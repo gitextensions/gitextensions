@@ -155,7 +155,7 @@
         </compat:IconSplitButton.Flyout>
       </compat:IconSplitButton>
       <Separator x:Name="sepSettings" Classes="gitextensions-toolbar-separator filestatus-toolbar-separator" />
-      <compat:IconDropDownButton x:Name="btnSettings" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="29" Height="22" MinHeight="22" Margin="0,1,0,2" Icon="{x:Static properties:Images.Settings}" Content="Settings">
+      <compat:IconDropDownButton x:Name="btnSettings" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="29" Height="22" MinHeight="22" Margin="0,1,0,2" Icon="{x:Static properties:Images.Settings}" compat:TranslationCompat.TranslateToolTip="False" Content="Settings">
         <compat:IconDropDownButton.Flyout>
           <MenuFlyout>
             <MenuItem x:Name="tsmiShowIgnoredFiles" x:FieldModifier="internal" Header="Show _ignored files" ToggleType="CheckBox" IsVisible="False" />

@@ -5,6 +5,8 @@ using System.Xml.Linq;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using GitExtensions.Extensibility.Translations;
+using GitUI.Compat;
+using NSubstitute;
 
 namespace GitExtensionsTests;
 
@@ -14,6 +16,21 @@ namespace GitExtensionsTests;
 public sealed class TranslationParityTests
 {
     private const string EvidencePathEnvironmentVariable = "GITEXT_TRANSLATION_PARITY_REPORT";
+
+    [Test]
+    public void Nested_control_root_should_not_publish_the_owner_window_title_key()
+    {
+        Button nestedControl = new() { Content = "Nested control" };
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        AvaloniaTranslationUtils.AddTranslationItemsFromFields("OwnerWindow", nestedControl, translation);
+
+        translation.DidNotReceive().AddTranslationItem(
+            "OwnerWindow",
+            "$this",
+            "Text",
+            Arg.Any<string>());
+    }
 
     [AvaloniaTest]
     [Category("P1_6")]

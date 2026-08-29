@@ -70,9 +70,11 @@
                       Content="A_uto stash"
                       IsEnabled="False" />
             <CheckBox x:Name="chkIgnoreDate"
+                      compat:TranslationCompat.ToolTipPropertyName="toolTip1"
                       Margin="0,0,10,4"
                       Content="Ignore _date" />
             <CheckBox x:Name="chkCommitterDateIsAuthorDate"
+                      compat:TranslationCompat.ToolTipPropertyName="toolTip1"
                       Margin="0,0,10,4"
                       Content="Co_mmitter date is author date" />
             <CheckBox x:Name="checkBoxUpdateRefs"
