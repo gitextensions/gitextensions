@@ -4,6 +4,7 @@
         xmlns:help="using:GitUI.Help"
         xmlns:properties="using:GitUI.Properties"
         xmlns:usercontrols="using:GitUI.UserControls"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
         x:Class="GitUI.CommandsDialogs.FormPull"
         Width="674"
         Height="525"
@@ -11,180 +12,259 @@
         MinHeight="525"
         CanResize="True"
         Title="Pull">
-  <Grid RowDefinitions="*,Auto">
-    <Grid x:Name="MainLayout"
+  <Window.Styles>
+    <Style Selector="wf|GroupBox.remote-source-group">
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Grid>
+            <Border Margin="0,8,0,0"
+                    BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="1" />
+            <ContentPresenter Margin="7,0,0,0"
+                              Padding="3,0"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Background="{TemplateBinding Background}"
+                              Content="{TemplateBinding Header}"
+                              ContentTemplate="{TemplateBinding HeaderTemplate}" />
+            <ContentPresenter Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+          </Grid>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+  </Window.Styles>
+  <Grid RowDefinitions="484,41">
+    <wf:TableLayoutPanel x:Name="MainLayout"
           Classes="gitextensions-dialog-main"
           Margin="9"
           ColumnDefinitions="Auto,*">
       <help:HelpImageDisplayUserControl x:Name="PanelLeftImage"
-                                        Margin="0,0,6,0"
+                                        Margin="3"
                                         IsExpanded="True"
                                         UniqueIsExpandedSettingsId="Pull" />
 
-      <Border x:Name="PanelRight"
-              Grid.Column="1">
-        <StackPanel x:Name="PanelRightInner"
-                    Spacing="6">
-          <HeaderedContentControl x:Name="GroupPullFrom"
-                                  Classes="gitextensions-group-box"
-                                  Header="Pull from">
-            <Grid ColumnDefinitions="Auto,*,Auto"
-                  RowDefinitions="Auto,Auto">
+      <wf:Panel x:Name="PanelRight"
+                Grid.Column="1"
+                Margin="3">
+        <wf:TableLayoutPanel x:Name="PanelRightInner"
+                             RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
+          <wf:GroupBox x:Name="GroupPullFrom"
+                       Classes="remote-source-group"
+                       Height="92"
+                       Margin="3"
+                       Header="Pull from">
+            <Grid Width="598"
+                  Height="92"
+                  Margin="-3,-19,0,0">
               <RadioButton x:Name="PullFromRemote"
-                           Margin="0,0,12,0"
-                           VerticalAlignment="Center"
+                           Margin="7,19,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
                            Content="_Remote"
                            IsChecked="True">
                 <ToolTip.Tip>Remote repository to pull from</ToolTip.Tip>
               </RadioButton>
               <ComboBox x:Name="_NO_TRANSLATE_Remotes"
-                        Grid.Column="1"
-                        MinWidth="288"
+                        Width="288"
+                        Height="23"
+                        Margin="148,16,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
                         IsEditable="True" />
               <compat:IconButton x:Name="AddRemote"
-                                 Grid.Column="2"
-                                 Margin="6,0,0,0"
-                                 MinWidth="150"
+                                 Width="150"
+                                 Height="25"
+                                 Margin="442,14,0,0"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Top"
                                  Icon="{x:Static properties:Images.Remotes}"
                                  Content="Mana_ge remotes" />
 
               <RadioButton x:Name="PullFromUrl"
-                           Grid.Row="1"
-                           Margin="0,6,12,0"
-                           VerticalAlignment="Center"
+                           Margin="7,47,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
                            Content="_URL">
                 <ToolTip.Tip>Url to pull from</ToolTip.Tip>
               </RadioButton>
               <ComboBox x:Name="comboBoxPullSource"
                         compat:TranslationCompat.TranslateText="False"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Margin="0,6,0,0"
+                        Width="288"
+                        Height="23"
+                        Margin="148,46,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
                         IsEditable="True"
                         IsEnabled="False" />
               <usercontrols:FolderBrowserButton x:Name="folderBrowserButton1"
-                                                Grid.Row="1"
-                                                Grid.Column="2"
-                                                Margin="6,6,0,0"
+                                                Width="100"
+                                                Height="25"
+                                                Margin="442,45,0,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
                                                 IsEnabled="False" />
             </Grid>
-          </HeaderedContentControl>
+          </wf:GroupBox>
 
-          <HeaderedContentControl x:Name="GroupBranch"
-                                  Classes="gitextensions-group-box"
-                                  Header="Branch">
-            <Grid ColumnDefinitions="Auto,*"
-                  RowDefinitions="Auto,Auto">
+          <wf:GroupBox x:Name="GroupBranch"
+                       Classes="remote-source-group"
+                       Grid.Row="1"
+                       Height="91"
+                       Margin="3"
+                       Header="Branch">
+            <Grid Width="598"
+                  Height="91"
+                  Margin="-3,-19,0,0">
               <Label x:Name="lblLocalBranch"
                      Classes="gitextensions-dialog-label"
-                     Width="130"
+                     Margin="9,22,0,0"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
                      Content="_Local branch"
                      Target="{Binding #localBranch}">
                 <ToolTip.Tip>Local branch to create or reset to the remote branch selected.</ToolTip.Tip>
               </Label>
               <TextBox x:Name="localBranch"
-                       Grid.Column="1"
                        Width="288"
+                       Height="23"
+                       Margin="150,14,0,0"
                        HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
                        compat:TranslationCompat.TranslateText="False" />
               <Label x:Name="lblRemoteBranch"
                      Classes="gitextensions-dialog-label"
-                     Grid.Row="1"
-                     Width="130"
-                     Margin="0,6,0,0"
+                     Margin="8,49,0,0"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
                      Content="Rem_ote branch"
                      Target="{Binding #Branches}">
                 <ToolTip.Tip>Remote branch to pull. Leave empty to pull all branches.</ToolTip.Tip>
               </Label>
               <ComboBox x:Name="Branches"
                         compat:TranslationCompat.TranslateText="False"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Margin="0,6,0,0"
                         Width="288"
+                        Height="23"
+                        Margin="150,46,0,0"
                         HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
                         IsEditable="True" />
             </Grid>
-          </HeaderedContentControl>
+          </wf:GroupBox>
 
-          <HeaderedContentControl x:Name="GroupMergeOptions"
-                                  Classes="gitextensions-group-box"
-                                  Header="Merge options">
-            <StackPanel x:Name="PanelMergeOptions"
-                        Spacing="4">
+          <wf:GroupBox x:Name="GroupMergeOptions"
+                       Classes="remote-source-group"
+                       Grid.Row="2"
+                       Height="103"
+                       Margin="3"
+                       Header="Merge options">
+            <wf:FlowLayoutPanel x:Name="PanelMergeOptions"
+                                Height="81">
+              <StackPanel>
               <compat:IconRadioButton x:Name="Merge"
+                                      Height="21"
+                                      Margin="3"
+                                      Padding="0,1"
                                       Icon="{x:Static properties:Images.Merge}"
                                       Content="_Merge remote branch into current branch"
                                       IsChecked="True" />
               <compat:IconRadioButton x:Name="Rebase"
+                                      Height="21"
+                                      Margin="3"
+                                      Padding="0,1"
                                       Icon="{x:Static properties:Images.Rebase}"
                                       Content="R_ebase current branch on top of remote branch, creates linear history (use with caution)" />
               <RadioButton x:Name="Fetch"
+                           Height="21"
+                           Margin="3"
+                           Padding="0,1"
                            Content="Do not merge, only _fetch remote changes" />
-            </StackPanel>
-          </HeaderedContentControl>
+              </StackPanel>
+            </wf:FlowLayoutPanel>
+          </wf:GroupBox>
 
-          <HeaderedContentControl x:Name="GroupTagOptions"
-                                  Classes="gitextensions-group-box"
-                                  Header="Tag options">
-            <StackPanel x:Name="PanelTagOptions"
-                        Spacing="4">
+          <wf:GroupBox x:Name="GroupTagOptions"
+                       Classes="remote-source-group"
+                       Grid.Row="3"
+                       Height="103"
+                       Margin="3"
+                       Header="Tag options">
+            <wf:FlowLayoutPanel x:Name="PanelTagOptions"
+                                Height="81">
+              <StackPanel>
               <RadioButton x:Name="ReachableTags"
+                           Height="21"
+                           Margin="3"
+                           Padding="0,1"
                            Content="Follow _tagopt, if not specified, fetch tags reachable from remote HEAD"
                            IsChecked="True" />
               <RadioButton x:Name="NoTags"
+                           Height="21"
+                           Margin="3"
+                           Padding="0,1"
                            Content="Fetch _no tag" />
               <RadioButton x:Name="AllTags"
+                           Height="21"
+                           Margin="3"
+                           Padding="0,1"
                            Content="Fetch _all tags" />
-            </StackPanel>
-          </HeaderedContentControl>
+              </StackPanel>
+            </wf:FlowLayoutPanel>
+          </wf:GroupBox>
 
           <CheckBox x:Name="Unshallow"
-                    Margin="4,0,0,0"
+                    Grid.Row="4"
+                    Margin="7,2,2,2"
                     Content="Do_wnload full history"
                     IsVisible="False" />
           <CheckBox x:Name="Prune"
-                    Margin="4,0,0,0"
+                    Grid.Row="5"
+                    Margin="7,2,2,2"
                     Content="_Prune remote branches">
             <ToolTip.Tip>Removes remote tracking branches that no longer exist on the remote (e.g. if someone else deleted them).&#x0a;&#x0a;Actual command line (if checked): --prune --force&#x0a;</ToolTip.Tip>
           </CheckBox>
           <CheckBox x:Name="PruneTags"
-                    Margin="4,0,0,0"
+                    Grid.Row="6"
+                    Margin="7,2,2,2"
                     Content="Prune remote branches an_d tags"
                     IsEnabled="False">
             <ToolTip.Tip>Before fetching, remove any local tags that no longer exist on the remote if --prune is enabled.</ToolTip.Tip>
           </CheckBox>
-        </StackPanel>
-      </Border>
-    </Grid>
+        </wf:TableLayoutPanel>
+      </wf:Panel>
+    </wf:TableLayoutPanel>
 
     <Grid x:Name="ControlsPanel"
           Grid.Row="1"
-          MinHeight="41"
-          Margin="5"
-          ColumnDefinitions="Auto,Auto,Auto,*,Auto">
+          ColumnDefinitions="325,141,6,132,6,82,6,100,6,124,13">
       <Button x:Name="Mergetool"
               Classes="gitextensions-dialog-action"
-              MinWidth="141"
+              Grid.Column="1"
+              Width="141"
+              Height="25"
+              Margin="0,8,0,8"
               Content="_Solve conflicts" />
       <Button x:Name="Stash"
               Classes="gitextensions-dialog-action"
-              Grid.Column="1"
-              Margin="6,0,0,0"
-              MinWidth="132"
+              Grid.Column="3"
+              Width="132"
+              Height="25"
+              Margin="0,8,0,8"
               Content="Stash _changes" />
       <CheckBox x:Name="AutoStash"
-                Grid.Column="2"
-                Margin="6,0,0,0"
+                Grid.Column="5"
                 VerticalAlignment="Center"
                 Content="Auto stas_h" />
       <TextBlock x:Name="lblSpacer"
-                 Grid.Column="3" />
+                 Grid.Column="7" />
       <compat:IconButton x:Name="Pull"
                          compat:TranslationCompat.TranslateText="False"
                          Classes="gitextensions-dialog-action"
-                         Grid.Column="4"
-                         MinWidth="120"
+                         Grid.Column="9"
+                         Width="124"
+                         Height="25"
+                         Margin="0,8,0,8"
                          Icon="{x:Static properties:Images.ArrowDown}"
                          IsDefault="True"
                          Content="Pull" />
