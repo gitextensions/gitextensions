@@ -1,6 +1,7 @@
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -70,7 +71,7 @@ public sealed class RemotesTests
         form.FindControl<Label>("labelPushUrl")!.IsVisible.Should().BeFalse("the push url row shows only with a separate push url");
         form.FindControl<ListBox>("RemoteBranches").Should().NotBeNull();
         form.FindControl<TextBox>("PuttySshKey").Should().NotBeNull();
-        form.FindControl<Grid>("pnlMgtPuttySsh")!.IsVisible.Should().BeFalse("the runtime SSH backend has not been evaluated");
+        form.FindControl<Control>("pnlMgtPuttySsh")!.IsVisible.Should().BeFalse("the runtime SSH backend has not been evaluated");
     }
 
     [AvaloniaTest]
@@ -129,7 +130,7 @@ public sealed class RemotesTests
         form.Show();
         try
         {
-            form.FindControl<Grid>("pnlMgtPuttySsh")!.IsVisible.Should().Be(OperatingSystem.IsWindows() && GitSshHelpers.IsPlink);
+            form.FindControl<Control>("pnlMgtPuttySsh")!.IsVisible.Should().Be(OperatingSystem.IsWindows() && GitSshHelpers.IsPlink);
             FormRemotes.TestAccessor accessor = form.GetTestAccessor();
 
             // No remotes yet: the management panel creates a new one.
@@ -244,6 +245,23 @@ public sealed class RemotesTests
             accessor.RemoteColorReset.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             accessor.Save.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             module.GetSetting("remote.origin.color").Should().BeEmpty();
+
+            form.CaptureRenderedFrame().Should().NotBeNull("the complete remotes dialog should render headlessly");
+
+            TabControl tabs = form.FindControl<TabControl>("tabControl1")!;
+            Control remotePage = form.FindControl<Control>("tabPage1")!;
+            Control remoteListPanel = form.FindControl<Control>("panel1")!;
+            Control managementContainer = form.FindControl<Control>("pnlManagementContainer")!;
+            Control managementGroup = form.FindControl<Control>("gbMgtPanel")!;
+
+            tabs.Classes.Should().Contain("gitextensions-native-tabs");
+            tabs.Bounds.Should().Be(new Avalonia.Rect(0, 0, 934, 306));
+            remotePage.Should().BeOfType<GitUI.Compat.WinFormsControls.TabPage>();
+            remoteListPanel.Should().BeOfType<GitUI.Compat.WinFormsControls.Panel>();
+            remoteListPanel.Bounds.Size.Should().Be(new Avalonia.Size(350, 266));
+            managementContainer.Bounds.Size.Should().Be(new Avalonia.Size(570, 266));
+            managementGroup.Should().BeOfType<GitUI.Compat.WinFormsControls.GroupBox>();
+            managementGroup.Bounds.Size.Should().Be(new Avalonia.Size(554, 172));
         }
         finally
         {

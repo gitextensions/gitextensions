@@ -198,6 +198,25 @@ public sealed class FormPullTests
             frame!.PixelSize.Width.Should().Be(
                 674 + GitUI.Properties.Images.HelpPullFetch.PixelSize.Width - 40,
                 "the source help control grows the host by the displayed image width minus its Designer width");
+
+            Control mainLayout = form.FindControl<Control>("MainLayout")!;
+            Control panelRight = form.FindControl<Control>("PanelRight")!;
+            Control groupPullFrom = form.FindControl<Control>("GroupPullFrom")!;
+            Control groupBranch = form.FindControl<Control>("GroupBranch")!;
+            Control groupMergeOptions = form.FindControl<Control>("GroupMergeOptions")!;
+            Control groupTagOptions = form.FindControl<Control>("GroupTagOptions")!;
+            Control controlsPanel = form.FindControl<Control>("ControlsPanel")!;
+
+            mainLayout.Should().BeOfType<GitUI.Compat.WinFormsControls.TableLayoutPanel>();
+            panelRight.Should().BeOfType<GitUI.Compat.WinFormsControls.Panel>();
+            mainLayout.Margin.Should().Be(new Avalonia.Thickness(9));
+            panelRight.Margin.Should().Be(new Avalonia.Thickness(3));
+            groupPullFrom.Bounds.Height.Should().Be(92);
+            groupBranch.Bounds.Should().Be(new Avalonia.Rect(3, 101, 598, 91));
+            groupMergeOptions.Bounds.Should().Be(new Avalonia.Rect(3, 198, 598, 103));
+            groupTagOptions.Bounds.Should().Be(new Avalonia.Rect(3, 307, 598, 103));
+            controlsPanel.Bounds.Y.Should().Be(484);
+            controlsPanel.Bounds.Height.Should().Be(41);
         }
         finally
         {
