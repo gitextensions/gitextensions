@@ -19,8 +19,10 @@
       <Grid Margin="7,4,7,7" ColumnDefinitions="350,*">
         <wf:Panel x:Name="panel1" Padding="8">
           <Grid ColumnDefinitions="*,36">
-          <ListBox x:Name="Remotes"
-                   Classes="gitextensions-native-list-items" />
+          <usercontrols:NativeListView x:Name="Remotes"
+                                       Classes="gitextensions-native-list-items" />
+          <wf:ColumnHeader x:Name="columnHeader1"
+                           IsVisible="False" />
           <StackPanel x:Name="panelButtons"
                       Grid.Column="1">
             <compat:IconButton x:Name="New"
@@ -60,6 +62,7 @@
                   RowDefinitions="Auto,Auto,Auto"
                   VerticalAlignment="Top">
               <wf:Panel x:Name="pnlMgtDetails"
+                         Text="Details"
                         Height="107"
                         Margin="3"
                         Padding="0,0,0,8">
@@ -75,7 +78,8 @@
                    Margin="3,0"
                    Content="_Name"
                    Target="{Binding #RemoteName}"
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center" />
             <TextBox x:Name="RemoteName"
                      Grid.Row="1" Grid.Column="1"
                      Margin="3"
@@ -86,7 +90,8 @@
                    Margin="3,0"
                    Content="_Url"
                    Target="{Binding #Url}"
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center" />
             <usercontrols:CaseSensitiveComboBox x:Name="Url"
                       Grid.Column="1"
                       Margin="3"
@@ -101,6 +106,7 @@
                       Grid.Row="4" Grid.ColumnSpan="2"
                       Margin="3"
                       Padding="24,0,0,0"
+                      HorizontalAlignment="Stretch"
                       Content="Sep_arate Push Url" />
 
             <Label x:Name="labelPushUrl"
@@ -110,7 +116,8 @@
                    Content="_Push Url"
                    Target="{Binding #comboBoxPushUrl}"
                    IsVisible="False"
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center" />
             <usercontrols:CaseSensitiveComboBox x:Name="comboBoxPushUrl"
                       Grid.Row="5" Grid.Column="1"
                       Margin="3"
@@ -119,21 +126,25 @@
                       IsEditable="True"
                       compat:TranslationCompat.TranslateText="False" />
             <usercontrols:FolderBrowserButton x:Name="folderBrowserButtonPushUrl"
-                                              Grid.Row="5" Grid.Column="2"
-                                              Margin="3"
-                                              IsVisible="False" />
+                                               Grid.Row="5" Grid.Column="2"
+                                               Margin="3"
+                                               Text="Bro&amp;wse..."
+                                               IsVisible="False" />
 
-            <TextBlock x:Name="lblRemoteColor"
-                       Grid.Row="3"
-                       Margin="3,0"
-                       Text="Color"
-                       VerticalAlignment="Center" />
+            <Label x:Name="lblRemoteColor"
+                   Grid.Row="3"
+                   Padding="0"
+                   Margin="3,0"
+                   Content="Color"
+                   VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center" />
             <StackPanel x:Name="flpnlRemoteColors"
                         Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
                         Orientation="Horizontal"
                         Spacing="6">
               <colorPicker:ColorPicker x:Name="btnRemoteColor"
-                                       MinWidth="80"
+                                       MinWidth="0"
+                                       Height="25"
                                        Content="Set _color"
                                        IsAlphaEnabled="False" />
               <Button x:Name="btnRemoteColorReset"
@@ -142,11 +153,13 @@
                       IsVisible="False" />
             </StackPanel>
 
-            <TextBlock x:Name="lblRemotePrefix"
-                       Grid.Row="2"
-                       Margin="3,0"
-                       Text="Prefix"
-                       VerticalAlignment="Center" />
+            <Label x:Name="lblRemotePrefix"
+                   Grid.Row="2"
+                   Padding="0"
+                   Margin="3,0"
+                   Content="Prefix"
+                   VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center" />
             <TextBox x:Name="txtRemotePrefix"
                      Grid.Row="2" Grid.Column="1"
                      Margin="3"
@@ -156,6 +169,7 @@
               </wf:Panel>
 
               <wf:Panel x:Name="pnlMgtPuttySsh"
+                  Text="PuTTY SSH"
                   Grid.Row="1"
                   Margin="3"
                   Padding="0,0,0,8"
@@ -164,8 +178,7 @@
                 <Grid RowDefinitions="Auto,Auto">
               <Grid ColumnDefinitions="Auto,*">
                 <TextBlock x:Name="lblMgtPuttyPanelHeader"
-                           Text="PuTTY SSH"
-                           FontWeight="SemiBold" />
+                           Text="PuTTY SSH" />
                 <Border x:Name="lblHeaderLine2"
                         Grid.Column="1"
                         Margin="8,0,0,0"
@@ -184,7 +197,8 @@
                        MinWidth="100"
                        Content="Private _key file"
                        Target="{Binding #PuttySshKey}"
-                       VerticalAlignment="Center" />
+                       VerticalAlignment="Stretch"
+                       VerticalContentAlignment="Center" />
                 <TextBox x:Name="PuttySshKey"
                          Grid.Column="1"
                          compat:TranslationCompat.TranslateText="False" />
@@ -194,22 +208,24 @@
                                    MinWidth="104"
                                    Icon="{x:Static properties:Images.FileNew}"
                                    Content="Brows_e..." />
-                <StackPanel
-                            Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal"
-                            Spacing="6">
-                  <compat:IconButton x:Name="LoadSSHKey"
-                                     Classes="gitextensions-native-dialog-action"
-                                     MinWidth="160"
-                                     Icon="{x:Static properties:Images.Putty}"
-                                     Content="_Load SSH key" />
-                  <compat:IconButton x:Name="TestConnection"
-                                     Classes="gitextensions-native-dialog-action"
-                                     MinWidth="160"
-                                     Icon="{x:Static properties:Images.Putty}"
-                                     Content="_Test connection" />
-                </StackPanel>
+                <wf:FlowLayoutPanel x:Name="flowLayoutPanelSsh"
+                                    Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Stretch">
+                  <StackPanel HorizontalAlignment="Right"
+                              Orientation="Horizontal"
+                              Spacing="6">
+                    <compat:IconButton x:Name="TestConnection"
+                                       Classes="gitextensions-native-dialog-action"
+                                       MinWidth="160"
+                                       Icon="{x:Static properties:Images.Putty}"
+                                       Content="_Test connection" />
+                    <compat:IconButton x:Name="LoadSSHKey"
+                                       Classes="gitextensions-native-dialog-action"
+                                       MinWidth="160"
+                                       Icon="{x:Static properties:Images.Putty}"
+                                       Content="_Load SSH key" />
+                  </StackPanel>
+                </wf:FlowLayoutPanel>
               </wf:TableLayoutPanel>
                 </Grid>
             </wf:Panel>
@@ -244,28 +260,29 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
-          <Border x:Name="BranchName"
+          <wf:DataGridViewTextBoxColumn x:Name="BranchName"
                   Padding="6,4"
                   BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
                   BorderThickness="0,0,1,1">
             <TextBlock Text="Local branch name" FontWeight="SemiBold" />
-          </Border>
-          <Border x:Name="RemoteCombo"
+          </wf:DataGridViewTextBoxColumn>
+          <wf:DataGridViewTextBoxColumn x:Name="RemoteCombo"
                   Grid.Column="1"
                   Padding="6,4"
                   BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
                   BorderThickness="0,0,1,1">
             <TextBlock Text="Remote repository" FontWeight="SemiBold" />
-          </Border>
-          <Border x:Name="MergeWith"
+          </wf:DataGridViewTextBoxColumn>
+          <wf:DataGridViewTextBoxColumn x:Name="MergeWith"
                   Grid.Column="2"
                   Padding="6,4"
                   BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
                   BorderThickness="0,0,1,1">
             <TextBlock Text="Default merge with" FontWeight="SemiBold" />
-          </Border>
-          <ListBox x:Name="RemoteBranches"
-                   Grid.Row="1" Grid.ColumnSpan="3" />
+          </wf:DataGridViewTextBoxColumn>
+          <wf:DataGridView x:Name="RemoteBranches"
+                           Grid.Row="1" Grid.ColumnSpan="3"
+                           IsReadOnly="True" />
         </Grid>
 
         <Grid x:Name="panelDetails"

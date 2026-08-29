@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
@@ -199,6 +199,7 @@ public sealed class FormPullTests
                 674 + GitUI.Properties.Images.HelpPullFetch.PixelSize.Width - 40,
                 "the source help control grows the host by the displayed image width minus its Designer width");
 
+            Control mainPanel = form.FindControl<Control>("MainPanel")!;
             Control mainLayout = form.FindControl<Control>("MainLayout")!;
             Control panelRight = form.FindControl<Control>("PanelRight")!;
             Control groupPullFrom = form.FindControl<Control>("GroupPullFrom")!;
@@ -207,9 +208,11 @@ public sealed class FormPullTests
             Control groupTagOptions = form.FindControl<Control>("GroupTagOptions")!;
             Control controlsPanel = form.FindControl<Control>("ControlsPanel")!;
 
+            mainPanel.Should().BeOfType<GitUI.Compat.WinFormsControls.Panel>();
             mainLayout.Should().BeOfType<GitUI.Compat.WinFormsControls.TableLayoutPanel>();
             panelRight.Should().BeOfType<GitUI.Compat.WinFormsControls.Panel>();
-            mainLayout.Margin.Should().Be(new Avalonia.Thickness(9));
+            ((Decorator)mainPanel).Padding.Should().Be(new Avalonia.Thickness(9));
+            mainLayout.Margin.Should().Be(new Avalonia.Thickness(0));
             panelRight.Margin.Should().Be(new Avalonia.Thickness(3));
             groupPullFrom.Bounds.Height.Should().Be(92);
             groupBranch.Bounds.Should().Be(new Avalonia.Rect(3, 101, 598, 91));

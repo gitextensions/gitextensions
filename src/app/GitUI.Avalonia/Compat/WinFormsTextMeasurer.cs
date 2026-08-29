@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -23,6 +23,9 @@ internal static class WinFormsTextMeasurer
         => MeasureSize(owner, value).Width;
 
     public static AvaloniaSize MeasureSize(TextBlock owner, string value)
+        => MeasureSize(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize, value);
+
+    public static AvaloniaSize MeasureSize(TemplatedControl owner, string value)
         => MeasureSize(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize, value);
 
     private static AvaloniaSize MeasureSize(
