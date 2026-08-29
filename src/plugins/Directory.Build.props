@@ -11,6 +11,10 @@
     <!-- Keep portable plugin artifacts beside the Avalonia application. The Windows
          flavor retains the existing GitExtensions/net10.0-windows/Plugins layout. -->
     <ArtifactsPluginsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', 'GitExtensions.Avalonia', 'net10.0', 'Plugins'))</ArtifactsPluginsDir>
+    <!-- The portable host already carries its shared framework/runtime dependencies.
+         Copying the complete multi-RID Avalonia/Skia graph into every plugin folder
+         consumes several gigabytes and can exhaust the build drive before tests start. -->
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <!--

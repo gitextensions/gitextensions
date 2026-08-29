@@ -45,7 +45,7 @@ public sealed class InputAccessibilityTests
                 Path.Combine(repositoryRoot, "src", "plugins", "Gource")),
         ]));
         WinFormsInputMetadata.ByType.Should().HaveCount(142);
-        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1485);
+        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1502);
     }
 
     [Test]
@@ -64,6 +64,12 @@ public sealed class InputAccessibilityTests
         textBox.Dock.Should().Be("Fill");
         textBox.Margin.Should().Be(new Thickness(0));
         textBox.BorderStyle.Should().Be("None");
+
+        IReadOnlyList<DesignerLayoutMetadata> remotes = WinFormsInputMetadata.LayoutByType[
+            "GitUI.CommandsDialogs.FormRemotes"];
+        remotes.Single(item => item.FieldName == "panel1").Padding.Should().Be(new Thickness(8));
+        remotes.Single(item => item.FieldName == "pnlManagementContainer").Padding.Should().Be(new Thickness(8, 4, 8, 8));
+        remotes.Single(item => item.FieldName == "pnlMgtDetails").Dock.Should().Be("Top");
     }
 
     [AvaloniaTest]
