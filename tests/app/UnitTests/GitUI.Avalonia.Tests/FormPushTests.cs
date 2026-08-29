@@ -175,6 +175,19 @@ public sealed class FormPushTests
 
             forceWithLease.IsChecked.Should().BeTrue();
             form.CaptureRenderedFrame().Should().NotBeNull("the reduced push dialog should render headlessly");
+
+            Control groupBox2 = form.FindControl<Control>("groupBox2")!;
+            TabControl tabs = form.FindControl<TabControl>("TabControlTagBranch")!;
+            Control branchTab = form.FindControl<Control>("BranchTab")!;
+            Control pull = form.FindControl<Control>("Pull")!;
+
+            groupBox2.Should().BeOfType<GitUI.Compat.WinFormsControls.GroupBox>();
+            groupBox2.Bounds.Size.Should().Be(new Avalonia.Size(556, 80));
+            groupBox2.Margin.Should().Be(new Avalonia.Thickness(0, 0, 4, 0));
+            tabs.Classes.Should().Contain("gitextensions-native-tabs");
+            tabs.Margin.Should().Be(new Avalonia.Thickness(0, 6));
+            branchTab.Should().BeOfType<GitUI.Compat.WinFormsControls.TabPage>();
+            pull.Bounds.Size.Should().Be(new Avalonia.Size(101, 25));
         }
         finally
         {
