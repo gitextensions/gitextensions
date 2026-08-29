@@ -129,6 +129,13 @@ internal static class AvaloniaThemeResources
         DrawingColor controlText = ResolveSystemColor(settings, KnownColor.ControlText);
         DrawingColor controlDark = ResolveSystemColor(settings, KnownColor.ControlDark);
         DrawingColor controlLight = ResolveSystemColor(settings, KnownColor.ControlLight);
+        DrawingColor dialogControlsBackground = controlLight.MakeDarkerBy(-0.04);
+        DrawingColor readOnlyTextInputBackground = isDark
+            ? ResolveSystemColor(settings, KnownColor.ControlDarkDark)
+            : control;
+        DrawingColor dataGridViewGridLine = isDark
+            ? DrawingColor.FromArgb(40, 40, 40)
+            : DrawingColor.FromArgb(100, 100, 100);
         DrawingColor menu = ResolveSystemColor(settings, KnownColor.Menu);
         DrawingColor menuText = ResolveSystemColor(settings, KnownColor.MenuText);
         DrawingColor commitEditorBackground = isDark ? controlLight : window;
@@ -162,6 +169,9 @@ internal static class AvaloniaThemeResources
         DrawingColor nativeTabPageBackground = isDark ? control : DrawingColor.Transparent;
         DrawingColor highlight = ResolveSystemColor(settings, KnownColor.Highlight);
         DrawingColor highlightText = ResolveSystemColor(settings, KnownColor.HighlightText);
+        DrawingColor dataGridViewSelectionBackground = isDark
+            ? highlight
+            : DrawingColor.FromArgb(0, 120, 212);
         DrawingColor inactiveSelection = ResolveSystemColor(settings, KnownColor.InactiveCaption);
         DrawingColor inactiveSelectionText = ResolveSystemColor(settings, KnownColor.InactiveCaptionText);
         DrawingColor info = ResolveSystemColor(settings, KnownColor.Info);
@@ -240,6 +250,9 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsWindowBackgroundBrush", window);
         SetBrush(resources, "GitExtensionsCommitEditorBackgroundBrush", commitEditorBackground);
         SetBrush(resources, "GitExtensionsTextInputBackgroundBrush", textInputBackground);
+        SetBrush(resources, "GitExtensionsDialogControlsBackgroundBrush", dialogControlsBackground);
+        SetBrush(resources, "GitExtensionsReadOnlyTextInputBackgroundBrush", readOnlyTextInputBackground);
+        SetBrush(resources, "GitExtensionsDataGridViewGridLineBrush", dataGridViewGridLine);
         SetBrush(resources, "GitExtensionsNativeGroupBoxBorderBrush", nativeGroupBoxBorder);
         SetBrush(resources, "GitExtensionsNativeButtonBackgroundBrush", nativeButtonBackground);
         SetBrush(resources, "GitExtensionsNativeButtonBorderBrush", nativeButtonBorder);
@@ -263,6 +276,7 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsDisabledForegroundBrush", grayText);
         SetBrush(resources, "GitExtensionsHighlightBackgroundBrush", highlight);
         SetBrush(resources, "GitExtensionsHighlightForegroundBrush", highlightText);
+        SetBrush(resources, "GitExtensionsDataGridViewSelectionBackgroundBrush", dataGridViewSelectionBackground);
         SetBrush(resources, "GitExtensionsFileStatusSelectionForegroundBrush", isDark ? controlText : highlightText);
         SetBrush(resources, "GitExtensionsInactiveSelectionForegroundBrush", inactiveSelectionText);
         SetBrush(resources, "GitExtensionsSystemInactiveSelectionBackgroundBrush", inactiveSelection);

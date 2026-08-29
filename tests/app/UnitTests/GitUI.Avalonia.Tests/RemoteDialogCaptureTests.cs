@@ -74,6 +74,13 @@ public sealed class RemoteDialogCaptureTests
             nodes["gbMgtPanel"].AutoSize.Should().BeTrue();
             nodes["label1"].Alignment.Should().Be("MiddleLeft");
             nodes["Remotes"].BorderStyle.Should().Be("Fixed3D");
+            nodes["flowLayoutPanelSsh"].Children
+                .Select(child => child.FieldName)
+                .Should().Equal("TestConnection", "LoadSSHKey");
+            nodes["lblHeaderLine2"].Colors.Border.Should().BeNull();
+            nodes["RemoteBranches"].Colors.GridLine.Should().Be("#FFE3E3E3");
+            nodes["RemoteBranches"].Colors.SelectionBackground.Should().Be("#FF0078D4");
+            nodes["RemoteBranches"].Colors.InactiveSelectionForeground.Should().Be("#FFFFFFFF");
             form.FindControl<ListBox>("Remotes")!.Classes.Should().Contain("gitextensions-native-list-items");
             foreach (string buttonName in new[] { "New", "Delete", "btnToggleState", "Save" })
             {
@@ -92,8 +99,8 @@ public sealed class RemoteDialogCaptureTests
         CaptureSurface surface = new AvaloniaControlTreeReader(form, renderScale: 1)
             .ReadPrimary(form, PixelSize.FromSize(form.ClientSize, 1));
         return Flatten(surface.Root)
-            .Where(node => node.FieldName is not null)
-            .GroupBy(node => node.FieldName!, StringComparer.Ordinal)
+            .Where(node => node.FieldName is not null || node.Name is not null)
+            .GroupBy(node => node.FieldName ?? node.Name!, StringComparer.Ordinal)
             .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
     }
 

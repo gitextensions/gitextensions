@@ -152,10 +152,10 @@ public sealed partial class FormPull : GitExtensionsDialog
         WinFormsAutoSizeContentControl.Attach(ReachableTags, 25, 21);
         WinFormsAutoSizeContentControl.Attach(NoTags, 25, 21);
         WinFormsAutoSizeContentControl.Attach(AllTags, 25, 21);
-        WinFormsAutoSizeContentControl.Attach(Unshallow, 25, 19);
-        WinFormsAutoSizeContentControl.Attach(Prune, 25, 19);
-        WinFormsAutoSizeContentControl.Attach(PruneTags, 25, 19);
-        WinFormsAutoSizeContentControl.Attach(AutoStash, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(Unshallow, 26, 19);
+        WinFormsAutoSizeContentControl.Attach(Prune, 26, 19);
+        WinFormsAutoSizeContentControl.Attach(PruneTags, 26, 19);
+        WinFormsAutoSizeContentControl.Attach(AutoStash, 26, 19);
         WinFormsAutoSizeContentControl.Attach(lblLocalBranch, 7, 15);
         WinFormsAutoSizeContentControl.Attach(lblRemoteBranch, 7, 15);
     }

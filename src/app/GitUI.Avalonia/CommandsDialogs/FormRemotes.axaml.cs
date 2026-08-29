@@ -889,9 +889,9 @@ Inactive remote is completely invisible to git.");
 
                     // Don't auto select a value when generic remote name entered or more than 1 result added.
                     // (The WinForms DataSource binding auto-selects the first item otherwise.)
-                    combobox.Text = string.IsNullOrEmpty(previousValues) && (!fillEmptyUrl || candidates.Count > 1)
-                        ? string.Empty
-                        : proposedRepositories[0];
+                    bool leaveSelectionEmpty = string.IsNullOrEmpty(previousValues) && (!fillEmptyUrl || candidates.Count > 1);
+                    combobox.SelectedIndex = leaveSelectionEmpty ? -1 : 0;
+                    combobox.Text = leaveSelectionEmpty ? string.Empty : proposedRepositories[0];
                 }
             }
         }
