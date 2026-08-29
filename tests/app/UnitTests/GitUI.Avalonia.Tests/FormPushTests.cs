@@ -189,6 +189,9 @@ public sealed class FormPushTests
             Control groupBox2 = form.FindControl<Control>("groupBox2")!;
             TabControl tabs = form.FindControl<TabControl>("TabControlTagBranch")!;
             Control branchTab = form.FindControl<Control>("BranchTab")!;
+            Control branchLayout = form.FindControl<Control>("tableLayoutPanel1")!;
+            Label branchDestinationLabel = form.FindControl<Label>("labelTo")!;
+            ComboBox remoteBranchControl = form.FindControl<ComboBox>("RemoteBranch")!;
             Control pull = form.FindControl<Control>("Pull")!;
 
             groupBox2.Should().BeOfType<GitUI.Compat.WinFormsControls.GroupBox>();
@@ -197,7 +200,34 @@ public sealed class FormPushTests
             tabs.Classes.Should().Contain("gitextensions-native-tabs");
             tabs.Margin.Should().Be(new Avalonia.Thickness(0, 6));
             branchTab.Should().BeOfType<GitUI.Compat.WinFormsControls.TabPage>();
+            ToolTip.GetTip(branchTab).Should().Be("Push branches and commits to remote repository.");
+            branchLayout.Bounds.Size.Should().Be(new Avalonia.Size(416, 23));
+            branchDestinationLabel.Bounds.Y.Should().Be(3);
+            remoteBranchControl.Bounds.Width.Should().Be(196);
             pull.Bounds.Size.Should().Be(new Avalonia.Size(101, 25));
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormPush_should_transfer_focus_to_the_selected_url_option()
+    {
+        GitModule module = CreateRepositoryAndRemote();
+        using FormPush form = new(new GitUICommands(_serviceContainer, module));
+        form.Show();
+        try
+        {
+            ComboBox remotes = form.FindControl<ComboBox>("_NO_TRANSLATE_Remotes")!;
+            RadioButton pushToUrl = form.FindControl<RadioButton>("PushToUrl")!;
+            remotes.Focus(Avalonia.Input.NavigationMethod.Tab).Should().BeTrue();
+
+            pushToUrl.IsChecked = true;
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+            pushToUrl.IsKeyboardFocusWithin.Should().BeTrue();
         }
         finally
         {
