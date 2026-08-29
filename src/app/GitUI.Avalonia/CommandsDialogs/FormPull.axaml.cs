@@ -109,6 +109,7 @@ public sealed partial class FormPull : GitExtensionsDialog
     public FormPull()
     {
         InitializeComponent();
+        ApplySourceAutoSize();
         InitializeComplete();
     }
 
@@ -116,6 +117,7 @@ public sealed partial class FormPull : GitExtensionsDialog
         : base(commands, enablePositionRestore: false)
     {
         InitializeComponent();
+        ApplySourceAutoSize();
         WireControls();
 
         _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
@@ -138,6 +140,24 @@ public sealed partial class FormPull : GitExtensionsDialog
         InitializeComplete();
         UpdateFormTitleAndButton();
         UpdateActionState();
+    }
+
+    private void ApplySourceAutoSize()
+    {
+        WinFormsAutoSizeContentControl.Attach(PullFromRemote, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(PullFromUrl, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(Merge, 41, 21);
+        WinFormsAutoSizeContentControl.Attach(Rebase, 41, 21);
+        WinFormsAutoSizeContentControl.Attach(Fetch, 25, 21);
+        WinFormsAutoSizeContentControl.Attach(ReachableTags, 25, 21);
+        WinFormsAutoSizeContentControl.Attach(NoTags, 25, 21);
+        WinFormsAutoSizeContentControl.Attach(AllTags, 25, 21);
+        WinFormsAutoSizeContentControl.Attach(Unshallow, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(Prune, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(PruneTags, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(AutoStash, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(lblLocalBranch, 7, 15);
+        WinFormsAutoSizeContentControl.Attach(lblRemoteBranch, 7, 15);
     }
 
     public bool ErrorOccurred { get; private set; }

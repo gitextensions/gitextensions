@@ -19,6 +19,7 @@ using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
+using ColumnHeader = GitUI.Compat.WinFormsControls.ColumnHeader;
 using MediaColor = Avalonia.Media.Color;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -110,6 +111,7 @@ Inactive remote is completely invisible to git.");
     public FormRemotes()
     {
         InitializeComponent();
+        ApplySourceAutoSize();
         WireControls();
         InitializeComplete();
         _btnRemoteColorText = btnRemoteColor.Content;
@@ -119,6 +121,7 @@ Inactive remote is completely invisible to git.");
         : base(commands, enablePositionRestore: true)
     {
         InitializeComponent();
+        ApplySourceAutoSize();
         WireControls();
         InitializeComplete();
 
@@ -133,6 +136,12 @@ Inactive remote is completely invisible to git.");
 
         ToolTip.SetTip(New, _btnNewTooltip.Text);
         ToolTip.SetTip(Delete, _btnDeleteTooltip.Text);
+    }
+
+    private void ApplySourceAutoSize()
+    {
+        WinFormsAutoSizeContentControl.Attach(btnRemoteColor, 14, 25);
+        WinFormsAutoSizeContentControl.Attach(btnRemoteColorReset, 14, 25);
     }
 
     private void WireControls()
@@ -166,6 +175,8 @@ Inactive remote is completely invisible to git.");
         RemoteBranches.ItemTemplate = new FuncDataTemplate<IGitRef>(
             (head, _) => CreateRemoteBranchRow(head),
             supportsRecycling: false);
+        Remotes.AddColumns(columnHeader1);
+        RemoteBranches.AddColumns(BranchName, RemoteCombo, MergeWith);
 
         Remotes.SelectionChanged += Remotes_SelectedIndexChanged;
         Remotes.ContainerPrepared += Remotes_ContainerPrepared;
@@ -266,6 +277,7 @@ Inactive remote is completely invisible to git.");
 
     private void AutoResizeRemotesColumn()
     {
+        columnHeader1.SourceWidth = Math.Max(0, Remotes.Bounds.Width - 4);
         Remotes.InvalidateMeasure();
     }
 
@@ -934,10 +946,10 @@ Inactive remote is completely invisible to git.");
         TranslateHeader(translation, nameof(MergeWith), MergeWith, "Default merge with");
     }
 
-    private static void TranslateHeader(GitExtensions.Extensibility.Translations.ITranslation translation, string fieldName, Border header, string defaultText)
+    private static void TranslateHeader(GitExtensions.Extensibility.Translations.ITranslation translation, string fieldName, ColumnHeader header, string defaultText)
     {
         string? text = translation.TranslateItem(nameof(FormRemotes), fieldName, "HeaderText", () => defaultText);
-        if (!string.IsNullOrEmpty(text) && header.Child is TextBlock textBlock)
+        if (!string.IsNullOrEmpty(text) && header.Content is TextBlock textBlock)
         {
             textBlock.Text = text;
         }

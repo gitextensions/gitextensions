@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
@@ -18,6 +18,7 @@ using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using SourceDataGridView = GitUI.Compat.WinFormsControls.DataGridView;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -76,6 +77,15 @@ public sealed class FormPushTests
         form.FindControl<ComboBox>("RemoteBranch")!.Text = "main";
         form.FindControl<ComboBox>("TagComboBox")!.Text = "v1.0";
         form.FindControl<ComboBox>("RecursiveSubmodules")!.SelectedIndex = 1;
+        SourceDataGridView branchGrid = form.FindControl<SourceDataGridView>("BranchGrid")!;
+        branchGrid.Columns.Should().HaveCount(6);
+        branchGrid.Columns.Select(column => column.Name).Should().Equal(
+            "LocalColumn",
+            "RemoteColumn",
+            "NewColumn",
+            "PushColumn",
+            "ForceColumn",
+            "DeleteColumn");
 
         form.AddTranslationItems(translation);
         form.TranslateItems(translation);

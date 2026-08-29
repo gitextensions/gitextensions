@@ -1,4 +1,5 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
+using GitUI.Compat.WinFormsControls;
 
 namespace GitUI.UserControls;
 
@@ -11,5 +12,16 @@ namespace GitUI.UserControls;
 /// </remarks>
 public class NativeListView : ListBox
 {
+    public IList<ColumnHeader> Columns { get; } = [];
+
     protected override Type StyleKeyOverride => typeof(ListBox);
+
+    public void AddColumns(params ColumnHeader[] columns)
+    {
+        for (int index = 0; index < columns.Length; index++)
+        {
+            columns[index].DisplayIndex = index;
+            Columns.Add(columns[index]);
+        }
+    }
 }
