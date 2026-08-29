@@ -98,6 +98,7 @@
                 Content="Initialize all submodules"
                 IsChecked="True" />
       <CheckBox x:Name="cbDownloadFullHistory"
+                compat:TranslationCompat.ToolTipPropertyName="ttHints"
                 Content="Download full _history"
                 IsChecked="True" />
     </StackPanel>

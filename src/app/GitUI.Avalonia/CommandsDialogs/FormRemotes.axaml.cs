@@ -247,6 +247,8 @@ Inactive remote is completely invisible to git.");
         }
 
         pnlMgtPuttySsh.IsVisible = OperatingSystem.IsWindows() && GitSshHelpers.IsPlink;
+        MinHeight = pnlMgtPuttySsh.IsVisible ? 361 : 270;
+        Height = MinHeight + 36;
 
         if (!AppSettings.AlwaysShowAdvOpt)
         {

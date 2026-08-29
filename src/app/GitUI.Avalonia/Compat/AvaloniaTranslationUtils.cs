@@ -48,6 +48,13 @@ internal static class AvaloniaTranslationUtils
         List<(string Name, object Item)> sharedItems = [];
         foreach ((string name, object item) in TranslationUtils.GetObjFields(host, "$this"))
         {
+            // Nested translated controls can intentionally publish their fields under an owning form's
+            // category. Their root is not that form's $this entry and must not overwrite its title key.
+            if (name == "$this" && item.GetType().Name != category)
+            {
+                continue;
+            }
+
             if (name.StartsWith("_NO_TRANSLATE_", StringComparison.Ordinal))
             {
                 continue;

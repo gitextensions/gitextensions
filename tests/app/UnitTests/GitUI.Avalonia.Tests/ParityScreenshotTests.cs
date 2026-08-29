@@ -880,7 +880,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormPull))
         {
-            return new FormPull(context.Commands, MainBranchName, RemoteName, GitPullAction.Default);
+            return new FormPull(context.Commands, MainBranchName, RemoteName, GitPullAction.Merge);
         }
 
         if (viewType == typeof(FormPush))
@@ -1150,13 +1150,6 @@ public sealed partial class ParityScreenshotTests
                 .GetField("ProcessCallback", BindingFlags.Instance | BindingFlags.NonPublic)
                 ?? throw new InvalidOperationException("FormStatus.ProcessCallback could not be found.");
             processCallback.SetValue(formStatus, (Action<FormStatus>)(_ => { }));
-        }
-
-        if (root is FormPush formPush)
-        {
-            HyperlinkButton showOptions = formPush.FindControl<HyperlinkButton>("ShowOptions")
-                ?? throw new InvalidOperationException("FormPush.ShowOptions could not be found.");
-            showOptions.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
         }
 
         if (root is FormSubmodules formSubmodules)
@@ -2393,6 +2386,21 @@ public sealed partial class ParityScreenshotTests
             return (900, 600);
         }
 
+        if (viewType == typeof(FormPull))
+        {
+            return (941, 525);
+        }
+
+        if (viewType == typeof(FormPush))
+        {
+            return (584, 290);
+        }
+
+        if (viewType == typeof(FormRemotes))
+        {
+            return (934, 306);
+        }
+
         if (viewType == typeof(FormUpdates))
         {
             return (462, 157);
@@ -2707,12 +2715,19 @@ public sealed partial class ParityScreenshotTests
             Refs = Module.GetRefs(RefsFilter.NoFilter);
             ObjectId headId = Module.GetCurrentCheckout();
             ObjectId parentId = Module.RevParse("HEAD~1");
+            ObjectId baseId = parentId.IsZero ? headId : parentId;
             long headTime = new DateTimeOffset(2026, 7, 17, 10, 30, 0, TimeSpan.Zero).ToUnixTimeSeconds();
             long parentTime = new DateTimeOffset(2026, 7, 16, 16, 45, 0, TimeSpan.Zero).ToUnixTimeSeconds();
             // parity-scaffolding: Paired captures use the same deterministic revision metadata;
             // the externally-owned repository supplies object ids, refs, and branch topology only.
-            ParentRevision = CreateRevision(parentId, InitialCommitSubject, parentTime, []);
-            HeadRevision = CreateRevision(headId, HeadCommitSubject, headTime, [parentId]);
+            // A one-commit fixture has no parent, so reuse its nonzero HEAD as the representative
+            // base without inventing a self-parent relationship.
+            ParentRevision = CreateRevision(baseId, InitialCommitSubject, parentTime, []);
+            HeadRevision = CreateRevision(
+                headId,
+                HeadCommitSubject,
+                headTime,
+                parentId.IsZero ? [] : [parentId]);
 
             Stashes =
             [

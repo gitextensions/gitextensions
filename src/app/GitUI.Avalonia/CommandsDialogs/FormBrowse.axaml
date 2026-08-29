@@ -254,6 +254,7 @@
         </compat:IconSplitButton>
         <Border Classes="gitextensions-toolbar-separator" />
         <compat:IconSplitButton x:Name="toolStripButtonPull"
+                                compat:TranslationCompat.TranslateToolTip="False"
                                 Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                 Content="Pull"
                                 Icon="{x:Static properties:Images.Pull}">
@@ -286,6 +287,7 @@
                                             Content="Push"
                                             Icon="{x:Static properties:Images.Push}" />
         <compat:IconButton x:Name="toolStripButtonCommit"
+                           compat:TranslationCompat.TranslateToolTip="False"
                            Classes="gitextensions-toolbar-button"
                            Content="Commit"
                            Icon="{x:Static properties:Images.RepoStateClean}" />
@@ -315,6 +317,7 @@
         </Button>
         <compat:IconButton x:Name="EditSettings"
                            compat:TranslationCompat.TranslateText="False"
+                           compat:TranslationCompat.UseToolTipText="True"
                            Classes="gitextensions-toolbar-button gitextensions-icon-only"
                            Content="Settings"
                            Icon="{x:Static properties:Images.Settings}" />

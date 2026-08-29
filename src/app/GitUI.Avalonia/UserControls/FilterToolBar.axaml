@@ -8,6 +8,8 @@
               Orientation="Horizontal"
               Spacing="1">
     <compat:IconSplitButton x:Name="tsbtnAdvancedFilter"
+                            compat:TranslationCompat.TranslateText="False"
+                            compat:TranslationCompat.UseToolTipText="True"
                             Classes="gitextensions-toolbar-button gitextensions-icon-only"
                             Content="Advanced filter"
                             Icon="{x:Static properties:Images.FunnelPencil}">
@@ -21,23 +23,26 @@
       </compat:IconSplitButton.Flyout>
     </compat:IconSplitButton>
     <ToggleButton x:Name="tsbShowReflog"
+                  compat:TranslationCompat.TranslateToolTip="False"
                   Classes="gitextensions-toolbar-button"
                   Padding="3">
       <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Book}" />
     </ToggleButton>
     <compat:IconSplitButton x:Name="tssbtnShowBranches"
+                            compat:TranslationCompat.UseToolTipText="True"
                             Classes="gitextensions-toolbar-button"
                             Content="_All branches"
                             Icon="{x:Static properties:Images.BranchLocal}">
       <compat:IconSplitButton.Flyout>
         <MenuFlyout>
-          <MenuItem x:Name="tsmiShowBranchesAll" Header="_All branches" />
-          <MenuItem x:Name="tsmiShowBranchesCurrent" Header="_Current branch only" />
-          <MenuItem x:Name="tsmiShowBranchesFiltered" Header="_Filtered branches" />
+          <MenuItem x:Name="tsmiShowBranchesAll" compat:TranslationCompat.UseToolTipText="True" Header="_All branches" />
+          <MenuItem x:Name="tsmiShowBranchesCurrent" compat:TranslationCompat.UseToolTipText="True" Header="_Current branch only" />
+          <MenuItem x:Name="tsmiShowBranchesFiltered" compat:TranslationCompat.UseToolTipText="True" Header="_Filtered branches" />
         </MenuFlyout>
       </compat:IconSplitButton.Flyout>
     </compat:IconSplitButton>
     <Label x:Name="toolStripLabel1"
+           compat:TranslationCompat.UseToolTipText="True"
            Classes="gitextensions-toolbar-label"
            Padding="0"
            Content="_Branches:"
@@ -60,6 +65,7 @@
     </compat:IconDropDownButton>
     <Border x:Name="toolStripSeparator19" Classes="gitextensions-toolbar-separator" />
     <Label x:Name="tslblRevisionFilter"
+           compat:TranslationCompat.UseToolTipText="True"
            Classes="gitextensions-toolbar-label"
            Padding="0"
            Content="_Filter:"
@@ -82,6 +88,7 @@
       </compat:IconDropDownButton.Flyout>
     </compat:IconDropDownButton>
     <ToggleButton x:Name="tsmiShowOnlyFirstParent"
+                  compat:TranslationCompat.TranslateToolTip="False"
                   Classes="gitextensions-toolbar-button"
                   Padding="3">
       <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ShowOnlyFirstParent}" />

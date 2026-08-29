@@ -4,10 +4,10 @@
         xmlns:properties="using:GitUI.Properties"
         xmlns:usercontrols="using:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormPush"
-        Width="650"
-        Height="400"
-        MinWidth="600"
-        MinHeight="360"
+        Width="584"
+        Height="290"
+        MinWidth="584"
+        MinHeight="290"
         CanResize="True"
         Title="Push">
   <Grid Classes="gitextensions-dialog-main"
@@ -44,7 +44,8 @@
                   Grid.Column="1"
                   Margin="0,8,0,0"
                   IsEditable="True"
-                  IsEnabled="False" />
+                  IsEnabled="False"
+                  compat:TranslationCompat.TranslateText="False" />
         <usercontrols:FolderBrowserButton x:Name="folderBrowserButton1"
                                           Grid.Row="1"
                                           Grid.Column="2"
@@ -82,7 +83,8 @@
             <ComboBox x:Name="RemoteBranch"
                       Grid.Column="3"
                       MinWidth="170"
-                      IsEditable="True" />
+                      IsEditable="True"
+                      compat:TranslationCompat.TranslateText="False" />
           </Grid>
 
           <HyperlinkButton x:Name="ShowOptions"
@@ -119,7 +121,8 @@
                        Content="Recursive _submodules"
                        Target="{Binding #RecursiveSubmodules}" />
                 <ComboBox x:Name="RecursiveSubmodules"
-                          Width="120" />
+                          Width="120"
+                          compat:TranslationCompat.TranslateText="False" />
               </StackPanel>
               <CheckBox x:Name="ReplaceTrackingReference"
                         Grid.Row="1"
@@ -150,7 +153,8 @@
           <ComboBox x:Name="TagComboBox"
                     Grid.Column="1"
                     MinWidth="260"
-                    IsEditable="True" />
+                    IsEditable="True"
+                    compat:TranslationCompat.TranslateText="False" />
           <CheckBox x:Name="ForcePushTags"
                     Grid.Row="1"
                     Grid.Column="1"

@@ -30,6 +30,7 @@
                        VerticalAlignment="Center"
                        Text="Selection Filter" />
             <ComboBox x:Name="selectionFilter"
+                      compat:TranslationCompat.TranslateToolTip="False"
                       Width="180"
                       IsEditable="True" />
           </StackPanel>
@@ -39,6 +40,7 @@
                      Margin="0,0,0,4"
                      Orientation="Horizontal">
             <compat:IconButton x:Name="toolStageAllItem"
+                               compat:TranslationCompat.TranslateToolTip="False"
                                Classes="gitextensions-icon-only"
                                Icon="{x:Static properties:Images.StageAll}"
                                IsEnabled="False" />
@@ -70,6 +72,7 @@
                                Content="_Unstage"
                                IsEnabled="False" />
             <compat:IconButton x:Name="toolUnstageAllItem"
+                               compat:TranslationCompat.TranslateToolTip="False"
                                Classes="gitextensions-icon-only"
                                Margin="4,0,0,0"
                                Icon="{x:Static properties:Images.UnstageAll}"
@@ -176,6 +179,7 @@
           <Grid Grid.Row="1">
             <spellChecker:EditNetSpell x:Name="Message" />
             <Button x:Name="modifyCommitMessageButton"
+                    compat:TranslationCompat.TranslateToolTip="False"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Content="Modify the commit m_essage"
@@ -262,6 +266,7 @@
             BorderThickness="1,1,1,0">
       <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
         <HyperlinkButton x:Name="commitAuthorStatus"
+                         compat:TranslationCompat.TranslateToolTip="False"
                          Grid.Column="0"
                          Padding="0"
                          VerticalAlignment="Center" />

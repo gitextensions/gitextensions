@@ -102,6 +102,15 @@ public sealed partial class ParityScreenshotTests
 
     [Test]
     [Category(P02Category)]
+    public void Remote_operation_capture_hosts_should_use_native_96_dpi_client_dimensions()
+    {
+        GetCaptureSize(typeof(FormPull)).Should().Be((941, 525));
+        GetCaptureSize(typeof(FormPush)).Should().Be((584, 290));
+        GetCaptureSize(typeof(FormRemotes)).Should().Be((934, 306));
+    }
+
+    [Test]
+    [Category(P02Category)]
     public void Commit_template_settings_capture_host_should_use_native_96_dpi_runtime_dimensions()
     {
         GetCaptureSize(typeof(FormCommitTemplateSettings)).Should().Be((698, 361));
