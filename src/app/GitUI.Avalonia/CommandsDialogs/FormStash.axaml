@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
         xmlns:local="using:GitUI"
         xmlns:editor="using:GitUI.Editor"
         x:Class="GitUI.CommandsDialogs.FormStash"
@@ -17,6 +18,7 @@
                Target="{Binding #Stashes}"
                VerticalAlignment="Center" />
         <ComboBox x:Name="Stashes"
+                  compat:TranslationCompat.UseToolTipText="True"
                   Grid.Column="1"
                   MaxDropDownHeight="600"
                   HorizontalAlignment="Stretch" />

@@ -43,6 +43,9 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormFileHistory" => new FormFileHistory(commands, "src/App.cs", CreateRevision(commands)),
             "GitUI.CommandsDialogs.FormStash" => new FormStash(commands),
             "GitUI.CommandsDialogs.FormVerify" => new FormVerify(commands),
+            "GitUI.CommandsDialogs.FormPull" => new FormPull(commands, "main", "origin", GitPullAction.Merge),
+            "GitUI.CommandsDialogs.FormPush" => new FormPush(commands, "main"),
+            "GitUI.CommandsDialogs.FormRemotes" => new FormRemotes(commands) { PreselectRemoteOnLoad = "origin" },
             "GitUI.CommandsDialogs.FormSettings" => new FormSettings(commands),
             "GitUI.CommandsDialogs.FormDiff" => CreateFormDiff(commands),
             "GitUI.CommandsDialogs.FormCompareToBranch" => new FormCompareToBranch(commands, commands.Module.RevParse("HEAD")),
@@ -238,6 +241,13 @@ internal static class ComponentFactory
         {
             case FormAbout formAbout:
                 ((System.Windows.Forms.Timer?)FindFieldValue(formAbout, "thanksTimer"))?.Stop();
+                break;
+            case FormRemotes formRemotes:
+                // parity-scaffolding: The original form defers its first repository-backed
+                // initialization to Application.Idle. The isolated worker pumps messages
+                // deterministically, so drive that same original callback before any focus
+                // state can enter a remote URL control.
+                InvokeNonPublic(formRemotes, "application_Idle", null!, EventArgs.Empty);
                 break;
             case CommitInfo commitInfo:
                 commitInfo.UICommandsSource = source;

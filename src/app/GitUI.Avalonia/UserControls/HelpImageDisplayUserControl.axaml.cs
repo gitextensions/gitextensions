@@ -11,6 +11,7 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
     private Bitmap? _image1;
     private Bitmap? _image2;
     private bool _isExpanded;
+    private double _hostContributionWidth = 40;
     ////public const string fastForwardHoverText = "Hover to see scenario when fast forward is possible.";
     private bool _isLoaded;
 
@@ -61,7 +62,7 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
         buttonShowHelp.IsVisible = !_isExpanded;
         pictureBox1.IsVisible = _isExpanded;
         labelHoverText.IsVisible = _isExpanded && IsOnHoverShowImage2;
-        MinWidth = _isExpanded ? 289 : 30;
+        UpdateControlSize();
     }
 
     public Bitmap? Image1
@@ -71,6 +72,10 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
         {
             _image1 = value;
             UpdateImageDisplay();
+            if (IsExpanded)
+            {
+                UpdateControlSize();
+            }
         }
     }
 
@@ -81,6 +86,10 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
         {
             _image2 = value;
             UpdateImageDisplay();
+            if (IsExpanded)
+            {
+                UpdateControlSize();
+            }
         }
     }
 
@@ -125,6 +134,25 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
     private bool _showImage2OnHover;
 
     private string GetId() => UniqueIsExpandedSettingsId ?? "MUST_BE_SET";
+
+    private void UpdateControlSize()
+    {
+        double width = IsExpanded
+            ? Math.Max(Image1?.PixelSize.Width ?? 40, Image2?.PixelSize.Width ?? 40)
+            : 30;
+        double widthDelta = width - _hostContributionWidth;
+
+        Width = width;
+        MinWidth = width;
+        if (TopLevel.GetTopLevel(this) is not Window form || widthDelta == 0)
+        {
+            return;
+        }
+
+        form.Width += widthDelta;
+        form.MinWidth = Math.Max(0, form.MinWidth + widthDelta);
+        _hostContributionWidth = width;
+    }
 
     private void UpdateImageDisplay()
     {

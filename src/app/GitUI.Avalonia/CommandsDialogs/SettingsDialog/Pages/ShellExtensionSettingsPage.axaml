@@ -1,5 +1,6 @@
 <settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
                                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:compat="using:GitUI.Compat"
                                  xmlns:properties="using:GitUI.Properties"
                                  xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
                                  x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage"
@@ -50,6 +51,7 @@
                      VerticalAlignment="Center"
                      Text="Configuration of items in the context menu" />
           <Image x:Name="menuHelp"
+                 compat:TranslationCompat.TranslateToolTip="False"
                  Grid.Row="2"
                  Grid.Column="1"
                  Width="16"

@@ -71,6 +71,12 @@ public sealed class FormPushTests
         FormPush form = new();
         ITranslation translation = Substitute.For<ITranslation>();
 
+        form.FindControl<ComboBox>("PushDestination")!.Text = "https://example.invalid/repository.git";
+        form.FindControl<ComboBox>("_NO_TRANSLATE_Branch")!.Text = "main";
+        form.FindControl<ComboBox>("RemoteBranch")!.Text = "main";
+        form.FindControl<ComboBox>("TagComboBox")!.Text = "v1.0";
+        form.FindControl<ComboBox>("RecursiveSubmodules")!.SelectedIndex = 1;
+
         form.AddTranslationItems(translation);
         form.TranslateItems(translation);
 
@@ -98,6 +104,10 @@ public sealed class FormPushTests
         translation.Received(1).AddTranslationItem(nameof(FormPush), "_noCurrentBranch", "Text", "No branch is selected, cannot push.");
         translation.Received(1).AddTranslationItem(nameof(FormPush), "_pushCaption", "Text", "Push");
         translation.Received(1).AddTranslationItem(nameof(FormPush), "_pushToCaption", "Text", "Push to {0}");
+        foreach (string runtimeField in new[] { "PushDestination", "_NO_TRANSLATE_Branch", "RemoteBranch", "TagComboBox", "RecursiveSubmodules" })
+        {
+            translation.DidNotReceive().AddTranslationItem(nameof(FormPush), runtimeField, "Text", Arg.Any<string>());
+        }
 
         string[] emittedKeys = translation.ReceivedCalls()
             .Where(call => call.GetMethodInfo().Name == nameof(ITranslation.AddTranslationItem))
@@ -106,6 +116,9 @@ public sealed class FormPushTests
         emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(
             emittedKeys.Length,
             "each field must be routed through exactly one translation path");
+        form.FindControl<HyperlinkButton>("ShowOptions")!.IsVisible.Should().BeTrue();
+        form.FindControl<Border>("PushOptionsPanel")!.IsVisible.Should().BeFalse(
+            "the original Designer starts with the advanced options collapsed");
         form.Close();
     }
 

@@ -9,7 +9,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 public partial class ShellExtensionSettingsPage : SettingsPageWithHeader
 {
 #pragma warning disable SX1309 // Preserve the original Designer field name used by translation and parity tooling.
-    private readonly ToolTip toolTip1 = new();
+    private readonly GitUI.Compat.Components.ToolTip toolTip1 = new();
     private const char Checked_InMenu = '0';
     private const char Indeterminate_InSubMenu = '1';
 
@@ -65,8 +65,7 @@ public partial class ShellExtensionSettingsPage : SettingsPageWithHeader
         // when the dock is set in the designer it causes weird visual artifacts in scaled Windows environments
         // Avalonia constraint: the native ListBox owns its scrolling and fills the available grid cell without Dock.
 
-        toolTip1.Content = _menuHelp.Text;
-        Avalonia.Controls.ToolTip.SetTip(menuHelp, toolTip1);
+        toolTip1.SetToolTip(menuHelp, _menuHelp.Text);
     }
 
     protected override void SettingsToPage()
