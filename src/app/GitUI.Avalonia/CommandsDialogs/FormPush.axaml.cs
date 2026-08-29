@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Input;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -815,6 +816,7 @@ public sealed partial class FormPush : GitModuleForm
     private void PushToUrlCheckedChanged(object? sender, EventArgs e)
     {
         bool pushToUrl = PushToUrl.IsChecked == true;
+        bool moveFocusToSelectedOption = pushToUrl && _NO_TRANSLATE_Remotes.IsKeyboardFocusWithin;
         PushDestination.IsEnabled = pushToUrl;
         folderBrowserButton1.IsEnabled = pushToUrl;
         _NO_TRANSLATE_Remotes.IsEnabled = !pushToUrl;
@@ -826,6 +828,10 @@ public sealed partial class FormPush : GitModuleForm
             PushDestination.ItemsSource = history.Select(repository => repository.Path).ToList();
             PushDestination.Text = previous;
             BranchSelectedValueChanged(this, EventArgs.Empty);
+            if (moveFocusToSelectedOption)
+            {
+                PushToUrl.Focus(NavigationMethod.Tab);
+            }
         }
         else
         {

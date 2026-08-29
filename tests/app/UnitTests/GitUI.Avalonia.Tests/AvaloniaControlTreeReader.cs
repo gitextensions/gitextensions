@@ -358,6 +358,8 @@ internal sealed class AvaloniaControlTreeReader
             && control.Name == "flowLayoutPanelSsh";
         bool isRemoteColorButton = _root.GetType().FullName == "GitUI.CommandsDialogs.FormRemotes"
             && control.Name == "btnRemoteColor";
+        bool isDialogControlsPanel = _root.GetType().FullName == "GitUI.CommandsDialogs.FormPull"
+            && control.Name == "ControlsPanel";
         bool isInheritedFormProcessContainer = IsInheritedFormProcessContainer(control);
         bool isSourceTransparentContainer = IsSourceTransparentContainer(control);
         bool hasSourceTransparentColors = HasSourceTransparentColors(control);
@@ -386,7 +388,9 @@ internal sealed class AvaloniaControlTreeReader
                 ? $"item[{ordinal}]"
             : fieldName ?? $"$unnamed[{ordinal}]:{control.GetType().Name}";
         string id = string.IsNullOrEmpty(parentId) ? segment : $"{parentId}/{segment}";
-        DesignerLayoutMetadata? designerLayout = GetDesignerLayout(control, fieldName);
+        DesignerLayoutMetadata? designerLayout = GetDesignerLayout(
+            control,
+            fieldName ?? (isLocalSourceFlowLayoutPanel ? control.Name : null));
         bool hasNativeListComposite = TryGetNativeListComposite(control, out Grid? nativeListComposite, out _);
         Rect bounds = boundsOverride
             ?? (hasNativeListComposite
@@ -506,7 +510,8 @@ internal sealed class AvaloniaControlTreeReader
                         : null
                 : isInheritedFormProcessContainer
                     ? ReadFont(_root)
-                : ReadFont(IsDetachedMenuItem(control)
+                : ReadFont(isLocalSourceFlowLayoutPanel
+                           || IsDetachedMenuItem(control)
                            || isSemanticToolStrip
                            || isSemanticToolStripItem
                            || isSourceTransparentContainer
@@ -537,8 +542,10 @@ internal sealed class AvaloniaControlTreeReader
                                                 ? ReadSourceLabelSubstituteColors(control)
                                                 : isRemoteColorButton
                                                     ? ReadSourceDesignerButtonColors(control)
-                                                : isSourceDataGrid
-                                                    ? ReadSourceDataGridColors(control)
+                                                 : isSourceDataGrid
+                                                     ? ReadSourceDataGridColors(control)
+                                                 : isDialogControlsPanel
+                                                     ? ReadDialogControlsPanelColors(control)
                                                 : isDesignerMetadataControl && control is Button or CheckBox or RadioButton
                                                     ? ReadSourceDesignerButtonColors(control)
                                                 : isDesignerMetadataControl && control is TextBox or ComboBox or NumericUpDown
@@ -547,6 +554,8 @@ internal sealed class AvaloniaControlTreeReader
                                                         ? ReadTransparentContainerColors(control)
                                                         : hasSourceLightTransparentColors
                                                             ? ReadLightTransparentColors(control)
+                                                            : isDesignerMetadataControl && control.Name == "lblHeaderLine2"
+                                                                ? ReadSourceDesignerColors(control) with { Border = null }
                                                             : isDesignerMetadataControl && control is TextBlock or Label or TabItem
                                                                 ? ReadSourceDesignerColors(control)
                                                                 : isFileViewerTextEditor
@@ -577,7 +586,7 @@ internal sealed class AvaloniaControlTreeReader
                 : isWatermarkComboBox || isSemanticToolStripItem || isSourceLabelSubstitute
                 ? null
                 : isRemoteColorButton
-                    ? "Standard"
+                    ? (IsDarkTheme() ? "Flat" : "Standard")
                 : designerLayout?.FlatStyle
                   ?? (isDesignerMetadataControl
                       ? GetDefaultDesignerFlatStyle(control)
@@ -606,7 +615,7 @@ internal sealed class AvaloniaControlTreeReader
                     : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage
                 ? ["Top", "Left"]
                 : []),
-            Dock = isComboBoxPopup || isComboBoxPopupItem ? null : designerLayout?.Dock
+            Dock = isComboBoxPopup || isComboBoxPopupItem ? null : isLocalSourceFlowLayoutPanel ? "Fill" : designerLayout?.Dock
                 ?? (isInheritedFormProcessContainer ? control.Name == "MainPanel" ? "Fill" : "Bottom" : null)
                 ?? (isToolStripItem
                     ? null
@@ -623,7 +632,7 @@ internal sealed class AvaloniaControlTreeReader
                                 : isRevisionGrid || isNativeTabPage || isNativeButton
                                     ? isNativeButton && control.Name == "buttonBrowse" ? "Fill" : "None"
                                     : isRevisionGridView || isNativeListView || isNativeTabControl ? "Fill" : null),
-            AutoSize = isComboBoxPopupItem ? false : designerLayout?.AutoSize
+            AutoSize = isComboBoxPopupItem ? false : isLocalSourceFlowLayoutPanel ? true : designerLayout?.AutoSize
                 ?? (isSourcePictureBox ? true : (bool?)null)
                 ?? (isInheritedFormProcessContainer ? control.Name == "ControlsPanel" : (bool?)null)
                 ?? (isSemanticToolStrip || isToolStripItem ? true : (bool?)null)
@@ -667,6 +676,7 @@ internal sealed class AvaloniaControlTreeReader
                 ? 0
                 : isInheritedFormProcessContainer
                     ? control.Name == "MainPanel" ? 1 : 0
+                : isLocalSourceFlowLayoutPanel ? 3
                 : isSemanticToolStripItem || control is MenuItem or Separator || isPopupRoot ? null : KeyboardNavigation.GetTabIndex(control),
             TabStop = isComboBoxPopupItem ? null
                 : isSurfaceRoot && !isPopupRoot
@@ -1705,6 +1715,9 @@ internal sealed class AvaloniaControlTreeReader
             && string.IsNullOrEmpty(control.Name)
             && GetFieldNames(control).Count == 0)
            || (control is Grid
+                 && string.IsNullOrEmpty(control.Name)
+                 && control.Parent?.GetType().FullName == "GitUI.Compat.WinFormsControls.FlowLayoutPanel")
+           || (control is StackPanel
                 && string.IsNullOrEmpty(control.Name)
                 && control.Parent?.GetType().FullName == "GitUI.Compat.WinFormsControls.FlowLayoutPanel")
            || control.Name == "columnsGrid"
@@ -1884,6 +1897,7 @@ internal sealed class AvaloniaControlTreeReader
         CaptureColors colors = ReadColors(control);
         bool isPreviewLink = control.Name == "_NO_TRANSLATE_lblShowPreview";
         bool isHelpLink = control.Name is "linkLabelShowHelp" or "linkLabelHide";
+        bool isDesignerLink = control is HyperlinkButton && IsDesignerMetadataControl(control);
         string? background = control.GetLogicalAncestors()
             .OfType<Control>()
             .Select(ancestor => BrushToArgb(GetPropertyValue(ancestor, "Background")))
@@ -1891,23 +1905,19 @@ internal sealed class AvaloniaControlTreeReader
             ?? ResolveResourceArgb("GitExtensionsWindowBackgroundBrush");
         return colors with
         {
-            Foreground = isPreviewLink || isHelpLink
+            Foreground = isPreviewLink || isHelpLink || isDesignerLink
                 ? ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
                   ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush")
                 : colors.Foreground,
             Background = isPreviewLink
                 ? "#00FFFFFF"
-                : isHelpLink
-                    ? ResolveResourceArgb("GitExtensionsKnownColorWindowBrush")
-                    : background,
+                : background,
             Border = null,
             SelectionForeground = null,
             SelectionBackground = null,
             InactiveSelectionForeground = null,
             InactiveSelectionBackground = null,
-            DisabledBackground = isHelpLink
-                ? ResolveResourceArgb("GitExtensionsKnownColorWindowBrush")
-                : colors.DisabledBackground
+            DisabledBackground = isHelpLink || isDesignerLink ? background : colors.DisabledBackground
         };
     }
 
@@ -1934,13 +1944,28 @@ internal sealed class AvaloniaControlTreeReader
         bool isTransparentSourceButton = control.Name == "btnRemoteColor";
         return colors with
         {
+            Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                         ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
             Background = isTransparentSourceButton ? "#00FFFFFF" : background,
             Border = null,
             DisabledBackground = isTransparentSourceButton ? "#00FFFFFF" : background,
+            DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                                 ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
             SelectionForeground = null,
             SelectionBackground = null,
             InactiveSelectionForeground = null,
             InactiveSelectionBackground = null
+        };
+    }
+
+    private CaptureColors ReadDialogControlsPanelColors(Control control)
+    {
+        CaptureColors colors = ReadColors(control);
+        string? background = ResolveResourceArgb("GitExtensionsDialogControlsBackgroundBrush");
+        return colors with
+        {
+            Background = background,
+            DisabledBackground = background
         };
     }
 
@@ -1956,14 +1981,16 @@ internal sealed class AvaloniaControlTreeReader
             Background = background,
             Border = ResolveResourceArgb("GitExtensionsKnownColorControlBrush"),
             SelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush"),
-            SelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush"),
-            InactiveSelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorInactiveCaptionTextBrush"),
+            SelectionBackground = ResolveResourceArgb("GitExtensionsDataGridViewSelectionBackgroundBrush"),
+            InactiveSelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush")
+                                          ?? ResolveResourceArgb("GitExtensionsHighlightForegroundBrush"),
             InactiveSelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorInactiveCaptionBrush"),
             DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush"),
             DisabledBackground = background,
-            GridLine = ResolveResourceArgb(usesWindowBackground
-                ? "GitExtensionsKnownColorControlLightBrush"
-                : "GitExtensionsKnownColorControlDarkDarkBrush"),
+            GridLine = usesWindowBackground
+                ? ResolveResourceArgb("GitExtensionsKnownColorControlLightBrush")
+                  ?? ResolveResourceArgb("GitExtensionsControlPointerOverBackgroundBrush")
+                : ResolveResourceArgb("GitExtensionsDataGridViewGridLineBrush"),
             Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
         };
     }
@@ -1981,8 +2008,13 @@ internal sealed class AvaloniaControlTreeReader
     private CaptureColors ReadSourceInputColors(Control control)
     {
         CaptureColors colors = ReadColors(control);
-        string? background = ResolveResourceArgb("GitExtensionsKnownColorWindowBrush")
-                             ?? ResolveResourceArgb("GitExtensionsWindowBackgroundBrush");
+        bool isReadOnly = GetNullableBoolProperty(control, "IsReadOnly") == true;
+        string? background = isReadOnly
+            ? ResolveResourceArgb("GitExtensionsReadOnlyTextInputBackgroundBrush")
+            : control is TextBox
+                ? ResolveResourceArgb("GitExtensionsTextInputBackgroundBrush")
+                : ResolveResourceArgb("GitExtensionsKnownColorWindowBrush")
+                  ?? ResolveResourceArgb("GitExtensionsWindowBackgroundBrush");
         return colors with
         {
             Foreground = ResolveResourceArgb("GitExtensionsKnownColorWindowTextBrush")

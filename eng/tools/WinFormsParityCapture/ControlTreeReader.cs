@@ -496,6 +496,11 @@ internal sealed class ControlTreeReader
 
     private string? GetToolTip(Control control)
     {
+        if (control is TabPage { ToolTipText.Length: > 0 } tabPage)
+        {
+            return tabPage.ToolTipText;
+        }
+
         foreach (ToolTip toolTip in _toolTips)
         {
             string? text = toolTip.GetToolTip(control);

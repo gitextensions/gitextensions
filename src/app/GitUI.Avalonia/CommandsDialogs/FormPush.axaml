@@ -36,60 +36,6 @@
   </Window.Styles>
   <Grid Classes="gitextensions-dialog-main"
         RowDefinitions="80,*,25">
-    <wf:GroupBox x:Name="groupBox2"
-                 Classes="remote-source-group"
-                 Height="80"
-                 Margin="0,0,4,0"
-                 Header="Push to">
-      <Grid Width="556"
-            Height="80"
-            Margin="-2,-18,0,0">
-        <RadioButton x:Name="PushToRemote"
-                     Margin="14,19,0,0"
-                     HorizontalAlignment="Left"
-                     VerticalAlignment="Top"
-                     Content="_Remote"
-                     IsChecked="True" />
-        <ComboBox x:Name="_NO_TRANSLATE_Remotes"
-                  Width="262"
-                  Height="23"
-                  Margin="128,19,0,0"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Top" />
-        <compat:IconButton x:Name="AddRemote"
-                           Classes="gitextensions-native-dialog-action"
-                           Width="150"
-                           Height="25"
-                           Margin="396,17,0,0"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Top"
-                           Icon="{x:Static properties:Images.Remotes}"
-                           Content="_Manage remotes" />
-
-        <RadioButton x:Name="PushToUrl"
-                     Margin="14,49,0,0"
-                     HorizontalAlignment="Left"
-                     VerticalAlignment="Top"
-                     Content="U_rl" />
-        <ComboBox x:Name="PushDestination"
-                  Width="262"
-                  Height="23"
-                  Margin="128,48,0,0"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Top"
-                  IsEditable="True"
-                  IsEnabled="False"
-                  compat:TranslationCompat.TranslateText="False" />
-        <usercontrols:FolderBrowserButton x:Name="folderBrowserButton1"
-                                          Width="100"
-                                          Height="25"
-                                          Margin="396,47,0,0"
-                                          HorizontalAlignment="Left"
-                                          VerticalAlignment="Top"
-                                          IsEnabled="False" />
-      </Grid>
-    </wf:GroupBox>
-
     <TabControl x:Name="TabControlTagBranch"
                 Grid.Row="1"
                 Classes="gitextensions-native-tabs"
@@ -99,6 +45,7 @@
       <wf:TabPage x:Name="BranchTab"
                   Classes="gitextensions-dialog-tab"
                   Header="Push branches">
+        <ToolTip.Tip>Push branches and commits to remote repository.</ToolTip.Tip>
         <Grid Margin="4,1,0,0">
           <Label x:Name="labelFrom"
                  Classes="gitextensions-dialog-label"
@@ -110,12 +57,12 @@
                  Content="_Branch to push"
                  Target="{Binding #_NO_TRANSLATE_Branch}" />
           <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
-                               Width="417"
-                               Height="22"
+                               Width="416"
+                               Height="23"
                                Margin="124,12,0,0"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               ColumnDefinitions="196,24,197">
+                               ColumnDefinitions="196,24,196">
             <ComboBox x:Name="_NO_TRANSLATE_Branch"
                       Height="21"
                       HorizontalAlignment="Stretch"
@@ -124,6 +71,7 @@
                    Classes="gitextensions-dialog-label"
                    Grid.Column="1"
                    Margin="4,3,2,0"
+                   VerticalAlignment="Top"
                    Content="_to"
                    Target="{Binding #RemoteBranch}" />
             <ComboBox x:Name="RemoteBranch"
@@ -275,6 +223,60 @@
         </Grid>
       </wf:TabPage>
     </TabControl>
+
+    <wf:GroupBox x:Name="groupBox2"
+                 Classes="remote-source-group"
+                 Height="80"
+                 Margin="0,0,4,0"
+                 Header="Push to">
+      <Grid Width="556"
+            Height="80"
+            Margin="0,-16,0,0">
+        <RadioButton x:Name="PushToRemote"
+                     Margin="14,19,0,0"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
+                     Content="_Remote"
+                     IsChecked="True" />
+        <ComboBox x:Name="_NO_TRANSLATE_Remotes"
+                  Width="262"
+                  Height="23"
+                  Margin="128,19,0,0"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top" />
+        <compat:IconButton x:Name="AddRemote"
+                           Classes="gitextensions-native-dialog-action"
+                           Width="150"
+                           Height="25"
+                           Margin="396,17,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Icon="{x:Static properties:Images.Remotes}"
+                           Content="_Manage remotes" />
+
+        <RadioButton x:Name="PushToUrl"
+                     Margin="14,49,0,0"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
+                     Content="U_rl" />
+        <ComboBox x:Name="PushDestination"
+                  Width="262"
+                  Height="23"
+                  Margin="128,48,0,0"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
+                  IsEditable="True"
+                  IsEnabled="False"
+                  compat:TranslationCompat.TranslateText="False" />
+        <usercontrols:FolderBrowserButton x:Name="folderBrowserButton1"
+                                          Width="100"
+                                          Height="25"
+                                          Margin="396,47,0,0"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Top"
+                                          IsEnabled="False" />
+      </Grid>
+    </wf:GroupBox>
 
     <Grid Grid.Row="2"
           ColumnDefinitions="Auto,*,Auto,Auto">
