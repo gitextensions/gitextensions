@@ -18,7 +18,7 @@
         <ControlTemplate>
           <Grid>
             <Border Margin="0,8,0,0"
-                    BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderBrush="{DynamicResource GitExtensionsNativeGroupBoxBorderBrush}"
                     BorderThickness="1" />
             <ContentPresenter Margin="7,0,0,0"
                               Padding="3,0"
@@ -43,7 +43,7 @@
                  Header="Push to">
       <Grid Width="556"
             Height="80"
-            Margin="-3,-19,0,0">
+            Margin="-2,-18,0,0">
         <RadioButton x:Name="PushToRemote"
                      Margin="14,19,0,0"
                      HorizontalAlignment="Left"
@@ -51,15 +51,17 @@
                      Content="_Remote"
                      IsChecked="True" />
         <ComboBox x:Name="_NO_TRANSLATE_Remotes"
+                  Width="262"
                   Height="23"
-                  Margin="128,19,166,0"
+                  Margin="128,19,0,0"
+                  HorizontalAlignment="Left"
                   VerticalAlignment="Top" />
         <compat:IconButton x:Name="AddRemote"
                            Classes="gitextensions-native-dialog-action"
                            Width="150"
                            Height="25"
-                           Margin="0,17,10,0"
-                           HorizontalAlignment="Right"
+                           Margin="396,17,0,0"
+                           HorizontalAlignment="Left"
                            VerticalAlignment="Top"
                            Icon="{x:Static properties:Images.Remotes}"
                            Content="_Manage remotes" />
@@ -70,8 +72,10 @@
                      VerticalAlignment="Top"
                      Content="U_rl" />
         <ComboBox x:Name="PushDestination"
+                  Width="262"
                   Height="23"
-                  Margin="128,48,166,0"
+                  Margin="128,48,0,0"
+                  HorizontalAlignment="Left"
                   VerticalAlignment="Top"
                   IsEditable="True"
                   IsEnabled="False"
@@ -79,8 +83,8 @@
         <usercontrols:FolderBrowserButton x:Name="folderBrowserButton1"
                                           Width="100"
                                           Height="25"
-                                          Margin="0,47,60,0"
-                                          HorizontalAlignment="Right"
+                                          Margin="396,47,0,0"
+                                          HorizontalAlignment="Left"
                                           VerticalAlignment="Top"
                                           IsEnabled="False" />
       </Grid>
@@ -95,7 +99,7 @@
       <wf:TabPage x:Name="BranchTab"
                   Classes="gitextensions-dialog-tab"
                   Header="Push branches">
-        <Grid>
+        <Grid Margin="4,1,0,0">
           <Label x:Name="labelFrom"
                  Classes="gitextensions-dialog-label"
                  Width="79"
@@ -185,7 +189,7 @@
       <wf:TabPage x:Name="TagTab"
                   Classes="gitextensions-dialog-tab"
                   Header="Push tags">
-        <Grid>
+        <Grid Margin="4,1,0,0">
           <Label x:Name="label1"
                  Classes="gitextensions-dialog-label"
                  Margin="6,15,0,0"
@@ -213,32 +217,32 @@
         <Grid Margin="4"
               RowDefinitions="Auto,*">
           <Grid ColumnDefinitions="2*,2*,110,65,65,120">
-            <Border x:Name="LocalColumn"
+            <wf:DataGridViewTextBoxColumn x:Name="LocalColumn"
                     Padding="4,3"
                     BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
                     BorderThickness="1">
               <TextBlock Text="Local Branch" />
-            </Border>
-            <Border x:Name="RemoteColumn"
+            </wf:DataGridViewTextBoxColumn>
+            <wf:DataGridViewTextBoxColumn x:Name="RemoteColumn"
                     Grid.Column="1"
                     Padding="4,3"
                     BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
                     BorderThickness="0,1,1,1">
               <TextBlock Text="Remote Branch" />
-            </Border>
-            <Border x:Name="NewColumn"
+            </wf:DataGridViewTextBoxColumn>
+            <wf:DataGridViewTextBoxColumn x:Name="NewColumn"
                     Grid.Column="2"
                     Padding="4,3"
                     BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
                     BorderThickness="0,1,1,1">
               <TextBlock Text="Ahead/Behind" />
-            </Border>
-            <Border x:Name="PushColumn"
+            </wf:DataGridViewTextBoxColumn>
+            <wf:DataGridViewCheckBoxColumn x:Name="PushColumn"
                     Grid.Column="3"
                     Padding="4,3"
                     BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
                     BorderThickness="0,1,1,1">
-              <Border.ContextMenu>
+              <wf:DataGridViewCheckBoxColumn.ContextMenu>
                 <ContextMenu x:Name="menuPushSelection">
                   <MenuItem x:Name="unselectAllToolStripMenuItem"
                             Header="Unselect all" />
@@ -247,27 +251,27 @@
                   <MenuItem x:Name="selectAllToolStripMenuItem"
                             Header="Select all" />
                 </ContextMenu>
-              </Border.ContextMenu>
+              </wf:DataGridViewCheckBoxColumn.ContextMenu>
               <TextBlock Text="Push" />
-            </Border>
-            <Border x:Name="ForceColumn"
+            </wf:DataGridViewCheckBoxColumn>
+            <wf:DataGridViewCheckBoxColumn x:Name="ForceColumn"
                     Grid.Column="4"
                     Padding="4,3"
                     BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
                     BorderThickness="0,1,1,1">
               <TextBlock Text="Force" />
-            </Border>
-            <Border x:Name="DeleteColumn"
+            </wf:DataGridViewCheckBoxColumn>
+            <wf:DataGridViewCheckBoxColumn x:Name="DeleteColumn"
                     Grid.Column="5"
                     Padding="4,3"
                     BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
                     BorderThickness="0,1,1,1">
               <TextBlock Text="Delete Remote Branch" />
-            </Border>
+            </wf:DataGridViewCheckBoxColumn>
           </Grid>
-          <ListBox x:Name="BranchGrid"
-                   Classes="gitextensions-stretch-items"
-                   Grid.Row="1" />
+          <wf:DataGridView x:Name="BranchGrid"
+                           Classes="gitextensions-stretch-items"
+                           Grid.Row="1" />
         </Grid>
       </wf:TabPage>
     </TabControl>

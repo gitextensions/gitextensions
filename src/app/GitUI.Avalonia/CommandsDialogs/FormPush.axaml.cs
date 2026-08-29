@@ -17,6 +17,7 @@ using GitUI.HelperDialogs;
 using GitUI.Infrastructure;
 using GitUI.ScriptsEngine;
 using ResourceManager;
+using ColumnHeader = GitUI.Compat.WinFormsControls.ColumnHeader;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
@@ -87,6 +88,7 @@ public sealed partial class FormPush : GitModuleForm
     public FormPush()
     {
         InitializeComponent();
+        ApplySourceAutoSize();
         WireControls();
         PopulateRecursiveSubmoduleOptions();
         InitializeComplete();
@@ -96,6 +98,7 @@ public sealed partial class FormPush : GitModuleForm
         : base(commands, enablePositionRestore: true)
     {
         InitializeComponent();
+        ApplySourceAutoSize();
         WireControls();
 
         // can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
@@ -223,6 +226,7 @@ public sealed partial class FormPush : GitModuleForm
         BranchGrid.ItemTemplate = new FuncDataTemplate<BranchPushRow>(
             (row, _) => row is null ? new TextBlock() : CreateBranchRow(row),
             supportsRecycling: false);
+        BranchGrid.AddColumns(LocalColumn, RemoteColumn, NewColumn, PushColumn, ForceColumn, DeleteColumn);
         folderBrowserButton1.PathShowingControl = PushDestination;
         Push.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(TranslatedStrings.ButtonPush);
     }
@@ -854,6 +858,22 @@ public sealed partial class FormPush : GitModuleForm
         UpdatePushButton();
     }
 
+    private void ApplySourceAutoSize()
+    {
+        WinFormsAutoSizeContentControl.Attach(PushToRemote, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(PushToUrl, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(labelFrom, 7, 15);
+        WinFormsAutoSizeContentControl.Attach(labelTo, 7, 15);
+        WinFormsAutoSizeContentControl.Attach(ShowOptions, 7, 15);
+        WinFormsAutoSizeContentControl.Attach(label1, 7, 15);
+        WinFormsAutoSizeContentControl.Attach(label2, 7, 15);
+        WinFormsAutoSizeContentControl.Attach(ckForceWithLease, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(ForcePushBranches, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(ReplaceTrackingReference, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(_createPullRequestCB, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(ForcePushTags, 25, 19);
+    }
+
     private void EnableLoadSshButton()
     {
         LoadSSHKey.IsVisible = OperatingSystem.IsWindows()
@@ -1268,10 +1288,10 @@ public sealed partial class FormPush : GitModuleForm
             => translation.TranslateItem(nameof(FormPush), control.Name!, property, () => fallback) ?? fallback;
     }
 
-    private static void TranslateHeader(ITranslation translation, string fieldName, Border header, string defaultText)
+    private static void TranslateHeader(ITranslation translation, string fieldName, ColumnHeader header, string defaultText)
     {
         string? text = translation.TranslateItem(nameof(FormPush), fieldName, "HeaderText", () => defaultText);
-        if (!string.IsNullOrEmpty(text) && header.Child is TextBlock textBlock)
+        if (!string.IsNullOrEmpty(text) && header.Content is TextBlock textBlock)
         {
             textBlock.Text = text;
         }

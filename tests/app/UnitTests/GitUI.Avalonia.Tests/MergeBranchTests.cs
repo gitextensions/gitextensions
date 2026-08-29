@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Text;
 using Avalonia.Controls;
@@ -164,7 +164,7 @@ public sealed class MergeBranchTests
             nameof(HelpImageDisplayUserControl),
             "linkLabelShowHelp",
             "Text",
-            $"Show{Environment.NewLine}help");
+            "Show\r\nhelp");
     }
 
     [AvaloniaTest]

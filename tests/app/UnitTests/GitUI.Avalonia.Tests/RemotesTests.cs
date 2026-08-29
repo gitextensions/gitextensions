@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -17,6 +17,7 @@ using GitUI.UserControls.RevisionGrid;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using MediaColor = Avalonia.Media.Color;
+using SourceDataGridView = GitUI.Compat.WinFormsControls.DataGridView;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -69,7 +70,9 @@ public sealed class RemotesTests
         form.GetTestAccessor().Save.Should().NotBeNull();
         form.FindControl<ComboBox>("Url").Should().NotBeNull();
         form.FindControl<Label>("labelPushUrl")!.IsVisible.Should().BeFalse("the push url row shows only with a separate push url");
-        form.FindControl<ListBox>("RemoteBranches").Should().NotBeNull();
+        SourceDataGridView remoteBranches = form.FindControl<SourceDataGridView>("RemoteBranches")!;
+        remoteBranches.IsReadOnly.Should().BeTrue();
+        remoteBranches.Columns.Select(column => column.Name).Should().Equal("BranchName", "RemoteCombo", "MergeWith");
         form.FindControl<TextBox>("PuttySshKey").Should().NotBeNull();
         form.FindControl<Control>("pnlMgtPuttySsh")!.IsVisible.Should().BeFalse("the runtime SSH backend has not been evaluated");
     }
@@ -189,7 +192,7 @@ public sealed class RemotesTests
             form.GetTestAccessor().TabControl.SelectedItem.Should().Be(form.FindControl<TabItem>("tabPage2"),
                 "preselecting a local branch opens the default pull behavior tab");
 
-            ListBox remoteBranches = form.FindControl<ListBox>("RemoteBranches")!;
+            SourceDataGridView remoteBranches = form.FindControl<SourceDataGridView>("RemoteBranches")!;
             remoteBranches.ItemCount.Should().Be(1);
             (remoteBranches.SelectedItem as IGitRef)!.LocalName.Should().Be("main");
             form.FindControl<TextBox>("LocalBranchNameEdit")!.Text.Should().Be("main");
