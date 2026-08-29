@@ -37,7 +37,8 @@
   </Window.Styles>
   <Grid RowDefinitions="484,41">
     <wf:Panel Name="MainPanel"
-              Padding="9">
+              Padding="9"
+              Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
       <wf:TableLayoutPanel x:Name="MainLayout"
           Classes="gitextensions-dialog-main"
           Margin="0"
@@ -61,7 +62,7 @@
                        Header="Pull from">
             <Grid Width="598"
                   Height="92"
-                  Margin="-1,-17,0,0">
+                  Margin="0,-16,0,0">
               <RadioButton x:Name="PullFromRemote"
                            Margin="7,19,0,0"
                            HorizontalAlignment="Left"
@@ -122,7 +123,7 @@
                        Header="Branch">
             <Grid Width="598"
                   Height="91"
-                  Margin="-1,-17,0,0">
+                  Margin="0,-16,0,0">
               <Label x:Name="lblLocalBranch"
                      Classes="gitextensions-dialog-label"
                      Margin="9,22,0,0"
@@ -246,7 +247,8 @@
 
     <wf:FlowLayoutPanel Name="ControlsPanel"
                         Grid.Row="1">
-      <Grid ColumnDefinitions="325,141,6,132,6,82,6,100,6,124,13">
+      <Grid Background="{DynamicResource GitExtensionsDialogControlsBackgroundBrush}"
+            ColumnDefinitions="325,141,6,132,6,82,6,100,6,124,13">
       <compat:IconButton x:Name="Pull"
                          compat:TranslationCompat.TranslateText="False"
                          Classes="gitextensions-dialog-action gitextensions-native-dialog-action"

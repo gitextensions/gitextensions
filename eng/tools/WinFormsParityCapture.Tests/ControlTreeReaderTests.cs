@@ -10,6 +10,26 @@ namespace WinFormsParityCapture.Tests;
 public sealed class ControlTreeReaderTests
 {
     [Test]
+    public void ReadPrimary_should_record_TabPage_owned_tooltip_text()
+    {
+        using Form form = new();
+        using TabControl tabs = new();
+        using TabPage page = new("Push branches")
+        {
+            Name = "BranchTab",
+            ToolTipText = "Push branches and commits to remote repository."
+        };
+        tabs.TabPages.Add(page);
+        form.Controls.Add(tabs);
+
+        CaptureSurface surface = new ControlTreeReader(form, dpi: 96)
+            .ReadPrimary(form, form.Bounds);
+
+        CaptureNode capturedPage = FindNode(surface.Root, "BranchTab");
+        capturedPage.ToolTip.Should().Be(page.ToolTipText);
+    }
+
+    [Test]
     public void ReadPrimary_should_preserve_field_name_and_resolve_colors()
     {
         using TestForm form = new();
@@ -380,7 +400,7 @@ public sealed class ControlTreeReaderTests
 
     private static CaptureNode FindNode(CaptureNode root, string fieldName)
     {
-        if (root.FieldName == fieldName)
+        if (root.FieldName == fieldName || root.Name == fieldName)
         {
             return root;
         }
@@ -399,7 +419,7 @@ public sealed class ControlTreeReaderTests
 
     private static CaptureNode? FindNodeOrDefault(CaptureNode root, string fieldName)
     {
-        if (root.FieldName == fieldName)
+        if (root.FieldName == fieldName || root.Name == fieldName)
         {
             return root;
         }

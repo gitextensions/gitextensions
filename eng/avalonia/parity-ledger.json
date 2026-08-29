@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
+  "analyzedCommit": "96e6dbff44433cdbe07cac95c5f92c4d4e52bb5b",
   "axisOrder": [
     "structural",
     "functional",
@@ -7341,8 +7341,8 @@
             "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 6279,
-          "note": "The 36 light/dark/custom pairs at 100/125/150/200 reduce native-100 diagnostics from 891 to 429 after restoring the source hierarchy, group client offset, spacer bounds, child order, and AutoSize measurement. All scales retain 6,279 unsuppressed diagnostics; higher-scale native-monitor provenance, popups, exhaustive states, and renderer differences stay open."
+      "findingCount": 5220,
+      "note": "Progress 83 evidence at eng/avalonia/parity-evidence/P8.6i/remote-renderer-closure-83 retains 5,220 findings across the 36 light/dark/custom pairs. Native 100% retains only 27 image thresholds and no tree diagnostic; all higher-scale geometry is isolated to dpiChangeMessage references. Genuine native-monitor 125/150/200 provenance, popups, exhaustive states, and renderer differences stay open."
         },
         "themingAndColor": {
           "status": "gap",
@@ -7352,8 +7352,8 @@
             "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 672,
-          "note": "Resolved ARGB values are recorded at all four scales in all three themes; 168 native-100 and 672 all-scale color diagnostics keep the axis open."
+      "findingCount": 0,
+      "note": "Progress 83 records zero color diagnostics across all 36 measured light/dark/custom pairs. Exhaustive theme settings and interaction states remain unverified, so the axis stays open."
         },
         "behavioralState": {
           "status": "partial",
@@ -7426,8 +7426,8 @@
             "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 2949,
-          "note": "The 36 light/dark/custom pairs at 100/125/150/200 reduce native-100 diagnostics from 774 to 258 after restoring the source DataGridView columns, control geometry, and AutoSize measurement. All scales retain 2,949 unsuppressed diagnostics; higher-scale native-monitor provenance, popups, advanced multi-branch states, and renderer differences stay open."
+      "findingCount": 2340,
+      "note": "Progress 83 evidence at eng/avalonia/parity-evidence/P8.6i/remote-renderer-closure-83 retains 2,340 findings across the 36 light/dark/custom pairs. Native 100% retains only 27 image thresholds and no tree diagnostic; all higher-scale geometry is isolated to dpiChangeMessage references. Genuine native-monitor 125/150/200 provenance, popups, advanced multi-branch states, and renderer differences stay open."
         },
         "themingAndColor": {
           "status": "gap",
@@ -7437,8 +7437,8 @@
             "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 168,
-          "note": "Resolved ARGB values are recorded at all four scales in all three themes; 42 native-100 and 168 all-scale color diagnostics keep the axis open."
+      "findingCount": 0,
+      "note": "Progress 83 records zero color diagnostics across all 36 measured light/dark/custom pairs. Exhaustive theme settings and interaction states remain unverified, so the axis stays open."
         },
         "behavioralState": {
           "status": "partial",
@@ -7450,8 +7450,8 @@
             "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows", "linux"],
-          "findingCount": 12,
-          "note": "Focused tests and all-scale pairs exercise normal, remote-focus, and URL-checked states. Twelve state-tree diagnostics plus live Pageant, hover, disabled, popup, keyboard, restart, and exhaustive interactions remain open."
+      "findingCount": 0,
+      "note": "Progress 83 removes every state-tree diagnostic in the measured normal, remote-focus, and URL-checked matrix and pins selected-URL focus transfer. Live Pageant, hover, disabled, popup, keyboard, restart, and exhaustive interactions remain open."
         },
         "platform": {
           "status": "partial",
@@ -7645,8 +7645,8 @@
             "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 3312,
-          "note": "The 36 light/dark/custom pairs at 100/125/150/200 reduce native-100 diagnostics from 519 to 180 after restoring source list/grid columns, read-only semantics, fill labels, PuTTY flow order, and AutoSize measurement. All scales retain 3,312 unsuppressed diagnostics; higher-scale native-monitor provenance, popups, live PuTTY, exhaustive interactions, and renderer differences stay open."
+      "findingCount": 2817,
+      "note": "Progress 83 evidence at eng/avalonia/parity-evidence/P8.6i/remote-renderer-closure-83 retains 2,817 findings across the 36 light/dark/custom pairs. Native 100% retains 27 image thresholds and nine explicit duplicate browse-button identities, with no geometry, color, text, layout, font, or state finding; all higher-scale geometry is isolated to dpiChangeMessage references. Genuine native-monitor 125/150/200 provenance, popups, live PuTTY, exhaustive interactions, and renderer differences stay open."
         },
         "themingAndColor": {
           "status": "gap",
@@ -7656,8 +7656,8 @@
             "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 288,
-          "note": "Resolved ARGB values are recorded at all four scales in all three themes; 72 native-100 and 288 all-scale color diagnostics keep the axis open."
+      "findingCount": 0,
+      "note": "Progress 83 records zero color diagnostics across all 36 measured light/dark/custom pairs. Exhaustive theme settings and interaction states remain unverified, so the axis stays open."
         },
         "behavioralState": {
           "status": "partial",
@@ -7669,8 +7669,8 @@
             "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows", "linux"],
-          "findingCount": 12,
-          "note": "Focused tests and all-scale pairs exercise normal, remote-list-focus, and URL-focus states. Twelve state-tree diagnostics plus live PuTTY, hover, disabled, popup, keyboard, restart, and exhaustive interactions remain open."
+      "findingCount": 0,
+      "note": "Progress 83 removes every state-tree diagnostic in the measured normal, remote-list-focus, and URL-focus matrix and pins source URL suggestion selection. Live PuTTY, hover, disabled, popup, keyboard, restart, and exhaustive interactions remain open."
         },
         "platform": {
           "status": "partial",
