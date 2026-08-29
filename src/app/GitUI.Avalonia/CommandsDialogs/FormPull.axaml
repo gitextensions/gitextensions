@@ -39,6 +39,7 @@
     <wf:TableLayoutPanel x:Name="MainLayout"
           Classes="gitextensions-dialog-main"
           Margin="9"
+          Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
           ColumnDefinitions="Auto,*">
       <help:HelpImageDisplayUserControl x:Name="PanelLeftImage"
                                         Margin="3"
@@ -52,6 +53,7 @@
                              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
           <wf:GroupBox x:Name="GroupPullFrom"
                        Classes="remote-source-group"
+                       Width="598"
                        Height="92"
                        Margin="3"
                        Header="Pull from">
@@ -74,6 +76,7 @@
                         VerticalAlignment="Top"
                         IsEditable="True" />
               <compat:IconButton x:Name="AddRemote"
+                                 Classes="gitextensions-native-dialog-action"
                                  Width="150"
                                  Height="25"
                                  Margin="442,14,0,0"
@@ -111,6 +114,7 @@
           <wf:GroupBox x:Name="GroupBranch"
                        Classes="remote-source-group"
                        Grid.Row="1"
+                       Width="598"
                        Height="91"
                        Margin="3"
                        Header="Branch">
@@ -156,6 +160,7 @@
           <wf:GroupBox x:Name="GroupMergeOptions"
                        Classes="remote-source-group"
                        Grid.Row="2"
+                       Width="598"
                        Height="103"
                        Margin="3"
                        Header="Merge options">
@@ -187,6 +192,7 @@
           <wf:GroupBox x:Name="GroupTagOptions"
                        Classes="remote-source-group"
                        Grid.Row="3"
+                       Width="598"
                        Height="103"
                        Margin="3"
                        Header="Tag options">
@@ -239,14 +245,14 @@
           Grid.Row="1"
           ColumnDefinitions="325,141,6,132,6,82,6,100,6,124,13">
       <Button x:Name="Mergetool"
-              Classes="gitextensions-dialog-action"
+              Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
               Grid.Column="1"
               Width="141"
               Height="25"
               Margin="0,8,0,8"
               Content="_Solve conflicts" />
       <Button x:Name="Stash"
-              Classes="gitextensions-dialog-action"
+              Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
               Grid.Column="3"
               Width="132"
               Height="25"
@@ -260,7 +266,7 @@
                  Grid.Column="7" />
       <compat:IconButton x:Name="Pull"
                          compat:TranslationCompat.TranslateText="False"
-                         Classes="gitextensions-dialog-action"
+                         Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                          Grid.Column="9"
                          Width="124"
                          Height="25"

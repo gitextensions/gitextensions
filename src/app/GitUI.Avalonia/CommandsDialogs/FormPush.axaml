@@ -55,6 +55,7 @@
                   Margin="128,19,166,0"
                   VerticalAlignment="Top" />
         <compat:IconButton x:Name="AddRemote"
+                           Classes="gitextensions-native-dialog-action"
                            Width="150"
                            Height="25"
                            Margin="0,17,10,0"
@@ -97,17 +98,22 @@
         <Grid>
           <Label x:Name="labelFrom"
                  Classes="gitextensions-dialog-label"
-                 Margin="10,15,0,0"
+                 Width="79"
+                 Height="13"
+                 Margin="6,15,0,0"
                  HorizontalAlignment="Left"
                  VerticalAlignment="Top"
                  Content="_Branch to push"
                  Target="{Binding #_NO_TRANSLATE_Branch}" />
           <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
-                               Height="23"
-                               Margin="128,12,16,0"
+                               Width="417"
+                               Height="22"
+                               Margin="124,12,0,0"
+                               HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               ColumnDefinitions="*,24,*">
+                               ColumnDefinitions="196,24,197">
             <ComboBox x:Name="_NO_TRANSLATE_Branch"
+                      Height="21"
                       HorizontalAlignment="Stretch"
                       IsEditable="True" />
             <Label x:Name="labelTo"
@@ -118,13 +124,16 @@
                    Target="{Binding #RemoteBranch}" />
             <ComboBox x:Name="RemoteBranch"
                       Grid.Column="2"
+                      Height="21"
                       HorizontalAlignment="Stretch"
                       IsEditable="True"
                       compat:TranslationCompat.TranslateText="False" />
           </wf:TableLayoutPanel>
 
           <HyperlinkButton x:Name="ShowOptions"
-                           Margin="10,40,0,0"
+                           Width="75"
+                           Height="18"
+                           Margin="6,40,0,0"
                            Padding="0"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Top"
@@ -266,12 +275,14 @@
     <Grid Grid.Row="2"
           ColumnDefinitions="Auto,*,Auto,Auto">
       <compat:IconButton x:Name="Pull"
+                         Classes="gitextensions-native-dialog-action"
                          Grid.Column="0"
                          Width="101"
                          Height="25"
                          Margin="-1,0,0,0"
                          Content="P_ull" />
       <compat:IconButton x:Name="LoadSSHKey"
+                         Classes="gitextensions-native-dialog-action"
                          Grid.Column="2"
                          Width="137"
                          Height="25"
@@ -281,7 +292,7 @@
                          Content="_Load SSH key" />
       <compat:IconButton x:Name="Push"
                          compat:TranslationCompat.TranslateText="False"
-                         Classes="gitextensions-dialog-action"
+                         Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                          Grid.Column="3"
                          Width="101"
                          Height="25"
