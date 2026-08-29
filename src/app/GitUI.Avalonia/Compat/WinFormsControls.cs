@@ -1,6 +1,7 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Threading;
 
 namespace GitUI.Compat.WinFormsControls;
@@ -38,11 +39,93 @@ public class ColumnHeader : ContentControl
         set => Content = value;
     }
 
+    public object? Header
+    {
+        get => Content is TextBlock textBlock ? textBlock.Text : Content;
+        set => Content = value;
+    }
+
+    public int DisplayIndex { get; internal set; }
+
+    public double SourceWidth { get; set; } = 100;
+
+    public bool CanUserResize { get; set; } = true;
+
+    public string SortMode { get; set; } = "Automatic";
+
+    public string CellAlignment { get; set; } = "NotSet";
+
     protected override Type StyleKeyOverride => typeof(ContentControl);
 
     internal void ResizeToFitContent()
         => (ResizeToFitContentAction
             ?? throw new InvalidOperationException("The column header has no content-sizing owner."))();
+}
+
+/// <summary>
+/// Preserves the source text-column identity while a native Avalonia header and row template render it.
+/// </summary>
+public class DataGridViewTextBoxColumn : ColumnHeader
+{
+}
+
+/// <summary>
+/// Preserves the source checkbox-column identity while a native Avalonia header and row template render it.
+/// </summary>
+public class DataGridViewCheckBoxColumn : ColumnHeader
+{
+    public DataGridViewCheckBoxColumn()
+    {
+        SortMode = "NotSortable";
+        CellAlignment = "MiddleCenter";
+    }
+}
+
+/// <summary>
+/// Preserves the source data-grid boundary while Avalonia owns list virtualization and row rendering.
+/// </summary>
+public class DataGridView : ListBox
+{
+    public IList<ColumnHeader> Columns { get; } = [];
+
+    public bool IsReadOnly { get; set; }
+
+    protected override Type StyleKeyOverride => typeof(ListBox);
+
+    public void AddColumns(params ColumnHeader[] columns)
+    {
+        for (int index = 0; index < columns.Length; index++)
+        {
+            columns[index].DisplayIndex = index;
+            Columns.Add(columns[index]);
+        }
+    }
+}
+
+/// <summary>
+/// Preserves the source picture-box boundary while an inner Avalonia image performs native rendering.
+/// </summary>
+public class PictureBox : Border
+{
+    private readonly Image _image = new()
+    {
+        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+        VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
+        Stretch = Stretch.None,
+    };
+
+    public PictureBox()
+    {
+        Child = _image;
+    }
+
+    public IImage? Source
+    {
+        get => _image.Source;
+        set => _image.Source = value;
+    }
+
+    protected override Type StyleKeyOverride => typeof(Border);
 }
 
 /// <summary>
@@ -72,6 +155,8 @@ public class SplitContainer : Grid
 /// </summary>
 public class Panel : Border
 {
+    public string Text { get; set; } = string.Empty;
+
     protected override Type StyleKeyOverride => typeof(Border);
 }
 

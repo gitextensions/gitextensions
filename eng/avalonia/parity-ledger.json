@@ -7309,88 +7309,80 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/inventory/windows-sweep-final.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/inventory/linux-final"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/linux-sweep-final.json"
           ],
           "platforms": [],
           "findingCount": 40,
-          "note": "The byte-identical Windows/Linux schema-v5 inventory remains at 40 actionable and total differences; progress 81 changes capture projection and rendered layout, so every structural difference stays open."
+          "note": "The byte-identical Windows/Linux schema-v5 inventory remains at 40 actionable and total differences. Progress 82 replaces renderer stand-ins with source-shaped controls but does not close the retained structural differences."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/windows/affected.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/inventory/windows-sweep-final.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json"
           ],
           "platforms": ["windows", "linux"],
           "findingCount": 40,
-          "note": "The 62-test affected suite passes on Windows and Linux, including the generated Designer projection and source control contract. The inventory retains 40 functional-contract differences, so the axis remains a gap."
+          "note": "The owned suites pass 44 tests on Windows and 45 on Linux, including source hierarchy, native control projection, sizing, and workflow coverage. The inventory retains 40 functional-contract differences, so the axis remains a gap."
         },
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-capture-79/winforms-final-79/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/avalonia-light-final-81/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/avalonia-dark-final-81/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/avalonia-custom-final-81/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-light-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-dark-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-custom-final-81/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/capture-plan.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 891,
-          "note": "Generated Designer semantics, native action chrome, inherited source colors, and the integer 96-DPI help/group layout reduce the same nine native-100 pairs from 5,184 to 891 diagnostics. Higher scales, popups, exhaustive states, and remaining renderer differences stay open."
+          "findingCount": 6279,
+          "note": "The 36 light/dark/custom pairs at 100/125/150/200 reduce native-100 diagnostics from 891 to 429 after restoring the source hierarchy, group client offset, spacer bounds, child order, and AutoSize measurement. All scales retain 6,279 unsuppressed diagnostics; higher-scale native-monitor provenance, popups, exhaustive states, and renderer differences stay open."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-light-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-dark-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-custom-final-81/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 189,
-          "note": "Resolved ARGB values are recorded in all three themes; 189 unsuppressed color diagnostics and the remaining scale/state matrix keep the axis open."
+          "findingCount": 672,
+          "note": "Resolved ARGB values are recorded at all four scales in all three themes; 168 native-100 and 672 all-scale color diagnostics keep the axis open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/windows/affected.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-light-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-dark-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-custom-final-81/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows", "linux"],
-          "findingCount": 9,
-          "note": "Focused tests exercise the remote workflows and source capture projection; paired captures retain normal, remote-focus, and fetch-checked states. The 9 state diagnostics plus hover, disabled, popup, keyboard, restart, and higher-scale states remain open."
+          "findingCount": 0,
+          "note": "Focused tests and all-scale pairs exercise normal, remote-focus, and fetch-checked states with no state-tree diagnostic in that measured subset. Hover, disabled, popup, keyboard, restart, and exhaustive interactions remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/windows/affected.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/linux-wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/linux-x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/flatpak-wayland/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/linux-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/linux-x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/flatpak-wayland/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "The 62-test affected suite passes on Windows and Linux and fresh inspected application smokes pass on Windows, Wayland, nested X11, and Wayland-only Flatpak with --filesystem=host. Component-specific confined interaction and Apple Silicon remain unverified."
+          "note": "The owned suites pass on Windows/Linux and fresh inspected application smokes pass on Windows, Wayland, nested X11, and Wayland-only Flatpak with --filesystem=host. Component-specific confined interaction and Apple Silicon remain unverified."
         }
       }
     },
@@ -7402,88 +7394,80 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/inventory/windows-sweep-final.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/inventory/linux-final"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/linux-sweep-final.json"
           ],
           "platforms": [],
           "findingCount": 100,
-          "note": "The byte-identical Windows/Linux schema-v5 inventory remains at 100 actionable and 112 total differences; progress 81 changes capture projection and rendered layout, so every structural difference stays open."
+          "note": "The byte-identical Windows/Linux schema-v5 inventory remains at 100 actionable and 112 total differences. Progress 82 replaces renderer stand-ins with source-shaped controls but does not close the retained structural differences."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/windows/affected.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/inventory/windows-sweep-final.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json"
           ],
           "platforms": ["windows", "linux"],
           "findingCount": 112,
-          "note": "The 62-test affected suite passes on Windows and Linux, including the generated Designer projection, source control contract, and plugin loading from lean output. The inventory retains 112 functional-contract differences, so the axis remains a gap."
+          "note": "The owned suites pass 44 tests on Windows and 45 on Linux, including the source DataGridView/column contract, sizing, projection, and workflows. The inventory retains 112 functional-contract differences, so the axis remains a gap."
         },
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-capture-79/winforms-final-79/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/avalonia-light-final-81/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/avalonia-dark-final-81/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/avalonia-custom-final-81/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-light-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-dark-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-custom-final-81/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/capture-plan.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 774,
-          "note": "Generated Designer semantics, native action chrome, inherited source colors, and the integer 96-DPI branch/option layout reduce the same nine native-100 pairs from 3,126 to 774 diagnostics. Higher scales, popups, advanced multi-branch states, and remaining renderer differences stay open."
+          "findingCount": 2949,
+          "note": "The 36 light/dark/custom pairs at 100/125/150/200 reduce native-100 diagnostics from 774 to 258 after restoring the source DataGridView columns, control geometry, and AutoSize measurement. All scales retain 2,949 unsuppressed diagnostics; higher-scale native-monitor provenance, popups, advanced multi-branch states, and renderer differences stay open."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-light-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-dark-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-custom-final-81/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 123,
-          "note": "Resolved ARGB values are recorded in all three themes; 123 unsuppressed color diagnostics and the remaining scale/state matrix keep the axis open."
+          "findingCount": 168,
+          "note": "Resolved ARGB values are recorded at all four scales in all three themes; 42 native-100 and 168 all-scale color diagnostics keep the axis open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/windows/affected.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-light-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-dark-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-custom-final-81/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows", "linux"],
-          "findingCount": 21,
-          "note": "Focused tests exercise the push workflows and source capture projection; paired captures retain normal, remote-focus, and URL-checked states. The 21 state diagnostics plus live Pageant, hover, disabled, popup, keyboard, restart, and higher-scale states remain open."
+          "findingCount": 12,
+          "note": "Focused tests and all-scale pairs exercise normal, remote-focus, and URL-checked states. Twelve state-tree diagnostics plus live Pageant, hover, disabled, popup, keyboard, restart, and exhaustive interactions remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/windows/affected.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/linux-wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/linux-x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/flatpak-wayland/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/linux-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/linux-x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/flatpak-wayland/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "The 62-test affected suite passes on Windows and Linux and fresh inspected application smokes pass on Windows, Wayland, nested X11, and Wayland-only Flatpak with --filesystem=host. Component-specific confined interaction and Apple Silicon remain unverified."
+          "note": "The owned suites pass on Windows/Linux and fresh inspected application smokes pass on Windows, Wayland, nested X11, and Wayland-only Flatpak with --filesystem=host. Component-specific confined interaction and Apple Silicon remain unverified."
         }
       }
     },
@@ -7629,88 +7613,80 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/inventory/windows-sweep-final.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/inventory/linux-final"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/linux-sweep-final.json"
           ],
           "platforms": [],
           "findingCount": 78,
-          "note": "The byte-identical Windows/Linux schema-v5 inventory remains at 78 actionable and 80 total differences; progress 81 changes capture projection and rendered layout, so every structural difference stays open."
+          "note": "The byte-identical Windows/Linux schema-v5 inventory remains at 78 actionable and 80 total differences. Progress 82 replaces renderer stand-ins with source-shaped controls but does not close the retained structural differences."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/windows/affected.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/inventory/windows-sweep-final.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json"
           ],
           "platforms": ["windows", "linux"],
           "findingCount": 80,
-          "note": "The 62-test affected suite passes on Windows and Linux, including remote workflows, generated Designer projection, native list/action contracts, and plugin loading from lean output. The inventory retains 80 functional-contract differences, so the axis remains a gap."
+          "note": "The owned suites pass 44 tests on Windows and 45 on Linux, including source ListView/DataGridView columns, read-only semantics, projection, sizing, and workflows. The inventory retains 80 functional-contract differences, so the axis remains a gap."
         },
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-capture-79/winforms-final-79/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/avalonia-light-final-81/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/avalonia-dark-final-81/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/avalonia-custom-final-81/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-light-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-dark-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-custom-final-81/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/capture-plan.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 519,
-          "note": "Generated Designer semantics, native list/action chrome, inherited source colors, and the integer 96-DPI management-panel placement reduce the same nine native-100 pairs from 3,930 to 519 diagnostics. Higher scales, popups, PuTTY-visible states, exhaustive interactions, and remaining renderer differences stay open."
+          "findingCount": 3312,
+          "note": "The 36 light/dark/custom pairs at 100/125/150/200 reduce native-100 diagnostics from 519 to 180 after restoring source list/grid columns, read-only semantics, fill labels, PuTTY flow order, and AutoSize measurement. All scales retain 3,312 unsuppressed diagnostics; higher-scale native-monitor provenance, popups, live PuTTY, exhaustive interactions, and renderer differences stay open."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-light-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-dark-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-custom-final-81/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 111,
-          "note": "Resolved ARGB values are recorded in all three themes; 111 unsuppressed color diagnostics and the remaining scale/state matrix keep the axis open."
+          "findingCount": 288,
+          "note": "Resolved ARGB values are recorded at all four scales in all three themes; 72 native-100 and 288 all-scale color diagnostics keep the axis open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/windows/affected.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-light-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-dark-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-custom-final-81/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows", "linux"],
-          "findingCount": 21,
-          "note": "Focused tests exercise remote workflows, the native list, and source capture projection; paired captures retain normal, remote-list-focus, and URL-focus states. The 21 state diagnostics plus live PuTTY, hover, disabled, popup, keyboard, restart, and higher-scale states remain open."
+          "findingCount": 12,
+          "note": "Focused tests and all-scale pairs exercise normal, remote-list-focus, and URL-focus states. Twelve state-tree diagnostics plus live PuTTY, hover, disabled, popup, keyboard, restart, and exhaustive interactions remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/windows/affected.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/linux-wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/linux-x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/flatpak-wayland/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/linux-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/linux-x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/flatpak-wayland/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "The 62-test affected suite passes on Windows and Linux and fresh inspected application smokes pass on Windows, Wayland, nested X11, and Wayland-only Flatpak with --filesystem=host. Component-specific confined interaction and Apple Silicon remain unverified."
+          "note": "The owned suites pass on Windows/Linux and fresh inspected application smokes pass on Windows, Wayland, nested X11, and Wayland-only Flatpak with --filesystem=host. Component-specific confined interaction and Apple Silicon remain unverified."
         }
       }
     },
@@ -31319,88 +31295,80 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/inventory/windows-sweep-final.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/inventory/linux-final"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/linux-sweep-final.json"
           ],
           "platforms": [],
           "findingCount": 22,
-          "note": "The byte-identical Windows/Linux schema-v5 inventory remains at 22 actionable and 28 total differences; progress 81 changes its rendered integer Designer layout, so every structural difference stays open."
+          "note": "The byte-identical Windows/Linux schema-v5 inventory remains at 22 actionable and 28 total differences. Progress 82 restores the PictureBox contract but does not close the retained structural differences."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/windows/affected.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/inventory/windows-sweep-final.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json"
           ],
           "platforms": ["windows", "linux"],
           "findingCount": 28,
-          "note": "The 62-test affected suite passes on Windows and Linux and pins the generated Designer projection and width propagation. The inventory retains 28 contract differences, so the axis remains a gap."
+          "note": "The owned suites pass 44 tests on Windows and 45 on Linux and pin PictureBox projection, top-left non-stretched rendering, and width propagation. The inventory retains 28 contract differences, so the axis remains a gap."
         },
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-capture-79/winforms-final-79/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/avalonia-light-final-81/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/avalonia-dark-final-81/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/avalonia-custom-final-81/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-light-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-dark-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-custom-final-81/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/capture-plan.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 891,
-          "note": "FormPull's nine native-100 pairs exercise the restored integer 96-DPI rows, flow/link/button/image bounds, and native action chrome. The 891 count is host-wide, not a claim that every finding belongs to this child; higher scales and exhaustive child states remain open."
+          "findingCount": 6279,
+          "note": "FormPull's 36 all-scale pairs exercise the source PictureBox identity and non-stretched top-left bitmap semantics. The 6,279 count is host-wide, including 429 at native 100%, and is not a claim that every finding belongs to this child; exhaustive child states remain open."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-light-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-dark-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-custom-final-81/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows"],
-          "findingCount": 189,
-          "note": "Resolved colors are captured through FormPull in all three themes; the 189 count is host-wide and does not close this control's remaining scale/state matrix."
+          "findingCount": 672,
+          "note": "Resolved colors are captured through FormPull in all three themes and scales; the 672 count is host-wide and does not close this control's exhaustive state matrix."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/windows/affected.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-light-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-dark-final-81/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/diff-custom-final-81/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
           ],
           "platforms": ["windows", "linux"],
-          "findingCount": 9,
-          "note": "The FormPull matrix exercises collapsed and expanded behavior and focused tests pin capture projection and width propagation. The 9 count is host-wide; hover-image, keyboard, restart, and higher-scale states remain open."
+          "findingCount": 0,
+          "note": "The FormPull matrix exercises collapsed and expanded behavior at all scales and focused tests pin capture projection and width propagation. No state-tree diagnostic remains in that subset; hover-image, keyboard, restart, and exhaustive child states remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-29",
-          "commit": "16435fe3b512fb259a1a8816473123a97ce51b9f",
+          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/windows/affected.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/linux-wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/linux-x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-designer-metadata-81/runtime/flatpak-wayland/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/linux-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/linux-x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/runtime/flatpak-wayland/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "The 62-test affected suite passes on Windows and Linux and fresh inspected application smokes pass on Windows, Wayland, nested X11, and Wayland-only Flatpak with --filesystem=host. Component-specific confined interaction and Apple Silicon remain unverified."
+          "note": "The owned suites pass on Windows/Linux and fresh inspected application smokes pass on Windows, Wayland, nested X11, and Wayland-only Flatpak with --filesystem=host. Component-specific confined interaction and Apple Silicon remain unverified."
         }
       }
     },
