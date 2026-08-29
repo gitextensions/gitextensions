@@ -193,7 +193,11 @@ public sealed class FormPullTests
             form.FindControl<HeaderedContentControl>("GroupTagOptions").Should().NotBeNull();
             form.FindControl<RadioButton>("PullFromUrl").Should().NotBeNull();
             form.FindControl<CheckBox>("Prune").Should().NotBeNull();
-            form.CaptureRenderedFrame().Should().NotBeNull("the complete pull dialog should render headlessly");
+            Avalonia.Media.Imaging.WriteableBitmap? frame = form.CaptureRenderedFrame();
+            frame.Should().NotBeNull("the complete pull dialog should render headlessly");
+            frame!.PixelSize.Width.Should().Be(
+                674 + GitUI.Properties.Images.HelpPullFetch.PixelSize.Width - 40,
+                "the source help control grows the host by the displayed image width minus its Designer width");
         }
         finally
         {

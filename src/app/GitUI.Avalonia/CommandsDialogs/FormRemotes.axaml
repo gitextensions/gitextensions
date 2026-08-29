@@ -5,8 +5,8 @@
         xmlns:properties="using:GitUI.Properties"
         xmlns:usercontrols="clr-namespace:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormRemotes"
-        Width="820" Height="560"
-        MinWidth="700" MinHeight="440"
+        Width="934" Height="306"
+        MinWidth="934" MinHeight="270"
         WindowStartupLocation="CenterOwner"
         Title="Remote repositories">
   <TabControl x:Name="tabControl1" Margin="8">
@@ -53,7 +53,8 @@
                    Target="{Binding #RemoteName}"
                    VerticalAlignment="Center" />
             <TextBox x:Name="RemoteName"
-                     Grid.Column="1" Grid.ColumnSpan="2" />
+                     Grid.Column="1" Grid.ColumnSpan="2"
+                     compat:TranslationCompat.TranslateText="False" />
 
             <Label x:Name="label2"
                    Grid.Row="1"
@@ -64,7 +65,8 @@
             <usercontrols:CaseSensitiveComboBox x:Name="Url"
                       Grid.Row="1" Grid.Column="1"
                       HorizontalAlignment="Stretch"
-                      IsEditable="True" />
+                      IsEditable="True"
+                      compat:TranslationCompat.TranslateText="False" />
             <usercontrols:FolderBrowserButton x:Name="folderBrowserButtonUrl"
                                               Grid.Row="1" Grid.Column="2" />
 
@@ -83,7 +85,8 @@
                       Grid.Row="3" Grid.Column="1"
                       HorizontalAlignment="Stretch"
                       IsVisible="False"
-                      IsEditable="True" />
+                      IsEditable="True"
+                      compat:TranslationCompat.TranslateText="False" />
             <usercontrols:FolderBrowserButton x:Name="folderBrowserButtonPushUrl"
                                               Grid.Row="3" Grid.Column="2"
                                               IsVisible="False" />
@@ -110,7 +113,8 @@
                        Text="Prefix"
                        VerticalAlignment="Center" />
             <TextBox x:Name="txtRemotePrefix"
-                     Grid.Row="5" Grid.Column="1" />
+                     Grid.Row="5" Grid.Column="1"
+                     compat:TranslationCompat.TranslateText="False" />
 
                 </Grid>
               </Grid>
@@ -145,7 +149,8 @@
                        Target="{Binding #PuttySshKey}"
                        VerticalAlignment="Center" />
                 <TextBox x:Name="PuttySshKey"
-                         Grid.Column="1" />
+                         Grid.Column="1"
+                         compat:TranslationCompat.TranslateText="False" />
                 <compat:IconButton x:Name="SshBrowse"
                                    Grid.Column="2"
                                    MinWidth="104"
@@ -228,7 +233,8 @@
                  VerticalAlignment="Center" />
           <TextBox x:Name="LocalBranchNameEdit"
                    Grid.Column="1"
-                   IsReadOnly="True" />
+                   IsReadOnly="True"
+                   compat:TranslationCompat.TranslateText="False" />
 
           <Label x:Name="label5"
                  Grid.Row="1"
@@ -238,7 +244,8 @@
                  VerticalAlignment="Center" />
           <ComboBox x:Name="RemoteRepositoryCombo"
                     Grid.Row="1" Grid.Column="1"
-                    HorizontalAlignment="Stretch" />
+                    HorizontalAlignment="Stretch"
+                    compat:TranslationCompat.TranslateText="False" />
 
           <Label x:Name="label6"
                  Grid.Row="2"
@@ -249,7 +256,8 @@
           <ComboBox x:Name="DefaultMergeWithCombo"
                     Grid.Row="2" Grid.Column="1"
                     HorizontalAlignment="Stretch"
-                    IsEditable="True" />
+                    IsEditable="True"
+                    compat:TranslationCompat.TranslateText="False" />
 
           <compat:IconButton x:Name="SaveDefaultPushPull"
                              Classes="gitextensions-dialog-action"
