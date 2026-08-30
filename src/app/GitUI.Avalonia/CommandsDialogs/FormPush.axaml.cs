@@ -125,6 +125,11 @@ public sealed partial class FormPush : GitModuleForm
             ShowOptions_LinkClicked(this, EventArgs.Empty);
         }
 
+        // Save the value because later the value for all the columns will be at '0'
+        // Avalonia retains the source display index directly on the column object.
+
+        // Handle left button click to also open the context menu
+        // Avalonia's native ContextMenu owns pointer opening through its column header.
         InitializeComplete();
         UpdatePushButton();
     }
@@ -531,6 +536,7 @@ public sealed partial class FormPush : GitModuleForm
 
     private ForcePushOptions GetForcePushOption()
     {
+        // tags cannot be pushed using --force-with-lease
         if (ForcePushBranches.IsChecked == true
             || (TabControlTagBranch.SelectedItem == TagTab && ForcePushTags.IsChecked == true))
         {
@@ -559,6 +565,7 @@ public sealed partial class FormPush : GitModuleForm
     private bool HandlePushOnExit(ref bool isError, FormProcess form)
     {
         // there is no way to pull to not current branch
+        // auto pull from URL not supported. See https://github.com/gitextensions/gitextensions/issues/1887
         if (!isError
             || _selectedBranch != _currentBranchName
             || PushToRemote.IsChecked != true
@@ -708,8 +715,16 @@ public sealed partial class FormPush : GitModuleForm
             return;
         }
 
+        // Trick to load items while interacting with dropdown
+        // while keeping same behavior as if the items
+        // were already loaded
         string currentBranch = _NO_TRANSLATE_Branch.Text ?? string.Empty;
+
+        // Fill dropdown with all local branches
+        // (using `.Clear()` would close the dropdown when user opened it)
         UpdateBranchDropDown(clear: false);
+
+        // and re-select the corresponding branch in the new items added
         _NO_TRANSLATE_Branch.Text = currentBranch;
     }
 
@@ -784,6 +799,9 @@ public sealed partial class FormPush : GitModuleForm
 
         if (localBranch != HeadText)
         {
+            // Handle case where current branch is selected but SelectedItem is still null
+            // because refs are lazy loaded until user interact with the control
+            // (to improve performance on repos with a lot of local branches)
             IGitRef? selectedBranch = _gitRefs.FirstOrDefault(reference => reference.IsHead && reference.Name == localBranch);
             if (PushToRemote.IsChecked == true && selectedBranch is not null && _selectedRemote is not null)
             {
@@ -1015,6 +1033,7 @@ public sealed partial class FormPush : GitModuleForm
 
     private void selectTrackedToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        // Check if the branch is tracked (i.e. not new)
         SetBranchesPushCheckboxesState(row => row.IsTracked);
     }
 
@@ -1080,6 +1099,13 @@ public sealed partial class FormPush : GitModuleForm
 
     private static string CleanCommandOutput(string processOutput)
     {
+        // Command output consists of lines of format:
+        //
+        //     <SHA1> \t <full-ref>
+        //
+        // Such as:
+        //
+        //     fa77791d780a01a06d1f7d4ccad4ef93ed0ae2fd\trefs/heads/branchName
         int firstTabIndex = processOutput.IndexOf('\t');
         return firstTabIndex == 40
             ? processOutput
@@ -1094,11 +1120,15 @@ public sealed partial class FormPush : GitModuleForm
         Dictionary<string, IGitRef> remoteBranches = remoteHeads.ToDictionary(head => head.LocalName, head => head);
         AheadBehindDataProvider provider = new(() => Module.GitExecutable);
         IReadOnlyDictionary<string, AheadBehindData>? aheadBehindData = provider.GetData();
+
+        // Add all the local branches.
         foreach (IGitRef head in localHeads)
         {
             string remoteName = head.Remote == remote ? head.MergeWith ?? head.Name : string.Empty;
             bool isKnownAtRemote = remoteBranches.TryGetValue(head.Name, out IGitRef? remoteBranch);
             AheadBehindData aheadBehind = default;
+
+            // Check if aheadBehind is relevant for this branch
             bool isAheadRemote = aheadBehindData is not null
                 && aheadBehindData.TryGetValue(head.Name, out aheadBehind)
                 && GitRefName.GetRemoteName(aheadBehind.RemoteRef) == remote;
@@ -1107,6 +1137,7 @@ public sealed partial class FormPush : GitModuleForm
             _branchRows.Add(new BranchPushRow(head.Name, destination, ahead));
         }
 
+        // Offer to delete all the left over remote branches.
         foreach (IGitRef remoteHead in remoteHeads.Where(remoteHead => localHeads.All(local => local.Name != remoteHead.LocalName)))
         {
             _branchRows.Add(new BranchPushRow(localBranch: string.Empty, remoteHead.LocalName, ahead: string.Empty));
@@ -1322,7 +1353,7 @@ public sealed partial class FormPush : GitModuleForm
     }
 
     /// <summary>
-    ///  Opens the Azure DevOps create-pull-request page for the selected remote and branch.
+    ///  Opens the Azure DevOps "create pull request" page in the default browser for the currently selected remote and branch.
     /// </summary>
     private void TryOpenAzureDevOpsPullRequestInBrowser()
     {

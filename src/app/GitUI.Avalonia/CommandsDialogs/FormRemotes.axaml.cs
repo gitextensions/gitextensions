@@ -3,6 +3,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -45,6 +46,9 @@ public sealed partial class FormRemotes : GitModuleForm
     private string[] _genericRemotesNames = ["origin", "upstream", "fork", "remote", "internal", .. AppSettings.CustomGenericRemoteNames];
 
     #region Translation
+    private readonly TranslationString _remoteBranchDataError =
+        new("Invalid ´{1}´ found for branch ´{0}´." + Environment.NewLine + "Value has been reset to empty value.");
+
     private readonly TranslationString _questionAutoPullBehaviour =
         new("You have added a new remote repository." + Environment.NewLine +
                               "Do you want to automatically configure the default push and pull behavior for this remote?");
@@ -60,6 +64,12 @@ public sealed partial class FormRemotes : GitModuleForm
 
     private readonly TranslationString _questionDeleteRemoteCaption =
         new("Delete");
+
+    private readonly TranslationString _sshKeyOpenFilter =
+        new("Private key (*.ppk)");
+
+    private readonly TranslationString _sshKeyOpenCaption =
+        new("Select ssh key file");
 
     private readonly TranslationString _labelUrlAsFetch =
         new("Fetch &Url");
@@ -97,15 +107,6 @@ Inactive remote is completely invisible to git.");
 
     private readonly TranslationString _disabledRemoteAlreadyExists =
         new("An inactive remote named \"{0}\" already exists.");
-
-    private readonly TranslationString _remoteBranchDataError =
-        new("Invalid ´{1}´ found for branch ´{0}´." + Environment.NewLine + "Value has been reset to empty value.");
-
-    private readonly TranslationString _sshKeyOpenFilter =
-        new("Private key (*.ppk)");
-
-    private readonly TranslationString _sshKeyOpenCaption =
-        new("Select ssh key file");
     #endregion
 
     public FormRemotes()
@@ -180,7 +181,23 @@ Inactive remote is completely invisible to git.");
 
         Remotes.SelectionChanged += Remotes_SelectedIndexChanged;
         Remotes.ContainerPrepared += Remotes_ContainerPrepared;
-        Remotes.SizeChanged += (_, _) => AutoResizeRemotesColumn();
+
+        // Debounce resize events to avoid excessive column recalculations during continuous resize operations
+        const int resizeDebounceIntervalMs = 150;
+        DispatcherTimer resizeDebounceTimer = new() { Interval = TimeSpan.FromMilliseconds(resizeDebounceIntervalMs) };
+        resizeDebounceTimer.Tick += (sender, _) =>
+        {
+            if (sender is DispatcherTimer timer)
+            {
+                timer.Stop();
+                AutoResizeRemotesColumn();
+            }
+        };
+        Remotes.SizeChanged += (_, _) =>
+        {
+            resizeDebounceTimer.Stop();
+            resizeDebounceTimer.Start();
+        };
         Remotes.PointerReleased += Remotes_MouseUp;
         New.Click += NewClick;
         Delete.Click += DeleteClick;
@@ -223,6 +240,25 @@ Inactive remote is completely invisible to git.");
         return row;
     }
 
+    private void AutoResizeRemotesColumn()
+    {
+        if (Remotes.ItemCount == 0)
+        {
+            return;
+        }
+
+        // First, auto-size the column to fit its content
+        double contentWidth = WinFormsListViewColumnSizer.Measure(
+            Remotes,
+            UserGitRemotes?.Select(remote => remote.Name) ?? []);
+
+        // If the content is narrower than the visible area, expand the column to fill the available space.
+        // If the content is wider, the column keeps its larger width, allowing a horizontal scrollbar to appear.
+        double availableWidth = Math.Max(0, Remotes.Bounds.Width - 4);
+        columnHeader1.SourceWidth = Math.Max(contentWidth, availableWidth);
+        Remotes.InvalidateMeasure();
+    }
+
     /// <summary>
     /// If this is not null before showing the dialog the given
     /// remote name will be preselected in the listbox.
@@ -242,45 +278,6 @@ Inactive remote is completely invisible to git.");
     /// </summary>
     private List<ConfigFileRemote>? UserGitRemotes { get; set; }
 
-    protected override void OnRuntimeLoad(EventArgs e)
-    {
-        base.OnRuntimeLoad(e);
-        application_Idle(this, e);
-    }
-
-    private void application_Idle(object? sender, EventArgs e)
-    {
-        // make sure only single load option is given
-        if (PreselectRemoteOnLoad is not null && PreselectLocalOnLoad is not null)
-        {
-            throw new ArgumentException($"Only one option allowed:" +
-                $" Either {nameof(PreselectRemoteOnLoad)} or {nameof(PreselectLocalOnLoad)}");
-        }
-
-        pnlMgtPuttySsh.IsVisible = OperatingSystem.IsWindows() && GitSshHelpers.IsPlink;
-        MinHeight = pnlMgtPuttySsh.IsVisible ? 361 : 270;
-        Height = MinHeight + 36;
-
-        if (!AppSettings.AlwaysShowAdvOpt)
-        {
-            lblRemoteColor.IsVisible = false;
-            flpnlRemoteColors.IsVisible = false;
-            lblRemotePrefix.IsVisible = false;
-            txtRemotePrefix.IsVisible = false;
-        }
-
-        _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
-
-        // load the data for the very first time
-        Initialize(PreselectRemoteOnLoad, PreselectLocalOnLoad);
-    }
-
-    private void AutoResizeRemotesColumn()
-    {
-        columnHeader1.SourceWidth = Math.Max(0, Remotes.Bounds.Width - 4);
-        Remotes.InvalidateMeasure();
-    }
-
     private void Url_Enter(object sender, EventArgs e)
         => FillWithSomeGeneratedRemoteUrls(Url, r => r.Url!);
 
@@ -291,6 +288,7 @@ Inactive remote is completely invisible to git.");
     {
         Validates.NotNull(UserGitRemotes);
 
+        // we need to unwire and rewire the events to avoid excessive flickering
         List<RemoteListItem> items = [];
         ConfigFileRemote[] enabled = [.. UserGitRemotes.Where(remote => !remote.Disabled)];
         ConfigFileRemote[] disabled = [.. UserGitRemotes.Where(remote => remote.Disabled)];
@@ -317,6 +315,7 @@ Inactive remote is completely invisible to git.");
             // default fallback - if the preselection didn't work select the first available one
             Remotes.SelectedItem = preselected ?? items.First(item => item.Remote is not null);
             Remotes.Focus();
+            AutoResizeRemotesColumn();
         }
         else
         {
@@ -376,6 +375,10 @@ Inactive remote is completely invisible to git.");
         ThreadHelper.ThrowIfNotOnUIThread();
         IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync);
 
+        // because the binding the same BindingList to multiple controls,
+        // and changes in one of the bound control automatically get reflected
+        // in the other control, which causes rather frustrating UX.
+        // to address that, re-create binding lists for each individual control
         _repositoryHistory = repositoryHistory;
         Url.ItemsSource = repositoryHistory.Select(repository => repository.Path).ToList();
         Url.SelectedItem = null;
@@ -433,6 +436,43 @@ Inactive remote is completely invisible to git.");
         {
             _settingRemoteColor = false;
         }
+    }
+
+    protected override void OnRuntimeLoad(EventArgs e)
+    {
+        base.OnRuntimeLoad(e);
+        application_Idle(this, e);
+    }
+
+    private void application_Idle(object? sender, EventArgs e)
+    {
+        // Avalonia's one-shot runtime-load hook is the Application.Idle unwire equivalent.
+
+        // make sure only single load option is given
+        if (PreselectRemoteOnLoad is not null && PreselectLocalOnLoad is not null)
+        {
+            throw new ArgumentException($"Only one option allowed:" +
+                $" Either {nameof(PreselectRemoteOnLoad)} or {nameof(PreselectLocalOnLoad)}");
+        }
+
+        pnlMgtPuttySsh.IsVisible = OperatingSystem.IsWindows() && GitSshHelpers.IsPlink;
+
+        // if Putty SSH isn't enabled, reduce the minimum height of the form
+        MinHeight = pnlMgtPuttySsh.IsVisible ? 361 : 270;
+        Height = MinHeight + 36;
+
+        if (!AppSettings.AlwaysShowAdvOpt)
+        {
+            lblRemoteColor.IsVisible = false;
+            flpnlRemoteColors.IsVisible = false;
+            lblRemotePrefix.IsVisible = false;
+            txtRemotePrefix.IsVisible = false;
+        }
+
+        _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
+
+        // load the data for the very first time
+        Initialize(PreselectRemoteOnLoad, PreselectLocalOnLoad);
     }
 
     private static MediaColor GetDefaultRemoteColor()
