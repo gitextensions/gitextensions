@@ -392,6 +392,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         UpdateContextMenuItems();
         DetachedFromVisualTree += (_, _) =>
         {
+            _revisionGraphColumnProvider.Dispose();
             _buildServerWatcher.Dispose();
             if (_indexWatcher.IsValueCreated)
             {
@@ -1132,9 +1133,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             {
                 selectedRef.IsSelected = true;
                 loadedRefs.FirstOrDefault(
-                    gitRef => gitRef.IsRemote
-                        && gitRef.Remote == selectedRef.TrackingRemote
-                        && gitRef.LocalName == selectedRef.MergeWith)
+                    gitRef => selectedRef.IsTrackingRemote(gitRef))
                     ?.IsSelectedHeadMergeSource = true;
             }
 
@@ -1237,6 +1236,15 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     private void ClearRefHighlight()
         => _messageColumnProvider.ClearRefHighlight();
+
+    internal void UpdateLaneHighlight(IGitRef? gitRef, GitRevision? revision)
+    {
+        int rowIndex = revision is not null
+            && _revisionGraph.TryGetRowIndex(revision.ObjectId, out int revisionRowIndex)
+                ? revisionRowIndex
+                : -1;
+        this.InvokeAndForget(() => _revisionGraphColumnProvider.SetHoverHighlightAsync(gitRef, rowIndex));
+    }
 
     public void ViewSelectedRevisions()
     {
@@ -2463,15 +2471,15 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     private void GoToRelatedRef(IGitRef gitRef, Action<string>? handleGone = null, bool toggleSelection = false)
     {
-        if (gitRef.Guid is null)
+        if (gitRef is NestledVirtualRef nestledRef)
         {
-            if (gitRef.Name == AheadBehindData.GoneSymbol)
+            if (nestledRef.TrackingBranchIsGone)
             {
-                handleGone?.Invoke(gitRef.MergeWith[GitRefName.RefsHeadsPrefix.Length..]);
+                handleGone?.Invoke(nestledRef.MergeWith);
             }
             else
             {
-                GoToRef(gitRef.CompleteName, showNoRevisionMsg: true, toggleSelection);
+                GoToRef(nestledRef.CompleteName, showNoRevisionMsg: true, toggleSelection);
             }
         }
         else if (_messageColumnProvider.GetAheadBehindData(gitRef.IsRemote, gitRef.CompleteName) is { } aheadBehindData)
@@ -3006,6 +3014,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         [
             .. _gridView.GetVisualDescendants().OfType<RevisionRowControl>(),
         ];
+        _revisionGraphColumnProvider.UpdateVisibleRange(
+            visibleRows.Select(row => row.DataContext).OfType<GitRevision>());
         int visibleLaneCount = visibleRows
             .Select(row => row.DataContext)
             .OfType<GitRevision>()
@@ -3030,7 +3040,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         DrawingContext context,
         GitRevision revision,
         RevisionGraphDrawStyle drawStyle,
-        double rowHeight)
+        double rowHeight,
+        IReadOnlySet<ObjectId>? hoverHighlightedIds = null)
     {
         if (_headId is not ObjectId headId
             || !_revisionGraph.TryGetRowIndex(revision.ObjectId, out int rowIndex))
@@ -3047,7 +3058,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
                 Math.Max(1, (int)Math.Round(rowHeight)),
                 _revisionGraph.GetSegmentsForRow,
                 drawStyle,
-                headId);
+                headId,
+                hoverHighlightedIds);
             return true;
         }
         catch (Exception)

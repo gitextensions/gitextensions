@@ -110,6 +110,19 @@ public sealed class EditNetSpellTests
     }
 
     [AvaloniaTest]
+    public void EditNetSpell_should_allow_its_owner_to_extend_the_context_menu()
+    {
+        EditNetSpell control = new();
+        MenuItem ownerItem = new() { Header = "Owner action" };
+        control.ContextMenuPopulating += (_, menu) => ((IList<object>)menu.ItemsSource!).Insert(0, ownerItem);
+
+        EditNetSpell.TestAccessor accessor = control.GetTestAccessor();
+        accessor.OpenContextMenu();
+
+        accessor.ContextMenu.Items.OfType<object>().First().Should().BeSameAs(ownerItem);
+    }
+
+    [AvaloniaTest]
     public void FormCommit_should_host_the_same_name_spell_check_editor()
     {
         FormCommit form = new();

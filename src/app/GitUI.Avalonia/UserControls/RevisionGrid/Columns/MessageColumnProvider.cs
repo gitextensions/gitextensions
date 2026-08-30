@@ -445,24 +445,15 @@ internal sealed class MessageColumnProvider : ColumnProvider
         return labels;
     }
 
-    private IGitRef? GetVirtualRef(IGitRef gitRef)
+    private (IGitRef GitRef, string Name)? GetVirtualRef(IGitRef gitRef)
     {
-        (string display, string trackedCompleteName) = GetAheadBehind(gitRef, withCounts: false);
+        (string display, string trackedCompleteName, bool isGone) = GetAheadBehind(gitRef, withCounts: false);
         if (display.Length == 0)
         {
             return null;
         }
 
-        return new VirtualRef(
-            display,
-            trackedCompleteName,
-            gitRef.TrackingRemote,
-            gitRef.CompleteName,
-            gitRef.Module)
-        {
-            IsHead = gitRef.IsRemote,
-            IsRemote = !gitRef.IsRemote,
-        };
+        return (new NestledVirtualRef(gitRef, trackedCompleteName, trackingBranchIsGone: isGone), display);
     }
 
     private string[] GetCommitMessageLines(GitRevision revision)
@@ -503,7 +494,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         ///  and <see cref="AheadBehindData.AheadCount"/> are swapped before formatting.
         ///  Returns an empty display string for untracked refs or when the provider is unavailable.
         /// </remarks>
-    private (string Display, string TrackedCompleteName) GetAheadBehind(IGitRef gitRef, bool withCounts = true)
+    private (string Display, string TrackedCompleteName, bool IsGone) GetAheadBehind(IGitRef gitRef, bool withCounts = true)
     {
         _aheadBehindDataByLocalBranch ??= _aheadBehindDataProvider?.GetData()
             ?? FrozenDictionary<string, AheadBehindData>.Empty;
@@ -518,17 +509,17 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
             if (_aheadBehindDataByRemoteBranch.TryGetValue(gitRef.CompleteName, out AheadBehindData aheadBehind))
             {
-                return (aheadBehind.ToDisplay(withCounts), GitRefName.RefsHeadsPrefix + aheadBehind.Branch);
+                return (aheadBehind.ToDisplay(withCounts), GitRefName.RefsHeadsPrefix + aheadBehind.Branch, aheadBehind.AheadCount == AheadBehindData.Gone);
             }
         }
         else if (_aheadBehindDataByLocalBranch.TryGetValue(gitRef.Name, out AheadBehindData aheadBehind))
         {
             // This info is displayed in a virtual remote ref label.
             // From the remote ref's perspective, ahead/behind are swapped relative to the local branch.
-            return (aheadBehind.ToDisplay(withCounts, reverse: true), aheadBehind.RemoteRef);
+            return (aheadBehind.ToDisplay(withCounts, reverse: true), aheadBehind.RemoteRef, aheadBehind.AheadCount == AheadBehindData.Gone);
         }
 
-        return (string.Empty, string.Empty);
+        return (string.Empty, string.Empty, false);
     }
 
     internal AheadBehindData? GetAheadBehindData(bool isRemote, string completeName)
@@ -562,10 +553,13 @@ internal sealed class MessageColumnProvider : ColumnProvider
         }
 
         StringBuilder toolTip = new();
-        if (gitRef.Guid is null)
+        if (gitRef is NestledVirtualRef aheadBehindRef)
         {
-            bool realRefIsRemote = !gitRef.IsRemote;
-            string realRefCompleteName = gitRef.MergeWith;
+            bool realRefIsRemote = !aheadBehindRef.IsRemote;
+            string realRefLocalName = aheadBehindRef.MergeWith;
+            string realRefCompleteName = realRefIsRemote
+                ? GitRefName.GetFullRemoteName(realRefLocalName, aheadBehindRef.TrackingRemote)
+                : GitRefName.GetFullBranchName(realRefLocalName);
             string realRefName = RemovePrefix(
                 realRefCompleteName,
                 realRefIsRemote ? GitRefName.RefsRemotesPrefix : GitRefName.RefsHeadsPrefix);
@@ -711,6 +705,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             {
                 _highlightedLabel.IsHighlighted = false;
                 _highlightedLabel = null;
+                _provider._grid.UpdateLaneHighlight(gitRef: null, revision: Revision);
             }
 
             Cursor = null;
@@ -732,6 +727,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 {
                     label.IsHighlighted = true;
                     Cursor = HandCursor;
+                    _provider._grid.UpdateLaneHighlight(label.GitRef, Revision);
                 }
             }
 
@@ -748,49 +744,5 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 e.Handled = true;
             }
         }
-    }
-
-    private sealed class VirtualRef(
-        string name,
-        string completeName,
-        string remote,
-        string mergeWith,
-        IGitModule module) : IGitRef
-    {
-        public string Name => name;
-        public ObjectId ObjectId => throw new NotSupportedException();
-        public string? Guid => null;
-        public IGitModule Module => module;
-        public string CompleteName => completeName;
-        public string Remote => remote;
-        public string LocalName => Name;
-        public bool IsRemote { get; init; }
-        public bool IsHead { get; init; }
-        public bool IsTag => false;
-        public bool IsBisect => false;
-        public bool IsBisectGood => false;
-        public bool IsBisectBad => false;
-        public bool IsStash => false;
-        public bool IsDereference => false;
-        public bool IsSelected { get; set; }
-        public bool IsSelectedHeadMergeSource { get; set; }
-        public string MergeWith
-        {
-            get => mergeWith;
-            set => throw new NotSupportedException();
-        }
-
-        public string TrackingRemote
-        {
-            get => string.Empty;
-            set => throw new NotSupportedException();
-        }
-
-        public bool IsTrackingRemote(IGitRef? remote) => false;
-
-        public override bool Equals(object? obj)
-            => obj is VirtualRef other && CompleteName == other.CompleteName;
-
-        public override int GetHashCode() => completeName.GetHashCode();
     }
 }

@@ -32840,6 +32840,82 @@
       }
     },
     {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/Columns/HoverHighlightCalculator.cs",
+      "twin": "src/app/GitUI/UserControls/RevisionGrid/Columns/HoverHighlightCalculator.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "verified",
+          "verifiedOn": "2026-08-30",
+          "commit": "40e2457de1a02c5da1ea88d4c8b4ee10eed601e1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/inventory/windows/functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact framework-neutral upstream source is compiled into the Avalonia twin through an MSBuild Link."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-08-30",
+          "commit": "40e2457de1a02c5da1ea88d4c8b4ee10eed601e1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/tests/windows/upstream-hover.trx",
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/tests/windows/affected.trx",
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/tests/linux/affected.trx"
+          ],
+          "platforms": ["windows", "linux"],
+          "findingCount": 0,
+          "note": "The unchanged upstream calculator is linked into both applications; focused upstream tests and Avalonia integration tests cover highlight ancestry and cancellation behavior."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-30",
+          "commit": "40e2457de1a02c5da1ea88d4c8b4ee10eed601e1",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping contains no renderer or UI chrome."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-30",
+          "commit": "40e2457de1a02c5da1ea88d4c8b4ee10eed601e1",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping contains no theme or color behavior."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-30",
+          "commit": "40e2457de1a02c5da1ea88d4c8b4ee10eed601e1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/tests/windows/upstream-hover.trx",
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/tests/windows/affected.trx",
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/tests/linux/affected.trx"
+          ],
+          "platforms": ["windows", "linux"],
+          "findingCount": 0,
+          "note": "Automated hover calculations are covered, but the exhaustive pointer transition matrix has not been exercised side by side."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-30",
+          "commit": "40e2457de1a02c5da1ea88d4c8b4ee10eed601e1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/runtime/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
+          "findingCount": 0,
+          "note": "Windows, Wayland, X11, and confined Flatpak runtime gates pass; Apple Silicon macOS remains unverified."
+        }
+      }
+    },
+    {
       "source": "src/app/GitUI/UserControls/RevisionGrid/Columns/MessageColumnProvider.cs",
       "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/MessageColumnProvider.cs",
       "complete": false,
@@ -32970,6 +33046,77 @@
           "platforms": [],
           "findingCount": 0,
           "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/Columns/NestledVirtualRef.cs",
+      "twin": "src/app/GitUI/UserControls/RevisionGrid/Columns/NestledVirtualRef.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "verified",
+          "verifiedOn": "2026-08-30",
+          "commit": "cb08b179de63e0c9c23eff33c52634b31c89062a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/inventory/windows/functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact framework-neutral upstream source is compiled into the Avalonia twin through an MSBuild Link."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-08-30",
+          "commit": "cb08b179de63e0c9c23eff33c52634b31c89062a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/tests/windows/affected.trx",
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/tests/linux/affected.trx"
+          ],
+          "platforms": ["windows", "linux"],
+          "findingCount": 0,
+          "note": "The unchanged upstream tracking-reference adapter is shared by both applications and its Avalonia renderer/navigation integration is covered on Windows and Linux."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-30",
+          "commit": "cb08b179de63e0c9c23eff33c52634b31c89062a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This immutable reference adapter contains no renderer or UI chrome."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-30",
+          "commit": "cb08b179de63e0c9c23eff33c52634b31c89062a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This immutable reference adapter contains no theme or color behavior."
+        },
+        "behavioralState": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-30",
+          "commit": "cb08b179de63e0c9c23eff33c52634b31c89062a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This immutable data adapter has no interaction state of its own."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-30",
+          "commit": "cb08b179de63e0c9c23eff33c52634b31c89062a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/upstream-sync-2026-08-30/runtime/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
+          "findingCount": 0,
+          "note": "Windows, Wayland, X11, and confined Flatpak runtime gates pass; Apple Silicon macOS remains unverified."
         }
       }
     },
