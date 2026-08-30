@@ -1,8 +1,10 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI.Theming;
@@ -62,6 +64,45 @@ public sealed class EditNetSpellTests
 
         accessor.ContextMenu.Items.OfType<MenuItem>().Select(item => item.Header?.ToString())
             .Should().Contain(["sentence", "Add to dictionary", "Dictionary"]);
+
+        MenuItem correction = accessor.ContextMenu.Items.OfType<MenuItem>()
+            .Single(item => item.Header?.ToString() == "sentence");
+        correction.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        control.Text.Should().StartWith("This sentence contains");
+        control.SelectionStart.Should().BeLessThanOrEqualTo(control.Text.Length);
+    }
+
+    [AvaloniaTest]
+    public void EditNetSpell_should_execute_the_original_dictionary_and_marking_menu_actions()
+    {
+        EditNetSpell control = new() { Text = "subject\n\nbody" };
+        EditNetSpell.TestAccessor accessor = control.GetTestAccessor();
+        accessor.OpenContextMenu();
+
+        MenuItem dictionary = accessor.ContextMenu.Items.OfType<MenuItem>()
+            .Single(item => item.Header?.ToString() == "Dictionary");
+        MenuItem none = dictionary.Items.OfType<MenuItem>()
+            .Single(item => item.Header?.ToString() == "None");
+        none.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        AppSettings.Dictionary.Should().Be("None");
+
+        MenuItem marking = accessor.ContextMenu.Items.OfType<MenuItem>()
+            .Single(item => item.Header?.ToString() == "Mark ill formed lines");
+        bool previousMarking = AppSettings.MarkIllFormedLinesInCommitMsg;
+        marking.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        AppSettings.MarkIllFormedLinesInCommitMsg.Should().Be(!previousMarking);
+    }
+
+    [AvaloniaTest]
+    public void EditNetSpell_should_use_the_native_placeholder_for_the_original_watermark_contract()
+    {
+        EditNetSpell control = new();
+
+        control.WatermarkText = "Commit message";
+
+        control.GetTestAccessor().TextBox.PlaceholderText.Should().Be("Commit message");
+        control.Text.Should().BeEmpty();
     }
 
     [AvaloniaTest]
@@ -123,6 +164,44 @@ public sealed class EditNetSpellTests
     }
 
     [AvaloniaTest]
+    public void EditNetSpell_should_notify_the_open_popup_when_rebuilding_its_context_menu()
+    {
+        EditNetSpell control = new() { Text = "sentnce" };
+        EditNetSpell.TestAccessor accessor = control.GetTestAccessor();
+        System.Collections.Specialized.INotifyCollectionChanged items = accessor.ContextMenu.ItemsSource.Should()
+            .BeAssignableTo<System.Collections.Specialized.INotifyCollectionChanged>().Subject;
+        int notificationCount = 0;
+        items.CollectionChanged += (_, _) => notificationCount++;
+
+        accessor.OpenContextMenu();
+
+        notificationCount.Should().BeGreaterThan(0);
+        accessor.ContextMenu.Items.Should().NotBeEmpty();
+    }
+
+    [AvaloniaTest]
+    public void EditNetSpell_should_materialize_the_rebuilt_context_menu_in_its_popup()
+    {
+        EditNetSpell control = new() { Text = "sentnce" };
+        EditNetSpell.TestAccessor accessor = control.GetTestAccessor();
+        Window window = new() { Content = control };
+        window.Show();
+        accessor.TextBox.Focus();
+
+        accessor.TextBox.RaiseEvent(new Avalonia.Input.ContextRequestedEventArgs());
+        accessor.ContextMenu.Open(accessor.TextBox);
+        Dispatcher.UIThread.RunJobs();
+
+        accessor.ContextMenu.IsOpen.Should().BeTrue();
+        Control overlayHost = window.GetVisualDescendants().OfType<Control>()
+            .Single(control => control.GetType().Name == "OverlayPopupHost");
+        overlayHost.Bounds.Width.Should().BeGreaterThan(2);
+        overlayHost.GetVisualDescendants().OfType<MenuItem>().Should().NotBeEmpty();
+        accessor.ContextMenu.Close();
+        window.Close();
+    }
+
+    [AvaloniaTest]
     public void FormCommit_should_host_the_same_name_spell_check_editor()
     {
         FormCommit form = new();
@@ -157,6 +236,8 @@ public sealed class EditNetSpellTests
         {
             translation.Received(1).AddTranslationItem(nameof(EditNetSpell), field, "Text", text);
         }
+
+        translation.Received(1).AddTranslationItem(nameof(EditNetSpell), "TextBox", "Text", string.Empty);
     }
 
     [AvaloniaTest]

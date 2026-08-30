@@ -28,6 +28,14 @@ The report schema version is `4`. It contains:
 - direct WinForms/Avalonia lifecycle event equivalents (`SelectedIndexChanged`/
   `SelectionChanged`, `Resize`/`SizeChanged`, `Enter`/`GotFocus`, and `Leave`/`LostFocus`)
   compared by their shared semantic event without hiding handler or target differences;
+- event subscriptions are accepted only when the right-hand side is a lambda, delegate
+  construction/cast, local method, delegate-typed value, member handler, or conventional
+  handler name; arithmetic, string, coordinate, and other ordinary `+=` assignments never
+  enter event evidence;
+- explicit `AddTranslationItem` calls with literal or `nameof` item names, `Text` or
+  `HeaderText` properties, and an explicit empty source enter the same `.Text` translation
+  evidence as empty WinForms Designer assignments. This preserves that identity without
+  mutating runtime control text during attachment; ordinary runtime registrations stay out;
 - WinForms-shaped Avalonia menu controls (`ToolStripMenuItem`, `ToolStripSeparator`, and
   `ContextMenuStrip`) read from AXAML as native menu entries. Menu children are sequence-aligned,
   so one genuine insertion or omission remains one finding instead of shifting every later item;
