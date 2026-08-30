@@ -5,6 +5,12 @@
              x:Class="GitUI.SpellChecker.EditNetSpell"
              d:DesignWidth="386"
              d:DesignHeight="336">
+  <UserControl.Resources>
+    <ContextMenu x:Key="SpellCheckContextMenuResource"
+                 x:Name="SpellCheckContextMenu">
+      <Separator x:Name="toolStripSeparator1" />
+    </ContextMenu>
+  </UserControl.Resources>
   <UserControl.Styles>
     <Style Selector="ListBox#AutoComplete > ListBoxItem">
       <Setter Property="Height" Value="15" />
@@ -40,11 +46,8 @@
              Padding="0"
              ScrollViewer.HorizontalScrollBarVisibility="Auto"
              ScrollViewer.VerticalScrollBarVisibility="Auto"
-             VerticalContentAlignment="Top">
-      <TextBox.ContextMenu>
-        <ContextMenu x:Name="SpellCheckContextMenu" />
-      </TextBox.ContextMenu>
-    </TextBox>
+             VerticalContentAlignment="Top"
+             ContextMenu="{StaticResource SpellCheckContextMenuResource}" />
     <local:SpellCheckAdorner x:Name="SpellCheckAdorner"
                              IsHitTestVisible="False" />
     <Canvas Panel.ZIndex="2">
