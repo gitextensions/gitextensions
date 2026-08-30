@@ -30,6 +30,12 @@ public partial class EditNetSpell : GitModuleControl
 {
     public event EventHandler? TextAssigned;
 
+    /// <summary>
+    ///  Raised after all built-in items have been added to the spell-check context menu,
+    ///  allowing consumers to append additional items.
+    /// </summary>
+    public event EventHandler<ContextMenu>? ContextMenuPopulating;
+
     private readonly TranslationString _cutMenuItemText = new("Cut");
     private readonly TranslationString _copyMenuItemText = new("Copy");
     private readonly TranslationString _pasteMenuItemText = new("Paste");
@@ -489,6 +495,7 @@ public partial class EditNetSpell : GitModuleControl
             isCheckable: true));
 
         SpellCheckContextMenu.ItemsSource = items;
+        ContextMenuPopulating?.Invoke(this, SpellCheckContextMenu);
     }
 
     private void SpellCheckTimerTick(object? sender, EventArgs e) => CheckSpelling();

@@ -20,6 +20,7 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.ScriptsEngine;
+using GitUI.SpellChecker;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -100,6 +101,7 @@ public sealed class FormCommitTests
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "_formTitle", "Text", "Commit to {0} ({1})");
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "_stageAll", "Text", "Stage all");
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "_unstageAll", "Text", "Unstage all");
+        translation.Received(1).AddTranslationItem(nameof(FormCommit), "_wordWrapCommitMessageBody", "Text", "&Word wrap (except subject line)");
 
         Button stageAll = form.FindControl<Button>("toolStageAllItem")
             ?? throw new InvalidOperationException("Stage-all button was not created.");
@@ -129,6 +131,37 @@ public sealed class FormCommitTests
         emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(
             emittedKeys.Length,
             "each field must be routed through exactly one translation path");
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommit_should_add_body_only_word_wrap_to_the_message_context_menu()
+    {
+        int originalLineLimit = AppSettings.CommitValidationMaxCntCharsPerLine;
+        AppSettings.CommitValidationMaxCntCharsPerLine = 12;
+        FormCommit form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithTwoUnstagedChanges()));
+        try
+        {
+            EditNetSpell message = form.GetTestAccessor().Message;
+            message.Text = "subject line remains unchanged\nbody words need wrapping";
+
+            EditNetSpell.TestAccessor messageAccessor = message.GetTestAccessor();
+            messageAccessor.OpenContextMenu();
+            MenuItem wordWrap = messageAccessor.ContextMenu.Items
+                .OfType<MenuItem>()
+                .Single(item => Equals(item.Header, "_Word wrap (except subject line)"));
+
+            wordWrap.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+
+            message.Text.Split('\n')[0].Should().Be("subject line remains unchanged");
+            message.Text.Replace("\r\n", "\n", StringComparison.Ordinal)
+                .Should().Be("subject line remains unchanged\nbody words\nneed\nwrapping");
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+            AppSettings.CommitValidationMaxCntCharsPerLine = originalLineLimit;
+        }
     }
 
     [AvaloniaTest]
