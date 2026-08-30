@@ -8,6 +8,7 @@ using Avalonia.VisualTree;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Compat;
+using GitUI.UserControls.RevisionGrid.Columns;
 using DrawingColor = System.Drawing.Color;
 using MediaColor = Avalonia.Media.Color;
 using Point = Avalonia.Point;
@@ -58,7 +59,7 @@ internal static class RevisionGridRefRenderer
         bool showTags,
         bool showRemoteBranches,
         bool fill,
-        Func<IGitRef, IGitRef?>? getVirtualRef,
+        Func<IGitRef, (IGitRef GitRef, string Name)?>? getVirtualRef,
         IReadOnlySet<string>? superprojectRefs)
     {
         IReadOnlyList<IGitRef> sortedRefs = SortRefs(
@@ -93,8 +94,9 @@ internal static class RevisionGridRefRenderer
                 continue;
             }
 
-            if (getVirtualRef?.Invoke(gitRef) is IGitRef virtualRef)
+            if (getVirtualRef?.Invoke(gitRef) is { } virtualRefData)
             {
+                IGitRef virtualRef = virtualRefData.GitRef;
                 (RefLabelShape refShape, RefLabelShape virtualShape) = gitRef.IsRemote
                     ? (RefLabelShape.NotchRight, RefLabelShape.PointLeft)
                     : (RefLabelShape.PointRight, RefLabelShape.NotchLeft);
@@ -107,11 +109,14 @@ internal static class RevisionGridRefRenderer
                         dashed: superprojectRefs?.Contains(gitRef.CompleteName) == true),
                     CreateLabel(
                         virtualRef,
-                        virtualRef.Name,
+                        virtualRefData.Name,
                         virtualShape,
                         fill,
                         showHeadIndicator: false,
-                        dashed: true)));
+                        dashed: true,
+                        fontWeight: virtualRef is NestledVirtualRef { TrackingBranchIsGone: true }
+                            ? FontWeight.Bold
+                            : FontWeight.Normal)));
                 continue;
             }
 
@@ -178,8 +183,7 @@ internal static class RevisionGridRefRenderer
         {
             foreach (IGitRef local in localBranches)
             {
-                if (local.MergeWith == remote.LocalName
-                    && local.TrackingRemote == remote.Remote)
+                if (local.IsTrackingRemote(remote))
                 {
                     if (!remoteByLocal.TryAdd(local.LocalName, remote))
                     {
@@ -199,7 +203,8 @@ internal static class RevisionGridRefRenderer
         RefLabelShape shape,
         bool fill,
         bool showHeadIndicator = true,
-        bool dashed = false)
+        bool dashed = false,
+        FontWeight? fontWeight = null)
         => new(
             gitRef,
             label,
@@ -214,7 +219,7 @@ internal static class RevisionGridRefRenderer
             dashed,
             GetRemoteRefBrush(gitRef))
         {
-            FontWeight = gitRef.IsSelected ? FontWeight.Bold : FontWeight.Normal,
+            FontWeight = fontWeight ?? (gitRef.IsSelected ? FontWeight.Bold : FontWeight.Normal),
             VerticalAlignment = VerticalAlignment.Center,
         };
 

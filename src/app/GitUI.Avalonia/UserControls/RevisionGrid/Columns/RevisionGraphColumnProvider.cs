@@ -2,20 +2,25 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUI.UserControls.RevisionGrid.Graph.Rendering;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns;
 
-internal sealed class RevisionGraphColumnProvider : ColumnProvider
+internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 {
     private static readonly Cursor HandCursor = new(StandardCursorType.Hand);
 
     private readonly RevisionGridControl _grid;
     private readonly LaneInfoProvider _laneInfoProvider;
     private readonly RevisionGraph _revisionGraph;
+    private readonly HoverHighlightCalculator _hoverHighlight;
+
+    private VisibleRowRange _cachedVisibleRange;
 
     public RevisionGraphColumnProvider(
         RevisionGraph revisionGraph,
@@ -31,6 +36,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         _revisionGraph = revisionGraph;
         _grid = grid;
         _laneInfoProvider = new LaneInfoProvider(new LaneNodeLocator(revisionGraph), gitRevisionSummaryBuilder);
+        _hoverHighlight = new HoverHighlightCalculator(_revisionGraph, () => _cachedVisibleRange);
     }
 
     public RevisionGraphDrawStyle RevisionGraphDrawStyle { get; set; } = RevisionGraphDrawStyle.DrawNonRelativesGray;
@@ -61,6 +67,43 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         ToolTip.SetTip(graph, null);
     }
 
+    public override void Clear()
+    {
+        _hoverHighlight.Clear();
+    }
+
+    internal void UpdateVisibleRange(IEnumerable<GitRevision> revisions)
+    {
+        int[] rowIndexes =
+        [
+            .. revisions
+                .Select(revision => _revisionGraph.TryGetRowIndex(revision.ObjectId, out int rowIndex) ? rowIndex : -1)
+                .Where(rowIndex => rowIndex >= 0),
+        ];
+        _cachedVisibleRange = rowIndexes.Length == 0
+            ? new VisibleRowRange(fromIndex: 0, count: 0)
+            : new VisibleRowRange(rowIndexes.Min(), rowIndexes.Max() - rowIndexes.Min() + 1);
+    }
+
+    /// <summary>
+    ///  Updates the hover highlight to show only the ancestry of the
+    ///  <paramref name="gitRef"/> and tracked remote or the tracking local.
+    ///  Debounces before computing, cancelling any prior pending computation when called again.
+    ///  Set <see langword="null"/> to clear hover highlighting.
+    /// </summary>
+    /// <param name="gitRef">The ref to highlight, or <see langword="null"/> to clear.</param>
+    /// <param name="rowIndex">
+    ///  The row index of the hovered ref label, limits the search to the visible range.
+    /// </param>
+    public async Task SetHoverHighlightAsync(IGitRef? gitRef, int rowIndex = -1)
+    {
+        await _hoverHighlight.SetAsync(gitRef, rowIndex);
+        foreach (GraphCellControl graph in _grid.GetVisualDescendants().OfType<GraphCellControl>())
+        {
+            graph.InvalidateVisual();
+        }
+    }
+
     internal static int CalculateGraphColumnWidth(int visibleLaneCount)
         => 6
             + Math.Max(
@@ -82,7 +125,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     }
 
     internal bool DrawGraph(DrawingContext context, GitRevision revision, double rowHeight)
-        => _grid.DrawGraphCell(context, revision, RevisionGraphDrawStyle, rowHeight);
+        => _grid.DrawGraphCell(context, revision, RevisionGraphDrawStyle, rowHeight, _hoverHighlight.HighlightedIds);
 
     internal string? GetLaneToolTip(GitRevision revision, double x)
     {
@@ -97,6 +140,8 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         string toolTip = _laneInfoProvider.GetLaneInfo(rowIndex, lane);
         return string.IsNullOrEmpty(toolTip) ? null : toolTip;
     }
+
+    public void Dispose() => _hoverHighlight.Dispose();
 
     private sealed class GraphCellControl : Control
     {

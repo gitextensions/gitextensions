@@ -1124,7 +1124,7 @@ public sealed partial class FormPush : GitModuleForm
         // Add all the local branches.
         foreach (IGitRef head in localHeads)
         {
-            string remoteName = head.Remote == remote ? head.MergeWith ?? head.Name : string.Empty;
+            string remoteName = head.Remote == remote ? head.MergeWith ?? head.LocalName : string.Empty;
             bool isKnownAtRemote = remoteBranches.TryGetValue(head.Name, out IGitRef? remoteBranch);
             AheadBehindData aheadBehind = default;
 
