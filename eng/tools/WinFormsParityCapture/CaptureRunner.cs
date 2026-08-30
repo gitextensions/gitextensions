@@ -343,6 +343,11 @@ internal static class CaptureRunner
         {
             bootstrap.ThrowIfThreadException();
             using ControlStateDriver driver = ApplyVerifiedCaptureState(root, bootstrap.Commands, component, state);
+            if (dpiMode == CaptureDpiMode.DpiChangeMessage)
+            {
+                EnsureManagedControlDpi(root, root.DeviceDpi);
+            }
+
             bootstrap.ThrowIfThreadException();
             using CaptureImageResult image = ImageCapture.Capture(root, driver.Popups, driver.ComboBoxPopups);
             string relativeDirectory = Path.Combine(Sanitize(componentType), Sanitize(theme.Id), scale.ToString(CultureInfo.InvariantCulture));
@@ -652,6 +657,50 @@ internal static class CaptureRunner
             targetDpi);
         NativeMethods.SendDpiChanged(window.Handle, targetDpi, suggestedBounds);
         Application.DoEvents();
+
+        EnsureManagedControlDpi(window, targetDpi);
+    }
+
+    internal static void EnsureManagedControlDpi(Control window, int targetDpi)
+    {
+        Control[] mismatchedControls = EnumerateControls(window)
+            .Where(control => control.IsHandleCreated && control.DeviceDpi != targetDpi)
+            .ToArray();
+        Control[] mismatchedRoots = mismatchedControls
+            .Where(control => control.Parent is null || !mismatchedControls.Contains(control.Parent))
+            .ToArray();
+        foreach (Control control in mismatchedRoots)
+        {
+            // A message-only fallback cannot change the physical monitor context inherited by
+            // HWNDs that WinForms creates or recreates during the parent transition. Deliver the
+            // same PMv2 child callbacks to each such subtree and refuse evidence if it stays stale.
+            NativeMethods.SendDpiChangedBeforeParentTree(control.Handle, targetDpi);
+            NativeMethods.SendDpiChangedAfterParentTree(control.Handle, targetDpi);
+        }
+
+        Application.DoEvents();
+        string[] remaining = EnumerateControls(window)
+            .Where(control => control.IsHandleCreated && control.DeviceDpi != targetDpi)
+            .Select(control => $"{control.Name} ({control.GetType().Name}: {control.DeviceDpi} DPI)")
+            .ToArray();
+        if (remaining.Length != 0)
+        {
+            throw new CaptureStateUnsupportedException(
+                "The WinForms DPI-change path left managed child windows at another DPI: "
+                + string.Join(", ", remaining));
+        }
+    }
+
+    private static IEnumerable<Control> EnumerateControls(Control root)
+    {
+        yield return root;
+        foreach (Control child in root.Controls)
+        {
+            foreach (Control descendant in EnumerateControls(child))
+            {
+                yield return descendant;
+            }
+        }
     }
 
     internal static Rectangle CalculateDpiChangedBounds(

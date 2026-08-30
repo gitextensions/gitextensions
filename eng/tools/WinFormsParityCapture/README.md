@@ -26,7 +26,14 @@ dotnet run --project eng/tools/WinFormsParityCapture -c Release -- validate `
 ```
 
 At 100%, a genuine 96-DPI monitor is mandatory. At 125%, 150%, and 200%, the tool prefers an
-exact native monitor and otherwise sends `WM_DPICHANGED` to the real WinForms window. It never
+exact native monitor and otherwise drives the complete Per-Monitor-v2 transition that Windows
+sends to the real WinForms window: `WM_DPICHANGED_BEFOREPARENT` traverses the child HWND tree
+bottom-up, the top-level window receives `WM_DPICHANGED`, then
+`WM_DPICHANGED_AFTERPARENT` traverses the child tree top-down. Because the fallback cannot
+change the physical monitor context inherited by HWNDs that WinForms creates or recreates during
+that transition, it gives those late child subtrees the same before/after callbacks and checks
+again after applying the requested capture state. The fallback refuses to emit a capture if any
+managed child window still does not report the requested DPI. It never
 stretches a bitmap and never calls `Control.Scale`. Every successful tree names either
 `nativeMonitor` or `dpiChangeMessage`; unsupported states are manifest-only entries with a
 reason and `captureMethod` set to `unsupported`. A pre-change per-control font baseline lets
