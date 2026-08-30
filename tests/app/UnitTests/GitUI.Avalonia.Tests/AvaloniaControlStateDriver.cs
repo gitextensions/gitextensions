@@ -404,6 +404,8 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
                 .FirstOrDefault(control => ReferenceEquals(control.ContextMenu, contextMenu))
                 ?? throw new AvaloniaCaptureStateUnsupportedException("The ContextMenu is not attached to a control in the captured view.");
             PrepareLongOverlayOwner(contextMenu);
+            owner.RaiseEvent(new ContextRequestedEventArgs());
+            Dispatcher.UIThread.RunJobs();
             contextMenu.Open(owner);
             Dispatcher.UIThread.RunJobs();
             TrackExternalTopLevels(contextMenu);
@@ -414,6 +416,8 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         if (target is Control { ContextMenu: { } attachedContextMenu })
         {
             PrepareLongOverlayOwner(attachedContextMenu);
+            ((Control)target).RaiseEvent(new ContextRequestedEventArgs());
+            Dispatcher.UIThread.RunJobs();
             attachedContextMenu.Open((Control)target);
             Dispatcher.UIThread.RunJobs();
             TrackExternalTopLevels(attachedContextMenu);
@@ -454,6 +458,8 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         {
             Control owner = EnumerateLogicalControls(_root)
                 .First(control => ReferenceEquals(control.ContextMenu, owningContextMenu));
+            owner.RaiseEvent(new ContextRequestedEventArgs());
+            Dispatcher.UIThread.RunJobs();
             owningContextMenu.Open(owner);
             Dispatcher.UIThread.RunJobs();
             _restoreActions.Add(owningContextMenu.Close);
