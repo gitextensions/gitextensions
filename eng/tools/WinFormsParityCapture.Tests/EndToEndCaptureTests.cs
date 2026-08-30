@@ -272,6 +272,89 @@ public sealed class EndToEndCaptureTests
 
     [Test]
     [Apartment(ApartmentState.STA)]
+    public void SendDpiChanged_should_drive_the_complete_per_monitor_v2_control_tree()
+    {
+        Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+        using Form form = new()
+        {
+            AutoScaleDimensions = new SizeF(96, 96),
+            AutoScaleMode = AutoScaleMode.Dpi,
+            ClientSize = new Size(320, 180),
+            StartPosition = FormStartPosition.Manual,
+        };
+        using Panel panel = new()
+        {
+            Bounds = new Rectangle(10, 20, 200, 100),
+        };
+        using Button button = new()
+        {
+            Bounds = new Rectangle(8, 12, 80, 24),
+        };
+        List<string> messageOrder = [];
+        button.DpiChangedBeforeParent += (_, _) => messageOrder.Add("button.before");
+        panel.DpiChangedBeforeParent += (_, _) => messageOrder.Add("panel.before");
+        form.DpiChanged += (_, _) => messageOrder.Add("form.changed");
+        panel.DpiChangedAfterParent += (_, _) => messageOrder.Add("panel.after");
+        button.DpiChangedAfterParent += (_, _) => messageOrder.Add("button.after");
+        panel.Controls.Add(button);
+        form.Controls.Add(panel);
+        form.Show();
+        Application.DoEvents();
+
+        Rectangle suggestedBounds = CaptureRunner.CalculateDpiChangedBounds(
+            NativeMethods.GetWindowRectangle(form.Handle),
+            form.ClientSize,
+            currentDpi: 96,
+            targetDpi: 120);
+        NativeMethods.SendDpiChanged(form.Handle, dpi: 120, suggestedBounds);
+        Application.DoEvents();
+
+        form.DeviceDpi.Should().Be(120);
+        panel.DeviceDpi.Should().Be(120);
+        button.DeviceDpi.Should().Be(120);
+        panel.Bounds.Should().Be(new Rectangle(12, 25, 250, 125));
+        button.Bounds.Should().Be(new Rectangle(10, 15, 100, 30));
+        messageOrder.Should().Equal(
+            "button.before",
+            "panel.before",
+            "form.changed",
+            "panel.after",
+            "button.after");
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    public void EnsureManagedControlDpi_should_transition_a_control_created_after_its_parent()
+    {
+        Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+        using Form form = new()
+        {
+            AutoScaleDimensions = new SizeF(96, 96),
+            AutoScaleMode = AutoScaleMode.Dpi,
+            ClientSize = new Size(320, 180),
+            StartPosition = FormStartPosition.Manual,
+        };
+        form.Show();
+        Application.DoEvents();
+        Rectangle suggestedBounds = CaptureRunner.CalculateDpiChangedBounds(
+            NativeMethods.GetWindowRectangle(form.Handle),
+            form.ClientSize,
+            currentDpi: 96,
+            targetDpi: 120);
+        NativeMethods.SendDpiChanged(form.Handle, dpi: 120, suggestedBounds);
+
+        using ComboBox lateControl = new() { Name = "lateControl" };
+        form.Controls.Add(lateControl);
+        _ = lateControl.Handle;
+        lateControl.DeviceDpi.Should().Be(96);
+
+        CaptureRunner.EnsureManagedControlDpi(form, targetDpi: 120);
+
+        lateControl.DeviceDpi.Should().Be(120);
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
     public void State_driver_should_capture_the_native_combo_box_popup()
     {
         using Form form = new() { ClientSize = new Size(320, 180) };
