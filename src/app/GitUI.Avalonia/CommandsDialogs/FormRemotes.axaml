@@ -223,6 +223,7 @@
             <usercontrols:NativeListView x:Name="Remotes"
                                          Classes="gitextensions-native-list-items" />
             <wf:ColumnHeader x:Name="columnHeader1"
+                             Text=""
                              IsVisible="False" />
             <StackPanel x:Name="panelButtons"
                         Grid.Column="1">

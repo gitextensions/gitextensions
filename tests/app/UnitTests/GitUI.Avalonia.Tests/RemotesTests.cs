@@ -17,6 +17,7 @@ using GitUI.UserControls.RevisionGrid;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using MediaColor = Avalonia.Media.Color;
+using SourceColumnHeader = GitUI.Compat.WinFormsControls.ColumnHeader;
 using SourceDataGridView = GitUI.Compat.WinFormsControls.DataGridView;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -172,6 +173,39 @@ public sealed class RemotesTests
         {
             form.Close();
             await RepositoryHistoryManager.Remotes.RemoveRecentAsync(url);
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormRemotes_should_size_the_remote_column_to_content_and_debounce_viewport_resizes()
+    {
+        GitModule module = CreateRepositoryWithCommit();
+        string longRemoteName = $"remote-{new string('x', 80)}";
+        module.AddRemote(longRemoteName, Path.Combine(_workingDirectory, "other")).Should().BeEmpty();
+
+        FormRemotes form = new(CreateCommands(module));
+        form.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            ListBox remotes = form.FindControl<ListBox>("Remotes")!;
+            SourceColumnHeader column = form.FindControl<SourceColumnHeader>("columnHeader1")!;
+            column.SourceWidth.Should().BeGreaterThan(remotes.Bounds.Width,
+                "content wider than the viewport must retain its measured width");
+
+            remotes.Width = 800;
+            Dispatcher.UIThread.RunJobs();
+            double widthBeforeDebounce = column.SourceWidth;
+            widthBeforeDebounce.Should().BeLessThan(remotes.Bounds.Width - 4);
+
+            await Task.Delay(200);
+            Dispatcher.UIThread.RunJobs();
+            column.SourceWidth.Should().BeApproximately(remotes.Bounds.Width - 4, 0.01,
+                "the debounced resize must expand a narrower content column to the viewport");
+        }
+        finally
+        {
+            form.Close();
         }
     }
 

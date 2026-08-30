@@ -242,6 +242,22 @@ public sealed class ParityDiffRunnerTests
     }
 
     [Test]
+    public void Run_should_scope_repeated_private_field_names_to_their_named_control_owners()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument reference = PutTargetInDistinctNamedOwners(fixture.CreateDocument("light"));
+        CaptureDocument candidate = PutTargetInDistinctNamedOwners(fixture.CreateDocument("light"));
+        fixture.WriteCaptureSet("reference", [reference]);
+        fixture.WriteCaptureSet("candidate", [candidate]);
+
+        ParityDiffResult result = fixture.Run();
+
+        CaptureComparison comparison = result.Captures.Should().ContainSingle().Subject;
+        comparison.Status.Should().Be("compared");
+        comparison.Findings.Should().NotContain(finding => finding.Code == "control.duplicateIdentity");
+    }
+
+    [Test]
     public void Run_should_apply_ssim_and_per_pixel_channel_budgets()
     {
         using ParityDiffFixture fixture = new();
@@ -508,6 +524,44 @@ public sealed class ParityDiffRunnerTests
                         Children = Enumerable.Range(1, count)
                             .Select(index => target with { Id = $"{target.Id}/{index}" })
                             .ToArray()
+                    }
+                }
+            ]
+        };
+    }
+
+    private static CaptureDocument PutTargetInDistinctNamedOwners(CaptureDocument document)
+    {
+        CaptureSurface surface = document.Surfaces.Single();
+        CaptureNode root = surface.Root;
+        CaptureNode target = root.Children.Single();
+        CaptureNode owner = target with
+        {
+            Id = "root/folderBrowserButtonUrl",
+            FieldName = "folderBrowserButtonUrl",
+            Name = "folderBrowserButtonUrl",
+            ControlKind = "userControl",
+            Children = [target with { Id = "root/folderBrowserButtonUrl/btnTarget" }]
+        };
+        return document with
+        {
+            Surfaces =
+            [
+                surface with
+                {
+                    Root = root with
+                    {
+                        Children =
+                        [
+                            owner,
+                            owner with
+                            {
+                                Id = "root/folderBrowserButtonPushUrl",
+                                FieldName = "folderBrowserButtonPushUrl",
+                                Name = "folderBrowserButtonPushUrl",
+                                Children = [target with { Id = "root/folderBrowserButtonPushUrl/btnTarget" }]
+                            }
+                        ]
                     }
                 }
             ]
