@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "96e6dbff44433cdbe07cac95c5f92c4d4e52bb5b",
+  "analyzedCommit": "0100a288ab5df6632fc7ee1bed573ae3f8cedb6b",
   "axisOrder": [
     "structural",
     "functional",
@@ -7308,41 +7308,42 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-29",
-          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
+          "verifiedOn": "2026-08-30",
+          "commit": "0100a288ab5df6632fc7ee1bed573ae3f8cedb6b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/linux-sweep-final.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/inventory/windows/types/GitUI.CommandsDialogs.FormPull.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/inventory/linux/types/GitUI.CommandsDialogs.FormPull.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 40,
-          "note": "The byte-identical Windows/Linux schema-v5 inventory remains at 40 actionable and total differences. Progress 82 replaces renderer stand-ins with source-shaped controls but does not close the retained structural differences."
+          "findingCount": 26,
+          "note": "Progress 85 restores source comments around implemented pull workflows. The byte-identical Windows/Linux schema-v5 inventory records 26 actionable and total differences; every remainder stays open."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-29",
-          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
+          "verifiedOn": "2026-08-30",
+          "commit": "0100a288ab5df6632fc7ee1bed573ae3f8cedb6b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/tests/windows/owned.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/wsl-gate.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/inventory/windows/types/GitUI.CommandsDialogs.FormPull.functional-findings.json"
           ],
           "platforms": ["windows", "linux"],
-          "findingCount": 40,
-          "note": "The owned suites pass 44 tests on Windows and 45 on Linux, including source hierarchy, native control projection, sizing, and workflow coverage. The inventory retains 40 functional-contract differences, so the axis remains a gap."
+          "findingCount": 26,
+          "note": "The 30-test affected remote-dialog cohort passes on Windows and Linux. The inventory retains 26 functional-contract differences, so the axis remains a gap."
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-29",
-          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
+          "verifiedOn": "2026-08-30",
+          "commit": "0100a288ab5df6632fc7ee1bed573ae3f8cedb6b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/capture-plan.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/capture-plan.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-dpi-message-84/winforms-authoritative/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/avalonia-final/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/diff-final/findings.json"
           ],
           "platforms": ["windows"],
-      "findingCount": 5220,
-      "note": "Progress 83 evidence at eng/avalonia/parity-evidence/P8.6i/remote-renderer-closure-83 retains 5,220 findings across the 36 light/dark/custom pairs. Native 100% retains only 27 image thresholds and no tree diagnostic; all higher-scale geometry is isolated to dpiChangeMessage references. Genuine native-monitor 125/150/200 provenance, popups, exhaustive states, and renderer differences stay open."
+      "findingCount": 3936,
+      "note": "Progress 85 retains 3,936 strict findings across the 36 light/dark/custom pairs. Native 100% retains only 27 image thresholds and no tree diagnostic; all geometry is isolated to higher-scale dpiChangeMessage references. Genuine native-monitor 125/150/200 provenance, popups, exhaustive states, and renderer differences stay open."
         },
         "themingAndColor": {
           "status": "gap",
@@ -7393,41 +7394,42 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-29",
-          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
+          "verifiedOn": "2026-08-30",
+          "commit": "0100a288ab5df6632fc7ee1bed573ae3f8cedb6b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/linux-sweep-final.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/inventory/windows/types/GitUI.CommandsDialogs.FormPush.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/inventory/linux/types/GitUI.CommandsDialogs.FormPush.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 100,
-          "note": "The byte-identical Windows/Linux schema-v5 inventory remains at 100 actionable and 112 total differences. Progress 82 replaces renderer stand-ins with source-shaped controls but does not close the retained structural differences."
+          "findingCount": 85,
+          "note": "Progress 85 restores source comments and exact visible column/browse text. The byte-identical Windows/Linux schema-v5 inventory records 85 actionable and 97 total differences; every remainder stays open."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-29",
-          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
+          "verifiedOn": "2026-08-30",
+          "commit": "0100a288ab5df6632fc7ee1bed573ae3f8cedb6b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/tests/windows/owned.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/wsl-gate.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/inventory/windows/types/GitUI.CommandsDialogs.FormPush.functional-findings.json"
           ],
           "platforms": ["windows", "linux"],
-          "findingCount": 112,
-          "note": "The owned suites pass 44 tests on Windows and 45 on Linux, including the source DataGridView/column contract, sizing, projection, and workflows. The inventory retains 112 functional-contract differences, so the axis remains a gap."
+          "findingCount": 97,
+          "note": "The 30-test affected remote-dialog cohort passes on Windows and Linux, including selected ComboBox text evidence. The inventory retains 85 actionable plus 12 dependent functional-contract differences, so the axis remains a gap."
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-29",
-          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
+          "verifiedOn": "2026-08-30",
+          "commit": "0100a288ab5df6632fc7ee1bed573ae3f8cedb6b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/capture-plan.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/capture-plan.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-dpi-message-84/winforms-authoritative/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/avalonia-final/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/diff-final/findings.json"
           ],
           "platforms": ["windows"],
-      "findingCount": 2340,
-      "note": "Progress 83 evidence at eng/avalonia/parity-evidence/P8.6i/remote-renderer-closure-83 retains 2,340 findings across the 36 light/dark/custom pairs. Native 100% retains only 27 image thresholds and no tree diagnostic; all higher-scale geometry is isolated to dpiChangeMessage references. Genuine native-monitor 125/150/200 provenance, popups, advanced multi-branch states, and renderer differences stay open."
+      "findingCount": 1917,
+      "note": "Progress 85 retains 1,917 strict findings across the 36 light/dark/custom pairs after selected remote and branch text is captured exactly. Native 100% retains only 27 image thresholds and no tree diagnostic; all geometry is isolated to higher-scale dpiChangeMessage references. Genuine native-monitor 125/150/200 provenance, popups, advanced multi-branch states, and renderer differences stay open."
         },
         "themingAndColor": {
           "status": "gap",
@@ -7612,41 +7614,42 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-29",
-          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
+          "verifiedOn": "2026-08-30",
+          "commit": "0100a288ab5df6632fc7ee1bed573ae3f8cedb6b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/linux-sweep-final.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/inventory/windows/types/GitUI.CommandsDialogs.FormRemotes.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/inventory/linux/types/GitUI.CommandsDialogs.FormRemotes.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 78,
-          "note": "The byte-identical Windows/Linux schema-v5 inventory remains at 78 actionable and 80 total differences. Progress 82 replaces renderer stand-ins with source-shaped controls but does not close the retained structural differences."
+          "findingCount": 30,
+          "note": "Progress 85 restores source member/comment order, content-based remote-column sizing, the 150 ms resize debounce, and exact header semantics. The byte-identical Windows/Linux schema-v5 inventory records 30 actionable and 32 total differences; every remainder stays open."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-29",
-          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
+          "verifiedOn": "2026-08-30",
+          "commit": "0100a288ab5df6632fc7ee1bed573ae3f8cedb6b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/windows/owned-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/tests/linux/wsl-gate-final.log",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/inventory/windows-sweep-final.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/tests/windows/owned.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/wsl-gate.log",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/inventory/windows/types/GitUI.CommandsDialogs.FormRemotes.functional-findings.json"
           ],
           "platforms": ["windows", "linux"],
-          "findingCount": 80,
-          "note": "The owned suites pass 44 tests on Windows and 45 on Linux, including source ListView/DataGridView columns, read-only semantics, projection, sizing, and workflows. The inventory retains 80 functional-contract differences, so the axis remains a gap."
+          "findingCount": 32,
+          "note": "The 30-test affected remote-dialog cohort passes on Windows and Linux, including content-width preservation and debounced viewport resize. The inventory retains 30 actionable plus two dependent functional-contract differences, so the axis remains a gap."
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-29",
-          "commit": "84edb9fc0e075e19da1104c16b91627e3d9d0e86",
+          "verifiedOn": "2026-08-30",
+          "commit": "0100a288ab5df6632fc7ee1bed573ae3f8cedb6b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/capture-plan.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/remote-renderer-scales-82"
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/capture-plan.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-dpi-message-84/winforms-authoritative/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/avalonia-final/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-evidence-contract-85/diff-final/findings.json"
           ],
           "platforms": ["windows"],
-      "findingCount": 2817,
-      "note": "Progress 83 evidence at eng/avalonia/parity-evidence/P8.6i/remote-renderer-closure-83 retains 2,817 findings across the 36 light/dark/custom pairs. Native 100% retains 27 image thresholds and nine explicit duplicate browse-button identities, with no geometry, color, text, layout, font, or state finding; all higher-scale geometry is isolated to dpiChangeMessage references. Genuine native-monitor 125/150/200 provenance, popups, live PuTTY, exhaustive interactions, and renderer differences stay open."
+      "findingCount": 2304,
+      "note": "Progress 85 retains 2,304 strict findings across the 36 light/dark/custom pairs. Native 100% retains only 27 image thresholds and no tree diagnostic after reusable child identities are scoped to their named composite owners; all geometry is isolated to higher-scale dpiChangeMessage references. Genuine native-monitor 125/150/200 provenance, popups, live PuTTY, exhaustive interactions, and renderer differences stay open."
         },
         "themingAndColor": {
           "status": "gap",

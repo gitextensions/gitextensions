@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
@@ -17,6 +17,32 @@ public sealed class RemoteDialogCaptureTests
         AssertFormPull();
         AssertFormPush();
         AssertFormRemotes();
+    }
+
+    [AvaloniaTest]
+    public void Capture_reader_should_emit_the_visible_text_of_a_non_editable_combo_selection()
+    {
+        ComboBox comboBox = new()
+        {
+            Name = "RemoteRepositoryCombo",
+            ItemsSource = new[] { string.Empty, "origin" },
+            SelectedItem = "origin",
+        };
+        Window window = new() { Content = comboBox };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            CaptureNode node = new AvaloniaControlTreeReader(window, renderScale: 1)
+                .ReadPrimary(window, PixelSize.FromSize(window.ClientSize, 1))
+                .Root.Children.Single(child => child.Name == "RemoteRepositoryCombo");
+
+            node.Text.Should().Be("origin");
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     private static void AssertFormPull()

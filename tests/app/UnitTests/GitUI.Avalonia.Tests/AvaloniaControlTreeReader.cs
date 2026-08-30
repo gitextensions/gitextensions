@@ -209,6 +209,12 @@ internal sealed class AvaloniaControlTreeReader
             ?? (content as TextBlock)?.Text
             ?? header as string
             ?? (header as TextBlock)?.Text;
+        if (control is ComboBox comboBox && string.IsNullOrEmpty(text))
+        {
+            text = comboBox.SelectedItem as string
+                ?? (comboBox.SelectedItem as ComboBoxItem)?.Content as string;
+        }
+
         return text is null
             ? string.Empty
             : (control is MenuItem or Button or Label || control.Name == "btnRemoteColor")

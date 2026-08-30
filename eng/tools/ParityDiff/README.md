@@ -15,9 +15,13 @@ It then uses global luminance SSIM plus declared per-pixel and maximum-channel-d
 Tolerance values live in `parity-diff.json`, with deliberate per-component overrides. Resolved
 colors always have zero tolerance.
 
-Repeated control field identities are reported as `control.duplicateIdentity` findings instead
-of aborting the comparison. Repeated controls are paired in stable control-tree order, and an
-occurrence suffix in subsequent finding paths identifies each repeated control.
+Control field identities are scoped to their nearest chain of named owners. This preserves the
+same private field name in separate instances of a reusable composite control, such as two
+`FolderBrowserButton.buttonBrowse` children, without treating those independent instances as a
+duplicate. Repetition within the same named-owner scope is reported as
+`control.duplicateIdentity` instead of aborting the comparison. Repeated controls are paired in
+stable control-tree order, and an occurrence suffix in subsequent finding paths identifies each
+repeated control.
 
 ```powershell
 dotnet run --project eng/tools/ParityDiff -- compare `
