@@ -66,6 +66,13 @@ public sealed partial class ParityScreenshotTests
 
     [Test]
     [Category(P02Category)]
+    public void Commit_capture_host_should_use_the_96_dpi_designer_client_size()
+    {
+        GetCaptureSize(typeof(FormCommit)).Should().Be((918, 644));
+    }
+
+    [Test]
+    [Category(P02Category)]
     public void Blame_log_capture_hosts_should_use_96_dpi_designer_dimensions()
     {
         GetCaptureSize(typeof(FormBlame)).Should().Be((784, 762));

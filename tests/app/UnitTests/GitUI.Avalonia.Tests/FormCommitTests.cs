@@ -5,7 +5,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
-using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaEdit;
@@ -29,11 +28,13 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 namespace GitExtensionsTests;
 
 [TestFixture]
+[NonParallelizable]
 public sealed class FormCommitTests
 {
     private const string FeatCommitTypeForTest = "feat";
 
     private string _originalApplicationExecutablePath = null!;
+    private string _originalWorkingDirectory = null!;
     private ServiceContainer _serviceContainer = null!;
     private string _workingDirectory = null!;
 
@@ -59,6 +60,7 @@ public sealed class FormCommitTests
         GitUI.ServiceContainerRegistry.RegisterServices(_serviceContainer);
         WinFormsShims.ShimHost.MessageBoxHost = new StubMessageBoxHost { Result = WinFormsShims.DialogResult.Yes };
 
+        _originalWorkingDirectory = Directory.GetCurrentDirectory();
         _workingDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.Tests-{Guid.NewGuid():N}");
         Directory.CreateDirectory(_workingDirectory);
     }
@@ -68,6 +70,7 @@ public sealed class FormCommitTests
     {
         AppSettings.GetTestAccessor().ApplicationExecutablePath = _originalApplicationExecutablePath;
         _serviceContainer.Dispose();
+        Directory.SetCurrentDirectory(_originalWorkingDirectory);
         TestDirectory.Delete(_workingDirectory);
     }
 
@@ -107,7 +110,8 @@ public sealed class FormCommitTests
         Button commitAndPush = form.FindControl<Button>("CommitAndPush")
             ?? throw new InvalidOperationException("Commit-and-push button was not created.");
         commitAndPush.Content.Should().Be("Commit & _push");
-        commitAndPush.IsEnabled.Should().BeFalse("there are no staged changes in the construction-only form");
+        commitAndPush.IsEnabled.Should().BeTrue(
+            "the original keeps commit actions enabled and validates their inputs only after invocation");
 
         form.FindControl<DropDownButton>("commitMessageToolStripMenuItem").Should().NotBeNull();
         form.FindControl<DropDownButton>("commitTemplatesToolStripMenuItem").Should().NotBeNull();
@@ -125,6 +129,119 @@ public sealed class FormCommitTests
         emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(
             emittedKeys.Length,
             "each field must be routed through exactly one translation path");
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommit_should_match_the_96_dpi_designer_shell_and_control_order()
+    {
+        FormCommit form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithStagedAndUnstagedChanges()));
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+            FileStatusList staged = form.FindControl<FileStatusList>("Staged")!;
+            await WaitForCountsAsync(unstaged, 1, staged, 1);
+
+            form.ClientSize.Should().Be(new Size(918, 644));
+            Grid splitMain = form.FindControl<Grid>("splitMain")!;
+            Grid splitLeft = form.FindControl<Grid>("splitLeft")!;
+            Grid splitRight = form.FindControl<Grid>("splitRight")!;
+            Grid tableLayoutPanel1 = form.FindControl<Grid>("tableLayoutPanel1")!;
+            Grid toolbarCommit = form.FindControl<Grid>("toolbarCommit")!;
+            StackPanel flowCommitButtons = form.FindControl<StackPanel>("flowCommitButtons")!;
+
+            splitMain.ColumnDefinitions.Select(column => column.Width).Should().Equal(
+                new GridLength(397),
+                new GridLength(6),
+                new GridLength(1, GridUnitType.Star));
+            splitLeft.RowDefinitions.Select(row => row.Height).Should().Equal(
+                new GridLength(268),
+                new GridLength(6),
+                new GridLength(1, GridUnitType.Star));
+            splitRight.RowDefinitions.Select(row => row.Height).Should().Equal(
+                new GridLength(412),
+                new GridLength(6),
+                new GridLength(192));
+            tableLayoutPanel1.RowDefinitions.Select(row => row.Height).Should().Equal(
+                new GridLength(28),
+                new GridLength(1, GridUnitType.Star));
+            splitLeft.Bounds.Size.Should().Be(new Size(391, 610));
+            splitRight.Bounds.Size.Should().Be(new Size(509, 610));
+            flowCommitButtons.Bounds.Width.Should().Be(171);
+            toolbarCommit.Bounds.Width.Should().Be(324);
+
+            Grid.GetColumn(flowCommitButtons).Should().Be(0);
+            Grid.GetRowSpan(flowCommitButtons).Should().Be(2);
+            form.FindControl<FileViewer>("SelectedDiff")!.TranslatePoint(default, splitRight)!.Value.Y
+                .Should().BeLessThan(form.FindControl<GitUI.SpellChecker.EditNetSpell>("Message")!.TranslatePoint(default, splitRight)!.Value.Y);
+
+            DropDownButton messageMenu = form.FindControl<DropDownButton>("commitMessageToolStripMenuItem")!;
+            DropDownButton optionsMenu = form.FindControl<DropDownButton>("tsmiOptions")!;
+            DropDownButton templatesMenu = form.FindControl<DropDownButton>("commitTemplatesToolStripMenuItem")!;
+            Grid.GetColumn(messageMenu).Should().Be(0);
+            Grid.GetColumn(optionsMenu).Should().Be(2);
+            templatesMenu.GetVisualAncestors().Should().Contain(toolbarCommit);
+            optionsMenu.Bounds.Width.Should().BeGreaterThan(0, "Options must remain visible before toolbar overflow items");
+            form.FindControl<StackPanel>("toolbarCommitInlineItems")!.IsVisible.Should().BeFalse(
+                "the source ToolStrip overflows templates at the 324-DIP Designer width");
+            form.FindControl<DropDownButton>("toolbarCommitOverflow")!.IsVisible.Should().BeTrue();
+
+            flowCommitButtons.GetVisualChildren().OfType<Control>().Select(control => control.Name).Should().ContainInOrder(
+                "Commit",
+                "CommitAndPush",
+                "StageInSuperproject",
+                "Amend",
+                "AmendPanel",
+                "StashStaged",
+                "btnResetAllChanges",
+                "btnResetUnstagedChanges");
+            form.FindControl<TextBlock>("commitStagedCount")!.Text.Should().Be("1/2");
+            form.FindControl<Button>("Commit")!.IsEnabled.Should().BeTrue(
+                "the original validates an empty commit message after the enabled Commit button is invoked");
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommit_should_apply_the_original_conventional_commit_prefix_rules()
+    {
+        FormCommit form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithTwoUnstagedChanges()));
+        FormCommit.TestAccessor accessor = form.GetTestAccessor();
+        (string Current, int Position, bool Scope, string Expected, int ExpectedPosition)[] cases =
+        [
+            ("message", 0, false, "fix: message", 5),
+            ("feat: message", 7, false, "fix: message", 6),
+            ("feat(scope): message", 10, false, "fix(scope): message", 9),
+            ("feat: message", 7, true, "fix(): message", 4),
+            ("feat(scope): message", 10, true, "fix(scope): message", 12),
+        ];
+
+        try
+        {
+            form.Show();
+            await WaitForCountsAsync(
+                form.FindControl<FileStatusList>("Unstaged")!,
+                2,
+                form.FindControl<FileStatusList>("Staged")!,
+                0);
+            foreach ((string current, int position, bool scope, string expected, int expectedPosition) in cases)
+            {
+                accessor.SetMessageState(current, position);
+                accessor.IncludeFeatureParentheses = scope;
+                (string message, int selectionStart) = accessor.PrefixOrReplaceKeyword("fix");
+                message.Should().Be(expected);
+                selectionStart.Should().Be(expectedPosition);
+            }
+        }
+        finally
+        {
+            form.Close();
+            await accessor.ClosePersistenceTask;
+        }
     }
 
     [AvaloniaTest]
@@ -413,6 +530,7 @@ public sealed class FormCommitTests
             finally
             {
                 form.Close();
+                await form.GetTestAccessor().ClosePersistenceTask;
             }
         }
         finally
@@ -576,15 +694,19 @@ public sealed class FormCommitTests
 
             await WaitForCountsAsync(unstaged, 2, staged, 0);
 
-            DoubleClickSelectedItem(form, unstaged);
+            await DoubleClickSelectedItemAsync(unstaged);
             await WaitForCountsAsync(unstaged, 1, staged, 1);
 
-            DoubleClickSelectedItem(form, staged);
+            await DoubleClickSelectedItemAsync(staged);
             await WaitForCountsAsync(unstaged, 2, staged, 0);
 
+            unstaged.SelectedGitItems = [unstaged.GitItemStatuses[0]];
+            await WaitUntilAsync(() => stageSelected.IsEnabled);
             stageSelected.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
             await WaitForCountsAsync(unstaged, 1, staged, 1);
 
+            staged.SelectedGitItems = [staged.GitItemStatuses[0]];
+            await WaitUntilAsync(() => unstageSelected.IsEnabled);
             unstageSelected.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
             await WaitForCountsAsync(unstaged, 2, staged, 0);
 
@@ -599,6 +721,7 @@ public sealed class FormCommitTests
         finally
         {
             form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
         }
     }
 
@@ -622,15 +745,14 @@ public sealed class FormCommitTests
             await WaitUntilAsync(() =>
                 unstaged.GitItemStatuses.Count == 1
                 && staged.GitItemStatuses.Count == 1
-                && diffEditor.Document?.Text.Contains("unstaged line", StringComparison.Ordinal) == true);
+                && diffEditor.Document?.Text.Contains("unstaged line", StringComparison.Ordinal) == true,
+                () => $"unstaged/staged={unstaged.GitItemStatuses.Count}/{staged.GitItemStatuses.Count}; diff={diffEditor.Document?.Text}");
 
             form.CaptureRenderedFrame().Should().NotBeNull("the dirty-repository staging view should render headlessly");
             unstaged.SelectedItem.Should().NotBeNull();
             staged.SelectedItem.Should().BeNull("the unstaged list is selected first, matching the upstream dialog");
 
-            ListBox stagedFiles = staged.FindControl<ListBox>("lstFiles")
-                ?? throw new InvalidOperationException("Staged file list box was not created.");
-            stagedFiles.SelectedIndex = 0;
+            staged.SelectedGitItems = [staged.GitItemStatuses[0]];
             await WaitUntilAsync(() =>
                 diffEditor.Document?.Text.Contains("staged line", StringComparison.Ordinal) == true
                 && diffEditor.Document.Text.Contains("unstaged line", StringComparison.Ordinal) == false);
@@ -642,6 +764,7 @@ public sealed class FormCommitTests
         finally
         {
             form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
         }
     }
 
@@ -680,29 +803,21 @@ public sealed class FormCommitTests
         return module;
     }
 
-    private static void DoubleClickSelectedItem(FormCommit form, FileStatusList fileStatusList)
+    private static async Task DoubleClickSelectedItemAsync(FileStatusList fileStatusList)
     {
-        ListBox listBox = fileStatusList.FindControl<ListBox>("lstFiles")
-            ?? throw new InvalidOperationException("File list box was not created.");
-        ListBoxItem item = listBox.ContainerFromIndex(listBox.SelectedIndex) as ListBoxItem
-            ?? throw new InvalidOperationException("Selected file row was not realized.");
-        Point point = item.TranslatePoint(new Point(12, item.Bounds.Height / 2), form)
-            ?? throw new InvalidOperationException("Selected file row position was not available.");
-
-        form.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
-        form.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
-        form.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
-        form.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+        fileStatusList.SelectedGitItems = [fileStatusList.GitItemStatuses[0]];
+        await WaitUntilAsync(() => fileStatusList.SelectedGitItems.Count > 0);
+        fileStatusList.GetTestAccessor().DoubleClick();
     }
 
     private static Task WaitForCountsAsync(FileStatusList unstaged, int unstagedCount, FileStatusList staged, int stagedCount)
     {
-        return WaitUntilAsync(() =>
-            unstaged.GitItemStatuses.Count == unstagedCount
-            && staged.GitItemStatuses.Count == stagedCount);
+        return WaitUntilAsync(
+            () => unstaged.GitItemStatuses.Count == unstagedCount && staged.GitItemStatuses.Count == stagedCount,
+            () => $"expected unstaged/staged counts {unstagedCount}/{stagedCount}, actual {unstaged.GitItemStatuses.Count}/{staged.GitItemStatuses.Count}");
     }
 
-    private static async Task WaitUntilAsync(Func<bool> condition)
+    private static async Task WaitUntilAsync(Func<bool> condition, Func<string>? timeoutReason = null)
     {
         Stopwatch stopwatch = Stopwatch.StartNew();
         while (!condition() && stopwatch.Elapsed < TimeSpan.FromSeconds(15))
@@ -711,7 +826,7 @@ public sealed class FormCommitTests
             await Task.Delay(10);
         }
 
-        condition().Should().BeTrue("the changed files and diff should load before the timeout");
+        condition().Should().BeTrue(timeoutReason?.Invoke() ?? "the changed files and diff should load before the timeout");
     }
 
     private sealed class StubMessageBoxHost : WinFormsShims.IMessageBoxHost
