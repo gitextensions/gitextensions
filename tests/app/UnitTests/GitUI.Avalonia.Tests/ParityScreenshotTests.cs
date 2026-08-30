@@ -828,7 +828,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormCommit))
         {
-            return new FormCommit(context.Commands, commitMessage: "Describe the representative Avalonia changes");
+            return new FormCommit(context.Commands);
         }
 
         if (viewType == typeof(FormCreateBranch))
@@ -2460,6 +2460,11 @@ public sealed partial class ParityScreenshotTests
         {
             // The WinForms full-window PrintWindow surface includes non-client chrome.
             return (816, 578);
+        }
+
+        if (viewType == typeof(FormCommit))
+        {
+            return (918, 644);
         }
 
         if (viewType == typeof(ColorsSettingsPage))
