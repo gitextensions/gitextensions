@@ -273,8 +273,22 @@ internal static class CaptureComparer
         DiffTolerance tolerance,
         ICollection<ParityFinding> findings)
     {
-        List<CaptureNode> referenceNodes = Flatten(referenceRoot).Where(node => node.FieldName is not null).ToList();
-        List<CaptureNode> candidateNodes = Flatten(candidateRoot).Where(node => node.FieldName is not null).ToList();
+        List<ScopedFieldNode> referenceFields = GetScopedFieldNodes(referenceRoot);
+        List<ScopedFieldNode> candidateFields = GetScopedFieldNodes(candidateRoot);
+        List<CaptureNode> referenceNodes = referenceFields.Select(field => field.Node).ToList();
+        List<CaptureNode> candidateNodes = candidateFields.Select(field => field.Node).ToList();
+        Dictionary<CaptureNode, string> referenceScopes = new(ReferenceEqualityComparer.Instance);
+        Dictionary<CaptureNode, string> candidateScopes = new(ReferenceEqualityComparer.Instance);
+        foreach (ScopedFieldNode field in referenceFields)
+        {
+            referenceScopes.Add(field.Node, field.OwnerPath);
+        }
+
+        foreach (ScopedFieldNode field in candidateFields)
+        {
+            candidateScopes.Add(field.Node, field.OwnerPath);
+        }
+
         Dictionary<string, List<CaptureNode>> candidatesByField = candidateNodes
             .GroupBy(node => node.FieldName!, StringComparer.Ordinal)
             .ToDictionary(group => group.Key, group => group.ToList(), StringComparer.Ordinal);
@@ -282,7 +296,7 @@ internal static class CaptureComparer
         Dictionary<string, int> candidateCounts = GetFieldCounts(candidateNodes);
         Dictionary<CaptureNode, int> referenceOccurrences = GetFieldOccurrences(referenceNodes);
         Dictionary<CaptureNode, int> candidateOccurrences = GetFieldOccurrences(candidateNodes);
-        ReportDuplicateFields(referenceCounts, candidateCounts, surfacePath, findings);
+        ReportDuplicateFields(referenceFields, candidateFields, surfacePath, findings);
 
         HashSet<CaptureNode> matchedCandidates = new(ReferenceEqualityComparer.Instance);
         foreach (CaptureNode referenceNode in referenceNodes)
@@ -291,7 +305,9 @@ internal static class CaptureComparer
             bool aliased = false;
             if (candidatesByField.TryGetValue(referenceNode.FieldName!, out List<CaptureNode>? exactMatches))
             {
-                candidateNode = exactMatches.FirstOrDefault(node => !matchedCandidates.Contains(node));
+                candidateNode = exactMatches.FirstOrDefault(node => !matchedCandidates.Contains(node)
+                    && string.Equals(candidateScopes[node], referenceScopes[referenceNode], StringComparison.Ordinal))
+                    ?? exactMatches.FirstOrDefault(node => !matchedCandidates.Contains(node));
             }
 
             if (candidateNode is null)
@@ -370,6 +386,29 @@ internal static class CaptureComparer
         nodes.GroupBy(node => node.FieldName!, StringComparer.Ordinal)
             .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
 
+    private static List<ScopedFieldNode> GetScopedFieldNodes(CaptureNode root)
+    {
+        List<ScopedFieldNode> fields = [];
+        AddChildren(root, "$root");
+        return fields;
+
+        void AddChildren(CaptureNode parent, string ownerPath)
+        {
+            foreach (CaptureNode child in parent.Children)
+            {
+                if (child.FieldName is not null)
+                {
+                    fields.Add(new ScopedFieldNode(child, ownerPath));
+                }
+
+                string childOwnerPath = child.FieldName is null
+                    ? ownerPath
+                    : $"{ownerPath}/{child.FieldName}";
+                AddChildren(child, childOwnerPath);
+            }
+        }
+    }
+
     private static Dictionary<CaptureNode, int> GetFieldOccurrences(IEnumerable<CaptureNode> nodes)
     {
         Dictionary<string, int> counts = new(StringComparer.Ordinal);
@@ -395,29 +434,40 @@ internal static class CaptureComparer
             : $"{surfacePath}/control[{fieldName}]";
 
     private static void ReportDuplicateFields(
-        IReadOnlyDictionary<string, int> referenceCounts,
-        IReadOnlyDictionary<string, int> candidateCounts,
+        IReadOnlyList<ScopedFieldNode> referenceFields,
+        IReadOnlyList<ScopedFieldNode> candidateFields,
         string surfacePath,
         ICollection<ParityFinding> findings)
     {
-        string[] duplicateFields = referenceCounts.Keys
+        Dictionary<ScopedFieldIdentity, int> referenceCounts = GetScopedFieldCounts(referenceFields);
+        Dictionary<ScopedFieldIdentity, int> candidateCounts = GetScopedFieldCounts(candidateFields);
+        ScopedFieldIdentity[] duplicateFields = referenceCounts.Keys
             .Concat(candidateCounts.Keys)
-            .Distinct(StringComparer.Ordinal)
-            .Where(fieldName => referenceCounts.GetValueOrDefault(fieldName) > 1
-                                || candidateCounts.GetValueOrDefault(fieldName) > 1)
-            .Order(StringComparer.Ordinal)
+            .Distinct()
+            .Where(identity => referenceCounts.GetValueOrDefault(identity) > 1
+                               || candidateCounts.GetValueOrDefault(identity) > 1)
+            .OrderBy(identity => identity.FieldName, StringComparer.Ordinal)
+            .ThenBy(identity => identity.OwnerPath, StringComparer.Ordinal)
             .ToArray();
-        foreach (string fieldName in duplicateFields)
+        foreach (ScopedFieldIdentity identity in duplicateFields)
         {
             findings.Add(CreateFinding(
                 ControlCategory,
                 "control.duplicateIdentity",
-                $"{surfacePath}/control[{fieldName}]",
-                "The field identity is duplicated; repeated controls are joined in stable tree order.",
-                referenceCounts.GetValueOrDefault(fieldName).ToString(CultureInfo.InvariantCulture),
-                candidateCounts.GetValueOrDefault(fieldName).ToString(CultureInfo.InvariantCulture)));
+                $"{surfacePath}/control[{identity.FieldName}]",
+                $"The field identity is duplicated within named owner '{identity.OwnerPath}'; repeated controls are joined in stable tree order.",
+                referenceCounts.GetValueOrDefault(identity).ToString(CultureInfo.InvariantCulture),
+                candidateCounts.GetValueOrDefault(identity).ToString(CultureInfo.InvariantCulture)));
         }
     }
+
+    private static Dictionary<ScopedFieldIdentity, int> GetScopedFieldCounts(IEnumerable<ScopedFieldNode> fields) =>
+        fields.GroupBy(field => new ScopedFieldIdentity(field.OwnerPath, field.Node.FieldName!))
+            .ToDictionary(group => group.Key, group => group.Count());
+
+    private sealed record ScopedFieldNode(CaptureNode Node, string OwnerPath);
+
+    private sealed record ScopedFieldIdentity(string OwnerPath, string FieldName);
 
     private static void CompareFocusOrder(
         CaptureNode reference,

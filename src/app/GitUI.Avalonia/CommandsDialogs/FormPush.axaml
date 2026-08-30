@@ -187,6 +187,7 @@
             </wf:DataGridViewTextBoxColumn>
             <wf:DataGridViewCheckBoxColumn x:Name="PushColumn"
                     Grid.Column="3"
+                    Text="Push"
                     Padding="4,3"
                     BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
                     BorderThickness="0,1,1,1">
@@ -269,6 +270,7 @@
                   IsEnabled="False"
                   compat:TranslationCompat.TranslateText="False" />
         <usercontrols:FolderBrowserButton x:Name="folderBrowserButton1"
+                                          Text="Bro&amp;wse..."
                                           Width="100"
                                           Height="25"
                                           Margin="396,47,0,0"

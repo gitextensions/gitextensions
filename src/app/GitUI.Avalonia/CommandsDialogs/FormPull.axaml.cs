@@ -233,6 +233,10 @@ public sealed partial class FormPull : GitExtensionsDialog
             .FirstOrDefault(remote => StringComparer.OrdinalIgnoreCase.Equals(remote, selectedRemoteName))
             ?? _NO_TRANSLATE_Remotes.Items.OfType<string>().FirstOrDefault(remote => remote != AllRemotes)
             ?? AllRemotes;
+
+        // we couldn't find the default assigned remote for the selected branch
+        // it is usually gets mapped via FormRemotes -> "default pull behavior" tab
+        // so pick the default user remote
         _NO_TRANSLATE_Remotes.SelectedItem = selected;
         _NO_TRANSLATE_Remotes.Text = selected;
         _bInternalUpdate = false;
@@ -305,6 +309,14 @@ public sealed partial class FormPull : GitExtensionsDialog
 
             if (_heads is null)
             {
+                // The line below is the most reliable way to get a list containing
+                // all remote branches but it is also the slowest.
+                // Heads = GitCommands.GitCommands.GetRemoteHeads(Remotes.Text, false, true);
+
+                // The code below is a quick way to get a list contains all remote branches.
+                // It only returns the heads that are already known to the repository. This
+                // doesn't return heads that are new on the server. This can be updated using
+                // update branch info in the manage remotes dialog.
                 _heads = PullFromUrl.IsChecked == true
                     ? [.. Module.GetRefs(RefsFilter.Heads)]
                     : [.. Module.GetRefs(RefsFilter.Remotes)
@@ -386,7 +398,6 @@ public sealed partial class FormPull : GitExtensionsDialog
             return WinFormsShims.DialogResult.No;
         }
 
-        // Rebase failed -> special 'rebase' merge conflict
         if (!ExecuteBeforeScripts())
         {
             return WinFormsShims.DialogResult.No;
@@ -505,6 +516,7 @@ public sealed partial class FormPull : GitExtensionsDialog
             return false;
         }
 
+        // Fast submodules check
         bool initialized = Module.GetSubmodulesLocalPaths()
             .Select(submoduleName => Module.GetSubmodule(submoduleName))
             .All(submodule => submodule.IsValidGitWorkingDir());
@@ -531,6 +543,7 @@ public sealed partial class FormPull : GitExtensionsDialog
 
     private bool CheckMergeConflictsOnError(WinFormsShims.IWin32Window? owner)
     {
+        // Rebase failed -> special 'rebase' merge conflict
         if (Rebase.IsChecked == true && Module.InTheMiddleOfRebase())
         {
             return UICommands.StartTheContinueRebaseDialog(owner);
@@ -585,6 +598,7 @@ public sealed partial class FormPull : GitExtensionsDialog
 
     private WinFormsShims.DialogResult ShouldRebaseMergeCommit(WinFormsShims.IWin32Window? owner)
     {
+        // ask only if exists commit not pushed to remote yet
         if (Rebase.IsChecked == true && PullFromRemote.IsChecked == true && MergeCommitExists())
         {
             return MessageBoxes.Show(
@@ -711,6 +725,8 @@ public sealed partial class FormPull : GitExtensionsDialog
         Lazy<string> currentBranchRemote = new(() => Module.GetSetting(string.Format(SettingKeyString.BranchRemote, localBranchName)));
         if (_branch == localBranchName)
         {
+            // if local branch eq to current branch and remote branch is not specified
+            // then run fetch with no refspec
             curLocalBranch = remote == currentBranchRemote.Value || string.IsNullOrEmpty(currentBranchRemote.Value)
                 ? string.IsNullOrEmpty(Branches.Text) ? null : _branch
                 : localBranchName;
@@ -1097,9 +1113,11 @@ public sealed partial class FormPull : GitExtensionsDialog
         string remote = GetSelectedRemoteName();
         if (!string.IsNullOrEmpty(remote) && remote != AllRemotes)
         {
+            // update the text box of the Remote Url combobox to show the URL of selected remote
             comboBoxPullSource.Text = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
         }
 
+        // update merge options radio buttons
         Merge.IsEnabled = !IsPullAll() || PullFromUrl.IsChecked == true;
         Rebase.IsEnabled = !IsPullAll() || PullFromUrl.IsChecked == true;
         if (IsPullAll() && PullFromRemote.IsChecked == true)
