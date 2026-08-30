@@ -269,7 +269,12 @@ public sealed class RevisionGridColumnProviderTests
                 ];
                 labels.Select(label => label.Label).Should().Equal("main", "↓");
                 labels.Should().OnlyContain(label => label.Fill);
-                labels.Single(label => label.Label == "↓").IsDashed.Should().BeTrue();
+                RevisionGridRefRenderer.RefLabelControl virtualLabel = labels.Single(label => label.Label == "↓");
+                virtualLabel.IsDashed.Should().BeTrue();
+                NestledVirtualRef nestledRef = virtualLabel.GitRef.Should().BeOfType<NestledVirtualRef>().Subject;
+                nestledRef.CompleteName.Should().Be("refs/remotes/origin/main");
+                nestledRef.IsRemote.Should().BeTrue();
+                nestledRef.TrackingBranchIsGone.Should().BeFalse();
                 ((RevisionGraphColumnProvider)control.ColumnProviders[0]).RevisionGraphDrawStyle
                     .Should().Be(RevisionGraphDrawStyle.Normal);
             }
