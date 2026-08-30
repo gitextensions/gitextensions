@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "0100a288ab5df6632fc7ee1bed573ae3f8cedb6b",
+  "analyzedCommit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
   "axisOrder": [
     "structural",
     "functional",
@@ -5409,70 +5409,98 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-08-30",
+          "commit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.CommitKindExtensions.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.CommitKindExtensions.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormCommit.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormCommit.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/FormCommit.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 203,
-          "note": "P8.6i progress 69 groups 47 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 203 actionable and 250 total differences for this mapping; every structural difference stays open."
+          "findingCount": 133,
+          "note": "Progress 86 restores substantial source-shaped logic and the source-authored native-96 layout. The fresh schema-v5 inventory records 133 actionable plus 6 dependent findings and 420 exact reviewed framework deviations; every remaining structural difference stays open."
         },
         "functional": {
           "status": "verified",
-          "verifiedOn": "2026-08-11",
-          "commit": "039822d94d0c382e33476ebc335d2df435ef06d1",
+          "verifiedOn": "2026-08-30",
+          "commit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6f/f2/functional-findings.after.json",
-            "eng/avalonia/parity-evidence/P8.6f/f2/inventory-classification.json",
-            "eng/avalonia/parity-evidence/P8.6f/f2/tests/windows/p8.6f2-focused-windows.trx",
-            "eng/avalonia/parity-evidence/P8.6f/f2/tests/linux/p8.6f2-focused-linux.trx"
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/FormCommit.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/tests/windows/FormCommit-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/tests/windows/ExecutableTests-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/tests/linux/wsl-gate.log",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/tests/linux/executable-tests.log"
           ],
           "platforms": [
             "windows",
             "linux"
           ],
-          "findingCount": 845,
-          "note": "Focused Windows/Linux tests close the FormCommit product-functional contract, including commit font, validation auto-wrap/indent/color formatting, selection-filter behavior, external settings, provider refresh, staging reload ordering, the original 18 hotkeys, and restored toolbar/menu/status owner routes. The raw findings are fully classified generated Designer/AXAML fields, framework event/menu/lifecycle/async representations, dynamic translations, and analyzer parser false positives; exact structural/visual/theme/exhaustive-state closure remains P8.6f.3."
+          "findingCount": 139,
+          "note": "The 17 focused tests on Windows and Linux cover the restored source layout contract, empty-message click-time validation, conventional prefixes, autosquash modes, templates/history, validation and font settings, selection filtering, commit arguments, stage/unstage/diff, and two real commits. Close-time task cancellation and persistence are joined before test repository disposal; 5 focused executable tests include a Windows descendant-process regression proving cancellation releases the repository working directory. The 139 inventory differences are structural/framework classifications, not untested product behavior; exact visual/theme/exhaustive-state closure remains open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-30",
+          "commit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/diff-authoritative-final/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 23290,
+          "note": "The source-authored 918-by-644 native-96 layout, split distances, action flow and toolbar geometry are restored. The seven-state light/dark/custom matrix captured 84/84 Avalonia requests and compared all 25 valid WinForms references, retaining 23,290 strict diagnostic findings. Fifty-nine higher-DPI WinForms cells are explicitly unsupported rather than silently compared because the nested native toolbar stayed at 96 DPI. Exact visual parity remains open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-30",
+          "commit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/diff-authoritative-final/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 6119,
+          "note": "Resolved-ARGB manifests round-trip for light, dark, and custom themes. The 25 comparable pairs retain 6,119 strict color diagnostics; exact theme/color parity remains open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-30",
+          "commit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/diff-authoritative-final/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/tests/windows/FormCommit-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/tests/linux/wsl-gate.log"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 772,
+          "note": "Seven declared capture states plus focused staging, selection, validation, autosquash, options, commit, and close lifecycle interactions are exercised. The strict pairs retain 772 state diagnostics and the complete hover/pressed/focus/popup/error audit remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-30",
+          "commit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/tests/windows/FormCommit-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/tests/linux/wsl-gate.log",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Focused tests pass on Windows and WSL; runtime smoke passes on Windows, native Wayland, X11, and Wayland Flatpak with --filesystem=host. macOS and exhaustive FormCommit-specific confined interactions remain verification debt."
         }
       }
     },

@@ -717,7 +717,11 @@ public partial class FileStatusList : GitModuleControl
         _nextItemToSelect = null;
         if (orSelectFirst && SelectedItem is null)
         {
-            SelectFirstVisibleItem();
+            GitItemStatus? firstItem = _gitItemFilteredStatuses.FirstOrDefault();
+            if (firstItem is not null)
+            {
+                SelectFileOrFolder(RelativePath.From(firstItem.Name));
+            }
         }
     }
 
@@ -1561,6 +1565,9 @@ public partial class FileStatusList : GitModuleControl
 
         internal void SelectFirstTreeLeaf()
             => control.tvFiles.SelectedItem = control.tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).First(node => node.Item is not null);
+
+        internal void DoubleClick()
+            => control.FileStatusListView_DoubleClick(control, EventArgs.Empty);
 
         internal void SetSort(DiffListSortType sortType)
         {

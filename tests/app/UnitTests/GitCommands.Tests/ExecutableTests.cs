@@ -62,6 +62,44 @@ public sealed class ExecutableTests
     }
 
     [Test]
+    [Platform(Include = "Win")]
+    public async Task Process_descendants_shall_be_killed_on_cancellation()
+    {
+        string workingDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.ExecutableTests-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(workingDirectory);
+        try
+        {
+            using CancellationTokenSource cancellationTokenSource = new();
+            IExecutable executable = new Executable("cmd.exe", workingDirectory);
+            Task<ExecutionResult> executionTask = executable.ExecuteAsync(
+                "/c ping -n 60 127.0.0.1",
+                cancellationToken: cancellationTokenSource.Token);
+
+            await Task.Delay(TimeSpan.FromMilliseconds(500));
+            await cancellationTokenSource.CancelAsync();
+
+            try
+            {
+                await executionTask.ConfigureAwaitRunInline();
+                Assert.Fail("the canceled process should not complete successfully");
+            }
+            catch (OperationCanceledException)
+            {
+            }
+
+            Action deleteWorkingDirectory = () => Directory.Delete(workingDirectory, recursive: true);
+            deleteWorkingDirectory.Should().NotThrow("the canceled process tree must release its working directory");
+        }
+        finally
+        {
+            if (Directory.Exists(workingDirectory))
+            {
+                Directory.Delete(workingDirectory, recursive: true);
+            }
+        }
+    }
+
+    [Test]
     public async Task WaitForProcessExitAsync_shall_return_latest_after_timeout()
     {
         TimeSpan halfRuntime = TimeSpan.FromSeconds(3);
