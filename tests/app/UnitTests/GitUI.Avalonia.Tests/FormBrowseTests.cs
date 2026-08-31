@@ -14,6 +14,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
 using GitCommands.Git.Gpg;
+using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -96,7 +97,7 @@ public sealed class FormBrowseTests
 
             dashboardForm.FindControl<Dashboard>("dashboard")!.IsVisible.Should().BeTrue();
             dashboardForm.FindControl<Grid>("mainContentGrid")!.IsVisible.Should().BeFalse();
-            dashboardForm.FindControl<WrapPanel>("toolPanel")!.IsVisible.Should().BeFalse();
+            dashboardForm.FindControl<SourceControls.ToolStripContainer>("toolPanel")!.IsVisible.Should().BeFalse();
             dashboardForm.FindControl<MenuItem>("dashboardToolStripMenuItem")!.IsVisible.Should().BeTrue();
             dashboardForm.FindControl<MenuItem>("repositoryToolStripMenuItem")!.IsVisible.Should().BeFalse();
         }
@@ -108,7 +109,7 @@ public sealed class FormBrowseTests
 
         repositoryForm.FindControl<Dashboard>("dashboard")!.IsVisible.Should().BeFalse();
         repositoryForm.FindControl<Grid>("mainContentGrid")!.IsVisible.Should().BeTrue();
-        repositoryForm.FindControl<WrapPanel>("toolPanel")!.IsVisible.Should().BeTrue();
+        repositoryForm.FindControl<SourceControls.ToolStripContainer>("toolPanel")!.IsVisible.Should().BeTrue();
         repositoryForm.FindControl<MenuItem>("dashboardToolStripMenuItem")!.IsVisible.Should().BeFalse();
         repositoryForm.FindControl<MenuItem>("repositoryToolStripMenuItem")!.IsVisible.Should().BeTrue();
         repositoryForm.FindControl<MenuItem>("editgitignoreToolStripMenuItem1").Should().NotBeNull();
@@ -440,11 +441,17 @@ public sealed class FormBrowseTests
             RevisionGridControl revisionGrid = form.RevisionGrid;
             TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
             await WaitUntilAsync(() => loadingStatus.Text == "6 revisions");
-
-            revisionGrid.GetTestAccessor().Revisions.Items
+            ObjectId initial = module.RevParse("HEAD~1");
+            ObjectId[] revisionOrder = [.. revisionGrid.GetTestAccessor().Revisions.Items
                 .Cast<GitRevision>()
-                .Select(revision => revision.ObjectId)
-                .Should().Equal(stash, ObjectId.WorkTreeId, ObjectId.IndexId, stashIndex, head, module.RevParse("HEAD~1"));
+                .Select(revision => revision.ObjectId)];
+
+            revisionOrder.Should().BeEquivalentTo([stash, stashIndex, ObjectId.WorkTreeId, ObjectId.IndexId, head, initial]);
+            revisionOrder.Should().OnlyHaveUniqueItems();
+            Array.IndexOf(revisionOrder, stash).Should().BeLessThan(Array.IndexOf(revisionOrder, stashIndex));
+            int artificialIndex = Array.IndexOf(revisionOrder, ObjectId.WorkTreeId);
+            revisionOrder.Skip(artificialIndex).Take(2).Should().Equal(ObjectId.WorkTreeId, ObjectId.IndexId);
+            artificialIndex.Should().BeLessThan(Array.IndexOf(revisionOrder, head));
 
             revisionGrid.SetSelectedRevision(head).Should().BeTrue();
             ContextMenu contextMenu = revisionGrid.FindControl<ContextMenu>("mainContextMenu")
@@ -516,6 +523,58 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [NonParallelizable]
+    public void FormBrowse_should_publish_submodule_provider_updates_in_the_source_toolbar_menu()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        string childPath = Path.Combine(_workingDirectory, "child");
+        Directory.CreateDirectory(childPath);
+        ISubmoduleStatusProvider provider = Substitute.For<ISubmoduleStatusProvider>();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
+        commands.GetService(Arg.Any<Type>()).Returns(call =>
+            call.Arg<Type>() == typeof(ISubmoduleStatusProvider)
+                ? provider
+                : _serviceContainer.GetService(call.Arg<Type>()));
+
+        using FormBrowse form = new(commands);
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+        IconSplitButton levelUp = form.FindControl<IconSplitButton>("toolStripButtonLevelUp")!;
+        MenuFlyout flyout = (MenuFlyout)levelUp.Flyout!;
+
+        provider.StatusUpdating += Raise.Event<EventHandler>(provider, EventArgs.Empty);
+        Dispatcher.UIThread.RunJobs();
+        flyout.Items.OfType<MenuItem>().Should().ContainSingle()
+            .Which.Should().Match<MenuItem>(item => item.Header!.ToString() == "Loading..." && item.IsEnabled);
+
+        SubmoduleInfo top = new("top", _workingDirectory, bold: true);
+        SubmoduleInfo child = new("child", childPath, bold: false);
+        SubmoduleInfoResult result = new()
+        {
+            TopProject = top,
+        };
+        result.OurSubmodules.Add(child);
+        result.AllSubmodules.Add(child);
+        provider.StatusUpdated += Raise.Event<EventHandler<SubmoduleStatusEventArgs>>(
+            provider,
+            new SubmoduleStatusEventArgs(result, structureUpdated: true, CancellationToken.None));
+        Dispatcher.UIThread.RunJobs();
+
+        MenuItem[] menuItems = flyout.Items.OfType<MenuItem>().ToArray();
+        menuItems.Select(item => item.Header!.ToString()).Should().Equal("child", "_Update all submodules");
+        menuItems[0].Tag.Should().Be(childPath);
+        menuItems[0].Icon.Should().BeOfType<Image>();
+        flyout.Items.OfType<Separator>().Should().ContainSingle();
+        ToolTip.GetTip(levelUp).Should().Be(string.Empty);
+
+        form.ExecuteCommand(FormBrowse.Command.GoToSubmodule).Should().BeTrue();
+        flyout.IsOpen.Should().BeTrue();
+        flyout.Hide();
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_worktree_surfaces_should_reuse_the_existing_translation_keys()
     {
         FormBrowse form = new();
@@ -529,6 +588,7 @@ public sealed class FormBrowseTests
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "manageWorktreeToolStripMenuItem", "Text", "Manage &worktrees...");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "toolStripMenuItemReflog", "Text", "Show reflo&g...");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "toolStripWorktrees", "ToolTipText", "Worktrees");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "toolStripButtonLevelUp", "ToolTipText", "Submodules");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "archiveToolStripMenuItem", "Text", "Archi&ve revision...");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitMaintenanceToolStripMenuItem", "Text", "&Git maintenance");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "compressGitDatabaseToolStripMenuItem", "Text", "&Compress git database");
