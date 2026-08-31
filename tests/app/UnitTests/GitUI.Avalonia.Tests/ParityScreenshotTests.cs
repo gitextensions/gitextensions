@@ -1887,7 +1887,24 @@ public sealed partial class ParityScreenshotTests
         if (Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
             && root is FormBrowse formBrowse)
         {
-            // parity-scaffolding: Wait for the seeded repository's status count so captures cannot race the monitor.
+            // parity-scaffolding: WinForms settles HEAD selection before opening FormBrowse menus.
+            // Drive the same product selection boundary so menu enabled-state evidence cannot race loading.
+            TextBlock loadingStatus = GetRequiredControl<TextBlock>(formBrowse.RevisionGrid, "lblLoadingStatus");
+            Stopwatch revisionStopwatch = Stopwatch.StartNew();
+            while (!IsLoadingComplete(loadingStatus.Text)
+                   && revisionStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            IsLoadingComplete(loadingStatus.Text).Should().BeTrue();
+            formBrowse.RevisionGrid.SetSelectedRevision(context.HeadRevision.ObjectId).Should().BeTrue();
+            Dispatcher.UIThread.RunJobs();
+            formBrowse.RevisionGrid.GetSelectedRevisions().Should().ContainSingle()
+                .Which.ObjectId.Should().Be(context.HeadRevision.ObjectId);
+
+            // Wait for the seeded repository's status count so captures cannot race the monitor.
             Button commitButton = GetRequiredControl<Button>(formBrowse, "toolStripButtonCommit");
             Stopwatch statusStopwatch = Stopwatch.StartNew();
             while (!(commitButton.Content?.ToString()?.EndsWith("(3)", StringComparison.Ordinal) ?? false)

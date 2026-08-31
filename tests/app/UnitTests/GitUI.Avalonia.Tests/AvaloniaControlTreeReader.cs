@@ -410,6 +410,8 @@ internal sealed class AvaloniaControlTreeReader
             && (isSourceToolStrip || isSourceToolStripItem);
         bool isFormBrowseMenuStrip = _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
             && (control.Name == "mainMenuStrip" || (control is MenuItem && control.Parent is Menu));
+        bool isFormBrowseToolStripContainer = sourceOwnerType == "GitUI.CommandsDialogs.FormBrowse"
+            && control.Name == "toolPanel";
         bool isDesignerMetadataControl = fieldName is not null && IsDesignerMetadataControl(control);
         Control? childSemanticParent = isSurfaceRoot || fieldName is not null || isInheritedFormProcessContainer
             ? control
@@ -567,20 +569,28 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (fieldName is not null ? ReadFont(_root) : null),
             Colors = isComboBoxPopup || isComboBoxPopupItem
                 ? ReadComboBoxPopupColors()
+                : isFormBrowseToolStripContainer
+                    ? ReadFormBrowseToolStripContainerColors()
                 : isFormBrowseMenuStrip
-                    ? ReadToolStripColors(control, isItem: control is MenuItem, transparentBackground: true)
+                    ? ReadToolStripColors(
+                        control,
+                        isItem: control is MenuItem,
+                        transparentBackground: true,
+                        useWindowText: true)
                 : isSemanticToolStrip
                     ? ReadToolStripColors(
                         control,
                         isItem: false,
                         transparentBackground: isFormBrowseSourceToolStrip,
-                        panelBackground: isFileStatusToolbar)
+                        panelBackground: isFileStatusToolbar,
+                        useControlText: isFormBrowseSourceToolStrip)
                     : isSemanticToolStripItem
                         ? ReadToolStripColors(
                             control,
                             isItem: true,
-                            transparentBackground: isFormBrowseSourceToolStrip,
-                            panelBackground: IsFileStatusToolbarItem(control))
+                            transparentBackground: false,
+                            panelBackground: IsFileStatusToolbarItem(control),
+                            useControlText: isFormBrowseSourceToolStrip)
                         : isFileStatusListView
                             ? ReadFileStatusListViewColors(semanticStateControl)
                             : isWatermarkComboBox
@@ -956,11 +966,9 @@ internal sealed class AvaloniaControlTreeReader
         {
             // parity-scaffolding: WinForms TabPage.Bounds is the native display rectangle,
             // while Avalonia's TabItem.Bounds describes only the clickable header.
-            return new Rect(
-                4,
-                30,
-                Math.Max(0, owner.Bounds.Width - 8),
-                Math.Max(0, owner.Bounds.Height - 34));
+            return owner.Classes.Contains("gitextensions-workspace-tabs")
+                ? new Rect(1, 29, Math.Max(0, owner.Bounds.Width - 2), Math.Max(0, owner.Bounds.Height - 30))
+                : new Rect(4, 30, Math.Max(0, owner.Bounds.Width - 8), Math.Max(0, owner.Bounds.Height - 34));
         }
 
         if (semanticParent is TabItem && IsNativeTabPage(semanticParent)
@@ -969,7 +977,25 @@ internal sealed class AvaloniaControlTreeReader
         {
             // parity-scaffolding: Product content is rendered through Avalonia's selected-content
             // presenter; report it relative to the emitted WinForms-shaped TabPage client.
-            return new Rect(pageChildOrigin.X - 4, pageChildOrigin.Y - 30, control.Bounds.Width, control.Bounds.Height);
+            return tabOwner.Classes.Contains("gitextensions-workspace-tabs")
+                ? new Rect(pageChildOrigin.X - 1, pageChildOrigin.Y - 29, control.Bounds.Width, control.Bounds.Height)
+                : new Rect(pageChildOrigin.X - 4, pageChildOrigin.Y - 30, control.Bounds.Width, control.Bounds.Height);
+        }
+
+        if (control.Name == "RightSplitContainer" && semanticParent?.Name == "MainSplitContainer")
+        {
+            // parity-scaffolding: WinForms reports SplitterPanel2 children relative to that
+            // implicit panel; the panel is flattened from the shared capture schema.
+            return new Rect(0, 0, control.Bounds.Width, control.Bounds.Height);
+        }
+
+        if ((control.Name is "ToolStripMain" or "ToolStripFilters")
+            && control.GetLogicalAncestors().OfType<Grid>().FirstOrDefault(
+                ancestor => ancestor.Name == (control.Name == "ToolStripMain"
+                    ? "toolStripMainHost"
+                    : "toolStripFiltersHost")) is { } toolbarHost)
+        {
+            return GetSemanticBounds(toolbarHost, semanticParent);
         }
 
         if (IsNativeTabControl(control)
@@ -1931,7 +1957,9 @@ internal sealed class AvaloniaControlTreeReader
         Control control,
         bool isItem,
         bool transparentBackground,
-        bool panelBackground = false)
+        bool panelBackground = false,
+        bool useWindowText = false,
+        bool useControlText = false)
     {
         bool isSeparator = control is Separator
             || GetSourceTypeName(GetSourceType(control, GetFieldNames(control).FirstOrDefault())) == "ToolStripSeparator";
@@ -1949,6 +1977,11 @@ internal sealed class AvaloniaControlTreeReader
             : control.Name == "encodingToolStripComboBox"
                 ? ResolveResourceArgb("GitExtensionsMenuForegroundBrush")
                   ?? ResolveResourceArgb("GitExtensionsWindowTextBrush")
+                : useControlText
+                    ? ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                      ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush")
+                : useWindowText
+                    ? ResolveResourceArgb("GitExtensionsWindowTextBrush")
                 : isItem
                     ? ResolveResourceArgb("GitExtensionsMenuForegroundBrush")
                     : ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
@@ -1968,6 +2001,26 @@ internal sealed class AvaloniaControlTreeReader
                 ? ResolveResourceArgb("GitExtensionsMenuBackgroundBrush")
                   ?? ResolveResourceArgb("GitExtensionsControlBackgroundBrush")
                 : null,
+            DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                                 ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
+            DisabledBackground = background,
+            GridLine = null,
+            Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+        };
+    }
+
+    private CaptureColors ReadFormBrowseToolStripContainerColors()
+    {
+        string? background = ResolveResourceArgb("GitExtensionsWindowBackgroundBrush");
+        return new CaptureColors
+        {
+            Foreground = ResolveResourceArgb("GitExtensionsWindowTextBrush"),
+            Background = background,
+            Border = null,
+            SelectionForeground = null,
+            SelectionBackground = null,
+            InactiveSelectionForeground = null,
+            InactiveSelectionBackground = null,
             DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
                                  ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
             DisabledBackground = background,
@@ -2281,7 +2334,9 @@ internal sealed class AvaloniaControlTreeReader
            && control.Name is "MainPanel" or "ControlsPanel";
 
     private static bool IsNativeTabControl(Control control)
-        => control is TabControl tabControl && tabControl.Classes.Contains("gitextensions-native-tabs");
+        => control is TabControl tabControl
+           && (tabControl.Classes.Contains("gitextensions-native-tabs")
+               || tabControl.Classes.Contains("gitextensions-workspace-tabs"));
 
     private static bool IsNativeTabPage(Control control)
         => control is TabItem tabItem
