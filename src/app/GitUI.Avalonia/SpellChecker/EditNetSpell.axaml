@@ -14,6 +14,9 @@
     </wf:ContextMenuStrip>
   </UserControl.Resources>
   <UserControl.Styles>
+    <Style Selector="TextBox#TextBox">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsCommitEditorBackgroundBrush}" />
+    </Style>
     <Style Selector="ListBox#AutoComplete > ListBoxItem">
       <Setter Property="Height" Value="15" />
       <Setter Property="MinHeight" Value="15" />
@@ -31,7 +34,14 @@
       <Setter Property="BorderThickness" Value="0" />
     </Style>
     <Style Selector="TextBox#TextBox:disabled">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsCommitEditorBackgroundBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    </Style>
+    <Style Selector="TextBox#TextBox[IsReadOnly=true]">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsCommitEditorReadOnlyBackgroundBrush}" />
+    </Style>
+    <Style Selector="TextBox#TextBox[IsReadOnly=true] /template/ Border#PART_BorderElement">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsCommitEditorReadOnlyBackgroundBrush}" />
     </Style>
   </UserControl.Styles>
   <!-- Avalonia has no ambient UserControl size, so preserve the original Designer surface dimensions. -->
@@ -39,7 +49,6 @@
     <TextBox x:Name="TextBox"
              AcceptsReturn="True"
              AcceptsTab="True"
-             Background="{DynamicResource GitExtensionsCommitEditorBackgroundBrush}"
              BorderBrush="Transparent"
              BorderThickness="0"
              FocusAdorner="{x:Null}"

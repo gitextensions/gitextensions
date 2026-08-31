@@ -99,9 +99,10 @@ internal sealed class ReviewedFrameworkDeviationManifest
             }
 
             string memberKey = entry.Path["member/".Length..];
-            if (entry.Code == "member.signature")
+            if (entry.Code is "member.signature" or "member.partial")
             {
-                memberKey = memberKey[..^"/signature".Length];
+                string suffix = entry.Code == "member.signature" ? "/signature" : "/part";
+                memberKey = memberKey[..^suffix.Length];
             }
 
             SourceInventory memberInventory = entry.Code == "member.missing" ? original : twin;
@@ -135,7 +136,7 @@ internal sealed class ReviewedFrameworkDeviationManifest
 
             MemberEntry? originalMember = entry.Code == "member.missing" ? member : null;
             MemberEntry? twinMember = entry.Code == "member.missing" ? null : member;
-            if (entry.Code == "member.signature")
+            if (entry.Code is "member.signature" or "member.partial")
             {
                 MemberEntry[] originalMembers = original.Members
                     .Where(candidate => $"{candidate.Kind}:{candidate.Name}" == memberKey)
@@ -187,14 +188,15 @@ internal sealed class ReviewedFrameworkDeviationManifest
     private static void ValidateMemberEntry(ReviewedFrameworkDeviationEntry entry)
     {
         if (!entry.Path.StartsWith("member/", StringComparison.Ordinal)
-            || (entry.Code == "member.signature" && !entry.Path.EndsWith("/signature", StringComparison.Ordinal)))
+            || (entry.Code == "member.signature" && !entry.Path.EndsWith("/signature", StringComparison.Ordinal))
+            || (entry.Code == "member.partial" && !entry.Path.EndsWith("/part", StringComparison.Ordinal)))
         {
             throw new InvalidDataException(
                 $"Reviewed adaptation '{entry.Identity}' is not an exact supported member finding.");
         }
 
-        bool requiresOriginal = entry.Code is "member.missing" or "member.signature";
-        bool requiresTwin = entry.Code is "member.extra" or "member.signature";
+        bool requiresOriginal = entry.Code is "member.missing" or "member.signature" or "member.partial";
+        bool requiresTwin = entry.Code is "member.extra" or "member.signature" or "member.partial";
         bool hasOriginal = entry.OriginalPart is not null
             || entry.OriginalAccessibility is not null
             || entry.OriginalSignature is not null;
@@ -367,6 +369,6 @@ internal sealed class ReviewedFrameworkDeviationManifest
     {
         public string Identity => $"{TypeName}/{Code}/{Path}";
 
-        public bool IsMemberDeviation => Code is "member.missing" or "member.extra" or "member.signature";
+        public bool IsMemberDeviation => Code is "member.missing" or "member.extra" or "member.signature" or "member.partial";
     }
 }
