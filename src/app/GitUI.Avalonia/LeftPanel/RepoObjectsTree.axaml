@@ -13,12 +13,12 @@
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
     </Style>
   </UserControl.Styles>
-  <Grid RowDefinitions="27,26,*">
+  <Grid x:Name="repoTreePanel" RowDefinitions="25,26,*">
     <StackPanel x:Name="leftPanelToolStrip"
                 Grid.Row="0"
                 Orientation="Horizontal"
-                Margin="1,2"
-                Spacing="1">
+                Height="25"
+                Spacing="0">
       <compat:IconButton x:Name="tsbCollapseAll"
                          compat:TranslationCompat.UseToolTipText="True"
                          Classes="gitextensions-toolbar-button gitextensions-icon-only"
@@ -60,8 +60,8 @@
           ColumnDefinitions="*,26">
       <TextBox x:Name="_txtBranchCriterion"
                Grid.Column="0"
-               Height="24"
-               Margin="1"
+               Height="23"
+               Margin="0,1,0,2"
                Padding="4,1"
                VerticalContentAlignment="Center" />
       <compat:IconButton x:Name="btnSearch"

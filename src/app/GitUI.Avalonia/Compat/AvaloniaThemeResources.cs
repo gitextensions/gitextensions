@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -455,7 +455,7 @@ internal static class AvaloniaThemeResources
             KnownColor.ControlDarkDark => "#5A5A5A",
             KnownColor.ControlLight => "#2E2E2E",
             KnownColor.ControlLightLight => "#1F1F1F",
-            KnownColor.ControlText => "#F0F0F0",
+            KnownColor.ControlText => "#FFFFFF",
             KnownColor.Desktop => "#101010",
             KnownColor.GradientActiveCaption => "#416482",
             KnownColor.GradientInactiveCaption => "#557396",
