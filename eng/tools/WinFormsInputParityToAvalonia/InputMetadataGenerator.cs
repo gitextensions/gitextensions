@@ -55,6 +55,13 @@ public static partial class InputMetadataGenerator
 
                 foreach (string line in File.ReadLines(designerPath))
                 {
+                    Match construction = ConstructionRegex().Match(line);
+                    if (construction.Success
+                        && controls.TryGetValue(construction.Groups["field"].Value, out MutableControlMetadata? constructedMetadata))
+                    {
+                        constructedMetadata.SourceType = construction.Groups["type"].Value;
+                    }
+
                     Match match = AssignmentRegex().Match(line);
                     if (!match.Success || !controls.TryGetValue(match.Groups["field"].Value, out MutableControlMetadata? metadata))
                     {
@@ -126,9 +133,14 @@ public static partial class InputMetadataGenerator
                         pair.Value.BorderStyle,
                         pair.Value.FlatStyle))
                     .ToArray();
-                if (projected.Length > 0 || layout.Length > 0)
+                SourceControlMetadata[] sourceControls = controls
+                    .Where(pair => pair.Value.SourceType is not null)
+                    .OrderBy(pair => pair.Key, StringComparer.Ordinal)
+                    .Select(pair => new SourceControlMetadata(pair.Key, pair.Value.SourceType!))
+                    .ToArray();
+                if (projected.Length > 0 || layout.Length > 0 || sourceControls.Length > 0)
                 {
-                    views.Add(new ViewMetadata(className, projected, layout));
+                    views.Add(new ViewMetadata(className, projected, layout, sourceControls));
                 }
             }
         }
@@ -172,6 +184,23 @@ public static partial class InputMetadataGenerator
                     ? "null"
                     : $"\"{EscapeString(control.AccessibleName)}\"";
                 AppendLine($"                new(\"{EscapeString(control.FieldName)}\", {tabIndex}, {isTabStop}, {accessibleName}),");
+            }
+
+            AppendLine("            ],");
+        }
+
+        AppendLine("        };");
+        AppendLine();
+        AppendLine("    internal static IReadOnlyDictionary<string, IReadOnlyList<SourceControlMetadata>> SourceByType { get; } =");
+        AppendLine("        new Dictionary<string, IReadOnlyList<SourceControlMetadata>>(StringComparer.Ordinal)");
+        AppendLine("        {");
+        foreach (ViewMetadata view in views.Where(view => view.SourceControls.Count > 0).OrderBy(view => view.ClassName, StringComparer.Ordinal))
+        {
+            AppendLine($"            [\"{EscapeString(view.ClassName)}\"] =");
+            AppendLine("            [");
+            foreach (SourceControlMetadata control in view.SourceControls)
+            {
+                AppendLine($"                new(\"{EscapeString(control.FieldName)}\", \"{EscapeString(control.SourceType)}\"),");
             }
 
             AppendLine("            ],");
@@ -277,6 +306,9 @@ public static partial class InputMetadataGenerator
     [GeneratedRegex("^\\s*(?:this\\.)?(?<field>[A-Za-z_][A-Za-z0-9_]*)\\.(?<property>TabIndex|TabStop|AccessibleName|Anchor|Dock|AutoSize|Margin|Padding|TextAlign|BorderStyle|FlatStyle)\\s*=\\s*(?<value>.+);\\s*$", RegexOptions.CultureInvariant)]
     private static partial Regex AssignmentRegex();
 
+    [GeneratedRegex("^\\s*(?:this\\.)?(?<field>[A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*new\\s+(?:global::)?(?<type>[A-Za-z_][A-Za-z0-9_.]*)\\s*\\(", RegexOptions.CultureInvariant)]
+    private static partial Regex ConstructionRegex();
+
     [GeneratedRegex("^new Padding\\((?:(?<value>-?[0-9]+)\\s*,?\\s*)+\\)$", RegexOptions.CultureInvariant)]
     private static partial Regex PaddingRegex();
 
@@ -304,6 +336,8 @@ public static partial class InputMetadataGenerator
 
         public string? FlatStyle { get; set; }
 
+        public string? SourceType { get; set; }
+
         public bool HasValue => TabIndex is not null || IsTabStop is not null || AccessibleName is not null;
 
         public bool HasLayoutValue => Anchor is not null
@@ -319,9 +353,12 @@ public static partial class InputMetadataGenerator
     private sealed record ViewMetadata(
         string ClassName,
         IReadOnlyList<ControlMetadata> Controls,
-        IReadOnlyList<LayoutControlMetadata> Layout);
+        IReadOnlyList<LayoutControlMetadata> Layout,
+        IReadOnlyList<SourceControlMetadata> SourceControls);
 
     private sealed record ControlMetadata(string FieldName, int? TabIndex, bool? IsTabStop, string? AccessibleName);
+
+    private sealed record SourceControlMetadata(string FieldName, string SourceType);
 
     private sealed record LayoutControlMetadata(
         string FieldName,

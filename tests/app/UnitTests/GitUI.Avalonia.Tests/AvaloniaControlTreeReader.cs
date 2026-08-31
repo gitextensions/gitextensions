@@ -34,7 +34,8 @@ internal sealed class AvaloniaControlTreeReader
         _usesDesignerLayoutMetadata = root is Window
             && rootType is not null
             && (WinFormsInputMetadata.ByType.ContainsKey(rootType)
-                || WinFormsInputMetadata.LayoutByType.ContainsKey(rootType));
+                || WinFormsInputMetadata.LayoutByType.ContainsKey(rootType)
+                || WinFormsInputMetadata.SourceByType.ContainsKey(rootType));
         IndexFields(root);
     }
 
@@ -126,12 +127,18 @@ internal sealed class AvaloniaControlTreeReader
             Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
         };
 
-    private static string GetControlKind(Control control) =>
+    private static string GetControlKind(
+        Control control,
+        string? sourceType,
+        bool isSourceToolStrip,
+        bool isSourceToolStripItem) =>
         control switch
         {
             Window => "window",
-            _ when IsSemanticToolStrip(control) => "toolStrip",
-            _ when IsSemanticToolStripItem(control) => "menuItem",
+            _ when GetSourceTypeName(sourceType) == "SplitContainer" => "split",
+            _ when GetSourceTypeName(sourceType) is "RichTextBox" or "TextBoxBase" => "text",
+            _ when IsSemanticToolStrip(control) || isSourceToolStrip => "toolStrip",
+            _ when IsSemanticToolStripItem(control) || isSourceToolStripItem => "menuItem",
             _ when IsFileStatusListView(control) => "tree",
             _ when IsRepositoryHostSplit(control) => "split",
             _ when IsSourceLabelSubstitute(control) || IsSpellCheckAutoComplete(control) => "control",
@@ -390,6 +397,19 @@ internal sealed class AvaloniaControlTreeReader
             ? null
             : fieldNames.FirstOrDefault()
               ?? (control is MenuItem or Separator || string.IsNullOrEmpty(control.Name) ? null : control.Name);
+        string? sourceType = GetSourceType(control, fieldName);
+        string sourceOwnerType = GetSourceOwnerType(control);
+        bool isSourceToolStrip = IsSourceToolStrip(sourceType);
+        bool isSourceToolStripItem = IsSourceToolStripItem(sourceType)
+            && control is not MenuItem
+            && control is not Separator;
+        isSemanticToolStrip |= isSourceToolStrip;
+        isSemanticToolStripItem |= isSourceToolStripItem;
+        isToolStripItem |= isSourceToolStripItem;
+        bool isFormBrowseSourceToolStrip = sourceOwnerType == "GitUI.CommandsDialogs.FormBrowse"
+            && (isSourceToolStrip || isSourceToolStripItem);
+        bool isFormBrowseMenuStrip = _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+            && (control.Name == "mainMenuStrip" || (control is MenuItem && control.Parent is Menu));
         bool isDesignerMetadataControl = fieldName is not null && IsDesignerMetadataControl(control);
         Control? childSemanticParent = isSurfaceRoot || fieldName is not null || isInheritedFormProcessContainer
             ? control
@@ -408,10 +428,12 @@ internal sealed class AvaloniaControlTreeReader
             ?? (hasNativeListComposite
                 ? GetSemanticBounds(nativeListComposite!, semanticParent)
                 : GetSemanticBounds(semanticStateControl, semanticParent));
-        bool semanticVisible = IsSemanticallyVisible(control, semanticStateControl) && ancestorSemanticVisible;
+        bool semanticVisible = IsSemanticallyVisible(control, semanticStateControl)
+            && (!isSourceToolStripItem || IsInsideClippedAncestors(control))
+            && ancestorSemanticVisible;
         bool childSemanticVisible = semanticVisible
             && (control is not MenuItem menuItem || menuItem.IsSubMenuOpen)
-            && (control is not TabItem tabItem || !isNativeTabPage || tabItem.IsSelected);
+            && (control is not TabItem tabItem || tabItem.IsSelected);
         IReadOnlyList<CaptureNode> children = GetSemanticChildren(control)
             .Select((child, childOrdinal) => ReadControl(
                 child,
@@ -445,7 +467,9 @@ internal sealed class AvaloniaControlTreeReader
                 : control.GetType().FullName ?? control.GetType().Name,
             ControlKind = isRemoteColorButton
                 ? "button"
-                : isRepositoryHostDiscussion || isDesignerLinkLabel ? "control" : GetControlKind(control),
+                : isRepositoryHostDiscussion || isDesignerLinkLabel
+                    ? "control"
+                    : GetControlKind(control, sourceType, isSourceToolStrip, isSourceToolStripItem),
             BoundsPx = new CaptureRectangle
             {
                 X = ToPixel(bounds.X),
@@ -543,10 +567,20 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (fieldName is not null ? ReadFont(_root) : null),
             Colors = isComboBoxPopup || isComboBoxPopupItem
                 ? ReadComboBoxPopupColors()
+                : isFormBrowseMenuStrip
+                    ? ReadToolStripColors(control, isItem: control is MenuItem, transparentBackground: true)
                 : isSemanticToolStrip
-                    ? ReadToolStripColors(control, isItem: false, transparentBackground: isFileStatusToolbar)
+                    ? ReadToolStripColors(
+                        control,
+                        isItem: false,
+                        transparentBackground: isFormBrowseSourceToolStrip,
+                        panelBackground: isFileStatusToolbar)
                     : isSemanticToolStripItem
-                        ? ReadToolStripColors(control, isItem: true, transparentBackground: IsTransparentFileStatusToolbarItem(control))
+                        ? ReadToolStripColors(
+                            control,
+                            isItem: true,
+                            transparentBackground: isFormBrowseSourceToolStrip,
+                            panelBackground: IsFileStatusToolbarItem(control))
                         : isFileStatusListView
                             ? ReadFileStatusListViewColors(semanticStateControl)
                             : isWatermarkComboBox
@@ -724,7 +758,7 @@ internal sealed class AvaloniaControlTreeReader
                 ? true
                 : control.Focusable && KeyboardNavigation.GetIsTabStop(control),
             Enabled = control is Separator ? false : semanticStateControl.IsEffectivelyEnabled,
-            Visible = isNativeTabPage
+            Visible = control is TabItem
                 ? ((TabItem)control).IsSelected && ancestorSemanticVisible
                 : semanticVisible,
             Focused = IsRepositoryHostSourceFocusedState(control, isPopupRoot)
@@ -786,11 +820,43 @@ internal sealed class AvaloniaControlTreeReader
             : null;
     }
 
+    private string? GetSourceType(Control control, string? fieldName)
+    {
+        if (!_usesDesignerLayoutMetadata || fieldName is null)
+        {
+            return null;
+        }
+
+        string ownerType = GetSourceOwnerType(control);
+        return WinFormsInputMetadata.SourceByType.TryGetValue(ownerType, out IReadOnlyList<SourceControlMetadata>? controls)
+            ? controls.FirstOrDefault(item => item.FieldName == fieldName).SourceType
+            : null;
+    }
+
+    private string GetSourceOwnerType(Control control)
+        => _fieldOwnerTypes.GetValueOrDefault(control)
+           ?? _root.GetType().FullName
+           ?? _root.GetType().Name;
+
     private bool IsDesignerMetadataControl(Control control)
         => _usesDesignerLayoutMetadata
            && _fieldOwnerTypes.TryGetValue(control, out string? ownerType)
            && (WinFormsInputMetadata.ByType.ContainsKey(ownerType)
-               || WinFormsInputMetadata.LayoutByType.ContainsKey(ownerType));
+               || WinFormsInputMetadata.LayoutByType.ContainsKey(ownerType)
+               || WinFormsInputMetadata.SourceByType.ContainsKey(ownerType));
+
+    private static bool IsSourceToolStrip(string? sourceType)
+        => GetSourceTypeName(sourceType) is "ToolStrip" or "ToolStripEx" or "FilterToolBar";
+
+    private static bool IsSourceToolStripItem(string? sourceType)
+    {
+        string? typeName = GetSourceTypeName(sourceType);
+        return typeName?.Contains("ToolStrip", StringComparison.Ordinal) == true
+               && typeName is not ("ToolStrip" or "ToolStripEx" or "ToolStripContainer" or "MenuStrip" or "MenuStripEx");
+    }
+
+    private static string? GetSourceTypeName(string? sourceType)
+        => sourceType is null ? null : sourceType[(sourceType.LastIndexOf('.') + 1)..];
 
     private static Thickness GetDefaultDesignerMargin(Control control)
         => control is TextBlock or Label or HyperlinkButton ? new Thickness(3, 0) : new Thickness(3);
@@ -1839,6 +1905,20 @@ internal sealed class AvaloniaControlTreeReader
                && control.GetLogicalAncestors().OfType<Control>().All(ancestor => ancestor.IsVisible);
     }
 
+    private static bool IsInsideClippedAncestors(Control control)
+    {
+        foreach (Control ancestor in control.GetVisualAncestors().OfType<Control>().Where(ancestor => ancestor.ClipToBounds))
+        {
+            if (control.TranslatePoint(default, ancestor) is not Point origin
+                || !new Rect(origin, control.Bounds.Size).Intersects(new Rect(ancestor.Bounds.Size)))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private static bool IsComboBoxPopup(Control control)
         => control.GetVisualDescendants().OfType<ListBoxItem>().Any();
 
@@ -1847,13 +1927,21 @@ internal sealed class AvaloniaControlTreeReader
            && control.GetVisualAncestors().OfType<Control>().Any(
                ancestor => IsPopupPresenter(ancestor) || IsOverlayPopupHost(ancestor));
 
-    private CaptureColors ReadToolStripColors(Control control, bool isItem, bool transparentBackground)
+    private CaptureColors ReadToolStripColors(
+        Control control,
+        bool isItem,
+        bool transparentBackground,
+        bool panelBackground = false)
     {
+        bool isSeparator = control is Separator
+            || GetSourceTypeName(GetSourceType(control, GetFieldNames(control).FirstOrDefault())) == "ToolStripSeparator";
         string? background = transparentBackground
             ? "#00FFFFFF"
-            : ResolveResourceArgb("GitExtensionsKnownColorControlBrush")
-              ?? ResolveResourceArgb("GitExtensionsControlBackgroundBrush");
-        string? foreground = control is Separator
+            : panelBackground
+                ? ResolveResourceArgb("GitExtensionsPanelBackgroundBrush")
+                : ResolveResourceArgb("GitExtensionsKnownColorControlBrush")
+                  ?? ResolveResourceArgb("GitExtensionsControlBackgroundBrush");
+        string? foreground = isSeparator
             ? ResolveResourceArgb("GitExtensionsKnownColorControlDarkBrush")
               ?? ResolveResourceArgb("GitExtensionsControlBorderBrush")
             : control.Name is "btnUnequalChange" or "btnOnlyB" or "btnOnlyA" or "btnSameChange"
@@ -1861,8 +1949,10 @@ internal sealed class AvaloniaControlTreeReader
             : control.Name == "encodingToolStripComboBox"
                 ? ResolveResourceArgb("GitExtensionsMenuForegroundBrush")
                   ?? ResolveResourceArgb("GitExtensionsWindowTextBrush")
-                : ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
-                  ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush");
+                : isItem
+                    ? ResolveResourceArgb("GitExtensionsMenuForegroundBrush")
+                    : ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                      ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush");
         return new CaptureColors
         {
             Foreground = foreground,

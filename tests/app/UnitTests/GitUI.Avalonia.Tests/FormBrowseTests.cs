@@ -1248,6 +1248,15 @@ public sealed class FormBrowseTests
         await WaitUntilAsync(() => loadingStatus.Text == "1 revisions" && form.RevisionGrid.SelectedRevision is not null);
         form.commandsToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
 
+        form.commitToolStripMenuItem.InputGesture.Should().Be(new KeyGesture(Key.Space, KeyModifiers.Control));
+        form.pullToolStripMenuItem.InputGesture.Should().Be(new KeyGesture(Key.Down, KeyModifiers.Control));
+        form.pushToolStripMenuItem.InputGesture.Should().Be(new KeyGesture(Key.Up, KeyModifiers.Control));
+        form.branchToolStripMenuItem.InputGesture.Should().Be(new KeyGesture(Key.B, KeyModifiers.Control));
+        form.checkoutBranchToolStripMenuItem.InputGesture.Should().Be(new KeyGesture(Key.OemPeriod, KeyModifiers.Control));
+        form.mergeBranchToolStripMenuItem.InputGesture.Should().Be(new KeyGesture(Key.M, KeyModifiers.Control));
+        form.rebaseToolStripMenuItem.InputGesture.Should().Be(new KeyGesture(Key.E, KeyModifiers.Control | KeyModifiers.Shift));
+        form.tagToolStripMenuItem.InputGesture.Should().Be(new KeyGesture(Key.T, KeyModifiers.Control));
+
         new[]
         {
             form.commitToolStripMenuItem,

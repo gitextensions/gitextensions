@@ -1855,46 +1855,79 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     internal enum Command
     {
         // Focus or visuals
-        // START menu
-        // DASHBOARD menu
-        // REPOSITORY menu
-        // COMMANDS menu
-        // PLUGINS menu
-        // TOOLS menu
-        // HELP menu
-        // Toolbar
-        GitBash = 0,
-        GitGui = 1,
-        GitGitK = 2,
+        FocusLeftPanel = 25,
         FocusRevisionGrid = 3,
         FocusCommitInfo = 4,
         FocusDiff = 5,
         FocusFileTree = 6,
         FocusGpgInfo = 26,
         FocusGitConsole = 29,
+        FocusBuildServerStatus = 30,
         FocusOutputHistoryAndToggleIfPanel = 47,
-        Commit = 7,
-        CheckoutBranch = 10,
-        QuickFetch = 11,
-        QuickPull = 12,
-        FocusFilter = 18,
-        OpenSettings = 20,
-        ToggleLeftPanel = 21,
         FocusNextTab = 31,
         FocusPrevTab = 32,
+
+        FocusFilter = 18,
+
+        ToggleLeftPanel = 21,
+
+        // START menu
+        OpenRepo = 45,
+
+        // DASHBOARD menu
+
+        // REPOSITORY menu
+        CloseRepository = 15,
+        ManageWorkTrees = 49,
+
+        // COMMANDS menu
+        Commit = 7,
+        CheckoutBranch = 10,
         PullOrFetch = 39,
-        QuickPullOrFetch = 48,
         Push = 40,
         CreateBranch = 41,
         MergeBranches = 42,
         CreateTag = 43,
         Rebase = 44,
-        ManageWorkTrees = 49,
-        OpenRepo = 45,
-        CloseRepository = 15,
+
+        // PLUGINS menu
+
+        // TOOLS menu
+        GitBash = 0,
+        GitGui = 1,
+        GitGitK = 2,
+        OpenSettings = 20,
+
+        // HELP menu
+
+        // Toolbar
         AddNotes = 8,
+        FindFileInSelectedCommit = 9,
+        QuickPullOrFetch = 48,
+        QuickFetch = 11,
+        QuickPull = 12,
+        QuickPush = 13,
+        Stash = 16,
+        StashStaged = 46,
+        StashPop = 17,
         GoToSuperproject = 27,
         GoToSubmodule = 28,
+
+        // Diff or File Tree tab
+        OpenWithDifftool = 19,
+        EditFile = 22,
+        OpenAsTempFile = 23,
+        OpenAsTempFileWith = 24,
+        OpenWithDifftoolFirstToLocal = 33,
+        OpenWithDifftoolSelectedToLocal = 34,
+
+        // Revision grid
+        OpenCommitsWithDifftool = 35,
+        ToggleBetweenArtificialAndHeadCommits = 36,
+        GoToChild = 37,
+        GoToParent = 38,
+
+        /* deprecated: RotateApplicationIcon = 14, */
 
         // WinForms routes F5 through ToolStripItem.ShortcutKeys. Avalonia has no ToolStrip,
         // so refresh joins the same command dispatcher without changing persisted upstream IDs.
@@ -2529,9 +2562,32 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void RefreshMenuShortcutKeys()
     {
+        // Avalonia keeps display gestures separately from routed hotkeys. Preserve the
+        // original ToolStrip menu text column as well as the form-level command route.
+        SetShortcutKeyDisplayString(commitToolStripMenuItem, Command.Commit);
+        SetShortcutKeyDisplayString(stashChangesToolStripMenuItem, Command.Stash);
+        SetShortcutKeyDisplayString(stashStagedToolStripMenuItem, Command.StashStaged);
+        SetShortcutKeyDisplayString(stashPopToolStripMenuItem, Command.StashPop);
+        SetShortcutKeyDisplayString(closeToolStripMenuItem, Command.CloseRepository);
+        SetShortcutKeyDisplayString(checkoutBranchToolStripMenuItem, Command.CheckoutBranch);
+        SetShortcutKeyDisplayString(branchToolStripMenuItem, Command.CreateBranch);
+        SetShortcutKeyDisplayString(tagToolStripMenuItem, Command.CreateTag);
+        SetShortcutKeyDisplayString(mergeBranchToolStripMenuItem, Command.MergeBranches);
+        SetShortcutKeyDisplayString(pullToolStripMenuItem, Command.PullOrFetch);
+        SetShortcutKeyDisplayString(pullToolStripMenuItem1, Command.PullOrFetch);
+        SetShortcutKeyDisplayString(pushToolStripMenuItem, Command.Push);
+        SetShortcutKeyDisplayString(rebaseToolStripMenuItem, Command.Rebase);
+        SetShortcutKeyDisplayString(manageWorktreeToolStripMenuItem, Command.ManageWorkTrees);
+
         fileToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
         helpToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
         toolsToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
+
+        void SetShortcutKeyDisplayString(MenuItem item, Command command)
+        {
+            item.InputGesture = KeysMapper.ToKeyGesture(GetShortcutKeys(command));
+            WinFormsToolStripMenuSizer.SetShortcutDisplayString(item, GetShortcutKeyDisplayString(command));
+        }
     }
 
     private void SetCommitInfoPosition(CommitInfoPosition position)

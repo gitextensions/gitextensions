@@ -19,6 +19,10 @@ internal readonly record struct InputControlMetadata(
     bool? IsTabStop,
     string? AccessibleName);
 
+// parity-scaffolding: Identifies the original Designer control kind without introducing a
+// System.Windows.Forms dependency into the portable capture and accessibility assembly.
+internal readonly record struct SourceControlMetadata(string FieldName, string SourceType);
+
 // parity-scaffolding: Preserves Designer layout semantics in cross-framework capture trees;
 // rendered bounds and colors remain measured from the native Avalonia controls.
 internal readonly record struct DesignerLayoutMetadata(
