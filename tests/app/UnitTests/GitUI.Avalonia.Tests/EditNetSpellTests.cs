@@ -237,6 +237,23 @@ public sealed class EditNetSpellTests
                        }))
             {
                 control.CaretIndex.Should().Be(2);
+                window.Bounds.Height.Should().BeGreaterThanOrEqualTo(900);
+                Control popupHost = window.GetVisualDescendants().OfType<Control>()
+                    .Single(candidate => candidate.GetType().Name == "OverlayPopupHost");
+                if (OperatingSystem.IsWindows())
+                {
+                    popupHost.Bounds.Width.Should().Be(206);
+                }
+                else
+                {
+                    popupHost.Bounds.Width.Should().BeGreaterThan(2);
+                }
+
+                popupHost.Bounds.Height.Should().Be(374);
+                CaptureNode textBox = new AvaloniaControlTreeReader(control, renderScale: 1)
+                    .ReadPrimary(control, new Avalonia.PixelSize(386, 336))
+                    .Root.Children.Single(child => child.FieldName == "TextBox");
+                textBox.Focused.Should().BeTrue();
                 accessor.ContextMenu.Items.OfType<MenuItem>()
                     .Select(item => item.Header?.ToString())
                     .Should().Contain("sentence");
