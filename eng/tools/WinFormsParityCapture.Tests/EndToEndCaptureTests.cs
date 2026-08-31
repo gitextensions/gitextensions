@@ -131,6 +131,26 @@ public sealed class EndToEndCaptureTests
 
     [Test]
     [Apartment(ApartmentState.STA)]
+    public void State_driver_should_apply_and_restore_the_read_only_text_state()
+    {
+        using TextBox textBox = new();
+
+        using (ControlStateDriver.Apply(
+                   textBox,
+                   new CaptureStatePlan
+                   {
+                       Id = "read-only",
+                       Kind = CaptureStateKind.ReadOnly,
+                   }))
+        {
+            textBox.ReadOnly.Should().BeTrue();
+        }
+
+        textBox.ReadOnly.Should().BeFalse();
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
     public void Paired_setting_binding_surfaces_should_expose_all_original_controls_and_edge_states()
     {
         using SettingControlBindingsCaptureSurface normal = new();

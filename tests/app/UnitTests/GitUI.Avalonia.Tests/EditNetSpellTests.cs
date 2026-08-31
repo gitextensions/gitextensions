@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -12,7 +13,9 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs;
 using GitUI.SpellChecker;
+using NetSpell.SpellChecker.Dictionary;
 using NSubstitute;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -106,6 +109,155 @@ public sealed class EditNetSpellTests
         bool previousMarking = AppSettings.MarkIllFormedLinesInCommitMsg;
         marking.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
         AppSettings.MarkIllFormedLinesInCommitMsg.Should().Be(!previousMarking);
+    }
+
+    [AvaloniaTest]
+    public async Task EditNetSpell_should_execute_the_original_ignore_remove_and_edit_menu_actions()
+    {
+        WinFormsShims.IClipboard originalClipboard = WinFormsShims.ShimHost.Clipboard;
+        RecordingClipboard clipboard = new();
+        WinFormsShims.ShimHost.Clipboard = clipboard;
+        EditNetSpell control = new();
+        EditNetSpell.TestAccessor accessor = control.GetTestAccessor();
+        Window window = new() { Content = control };
+        window.Show();
+
+        try
+        {
+            control.Text = "sentnce";
+            control.CheckSpelling();
+            control.CaretIndex = 2;
+            accessor.OpenContextMenu();
+            ClickMenuItem(accessor, "Ignore word");
+            control.Text.Should().Be("sentnce");
+            accessor.MisspelledWords.Should().ContainSingle(
+                "the source Ignore action skips only the current NetSpell pass and then starts a fresh check");
+
+            control.Text = "misspeling";
+            control.CheckSpelling();
+            control.CaretIndex = 2;
+            accessor.OpenContextMenu();
+            ClickMenuItem(accessor, "Remove word");
+            control.Text.Should().BeEmpty();
+
+            control.Text = "alpha beta";
+            control.SelectionStart = 0;
+            control.SelectionLength = 5;
+            accessor.OpenContextMenu();
+            ClickMenuItem(accessor, "Copy");
+            (await window.Clipboard!.TryGetTextAsync()).Should().Be("alpha");
+            control.Text.Should().Be("alpha beta");
+
+            accessor.OpenContextMenu();
+            ClickMenuItem(accessor, "Cut");
+            control.Text.Should().Be(" beta");
+            (await window.Clipboard!.TryGetTextAsync()).Should().Be("alpha");
+
+            control.SelectionStart = 0;
+            control.SelectionLength = 1;
+            accessor.OpenContextMenu();
+            ClickMenuItem(accessor, "Delete");
+            control.Text.Should().Be("beta");
+
+            control.SelectionStart = control.Text.Length;
+            control.SelectionLength = 0;
+            clipboard.SetText("alpha");
+            accessor.OpenContextMenu();
+            ClickMenuItem(accessor, "Paste");
+            control.Text.Should().Be("betaalpha");
+
+            accessor.OpenContextMenu();
+            ClickMenuItem(accessor, "Select all");
+            control.SelectedText.Should().Be("betaalpha");
+
+            control.IsEnabled = false;
+            accessor.TextBox.IsReadOnly.Should().BeTrue();
+            control.IsEnabled = true;
+            accessor.TextBox.IsReadOnly.Should().BeFalse();
+        }
+        finally
+        {
+            WinFormsShims.ShimHost.Clipboard = originalClipboard;
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void EditNetSpell_should_add_a_word_only_to_an_isolated_dictionary_copy()
+    {
+        string originalDictionaryDirectory = Path.Combine(AppContext.BaseDirectory, "Dictionaries");
+        string temporaryRoot = Path.Combine(
+            Path.GetTempPath(),
+            $"GitExtensions.EditNetSpellDictionary-{Guid.NewGuid():N}");
+        string temporaryDictionaryDirectory = Path.Combine(temporaryRoot, "Dictionaries");
+        Directory.CreateDirectory(temporaryDictionaryDirectory);
+        foreach (string source in Directory.GetFiles(originalDictionaryDirectory, "en-US.*"))
+        {
+            File.Copy(source, Path.Combine(temporaryDictionaryDirectory, Path.GetFileName(source)));
+        }
+
+        AppSettings.GetTestAccessor().ApplicationExecutablePath = Path.Combine(temporaryRoot, "GitExtensions.Avalonia.exe");
+        EditNetSpell control = new() { Text = "paritification" };
+        EditNetSpell.TestAccessor accessor = control.GetTestAccessor();
+        Window window = new() { Content = control };
+        window.Show();
+        WordDictionary? dictionary = null;
+        string? originalUserFile = null;
+
+        try
+        {
+            control.CheckSpelling();
+            accessor.MisspelledWords.Should().ContainSingle();
+            control.CaretIndex = 2;
+            accessor.OpenContextMenu();
+
+            dictionary = (WordDictionary)typeof(EditNetSpell)
+                .GetField("_wordDictionary", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!
+                .GetValue(null)!;
+            originalUserFile = dictionary.UserFile;
+            string userDictionary = Path.Combine(temporaryRoot, "user.dic");
+            dictionary.UserFile = userDictionary;
+            ClickMenuItem(accessor, "Add to dictionary");
+
+            accessor.MisspelledWords.Should().BeEmpty();
+            File.ReadAllLines(userDictionary).Should().Contain("paritification");
+            Path.GetFullPath(userDictionary).Should().StartWith(Path.GetFullPath(temporaryRoot));
+        }
+        finally
+        {
+            if (dictionary is not null)
+            {
+                dictionary.UserFile = originalUserFile!;
+            }
+
+            window.Close();
+            AppSettings.GetTestAccessor().ApplicationExecutablePath = _originalApplicationExecutablePath;
+            TestDirectory.Delete(temporaryRoot);
+        }
+    }
+
+    [AvaloniaTest]
+    public void EditNetSpell_should_match_the_original_read_only_background_in_light_and_dark_themes()
+    {
+        EditNetSpell control = new();
+        Window window = new()
+        {
+            Content = control,
+            RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Light,
+        };
+        window.Show();
+        TextBox textBox = control.GetTestAccessor().TextBox;
+        textBox.IsReadOnly = true;
+        Dispatcher.UIThread.RunJobs();
+
+        textBox.Background.Should().BeOfType<SolidColorBrush>()
+            .Which.Color.Should().Be(Color.FromRgb(240, 240, 240));
+
+        window.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Dark;
+        Dispatcher.UIThread.RunJobs();
+        textBox.Background.Should().BeOfType<SolidColorBrush>()
+            .Which.Color.Should().Be(Color.FromRgb(46, 46, 46));
+        window.Close();
     }
 
     [AvaloniaTest]
@@ -439,4 +591,22 @@ public sealed class EditNetSpellTests
 
     private static Color ToMediaColor(System.Drawing.Color color)
         => Color.FromArgb(color.A, color.R, color.G, color.B);
+
+    private static void ClickMenuItem(EditNetSpell.TestAccessor accessor, string header)
+    {
+        MenuItem item = accessor.ContextMenu.Items.OfType<MenuItem>()
+            .Single(candidate => candidate.Header?.ToString() == header);
+        item.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+    }
+
+    private sealed class RecordingClipboard : WinFormsShims.IClipboard
+    {
+        public string Text { get; private set; } = string.Empty;
+
+        public void SetText(string value) => Text = value;
+
+        public string GetText() => Text;
+
+        public bool ContainsText() => Text.Length > 0;
+    }
 }

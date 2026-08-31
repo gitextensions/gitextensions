@@ -305,6 +305,16 @@ public sealed partial class ParityScreenshotTests
         comboBox.IsDropDownOpen.Should().BeFalse();
     }
 
+    [Test]
+    [Category(P02Category)]
+    public void EditNetSpell_capture_host_should_scale_the_96_dpi_Designer_dimensions()
+    {
+        GetPlannedCaptureHostSize(typeof(EditNetSpell), 100).Should().Be((385.25, 335.25));
+        GetPlannedCaptureHostSize(typeof(EditNetSpell), 125).Should().Be((385, 335.4));
+        GetPlannedCaptureHostSize(typeof(EditNetSpell), 150).Should().Be((385.5, 335.5));
+        GetPlannedCaptureHostSize(typeof(EditNetSpell), 200).Should().Be((385.625, 335.625));
+    }
+
     [AvaloniaTest]
     [Category(P02Category)]
     public void Avalonia_tree_reader_should_emit_canonical_shared_schema()
@@ -820,6 +830,37 @@ public sealed partial class ParityScreenshotTests
 
     [AvaloniaTest]
     [Category(P02Category)]
+    public void Avalonia_state_driver_should_apply_and_restore_the_read_only_text_state()
+    {
+        Window window = new() { Width = 240, Height = 100 };
+        TextBox target = new() { Name = "txtTarget", Text = "Editable" };
+        window.Content = target;
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        target.Focus();
+        Dispatcher.UIThread.RunJobs();
+        target.IsKeyboardFocusWithin.Should().BeTrue();
+
+        using (AvaloniaControlStateDriver.Apply(
+                   window,
+                   new CaptureStatePlan
+                   {
+                       Id = "read-only",
+                       Kind = CaptureStateKind.ReadOnly,
+                       TargetField = "txtTarget",
+                   }))
+        {
+            target.IsReadOnly.Should().BeTrue();
+            target.IsKeyboardFocusWithin.Should().BeTrue();
+            window.CaptureRenderedFrame().Should().NotBeNull();
+        }
+
+        target.IsReadOnly.Should().BeFalse();
+        window.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
     public void Avalonia_state_driver_should_drive_the_single_toggle_inside_a_composite_control()
     {
         GitUI.UserControls.Settings.SettingsCheckBox composite = new();
@@ -1050,7 +1091,7 @@ public sealed partial class ParityScreenshotTests
         Control view = CreateView(context, descriptor.ViewType, state);
         Control captureHost = view;
         bool cropToComponent = false;
-        (double width, double height) = GetCaptureSize(captureHost.GetType());
+        (double width, double height) = GetPlannedCaptureHostSize(captureHost.GetType(), scalePercent);
         if (descriptor.ViewType == typeof(WatermarkComboBox)
             || descriptor.ViewType == typeof(CaseSensitiveComboBox))
         {
@@ -1060,8 +1101,7 @@ public sealed partial class ParityScreenshotTests
         }
 
         double renderScale = scalePercent / 100d;
-        if (descriptor.ViewType == typeof(EditNetSpell)
-            || descriptor.ViewType == typeof(FileStatusList)
+        if (descriptor.ViewType == typeof(FileStatusList)
             || descriptor.ViewType == typeof(RevisionGridControl)
             || descriptor.ViewType == typeof(BlameViewerSettingsPage))
         {
@@ -1172,6 +1212,14 @@ public sealed partial class ParityScreenshotTests
             // before driving focus so a previously closed capture cannot retain the input root.
             window.Activate();
             Dispatcher.UIThread.RunJobs();
+            if (view is EditNetSpell editNetSpell)
+            {
+                // parity-scaffolding: The WinForms standalone host gives its first focusable child
+                // keyboard focus before applying non-focus states; establish the same baseline.
+                editNetSpell.GetTestAccessor().TextBox.Focus();
+                Dispatcher.UIThread.RunJobs();
+            }
+
             using AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(view, state);
             using WriteableBitmap primaryFrame = CaptureRenderedFrame(window);
             PixelRect primarySurfaceBounds = cropToComponent
@@ -1336,6 +1384,22 @@ public sealed partial class ParityScreenshotTests
 
             Dispatcher.UIThread.RunJobs();
         }
+    }
+
+    private static (double Width, double Height) GetPlannedCaptureHostSize(Type viewType, int scalePercent)
+    {
+        (double width, double height) = GetCaptureSize(viewType);
+        if (viewType != typeof(EditNetSpell))
+        {
+            return (width, height);
+        }
+
+        double renderScale = scalePercent / 100d;
+        double targetPixelWidth = Math.Floor(width * renderScale);
+        double targetPixelHeight = Math.Floor(height * renderScale);
+        return (
+            (targetPixelWidth - 0.75) / renderScale,
+            (targetPixelHeight - 0.75) / renderScale);
     }
 
     private static CaptureDocument CreateDocument(
