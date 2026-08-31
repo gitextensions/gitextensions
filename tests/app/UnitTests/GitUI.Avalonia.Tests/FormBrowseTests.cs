@@ -95,9 +95,10 @@ public sealed class FormBrowseTests
             dashboardForm.Show();
             Dispatcher.UIThread.RunJobs();
 
-            dashboardForm.FindControl<Dashboard>("dashboard")!.IsVisible.Should().BeTrue();
+            dashboardForm.GetVisualDescendants().OfType<Dashboard>()
+                .Should().ContainSingle(dashboard => dashboard.Name == "dashboard" && dashboard.IsVisible);
             dashboardForm.FindControl<Grid>("mainContentGrid")!.IsVisible.Should().BeFalse();
-            dashboardForm.FindControl<SourceControls.ToolStripContainer>("toolPanel")!.IsVisible.Should().BeFalse();
+            dashboardForm.FindControl<SourceControls.ToolStripContainer>("toolPanel")!.IsVisible.Should().BeTrue();
             dashboardForm.FindControl<MenuItem>("dashboardToolStripMenuItem")!.IsVisible.Should().BeTrue();
             dashboardForm.FindControl<MenuItem>("repositoryToolStripMenuItem")!.IsVisible.Should().BeFalse();
         }
@@ -107,7 +108,7 @@ public sealed class FormBrowseTests
         repositoryForm.Show();
         Dispatcher.UIThread.RunJobs();
 
-        repositoryForm.FindControl<Dashboard>("dashboard")!.IsVisible.Should().BeFalse();
+        repositoryForm.GetVisualDescendants().OfType<Dashboard>().Should().BeEmpty();
         repositoryForm.FindControl<Grid>("mainContentGrid")!.IsVisible.Should().BeTrue();
         repositoryForm.FindControl<SourceControls.ToolStripContainer>("toolPanel")!.IsVisible.Should().BeTrue();
         repositoryForm.FindControl<MenuItem>("dashboardToolStripMenuItem")!.IsVisible.Should().BeFalse();

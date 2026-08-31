@@ -3,10 +3,9 @@
              xmlns:compat="using:GitUI.Compat"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.UserControls.FilterToolBar">
-  <StackPanel x:Name="ToolStripFilters"
-              Height="25"
+  <StackPanel Height="25"
               Orientation="Horizontal"
-              Spacing="1">
+              Spacing="0">
     <compat:IconSplitButton x:Name="tsbtnAdvancedFilter"
                             compat:TranslationCompat.TranslateText="False"
                             compat:TranslationCompat.UseToolTipText="True"

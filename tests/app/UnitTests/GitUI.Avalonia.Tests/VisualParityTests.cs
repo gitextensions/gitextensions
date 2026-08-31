@@ -410,10 +410,10 @@ public sealed class VisualParityTests
                         .OfType<PathIcon>()
                         .Single();
 
-                    splitButton.Bounds.Height.Should().Be(23);
-                    primaryButton.Bounds.Height.Should().Be(23);
+                    splitButton.Bounds.Height.Should().Be(22);
+                    primaryButton.Bounds.Height.Should().Be(22);
                     secondaryButton.Bounds.Width.Should().Be(13);
-                    secondaryButton.Bounds.Height.Should().Be(23);
+                    secondaryButton.Bounds.Height.Should().Be(22);
                     arrow.Bounds.Size.Should().Be(new Size(7, 5));
                 }
 

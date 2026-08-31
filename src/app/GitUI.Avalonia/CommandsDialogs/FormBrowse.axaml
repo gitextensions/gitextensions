@@ -4,7 +4,6 @@
         xmlns:commitinfo="clr-namespace:GitUI.CommitInfo"
         xmlns:commandsDialogs="using:GitUI.CommandsDialogs"
         xmlns:menus="using:GitUI.CommandsDialogs.Menus"
-        xmlns:dashboard="using:GitUI.CommandsDialogs.BrowseDialog.DashboardControl"
         xmlns:leftpanel="clr-namespace:GitUI.LeftPanel"
         xmlns:controls="clr-namespace:GitUI.UserControls"
         xmlns:compat="using:GitUI.Compat"
@@ -15,6 +14,40 @@
         Title="Git Extensions"
         Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
   <Window.Styles>
+    <!-- The source ToolStrip lays out FormBrowse buttons at 22 DIPs high and reserves
+         the native image-button widths inside its 25-DIP toolbar row. -->
+    <Style Selector="Button.gitextensions-toolbar-button,
+                     ToggleButton.gitextensions-toolbar-button,
+                     compat|IconButton.gitextensions-toolbar-button,
+                     compat|IconToggleButton.gitextensions-toolbar-button,
+                     compat|IconSplitButton.gitextensions-toolbar-button,
+                     SplitButton.gitextensions-toolbar-button">
+      <Setter Property="Height" Value="22" />
+      <Setter Property="MinHeight" Value="22" />
+      <Setter Property="Margin" Value="0,1,0,2" />
+      <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+    <Style Selector="Button.gitextensions-toolbar-button.gitextensions-icon-only,
+                     ToggleButton.gitextensions-toolbar-button.gitextensions-icon-only,
+                     compat|IconButton.gitextensions-toolbar-button.gitextensions-icon-only,
+                     compat|IconToggleButton.gitextensions-toolbar-button.gitextensions-icon-only">
+      <Setter Property="Width" Value="23" />
+    </Style>
+    <Style Selector="compat|IconSplitButton.gitextensions-toolbar-button.gitextensions-icon-only,
+                     SplitButton.gitextensions-toolbar-button.gitextensions-icon-only">
+      <Setter Property="Width" Value="32" />
+    </Style>
+    <Style Selector="Button.gitextensions-toolbar-button.gitextensions-toolbar-first">
+      <Setter Property="Margin" Value="5,1,0,2" />
+    </Style>
+    <Style Selector="Border.gitextensions-toolbar-separator">
+      <Setter Property="Width" Value="6" />
+      <Setter Property="Height" Value="25" />
+      <Setter Property="Margin" Value="0" />
+    </Style>
+    <Style Selector="compat|IconSplitButton#branchSelect">
+      <Setter Property="Padding" Value="2,1" />
+    </Style>
     <Style Selector="MenuItem.worktree-deleted">
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
     </Style>
@@ -22,6 +55,7 @@
       <Setter Property="Height" Value="19" />
       <Setter Property="MinHeight" Value="19" />
       <Setter Property="Margin" Value="0,4" />
+      <Setter Property="Padding" Value="8,0" />
     </Style>
   </Window.Styles>
   <DockPanel>
@@ -206,20 +240,20 @@
                       Background="Transparent"
                       Height="25"
                       Orientation="Horizontal"
-                      Spacing="1">
-        <Button x:Name="RefreshButton" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button">
+                      Spacing="0">
+        <Button x:Name="RefreshButton" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only gitextensions-toolbar-first">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ReloadRevisions}" />
         </Button>
         <Border x:Name="toolStripSeparator0" Classes="gitextensions-toolbar-separator" />
-        <Button x:Name="toggleLeftPanel" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button">
+        <Button x:Name="toggleLeftPanel" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutSidebarLeft}" />
         </Button>
-        <Button x:Name="toggleSplitViewLayout" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button">
+        <Button x:Name="toggleSplitViewLayout" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutFooter}" />
         </Button>
         <SplitButton x:Name="menuCommitInfoPosition"
                      compat:TranslationCompat.TranslateToolTip="False"
-                     Classes="gitextensions-toolbar-button">
+                     Classes="gitextensions-toolbar-button gitextensions-icon-only">
           <SplitButton.Content>
             <Image Classes="gitextensions-icon-16" x:Name="menuCommitInfoPositionImage"
                    Source="{x:Static properties:Images.LayoutFooterTab}" />
@@ -264,7 +298,7 @@
         </compat:IconSplitButton>
         <menus:WorkingDirectoryToolStripSplitButton x:Name="_NO_TRANSLATE_WorkingDir"
                                                     Classes="gitextensions-toolbar-button"
-                                                    Height="23" />
+                                                    Height="22" />
         <compat:IconSplitButton x:Name="branchSelect"
                                 compat:TranslationCompat.TranslateToolTip="False"
                                 Classes="gitextensions-toolbar-button"
@@ -315,7 +349,7 @@
                            Icon="{x:Static properties:Images.RepoStateClean}" />
         <SplitButton x:Name="toolStripSplitStash"
                      compat:TranslationCompat.TranslateToolTip="False"
-                     Classes="gitextensions-toolbar-button">
+                     Classes="gitextensions-toolbar-button gitextensions-icon-only">
           <SplitButton.Content>
             <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stash}" />
           </SplitButton.Content>
@@ -331,7 +365,7 @@
           </SplitButton.Flyout>
         </SplitButton>
         <Border x:Name="toolStripSeparator2" Classes="gitextensions-toolbar-separator" />
-        <Button x:Name="toolStripFileExplorer" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button">
+        <Button x:Name="toolStripFileExplorer" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" />
         </Button>
         <Button x:Name="userShell" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button">
@@ -378,17 +412,17 @@
                   Orientation="Horizontal"
                   Spacing="1"
                   IsVisible="False" />
-    <Grid>
+    <Grid x:Name="_contentPanel">
       <TextBlock x:Name="lblRepoPath" IsVisible="False" />
       <TextBlock x:Name="lblStatus" IsVisible="False" />
       <Grid x:Name="mainContentGrid"
             ColumnDefinitions="260,0,*"
             RowDefinitions="*,0,0"
-            Margin="6,0,6,6">
+            Margin="6">
       <wf:SplitContainer x:Name="MainSplitContainer"
                          Background="Transparent"
                          Grid.ColumnSpan="3"
-                         ColumnDefinitions="260,0,*">
+                         ColumnDefinitions="260,6,*">
       <Border x:Name="leftPanel" Grid.Column="0" Classes="gitextensions-section">
         <wf:SplitContainer x:Name="LeftSplitContainer"
                            Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
@@ -397,7 +431,9 @@
         </wf:SplitContainer>
       </Border>
       <GridSplitter x:Name="leftPanelSplitter" Grid.Column="1" ResizeDirection="Columns" />
-      <wf:SplitContainer x:Name="RightSplitContainer" Grid.Column="2" RowDefinitions="3*,0,2*" Background="Transparent">
+      <!-- SplitterDistance=209 in the source yields a 211-DIP first panel after the native
+           SplitContainer border; Avalonia has no equivalent implicit border. -->
+      <wf:SplitContainer x:Name="RightSplitContainer" Grid.Column="2" RowDefinitions="211,6,*" Background="Transparent">
           <wf:SplitContainer x:Name="RevisionsSplitContainer" Grid.Row="0" ColumnDefinitions="0,0,*,0,0" Background="Transparent">
           <Border x:Name="commitInfoLeftHost" Grid.Column="0" Classes="gitextensions-section" />
           <GridSplitter x:Name="commitInfoLeftSplitter" Grid.Column="1" ResizeDirection="Columns" IsVisible="False" />
@@ -464,7 +500,6 @@
               Classes="gitextensions-section"
               IsVisible="False" />
       </Grid>
-      <dashboard:Dashboard x:Name="dashboard" IsVisible="False" />
     </Grid>
     </wf:ToolStripContainer>
   </DockPanel>
