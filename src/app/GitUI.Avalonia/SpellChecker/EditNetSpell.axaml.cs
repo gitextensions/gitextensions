@@ -26,8 +26,15 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 namespace GitUI.SpellChecker;
 
 [DefaultEvent("TextChanged")]
-public partial class EditNetSpell : GitModuleControl
+public partial class EditNetSpell : GitModuleControl, IDisposable
 {
+#pragma warning disable SX1309 // Preserve the original Designer field names for port parity.
+    private readonly DispatcherTimer SpellCheckTimer;
+    private readonly DispatcherTimer AutoCompleteTimer;
+    private readonly ToolTip AutoCompleteToolTip = new();
+    private readonly DispatcherTimer AutoCompleteToolTipTimer;
+#pragma warning restore SX1309
+
     public event EventHandler? TextAssigned;
 
     /// <summary>
@@ -57,11 +64,6 @@ public partial class EditNetSpell : GitModuleControl
     private AsyncLazy<IEnumerable<AutoCompleteWord>?>? _autoCompleteListTask;
     private bool _autoCompleteWasUserActivated;
     private bool _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
-
-    private readonly DispatcherTimer _spellCheckTimer;
-    private readonly DispatcherTimer _autoCompleteTimer;
-    private readonly ToolTip _autoCompleteToolTip = new();
-    private readonly DispatcherTimer _autoCompleteToolTipTimer;
 
     // Avalonia routes navigation directly to the native list instead of sending virtual key strings.
     private readonly HashSet<Key> _keysToSendToAutoComplete =
@@ -116,48 +118,40 @@ public partial class EditNetSpell : GitModuleControl
             IgnoreWordsWithDigits = true,
             MaxSuggestions = 5,
         };
-        _spelling.ReplacedWord += SpellingReplacedWord;
-        _spelling.DeletedWord += SpellingDeletedWord;
-        _spelling.MisspelledWord += SpellingMisspelledWord;
 
-        _spellCheckTimer = new DispatcherTimer
+        SpellCheckTimer = new DispatcherTimer
         {
             Interval = TimeSpan.FromMilliseconds(250),
         };
-        _spellCheckTimer.Tick += SpellCheckTimerTick;
+        SpellCheckTimer.Tick += SpellCheckTimerTick;
 
-        _autoCompleteTimer = new DispatcherTimer
+        AutoCompleteTimer = new DispatcherTimer
         {
             Interval = TimeSpan.FromMilliseconds(200),
         };
-        _autoCompleteTimer.Tick += AutoCompleteTimer_Tick;
-        _autoCompleteToolTipTimer = new DispatcherTimer
+        AutoCompleteTimer.Tick += AutoCompleteTimer_Tick;
+        AutoCompleteToolTipTimer = new DispatcherTimer
         {
             Interval = TimeSpan.FromSeconds(2),
         };
-        _autoCompleteToolTipTimer.Tick += AutoCompleteToolTipTimer_Tick;
-
+        AutoCompleteToolTipTimer.Tick += AutoCompleteToolTipTimer_Tick;
         AutoComplete.ItemTemplate = new FuncDataTemplate<AutoCompleteWord>((word, _) =>
             new TextBlock { Text = word?.Word ?? string.Empty });
 
         TextBox.TextWrapping = AppSettings.MessageEditorWordWrap.Value
             ? TextWrapping.Wrap
             : TextWrapping.NoWrap;
-        TextBox.TextChanged += TextBoxTextChanged;
         TextBox.KeyDown += TextBox_KeyDown;
         TextBox.KeyUp += TextBox_KeyUp;
         TextBox.TextInput += TextBox_KeyPress;
-        TextBox.DoubleTapped += TextBox_DoubleClick;
         TextBox.GotFocus += TextBox_GotFocus;
         TextBox.LostFocus += TextBoxLeave;
         TextBox.LostFocus += TextBox_LostFocus;
-        TextBox.PropertyChanged += TextBox_SelectionChanged;
         TextBox.PointerPressed += TextBox_MouseDown;
         TextBox.ContextRequested += TextBox_ContextRequested;
         AutoComplete.PointerReleased += AutoComplete_Click;
         TextBox.LayoutUpdated += (_, _) => SpellCheckAdorner.InvalidateVisual();
         SpellCheckContextMenu.Opening += SpellCheckContextMenuOpening;
-        PropertyChanged += EditNetSpellEnabledChanged;
         AttachedToVisualTree += EditNetSpellAttachedToVisualTree;
         DetachedFromVisualTree += EditNetSpellDetachedFromVisualTree;
 
@@ -290,6 +284,35 @@ public partial class EditNetSpell : GitModuleControl
             : AppSettings.SettingsContainer;
 
     public void SelectAll() => TextBox.SelectAll();
+
+    // Avalonia controls have no WinForms RuntimeLoad event, so the first visual-tree attachment
+    // invokes the original source-named runtime boundary.
+    protected virtual void OnRuntimeLoad()
+    {
+        TextBox.PropertyChanged += TextBox_SelectionChanged;
+        TextBox.TextChanged += TextBoxTextChanged;
+        TextBox.DoubleTapped += TextBox_DoubleClick;
+
+        PropertyChanged += EditNetSpellEnabledChanged;
+
+        ShowWatermark();
+
+        ToggleAutoCompletion();
+
+        //
+        // spelling
+        //
+        _spelling.ReplacedWord += SpellingReplacedWord;
+        _spelling.DeletedWord += SpellingDeletedWord;
+        _spelling.MisspelledWord += SpellingMisspelledWord;
+
+        //
+        // wordDictionary
+        //
+        LoadDictionary();
+
+        SpellCheckTimer.Start();
+    }
 
     private static string DictionaryDirectory
     {
@@ -426,13 +449,19 @@ public partial class EditNetSpell : GitModuleControl
 
     private void EditNetSpellAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
-        CheckSpelling();
-        ToggleAutoCompletion();
+        OnRuntimeLoad();
     }
 
     private void EditNetSpellDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
-        _spellCheckTimer.Stop();
+        TextBox.PropertyChanged -= TextBox_SelectionChanged;
+        TextBox.TextChanged -= TextBoxTextChanged;
+        TextBox.DoubleTapped -= TextBox_DoubleClick;
+        PropertyChanged -= EditNetSpellEnabledChanged;
+        _spelling.ReplacedWord -= SpellingReplacedWord;
+        _spelling.DeletedWord -= SpellingDeletedWord;
+        _spelling.MisspelledWord -= SpellingMisspelledWord;
+        SpellCheckTimer.Stop();
         CloseAutoComplete();
         CancelAutoComplete();
     }
@@ -466,7 +495,7 @@ public partial class EditNetSpell : GitModuleControl
 
     public void CheckSpelling()
     {
-        _spellCheckTimer.Stop();
+        SpellCheckTimer.Stop();
         _customUnderlines.MisspelledWords.Clear();
         _customUnderlines.IllFormedLines.Clear();
         _customUnderlines.MarkFirstLineBlank = false;
@@ -550,14 +579,10 @@ public partial class EditNetSpell : GitModuleControl
 
         _spellCheckContextMenuItems.Clear();
         AddWordSuggestions(textIndex);
-        MenuItem cut = AddContextMenuItem(_cutMenuItemText.Text, CutMenuItemClick);
-        cut.IsEnabled = SelectionLength > 0 && !TextBox.IsReadOnly;
-        MenuItem copy = AddContextMenuItem(_copyMenuItemText.Text, CopyMenuItemdClick);
-        copy.IsEnabled = SelectionLength > 0;
-        MenuItem paste = AddContextMenuItem(_pasteMenuItemText.Text, PasteMenuItemClick);
-        paste.IsEnabled = !TextBox.IsReadOnly;
-        MenuItem delete = AddContextMenuItem(_deleteMenuItemText.Text, DeleteMenuItemClick);
-        delete.IsEnabled = SelectionLength > 0 && !TextBox.IsReadOnly;
+        AddContextMenuItem(_cutMenuItemText.Text, CutMenuItemClick);
+        AddContextMenuItem(_copyMenuItemText.Text, CopyMenuItemdClick);
+        AddContextMenuItem(_pasteMenuItemText.Text, PasteMenuItemClick);
+        AddContextMenuItem(_deleteMenuItemText.Text, DeleteMenuItemClick);
         AddContextMenuItem(_selectAllMenuItemText.Text, SelectAllMenuItemClick);
 
         AddContextMenuSeparator();
@@ -646,8 +671,8 @@ public partial class EditNetSpell : GitModuleControl
             _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
 
             // Reset when timer is already running
-            _autoCompleteTimer.Stop();
-            _autoCompleteTimer.Start();
+            AutoCompleteTimer.Stop();
+            AutoCompleteTimer.Start();
         }
 
         _customUnderlines.MisspelledWords.Clear();
@@ -658,8 +683,8 @@ public partial class EditNetSpell : GitModuleControl
 
         if (Text.Length >= 4 && Settings.Detached().Dictionary is not "None")
         {
-            _spellCheckTimer.Stop();
-            _spellCheckTimer.Start();
+            SpellCheckTimer.Stop();
+            SpellCheckTimer.Start();
         }
     }
 
@@ -691,7 +716,59 @@ public partial class EditNetSpell : GitModuleControl
 
     private void TextBox_KeyDown(object? sender, KeyEventArgs e)
     {
-        e.Handled = ProcessCmdKey(e.Key, e.KeyModifiers);
+        if (ProcessCmdKey(e.Key, e.KeyModifiers))
+        {
+            e.Handled = true;
+            return;
+        }
+
+        if (e.KeyModifiers == KeyModifiers.None
+            && _keysToSendToAutoComplete.Contains(e.Key)
+            && AutoComplete.IsVisible)
+        {
+            MoveAutoCompleteSelection(e.Key);
+            e.Handled = true;
+            return;
+        }
+
+        // handle paste from clipboard (Ctrl+V, Shift+Ins)
+        if ((e.KeyModifiers == KeyModifiers.Control && e.Key == Key.V)
+            || (e.KeyModifiers == KeyModifiers.Shift && e.Key == Key.Insert))
+        {
+            PasteTextFromClipboard();
+            e.Handled = true;
+            return;
+        }
+
+        if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Z)
+        {
+            UndoHighlighting();
+        }
+        else if (e.KeyModifiers == KeyModifiers.Control
+                 && e.Key == Key.Space
+                 && AppSettings.ProvideAutocompletion)
+        {
+            UpdateOrShowAutoComplete(calledByUser: true);
+            e.Handled = true;
+            return;
+        }
+
+        // handle vertical tab (Shift + Enter)
+        if (e.KeyModifiers == KeyModifiers.Shift && e.Key == Key.Enter)
+        {
+            AddNewLine();
+            e.Handled = true;
+            return;
+        }
+
+        if (e.Key == Key.Back)
+        {
+            _disableAutoCompleteTriggerOnTextUpdate = false;
+            if (CaretIndex == 0 || Text[CaretIndex - 1].IsSeparator())
+            {
+                CloseAutoComplete();
+            }
+        }
     }
 
     private void PasteTextFromClipboard()
@@ -707,6 +784,8 @@ public partial class EditNetSpell : GitModuleControl
 
     private void TextBox_KeyPress(object? sender, TextInputEventArgs e)
     {
+        // When a character is deleted...
+        // Avalonia reports Backspace through KeyDown rather than TextInput, so that branch is handled there.
         if (string.IsNullOrEmpty(e.Text))
         {
             return;
@@ -838,44 +917,37 @@ public partial class EditNetSpell : GitModuleControl
     private void ShowAutoCompleteList(IReadOnlyList<AutoCompleteWord> list)
     {
         const double itemHeight = 15;
+        const double listBorderWidth = 1;
+        const double textRendererOverhang = 7;
         const double verticalScrollBarWidth = 17;
 
-        double width = list.Max(word =>
-        {
-            TextBlock text = new()
-            {
-                FontFamily = TextBox.FontFamily,
-                FontSize = TextBox.FontSize,
-                FontStyle = TextBox.FontStyle,
-                FontWeight = TextBox.FontWeight,
-                Text = word.Word,
-            };
-            text.Measure(Avalonia.Size.Infinity);
-            return text.DesiredSize.Width;
-        });
-        width = Math.Max(24, Math.Ceiling(width) + 6);
+        // TextRenderer includes a seven-pixel glyph overhang in the original ListBox width.
+        double width = Math.Max(
+            24,
+            Math.Ceiling(list.Max(word => WinFormsTextMeasurer.Measure(TextBox, word.Word))) + textRendererOverhang);
 
         Point cursorPosition = GetCursorPosition();
         double top = cursorPosition.Y;
         double height = (list.Count + 1) * itemHeight;
         if (top + height > Bounds.Height)
         {
-            // if reduced height is not too small then shrink only
             if (Bounds.Height - top > Bounds.Height / 2)
             {
                 height = Bounds.Height - top;
             }
             else
             {
-                // if shrinking wasn't acceptable, move higher
                 top = Math.Max(0, Bounds.Height - height);
 
-                // and reduce height if moving up wasn't enough
                 height = Math.Min(Bounds.Height - top, height);
             }
 
             width += verticalScrollBarWidth;
         }
+
+        // WinForms ListBox.IntegralHeight reduces SetBounds heights to complete 15-pixel rows.
+        double clientHeight = Math.Max(itemHeight, height - (2 * listBorderWidth));
+        height = (Math.Floor(clientHeight / itemHeight) * itemHeight) + (2 * listBorderWidth);
 
         Canvas.SetLeft(AutoComplete, Math.Clamp(cursorPosition.X, 0, Math.Max(0, Bounds.Width - width)));
         Canvas.SetTop(AutoComplete, top);
@@ -962,12 +1034,6 @@ public partial class EditNetSpell : GitModuleControl
 
     protected bool ProcessCmdKey(Key key, KeyModifiers keyModifiers)
     {
-        if (AutoComplete.IsVisible && keyModifiers == KeyModifiers.None && _keysToSendToAutoComplete.Contains(key))
-        {
-            MoveAutoCompleteSelection(key);
-            return true;
-        }
-
         if (AutoComplete.IsVisible && key is Key.Tab or Key.Enter)
         {
             AcceptAutoComplete();
@@ -978,43 +1044,6 @@ public partial class EditNetSpell : GitModuleControl
         {
             CloseAutoComplete();
             return true;
-        }
-
-        if (keyModifiers == KeyModifiers.Control && key == Key.Space && AppSettings.ProvideAutocompletion)
-        {
-            UpdateOrShowAutoComplete(calledByUser: true);
-            return true;
-        }
-
-        if (keyModifiers == KeyModifiers.Control && key == Key.Z)
-        {
-            UndoHighlighting();
-        }
-
-        // handle paste from clipboard (Ctrl+V, Shift+Ins)
-        if ((keyModifiers == KeyModifiers.Control && key == Key.V)
-            || (keyModifiers == KeyModifiers.Shift && key == Key.Insert))
-        {
-            PasteTextFromClipboard();
-            return true;
-        }
-
-        // handle vertical tab (Shift + Enter)
-        if (keyModifiers == KeyModifiers.Shift && key == Key.Enter)
-        {
-            AddNewLine();
-            return true;
-        }
-
-        if (key == Key.Back)
-        {
-            _disableAutoCompleteTriggerOnTextUpdate = false;
-
-            // When a character is deleted...
-            if (CaretIndex == 0 || Text[CaretIndex - 1].IsSeparator())
-            {
-                CloseAutoComplete();
-            }
         }
 
         return false;
@@ -1071,17 +1100,17 @@ public partial class EditNetSpell : GitModuleControl
 
             if (calledByUser)
             {
-                _autoCompleteToolTip.Content = "AutoComplete is not available yet (it is still parsing the changed files).";
-                ToolTip.SetTip(TextBox, _autoCompleteToolTip.Content);
+                AutoCompleteToolTip.Content = "AutoComplete is not available yet (it is still parsing the changed files).";
+                ToolTip.SetTip(TextBox, AutoCompleteToolTip.Content);
                 ToolTip.SetIsOpen(TextBox, true);
-                _autoCompleteToolTipTimer.Stop();
-                _autoCompleteToolTipTimer.Start();
+                AutoCompleteToolTipTimer.Stop();
+                AutoCompleteToolTipTimer.Start();
             }
 
             return;
         }
 
-        _autoCompleteToolTipTimer.Stop();
+        AutoCompleteToolTipTimer.Stop();
         ToolTip.SetIsOpen(TextBox, false);
 
         string word = GetWordAtCursor();
@@ -1116,12 +1145,23 @@ public partial class EditNetSpell : GitModuleControl
             _autoCompleteWasUserActivated = true;
         }
 
+        // The native list helper applies the source overflow rules:
+        // if reduced height is not too small then shrink only
+        // if shrinking wasn't acceptable, move higher
+        // and reduce height if moving up wasn't enough
         ShowAutoCompleteList(list);
     }
 
     private Point GetCursorPosition()
     {
-        return _customUnderlines.GetTextPosition(CaretIndex);
+        Point position = _customUnderlines.GetTextPosition(CaretIndex);
+        int lineStart = CaretIndex == 0 ? 0 : Text.LastIndexOf('\n', CaretIndex - 1) + 1;
+        string linePrefix = Text[lineStart..CaretIndex];
+        const double richTextBoxTextInset = 1;
+        double sourceTextPosition = richTextBoxTextInset
+                                    + Math.Ceiling(WinFormsTextMeasurer.Measure(TextBox, linePrefix))
+                                    + 2;
+        return new Point(sourceTextPosition, position.Y);
     }
 
     private void AutoComplete_Click(object? sender, PointerReleasedEventArgs e)
@@ -1135,14 +1175,14 @@ public partial class EditNetSpell : GitModuleControl
     private void AutoCompleteTimer_Tick(object? sender, EventArgs e)
     {
         UpdateOrShowAutoComplete(calledByUser: false);
-        _autoCompleteTimer.Stop();
+        AutoCompleteTimer.Stop();
     }
 
     public void CancelAutoComplete()
     {
         _autoCompleteCancellationTokenSource.Cancel();
-        _autoCompleteToolTipTimer.Stop();
-        _autoCompleteTimer.Stop();
+        AutoCompleteToolTipTimer.Stop();
+        AutoCompleteTimer.Stop();
     }
 
     private void ReplaceText(int start, int length, string replacement)
@@ -1162,7 +1202,28 @@ public partial class EditNetSpell : GitModuleControl
     private void AutoCompleteToolTipTimer_Tick(object? sender, EventArgs e)
     {
         ToolTip.SetIsOpen(TextBox, false);
-        _autoCompleteToolTipTimer.Stop();
+        AutoCompleteToolTipTimer.Stop();
+    }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            CancelAutoComplete();
+            SpellCheckTimer.Stop();
+            _autoCompleteCancellationTokenSource.Dispose();
+        }
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 
     private void TextBox_ContextRequested(object? sender, ContextRequestedEventArgs e)
@@ -1309,6 +1370,16 @@ public partial class EditNetSpell : GitModuleControl
 
         public void ToggleAutoCompletion() => control.ToggleAutoCompletion();
 
-        public bool KeyDown(Key key, KeyModifiers keyModifiers) => control.ProcessCmdKey(key, keyModifiers);
+        public bool KeyDown(Key key, KeyModifiers keyModifiers)
+        {
+            KeyEventArgs e = new()
+            {
+                RoutedEvent = InputElement.KeyDownEvent,
+                Key = key,
+                KeyModifiers = keyModifiers,
+            };
+            control.TextBox_KeyDown(control.TextBox, e);
+            return e.Handled;
+        }
     }
 }

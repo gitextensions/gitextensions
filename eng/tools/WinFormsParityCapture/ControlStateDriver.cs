@@ -391,6 +391,24 @@ internal sealed class ControlStateDriver : IDisposable
             return;
         }
 
+        if (target is ContextMenuStrip
+            && _root is GitUI.SpellChecker.EditNetSpell spellEditor
+            && _root.Controls.Find("TextBox", searchAllChildren: true).OfType<RichTextBox>().FirstOrDefault() is { } spellTextBox)
+        {
+            spellEditor.CheckSpelling();
+            int previousSelectionStart = spellTextBox.SelectionStart;
+            int previousSelectionLength = spellTextBox.SelectionLength;
+            int wordStart = FindFirstWordStart(spellTextBox.Text);
+            spellTextBox.Select(Math.Min(wordStart + 2, spellTextBox.TextLength), 0);
+            _restoreActions.Add(() =>
+            {
+                int restoredStart = Math.Min(previousSelectionStart, spellTextBox.TextLength);
+                spellTextBox.Select(
+                    restoredStart,
+                    Math.Min(previousSelectionLength, spellTextBox.TextLength - restoredStart));
+            });
+        }
+
         if (target is ToolStripComboBox toolStripComboBox)
         {
             target = toolStripComboBox.ComboBox;
@@ -460,6 +478,17 @@ internal sealed class ControlStateDriver : IDisposable
             }
 
             return contextMenu;
+        }
+
+        static int FindFirstWordStart(string text)
+        {
+            int index = 0;
+            while (index < text.Length && char.IsWhiteSpace(text[index]))
+            {
+                index++;
+            }
+
+            return index;
         }
     }
 
