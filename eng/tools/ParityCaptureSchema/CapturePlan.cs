@@ -109,6 +109,7 @@ public enum CaptureStateKind
     Normal,
     Focus,
     Disabled,
+    ReadOnly,
     Checked,
     Expanded,
     Hover,
