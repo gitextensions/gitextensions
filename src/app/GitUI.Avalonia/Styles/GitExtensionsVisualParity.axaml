@@ -431,7 +431,7 @@
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBorderBrush" Color="#6B6B6B" />
           <SolidColorBrush x:Key="GitExtensionsMenuCheckBackgroundBrush" Color="#2E3F56" />
           <SolidColorBrush x:Key="GitExtensionsMenuCheckForegroundBrush" Color="#E1E3E6" />
-          <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#4A4A4A" />
           <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#2E2E2E" />
           <SolidColorBrush x:Key="GitExtensionsControlPressedBackgroundBrush" Color="#4A4A4A" />
@@ -505,7 +505,7 @@
        remain as designer and pre-startup fallbacks. -->
   <Style Selector="Window">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
-    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
     <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
@@ -1320,7 +1320,7 @@
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
     <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
     <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
-    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsMenuForegroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
   </Style>
   <Style Selector="MenuItem.gitextensions-menu-command-toggle /template/ ContentControl#PART_ToggleIconPresenter">
@@ -1545,6 +1545,7 @@
   </Style>
   <Style Selector="Menu > MenuItem">
     <Setter Property="Margin" Value="0,2" />
+    <Setter Property="Padding" Value="4,0" />
     <Setter Property="MinHeight" Value="20" />
     <!-- Reserve the open-state border so selecting an item never remeasures the menu bar. -->
     <Setter Property="BorderBrush" Value="Transparent" />

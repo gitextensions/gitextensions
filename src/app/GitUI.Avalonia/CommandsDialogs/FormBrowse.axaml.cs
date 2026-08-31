@@ -85,8 +85,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private GitRevision? _gpgInfoLoadingRevision;
     private GitRevision? _gpgInfoRevision;
     private GridLength _leftPanelWidth = new(260);
-    private GridLength _splitViewBottomHeight = new(2, GridUnitType.Star);
-    private GridLength _splitViewTopHeight = new(3, GridUnitType.Star);
+    private GridLength _splitViewBottomHeight = new(1, GridUnitType.Star);
+    private GridLength _splitViewTopHeight = new(211);
     private bool _gpgInfoLoaded;
     private bool _hasRuntimeCommands;
     private int _gpgInfoLoadVersion;
@@ -95,6 +95,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
     private IConsoleShellRunner? _terminal;
+    private Dashboard? _dashboard;
     private TabItem? _consoleTabPage;
     private OutputHistoryControllerBase? _outputHistoryController;
 
@@ -162,17 +163,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         revisionDiff.UICommandsSource = this;
         fileTree.UICommandsSource = this;
         repoObjectsTree.UICommandsSource = this;
-        dashboard.UICommandsSource = this;
         notificationBarBisectInProgress.UICommandsSource = this;
         notificationBarGitActionInProgress.UICommandsSource = this;
         Activated += (_, _) => Dispatcher.UIThread.Post(OnActivate);
-        if (_repositoryHistoryUIService is not null)
-        {
-            dashboard.Initialize(_repositoryHistoryUIService);
-            dashboard.GitModuleChanged += (_, e) => ChangeWorkingDirectory(e.GitModule.WorkingDir);
-            dashboard.ConfigureRepositoriesRequested += (_, _) => ConfigureRecentRepositories();
-            dashboard.OpenRepositoryRequested += (_, _) => OpenRepositoryDialog();
-        }
 
         _consoleEmulatorsRegistry = UICommands.GetService(typeof(IConsoleEmulatorsRegistry)) as IConsoleEmulatorsRegistry;
         _controller = gpgInfoProvider ?? new GpgInfoProvider(new GitGpgController(() => Module));
@@ -539,9 +532,16 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void ShowRepository()
     {
-        dashboard.IsVisible = false;
+        if (_dashboard is not null)
+        {
+            _dashboard.IsVisible = false;
+        }
+
         mainContentGrid.IsVisible = true;
         toolPanel.IsVisible = true;
+        toolStripMainHost.IsVisible = true;
+        toolStripFiltersHost.IsVisible = true;
+        ToolStripScripts.IsVisible = ToolStripScripts.Children.Count > 0;
         _repositoryHistoryUIService?.TriggerBranchNameCacheUpdate(onlyIfEmpty: true);
     }
 
@@ -633,9 +633,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         form.ShowDialog(this);
         _repositoryHistoryUIService?.Invalidate();
         _NO_TRANSLATE_WorkingDir.RefreshContent();
-        if (dashboard.IsVisible)
+        if (_dashboard?.IsVisible is true)
         {
-            dashboard.RefreshContent();
+            _dashboard.RefreshContent();
         }
     }
 
@@ -767,11 +767,32 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void ShowDashboard()
     {
+        if (_dashboard is null)
+        {
+            _dashboard = new Dashboard
+            {
+                Name = "dashboard",
+                UICommandsSource = this,
+            };
+            if (_repositoryHistoryUIService is not null)
+            {
+                _dashboard.Initialize(_repositoryHistoryUIService);
+            }
+
+            _dashboard.GitModuleChanged += (_, e) => ChangeWorkingDirectory(e.GitModule.WorkingDir);
+            _dashboard.ConfigureRepositoriesRequested += (_, _) => ConfigureRecentRepositories();
+            _dashboard.OpenRepositoryRequested += (_, _) => OpenRepositoryDialog();
+            _contentPanel.Children.Add(_dashboard);
+        }
+
         mainContentGrid.IsVisible = false;
-        toolPanel.IsVisible = false;
-        dashboard.IsVisible = true;
-        dashboard.RefreshContent();
-        dashboard.Focus();
+        toolStripMainHost.IsVisible = false;
+        toolStripFiltersHost.IsVisible = false;
+        ToolStripScripts.IsVisible = false;
+        toolPanel.IsVisible = true;
+        _dashboard.IsVisible = true;
+        _dashboard.RefreshContent();
+        _dashboard.Focus();
     }
 
     private void UpdatePluginMenu(bool validWorkingDir)
@@ -1101,7 +1122,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         bool showSplitView = AppSettings.ShowSplitViewLayout;
         RowDefinitions rows = RightSplitContainer.RowDefinitions;
         rows[0].Height = showSplitView ? _splitViewTopHeight : new GridLength(1, GridUnitType.Star);
-        rows[1].Height = new GridLength(0);
+        rows[1].Height = showSplitView ? new GridLength(6) : new GridLength(0);
         rows[2].Height = showSplitView ? _splitViewBottomHeight : new GridLength(0);
         splitViewSplitter.IsVisible = showSplitView;
         CommitInfoTabControl.IsVisible = showSplitView;
@@ -1149,7 +1170,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void RefreshDashboardToolStripMenuItemClick(object sender, EventArgs e)
     {
-        dashboard.RefreshContent();
+        _dashboard?.RefreshContent();
     }
 
     private void PatchToolStripMenuItemClick(object sender, EventArgs e)
@@ -2721,6 +2742,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void fileToolStripMenuItem_RecentRepositoriesCleared(object sender, EventArgs e)
     {
-        dashboard.RefreshContent();
+        _dashboard?.RefreshContent();
     }
 }

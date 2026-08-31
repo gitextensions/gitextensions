@@ -1782,6 +1782,7 @@ internal static class WinFormsInputMetadata
                 new("branchSearchPanel", 4, null, null),
                 new("btnSearch", 2, null, null),
                 new("leftPanelToolStrip", 5, null, null),
+                new("repoTreePanel", 4, null, null),
                 new("treeMain", 3, null, null),
             ],
             ["GitUI.PatchGrid"] =
@@ -4349,6 +4350,7 @@ internal static class WinFormsInputMetadata
                 new("mnubtnStashSubmodule", "ToolStripMenuItem"),
                 new("mnubtnSynchronizeSubmodules", "ToolStripMenuItem"),
                 new("mnubtnUpdateSubmodule", "ToolStripMenuItem"),
+                new("repoTreePanel", "TableLayoutPanel"),
                 new("runScriptToolStripMenuItem", "ToolStripMenuItem"),
                 new("toolStripSeparator1", "ToolStripSeparator"),
                 new("toolStripSeparator10", "ToolStripSeparator"),
@@ -6457,6 +6459,7 @@ internal static class WinFormsInputMetadata
             [
                 new("branchSearchPanel", null, "Fill", true, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null),
                 new("btnSearch", ["Left"], null, true, new Avalonia.Thickness(0, 0, 0, 0), new Avalonia.Thickness(2, 2, 2, 2), null, null, "Flat"),
+                new("repoTreePanel", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null),
                 new("treeMain", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, "None", null),
             ],
             ["GitUI.PatchGrid"] =
