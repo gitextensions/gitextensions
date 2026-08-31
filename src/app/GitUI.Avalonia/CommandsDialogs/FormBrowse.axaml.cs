@@ -4,6 +4,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using GitCommands;
@@ -31,6 +32,7 @@ using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
 using ResourceManager;
@@ -42,9 +44,15 @@ namespace GitUI.CommandsDialogs;
 
 public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 {
+    private readonly TranslationString _noSubmodulesPresent = new("No submodules");
+    private readonly TranslationString _topProjectModuleFormat = new("Top project: {0}");
+    private readonly TranslationString _superprojectModuleFormat = new("Superproject: {0}");
+    private readonly TranslationString _goToSuperProject = new("Go to superproject");
     private readonly TranslationString _indexLockCantDelete = new("Failed to delete index.lock");
+    private readonly TranslationString _loading = new("Loading...");
     private readonly TranslationString _noReposHostPluginLoaded = new("No repository host plugin loaded.");
     private readonly TranslationString _noReposHostFound = new("Could not find any relevant repository hosts for the currently open repository.");
+    private readonly TranslationString _updateCurrentSubmodule = new("Update current submodule");
     private readonly TranslationString _pullFetch = new("Fetch");
     private readonly TranslationString _pullFetchAll = new("Fetch all");
     private readonly TranslationString _pullFetchPruneAll = new("Fetch and prune all");
@@ -71,6 +79,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
     private readonly ISubmoduleStatusProvider? _submoduleStatusProvider;
     private readonly IScriptsManager? _scriptsManager;
+    private List<MenuItem>? _currentSubmoduleMenuItems;
     private GridLength _commitInfoWidth = new(490);
     private GpgInfo? _gpgInfo;
     private GitRevision? _gpgInfoLoadingRevision;
@@ -98,6 +107,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         InitializeComponent();
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip, RevisionGrid, repositoryToolStripMenuItem);
         InitializeWorkspaceLayout();
+        InitializeToolbarOverflow();
         InitializeComplete();
         InitMenusAndToolbars(revFilter: null, pathFilter: null);
     }
@@ -133,6 +143,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _hasRuntimeCommands = true;
         _scriptsManager = UICommands.GetService(typeof(IScriptsManager)) as IScriptsManager;
         _submoduleStatusProvider = UICommands.GetService(typeof(ISubmoduleStatusProvider)) as ISubmoduleStatusProvider;
+        if (_submoduleStatusProvider is not null)
+        {
+            _submoduleStatusProvider.StatusUpdating += SubmoduleStatusProvider_StatusUpdating;
+            _submoduleStatusProvider.StatusUpdated += SubmoduleStatusProvider_StatusUpdated;
+        }
+
         _updateCheckService = UICommands.GetService(typeof(IUpdateCheckService)) as IUpdateCheckService;
         _repositoryHistoryUIService = UICommands.GetService(typeof(IRepositoryHistoryUIService)) as IRepositoryHistoryUIService;
         fileToolStripMenuItem.Initialize(() => UICommands);
@@ -241,6 +257,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             RoutingStrategies.Tunnel);
         toolStripWorktrees.Click += manageWorktreeToolStripMenuItem_Click;
         WorktreeFlyout.Opening += (_, _) => PopulateWorktreeSelector();
+        toolStripButtonLevelUp.Click += toolStripButtonLevelUp_ButtonClick;
+        InitializeToolbarOverflow();
         toolStripButtonPull.Click += ToolStripButtonPullClick;
         toolStripButtonPush.Click += ToolStripButtonPushClick;
         toolStripButtonCommit.Click += CommitToolStripMenuItemClick;
@@ -330,6 +348,35 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         ToolStripScripts.IsVisible = ToolStripScripts.Children.Count > 0;
     }
 
+    private static void ToggleToolbarOverflow(Control content, ScrollViewer viewport, Button overflowButton)
+    {
+        double maximumOffset = Math.Max(0, content.Bounds.Width - viewport.Bounds.Width);
+        bool returnToStart = content.RenderTransform is TranslateTransform { X: < 0 };
+        content.RenderTransform = new TranslateTransform(returnToStart ? 0 : -maximumOffset, 0);
+        overflowButton.Content = returnToStart ? "»" : "«";
+    }
+
+    private void InitializeToolbarOverflow()
+    {
+        toolStripMainOverflow.Click += (_, _) => ToggleToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
+        toolStripFiltersOverflow.Click += (_, _) => ToggleToolbarOverflow(ToolStripFilters, toolStripFiltersViewport, toolStripFiltersOverflow);
+        toolStripMainViewport.SizeChanged += (_, _) => UpdateToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
+        toolStripFiltersViewport.SizeChanged += (_, _) => UpdateToolbarOverflow(ToolStripFilters, toolStripFiltersViewport, toolStripFiltersOverflow);
+        ToolStripMain.LayoutUpdated += (_, _) => UpdateToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
+        ToolStripFilters.LayoutUpdated += (_, _) => UpdateToolbarOverflow(ToolStripFilters, toolStripFiltersViewport, toolStripFiltersOverflow);
+    }
+
+    private static void UpdateToolbarOverflow(Control content, ScrollViewer viewport, Button overflowButton)
+    {
+        bool hasOverflow = content.Bounds.Width > viewport.Bounds.Width;
+        overflowButton.IsVisible = hasOverflow;
+        if (!hasOverflow && content.RenderTransform is TranslateTransform { X: not 0 })
+        {
+            content.RenderTransform = new TranslateTransform(0, 0);
+            overflowButton.Content = "»";
+        }
+    }
+
     public FormBrowse(IServiceProvider serviceProvider, GitModule module)
         : this(new GitUICommands(serviceProvider, module))
     {
@@ -343,6 +390,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toggleSplitViewLayout), "ToolTipText", "Toggle split view layout");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(menuCommitInfoPosition), "ToolTipText", "Commit info position");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(branchSelect), "ToolTipText", "Change current branch");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripButtonLevelUp), "ToolTipText", "Submodules");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripSplitStash), "ToolTipText", "Manage stashes");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripWorktrees), "ToolTipText", "Worktrees");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripFileExplorer), "ToolTipText", "File Explorer");
@@ -362,6 +410,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         SetTranslatedToolTip(toggleSplitViewLayout, nameof(toggleSplitViewLayout), "Toggle split view layout");
         SetTranslatedToolTip(menuCommitInfoPosition, nameof(menuCommitInfoPosition), "Commit info position");
         SetTranslatedToolTip(branchSelect, nameof(branchSelect), "Change current branch");
+        SetTranslatedToolTip(toolStripButtonLevelUp, nameof(toolStripButtonLevelUp), "Submodules");
         SetTranslatedToolTip(toolStripSplitStash, nameof(toolStripSplitStash), "Manage stashes");
         SetTranslatedToolTip(toolStripWorktrees, nameof(toolStripWorktrees), "Worktrees");
         SetTranslatedToolTip(toolStripFileExplorer, nameof(toolStripFileExplorer), "File Explorer");
@@ -1618,6 +1667,22 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UpdateSubmodulesStructure();
     }
 
+    private void UpdateSubmoduleToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        if (sender is MenuItem { Tag: string submodule } && Module.SuperprojectModule is not null)
+        {
+            FormProcess.ShowDialog(
+                this,
+                UICommands,
+                arguments: Commands.SubmoduleUpdate(submodule),
+                Module.SuperprojectModule.WorkingDir,
+                input: null,
+                useDialogSettings: true);
+        }
+
+        RefreshRevisions();
+    }
+
     private void UpdateAllSubmodulesToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartUpdateSubmodulesDialog(this);
@@ -1828,6 +1893,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         OpenRepo = 45,
         CloseRepository = 15,
         AddNotes = 8,
+        GoToSuperproject = 27,
+        GoToSubmodule = 28,
 
         // WinForms routes F5 through ToolStripItem.ShortcutKeys. Avalonia has no ToolStrip,
         // so refresh joins the same command dispatcher without changing persisted upstream IDs.
@@ -1963,6 +2030,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             case Command.Refresh: RefreshToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.Commit: CommitToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.AddNotes: AddNotes(); break;
+            case Command.GoToSuperproject: toolStripButtonLevelUp_ButtonClick(toolStripButtonLevelUp, EventArgs.Empty); break;
+            case Command.GoToSubmodule: toolStripButtonLevelUp.ShowDropDown(); break;
             case Command.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.QuickFetch: QuickFetch(); break;
             case Command.PullOrFetch: PullToolStripMenuItemClick(this, EventArgs.Empty); break;
@@ -2092,6 +2161,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
+        ToolTip.SetTip(toolStripButtonLevelUp, string.Empty);
         string workingDirectory = Module.WorkingDir;
         CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
         _loadOperations.FileAndForget(async () =>
@@ -2120,6 +2190,213 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 MessageBoxes.ShowGitConfigurationExceptionMessage(this, exception);
             }
         });
+    }
+
+    private void SubmoduleToolStripButtonClick(object? sender, EventArgs e)
+    {
+        if (sender is not MenuItem { Tag: string path })
+        {
+            return;
+        }
+
+        if (!Directory.Exists(path))
+        {
+            MessageBoxes.SubmoduleDirectoryDoesNotExist(this, path);
+            return;
+        }
+
+        SetWorkingDir(path);
+    }
+
+    private MenuItem CreateSubmoduleMenuItem(SubmoduleInfo info, string textFormat = "{0}")
+    {
+        MenuItem item = new()
+        {
+            Width = 200,
+            Header = string.Format(textFormat, info.Text),
+            Tag = info.Path,
+            Icon = CreateSubmoduleMenuIcon(Properties.Images.FolderSubmodule),
+            FontWeight = info.Bold ? FontWeight.Bold : FontWeight.Normal,
+        };
+        item.Click += SubmoduleToolStripButtonClick;
+        return item;
+    }
+
+    private static void UpdateSubmoduleMenuItemStatus(MenuItem item, SubmoduleInfo info, string textFormat = "{0}")
+    {
+        if (info.Detailed is null)
+        {
+            return;
+        }
+
+        item.Icon = CreateSubmoduleMenuIcon(GetSubmoduleItemImage(info.Detailed));
+        item.Header = string.Format(textFormat, info.Text + info.Detailed.AddedAndRemovedText);
+
+        static IImage GetSubmoduleItemImage(DetailedSubmoduleInfo details)
+        {
+            return (details.Status, details.IsDirty) switch
+            {
+                (null, _) => Properties.Images.FolderSubmodule,
+                (SubmoduleStatus.FastForward, true) => Properties.Images.SubmoduleRevisionUpDirty,
+                (SubmoduleStatus.FastForward, false) => Properties.Images.SubmoduleRevisionUp,
+                (SubmoduleStatus.Rewind, true) => Properties.Images.SubmoduleRevisionDownDirty,
+                (SubmoduleStatus.Rewind, false) => Properties.Images.SubmoduleRevisionDown,
+                (SubmoduleStatus.NewerTime, true) => Properties.Images.SubmoduleRevisionSemiUpDirty,
+                (SubmoduleStatus.NewerTime, false) => Properties.Images.SubmoduleRevisionSemiUp,
+                (SubmoduleStatus.OlderTime, true) => Properties.Images.SubmoduleRevisionSemiDownDirty,
+                (SubmoduleStatus.OlderTime, false) => Properties.Images.SubmoduleRevisionSemiDown,
+                (_, true) => Properties.Images.SubmoduleDirty,
+                (_, false) => Properties.Images.FileStatusModified,
+            };
+        }
+    }
+
+    private static Image CreateSubmoduleMenuIcon(IImage image)
+        => new() { Width = 16, Height = 16, Source = image };
+
+    private void SubmoduleStatusProvider_StatusUpdating(object? sender, EventArgs e)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            RemoveSubmoduleButtons();
+            SubmoduleFlyout.Items.Add(new MenuItem { Header = _loading.Text });
+        });
+    }
+
+    private void SubmoduleStatusProvider_StatusUpdated(object? sender, SubmoduleStatusEventArgs e)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (e.Token.IsCancellationRequested)
+            {
+                return;
+            }
+
+            if (e.StructureUpdated || _currentSubmoduleMenuItems is null)
+            {
+                _currentSubmoduleMenuItems = PopulateToolbar(e.Info);
+            }
+
+            UpdateSubmoduleMenuStatus(e.Info);
+        });
+    }
+
+    private List<MenuItem> PopulateToolbar(SubmoduleInfoResult result)
+    {
+        RemoveSubmoduleButtons();
+        List<MenuItem> newItems = [.. result.OurSubmodules.Select(submodule => CreateSubmoduleMenuItem(submodule))];
+
+        if (result.OurSubmodules.Count == 0)
+        {
+            newItems.Add(new MenuItem { Header = _noSubmodulesPresent.Text });
+        }
+
+        foreach (MenuItem item in newItems)
+        {
+            SubmoduleFlyout.Items.Add(item);
+        }
+
+        if (result.SuperProject is not null)
+        {
+            SubmoduleFlyout.Items.Add(new Separator());
+            if (result.TopProject is not null && result.TopProject != result.SuperProject)
+            {
+                MenuItem topProjectItem = CreateSubmoduleMenuItem(result.TopProject, _topProjectModuleFormat.Text);
+                newItems.Add(topProjectItem);
+                SubmoduleFlyout.Items.Add(topProjectItem);
+            }
+
+            MenuItem superProjectItem = CreateSubmoduleMenuItem(result.SuperProject, _superprojectModuleFormat.Text);
+            newItems.Add(superProjectItem);
+            SubmoduleFlyout.Items.Add(superProjectItem);
+            foreach (SubmoduleInfo submodule in result.AllSubmodules)
+            {
+                MenuItem item = CreateSubmoduleMenuItem(submodule);
+                newItems.Add(item);
+                SubmoduleFlyout.Items.Add(item);
+            }
+
+            ToolTip.SetTip(toolStripButtonLevelUp, _goToSuperProject.Text);
+        }
+
+        SubmoduleFlyout.Items.Add(new Separator());
+        MenuItem updateAllItem = new()
+        {
+            Header = updateAllSubmodulesToolStripMenuItem.Header,
+            Icon = CreateSubmoduleMenuIcon(Properties.Images.SubmodulesUpdate),
+        };
+        updateAllItem.Click += UpdateAllSubmodulesToolStripMenuItemClick;
+        SubmoduleFlyout.Items.Add(updateAllItem);
+
+        if (result.CurrentSubmoduleName is not null)
+        {
+            MenuItem updateCurrentItem = new()
+            {
+                Width = 200,
+                Header = _updateCurrentSubmodule.Text,
+                Tag = Module.WorkingDir,
+                Icon = CreateSubmoduleMenuIcon(Properties.Images.FolderSubmodule),
+            };
+            updateCurrentItem.Click += UpdateSubmoduleToolStripMenuItemClick;
+            SubmoduleFlyout.Items.Add(updateCurrentItem);
+        }
+
+        return newItems;
+    }
+
+    private void UpdateSubmoduleMenuStatus(SubmoduleInfoResult result)
+    {
+        if (_currentSubmoduleMenuItems is null)
+        {
+            return;
+        }
+
+        Validates.NotNull(result.TopProject);
+        Dictionary<string, SubmoduleInfo> infos = result.AllSubmodules.ToDictionary(info => info.Path, info => info);
+        infos[result.TopProject.Path] = result.TopProject;
+        foreach (MenuItem item in _currentSubmoduleMenuItems)
+        {
+            if (item.Tag is not string path)
+            {
+                continue;
+            }
+
+            if (infos.TryGetValue(path, out SubmoduleInfo? info))
+            {
+                UpdateSubmoduleMenuItemStatus(item, info);
+            }
+            else
+            {
+                DebugHelpers.Fail($"Status info for {path} ({1 + result.AllSubmodules.Count} records) has no match in current nodes ({_currentSubmoduleMenuItems.Count})");
+            }
+        }
+    }
+
+    private void RemoveSubmoduleButtons()
+    {
+        foreach (MenuItem item in SubmoduleFlyout.Items.OfType<MenuItem>())
+        {
+            item.Click -= SubmoduleToolStripButtonClick;
+            item.Click -= UpdateAllSubmodulesToolStripMenuItemClick;
+            item.Click -= UpdateSubmoduleToolStripMenuItemClick;
+        }
+
+        SubmoduleFlyout.Items.Clear();
+        _currentSubmoduleMenuItems = null;
+    }
+
+    private MenuFlyout SubmoduleFlyout => (MenuFlyout)toolStripButtonLevelUp.Flyout!;
+
+    private void toolStripButtonLevelUp_ButtonClick(object? sender, EventArgs e)
+    {
+        if (Module.SuperprojectModule is not null)
+        {
+            SetWorkingDir(Module.SuperprojectModule.WorkingDir);
+        }
+        else
+        {
+            toolStripButtonLevelUp.ShowDropDown();
+        }
     }
 
     /// <summary>
@@ -2226,7 +2503,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void toggleLeftPanel_Click(object? sender, EventArgs e)
     {
-        ColumnDefinition leftColumn = mainContentGrid.ColumnDefinitions[0];
+        ColumnDefinition leftColumn = MainSplitContainer.ColumnDefinitions[0];
         bool hide = leftColumn.Width.Value > 0;
         if (hide)
         {
@@ -2323,6 +2600,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         _loadOperationsCancellationTokenSource.Cancel();
+        if (_submoduleStatusProvider is not null)
+        {
+            _submoduleStatusProvider.StatusUpdating -= SubmoduleStatusProvider_StatusUpdating;
+            _submoduleStatusProvider.StatusUpdated -= SubmoduleStatusProvider_StatusUpdated;
+        }
+
         _submoduleStatusProvider?.Init();
         _splitterManager?.SaveSplitters();
         _gpgInfoLoadSequence.Dispose();
