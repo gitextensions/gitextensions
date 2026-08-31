@@ -434,10 +434,16 @@
       <!-- SplitterDistance=209 in the source yields a 211-DIP first panel after the native
            SplitContainer border; Avalonia has no equivalent implicit border. -->
       <wf:SplitContainer x:Name="RightSplitContainer" Grid.Column="2" RowDefinitions="211,6,*" Background="Transparent">
-          <wf:SplitContainer x:Name="RevisionsSplitContainer" Grid.Row="0" ColumnDefinitions="0,0,*,0,0" Background="Transparent">
+          <wf:SplitContainer x:Name="RevisionsSplitContainer"
+                             Grid.Row="0"
+                             ColumnDefinitions="0,0,*,0,0"
+                             Background="Transparent">
           <Border x:Name="commitInfoLeftHost" Grid.Column="0" Classes="gitextensions-section" />
           <GridSplitter x:Name="commitInfoLeftSplitter" Grid.Column="1" ResizeDirection="Columns" IsVisible="False" />
-          <wf:Panel x:Name="RevisionGridContainer" Grid.Column="2" Classes="gitextensions-section">
+          <wf:Panel x:Name="RevisionGridContainer"
+                    Grid.Column="2"
+                    Margin="1"
+                    Classes="gitextensions-section">
             <Grid RowDefinitions="Auto,Auto,*">
               <controls:InteractiveGitActionControl x:Name="notificationBarGitActionInProgress"
                                                     Grid.Row="0"
@@ -461,6 +467,7 @@
                                               Classes="gitextensions-workspace-tabs">
           <wf:TabPage x:Name="CommitInfoTabPage"
                    Classes="gitextensions-workspace-tab"
+                   Padding="0"
                    Header="Commit"
                    Icon="{x:Static properties:Images.CommitSummary}">
             <Border x:Name="commitInfoBelowHost" Classes="gitextensions-section">
@@ -469,18 +476,21 @@
           </wf:TabPage>
           <wf:TabPage x:Name="DiffTabPage"
                    Classes="gitextensions-workspace-tab"
+                   Padding="0"
                    Header="Diff"
                    Icon="{x:Static properties:Images.Diff}">
             <commandsDialogs:RevisionDiffControl x:Name="revisionDiff" />
           </wf:TabPage>
           <wf:TabPage x:Name="TreeTabPage"
                    Classes="gitextensions-workspace-tab"
+                   Padding="0"
                    Header="File tree"
                    Icon="{x:Static properties:Images.FileTree}">
             <commandsDialogs:RevisionDiffControl x:Name="fileTree" />
           </wf:TabPage>
           <wf:TabPage x:Name="GpgInfoTabPage"
                    Classes="gitextensions-workspace-tab"
+                   Padding="0"
                    Header="GPG"
                    Icon="{x:Static properties:Images.Key}"
                    IsVisible="False">

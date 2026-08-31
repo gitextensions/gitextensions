@@ -302,6 +302,7 @@
           <SolidColorBrush x:Key="GitExtensionsMenuCheckBackgroundBrush" Color="#B5D7F3" />
           <SolidColorBrush x:Key="GitExtensionsMenuCheckForegroundBrush" Color="#393939" />
           <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsSourceControlTextBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#A0A0A0" />
           <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#E3E3E3" />
           <SolidColorBrush x:Key="GitExtensionsControlPressedBackgroundBrush" Color="#A0A0A0" />
@@ -432,6 +433,7 @@
           <SolidColorBrush x:Key="GitExtensionsMenuCheckBackgroundBrush" Color="#2E3F56" />
           <SolidColorBrush x:Key="GitExtensionsMenuCheckForegroundBrush" Color="#E1E3E6" />
           <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsSourceControlTextBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#4A4A4A" />
           <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#2E2E2E" />
           <SolidColorBrush x:Key="GitExtensionsControlPressedBackgroundBrush" Color="#4A4A4A" />

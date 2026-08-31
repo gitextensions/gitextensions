@@ -127,6 +127,7 @@ internal static class AvaloniaThemeResources
         DrawingColor grayText = ResolveSystemColor(settings, KnownColor.GrayText);
         DrawingColor control = ResolveSystemColor(settings, KnownColor.Control);
         DrawingColor controlText = ResolveSystemColor(settings, KnownColor.ControlText);
+        DrawingColor sourceControlText = isDark ? DrawingColor.FromArgb(240, 240, 240) : controlText;
         DrawingColor controlDark = ResolveSystemColor(settings, KnownColor.ControlDark);
         DrawingColor controlLight = ResolveSystemColor(settings, KnownColor.ControlLight);
         DrawingColor dialogControlsBackground = controlLight.MakeDarkerBy(-0.04);
@@ -268,6 +269,7 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsCommitMessageBackgroundBrush", commitMessageBackground);
         SetBrush(resources, "GitExtensionsControlBackgroundBrush", control);
         SetBrush(resources, "GitExtensionsControlForegroundBrush", controlText);
+        SetBrush(resources, "GitExtensionsSourceControlTextBrush", sourceControlText);
         SetBrush(resources, "GitExtensionsControlBorderBrush", controlDark);
         SetBrush(resources, "GitExtensionsControlPointerOverBackgroundBrush", controlLight);
         SetBrush(resources, "GitExtensionsControlPressedBackgroundBrush", controlDark);

@@ -13,6 +13,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.LeftPanel.ContextMenu;
@@ -34,6 +35,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private readonly TranslationString _searchTooltip = new("Search");
 
     private readonly List<Tree> _rootNodes = [];
+    private readonly SearchControl<string> _txtBranchCriterion;
     private LocalBranchTree _branchesTree = null!;
     private RemoteBranchTree _remotesTree = null!;
     private IReadOnlyCollection<GitRevision> _currentStashes = [];
@@ -182,6 +184,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     public RepoObjectsTree()
     {
         InitializeComponent();
+        _txtBranchCriterion = CreateSearchBox();
+        Grid.SetColumn(_txtBranchCriterion, 0);
+        branchSearchPanel.Children.Add(_txtBranchCriterion);
         tsbCollapseAll.Icon = Images.CollapseAll.AdaptLightness();
         _submoduleTree = new SubmoduleTree(this);
         _worktreeTree = new WorktreeTree(this);
@@ -199,8 +204,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         tsbShowSubmodules.Click += tsbShowSubmodules_Click;
         tsbShowStashes.Click += tsbShowStashes_Click;
         btnSearch.Click += OnBtnSearchClicked;
-        _txtBranchCriterion.PropertyChanged += OnBranchCriterionChanged;
-        _txtBranchCriterion.KeyDown += TxtBranchCriterion_KeyDown;
 
         tsbShowBranches.IsChecked = AppSettings.RepoObjectsTreeShowBranches;
         tsbShowRemotes.IsChecked = AppSettings.RepoObjectsTreeShowRemotes;
@@ -226,6 +229,37 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         ToolTip.SetTip(tsbShowTags, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowTags.Content!));
         ToolTip.SetTip(tsbShowSubmodules, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowSubmodules.Content!));
         ToolTip.SetTip(tsbShowStashes, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowStashes.Content!));
+
+        return;
+
+        SearchControl<string> CreateSearchBox()
+        {
+            SearchControl<string> search = new(SearchForBranch, onSizeChanged: size => { })
+            {
+                Name = "txtBranchCritierion"
+            };
+            KeyboardNavigation.SetTabIndex(search, 1);
+            search.OnTextEntered += () =>
+            {
+                OnBranchCriterionChanged(this, EventArgs.Empty);
+                OnBtnSearchClicked(this, EventArgs.Empty);
+            };
+            search.TextChanged += OnBranchCriterionChanged;
+            search.KeyDown += TxtBranchCriterion_KeyDown;
+
+            search.SearchBoxBorderStyle = WinFormsShims.BorderStyle.FixedSingle;
+            search.SearchBoxBorderDefaultColor = System.Drawing.Color.LightGray.AdaptBackColor();
+            search.SearchBoxBorderHoveredColor = System.Drawing.SystemColors.Highlight;
+            search.SearchBoxBorderFocusedColor = System.Drawing.SystemColors.HotTrack;
+
+            return search;
+
+            IEnumerable<string> SearchForBranch(string arg)
+                => _rootNodes
+                    .SelectMany(tree => tree.DescendantsAndSelf())
+                    .Select(node => node.SearchText)
+                    .Where(path => path.Contains(arg, StringComparison.OrdinalIgnoreCase));
+        }
     }
 
     public void Initialize(
@@ -589,7 +623,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         if (string.IsNullOrEmpty(criterion))
         {
             ClearSearchResults();
-            _txtBranchCriterion.Focus();
+            _txtBranchCriterion.FocusSearchBox();
             return;
         }
 
@@ -666,13 +700,10 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
-    private void OnBranchCriterionChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    private void OnBranchCriterionChanged(object? sender, EventArgs e)
     {
-        if (e.Property == TextBox.TextProperty)
-        {
-            _searchCriteriaChanged = true;
-            ClearSearchResults();
-        }
+        _searchCriteriaChanged = true;
+        ClearSearchResults();
     }
 
     private void SetActionVisible(RepoAction action, bool enabled)
@@ -872,7 +903,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         internal Avalonia.Controls.ContextMenu ContextMenu => control.menuMain;
 
-        internal TextBox SearchBox => control._txtBranchCriterion;
+        internal SearchControl<string> SearchBox => control._txtBranchCriterion;
 
         internal Button SearchButton => control.btnSearch;
 
