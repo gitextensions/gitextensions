@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
@@ -213,7 +213,7 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
-    public void FormBrowse_should_keep_all_main_sections_usable_at_its_minimum_size()
+    public void FormBrowse_should_keep_all_main_sections_usable_at_its_source_authored_size()
     {
         CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
         bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
@@ -223,16 +223,32 @@ public sealed class VisualParityTests
             AppSettings.ShowSplitViewLayout = true;
             FormBrowse form = new()
             {
-                Width = 900,
-                Height = 560,
+                Width = 923,
+                Height = 573,
             };
             form.Show();
             try
             {
                 Dispatcher.UIThread.RunJobs();
 
-                form.MinWidth.Should().Be(900);
-                form.MinHeight.Should().Be(560);
+                form.MinWidth.Should().Be(0);
+                form.MinHeight.Should().Be(0);
+                GitUI.Compat.WinFormsControls.ToolStripContainer toolPanel = form.FindControl<GitUI.Compat.WinFormsControls.ToolStripContainer>("toolPanel")!;
+                StackPanel toolStripMain = form.FindControl<StackPanel>("ToolStripMain")!;
+                FilterToolBar toolStripFilters = form.FindControl<FilterToolBar>("ToolStripFilters")!;
+                toolPanel.Bounds.Should().Be(new Rect(0, 27, 923, 546));
+                form.toolStripMainHost.Bounds.Should().Be(new Rect(7, 0, 812, 25));
+                form.toolStripFiltersHost.Bounds.Should().Be(new Rect(819, 0, 50, 25));
+                form.toolStripFiltersOverflow.IsVisible.Should().BeTrue();
+                form.toolStripFiltersOverflow.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+                Dispatcher.UIThread.RunJobs();
+                ((TranslateTransform)form.ToolStripFilters.RenderTransform!).X.Should().BeLessThan(0);
+                form.toolStripFiltersOverflow.Content.Should().Be("«");
+                form.toolStripFiltersOverflow.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+                Dispatcher.UIThread.RunJobs();
+                ((TranslateTransform)form.ToolStripFilters.RenderTransform!).X.Should().Be(0);
+                Point settingsPosition = form.EditSettings.TranslatePoint(default, form.toolStripMainViewport)!.Value;
+                settingsPosition.X.Should().BeLessThan(form.toolStripMainViewport.Viewport.Width);
                 Point repoTreePosition = form.repoObjectsTree.TranslatePoint(new Point(), form)
                     ?? throw new InvalidOperationException("The repository tree position was not available.");
                 repoTreePosition.X.Should().BeApproximately(7, 0.1);
@@ -276,9 +292,9 @@ public sealed class VisualParityTests
 
                 Menu menu = form.FindControl<Menu>("mainMenuStrip")
                     ?? throw new InvalidOperationException("The main menu was not created.");
-                menu.Bounds.Height.Should().Be(24);
+                menu.Bounds.Height.Should().Be(27);
                 MenuItem[] visibleMenuItems = menu.Items.Cast<MenuItem>().Where(item => item.IsVisible).ToArray();
-                visibleMenuItems.Should().OnlyContain(item => item.Bounds.Height == 20);
+                visibleMenuItems.Should().OnlyContain(item => item.Bounds.Height == 19);
                 Rect[] closedMenuItemBounds = visibleMenuItems.Select(item => item.Bounds).ToArray();
                 form.commandsToolStripMenuItem.IsSubMenuOpen = true;
                 Dispatcher.UIThread.RunJobs();
@@ -310,7 +326,18 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
-    public void FormBrowse_toolbars_should_stay_compact_and_wrap_only_at_narrow_widths()
+    public void FormBrowse_should_use_the_source_authored_native_96_dpi_client_size()
+    {
+        FormBrowse form = new();
+
+        form.Width.Should().Be(923);
+        form.Height.Should().Be(573);
+        form.MinWidth.Should().Be(0);
+        form.MinHeight.Should().Be(0);
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_toolbars_should_stay_in_the_source_single_overflow_row()
     {
         foreach (ThemeVariant theme in new[] { ThemeVariant.Light, ThemeVariant.Dark })
         {
@@ -324,10 +351,10 @@ public sealed class VisualParityTests
             try
             {
                 Dispatcher.UIThread.RunJobs();
-                WrapPanel toolPanel = form.FindControl<WrapPanel>("toolPanel")!;
+                GitUI.Compat.WinFormsControls.ToolStripContainer toolPanel = form.FindControl<GitUI.Compat.WinFormsControls.ToolStripContainer>("toolPanel")!;
                 StackPanel mainToolbar = form.FindControl<StackPanel>("ToolStripMain")!;
                 mainToolbar.Bounds.Height.Should().Be(25);
-                toolPanel.Bounds.Height.Should().Be(25);
+                toolPanel.Bounds.Height.Should().Be(673);
                 mainToolbar.GetVisualDescendants().OfType<Button>()
                     .Should().OnlyContain(button => button.Bounds.Height <= 23);
 
@@ -369,7 +396,8 @@ public sealed class VisualParityTests
                     .Where(button => button.IsVisible
                                      && button.Classes.Contains("gitextensions-toolbar-button"))
                     .ToArray();
-                splitButtons.Should().HaveCount(7);
+                splitButtons.Should().HaveCount(8);
+                splitButtons.Select(button => button.Name).Should().Contain(nameof(form.toolStripButtonLevelUp));
                 foreach (SplitButton splitButton in splitButtons)
                 {
                     Button primaryButton = splitButton.GetVisualDescendants()
@@ -406,7 +434,7 @@ public sealed class VisualParityTests
 
                 form.Width = 900;
                 Dispatcher.UIThread.RunJobs();
-                toolPanel.Bounds.Height.Should().BeGreaterThan(25);
+                toolPanel.Bounds.Height.Should().Be(673);
             }
             finally
             {

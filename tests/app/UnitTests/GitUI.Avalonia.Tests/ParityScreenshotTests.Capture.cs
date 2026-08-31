@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -173,6 +173,26 @@ public sealed partial class ParityScreenshotTests
         commandNode.BoundsDip.Should().Be(
             new CaptureRectangleF { X = 32, Y = 24, Width = 75, Height = 25 });
         window.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
+    public void Avalonia_tree_reader_should_apply_generated_designer_metadata_to_window_roots()
+    {
+        FormBrowse form = new() { Width = 923, Height = 573 };
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureSurface surface = new AvaloniaControlTreeReader(form, renderScale: 1)
+            .ReadPrimary(form, new PixelSize(923, 573));
+        CaptureNode toolPanel = Flatten(surface.Root).Single(node => node.FieldName == "toolPanel");
+        toolPanel.Dock.Should().Be("Fill");
+        toolPanel.Anchor.Should().Equal("Top", "Left");
+        CaptureThicknessF emptyThickness = new() { Left = 0, Top = 0, Right = 0, Bottom = 0 };
+        toolPanel.Margin.Dip.Should().Be(emptyThickness);
+        toolPanel.Padding.Dip.Should().Be(emptyThickness);
+        toolPanel.TabIndex.Should().Be(1);
+        form.Close();
     }
 
     [AvaloniaTest]
