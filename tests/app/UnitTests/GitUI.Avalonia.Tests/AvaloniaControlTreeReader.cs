@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
@@ -30,13 +30,11 @@ internal sealed class AvaloniaControlTreeReader
         _root = root;
         _renderScale = renderScale;
         _primaryScreenOrigin = primaryScreenOrigin ?? default;
-        _usesDesignerLayoutMetadata = root.GetType().FullName is
-            "GitUI.CommandsDialogs.RepoHosting.CreatePullRequestForm"
-            or "GitUI.CommandsDialogs.RepoHosting.ForkAndCloneForm"
-            or "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm"
-            or "GitUI.CommandsDialogs.FormPull"
-            or "GitUI.CommandsDialogs.FormPush"
-            or "GitUI.CommandsDialogs.FormRemotes";
+        string? rootType = root.GetType().FullName;
+        _usesDesignerLayoutMetadata = root is Window
+            && rootType is not null
+            && (WinFormsInputMetadata.ByType.ContainsKey(rootType)
+                || WinFormsInputMetadata.LayoutByType.ContainsKey(rootType));
         IndexFields(root);
     }
 
@@ -492,7 +490,7 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (isSemanticToolStrip ? new Thickness(0, 0, 1, 0) : (Thickness?)null)
                 ?? (isSemanticToolStripItem || control is Separator || isFileStatusListView || isFileStatusSplitter ? default(Thickness) : (Thickness?)null)
                 ?? (control is MenuItem ? new Thickness(0, 1, 0, 1) : (Thickness?)null)
-                ?? (_usesDesignerLayoutMetadata
+                ?? (designerLayout is not null
                     ? GetDefaultDesignerPadding(control)
                     : isNativeTabPage || isNativeButton
                         ? default(Thickness)
@@ -512,7 +510,7 @@ internal sealed class AvaloniaControlTreeReader
                     : (Thickness?)null)
                 ?? (control is MenuItem or Separator ? default(Thickness) : (Thickness?)null)
                 ?? (isFileStatusSplitter ? new Thickness(3, 0) : (Thickness?)null)
-                ?? (_usesDesignerLayoutMetadata
+                ?? (designerLayout is not null
                     ? GetDefaultDesignerMargin(control)
                     : isNativeButton
                         ? new Thickness(3)
@@ -592,13 +590,13 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (isFileStatusListView || isFileStatusSplitter || isFileViewerPictureBox || isLoadingControl ? "None" : null)
                 ?? (isSourcePictureBox || isInheritedFormProcessContainer || control.Name == "PanelLeftImage"
                     || control.Name?.StartsWith("folderBrowserButton", StringComparison.Ordinal) == true ? "None" : null)
-                ?? (_usesDesignerLayoutMetadata && control is Image ? "None" : null)
+                ?? (designerLayout is not null && control is Image ? "None" : null)
                 ?? (isSpellCheckAutoComplete ? "FixedSingle" : null)
                 ?? (isSpellCheckEditor ? "None" : null)
                 ?? (isSpellCheckTextBox || isSourceLabelSubstitute || isSourceTransparentContainer || isFileViewerInternal ? "None" : null)
                 ?? (isFileViewerTextEditor ? "None" : null)
                 ?? (isSourceDataGrid ? "FixedSingle" : null)
-                ?? (_usesDesignerLayoutMetadata
+                ?? (designerLayout is not null
                     ? GetDefaultDesignerBorderStyle(control)
                     : isRevisionGrid || isRevisionGridView || isNativeTabPage
                 ? "None"
@@ -636,7 +634,7 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (isFileViewerToolbar ? new[] { "Top", "Right" } : null)
                 ?? (isToolStripItem ? [] : (string[]?)null)
                 ?? (isFileStatusListView ? new[] { "Top", "Bottom", "Left", "Right" } : null)
-                ?? (_usesDesignerLayoutMetadata
+                ?? (designerLayout is not null
                     ? ["Top", "Left"]
                     : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage
                 ? ["Top", "Left"]
@@ -656,7 +654,7 @@ internal sealed class AvaloniaControlTreeReader
                             ? "None"
                             : isLoadingControl || isLoadingWaitSpinner
                                 ? "Fill"
-                            : _usesDesignerLayoutMetadata
+                            : designerLayout is not null
                                 ? "None"
                                 : isRevisionGrid || isNativeTabPage || isNativeButton
                                     ? isNativeButton && control.Name == "buttonBrowse" ? "Fill" : "None"
@@ -668,7 +666,7 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (isInheritedFormProcessContainer ? control.Name == "ControlsPanel" : (bool?)null)
                 ?? (isSemanticToolStrip || isToolStripItem ? true : (bool?)null)
                 ?? (isFileStatusListView || isFileStatusSplitter || isSpellCheckTextBox ? false : (bool?)null)
-                ?? (_usesDesignerLayoutMetadata
+                ?? (designerLayout is not null
                     ? GetDefaultDesignerAutoSize(control)
                     : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
                 ? false
@@ -680,7 +678,7 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (isSourceLabelSubstitute ? "TopLeft" : null)
                 ?? (isToolStripItem ? "MiddleCenter" : null)
                 ?? (isFileStatusSplitter ? "TopLeft" : null)
-                ?? (_usesDesignerLayoutMetadata
+                ?? (designerLayout is not null
                     ? GetDefaultDesignerAlignment(control)
                     : isNativeButton
                 ? "MiddleCenter"
@@ -712,8 +710,10 @@ internal sealed class AvaloniaControlTreeReader
             TabStop = isComboBoxPopupItem ? null
                 : isSurfaceRoot && !isPopupRoot
                 ? true
+                : isSemanticToolStripItem || control is MenuItem or Separator || isPopupRoot
+                ? null
                 : isDesignerMetadataControl
-                ? GetSourceDesignerTabStop(control)
+                ? GetSourceDesignerTabStop(control, fieldName!)
                 : isSpellCheckAutoComplete || isFileViewerInternal || isFileViewerTextEditor || isLoadingControl || isLoadingWaitSpinner || IsSourceTabStopContainer(control)
                 ? true
                 : isSemanticToolStrip || isFileStatusSplitter
@@ -722,9 +722,7 @@ internal sealed class AvaloniaControlTreeReader
                 ? false
                 : isFileStatusListView || isRevisionGrid || isRevisionGridView || isNativeListView || isSourceDataGrid || isNativeTabControl
                 ? true
-                : isSemanticToolStripItem || control is MenuItem or Separator || isPopupRoot
-                    ? null
-                    : control.Focusable && KeyboardNavigation.GetIsTabStop(control),
+                : control.Focusable && KeyboardNavigation.GetIsTabStop(control),
             Enabled = control is Separator ? false : semanticStateControl.IsEffectivelyEnabled,
             Visible = isNativeTabPage
                 ? ((TabItem)control).IsSelected && ancestorSemanticVisible
@@ -803,15 +801,32 @@ internal sealed class AvaloniaControlTreeReader
     private static bool GetDefaultDesignerAutoSize(Control control)
         => control is TextBox;
 
-    private static bool GetSourceDesignerTabStop(Control control)
-        => control switch
+    private bool GetSourceDesignerTabStop(Control control, string fieldName)
+    {
+        string ownerType = _fieldOwnerTypes.GetValueOrDefault(control)
+            ?? _root.GetType().FullName
+            ?? _root.GetType().Name;
+        bool? explicitTabStop = WinFormsInputMetadata.ByType.TryGetValue(
+            ownerType,
+            out IReadOnlyList<InputControlMetadata>? controls)
+            ? controls.FirstOrDefault(item => item.FieldName == fieldName).IsTabStop
+            : null;
+        if (explicitTabStop is not null)
+        {
+            return explicitTabStop.Value;
+        }
+
+        return control switch
         {
             RadioButton radioButton => radioButton.IsChecked == true,
             Button or HyperlinkButton or CheckBox or TextBox or ComboBox or ListBox or NumericUpDown or TabControl => true,
+            TreeView => true,
+            _ when control.GetType().Namespace?.StartsWith("GitUI.", StringComparison.Ordinal) == true => true,
             _ when control.Name is "PanelLeftImage" or "folderBrowserButton1" or "folderBrowserButtonUrl"
                 or "folderBrowserButtonPushUrl" or "btnRemoteColor" => true,
             _ => false
         };
+    }
 
     private static string? GetDefaultDesignerAlignment(Control control)
         => control switch
@@ -1751,6 +1766,12 @@ internal sealed class AvaloniaControlTreeReader
             && control is Panel
             && string.IsNullOrEmpty(control.Name)
             && GetFieldNames(control).Count == 0)
+           || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+               && control.Name is "toolStripMainHost" or "toolStripMainViewport"
+                   or "toolStripFiltersHost" or "toolStripFiltersViewport"
+                   or "mainContentGrid" or "leftPanel"
+                   or "commitInfoLeftHost" or "commitInfoRightHost"
+                   or "commitInfoBelowHost" or "outputHistoryPanelHost")
            || (control is Grid
                  && string.IsNullOrEmpty(control.Name)
                  && control.Parent?.GetType().FullName == "GitUI.Compat.WinFormsControls.FlowLayoutPanel")
@@ -1768,6 +1789,7 @@ internal sealed class AvaloniaControlTreeReader
 
     private static bool IsRendererOnlyControl(Control control)
         => control.Name == "ImagePreview"
+           || control.Name is "toolStripMainOverflow" or "toolStripFiltersOverflow"
            || (control.GetType().Namespace == "GitUI.Compat.WinFormsControls"
                 && (control.GetType().Name == "ColumnHeader"
                     || control.GetType().Name.EndsWith("Column", StringComparison.Ordinal)))

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -2238,7 +2238,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormBrowse))
         {
-            return (1400, 850);
+            return (923, 573);
         }
 
         if (viewType == typeof(CreatePullRequestForm))
