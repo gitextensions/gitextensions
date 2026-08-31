@@ -10,6 +10,7 @@ using Avalonia.VisualTree;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.ParityCapture;
 using GitUI;
+using GitUI.AutoCompletion;
 using GitUI.Compat;
 using GitUI.UserControls.RevisionGrid.Columns;
 
@@ -198,6 +199,12 @@ internal sealed class AvaloniaControlTreeReader
             return popupItem.ToString();
         }
 
+        if (IsSpellCheckAutoComplete(control)
+            && control is ListBox { SelectedItem: AutoCompleteWord selectedCompletion })
+        {
+            return selectedCompletion.Word;
+        }
+
         object? content = GetPropertyValue(control, "Content");
         object? header = GetPropertyValue(control, "Header");
         string? text = control.Name == "btnRemoteColor"
@@ -355,6 +362,7 @@ internal sealed class AvaloniaControlTreeReader
         bool isLoadingWaitSpinner = IsLoadingWaitSpinner(control);
         bool isSpellCheckAutoComplete = IsSpellCheckAutoComplete(control);
         bool isSpellCheckTextBox = IsSpellCheckTextBox(control);
+        bool isSpellCheckEditor = control.GetType().FullName == "GitUI.SpellChecker.EditNetSpell";
         bool isDesignerLinkLabel = control is HyperlinkButton && IsDesignerMetadataControl(control);
         bool isSourceLabelSubstitute = IsSourceLabelSubstitute(control) || isDesignerLinkLabel;
         bool isWatermarkComboBox = IsFileStatusWatermarkComboBox(control);
@@ -456,13 +464,21 @@ internal sealed class AvaloniaControlTreeReader
             },
             ClientSizePx = new CaptureSize
             {
-                Width = ToPixel(isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Width - 4) : bounds.Width),
-                Height = ToPixel(isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Height - 4) : bounds.Height)
+                Width = ToPixel(isSpellCheckAutoComplete
+                    ? Math.Max(0, bounds.Width - 2)
+                    : isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Width - 4) : bounds.Width),
+                Height = ToPixel(isSpellCheckAutoComplete
+                    ? Math.Max(0, bounds.Height - 2)
+                    : isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Height - 4) : bounds.Height)
             },
             ClientSizeDip = new CaptureSizeF
             {
-                Width = ToDecimal(isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Width - 4) : bounds.Width),
-                Height = ToDecimal(isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Height - 4) : bounds.Height)
+                Width = ToDecimal(isSpellCheckAutoComplete
+                    ? Math.Max(0, bounds.Width - 2)
+                    : isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Width - 4) : bounds.Width),
+                Height = ToDecimal(isSpellCheckAutoComplete
+                    ? Math.Max(0, bounds.Height - 2)
+                    : isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Height - 4) : bounds.Height)
             },
             ItemHeightDip = isRevisionGridView
                 ? ReadRevisionGridItemHeight(control)
@@ -485,6 +501,7 @@ internal sealed class AvaloniaControlTreeReader
                 ? default(Thickness)
                 : isInheritedFormProcessContainer ? default(Thickness)
                 : designerLayout?.Margin
+                ?? (isSpellCheckAutoComplete ? new Thickness(3) : (Thickness?)null)
                 ?? (isSemanticToolStrip || isFileStatusListView ? default(Thickness) : (Thickness?)null)
                 ?? (isSemanticToolStripItem
                     ? control is Separator
@@ -577,6 +594,7 @@ internal sealed class AvaloniaControlTreeReader
                     || control.Name?.StartsWith("folderBrowserButton", StringComparison.Ordinal) == true ? "None" : null)
                 ?? (_usesDesignerLayoutMetadata && control is Image ? "None" : null)
                 ?? (isSpellCheckAutoComplete ? "FixedSingle" : null)
+                ?? (isSpellCheckEditor ? "None" : null)
                 ?? (isSpellCheckTextBox || isSourceLabelSubstitute || isSourceTransparentContainer || isFileViewerInternal ? "None" : null)
                 ?? (isFileViewerTextEditor ? "None" : null)
                 ?? (isSourceDataGrid ? "FixedSingle" : null)
@@ -611,6 +629,8 @@ internal sealed class AvaloniaControlTreeReader
                 ? null
                 : ReadCornerRadius(control),
             Anchor = isComboBoxPopup || isComboBoxPopupItem ? [] : designerLayout?.Anchor
+                ?? (isSpellCheckEditor ? new[] { "Top", "Left" } : null)
+                ?? (isSpellCheckAutoComplete || isSpellCheckTextBox ? new[] { "Top", "Left" } : null)
                 ?? (isInheritedFormProcessContainer ? new[] { "Top", "Left" } : null)
                 ?? (isFileStatusToolbar || isFileStatusSplitter ? new[] { "Top", "Left" } : null)
                 ?? (isFileViewerToolbar ? new[] { "Top", "Right" } : null)
@@ -622,6 +642,9 @@ internal sealed class AvaloniaControlTreeReader
                 ? ["Top", "Left"]
                 : []),
             Dock = isComboBoxPopup || isComboBoxPopupItem ? null : isLocalSourceFlowLayoutPanel ? "Fill" : designerLayout?.Dock
+                ?? (isSpellCheckEditor ? "None" : null)
+                ?? (isSpellCheckAutoComplete ? "None" : null)
+                ?? (isSpellCheckTextBox ? "Fill" : null)
                 ?? (isInheritedFormProcessContainer ? control.Name == "MainPanel" ? "Fill" : "Bottom" : null)
                 ?? (isToolStripItem
                     ? null
@@ -639,6 +662,8 @@ internal sealed class AvaloniaControlTreeReader
                                     ? isNativeButton && control.Name == "buttonBrowse" ? "Fill" : "None"
                                     : isRevisionGridView || isNativeListView || isNativeTabControl ? "Fill" : null),
             AutoSize = isComboBoxPopupItem ? false : isLocalSourceFlowLayoutPanel ? true : designerLayout?.AutoSize
+                ?? (isSpellCheckEditor ? false : (bool?)null)
+                ?? (isSpellCheckAutoComplete ? false : (bool?)null)
                 ?? (isSourcePictureBox ? true : (bool?)null)
                 ?? (isInheritedFormProcessContainer ? control.Name == "ControlsPanel" : (bool?)null)
                 ?? (isSemanticToolStrip || isToolStripItem ? true : (bool?)null)
@@ -648,7 +673,7 @@ internal sealed class AvaloniaControlTreeReader
                     : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
                 ? false
                 : control is MenuItem or Separator || isPopupRoot ? true : null),
-            Alignment = isComboBoxPopupItem || isSpellCheckTextBox ? null
+            Alignment = isComboBoxPopupItem || isSpellCheckTextBox || isSpellCheckEditor ? null
                 : isRemoteColorButton ? "MiddleCenter"
                 : control.Name == "lblHeaderLine2" ? "TopLeft"
                 : designerLayout?.Alignment
@@ -725,7 +750,9 @@ internal sealed class AvaloniaControlTreeReader
                 },
                 _ => null
             },
-            Selected = (isSemanticToolStripItem && control is not Separator) || isSpellCheckAutoComplete || isWatermarkComboBox
+            Selected = isSpellCheckAutoComplete && control is ListBox spellCheckAutoComplete
+                ? spellCheckAutoComplete.SelectedIndex >= 0
+                : (isSemanticToolStripItem && control is not Separator) || isWatermarkComboBox
                 ? false
                 : GetSelected(control),
             Expanded = isRevisionGrid || isRevisionGridView
@@ -1042,7 +1069,9 @@ internal sealed class AvaloniaControlTreeReader
     }
 
     private IEnumerable<Control> GetSemanticChildren(Control control)
-        => GetCaptureChildren(control).SelectMany(ExpandSemanticChild);
+        => IsSpellCheckAutoComplete(control)
+            ? []
+            : GetCaptureChildren(control).SelectMany(ExpandSemanticChild);
 
     private IEnumerable<Control> ExpandSemanticChild(Control child)
     {
@@ -1726,6 +1755,9 @@ internal sealed class AvaloniaControlTreeReader
            || (control is StackPanel
                 && string.IsNullOrEmpty(control.Name)
                 && control.Parent?.GetType().FullName == "GitUI.Compat.WinFormsControls.FlowLayoutPanel")
+           || (_root.GetType().FullName == "GitUI.SpellChecker.EditNetSpell"
+               && control is Grid or Canvas
+               && string.IsNullOrEmpty(control.Name))
            || control.Name == "columnsGrid"
            || control.Name == "FindInCommitFilesGitGrepPanel"
            || (control is StackPanel
