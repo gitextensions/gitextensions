@@ -27,6 +27,7 @@ using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
+using ContextMenuStrip = GitUI.Compat.WinFormsControls.ContextMenuStrip;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
@@ -1507,7 +1508,7 @@ public sealed partial class FormCommit : GitModuleForm
         }
     }
 
-    private void Message_ContextMenuPopulating(object? sender, ContextMenu menu)
+    private void Message_ContextMenuPopulating(object? sender, ContextMenuStrip menu)
     {
         if (menu.ItemsSource is not IList<object> items)
         {

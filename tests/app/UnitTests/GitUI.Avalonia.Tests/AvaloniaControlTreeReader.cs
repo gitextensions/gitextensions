@@ -731,6 +731,8 @@ internal sealed class AvaloniaControlTreeReader
                 : semanticVisible,
             Focused = IsRepositoryHostSourceFocusedState(control, isPopupRoot)
                 ? true
+                : isSpellCheckTextBox && (control.IsFocused || control.ContextMenu?.IsOpen == true)
+                    ? true
                 : isPopupRoot || isComboBoxPopupItem ? false : IsFocused(semanticStateControl),
             ReadOnly = isComboBoxPopup
                 ? true
