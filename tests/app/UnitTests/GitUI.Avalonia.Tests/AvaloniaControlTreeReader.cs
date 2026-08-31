@@ -515,7 +515,12 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (isPopupRoot ? new Thickness(33, 2, 1, 2) : (Thickness?)null)
                 ?? (isSemanticToolStrip ? new Thickness(0, 0, 1, 0) : (Thickness?)null)
                 ?? (isSemanticToolStripItem || control is Separator || isFileStatusListView || isFileStatusSplitter ? default(Thickness) : (Thickness?)null)
+                ?? (isFormBrowseMenuStrip && control is MenuItem && control.Parent is Menu
+                    ? new Thickness(4, 0)
+                    : (Thickness?)null)
                 ?? (control is MenuItem ? new Thickness(0, 1, 0, 1) : (Thickness?)null)
+                ?? (isNativeTabPage ? default(Thickness) : (Thickness?)null)
+                ?? (control.Name == "_contentPanel" ? new Thickness(6) : (Thickness?)null)
                 ?? (designerLayout is not null
                     ? GetDefaultDesignerPadding(control)
                     : isNativeTabPage || isNativeButton
@@ -524,9 +529,11 @@ internal sealed class AvaloniaControlTreeReader
             Margin = ReadThicknessPair(isComboBoxPopup || isComboBoxPopupItem
                 ? default(Thickness)
                 : isInheritedFormProcessContainer ? default(Thickness)
+                : isSurfaceRoot && !isPopupRoot ? new Thickness(3)
                 : designerLayout?.Margin
                 ?? (isSpellCheckAutoComplete ? new Thickness(3) : (Thickness?)null)
                 ?? (isSemanticToolStrip || isFileStatusListView ? default(Thickness) : (Thickness?)null)
+                ?? (isFormBrowseMenuStrip ? default(Thickness) : (Thickness?)null)
                 ?? (isSemanticToolStripItem
                     ? control is Separator
                         ? default(Thickness)
@@ -582,14 +589,15 @@ internal sealed class AvaloniaControlTreeReader
                         control,
                         isItem: false,
                         transparentBackground: isFormBrowseSourceToolStrip,
-                        panelBackground: isFileStatusToolbar,
+                        windowBackground: isFileStatusToolbar,
                         useControlText: isFormBrowseSourceToolStrip)
                     : isSemanticToolStripItem
                         ? ReadToolStripColors(
                             control,
                             isItem: true,
-                            transparentBackground: false,
-                            panelBackground: IsFileStatusToolbarItem(control),
+                            transparentBackground: IsTransparentFormBrowseToolStripItem(control),
+                            windowBackground: IsWindowBackgroundToolStripItem(control),
+                            useWindowText: IsWindowTextToolStripItem(control),
                             useControlText: isFormBrowseSourceToolStrip)
                         : isFileStatusListView
                             ? ReadFileStatusListViewColors(semanticStateControl)
@@ -615,6 +623,8 @@ internal sealed class AvaloniaControlTreeReader
                                                     ? ReadSourceDesignerButtonColors(control)
                                                 : isDesignerMetadataControl && control is TextBox or ComboBox or NumericUpDown
                                                     ? ReadSourceInputColors(control)
+                                                    : IsSourceControlTextControl(control, fieldName, sourceType)
+                                                        ? ReadSourceControlTextColors(control)
                                                     : hasSourceTransparentColors
                                                         ? ReadTransparentContainerColors(control)
                                                         : hasSourceLightTransparentColors
@@ -640,6 +650,10 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (isSpellCheckTextBox || isSourceLabelSubstitute || isSourceTransparentContainer || isFileViewerInternal ? "None" : null)
                 ?? (isFileViewerTextEditor ? "None" : null)
                 ?? (isSourceDataGrid ? "FixedSingle" : null)
+                ?? (isDesignerMetadataControl
+                    ? GetDefaultDesignerBorderStyle(control)
+                    : null)
+                ?? (IsSourceBorderlessControl(control, fieldName) ? "None" : null)
                 ?? (designerLayout is not null
                     ? GetDefaultDesignerBorderStyle(control)
                     : isRevisionGrid || isRevisionGridView || isNativeTabPage
@@ -718,6 +732,8 @@ internal sealed class AvaloniaControlTreeReader
             Alignment = isComboBoxPopupItem || isSpellCheckTextBox || isSpellCheckEditor ? null
                 : isRemoteColorButton ? "MiddleCenter"
                 : control.Name == "lblHeaderLine2" ? "TopLeft"
+                : isSurfaceRoot || IsSourceRichTextControl(control) ? null
+                : control.Name == "_NO_TRANSLATE_WorkingDir" ? "MiddleLeft"
                 : designerLayout?.Alignment
                 ?? (isSourceLabelSubstitute ? "TopLeft" : null)
                 ?? (isToolStripItem ? "MiddleCenter" : null)
@@ -758,6 +774,10 @@ internal sealed class AvaloniaControlTreeReader
                 ? null
                 : isDesignerMetadataControl
                 ? GetSourceDesignerTabStop(control, fieldName!)
+                : GetSourceTypeName(sourceType) == "SplitContainer"
+                ? true
+                : IsSourceCustomControl(control, fieldName)
+                ? true
                 : isSpellCheckAutoComplete || isFileViewerInternal || isFileViewerTextEditor || isLoadingControl || isLoadingWaitSpinner || IsSourceTabStopContainer(control)
                 ? true
                 : isSemanticToolStrip || isFileStatusSplitter
@@ -780,8 +800,12 @@ internal sealed class AvaloniaControlTreeReader
                 ? true
                 : isRevisionGridView
                 ? true
-                : isFileViewerTextEditor || control.Name == "_diffViewer"
+                : isFileViewerTextEditor || isFileViewerInternal || control.Name == "_diffViewer"
                     ? null
+                    : IsSourceRichTextControl(control)
+                        ? true
+                    : IsSourceCustomControl(control, fieldName)
+                        ? null
                     : GetNullableBoolProperty(control, "IsReadOnly"),
             CheckState = control switch
             {
@@ -934,20 +958,68 @@ internal sealed class AvaloniaControlTreeReader
             _ => null
         };
 
+    private static bool IsSourceCustomControl(Control control, string? fieldName)
+        => fieldName is not null
+           && control.GetType().Namespace?.StartsWith("GitUI.", StringComparison.Ordinal) == true;
+
+    private static bool IsSourceBorderlessControl(Control control, string? fieldName)
+        => fieldName is not null
+           && (control is Image
+               || control.Name == "_contentPanel"
+               || control.Name == "toolPanel"
+               || (IsSourceCustomControl(control, fieldName)
+                   && control.GetType().Namespace != "GitUI.Compat.WinFormsControls"
+                   && control is not Button
+                   && control is not ToggleButton
+                   && control is not ComboBox
+                   && control is not MenuItem
+                   && control is not Separator
+                   && control is not TabControl));
+
+    private static bool IsSourceRichTextControl(Control control)
+        => control.GetType().FullName is "GitUI.Compat.XhtmlTextBlock" or "GitUI.Compat.ThemeAwareTextEditor";
+
+    private static bool IsSourceControlTextControl(Control control, string? fieldName, string? sourceType)
+    {
+        if (fieldName is null
+            || control is MenuItem or Separator or TextBox or ComboBox or ListBox or TreeView
+            || control.Name is "LoadingFiles" or "NoFiles")
+        {
+            return false;
+        }
+
+        return GetSourceTypeName(sourceType) is not ("TextBox" or "RichTextBox" or "ComboBox"
+            or "ListBox" or "ListView" or "TreeView" or "DataGridView" or "MenuStrip"
+            or "ToolStrip" or "ToolStripEx" or "FilterToolBar");
+    }
+
     private static Rect GetSemanticBounds(Control control, Control? semanticParent)
     {
-        if (semanticParent is not null
-            && IsOverlayPopupHost(semanticParent)
-            && control is MenuItem or Separator
-            && control.TranslatePoint(default, semanticParent) is Point popupItemOrigin)
+        Control? popupOwner = semanticParent is not null && IsOverlayPopupHost(semanticParent)
+            ? semanticParent
+            : control.GetVisualAncestors().OfType<Control>().FirstOrDefault(IsOverlayPopupHost);
+        if (popupOwner is not null && control is MenuItem or Separator)
         {
-            // parity-scaffolding: Fluent reserves its submenu border outside the item canvas;
-            // ToolStrip overlays the leading border and retains two vertical canvas insets.
+            Control[] items = popupOwner.GetVisualDescendants()
+                .OfType<Control>()
+                .Where(item => item is MenuItem or Separator)
+                .Where(item => !item.GetVisualAncestors()
+                    .TakeWhile(ancestor => !ReferenceEquals(ancestor, popupOwner))
+                    .OfType<MenuItem>()
+                    .Any())
+                .ToArray();
+            int itemIndex = Array.IndexOf(items, control);
+            double y = 2 + items
+                .Take(Math.Max(0, itemIndex))
+                .Sum(item => item is Separator ? 6 : 22);
+
+            // parity-scaffolding: ToolStrip lays out its popup canvas with two vertical insets;
+            // separators occupy a six-DIP row and retain the native two-DIP leading inset.
             return new Rect(
-                popupItemOrigin.X - 1,
-                popupItemOrigin.Y + 1,
-                control.Bounds.Width,
-                control.Bounds.Height);
+                control is Separator ? 2 : 0,
+                y,
+                Math.Max(0, popupOwner.Bounds.Width - (control is Separator ? 5 : 2)),
+                control is Separator ? 6 : 22);
         }
 
         if (IsComboBoxPopupItem(control)
@@ -1328,7 +1400,7 @@ internal sealed class AvaloniaControlTreeReader
                                  ?? ResolveResourceArgb("GitExtensionsControlBackgroundBrush");
             return new CaptureColors
             {
-                Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                Foreground = ResolveSourceControlTextArgb()
                              ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
                 Background = background,
                 Border = null,
@@ -1565,8 +1637,8 @@ internal sealed class AvaloniaControlTreeReader
 
         // parity-scaffolding: RevisionGrid uses native recycled ListBox rows, so expose its real
         // provider layout through the same grid-column schema that represents DataGridView.
-        if (_root is RevisionGridControl revisionGrid
-            && control is ListBox { Name: "_gridView" })
+        if (control is ListBox { Name: "_gridView" }
+            && control.GetLogicalAncestors().OfType<RevisionGridControl>().FirstOrDefault() is { } revisionGrid)
         {
             return ReadRevisionGridColumns(revisionGrid);
         }
@@ -1705,6 +1777,9 @@ internal sealed class AvaloniaControlTreeReader
             ? BrushToArgb(resource)
             : null;
 
+    private string? ResolveSourceControlTextArgb()
+        => ResolveResourceArgb("GitExtensionsSourceControlTextBrush");
+
     private static bool IsRevisionGridView(Control control) =>
         control is ListBox { Name: "_gridView" }
         && control.GetLogicalAncestors().OfType<RevisionGridControl>().Any();
@@ -1716,9 +1791,23 @@ internal sealed class AvaloniaControlTreeReader
     private static bool IsFileStatusToolbarItem(Control control)
         => control.Parent is StackPanel toolbar && IsFileStatusToolbar(toolbar);
 
-    private static bool IsTransparentFileStatusToolbarItem(Control control)
+    private bool IsTransparentFormBrowseToolStripItem(Control control)
+        => GetSourceOwnerType(control) == "GitUI.CommandsDialogs.FormBrowse"
+           && control.Name is "_NO_TRANSLATE_WorkingDir" or "branchSelect" or "menuCommitInfoPosition"
+               or "RefreshButton" or "toggleLeftPanel" or "toggleSplitViewLayout"
+               or "toolStripButtonLevelUp" or "toolStripButtonPull" or "toolStripSeparator0"
+               or "toolStripSeparator1" or "toolStripSeparator17" or "toolStripWorktrees"
+               or "tsddbtnRevisionFilter";
+
+    private static bool IsWindowBackgroundToolStripItem(Control control)
         => IsFileStatusToolbarItem(control)
-           && control.Name is not ("btnCollapseGroups" or "sepRefresh" or "btnRefresh");
+           || control.Name is "tscboBranchFilter" or "tstxtRevisionFilter";
+
+    private static bool IsWindowTextToolStripItem(Control control)
+        => IsFileStatusToolbarItem(control)
+           || control.Name is "toolStripLabel1" or "tsbShowReflog" or "tsbtnAdvancedFilter"
+               or "tsddbtnBranchFilter" or "tslblRevisionFilter" or "tsmiShowOnlyFirstParent"
+               or "tssbtnShowBranches";
 
     private static bool IsFileViewerToolbar(Control control)
         => control is Border { Name: "fileviewerToolbar" }
@@ -1957,7 +2046,7 @@ internal sealed class AvaloniaControlTreeReader
         Control control,
         bool isItem,
         bool transparentBackground,
-        bool panelBackground = false,
+        bool windowBackground = false,
         bool useWindowText = false,
         bool useControlText = false)
     {
@@ -1965,8 +2054,8 @@ internal sealed class AvaloniaControlTreeReader
             || GetSourceTypeName(GetSourceType(control, GetFieldNames(control).FirstOrDefault())) == "ToolStripSeparator";
         string? background = transparentBackground
             ? "#00FFFFFF"
-            : panelBackground
-                ? ResolveResourceArgb("GitExtensionsPanelBackgroundBrush")
+            : windowBackground
+                ? ResolveResourceArgb("GitExtensionsWindowBackgroundBrush")
                 : ResolveResourceArgb("GitExtensionsKnownColorControlBrush")
                   ?? ResolveResourceArgb("GitExtensionsControlBackgroundBrush");
         string? foreground = isSeparator
@@ -1977,14 +2066,14 @@ internal sealed class AvaloniaControlTreeReader
             : control.Name == "encodingToolStripComboBox"
                 ? ResolveResourceArgb("GitExtensionsMenuForegroundBrush")
                   ?? ResolveResourceArgb("GitExtensionsWindowTextBrush")
-                : useControlText
-                    ? ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
-                      ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush")
                 : useWindowText
                     ? ResolveResourceArgb("GitExtensionsWindowTextBrush")
+                : useControlText
+                    ? ResolveSourceControlTextArgb()
+                      ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush")
                 : isItem
                     ? ResolveResourceArgb("GitExtensionsMenuForegroundBrush")
-                    : ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                    : ResolveSourceControlTextArgb()
                       ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush");
         return new CaptureColors
         {
@@ -2026,6 +2115,16 @@ internal sealed class AvaloniaControlTreeReader
             DisabledBackground = background,
             GridLine = null,
             Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+        };
+    }
+
+    private CaptureColors ReadSourceControlTextColors(Control control)
+    {
+        CaptureColors colors = ReadColors(control);
+        return colors with
+        {
+            Foreground = ResolveSourceControlTextArgb()
+                         ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush")
         };
     }
 
@@ -2111,7 +2210,7 @@ internal sealed class AvaloniaControlTreeReader
         return colors with
         {
             Foreground = isPreviewLink || isHelpLink || isDesignerLink
-                ? ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                ? ResolveSourceControlTextArgb()
                   ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush")
                 : colors.Foreground,
             Background = isPreviewLink
@@ -2131,7 +2230,7 @@ internal sealed class AvaloniaControlTreeReader
         CaptureColors colors = ReadColors(control);
         return colors with
         {
-            Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+            Foreground = ResolveSourceControlTextArgb()
                          ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
             DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
                                  ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush")
@@ -2149,7 +2248,7 @@ internal sealed class AvaloniaControlTreeReader
         bool isTransparentSourceButton = control.Name == "btnRemoteColor";
         return colors with
         {
-            Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+            Foreground = ResolveSourceControlTextArgb()
                          ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
             Background = isTransparentSourceButton ? "#00FFFFFF" : background,
             Border = null,
@@ -2182,7 +2281,7 @@ internal sealed class AvaloniaControlTreeReader
             : "GitExtensionsKnownColorControlDarkBrush");
         return new CaptureColors
         {
-            Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush"),
+            Foreground = ResolveSourceControlTextArgb(),
             Background = background,
             Border = ResolveResourceArgb("GitExtensionsKnownColorControlBrush"),
             SelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush"),
@@ -2262,7 +2361,7 @@ internal sealed class AvaloniaControlTreeReader
         CaptureColors colors = ReadColors(control);
         return colors with
         {
-            Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+            Foreground = ResolveSourceControlTextArgb()
                          ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
             Background = "#00FFFFFF",
             Border = null,
@@ -2289,7 +2388,7 @@ internal sealed class AvaloniaControlTreeReader
     private CaptureColors ReadFileViewerTextEditorColors()
         => new()
         {
-            Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush"),
+            Foreground = ResolveSourceControlTextArgb(),
             Background = "#00FFFFFF",
             Border = null,
             SelectionForeground = null,

@@ -87,7 +87,15 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
 
         // Avalonia cannot focus an unattached control; preserve the original Select() at the attachment boundary.
         Dispatcher.UIThread.Post(
-            () => SearchTextBox.Focus(),
+            () =>
+            {
+                // WinForms Select() runs during construction and does not override a later
+                // explicit owner selection. Preserve that ordering when attachment is deferred.
+                if (TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is null)
+                {
+                    SearchTextBox.Focus();
+                }
+            },
             DispatcherPriority.Input);
     }
 

@@ -58,12 +58,6 @@
     <Grid x:Name="branchSearchPanel"
           Grid.Row="1"
           ColumnDefinitions="*,26">
-      <TextBox x:Name="_txtBranchCriterion"
-               Grid.Column="0"
-               Height="23"
-               Margin="0,1,0,2"
-               Padding="4,1"
-               VerticalContentAlignment="Center" />
       <compat:IconButton x:Name="btnSearch"
                          Grid.Column="1"
                          Classes="gitextensions-toolbar-button gitextensions-icon-only"
