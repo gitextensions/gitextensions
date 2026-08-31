@@ -44,6 +44,9 @@ internal sealed class ControlStateDriver : IDisposable
             case CaptureStateKind.Disabled:
                 driver.Disable(target);
                 break;
+            case CaptureStateKind.ReadOnly:
+                driver.MakeReadOnly(target);
+                break;
             case CaptureStateKind.Checked:
                 driver.Check(target);
                 break;
@@ -234,6 +237,18 @@ internal sealed class ControlStateDriver : IDisposable
         bool previous = control.Enabled;
         control.Enabled = false;
         _restoreActions.Add(() => control.Enabled = previous);
+    }
+
+    private void MakeReadOnly(object target)
+    {
+        if (target is not TextBoxBase textBox)
+        {
+            throw new CaptureStateUnsupportedException("The read-only state requires a TextBoxBase.");
+        }
+
+        bool previous = textBox.ReadOnly;
+        textBox.ReadOnly = true;
+        _restoreActions.Add(() => textBox.ReadOnly = previous);
     }
 
     private void Expand(object target)

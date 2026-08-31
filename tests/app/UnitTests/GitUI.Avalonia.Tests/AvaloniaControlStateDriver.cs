@@ -63,6 +63,9 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             case CaptureStateKind.Disabled:
                 driver.Disable(target);
                 break;
+            case CaptureStateKind.ReadOnly:
+                driver.MakeReadOnly(target);
+                break;
             case CaptureStateKind.Checked:
                 driver.Check(target);
                 break;
@@ -230,6 +233,25 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         _restoreActions.Add(() => control.IsEnabled = previous);
     }
 
+    private void MakeReadOnly(object target)
+    {
+        if (target is not TextBox textBox)
+        {
+            throw new AvaloniaCaptureStateUnsupportedException("The read-only state requires a TextBox.");
+        }
+
+        bool previous = textBox.IsReadOnly;
+        bool wasFocused = textBox.IsKeyboardFocusWithin;
+        textBox.IsReadOnly = true;
+        Dispatcher.UIThread.RunJobs();
+        if (wasFocused && !textBox.IsKeyboardFocusWithin)
+        {
+            textBox.Focus();
+        }
+
+        _restoreActions.Add(() => textBox.IsReadOnly = previous);
+    }
+
     private void Expand(object target)
     {
         Control? control = target as Control;
@@ -356,12 +378,19 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
     private void Hover(object target)
     {
         Control control = RequireVisibleControl(target, "hover");
+        IInputElement? focusedElement = _topLevel.FocusManager?.GetFocusedElement();
         Point point = GetCenter(control);
         _topLevel.MouseMove(point, RawInputModifiers.None);
         Dispatcher.UIThread.RunJobs();
         if (!control.IsPointerOver)
         {
             throw new AvaloniaCaptureStateUnsupportedException("The headless pointer did not enter the requested Control.");
+        }
+
+        if (focusedElement is Control focusedControl
+            && !ReferenceEquals(_topLevel.FocusManager?.GetFocusedElement(), focusedElement))
+        {
+            focusedControl.Focus();
         }
 
         _restoreActions.Add(() => _topLevel.MouseMove(new Point(-1, -1), RawInputModifiers.None));

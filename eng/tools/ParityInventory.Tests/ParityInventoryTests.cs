@@ -507,6 +507,51 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Run_should_record_an_exact_reviewed_framework_partial_adaptation()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal(
+            "Widget.Designer.cs",
+            "namespace Sample; public partial class Widget { private int clock; }");
+        fixture.WriteTwin(
+            "Widget.axaml",
+            "<UserControl xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" x:Class=\"Sample.Widget\" />");
+        fixture.WriteTwin(
+            "Widget.axaml.cs",
+            "namespace Sample; public partial class Widget { private int clock; }");
+        fixture.WriteFrameworkAdaptations("""
+            {
+              "schemaVersion": 4,
+              "deviations": [
+                {
+                  "typeName": "Sample.Widget",
+                  "code": "member.partial",
+                  "path": "member/field:clock/part",
+                  "originalPart": "Widget.Designer.cs",
+                  "originalAccessibility": "private",
+                  "originalSignature": "int clock",
+                  "twinPart": "Widget.axaml.cs",
+                  "twinAccessibility": "private",
+                  "twinSignature": "int clock",
+                  "rationale": "AXAML cannot own this nonvisual framework component."
+                }
+              ]
+            }
+            """);
+
+        InventoryReport report = fixture.Run(useFrameworkAdaptations: true);
+
+        report.Findings.Should().BeEmpty();
+        report.AcceptedFrameworkDeviations.Should().ContainSingle(item =>
+            item.Code == "member.partial"
+            && item.Path == "member/field:clock/part"
+            && item.OriginalPart == "Widget.Designer.cs"
+            && item.OriginalValue == "private int clock"
+            && item.TwinPart == "Widget.axaml.cs"
+            && item.TwinValue == "private int clock");
+    }
+
+    [Test]
     public void Run_should_record_an_exact_reviewed_framework_adaptation()
     {
         using InventoryFixture fixture = new();
