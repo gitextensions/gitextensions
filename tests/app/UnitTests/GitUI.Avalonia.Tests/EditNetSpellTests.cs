@@ -7,7 +7,9 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.ParityCapture;
 using GitExtUtils.GitUI.Theming;
+using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs;
 using GitUI.SpellChecker;
 using NSubstitute;
@@ -51,26 +53,38 @@ public sealed class EditNetSpellTests
     {
         EditNetSpell control = new();
         EditNetSpell.TestAccessor accessor = control.GetTestAccessor();
+        Window window = new() { Content = control };
+        window.Show();
         control.Text = "This sentnce contains a misspeling.";
 
-        control.CheckSpelling();
+        try
+        {
+            control.CheckSpelling();
 
-        File.Exists(Path.Combine(accessor.DictionaryPath, "en-US.dic")).Should().BeTrue();
-        accessor.MisspelledWords.Select(range => control.Text[range.Start..range.End])
-            .Should().Contain(["sentnce", "misspeling"]);
+            File.Exists(Path.Combine(accessor.DictionaryPath, "en-US.dic")).Should().BeTrue();
+            accessor.MisspelledWords.Select(range => control.Text[range.Start..range.End])
+                .Should().Contain(["sentnce", "misspeling"]);
 
-        control.CaretIndex = control.Text.IndexOf("sentnce", StringComparison.Ordinal) + 2;
-        accessor.OpenContextMenu();
+            control.CaretIndex = control.Text.IndexOf("sentnce", StringComparison.Ordinal) + 2;
+            accessor.OpenContextMenu();
 
-        accessor.ContextMenu.Items.OfType<MenuItem>().Select(item => item.Header?.ToString())
-            .Should().Contain(["sentence", "Add to dictionary", "Dictionary"]);
+            accessor.ContextMenu.Items.OfType<MenuItem>().Select(item => item.Header?.ToString())
+                .Should().Contain(["sentence", "Add to dictionary", "Dictionary"]);
+            accessor.ContextMenu.Items.OfType<MenuItem>()
+                .Where(item => item.Header?.ToString() is "Cut" or "Copy" or "Paste" or "Delete")
+                .Should().OnlyContain(item => item.IsEnabled);
 
-        MenuItem correction = accessor.ContextMenu.Items.OfType<MenuItem>()
-            .Single(item => item.Header?.ToString() == "sentence");
-        correction.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            MenuItem correction = accessor.ContextMenu.Items.OfType<MenuItem>()
+                .Single(item => item.Header?.ToString() == "sentence");
+            correction.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
-        control.Text.Should().StartWith("This sentence contains");
-        control.SelectionStart.Should().BeLessThanOrEqualTo(control.Text.Length);
+            control.Text.Should().StartWith("This sentence contains");
+            control.SelectionStart.Should().BeLessThanOrEqualTo(control.Text.Length);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]
@@ -199,6 +213,99 @@ public sealed class EditNetSpellTests
         overlayHost.GetVisualDescendants().OfType<MenuItem>().Should().NotBeEmpty();
         accessor.ContextMenu.Close();
         window.Close();
+    }
+
+    [AvaloniaTest]
+    public void Capture_driver_should_open_the_spelling_menu_at_the_same_misspelled_word_as_WinForms()
+    {
+        EditNetSpell control = new() { Text = "sentnce Br" };
+        EditNetSpell.TestAccessor accessor = control.GetTestAccessor();
+        control.CaretIndex = control.Text.Length;
+        int originalCaretIndex = control.CaretIndex;
+        Window window = new() { Width = 386, Height = 336, Content = control };
+        window.Show();
+
+        try
+        {
+            using (AvaloniaControlStateDriver.Apply(
+                       control,
+                       new CaptureStatePlan
+                       {
+                           Id = "spelling.open",
+                           Kind = CaptureStateKind.MenuOpen,
+                           TargetField = "SpellCheckContextMenu",
+                       }))
+            {
+                control.CaretIndex.Should().Be(2);
+                accessor.ContextMenu.Items.OfType<MenuItem>()
+                    .Select(item => item.Header?.ToString())
+                    .Should().Contain("sentence");
+            }
+
+            control.CaretIndex.Should().Be(originalCaretIndex);
+        }
+        finally
+        {
+            accessor.ContextMenu.Close();
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Capture_tree_should_project_the_source_editor_and_integral_autocomplete_list()
+    {
+        EditNetSpell control = new() { Text = "Br" };
+        EditNetSpell.TestAccessor accessor = control.GetTestAccessor();
+        control.CaretIndex = control.Text.Length;
+        Window window = new() { Width = 386, Height = 336, Content = control };
+        window.Show();
+
+        try
+        {
+            accessor.ShowAutoCompleteForCapture(
+            [
+                new AutoCompleteWord("BranchParser"),
+                new AutoCompleteWord("BranchPolicy"),
+            ]);
+            Dispatcher.UIThread.RunJobs();
+
+            CaptureNode root = new AvaloniaControlTreeReader(control, renderScale: 1)
+                .ReadPrimary(control, new Avalonia.PixelSize(386, 336))
+                .Root;
+            root.BorderStyle.Should().Be("None");
+            root.Anchor.Should().Equal("Top", "Left");
+            root.Dock.Should().Be("None");
+            root.AutoSize.Should().BeFalse();
+            root.Alignment.Should().BeNull();
+            root.Children.Select(child => child.FieldName).Should().Equal("TextBox", "AutoComplete");
+
+            CaptureNode autoComplete = root.Children.Single(child => child.FieldName == "AutoComplete");
+            if (OperatingSystem.IsWindows())
+            {
+                autoComplete.BoundsDip.Should().Be(new CaptureRectangleF { X = 14, Y = 16, Width = 76, Height = 32 });
+                autoComplete.ClientSizeDip.Should().Be(new CaptureSizeF { Width = 74, Height = 30 });
+            }
+            else
+            {
+                autoComplete.BoundsDip.X.Should().BeGreaterThanOrEqualTo(0);
+                autoComplete.BoundsDip.Y.Should().BeGreaterThanOrEqualTo(0);
+                autoComplete.BoundsDip.Width.Should().BeGreaterThan(2);
+                autoComplete.BoundsDip.Height.Should().Be(32);
+                autoComplete.ClientSizeDip.Should().Be(new CaptureSizeF
+                {
+                    Width = autoComplete.BoundsDip.Width - 2,
+                    Height = 30,
+                });
+            }
+
+            autoComplete.Text.Should().Be("BranchParser");
+            autoComplete.Selected.Should().BeTrue();
+        }
+        finally
+        {
+            accessor.CloseAutoComplete();
+            window.Close();
+        }
     }
 
     [AvaloniaTest]

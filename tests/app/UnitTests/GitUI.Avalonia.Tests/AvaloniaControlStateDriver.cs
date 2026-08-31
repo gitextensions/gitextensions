@@ -403,9 +403,18 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             Control owner = EnumerateLogicalControls(_root)
                 .FirstOrDefault(control => ReferenceEquals(control.ContextMenu, contextMenu))
                 ?? throw new AvaloniaCaptureStateUnsupportedException("The ContextMenu is not attached to a control in the captured view.");
-            PrepareLongOverlayOwner(contextMenu);
+            if (_root is EditNetSpell spellEditor)
+            {
+                spellEditor.CheckSpelling();
+                int previousCaretIndex = spellEditor.CaretIndex;
+                int wordStart = FindFirstWordStart(spellEditor.Text);
+                spellEditor.CaretIndex = Math.Min(wordStart + 2, spellEditor.Text.Length);
+                _restoreActions.Add(() => spellEditor.CaretIndex = Math.Min(previousCaretIndex, spellEditor.Text.Length));
+            }
+
             owner.RaiseEvent(new ContextRequestedEventArgs());
             Dispatcher.UIThread.RunJobs();
+            PrepareLongOverlayOwner(contextMenu);
             contextMenu.Open(owner);
             Dispatcher.UIThread.RunJobs();
             TrackExternalTopLevels(contextMenu);
@@ -415,14 +424,25 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
         if (target is Control { ContextMenu: { } attachedContextMenu })
         {
-            PrepareLongOverlayOwner(attachedContextMenu);
             ((Control)target).RaiseEvent(new ContextRequestedEventArgs());
             Dispatcher.UIThread.RunJobs();
+            PrepareLongOverlayOwner(attachedContextMenu);
             attachedContextMenu.Open((Control)target);
             Dispatcher.UIThread.RunJobs();
             TrackExternalTopLevels(attachedContextMenu);
             _restoreActions.Add(attachedContextMenu.Close);
             return;
+        }
+
+        static int FindFirstWordStart(string text)
+        {
+            int index = 0;
+            while (index < text.Length && char.IsWhiteSpace(text[index]))
+            {
+                index++;
+            }
+
+            return index;
         }
 
         if (target is Control controlWithFlyout && GetFlyout(controlWithFlyout) is PopupFlyoutBase flyout)
