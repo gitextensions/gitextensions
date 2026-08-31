@@ -12,7 +12,8 @@
         xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.FormBrowse"
         Width="923" Height="573"
-        Title="Git Extensions">
+        Title="Git Extensions"
+        Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
   <Window.Styles>
     <Style Selector="MenuItem.worktree-deleted">
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
@@ -193,6 +194,7 @@
       <menus:HelpToolStripMenuItem x:Name="helpToolStripMenuItem" />
     </wf:MenuStripEx>
     <wf:ToolStripContainer x:Name="toolPanel"
+                           Background="Transparent"
                            ClipToBounds="True">
       <Grid x:Name="toolStripMainHost" ColumnDefinitions="*,Auto" Height="25" ClipToBounds="True">
         <ScrollViewer x:Name="toolStripMainViewport"
@@ -201,6 +203,7 @@
                       HorizontalScrollBarVisibility="Hidden"
                       VerticalScrollBarVisibility="Disabled">
           <StackPanel x:Name="ToolStripMain"
+                      Background="Transparent"
                       Height="25"
                       Orientation="Horizontal"
                       Spacing="1">
@@ -383,16 +386,19 @@
             RowDefinitions="*,0,0"
             Margin="6,0,6,6">
       <wf:SplitContainer x:Name="MainSplitContainer"
+                         Background="Transparent"
                          Grid.ColumnSpan="3"
                          ColumnDefinitions="260,0,*">
       <Border x:Name="leftPanel" Grid.Column="0" Classes="gitextensions-section">
-        <wf:SplitContainer x:Name="LeftSplitContainer">
-          <leftpanel:RepoObjectsTree x:Name="repoObjectsTree" />
+        <wf:SplitContainer x:Name="LeftSplitContainer"
+                           Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
+          <leftpanel:RepoObjectsTree x:Name="repoObjectsTree"
+                                     Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" />
         </wf:SplitContainer>
       </Border>
       <GridSplitter x:Name="leftPanelSplitter" Grid.Column="1" ResizeDirection="Columns" />
-      <wf:SplitContainer x:Name="RightSplitContainer" Grid.Column="2" RowDefinitions="3*,0,2*">
-          <wf:SplitContainer x:Name="RevisionsSplitContainer" Grid.Row="0" ColumnDefinitions="0,0,*,0,0">
+      <wf:SplitContainer x:Name="RightSplitContainer" Grid.Column="2" RowDefinitions="3*,0,2*" Background="Transparent">
+          <wf:SplitContainer x:Name="RevisionsSplitContainer" Grid.Row="0" ColumnDefinitions="0,0,*,0,0" Background="Transparent">
           <Border x:Name="commitInfoLeftHost" Grid.Column="0" Classes="gitextensions-section" />
           <GridSplitter x:Name="commitInfoLeftSplitter" Grid.Column="1" ResizeDirection="Columns" IsVisible="False" />
           <wf:Panel x:Name="RevisionGridContainer" Grid.Column="2" Classes="gitextensions-section">
