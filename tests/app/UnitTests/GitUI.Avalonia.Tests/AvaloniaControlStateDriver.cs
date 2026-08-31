@@ -51,6 +51,11 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         switch (state.Kind)
         {
             case CaptureStateKind.Normal:
+                if (root is EditNetSpell editNetSpell)
+                {
+                    editNetSpell.Focus();
+                }
+
                 break;
             case CaptureStateKind.Focus:
                 driver.Focus(target);
@@ -574,7 +579,13 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
     // screen-sized viewport while retaining the component's measured size for the paired crop.
     private void PrepareLongOverlayOwner(ContextMenu contextMenu)
     {
-        if (contextMenu.Items.Count < 20 || _topLevel is not Window captureWindow)
+        if (_topLevel is not Window captureWindow)
+        {
+            return;
+        }
+
+        contextMenu.Measure(Size.Infinity);
+        if (contextMenu.DesiredSize.Height <= captureWindow.Bounds.Height)
         {
             return;
         }

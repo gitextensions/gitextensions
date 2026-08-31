@@ -2,14 +2,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="using:GitUI.SpellChecker"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
              x:Class="GitUI.SpellChecker.EditNetSpell"
              d:DesignWidth="386"
              d:DesignHeight="336">
   <UserControl.Resources>
-    <ContextMenu x:Key="SpellCheckContextMenuResource"
-                 x:Name="SpellCheckContextMenu">
+    <wf:ContextMenuStrip x:Key="SpellCheckContextMenuResource"
+                         x:Name="SpellCheckContextMenu"
+                         Classes="gitextensions-toolstrip-context-menu">
       <Separator x:Name="toolStripSeparator1" />
-    </ContextMenu>
+    </wf:ContextMenuStrip>
   </UserControl.Resources>
   <UserControl.Styles>
     <Style Selector="ListBox#AutoComplete > ListBoxItem">

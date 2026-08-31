@@ -1,11 +1,12 @@
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.VisualTree;
 
 namespace GitUI.Compat;
 
 /// <summary>
-/// Applies the WinForms <c>ToolStripDropDownMenu</c> 96-DPI width calculation to an Avalonia submenu.
+/// Applies the WinForms <c>ToolStripDropDownMenu</c> 96-DPI width calculation to Avalonia menu items.
 /// </summary>
 internal static class WinFormsToolStripMenuSizer
 {
@@ -15,6 +16,7 @@ internal static class WinFormsToolStripMenuSizer
     private const double TextPaddingRight = 9;
     private const double ArrowWidth = 10;
     private const double ArrowPaddingRight = 8;
+    private const double ContextMenuLayoutBorder = 1;
     private static readonly ConditionalWeakTable<MenuItem, ShortcutDisplay> ShortcutDisplays = new();
 
     public static void SetShortcutDisplayString(MenuItem item, string? displayString)
@@ -26,7 +28,7 @@ internal static class WinFormsToolStripMenuSizer
         }
     }
 
-    public static void Apply(MenuItem owner)
+    public static void Apply(ItemsControl owner)
     {
         MenuItem[] menuItems = [.. owner.Items.OfType<MenuItem>()];
         if (menuItems.Length == 0)
@@ -46,7 +48,8 @@ internal static class WinFormsToolStripMenuSizer
             + maximumTextAndShortcutWidth
             + TextPaddingRight
             + ArrowWidth
-            + ArrowPaddingRight);
+            + ArrowPaddingRight)
+            - (owner is ContextMenu ? ContextMenuLayoutBorder : 0);
 
         foreach (MenuItem item in menuItems)
         {
@@ -61,7 +64,7 @@ internal static class WinFormsToolStripMenuSizer
         }
     }
 
-    private static double MeasureText(MenuItem owner, string text)
+    private static double MeasureText(TemplatedControl owner, string text)
         => WinFormsTextMeasurer.Measure(owner, text) + TextRendererOverhang;
 
     private static double GetShortcutWidth(MenuItem item)

@@ -25,7 +25,7 @@
       <ListBox.ContextMenu>
         <!-- The 265-DIP ToolStrip item canvas plus its retained one-pixel native border. -->
         <wf:ContextMenuStrip x:Name="mainContextMenu"
-                             Classes="gitextensions-revision-context-menu"
+                             Classes="gitextensions-toolstrip-context-menu"
                              Width="266">
           <wf:ToolStripMenuItem x:Name="markRevisionAsBadToolStripMenuItem" Header="Mark revision as bad">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BisectBad}" /></MenuItem.Icon>

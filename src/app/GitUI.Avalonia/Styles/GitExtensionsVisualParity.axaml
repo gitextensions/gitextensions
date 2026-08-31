@@ -1482,7 +1482,7 @@
   <Style Selector="ContextMenu /template/ ItemsPresenter#PART_ItemsPresenter">
     <Setter Property="Margin" Value="0" />
   </Style>
-  <Style Selector="ContextMenu.gitextensions-revision-context-menu /template/ ItemsPresenter#PART_ItemsPresenter">
+  <Style Selector="ContextMenu.gitextensions-toolstrip-context-menu /template/ ItemsPresenter#PART_ItemsPresenter">
     <!-- ToolStrip paints its one-pixel border over the item canvas instead of reserving a
          separate leading/top layout inset. -->
     <Setter Property="Margin" Value="-1,1,0,1" />
