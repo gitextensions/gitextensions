@@ -431,7 +431,7 @@
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBorderBrush" Color="#6B6B6B" />
           <SolidColorBrush x:Key="GitExtensionsMenuCheckBackgroundBrush" Color="#2E3F56" />
           <SolidColorBrush x:Key="GitExtensionsMenuCheckForegroundBrush" Color="#E1E3E6" />
-          <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#4A4A4A" />
           <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#2E2E2E" />
           <SolidColorBrush x:Key="GitExtensionsControlPressedBackgroundBrush" Color="#4A4A4A" />
@@ -957,6 +957,8 @@
     <Setter Property="CornerRadius" Value="0" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
   </Style>
   <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_PrimaryButton">
     <Setter Property="MinWidth" Value="23" />
@@ -1318,7 +1320,7 @@
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
     <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
     <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
-    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsMenuForegroundBrush}" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
   </Style>
   <Style Selector="MenuItem.gitextensions-menu-command-toggle /template/ ContentControl#PART_ToggleIconPresenter">
@@ -1548,6 +1550,7 @@
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="1,1,1,0" />
     <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
   </Style>
   <Style Selector="Menu > MenuItem:selected /template/ Border#PART_LayoutRoot">
     <!-- WinForms joins an open top-level item visually to its dropdown. -->
