@@ -16,6 +16,7 @@
   <Grid x:Name="repoTreePanel" RowDefinitions="25,26,*">
     <StackPanel x:Name="leftPanelToolStrip"
                 Grid.Row="0"
+                Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
                 Orientation="Horizontal"
                 Height="25"
                 Spacing="0">
@@ -57,6 +58,7 @@
     </StackPanel>
     <Grid x:Name="branchSearchPanel"
           Grid.Row="1"
+          Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
           ColumnDefinitions="*,26">
       <compat:IconButton x:Name="btnSearch"
                          Grid.Column="1"
@@ -69,6 +71,8 @@
     <TreeView x:Name="treeMain"
               Classes="gitextensions-native-tree"
               Grid.Row="2"
+              Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
+              Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
               SelectionMode="Multiple"
               ScrollViewer.HorizontalScrollBarVisibility="Auto"
               ScrollViewer.VerticalScrollBarVisibility="Auto"

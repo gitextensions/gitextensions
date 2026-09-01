@@ -8,7 +8,6 @@
               Spacing="0">
     <compat:IconSplitButton x:Name="tsbtnAdvancedFilter"
                             compat:TranslationCompat.TranslateText="False"
-                            compat:TranslationCompat.UseToolTipText="True"
                             Classes="gitextensions-toolbar-button gitextensions-icon-only"
                             Content="Advanced filter"
                             Icon="{x:Static properties:Images.FunnelPencil}">
@@ -51,6 +50,7 @@
                             Height="23"
                             IsEditable="True" />
     <compat:IconDropDownButton x:Name="tsddbtnBranchFilter"
+                               compat:TranslationCompat.UseToolTipText="True"
                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                Content="Branch type"
                                Icon="{x:Static properties:Images.EditFilter}">
@@ -74,6 +74,7 @@
                             Height="23"
                             IsEditable="True" />
     <compat:IconDropDownButton x:Name="tsddbtnRevisionFilter"
+                               compat:TranslationCompat.UseToolTipText="True"
                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                Content="Filter type"
                                Icon="{x:Static properties:Images.EditFilter}">
