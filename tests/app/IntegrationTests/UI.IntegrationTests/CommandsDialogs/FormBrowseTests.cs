@@ -341,6 +341,46 @@ public class FormBrowseTests
             commands);
     }
 
+    [Test]
+    public void SetWorkingDir_should_reload_commit_info_for_auto_selected_revision_after_repository_switch()
+    {
+        using (CommitInfoPanelTestSettingsScope.ForBrowseRepositorySwitch())
+        {
+            using GitModuleTestHelper repoA = new("formBrowseRepoSwitchA");
+            using GitModuleTestHelper repoB = new("formBrowseRepoSwitchB");
+            CreateCommitWithSubject(repoA, "REPO_A_HEAD subject");
+            CreateCommitWithSubject(repoB, "REPO_B_HEAD subject");
+
+            GitUICommands commandsA = new(GlobalServiceContainer.CreateDefaultMockServiceContainer(), repoA.Module);
+
+            RunFormTest(
+                async form =>
+                {
+                    FormBrowse.TestAccessor ta = form.GetTestAccessor();
+                    ta.CommitInfoTabControl.SelectedTab = ta.CommitInfoTabPage;
+
+                    WaitForRevisionsToBeLoaded(form);
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
+                    ta.RevisionInfo.GetTestAccessor().CommitMessage.Text.Should().Contain("REPO_A_HEAD");
+
+                    ta.SetWorkingDir(repoB.Module.WorkingDir);
+                    WaitForRevisionsToBeLoaded(form);
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
+                    GitUI.CommitInfo.CommitInfo.TestAccessor commitInfoAccessor = ta.RevisionInfo.GetTestAccessor();
+                    commitInfoAccessor.CommitMessage.Text.Should().Contain("REPO_B_HEAD");
+                    commitInfoAccessor.CommitMessage.Text.Should().NotContain("REPO_A_HEAD");
+                },
+                commandsA);
+        }
+    }
+
+    private static void CreateCommitWithSubject(GitModuleTestHelper helper, string subject)
+    {
+        helper.Module.GitExecutable.GetOutput($@"commit --allow-empty -m ""{subject}""");
+    }
+
     private static void RunFormTest(Action<FormBrowse> testDriver, GitUICommands commands)
     {
         UITest.RunForm(
