@@ -3,6 +3,7 @@
              xmlns:compat="using:GitUI.Compat"
              xmlns:local="using:GitUI.CommitInfo"
              x:Class="GitUI.CommitInfo.CommitInfo"
+             Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
              ContextMenu="{StaticResource CommitInfoContextMenu}">
   <UserControl.Resources>
     <ContextMenu x:Key="CommitInfoContextMenu" x:Name="commitInfoContextMenuStrip">
