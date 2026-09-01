@@ -96,7 +96,7 @@
     </ContextMenu>
   </UserControl.ContextMenu>
   <DockPanel>
-    <StackPanel x:Name="Toolbar" DockPanel.Dock="Top" Orientation="Horizontal" Height="25" Background="{DynamicResource GitExtensionsControlBackgroundBrush}">
+    <StackPanel x:Name="Toolbar" DockPanel.Dock="Top" Orientation="Horizontal" Height="25" Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
       <Button x:Name="btnCollapseGroups" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" Height="22" MinHeight="22" Margin="0,1,0,2" ToolTip.Tip="Collapse all groups, otherwise expand the selected group" IsVisible="False">
         <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CollapseAll}" />
       </Button>
