@@ -5,6 +5,7 @@
              Margin="0">
   <compat:ThemeAwareTextEditor x:Name="TextEditor"
                                Classes="gitextensions-diff-editor"
+                               FontFamily="{DynamicResource GitExtensionsGenericMonospaceFontFamily}"
                                IsReadOnly="True"
                                ShowLineNumbers="True"
                                HorizontalScrollBarVisibility="Auto"

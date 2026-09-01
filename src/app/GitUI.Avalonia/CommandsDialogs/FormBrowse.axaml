@@ -320,11 +320,16 @@
               <wf:ToolStripSeparator x:Name="toolStripSeparator11" />
               <wf:ToolStripMenuItem x:Name="mergeToolStripMenuItem" Header="Pull - _merge" />
               <wf:ToolStripMenuItem x:Name="rebaseToolStripMenuItem1" Header="Pull - _rebase" />
-              <wf:ToolStripMenuItem x:Name="fetchToolStripMenuItem" Header="_Fetch" />
+              <wf:ToolStripMenuItem x:Name="fetchToolStripMenuItem"
+                                    Header="_Fetch"
+                                    ToolTip.Tip="Fetch branches and tags" />
               <wf:ToolStripMenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all">
                 <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetchAll}" /></MenuItem.Icon>
+                <ToolTip.Tip>Fetch branches and tags from all remote repositories</ToolTip.Tip>
               </wf:ToolStripMenuItem>
-              <wf:ToolStripMenuItem x:Name="fetchPruneAllToolStripMenuItem" Header="F_etch and prune all" />
+              <wf:ToolStripMenuItem x:Name="fetchPruneAllToolStripMenuItem"
+                                    Header="F_etch and prune all"
+                                    ToolTip.Tip="Fetch branches and tags from all remote repositories also prune deleted branches" />
               <wf:ToolStripSeparator x:Name="toolStripSeparator14" />
               <wf:ToolStripMenuItem x:Name="setDefaultPullButtonActionToolStripMenuItem" Header="Set _default Pull button action">
                 <wf:ToolStripMenuItem x:Name="defaultPullDialogToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Open pull dialog" ToggleType="Radio" />
@@ -355,11 +360,11 @@
           </SplitButton.Content>
           <SplitButton.Flyout>
             <MenuFlyout>
-              <wf:ToolStripMenuItem x:Name="stashChangesToolStripMenuItem" Header="_Stash" />
-              <wf:ToolStripMenuItem x:Name="stashStagedToolStripMenuItem" Header="S_tash staged" />
-              <wf:ToolStripMenuItem x:Name="stashPopToolStripMenuItem" Header="Stash _pop" />
+              <wf:ToolStripMenuItem x:Name="stashChangesToolStripMenuItem" Header="_Stash" ToolTip.Tip="Stash changes" />
+              <wf:ToolStripMenuItem x:Name="stashStagedToolStripMenuItem" Header="S_tash staged" ToolTip.Tip="Stash staged changes" />
+              <wf:ToolStripMenuItem x:Name="stashPopToolStripMenuItem" Header="Stash _pop" ToolTip.Tip="Apply and drop single stash" />
               <wf:ToolStripSeparator x:Name="toolStripSeparator9" />
-              <wf:ToolStripMenuItem x:Name="manageStashesToolStripMenuItem" Header="_Manage stashes..." />
+              <wf:ToolStripMenuItem x:Name="manageStashesToolStripMenuItem" Header="_Manage stashes..." ToolTip.Tip="Manage stashes" />
               <wf:ToolStripMenuItem x:Name="createAStashToolStripMenuItem" Header="_Create a stash..." />
             </MenuFlyout>
           </SplitButton.Flyout>
@@ -412,7 +417,8 @@
                   Orientation="Horizontal"
                   Spacing="1"
                   IsVisible="False" />
-    <Grid x:Name="_contentPanel">
+    <Grid x:Name="_contentPanel"
+          Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
       <TextBlock x:Name="lblRepoPath" IsVisible="False" />
       <TextBlock x:Name="lblStatus" IsVisible="False" />
       <Grid x:Name="mainContentGrid"
@@ -443,6 +449,7 @@
           <wf:Panel x:Name="RevisionGridContainer"
                     Grid.Column="2"
                     Margin="1"
+                    Background="{DynamicResource GitExtensionsSectionBorderBrush}"
                     Classes="gitextensions-section">
             <Grid RowDefinitions="Auto,Auto,*">
               <controls:InteractiveGitActionControl x:Name="notificationBarGitActionInProgress"
@@ -464,6 +471,7 @@
                                               Grid.Row="2"
                                               SelectedIndex="0"
                                               Padding="0"
+                                              Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
                                               Classes="gitextensions-workspace-tabs">
           <wf:TabPage x:Name="CommitInfoTabPage"
                    Classes="gitextensions-workspace-tab"

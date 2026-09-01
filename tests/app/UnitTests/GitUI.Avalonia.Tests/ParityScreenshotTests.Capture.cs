@@ -1005,6 +1005,10 @@ public sealed partial class ParityScreenshotTests
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
         GitExtensions.Shims.WinForms.ShimHost.MessageBoxHost = new StubMessageBoxHost();
         GitExtensions.Shims.WinForms.ShimHost.Clipboard = new CaptureClipboard();
+        // parity-scaffolding: The application entry point normally creates the aggregate MEF
+        // catalog before FormBrowse opens. The capture host is the entry point here, so create
+        // the same empty base catalog before the form starts its background plugin scan.
+        ManagedExtensibility.Initialise();
 
         CapturePlan plan = CapturePlan.Load(GetCapturePlanPath());
         string? viewFilter = Environment.GetEnvironmentVariable(CaptureViewEnvironmentVariable);
