@@ -5,9 +5,9 @@
                                  x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.FormBrowseRepoSettingsPage"
                                  MinWidth="650"
                                  MinHeight="438"
+                                 Padding="8"
                                  Text="Browse repository window">
   <Grid x:Name="tlpnlMain"
-        Margin="8"
         RowDefinitions="165,142,*">
       <GroupBox x:Name="groupBox1"
                 Margin="3"

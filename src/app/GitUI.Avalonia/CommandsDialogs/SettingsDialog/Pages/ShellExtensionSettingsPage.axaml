@@ -6,10 +6,10 @@
                                  x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage"
                                  MinWidth="650"
                                  MinHeight="331"
+                                 Padding="8"
                                  Text="Shell extension">
   <Grid x:Name="tlpnlMain"
         Height="315"
-        Margin="8"
         RowDefinitions="69,508">
       <GroupBox x:Name="gbExplorerIntegration"
                 Margin="3"
@@ -74,8 +74,7 @@
                    Height="382"
                    Margin="3"
                    VerticalAlignment="Top" />
-          <Border x:Name="panel1"
-                  Grid.Row="3"
+          <Border Grid.Row="3"
                   Grid.Column="2"
                   Margin="2"
                   Padding="3">

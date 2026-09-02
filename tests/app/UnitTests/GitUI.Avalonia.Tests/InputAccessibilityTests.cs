@@ -45,7 +45,7 @@ public sealed class InputAccessibilityTests
                 Path.Combine(repositoryRoot, "src", "plugins", "Gource")),
         ]));
         WinFormsInputMetadata.ByType.Should().HaveCount(142);
-        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1515);
+        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1514);
         WinFormsInputMetadata.SourceByType.Should().ContainKey("GitUI.CommandsDialogs.FormBrowse");
         WinFormsInputMetadata.SourceByType["GitUI.CommandsDialogs.FormBrowse"]
             .Single(item => item.FieldName == "toolStripButtonPull")
@@ -74,6 +74,24 @@ public sealed class InputAccessibilityTests
         remotes.Single(item => item.FieldName == "panel1").Padding.Should().Be(new Thickness(8));
         remotes.Single(item => item.FieldName == "pnlManagementContainer").Padding.Should().Be(new Thickness(8, 4, 8, 8));
         remotes.Single(item => item.FieldName == "pnlMgtDetails").Dock.Should().Be("Top");
+
+        IReadOnlyList<DesignerLayoutMetadata> commit = WinFormsInputMetadata.LayoutByType[
+            "GitUI.CommandsDialogs.SettingsDialog.Pages.CommitDialogSettingsPage"];
+        commit.Single(item => item.FieldName == "lblCommitDialogNumberOfPreviousMessages")
+            .Anchor.Should().Equal("Left");
+        WinFormsInputMetadata.SourceByType[
+                "GitUI.CommandsDialogs.SettingsDialog.Pages.CommitDialogSettingsPage"]
+            .Single(item => item.FieldName == "_NO_TRANSLATE_CommitDialogNumberOfPreviousMessages")
+            .SourceType.Should().Be("NumericUpDown");
+
+        IReadOnlyList<DesignerLayoutMetadata> about = WinFormsInputMetadata.LayoutByType[
+            "GitUI.CommandsDialogs.FormAbout"];
+        about.Single(item => item.FieldName == "label2").Anchor.Should().Equal("Top", "Left", "Right");
+
+        WinFormsInputMetadata.LayoutByType[
+                "GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage"]
+            .Single(item => item.FieldName == "menuHelp")
+            .AutoSize.Should().BeTrue();
     }
 
     [AvaloniaTest]

@@ -53,17 +53,18 @@ public static partial class InputMetadataGenerator
                     _ => new MutableControlMetadata(),
                     StringComparer.Ordinal);
 
-                foreach (string line in File.ReadLines(designerPath))
+                string designerSource = File.ReadAllText(designerPath);
+                foreach (Match construction in ConstructionRegex().Matches(designerSource))
                 {
-                    Match construction = ConstructionRegex().Match(line);
-                    if (construction.Success
-                        && controls.TryGetValue(construction.Groups["field"].Value, out MutableControlMetadata? constructedMetadata))
+                    if (controls.TryGetValue(construction.Groups["field"].Value, out MutableControlMetadata? constructedMetadata))
                     {
                         constructedMetadata.SourceType = construction.Groups["type"].Value;
                     }
+                }
 
-                    Match match = AssignmentRegex().Match(line);
-                    if (!match.Success || !controls.TryGetValue(match.Groups["field"].Value, out MutableControlMetadata? metadata))
+                foreach (Match match in AssignmentRegex().Matches(designerSource))
+                {
+                    if (!controls.TryGetValue(match.Groups["field"].Value, out MutableControlMetadata? metadata))
                     {
                         continue;
                     }
@@ -106,6 +107,13 @@ public static partial class InputMetadataGenerator
                             break;
                         case "FlatStyle":
                             metadata.FlatStyle = ParseEnum(value, "FlatStyle.");
+                            break;
+                        case "SizeMode":
+                            if (ParseEnum(value, "PictureBoxSizeMode.") == "AutoSize")
+                            {
+                                metadata.AutoSize = true;
+                            }
+
                             break;
                     }
                 }
@@ -271,9 +279,16 @@ public static partial class InputMetadataGenerator
     }
 
     private static IReadOnlyList<string> ParseEnumFlags(string value, string prefix)
-        => value.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Select(part => ParseEnum(part, prefix))
+    {
+        string pattern = $"{Regex.Escape(prefix)}(?<value>[A-Za-z_][A-Za-z0-9_]*)";
+        string[] flags = Regex.Matches(value, pattern, RegexOptions.CultureInvariant)
+            .Select(match => match.Groups["value"].Value)
+            .Distinct(StringComparer.Ordinal)
             .ToArray();
+        return flags.Length > 0
+            ? flags
+            : throw new InvalidDataException($"Unsupported Designer enum flags value: {value}");
+    }
 
     private static ThicknessValue? ParsePadding(string value)
     {
@@ -303,10 +318,10 @@ public static partial class InputMetadataGenerator
             ? "null"
             : $"new Avalonia.Thickness({value.Left}, {value.Top}, {value.Right}, {value.Bottom})";
 
-    [GeneratedRegex("^\\s*(?:this\\.)?(?<field>[A-Za-z_][A-Za-z0-9_]*)\\.(?<property>TabIndex|TabStop|AccessibleName|Anchor|Dock|AutoSize|Margin|Padding|TextAlign|BorderStyle|FlatStyle)\\s*=\\s*(?<value>.+);\\s*$", RegexOptions.CultureInvariant)]
+    [GeneratedRegex("^\\s*(?:this\\.)?(?<field>[A-Za-z_][A-Za-z0-9_]*)\\.(?<property>TabIndex|TabStop|AccessibleName|Anchor|Dock|AutoSize|Margin|Padding|TextAlign|BorderStyle|FlatStyle|SizeMode)\\s*=\\s*(?<value>.*?);\\s*$", RegexOptions.CultureInvariant | RegexOptions.Multiline | RegexOptions.Singleline)]
     private static partial Regex AssignmentRegex();
 
-    [GeneratedRegex("^\\s*(?:this\\.)?(?<field>[A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*new\\s+(?:global::)?(?<type>[A-Za-z_][A-Za-z0-9_.]*)\\s*\\(", RegexOptions.CultureInvariant)]
+    [GeneratedRegex("^\\s*(?:this\\.)?(?<field>[A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*new\\s+(?:global::)?(?<type>[A-Za-z_][A-Za-z0-9_.]*)\\s*\\(", RegexOptions.CultureInvariant | RegexOptions.Multiline)]
     private static partial Regex ConstructionRegex();
 
     [GeneratedRegex("^new Padding\\((?:(?<value>-?[0-9]+)\\s*,?\\s*)+\\)$", RegexOptions.CultureInvariant)]

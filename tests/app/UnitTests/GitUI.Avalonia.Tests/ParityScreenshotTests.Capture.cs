@@ -151,7 +151,7 @@ public sealed partial class ParityScreenshotTests
         GetCaptureSize(typeof(CommitDialogSettingsPage)).Should().Be((1014, 950));
         GetCaptureSize(typeof(FormBrowseRepoSettingsPage)).Should().Be((738, 438));
         GetCaptureSize(typeof(ShellExtensionSettingsPage)).Should().Be((1502, 331));
-        GetCaptureSize(typeof(FormChooseTranslation)).Should().Be((816, 578));
+        GetCaptureSize(typeof(FormChooseTranslation)).Should().Be((800, 539));
     }
 
     [AvaloniaTest]
@@ -1236,11 +1236,12 @@ public sealed partial class ParityScreenshotTests
             // before driving focus so a previously closed capture cannot retain the input root.
             window.Activate();
             Dispatcher.UIThread.RunJobs();
-            if (view is EditNetSpell editNetSpell)
+            Control? defaultFocusedControl = GetStandaloneDefaultFocusedControl(view);
+            if (defaultFocusedControl is not null)
             {
                 // parity-scaffolding: The WinForms standalone host gives its first focusable child
                 // keyboard focus before applying non-focus states; establish the same baseline.
-                editNetSpell.GetTestAccessor().TextBox.Focus();
+                defaultFocusedControl.Focus();
                 Dispatcher.UIThread.RunJobs();
             }
 
@@ -1409,6 +1410,19 @@ public sealed partial class ParityScreenshotTests
             Dispatcher.UIThread.RunJobs();
         }
     }
+
+    private static Control? GetStandaloneDefaultFocusedControl(Control view)
+        => view switch
+        {
+            EditNetSpell editNetSpell => editNetSpell.GetTestAccessor().TextBox,
+            BlameViewerSettingsPage => view.FindControl<Control>("cbIgnoreWhitespace"),
+            CommitDialogSettingsPage => view.FindControl<Control>("chkAutocomplete"),
+            FormBrowseRepoSettingsPage => view.FindControl<Control>("cboTerminal"),
+            ShellExtensionSettingsPage => view.FindControl<Control>("cbAlwaysShowAllCommands"),
+            FormChooseTranslation => view.FindControl<ListBox>("lvTranslations")?
+                .GetLogicalDescendants().OfType<ListBoxItem>().FirstOrDefault(),
+            _ => null,
+        };
 
     private static (double Width, double Height) GetPlannedCaptureHostSize(Type viewType, int scalePercent)
     {
@@ -1838,6 +1852,9 @@ public sealed partial class ParityScreenshotTests
         AppSettings.TelemetryEnabled = false;
         AppSettings.CheckForUpdates = false;
         AppSettings.ShowAvailableDiffTools = false;
+        AppSettings.ShowConEmuTab.Value = false;
+        AppSettings.Translation = "English";
+        AppSettings.CurrentTranslation = "English";
         foreach ((string key, string value) in profile.AppSettings)
         {
             AppSettings.SetString(key, value);

@@ -574,6 +574,26 @@ public sealed partial class ParityScreenshotTests
             return new HotkeysSettingsPage(context.Commands);
         }
 
+        if (viewType == typeof(BlameViewerSettingsPage))
+        {
+            return new BlameViewerSettingsPage(context.Commands);
+        }
+
+        if (viewType == typeof(CommitDialogSettingsPage))
+        {
+            return new CommitDialogSettingsPage(context.Commands);
+        }
+
+        if (viewType == typeof(FormBrowseRepoSettingsPage))
+        {
+            return new FormBrowseRepoSettingsPage(context.Commands);
+        }
+
+        if (viewType == typeof(ShellExtensionSettingsPage))
+        {
+            return new ShellExtensionSettingsPage(context.Commands);
+        }
+
         if (viewType == typeof(SimpleHelpDisplayDialog))
         {
             return new SimpleHelpDisplayDialog
@@ -2476,8 +2496,9 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormChooseTranslation))
         {
-            // The WinForms full-window PrintWindow surface includes non-client chrome.
-            return (816, 578);
+            // The Avalonia surface is client-only; the reference tree retains its native
+            // non-client pixels separately and declares the 800x539 client crop.
+            return (800, 539);
         }
 
         if (viewType == typeof(FormCommit))

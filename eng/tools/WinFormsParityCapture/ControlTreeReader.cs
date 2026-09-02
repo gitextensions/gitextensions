@@ -68,12 +68,23 @@ internal sealed class ControlTreeReader
     public CaptureSurface ReadPrimary(Control root, Rectangle screenBounds)
     {
         CaptureNode rootNode = ReadControl(root, parentId: string.Empty, ordinal: 0);
-        Rectangle clientScreenBounds = root.RectangleToScreen(root.ClientRectangle);
-        Rectangle clientSurfaceBounds = new(
-            clientScreenBounds.X - screenBounds.X,
-            clientScreenBounds.Y - screenBounds.Y,
-            clientScreenBounds.Width,
-            clientScreenBounds.Height);
+        Rectangle clientSurfaceBounds;
+        if (root is Form)
+        {
+            Rectangle clientScreenBounds = root.RectangleToScreen(root.ClientRectangle);
+            clientSurfaceBounds = new Rectangle(
+                clientScreenBounds.X - screenBounds.X,
+                clientScreenBounds.Y - screenBounds.Y,
+                clientScreenBounds.Width,
+                clientScreenBounds.Height);
+        }
+        else
+        {
+            // Hosted component captures already contain only the control's client pixels.
+            // RectangleToScreen can resolve through the hidden capture form and must not
+            // turn that host's client rectangle into the component root bounds.
+            clientSurfaceBounds = new Rectangle(Point.Empty, screenBounds.Size);
+        }
 
         // parity-scaffolding: PrintWindow keeps native non-client chrome in the bitmap, while
         // the root control tree describes the product client area. Store its surface-relative
