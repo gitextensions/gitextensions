@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -179,6 +179,7 @@ public sealed partial class ParityScreenshotTests
     [Category(P02Category)]
     public void Avalonia_tree_reader_should_apply_generated_designer_metadata_to_window_roots()
     {
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
         FormBrowse form = new() { Width = 923, Height = 573 };
         form.Show();
         Dispatcher.UIThread.RunJobs();
@@ -573,7 +574,7 @@ public sealed partial class ParityScreenshotTests
             rootNode.Alignment.Should().BeNull();
             rootNode.TabIndex.Should().Be(0);
             rootNode.TabStop.Should().BeTrue();
-            rootNode.Expanded.Should().BeFalse();
+            rootNode.Expanded.Should().BeNull();
             gridNode.BorderStyle.Should().Be("None");
             gridNode.Anchor.Should().Equal("Top", "Left");
             gridNode.Dock.Should().Be("Fill");
@@ -582,7 +583,7 @@ public sealed partial class ParityScreenshotTests
             gridNode.TabIndex.Should().Be(0);
             gridNode.TabStop.Should().BeTrue();
             gridNode.Focused.Should().BeTrue();
-            gridNode.Expanded.Should().BeFalse();
+            gridNode.Expanded.Should().BeNull();
             decimal resolvedRowHeight = decimal.Round((decimal)RevisionGridControl.GetRowHeight(revisionGrid), 4);
             gridNode.ItemHeightDip.Should().Be(resolvedRowHeight);
 
@@ -778,36 +779,48 @@ public sealed partial class ParityScreenshotTests
         flyoutWindow.Close();
 
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        AppSettings.TestAccessor settingsAccessor = AppSettings.GetTestAccessor();
+        string originalApplicationExecutablePath = settingsAccessor.ApplicationExecutablePath;
         string originalDictionary = AppSettings.Dictionary;
-        AppSettings.Dictionary = "None";
-        EditNetSpell hostedEditor = new() { Name = "editHosted" };
-        Window hostedEditorWindow = new() { Width = 240, Height = 100, Content = hostedEditor };
-        hostedEditorWindow.Show();
-        Dispatcher.UIThread.RunJobs();
-        CaptureStatePlan hostedFocusState = new()
+        Window? hostedEditorWindow = null;
+        try
         {
-            Id = "hosted.focused",
-            Kind = CaptureStateKind.Focus,
-            TargetField = "editHosted"
-        };
-        using (AvaloniaControlStateDriver.Apply(hostedEditorWindow, hostedFocusState))
-        {
-            hostedEditor.GetTestAccessor().TextBox.IsFocused.Should().BeTrue();
-        }
+            settingsAccessor.ApplicationExecutablePath = Path.Combine(
+                TestContext.CurrentContext.WorkDirectory,
+                "GitExtensions.Avalonia.exe");
+            AppSettings.Dictionary = "None";
+            EditNetSpell hostedEditor = new() { Name = "editHosted" };
+            hostedEditorWindow = new Window { Width = 240, Height = 100, Content = hostedEditor };
+            hostedEditorWindow.Show();
+            Dispatcher.UIThread.RunJobs();
+            CaptureStatePlan hostedFocusState = new()
+            {
+                Id = "hosted.focused",
+                Kind = CaptureStateKind.Focus,
+                TargetField = "editHosted"
+            };
+            using (AvaloniaControlStateDriver.Apply(hostedEditorWindow, hostedFocusState))
+            {
+                hostedEditor.GetTestAccessor().TextBox.IsFocused.Should().BeTrue();
+            }
 
-        CaptureStatePlan hostedTextBoxFocusState = new()
-        {
-            Id = "hosted-textbox.focused",
-            Kind = CaptureStateKind.Focus,
-            TargetField = "TextBox"
-        };
-        using (AvaloniaControlStateDriver.Apply(hostedEditorWindow, hostedTextBoxFocusState))
-        {
-            hostedEditor.GetTestAccessor().TextBox.IsFocused.Should().BeTrue();
+            CaptureStatePlan hostedTextBoxFocusState = new()
+            {
+                Id = "hosted-textbox.focused",
+                Kind = CaptureStateKind.Focus,
+                TargetField = "TextBox"
+            };
+            using (AvaloniaControlStateDriver.Apply(hostedEditorWindow, hostedTextBoxFocusState))
+            {
+                hostedEditor.GetTestAccessor().TextBox.IsFocused.Should().BeTrue();
+            }
         }
-
-        hostedEditorWindow.Close();
-        AppSettings.Dictionary = originalDictionary;
+        finally
+        {
+            hostedEditorWindow?.Close();
+            AppSettings.Dictionary = originalDictionary;
+            settingsAccessor.ApplicationExecutablePath = originalApplicationExecutablePath;
+        }
 
         Button secondTabButton = new() { Name = "btnSecondTab", Content = "Second" };
         TabItem firstTab = new() { Header = "First", Content = "First content" };

@@ -7,10 +7,13 @@
         Height="529"
         MinWidth="250"
         MinHeight="250"
+        Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
+        Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
         WindowStartupLocation="CenterOwner"
         Title="Diff">
   <Grid x:Name="splitContainer1"
-        RowDefinitions="205,4,*"
+        RowDefinitions="205,6,*"
+        Background="Transparent"
         TabIndex="0">
     <gitui:RevisionGridControl x:Name="RevisionGrid"
                                Grid.Row="0"
@@ -21,10 +24,12 @@
                   ResizeDirection="Rows" />
     <Grid x:Name="splitContainer3"
           Grid.Row="2"
-          ColumnDefinitions="188,4,*"
+          ColumnDefinitions="188,6,*"
+          Background="Transparent"
           TabIndex="1">
       <gitui:FileStatusList x:Name="DiffFiles"
                             Grid.Column="0"
+                            Background="Transparent"
                             TabIndex="0" />
       <GridSplitter Grid.Column="1"
                     Width="4"
@@ -32,6 +37,7 @@
                     ResizeDirection="Columns" />
       <editor:FileViewer x:Name="diffViewer"
                          Grid.Column="2"
+                         Background="Transparent"
                          TabIndex="1" />
     </Grid>
   </Grid>
