@@ -219,9 +219,12 @@ public partial class FileViewer : GitModuleControl
         UICommandsSourceSet += OnUICommandsSourceSet;
         AttachedToLogicalTree += (_, _) =>
         {
-            if (TryGetUICommandsDirect(out IGitUICommands? commands))
+            _ = TryGetUICommandsDirect(out IGitUICommands? commands)
+                || (this.GetLogicalAncestors().OfType<GitModuleForm>().FirstOrDefault()?.TryGetUICommands(out commands) ?? false);
+            if (commands is not null)
             {
                 BindSettingsCommands(commands);
+                ReloadHotkeys();
             }
         };
 
@@ -379,9 +382,8 @@ public partial class FileViewer : GitModuleControl
     /// <summary>Reloads the configurable FileViewer hotkeys.</summary>
     public void ReloadHotkeys()
     {
-        IGitUICommands? commands = TryGetUICommandsDirect(out IGitUICommands? directCommands)
-            ? directCommands
-            : this.GetLogicalAncestors().OfType<IGitModuleForm>().FirstOrDefault()?.UICommands;
+        _ = TryGetUICommandsDirect(out IGitUICommands? commands)
+            || (this.GetLogicalAncestors().OfType<GitModuleForm>().FirstOrDefault()?.TryGetUICommands(out commands) ?? false);
         if (commands?.GetService(typeof(IHotkeySettingsLoader)) is not IHotkeySettingsLoader)
         {
             return;
