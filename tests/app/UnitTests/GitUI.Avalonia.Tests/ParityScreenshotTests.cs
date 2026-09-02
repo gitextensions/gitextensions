@@ -828,6 +828,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormCommit))
         {
+            context.ResetCommitMessageForCapture();
             return new FormCommit(context.Commands);
         }
 
@@ -2813,6 +2814,16 @@ public sealed partial class ParityScreenshotTests
             7  Avalonia Contributor  }
 
             """;
+
+        public void ResetCommitMessageForCapture()
+        {
+            if (_ownsWorkingDirectory)
+            {
+                string gitDirectory = Module.WorkingDirGitDir;
+                File.Delete(Path.Combine(gitDirectory, "COMMITMESSAGE"));
+                File.Delete(Path.Combine(gitDirectory, "GitExtensions.amend"));
+            }
+        }
 
         public void Dispose()
         {
