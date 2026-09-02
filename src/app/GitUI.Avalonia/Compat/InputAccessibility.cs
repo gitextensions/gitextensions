@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Text;
 using Avalonia;
 using Avalonia.Automation;
@@ -23,6 +23,8 @@ internal readonly record struct InputControlMetadata(
 // System.Windows.Forms dependency into the portable capture and accessibility assembly.
 internal readonly record struct SourceControlMetadata(string FieldName, string SourceType);
 
+internal readonly record struct DesignerDpiMetadata(decimal Horizontal, decimal Vertical);
+
 // parity-scaffolding: Preserves Designer layout semantics in cross-framework capture trees;
 // rendered bounds and colors remain measured from the native Avalonia controls.
 internal readonly record struct DesignerLayoutMetadata(
@@ -34,7 +36,9 @@ internal readonly record struct DesignerLayoutMetadata(
     Thickness? Padding,
     string? Alignment,
     string? BorderStyle,
-    string? FlatStyle);
+    string? FlatStyle,
+    bool HasExplicitForeground,
+    bool HasExplicitBackground);
 
 internal static class InputAccessibility
 {
@@ -90,7 +94,7 @@ internal static class InputAccessibility
                     KeyboardNavigation.SetTabIndex(control, tabIndex);
                 }
 
-                if (item.IsTabStop is bool isTabStop)
+                if (item.IsTabStop is bool isTabStop && control is not RadioButton)
                 {
                     KeyboardNavigation.SetIsTabStop(control, isTabStop);
                 }
@@ -102,6 +106,12 @@ internal static class InputAccessibility
             }
         }
 
+        foreach (RadioButton radioButton in fields.Values.OfType<RadioButton>().Distinct())
+        {
+            ApplyRadioButtonTabStop(radioButton);
+            radioButton.IsCheckedChanged += (_, _) => ApplyRadioButtonTabStop(radioButton);
+        }
+
         foreach (Control control in EnumerateControls(host, fields))
         {
             ApplyAutomationProperties(control);
@@ -109,6 +119,9 @@ internal static class InputAccessibility
 
         host.AddHandler(InputElement.KeyDownEvent, HandleContextMenuKey, RoutingStrategies.Bubble);
     }
+
+    private static void ApplyRadioButtonTabStop(RadioButton radioButton)
+        => KeyboardNavigation.SetIsTabStop(radioButton, radioButton.IsChecked == true);
 
     internal static bool IsActionable(Control control)
         => control is Button

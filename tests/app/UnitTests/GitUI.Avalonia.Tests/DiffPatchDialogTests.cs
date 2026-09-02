@@ -169,12 +169,14 @@ public sealed class DiffPatchDialogTests
             form.FindControl<Label>("lblSecondCommit")!.Bounds.Should().Be(new Avalonia.Rect(3, 6, 200, 15));
             form.FindControl<Label>("lblFirstCommit")!.TabIndex.Should().Be(14);
             form.FindControl<Label>("lblSecondCommit")!.TabIndex.Should().Be(1);
-            firstPanel.Bounds.X.Should().Be(3, "the first commit panel keeps the original group-box inset");
+            firstPanel.Bounds.X.Should().Be(
+                -3,
+                "Avalonia's six-DIP content presenter combines with this offset to preserve the original three-DIP group-box inset");
             firstPanel.Bounds.Width.Should().Be(491);
             swap.Bounds.Y.Should().Be(21);
             options.Bounds.X.Should().Be(3, "the options panel keeps the original left margin");
             options.Bounds.Y.Should().Be(53);
-            options.Bounds.Width.Should().Be(412);
+            options.Bounds.Width.Should().Be(413);
             options.Bounds.Height.Should().Be(25);
             split.Bounds.X.Should().Be(3, "the split panel keeps the original left margin");
             split.Bounds.Y.Should().Be(115);
@@ -226,8 +228,9 @@ public sealed class DiffPatchDialogTests
             Label currentBranch = form.FindControl<Label>("CurrentBranch")!;
             selectedBranch.Bounds.X.Should().Be(3);
             selectedBranch.Bounds.Y.Should().Be(0);
+            selectedBranch.Bounds.Width.Should().Be(120);
             selectedBranch.Bounds.Height.Should().Be(15);
-            currentBranch.Bounds.X.Should().BeGreaterThan(selectedBranch.Bounds.Right);
+            currentBranch.Bounds.X.Should().Be(129);
             currentBranch.Bounds.Y.Should().Be(0);
             currentBranch.Bounds.Height.Should().Be(15);
             output.TabIndex.Should().Be(1);
