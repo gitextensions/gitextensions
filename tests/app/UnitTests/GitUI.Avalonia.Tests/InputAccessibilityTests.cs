@@ -9,11 +9,17 @@ using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using GitCommands;
+using GitCommands.Git;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.ParityCapture;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
+using GitUIPluginInterfaces;
+using NSubstitute;
 using WinFormsInputParityToAvalonia;
 using WinFormsKeys = GitExtensions.Shims.WinForms.Keys;
 
@@ -50,6 +56,9 @@ public sealed class InputAccessibilityTests
         WinFormsInputMetadata.SourceByType["GitUI.CommandsDialogs.FormBrowse"]
             .Single(item => item.FieldName == "toolStripButtonPull")
             .SourceType.Should().Be("ToolStripSplitButton");
+        WinFormsInputMetadata.AutoSizeRootTypes.Should().Contain("GitUI.CommandsDialogs.FormCompareToBranch");
+        WinFormsInputMetadata.DesignerDpiByType["GitUI.CommandsDialogs.FormFormatPatch"]
+            .Should().Be(new DesignerDpiMetadata(120, 120));
     }
 
     [Test]
@@ -92,6 +101,22 @@ public sealed class InputAccessibilityTests
                 "GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage"]
             .Single(item => item.FieldName == "menuHelp")
             .AutoSize.Should().BeTrue();
+
+        IReadOnlyList<DesignerLayoutMetadata> formatPatch = WinFormsInputMetadata.LayoutByType[
+            "GitUI.CommandsDialogs.FormFormatPatch"];
+        formatPatch.Single(item => item.FieldName == "Browse").Margin.Should().Be(new Thickness(3));
+        formatPatch.Single(item => item.FieldName == "lblPatches").Padding.Should().Be(new Thickness(0, 5, 0, 0));
+
+        IReadOnlyList<DesignerLayoutMetadata> stash = WinFormsInputMetadata.LayoutByType[
+            "GitUI.CommandsDialogs.FormStash"];
+        stash.Single(item => item.FieldName == "StashKeepIndex").Margin.Should().Be(new Thickness(3));
+        stash.Single(item => item.FieldName == "toolStrip1").Padding.Should().Be(new Thickness(2));
+
+        DesignerLayoutMetadata branchChanges = WinFormsInputMetadata.LayoutByType[
+                "GitUI.UserControls.BranchSelector"]
+            .Single(item => item.FieldName == "lbChanges");
+        branchChanges.HasExplicitForeground.Should().BeTrue();
+        branchChanges.HasExplicitBackground.Should().BeFalse();
     }
 
     [AvaloniaTest]
@@ -137,6 +162,26 @@ public sealed class InputAccessibilityTests
 
         clone.Close();
         commit.Close();
+    }
+
+    [AvaloniaTest]
+    public void Radio_button_TabStop_should_follow_the_checked_control_like_WinForms()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetRefs(Arg.Any<RefsFilter>()).Returns([]);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        FormCompareToBranch form = new(commands, default);
+        GitUI.UserControls.BranchSelector.TestAccessor accessor = form.GetTestAccessor().BranchSelector.GetTestAccessor();
+
+        KeyboardNavigation.GetIsTabStop(accessor.LocalBranch).Should().BeFalse();
+        KeyboardNavigation.GetIsTabStop(accessor.Remotebranch).Should().BeTrue();
+
+        accessor.LocalBranch.IsChecked = true;
+
+        KeyboardNavigation.GetIsTabStop(accessor.LocalBranch).Should().BeTrue();
+        KeyboardNavigation.GetIsTabStop(accessor.Remotebranch).Should().BeFalse();
+        form.Close();
     }
 
     [AvaloniaTest]

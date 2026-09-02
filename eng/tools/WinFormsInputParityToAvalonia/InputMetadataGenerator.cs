@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -54,6 +54,8 @@ public static partial class InputMetadataGenerator
                     StringComparer.Ordinal);
 
                 string designerSource = File.ReadAllText(designerPath);
+                bool rootAutoSize = RootAutoSizeRegex().IsMatch(designerSource);
+                DesignerDpiScale designerDpiScale = GetDesignerDpiScale(designerSource);
                 foreach (Match construction in ConstructionRegex().Matches(designerSource))
                 {
                     if (controls.TryGetValue(construction.Groups["field"].Value, out MutableControlMetadata? constructedMetadata))
@@ -92,10 +94,10 @@ public static partial class InputMetadataGenerator
                             metadata.AutoSize = bool.Parse(value);
                             break;
                         case "Margin":
-                            metadata.Margin = ParsePadding(value);
+                            metadata.Margin = NormalizeThickness(ParsePadding(value), designerDpiScale);
                             break;
                         case "Padding":
-                            metadata.Padding = ParsePadding(value);
+                            metadata.Padding = NormalizeThickness(ParsePadding(value), designerDpiScale);
                             break;
                         case "TextAlign":
                             metadata.Alignment = ParseEnum(value, value.Contains("ContentAlignment.", StringComparison.Ordinal)
@@ -107,6 +109,12 @@ public static partial class InputMetadataGenerator
                             break;
                         case "FlatStyle":
                             metadata.FlatStyle = ParseEnum(value, "FlatStyle.");
+                            break;
+                        case "ForeColor":
+                            metadata.HasExplicitForeground = true;
+                            break;
+                        case "BackColor":
+                            metadata.HasExplicitBackground = true;
                             break;
                         case "SizeMode":
                             if (ParseEnum(value, "PictureBoxSizeMode.") == "AutoSize")
@@ -139,7 +147,9 @@ public static partial class InputMetadataGenerator
                         pair.Value.Padding,
                         pair.Value.Alignment,
                         pair.Value.BorderStyle,
-                        pair.Value.FlatStyle))
+                        pair.Value.FlatStyle,
+                        pair.Value.HasExplicitForeground,
+                        pair.Value.HasExplicitBackground))
                     .ToArray();
                 SourceControlMetadata[] sourceControls = controls
                     .Where(pair => pair.Value.SourceType is not null)
@@ -148,7 +158,7 @@ public static partial class InputMetadataGenerator
                     .ToArray();
                 if (projected.Length > 0 || layout.Length > 0 || sourceControls.Length > 0)
                 {
-                    views.Add(new ViewMetadata(className, projected, layout, sourceControls));
+                    views.Add(new ViewMetadata(className, rootAutoSize, designerDpiScale, projected, layout, sourceControls));
                 }
             }
         }
@@ -199,6 +209,28 @@ public static partial class InputMetadataGenerator
 
         AppendLine("        };");
         AppendLine();
+        AppendLine("    internal static IReadOnlySet<string> AutoSizeRootTypes { get; } =");
+        AppendLine("        new HashSet<string>(StringComparer.Ordinal)");
+        AppendLine("        {");
+        foreach (ViewMetadata view in views.Where(view => view.RootAutoSize).OrderBy(view => view.ClassName, StringComparer.Ordinal))
+        {
+            AppendLine($"            \"{EscapeString(view.ClassName)}\",");
+        }
+
+        AppendLine("        };");
+        AppendLine();
+        AppendLine("    internal static IReadOnlyDictionary<string, DesignerDpiMetadata> DesignerDpiByType { get; } =");
+        AppendLine("        new Dictionary<string, DesignerDpiMetadata>(StringComparer.Ordinal)");
+        AppendLine("        {");
+        foreach (ViewMetadata view in views.Where(view => !view.DesignerDpiScale.IsIdentity).OrderBy(view => view.ClassName, StringComparer.Ordinal))
+        {
+            string horizontal = view.DesignerDpiScale.Horizontal.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            string vertical = view.DesignerDpiScale.Vertical.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            AppendLine($"            [\"{EscapeString(view.ClassName)}\"] = new({horizontal}, {vertical}),");
+        }
+
+        AppendLine("        };");
+        AppendLine();
         AppendLine("    internal static IReadOnlyDictionary<string, IReadOnlyList<SourceControlMetadata>> SourceByType { get; } =");
         AppendLine("        new Dictionary<string, IReadOnlyList<SourceControlMetadata>>(StringComparer.Ordinal)");
         AppendLine("        {");
@@ -235,7 +267,9 @@ public static partial class InputMetadataGenerator
                 string alignment = ToNullableString(control.Alignment);
                 string borderStyle = ToNullableString(control.BorderStyle);
                 string flatStyle = ToNullableString(control.FlatStyle);
-                AppendLine($"                new(\"{EscapeString(control.FieldName)}\", {anchor}, {dock}, {autoSize}, {margin}, {padding}, {alignment}, {borderStyle}, {flatStyle}),");
+                string hasExplicitForeground = control.HasExplicitForeground.ToString().ToLowerInvariant();
+                string hasExplicitBackground = control.HasExplicitBackground.ToString().ToLowerInvariant();
+                AppendLine($"                new(\"{EscapeString(control.FieldName)}\", {anchor}, {dock}, {autoSize}, {margin}, {padding}, {alignment}, {borderStyle}, {flatStyle}, {hasExplicitForeground}, {hasExplicitBackground}),");
             }
 
             AppendLine("            ],");
@@ -310,6 +344,45 @@ public static partial class InputMetadataGenerator
         };
     }
 
+    private static DesignerDpiScale GetDesignerDpiScale(string designerSource)
+    {
+        if (!DpiAutoScaleModeRegex().IsMatch(designerSource))
+        {
+            return DesignerDpiScale.Identity;
+        }
+
+        Match dimensions = AutoScaleDimensionsRegex().Match(designerSource);
+        if (!dimensions.Success)
+        {
+            throw new InvalidDataException("A DPI-scaled Designer must declare AutoScaleDimensions.");
+        }
+
+        decimal horizontal = decimal.Parse(
+            dimensions.Groups["horizontal"].Value,
+            System.Globalization.CultureInfo.InvariantCulture);
+        decimal vertical = decimal.Parse(
+            dimensions.Groups["vertical"].Value,
+            System.Globalization.CultureInfo.InvariantCulture);
+        if (horizontal <= 0 || vertical <= 0)
+        {
+            throw new InvalidDataException("Designer AutoScaleDimensions must be positive.");
+        }
+
+        return new DesignerDpiScale(horizontal, vertical);
+    }
+
+    private static ThicknessValue? NormalizeThickness(ThicknessValue? value, DesignerDpiScale scale)
+        => value is null
+            ? null
+            : new ThicknessValue(
+                NormalizeDimension(value.Left, scale.HorizontalScale),
+                NormalizeDimension(value.Top, scale.VerticalScale),
+                NormalizeDimension(value.Right, scale.HorizontalScale),
+                NormalizeDimension(value.Bottom, scale.VerticalScale));
+
+    private static int NormalizeDimension(int value, decimal scale)
+        => decimal.ToInt32(decimal.Round(value * scale, 0, MidpointRounding.AwayFromZero));
+
     private static string ToNullableString(string? value)
         => value is null ? "null" : $"\"{EscapeString(value)}\"";
 
@@ -318,7 +391,7 @@ public static partial class InputMetadataGenerator
             ? "null"
             : $"new Avalonia.Thickness({value.Left}, {value.Top}, {value.Right}, {value.Bottom})";
 
-    [GeneratedRegex("^\\s*(?:this\\.)?(?<field>[A-Za-z_][A-Za-z0-9_]*)\\.(?<property>TabIndex|TabStop|AccessibleName|Anchor|Dock|AutoSize|Margin|Padding|TextAlign|BorderStyle|FlatStyle|SizeMode)\\s*=\\s*(?<value>.*?);\\s*$", RegexOptions.CultureInvariant | RegexOptions.Multiline | RegexOptions.Singleline)]
+    [GeneratedRegex("^\\s*(?:this\\.)?(?<field>[A-Za-z_][A-Za-z0-9_]*)\\.(?<property>TabIndex|TabStop|AccessibleName|Anchor|Dock|AutoSize|Margin|Padding|TextAlign|BorderStyle|FlatStyle|SizeMode|ForeColor|BackColor)\\s*=\\s*(?<value>.*?);\\s*$", RegexOptions.CultureInvariant | RegexOptions.Multiline | RegexOptions.Singleline)]
     private static partial Regex AssignmentRegex();
 
     [GeneratedRegex("^\\s*(?:this\\.)?(?<field>[A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*new\\s+(?:global::)?(?<type>[A-Za-z_][A-Za-z0-9_.]*)\\s*\\(", RegexOptions.CultureInvariant | RegexOptions.Multiline)]
@@ -326,6 +399,15 @@ public static partial class InputMetadataGenerator
 
     [GeneratedRegex("^new Padding\\((?:(?<value>-?[0-9]+)\\s*,?\\s*)+\\)$", RegexOptions.CultureInvariant)]
     private static partial Regex PaddingRegex();
+
+    [GeneratedRegex("^\\s*(?:this\\.)?AutoScaleMode\\s*=\\s*AutoScaleMode\\.Dpi\\s*;\\s*$", RegexOptions.CultureInvariant | RegexOptions.Multiline)]
+    private static partial Regex DpiAutoScaleModeRegex();
+
+    [GeneratedRegex("^\\s*(?:this\\.)?AutoScaleDimensions\\s*=\\s*new SizeF\\((?<horizontal>[0-9]+(?:\\.[0-9]+)?)F?\\s*,\\s*(?<vertical>[0-9]+(?:\\.[0-9]+)?)F?\\)\\s*;\\s*$", RegexOptions.CultureInvariant | RegexOptions.Multiline)]
+    private static partial Regex AutoScaleDimensionsRegex();
+
+    [GeneratedRegex("^\\s*(?:this\\.)?AutoSize\\s*=\\s*true\\s*;\\s*$", RegexOptions.CultureInvariant | RegexOptions.Multiline)]
+    private static partial Regex RootAutoSizeRegex();
 
     private sealed class MutableControlMetadata
     {
@@ -353,6 +435,10 @@ public static partial class InputMetadataGenerator
 
         public string? SourceType { get; set; }
 
+        public bool HasExplicitForeground { get; set; }
+
+        public bool HasExplicitBackground { get; set; }
+
         public bool HasValue => TabIndex is not null || IsTabStop is not null || AccessibleName is not null;
 
         public bool HasLayoutValue => Anchor is not null
@@ -362,11 +448,15 @@ public static partial class InputMetadataGenerator
             || Padding is not null
             || Alignment is not null
             || BorderStyle is not null
-            || FlatStyle is not null;
+            || FlatStyle is not null
+            || HasExplicitForeground
+            || HasExplicitBackground;
     }
 
     private sealed record ViewMetadata(
         string ClassName,
+        bool RootAutoSize,
+        DesignerDpiScale DesignerDpiScale,
         IReadOnlyList<ControlMetadata> Controls,
         IReadOnlyList<LayoutControlMetadata> Layout,
         IReadOnlyList<SourceControlMetadata> SourceControls);
@@ -384,7 +474,20 @@ public static partial class InputMetadataGenerator
         ThicknessValue? Padding,
         string? Alignment,
         string? BorderStyle,
-        string? FlatStyle);
+        string? FlatStyle,
+        bool HasExplicitForeground,
+        bool HasExplicitBackground);
 
     private sealed record ThicknessValue(int Left, int Top, int Right, int Bottom);
+
+    private readonly record struct DesignerDpiScale(decimal Horizontal, decimal Vertical)
+    {
+        public static DesignerDpiScale Identity { get; } = new(96m, 96m);
+
+        public bool IsIdentity => this == Identity;
+
+        public decimal HorizontalScale => 96m / Horizontal;
+
+        public decimal VerticalScale => 96m / Vertical;
+    }
 }

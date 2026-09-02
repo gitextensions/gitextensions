@@ -139,6 +139,13 @@ public partial class FormFormatPatch : GitModuleForm
 
     private void WireEvents()
     {
+        EventHandler? focusInitialControl = null;
+        focusInitialControl = (_, _) =>
+        {
+            Activated -= focusInitialControl;
+            OutputPath.Focus();
+        };
+        Activated += focusInitialControl;
         Browse.Click += Browse_Click;
         FormatPatch.Click += FormatPatch_Click;
     }

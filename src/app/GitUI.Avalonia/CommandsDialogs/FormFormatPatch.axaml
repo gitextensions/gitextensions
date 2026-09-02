@@ -4,6 +4,8 @@
         x:Class="GitUI.CommandsDialogs.FormFormatPatch"
         Width="824"
         Height="532"
+        Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
+        Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
         MinWidth="446"
         MinHeight="316"
         CanResize="True"
@@ -60,6 +62,7 @@
                 Orientation="Horizontal"
                 TabIndex="2">
       <Label x:Name="SelectedBranch"
+             Width="120"
              Height="15"
              Margin="3,0"
              Padding="0"

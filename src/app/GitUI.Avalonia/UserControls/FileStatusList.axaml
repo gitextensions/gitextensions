@@ -11,6 +11,7 @@
       <Setter Property="MinHeight" Value="22" />
       <Setter Property="Margin" Value="0,1,0,2" />
       <Setter Property="VerticalAlignment" Value="Top" />
+      <Setter Property="Background" Value="Transparent" />
     </Style>
     <Style Selector="Separator.gitextensions-toolbar-separator.filestatus-toolbar-separator">
       <Setter Property="Width" Value="6" />
@@ -96,7 +97,7 @@
     </ContextMenu>
   </UserControl.ContextMenu>
   <DockPanel>
-    <StackPanel x:Name="Toolbar" DockPanel.Dock="Top" Orientation="Horizontal" Height="25" Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
+    <StackPanel x:Name="Toolbar" DockPanel.Dock="Top" Orientation="Horizontal" Height="25" Background="Transparent">
       <Button x:Name="btnCollapseGroups" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" Height="22" MinHeight="22" Margin="0,1,0,2" ToolTip.Tip="Collapse all groups, otherwise expand the selected group" IsVisible="False">
         <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CollapseAll}" />
       </Button>

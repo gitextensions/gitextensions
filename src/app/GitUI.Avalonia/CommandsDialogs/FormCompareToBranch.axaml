@@ -4,17 +4,14 @@
         x:Class="GitUI.CommandsDialogs.FormCompareToBranch"
         Width="434"
         Height="106"
+        Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
+        Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
         CanResize="False"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Title="Compare to branch">
   <Canvas Width="434"
           Height="106">
-    <controls:BranchSelector x:Name="branchSelector"
-                             Width="322"
-                             Height="58"
-                             Margin="8"
-                             TabIndex="0" />
     <Button x:Name="btnCompare"
             Canvas.Left="349"
             Canvas.Top="75"
@@ -25,5 +22,10 @@
             TabIndex="1"
             Content="Compare"
             IsDefault="True" />
+    <controls:BranchSelector x:Name="branchSelector"
+                             Width="322"
+                             Height="58"
+                             Margin="8"
+                             TabIndex="0" />
   </Canvas>
 </Window>
