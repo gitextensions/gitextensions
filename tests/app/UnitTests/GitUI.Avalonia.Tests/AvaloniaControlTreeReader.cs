@@ -31,8 +31,7 @@ internal sealed class AvaloniaControlTreeReader
         _renderScale = renderScale;
         _primaryScreenOrigin = primaryScreenOrigin ?? default;
         string? rootType = root.GetType().FullName;
-        _usesDesignerLayoutMetadata = root is Window
-            && rootType is not null
+        _usesDesignerLayoutMetadata = rootType is not null
             && (WinFormsInputMetadata.ByType.ContainsKey(rootType)
                 || WinFormsInputMetadata.LayoutByType.ContainsKey(rootType)
                 || WinFormsInputMetadata.SourceByType.ContainsKey(rootType));
@@ -646,6 +645,8 @@ internal sealed class AvaloniaControlTreeReader
                 ? ReadComboBoxPopupColors()
                 : formCommitSemanticColors is not null
                     ? formCommitSemanticColors
+                : isSurfaceRoot && control is not Window && _usesDesignerLayoutMetadata
+                    ? ReadSourceDesignerColors(control)
                 : isFormBrowseToolStripContainer
                     ? ReadFormBrowseToolStripContainerColors()
                 : isFormBrowseMenuStrip
@@ -704,6 +705,8 @@ internal sealed class AvaloniaControlTreeReader
                                                         ? ReadFileViewerTextEditorColors()
                                                     : isFileViewerPictureBox
                                                         ? ReadFileViewerPictureBoxColors(control)
+                                                    : isDesignerMetadataControl && IsSourceAmbientControl(sourceType)
+                                                        ? ReadSourceDesignerColors(control)
                                                     : IsSourceControlTextControl(control, fieldName, sourceType)
                                                         ? ReadSourceControlTextColors(control)
                                                     : hasSourceTransparentColors
@@ -712,9 +715,7 @@ internal sealed class AvaloniaControlTreeReader
                                                             ? ReadLightTransparentColors(control)
                                                             : isDesignerMetadataControl && control.Name == "lblHeaderLine2"
                                                                 ? ReadSourceDesignerColors(control) with { Border = null }
-                                                            : isDesignerMetadataControl && control is TextBlock or Label or TabItem
-                                                                ? ReadSourceDesignerColors(control)
-                                                                : ReadColors(semanticStateControl),
+                                                            : ReadColors(semanticStateControl),
             BorderStyle = isFormBrowseToolStripContainer
                 ? null
                 : isFormCommitToolStripPanel && semanticName != "_contentPanel"
@@ -1062,6 +1063,10 @@ internal sealed class AvaloniaControlTreeReader
 
     private static string? GetSourceTypeName(string? sourceType)
         => sourceType is null ? null : sourceType[(sourceType.LastIndexOf('.') + 1)..];
+
+    private static bool IsSourceAmbientControl(string? sourceType)
+        => GetSourceTypeName(sourceType) is "FlowLayoutPanel" or "GroupBox" or "Label" or "LinkLabel"
+            or "Panel" or "PictureBox" or "SettingsCheckBox" or "TableLayoutPanel";
 
     private static Thickness GetDefaultDesignerMargin(Control control)
         => control is TextBlock or Label or HyperlinkButton ? new Thickness(3, 0) : new Thickness(3);
@@ -2931,11 +2936,7 @@ internal sealed class AvaloniaControlTreeReader
         bool isPreviewLink = control.Name == "_NO_TRANSLATE_lblShowPreview";
         bool isHelpLink = control.Name is "linkLabelShowHelp" or "linkLabelHide";
         bool isDesignerLink = control is HyperlinkButton && IsDesignerMetadataControl(control);
-        string? background = control.GetLogicalAncestors()
-            .OfType<Control>()
-            .Select(ancestor => BrushToArgb(GetPropertyValue(ancestor, "Background")))
-            .FirstOrDefault(color => color is not null)
-            ?? ResolveResourceArgb("GitExtensionsWindowBackgroundBrush");
+        string? background = ResolveSourceAmbientBackground(control, "GitExtensionsWindowBackgroundBrush");
         return colors with
         {
             Foreground = isPreviewLink || isHelpLink || isDesignerLink
@@ -2959,27 +2960,51 @@ internal sealed class AvaloniaControlTreeReader
     private CaptureColors ReadSourceDesignerColors(Control control)
     {
         CaptureColors colors = ReadColors(control);
+        string? background = ResolveSourceAmbientBackground(control, "GitExtensionsControlBackgroundBrush");
         return colors with
         {
-            Foreground = ResolveSourceControlTextArgb()
+            Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                         ?? ResolveSourceControlTextArgb()
                          ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
+            Background = background,
+            Border = null,
+            SelectionForeground = null,
+            SelectionBackground = null,
+            InactiveSelectionForeground = null,
+            InactiveSelectionBackground = null,
+            DisabledBackground = background,
             DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
                                  ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush")
         };
     }
 
+    private static IEnumerable<Control> EnumerateSelfAndLogicalAncestors(Control control)
+    {
+        yield return control;
+        foreach (Control ancestor in control.GetLogicalAncestors().OfType<Control>())
+        {
+            yield return ancestor;
+        }
+    }
+
+    private static bool IsVisibleBackground(string? color)
+        => color is not null && !color.StartsWith("#00", StringComparison.Ordinal);
+
+    private string? ResolveSourceAmbientBackground(Control control, string fallbackResource)
+        => EnumerateSelfAndLogicalAncestors(control)
+               .Select(candidate => BrushToArgb(GetPropertyValue(candidate, "Background")))
+               .FirstOrDefault(IsVisibleBackground)
+           ?? ResolveResourceArgb(fallbackResource);
+
     private CaptureColors ReadSourceDesignerButtonColors(Control control)
     {
         CaptureColors colors = ReadColors(control);
-        string? background = control.GetLogicalAncestors()
-            .OfType<Control>()
-            .Select(ancestor => BrushToArgb(GetPropertyValue(ancestor, "Background")))
-            .FirstOrDefault(color => color is not null)
-            ?? ResolveResourceArgb("GitExtensionsControlBackgroundBrush");
+        string? background = ResolveSourceAmbientBackground(control, "GitExtensionsControlBackgroundBrush");
         bool isTransparentSourceButton = control.Name == "btnRemoteColor";
         return colors with
         {
-            Foreground = ResolveSourceControlTextArgb()
+            Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                         ?? ResolveSourceControlTextArgb()
                          ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
             Background = isTransparentSourceButton ? "#00FFFFFF" : background,
             Border = null,

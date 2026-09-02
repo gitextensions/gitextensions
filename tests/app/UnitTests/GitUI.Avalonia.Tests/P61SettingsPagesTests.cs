@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.ParityCapture;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -499,6 +500,44 @@ public sealed class P61SettingsPagesTests
     }
 
     [AvaloniaTest]
+    public void Standalone_settings_page_capture_should_preserve_source_designer_semantics()
+    {
+        BlameViewerSettingsPage page = new();
+        Window window = new()
+        {
+            Content = page,
+            Width = 341,
+            Height = 272,
+            SizeToContent = SizeToContent.Manual,
+        };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            CaptureNode root = new AvaloniaControlTreeReader(page, renderScale: 1)
+                .ReadPrimary(page, new Avalonia.PixelSize(341, 272))
+                .Root;
+            CaptureNode group = Flatten(root).Single(node => node.FieldName == "groupBoxBlameSettings");
+            CaptureNode table = Flatten(root).Single(node => node.FieldName == "tableLayoutPanelBlameSettings");
+
+            group.Anchor.Should().Equal("Top", "Left", "Right");
+            group.Dock.Should().Be("None");
+            group.AutoSize.Should().BeTrue();
+            group.Colors.Background.Should().Be(root.Colors.Background);
+            group.Colors.DisabledBackground.Should().Be(root.Colors.Background);
+            group.Colors.Border.Should().BeNull();
+            table.Dock.Should().Be("Fill");
+            table.AutoSize.Should().BeTrue();
+        }
+        finally
+        {
+            window.Close();
+            (page as IDisposable)?.Dispose();
+        }
+    }
+
+    [AvaloniaTest]
     public void Missing_pages_should_preserve_original_translation_keys()
     {
         ITranslation translation = Substitute.For<ITranslation>();
@@ -587,6 +626,15 @@ public sealed class P61SettingsPagesTests
             {
                 (view as IDisposable)?.Dispose();
             }
+        }
+    }
+
+    private static IEnumerable<CaptureNode> Flatten(CaptureNode node)
+    {
+        yield return node;
+        foreach (CaptureNode child in node.Children.SelectMany(Flatten))
+        {
+            yield return child;
         }
     }
 
