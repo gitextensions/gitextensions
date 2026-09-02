@@ -35,10 +35,11 @@
             RowDefinitions="268,6,*">
         <Grid x:Name="toolStripContainer1"
               Grid.Row="0"
-              Margin="1">
-          <DockPanel>
+              Margin="1"
+              RowDefinitions="Auto,*">
+          <Grid x:Name="_topPanel"
+                Grid.Row="0">
             <StackPanel x:Name="toolbarSelectionFilter"
-                        DockPanel.Dock="Top"
                         Height="25"
                         Margin="2,0,0,0"
                         Orientation="Horizontal"
@@ -52,12 +53,28 @@
                         Width="121"
                         IsEditable="True" />
             </StackPanel>
-            <Grid>
-              <gitui:FileStatusList x:Name="Unstaged" />
-              <revisionGrid:LoadingControl x:Name="Loading"
-                                           IsVisible="False" />
-            </Grid>
-          </DockPanel>
+          </Grid>
+          <Grid x:Name="_bottomPanel"
+                Grid.RowSpan="2"
+                Height="0"
+                VerticalAlignment="Bottom"
+                IsHitTestVisible="False" />
+          <Grid x:Name="_leftPanel"
+                Grid.RowSpan="2"
+                Width="0"
+                HorizontalAlignment="Left"
+                IsHitTestVisible="False" />
+          <Grid x:Name="_rightPanel"
+                Grid.RowSpan="2"
+                Width="0"
+                HorizontalAlignment="Right"
+                IsHitTestVisible="False" />
+          <Grid x:Name="_contentPanel"
+                Grid.Row="1">
+            <gitui:FileStatusList x:Name="Unstaged" />
+            <revisionGrid:LoadingControl x:Name="Loading"
+                                         IsVisible="False" />
+          </Grid>
         </Grid>
 
         <GridSplitter Grid.Row="1"
@@ -88,8 +105,7 @@
                                Width="70"
                                Height="23"
                                Icon="{x:Static properties:Images.Unstage}"
-                               Content="_Unstage"
-                               IsEnabled="False" />
+                               Content="_Unstage" />
             <compat:IconButton x:Name="toolStageItem"
                                Grid.Column="5"
                                Width="56"
@@ -184,7 +200,6 @@
                       ToolTip.Tip="Stage current submodule in superproject after commit"
                       IsVisible="False" />
             <CheckBox x:Name="Amend"
-                      Width="97"
                       Height="19"
                       Margin="0,3"
                       VerticalContentAlignment="Center"
@@ -205,8 +220,7 @@
                                  Margin="0,3"
                                  Icon="{x:Static properties:Images.ResetCurrentBranchToHere}"
                                  Content="Reset so_ft"
-                                 ToolTip.Tip="Perform a soft reset to the previous commit; leaves working directory and index untouched"
-                                 IsEnabled="False" />
+                                 ToolTip.Tip="Perform a soft reset to the previous commit; leaves working directory and index untouched" />
             </StackPanel>
             <compat:IconButton x:Name="StashStaged"
                                Width="171"
@@ -395,7 +409,9 @@
         <HyperlinkButton x:Name="commitAuthorStatus"
                          compat:TranslationCompat.TranslateToolTip="False"
                          Grid.Column="0"
+                         Height="17"
                          Padding="0"
+                         HorizontalAlignment="Stretch"
                          VerticalAlignment="Center" />
         <ProgressBar x:Name="toolStripProgressBar1"
                      Grid.Column="1"

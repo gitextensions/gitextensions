@@ -187,6 +187,8 @@ public sealed partial class FormCommit : GitModuleForm
         WinFormsAutoSizeTextBlock.Attach(commitStagedCountLabel);
         WinFormsAutoSizeTextBlock.Attach(commitCursorLineLabel);
         WinFormsAutoSizeTextBlock.Attach(commitCursorColumnLabel);
+        WinFormsAutoSizeContentControl.Attach(Amend, 26, 19);
+        WinFormsAutoSizeContentControl.Attach(ResetAuthor, 26, 19);
         toolStripStatusBranchIcon.Source = Properties.Images.Branch.AdaptLightness();
         InitializeComplete();
     }
@@ -207,6 +209,8 @@ public sealed partial class FormCommit : GitModuleForm
         WinFormsAutoSizeTextBlock.Attach(commitStagedCountLabel);
         WinFormsAutoSizeTextBlock.Attach(commitCursorLineLabel);
         WinFormsAutoSizeTextBlock.Attach(commitCursorColumnLabel);
+        WinFormsAutoSizeContentControl.Attach(Amend, 26, 19);
+        WinFormsAutoSizeContentControl.Attach(ResetAuthor, 26, 19);
         RestoreSplitters();
         toolStripStatusBranchIcon.Source = Properties.Images.Branch.AdaptLightness();
 
@@ -308,12 +312,10 @@ public sealed partial class FormCommit : GitModuleForm
         bool closeAfterCommit = AppSettings.CloseCommitDialogAfterCommit;
         bool closeAfterLastCommit = AppSettings.CloseCommitDialogAfterLastCommit;
         bool refreshOnFocus = AppSettings.RefreshArtificialCommitOnApplicationActivated;
-        bool selectStagedOnEnter = AppSettings.CommitDialogSelectStagedOnEnterMessage.Value;
         _skipUpdate = true;
         closeDialogAfterEachCommitToolStripMenuItem.IsChecked = closeAfterCommit;
         closeDialogAfterAllFilesCommittedToolStripMenuItem.IsChecked = closeAfterLastCommit;
         refreshDialogOnFormFocusToolStripMenuItem.IsChecked = refreshOnFocus;
-        tsmiSelectStagedOnEnterMessage.IsChecked = selectStagedOnEnter;
         _skipUpdate = false;
         ShowOnlyMyMessagesToolStripMenuItem.IsChecked = AppSettings.CommitDialogShowOnlyMyMessages;
         toolbarSelectionFilter.IsVisible = AppSettings.CommitDialogSelectionFilter;
@@ -1116,10 +1118,10 @@ public sealed partial class FormCommit : GitModuleForm
     private void UpdateStageButtons()
     {
         bool actionsEnabled = !_indexOperationInProgress && !_commitInProgress;
-        toolStageItem.IsEnabled = actionsEnabled && Unstaged.SelectedGitItems.Any(CanStage);
-        toolStageAllItem.IsEnabled = actionsEnabled && Unstaged.GitItemFilteredStatuses.Any(CanStage);
-        toolUnstageItem.IsEnabled = actionsEnabled && Staged.SelectedGitItems.Count > 0;
-        toolUnstageAllItem.IsEnabled = actionsEnabled && Staged.GitItemFilteredStatuses.Count > 0;
+        toolStageItem.IsEnabled = actionsEnabled;
+        toolStageAllItem.IsEnabled = actionsEnabled;
+        toolUnstageItem.IsEnabled = actionsEnabled;
+        toolUnstageAllItem.IsEnabled = actionsEnabled;
         btnResetUnstagedChanges.IsEnabled = actionsEnabled && Unstaged.GitItemStatuses.Count > 0;
         btnResetAllChanges.IsEnabled = actionsEnabled && (Unstaged.GitItemStatuses.Count > 0 || Staged.GitItemStatuses.Count > 0);
 

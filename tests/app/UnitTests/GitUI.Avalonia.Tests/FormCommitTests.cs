@@ -15,6 +15,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.ParityCapture;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -182,6 +183,9 @@ public sealed class FormCommitTests
             Grid tableLayoutPanel1 = form.FindControl<Grid>("tableLayoutPanel1")!;
             Grid toolbarCommit = form.FindControl<Grid>("toolbarCommit")!;
             StackPanel flowCommitButtons = form.FindControl<StackPanel>("flowCommitButtons")!;
+            Grid toolStripContainer = form.FindControl<Grid>("toolStripContainer1")!;
+            Grid topToolStripPanel = form.FindControl<Grid>("_topPanel")!;
+            Grid contentPanel = form.FindControl<Grid>("_contentPanel")!;
 
             splitMain.ColumnDefinitions.Select(column => column.Width).Should().Equal(
                 new GridLength(397),
@@ -202,6 +206,10 @@ public sealed class FormCommitTests
             splitRight.Bounds.Size.Should().Be(new Size(509, 610));
             flowCommitButtons.Bounds.Width.Should().Be(171);
             toolbarCommit.Bounds.Width.Should().Be(324);
+            topToolStripPanel.GetVisualAncestors().Should().Contain(toolStripContainer);
+            contentPanel.GetVisualAncestors().Should().Contain(toolStripContainer);
+            form.FindControl<StackPanel>("toolbarSelectionFilter")!.GetVisualAncestors().Should().Contain(topToolStripPanel);
+            unstaged.GetVisualAncestors().Should().Contain(contentPanel);
 
             Grid toolbarStaged = form.FindControl<Grid>("toolbarStaged")!;
             toolbarStaged.ColumnDefinitions.Select(column => column.Width).Should().Equal(
@@ -255,6 +263,18 @@ public sealed class FormCommitTests
             form.FindControl<TextBlock>("commitStagedCount")!.Text.Should().Be("1/2");
             form.FindControl<Button>("Commit")!.IsEnabled.Should().BeTrue(
                 "the original validates an empty commit message after the enabled Commit button is invoked");
+            form.FindControl<Button>("toolStageItem")!.IsEnabled.Should().BeTrue();
+            form.FindControl<Button>("toolUnstageItem")!.IsEnabled.Should().BeTrue();
+
+            CaptureNode[] semanticNodes = Flatten(
+                new AvaloniaControlTreeReader(form, renderScale: 1)
+                    .ReadPrimary(form, new PixelSize(918, 644)).Root).ToArray();
+            semanticNodes.Should().Contain(node => node.FieldName == "_topPanel" && node.Dock == "Top");
+            semanticNodes.Should().Contain(node => node.FieldName == "_bottomPanel" && node.Dock == "Bottom");
+            semanticNodes.Should().Contain(node => node.FieldName == "_leftPanel" && node.Dock == "Left");
+            semanticNodes.Should().Contain(node => node.FieldName == "_rightPanel" && node.Dock == "Right");
+            semanticNodes.Should().Contain(node => node.FieldName == "_contentPanel" && node.Dock == "Fill");
+            semanticNodes.Should().NotContain(node => node.FieldName == null && node.ControlKind == "split");
         }
         finally
         {
@@ -893,6 +913,15 @@ public sealed class FormCommitTests
         fileStatusList.SelectedGitItems = [fileStatusList.GitItemStatuses[0]];
         await WaitUntilAsync(() => fileStatusList.SelectedGitItems.Count > 0);
         fileStatusList.GetTestAccessor().DoubleClick();
+    }
+
+    private static IEnumerable<CaptureNode> Flatten(CaptureNode node)
+    {
+        yield return node;
+        foreach (CaptureNode child in node.Children.SelectMany(Flatten))
+        {
+            yield return child;
+        }
     }
 
     private static Task WaitForCountsAsync(FileStatusList unstaged, int unstagedCount, FileStatusList staged, int stagedCount)
