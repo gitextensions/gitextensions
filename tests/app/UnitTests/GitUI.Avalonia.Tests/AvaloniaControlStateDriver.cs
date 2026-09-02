@@ -286,6 +286,17 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
         ActivateContainingTabs(control);
 
+        if (control is GitUI.UserControls.Settings.SettingsCheckBox settingsCheckBox)
+        {
+            Control checkBox = settingsCheckBox.GetTestAccessor().CheckBox;
+            checkBox.Focus(NavigationMethod.Tab);
+            Dispatcher.UIThread.RunJobs();
+            if (IsFocusWithin(control))
+            {
+                return;
+            }
+        }
+
         if (IsFocusWithin(control))
         {
             return;

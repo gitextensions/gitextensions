@@ -32,14 +32,6 @@
                   HorizontalAlignment="Left"
                   Grid.ColumnSpan="2"
                   Content="Show errors when staging files" />
-        <CheckBox x:Name="chkEnsureCommitMessageSecondLineEmpty"
-                  Grid.Row="2"
-                  Width="300"
-                  Height="19"
-                  Margin="3"
-                  HorizontalAlignment="Left"
-                  Grid.ColumnSpan="2"
-                  Content="Ensure the second line of commit message is empty" />
         <CheckBox x:Name="chkWriteCommitMessageInCommitWindow"
                   Grid.Row="3"
                   Width="329"
@@ -105,6 +97,14 @@
                       Content="Reset All Changes" />
           </Grid>
         </GroupBox>
+        <CheckBox x:Name="chkEnsureCommitMessageSecondLineEmpty"
+                  Grid.Row="2"
+                  Width="300"
+                  Height="19"
+                  Margin="3"
+                  HorizontalAlignment="Left"
+                  Grid.ColumnSpan="2"
+                  Content="Ensure the second line of commit message is empty" />
       </Grid>
     </GroupBox>
   </ScrollViewer>

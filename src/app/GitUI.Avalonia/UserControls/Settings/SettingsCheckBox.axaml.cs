@@ -4,6 +4,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Input;
 using GitCommands;
+using GitUI.Compat;
 using GitUI.Properties;
 
 namespace GitUI.UserControls.Settings;
@@ -16,6 +17,7 @@ public partial class SettingsCheckBox : UserControl
     public SettingsCheckBox()
     {
         InitializeComponent();
+        WinFormsAutoSizeContentControl.Attach(checkBox, 26, 19);
         AutomationProperties.SetName(checkBox, Text);
 
         pictureBox.PointerReleased += (_, e) =>
@@ -121,6 +123,6 @@ public partial class SettingsCheckBox : UserControl
     internal readonly struct TestAccessor(SettingsCheckBox control)
     {
         internal CheckBox CheckBox => control.checkBox;
-        internal Image PictureBox => control.pictureBox;
+        internal GitUI.Compat.WinFormsControls.PictureBox PictureBox => control.pictureBox;
     }
 }

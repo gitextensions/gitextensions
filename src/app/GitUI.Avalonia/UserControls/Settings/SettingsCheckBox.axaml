@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:properties="using:GitUI.Properties"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
              x:Class="GitUI.UserControls.Settings.SettingsCheckBox"
              d:DesignWidth="104"
              d:DesignHeight="17">
@@ -15,14 +16,13 @@
     <CheckBox x:Name="checkBox"
               Margin="0,0,2,0"
               Content="Settings text" />
-    <Image x:Name="pictureBox"
-           Width="19"
-           Height="18"
-           Cursor="Hand"
-           Margin="2,0,0,0"
-           Stretch="None"
-           VerticalAlignment="Top"
-           IsVisible="False"
-           Source="{x:Static properties:Images.Information}" />
+    <wf:PictureBox x:Name="pictureBox"
+                   Width="19"
+                   Height="18"
+                   Cursor="Hand"
+                   Margin="2,0,0,0"
+                   VerticalAlignment="Top"
+                   IsVisible="False"
+                   Source="{x:Static properties:Images.Information}" />
   </StackPanel>
 </UserControl>
