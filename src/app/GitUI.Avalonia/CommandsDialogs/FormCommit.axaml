@@ -11,7 +11,20 @@
         Height="644"
         MinWidth="600"
         MinHeight="297"
+        Background="{DynamicResource GitExtensionsOtherBackgroundBrush}"
+        Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
         Title="Commit">
+  <Window.Styles>
+    <Style Selector="gitui|FileStatusList StackPanel#Toolbar">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsPaneBorderBrush}" />
+    </Style>
+    <Style Selector="gitui|FileStatusList StackPanel#Toolbar Button,
+                     gitui|FileStatusList StackPanel#Toolbar ToggleButton,
+                     gitui|FileStatusList StackPanel#Toolbar compat|IconSplitButton,
+                     gitui|FileStatusList StackPanel#Toolbar compat|IconDropDownButton">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
+    </Style>
+  </Window.Styles>
   <Grid RowDefinitions="*,22">
     <Grid x:Name="splitMain"
           Grid.Row="0"
@@ -55,34 +68,43 @@
               RowDefinitions="28,*">
           <Grid x:Name="toolbarStaged"
                 Grid.Row="0"
-                ColumnDefinitions="Auto,6,Auto,*,Auto,6,Auto">
-            <compat:IconButton x:Name="toolUnstageItem"
-                               Grid.Column="0"
-                               Height="23"
-                               Icon="{x:Static properties:Images.Unstage}"
-                               Content="_Unstage"
-                               IsEnabled="False" />
-            <Separator x:Name="toolStripSeparator11"
-                       Grid.Column="1" />
+                Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
+                ColumnDefinitions="2,23,6,70,*,56,6,23,2">
             <compat:IconButton x:Name="toolUnstageAllItem"
                                compat:TranslationCompat.TranslateToolTip="False"
-                               Grid.Column="2"
+                               Grid.Column="1"
                                Width="23"
                                Height="23"
                                Classes="gitextensions-icon-only"
                                Icon="{x:Static properties:Images.UnstageAll}"
                                IsEnabled="False" />
+            <Separator x:Name="toolStripSeparator11"
+                       Classes="gitextensions-toolbar-separator"
+                       Grid.Column="2"
+                       Width="6"
+                       Height="26" />
+            <compat:IconButton x:Name="toolUnstageItem"
+                               Grid.Column="3"
+                               Width="70"
+                               Height="23"
+                               Icon="{x:Static properties:Images.Unstage}"
+                               Content="_Unstage"
+                               IsEnabled="False" />
             <compat:IconButton x:Name="toolStageItem"
-                               Grid.Column="4"
+                               Grid.Column="5"
+                               Width="56"
                                Height="23"
                                Icon="{x:Static properties:Images.Stage}"
                                Content="_Stage"
                                IsEnabled="False" />
             <Separator x:Name="toolStripSeparator10"
-                       Grid.Column="5" />
+                       Classes="gitextensions-toolbar-separator"
+                       Grid.Column="6"
+                       Width="6"
+                       Height="26" />
             <compat:IconButton x:Name="toolStageAllItem"
                                compat:TranslationCompat.TranslateToolTip="False"
-                               Grid.Column="6"
+                               Grid.Column="7"
                                Width="23"
                                Height="23"
                                Classes="gitextensions-icon-only"
@@ -118,6 +140,9 @@
                              HorizontalAlignment="Left"
                              VerticalAlignment="Top"
                              Icon="{x:Static properties:Images.SolveMerge}"
+                             Background="{DynamicResource GitExtensionsMergeConflictsBackgroundBrush}"
+                             Foreground="{DynamicResource GitExtensionsMergeConflictsForegroundBrush}"
+                             FontWeight="Bold"
                              Content="There are unresolved merge conflicts&#x0a;"
                              IsVisible="False" />
         </Grid>
@@ -136,6 +161,7 @@
                       Width="171"
                       Margin="6,6,6,0">
             <compat:IconButton x:Name="Commit"
+                               Width="171"
                                Height="26"
                                Margin="0,0,0,3"
                                Icon="{x:Static properties:Images.RepoStateClean}"
@@ -143,18 +169,22 @@
                                IsEnabled="False" />
             <compat:IconButton x:Name="CommitAndPush"
                                compat:TranslationCompat.TranslateText="False"
+                               Width="171"
                                Height="26"
                                Margin="0,3"
                                Icon="{x:Static properties:Images.ArrowUp}"
                                Content="Commit &amp; _push"
                                IsEnabled="False" />
             <CheckBox x:Name="StageInSuperproject"
+                      Width="130"
                       Height="19"
                       Margin="0,3"
                       VerticalContentAlignment="Center"
                       Content="Stage _in Superproject"
+                      ToolTip.Tip="Stage current submodule in superproject after commit"
                       IsVisible="False" />
             <CheckBox x:Name="Amend"
+                      Width="97"
                       Height="19"
                       Margin="0,3"
                       VerticalContentAlignment="Center"
@@ -164,30 +194,36 @@
                         Margin="12,0,0,0"
                         IsVisible="False">
               <CheckBox x:Name="ResetAuthor"
+                        Width="97"
                         Height="19"
                         Margin="0,3"
                         VerticalContentAlignment="Center"
                         Content="R_eset author" />
               <compat:IconButton x:Name="ResetSoft"
+                                 Width="159"
                                  Height="26"
                                  Margin="0,3"
                                  Icon="{x:Static properties:Images.ResetCurrentBranchToHere}"
                                  Content="Reset so_ft"
+                                 ToolTip.Tip="Perform a soft reset to the previous commit; leaves working directory and index untouched"
                                  IsEnabled="False" />
             </StackPanel>
             <compat:IconButton x:Name="StashStaged"
+                               Width="171"
                                Height="26"
                                Margin="0,3"
                                Icon="{x:Static properties:Images.Stash}"
                                Content="_Stash staged"
                                IsVisible="False" />
             <compat:IconButton x:Name="btnResetAllChanges"
+                               Width="171"
                                Height="26"
                                Margin="0,3"
                                Icon="{x:Static properties:Images.ResetWorkingDirChanges}"
                                Content="_Reset all changes"
                                IsEnabled="False" />
             <compat:IconButton x:Name="btnResetUnstagedChanges"
+                               Width="171"
                                Height="26"
                                Margin="0,3"
                                Icon="{x:Static properties:Images.ResetWorkingDirChanges}"
@@ -285,7 +321,8 @@
                                          Height="23"
                                          Classes="gitextensions-toolbar-button"
                                          Icon="{x:Static properties:Images.CommitTemplates}"
-                                         Content="Commit _templates">
+                                         Content="Commit _templates"
+                                         ToolTip.Tip="Commit templates">
                 <compat:IconDropDownButton.Flyout>
                   <MenuFlyout />
                 </compat:IconDropDownButton.Flyout>
@@ -296,7 +333,8 @@
                                  Height="23"
                                  Classes="gitextensions-toolbar-button"
                                  Icon="{x:Static properties:Images.BranchCreate}"
-                                 Content="Create _branch" />
+                                 Content="Create _branch"
+                                 ToolTip.Tip="Create branch" />
             </StackPanel>
 
             <DropDownButton x:Name="toolbarCommitOverflow"
@@ -353,7 +391,7 @@
             Padding="1,0,11,0"
             BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
             BorderThickness="0,1,0,0">
-      <Grid ColumnDefinitions="*,150,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,1">
+      <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,1">
         <HyperlinkButton x:Name="commitAuthorStatus"
                          compat:TranslationCompat.TranslateToolTip="False"
                          Grid.Column="0"
@@ -371,44 +409,54 @@
                Source="{x:Static properties:Images.Branch}" />
         <TextBlock x:Name="branchNameLabel"
                    Grid.Column="3"
+                   Height="17"
+                   Margin="0,3,0,2"
                    VerticalAlignment="Center"
                    Text="(Branch name)" />
         <HyperlinkButton x:Name="remoteNameLabel"
                          Grid.Column="4"
                          Margin="0,0,25,0"
+                         Height="17"
                          Padding="0"
                          VerticalAlignment="Center"
                          Content="(Remote name)" />
         <TextBlock x:Name="commitStagedCountLabel"
                    Grid.Column="5"
+                   Height="17"
                    VerticalAlignment="Center"
                    Text="Staged" />
         <TextBlock x:Name="commitStagedCount"
                    Grid.Column="6"
                    Width="40"
+                   Height="17"
                    VerticalAlignment="Center"
                    Text="0" />
         <TextBlock x:Name="commitCursorLineLabel"
                    Grid.Column="7"
+                   Height="17"
                    VerticalAlignment="Center"
                    Text="Ln" />
         <TextBlock x:Name="commitCursorLine"
                    Grid.Column="8"
                    Width="40"
+                   Height="17"
                    VerticalAlignment="Center"
                    Text="0" />
         <TextBlock x:Name="commitCursorColumnLabel"
                    Grid.Column="9"
+                   Height="17"
                    VerticalAlignment="Center"
                    Text="Col" />
         <TextBlock x:Name="commitCursorColumn"
                    Grid.Column="10"
                    Width="40"
+                   Height="17"
                    VerticalAlignment="Center"
                    Text="0" />
         <TextBlock x:Name="commitEndPadding"
                    Grid.Column="11"
-                   Width="1" />
+                   Width="1"
+                   Height="17" />
       </Grid>
     </Border>
   </Grid>

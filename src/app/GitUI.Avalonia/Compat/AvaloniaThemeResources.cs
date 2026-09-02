@@ -180,6 +180,16 @@ internal static class AvaloniaThemeResources
         DrawingColor sectionBorder = isDark
             ? DrawingColor.FromArgb(47, 47, 47)
             : DrawingColor.FromArgb(224, 224, 224);
+
+        // OtherColors uses AdaptBackColor for these invariant values. The resolved results
+        // are published explicitly because Avalonia resources are produced per theme rather
+        // than through WinForms' ambient static-color initialization.
+        DrawingColor otherBackground = isDark
+            ? DrawingColor.FromArgb(53, 53, 53)
+            : DrawingColor.FromArgb(251, 251, 251);
+        DrawingColor mergeConflicts = isDark
+            ? DrawingColor.FromArgb(112, 18, 18)
+            : DrawingColor.FromArgb(230, 99, 99);
         DrawingColor treeConnector = ColorHelper.Lerp(panel, windowText, isDark ? 0.38f : 0.46f);
         DrawingColor refLabelBackground = isDark ? ColorHelper.Lerp(panel, DrawingColor.Black, 0.36f) : panel;
         DrawingColor removedBackground = ResolveAppColor(settings, AppColor.AnsiTerminalRedBackNormal);
@@ -286,6 +296,9 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsToolTipForegroundBrush", infoText);
         SetBrush(resources, "GitExtensionsPaneBorderBrush", sectionBorder);
         SetBrush(resources, "GitExtensionsSectionBorderBrush", sectionBorder);
+        SetBrush(resources, "GitExtensionsOtherBackgroundBrush", otherBackground);
+        SetBrush(resources, "GitExtensionsMergeConflictsBackgroundBrush", mergeConflicts);
+        SetBrush(resources, "GitExtensionsMergeConflictsForegroundBrush", controlText);
         SetBrush(resources, "GitExtensionsRefLabelBackgroundBrush", refLabelBackground);
         SetBrush(resources, "GitExtensionsBranchRefBrush", ResolveAppColor(settings, AppColor.Branch));
         SetBrush(resources, "GitExtensionsRemoteBranchRefBrush", ResolveAppColor(settings, AppColor.RemoteBranch));
