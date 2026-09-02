@@ -168,6 +168,38 @@ public sealed class ControlTreeReaderTests
     }
 
     [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_record_a_hosted_control_as_a_zero_origin_client_surface()
+    {
+        using Form form = new()
+        {
+            StartPosition = FormStartPosition.Manual,
+            Location = new Point(40, 50),
+            ClientSize = new Size(300, 200)
+        };
+        using UserControl control = new()
+        {
+            Location = new Point(20, 15),
+            ClientSize = new Size(120, 60)
+        };
+        form.Controls.Add(control);
+        form.Show();
+        Application.DoEvents();
+        Rectangle controlBounds = control.RectangleToScreen(control.ClientRectangle);
+        ControlTreeReader reader = new(control, dpi: 96);
+
+        CaptureSurface surface = reader.ReadPrimary(control, controlBounds);
+
+        surface.Root.BoundsPx.Should().Be(new CaptureRectangle
+        {
+            X = 0,
+            Y = 0,
+            Width = 120,
+            Height = 60
+        });
+    }
+
+    [Test]
     public void ReadPrimary_should_record_resolved_data_grid_item_height()
     {
         using Form form = new();
