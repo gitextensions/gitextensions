@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -62,6 +62,7 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
 
         RefreshLogItems();
         RefreshCommandCacheItems();
+        LogItems.Focus();
     }
 
     protected override void OnClosed(EventArgs e)
