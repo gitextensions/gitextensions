@@ -167,10 +167,28 @@ public sealed class SmallControlParityTests
         control.Checked.Should().BeTrue();
         checkedChanges.Should().Be(1);
         accessor.PictureBox.IsVisible.Should().BeTrue();
-        accessor.PictureBox.Classes.Should().Contain("gitextensions-icon-16");
         accessor.PictureBox.Source.Should().BeSameAs(Images.Information);
         ToolTip.GetTip(accessor.CheckBox).Should().Be("More information");
         ToolTip.GetTip(accessor.PictureBox).Should().Be("More information");
+
+        Window window = new() { Content = control };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            accessor.CheckBox.Bounds.Height.Should().Be(19);
+            if (OperatingSystem.IsWindows())
+            {
+                accessor.CheckBox.Bounds.Width.Should().Be(101);
+            }
+
+            accessor.PictureBox.Bounds.Size.Should().Be(new Avalonia.Size(19, 18));
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]

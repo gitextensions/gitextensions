@@ -1530,7 +1530,6 @@ internal static class WinFormsInputMetadata
                 new("labelPreview", 1, null, null),
                 new("lblMenuEntries", 4, null, null),
                 new("menuHelp", 13, false, null),
-                new("panel1", 0, null, null),
                 new("tlpnlCascadingMenu", 0, null, null),
                 new("tlpnlMain", 0, null, null),
             ],
@@ -3535,6 +3534,7 @@ internal static class WinFormsInputMetadata
             ],
             ["GitUI.CommandsDialogs.SettingsDialog.Pages.CommitDialogSettingsPage"] =
             [
+                new("_NO_TRANSLATE_CommitDialogNumberOfPreviousMessages", "NumericUpDown"),
                 new("cbRememberAmendCommitState", "CheckBox"),
                 new("chkAutocomplete", "CheckBox"),
                 new("chkEnsureCommitMessageSecondLineEmpty", "CheckBox"),
@@ -3866,7 +3866,6 @@ internal static class WinFormsInputMetadata
                 new("labelPreview", "Label"),
                 new("lblMenuEntries", "Label"),
                 new("menuHelp", "PictureBox"),
-                new("panel1", "Panel"),
                 new("tlpnlCascadingMenu", "TableLayoutPanel"),
                 new("tlpnlMain", "TableLayoutPanel"),
             ],
@@ -4835,7 +4834,7 @@ internal static class WinFormsInputMetadata
                 new("environmentInfo", null, "Fill", true, null, new Avalonia.Thickness(0, 12, 0, 4), null, null, null),
                 new("flowLayoutPanel1", null, "Left", null, new Avalonia.Thickness(2, 2, 2, 2), null, null, null, null),
                 new("label1", null, "Fill", true, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null),
-                new("label2", null, null, true, new Avalonia.Thickness(12, 4, 12, 4), null, "MiddleCenter", null, null),
+                new("label2", ["Top", "Left", "Right"], null, true, new Avalonia.Thickness(12, 4, 12, 4), null, "MiddleCenter", null, null),
                 new("linkLabelIcons", null, null, true, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null),
                 new("logoPictureBox", null, null, null, new Avalonia.Thickness(12, 12, 12, 12), null, null, null, null),
                 new("pictureDonate", null, null, null, new Avalonia.Thickness(6, 12, 6, 4), null, null, null, null),
@@ -4863,6 +4862,7 @@ internal static class WinFormsInputMetadata
                 new("panel1", null, "Bottom", null, null, null, null, null, null),
                 new("panel2", null, "Bottom", null, null, null, null, null, null),
                 new("panel3", null, "Fill", null, null, null, null, null, null),
+                new("pictureBox1", null, null, true, null, null, null, null, null),
             ],
             ["GitUI.CommandsDialogs.FormApplyPatch"] =
             [
@@ -5694,7 +5694,9 @@ internal static class WinFormsInputMetadata
             ],
             ["GitUI.CommandsDialogs.RevisionGpgInfoControl"] =
             [
+                new("commitSignPicture", null, null, true, null, null, null, null, null),
                 new("tableLayoutPanel1", null, "Fill", null, null, null, null, null, null),
+                new("tagSignPicture", null, null, true, null, null, null, null, null),
                 new("txtCommitGpgInfo", null, "Fill", null, null, null, null, "None", null),
                 new("txtTagGpgInfo", null, "Fill", null, null, null, null, "None", null),
             ],
@@ -5769,7 +5771,7 @@ internal static class WinFormsInputMetadata
                 new("ShowAuthorAvatarInCommitInfo", null, "Fill", true, null, null, null, null, null),
                 new("_NO_TRANSLATE_DaysToCacheImages", null, null, null, null, null, "Right", null, null),
                 new("_NO_TRANSLATE_NoImageService", null, "Fill", null, null, null, null, null, null),
-                new("avatarProviderHelp", null, null, null, new Avalonia.Thickness(3, 5, 3, 3), null, null, null, null),
+                new("avatarProviderHelp", null, null, true, new Avalonia.Thickness(3, 5, 3, 3), null, null, null, null),
                 new("chkEnableAutoScale", null, "Fill", true, null, null, null, null, null),
                 new("chkShowCurrentBranchInVisualStudio", null, "Fill", true, null, null, null, null, null),
                 new("chkShowRelativeDate", null, "Fill", true, null, null, null, null, null),
@@ -5785,7 +5787,7 @@ internal static class WinFormsInputMetadata
                 new("lblLanguage", null, "Fill", true, null, null, "MiddleLeft", null, null),
                 new("lblNoImageService", null, "Fill", true, null, null, "MiddleLeft", null, null),
                 new("lblSpellingDictionary", null, "Fill", true, null, null, "MiddleLeft", null, null),
-                new("pictureAvatarHelp", null, null, null, new Avalonia.Thickness(3, 5, 3, 3), null, null, null, null),
+                new("pictureAvatarHelp", null, null, true, new Avalonia.Thickness(3, 5, 3, 3), null, null, null, null),
                 new("tlpnlAuthor", null, "Fill", true, null, null, null, null, null),
                 new("tlpnlGeneral", null, "Fill", true, null, null, null, null, null),
                 new("tlpnlLanguage", null, "Fill", true, null, null, null, null, null),
@@ -5882,7 +5884,7 @@ internal static class WinFormsInputMetadata
                 new("flowLayoutPanel1", null, "Fill", true, null, null, null, null, null),
                 new("groupBoxBehaviour", null, "Top", true, null, null, null, null, null),
                 new("grpAdditionalButtons", null, "Fill", true, null, null, null, null, null),
-                new("lblCommitDialogNumberOfPreviousMessages", null, null, true, null, null, null, null, null),
+                new("lblCommitDialogNumberOfPreviousMessages", ["Left"], null, true, null, null, null, null, null),
                 new("tableLayoutPanelBehaviour", null, "Top", true, null, null, null, null, null),
             ],
             ["GitUI.CommandsDialogs.SettingsDialog.Pages.ConfirmationsSettingsPage"] =
@@ -6181,16 +6183,15 @@ internal static class WinFormsInputMetadata
                 new("label1", null, "Fill", true, null, null, "MiddleLeft", null, null),
                 new("labelPreview", null, "Fill", null, null, null, null, null, null),
                 new("lblMenuEntries", null, "Fill", true, new Avalonia.Thickness(3, 0, 0, 0), null, "MiddleLeft", null, null),
-                new("menuHelp", null, null, null, new Avalonia.Thickness(0, 5, 3, 3), null, null, null, null),
-                new("panel1", null, "Fill", true, new Avalonia.Thickness(2, 2, 2, 2), new Avalonia.Thickness(3, 3, 3, 3), null, null, null),
+                new("menuHelp", null, null, true, new Avalonia.Thickness(0, 5, 3, 3), null, null, null, null),
                 new("tlpnlCascadingMenu", null, "Fill", true, null, null, null, null, null),
                 new("tlpnlMain", null, "Fill", true, null, null, null, null, null),
             ],
             ["GitUI.CommandsDialogs.SettingsDialog.Pages.SortingSettingsPage"] =
             [
-                new("PrioBranchNamesHelp", null, null, null, new Avalonia.Thickness(3, 5, 3, 3), null, null, null, null),
-                new("PrioRemoteNamesHelp", null, null, null, new Avalonia.Thickness(3, 5, 3, 3), null, null, null, null),
-                new("RevisionSortOrderHelp", null, null, null, new Avalonia.Thickness(3, 5, 3, 3), null, null, null, null),
+                new("PrioBranchNamesHelp", null, null, true, new Avalonia.Thickness(3, 5, 3, 3), null, null, null, null),
+                new("PrioRemoteNamesHelp", null, null, true, new Avalonia.Thickness(3, 5, 3, 3), null, null, null, null),
+                new("RevisionSortOrderHelp", null, null, true, new Avalonia.Thickness(3, 5, 3, 3), null, null, null, null),
                 new("_NO_TRANSLATE_cmbBranchesOrder", null, "Fill", null, null, null, null, null, null),
                 new("_NO_TRANSLATE_cmbBranchesSortBy", null, "Fill", null, null, null, null, null, null),
                 new("_NO_TRANSLATE_cmbRevisionsSortBy", null, "Fill", null, null, null, null, null, null),
@@ -6369,7 +6370,7 @@ internal static class WinFormsInputMetadata
                 new("labelHoverText", ["Top", "Bottom", "Left", "Right"], null, true, null, null, null, null, null),
                 new("linkLabelHide", null, null, true, null, null, null, null, null),
                 new("linkLabelShowHelp", null, null, true, null, null, null, null, null),
-                new("pictureBox1", null, "Fill", null, null, null, null, null, null),
+                new("pictureBox1", null, "Fill", true, null, null, null, null, null),
                 new("tableLayoutPanel1", null, "Fill", null, null, null, null, null, null),
             ],
             ["GitUI.HelperDialogs.FormBuildServerCredentials"] =
@@ -6419,7 +6420,7 @@ internal static class WinFormsInputMetadata
                 new("commitSummaryUserControl", null, "Fill", true, new Avalonia.Thickness(1, 1, 1, 1), null, null, null, null),
                 new("flowLayoutPanel1", null, "Fill", true, new Avalonia.Thickness(2, 2, 2, 2), null, null, null, null),
                 new("lblResetBranchWarning", null, "Fill", true, null, null, null, null, null),
-                new("pictureBox1", null, "Fill", null, null, null, null, null, null),
+                new("pictureBox1", null, "Fill", true, null, null, null, null, null),
                 new("tableLayoutPanel1", null, "Top", true, new Avalonia.Thickness(2, 2, 2, 2), new Avalonia.Thickness(3, 3, 3, 3), null, null, null),
                 new("tlpnlWarning", null, "Fill", true, new Avalonia.Thickness(2, 2, 2, 2), null, null, null, null),
             ],
@@ -6539,7 +6540,7 @@ internal static class WinFormsInputMetadata
             [
                 new("flowLayoutPanel1", null, "Fill", null, null, null, null, null, null),
                 new("linkLabelHelp", ["Left"], null, true, new Avalonia.Thickness(0, 0, 3, 0), null, null, null, null),
-                new("pictureBoxHelpIcon", ["Left"], null, null, null, null, null, null, null),
+                new("pictureBoxHelpIcon", ["Left"], null, true, null, null, null, null, null),
             ],
             ["GitUI.UserControls.InteractiveGitActionControl"] =
             [
