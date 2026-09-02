@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
@@ -88,6 +88,18 @@ public sealed class BlameAndLogTests
     }
 
     [AvaloniaTest]
+    public void FormLog_should_translate_its_title_from_the_original_FormDiff_category()
+    {
+        FormLog form = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+        translation.TranslateItem("FormDiff", "$this", "Text", Arg.Any<Func<string?>>()).Returns("Translated diff");
+
+        form.TranslateItems(translation);
+
+        form.Title.Should().Be("Translated diff");
+    }
+
+    [AvaloniaTest]
     public void FormLog_should_construct_with_ui_commands()
     {
         IGitModule module = Substitute.For<IGitModule>();
@@ -107,11 +119,11 @@ public sealed class BlameAndLogTests
         FormLog.TestAccessor accessor = form.GetTestAccessor();
         Grid root = (Grid)form.Content!;
         root.RowDefinitions[0].Height.Should().Be(new GridLength(205));
-        root.RowDefinitions[1].Height.Should().Be(new GridLength(4));
+        root.RowDefinitions[1].Height.Should().Be(new GridLength(6));
         root.ColumnDefinitions.Should().BeEmpty();
         Grid lower = (Grid)accessor.DiffFiles.Parent!;
         lower.ColumnDefinitions[0].Width.Should().Be(new GridLength(188));
-        lower.ColumnDefinitions[1].Width.Should().Be(new GridLength(4));
+        lower.ColumnDefinitions[1].Width.Should().Be(new GridLength(6));
         root.Children.OfType<GridSplitter>().Should().ContainSingle();
         lower.Children.OfType<GridSplitter>().Should().ContainSingle();
         accessor.RevisionGrid.TabIndex.Should().Be(1);
@@ -131,9 +143,21 @@ public sealed class BlameAndLogTests
         accessor.LogItems.Should().NotBeNull();
         accessor.CommandCacheItems.Should().NotBeNull();
         accessor.WordWrap.IsChecked.Should().BeTrue();
-        accessor.LogOutput.IsReadOnly.Should().BeTrue();
-        accessor.CommandCacheOutput.IsReadOnly.Should().BeTrue();
+        accessor.LogOutput.IsReadOnly.Should().BeFalse();
+        accessor.CommandCacheOutput.IsReadOnly.Should().BeFalse();
 
+        form.Close();
+    }
+
+    [AvaloniaTest]
+    public void FormGitCommandLog_should_focus_the_command_log_when_opened()
+    {
+        FormGitCommandLog form = new();
+
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        form.GetTestAccessor().LogItems.IsFocused.Should().BeTrue();
         form.Close();
     }
 
@@ -151,19 +175,21 @@ public sealed class BlameAndLogTests
         form.Width.Should().Be(659);
         form.Height.Should().Be(470);
         accessor.TabControl.Margin.Should().Be(new Thickness(0, 3, 0, 0));
+        accessor.TabControl.Classes.Should().Contain("gitextensions-native-tabs");
+        accessor.TabControl.Classes.Should().Contain("gitextensions-full-bleed-tabs");
         accessor.TabControl.TabIndex.Should().Be(1);
         logSplit.RowDefinitions.Select(row => row.Height).Should().Equal(
             GridLength.Star,
-            new GridLength(4),
+            new GridLength(7),
             new GridLength(150));
         cacheSplit.RowDefinitions.Select(row => row.Height).Should().Equal(
-            new GridLength(183, GridUnitType.Star),
-            new GridLength(4),
-            new GridLength(231, GridUnitType.Star));
-        logSplit.Margin.Should().Be(new Thickness(1, 0, 1, 1));
-        cacheSplit.Margin.Should().Be(new Thickness(1, 0, 1, 1));
-        logSplit.Children.OfType<GridSplitter>().Single().MinHeight.Should().Be(4);
-        cacheSplit.Children.OfType<GridSplitter>().Single().MinHeight.Should().Be(4);
+            new GridLength(180, GridUnitType.Star),
+            new GridLength(6),
+            new GridLength(226, GridUnitType.Star));
+        logSplit.Margin.Should().Be(default(Thickness));
+        cacheSplit.Margin.Should().Be(default(Thickness));
+        logSplit.Children.OfType<GridSplitter>().Single().MinHeight.Should().Be(7);
+        cacheSplit.Children.OfType<GridSplitter>().Single().MinHeight.Should().Be(6);
         logTab.Classes.Should().Contain("gitextensions-dialog-tab");
         cacheTab.Classes.Should().Contain("gitextensions-dialog-tab");
         accessor.LogItems.BorderThickness.Should().Be(default(Thickness));

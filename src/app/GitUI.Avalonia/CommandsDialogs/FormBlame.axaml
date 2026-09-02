@@ -4,6 +4,8 @@
         x:Class="GitUI.CommandsDialogs.FormBlame"
         Width="784"
         Height="762"
+        Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
+        Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
         WindowStartupLocation="CenterOwner"
         Title="File History">
   <blame:BlameControl x:Name="blameControl1"

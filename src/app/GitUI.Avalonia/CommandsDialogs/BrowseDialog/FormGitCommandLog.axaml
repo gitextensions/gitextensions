@@ -5,6 +5,8 @@
         x:Class="GitUI.CommandsDialogs.BrowseDialog.FormGitCommandLog"
         Width="659"
         Height="470"
+        Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
+        Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
         ShowInTaskbar="True"
         Title="Git Command Log">
   <Grid RowDefinitions="*,Auto">
@@ -12,6 +14,7 @@
                                          Grid.Row="0"
                                          Margin="0,3,0,0"
                                          Padding="0"
+                                         Classes="gitextensions-native-tabs gitextensions-full-bleed-tabs"
                                          TabIndex="1">
       <TabItem x:Name="tabPageCommandLog"
                Classes="gitextensions-dialog-tab"
@@ -32,8 +35,7 @@
           </ContextMenu>
         </TabItem.ContextMenu>
         <Grid x:Name="splitContainer2"
-              RowDefinitions="*,4,150"
-              Margin="1,0,1,1"
+              RowDefinitions="*,7,150"
               TabIndex="1">
           <ListBox x:Name="LogItems"
                    Grid.Row="0"
@@ -53,15 +55,14 @@
             </ListBox.Styles>
           </ListBox>
           <GridSplitter Grid.Row="1"
-                        Height="4"
-                        MinHeight="4"
+                        Height="7"
+                        MinHeight="7"
                         ResizeDirection="Rows" />
           <TextBox x:Name="LogOutput"
                    Grid.Row="2"
                    Padding="0"
                    BorderThickness="0"
                    Background="{DynamicResource GitExtensionsKnownColorControlLightBrush}"
-                   IsReadOnly="True"
                    AcceptsReturn="True"
                    TextWrapping="Wrap"
                    FontFamily="{DynamicResource GitExtensionsGenericMonospaceFontFamily}"
@@ -82,8 +83,7 @@
           </ContextMenu>
         </TabItem.ContextMenu>
         <Grid x:Name="splitContainer1"
-              RowDefinitions="183*,4,231*"
-              Margin="1,0,1,1"
+              RowDefinitions="180*,6,226*"
               TabIndex="0">
           <ListBox x:Name="CommandCacheItems"
                    Grid.Row="0"
@@ -103,15 +103,14 @@
             </ListBox.Styles>
           </ListBox>
           <GridSplitter Grid.Row="1"
-                        Height="4"
-                        MinHeight="4"
+                        Height="6"
+                        MinHeight="6"
                         ResizeDirection="Rows" />
           <TextBox x:Name="commandCacheOutput"
                    Grid.Row="2"
                    Padding="0"
                    BorderThickness="0"
                    Background="{DynamicResource GitExtensionsKnownColorControlLightBrush}"
-                   IsReadOnly="True"
                    AcceptsReturn="True"
                    TextWrapping="Wrap"
                    FontFamily="{DynamicResource GitExtensionsGenericMonospaceFontFamily}"

@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -27,10 +27,16 @@ public partial class FormLog : GitModuleForm
     // The original form's Designer sets Name = "FormDiff", so its only translated string
     // ($this.Text) lives under the "FormDiff" catalog category rather than the class name.
     public override void AddTranslationItems(ITranslation translation)
-        => GitUI.Compat.AvaloniaTranslationUtils.AddTranslationItemsFromFields("FormDiff", this, translation);
+        => translation.AddTranslationItem("FormDiff", "$this", "Text", Title ?? string.Empty);
 
     public override void TranslateItems(ITranslation translation)
-        => GitUI.Compat.AvaloniaTranslationUtils.TranslateItemsFromFields("FormDiff", this, translation);
+    {
+        string? translatedTitle = translation.TranslateItem("FormDiff", "$this", "Text", () => Title);
+        if (!string.IsNullOrEmpty(translatedTitle))
+        {
+            Title = translatedTitle;
+        }
+    }
 
     /// <summary>
     /// Clean up any resources being used.
