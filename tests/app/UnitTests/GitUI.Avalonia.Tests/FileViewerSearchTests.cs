@@ -327,8 +327,16 @@ public sealed class FileViewerSearchTests
         source.UICommands.Returns(commands);
         FileViewer viewer = new() { UICommandsSource = source };
         ToolTip.SetTip(viewer.GetTestAccessor().NextChangeButton, "Next change");
+        ITranslation translation = Substitute.For<ITranslation>();
+        translation.TranslateItem(
+                nameof(FileViewer),
+                "nextChangeButton",
+                "ToolTipText",
+                Arg.Any<Func<string?>>())
+            .Returns("Next change");
 
         viewer.ReloadHotkeys();
+        viewer.TranslateItems(translation);
 
         FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
         accessor.FindMenuItem.InputGesture.Should().Be(new KeyGesture(Key.F, KeyModifiers.Control));

@@ -2901,6 +2901,18 @@ public partial class FileViewer : GitModuleControl
         SetTranslatedToolTip(ignoreAllWhitespaces, nameof(ignoreAllWhitespaces), "Ignore all whitespace changes");
         SetTranslatedToolTip(settingsButton, nameof(settingsButton), "Settings");
         automaticContinuousScrollToolStripMenuItem.Header = TranslatedStrings.ContScrollToNextFileOnlyWithAlt;
+        if (_hotkeysLoaded)
+        {
+            // Framework constraint: Avalonia tooltips are translated explicitly, after the
+            // hotkey suffix was first applied. Restore the source ToolStrip tooltip order.
+            UpdateTooltipWithShortcut(nextChangeButton, Command.NextChange);
+            UpdateTooltipWithShortcut(previousChangeButton, Command.PreviousChange);
+            UpdateTooltipWithShortcut(increaseNumberOfLines, Command.IncreaseNumberOfVisibleLines);
+            UpdateTooltipWithShortcut(decreaseNumberOfLines, Command.DecreaseNumberOfVisibleLines);
+            UpdateTooltipWithShortcut(showEntireFileButton, Command.ShowEntireFile);
+            UpdateTooltipWithShortcut(showSyntaxHighlighting, Command.ShowSyntaxHighlighting);
+            UpdateTooltipWithShortcut(ignoreAllWhitespaces, Command.IgnoreAllWhitespace);
+        }
 
         return;
 

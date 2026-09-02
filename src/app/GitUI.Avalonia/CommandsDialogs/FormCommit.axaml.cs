@@ -179,6 +179,14 @@ public sealed partial class FormCommit : GitModuleForm
     public FormCommit()
     {
         InitializeComponent();
+
+        // Framework constraint: WinForms ToolStripStatusLabel.AutoSize includes the
+        // TextRenderer overhang that Avalonia text measurement omits.
+        WinFormsAutoSizeTextBlock.Attach(branchNameLabel);
+        WinFormsAutoSizeContentControl.Attach(remoteNameLabel, 7, 17);
+        WinFormsAutoSizeTextBlock.Attach(commitStagedCountLabel);
+        WinFormsAutoSizeTextBlock.Attach(commitCursorLineLabel);
+        WinFormsAutoSizeTextBlock.Attach(commitCursorColumnLabel);
         toolStripStatusBranchIcon.Source = Properties.Images.Branch.AdaptLightness();
         InitializeComplete();
     }
@@ -194,6 +202,11 @@ public sealed partial class FormCommit : GitModuleForm
         _editedCommit = editedCommit;
 
         InitializeComponent();
+        WinFormsAutoSizeTextBlock.Attach(branchNameLabel);
+        WinFormsAutoSizeContentControl.Attach(remoteNameLabel, 7, 17);
+        WinFormsAutoSizeTextBlock.Attach(commitStagedCountLabel);
+        WinFormsAutoSizeTextBlock.Attach(commitCursorLineLabel);
+        WinFormsAutoSizeTextBlock.Attach(commitCursorColumnLabel);
         RestoreSplitters();
         toolStripStatusBranchIcon.Source = Properties.Images.Branch.AdaptLightness();
 
@@ -414,7 +427,7 @@ public sealed partial class FormCommit : GitModuleForm
                 break;
         }
 
-        if (_useFormCommitMessage && string.IsNullOrEmpty(message))
+        if (!_useFormCommitMessage || string.IsNullOrEmpty(message))
         {
             try
             {
@@ -1308,6 +1321,13 @@ public sealed partial class FormCommit : GitModuleForm
     private void UpdateCursorPosition()
     {
         string text = Message.Text ?? string.Empty;
+        if (text.Length == 0)
+        {
+            commitCursorLine.Text = "0";
+            commitCursorColumn.Text = "0";
+            return;
+        }
+
         int caret = Math.Clamp(Message.CaretIndex, 0, text.Length);
         int line = 1;
         int column = 1;
@@ -2496,7 +2516,6 @@ public sealed partial class FormCommit : GitModuleForm
         ToolTip.SetTip(toolUnstageAllItem, _unstageAll.Text);
         ToolTip.SetTip(modifyCommitMessageButton, _modifyCommitMessageButtonToolTip.Text);
         ToolTip.SetTip(commitAuthorStatus, _commitCommitterToolTip.Text);
-        ToolTip.SetTip(selectionFilter, _selectionFilterToolTip.Text);
         UpdateStageButtons();
     }
 

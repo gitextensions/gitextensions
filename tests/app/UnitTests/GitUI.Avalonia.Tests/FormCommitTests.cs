@@ -203,6 +203,22 @@ public sealed class FormCommitTests
             flowCommitButtons.Bounds.Width.Should().Be(171);
             toolbarCommit.Bounds.Width.Should().Be(324);
 
+            Grid toolbarStaged = form.FindControl<Grid>("toolbarStaged")!;
+            toolbarStaged.ColumnDefinitions.Select(column => column.Width).Should().Equal(
+                new GridLength(2),
+                new GridLength(23),
+                new GridLength(6),
+                new GridLength(70),
+                new GridLength(1, GridUnitType.Star),
+                new GridLength(56),
+                new GridLength(6),
+                new GridLength(23),
+                new GridLength(2));
+            Grid.GetColumn(form.FindControl<Button>("toolUnstageAllItem")!).Should().Be(1);
+            Grid.GetColumn(form.FindControl<Button>("toolUnstageItem")!).Should().Be(3);
+            Grid.GetColumn(form.FindControl<Button>("toolStageItem")!).Should().Be(5);
+            Grid.GetColumn(form.FindControl<Button>("toolStageAllItem")!).Should().Be(7);
+
             Grid.GetColumn(flowCommitButtons).Should().Be(0);
             Grid.GetRowSpan(flowCommitButtons).Should().Be(2);
             form.FindControl<FileViewer>("SelectedDiff")!.TranslatePoint(default, splitRight)!.Value.Y
@@ -228,6 +244,14 @@ public sealed class FormCommitTests
                 "StashStaged",
                 "btnResetAllChanges",
                 "btnResetUnstagedChanges");
+            new[] { "Commit", "CommitAndPush", "StashStaged", "btnResetAllChanges", "btnResetUnstagedChanges" }
+                .Select(name => form.FindControl<Button>(name)!.Width)
+                .Should().OnlyContain(width => width == 171);
+            form.FindControl<Button>("ResetSoft")!.Width.Should().Be(159);
+            ToolTip.GetTip(form.FindControl<Button>("ResetSoft")!).Should().Be(
+                "Perform a soft reset to the previous commit; leaves working directory and index untouched");
+            ToolTip.GetTip(form.FindControl<CheckBox>("StageInSuperproject")!).Should().Be(
+                "Stage current submodule in superproject after commit");
             form.FindControl<TextBlock>("commitStagedCount")!.Text.Should().Be("1/2");
             form.FindControl<Button>("Commit")!.IsEnabled.Should().BeTrue(
                 "the original validates an empty commit message after the enabled Commit button is invoked");
@@ -301,6 +325,34 @@ public sealed class FormCommitTests
             CommitKind.Amend,
             $"amend! Target commit{Environment.NewLine}{Environment.NewLine}Target body",
             editable: true);
+
+    [AvaloniaTest]
+    public async Task FormCommit_should_load_the_git_template_instead_of_the_recovery_message_when_the_editor_is_disabled()
+    {
+        bool useFormCommitMessage = AppSettings.UseFormCommitMessage;
+        AppSettings.UseFormCommitMessage = false;
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        string templatePath = Path.Combine(_workingDirectory, "commit-template.txt");
+        File.WriteAllText(templatePath, "Configured template");
+        module.SetSetting("commit.template", templatePath);
+        File.WriteAllText(Path.Combine(module.WorkingDirGitDir, "COMMIT_EDITMSG"), "Recovered message");
+
+        FormCommit form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => form.GetTestAccessor().Message.Text == "Configured template");
+
+            form.GetTestAccessor().Message.Text.Should().Be("Configured template");
+            form.GetTestAccessor().Message.IsEnabled.Should().BeFalse();
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+            AppSettings.UseFormCommitMessage = useFormCommitMessage;
+        }
+    }
 
     private async Task AssertCommitKindAsync(CommitKind kind, string expected, bool editable)
     {
