@@ -44,6 +44,7 @@ public partial class FileViewer : GitModuleControl
     private bool _allowLinePatching;
     private IGitUICommandsSource? _commandsSource;
     private bool _hotkeysLoaded;
+    private bool _runtimeStateApplied;
     private Bitmap? _image;
     private Action? _openWithDifftool;
     private string? _fileName;
@@ -217,16 +218,8 @@ public partial class FileViewer : GitModuleControl
 
         HotkeysEnabled = true;
         UICommandsSourceSet += OnUICommandsSourceSet;
-        AttachedToLogicalTree += (_, _) =>
-        {
-            _ = TryGetUICommandsDirect(out IGitUICommands? commands)
-                || (this.GetLogicalAncestors().OfType<GitModuleForm>().FirstOrDefault()?.TryGetUICommands(out commands) ?? false);
-            if (commands is not null)
-            {
-                BindSettingsCommands(commands);
-                ReloadHotkeys();
-            }
-        };
+        AttachedToVisualTree += (_, _) => ApplyRuntimeStateIfVisible();
+        LayoutUpdated += (_, _) => ApplyRuntimeStateIfVisible();
 
         PopulateEncodings();
         _showNonPrintingChars = AppSettings.ShowNonPrintingChars.GetValue(
@@ -243,6 +236,29 @@ public partial class FileViewer : GitModuleControl
         VRulerPosition = AppSettings.DiffVerticalRulerPosition;
 
         InitializeComplete();
+    }
+
+    // Framework constraint: WinForms raises OnRuntimeLoad only once a hidden tab page becomes
+    // visible. Avalonia realizes those pages eagerly, so apply the same setting at effective
+    // visibility instead of replacing the editor's native pre-load font prematurely.
+    private void ApplyRuntimeStateIfVisible()
+    {
+        if (_runtimeStateApplied || !IsEffectivelyVisible)
+        {
+            return;
+        }
+
+        _ = TryGetUICommandsDirect(out IGitUICommands? commands)
+            || (this.GetLogicalAncestors().OfType<GitModuleForm>().FirstOrDefault()?.TryGetUICommands(out commands) ?? false);
+        if (commands is null)
+        {
+            return;
+        }
+
+        BindSettingsCommands(commands);
+        ReloadHotkeys();
+        Font = AppSettings.FixedWidthFont;
+        _runtimeStateApplied = true;
     }
 
     /// <summary>
@@ -1184,7 +1200,6 @@ public partial class FileViewer : GitModuleControl
     private void OnUICommandsChanged(object? sender, GitUICommandsChangedEventArgs? e)
     {
         BindSettingsCommands((sender as IGitUICommandsSource)?.UICommands);
-        ReloadHotkeys();
         Encoding = null;
     }
 

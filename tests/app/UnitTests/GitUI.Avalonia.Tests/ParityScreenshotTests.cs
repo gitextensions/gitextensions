@@ -1500,7 +1500,7 @@ public sealed partial class ParityScreenshotTests
         byte[] avatar = (await new InitialsAvatarProvider().GetAvatarAsync(
             "avalonia.contributor@example.com",
             "Avalonia Contributor",
-            blame.BlameAuthor.AvatarSize))!;
+            Math.Max(1, (int)Math.Ceiling(blame.BlameAuthor.TextEditor.FontSize) + 1)))!;
         GitBlameEntry[] entries = lines
             .Select((_, index) => new GitBlameEntry
             {
@@ -1513,8 +1513,10 @@ public sealed partial class ParityScreenshotTests
             '\n',
             lines.Select((_, index) => index % 4 == 0 ? $"2026-07-{20 - (index % 7):00} - Avalonia Contributor" : string.Empty));
 
-        await accessor.BlameFile.ViewTextAsync(AppSourcePath, context.SampleBlame);
-        blame.BlameAuthor.Initialize(gutter, entries, showAvatars: true);
+        await Task.WhenAll(
+            accessor.BlameFile.ViewTextAsync(AppSourcePath, context.SampleBlame),
+            blame.BlameAuthor.ViewTextAsync("committer.txt", gutter));
+        blame.BlameAuthor.SetGitBlameGutter(entries);
     }
 
     private static void SeedChecklist(ChecklistSettingsPage checklist)
@@ -2838,11 +2840,28 @@ public sealed partial class ParityScreenshotTests
 
         public void ResetCommitMessageForCapture()
         {
-            if (_ownsWorkingDirectory)
+            // The paired WinForms capture can persist its draft while disposing the form.
+            // A deterministic capture repository is throwaway input, so every host must
+            // begin FormCommit from the same empty persisted-message state.
+            string gitDirectory = Module.WorkingDirGitDir;
+            DeleteCaptureStateFile(Path.Combine(gitDirectory, "COMMITMESSAGE"));
+            DeleteCaptureStateFile(Path.Combine(gitDirectory, "GitExtensions.amend"));
+
+            static void DeleteCaptureStateFile(string path)
             {
-                string gitDirectory = Module.WorkingDirGitDir;
-                File.Delete(Path.Combine(gitDirectory, "COMMITMESSAGE"));
-                File.Delete(Path.Combine(gitDirectory, "GitExtensions.amend"));
+                const int RetryCount = 20;
+                for (int attempt = 1; ; attempt++)
+                {
+                    try
+                    {
+                        File.Delete(path);
+                        return;
+                    }
+                    catch (IOException) when (attempt < RetryCount)
+                    {
+                        Thread.Sleep(50);
+                    }
+                }
             }
         }
 

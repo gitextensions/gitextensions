@@ -331,14 +331,7 @@
                                     Header="F_etch and prune all"
                                     ToolTip.Tip="Fetch branches and tags from all remote repositories also prune deleted branches" />
               <wf:ToolStripSeparator x:Name="toolStripSeparator14" />
-              <wf:ToolStripMenuItem x:Name="setDefaultPullButtonActionToolStripMenuItem" Header="Set _default Pull button action">
-                <wf:ToolStripMenuItem x:Name="defaultPullDialogToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Open pull dialog" ToggleType="Radio" />
-                <wf:ToolStripMenuItem x:Name="defaultPullMergeToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Pull - merge" ToggleType="Radio" />
-                <wf:ToolStripMenuItem x:Name="defaultPullRebaseToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Pull - rebase" ToggleType="Radio" />
-                <wf:ToolStripMenuItem x:Name="defaultPullFetchToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Fetch" ToggleType="Radio" />
-                <wf:ToolStripMenuItem x:Name="defaultPullFetchAllToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Fetch all" ToggleType="Radio" />
-                <wf:ToolStripMenuItem x:Name="defaultPullFetchPruneAllToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Fetch and prune all" ToggleType="Radio" />
-              </wf:ToolStripMenuItem>
+              <wf:ToolStripMenuItem x:Name="setDefaultPullButtonActionToolStripMenuItem" Header="Set _default Pull button action" />
             </MenuFlyout>
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>

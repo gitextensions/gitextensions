@@ -6,6 +6,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.Compat;
+using GitUI.Compat.WinFormsControls;
 using GitUI.Properties;
 using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
@@ -18,6 +19,7 @@ partial class FormBrowse
     // This file is dedicated to init logic for FormBrowse menus and toolbars
 
     internal static readonly string FetchPullToolbarShortcutsPrefix = "pull_shortcut_";
+    private const string ToolbarSettingsPrefix = "formbrowse_toolbar_visibility_";
 
     private void InitMenusAndToolbars(string? revFilter, string? pathFilter)
     {
@@ -140,6 +142,9 @@ partial class FormBrowse
                 Icon = image,
                 Name = FetchPullToolbarShortcutsPrefix + toolStripMenuItem.Name,
                 Content = toolTipText,
+                IsVisible = AppSettings.GetBool(
+                    ToolbarSettingsPrefix + FetchPullToolbarShortcutsPrefix + toolStripMenuItem.Name,
+                    defaultValue: false),
             };
             clonedToolStripMenuItem.Classes.Add("gitextensions-toolbar-button");
             clonedToolStripMenuItem.Classes.Add("gitextensions-icon-only");
@@ -158,20 +163,29 @@ partial class FormBrowse
         // Show both Check and Image margins in a menu
         // Prevent submenu from closing while options are changed
         // Avalonia's native menu owns its margins and dismissal behavior; the actions remain independently selectable.
-        (MenuItem Item, GitPullAction Action)[] items =
+        (MenuItem Source, GitPullAction Action)[] items =
         [
-            (defaultPullDialogToolStripMenuItem, GitPullAction.None),
-            (defaultPullMergeToolStripMenuItem, GitPullAction.Merge),
-            (defaultPullRebaseToolStripMenuItem, GitPullAction.Rebase),
-            (defaultPullFetchToolStripMenuItem, GitPullAction.Fetch),
-            (defaultPullFetchAllToolStripMenuItem, GitPullAction.FetchAll),
-            (defaultPullFetchPruneAllToolStripMenuItem, GitPullAction.FetchPruneAll),
+            (pullToolStripMenuItem1, GitPullAction.None),
+            (mergeToolStripMenuItem, GitPullAction.Merge),
+            (rebaseToolStripMenuItem1, GitPullAction.Rebase),
+            (fetchToolStripMenuItem, GitPullAction.Fetch),
+            (fetchAllToolStripMenuItem, GitPullAction.FetchAll),
+            (fetchPruneAllToolStripMenuItem, GitPullAction.FetchPruneAll),
         ];
 
-        foreach ((MenuItem item, GitPullAction action) in items)
+        foreach ((MenuItem source, GitPullAction action) in items)
         {
+            MenuItem item = new ToolStripMenuItem
+            {
+                Name = $"{source.Name}SetDefault",
+                Header = source.Header,
+                Icon = CloneMenuIcon(source.Icon),
+                Tag = action,
+                ToggleType = MenuItemToggleType.Radio,
+            };
             item.Tag = action;
             item.Click += SetDefaultPullActionMenuItemClick;
+            setDefaultPullButtonActionToolStripMenuItem.Items.Add(item);
         }
 
         void SetDefaultPullActionMenuItemClick(object? sender, EventArgs eventArgs)
@@ -180,6 +194,17 @@ partial class FormBrowse
             AppSettings.DefaultPullAction = (GitPullAction)clickedMenuItem.Tag!;
             RefreshDefaultPullAction();
         }
+
+        static object? CloneMenuIcon(object? icon)
+            => icon is Image image
+                ? new Image
+                {
+                    Width = image.Width,
+                    Height = image.Height,
+                    Source = image.Source,
+                    Stretch = image.Stretch,
+                }
+                : null;
     }
 
     private void FillUserShells(string defaultShell)
@@ -241,7 +266,10 @@ partial class FormBrowse
         fetchAllToolStripMenuItem.IsVisible = hasMultipleRemotes;
 
         // Update the "set default pull action" submenu items
-        defaultPullFetchAllToolStripMenuItem.IsVisible = hasMultipleRemotes;
+        setDefaultPullButtonActionToolStripMenuItem.Items
+            .OfType<MenuItem>()
+            .Single(item => item.Tag is GitPullAction.FetchAll)
+            .IsVisible = hasMultipleRemotes;
     }
 
     private Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)

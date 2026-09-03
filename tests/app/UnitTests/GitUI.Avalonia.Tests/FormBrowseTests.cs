@@ -739,6 +739,8 @@ public sealed class FormBrowseTests
             "gitGUIToolStripMenuItem",
             "kGitToolStripMenuItem",
             "|",
+            "PuTTYToolStripMenuItem",
+            "|",
             "gitcommandLogToolStripMenuItem",
             "|",
             "settingsToolStripMenuItem");
@@ -754,14 +756,7 @@ public sealed class FormBrowseTests
             "checkForUpdatesToolStripMenuItem",
             "aboutToolStripMenuItem");
 
-        foreach (string unavailableName in new[]
-        {
-            "PuTTYToolStripMenuItem",
-        })
-        {
-            form.FindControl<Control>(unavailableName).Should().BeNull(
-                $"{unavailableName} must remain absent until its shared owner or native dialog exists");
-        }
+        form.toolsToolStripMenuItem.GetTestAccessor().PuTTYMenuItem.IsVisible.Should().Be(OperatingSystem.IsWindows());
 
         return;
 
@@ -793,6 +788,9 @@ public sealed class FormBrowseTests
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitBashToolStripMenuItem", "Text", "Git &bash");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitGUIToolStripMenuItem", "Text", "Git &GUI");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "kGitToolStripMenuItem", "Text", "Git&K");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "PuTTYToolStripMenuItem", "Text", "&PuTTY");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "startAuthenticationAgentToolStripMenuItem", "Text", "Start authentication agent");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "generateOrImportKeyToolStripMenuItem", "Text", "Generate or import key");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitcommandLogToolStripMenuItem", "Text", "Git &command log");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "settingsToolStripMenuItem", "Text", "&Settings...");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "userManualToolStripMenuItem", "Text", "User &manual");
@@ -1203,12 +1201,23 @@ public sealed class FormBrowseTests
             "pull_shortcut_mergeToolStripMenuItem",
             "pull_shortcut_rebaseToolStripMenuItem1",
             "pull_shortcut_pullToolStripMenuItem1");
-        form.defaultPullDialogToolStripMenuItem.Tag.Should().Be(GitPullAction.None);
-        form.defaultPullMergeToolStripMenuItem.Tag.Should().Be(GitPullAction.Merge);
-        form.defaultPullRebaseToolStripMenuItem.Tag.Should().Be(GitPullAction.Rebase);
-        form.defaultPullFetchToolStripMenuItem.Tag.Should().Be(GitPullAction.Fetch);
-        form.defaultPullFetchAllToolStripMenuItem.Tag.Should().Be(GitPullAction.FetchAll);
-        form.defaultPullFetchPruneAllToolStripMenuItem.Tag.Should().Be(GitPullAction.FetchPruneAll);
+        MenuItem[] defaultPullItems = form.setDefaultPullButtonActionToolStripMenuItem.Items
+            .OfType<MenuItem>()
+            .ToArray();
+        defaultPullItems.Select(item => item.Name).Should().Equal(
+            "pullToolStripMenuItem1SetDefault",
+            "mergeToolStripMenuItemSetDefault",
+            "rebaseToolStripMenuItem1SetDefault",
+            "fetchToolStripMenuItemSetDefault",
+            "fetchAllToolStripMenuItemSetDefault",
+            "fetchPruneAllToolStripMenuItemSetDefault");
+        defaultPullItems.Select(item => item.Tag).Should().Equal(
+            GitPullAction.None,
+            GitPullAction.Merge,
+            GitPullAction.Rebase,
+            GitPullAction.Fetch,
+            GitPullAction.FetchAll,
+            GitPullAction.FetchPruneAll);
     }
 
     [AvaloniaTest]

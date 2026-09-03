@@ -2517,7 +2517,6 @@ public sealed partial class FormCommit : GitModuleForm
         ToolTip.SetTip(toolStageAllItem, _stageAll.Text);
         ToolTip.SetTip(toolUnstageAllItem, _unstageAll.Text);
         ToolTip.SetTip(modifyCommitMessageButton, _modifyCommitMessageButtonToolTip.Text);
-        ToolTip.SetTip(commitAuthorStatus, _commitCommitterToolTip.Text);
         UpdateStageButtons();
     }
 
