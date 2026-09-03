@@ -23,21 +23,17 @@
               Height="25"
               HorizontalAlignment="Right"
               VerticalAlignment="Bottom"
-              Margin="0,0,12,10"
+              Margin="0,0,14,10"
               TabIndex="0"
               Content="Save" />
       <!-- Avalonia's access-key parser must not treat the mailmap example's literal underscore as a mnemonic. -->
-      <Label x:Name="label1"
-             Width="302"
-             Height="171"
-             HorizontalAlignment="Left"
-             VerticalAlignment="Top"
-             Margin="3,9,0,0"
-             Padding="0"
-             compat:TranslationCompat.ConvertMnemonics="False"
-             TabIndex="1">
-        <TextBlock Text="Edit the mailmap.&#10;This file is meant to correct usernames.&#10;&#10;Example:&#10;Henk Westhuis &lt;Henk@.(none)&gt;&#10;Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;&#10;&#10;For more information run&#10;command &quot;git help shortlog&quot;" />
-      </Label>
+      <TextBlock x:Name="label1"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 Margin="3,9,0,0"
+                 compat:TranslationCompat.ConvertMnemonics="False"
+                 TabIndex="1"
+                 Text="Edit the mailmap.&#10;This file is meant to correct usernames.&#10;&#10;Example:&#10;Henk Westhuis &lt;Henk@.(none)&gt;&#10;Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;&#10;&#10;For more information run&#10;command &quot;git help shortlog&quot;" />
     </Grid>
   </Grid>
 </Window>

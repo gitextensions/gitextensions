@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Avalonia.Controls;
+using Avalonia.LogicalTree;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -84,5 +85,17 @@ public partial class FormCheckoutRevision : GitExtensionsDialog
     private void WireEvents()
     {
         OkCheckout.Click += OkClick;
+    }
+
+    protected override void OnRuntimeLoad(EventArgs e)
+    {
+        base.OnRuntimeLoad(e);
+        if (TryGetUICommands(out _))
+        {
+            commitPickerSmallControl1.GetLogicalDescendants()
+                .OfType<Avalonia.Controls.TextBox>()
+                .Single(control => control.Name == "textBoxCommitHash")
+                .Focus();
+        }
     }
 }

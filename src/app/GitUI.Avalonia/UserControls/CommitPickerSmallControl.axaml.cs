@@ -17,6 +17,7 @@ public partial class CommitPickerSmallControl : GitModuleControl
     public CommitPickerSmallControl()
     {
         InitializeComponent();
+        ((Grid)Content!).Name = "tableLayoutPanel1";
         textBoxCommitHash.LostFocus += textBoxCommitHash_TextLeave;
         buttonPickCommit.Click += buttonPickCommit_Click;
         InitializeComplete();
@@ -85,6 +86,13 @@ public partial class CommitPickerSmallControl : GitModuleControl
 
     private void textBoxCommitHash_TextLeave(object sender, EventArgs e)
     {
+        // Avalonia clears keyboard focus after hiding a closing top level. WinForms does not
+        // run Leave validation during teardown, so do not resolve a revision from that route.
+        if (TopLevel.GetTopLevel(this)?.IsVisible != true || !TryGetUICommandsDirect(out _))
+        {
+            return;
+        }
+
         SetSelectedCommitHash(textBoxCommitHash.Text!.Trim());
     }
 }

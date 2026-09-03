@@ -4,6 +4,7 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
+using GitUI.Compat;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -33,6 +34,7 @@ public partial class FormMailMap : GitModuleForm
     public FormMailMap()
     {
         InitializeComponent();
+        WinFormsAutoSizeTextBlock.Attach(label1, includePadding: true, singleLine: false);
         Save.Click += SaveClick;
         InitializeComplete();
     }
@@ -41,6 +43,7 @@ public partial class FormMailMap : GitModuleForm
         : base(commands, enablePositionRestore: false)
     {
         InitializeComponent();
+        WinFormsAutoSizeTextBlock.Attach(label1, includePadding: true, singleLine: false);
         _NO_TRANSLATE_MailMapText.IsReadOnly = false;
         Save.Click += SaveClick;
         InitializeComplete();
@@ -174,6 +177,6 @@ public partial class FormMailMap : GitModuleForm
     {
         public Editor.FileViewer Editor => form._NO_TRANSLATE_MailMapText;
         public Button Save => form.Save;
-        public Label Help => form.label1;
+        public TextBlock Help => form.label1;
     }
 }

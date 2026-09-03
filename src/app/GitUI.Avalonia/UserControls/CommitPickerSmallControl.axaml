@@ -3,7 +3,7 @@
              xmlns:compat="using:GitUI.Compat"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.UserControls.CommitPickerSmallControl">
-  <Grid x:Name="tableLayoutPanel1" ColumnDefinitions="*,Auto,Auto">
+  <Grid ColumnDefinitions="*,Auto,Auto">
     <TextBox x:Name="textBoxCommitHash" Height="22" Margin="0,2,3,0" MaxLength="100" />
     <compat:IconButton x:Name="buttonPickCommit"
                        Classes="gitextensions-icon-only"
@@ -18,7 +18,7 @@
                MinWidth="1"
                Margin="0,0,2,0"
                Padding="0,5,0,0"
-               Opacity="0.65"
+               Foreground="{DynamicResource GitExtensionsKnownColorGrayTextBrush}"
                VerticalAlignment="Stretch" />
   </Grid>
 </UserControl>

@@ -280,8 +280,8 @@ public sealed class NavigationDialogTests
             Invoke(search, "SearchForCandidates", (object)new[] { "src/App.cs" });
             Dispatcher.UIThread.RunJobs();
 
-            window.Bounds.Width.Should().BeApproximately(300, 1);
-            window.Bounds.Height.Should().BeApproximately(79, 1);
+            window.Bounds.Width.Should().BeApproximately(303, 1);
+            window.Bounds.Height.Should().BeApproximately(82, 1);
             AssertBounds(window.FindControl<Label>("lblEnterFileName")!, 0, 0, 300, 24);
             AssertBounds(search.FindControl<ListBox>("listBoxSearchResult")!, 0, 47, 300, 32);
         }
@@ -315,8 +315,8 @@ public sealed class NavigationDialogTests
             Avalonia.Media.FontManager.Current.TryGetGlyphTypeface(typeface, out Avalonia.Media.GlyphTypeface? glyphTypeface).Should().BeTrue();
             Avalonia.Media.FontMetrics metrics = glyphTypeface!.Metrics;
             double lineHeight = metrics.LineSpacing * searchBox.FontSize / metrics.DesignEmHeight;
-            double itemHeight = Math.Max(16, Math.Ceiling(lineHeight * 1.25) / 1.25);
-            reportedSize.Height.Should().BeApproximately((itemHeight * 2) + Math.Max(22, searchBox.Bounds.Height), 0.01);
+            double itemHeight = Math.Max(15 * 1.25, Math.Floor(lineHeight * 1.25)) / 1.25;
+            reportedSize.Height.Should().BeApproximately((itemHeight * 2) + (2 / 1.25) + Math.Max(22, searchBox.Bounds.Height), 0.01);
             search.FindControl<ListBox>("listBoxSearchResult")!.Classes.Should().Contain("search-results");
         }
         finally

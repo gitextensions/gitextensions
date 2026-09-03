@@ -64,9 +64,11 @@ public partial class SearchWindow<T> : SearchWindow where T : class
     {
         double labelHeight = Math.Max(24, SearchPromptLabel.Bounds.Height);
         SearchTableLayoutPanel.Width = newSize.Width;
-        Width = newSize.Width;
+
+        // WinForms AutoSize retains the TableLayoutPanel's native three-pixel leading extent.
+        Width = newSize.Width + 3;
         SearchTableLayoutPanel.Height = newSize.Height + labelHeight;
-        Height = SearchTableLayoutPanel.Height;
+        Height = SearchTableLayoutPanel.Height + 3;
     }
 
     public T? SelectedItem => _searchControl.SelectedItem;

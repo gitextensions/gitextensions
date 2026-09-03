@@ -137,6 +137,8 @@ public sealed partial class FormGoToCommit : GitModuleForm
                 // Avalonia's editable ComboBox requires display strings; keep the IGitRef
                 // objects beside it so selection retains the original identity semantics.
                 comboBoxBranches.ItemsSource = list.Select(item => item.LocalName).ToList();
+                comboBoxBranches.SelectedIndex = list.Count > 0 ? 0 : -1;
+                _selectedBranch = list.FirstOrDefault();
                 _branchesLoaded = true;
                 SetSelectedRevisionByFocusedControl();
             });

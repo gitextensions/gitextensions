@@ -107,7 +107,7 @@ public sealed class IgnoreAttributesMailmapTests
     {
         FormMailMap form = new();
         ITranslation translation = Substitute.For<ITranslation>();
-        Label help = form.GetTestAccessor().Help;
+        TextBlock help = form.GetTestAccessor().Help;
         translation.TranslateItem(
                 Arg.Any<string>(),
                 Arg.Any<string>(),
@@ -126,7 +126,7 @@ public sealed class IgnoreAttributesMailmapTests
             "label1",
             "Text",
             Arg.Is<string>(text => text.Contains("henk_westhuis@hotmail.com", StringComparison.Ordinal)));
-        help.Content.Should().BeOfType<TextBlock>().Which.Text.Should().Contain("henk_westhuis@hotmail.com");
+        help.Text.Should().Contain("henk_westhuis@hotmail.com");
     }
 
     [AvaloniaTest]
@@ -167,7 +167,7 @@ public sealed class IgnoreAttributesMailmapTests
             Grid ignoreSplit = ignore.FindControl<Grid>("splitContainer1")!;
             ignoreSplit.ColumnDefinitions.Select(column => column.Width).Should().Equal(
                 GridLength.Star,
-                new GridLength(4),
+                new GridLength(6),
                 new GridLength(270));
             ignore.MinWidth.Should().Be(634);
             ignore.MinHeight.Should().Be(459);
@@ -181,8 +181,8 @@ public sealed class IgnoreAttributesMailmapTests
             ignore.GetTestAccessor().Save.Bounds.Size.Should().Be(new Size(160, 27));
             ignore.GetTestAccessor().Save.TabIndex.Should().Be(1);
 
-            AssertEditorDialogLayout(attributes, attributes.GetTestAccessor().Editor, attributes.GetTestAccessor().Save, attributes.GetTestAccessor().Help, 209, 285);
-            AssertEditorDialogLayout(mailMap, mailMap.GetTestAccessor().Editor, mailMap.GetTestAccessor().Save, mailMap.GetTestAccessor().Help, 302, 171);
+            AssertEditorDialogLayout(attributes, attributes.GetTestAccessor().Editor, attributes.GetTestAccessor().Save, attributes.GetTestAccessor().Help, 182, 225);
+            AssertEditorDialogLayout(mailMap, mailMap.GetTestAccessor().Editor, mailMap.GetTestAccessor().Save, mailMap.GetTestAccessor().Help, 261, 135);
         }
         finally
         {
@@ -252,7 +252,7 @@ public sealed class IgnoreAttributesMailmapTests
         Window form,
         GitUI.Editor.FileViewer editor,
         Button save,
-        Label help,
+        TextBlock help,
         int helpWidth,
         int helpHeight)
     {
@@ -264,7 +264,17 @@ public sealed class IgnoreAttributesMailmapTests
         editor.TabIndex.Should().Be(0);
         save.Bounds.Size.Should().Be(new Size(75, 25));
         save.TabIndex.Should().Be(0);
-        help.Bounds.Size.Should().Be(new Size(helpWidth, helpHeight));
+        if (OperatingSystem.IsWindows())
+        {
+            help.Bounds.Size.Should().Be(new Size(helpWidth, helpHeight));
+        }
+        else
+        {
+            help.Bounds.Width.Should().BeGreaterThanOrEqualTo(Math.Ceiling(help.TextLayout.WidthIncludingTrailingWhitespace));
+            help.Bounds.Height.Should().BeGreaterThanOrEqualTo(Math.Ceiling(help.TextLayout.Height));
+            help.TextLayout.TextLines.Should().OnlyContain(line => !line.HasCollapsed && !line.HasOverflowed);
+        }
+
         help.Bounds.Position.Should().Be(new Point(3, 9));
         help.TabIndex.Should().Be(1);
     }

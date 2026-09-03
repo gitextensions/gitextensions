@@ -2883,18 +2883,18 @@
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-08-21",
+          "verifiedOn": "2026-09-03",
           "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 2318,
-          "note": "The fresh native-100 light/dark/custom matrix records 2318 diagnostics for FormGoToCommit; exact geometry, image, layout, font, text, and control closure remains open."
+          "findingCount": 58,
+          "note": "Progress 102 compares the declared native-100 light, dark, and custom FormGoToCommit states and retains 58 strict diagnostics; exact renderer, declared navigation residuals, higher-scale, exhaustive action, preview, and Apple Silicon closure remain open."
         },
         "themingAndColor": {
           "status": "partial",
@@ -4158,18 +4158,18 @@
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-21",
+          "verifiedOn": "2026-09-03",
           "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 2018,
-          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
+          "findingCount": 36,
+          "note": "Progress 102 compares every declared native-100 light, dark, and custom FormAddToGitIgnore state with zero unsupported entries and retains 36 image-only diagnostics; exact renderer, higher-scale, exhaustive action, preview, and Apple Silicon closure remain open."
         },
         "themingAndColor": {
           "status": "gap",
@@ -5035,18 +5035,18 @@
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-08-21",
+          "verifiedOn": "2026-09-03",
           "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 2387,
-          "note": "The fresh native-100 light/dark/custom matrix records 2387 diagnostics for FormCheckoutRevision; exact geometry, image, layout, font, text, and control closure remains open."
+          "findingCount": 45,
+          "note": "Progress 102 compares the declared native-100 light, dark, and custom FormCheckoutRevision states and retains 45 strict diagnostics; exact renderer, declared navigation residuals, higher-scale, exhaustive action, preview, and Apple Silicon closure remain open."
         },
         "themingAndColor": {
           "status": "partial",
@@ -6468,18 +6468,18 @@
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-21",
+          "verifiedOn": "2026-09-03",
           "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 3530,
-          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
+          "findingCount": 36,
+          "note": "Progress 102 compares every declared native-100 light, dark, and custom FormGitAttributes state with zero unsupported entries and retains 36 image-only diagnostics; exact renderer, higher-scale, exhaustive action, preview, and Apple Silicon closure remain open."
         },
         "themingAndColor": {
           "status": "gap",
@@ -6562,18 +6562,18 @@
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-21",
+          "verifiedOn": "2026-09-03",
           "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 3530,
-          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
+          "findingCount": 36,
+          "note": "Progress 102 compares every declared native-100 light, dark, and custom FormMailMap state with zero unsupported entries and retains 36 image-only diagnostics; exact renderer, higher-scale, exhaustive action, preview, and Apple Silicon closure remain open."
         },
         "themingAndColor": {
           "status": "gap",
@@ -6656,18 +6656,18 @@
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-21",
+          "verifiedOn": "2026-09-03",
           "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 4818,
-          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
+          "findingCount": 36,
+          "note": "Progress 102 compares every declared native-100 light, dark, and custom FormGitIgnore state with zero unsupported entries and retains 36 image-only diagnostics; exact renderer, higher-scale, exhaustive action, preview, and Apple Silicon closure remain open."
         },
         "themingAndColor": {
           "status": "gap",
@@ -7042,18 +7042,18 @@
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-21",
+          "verifiedOn": "2026-09-03",
           "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/editors/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 3530,
-          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
+          "findingCount": 36,
+          "note": "Progress 102 compares every declared native-100 light, dark, and custom FormMailMap state with zero unsupported entries and retains 36 image-only diagnostics; exact renderer, higher-scale, exhaustive action, preview, and Apple Silicon closure remain open."
         },
         "themingAndColor": {
           "status": "gap",
@@ -10523,18 +10523,18 @@
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-08-21",
+          "verifiedOn": "2026-09-03",
           "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 541,
-          "note": "The fresh native-100 light/dark/custom matrix records 541 diagnostics for SearchControl; exact geometry, image, layout, font, text, and control closure remains open."
+          "findingCount": 30,
+          "note": "Progress 102 compares the declared native-100 light, dark, and custom SearchControl states and retains 30 strict diagnostics; exact renderer, declared navigation residuals, higher-scale, exhaustive action, preview, and Apple Silicon closure remain open."
         },
         "themingAndColor": {
           "status": "partial",
@@ -10727,18 +10727,18 @@
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-08-21",
+          "verifiedOn": "2026-09-03",
           "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 940,
-          "note": "The fresh native-100 light/dark/custom matrix records 940 diagnostics for SearchWindow; exact geometry, image, layout, font, text, and control closure remains open."
+          "findingCount": 30,
+          "note": "Progress 102 compares the declared native-100 light, dark, and custom SearchWindow states and retains 30 strict diagnostics; exact renderer, declared navigation residuals, higher-scale, exhaustive action, preview, and Apple Silicon closure remain open."
         },
         "themingAndColor": {
           "status": "partial",
@@ -29437,18 +29437,18 @@
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-08-21",
+          "verifiedOn": "2026-09-03",
           "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/progress-102-final/navigation/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 2387,
-          "note": "Measured only as the embedded picker inside FormCheckoutRevision; the dialog aggregate still contains 2387 diagnostics, so no standalone visual claim is made."
+          "findingCount": 45,
+          "note": "Progress 102 compares the declared native-100 light, dark, and custom CommitPickerSmallControl states and retains 45 strict diagnostics; exact renderer, declared navigation residuals, higher-scale, exhaustive action, preview, and Apple Silicon closure remain open."
         },
         "themingAndColor": {
           "status": "partial",
