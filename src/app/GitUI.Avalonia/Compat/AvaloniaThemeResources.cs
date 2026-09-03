@@ -296,6 +296,7 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsToolTipForegroundBrush", infoText);
         SetBrush(resources, "GitExtensionsPaneBorderBrush", sectionBorder);
         SetBrush(resources, "GitExtensionsSectionBorderBrush", sectionBorder);
+        SetBrush(resources, "GitExtensionsFileStatusSplitterBrush", sectionBorder);
         SetBrush(resources, "GitExtensionsOtherBackgroundBrush", otherBackground);
         SetBrush(resources, "GitExtensionsMergeConflictsBackgroundBrush", mergeConflicts);
         SetBrush(resources, "GitExtensionsMergeConflictsForegroundBrush", controlText);

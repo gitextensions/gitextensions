@@ -236,7 +236,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         {
             SearchControl<string> search = new(SearchForBranch, onSizeChanged: size => { })
             {
-                Name = "txtBranchCritierion"
+                Name = "txtBranchCritierion",
+                Height = 23,
+                Margin = new Thickness(0, 1, 0, 2)
             };
             KeyboardNavigation.SetTabIndex(search, 1);
             search.OnTextEntered += () =>
