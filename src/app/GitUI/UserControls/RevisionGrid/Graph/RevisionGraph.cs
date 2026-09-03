@@ -448,7 +448,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
         // Collect all refs for known revisions
         IReadOnlyList<IGitRef> refs = orderedNodesCache
             .Where(x => x.GitRevision is not null)
-            .SelectMany(x => x.GitRevision?.Refs)
+            .SelectMany(x => x.GitRevision!.Refs)
             .AsReadOnlyList();
 
         // Find the first revision that goes in each reserved lane.
@@ -456,11 +456,14 @@ public class RevisionGraph : IRevisionGraphRowProvider
         int[] firstIndexForReservedLane = Enumerable.Repeat(-1, lanePriorityByRef.Values.Append(-1).Max() + 1).ToArray();
         for (int nodeIndex = 0; nodeIndex < orderedNodesCount; ++nodeIndex)
         {
-            foreach (IGitRef gitRef in orderedNodesCache[nodeIndex].GitRevision.Refs)
+            if (orderedNodesCache[nodeIndex].GitRevision is { } gitRevision)
             {
-                if (lanePriorityByRef.TryGetValue(gitRef, out int priority) && firstIndexForReservedLane[priority] == -1)
+                foreach (IGitRef gitRef in gitRevision.Refs)
                 {
-                    firstIndexForReservedLane[priority] = nodeIndex;
+                    if (lanePriorityByRef.TryGetValue(gitRef, out int priority) && firstIndexForReservedLane[priority] == -1)
+                    {
+                        firstIndexForReservedLane[priority] = nodeIndex;
+                    }
                 }
             }
         }

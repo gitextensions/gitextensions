@@ -14,7 +14,7 @@ public static class Priority
     /// <param name="regexes">Array with the priority regexes.</param>
     /// <param name="regexList">String with the priority regexes separated by semicolon; used if<paramref name="regexes"/> is null.</param>
     /// <returns>Priorities for the references that match a regex.</returns>
-    public static Dictionary<T, int> Priorities<T>(IReadOnlyList<T> references, Func<T, string> keySelector, string[]? regexes = null, string? regexList = null)
+    public static Dictionary<T, int> Priorities<T>(IReadOnlyList<T> references, Func<T, string> keySelector, string[]? regexes = null, string? regexList = null) where T : class
     {
         regexes ??= regexList
             ?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)

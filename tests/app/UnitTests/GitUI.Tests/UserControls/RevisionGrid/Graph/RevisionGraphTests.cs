@@ -583,7 +583,7 @@ public class RevisionGraphTests
             if (parts.Length > 2)
             {
                 string[] refNames = parts[2].Split(',');
-                commit.Refs = refNames.Select(name => new GitRef(module, null, name)).AsReadOnlyList();
+                commit.Refs = refNames.Select(name => new GitRef(module, ObjectId.Random(), name)).AsReadOnlyList();
         }
         }
 
@@ -636,7 +636,7 @@ public class RevisionGraphTests
             line[row.GetCurrentRevisionLane() * 2] = subject?.Length is 1 ? subject[0] : '*';
 
             // List refs applying to commit
-            string refs = string.Join(" ", row.Revision.GitRevision.Refs.Select(r => r.Name));
+            string refs = string.Join(" ", row.Revision.GitRevision?.Refs.Select(r => r.Name) ?? []);
             if (row.Revision.Objectid == ObjectId.WorkTreeId)
             {
                 refs += " [Working directory]";

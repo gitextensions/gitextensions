@@ -98,7 +98,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
     /// <param name="keySelector">Function in T to get the sort key.</param>
     /// <param name="regexList">String with the priority regexes separated by semicolon.</param>
     /// <returns>The resorted references.</returns>
-    private static IEnumerable<T> OrderByPriority<T>(IReadOnlyList<T> references, Func<T, string> keySelector, string regexList)
+    private static IEnumerable<T> OrderByPriority<T>(IReadOnlyList<T> references, Func<T, string> keySelector, string regexList) where T : class
     {
         Dictionary<T, int> priorityByNode = Priority.Priorities(references, keySelector, regexList: regexList);
 
