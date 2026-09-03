@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
@@ -30,11 +30,10 @@ internal sealed class AvaloniaControlTreeReader
         _root = root;
         _renderScale = renderScale;
         _primaryScreenOrigin = primaryScreenOrigin ?? default;
-        string? rootType = root.GetType().FullName;
-        _usesDesignerLayoutMetadata = rootType is not null
-            && (WinFormsInputMetadata.ByType.ContainsKey(rootType)
-                || WinFormsInputMetadata.LayoutByType.ContainsKey(rootType)
-                || WinFormsInputMetadata.SourceByType.ContainsKey(rootType));
+        string rootType = GetMetadataTypeName(root.GetType());
+        _usesDesignerLayoutMetadata = WinFormsInputMetadata.ByType.ContainsKey(rootType)
+            || WinFormsInputMetadata.LayoutByType.ContainsKey(rootType)
+            || WinFormsInputMetadata.SourceByType.ContainsKey(rootType);
         IndexFields(root);
     }
 
@@ -274,7 +273,7 @@ internal sealed class AvaloniaControlTreeReader
             // WinForms ListControl.SelectedValue stays null for item-backed ComboBoxes but is
             // populated for the data-bound protocol selector used by ForkAndCloneForm.
             ComboBox comboBox when control.Name == "ProtocolDropdownList" => comboBox.SelectedIndex >= 0,
-            ComboBox comboBox when control.Name is "_NO_TRANSLATE_Remotes" or "RemoteRepositoryCombo" or "Url" => comboBox.SelectedIndex >= 0,
+            ComboBox comboBox when control.Name is "_NO_TRANSLATE_Remotes" or "RemoteRepositoryCombo" or "Url" or "comboBoxBranches" => comboBox.SelectedIndex >= 0,
             ComboBox => false,
             _ => null
         };
@@ -428,11 +427,17 @@ internal sealed class AvaloniaControlTreeReader
         bool isWatermarkComboBox = IsFileStatusWatermarkComboBox(control);
         bool isSourceDataGrid = control.GetType().FullName == "GitUI.Compat.WinFormsControls.DataGridView";
         bool isSourcePictureBox = control.GetType().FullName == "GitUI.Compat.WinFormsControls.PictureBox";
-        bool isLocalSourceFlowLayoutPanel = _root.GetType().FullName == "GitUI.CommandsDialogs.FormRemotes"
+        bool isRemoteLocalSourceFlowLayoutPanel = _root.GetType().FullName == "GitUI.CommandsDialogs.FormRemotes"
             && control.Name == "flowLayoutPanelSsh";
+        bool isGitIgnoreLocalSourceFlowLayoutPanel = _root.GetType().FullName == "GitUI.CommandsDialogs.FormGitIgnore"
+            && (control.Name is "flowLayoutPanel2" or "panel1");
+        bool isLocalSourceFlowLayoutPanel = isRemoteLocalSourceFlowLayoutPanel
+            || isGitIgnoreLocalSourceFlowLayoutPanel;
         bool isRemoteColorButton = _root.GetType().FullName == "GitUI.CommandsDialogs.FormRemotes"
             && control.Name == "btnRemoteColor";
-        bool isDialogControlsPanel = _root.GetType().FullName == "GitUI.CommandsDialogs.FormPull"
+        bool isDialogControlsPanel = (_root.GetType().FullName is
+            "GitUI.CommandsDialogs.FormCheckoutRevision" or
+            "GitUI.CommandsDialogs.FormPull")
             && control.Name == "ControlsPanel";
         bool isInheritedFormProcessContainer = IsInheritedFormProcessContainer(control);
         bool isSourceTransparentContainer = IsSourceTransparentContainer(control);
@@ -451,17 +456,37 @@ internal sealed class AvaloniaControlTreeReader
             ? null
             : fieldNames.FirstOrDefault()
               ?? (control is MenuItem or Separator || string.IsNullOrEmpty(control.Name) ? null : control.Name);
+        if (control.Name == "tableLayoutPanel1"
+            && control.Parent?.GetType().FullName == "GitUI.UserControls.CommitPickerSmallControl"
+            && fieldNames.Count == 0)
+        {
+            // The WinForms Designer names this local layout variable but does not declare a
+            // control field. Preserve its tree name without inventing a structural member.
+            fieldName = null;
+        }
+
+        bool isCommitPickerLocalLayout = fieldName is null
+            && control.Name == "tableLayoutPanel1"
+            && control.Parent?.GetType().FullName == "GitUI.UserControls.CommitPickerSmallControl";
         string? sourceType = GetSourceType(control, fieldName);
         bool hasWinFormsTextBoxClientInset = control is TextBox
             && !isSpellCheckTextBox
             && !IsSourceRichTextControl(control)
             && GetSourceTypeName(sourceType) is not "RichTextBox";
+        bool hasSourceVerticalTextScrollBar = control is TextBox
+            && ((_root.GetType().FullName == "GitUI.CommandsDialogs.FormAddToGitIgnore"
+                    && control.Name == "FilePattern")
+                || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormGitIgnore"
+                    && control.Name == "label1"));
         bool isShellPreviewPanel = _root.GetType().FullName == "GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage"
             && control is Border
             && string.IsNullOrEmpty(control.Name)
             && control.GetLogicalDescendants().OfType<Control>().Any(descendant => descendant.Name == "labelPreview");
         sourceType ??= isShellPreviewPanel ? "Panel" : null;
         string sourceOwnerType = GetSourceOwnerType(control);
+        string rootMetadataType = GetMetadataTypeName(_root.GetType());
+        bool isSearchWindowControl = rootMetadataType == "GitUI.CommandsDialogs.SearchWindow"
+            && fieldName == "_searchControl";
         bool isSourceList = IsSourceListControl(sourceType);
         bool isSourceCheckedList = GetSourceTypeName(sourceType) == "CheckedListBox";
         bool isSourcePictureBoxControl = GetSourceTypeName(sourceType) == "PictureBox";
@@ -485,6 +510,9 @@ internal sealed class AvaloniaControlTreeReader
             "GitUI.CommandsDialogs.FormCompareToBranch" or
             "GitUI.CommandsDialogs.FormDiff" or
             "GitUI.CommandsDialogs.FormFormatPatch" or
+            "GitUI.CommandsDialogs.FormGitAttributes" or
+            "GitUI.CommandsDialogs.FormGitIgnore" or
+            "GitUI.CommandsDialogs.FormMailMap" or
             "GitUI.CommandsDialogs.FormLog";
         string? semanticName = fieldName ?? control.Name;
         bool isFormCommitStatusItem = isFormCommitSurface && IsFormCommitStatusItem(semanticName);
@@ -498,8 +526,14 @@ internal sealed class AvaloniaControlTreeReader
             control,
             fieldName);
         CaptureColors? blameLogSemanticColors = ReadBlameLogSemanticColors(control, fieldName);
+        CaptureColors? navigationEditorSemanticColors = ReadNavigationEditorSemanticColors(
+            control,
+            sourceOwnerType,
+            fieldName,
+            isSurfaceRoot);
         bool isDesignerMetadataControl = fieldName is not null && IsDesignerMetadataControl(control);
-        Control? childSemanticParent = isSurfaceRoot || fieldName is not null || isInheritedFormProcessContainer || isShellPreviewPanel
+        Control? childSemanticParent = isSurfaceRoot || fieldName is not null || isInheritedFormProcessContainer
+                                                || isLocalSourceFlowLayoutPanel || isShellPreviewPanel || isSearchWindowControl
             ? control
             : semanticParent;
         string segment = isSurfaceRoot
@@ -511,6 +545,7 @@ internal sealed class AvaloniaControlTreeReader
         DesignerLayoutMetadata? designerLayout = GetDesignerLayout(
             control,
             fieldName ?? (isLocalSourceFlowLayoutPanel ? control.Name : null));
+        bool hasSourceFixedSingleClientInset = designerLayout?.BorderStyle == "FixedSingle";
         bool hasNativeListComposite = TryGetNativeListComposite(control, out Grid? nativeListComposite, out _);
         Rect bounds = isFormCommitSurface && semanticName == "Ok"
             ? new Rect(334, 10, 75, 23)
@@ -520,6 +555,13 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (hasNativeListComposite
                 ? GetSemanticBounds(nativeListComposite!, semanticParent)
                 : GetSemanticBounds(semanticStateControl, semanticParent));
+        if (rootMetadataType is "GitUI.CommandsDialogs.FormGitAttributes" or "GitUI.CommandsDialogs.FormMailMap"
+            && semanticName == "Save")
+        {
+            // WinForms resolves right anchoring to integral device coordinates at 96 DPI.
+            bounds = new Rect(Math.Floor(bounds.X), bounds.Y, bounds.Width, bounds.Height);
+        }
+
         bool semanticVisible = IsSemanticallyVisible(control, semanticStateControl)
             && (!isSourceToolStripItem || IsInsideClippedAncestors(control))
             && ancestorSemanticVisible;
@@ -550,7 +592,7 @@ internal sealed class AvaloniaControlTreeReader
                     ? "System.Windows.Forms.PictureBox"
                     : isShellPreviewPanel
                         ? "System.Windows.Forms.Panel"
-                    : isLocalSourceFlowLayoutPanel
+                        : isLocalSourceFlowLayoutPanel
                             ? "System.Windows.Forms.FlowLayoutPanel"
                         : isRemoteColorButton
                             ? "System.Windows.Forms.Button"
@@ -585,41 +627,59 @@ internal sealed class AvaloniaControlTreeReader
             ClientSizePx = new CaptureSize
             {
                 Width = ToPixel(isSourceList
-                    ? designerLayout?.BorderStyle == "None" ? bounds.Width : GetSourceListClientWidth(bounds, sourceType)
+                    ? designerLayout?.BorderStyle == "None" ? bounds.Width : GetSourceListClientWidth(bounds, sourceType, designerLayout?.BorderStyle)
+                    : hasSourceFixedSingleClientInset
+                        ? Math.Max(0, bounds.Width - 2)
                     : isSpellCheckAutoComplete
                         ? Math.Max(0, bounds.Width - 2)
-                        : isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Width - 4) : bounds.Width),
+                    : hasWinFormsTextBoxClientInset
+                        ? GetSourceTextBoxClientWidth(bounds, designerLayout?.BorderStyle, hasSourceVerticalTextScrollBar)
+                    : isNativeListView ? Math.Max(0, bounds.Width - 4) : bounds.Width),
                 Height = ToPixel(isSourceList
-                    ? designerLayout?.BorderStyle == "None" ? bounds.Height : Math.Max(0, bounds.Height - 4)
+                    ? designerLayout?.BorderStyle == "None" ? bounds.Height : Math.Max(0, bounds.Height - (hasSourceFixedSingleClientInset ? 2 : 4))
+                    : hasSourceFixedSingleClientInset
+                        ? Math.Max(0, bounds.Height - 2)
                     : isSpellCheckAutoComplete
                         ? Math.Max(0, bounds.Height - 2)
-                        : isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Height - 4) : bounds.Height)
+                        : hasWinFormsTextBoxClientInset
+                            ? GetSourceTextBoxClientHeight(bounds, designerLayout?.BorderStyle)
+                        : isNativeListView ? Math.Max(0, bounds.Height - 4) : bounds.Height)
             },
             ClientSizeDip = new CaptureSizeF
             {
                 Width = ToDecimal(isSourceList
-                    ? designerLayout?.BorderStyle == "None" ? bounds.Width : GetSourceListClientWidth(bounds, sourceType)
+                    ? designerLayout?.BorderStyle == "None" ? bounds.Width : GetSourceListClientWidth(bounds, sourceType, designerLayout?.BorderStyle)
+                    : hasSourceFixedSingleClientInset
+                        ? Math.Max(0, bounds.Width - 2)
                     : isSpellCheckAutoComplete
                         ? Math.Max(0, bounds.Width - 2)
-                        : isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Width - 4) : bounds.Width),
+                    : hasWinFormsTextBoxClientInset
+                        ? GetSourceTextBoxClientWidth(bounds, designerLayout?.BorderStyle, hasSourceVerticalTextScrollBar)
+                    : isNativeListView ? Math.Max(0, bounds.Width - 4) : bounds.Width),
                 Height = ToDecimal(isSourceList
-                    ? designerLayout?.BorderStyle == "None" ? bounds.Height : Math.Max(0, bounds.Height - 4)
+                    ? designerLayout?.BorderStyle == "None" ? bounds.Height : Math.Max(0, bounds.Height - (hasSourceFixedSingleClientInset ? 2 : 4))
+                    : hasSourceFixedSingleClientInset
+                        ? Math.Max(0, bounds.Height - 2)
                     : isSpellCheckAutoComplete
                         ? Math.Max(0, bounds.Height - 2)
-                        : isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Height - 4) : bounds.Height)
+                        : hasWinFormsTextBoxClientInset
+                            ? GetSourceTextBoxClientHeight(bounds, designerLayout?.BorderStyle)
+                        : isNativeListView ? Math.Max(0, bounds.Height - 4) : bounds.Height)
             },
             ItemHeightDip = isRevisionGridView
                 ? ReadRevisionGridItemHeight(control)
                 : isComboBoxPopup ? 15 : null,
             Padding = ReadThicknessPair(isComboBoxPopup || isComboBoxPopupItem
                 ? default(Thickness)
-                : isFileViewerInternal ? _root.GetType().FullName == "GitUI.CommandsDialogs.FormLog"
+                : isFileViewerInternal ? UsesZeroInsetFileViewer()
                     ? default(Thickness)
                     : new Thickness(5, 0, 0, 0)
                 : isFormCommitToolStripPanel ? default(Thickness)
                 : isFormCommitSurface && semanticName is "Ok" or "Cancel" ? default(Thickness)
                 : isInheritedFormProcessContainer
-                    ? new Thickness(control.Name == "MainPanel" ? 9 : 5)
+                    ? GetInheritedFormProcessPadding(control)
+                : isGitIgnoreLocalSourceFlowLayoutPanel && control.Name == "panel1"
+                    ? new Thickness(0, 0, 8, 4)
                 : designerLayout?.Padding
                 ?? (isPopupRoot ? new Thickness(33, 2, 1, 2) : (Thickness?)null)
                 ?? (isSemanticToolStrip ? new Thickness(0, 0, 1, 0) : (Thickness?)null)
@@ -643,9 +703,16 @@ internal sealed class AvaloniaControlTreeReader
                 : isFormCommitSurface && semanticName == "_waitSpinner" ? new Thickness(3)
                 : isFormCommitSurface && semanticName == "_currentFilesList" ? new Thickness(3, 4)
                 : isFormCommitSurface && semanticName is "Ok" or "Cancel" ? new Thickness(3)
-                : isInheritedFormProcessContainer ? default(Thickness)
+                : isInheritedFormProcessContainer || isSearchWindowControl
+                    ? default(Thickness)
+                : isGitIgnoreLocalSourceFlowLayoutPanel
+                    ? new Thickness(3)
+                : isCommitPickerLocalLayout
+                    ? new Thickness(2)
                 : isSurfaceRoot && !isPopupRoot
-                    ? _root.GetType().FullName == "GitUI.CommandsDialogs.FormCommit"
+                    ? rootMetadataType == "GitUI.CommandsDialogs.SearchControl"
+                        ? default(Thickness)
+                    : _root.GetType().FullName == "GitUI.CommandsDialogs.FormCommit"
                         ? new Thickness(2)
                         : new Thickness(3)
                 : designerLayout?.Margin
@@ -685,6 +752,7 @@ internal sealed class AvaloniaControlTreeReader
                 : isShellPreviewPanel
                     ? ReadFont(_root)
                 : ReadFont(isLocalSourceFlowLayoutPanel
+                           || isCommitPickerLocalLayout
                            || IsDetachedMenuItem(control)
                            || isSemanticToolStrip
                            || isSemanticToolStripItem
@@ -702,6 +770,8 @@ internal sealed class AvaloniaControlTreeReader
                     ? formCommitSemanticColors
                 : blameLogSemanticColors is not null
                     ? blameLogSemanticColors
+                : navigationEditorSemanticColors is not null
+                    ? navigationEditorSemanticColors
                 : isSurfaceRoot && _usesDesignerLayoutMetadata
                     ? ReadSourceDesignerColors(control)
                 : isShellPreviewPanel
@@ -787,6 +857,10 @@ internal sealed class AvaloniaControlTreeReader
                 ? null
                 : isShellPreviewPanel
                     ? "None"
+                : isLocalSourceFlowLayoutPanel
+                    ? "None"
+                : isCommitPickerLocalLayout
+                    ? "None"
                 : isSurfaceRoot && _usesDesignerLayoutMetadata && control is not Window
                     ? "None"
                 : isFormCommitToolStripPanel && semanticName != "_contentPanel"
@@ -846,7 +920,8 @@ internal sealed class AvaloniaControlTreeReader
             CornerRadiusDip = isSourceLabelSubstitute || isComboBoxPopupItem || isDesignerMetadataControl
                 ? null
                 : ReadCornerRadius(control),
-            Anchor = isComboBoxPopup || isComboBoxPopupItem ? [] : isShellPreviewPanel ? ["Top", "Left"] : designerLayout?.Anchor
+            Anchor = isComboBoxPopup || isComboBoxPopupItem ? []
+                : isShellPreviewPanel || isLocalSourceFlowLayoutPanel || isCommitPickerLocalLayout ? ["Top", "Left"] : designerLayout?.Anchor
                 ?? (isSurfaceRoot && !isPopupRoot ? new[] { "Top", "Left" } : null)
                 ?? (isFormCommitSurface && (isFormCommitToolStripPanel || semanticName is "_waitSpinner" or "_currentFilesList" or "Ok" or "Cancel")
                     ? new[] { "Top", "Left" }
@@ -866,7 +941,12 @@ internal sealed class AvaloniaControlTreeReader
                     : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage
                 ? ["Top", "Left"]
                 : []),
-            Dock = isComboBoxPopup || isComboBoxPopupItem ? null : isLocalSourceFlowLayoutPanel || isShellPreviewPanel ? "Fill" : designerLayout?.Dock
+            Dock = isComboBoxPopup || isComboBoxPopupItem ? null
+                : isRemoteLocalSourceFlowLayoutPanel || isShellPreviewPanel ? "Fill"
+                : isGitIgnoreLocalSourceFlowLayoutPanel ? "Bottom"
+                : isSearchWindowControl ? "Fill"
+                : isCommitPickerLocalLayout ? "Fill"
+                : designerLayout?.Dock
                 ?? (isSurfaceRoot && !isPopupRoot ? "None" : null)
                 ?? (isFormCommitSurface
                     ? semanticName switch
@@ -907,9 +987,11 @@ internal sealed class AvaloniaControlTreeReader
                                 : isRevisionGrid || isNativeTabPage || isNativeButton
                                     ? isNativeButton && control.Name == "buttonBrowse" ? "Fill" : "None"
                                     : isRevisionGridView || isNativeListView || isNativeTabControl ? "Fill" : null),
-            AutoSize = isComboBoxPopupItem ? false : isLocalSourceFlowLayoutPanel || isShellPreviewPanel ? true : designerLayout?.AutoSize
+            AutoSize = isComboBoxPopupItem ? false
+                : isLocalSourceFlowLayoutPanel || isShellPreviewPanel || isSearchWindowControl || isCommitPickerLocalLayout ? true
+                : designerLayout?.AutoSize
                 ?? (isSurfaceRoot && !isPopupRoot
-                    ? WinFormsInputMetadata.AutoSizeRootTypes.Contains(_root.GetType().FullName ?? _root.GetType().Name)
+                    ? WinFormsInputMetadata.AutoSizeRootTypes.Contains(GetMetadataTypeName(_root.GetType()))
                     : (bool?)null)
                 ?? (isFormCommitSurface
                     ? semanticName switch
@@ -956,8 +1038,8 @@ internal sealed class AvaloniaControlTreeReader
                 : isSourceList && control is ListBox sourceListWithSelection
                     ? GetSourceListText(sourceListWithSelection)
                 : isSourcePictureBoxControl && control.Name == "menuHelp"
-                    ? GetToolTip(control) ?? GetText(control)
-                : GetText(control),
+                ? GetToolTip(control) ?? GetText(control)
+                : IsHiddenEditorEncodingSelector(control) ? string.Empty : GetText(control),
             ToolTip = GetToolTip(control),
             TranslationSource = fieldName,
             TabIndex = isComboBoxPopupItem ? null
@@ -972,6 +1054,8 @@ internal sealed class AvaloniaControlTreeReader
                         "_contentPanel" => 0,
                         _ => null,
                     }
+                : isSearchWindowControl ? 1
+                : isCommitPickerLocalLayout ? 0
                 : GetSourceTabIndex(control, fieldName) is int sourceTabIndex ? sourceTabIndex
                 : fieldName == "_contentPanel" ? 0
                 : isSemanticToolStrip ? 0
@@ -990,8 +1074,12 @@ internal sealed class AvaloniaControlTreeReader
                 : isRevisionGridView
                 ? 0
                 : isInheritedFormProcessContainer
-                    ? control.Name == "MainPanel" ? 1 : 0
+                    ? _root.GetType().FullName == "GitUI.CommandsDialogs.FormCheckoutRevision"
+                        ? control.Name == "MainPanel" ? 0 : 1
+                        : control.Name == "MainPanel" ? 1 : 0
                 : isShellPreviewPanel ? 0
+                : isGitIgnoreLocalSourceFlowLayoutPanel
+                    ? control.Name == "flowLayoutPanel2" ? 6 : 5
                 : isLocalSourceFlowLayoutPanel ? 3
                 : isSemanticToolStripItem || control is MenuItem or Separator || isPopupRoot ? null
                 : GetSourceTabIndex(control, fieldName) ?? KeyboardNavigation.GetTabIndex(control),
@@ -1068,6 +1156,9 @@ internal sealed class AvaloniaControlTreeReader
                 ? null
                 : isSourceCheckedList
                     ? false
+                : rootMetadataType == "GitUI.CommandsDialogs.SearchWindow"
+                    && control.Name == "listBoxSearchResult"
+                    ? false
                 : isSourceList && control is ListBox sourceList
                     ? sourceList.SelectedIndex >= 0
                 : isFormBrowseMenuStrip && control is MenuItem
@@ -1105,8 +1196,7 @@ internal sealed class AvaloniaControlTreeReader
         }
 
         string ownerType = _fieldOwnerTypes.GetValueOrDefault(control)
-            ?? _root.GetType().FullName
-            ?? _root.GetType().Name;
+            ?? GetMetadataTypeName(_root.GetType());
         return WinFormsInputMetadata.LayoutByType.TryGetValue(ownerType, out IReadOnlyList<DesignerLayoutMetadata>? controls)
             ? controls.FirstOrDefault(item => item.FieldName == fieldName) is { FieldName: not null } metadata
                 ? metadata
@@ -1129,8 +1219,7 @@ internal sealed class AvaloniaControlTreeReader
 
     private string GetSourceOwnerType(Control control)
         => _fieldOwnerTypes.GetValueOrDefault(control)
-           ?? _root.GetType().FullName
-           ?? _root.GetType().Name;
+           ?? GetMetadataTypeName(_root.GetType());
 
     private bool IsDesignerMetadataControl(Control control)
         => _usesDesignerLayoutMetadata
@@ -1159,12 +1248,25 @@ internal sealed class AvaloniaControlTreeReader
     private static bool IsSourceListControl(string? sourceType)
         => GetSourceTypeName(sourceType) is "CheckedListBox" or "ListBox" or "ListView" or "NativeListView";
 
-    private static double GetSourceListClientWidth(Rect bounds, string? sourceType)
+    private static double GetSourceListClientWidth(Rect bounds, string? sourceType, string? borderStyle)
     {
-        double nativeBorder = 4;
+        double nativeBorder = borderStyle == "FixedSingle" ? 2 : 4;
         double nativeVerticalScrollBar = GetSourceTypeName(sourceType) == "NativeListView" ? 17 : 0;
         return Math.Max(0, bounds.Width - nativeBorder - nativeVerticalScrollBar);
     }
+
+    private static double GetSourceTextBoxClientWidth(
+        Rect bounds,
+        string? borderStyle,
+        bool hasVerticalScrollBar)
+    {
+        double nativeBorder = borderStyle == "None" ? 0 : 4;
+        double nativeVerticalScrollBar = hasVerticalScrollBar ? 17 : 0;
+        return Math.Max(0, bounds.Width - nativeBorder - nativeVerticalScrollBar);
+    }
+
+    private static double GetSourceTextBoxClientHeight(Rect bounds, string? borderStyle)
+        => Math.Max(0, bounds.Height - (borderStyle == "None" ? 0 : 4));
 
     private Thickness GetDefaultDesignerMargin(Control control, string? sourceType)
     {
@@ -1172,7 +1274,7 @@ internal sealed class AvaloniaControlTreeReader
             ? new Thickness(3, 4)
             : control is TextBlock or Label or HyperlinkButton ? new Thickness(3, 0) : new Thickness(3);
         if (!WinFormsInputMetadata.DesignerDpiByType.TryGetValue(
-                _root.GetType().FullName ?? _root.GetType().Name,
+                GetMetadataTypeName(_root.GetType()),
                 out DesignerDpiMetadata designerDpi))
         {
             return margin;
@@ -1197,8 +1299,7 @@ internal sealed class AvaloniaControlTreeReader
     private bool GetSourceDesignerTabStop(Control control, string fieldName, string? sourceType)
     {
         string ownerType = _fieldOwnerTypes.GetValueOrDefault(control)
-            ?? _root.GetType().FullName
-            ?? _root.GetType().Name;
+            ?? GetMetadataTypeName(_root.GetType());
         bool? explicitTabStop = WinFormsInputMetadata.ByType.TryGetValue(
             ownerType,
             out IReadOnlyList<InputControlMetadata>? controls)
@@ -1391,6 +1492,19 @@ internal sealed class AvaloniaControlTreeReader
             return new Rect(0, 0, control.Bounds.Width, control.Bounds.Height);
         }
 
+        if (IsEditorDialog()
+            && control.Parent is Grid editorSplitPanel
+            && editorSplitPanel.Parent is Grid editorSplit
+            && GetSourceTypeName(GetSourceType(
+                editorSplit,
+                GetFieldNames(editorSplit).FirstOrDefault() ?? editorSplit.Name)) == "SplitContainer"
+            && control.TranslatePoint(default, editorSplitPanel) is Point editorPanelOrigin)
+        {
+            // WinForms reports children relative to the implicit SplitterPanel. The Avalonia
+            // layout Grid is flattened, so retain the same panel-local coordinate space.
+            return new Rect(editorPanelOrigin, control.Bounds.Size);
+        }
+
         if (semanticParent is Grid
             && GetSourceTypeName(GetSourceType(
                 semanticParent,
@@ -1411,7 +1525,7 @@ internal sealed class AvaloniaControlTreeReader
         {
             // The native text editor exposes a five-DIP left client inset even though its
             // outer Designer bounds begin at zero. Preserve that semantic client geometry.
-            return _root.GetType().FullName == "GitUI.CommandsDialogs.FormLog"
+            return UsesZeroInsetFileViewer()
                 ? new Rect(0, 0, semanticParent.Bounds.Width, control.Bounds.Height)
                 : new Rect(5, 0, Math.Max(0, semanticParent.Bounds.Width - 5), control.Bounds.Height);
         }
@@ -1665,7 +1779,7 @@ internal sealed class AvaloniaControlTreeReader
 
     private IEnumerable<Control> GetDetachedSourceFields()
     {
-        string rootType = _root.GetType().FullName ?? _root.GetType().Name;
+        string rootType = GetMetadataTypeName(_root.GetType());
         if (!WinFormsInputMetadata.SourceByType.TryGetValue(
                 rootType,
                 out IReadOnlyList<SourceControlMetadata>? sourceControls))
@@ -2229,13 +2343,20 @@ internal sealed class AvaloniaControlTreeReader
             : null;
 
     private string? ResolveSourceControlTextArgb()
-        => _root.GetType().FullName is
+        => GetMetadataTypeName(_root.GetType()) is
+            "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit" or
             "GitUI.CommandsDialogs.BrowseDialog.FormGitCommandLog" or
+            "GitUI.CommandsDialogs.FormCheckoutRevision" or
             "GitUI.CommandsDialogs.FormCommit" or
             "GitUI.CommandsDialogs.FormCompareToBranch" or
             "GitUI.CommandsDialogs.FormDiff" or
             "GitUI.CommandsDialogs.FormFormatPatch" or
+            "GitUI.CommandsDialogs.FormGitAttributes" or
+            "GitUI.CommandsDialogs.FormGitIgnore" or
+            "GitUI.CommandsDialogs.FormMailMap" or
             "GitUI.CommandsDialogs.FormLog"
+            or "GitUI.CommandsDialogs.SearchControl"
+            or "GitUI.CommandsDialogs.SearchWindow"
             ? ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
             : ResolveResourceArgb("GitExtensionsSourceControlTextBrush");
 
@@ -2302,10 +2423,13 @@ internal sealed class AvaloniaControlTreeReader
                     or "toolbarCommit" or "commitStatusStrip" or "fileviewerToolbar"))
            || ((_root.GetType().FullName is
                 "GitUI.CommandsDialogs.FormBlame" or
-                    "GitUI.CommandsDialogs.FormCompareToBranch" or
-                    "GitUI.CommandsDialogs.FormDiff" or
-                    "GitUI.CommandsDialogs.FormFormatPatch" or
-                    "GitUI.CommandsDialogs.FormLog")
+                "GitUI.CommandsDialogs.FormCompareToBranch" or
+                "GitUI.CommandsDialogs.FormDiff" or
+                "GitUI.CommandsDialogs.FormFormatPatch" or
+                "GitUI.CommandsDialogs.FormGitAttributes" or
+                "GitUI.CommandsDialogs.FormGitIgnore" or
+                "GitUI.CommandsDialogs.FormMailMap" or
+                "GitUI.CommandsDialogs.FormLog")
                && IsSemanticToolStripItem(control))
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
            && (control.Name is "toolStripLabel1" or "tsbShowReflog" or "tsbtnAdvancedFilter"
@@ -2467,6 +2591,15 @@ internal sealed class AvaloniaControlTreeReader
             && control is Panel or ScrollViewer
             && string.IsNullOrEmpty(control.Name)
             && GetFieldNames(control).Count == 0)
+           || ((GetMetadataTypeName(_root.GetType()) == "GitUI.CommandsDialogs.SearchControl"
+                || control.GetLogicalAncestors().Any(
+                    ancestor => GetMetadataTypeName(ancestor.GetType()) == "GitUI.CommandsDialogs.SearchControl"))
+               && control is Border
+               && string.IsNullOrEmpty(control.Name))
+           || (GetMetadataTypeName(_root.GetType()) == "GitUI.CommandsDialogs.SearchWindow"
+               && control is ContentControl
+               && string.IsNullOrEmpty(control.Name)
+               && GetFieldNames(control).Count == 0)
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
                 && control.Name is "toolStripMainHost" or "toolStripMainViewport"
                     or "toolStripFiltersHost" or "toolStripFiltersViewport"
@@ -2708,6 +2841,79 @@ internal sealed class AvaloniaControlTreeReader
             Foreground = ResolveSourceControlTextArgb()
                          ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush")
         };
+    }
+
+    private CaptureColors? ReadNavigationEditorSemanticColors(
+        Control control,
+        string sourceOwnerType,
+        string? fieldName,
+        bool isSurfaceRoot)
+    {
+        string rootType = GetMetadataTypeName(_root.GetType());
+        string? name = fieldName ?? control.Name;
+        if (sourceOwnerType == "GitUI.UserControls.CommitPickerSmallControl" && name == "lbCommits")
+        {
+            return ReadColors(control) with
+            {
+                Foreground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                             ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush")
+            };
+        }
+
+        if ((rootType == "GitUI.CommandsDialogs.SearchControl" && isSurfaceRoot)
+            || (sourceOwnerType == "GitUI.CommandsDialogs.SearchControl" && name == "tableLayoutPanel1"))
+        {
+            return ReadTransparentContainerColors(control);
+        }
+
+        if (rootType == "GitUI.CommandsDialogs.SearchWindow"
+            && (isSurfaceRoot
+                || (sourceOwnerType == "GitUI.CommandsDialogs.SearchWindow" && name == "tableLayoutPanel1")))
+        {
+            CaptureColors colors = ReadColors(control);
+            return colors with
+            {
+                Foreground = ResolveSourceControlTextArgb(),
+                Background = "#FF00FF00",
+                Border = null,
+                DisabledBackground = "#FF00FF00"
+            };
+        }
+
+        bool isEditorDialog = rootType is
+            "GitUI.CommandsDialogs.FormGitAttributes" or
+            "GitUI.CommandsDialogs.FormGitIgnore" or
+            "GitUI.CommandsDialogs.FormMailMap";
+        if (!isEditorDialog || isSurfaceRoot)
+        {
+            return null;
+        }
+
+        if (rootType == "GitUI.CommandsDialogs.FormGitIgnore" && name == "label1")
+        {
+            string? background = ResolveResourceArgb("GitExtensionsKnownColorControlBrush");
+            return EmptyColors() with
+            {
+                Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush"),
+                Background = background,
+                DisabledForeground = ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
+                DisabledBackground = background
+            };
+        }
+
+        bool isTransparent = name is
+            "splitContainer1" or
+            "_NO_TRANSLATE_GitAttributesText" or
+            "_NO_TRANSLATE_GitIgnoreEdit" or
+            "_NO_TRANSLATE_MailMapText" or
+            "internalFileViewer" or
+            "_NO_TRANSLATE_lblShowPreview"
+            || (rootType == "GitUI.CommandsDialogs.FormGitIgnore"
+                && name is "flowLayoutPanel2" or "panel1" or "AddDefault" or "AddPattern"
+                    or "lnkGitIgnoreGenerate" or "lnkGitIgnorePatterns")
+            || (rootType is "GitUI.CommandsDialogs.FormGitAttributes" or "GitUI.CommandsDialogs.FormMailMap"
+                && name is "label1" or "Save");
+        return isTransparent ? ReadTransparentContainerColors(control) : null;
     }
 
     private CaptureColors? ReadFormBrowseSemanticColors(
@@ -3482,8 +3688,31 @@ internal sealed class AvaloniaControlTreeReader
         => control is ListBox list && list.Classes.Contains("gitextensions-native-list-items");
 
     private bool IsInheritedFormProcessContainer(Control control)
-        => _root.GetType().FullName == "GitUI.CommandsDialogs.FormPull"
-           && control.Name is "MainPanel" or "ControlsPanel";
+        => (_root.GetType().FullName is
+               "GitUI.CommandsDialogs.FormCheckoutRevision" or
+               "GitUI.CommandsDialogs.FormPull")
+           && (control.Name is "MainPanel" or "ControlsPanel");
+
+    private Thickness GetInheritedFormProcessPadding(Control control)
+        => _root.GetType().FullName == "GitUI.CommandsDialogs.FormCheckoutRevision"
+            && control.Name == "MainPanel"
+                ? new Thickness(12)
+                : new Thickness(control.Name == "MainPanel" ? 9 : 5);
+
+    private bool IsEditorDialog()
+        => _root.GetType().FullName is
+            "GitUI.CommandsDialogs.FormGitAttributes" or
+            "GitUI.CommandsDialogs.FormGitIgnore" or
+            "GitUI.CommandsDialogs.FormMailMap";
+
+    private bool UsesZeroInsetFileViewer()
+        => IsEditorDialog()
+           || _root.GetType().FullName == "GitUI.CommandsDialogs.FormLog";
+
+    private bool IsHiddenEditorEncodingSelector(Control control)
+        => IsEditorDialog()
+           && control.Name == "encodingToolStripComboBox"
+           && !control.IsEffectivelyVisible;
 
     private static bool IsNativeTabControl(Control control)
         => control is TabControl tabControl

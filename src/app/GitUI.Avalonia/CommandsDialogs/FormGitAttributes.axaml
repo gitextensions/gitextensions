@@ -22,18 +22,15 @@
               Height="25"
               HorizontalAlignment="Right"
               VerticalAlignment="Bottom"
-              Margin="0,0,12,10"
+              Margin="0,0,14,10"
               TabIndex="0"
               Content="Save" />
-      <Label x:Name="label1"
-             Width="209"
-             Height="285"
-             HorizontalAlignment="Left"
-             VerticalAlignment="Top"
-             Margin="3,9,0,0"
-             Padding="0"
-             TabIndex="1"
-             Content="Edit the git attributes&#10;Define attributes per path&#10;&#10;Examples&#10;Mark all jpg files as binary:&#10;*.jpg binary&#10;&#10;Mark sln files as binary:&#10;*.sln binary&#10;&#10;Mark single file as text:&#10;weirdchars.txt text&#10;&#10;For more information run&#10;command &quot;git help gitattributes&quot;&#10;" />
+      <TextBlock x:Name="label1"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 Margin="3,9,0,0"
+                 TabIndex="1"
+                 Text="Edit the git attributes&#10;Define attributes per path&#10;&#10;Examples&#10;Mark all jpg files as binary:&#10;*.jpg binary&#10;&#10;Mark sln files as binary:&#10;*.sln binary&#10;&#10;Mark single file as text:&#10;weirdchars.txt text&#10;&#10;For more information run&#10;command &quot;git help gitattributes&quot;&#10;" />
     </Grid>
   </Grid>
 </Window>

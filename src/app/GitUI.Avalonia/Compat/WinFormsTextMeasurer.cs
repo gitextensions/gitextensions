@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -22,28 +22,30 @@ internal static class WinFormsTextMeasurer
     public static double Measure(TextBlock owner, string value)
         => MeasureSize(owner, value).Width;
 
-    public static AvaloniaSize MeasureSize(TextBlock owner, string value)
-        => MeasureSize(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize, value);
+    public static AvaloniaSize MeasureSize(TextBlock owner, string value, bool singleLine = true)
+        => MeasureSize(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize, value, singleLine);
 
     public static AvaloniaSize MeasureSize(TemplatedControl owner, string value)
-        => MeasureSize(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize, value);
+        => MeasureSize(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize, value, singleLine: true);
 
     private static AvaloniaSize MeasureSize(
         FontFamily fontFamily,
         FontStyle fontStyle,
         FontWeight fontWeight,
         double fontSize,
-        string value)
+        string value,
+        bool singleLine = true)
     {
+        string measuredValue = singleLine ? value : value.TrimEnd('\r', '\n');
         if (OperatingSystem.IsWindows()
-            && TryMeasureWithGdi(fontFamily, fontStyle, fontWeight, fontSize, value, out AvaloniaSize size))
+            && TryMeasureWithGdi(fontFamily, fontStyle, fontWeight, fontSize, measuredValue, singleLine, out AvaloniaSize size))
         {
             return size;
         }
 
         Typeface typeface = new(fontFamily, fontStyle, fontWeight);
         FormattedText formattedText = new(
-            value,
+            measuredValue,
             CultureInfo.CurrentUICulture,
             FlowDirection.LeftToRight,
             typeface,
@@ -58,6 +60,7 @@ internal static class WinFormsTextMeasurer
         FontWeight fontWeight,
         double fontSize,
         string value,
+        bool singleLine,
         out AvaloniaSize size)
     {
         const int defaultCharset = 1;
@@ -102,7 +105,7 @@ internal static class WinFormsTextMeasurer
             value,
             value.Length,
             ref rectangle,
-            DrawTextCalculateRectangle | DrawTextSingleLine | DrawTextNoPrefix);
+            DrawTextCalculateRectangle | DrawTextNoPrefix | (singleLine ? DrawTextSingleLine : 0));
         SelectObject(deviceContext, previousFont);
         DeleteObject(font);
         ReleaseDC(0, deviceContext);

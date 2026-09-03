@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -2796,6 +2796,7 @@ public partial class FileViewer : GitModuleControl
             encodingToolStripComboBox.ItemsSource = GetAvailableEncodings()
                 .Select(encoding => encoding.EncodingName)
                 .ToArray();
+            encodingToolStripComboBox.SelectedIndex = -1;
         }
         finally
         {

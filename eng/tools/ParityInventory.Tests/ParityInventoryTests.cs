@@ -1246,6 +1246,37 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Run_should_not_treat_a_layout_panel_child_as_the_panels_translation_text()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.Designer.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                private Panel footerPanel;
+            }
+            """);
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml", """
+            <UserControl xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         x:Class="Sample.Widget">
+              <Panel x:Name="footerPanel">
+                <TextBlock Text="Status" />
+              </Panel>
+            </UserControl>
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.Twin.TranslationKeys.Should().NotContain(item => item.Key == "footerPanel.Text");
+        report.Findings.Should().NotContain(item =>
+            item.Code.StartsWith("translation.", StringComparison.Ordinal)
+            && item.Path.Contains("footerPanel.Text", StringComparison.Ordinal));
+    }
+
+    [Test]
     public void Run_should_recognize_explicit_translation_registration_as_a_translation_key()
     {
         using InventoryFixture fixture = new();
