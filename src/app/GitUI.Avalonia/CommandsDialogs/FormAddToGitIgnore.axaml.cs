@@ -4,6 +4,7 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
+using GitUI.Compat;
 using Microsoft;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -24,6 +25,7 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
     public FormAddToGitIgnore()
     {
         InitializeComponent();
+        WinFormsAutoSizeTextBlock.Attach(_NO_TRANSLATE_filesWillBeIgnored, includePadding: true);
         WireEvents();
         InitializeComplete();
     }
@@ -34,6 +36,7 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
         _localExclude = localExclude;
 
         InitializeComponent();
+        WinFormsAutoSizeTextBlock.Attach(_NO_TRANSLATE_filesWillBeIgnored, includePadding: true);
         WireEvents();
         InitializeComplete();
 
@@ -116,7 +119,8 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
     private void UpdatePreviewPanel(IReadOnlyList<string> ignoredFiles)
     {
         _NO_TRANSLATE_Preview.ItemsSource = ignoredFiles;
-        _NO_TRANSLATE_filesWillBeIgnored.Content = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.ItemCount);
+        _NO_TRANSLATE_Preview.SelectedIndex = ignoredFiles.Count > 0 ? 0 : -1;
+        _NO_TRANSLATE_filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.ItemCount);
         _NO_TRANSLATE_Preview.IsEnabled = true;
         noMatchPanel.IsVisible = _NO_TRANSLATE_Preview.ItemCount == 0;
     }
@@ -135,7 +139,7 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
         if (_NO_TRANSLATE_Preview.IsEnabled)
         {
             _ignoredFilesLoader.Delay = TimeSpan.FromMilliseconds(300);
-            _NO_TRANSLATE_filesWillBeIgnored.Content = _updateStatusString.Text;
+            _NO_TRANSLATE_filesWillBeIgnored.Text = _updateStatusString.Text;
             _NO_TRANSLATE_Preview.ItemsSource = new List<string> { _updateStatusString.Text };
             _NO_TRANSLATE_Preview.IsEnabled = false;
         }
@@ -147,6 +151,12 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
     {
         _ignoredFilesLoader.Dispose();
         base.OnClosed(e);
+    }
+
+    protected override void OnRuntimeLoad(EventArgs e)
+    {
+        base.OnRuntimeLoad(e);
+        AddToIgnore.Focus();
     }
 
     internal TestAccessor GetTestAccessor() => new(this);

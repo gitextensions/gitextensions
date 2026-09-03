@@ -957,7 +957,8 @@ internal static class SourceInventoryReader
             // AXAML x:Name generates the field that the WinForms Designer declares explicitly.
             part.Members.Add(NewMember(part.Path, part.Members.Count, "field", name, accessibility, $"{kind} {name}"));
             XElement[] contentChildren = element.Elements().Take(2).ToArray();
-            bool hasNestedTextContent = contentChildren.Length == 1
+            bool hasNestedTextContent = kind != "Panel"
+                && contentChildren.Length == 1
                 && contentChildren[0].Name.LocalName == "TextBlock"
                 && contentChildren[0].Attribute("Text") is not null;
             string? translatedProperty = element.Attribute("Header") is not null

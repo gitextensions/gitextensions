@@ -13,23 +13,6 @@
   <Grid Margin="12,10,8,10"
         ColumnDefinitions="133,10,*,6,75"
         RowDefinitions="28,5,141,32,23,19,23,*">
-    <TextBlock x:Name="label1"
-               Width="112"
-               Height="15"
-               HorizontalAlignment="Left"
-               Text="Commit expression:"
-               VerticalAlignment="Center" />
-    <TextBox x:Name="textboxCommitExpression"
-             Grid.Column="2"
-             Height="23"
-             VerticalContentAlignment="Center" />
-    <Button x:Name="goButton"
-            Grid.Column="4"
-            MinWidth="75"
-            Height="28"
-            Content="Go"
-            IsDefault="True" />
-
     <GroupBox x:Name="groupBox1"
               Classes="gitextensions-group-box go-to-commit-help"
               Grid.Row="2"
@@ -56,6 +39,25 @@
                          Content="More see git-rev-parse" />
       </Canvas>
     </GroupBox>
+
+    <TextBlock x:Name="label1"
+               Width="112"
+               Height="15"
+               HorizontalAlignment="Left"
+               Text="Commit expression:"
+               Margin="0,1,0,0"
+               VerticalAlignment="Center" />
+    <TextBox x:Name="textboxCommitExpression"
+             Grid.Column="2"
+             Height="23"
+             Margin="0,1,0,0"
+             VerticalContentAlignment="Center" />
+    <Button x:Name="goButton"
+            Grid.Column="4"
+            MinWidth="75"
+            Height="28"
+            Content="Go"
+            IsDefault="True" />
 
     <TextBlock x:Name="label3"
                Grid.Row="4"

@@ -9,9 +9,9 @@ internal static class WinFormsAutoSizeTextBlock
 {
     private const double TextRendererOverhang = 7;
 
-    public static void Attach(TextBlock textBlock, bool includePadding = false)
+    public static void Attach(TextBlock textBlock, bool includePadding = false, bool singleLine = true)
     {
-        UpdateSize(textBlock, includePadding);
+        UpdateSize(textBlock, includePadding, singleLine);
         textBlock.PropertyChanged += (_, e) =>
         {
             if (e.Property.Name is nameof(TextBlock.Text)
@@ -20,15 +20,15 @@ internal static class WinFormsAutoSizeTextBlock
                 or nameof(TextBlock.FontStyle)
                 or nameof(TextBlock.FontWeight))
             {
-                UpdateSize(textBlock, includePadding);
+                UpdateSize(textBlock, includePadding, singleLine);
             }
         };
     }
 
-    private static void UpdateSize(TextBlock textBlock, bool includePadding)
+    private static void UpdateSize(TextBlock textBlock, bool includePadding, bool singleLine)
     {
         // Framework constraint: WinForms AutoSize Label uses TextRenderer's GDI overhang.
-        Avalonia.Size textSize = WinFormsTextMeasurer.MeasureSize(textBlock, textBlock.Text ?? string.Empty);
+        Avalonia.Size textSize = WinFormsTextMeasurer.MeasureSize(textBlock, textBlock.Text ?? string.Empty, singleLine);
         textBlock.Width = Math.Ceiling(textSize.Width
             + TextRendererOverhang
             + (includePadding ? textBlock.Padding.Left + textBlock.Padding.Right : 0));
