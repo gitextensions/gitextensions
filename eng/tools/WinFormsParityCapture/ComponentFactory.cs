@@ -39,7 +39,7 @@ internal static class ComponentFactory
         Control control = component.TypeName switch
         {
             "GitUI.CommandsDialogs.FormBrowse" => new FormBrowse(commands, new BrowseArguments()),
-            "GitUI.CommandsDialogs.FormCommit" => new FormCommit(commands),
+            "GitUI.CommandsDialogs.FormCommit" => CreateFormCommit(commands),
             "GitUI.CommandsDialogs.FormFileHistory" => new FormFileHistory(commands, "src/App.cs", CreateRevision(commands)),
             "GitUI.CommandsDialogs.FormStash" => new FormStash(commands),
             "GitUI.CommandsDialogs.FormVerify" => new FormVerify(commands),
@@ -109,6 +109,34 @@ internal static class ComponentFactory
         ApplyTextValues(control, component);
 
         return control;
+    }
+
+    // parity-scaffolding: FormCommit persists its draft when each isolated capture closes.
+    // The shared throwaway repository is deterministic input, so every state starts without
+    // a draft or amend flag just like the Avalonia capture host.
+    private static FormCommit CreateFormCommit(GitUICommands commands)
+    {
+        string gitDirectory = commands.Module.WorkingDirGitDir;
+        DeleteCaptureStateFile(Path.Combine(gitDirectory, "COMMITMESSAGE"));
+        DeleteCaptureStateFile(Path.Combine(gitDirectory, "GitExtensions.amend"));
+        return new FormCommit(commands);
+    }
+
+    private static void DeleteCaptureStateFile(string path)
+    {
+        const int RetryCount = 20;
+        for (int attempt = 1; ; attempt++)
+        {
+            try
+            {
+                File.Delete(path);
+                return;
+            }
+            catch (IOException) when (attempt < RetryCount)
+            {
+                Thread.Sleep(50);
+            }
+        }
     }
 
     private static CreatePullRequestForm CreateCreatePullRequestForm(
@@ -237,6 +265,19 @@ internal static class ComponentFactory
     public static void PrepareAfterHandle(Control control, IGitUICommands commands, CaptureComponentPlan component)
     {
         CaptureCommandsSource source = new(commands);
+        foreach (GitUI.Editor.FileViewer fileViewer in EnumerateSelfAndDescendants(control).OfType<GitUI.Editor.FileViewer>())
+        {
+            // A hosted FileViewer can receive its command source after its runtime-load
+            // callback. Settle the original's public hotkey projection after both are ready,
+            // matching the Avalonia host's command-source callback deterministically.
+            if (FindFieldValue(fileViewer, "_uiCommandsSource") is null)
+            {
+                fileViewer.UICommandsSource = source;
+            }
+
+            fileViewer.ReloadHotkeys();
+        }
+
         switch (control)
         {
             case FormAbout formAbout:

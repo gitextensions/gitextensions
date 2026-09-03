@@ -602,7 +602,7 @@ internal sealed class ControlTreeReader
         }
     }
 
-    private CaptureNode ReadControl(Control control, string parentId, int ordinal)
+    private CaptureNode ReadControl(Control control, string parentId, int ordinal, Point semanticOffset = default)
     {
         IReadOnlyList<string> names = GetFieldNames(control);
         string segment = names.FirstOrDefault()
@@ -632,7 +632,7 @@ internal sealed class ControlTreeReader
                 // product field. Emit the controls it owns directly beneath the semantic split.
                 foreach (Control panelChild in child.Controls)
                 {
-                    children.Add(ReadControl(panelChild, id, childOrdinal++));
+                    children.Add(ReadControl(panelChild, id, childOrdinal++, child.Location));
                 }
 
                 continue;
@@ -657,6 +657,7 @@ internal sealed class ControlTreeReader
         }
 
         Rectangle bounds = control.Bounds;
+        bounds.Offset(semanticOffset);
         Size clientSize = control.ClientSize;
         return new CaptureNode
         {
