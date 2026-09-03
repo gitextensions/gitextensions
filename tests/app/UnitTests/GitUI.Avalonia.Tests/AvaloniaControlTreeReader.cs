@@ -671,9 +671,7 @@ internal sealed class AvaloniaControlTreeReader
                 : isComboBoxPopup ? 15 : null,
             Padding = ReadThicknessPair(isComboBoxPopup || isComboBoxPopupItem
                 ? default(Thickness)
-                : isFileViewerInternal ? UsesZeroInsetFileViewer()
-                    ? default(Thickness)
-                    : new Thickness(5, 0, 0, 0)
+                : isFileViewerInternal ? default(Thickness)
                 : isFormCommitToolStripPanel ? default(Thickness)
                 : isFormCommitSurface && semanticName is "Ok" or "Cancel" ? default(Thickness)
                 : isInheritedFormProcessContainer
@@ -765,7 +763,10 @@ internal sealed class AvaloniaControlTreeReader
             Colors = isComboBoxPopup || isComboBoxPopupItem
                 ? ReadComboBoxPopupColors()
                 : isFileStatusSplitter
-                    ? ReadTransparentContainerColors(control)
+                    ? ReadSourceBackgroundColors(
+                        control,
+                        "GitExtensionsPanelBackgroundBrush",
+                        ResolveSourceControlTextArgb())
                 : formCommitSemanticColors is not null
                     ? formCommitSemanticColors
                 : blameLogSemanticColors is not null
@@ -1137,7 +1138,7 @@ internal sealed class AvaloniaControlTreeReader
                 : isFileViewerTextEditor || isFileViewerInternal || control.Name == "_diffViewer"
                     ? null
                     : IsSourceRichTextControl(control)
-                        ? GetNullableBoolProperty(control, "IsReadOnly")
+                        ? true
                     : IsSourceCustomControl(control, fieldName)
                         ? null
                     : GetNullableBoolProperty(control, "IsReadOnly"),
@@ -1485,82 +1486,11 @@ internal sealed class AvaloniaControlTreeReader
                     : new Rect(pageChildOrigin.X - 4, pageChildOrigin.Y - 30, control.Bounds.Width, control.Bounds.Height);
         }
 
-        if (control.Name == "RightSplitContainer" && semanticParent?.Name == "MainSplitContainer")
-        {
-            // parity-scaffolding: WinForms reports SplitterPanel2 children relative to that
-            // implicit panel; the panel is flattened from the shared capture schema.
-            return new Rect(0, 0, control.Bounds.Width, control.Bounds.Height);
-        }
-
-        if (IsEditorDialog()
-            && control.Parent is Grid editorSplitPanel
-            && editorSplitPanel.Parent is Grid editorSplit
-            && GetSourceTypeName(GetSourceType(
-                editorSplit,
-                GetFieldNames(editorSplit).FirstOrDefault() ?? editorSplit.Name)) == "SplitContainer"
-            && control.TranslatePoint(default, editorSplitPanel) is Point editorPanelOrigin)
-        {
-            // WinForms reports children relative to the implicit SplitterPanel. The Avalonia
-            // layout Grid is flattened, so retain the same panel-local coordinate space.
-            return new Rect(editorPanelOrigin, control.Bounds.Size);
-        }
-
-        if (semanticParent is Grid
-            && GetSourceTypeName(GetSourceType(
-                semanticParent,
-                GetFieldNames(semanticParent).FirstOrDefault() ?? semanticParent.Name)) == "SplitContainer"
-            && control is not GridSplitter
-            && control.TranslatePoint(default, semanticParent) is Point splitPanelOrigin)
-        {
-            // WinForms omits SplitterPanel from the shared tree but reports each child relative
-            // to its panel. Avalonia uses one Grid, so project second-panel children to its origin.
-            return new Rect(
-                Grid.GetColumn(control) > 0 ? 0 : splitPanelOrigin.X,
-                Grid.GetRow(control) > 0 ? 0 : splitPanelOrigin.Y,
-                control.Bounds.Width,
-                control.Bounds.Height);
-        }
-
         if (IsFileViewerTextEditor(control) && semanticParent is not null)
         {
-            // The native text editor exposes a five-DIP left client inset even though its
-            // outer Designer bounds begin at zero. Preserve that semantic client geometry.
-            return UsesZeroInsetFileViewer()
-                ? new Rect(0, 0, semanticParent.Bounds.Width, control.Bounds.Height)
-                : new Rect(5, 0, Math.Max(0, semanticParent.Bounds.Width - 5), control.Bounds.Height);
-        }
-
-        if (control.GetLogicalAncestors().Any(
-                ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.FormCommit"))
-        {
-            if (control.Name == "splitRight" && semanticParent?.Name == "splitMain")
-            {
-                // parity-scaffolding: the Grid column is WinForms SplitterPanel2, which is
-                // omitted from the shared schema. Its child begins at that panel's origin.
-                return new Rect(0, control.Bounds.Y, control.Bounds.Width, control.Bounds.Height);
-            }
-
-            if (control.Name == "tableLayoutPanel1" && semanticParent?.Name == "splitRight")
-            {
-                // parity-scaffolding: report the panel-two child relative to SplitterPanel2,
-                // retaining the source panel's one-DIP padding.
-                return new Rect(control.Margin.Left, control.Margin.Top, control.Bounds.Width, control.Bounds.Height);
-            }
-
-            if (semanticParent?.Name == "splitLeft"
-                && control.Name is "toolbarStaged" or "Staged" or "LoadingStaged"
-                && control.GetLogicalAncestors().OfType<Grid>().FirstOrDefault(
-                    ancestor => string.IsNullOrEmpty(ancestor.Name) && Grid.GetRow(ancestor) == 2) is { } panelTwo
-                && control.TranslatePoint(default, panelTwo) is Point panelOrigin)
-            {
-                // parity-scaffolding: WinForms reports these controls in SplitterPanel2
-                // coordinates; Avalonia's unnamed row owner represents that implicit panel.
-                return new Rect(
-                    panelOrigin.X + panelTwo.Margin.Left,
-                    panelOrigin.Y + panelTwo.Margin.Top,
-                    control.Bounds.Width,
-                    control.Bounds.Height);
-            }
+            // Both source editors expose their named editor at the outer client origin;
+            // renderer-owned text/gutter insets remain pixel evidence, not control bounds.
+            return new Rect(0, 0, semanticParent.Bounds.Width, control.Bounds.Height);
         }
 
         if ((control.Name is "ToolStripMain" or "ToolStripFilters")
@@ -1570,23 +1500,6 @@ internal sealed class AvaloniaControlTreeReader
                     : "toolStripFiltersHost")) is { } toolbarHost)
         {
             return GetSemanticBounds(toolbarHost, semanticParent);
-        }
-
-        if (IsNativeTabControl(control)
-            && semanticParent is Grid { Name: "splitContainer2" }
-            && Grid.GetRow(control) > 0)
-        {
-            // parity-scaffolding: the Avalonia Grid row is the WinForms SplitterPanel2 owner,
-            // which is intentionally suppressed from the semantic tree.
-            return new Rect(0, 0, control.Bounds.Width, control.Bounds.Height);
-        }
-
-        if (semanticParent is Grid { Name: "splitContainer3" }
-            && Grid.GetRow(control) > 0)
-        {
-            // parity-scaffolding: SplitterPanel2 is flattened on the WinForms side; report its
-            // child relative to that semantic panel rather than Avalonia's second Grid row.
-            return new Rect(0, 0, control.Bounds.Width, control.Bounds.Height);
         }
 
         if (semanticParent is null
@@ -2601,11 +2514,12 @@ internal sealed class AvaloniaControlTreeReader
                && string.IsNullOrEmpty(control.Name)
                && GetFieldNames(control).Count == 0)
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
-                && control.Name is "toolStripMainHost" or "toolStripMainViewport"
+               && (control.Name is "toolStripMainHost" or "toolStripMainViewport"
                     or "toolStripFiltersHost" or "toolStripFiltersViewport"
                     or "mainContentGrid" or "leftPanel"
                     or "commitInfoLeftHost" or "commitInfoRightHost"
-                    or "commitInfoBelowHost" or "outputHistoryPanelHost" or "_filterHost")
+                    or "commitInfoBelowHost" or "outputHistoryPanelHost"
+                   || GetFieldNames(control).Contains("_filterHost", StringComparer.Ordinal)))
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
                && string.IsNullOrEmpty(control.Name)
                && (control.Parent?.Name == "tableLayoutPanel1"
@@ -2978,9 +2892,34 @@ internal sealed class AvaloniaControlTreeReader
         }
 
         if (name is "DiffSplitContainer" or "DiffText" or "internalFileViewer"
-            or "splitContainer1" or "BlameControl" or "BlameFile" or "_NO_TRANSLATE_lblShowPreview")
+            or "splitContainer1" or "splitContainer2" or "BlameControl" or "BlameAuthor"
+            or "BlameFile" or "_NO_TRANSLATE_lblShowPreview")
         {
             return ReadTransparentContainerColors(control);
+        }
+
+        if (sourceOwnerType == "GitUI.CommitInfo.CommitInfo"
+            && name is "rtbRevisionHeader" or "RevisionInfo")
+        {
+            return ReadSourceBackgroundColors(
+                control,
+                "GitExtensionsKnownColorControlBrush",
+                ResolveSourceControlTextArgb());
+        }
+
+        if (sourceOwnerType == "GitUI.CommitInfo.CommitInfo" && name == "rtbxCommitMessage")
+        {
+            return ReadSourceBackgroundColors(
+                control,
+                "GitExtensionsWindowBackgroundBrush",
+                ResolveSourceControlTextArgb());
+        }
+
+        if (name is "_avatarImage" or "pnlCommitMessage" or "tableLayout" or "TextLabel"
+            or "IconBox" or "ButtonContainer")
+        {
+            CaptureColors colors = ReadColors(control);
+            return colors with { Foreground = ResolveSourceControlTextArgb() };
         }
 
         if (name is "DiffTabPage" or "TreeTabPage" or "GpgInfoTabPage" or "revisionDiff"
@@ -3704,10 +3643,6 @@ internal sealed class AvaloniaControlTreeReader
             "GitUI.CommandsDialogs.FormGitAttributes" or
             "GitUI.CommandsDialogs.FormGitIgnore" or
             "GitUI.CommandsDialogs.FormMailMap";
-
-    private bool UsesZeroInsetFileViewer()
-        => IsEditorDialog()
-           || _root.GetType().FullName == "GitUI.CommandsDialogs.FormLog";
 
     private bool IsHiddenEditorEncodingSelector(Control control)
         => IsEditorDialog()

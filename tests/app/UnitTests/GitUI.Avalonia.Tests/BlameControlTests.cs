@@ -57,8 +57,9 @@ public sealed class BlameControlTests
         BlameControl control = new();
 
         control.BlameFile.Should().NotBeNull();
-        control.BlameFile.TextEditor.TextArea.LeftMargins.Should().Contain(control.BlameAuthor,
-            "the author gutter is a margin of the file editor, replacing the second WinForms editor");
+        control.BlameAuthor.Should().NotBeNull();
+        control.BlameAuthor.Should().NotBeSameAs(control.BlameFile,
+            "the source has separate scroll-synchronised author and file viewers");
         control.blameRevisionToolStripMenuItem.Should().NotBeNull("the context menu items keep their WinForms names");
         control.showChangesToolStripMenuItem.IsVisible.Should().BeTrue("FormCommitDiff is available");
         control.FindControl<GitUI.CommitInfo.CommitInfo>("CommitInfo").Should().NotBeNull();
@@ -223,13 +224,13 @@ public sealed class BlameControlTests
             ]);
 
             (string gutter, _, List<GitBlameEntry> entries) = accessor.BuildBlameContents("fileName.txt");
-            int contentVersion = control.BlameAuthor.Initialize(gutter, entries, showAvatars: true);
-            await accessor.LoadAvatarsAsync(entries, contentVersion);
+            await accessor.LoadAvatarsAsync(entries);
 
-            _ = provider.Received(1).GetAvatarAsync("author1@mail.fake", "author1", control.BlameAuthor.AvatarSize);
-            control.BlameAuthor.GetAvatarPixelSize(0).Should().Be(new Avalonia.PixelSize(control.BlameAuthor.AvatarSize, control.BlameAuthor.AvatarSize));
-            control.BlameAuthor.GetAvatarPixelSize(1).Should().BeNull("continuation lines keep the original empty avatar slot");
-            control.BlameAuthor.GetAvatarPixelSize(2).Should().Be(new Avalonia.PixelSize(control.BlameAuthor.AvatarSize, control.BlameAuthor.AvatarSize));
+            int avatarSize = Math.Max(1, (int)Math.Ceiling(control.BlameAuthor.TextEditor.FontSize) + 1);
+            _ = provider.Received(1).GetAvatarAsync("author1@mail.fake", "author1", avatarSize);
+            entries[0].Avatar.Should().NotBeNull();
+            entries[1].Avatar.Should().BeNull("continuation lines keep the original empty avatar slot");
+            entries[2].Avatar.Should().NotBeNull();
         }
         finally
         {
@@ -241,8 +242,7 @@ public sealed class BlameControlTests
     [AvaloniaTest]
     public async Task BlameAuthorMargin_should_reject_stale_avatars_and_clear_owned_images()
     {
-        BlameControl control = new();
-        BlameAuthorMargin margin = control.BlameAuthor;
+        BlameAuthorMargin margin = new(new Avalonia.Media.Typeface("Segoe UI"), 9);
         byte[] imageData = (await new InitialsAvatarProvider().GetAvatarAsync("author1@mail.fake", "author1", margin.AvatarSize))!;
         GitBlameEntry entry = new() { AgeBucketColor = Color.Green };
 
@@ -272,7 +272,7 @@ public sealed class BlameControlTests
 
             (string gutter, string body, List<GitBlameEntry> entries) = accessor.BuildBlameContents("fileName.txt");
 
-            gutter.Should().NotBeEmpty("the combined author text margin remains visible");
+            gutter.Should().NotBeEmpty("the separate author viewer remains visible");
             body.Should().Contain("line1");
             entries.Should().BeEmpty("WinForms hides the avatar margin and its age marker together");
         }

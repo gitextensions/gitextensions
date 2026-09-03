@@ -3,9 +3,6 @@
              xmlns:commitinfo="clr-namespace:GitUI.CommitInfo"
              xmlns:editor="clr-namespace:GitUI.Editor"
              x:Class="GitUI.Blame.BlameControl">
-  <!-- Upstream splitContainer1 (commit info above, fixed 160) / splitContainer2 (author
-       gutter | file). The author gutter is an editor margin here, so a single row hosts
-       the file viewer. -->
   <Grid x:Name="splitContainer1" RowDefinitions="160,5,*">
     <commitinfo:CommitInfo x:Name="CommitInfo" />
 
@@ -13,20 +10,32 @@
                   Height="5"
                   ResizeDirection="Rows" />
 
-    <editor:FileViewer x:Name="BlameFile" Grid.Row="2">
-      <editor:FileViewer.ContextMenu>
-        <ContextMenu x:Name="contextMenu">
-          <MenuItem x:Name="blameRevisionToolStripMenuItem" Header="Blame _this revision" />
-          <MenuItem x:Name="blamePreviousRevisionToolStripMenuItem" Header="Blame previous revision" />
-          <MenuItem x:Name="showChangesToolStripMenuItem" Header="_Show changes" />
-          <Separator x:Name="toolStripSeparator1" />
-          <MenuItem x:Name="copyToClipboardToolStripMenuItem" Header="_Copy to clipboard">
-            <MenuItem x:Name="commitHashToolStripMenuItem" Header="Commit _hash" />
-            <MenuItem x:Name="commitMessageToolStripMenuItem" Header="Commit _message" />
-            <MenuItem x:Name="allCommitInfoToolStripMenuItem" Header="_All commit info" />
-          </MenuItem>
-        </ContextMenu>
-      </editor:FileViewer.ContextMenu>
-    </editor:FileViewer>
+    <Grid x:Name="splitContainer2"
+          Grid.Row="2"
+          ColumnDefinitions="186,6,*">
+      <editor:FileViewer x:Name="BlameAuthor"
+                         Grid.Column="0"
+                         IsTabStop="False">
+        <editor:FileViewer.ContextMenu>
+          <ContextMenu x:Name="contextMenu">
+            <MenuItem x:Name="blameRevisionToolStripMenuItem" Header="Blame _this revision" />
+            <MenuItem x:Name="blamePreviousRevisionToolStripMenuItem" Header="Blame previous revision" />
+            <MenuItem x:Name="showChangesToolStripMenuItem" Header="_Show changes" />
+            <Separator x:Name="toolStripSeparator1" />
+            <MenuItem x:Name="copyToClipboardToolStripMenuItem" Header="_Copy to clipboard">
+              <MenuItem x:Name="commitHashToolStripMenuItem" Header="Commit _hash" />
+              <MenuItem x:Name="commitMessageToolStripMenuItem" Header="Commit _message" />
+              <MenuItem x:Name="allCommitInfoToolStripMenuItem" Header="_All commit info" />
+            </MenuItem>
+          </ContextMenu>
+        </editor:FileViewer.ContextMenu>
+      </editor:FileViewer>
+
+      <GridSplitter Grid.Column="1"
+                    Width="6"
+                    ResizeDirection="Columns" />
+
+      <editor:FileViewer x:Name="BlameFile" Grid.Column="2" />
+    </Grid>
   </Grid>
 </UserControl>

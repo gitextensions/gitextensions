@@ -412,7 +412,8 @@
                          Height="17"
                          Padding="0"
                          HorizontalAlignment="Stretch"
-                         VerticalAlignment="Center" />
+                         VerticalAlignment="Center"
+                         ToolTip.Tip="Click to change author information." />
         <ProgressBar x:Name="toolStripProgressBar1"
                      Grid.Column="1"
                      Width="150"

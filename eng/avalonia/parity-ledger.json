@@ -4856,81 +4856,80 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-windows.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-linux.json"
           ],
           "platforms": [],
-          "findingCount": 478,
-          "note": "P8.6i progress 69 groups 142 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 478 actionable and 620 total differences for this mapping; every structural difference stays open."
+          "findingCount": 213,
+          "note": "Progress 103 restores dynamic source-named default-pull menu items and removes their obsolete reviewed deviations. The byte-identical Windows/Linux schema-v5 inventory records 213 actionable and 281 total FormBrowse differences; all 546 accepted framework deviations remain visible and every ordinary difference stays open."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-26",
-          "commit": "159741aa5093b520ec734fd755b218d921fbc79c",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/inventory/FormBrowse.json",
-            "eng/avalonia/parity-evidence/PR-feedback/focus-mnemonics/preview/windows/previewability.json",
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/inventory/windows/FormBrowse.json",
-            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/tests/linux/form-browse.trx"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-windows.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-linux.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/windows/affected-119.trx",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/linux/affected-119.trx"
           ],
-          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
-          "findingCount": 1224,
-          "note": "Reviewer-feedback coverage verifies that the initial loaded revision list owns keyboard focus, the filter receives focus only when explicitly requested, and the existing FocusRevisionGrid command returns focus to the native inner list. Generated top-level and context-menu AccessText presenters keep access-key underlines visible regardless of the platform keyboard-cue preference. The source-shape sweep restores native source-named menu, toolbar-container, split-container, tab-page, and repository-grid host identities, 59 exact nonnullable event-handler signatures, and cancellable ahead/behind publication before the Push label is updated on the UI dispatcher. The current whole-FormBrowse inventory is 1,224 findings and the exhaustive behavior audit stays open for P8.6h."
+          "platforms": ["windows", "linux"],
+          "findingCount": 281,
+          "note": "The Windows/Linux affected gate covers the restored PuTTY command family, source-named dynamic pull defaults and exact ordering, fetch-default settings, input metadata, and capture fixtures. The 281 total source differences and exhaustive live command/error/persistence audit remain open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/winforms-final2/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/avalonia-final4/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/diff-final4/findings.json"
+          ],
+          "platforms": ["windows"],
+          "findingCount": 2094,
+          "note": "Twelve native-100 light/dark/custom normal, revision-focus, Repository-menu, and Commands-menu pairs compare with zero unavailable states. The restored semantic tree removes 1,454 findings across the combined FormBrowse/FormCommit matrix; FormBrowse retains 2,094 strict diagnostics and higher scales remain open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/diff-final4/findings.json"
+          ],
+          "platforms": ["windows"],
+          "findingCount": 276,
+          "note": "Resolved-ARGB comparisons cover the declared light, dark, and custom native-100 states. FormBrowse retains 276 exact color findings; configurable-color, live theme-switch, and higher-scale closure remain open."
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-08-26",
-          "commit": "159741aa5093b520ec734fd755b218d921fbc79c",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/PR-feedback/focus-mnemonics/preview/windows/previewability.json",
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/window.png",
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/x11/window.png",
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/flatpak/window.png"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/diff-final4/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/windows/affected-119.trx",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/linux/affected-119.trx"
           ],
-          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
-          "findingCount": 0,
-          "note": "Focused tests verify startup, explicit filter focus, focus-command recovery, and always-visible top-level/context-menu mnemonic underlines. Inspected Linux runtime captures show the revision list selected/focused and menu underlines visible without an Alt-key trigger. The complete interaction state matrix remains open."
+          "platforms": ["windows", "linux"],
+          "findingCount": 264,
+          "note": "The declared normal, revision-focus, and two open-menu states plus focused source-behavior tests pass on Windows and Linux. FormBrowse retains 264 strict state findings and the complete interaction matrix remains open."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-08-26",
-          "commit": "159741aa5093b520ec734fd755b218d921fbc79c",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/PR-feedback/focus-mnemonics/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Fresh Windows, native Wayland, nested X11, and confined Wayland Flatpak smokes pass; the Linux screenshots visibly retain menu mnemonic underlines and initial revision-list focus. The current runtime screenshots were inspected after the source-shape sweep; Flatpak stayed Wayland-only with --filesystem=host. macOS and the exhaustive platform state matrix remain open."
+          "note": "Fresh Windows, native Wayland, and nested X11 smokes pass and their screenshots were inspected. Flatpak is retained from its prior --filesystem=host evidence and is N/A for this ordinary cross-platform UI/capture change; Apple Silicon and the exhaustive platform matrix remain open."
         }
       }
     },
@@ -5409,14 +5408,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-30",
-          "commit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/FormCommit.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-windows.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-linux.json"
           ],
           "platforms": [],
-          "findingCount": 133,
-          "note": "Progress 86 restores substantial source-shaped logic and the source-authored native-96 layout. The fresh schema-v5 inventory records 133 actionable plus 6 dependent findings and 420 exact reviewed framework deviations; every remaining structural difference stays open."
+          "findingCount": 132,
+          "note": "Progress 103 refreshes the byte-identical Windows/Linux schema-v5 inventory after restoring the source-owned default author tooltip and capture lifecycle. It records 132 actionable plus 5 dependent findings and 424 visible framework deviations; every remaining structural difference stays open."
         },
         "functional": {
           "status": "verified",
@@ -5438,59 +5438,59 @@
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-30",
-          "commit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/diff-authoritative-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/winforms-final2/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/avalonia-final4/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 23290,
-          "note": "The source-authored 918-by-644 native-96 layout, split distances, action flow and toolbar geometry are restored. The seven-state light/dark/custom matrix captured 84/84 Avalonia requests and compared all 25 valid WinForms references, retaining 23,290 strict diagnostic findings. Fifty-nine higher-DPI WinForms cells are explicitly unsupported rather than silently compared because the nested native toolbar stayed at 96 DPI. Exact visual parity remains open."
+          "findingCount": 738,
+          "note": "Twenty-one native-100 light/dark/custom normal, options-menu, amend, and commit-button state pairs compare with zero unavailable entries and retain 738 strict diagnostics. The source author tooltip and deterministic clean-message/amend initialization are restored; higher scales and exact visual closure remain open."
         },
         "themingAndColor": {
           "status": "gap",
-          "verifiedOn": "2026-08-30",
-          "commit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/diff-authoritative-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 6119,
-          "note": "Resolved-ARGB manifests round-trip for light, dark, and custom themes. The 25 comparable pairs retain 6,119 strict color diagnostics; exact theme/color parity remains open."
+          "findingCount": 159,
+          "note": "Resolved-ARGB manifests round-trip for light, dark, and custom native-100 states. FormCommit retains 159 exact color findings; configurable-color, live theme-switch, and higher-scale closure remain open."
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-08-30",
-          "commit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/diff-authoritative-final/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/tests/windows/FormCommit-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/tests/linux/wsl-gate.log"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/avalonia-final4/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/diff-final4/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/windows/affected-119.trx",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/linux/affected-119.trx"
           ],
           "platforms": [
             "windows",
             "linux"
           ],
-          "findingCount": 772,
-          "note": "Seven declared capture states plus focused staging, selection, validation, autosquash, options, commit, and close lifecycle interactions are exercised. The strict pairs retain 772 state diagnostics and the complete hover/pressed/focus/popup/error audit remains open."
+          "findingCount": 9,
+          "note": "Seven declared states across three themes plus focused source-behavior tests are exercised. The strict pairs retain nine state findings and the complete live hover/pressed/focus/popup/error audit remains open."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-08-30",
-          "commit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/tests/windows/FormCommit-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/tests/linux/wsl-gate.log",
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/formcommit-86/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/windows/affected-119.trx",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/linux/affected-119.trx",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/runtime/x11/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/formcommit-86/runtime/flatpak/smoke.json"
           ],
           "platforms": [
@@ -5500,7 +5500,7 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Focused tests pass on Windows and WSL; runtime smoke passes on Windows, native Wayland, X11, and Wayland Flatpak with --filesystem=host. macOS and exhaustive FormCommit-specific confined interactions remain verification debt."
+          "note": "Focused tests and fresh runtime smokes pass on Windows, native Wayland, and nested X11; all three screenshots were inspected. Prior Wayland Flatpak evidence with --filesystem=host remains applicable because this iteration does not touch Linux-specific or confinement boundaries. Apple Silicon and exhaustive FormCommit-specific platform interactions remain debt."
         }
       }
     },
@@ -18971,28 +18971,28 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.Editor.FileViewer.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.Editor.FileViewer.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-windows.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-linux.json"
           ],
           "platforms": [],
-          "findingCount": 189,
-          "note": "P8.6i progress 69 groups 5 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 189 actionable and 194 total differences for this mapping; every structural difference stays open."
+          "findingCount": 99,
+          "note": "Progress 103 refreshes the byte-identical Windows/Linux schema-v5 inventory after moving hotkey, settings-command, and fixed-font initialization to the source-equivalent effective-visibility lifecycle. It records 99 actionable and 104 total differences plus 280 visible framework deviations; every ordinary difference stays open."
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-27",
-          "commit": "669862c91d2d20916257da16475dc8a6df6be242",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-62/inventory/windows/GitUI.Editor.FileViewer.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-62/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-62/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-windows.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/windows/affected-119.trx",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/linux/affected-119.trx"
           ],
           "platforms": ["windows", "linux"],
-          "findingCount": 301,
-          "note": "FileViewer retains the restored FileViewerInternal ownership contract while its common member order now matches the source exactly. The 128-test focused Windows/Linux gate passes; 301 inventory findings and exhaustive behavior remain open."
+          "findingCount": 104,
+          "note": "The focused Windows/Linux gate pins the deferred runtime hotkey/settings/font lifecycle, configured gesture dispatch, tooltip suffix order, and the restored dual-viewer blame consumer. The 104 total source differences and exhaustive editor behavior audit remain open."
         },
         "visual": {
           "status": "partial",
@@ -19014,21 +19014,21 @@
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-08-26",
-          "commit": "e8d2ada0eac6b7b6653d2c0cb23ac90e349927f1",
-          "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/diff/findings.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/tests/linux/focused.trx"],
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/windows/affected-119.trx", "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/linux/affected-119.trx"],
           "platforms": ["windows", "linux"],
-          "findingCount": 177,
-          "note": "Hidden descendants, configured shortcut gestures and tooltip suffixes, source toolbar layout, real toolbar hover, and partial-flexible context separator visibility are covered; the complete interaction matrix remains open."
+          "findingCount": 0,
+          "note": "The new lifecycle test proves a hidden realized viewer retains its native pre-load font and untranslated shortcut-free tooltip until it becomes effectively visible, then loads configured hotkeys and the fixed-width font exactly once. The complete interaction matrix remains open."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-08-26",
-          "commit": "e8d2ada0eac6b7b6653d2c0cb23ac90e349927f1",
-          "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/runtime/flatpak/smoke.json"],
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/primary-windows-103/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/runtime/flatpak/smoke.json"],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Fresh Windows, native Wayland, nested X11, and Wayland Flatpak smokes pass with --filesystem=host; Apple Silicon and exhaustive FileViewer interaction remain open."
+          "note": "Fresh Windows, native-Wayland, and nested-X11 smokes pass and were inspected. Prior Wayland Flatpak evidence with --filesystem=host remains applicable because no confinement boundary changed; Apple Silicon and exhaustive FileViewer interaction remain open."
         }
       }
     },
@@ -29032,26 +29032,28 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-        "commit": "111c890e315eaf6690ec004330cc44485e36201b",
+          "verifiedOn": "2026-09-03",
+        "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
         "evidence": [
-          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/windows/types/GitUI.Blame.BlameControl.functional-findings.json",
-          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/linux/types/GitUI.Blame.BlameControl.functional-findings.json"
+          "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-windows.json",
+          "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-linux.json"
         ],
         "platforms": [],
-        "findingCount": 24,
-        "note": "P8.6i progress 77 restores the original CommandClick event boundary and forwards CommitInfo command navigation through the same handler identity. The byte-identical Windows/Linux schema-v5 inventory records 24 actionable and 30 total differences for this mapping; every remaining structural difference stays open."
+        "findingCount": 26,
+        "note": "Progress 103 replaces the synthetic author margin with the source-named second FileViewer and restores the original split hierarchy, viewer synchronization, blame text loading, avatar ownership, context menu, and double-click route. The byte-identical Windows/Linux schema-v5 inventory records 26 ordinary findings and 95 visible framework deviations; every remaining structural difference stays open."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-windows.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/windows/affected-119.trx",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/linux/affected-119.trx"
           ],
-          "platforms": [],
-          "findingCount": 191,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux"],
+          "findingCount": 26,
+          "note": "Focused Windows/Linux tests verify the two source-named FileViewer instances, split layout, scroll and selection synchronization, separate author/file text, Git-blame gutter data, avatar assignment, context-menu ownership, and source command routes. The remaining 26 source findings and exhaustive live blame actions keep functional parity open."
         },
         "visual": {
           "status": "unverified",
@@ -29081,13 +29083,19 @@
           "note": "the complete interaction state matrix has not been exercised"
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/windows/affected-119.trx",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/linux/affected-119.trx",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/runtime/x11/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "The restored control passes focused Windows/Linux tests and fresh inspected Windows, native-Wayland, and nested-X11 application smokes. Flatpak is N/A for this ordinary control change; Apple Silicon and exhaustive live blame interactions remain open."
         }
       }
     },
@@ -29931,24 +29939,24 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.FileStatusList.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.FileStatusList.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-windows.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-linux.json"
           ],
           "platforms": [],
-          "findingCount": 243,
-          "note": "P8.6i progress 69 groups 21 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 243 actionable and 264 total differences for this mapping; every structural difference stays open."
+          "findingCount": 100,
+          "note": "Progress 103 refreshes the byte-identical Windows/Linux schema-v5 inventory while retaining the original FileStatusList source shape and restoring the source PanelBackground splitter semantics. It records 100 actionable and 121 total differences plus 593 visible framework deviations; every ordinary difference stays open."
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-27",
-          "commit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
+          "verifiedOn": "2026-09-03",
+          "commit": "8b6d23027a459f59ecfe6c4d646946debf7f7077",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/windows/GitUI.FileStatusList.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/tests/windows/focused-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/tests/linux/gate.log"
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/inventory-windows.json",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/windows/affected-119.trx",
+            "eng/avalonia/parity-evidence/P8.6i/primary-windows-103/tests/linux/affected-119.trx"
           ],
           "platforms": [
             "windows",
@@ -30841,8 +30849,8 @@
             "windows",
             "linux"
           ],
-          "findingCount": 401,
-          "note": "Source-shaped SetFilter and SetFileStatusListVisibility contracts, interface-typed collaborators, event sender annotations, and the Files/Copy paths translation identities pass in the 154-test Windows/Linux focused gate. The 401 ordinary findings and exhaustive live interactions remain open, so functional completion is not claimed."
+          "findingCount": 121,
+          "note": "The current Windows/Linux gate retains the source-shaped FileStatusList contracts and the semantic capture reader now resolves its splitter as the original PanelBackground rather than a text foreground. The 121 total source differences and exhaustive live interactions remain open."
         },
         "visual": {
           "status": "partial",

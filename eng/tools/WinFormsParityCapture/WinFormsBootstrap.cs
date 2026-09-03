@@ -69,9 +69,9 @@ internal sealed class WinFormsBootstrap : IDisposable
             throw new FileNotFoundException("The isolated theme file is missing.", themePath);
         }
 
-        ApplyProfile(profile, theme);
         SetDocumentationBaseUrl();
         AppSettings.LoadSettings();
+        ApplyProfile(profile, theme);
 
         using (new Form())
         {

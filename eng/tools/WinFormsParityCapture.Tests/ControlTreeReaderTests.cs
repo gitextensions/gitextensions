@@ -261,14 +261,20 @@ public sealed class ControlTreeReaderTests
     [Category("P8_6i")]
     public void ReadPrimary_should_flatten_framework_splitter_panels()
     {
-        using Form form = new();
-        using SplitContainer split = new() { Name = "splitContainer" };
+        using Form form = new() { ClientSize = new Size(300, 200) };
+        using SplitContainer split = new()
+        {
+            Name = "splitContainer",
+            Dock = DockStyle.Fill,
+            SplitterDistance = 100,
+        };
         using Label first = new() { Name = "first", Text = "First" };
         using Label second = new() { Name = "second", Text = "Second" };
         split.Panel1.Controls.Add(first);
         split.Panel2.Controls.Add(second);
         form.Controls.Add(split);
         form.CreateControl();
+        form.PerformLayout();
         ControlTreeReader reader = new(form, dpi: 96);
 
         CaptureNode splitNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
@@ -276,6 +282,8 @@ public sealed class ControlTreeReaderTests
         splitNode.ControlKind.Should().Be("split");
         splitNode.Children.Select(node => node.Name).Should().Equal("first", "second");
         splitNode.Children.Should().NotContain(node => node.Type.Contains("SplitterPanel", StringComparison.Ordinal));
+        splitNode.Children.Single(node => node.Name == "first").BoundsDip.X.Should().Be(split.Panel1.Left + first.Left);
+        splitNode.Children.Single(node => node.Name == "second").BoundsDip.X.Should().Be(split.Panel2.Left + second.Left);
     }
 
     [Test]
