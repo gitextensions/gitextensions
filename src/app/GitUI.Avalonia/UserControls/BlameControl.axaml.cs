@@ -23,8 +23,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.Blame;
 
-// The author gutter is a BlameAuthorMargin inside the file editor instead of a second
-// scroll-synchronised editor, so separate scroll-position handlers are unnecessary.
 public sealed partial class BlameControl : GitModuleControl
 {
     public event EventHandler<CommandEventArgs>? CommandClick;
@@ -54,9 +52,8 @@ public sealed partial class BlameControl : GitModuleControl
     private static readonly TranslationString _blameVisiblePreviousRevision = new("&Blame previous visible revision");
     private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
     private readonly IGitBlameParser _gitBlameParser;
+    private bool _changingScrollPosition;
     private bool _loading;
-
-    internal BlameAuthorMargin BlameAuthor { get; }
 
     public BlameControl()
         : this(AvatarService.DefaultProvider)
@@ -68,18 +65,24 @@ public sealed partial class BlameControl : GitModuleControl
         _avatarProvider = avatarProvider ?? throw new ArgumentNullException(nameof(avatarProvider));
         InitializeComponent();
 
-        BlameAuthor = new BlameAuthorMargin(
-            new Avalonia.Media.Typeface(BlameFile.TextEditor.FontFamily),
-            BlameFile.TextEditor.FontSize);
-        BlameFile.TextEditor.TextArea.LeftMargins.Insert(0, BlameAuthor);
+        BlameAuthor.IsReadOnly = true;
+        BlameAuthor.EnableScrollBars(false);
         UpdateShowLineNumbers();
+        BlameAuthor.HScrollPositionChanged += BlameAuthor_HScrollPositionChanged;
+        BlameAuthor.VScrollPositionChanged += BlameAuthor_VScrollPositionChanged;
         BlameAuthor.PointerMoved += BlameAuthor_MouseMove;
         BlameAuthor.PointerExited += BlameAuthor_MouseLeave;
+        BlameAuthor.SelectedLineChanged += SelectedLineChanged;
+        BlameAuthor.RequestDiffView += ActiveTextAreaControlDoubleClick;
+        BlameAuthor.EscapePressed += () => EscapePressed?.Invoke();
+        BlameAuthor.DontMarkGutterSelectedLine();
 
+        BlameFile.IsReadOnly = true;
+        BlameFile.VScrollPositionChanged += BlameFile_VScrollPositionChanged;
         BlameFile.PointerMoved += BlameFile_MouseMove;
         BlameFile.SelectedLineChanged += SelectedLineChanged;
-        BlameFile.DoubleTapped += ActiveTextAreaControlDoubleClick;
         BlameFile.EscapePressed += () => EscapePressed?.Invoke();
+        BlameFile.EnableAutomaticContinuousScroll = false;
 
         CommitInfo.CommandClicked += commitInfo_CommandClicked;
 
@@ -106,7 +109,7 @@ public sealed partial class BlameControl : GitModuleControl
             nested.AddSplitter(splitContainer1, defaultDistance: 26);
         }
 
-        nested.AddSplitter(BlameAuthor, "splitContainer2", defaultDistance: 26);
+        nested.AddSplitter(splitContainer2, defaultDistance: 26);
     }
 
     public void ConfigureRepositoryHostPlugin(IRepositoryHostPlugin? gitHoster)
@@ -179,13 +182,13 @@ public sealed partial class BlameControl : GitModuleControl
 
     public void UpdateShowLineNumbers()
     {
-        BlameFile.TextEditor.ShowLineNumbers = AppSettings.BlameShowLineNumbers;
+        BlameAuthor.ShowLineNumbers = AppSettings.BlameShowLineNumbers;
     }
 
     internal void CancelBackgroundTasks()
     {
         _blameLoadSequence.CancelCurrent();
-        BlameAuthor.Clear();
+        BlameAuthor.ClearBlameGutter();
     }
 
     public int CurrentFileColumn => BlameFile.CurrentFileColumn;
@@ -240,7 +243,8 @@ public sealed partial class BlameControl : GitModuleControl
         _encoding = encoding;
 
         // Clear the contents of the viewer while loading
-        BlameAuthor.Clear();
+        BlameAuthor.ClearBlameGutter();
+        await BlameAuthor.ClearAsync();
         await BlameFile.ClearAsync();
 
         try
@@ -283,6 +287,11 @@ public sealed partial class BlameControl : GitModuleControl
 
     private void BlameAuthor_MouseMove(object? sender, PointerEventArgs e)
     {
+        if (!BlameFile.IsKeyboardFocusWithin)
+        {
+            BlameFile.Focus();
+        }
+
         if (_blame is null)
         {
             return;
@@ -326,6 +335,35 @@ public sealed partial class BlameControl : GitModuleControl
             : null;
 
         HighlightLinesForCommit(blameCommit);
+    }
+
+    private void BlameAuthor_HScrollPositionChanged(object? sender, EventArgs e)
+    {
+        BlameAuthor.HScrollPosition = 0;
+    }
+
+    private void BlameAuthor_VScrollPositionChanged(object? sender, EventArgs e)
+    {
+        if (_changingScrollPosition)
+        {
+            return;
+        }
+
+        _changingScrollPosition = true;
+        BlameFile.VScrollPosition = BlameAuthor.VScrollPosition;
+        _changingScrollPosition = false;
+    }
+
+    private void BlameFile_VScrollPositionChanged(object? sender, EventArgs e)
+    {
+        if (_changingScrollPosition)
+        {
+            return;
+        }
+
+        _changingScrollPosition = true;
+        BlameAuthor.VScrollPosition = BlameFile.VScrollPosition;
+        _changingScrollPosition = false;
     }
 
     private void HighlightLinesForCommit(GitBlameCommit? commit)
@@ -412,32 +450,32 @@ public sealed partial class BlameControl : GitModuleControl
         (string gutter, string body, List<GitBlameEntry> gitBlameEntries) = BuildBlameContents(filename);
         cancellationToken.ThrowIfCancellationRequested();
 
-        bool showAuthorAvatar = AppSettings.BlameShowAuthorAvatar;
-        int contentVersion = BlameAuthor.Initialize(gutter, gitBlameEntries, showAuthorAvatar);
-
         Validates.NotNull(_fileName);
-        await BlameFile.ViewTextAsync(_fileName, body, cancellationToken);
+        await Task.WhenAll(
+            BlameAuthor.ViewTextAsync("committer.txt", gutter, cancellationToken),
+            BlameFile.ViewTextAsync(_fileName, body, cancellationToken));
         BlameFile.GoToLine(Math.Min(lineNumber, _blame!.Lines.Count));
         _clickedBlameLine = null;
 
         _blameId = revision.ObjectId;
         CommitInfo.Revision = revision;
 
-        if (showAuthorAvatar)
+        if (AppSettings.BlameShowAuthorAvatar)
         {
-            await LoadAvatarsAsync(gitBlameEntries, contentVersion, mainThreadFactory, cancellationToken);
+            await LoadAvatarsAsync(gitBlameEntries, mainThreadFactory, cancellationToken);
         }
+
+        BlameAuthor.SetGitBlameGutter(gitBlameEntries);
     }
 
     private async Task LoadAvatarsAsync(
         IReadOnlyList<GitBlameEntry> gitBlameEntries,
-        int contentVersion,
         JoinableTaskFactory mainThreadFactory,
         CancellationToken cancellationToken)
     {
         Validates.NotNull(_blame);
 
-        int avatarSize = BlameAuthor.AvatarSize;
+        int avatarSize = Math.Max(1, (int)Math.Ceiling(BlameAuthor.TextEditor.FontSize) + 1);
         GitBlameCommit? lastCommit = null;
         Dictionary<string, Task<byte[]?>> avatarRequests = new(StringComparer.OrdinalIgnoreCase);
         List<Task> updates = [];
@@ -478,7 +516,7 @@ public sealed partial class BlameControl : GitModuleControl
             await mainThreadFactory.SwitchToMainThreadAsync(cancellationToken);
             if (lineIndex < gitBlameEntries.Count)
             {
-                BlameAuthor.SetAvatar(lineIndex, imageData, contentVersion);
+                gitBlameEntries[lineIndex].Avatar = imageData;
             }
         }
     }
@@ -833,7 +871,7 @@ public sealed partial class BlameControl : GitModuleControl
         if (_blame is not null)
         {
             (_, _, List<GitBlameEntry> entries) = BuildBlameContents(_fileName);
-            BlameAuthor.UpdateAgeBuckets(entries);
+            BlameAuthor.SetGitBlameGutter(entries);
         }
 
         GitBlameCommit? highlightedCommit = _highlightedCommit;
@@ -867,8 +905,14 @@ public sealed partial class BlameControl : GitModuleControl
 
         public double AuthorMarginWidth
         {
-            get => ((IPersistedSplitter)_control.BlameAuthor).SplitterDistance;
-            set => ((IPersistedSplitter)_control.BlameAuthor).SplitterDistance = value;
+            get
+            {
+                ColumnDefinition authorColumn = _control.splitContainer2.ColumnDefinitions[0];
+                return authorColumn.ActualWidth > 0
+                    ? authorColumn.ActualWidth
+                    : authorColumn.Width.Value;
+            }
+            set => _control.splitContainer2.ColumnDefinitions[0].Width = new GridLength(value);
         }
 
         public DateTime ArtificialOldBoundary => _control.ArtificialOldBoundary;
@@ -878,8 +922,8 @@ public sealed partial class BlameControl : GitModuleControl
 
         public (string gutter, string body, List<GitBlameEntry> gitBlameDisplays) BuildBlameContents(string filename) => _control.BuildBlameContents(filename);
 
-        public Task LoadAvatarsAsync(IReadOnlyList<GitBlameEntry> entries, int contentVersion, CancellationToken cancellationToken = default)
-            => _control.LoadAvatarsAsync(entries, contentVersion, ThreadHelper.JoinableTaskFactory, cancellationToken);
+        public Task LoadAvatarsAsync(IReadOnlyList<GitBlameEntry> entries, CancellationToken cancellationToken = default)
+            => _control.LoadAvatarsAsync(entries, ThreadHelper.JoinableTaskFactory, cancellationToken);
 
         public List<GitBlameEntry> CalculateBlameGutterData(IReadOnlyList<GitBlameLine> blameLines)
             => _control.CalculateBlameGutterData(blameLines);

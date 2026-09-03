@@ -13,6 +13,16 @@
   <MenuItem x:Name="kGitToolStripMenuItem" Header="Git_K">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Gitk}" /></MenuItem.Icon>
   </MenuItem>
+  <Separator x:Name="toolStripSeparator6" />
+  <MenuItem x:Name="PuTTYToolStripMenuItem" Header="_PuTTY">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Putty}" /></MenuItem.Icon>
+    <MenuItem x:Name="startAuthenticationAgentToolStripMenuItem" Header="Start authentication agent">
+      <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Pageant16}" /></MenuItem.Icon>
+    </MenuItem>
+    <MenuItem x:Name="generateOrImportKeyToolStripMenuItem" Header="Generate or import key">
+      <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PuttyGen}" /></MenuItem.Icon>
+    </MenuItem>
+  </MenuItem>
   <Separator x:Name="toolStripSeparator41" />
   <MenuItem x:Name="gitcommandLogToolStripMenuItem" Header="Git _command log">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GitCommandLog}" /></MenuItem.Icon>

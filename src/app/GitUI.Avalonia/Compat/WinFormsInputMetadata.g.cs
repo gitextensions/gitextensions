@@ -31,9 +31,11 @@ internal static class WinFormsInputMetadata
             ],
             ["GitUI.Blame.BlameControl"] =
             [
+                new("BlameAuthor", 5, false, null),
                 new("BlameFile", 0, null, null),
                 new("CommitInfo", 5, null, null),
                 new("splitContainer1", 7, null, null),
+                new("splitContainer2", 0, null, null),
             ],
             ["GitUI.BranchComboBox"] =
             [
@@ -1831,7 +1833,6 @@ internal static class WinFormsInputMetadata
             [
                 new("buttonPickCommit", 1, null, null),
                 new("lbCommits", 2, null, null),
-                new("tableLayoutPanel1", 0, null, null),
                 new("textBoxCommitHash", 0, null, null),
             ],
             ["GitUI.UserControls.CommitSummaryUserControl"] =
@@ -2025,6 +2026,7 @@ internal static class WinFormsInputMetadata
             ],
             ["GitUI.Blame.BlameControl"] =
             [
+                new("BlameAuthor", "GitUI.Editor.FileViewer"),
                 new("BlameFile", "GitUI.Editor.FileViewer"),
                 new("CommitInfo", "GitUI.CommitInfo.CommitInfo"),
                 new("allCommitInfoToolStripMenuItem", "ToolStripMenuItem"),
@@ -2036,6 +2038,7 @@ internal static class WinFormsInputMetadata
                 new("copyToClipboardToolStripMenuItem", "ToolStripMenuItem"),
                 new("showChangesToolStripMenuItem", "ToolStripMenuItem"),
                 new("splitContainer1", "SplitContainer"),
+                new("splitContainer2", "SplitContainer"),
                 new("toolStripSeparator1", "ToolStripSeparator"),
             ],
             ["GitUI.BranchComboBox"] =
@@ -3297,12 +3300,16 @@ internal static class WinFormsInputMetadata
             ],
             ["GitUI.CommandsDialogs.Menus.ToolsToolStripMenuItem"] =
             [
+                new("PuTTYToolStripMenuItem", "ToolStripMenuItem"),
+                new("generateOrImportKeyToolStripMenuItem", "ToolStripMenuItem"),
                 new("gitBashToolStripMenuItem", "ToolStripMenuItem"),
                 new("gitGUIToolStripMenuItem", "ToolStripMenuItem"),
                 new("gitcommandLogToolStripMenuItem", "ToolStripMenuItem"),
                 new("kGitToolStripMenuItem", "ToolStripMenuItem"),
                 new("settingsToolStripMenuItem", "ToolStripMenuItem"),
+                new("startAuthenticationAgentToolStripMenuItem", "ToolStripMenuItem"),
                 new("toolStripSeparator41", "ToolStripSeparator"),
+                new("toolStripSeparator6", "ToolStripSeparator"),
                 new("toolStripSeparator7", "ToolStripSeparator"),
             ],
             ["GitUI.CommandsDialogs.RepoHosting.CreatePullRequestForm"] =
@@ -4533,7 +4540,6 @@ internal static class WinFormsInputMetadata
             [
                 new("buttonPickCommit", "Button"),
                 new("lbCommits", "Label"),
-                new("tableLayoutPanel1", "TableLayoutPanel"),
                 new("textBoxCommitHash", "TextBox"),
             ],
             ["GitUI.UserControls.CommitSummaryUserControl"] =
@@ -4709,9 +4715,11 @@ internal static class WinFormsInputMetadata
             ],
             ["GitUI.Blame.BlameControl"] =
             [
+                new("BlameAuthor", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
                 new("BlameFile", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
                 new("CommitInfo", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
                 new("splitContainer1", null, "Fill", null, new Avalonia.Thickness(4, 4, 4, 4), null, null, null, null, false, true),
+                new("splitContainer2", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
             ],
             ["GitUI.BranchComboBox"] =
             [
@@ -6561,7 +6569,6 @@ internal static class WinFormsInputMetadata
             [
                 new("buttonPickCommit", ["Top", "Right"], null, null, new Avalonia.Thickness(3, 0, 3, 0), null, null, null, null, false, false),
                 new("lbCommits", null, "Fill", true, null, null, "MiddleLeft", null, null, true, false),
-                new("tableLayoutPanel1", null, "Fill", true, new Avalonia.Thickness(2, 2, 2, 2), null, null, null, null, false, false),
                 new("textBoxCommitHash", null, "Fill", null, new Avalonia.Thickness(0, 2, 0, 0), null, null, null, null, false, false),
             ],
             ["GitUI.UserControls.CommitSummaryUserControl"] =

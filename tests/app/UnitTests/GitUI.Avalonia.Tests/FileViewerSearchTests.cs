@@ -297,6 +297,7 @@ public sealed class FileViewerSearchTests
         FindAndReplaceForm.TestAccessor accessor = form.GetTestAccessor();
         accessor.SetEditor(viewer.TextEditor);
         accessor.TxtLookFor.Text = "target";
+        viewer.ReloadHotkeys();
 
         viewer.ProcessHotkey(WinFormsShims.Keys.F3).Should().BeTrue();
         Dispatcher.UIThread.RunJobs();
@@ -341,6 +342,58 @@ public sealed class FileViewerSearchTests
         FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
         accessor.FindMenuItem.InputGesture.Should().Be(new KeyGesture(Key.F, KeyModifiers.Control));
         ToolTip.GetTip(accessor.NextChangeButton).Should().Be("Next change\u00A0(Ctrl+Down)");
+    }
+
+    [AvaloniaTest]
+    public void FileViewer_should_load_runtime_hotkeys_and_font_only_when_effectively_visible()
+    {
+        IHotkeySettingsLoader loader = Substitute.For<IHotkeySettingsLoader>();
+        loader.LoadHotkeys(FileViewer.HotkeySettingsName).Returns(
+        [
+            new HotkeyCommand((int)FileViewer.Command.NextChange, nameof(FileViewer.Command.NextChange))
+            {
+                KeyData = WinFormsShims.Keys.Control | WinFormsShims.Keys.Down,
+            },
+        ]);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(commands);
+        WinFormsShims.Font originalFont = AppSettings.FixedWidthFont;
+        Window owner = new();
+        try
+        {
+            AppSettings.FixedWidthFont = new WinFormsShims.Font("Consolas", 10);
+            FileViewer viewer = new() { UICommandsSource = source, IsVisible = false };
+            FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+            owner.Content = viewer;
+            owner.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            GetToolTipText(accessor.NextChangeButton).Should().Be("Next change");
+            viewer.Font.Name.Should().Be("Courier New");
+            _ = loader.DidNotReceive().LoadHotkeys(FileViewer.HotkeySettingsName);
+
+            viewer.IsVisible = true;
+            Dispatcher.UIThread.RunJobs();
+
+            GetToolTipText(accessor.NextChangeButton).Should().Be("Next change\u00A0(Ctrl+Down)");
+            viewer.Font.Name.Should().Be("Consolas");
+            _ = loader.Received().LoadHotkeys(FileViewer.HotkeySettingsName);
+        }
+        finally
+        {
+            owner.Close();
+            AppSettings.FixedWidthFont = originalFont;
+        }
+
+        static string? GetToolTipText(Control control)
+            => ToolTip.GetTip(control) switch
+            {
+                TextBlock textBlock => textBlock.Text,
+                string text => text,
+                _ => null,
+            };
     }
 
     [AvaloniaTest]
