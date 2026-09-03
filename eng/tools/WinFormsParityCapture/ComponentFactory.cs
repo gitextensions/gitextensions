@@ -420,7 +420,7 @@ internal static class ComponentFactory
         }
 
         RevisionGridControl? revisionGrid = control as RevisionGridControl;
-        if (revisionGrid is null && control is FormLog)
+        if (revisionGrid is null && control is FormLog or FormBrowse)
         {
             revisionGrid = (RevisionGridControl?)FindFieldValue(control, "RevisionGrid");
         }
