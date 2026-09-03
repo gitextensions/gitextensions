@@ -195,8 +195,9 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
         }
 
         // Avalonia may substitute a shorter platform font; preserve the WinForms 96-DPI default row height while allowing configured fonts to grow.
-        double itemHeight = Math.Max(16, Math.Ceiling(lineHeight * renderScale) / renderScale);
-        double listHeight = Math.Min(800 / renderScale, itemHeight * (SearchResultListBox.ItemCount + 1));
+        double itemHeight = Math.Max(15 * renderScale, Math.Floor(lineHeight * renderScale)) / renderScale;
+        double listHeight = Math.Min(800 / renderScale, itemHeight * (SearchResultListBox.ItemCount + 1))
+            + (2 / renderScale);
         SearchResultListBox.Width = width;
         SearchResultListBox.Height = listHeight;
 

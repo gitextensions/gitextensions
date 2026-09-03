@@ -12,36 +12,39 @@
         Padding="4"
         Title="Edit .gitignore">
   <!-- WinForms MinimumSize 650x498 includes its 16x39 native-96 non-client frame; Avalonia sizes the client. -->
-  <Grid RowDefinitions="*,Auto">
+  <Grid RowDefinitions="*,33">
     <Grid x:Name="splitContainer1"
           Grid.Row="0"
-          ColumnDefinitions="*,4,270"
+          ColumnDefinitions="*,6,270"
           TabIndex="0">
       <Grid Grid.Column="0" RowDefinitions="*,33">
         <editor:FileViewer x:Name="_NO_TRANSLATE_GitIgnoreEdit"
                            Grid.Row="0"
                            Margin="0"
                            TabIndex="0" />
-        <StackPanel x:Name="flowLayoutPanel2"
-                    Grid.Row="1"
-                    Orientation="Horizontal"
-                    Spacing="6"
-                    Margin="3,3,0,3"
-                    TabIndex="6">
+        <Canvas x:Name="flowLayoutPanel2"
+                Grid.Row="1"
+                Margin="0"
+                TabIndex="6">
           <Button x:Name="AddDefault"
+                  Canvas.Left="3"
+                  Canvas.Top="3"
                   Width="160"
                   Height="27"
                   TabIndex="2"
                   Content="Add default ignores" />
           <Button x:Name="AddPattern"
+                  Canvas.Left="169"
+                  Canvas.Top="3"
                   Width="160"
                   Height="27"
                   TabIndex="3"
                   Content="Add pattern" />
-        </StackPanel>
+        </Canvas>
       </Grid>
 
       <GridSplitter Grid.Column="1"
+                    Margin="1,0"
                     ResizeDirection="Columns" />
 
       <Grid Grid.Column="2" RowDefinitions="*,42">
@@ -72,9 +75,9 @@
                            TabIndex="7"
                            Content="Generate a custom ignore file for git" />
           <HyperlinkButton x:Name="lnkGitIgnorePatterns"
-                           Canvas.Left="124"
+                           Canvas.Left="125"
                            Canvas.Top="21"
-                           Width="135"
+                           Width="134"
                            Height="15"
                            Padding="0"
                            TabIndex="6"
@@ -83,30 +86,29 @@
       </Grid>
     </Grid>
 
-    <StackPanel x:Name="flowLayoutPanel1"
-                Grid.Row="1"
-                Height="33"
-                Margin="0,3,3,3"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Orientation="Horizontal"
-                Spacing="6"
-                TabIndex="1">
-      <Button x:Name="btnCancel"
-              Classes="gitextensions-dialog-action"
-              Width="75"
-              Height="27"
-              TabIndex="2"
-              Content="Cancel"
-              IsCancel="True" />
+    <Canvas x:Name="flowLayoutPanel1"
+            Grid.Row="1"
+            Height="33"
+            TabIndex="1">
       <compat:IconButton x:Name="Save"
                          Classes="gitextensions-dialog-action"
+                         Canvas.Left="463"
+                         Canvas.Top="3"
                          Width="160"
                          Height="27"
                          TabIndex="1"
                          Content="Save"
                          Icon="{x:Static properties:Images.Save}"
                          IsDefault="True" />
-    </StackPanel>
+      <Button x:Name="btnCancel"
+              Classes="gitextensions-dialog-action"
+              Canvas.Left="382"
+              Canvas.Top="3"
+              Width="75"
+              Height="27"
+              TabIndex="2"
+              Content="Cancel"
+              IsCancel="True" />
+    </Canvas>
   </Grid>
 </Window>

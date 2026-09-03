@@ -34,16 +34,17 @@
                TabIndex="13">
           <ListBox x:Name="_NO_TRANSLATE_Preview"
                    Classes="gitextensions-native-list-items"
+                   Margin="0,0,0,3"
                    TabIndex="2" />
         </Panel>
         <Panel x:Name="panel2"
                Grid.Row="1"
                TabIndex="12">
-          <Label x:Name="_NO_TRANSLATE_filesWillBeIgnored"
-                 HorizontalAlignment="Right"
-                 Padding="0"
-                 TabIndex="11"
-                 Content="(matched files count)" />
+          <TextBlock x:Name="_NO_TRANSLATE_filesWillBeIgnored"
+                     HorizontalAlignment="Right"
+                     VerticalAlignment="Top"
+                     TabIndex="11"
+                     Text="(matched files count)" />
         </Panel>
         <Border x:Name="noMatchPanel"
                 Grid.Row="0"
