@@ -28,6 +28,10 @@ internal static class VisualStudioIntegration
             [
                 "-prerelease", // Include prerelease versions of Visual Studio in the search.
                 "-latest",
+                "-requires Microsoft.VisualStudio.Product.Enterprise",
+                "-requires Microsoft.VisualStudio.Product.Professional",
+                "-requires Microsoft.VisualStudio.Product.Community",
+                "-requiresAny",
                 "-property productPath"
             ];
             _devEnvPath = await executable.GetOutputAsync(arguments);
