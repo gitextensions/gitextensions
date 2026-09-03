@@ -294,6 +294,56 @@ public class RevisionGraphTests
         await VerifyGraphLayoutAsync(revisionGraph);
     }
 
+    [Test]
+    public async Task DevGetsTheSecondLane()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  m:1:main d:1:dev 3:1  4:3 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheSecondLane2()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  d:1:dev m:1:main 3:1  4:3 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheSecondLane3()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  m:1:main d:1:dev 3:1 4:3 5:m 6:d 7:m");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheSecondLane4([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+        RevisionGraph revisionGraph = CreateGraph(" 1  m:1:main 2:1 d:1,2:dev 3:d 4:3 5:1");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheFirstLaneIfMainIsMissing()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  d:1:dev 3:1  4:3 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevAndMainGetSameLaneIfSameNode()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  2:1:dev,main 3:1  4:3 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
     private const string graphWithMultiLaneCrossings = "0:C,1,2,3,4,5,6,7,8,9,A,B 1:R 2:R 3:R 4:C 5:C 6:C 7:R 8:C 9:R A:C B:R C:D D:E E:F F:G G:H,K,R H:I,R I:J,R J:R K:R R";
 
     [Test]

@@ -451,16 +451,39 @@ public class RevisionGraph : IRevisionGraphRowProvider
             .SelectMany(x => x.GitRevision?.Refs)
             .AsReadOnlyList();
 
-        // Find first revision with a ref at priority 1 (usually 'main' or 'master')
-        HashSet<IGitRef> priority1Refs = [.. Priority.Priorities(refs, x => x.LocalName, regexList: AppSettings.PrioritizedBranchNames)
-            .Where(kv => kv.Value == 0)
-            .Select(kv => kv.Key)];
+        // Find the first revision that goes in each reserved lane.
+        Dictionary<IGitRef, int> lanePriorityByRef = Priority.Priorities(refs, x => x.LocalName, regexList: AppSettings.ReservedLanesBranchNames);
+        int[] firstIndexForReservedLane = Enumerable.Repeat(-1, lanePriorityByRef.Values.Append(-1).Max() + 1).ToArray();
+        for (int nodeIndex = 0; nodeIndex < orderedNodesCount; ++nodeIndex)
+        {
+            foreach (IGitRef gitRef in orderedNodesCache[nodeIndex].GitRevision.Refs)
+            {
+                if (lanePriorityByRef.TryGetValue(gitRef, out int priority) && firstIndexForReservedLane[priority] == -1)
+                {
+                    firstIndexForReservedLane[priority] = nodeIndex;
+                }
+            }
+        }
 
-        int mainRevisionIndex = orderedNodesCache.IndexOf(x => x.GitRevision.Refs.Any(r => priority1Refs.Contains(r)));
+        // Eliminate unused reserved lanes and duplicates (same revision in multiple lanes)
+        firstIndexForReservedLane = firstIndexForReservedLane.Where(x => x != -1).GroupBy(x => x).Select(g => g.Key).ToArray();
+
+        // Create the reverse map
+        Dictionary<int, int> reservedLaneForIndex = firstIndexForReservedLane
+            .Select((firstIndex, priority) => (firstIndex, priority))
+            .ToDictionary(x => x.firstIndex, x => x.priority);
+        int emptyReservedLaneCount = firstIndexForReservedLane.Length;
 
         for (int nextIndex = startIndex; nextIndex <= lastToCacheRowIndex; ++nextIndex)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
+            bool reserveLaneForCurrentRevision = reservedLaneForIndex.TryGetValue(nextIndex, out int laneForCurrentRevision);
+            if (reserveLaneForCurrentRevision)
+            {
+                --emptyReservedLaneCount;
+            }
+
             RevisionGraphRevision revision = orderedNodesCache[nextIndex];
             RevisionGraphSegment[] revisionStartSegments = revision.GetStartSegments();
             if (orderSegments)
@@ -496,10 +519,10 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 bool startSegmentsAdded = false;
 
                 List<RevisionGraphSegment> segmentsForNode = segments;
-                if (nextIndex == mainRevisionIndex)
+                if (reserveLaneForCurrentRevision)
                 {
-                    // The segments connecting to this row's node are put in their own list, which
-                    // will be inserted first in 'segments'
+                    // Collect the segments connecting to this row's node in a separate list, which
+                    // will be inserted in the right position after the rest of the row has been built.
                     segmentsForNode = [];
                 }
 
@@ -585,20 +608,29 @@ public class RevisionGraph : IRevisionGraphRowProvider
                     }
                 }
 
-                if (!ReferenceEquals(segments, segmentsForNode))
+                if (reserveLaneForCurrentRevision)
                 {
-                    segments.InsertRange(0, segmentsForNode);
+                    // Now we can insert the segments for this node, after all segments that belong to higher-pri occupied reserved lanes.
+                    int lane = firstIndexForReservedLane.IndexOf(nextIndex);
+                    int occupiedReservedLaneCount = firstIndexForReservedLane.Take(lane).Count(x => x <= nextIndex);
+                    segments.InsertRange(occupiedReservedLaneCount, segmentsForNode);
                 }
             }
 
-            int emptyLaneCount = 0;
-            if (mainRevisionIndex != -1 && nextIndex < mainRevisionIndex)
+            RevisionGraphRow row = new(revision, segments, Config.MergeGraphLanesHavingCommonParent);
+            if (emptyReservedLaneCount > 0)
             {
-                // Reserve the first lane for the 'main' commit
-                ++emptyLaneCount;
-            }
+                _ = row.GetLaneCount();
 
-            RevisionGraphRow row = new(revision, segments, Config.MergeGraphLanesHavingCommonParent, emptyLaneCount);
+                for (int lane = 0; lane < firstIndexForReservedLane.Length; ++lane)
+                {
+                    if (firstIndexForReservedLane[lane] > nextIndex)
+                    {
+                        // Make space for a not yet filled reserved lane
+                        row.MoveLanesRight(lane);
+                    }
+                }
+            }
 
             _orderedRowCache.Add(row);
         }
@@ -616,7 +648,8 @@ public class RevisionGraph : IRevisionGraphRowProvider
         {
             int straightenDiagonalsStartIndex = Math.Max(1, startIndex - _straightenLanesLookAhead - straightenDiagonalsLookAhead);
             int straightenDiagonalsLastIndex = loadingCompleted ? lastToCacheRowIndex - 1 : lastToCacheRowIndex - _straightenLanesLookAhead - straightenDiagonalsLookAhead;
-            StraightenDiagonals(straightenDiagonalsStartIndex, straightenDiagonalsLastIndex, lastLookAheadIndex: lastToCacheRowIndex, straightenDiagonalsLookAhead, _orderedRowCache, Config.StraightenGraphSegmentsLimit);
+            StraightenDiagonals(straightenDiagonalsStartIndex, straightenDiagonalsLastIndex, lastLookAheadIndex: lastToCacheRowIndex, straightenDiagonalsLookAhead,
+                _orderedRowCache, Config.StraightenGraphSegmentsLimit, firstIndexForReservedLane);
         }
 
         return;
@@ -772,7 +805,8 @@ public class RevisionGraph : IRevisionGraphRowProvider
             }
         }
 
-        static void StraightenDiagonals(int startIndex, int lastStraightenIndex, int lastLookAheadIndex, int straightenDiagonalsLookAhead, IList<RevisionGraphRow> localOrderedRowCache, int straightenGraphSegmentsLimit)
+        static void StraightenDiagonals(int startIndex, int lastStraightenIndex, int lastLookAheadIndex, int straightenDiagonalsLookAhead,
+            IList<RevisionGraphRow> localOrderedRowCache, int straightenGraphSegmentsLimit, int[] firstIndexForReservedLane)
         {
             List<MoveLaneBy> moveLaneBy = new(capacity: straightenDiagonalsLookAhead);
             int goBackLimit = 1;
@@ -946,11 +980,10 @@ public class RevisionGraph : IRevisionGraphRowProvider
                                 return false;
                             }
 
-                            if (segmentOrAncestor.Parent == endRow.Revision && endLane.Index == 0)
+                            if (segmentOrAncestor.Parent == endRow.Revision && firstIndexForReservedLane.Length > endLane.Index && firstIndexForReservedLane[endLane.Index] == lookAheadIndex)
                             {
-                                // The segment ends in the leftmost lane of this row, which is the node lane.
-                                // We don't want to move this lane (this should only happen for the 'main'
-                                // commit when it's fixed to the leftmost lane).
+                                // The segment ends in the first node in a reserved lane.
+                                // We don't want to move this lane.
                                 return false;
                             }
 
