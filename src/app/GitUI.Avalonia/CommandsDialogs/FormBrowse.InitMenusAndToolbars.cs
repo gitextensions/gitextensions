@@ -8,6 +8,7 @@ using GitExtUtils;
 using GitUI.Compat;
 using GitUI.Compat.WinFormsControls;
 using GitUI.Properties;
+using GitUI.Shells;
 using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
 using Brush = Avalonia.Media.IBrush;
@@ -45,7 +46,7 @@ partial class FormBrowse
         FillNextPullActionAsDefaultToolStripMenuItems();
         RefreshDefaultPullAction();
 
-        FillUserShells(defaultShell: "Git bash");
+        FillUserShells(defaultShell: BashShell.ShellName);
 
         InsertFetchPullShortcuts();
 

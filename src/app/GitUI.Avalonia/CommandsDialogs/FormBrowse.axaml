@@ -121,7 +121,7 @@
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.DashboardFolderGit}" /></MenuItem.Icon>
         </wf:ToolStripMenuItem>
       </wf:ToolStripMenuItem>
-      <wf:ToolStripMenuItem x:Name="commandsToolStripMenuItem" Header="_Commands">
+      <wf:ToolStripMenuItem x:Name="commandsToolStripMenuItem" Width="81" Header="_Commands">
         <wf:ToolStripMenuItem x:Name="commitToolStripMenuItem" Header="_Commit...">
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RepoStateClean}" /></MenuItem.Icon>
         </wf:ToolStripMenuItem>
@@ -215,7 +215,7 @@
         </wf:ToolStripMenuItem>
         <wf:ToolStripSeparator x:Name="toolStripSeparator42" />
       </wf:ToolStripMenuItem>
-      <wf:ToolStripMenuItem x:Name="pluginsToolStripMenuItem" Header="_Plugins">
+      <wf:ToolStripMenuItem x:Name="pluginsToolStripMenuItem" Width="58" Header="_Plugins">
         <wf:ToolStripMenuItem x:Name="pluginsLoadingToolStripMenuItem"
                   Header="Loading..."
                   IsEnabled="False" />
@@ -224,8 +224,8 @@
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Settings}" /></MenuItem.Icon>
         </wf:ToolStripMenuItem>
       </wf:ToolStripMenuItem>
-      <menus:ToolsToolStripMenuItem x:Name="toolsToolStripMenuItem" />
-      <menus:HelpToolStripMenuItem x:Name="helpToolStripMenuItem" />
+      <menus:ToolsToolStripMenuItem x:Name="toolsToolStripMenuItem" Width="47" />
+      <menus:HelpToolStripMenuItem x:Name="helpToolStripMenuItem" Width="44" />
     </wf:MenuStripEx>
     <wf:ToolStripContainer x:Name="toolPanel"
                            Background="Transparent"
@@ -440,10 +440,9 @@
           <Border x:Name="commitInfoLeftHost" Grid.Column="0" Classes="gitextensions-section" />
           <GridSplitter x:Name="commitInfoLeftSplitter" Grid.Column="1" ResizeDirection="Columns" IsVisible="False" />
           <wf:Panel x:Name="RevisionGridContainer"
-                    Grid.Column="2"
-                    Margin="1"
-                    Background="{DynamicResource GitExtensionsSectionBorderBrush}"
-                    Classes="gitextensions-section">
+                     Grid.Column="2"
+                     Margin="1"
+                     Background="{DynamicResource GitExtensionsSectionBorderBrush}">
             <Grid RowDefinitions="Auto,Auto,*">
               <controls:InteractiveGitActionControl x:Name="notificationBarGitActionInProgress"
                                                     Grid.Row="0"
@@ -512,6 +511,10 @@
               IsVisible="False" />
       </Grid>
     </Grid>
+    <wf:Panel Name="_topPanel" Height="0" VerticalAlignment="Top" IsHitTestVisible="False" />
+    <wf:Panel Name="_bottomPanel" Height="0" VerticalAlignment="Bottom" IsHitTestVisible="False" />
+    <wf:Panel Name="_leftPanel" Width="0" HorizontalAlignment="Left" IsHitTestVisible="False" />
+    <wf:Panel Name="_rightPanel" Width="0" HorizontalAlignment="Right" IsHitTestVisible="False" />
     </wf:ToolStripContainer>
   </DockPanel>
 </Window>
