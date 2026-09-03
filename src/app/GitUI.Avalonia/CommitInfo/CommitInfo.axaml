@@ -42,6 +42,7 @@
           Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
           IsVisible="False">
       <local:CommitInfoHeader x:Name="commitInfoHeader"
+                              HorizontalAlignment="Left"
                               Margin="8,8,16,8" />
       <Border x:Name="pnlCommitMessage"
               Grid.Row="1"

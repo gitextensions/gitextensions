@@ -318,6 +318,8 @@
                            Color="#E0E0E0" />
           <SolidColorBrush x:Key="GitExtensionsSectionBorderBrush"
                            Color="#E0E0E0" />
+          <SolidColorBrush x:Key="GitExtensionsFileStatusSplitterBrush"
+                           Color="#E0E0E0" />
           <SolidColorBrush x:Key="GitExtensionsOtherBackgroundBrush" Color="#FBFBFB" />
           <SolidColorBrush x:Key="GitExtensionsMergeConflictsBackgroundBrush" Color="#E66363" />
           <SolidColorBrush x:Key="GitExtensionsMergeConflictsForegroundBrush" Color="#000000" />
@@ -452,6 +454,8 @@
                            Color="#4C4C4C" />
           <SolidColorBrush x:Key="GitExtensionsSectionBorderBrush"
                            Color="#4C4C4C" />
+          <SolidColorBrush x:Key="GitExtensionsFileStatusSplitterBrush"
+                           Color="#2F2F2F" />
           <SolidColorBrush x:Key="GitExtensionsOtherBackgroundBrush" Color="#353535" />
           <SolidColorBrush x:Key="GitExtensionsMergeConflictsBackgroundBrush" Color="#701212" />
           <SolidColorBrush x:Key="GitExtensionsMergeConflictsForegroundBrush" Color="#FFFFFF" />

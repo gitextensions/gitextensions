@@ -175,7 +175,7 @@
         </compat:IconDropDownButton.Flyout>
       </compat:IconDropDownButton>
     </StackPanel>
-    <TextBlock x:Name="lblSplitter" DockPanel.Dock="Top" Height="2" MinHeight="2" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" />
+    <TextBlock x:Name="lblSplitter" DockPanel.Dock="Top" Height="2" MinHeight="2" Background="{DynamicResource GitExtensionsFileStatusSplitterBrush}" />
     <Grid DockPanel.Dock="Top" Height="23">
       <userControls:WatermarkComboBox x:Name="cboFilterComboBox" HorizontalAlignment="Stretch" MinHeight="23" Padding="4,1" FontWeight="Bold" Watermark="Filter files using a regular expression..." />
       <Button x:Name="DeleteFilterButton" Classes="gitextensions-icon-only filestatus-filter-delete" Width="18" Height="23" Margin="0,0,18,0" HorizontalAlignment="Right" Focusable="False" IsVisible="False">

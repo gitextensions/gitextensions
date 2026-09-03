@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
@@ -6,11 +7,13 @@ using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.ParityCapture;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommitInfo;
 using GitUI.Compat;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -43,6 +46,29 @@ public sealed class CommitInfoTests
 
         link.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         activatedUri.Should().Be("gitext://gototag/v1");
+    }
+
+    [AvaloniaTest]
+    public void Capture_tree_should_preserve_XHTML_text_and_link_targets()
+    {
+        AvaloniaThemeResources.Apply(Application.Current!, ThemeModule.Settings);
+        XhtmlTextBlock block = new() { Name = "RevisionInfo" };
+        block.SetXHTMLText("Contained in branches:<br/><a href='gitext://gotobranch/main'>main</a>");
+        Window window = new() { Width = 200, Height = 50, Content = block };
+        window.Show();
+
+        try
+        {
+            CaptureNode node = new AvaloniaControlTreeReader(block, renderScale: 1)
+                .ReadPrimary(block, new PixelSize(200, 50))
+                .Root;
+
+            node.Text.Should().Be($"Contained in branches:{Environment.NewLine}main|||gitext://gotobranch/main");
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]

@@ -1927,6 +1927,23 @@ public sealed partial class ParityScreenshotTests
             formBrowse.RevisionGrid.GetSelectedRevisions().Should().ContainSingle()
                 .Which.ObjectId.Should().Be(context.HeadRevision.ObjectId);
 
+            // The revision list and primary commit-details loaders complete independently.
+            // Wait for the selected revision's header and message before recording it.
+            CommitInfo.TestAccessor commitInfo = formBrowse.RevisionInfo.GetTestAccessor();
+            Stopwatch commitInfoStopwatch = Stopwatch.StartNew();
+            while ((!commitInfo.Header.GetTestAccessor().RevisionHeader.GetPlainText()
+                .Contains(context.HeadRevision.ObjectId.ToString(), StringComparison.Ordinal)
+                    || string.IsNullOrWhiteSpace(commitInfo.CommitMessage.GetPlainText()))
+                   && commitInfoStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            commitInfo.Header.GetTestAccessor().RevisionHeader.GetPlainText()
+                .Should().Contain(context.HeadRevision.ObjectId.ToString());
+            commitInfo.CommitMessage.GetPlainText().Should().NotBeNullOrWhiteSpace();
+
             // Wait for the seeded repository's status count so captures cannot race the monitor.
             Button commitButton = GetRequiredControl<Button>(formBrowse, "toolStripButtonCommit");
             Stopwatch statusStopwatch = Stopwatch.StartNew();
