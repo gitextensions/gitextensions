@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.UserControls.FolderBrowserButton">
+  <!-- Framework constraint: preserve the source AutoSize button's 100x25 minimum inside a shorter host. -->
+  <compat:IconButton x:Name="buttonBrowse"
+                     Classes="gitextensions-native-dialog-action"
+                     Icon="{x:Static properties:Images.BrowseFileExplorer}"
+                     Content="_Browse..."
+                     MinWidth="100"
+                     MinHeight="25"
+                     Height="25"
+                     Padding="4,0"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Top"
+                     HorizontalContentAlignment="Center" />
+</UserControl>

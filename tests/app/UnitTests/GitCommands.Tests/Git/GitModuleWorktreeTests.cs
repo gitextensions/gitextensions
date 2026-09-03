@@ -7,6 +7,15 @@ using GitExtensions.Extensibility.Git;
 namespace GitCommandsTests.Git;
 public sealed class GitModuleWorktreeTests
 {
+    // git reports worktree paths with '/' and the parser returns them in the native form.
+    // A rooted path has no spelling common to both platforms, so both are given explicitly.
+    private static readonly string _mainGitPath = OperatingSystem.IsWindows() ? "C:/repos/main" : "/repos/main";
+    private static readonly string _mainNativePath = OperatingSystem.IsWindows() ? @"C:\repos\main" : "/repos/main";
+    private static readonly string _featureGitPath = OperatingSystem.IsWindows() ? "C:/repos/feature" : "/repos/feature";
+    private static readonly string _featureNativePath = OperatingSystem.IsWindows() ? @"C:\repos\feature" : "/repos/feature";
+    private static readonly string _spacedGitPath = OperatingSystem.IsWindows() ? "C:/my repos/work tree" : "/my repos/work tree";
+    private static readonly string _spacedNativePath = OperatingSystem.IsWindows() ? @"C:\my repos\work tree" : "/my repos/work tree";
+
     private GitModule _gitModule = null!;
     private MockExecutable _executable = null!;
 
@@ -30,7 +39,7 @@ public sealed class GitModuleWorktreeTests
     public void GetWorktrees_should_parse_single_worktree_with_branch()
     {
         string output = string.Join('\0',
-            "worktree C:/repos/main",
+            $"worktree {_mainGitPath}",
             "HEAD abc1234abc1234abc1234abc1234abc1234abc12",
             "branch refs/heads/master",
             "", "");
@@ -40,7 +49,7 @@ public sealed class GitModuleWorktreeTests
             IReadOnlyList<GitWorktree> worktrees = _gitModule.GetWorktrees();
 
             worktrees.Should().HaveCount(1);
-            worktrees[0].Path.Should().Be("C:\\repos\\main");
+            worktrees[0].Path.Should().Be(_mainNativePath);
             worktrees[0].HeadType.Should().Be(GitWorktreeHeadType.Branch);
             worktrees[0].Sha1.Should().Be("abc1234abc1234abc1234abc1234abc1234abc12");
             worktrees[0].Branch.Should().Be("master");
@@ -91,11 +100,11 @@ public sealed class GitModuleWorktreeTests
     public void GetWorktrees_should_parse_multiple_worktrees()
     {
         string output = string.Join('\0',
-            "worktree C:/repos/main",
+            $"worktree {_mainGitPath}",
             "HEAD aaaa1234aaaa1234aaaa1234aaaa1234aaaa1234",
             "branch refs/heads/master",
             "", // end of first record
-            "worktree C:/repos/feature",
+            $"worktree {_featureGitPath}",
             "HEAD bbbb5678bbbb5678bbbb5678bbbb5678bbbb5678",
             "branch refs/heads/feature/my-feature",
             "", "");
@@ -106,10 +115,10 @@ public sealed class GitModuleWorktreeTests
 
             worktrees.Should().HaveCount(2);
 
-            worktrees[0].Path.Should().Be("C:\\repos\\main");
+            worktrees[0].Path.Should().Be(_mainNativePath);
             worktrees[0].Branch.Should().Be("master");
 
-            worktrees[1].Path.Should().Be("C:\\repos\\feature");
+            worktrees[1].Path.Should().Be(_featureNativePath);
             worktrees[1].Branch.Should().Be("feature/my-feature");
         }
     }
@@ -118,7 +127,7 @@ public sealed class GitModuleWorktreeTests
     public void GetWorktrees_should_handle_path_with_spaces()
     {
         string output = string.Join('\0',
-            "worktree C:/my repos/work tree",
+            $"worktree {_spacedGitPath}",
             "HEAD abc1234abc1234abc1234abc1234abc1234abc12",
             "branch refs/heads/main",
             "", "");
@@ -128,7 +137,7 @@ public sealed class GitModuleWorktreeTests
             IReadOnlyList<GitWorktree> worktrees = _gitModule.GetWorktrees();
 
             worktrees.Should().HaveCount(1);
-            worktrees[0].Path.Should().Be("C:\\my repos\\work tree");
+            worktrees[0].Path.Should().Be(_spacedNativePath);
             worktrees[0].Branch.Should().Be("main");
         }
     }
@@ -137,7 +146,7 @@ public sealed class GitModuleWorktreeTests
     public void GetWorktrees_should_strip_refs_heads_prefix_from_branch()
     {
         string output = string.Join('\0',
-            "worktree C:/repos/main",
+            $"worktree {_mainGitPath}",
             "HEAD abc1234abc1234abc1234abc1234abc1234abc12",
             "branch refs/heads/feature/nested/branch",
             "", "");

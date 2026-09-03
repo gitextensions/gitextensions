@@ -1,0 +1,92 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:spellChecker="using:GitUI.SpellChecker"
+        xmlns:winformsControls="using:GitUI.Compat.WinFormsControls"
+        x:Class="GitUI.CommandsDialogs.RepoHosting.CreatePullRequestForm"
+        Width="546"
+        Height="323"
+        MinWidth="546"
+        MinHeight="323"
+        WindowStartupLocation="CenterOwner"
+        Title="Create Pull Request">
+  <Grid>
+    <winformsControls:Label x:Name="label3"
+               Classes="gitextensions-auto-label"
+               Margin="9,15,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Text="Target repository:" />
+    <ComboBox x:Name="_pullReqTargetsCB"
+              Margin="141,12,14,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
+              VerticalContentAlignment="Center" />
+
+    <winformsControls:Label x:Name="label4"
+               Classes="gitextensions-auto-label"
+               Margin="9,42,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Text="Your branch:" />
+    <ComboBox x:Name="_yourBranchesCB"
+              Margin="141,39,14,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
+              VerticalContentAlignment="Center" />
+
+    <winformsControls:Label x:Name="label5"
+               Classes="gitextensions-auto-label"
+               Margin="9,69,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Text="Target branch:" />
+    <ComboBox x:Name="_remoteBranchesCB"
+              Margin="141,66,14,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
+              VerticalContentAlignment="Center" />
+
+    <winformsControls:GroupBox x:Name="groupBox1"
+                            Classes="gitextensions-group-box gitextensions-native-group-border"
+                            Margin="12,100,8,48"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Padding="6,2,6,6"
+                            Header="Pull request data">
+      <Grid RowDefinitions="27,*"
+            ColumnDefinitions="52,*">
+        <winformsControls:Label x:Name="label1"
+                   Classes="gitextensions-auto-label"
+                   Margin="0,4,0,0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Text="Title:" />
+        <TextBox x:Name="_titleTB"
+                 Grid.Column="1"
+                 Height="23"
+                 Margin="0,1,0,0"
+                 VerticalAlignment="Top"
+                 VerticalContentAlignment="Center" />
+        <winformsControls:Label x:Name="label2"
+                   Grid.Row="1"
+                   Classes="gitextensions-auto-label"
+                   Margin="0,3,0,0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Text="Body:" />
+        <spellChecker:EditNetSpell x:Name="_bodyTB"
+                                   Grid.Row="1"
+                                   Grid.Column="1" />
+      </Grid>
+    </winformsControls:GroupBox>
+
+    <Button x:Name="_createBtn"
+            Classes="gitextensions-dialog-action-primary gitextensions-native-dialog-action"
+            Margin="0,0,8,9"
+            Width="112"
+            Height="33"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Content="Create" />
+  </Grid>
+</Window>

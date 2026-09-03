@@ -1,0 +1,448 @@
+﻿using AwesomeAssertions;
+using GitExtensions.ParityCapture;
+using NUnit.Framework;
+
+namespace WinFormsParityCapture.Tests;
+
+[TestFixture]
+[Apartment(ApartmentState.STA)]
+[Category("P0_1")]
+public sealed class ControlTreeReaderTests
+{
+    [Test]
+    public void ReadPrimary_should_record_TabPage_owned_tooltip_text()
+    {
+        using Form form = new();
+        using TabControl tabs = new();
+        using TabPage page = new("Push branches")
+        {
+            Name = "BranchTab",
+            ToolTipText = "Push branches and commits to remote repository."
+        };
+        tabs.TabPages.Add(page);
+        form.Controls.Add(tabs);
+
+        CaptureSurface surface = new ControlTreeReader(form, dpi: 96)
+            .ReadPrimary(form, form.Bounds);
+
+        CaptureNode capturedPage = FindNode(surface.Root, "BranchTab");
+        capturedPage.ToolTip.Should().Be(page.ToolTipText);
+    }
+
+    [Test]
+    public void ReadPrimary_should_preserve_field_name_and_resolve_colors()
+    {
+        using TestForm form = new();
+        form.CreateControl();
+        form.TestButton.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureSurface surface = reader.ReadPrimary(form, new Rectangle(10, 20, 300, 200));
+
+        CaptureNode button = FindNode(surface.Root, "_btnAction");
+        button.FieldName.Should().Be("_btnAction");
+        button.Colors.Foreground.Should().MatchRegex("^#[0-9A-F]{8}$");
+        button.Colors.Background.Should().MatchRegex("^#[0-9A-F]{8}$");
+        button.Expanded.Should().BeNull("expanded state applies only to expandable controls");
+    }
+
+    [Test]
+    public void ReadPrimary_should_record_tree_expansion_only_for_tree_controls()
+    {
+        using Form form = new();
+        using TreeView tree = new();
+        tree.Nodes.Add("root").Expand();
+        form.Controls.Add(tree);
+        form.CreateControl();
+        tree.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode treeNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        treeNode.Expanded.Should().BeTrue();
+        treeNode.Children.Should().BeEmpty();
+    }
+
+    [Test]
+    public void ReadPrimary_should_record_pixels_and_dips()
+    {
+        using TestForm form = new();
+        form.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 192);
+
+        CaptureSurface surface = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200));
+
+        surface.Root.BoundsDip.Width.Should().Be(surface.Root.BoundsPx.Width / 2m);
+        surface.Root.BoundsDip.Height.Should().Be(surface.Root.BoundsPx.Height / 2m);
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_record_dpi_scaled_fonts_in_logical_units()
+    {
+        using Form form = new() { Font = new Font("Segoe UI", 9F, GraphicsUnit.Point) };
+        form.CreateControl();
+        IReadOnlyDictionary<object, ControlTreeReader.FontBaseline> baselines =
+            ControlTreeReader.CaptureFontBaselines(form);
+        form.Font = new Font("Segoe UI", 18F, GraphicsUnit.Point);
+        ControlTreeReader reader = new(form, dpi: 192, baselines);
+
+        CaptureFont? font = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Font;
+
+        font.Should().NotBeNull();
+        font!.EmSize.Should().Be(9m);
+        font.SizePoints.Should().Be(9m);
+        font.SizeDip.Should().Be(12m);
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_preserve_explicit_fonts_not_changed_by_dpi()
+    {
+        using Form form = new() { Font = new Font("Segoe UI", 9F, GraphicsUnit.Point) };
+        form.CreateControl();
+        IReadOnlyDictionary<object, ControlTreeReader.FontBaseline> baselines =
+            ControlTreeReader.CaptureFontBaselines(form);
+        ControlTreeReader reader = new(form, dpi: 192, baselines);
+
+        CaptureFont? font = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Font;
+
+        font.Should().NotBeNull();
+        font!.EmSize.Should().Be(9m);
+        font.SizePoints.Should().Be(9m);
+        font.SizeDip.Should().Be(12m);
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_use_the_root_baseline_for_late_inherited_controls()
+    {
+        using Form form = new() { Font = new Font("Segoe UI", 9F, GraphicsUnit.Point) };
+        form.CreateControl();
+        IReadOnlyDictionary<object, ControlTreeReader.FontBaseline> baselines =
+            ControlTreeReader.CaptureFontBaselines(form);
+        form.Font = new Font("Segoe UI", 18F, GraphicsUnit.Point);
+        using Label lateChild = new() { Font = form.Font };
+        form.Controls.Add(lateChild);
+        ControlTreeReader reader = new(form, dpi: 192, baselines);
+
+        CaptureFont? font = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200))
+            .Root.Children.Single().Font;
+
+        font.Should().NotBeNull();
+        font!.SizePoints.Should().Be(9m);
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_record_the_form_client_inset_relative_to_the_full_window_surface()
+    {
+        using Form form = new()
+        {
+            StartPosition = FormStartPosition.Manual,
+            Location = new Point(40, 50),
+            ClientSize = new Size(200, 100)
+        };
+        form.Show();
+        Application.DoEvents();
+        Rectangle windowBounds = form.Bounds;
+        Rectangle clientBounds = form.RectangleToScreen(form.ClientRectangle);
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureSurface surface = reader.ReadPrimary(form, windowBounds);
+
+        surface.ScreenBoundsPx.Should().Be(new CaptureRectangle
+        {
+            X = windowBounds.X,
+            Y = windowBounds.Y,
+            Width = windowBounds.Width,
+            Height = windowBounds.Height
+        });
+        surface.Root.BoundsPx.Should().Be(new CaptureRectangle
+        {
+            X = clientBounds.X - windowBounds.X,
+            Y = clientBounds.Y - windowBounds.Y,
+            Width = 200,
+            Height = 100
+        });
+    }
+
+    [Test]
+    public void ReadPrimary_should_record_resolved_data_grid_item_height()
+    {
+        using Form form = new();
+        using DataGridView grid = new() { RowTemplate = { Height = 32 } };
+        grid.Columns.Add("subject", "Subject");
+        grid.Rows.Add("Revision");
+        form.Controls.Add(grid);
+        form.CreateControl();
+        grid.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 120);
+
+        CaptureNode gridNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        gridNode.ItemHeightDip.Should().Be(25.6m);
+        gridNode.Children.Should().BeEmpty(
+            "generated DataGridView scrollbars and placeholders are not semantic product controls");
+    }
+
+    [Test]
+    [Category("P8_6h")]
+    public void ReadPrimary_should_record_the_data_grid_surface_background()
+    {
+        using Form form = new();
+        using DataGridView grid = new()
+        {
+            BackColor = Color.FromArgb(1, 2, 3),
+            BackgroundColor = Color.FromArgb(4, 5, 6),
+        };
+        form.Controls.Add(grid);
+        form.CreateControl();
+        grid.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode gridNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        gridNode.Colors.Background.Should().Be("#FF040506");
+        gridNode.Colors.DisabledBackground.Should().Be("#FF040506");
+    }
+
+    [Test]
+    [Category("P8_6h")]
+    public void ReadPrimary_should_preserve_named_data_grid_child_controls()
+    {
+        using Form form = new();
+        using DataGridView grid = new();
+        using Label status = new() { Name = "status", Text = "Loading" };
+        grid.Controls.Add(status);
+        form.Controls.Add(grid);
+        form.CreateControl();
+        grid.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode gridNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        gridNode.Children.Should().ContainSingle(node => node.Name == "status" && node.Text == "Loading");
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_flatten_framework_splitter_panels()
+    {
+        using Form form = new();
+        using SplitContainer split = new() { Name = "splitContainer" };
+        using Label first = new() { Name = "first", Text = "First" };
+        using Label second = new() { Name = "second", Text = "Second" };
+        split.Panel1.Controls.Add(first);
+        split.Panel2.Controls.Add(second);
+        form.Controls.Add(split);
+        form.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode splitNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        splitNode.ControlKind.Should().Be("split");
+        splitNode.Children.Select(node => node.Name).Should().Equal("first", "second");
+        splitNode.Children.Should().NotContain(node => node.Type.Contains("SplitterPanel", StringComparison.Ordinal));
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_stop_at_the_external_text_editor_boundary()
+    {
+        using Form form = new();
+        using ICSharpCode.TextEditor.TextEditorControl editor = new() { Name = "TextEditor" };
+        form.Controls.Add(editor);
+        form.CreateControl();
+        editor.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode editorNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        editorNode.Name.Should().Be("TextEditor");
+        editorNode.Children.Should().BeEmpty(
+            "external text-area panels and scrollbars are renderer implementation details");
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_stop_at_the_numeric_up_down_semantic_boundary()
+    {
+        using Form form = new();
+        using NumericUpDown numeric = new() { Name = "depthUpDown" };
+        form.Controls.Add(numeric);
+        form.CreateControl();
+        numeric.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode numericNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        numericNode.Name.Should().Be("depthUpDown");
+        numericNode.Children.Should().BeEmpty(
+            "the native edit and spin buttons render the one product NumericUpDown");
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_emit_a_tool_strip_control_host_once_as_its_semantic_item()
+    {
+        using Form form = new();
+        using ToolStrip toolStrip = new() { Name = "Toolbar" };
+        using ToolStripComboBox combo = new() { Name = "encodingToolStripComboBox" };
+        toolStrip.Items.Add(combo);
+        form.Controls.Add(toolStrip);
+        form.CreateControl();
+        toolStrip.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode toolbarNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        toolbarNode.Children.Should().ContainSingle();
+        toolbarNode.Children.Single().Type.Should().Be(typeof(ToolStripComboBox).FullName);
+        toolbarNode.Children.Single().Name.Should().Be("encodingToolStripComboBox");
+    }
+
+    [Test]
+    [Category("P1_7")]
+    public void ReadPrimary_should_emit_framework_neutral_resolved_color_roles()
+    {
+        using TestForm form = new();
+        form.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureSurface surface = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200));
+        IReadOnlyDictionary<string, string> roles = surface.Root.Colors.Additional
+            .Where(pair => pair.Key.StartsWith("semantic.", StringComparison.Ordinal))
+            .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
+
+        roles.Should().HaveCount(20);
+        roles.Keys.Should().Contain(
+            "semantic.app.panel.background",
+            "semantic.app.revision.alternating.background",
+            "semantic.app.revision.authored.background",
+            "semantic.app.selection.background",
+            "semantic.system.control.background",
+            "semantic.system.highlight.background",
+            "semantic.system.inactiveSelection.background",
+            "semantic.system.tooltip.background",
+            "semantic.app.reset.hard.background");
+        roles.Values.Should().OnlyContain(color => System.Text.RegularExpressions.Regex.IsMatch(color, "^#[0-9A-F]{8}$"));
+    }
+
+    [Test]
+    [Category("P1_7")]
+    public void Dark_system_roles_should_use_the_resolved_WinForms_dark_palette()
+    {
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.Control, isDark: true)
+            .Should().Be(Color.FromArgb(32, 32, 32));
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.WindowText, isDark: true)
+            .Should().Be(Color.FromArgb(240, 240, 240));
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.Info, isDark: true)
+            .Should().Be(Color.FromArgb(80, 80, 60));
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.Menu, isDark: true)
+            .Should().Be(Color.FromArgb(55, 55, 55));
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.MenuText, isDark: true)
+            .Should().Be(Color.FromArgb(240, 240, 240));
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.HotTrack, isDark: true)
+            .Should().Be(Color.FromArgb(45, 95, 175));
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.Highlight, isDark: false)
+            .Should().Be(Color.FromArgb(0, 120, 215));
+    }
+
+    [Test]
+    public void ReadPopup_should_emit_noninteractive_separator_state()
+    {
+        using ContextMenuStrip menu = new();
+        menu.Items.Add(new ToolStripSeparator { Name = "separator" });
+        ControlTreeReader reader = new(menu, dpi: 96);
+
+        CaptureNode separator = reader.ReadPopup(menu, ordinal: 0).Root.Children.Single();
+
+        separator.Enabled.Should().BeFalse();
+        separator.Focused.Should().BeFalse();
+        separator.Selected.Should().BeNull();
+        separator.Expanded.Should().BeNull();
+    }
+
+    [Test]
+    [Category("P8_6h")]
+    public void ReadPopup_should_emit_checked_and_unchecked_menu_state()
+    {
+        using ContextMenuStrip menu = new();
+        menu.Items.Add(new ToolStripMenuItem("Checked") { Checked = true });
+        menu.Items.Add(new ToolStripMenuItem("Unchecked"));
+        ControlTreeReader reader = new(menu, dpi: 96);
+
+        CaptureNode[] items = reader.ReadPopup(menu, ordinal: 0).Root.Children.ToArray();
+
+        items.Select(item => item.CheckState).Should().Equal("Checked", "Unchecked");
+    }
+
+    [Test]
+    [Category("P8_6h")]
+    public void ReadPopup_should_keep_absolute_screen_bounds_and_emit_owner_relative_root_bounds()
+    {
+        using ContextMenuStrip menu = new();
+        menu.Items.Add("Copy");
+        menu.Show(new Point(320, 240));
+        ControlTreeReader reader = new(menu, dpi: 96);
+        Point primaryOrigin = new(menu.Bounds.X - 25, menu.Bounds.Y - 40);
+
+        CaptureSurface surface = reader.ReadPopup(menu, ordinal: 0, primaryOrigin);
+
+        surface.ScreenBoundsPx.X.Should().Be(menu.Bounds.X);
+        surface.ScreenBoundsPx.Y.Should().Be(menu.Bounds.Y);
+        surface.Root.BoundsPx.X.Should().Be(25);
+        surface.Root.BoundsPx.Y.Should().Be(40);
+        surface.Root.BoundsDip.X.Should().Be(25);
+        surface.Root.BoundsDip.Y.Should().Be(40);
+    }
+
+    private static CaptureNode FindNode(CaptureNode root, string fieldName)
+    {
+        if (root.FieldName == fieldName || root.Name == fieldName)
+        {
+            return root;
+        }
+
+        foreach (CaptureNode child in root.Children)
+        {
+            CaptureNode? match = FindNodeOrDefault(child, fieldName);
+            if (match is not null)
+            {
+                return match;
+            }
+        }
+
+        throw new InvalidOperationException($"Node '{fieldName}' was not found.");
+    }
+
+    private static CaptureNode? FindNodeOrDefault(CaptureNode root, string fieldName)
+    {
+        if (root.FieldName == fieldName || root.Name == fieldName)
+        {
+            return root;
+        }
+
+        return root.Children.Select(child => FindNodeOrDefault(child, fieldName)).FirstOrDefault(match => match is not null);
+    }
+
+    private sealed class TestForm : Form
+    {
+        private readonly Button _btnAction = new()
+        {
+            Name = "btnAction",
+            Text = "Action",
+            ForeColor = Color.FromArgb(255, 1, 2, 3),
+            BackColor = Color.FromArgb(255, 4, 5, 6)
+        };
+
+        public TestForm()
+        {
+            Controls.Add(_btnAction);
+            ClientSize = new Size(300, 200);
+        }
+
+        public Button TestButton => _btnAction;
+    }
+}

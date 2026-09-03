@@ -1,0 +1,340 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:colorPicker="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.ColorPicker"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        xmlns:usercontrols="clr-namespace:GitUI.UserControls"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
+        x:Class="GitUI.CommandsDialogs.FormRemotes"
+        Width="934" Height="306"
+        MinWidth="934" MinHeight="270"
+        WindowStartupLocation="CenterOwner"
+        Title="Remote repositories">
+  <TabControl x:Name="tabControl1"
+              Classes="gitextensions-native-tabs"
+              Padding="0">
+    <wf:TabPage x:Name="tabPage1"
+                Classes="gitextensions-dialog-tab"
+                Header="Remote repositories">
+      <Grid Margin="7,4,7,7" ColumnDefinitions="350,*">
+        <wf:Panel x:Name="pnlManagementContainer"
+                  Grid.Column="1"
+                  Padding="8,4,8,8">
+          <wf:GroupBox x:Name="gbMgtPanel"
+                       Classes="gitextensions-group-box"
+                       Height="172"
+                       Header="Create New Remote"
+                       VerticalAlignment="Top">
+            <wf:TableLayoutPanel x:Name="flpnlRemoteManagement"
+                                 Width="548"
+                                 Height="150"
+                                 Margin="0,-5,0,0"
+                                 RowDefinitions="Auto,Auto,Auto"
+                                 VerticalAlignment="Top">
+              <wf:Panel x:Name="pnlMgtDetails"
+                         Text="Details"
+                        Height="107"
+                        Margin="3"
+                        Padding="0,0,0,8">
+                <wf:TableLayoutPanel x:Name="tblpnlMgtDetails"
+                      Height="85"
+                      Margin="16,11,6,0"
+                      ColumnDefinitions="106,*,110"
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                      VerticalAlignment="Top">
+            <Label x:Name="label1"
+                   Grid.Row="1"
+                   Padding="0"
+                   Margin="3,0"
+                   Content="_Name"
+                   Target="{Binding #RemoteName}"
+                   VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center" />
+            <TextBox x:Name="RemoteName"
+                     Grid.Row="1" Grid.Column="1"
+                     Margin="3"
+                     compat:TranslationCompat.TranslateText="False" />
+
+            <Label x:Name="label2"
+                   Padding="0"
+                   Margin="3,0"
+                   Content="_Url"
+                   Target="{Binding #Url}"
+                   VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center" />
+            <usercontrols:CaseSensitiveComboBox x:Name="Url"
+                                                Grid.Column="1"
+                                                Margin="3,4,3,2"
+                                                HorizontalAlignment="Stretch"
+                                                IsEditable="True"
+                                                compat:TranslationCompat.TranslateText="False" />
+            <usercontrols:FolderBrowserButton x:Name="folderBrowserButtonUrl"
+                                              Grid.Column="2"
+                                              Margin="3" />
+
+            <CheckBox x:Name="checkBoxSepPushUrl"
+                      Grid.Row="4" Grid.ColumnSpan="2"
+                      Margin="3"
+                      Padding="24,0,0,0"
+                      HorizontalAlignment="Stretch"
+                      Content="Sep_arate Push Url" />
+
+            <Label x:Name="labelPushUrl"
+                   Grid.Row="5"
+                   Padding="0"
+                   Margin="3,0"
+                   Content="_Push Url"
+                   Target="{Binding #comboBoxPushUrl}"
+                   IsVisible="False"
+                   VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center" />
+            <usercontrols:CaseSensitiveComboBox x:Name="comboBoxPushUrl"
+                      Grid.Row="5" Grid.Column="1"
+                      Margin="3"
+                      HorizontalAlignment="Stretch"
+                      IsVisible="False"
+                      IsEditable="True"
+                      compat:TranslationCompat.TranslateText="False" />
+            <usercontrols:FolderBrowserButton x:Name="folderBrowserButtonPushUrl"
+                                               Grid.Row="5" Grid.Column="2"
+                                               Margin="3"
+                                               Text="Bro&amp;wse..."
+                                               IsVisible="False" />
+
+            <Label x:Name="lblRemoteColor"
+                   Grid.Row="3"
+                   Padding="0"
+                   Margin="3,0"
+                   Content="Color"
+                   VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center" />
+            <StackPanel x:Name="flpnlRemoteColors"
+                        Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        Spacing="6">
+              <colorPicker:ColorPicker x:Name="btnRemoteColor"
+                                       MinWidth="0"
+                                       Height="25"
+                                       Content="Set _color"
+                                       IsAlphaEnabled="False" />
+              <Button x:Name="btnRemoteColorReset"
+                      Classes="gitextensions-native-dialog-action"
+                      Content="Default color"
+                      IsVisible="False" />
+            </StackPanel>
+
+            <Label x:Name="lblRemotePrefix"
+                   Grid.Row="2"
+                   Padding="0"
+                   Margin="3,0"
+                   Content="Prefix"
+                   VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center" />
+            <TextBox x:Name="txtRemotePrefix"
+                     Grid.Row="2" Grid.Column="1"
+                     Margin="3"
+                     compat:TranslationCompat.TranslateText="False" />
+
+                </wf:TableLayoutPanel>
+              </wf:Panel>
+
+              <wf:Panel x:Name="pnlMgtPuttySsh"
+                  Text="PuTTY SSH"
+                  Grid.Row="1"
+                  Margin="3"
+                  Padding="0,0,0,8"
+                  IsVisible="False"
+                  >
+                <Grid RowDefinitions="Auto,Auto">
+              <Grid ColumnDefinitions="Auto,*">
+                <TextBlock x:Name="lblMgtPuttyPanelHeader"
+                           Text="PuTTY SSH" />
+                <Border x:Name="lblHeaderLine2"
+                        Grid.Column="1"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                        BorderThickness="0,1,0,0" />
+              </Grid>
+              <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
+                    Grid.Row="1"
+                    Margin="16,3,6,0"
+                    ColumnDefinitions="106,*,110"
+                    RowDefinitions="Auto,Auto"
+                    VerticalAlignment="Top">
+                <Label x:Name="label3"
+                       Padding="0"
+                       MinWidth="100"
+                       Content="Private _key file"
+                       Target="{Binding #PuttySshKey}"
+                       VerticalAlignment="Stretch"
+                       VerticalContentAlignment="Center" />
+                <TextBox x:Name="PuttySshKey"
+                         Grid.Column="1"
+                         compat:TranslationCompat.TranslateText="False" />
+                <compat:IconButton x:Name="SshBrowse"
+                                   Classes="gitextensions-native-dialog-action"
+                                   Grid.Column="2"
+                                   MinWidth="104"
+                                   Icon="{x:Static properties:Images.FileNew}"
+                                   Content="Brows_e..." />
+                <wf:FlowLayoutPanel x:Name="flowLayoutPanelSsh"
+                                    Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Stretch">
+                  <StackPanel HorizontalAlignment="Right"
+                              Orientation="Horizontal"
+                              Spacing="6">
+                    <compat:IconButton x:Name="TestConnection"
+                                       Classes="gitextensions-native-dialog-action"
+                                       MinWidth="160"
+                                       Icon="{x:Static properties:Images.Putty}"
+                                       Content="_Test connection" />
+                    <compat:IconButton x:Name="LoadSSHKey"
+                                       Classes="gitextensions-native-dialog-action"
+                                       MinWidth="160"
+                                       Icon="{x:Static properties:Images.Putty}"
+                                       Content="_Load SSH key" />
+                  </StackPanel>
+                </wf:FlowLayoutPanel>
+              </wf:TableLayoutPanel>
+                </Grid>
+            </wf:Panel>
+
+              <wf:FlowLayoutPanel x:Name="flowLayoutPanel2"
+                          Grid.Row="2"
+                          Margin="3"
+                          Padding="0,0,23,0"
+                          Height="31">
+                <compat:IconButton x:Name="Save"
+                                   Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
+                                   Width="130"
+                                   Height="25"
+                                   Margin="0,3,0,3"
+                                   HorizontalAlignment="Right"
+                                   Icon="{x:Static properties:Images.Save}"
+                                   Content="_Save changes" />
+              </wf:FlowLayoutPanel>
+            </wf:TableLayoutPanel>
+          </wf:GroupBox>
+        </wf:Panel>
+
+        <wf:Panel x:Name="panel1" Padding="8">
+          <Grid ColumnDefinitions="*,36">
+            <usercontrols:NativeListView x:Name="Remotes"
+                                         Classes="gitextensions-native-list-items" />
+            <wf:ColumnHeader x:Name="columnHeader1"
+                             Text=""
+                             IsVisible="False" />
+            <StackPanel x:Name="panelButtons"
+                        Grid.Column="1">
+              <compat:IconButton x:Name="New"
+                                 Classes="gitextensions-icon-only gitextensions-native-dialog-action"
+                                 Width="26"
+                                 Height="26"
+                                 Margin="7,3,3,3"
+                                 Icon="{x:Static properties:Images.RemoteAdd}" />
+              <compat:IconButton x:Name="Delete"
+                                 Classes="gitextensions-icon-only gitextensions-native-dialog-action"
+                                 Width="26"
+                                 Height="26"
+                                 Margin="7,3,3,3"
+                                 Icon="{x:Static properties:Images.RemoteDelete}" />
+              <compat:IconButton x:Name="btnToggleState"
+                                 Classes="gitextensions-icon-only gitextensions-native-dialog-action"
+                                 Width="26"
+                                 Height="26"
+                                 Margin="7,3,3,3"
+                                 Icon="{x:Static properties:Images.EyeOpened}" />
+            </StackPanel>
+          </Grid>
+        </wf:Panel>
+      </Grid>
+    </wf:TabPage>
+
+    <wf:TabPage x:Name="tabPage2"
+                Classes="gitextensions-dialog-tab"
+                Header="Default pull behavior (fetch &amp; merge)">
+      <wf:TableLayoutPanel x:Name="tableLayoutPanel2" RowDefinitions="*,Auto" Margin="3">
+        <Grid x:Name="columnsGrid" RowDefinitions="Auto,*">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <wf:DataGridViewTextBoxColumn x:Name="BranchName"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock Text="Local branch name" FontWeight="SemiBold" />
+          </wf:DataGridViewTextBoxColumn>
+          <wf:DataGridViewTextBoxColumn x:Name="RemoteCombo"
+                  Grid.Column="1"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock Text="Remote repository" FontWeight="SemiBold" />
+          </wf:DataGridViewTextBoxColumn>
+          <wf:DataGridViewTextBoxColumn x:Name="MergeWith"
+                  Grid.Column="2"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock Text="Default merge with" FontWeight="SemiBold" />
+          </wf:DataGridViewTextBoxColumn>
+          <wf:DataGridView x:Name="RemoteBranches"
+                           Grid.Row="1" Grid.ColumnSpan="3"
+                           IsReadOnly="True" />
+        </Grid>
+
+        <Grid x:Name="panelDetails"
+              Grid.Row="1"
+              Margin="0,10,0,0"
+              ColumnDefinitions="Auto,*,Auto"
+              RowDefinitions="Auto,Auto,Auto"
+              ColumnSpacing="8" RowSpacing="6">
+          <Label x:Name="label4"
+                 Padding="0"
+                 Content="_Local branch name"
+                 Target="{Binding #LocalBranchNameEdit}"
+                 VerticalAlignment="Center" />
+          <TextBox x:Name="LocalBranchNameEdit"
+                   Grid.Column="1"
+                   Background="{DynamicResource GitExtensionsReadOnlyTextInputBackgroundBrush}"
+                   IsReadOnly="True"
+                   compat:TranslationCompat.TranslateText="False" />
+
+          <Label x:Name="label5"
+                 Grid.Row="1"
+                 Padding="0"
+                 Content="_Remote repository"
+                 Target="{Binding #RemoteRepositoryCombo}"
+                 VerticalAlignment="Center" />
+          <ComboBox x:Name="RemoteRepositoryCombo"
+                    Grid.Row="1" Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    compat:TranslationCompat.TranslateText="False" />
+
+          <Label x:Name="label6"
+                 Grid.Row="2"
+                 Padding="0"
+                 Content="_Default merge with"
+                 Target="{Binding #DefaultMergeWithCombo}"
+                 VerticalAlignment="Center" />
+          <ComboBox x:Name="DefaultMergeWithCombo"
+                    Grid.Row="2" Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    IsEditable="True"
+                    compat:TranslationCompat.TranslateText="False" />
+
+          <compat:IconButton x:Name="SaveDefaultPushPull"
+                             Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
+                             Grid.Row="2" Grid.Column="2"
+                             MinWidth="120"
+                             VerticalAlignment="Bottom"
+                             Icon="{x:Static properties:Images.Save}"
+                             Content="_Save changes" />
+        </Grid>
+      </wf:TableLayoutPanel>
+    </wf:TabPage>
+  </TabControl>
+</Window>

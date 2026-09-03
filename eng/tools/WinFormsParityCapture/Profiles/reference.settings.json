@@ -1,0 +1,13 @@
+{
+  "uiFontFamily": "Segoe UI",
+  "uiFontSizePoints": 9.0,
+  "fixedFontFamily": "Consolas",
+  "fixedFontSizePoints": 10.0,
+  "appSettings": {
+    "showconsole": "false",
+    "showoutputhistory": "false",
+    "checksettings": "false",
+    "checkforupdates": "false",
+    "translation": "English"
+  }
+}

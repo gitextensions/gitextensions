@@ -29,8 +29,9 @@ public sealed class ExecutableTests
         using CancellationTokenSource cts = new();
 
         // start a process running for seconds
-        IExecutable executable = new Executable("ping.exe");
-        IProcess process = executable.Start($"-n {cancelDelay.TotalSeconds + 60} 127.0.0.1", cancellationToken: cts.Token);
+        (string fileName, string arguments) = GetLongRunningCommand((int)cancelDelay.TotalSeconds + 60);
+        IExecutable executable = new Executable(fileName);
+        IProcess process = executable.Start(arguments, cancellationToken: cts.Token);
         DateTime startedAt = DateTime.Now;
 
         // cancel after delay
@@ -61,6 +62,44 @@ public sealed class ExecutableTests
     }
 
     [Test]
+    [Platform(Include = "Win")]
+    public async Task Process_descendants_shall_be_killed_on_cancellation()
+    {
+        string workingDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.ExecutableTests-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(workingDirectory);
+        try
+        {
+            using CancellationTokenSource cancellationTokenSource = new();
+            IExecutable executable = new Executable("cmd.exe", workingDirectory);
+            Task<ExecutionResult> executionTask = executable.ExecuteAsync(
+                "/c ping -n 60 127.0.0.1",
+                cancellationToken: cancellationTokenSource.Token);
+
+            await Task.Delay(TimeSpan.FromMilliseconds(500));
+            await cancellationTokenSource.CancelAsync();
+
+            try
+            {
+                await executionTask.ConfigureAwaitRunInline();
+                Assert.Fail("the canceled process should not complete successfully");
+            }
+            catch (OperationCanceledException)
+            {
+            }
+
+            Action deleteWorkingDirectory = () => Directory.Delete(workingDirectory, recursive: true);
+            deleteWorkingDirectory.Should().NotThrow("the canceled process tree must release its working directory");
+        }
+        finally
+        {
+            if (Directory.Exists(workingDirectory))
+            {
+                Directory.Delete(workingDirectory, recursive: true);
+            }
+        }
+    }
+
+    [Test]
     public async Task WaitForProcessExitAsync_shall_return_latest_after_timeout()
     {
         TimeSpan halfRuntime = TimeSpan.FromSeconds(3);
@@ -68,8 +107,9 @@ public sealed class ExecutableTests
         await TaskScheduler.Default;
 
         // start a process running for seconds
-        IExecutable executable = new Executable("ping.exe");
-        using IProcess process = executable.Start($"-n {(halfRuntime.TotalSeconds * 2) + 1} 127.0.0.1");
+        (string fileName, string arguments) = GetLongRunningCommand(((int)halfRuntime.TotalSeconds * 2) + 1);
+        IExecutable executable = new Executable(fileName);
+        using IProcess process = executable.Start(arguments);
 
         // wait for process exit, but cancel the wait while the process is still running
         using CancellationTokenSource cts = new();
@@ -95,7 +135,7 @@ public sealed class ExecutableTests
     }
 
     [Test]
-    public async Task ExecuteAsync_shall_return_latest_after_timeout([Values("cmd.exe", "ping.exe")] string exeFile)
+    public async Task ExecuteAsync_shall_return_latest_after_timeout([ValueSource(nameof(LongRunningExecutables))] string exeFile)
     {
         const int cancelDelay = 1000;
         const int exitDelay = cancelDelay;
@@ -104,7 +144,7 @@ public sealed class ExecutableTests
         // Run a subcommand that blocks for the required duration instead.
         string arguments = exeFile.Contains("ping") ? $"-n {(minRuntime / 1000) + 2} 127.0.0.1"
                          : exeFile.Contains("cmd") ? $"/c ping -n {(minRuntime / 1000) + 2} 127.0.0.1"
-                         : "";
+                         : $"-c \"sleep {(minRuntime / 1000) + 2}\"";
 
         using CancellationTokenSource cancellationTokenSource = new();
         CancellationToken cancellationToken = cancellationTokenSource.Token;
@@ -135,4 +175,12 @@ public sealed class ExecutableTests
         exception.GetType().Should().Be<OperationCanceledException>();
         executionResult.Should().BeNull();
     }
+
+    private static IEnumerable<string> LongRunningExecutables
+        => OperatingSystem.IsWindows() ? ["cmd.exe", "ping.exe"] : ["/bin/sh"];
+
+    private static (string FileName, string Arguments) GetLongRunningCommand(int seconds)
+        => OperatingSystem.IsWindows()
+            ? ("ping.exe", $"-n {seconds} 127.0.0.1")
+            : ("/bin/sh", $"-c \"sleep {seconds}\"");
 }

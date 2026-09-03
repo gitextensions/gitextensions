@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "backendPresent": "passed",
+  "backendAbsent": "passed",
+  "pickerTransport": "org.freedesktop.portal.FileChooser",
+  "shellTransport": "org.freedesktop.portal.OpenURI",
+  "defaultHandlerLaunchesObserved": 3,
+  "openFileApplicationChooserAccepted": true,
+  "backend": "x11",
+  "settingsIsolation": "temporaryXdgHome",
+  "repositoryLocation": "outsideWorkingTree",
+  "reports": [
+    "present/report.json",
+    "absent/report.json"
+  ]
+}

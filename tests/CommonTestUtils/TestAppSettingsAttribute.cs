@@ -7,13 +7,32 @@ namespace CommonTestUtils;
 [AttributeUsage(AttributeTargets.Assembly)]
 public sealed class TestAppSettingsAttribute : Attribute, ITestAction
 {
-    private readonly Semaphore _semaphore = new(initialCount: 1, maximumCount: 1, "GitExtensionsTestAssemblySerializer");
+    private readonly Semaphore? _windowsSemaphore = OperatingSystem.IsWindows()
+        ? new(initialCount: 1, maximumCount: 1, "GitExtensionsTestAssemblySerializer")
+        : null;
+    private readonly Mutex? _portableMutex = OperatingSystem.IsWindows()
+        ? null
+        : new(
+            initiallyOwned: false,
+            name: "GitExtensionsTestAssemblySerializer",
+            new NamedWaitHandleOptions
+            {
+                CurrentUserOnly = true,
+                CurrentSessionOnly = false
+            });
 
     public ActionTargets Targets => ActionTargets.Suite;
 
     public void BeforeTest(ITest test)
     {
-        _semaphore.WaitOne();
+        if (_windowsSemaphore is not null)
+        {
+            _windowsSemaphore.WaitOne();
+        }
+        else
+        {
+            _portableMutex!.WaitOne();
+        }
 
         // A test host may run under the shared dotnet runtime rather than a native testhost.exe apphost (e.g. on the
         // arm64 CI runner, which has no native testhost.exe). In that case Application.ExecutablePath — and therefore
@@ -22,7 +41,12 @@ public sealed class TestAppSettingsAttribute : Attribute, ITestAction
         // a modal error dialog that hangs the headless run). Pin the path to the test's own directory so it resolves.
         AppSettings.GetTestAccessor().ApplicationExecutablePath = Path.Combine(AppContext.BaseDirectory, "GitExtensions.exe");
 
-        File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
+        string settingsFilePath = AppSettings.SettingsContainer.SettingsCache.SettingsFilePath;
+        if (File.Exists(settingsFilePath))
+        {
+            File.Delete(settingsFilePath);
+        }
+
         AppSettings.SettingsContainer.SettingsCache.Load();
 
         AppSettings.CheckForUpdates = false;
@@ -36,6 +60,13 @@ public sealed class TestAppSettingsAttribute : Attribute, ITestAction
     {
         AppSettings.SettingsContainer.SettingsCache.Dispose();
 
-        _semaphore.Release();
+        if (_windowsSemaphore is not null)
+        {
+            _windowsSemaphore.Release();
+        }
+        else
+        {
+            _portableMutex!.ReleaseMutex();
+        }
     }
 }

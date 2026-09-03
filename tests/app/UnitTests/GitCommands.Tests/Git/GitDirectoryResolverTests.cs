@@ -7,7 +7,9 @@ using NSubstitute;
 namespace GitCommandsTests.Git;
 public class GitDirectoryResolverTests
 {
-    private readonly string _workingDir = @"c:\dev\repo";
+    // The resolver combines and roots paths natively, so the working directory must be a
+    // native one; the .git file always spells its gitdir with '/'.
+    private readonly string _workingDir = OperatingSystem.IsWindows() ? @"c:\dev\repo" : "/dev/repo";
     private string _gitWorkingDir = null!;
     private string _gitFile = null!;
     private FileBase _file = null!;
@@ -64,14 +66,16 @@ public class GitDirectoryResolverTests
         _resolver.Resolve(_workingDir).Should().Be(_gitWorkingDir);
     }
 
-    [Platform(Include = "Win")]
     [Test]
     public void Resolve_should_return_path_from_git_file_if_present()
     {
-        _file.Exists(_gitFile).Returns(true);
-        _file.ReadLines(_gitFile).Returns(new[] { "", " ", @"gitdir: c:/dev/repo/.git/modules/Externals/Git.hub", "text" });
+        string gitDir = OperatingSystem.IsWindows() ? "c:/dev/repo/.git/modules/Externals/Git.hub" : "/dev/repo/.git/modules/Externals/Git.hub";
+        string expected = OperatingSystem.IsWindows() ? @"c:\dev\repo\.git\modules\Externals\Git.hub\" : "/dev/repo/.git/modules/Externals/Git.hub/";
 
-        _resolver.Resolve(_workingDir).Should().Be(@"c:\dev\repo\.git\modules\Externals\Git.hub\");
+        _file.Exists(_gitFile).Returns(true);
+        _file.ReadLines(_gitFile).Returns(new[] { "", " ", $"gitdir: {gitDir}", "text" });
+
+        _resolver.Resolve(_workingDir).Should().Be(expected);
 
         _directory.DidNotReceive().Exists(_gitWorkingDir);
     }
@@ -79,10 +83,12 @@ public class GitDirectoryResolverTests
     [Test]
     public void Resolve_should_return_resolved_full_path_from_git_file_if_present()
     {
+        string expected = OperatingSystem.IsWindows() ? @"c:\dev\.git\modules\Externals\Git.hub\" : "/dev/.git/modules/Externals/Git.hub/";
+
         _file.Exists(_gitFile).Returns(true);
         _file.ReadLines(_gitFile).Returns(new[] { "", " ", @"gitdir: ../.git/modules/Externals/Git.hub", "text" });
 
-        _resolver.Resolve(_workingDir).Should().Be(@"c:\dev\.git\modules\Externals\Git.hub\");
+        _resolver.Resolve(_workingDir).Should().Be(expected);
 
         _directory.DidNotReceive().Exists(_gitWorkingDir);
     }
@@ -103,7 +109,7 @@ public class GitDirectoryResolverTests
         helper.CreateFile(submodulePath, ".git", "\r \r\ngitdir: ../../.git/modules/Externals/Git.hub\r\ntext");
         _resolver = new GitDirectoryResolver();
 
-        _resolver.Resolve(submodulePath).Should().Be($@"{helper.Module.WorkingDirGitDir}modules\Externals\Git.hub\");
+        _resolver.Resolve(submodulePath).Should().Be(Path.Combine(helper.Module.WorkingDirGitDir, "modules", "Externals", "Git.hub").EnsureTrailingPathSeparator());
         _resolver.Resolve(helper.Module.WorkingDir).Should().Be(helper.Module.WorkingDirGitDir);
     }
 }

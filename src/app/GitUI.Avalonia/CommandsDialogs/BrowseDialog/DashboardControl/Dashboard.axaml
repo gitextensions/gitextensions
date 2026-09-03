@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:GitUI.CommandsDialogs.BrowseDialog.DashboardControl"
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="DashboardLogoBackgroundBrush" Color="#137AD4" />
+          <SolidColorBrush x:Key="DashboardStartBackgroundBrush" Color="#DBEBF8" />
+          <SolidColorBrush x:Key="DashboardContributeBackgroundBrush" Color="#E6F1FA" />
+          <SolidColorBrush x:Key="DashboardLinkHoverBrush" Color="#ACCFEF" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="DashboardLogoBackgroundBrush" Color="#252525" />
+          <SolidColorBrush x:Key="DashboardStartBackgroundBrush" Color="#303030" />
+          <SolidColorBrush x:Key="DashboardContributeBackgroundBrush" Color="#383838" />
+          <SolidColorBrush x:Key="DashboardLinkHoverBrush" Color="#484848" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="Button.dashboard-link">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="CornerRadius" Value="0" />
+      <Setter Property="Padding" Value="4,3" />
+    </Style>
+    <Style Selector="Button.dashboard-link:pointerover">
+      <Setter Property="Background" Value="{DynamicResource DashboardLinkHoverBrush}" />
+    </Style>
+  </UserControl.Styles>
+  <Grid ColumnDefinitions="260,*"
+        Background="{DynamicResource ThemeBackgroundBrush}">
+    <Image x:Name="backgroundImage"
+           Grid.ColumnSpan="2"
+           Stretch="Fill"
+           IsHitTestVisible="False" />
+    <Grid x:Name="pnlLeft" RowDefinitions="80,*,Auto">
+      <Border x:Name="pnlLogo"
+              Padding="24,12"
+              Background="{DynamicResource DashboardLogoBackgroundBrush}">
+        <Image x:Name="pbLogo"
+               Width="205"
+               Height="52"
+               HorizontalAlignment="Left"
+               Source="{x:Static properties:Images.GitExtensionsLogoWide}"
+               Stretch="Uniform" />
+      </Border>
+      <Border x:Name="pnlStart"
+              Grid.Row="1"
+              Padding="24,22"
+              Background="{DynamicResource DashboardStartBackgroundBrush}">
+        <StackPanel x:Name="flpnlStart" Spacing="4">
+          <Button x:Name="createItem" Classes="dashboard-link" />
+          <Button x:Name="openItem" Classes="dashboard-link" />
+          <Button x:Name="cloneItem" Classes="dashboard-link" />
+        </StackPanel>
+      </Border>
+      <Border x:Name="pnlContribute"
+              Grid.Row="2"
+              Padding="24,16,24,20"
+              Background="{DynamicResource DashboardContributeBackgroundBrush}">
+        <StackPanel x:Name="flpnlContribute" Spacing="4">
+          <TextBlock x:Name="lblContribute" FontSize="18" Text="Contribute" Margin="0,0,0,4" />
+          <Button x:Name="developItem" Classes="dashboard-link" />
+          <Button x:Name="donateItem" Classes="dashboard-link" />
+          <Button x:Name="translateItem" Classes="dashboard-link" />
+          <Button x:Name="issuesItem" Classes="dashboard-link" />
+        </StackPanel>
+      </Border>
+    </Grid>
+    <local:UserRepositoriesList x:Name="userRepositoriesList" Grid.Column="1" />
+  </Grid>
+</UserControl>

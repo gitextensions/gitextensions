@@ -1,0 +1,4 @@
+Warning: Permanently added '[127.0.0.1]:45983' (ED25519) to the list of known hosts.
+To ssh://127.0.0.1:45983/var/data/p83-action-sweep/remote.git
+ * [new branch]      main -> main
+817027a95907f4a02f1957828d5f44983db8ad61

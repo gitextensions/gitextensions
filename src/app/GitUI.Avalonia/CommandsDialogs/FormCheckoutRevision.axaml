@@ -1,0 +1,57 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        xmlns:usercontrols="clr-namespace:GitUI.UserControls"
+        x:Class="GitUI.CommandsDialogs.FormCheckoutRevision"
+        Width="481" Height="131"
+        MinWidth="460" MinHeight="125"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Checkout revision">
+  <DockPanel>
+    <Border x:Name="ControlsPanel"
+            DockPanel.Dock="Bottom"
+            Height="41"
+            Padding="0,0,13,0"
+            Background="{DynamicResource GitExtensionsControlBackgroundBrush}">
+      <compat:IconButton x:Name="OkCheckout"
+                         Classes="gitextensions-dialog-action"
+                         Width="84"
+                         Height="25"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Center"
+                         Icon="{x:Static properties:Images.Checkout}"
+                         Content="_Checkout"
+                         IsDefault="True" />
+    </Border>
+    <Border x:Name="MainPanel"
+            Padding="12"
+            Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
+      <Grid x:Name="tableLayoutPanel1"
+            ColumnDefinitions="130,*"
+            RowDefinitions="32,28,*">
+        <Label x:Name="label2"
+               Target="{Binding #commitPickerSmallControl1}"
+               Margin="3,5,3,0"
+               Padding="3,0,0,0"
+               Content="Checkout this _revision"
+               VerticalContentAlignment="Center" />
+        <usercontrols:CommitPickerSmallControl x:Name="commitPickerSmallControl1"
+                                               Grid.Column="1"
+                                               Margin="3,3,3,3"
+                                               MinWidth="100"
+                                               MinHeight="26" />
+        <CheckBox x:Name="Force"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Width="166"
+                  Height="19"
+                  Margin="3,3,0,6"
+                  Content="_Force (reset local changes)"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center" />
+      </Grid>
+    </Border>
+  </DockPanel>
+</Window>

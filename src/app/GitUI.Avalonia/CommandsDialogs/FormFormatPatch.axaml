@@ -1,0 +1,87 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="using:GitUI"
+        x:Class="GitUI.CommandsDialogs.FormFormatPatch"
+        Width="824"
+        Height="532"
+        MinWidth="446"
+        MinHeight="316"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner"
+        Title="Format patch">
+  <!-- The 120-DPI WinForms Designer values resolve through AutoScale to these integer 96-DPI dimensions. -->
+  <Grid x:Name="tableLayoutPanelForm"
+        ColumnDefinitions="*,Auto"
+        RowDefinitions="34,*,36"
+        TabIndex="0">
+    <Grid x:Name="tableLayoutPanelSaveTo"
+          Grid.ColumnSpan="2"
+          Margin="3"
+          ColumnDefinitions="Auto,*,Auto"
+          TabIndex="0">
+      <Label x:Name="lblPatches"
+             Width="40"
+             Height="20"
+             Margin="3,0"
+             Padding="3,5,4,0"
+             TabIndex="0"
+             VerticalAlignment="Top"
+             Content="_Patch:"
+             Target="{Binding #OutputPath}" />
+      <TextBox x:Name="OutputPath"
+               Grid.Column="1"
+               Height="23"
+               Margin="3"
+               Padding="0"
+               TabIndex="1"
+               VerticalAlignment="Top"
+               VerticalContentAlignment="Center" />
+      <Button x:Name="Browse"
+              Grid.Column="2"
+              Width="64"
+              Height="25"
+              Margin="3"
+              Padding="0"
+              TabIndex="2"
+              VerticalAlignment="Top"
+              Content="Browse" />
+    </Grid>
+
+    <gitui:RevisionGridControl x:Name="RevisionGrid"
+                               Grid.Row="1"
+                               Grid.ColumnSpan="2"
+                               Margin="3"
+                               TabIndex="1" />
+
+    <StackPanel x:Name="flowLayoutPanelBranch"
+                Grid.Row="2"
+                Height="30"
+                Margin="3"
+                Orientation="Horizontal"
+                TabIndex="2">
+      <Label x:Name="SelectedBranch"
+             Height="15"
+             Margin="3,0"
+             Padding="0"
+             TabIndex="0"
+             VerticalAlignment="Top"
+             Content="Branch" />
+      <Label x:Name="CurrentBranch"
+             Height="15"
+             Margin="3,0"
+             Padding="0"
+             TabIndex="1"
+             VerticalAlignment="Top" />
+    </StackPanel>
+    <Button x:Name="FormatPatch"
+            Grid.Row="2"
+            Grid.Column="1"
+            Width="140"
+            Height="25"
+            Margin="3"
+            Padding="0"
+            TabIndex="3"
+            VerticalAlignment="Bottom"
+            Content="Create patch(es)" />
+  </Grid>
+</Window>

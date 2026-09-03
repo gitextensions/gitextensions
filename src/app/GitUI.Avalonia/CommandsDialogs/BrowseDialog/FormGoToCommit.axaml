@@ -1,0 +1,94 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit"
+        Width="604" Height="302"
+        MinWidth="604" MinHeight="302"
+        WindowStartupLocation="CenterOwner"
+        Title="Go to commit">
+  <Window.Styles>
+    <Style Selector="GroupBox.go-to-commit-help /template/ ContentPresenter#PART_HeaderPresenter">
+      <Setter Property="MinHeight" Value="22" />
+    </Style>
+  </Window.Styles>
+  <Grid Margin="12,10,8,10"
+        ColumnDefinitions="133,10,*,6,75"
+        RowDefinitions="28,5,141,32,23,19,23,*">
+    <TextBlock x:Name="label1"
+               Width="112"
+               Height="15"
+               HorizontalAlignment="Left"
+               Text="Commit expression:"
+               VerticalAlignment="Center" />
+    <TextBox x:Name="textboxCommitExpression"
+             Grid.Column="2"
+             Height="23"
+             VerticalContentAlignment="Center" />
+    <Button x:Name="goButton"
+            Grid.Column="4"
+            MinWidth="75"
+            Height="28"
+            Content="Go"
+            IsDefault="True" />
+
+    <GroupBox x:Name="groupBox1"
+              Classes="gitextensions-group-box go-to-commit-help"
+              Grid.Row="2"
+              Grid.Column="0"
+              Grid.ColumnSpan="3"
+              Margin="33,0,0,0"
+              Padding="13,0,0,0"
+              Background="{DynamicResource GitExtensionsControlBackgroundBrush}"
+              Header="Help">
+      <Canvas>
+        <TextBlock x:Name="label2"
+                   Width="413"
+                   Height="75"
+                   Padding="2,0,0,0"
+                   Text="Commit expression examples:&#x0D;&#x0A;- complete commit hash: e. g.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9&#x0D;&#x0A;- partial commit hash (if unique): e. g.: 8eab51fcb9c453&#x0D;&#x0A;- tag name&#x0D;&#x0A;- branch name"
+                   TextWrapping="Wrap" />
+        <HyperlinkButton x:Name="linkGitRevParse"
+                         Canvas.Top="90"
+                         Width="126"
+                         Height="15"
+                         Padding="3,0,0,0"
+                         Classes="gitextensions-link"
+                         Focusable="True"
+                         Content="More see git-rev-parse" />
+      </Canvas>
+    </GroupBox>
+
+    <TextBlock x:Name="label3"
+               Grid.Row="4"
+               Width="59"
+               Height="15"
+               HorizontalAlignment="Left"
+               Text="Go to tag:"
+               Margin="0,3,0,0"
+               VerticalAlignment="Top" />
+    <ComboBox x:Name="comboBoxTags"
+              Grid.Row="4"
+              Grid.Column="2"
+              Height="23"
+              Margin="0,0,73,0"
+              HorizontalAlignment="Stretch"
+              IsEditable="True"
+              IsTextSearchEnabled="True" />
+
+    <TextBlock x:Name="label4"
+               Grid.Row="6"
+               Width="79"
+               Height="15"
+               HorizontalAlignment="Left"
+               Text="Go to branch:"
+               Margin="0,3,0,0"
+               VerticalAlignment="Top" />
+    <ComboBox x:Name="comboBoxBranches"
+              Grid.Row="6"
+              Grid.Column="2"
+              Height="23"
+              Margin="0,0,73,0"
+              HorizontalAlignment="Stretch"
+              IsEditable="True"
+              IsTextSearchEnabled="True" />
+  </Grid>
+</Window>

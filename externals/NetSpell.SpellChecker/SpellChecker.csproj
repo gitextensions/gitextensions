@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT' or '$(BuildAvalonia)' == 'true'">net10.0;net10.0-windows</TargetFrameworks>
+    <TargetFramework Condition="'$(OS)' == 'Windows_NT' and '$(BuildAvalonia)' != 'true'">net10.0-windows</TargetFramework>
+    <UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0-windows'">true</UseWindowsForms>
+    <UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0'">false</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>

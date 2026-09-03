@@ -1,0 +1,100 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormAddToGitIgnore"
+        Width="599"
+        Height="341"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        Title="Add file(s) to .gitignore">
+  <Grid RowDefinitions="93,*,44">
+    <HeaderedContentControl x:Name="groupFilePattern"
+                            Grid.Row="0"
+                            Classes="gitextensions-group-box"
+                            Padding="12,3,12,3"
+                            TabIndex="11"
+                            Header="Enter a file pattern to ignore:">
+      <TextBox x:Name="FilePattern"
+               Height="71"
+               TabIndex="6"
+               AcceptsReturn="True"
+               TextWrapping="NoWrap"
+               ScrollViewer.VerticalScrollBarVisibility="Auto" />
+    </HeaderedContentControl>
+
+    <HeaderedContentControl x:Name="groupBox1"
+                            Grid.Row="1"
+                            Classes="gitextensions-group-box"
+                            Padding="12,8,12,4"
+                            TabIndex="9"
+                            Header="Preview">
+      <Grid RowDefinitions="*,19">
+        <Panel x:Name="panel3"
+               Grid.Row="0"
+               TabIndex="13">
+          <ListBox x:Name="_NO_TRANSLATE_Preview"
+                   Classes="gitextensions-native-list-items"
+                   TabIndex="2" />
+        </Panel>
+        <Panel x:Name="panel2"
+               Grid.Row="1"
+               TabIndex="12">
+          <Label x:Name="_NO_TRANSLATE_filesWillBeIgnored"
+                 HorizontalAlignment="Right"
+                 Padding="0"
+                 TabIndex="11"
+                 Content="(matched files count)" />
+        </Panel>
+        <Border x:Name="noMatchPanel"
+                Grid.Row="0"
+                Width="233"
+                Height="26"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                IsVisible="False"
+                Background="{DynamicResource GitExtensionsKnownColorControlBrush}">
+          <Canvas Width="233" Height="26">
+            <Image x:Name="pictureBox1"
+                   Canvas.Left="10"
+                   Canvas.Top="5"
+                   Classes="gitextensions-icon-16"
+                   Source="{x:Static properties:Images.Unmerged}" />
+            <Label x:Name="label2"
+                   Canvas.Left="25"
+                   Canvas.Top="5"
+                   Width="195"
+                   Height="15"
+                   Padding="0"
+                   TabIndex="1"
+                   Foreground="{DynamicResource GitExtensionsKnownColorControlDarkDarkBrush}"
+                   Content="No existing files match that pattern." />
+          </Canvas>
+        </Border>
+      </Grid>
+    </HeaderedContentControl>
+
+    <Canvas x:Name="panel1"
+            Grid.Row="2"
+            Height="44"
+            TabIndex="10">
+      <Button x:Name="AddToIgnore"
+              Classes="gitextensions-dialog-action"
+              Canvas.Left="335"
+              Canvas.Top="7"
+              Width="110"
+              Height="25"
+              TabIndex="7"
+              Content="Ignore"
+              IsDefault="True" />
+      <Button x:Name="btnCancel"
+              Classes="gitextensions-dialog-action"
+              Canvas.Left="467"
+              Canvas.Top="7"
+              Width="110"
+              Height="25"
+              TabIndex="8"
+              Content="Cancel"
+              IsCancel="True" />
+    </Canvas>
+  </Grid>
+</Window>

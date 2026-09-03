@@ -1,0 +1,61 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:settings="using:GitUI.UserControls.Settings"
+        x:Class="GitUI.CommandsDialogs.BrowseDialog.FormUpdates"
+        Width="462"
+        Height="157"
+        MinWidth="462"
+        MinHeight="157"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Check for update">
+  <Grid RowDefinitions="*,Auto">
+    <Grid x:Name="MainPanel"
+          Margin="12"
+          RowDefinitions="Auto,20,8,Auto,*,Auto">
+      <TextBlock x:Name="UpdateLabel"
+                 Text="Searching for updates" />
+      <ProgressBar x:Name="progressBar1"
+                   Grid.Row="1"
+                   MinHeight="20"
+                   IsIndeterminate="True" />
+      <settings:SettingsLinkLabel x:Name="linkRequiredDotNetRuntime"
+                                  Grid.Row="3"
+                                  Margin="4,3"
+                                  compat:TranslationCompat.ToolTipPropertyName="ToolTipText"
+                                  Text="Required: .NET {0} Desktop Runtime {1} or later {2}.x"
+                                  ToolTipIcon="Information"
+                                  ToolTipText="Download latest .NET Desktop Runtime. See docs on how to install .NET runtime without administrative privileges."
+                                  IsVisible="False" />
+      <HyperlinkButton x:Name="linkChangeLog"
+                       Grid.Row="5"
+                       Padding="0"
+                       HorizontalAlignment="Left"
+                       Content="Show release notes and change _log"
+                       IsVisible="False" />
+    </Grid>
+
+    <Border Grid.Row="1"
+            Padding="8"
+            BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+            BorderThickness="0,1,0,0">
+      <StackPanel x:Name="ControlsPanel"
+                  HorizontalAlignment="Right"
+                  Orientation="Horizontal"
+                  Spacing="8">
+        <Button x:Name="btnUpdateNow"
+                Classes="gitextensions-dialog-action"
+                MinWidth="100"
+                Content="_Update Now"
+                IsVisible="False" />
+        <HyperlinkButton x:Name="linkDirectDownload"
+                         MinHeight="25"
+                         Padding="4,0"
+                         VerticalContentAlignment="Center"
+                         Content="_Direct Download"
+                         IsVisible="False" />
+      </StackPanel>
+    </Border>
+  </Grid>
+</Window>

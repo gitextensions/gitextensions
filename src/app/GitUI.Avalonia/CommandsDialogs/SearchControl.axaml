@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitUI.CommandsDialogs.SearchControl"
+             MinWidth="64"
+             MinHeight="23">
+  <UserControl.Styles>
+    <Style Selector="ListBox.search-results ListBoxItem">
+      <Setter Property="MinHeight" Value="16" />
+      <Setter Property="Padding" Value="1,0" />
+    </Style>
+    <Style Selector="ListBox.search-results:not(:focus-within) ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsHighlightForegroundBrush}" />
+    </Style>
+  </UserControl.Styles>
+  <Grid x:Name="tableLayoutPanel1"
+        RowDefinitions="Auto,Auto">
+    <Border Height="23"
+            BorderThickness="1">
+      <TextBox x:Name="txtSearchBox"
+               AutomationProperties.Name="Enter File Name"
+               Margin="-1"
+               Height="22"
+               VerticalContentAlignment="Center" />
+    </Border>
+    <ListBox x:Name="listBoxSearchResult"
+             AutomationProperties.Name="File search results"
+             Grid.Row="1"
+             Classes="search-results"
+             Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
+             Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
+             MinWidth="64"
+             Margin="0"
+             IsVisible="False" />
+  </Grid>
+</UserControl>

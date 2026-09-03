@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             x:Class="GitUI.CommandsDialogs.SettingsDialog.SettingsTreeViewUserControl"
+             MinWidth="100"
+             MinHeight="220"
+             d:DesignWidth="200"
+             d:DesignHeight="220">
+  <UserControl.Styles>
+    <Style Selector="TreeViewItem.settings-search-match /template/ Border#PART_LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
+    </Style>
+    <Style Selector="TreeViewItem.settings-search-match TextBlock">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsSelectionForegroundBrush}" />
+    </Style>
+  </UserControl.Styles>
+  <Grid RowDefinitions="8,Auto,8,*">
+    <TextBox x:Name="textBoxFind"
+             Grid.Row="1"
+             PlaceholderText="Type to find..." />
+    <TreeView x:Name="treeView1"
+              Classes="gitextensions-native-tree"
+              Grid.Row="3"
+              SelectionMode="Single"
+              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+              ScrollViewer.VerticalScrollBarVisibility="Auto"
+              ScrollViewer.AllowAutoHide="False" />
+  </Grid>
+</UserControl>

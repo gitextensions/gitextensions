@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:GitUI.SpellChecker"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
+             x:Class="GitUI.SpellChecker.EditNetSpell"
+             d:DesignWidth="386"
+             d:DesignHeight="336">
+  <UserControl.Resources>
+    <wf:ContextMenuStrip x:Key="SpellCheckContextMenuResource"
+                         x:Name="SpellCheckContextMenu"
+                         Classes="gitextensions-toolstrip-context-menu">
+      <Separator x:Name="toolStripSeparator1" />
+    </wf:ContextMenuStrip>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="TextBox#TextBox">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsCommitEditorBackgroundBrush}" />
+    </Style>
+    <Style Selector="ListBox#AutoComplete > ListBoxItem">
+      <Setter Property="Height" Value="15" />
+      <Setter Property="MinHeight" Value="15" />
+      <Setter Property="Padding" Value="2,0" />
+    </Style>
+    <Style Selector="ListBox#AutoComplete:not(:focus-within) ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsHighlightForegroundBrush}" />
+    </Style>
+    <Style Selector="TextBox#TextBox:pointerover /template/ Border#PART_BorderElement,
+                     TextBox#TextBox:focus /template/ Border#PART_BorderElement,
+                     TextBox#TextBox:disabled /template/ Border#PART_BorderElement">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsCommitEditorBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="TextBox#TextBox:disabled">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsCommitEditorBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    </Style>
+    <Style Selector="TextBox#TextBox[IsReadOnly=true]">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsCommitEditorReadOnlyBackgroundBrush}" />
+    </Style>
+    <Style Selector="TextBox#TextBox[IsReadOnly=true] /template/ Border#PART_BorderElement">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsCommitEditorReadOnlyBackgroundBrush}" />
+    </Style>
+  </UserControl.Styles>
+  <!-- Avalonia has no ambient UserControl size, so preserve the original Designer surface dimensions. -->
+  <Grid>
+    <TextBox x:Name="TextBox"
+             AcceptsReturn="True"
+             AcceptsTab="True"
+             BorderBrush="Transparent"
+             BorderThickness="0"
+             FocusAdorner="{x:Null}"
+             Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
+             HorizontalContentAlignment="Left"
+             Padding="0"
+             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             VerticalContentAlignment="Top"
+             ContextMenu="{StaticResource SpellCheckContextMenuResource}" />
+    <local:SpellCheckAdorner x:Name="SpellCheckAdorner"
+                             IsHitTestVisible="False" />
+    <Canvas Panel.ZIndex="2">
+      <ListBox x:Name="AutoComplete"
+               Canvas.Left="0"
+               Canvas.Top="0"
+               Width="120"
+               Height="92"
+               Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
+               BorderBrush="{DynamicResource GitExtensionsControlBorderBrush}"
+               BorderThickness="1"
+               Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
+               IsHitTestVisible="True"
+               IsVisible="False"
+               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+               ScrollViewer.VerticalScrollBarVisibility="Auto" />
+    </Canvas>
+  </Grid>
+</UserControl>
