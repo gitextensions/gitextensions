@@ -25,13 +25,11 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
 {
     private static readonly Lane _noLane = new(Index: -1, LaneSharing.ExclusiveOrPrimary);
 
-    public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments,
-        bool mergeGraphLanesHavingCommonParent, int emptyLaneCount = 0)
+    public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments, bool mergeGraphLanesHavingCommonParent)
     {
         Revision = revision;
         Segments = segments;
         _mergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
-        _emptyLaneCount = emptyLaneCount;
     }
 
     public RevisionGraphRevision Revision { get; }
@@ -39,8 +37,6 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
     public IReadOnlyList<RevisionGraphSegment> Segments { get; }
 
     private readonly bool _mergeGraphLanesHavingCommonParent;
-
-    private readonly int _emptyLaneCount;
 
     /// <summary>
     /// This dictionary contains a cached list of all segments and the lane index the segment is in for this row.
@@ -98,8 +94,6 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
             {
                 _revisionLane = CreateLane();
             }
-
-            MoveLanesRight(0, _emptyLaneCount);
 
             return;
 
