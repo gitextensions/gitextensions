@@ -329,6 +329,17 @@ public class RevisionGraphTests
     }
 
     [Test]
+    public async Task DevGetsTheSecondLane_DespiteLaneStraightening([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1:main 3:2:feature 4:2,3:dev 5:4 6:5 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
     public async Task DevGetsTheFirstLaneIfMainIsMissing()
     {
         RevisionGraph revisionGraph = CreateGraph(" 1  d:1:dev 3:1  4:3 ");

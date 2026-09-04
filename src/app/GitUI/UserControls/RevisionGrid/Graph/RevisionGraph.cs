@@ -856,7 +856,8 @@ public class RevisionGraph : IRevisionGraphRowProvider
                     // * / <---- next lane
                     // |/
                     // * <------ end lane
-                    if (currentLane == previousLane - 1 && currentIndex + 2 <= currentLastLookAheadIndex)
+                    bool isReservedLane = firstIndexForReservedLane.Length > currentLane && firstIndexForReservedLane[currentLane] == currentIndex;
+                    if (!isReservedLane && currentLane == previousLane - 1 && currentIndex + 2 <= currentLastLookAheadIndex)
                     {
                         RevisionGraphSegment segmentOrAncestor = currentRow.FirstParentOrSelf(revisionGraphSegment);
                         IRevisionGraphRow nextRow = localOrderedRowCache[currentIndex + 1];
