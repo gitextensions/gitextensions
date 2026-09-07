@@ -16,7 +16,8 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
         "The remotes matching the pattern will be shown before the others.\n" +
         "Separate the priorities with ';'.");
     private readonly TranslationString _reservedLanesBranchNamesTooltip = new("Regex for branch names that get reserved lanes in the revision graph.\n" +
-        "The first lane is reserved for a branch matching the priority 1 pattern, the second lane for a priority 2 pattern branch and so on.\n" +
+        "The first lane is reserved for a branch matching the priority 1 pattern if there is one, \n" +
+        "the next lane for a priority 2 pattern branch and so on.\n" +
         "Separate the priorities with ';'.");
 
     public SortingSettingsPage(IServiceProvider serviceProvider)

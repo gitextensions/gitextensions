@@ -9998,7 +9998,8 @@ Separate the priorities with ';'.</source>
       </trans-unit>
       <trans-unit id="_reservedLanesBranchNamesTooltip.Text">
         <source>Regex for branch names that get reserved lanes in the revision graph.
-The first lane is reserved for a branch matching the priority 1 pattern, the second lane for a priority 2 pattern branch and so on.
+The first lane is reserved for a branch matching the priority 1 pattern if there is one, 
+the next lane for a priority 2 pattern branch and so on.
 Separate the priorities with ';'.</source>
         <target />
       </trans-unit>
@@ -10026,7 +10027,7 @@ Separate the priorities with ';'.</source>
         <source>Prioritized remotes</source>
         <target />
       </trans-unit>
-      <trans-unit id="lblReservedLaneBranchNames.Text">
+      <trans-unit id="lblReservedLanesBranchNames.Text">
         <source>Reserve lane for branches</source>
         <target />
       </trans-unit>
