@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using EnvDTE;
@@ -26,7 +26,12 @@ internal static class VisualStudioIntegration
             Executable executable = new(vswhere);
             ArgumentBuilder arguments =
             [
+                "-prerelease", // Include prerelease versions of Visual Studio in the search.
                 "-latest",
+                "-requires Microsoft.VisualStudio.Product.Enterprise",
+                "-requires Microsoft.VisualStudio.Product.Professional",
+                "-requires Microsoft.VisualStudio.Product.Community",
+                "-requiresAny",
                 "-property productPath"
             ];
             _devEnvPath = await executable.GetOutputAsync(arguments);
