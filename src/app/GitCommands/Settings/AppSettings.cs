@@ -1986,11 +1986,11 @@ public static partial class AppSettings
     }
 
     /// <summary>
-    /// Gets or sets the regular expressions for branch names that get a reserved lane in the left of the revision graph.
+    ///  Gets or sets the regular expressions for branch names that get a reserved lane in the left of the revision graph.
     /// </summary>
     public static string ReservedLanesBranchNames
     {
-        get => GetString("ReservedLanesBranchNames", "main[^/]*|master[^/]*;dev[^/]*");
+        get => GetString("ReservedLanesBranchNames", "main[^/]*|master[^/]*");
         set => SetString("ReservedLanesBranchNames", value);
     }
 
