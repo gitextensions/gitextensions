@@ -209,10 +209,10 @@ partial class FileStatusList
 
     private void FindInFilesGitGrep_DropDownOpening(object sender, EventArgs e)
     {
-        tsmiFindUsingMatchCase.Checked = !AppSettings.GitGrepIgnoreCase.Value;
-        tsmiFindUsingWholeWord.Checked = AppSettings.GitGrepMatchWholeWord.Value;
+        tsmiFindUsingMatchCase.Checked = !AppSettings.GitGrepIgnoreCase;
+        tsmiFindUsingWholeWord.Checked = AppSettings.GitGrepMatchWholeWord;
         _findUsingOptionsPrefix ??= tsmiFindUsingOptions.Text + ": ";
-        tsmiFindUsingOptions.Text = _findUsingOptionsPrefix + AppSettings.GitGrepUserArguments.Value;
+        tsmiFindUsingOptions.Text = _findUsingOptionsPrefix + AppSettings.GitGrepUserArguments;
     }
 
     private void ShowAssumeUnchangedFiles_Click(object sender, EventArgs e)
@@ -275,9 +275,9 @@ partial class FileStatusList
         tsmiGroupByFileStatusTree.Checked = sortType == DiffListSortType.FileStatus;
         tsmiGroupByFileStatusFlat.Checked = sortType == DiffListSortType.FileStatusFlat;
 
-        tsmiDenseTree.Checked = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
+        tsmiDenseTree.Checked = AppSettings.FileStatusMergeSingleItemWithFolder;
         tsmiDenseTree.Enabled = !flatList;
-        tsmiShowGroupNodesInFlatList.Checked = AppSettings.FileStatusShowGroupNodesInFlatList.Value;
+        tsmiShowGroupNodesInFlatList.Checked = AppSettings.FileStatusShowGroupNodesInFlatList;
         tsmiShowGroupNodesInFlatList.Enabled = _groupBy is not null && flatList;
 
         bool filterByDiffStatus = HasDiffABGroups();

@@ -2749,7 +2749,7 @@ public sealed partial class FormCommit : GitModuleForm
 
         UpdateButtonStates();
 
-        if (AppSettings.CommitDialogSelectStagedOnEnterMessage.Value)
+        if (AppSettings.CommitDialogSelectStagedOnEnterMessage)
         {
             SelectStaged();
         }
@@ -2786,7 +2786,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void Message_Enter(object sender, EventArgs e)
     {
-        if (AppSettings.CommitDialogSelectStagedOnEnterMessage.Value)
+        if (AppSettings.CommitDialogSelectStagedOnEnterMessage)
         {
             SelectStaged();
         }
@@ -2824,12 +2824,12 @@ public sealed partial class FormCommit : GitModuleForm
     private void Options_DropDownOpening(object sender, EventArgs e)
     {
         refreshDialogOnFormFocusToolStripMenuItem.Checked = AppSettings.RefreshArtificialCommitOnApplicationActivated;
-        tsmiSelectStagedOnEnterMessage.Checked = AppSettings.CommitDialogSelectStagedOnEnterMessage.Value;
+        tsmiSelectStagedOnEnterMessage.Checked = AppSettings.CommitDialogSelectStagedOnEnterMessage;
     }
 
     private void tsmiSelectStagedOnEnterMessage_Click(object sender, EventArgs e)
     {
-        AppSettings.CommitDialogSelectStagedOnEnterMessage.Value = !AppSettings.CommitDialogSelectStagedOnEnterMessage.Value;
+        AppSettings.CommitDialogSelectStagedOnEnterMessage.Value = !AppSettings.CommitDialogSelectStagedOnEnterMessage;
     }
 
     private bool WordWrapCommitMessageLineIfNecessary(int line, int lineLimit)

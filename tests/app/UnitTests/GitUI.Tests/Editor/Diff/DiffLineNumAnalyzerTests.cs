@@ -174,7 +174,7 @@ public class DiffLineNumAnalyzerTests
     [Test]
     public void CanGetAddedMovedDiffInfo()
     {
-        GitCommands.Settings.DiffDisplayAppearance theme = AppSettings.DiffDisplayAppearance.Value;
+        GitCommands.Settings.DiffDisplayAppearance theme = AppSettings.DiffDisplayAppearance;
         AppSettings.DiffDisplayAppearance.Value = GitCommands.Settings.DiffDisplayAppearance.Patch;
 
         string text = _sampleAddedDiff;
@@ -297,7 +297,7 @@ public class DiffLineNumAnalyzerTests
     [Test]
     public void CanGetRemovedMovedDiffInfo()
     {
-        GitCommands.Settings.DiffDisplayAppearance theme = AppSettings.DiffDisplayAppearance.Value;
+        GitCommands.Settings.DiffDisplayAppearance theme = AppSettings.DiffDisplayAppearance;
         AppSettings.DiffDisplayAppearance.Value = GitCommands.Settings.DiffDisplayAppearance.Patch;
 
         string text = _sampleRemovedDiff;
@@ -369,7 +369,7 @@ public class DiffLineNumAnalyzerTests
     [Test]
     public void CanGetGitWordDiffInfo()
     {
-        GitCommands.Settings.DiffDisplayAppearance theme = AppSettings.DiffDisplayAppearance.Value;
+        GitCommands.Settings.DiffDisplayAppearance theme = AppSettings.DiffDisplayAppearance;
         AppSettings.DiffDisplayAppearance.Value = GitCommands.Settings.DiffDisplayAppearance.GitWordDiff;
 
         string text = _sampleGitWordDiff;
@@ -427,7 +427,7 @@ public class DiffLineNumAnalyzerTests
         string text = _sampleDifftastic;
         EnvironmentAbstraction env = new();
         env.SetEnvironmentVariable("DFT_WIDTH", "200"); // Matching the value when getting the sample
-        bool theme = AppSettings.ReverseGitColoring.Value;
+        bool theme = AppSettings.ReverseGitColoring;
         AppSettings.ReverseGitColoring.Value = false;
 
         _ = new DifftasticHighlightService(ref text, _diffViewerLineNumber, out int vrulerpos);

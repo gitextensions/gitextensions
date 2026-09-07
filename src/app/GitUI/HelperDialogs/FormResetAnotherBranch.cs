@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -40,7 +40,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
 
         InitializeComplete();
 
-        cbxCheckoutBranch.Checked = AppSettings.CheckoutOtherBranchAfterReset.Value;
+        cbxCheckoutBranch.Checked = AppSettings.CheckoutOtherBranchAfterReset;
         cbxCheckoutBranch.CheckedChanged += (s, e) => AppSettings.CheckoutOtherBranchAfterReset.Value = cbxCheckoutBranch.Checked;
 
         Ok.Enabled = false;
