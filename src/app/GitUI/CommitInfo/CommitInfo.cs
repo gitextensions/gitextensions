@@ -62,6 +62,7 @@ public partial class CommitInfo : GitModuleControl
     private readonly IConfigFileRemoteSettingsManager _remotesManager;
     private readonly GitDescribeProvider _gitDescribeProvider;
     private readonly CancellationTokenSequence _asyncLoadCancellation = new();
+    private IGitUICommandsSource? _uiCommandsSource;
 
     private readonly IDisposable _revisionInfoResizedSubscription;
     private readonly IDisposable _commitMessageResizedSubscription;
@@ -143,6 +144,11 @@ public partial class CommitInfo : GitModuleControl
         {
             _asyncLoadCancellation.Dispose();
 
+            if (_uiCommandsSource is not null)
+            {
+                _uiCommandsSource.UICommandsChanged -= OnUICommandsChanged;
+            }
+
             components?.Dispose();
         }
 
@@ -159,6 +165,13 @@ public partial class CommitInfo : GitModuleControl
     {
         base.OnUICommandsSourceSet(source);
 
+        if (_uiCommandsSource is not null)
+        {
+            _uiCommandsSource.UICommandsChanged -= OnUICommandsChanged;
+        }
+
+        _uiCommandsSource = source;
+
         if (source is null)
         {
             _linkFactory = null;
@@ -167,14 +180,38 @@ public partial class CommitInfo : GitModuleControl
         }
         else
         {
-            _linkFactory = source.UICommands.GetRequiredService<ILinkFactory>();
-            _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
-            _refsFormatter = new RefsFormatter(_linkFactory);
+            InitializeRenderers(source.UICommands);
 
-            source.UICommandsChanged += delegate { RefreshSortedTags(); };
+            source.UICommandsChanged += OnUICommandsChanged;
 
             // call this event handler also now (necessary for "Contained in branches/tags")
             RefreshSortedTags();
+        }
+    }
+
+    private void InitializeRenderers(IGitUICommands uiCommands)
+    {
+        _linkFactory = uiCommands.GetRequiredService<ILinkFactory>();
+        _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
+        _refsFormatter = new RefsFormatter(_linkFactory);
+    }
+
+    private void OnUICommandsChanged(object? sender, GitUICommandsChangedEventArgs e)
+    {
+        if (sender is not IGitUICommandsSource source)
+        {
+            return;
+        }
+
+        // Cancel unconditionally: any in-flight load belongs to the previous repository.
+        CancellationToken cancellationToken = _asyncLoadCancellation.Next();
+
+        InitializeRenderers(source.UICommands);
+        RefreshSortedTags();
+
+        if (_revision is not null && tableLayout.Visible)
+        {
+            ReloadCommitInfo(cancellationToken);
         }
     }
 
@@ -225,6 +262,8 @@ public partial class CommitInfo : GitModuleControl
         if (revision is null)
         {
             tableLayout.Visible = false;
+            ClearRevisionDetailsFields();
+            RevisionInfo.Clear();
             return;
         }
 
@@ -319,11 +358,8 @@ public partial class CommitInfo : GitModuleControl
         _tags = null;
         _annotatedTagsMessages = null;
 
-        _annotatedTagsInfo = "";
-        _linksInfo = "";
-        _branchInfo = "";
-        _tagInfo = "";
-        _gitDescribeInfo = "";
+        ClearRevisionDetailsFields();
+        RevisionInfo.Clear();
 
         if (_revision is not null && !_revision.IsArtificial && !_revision.IsAutostash)
         {
@@ -595,6 +631,15 @@ public partial class CommitInfo : GitModuleControl
                 }
             }
         }
+    }
+
+    private void ClearRevisionDetailsFields()
+    {
+        _annotatedTagsInfo = "";
+        _linksInfo = "";
+        _branchInfo = "";
+        _tagInfo = "";
+        _gitDescribeInfo = "";
     }
 
     private void UpdateRevisionInfo()

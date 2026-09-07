@@ -1275,12 +1275,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
-        _selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
-
         if (revision is null)
         {
             return;
         }
+
+        _selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
 
         IReadOnlyList<ObjectId> children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
         RevisionInfo.SetRevisionWithChildren(revision, children);
@@ -1749,6 +1749,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 RevisionGrid.ResetAllFilters();
                 ToolStripFilters.ClearQuickFilters();
                 revisionDiff.RepositoryChanged();
+
+                _selectedRevisionUpdatedTargets = UpdateTargets.None;
             }
 
             RevisionInfo.SetRevisionWithChildren(revision: null, children: []);
@@ -3074,8 +3076,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         public SplitterManager SplitterManager => _form._splitterManager;
         public TabPage TreeTabPage => _form.TreeTabPage;
         public FilterToolBar ToolStripFilters => _form.ToolStripFilters;
+        public CommitInfo.CommitInfo RevisionInfo => _form.RevisionInfo;
+        public TabPage CommitInfoTabPage => _form.CommitInfoTabPage;
 
         public void RefreshRevisions() => _form.RefreshRevisions();
+        public void SetWorkingDir(string? path) => _form.SetWorkingDir(path);
     }
 
     private void FormBrowse_DragDrop(object? sender, DragEventArgs e)

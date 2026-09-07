@@ -1,11 +1,16 @@
 ﻿using System.ComponentModel.Design;
 using CommonTestUtils;
 using GitCommands;
+using GitCommands.Config;
+using GitCommands.ExternalLinks;
 using GitCommands.Git;
+using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitUI;
+using GitUI.Editor.RichTextBoxExtension;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using ResourceManager;
@@ -336,16 +341,19 @@ public class CommitInfoTests
     }
 
     private void RunCommitInfoTest(Func<GitUI.CommitInfo.CommitInfo, Task> runTestAsync)
+        => RunCommitInfoTest(CreateDefaultUiCommandsSource(), runTestAsync, stageEmptyTagListOutput: true);
+
+    private void RunCommitInfoTest(IGitUICommandsSource uiCommandsSource, Func<GitUI.CommitInfo.CommitInfo, Task> runTestAsync, bool stageEmptyTagListOutput = false)
     {
+        if (stageEmptyTagListOutput)
+        {
+            // CommitInfo.UICommandsSource assignment triggers RefreshSortedTags
+            _gitExecutable.StageOutput(@"for-each-ref --sort=""-taggerdate"" --format=""%(refname)"" refs/tags/", "");
+        }
+
         UITest.RunControl(
             createControl: form =>
             {
-                IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
-                uiCommandsSource.UICommands.Returns(x => _commands);
-
-                // the following assignment of CommitInfo.UICommandsSource will already call this command
-                _gitExecutable.StageOutput(@"for-each-ref --sort=""-taggerdate"" --format=""%(refname)"" refs/tags/", "");
-
                 form.Size = new(600, 480);
 
                 return new GitUI.CommitInfo.CommitInfo
@@ -363,6 +371,56 @@ public class CommitInfoTests
 
                 await runTestAsync(commitInfo);
             });
+    }
+
+    private IGitUICommandsSource CreateDefaultUiCommandsSource()
+    {
+        IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
+        uiCommandsSource.UICommands.Returns(_ => _commands);
+        return uiCommandsSource;
+    }
+
+    [Test]
+    public void ReloadCommitInfo_should_use_current_repository_for_related_links_after_module_switch()
+    {
+        using (CommitInfoPanelTestSettingsScope.ForMinimalCommitInfoDataLoad())
+        {
+            using ExternalLinksTwoRepositoryFixture fixture = new(
+                _mockLinkFactory,
+                repositoryNamePrefix: "externalLinksRepo",
+                ReferenceRepository.AuthorFullIdentity,
+                ReferenceRepository.AuthorEmail,
+                ExternalLinksIntegrationTestHelper.SampleAuthorTime);
+
+            RunCommitInfoTest(
+                fixture.UiCommandsSource,
+                async commitInfo =>
+                {
+                    commitInfo.SetRevisionWithChildren(fixture.Revision, children: null);
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
+                    GitUI.CommitInfo.CommitInfo.TestAccessor ta = commitInfo.GetTestAccessor();
+                    string? linkUriA = ExternalLinksIntegrationTestHelper.FindFirstGitHubIssueLink(ta.RevisionInfo);
+                    linkUriA.Should().NotBeNull();
+                    linkUriA.Should().Contain(ExternalLinksIntegrationTestHelper.RepoAUserRepoSlug);
+
+                    fixture.UiCommandsSource.SetCommands(fixture.CommandsB);
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
+                    ta.RevisionInfo.Text.Should().NotContain(ExternalLinksIntegrationTestHelper.RepoAUserRepoSlug);
+
+                    string? linkUriB = ExternalLinksIntegrationTestHelper.FindFirstGitHubIssueLink(ta.RevisionInfo);
+                    linkUriB.Should().NotBeNull();
+                    linkUriB.Should().Contain(ExternalLinksIntegrationTestHelper.RepoBUserRepoSlug);
+
+                    int linkStart = ExternalLinksIntegrationTestHelper.FindLinkCharIndex(
+                        ta.RevisionInfo,
+                        ExternalLinksIntegrationTestHelper.RepoBUserRepoSlug);
+                    linkStart.Should().BeGreaterThan(-1);
+                    ta.LinkClicked(ta.RevisionInfo, new("Issue 3657", linkStart, linkLength: 10));
+                    _mockLinkFactory.LastExecutedLinkUri.Should().Contain(ExternalLinksIntegrationTestHelper.RepoBUserRepoSlug);
+                });
+        }
     }
 
     private class MockLinkFactory : ILinkFactory
