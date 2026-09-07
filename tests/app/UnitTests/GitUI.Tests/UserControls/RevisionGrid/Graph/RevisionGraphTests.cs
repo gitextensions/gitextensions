@@ -15,6 +15,7 @@ public class RevisionGraphTests
     {
         AppSettings.MergeGraphLanesHavingCommonParent.Value = false;
         AppSettings.StraightenGraphDiagonals.Value = false;
+        AppSettings.ReservedLanesBranchNames = "main[^/]*|master[^/]*;dev[^/]*";
     }
 
     private void Setup(bool mergeGraphLanesHavingCommonParent, bool finishLoading = false, IEnumerable<GitRevision>? revisions = null)
