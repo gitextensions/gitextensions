@@ -186,6 +186,8 @@ To be able to open this repository, you need to either:
     private readonly TranslationString _failedToLoadAnAssembly = new("Failed to load an assembly");
     private readonly TranslationString _failedToLoadFileOrAssemblyFormat = new("Could not load file or assembly '{0}'.");
     private readonly TranslationString _failedToLoadFileOrAssemblyText = new("Most of the times the error is temporary, likely caused by Windows Update.");
+    private readonly TranslationString _methodNotFoundInAssemblyFormat = new("Method not found: '{0}'.");
+    private readonly TranslationString _methodNotFoundInAssemblyText = new("A required method was not found in the assembly, likely due to a version mismatch or an incomplete installation. Reinstalling the application should resolve the issue.");
     private readonly TranslationString _notConfigured = new("{0} not configured");
 
     private readonly TranslationString _failedToLoadPlugin = new("Plugin loading failure");
@@ -398,6 +400,8 @@ Copy error details to clipboard?");
     public static string FailedToLoadAnAssembly => _instance.Value._failedToLoadAnAssembly.Text;
     public static string FailedToLoadFileOrAssemblyFormat => _instance.Value._failedToLoadFileOrAssemblyFormat.Text;
     public static string FailedToLoadFileOrAssemblyText => _instance.Value._failedToLoadFileOrAssemblyText.Text;
+    public static string MethodNotFoundInAssemblyFormat => _instance.Value._methodNotFoundInAssemblyFormat.Text;
+    public static string MethodNotFoundInAssemblyText => _instance.Value._methodNotFoundInAssemblyText.Text;
     public static string NotConfigured => _instance.Value._notConfigured.Text;
     public static string FailedToLoadPlugin => _instance.Value._failedToLoadPlugin.Text;
     public static string FailedToLoadPluginPopupText => _instance.Value._failedToLoadPluginPopupText.Text;
