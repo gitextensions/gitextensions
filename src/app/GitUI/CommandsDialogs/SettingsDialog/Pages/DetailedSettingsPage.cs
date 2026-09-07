@@ -16,7 +16,9 @@ public partial class DetailedSettingsPage : DistributedSettingsPage
 
         _controlBindings = [SettingControlBindingsProvider.CreateControlBinding(DetailedSettings.GetRemoteBranchesDirectlyFromRemote, chkRemotesFromServer),
                             SettingControlBindingsProvider.CreateControlBinding(DetailedSettings.AddMergeLogMessages, addLogMessages),
-                            SettingControlBindingsProvider.CreateControlBinding(DetailedSettings.MergeLogMessagesCount, nbMessages)];
+                            SettingControlBindingsProvider.CreateControlBinding(DetailedSettings.MergeLogMessagesCount, nbMessages),
+                            SettingControlBindingsProvider.CreateControlBinding(DetailedSettings.AiDiffPromptPrefix, txtAiDiffPromptPrefix),
+                            SettingControlBindingsProvider.CreateControlBinding(DetailedSettings.AiDiffPromptSuffix, txtAiDiffPromptSuffix)];
     }
 
     public static SettingsPageReference GetPageReference()
