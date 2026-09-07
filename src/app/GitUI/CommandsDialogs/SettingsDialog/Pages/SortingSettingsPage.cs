@@ -93,7 +93,7 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
     private void PrioRemoteNamesHelp_Click(object sender, EventArgs e)
         => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "sorting-sort-prioritized-remotes"));
     private void ReservedLanesBranchNamesHelp_Click(object sender, EventArgs e)
-        => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "sorting-sort-Reserved-lanes-branches"));
+        => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "sorting-sort-reserved-lanes-branches"));
 
     private sealed class ComboBoxItem<T>
     {

@@ -607,7 +607,7 @@ public class RevisionGraphTests
             if (parts.Length > 2)
             {
                 string[] refNames = parts[2].Split(',');
-                commit.Refs = refNames.Select(name => new GitRef(module, ObjectId.Random(), name)).AsReadOnlyList();
+                commit.Refs = refNames.Select(name => new GitRef(module, objectId, name)).AsReadOnlyList();
         }
         }
 

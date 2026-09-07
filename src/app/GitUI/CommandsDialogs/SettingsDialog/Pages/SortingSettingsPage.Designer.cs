@@ -44,7 +44,7 @@ partial class SortingSettingsPage
         lblBranchesOrder = new Label();
         lblBranchesSortBy = new Label();
         lblRevisionsSortBy = new Label();
-        lblReservedLaneBranchNames = new Label();
+        lblReservedLanesBranchNames = new Label();
         lblPrioBranchNames = new Label();
         lblPrioRemoteNames = new Label();
         tlpnlMain.SuspendLayout();
@@ -106,7 +106,7 @@ partial class SortingSettingsPage
         tlpnlGeneral.Controls.Add(lblRevisionsSortBy, 0, 0);
         tlpnlGeneral.Controls.Add(lblPrioBranchNames, 0, 3);
         tlpnlGeneral.Controls.Add(lblPrioRemoteNames, 0, 4);
-        tlpnlGeneral.Controls.Add(lblReservedLaneBranchNames, 0, 5);
+        tlpnlGeneral.Controls.Add(lblReservedLanesBranchNames, 0, 5);
         tlpnlGeneral.Dock = DockStyle.Fill;
         tlpnlGeneral.Location = new Point(8, 24);
         tlpnlGeneral.Name = "tlpnlGeneral";
@@ -273,16 +273,16 @@ partial class SortingSettingsPage
         lblPrioRemoteNames.Text = "Prioritized remotes";
         lblPrioRemoteNames.TextAlign = ContentAlignment.MiddleLeft;
         // 
-        // lblReservedLaneBranchNames
+        // lblReservedLanesBranchNames
         // 
-        lblReservedLaneBranchNames.AutoSize = true;
-        lblReservedLaneBranchNames.Dock = DockStyle.Fill;
-        lblReservedLaneBranchNames.Location = new Point(3, 145);
-        lblReservedLaneBranchNames.Name = "lblReservedLanesBranchNames";
-        lblReservedLaneBranchNames.Padding = new Padding(0, 0, 0, 2);
-        lblReservedLaneBranchNames.Size = new Size(111, 29);
-        lblReservedLaneBranchNames.Text = "Reserve lane for branches";
-        lblReservedLaneBranchNames.TextAlign = ContentAlignment.MiddleLeft;
+        lblReservedLanesBranchNames.AutoSize = true;
+        lblReservedLanesBranchNames.Dock = DockStyle.Fill;
+        lblReservedLanesBranchNames.Location = new Point(3, 145);
+        lblReservedLanesBranchNames.Name = "lblReservedLanesBranchNames";
+        lblReservedLanesBranchNames.Padding = new Padding(0, 0, 0, 2);
+        lblReservedLanesBranchNames.Size = new Size(111, 29);
+        lblReservedLanesBranchNames.Text = "Reserve lane for branches";
+        lblReservedLanesBranchNames.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // SortingSettingsPage
         // 
@@ -316,7 +316,7 @@ partial class SortingSettingsPage
     private Label lblBranchesOrder;
     private Label lblPrioBranchNames;
     private Label lblPrioRemoteNames;
-    private Label lblReservedLaneBranchNames;
+    private Label lblReservedLanesBranchNames;
     private ComboBox _NO_TRANSLATE_cmbRevisionsSortBy;
     private ComboBox _NO_TRANSLATE_cmbBranchesSortBy;
     private ComboBox _NO_TRANSLATE_cmbBranchesOrder;

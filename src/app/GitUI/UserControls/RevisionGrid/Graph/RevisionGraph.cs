@@ -2,7 +2,6 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -614,8 +613,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 if (reserveLaneForCurrentRevision)
                 {
                     // Now we can insert the segments for this node, after all segments that belong to higher-pri occupied reserved lanes.
-                    int lane = firstIndexForReservedLane.IndexOf(nextIndex);
-                    int occupiedReservedLaneCount = firstIndexForReservedLane.Take(lane).Count(x => x <= nextIndex);
+                    int occupiedReservedLaneCount = firstIndexForReservedLane.Take(laneForCurrentRevision).Count(x => x <= nextIndex);
                     segments.InsertRange(occupiedReservedLaneCount, segmentsForNode);
                 }
             }

@@ -6,7 +6,7 @@ namespace GitExtUtils;
 public static class Priority
 {
     /// <summary>
-    /// Returns a dictionary with priorities for the references whose key matches the given list of regexes.
+    ///  Returns a dictionary with priorities for the references whose key matches the given list of regexes.
     /// </summary>
     /// <typeparam name="T">The type to prioritize, e.g. IGitRef.</typeparam>
     /// <param name="references">The branches or remotes to prioritize.</param>
@@ -20,7 +20,7 @@ public static class Priority
             ?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .Select(regex => $"^({regex})$")
             .ToArray()
-            ?? throw new ArgumentNullException($"{nameof(regexes)} and {nameof(regexList)}");
+            ?? throw new ArgumentException($"Both {nameof(regexes)} and {nameof(regexList)} are null");
 
         if (regexes.Length == 0)
         {
