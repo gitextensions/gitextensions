@@ -195,6 +195,10 @@ To be able to open this repository, you need to either:
 
 Copy error details to clipboard?");
 
+    private readonly TranslationString _incompatiblePlugin = new("Incompatible plugin");
+    private readonly TranslationString _incompatiblePluginHeadingFormat = new("Plugin '{0}' is not compatible with this version of Git Extensions.");
+    private readonly TranslationString _incompatiblePluginText = new("The plugin was compiled for an older version of Git Extensions and cannot run. Please update or remove the plugin.");
+
     // public only because of FormTranslate
     public TranslatedStrings()
     {
@@ -401,4 +405,8 @@ Copy error details to clipboard?");
     public static string NotConfigured => _instance.Value._notConfigured.Text;
     public static string FailedToLoadPlugin => _instance.Value._failedToLoadPlugin.Text;
     public static string FailedToLoadPluginPopupText => _instance.Value._failedToLoadPluginPopupText.Text;
+
+    public static string IncompatiblePlugin => _instance.Value._incompatiblePlugin.Text;
+    public static string IncompatiblePluginHeadingFormat => _instance.Value._incompatiblePluginHeadingFormat.Text;
+    public static string IncompatiblePluginText => _instance.Value._incompatiblePluginText.Text;
 }
