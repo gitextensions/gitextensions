@@ -21,16 +21,9 @@ jobs:
       - name: Build native code
         run: dotnet build src\native\build.proj -c Release --verbosity q --nologo
 
-      - name: Publish (solution from repo root, win-x64 self-contained; CreatePortable auto-zips)
+      - name: Publish (framework-dependent like upstream; CreatePortable auto-zips)
         shell: pwsh
-        run: dotnet publish -c Release -r win-x64 --self-contained true --verbosity q --nologo /p:ContinuousIntegrationBuild=true /p:ErrorOnDuplicatePublishOutputFiles=false
-
-      - name: Resolve portable archive name
-        shell: pwsh
-        run: |
-          $zip = Get-ChildItem artifacts\Release\publish\*.zip | Select-Object -First 1
-          if (-not $zip) { throw 'No publish zip found under artifacts\Release\publish' }
-          "ZIPNAME=$($zip.Name)" >> $env:GITHUB_ENV
+        run: dotnet publish -c Release --verbosity q --nologo /p:ContinuousIntegrationBuild=true /p:ErrorOnDuplicatePublishOutputFiles=false
 
       - name: Upload portable archive
         uses: actions/upload-artifact@v4
