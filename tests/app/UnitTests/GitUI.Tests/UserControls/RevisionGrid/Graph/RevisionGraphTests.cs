@@ -296,6 +296,14 @@ public class RevisionGraphTests
     }
 
     [Test]
+    public async Task MainGetsTheLeftmostLane_WithIsolatedNodes()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  2::main  3 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
     public async Task DevGetsTheSecondLane()
     {
         RevisionGraph revisionGraph = CreateGraph(" 1  m:1:main d:1:dev 3:1  4:3 ");
@@ -600,7 +608,7 @@ public class RevisionGraphTests
 
             if (parts.Length > 1)
             {
-                string[] parentIds = parts[1].Split(',');
+                string[] parentIds = parts[1].Split(',', StringSplitOptions.RemoveEmptyEntries);
                 commit.ParentIds = parentIds.Select(id => commitsById[id].ObjectId).ToList();
             }
 
@@ -608,7 +616,7 @@ public class RevisionGraphTests
             {
                 string[] refNames = parts[2].Split(',');
                 commit.Refs = refNames.Select(name => new GitRef(module, objectId, name)).AsReadOnlyList();
-        }
+            }
         }
 
         // Add commits to graph from newest to oldest
@@ -624,6 +632,8 @@ public class RevisionGraphTests
 
         int lastRowIndex = graph.Count - 1;
         graph.CacheTo(lastRowIndex, lastRowIndex);
+
+        VerifyGraphConsistency(graph);
 
         return graph;
     }
@@ -765,6 +775,16 @@ public class RevisionGraphTests
         }
 
         return graph;
+    }
+
+    private static void VerifyGraphConsistency(RevisionGraph graph)
+    {
+        for (int rowIndex = 0; rowIndex < graph.GetCachedCount(); ++rowIndex)
+        {
+            IRevisionGraphRow row = graph.GetSegmentsForRow(rowIndex)!;
+            List<int> usedLanes = row.Segments.Select(s => row.GetLaneForSegment(s).Index).Append(row.GetCurrentRevisionLane()).Distinct().ToList();
+            row.GetLaneCount().Should().Be(usedLanes.Max() + 1);
+        }
     }
 
     private static async Task VerifyGraphLayoutAsync(RevisionGraph revisionGraph)
