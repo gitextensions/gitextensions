@@ -235,6 +235,17 @@ public class RevisionGraphTests
     }
 
     [Test]
+    public async Task SegmentsAreStraightened_WithFixedLanes([Values] bool mergeGraphLanesHavingCommonParent)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+
+        AppSettings.ReservedLanesBranchNames = "A;B;C;D";
+        RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1,2  4:1:D  5:3 6:5:B 7:5:A 8:1:C ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
     public async Task SegmentsWithOutgoingPrimaryMergesAreStraightened([Values] bool mergeGraphLanesHavingCommonParent)
     {
         AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
@@ -338,12 +349,46 @@ public class RevisionGraphTests
     }
 
     [Test]
-    public async Task DevGetsTheSecondLane_DespiteLaneStraightening([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    public async Task DevGetsTheSecondLane_DespiteDiagonalStraightening([Values] bool mergeCommonParents, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeCommonParents;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1:main 3:2:feature 4:2,3:dev 5:4 6:5 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheSecondLane_DespiteDiagonalStraightening_2([Values] bool mergeCommonParents, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeCommonParents;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:1 4:1,2 5:3:dev 6:5:feat 7:4,6:main _w:7 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheSecondLane_DespiteDiagonalStraightening_3([Values] bool mergeCommonParents, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeCommonParents;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:1 4:1,2 5:3:dev 8:4 6:5:feat 7:8,6:main _w:7 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task CGetsTheThirdLane_DespiteDiagonalStraightening([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
     {
         AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
         AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
 
-        RevisionGraph revisionGraph = CreateGraph(" 1 2:1:main 3:2:feature 4:2,3:dev 5:4 6:5 ");
+        AppSettings.ReservedLanesBranchNames = "A;B;C;D";
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:2 4:2,3 5:1:C 6:4 7:6 8:6,7 9:8:A 10:1:B 11:1:D ");
 
         await VerifyGraphLayoutAsync(revisionGraph);
     }
@@ -372,6 +417,18 @@ public class RevisionGraphTests
 
         AppSettings.ReservedLanesBranchNames = "A;B;C;D";
         RevisionGraph revisionGraph = CreateGraph(" 1 2:1 A:2:A D:A:D 3:2 4:3 b:1 B:b:B 5:b C:5:C 6:4 7:6 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task CGetsTheThirdLane_DespiteLaneReuse([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        AppSettings.ReservedLanesBranchNames = "A;B;C";
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1:C 3:1:B 4:1:A ");
 
         await VerifyGraphLayoutAsync(revisionGraph);
     }
@@ -657,7 +714,7 @@ public class RevisionGraphTests
             // Create a line for commit
 
             IRevisionGraphRow? row = revisionGraph.GetSegmentsForRow(rowIndex);
-            char[] line = [.. Enumerable.Repeat(' ', (row!.GetLaneCount() * 2) + 1)];
+            char[] line = [.. Enumerable.Repeat(' ', (row!.GetLaneCount() * 2) - 1)];
 
             // Show '|' in lanes passing through
             foreach (RevisionGraphSegment segment in row.Segments)
@@ -681,7 +738,7 @@ public class RevisionGraphTests
                 refs += " [Commit index]";
             }
 
-            graph.Add((new string(line) + refs).TrimEnd());
+            graph.Add($"{new string(line)}  {refs}".TrimEnd());
 
             IRevisionGraphRow? nextRow = revisionGraph.GetSegmentsForRow(rowIndex + 1);
             if (nextRow == null)
@@ -716,14 +773,15 @@ public class RevisionGraphTests
                     // Segment shifts one lane to the right
                     actions.Add(() =>
                     {
-                        if (line[fromPos + 1] == '/')
+                        ref char c = ref line[fromPos + 1];
+                        if (c == '/' || c == 'X')
                         {
                             // , crossing another shifting left
-                            line[fromPos + 1] = 'X';
+                            c = 'X';
                         }
                         else
                         {
-                            line[fromPos + 1] = '\\';
+                            c = '\\';
                         }
                     });
                 }
@@ -732,14 +790,15 @@ public class RevisionGraphTests
                     // Segment shifts one lane to the left
                     actions.Add(() =>
                     {
-                        if (line[fromPos - 1] == '\\')
+                        ref char c = ref line[fromPos - 1];
+                        if (c == '\\' || c == 'X')
                         {
                             // , crossing another shifting right
-                            line[fromPos - 1] = 'X';
+                            c = 'X';
                         }
                         else
                         {
-                            line[fromPos - 1] = '/';
+                            c = '/';
                         }
                     });
                 }
