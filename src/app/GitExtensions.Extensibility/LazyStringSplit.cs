@@ -122,29 +122,16 @@ public static class LazyStringSplitExtensions
     {
         bool trim = options.HasFlag(StringSplitOptions.TrimEntries);
         bool removeEmpty = options.HasFlag(StringSplitOptions.RemoveEmptyEntries);
-        int start = 0;
-        while (true)
+        for (int start = 0; start <= stringToSplit.Length;)
         {
             int indexOfNextDelimiter = stringToSplit.IndexOf(delimiter, start);
             int end = indexOfNextDelimiter < 0 ? stringToSplit.Length : indexOfNextDelimiter;
-            int beginningTrimmed = start;
-            int endTrimmed = end;
-            if (trim)
-            {
-                while (beginningTrimmed < endTrimmed && char.IsWhiteSpace(stringToSplit[beginningTrimmed]))
-                {
-                    beginningTrimmed++;
-                }
 
-                while (endTrimmed > beginningTrimmed && char.IsWhiteSpace(stringToSplit[endTrimmed - 1]))
-                {
-                    endTrimmed--;
-                }
-            }
+            (int beginning, int length) range = GetRange(stringToSplit, start, end, trim);
 
-            if (!removeEmpty || beginningTrimmed != endTrimmed)
+            if (!removeEmpty || range.length != 0)
             {
-                yield return (beginningTrimmed, endTrimmed - beginningTrimmed);
+                yield return range;
             }
 
             if (indexOfNextDelimiter < 0)
@@ -154,6 +141,24 @@ public static class LazyStringSplitExtensions
 
             start = indexOfNextDelimiter + 1;
         }
+    }
+
+    private static (int beginning, int length) GetRange(string value, int start, int end, bool trim)
+    {
+        if (trim)
+        {
+            while (start < end && char.IsWhiteSpace(value[start]))
+            {
+                start++;
+            }
+
+            while (end > start && char.IsWhiteSpace(value[end - 1]))
+            {
+                end--;
+            }
+        }
+
+        return (start, end - start);
     }
 
     public static IEnumerable<T> Select<T>(this LazyStringSplit split, Func<string, T> func)
