@@ -12,28 +12,33 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+          fetch-depth: 0
 
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
 
-      - name: Create Plugins output dir
+      - name: Build native code
+        run: dotnet build src\native\build.proj -c Release --verbosity q --nologo
+
+      - name: Build .NET (solution, from repo root)
         shell: pwsh
-        run: New-Item -ItemType Directory -Force -Path artifacts/Release/bin/GitExtensions/net10.0-windows/Plugins | Out-Null
+        run: dotnet build -c Release --verbosity q --nologo /p:ContinuousIntegrationBuild=true
 
-      - name: Build
-        run: dotnet build src/app/GitExtensions/GitExtensions.csproj -c Release
-
-      - name: Publish (self-contained win-x64)
-        run: dotnet publish src/app/GitExtensions/GitExtensions.csproj -c Release -r win-x64 --self-contained true -p:ErrorOnDuplicatePublishOutputFiles=false
-
-      - name: Zip portable package
+      - name: Publish (solution, from repo root; CreatePortable auto-zips)
         shell: pwsh
-        run: Compress-Archive -Path artifacts/Release/publish/GitExtensions/* -DestinationPath GitExtensions-portable-win-x64.zip
+        run: dotnet publish -c Release --no-build -r win-x64 --self-contained true /p:ContinuousIntegrationBuild=true /p:ErrorOnDuplicatePublishOutputFiles=false
 
-      - name: Upload artifact
+      - name: Resolve portable archive name
+        shell: pwsh
+        run: |
+          $zip = Get-ChildItem artifacts\Release\publish\*.zip | Select-Object -First 1
+          if (-not $zip) { throw 'No publish zip found under artifacts\Release\publish' }
+          "ZIPNAME=$($zip.Name)" >> $env:GITHUB_ENV
+
+      - name: Upload portable archive
         uses: actions/upload-artifact@v4
         with:
           name: GitExtensions-portable-win-x64
-          path: GitExtensions-portable-win-x64.zip
+          path: artifacts/Release/publish/*.zip
           retention-days: 90
