@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
@@ -73,6 +73,7 @@ partial class FormCommit
         closeDialogAfterAllFilesCommittedToolStripMenuItem = new ToolStripMenuItem();
         refreshDialogOnFormFocusToolStripMenuItem = new ToolStripMenuItem();
         tsmiSelectStagedOnEnterMessage = new ToolStripMenuItem();
+        tsmiVerticalStagedLayout = new ToolStripMenuItem();
         toolStripSeparator2 = new ToolStripSeparator();
         signOffToolStripMenuItem = new ToolStripMenuItem();
         toolAuthorLabelItem = new ToolStripMenuItem();
@@ -678,6 +679,7 @@ partial class FormCommit
         tsmiOptions.Alignment = ToolStripItemAlignment.Right;
         tsmiOptions.AutoToolTip = false;
         tsmiOptions.DropDownItems.AddRange(new ToolStripItem[] {
+        tsmiVerticalStagedLayout,
         closeDialogAfterEachCommitToolStripMenuItem,
         closeDialogAfterAllFilesCommittedToolStripMenuItem,
         refreshDialogOnFormFocusToolStripMenuItem,
@@ -723,6 +725,14 @@ partial class FormCommit
         tsmiSelectStagedOnEnterMessage.Size = new Size(314, 22);
         tsmiSelectStagedOnEnterMessage.Text = "Select staged on entering message editor";
         tsmiSelectStagedOnEnterMessage.Click += tsmiSelectStagedOnEnterMessage_Click;
+        // 
+        // tsmiVerticalStagedLayout
+        // 
+        tsmiVerticalStagedLayout.Checked = false;
+        tsmiVerticalStagedLayout.CheckOnClick = false;
+        tsmiVerticalStagedLayout.Name = "tsmiVerticalStagedLayout";
+        tsmiVerticalStagedLayout.Text = "Show staged and unstaged lists side by side";
+        tsmiVerticalStagedLayout.Click += tsmiVerticalStagedLayout_Click;
         // 
         // toolStripSeparator2
         // 
@@ -986,6 +996,7 @@ partial class FormCommit
     private ToolStripMenuItem closeDialogAfterAllFilesCommittedToolStripMenuItem;
     private ToolStripMenuItem refreshDialogOnFormFocusToolStripMenuItem;
     private ToolStripMenuItem tsmiSelectStagedOnEnterMessage;
+    private ToolStripMenuItem tsmiVerticalStagedLayout;
     private GitUI.UserControls.RevisionGrid.LoadingControl Loading;
     private FileStatusList Unstaged;
     private ToolStripProgressBar toolStripProgressBar1;

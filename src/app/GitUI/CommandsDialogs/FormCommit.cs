@@ -473,6 +473,7 @@ public sealed partial class FormCommit : GitModuleForm
         _splitterManager.AddSplitter(splitMain, nameof(splitMain));
         _splitterManager.AddSplitter(splitRight, nameof(splitRight));
         _splitterManager.AddSplitter(splitLeft, nameof(splitLeft));
+        ApplyStagedLayout();
         _splitterManager.RestoreSplitters();
     }
 
@@ -2820,6 +2821,31 @@ public sealed partial class FormCommit : GitModuleForm
 
     internal TestAccessor GetTestAccessor()
         => new(this);
+
+    /// <summary>
+    /// Shows the staged and unstaged file lists side by side instead of stacked,
+    /// per <see cref="AppSettings.CommitDialogSideBySideFileLists"/>.
+    /// </summary>
+    private void ApplyStagedLayout()
+    {
+        bool sideBySide = AppSettings.CommitDialogSideBySideFileLists.Value;
+        Orientation orientation = sideBySide ? Orientation.Vertical : Orientation.Horizontal;
+        if (splitLeft.Orientation != orientation)
+        {
+            splitLeft.Orientation = orientation;
+        }
+
+        tsmiVerticalStagedLayout.Checked = sideBySide;
+    }
+
+    private void tsmiVerticalStagedLayout_Click(object sender, EventArgs e)
+    {
+        AppSettings.CommitDialogSideBySideFileLists.Value = !AppSettings.CommitDialogSideBySideFileLists.Value;
+        ApplyStagedLayout();
+
+        // Re-balance the two file lists evenly after flipping the orientation.
+        splitLeft.SplitterDistance = splitLeft.Width / 2;
+    }
 
     private void Options_DropDownOpening(object sender, EventArgs e)
     {

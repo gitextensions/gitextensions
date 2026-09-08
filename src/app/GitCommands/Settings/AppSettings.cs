@@ -464,6 +464,9 @@ public static partial class AppSettings
 
     public static ISetting<bool> CommitDialogSelectStagedOnEnterMessage { get; } = Setting.Create(DialogSettingsPath, nameof(CommitDialogSelectStagedOnEnterMessage), true);
 
+    /// <summary>Gets a value indicating whether the commit dialog should show the staged and unstaged lists side by side (left of the diff) instead of stacked.</summary>
+    public static ISetting<bool> CommitDialogSideBySideFileLists { get; } = Setting.Create(DialogSettingsPath, nameof(CommitDialogSideBySideFileLists), false);
+
     public static bool CommitDialogShowOnlyMyMessages
     {
         get => GetBool("commitDialogShowOnlyMyMessages", false);
