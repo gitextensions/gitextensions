@@ -861,6 +861,10 @@ public partial class CommitInfo : GitModuleControl
             string[] remoteBranchRegexes = [.. branchRegexes.Select(regex => $"^{_remoteBranchPrefix}[^/]+/({regex})$")];
             string[] remoteRegexes = [.. AppSettings.PrioritizedRemoteNames.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(regex => $"^{_remoteBranchPrefix}({regex})/")];
 
+            Dictionary<string, int> localBranchPriorities = Priority.Priorities(branches, x => x, localBranchRegexes);
+            Dictionary<string, int> remoteBranchPriorities = Priority.Priorities(branches, x => x, remoteBranchRegexes);
+            Dictionary<string, int> remotePriorities = Priority.Priorities(branches, x => x, remoteRegexes);
+
             foreach (string branch in branches)
             {
                 _orderByBranch[branch] = GetBranchOrder(branch);
@@ -883,7 +887,7 @@ public partial class CommitInfo : GitModuleControl
 
                 if (IsLocalBranch())
                 {
-                    if (!TryGetOrder(branch, localBranchRegexes, out int localBranchOrder))
+                    if (!TryGetOrder(branch, localBranchRegexes, localBranchPriorities, out int localBranchOrder))
                     {
                         // Non prioritized local branches added after prioritized remote branches
                         // localBranchOrder==localBranchRegexes.Length, an extra priority level
@@ -899,7 +903,7 @@ public partial class CommitInfo : GitModuleControl
                 // Remote branches after local prioritized branches
                 order += localBranchRegexes.Length;
 
-                if (!TryGetOrder(branch, remoteBranchRegexes, out int remoteBranchOrder))
+                if (!TryGetOrder(branch, remoteBranchRegexes, remoteBranchPriorities, out int remoteBranchOrder))
                 {
                     // after non priority local branches (that are inserted after remote prioritzed branches)
                     const int localNonprioritizedBranchesLength = 1;
@@ -907,7 +911,7 @@ public partial class CommitInfo : GitModuleControl
                 }
 
                 // Group by branch priority then order by remote
-                order += (remoteBranchOrder * remotesGroupLength()) + GetOrder(branch, remoteRegexes);
+                order += (remoteBranchOrder * remotesGroupLength()) + GetOrder(branch, remoteRegexes, remotePriorities);
 
                 return order;
 
@@ -921,27 +925,20 @@ public partial class CommitInfo : GitModuleControl
 
                 // Get the index of the match for prioritized sorting,
                 // set order to regexes.Length at no match
-                bool TryGetOrder(string branch, string[] regexes, out int order)
+                bool TryGetOrder(string branch, string[] regexes, Dictionary<string, int> priorities, out int order)
                 {
-                    int currentOrder = 0;
-                    foreach (string regex in regexes)
+                    if (priorities.TryGetValue(branch, out order))
                     {
-                        if (Regex.IsMatch(branch, regex, RegexOptions.ExplicitCapture))
-                        {
-                            order = currentOrder;
-                            return true;
-                        }
-
-                        currentOrder++;
+                        return true;
                     }
 
-                    order = currentOrder;
+                    order = regexes.Length;
                     return false;
                 }
 
-                int GetOrder(string branch, string[] regexes)
+                int GetOrder(string branch, string[] regexes, Dictionary<string, int> priorities)
                 {
-                    TryGetOrder(branch, regexes, out int order);
+                    TryGetOrder(branch, regexes, priorities, out int order);
                     return order;
                 }
             }

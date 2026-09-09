@@ -1985,6 +1985,15 @@ public static partial class AppSettings
         set => SetString("PrioritizedBuildServerRemoteNames", value);
     }
 
+    /// <summary>
+    ///  Gets or sets the regular expressions for branch names that get a reserved lane in the left of the revision graph.
+    /// </summary>
+    public static string ReservedLanesBranchNames
+    {
+        get => GetString("ReservedLanesBranchNames", "main[^/]*|master[^/]*");
+        set => SetString("ReservedLanesBranchNames", value);
+    }
+
     public static bool BlameDisplayAuthorFirst
     {
         get => GetBool("Blame.DisplayAuthorFirst", false);

@@ -3,6 +3,7 @@ using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
+using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid;
 public class RevisionGraphTests
@@ -14,6 +15,7 @@ public class RevisionGraphTests
     {
         AppSettings.MergeGraphLanesHavingCommonParent.Value = false;
         AppSettings.StraightenGraphDiagonals.Value = false;
+        AppSettings.ReservedLanesBranchNames = "main[^/]*|master[^/]*;dev[^/]*";
     }
 
     private void Setup(bool mergeGraphLanesHavingCommonParent, bool finishLoading = false, IEnumerable<GitRevision>? revisions = null)
@@ -233,6 +235,17 @@ public class RevisionGraphTests
     }
 
     [Test]
+    public async Task SegmentsAreStraightened_WithFixedLanes([Values] bool mergeGraphLanesHavingCommonParent)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+
+        AppSettings.ReservedLanesBranchNames = "A;B;C;D";
+        RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1,2  4:1:D  5:3 6:5:B 7:5:A 8:1:C ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
     public async Task SegmentsWithOutgoingPrimaryMergesAreStraightened([Values] bool mergeGraphLanesHavingCommonParent)
     {
         AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
@@ -251,6 +264,171 @@ public class RevisionGraphTests
 
         // Two segments cross at the 'X'. The one going '/' could be straightened,
         // but then it would shift the parent node causing an unwanted gap.
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task MainGetsTheLeftmostLane()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  m:1:main  3:1  4:3 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task MainGetsTheLeftmostLane2()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  m:1:main 3:1 4:3 5:m 6:m 7:m");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task MainGetsTheLeftmostLane3([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 b:1 c:2 m:1,b:main _i:m _w:_i 4:c,m 5:4");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task MainGetsTheLeftmostLane4([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 b:1 c:2 m:b:main _i:m _w:_i 4:c,m 5:4");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task MainGetsTheLeftmostLane_WithIsolatedNodes()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  2::main  3 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheSecondLane()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  m:1:main d:1:dev 3:1  4:3 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheSecondLane2()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  d:1:dev m:1:main 3:1  4:3 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheSecondLane3()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  m:1:main d:1:dev 3:1 4:3 5:m 6:d 7:m");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheSecondLane4([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+        RevisionGraph revisionGraph = CreateGraph(" 1  m:1:main 2:1 d:1,2:dev 3:d 4:3 5:1");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheSecondLane_DespiteDiagonalStraightening([Values] bool mergeCommonParents, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeCommonParents;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1:main 3:2:feature 4:2,3:dev 5:4 6:5 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheSecondLane_DespiteDiagonalStraightening_2([Values] bool mergeCommonParents, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeCommonParents;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:1 4:1,2 5:3:dev 6:5:feat 7:4,6:main _w:7 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheSecondLane_DespiteDiagonalStraightening_3([Values] bool mergeCommonParents, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeCommonParents;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:1 4:1,2 5:3:dev 8:4 6:5:feat 7:8,6:main _w:7 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task CGetsTheThirdLane_DespiteDiagonalStraightening([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        AppSettings.ReservedLanesBranchNames = "A;B;C;D";
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:2 4:2,3 5:1:C 6:4 7:6 8:6,7 9:8:A 10:1:B 11:1:D ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevGetsTheFirstLaneIfMainIsMissing()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  d:1:dev 3:1  4:3 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task DevAndMainGetSameLaneIfSameNode()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  2:1:dev,main 3:1  4:3 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task ReservedLaneCanBeReusedBelowFirstOccupation([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        AppSettings.ReservedLanesBranchNames = "A;B;C;D";
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 A:2:A D:A:D 3:2 4:3 b:1 B:b:B 5:b C:5:C 6:4 7:6 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task CGetsTheThirdLane_DespiteLaneReuse([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        AppSettings.ReservedLanesBranchNames = "A;B;C";
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1:C 3:1:B 4:1:A ");
 
         await VerifyGraphLayoutAsync(revisionGraph);
     }
@@ -454,9 +632,15 @@ public class RevisionGraphTests
     /// or just {id} if it has no parent.
     ///
     /// E.g.: " 1   2:1   3:1   4:2,3 "
+    ///
+    /// The special IDs "_w" and "_i" denote the working tree and index, respectively.
+    ///
+    /// Refs can be specified after an additional colon, e.g.: " 1   2:1:tag1  3:2:tag2  4:3:tag3,main "
     /// </summary>
     private static RevisionGraph CreateGraph(string commitSpecs)
     {
+        IGitModule module = Substitute.For<IGitModule>();
+
         List<GitRevision> commits = [];
         Dictionary<string, GitRevision> commitsById = [];
 
@@ -466,7 +650,13 @@ public class RevisionGraphTests
             string[] parts = spec.Split(':');
             string id = parts[0];
 
-            GitRevision commit = new(ObjectId.Random())
+            ObjectId objectId = id switch
+            {
+                "_w" => ObjectId.WorkTreeId,
+                "_i" => ObjectId.IndexId,
+                _ => ObjectId.Random()
+            };
+            GitRevision commit = new(objectId)
             {
                 Subject = id
             };
@@ -475,8 +665,14 @@ public class RevisionGraphTests
 
             if (parts.Length > 1)
             {
-                string[] parentIds = parts[1].Split(',');
+                string[] parentIds = parts[1].Split(',', StringSplitOptions.RemoveEmptyEntries);
                 commit.ParentIds = parentIds.Select(id => commitsById[id].ObjectId).ToList();
+            }
+
+            if (parts.Length > 2)
+            {
+                string[] refNames = parts[2].Split(',');
+                commit.Refs = refNames.Select(name => new GitRef(module, objectId, name)).AsReadOnlyList();
             }
         }
 
@@ -493,6 +689,8 @@ public class RevisionGraphTests
 
         int lastRowIndex = graph.Count - 1;
         graph.CacheTo(lastRowIndex, lastRowIndex);
+
+        VerifyGraphConsistency(graph);
 
         return graph;
     }
@@ -516,7 +714,7 @@ public class RevisionGraphTests
             // Create a line for commit
 
             IRevisionGraphRow? row = revisionGraph.GetSegmentsForRow(rowIndex);
-            char[] line = [.. Enumerable.Repeat(' ', (row!.GetLaneCount() * 2) + 1)];
+            char[] line = [.. Enumerable.Repeat(' ', (row!.GetLaneCount() * 2) - 1)];
 
             // Show '|' in lanes passing through
             foreach (RevisionGraphSegment segment in row.Segments)
@@ -524,11 +722,23 @@ public class RevisionGraphTests
                 line[row.GetLaneForSegment(segment).Index * 2] = '|';
             }
 
-            // Show '*' in lane of actual commit
+            // Show first char of commit ID, or '*', in lane of actual commit
             string? subject = row!.Revision.GitRevision?.Subject;
             line[row.GetCurrentRevisionLane() * 2] = subject?.Length is 1 ? subject[0] : '*';
 
-            graph.Add(new string(line).TrimEnd());
+            // List refs applying to commit
+            string refs = string.Join(" ", row.Revision.GitRevision?.Refs.Select(r => r.Name) ?? []);
+            if (row.Revision.Objectid == ObjectId.WorkTreeId)
+            {
+                refs += " [Working directory]";
+            }
+
+            if (row.Revision.Objectid == ObjectId.IndexId)
+            {
+                refs += " [Commit index]";
+            }
+
+            graph.Add($"{new string(line)}  {refs}".TrimEnd());
 
             IRevisionGraphRow? nextRow = revisionGraph.GetSegmentsForRow(rowIndex + 1);
             if (nextRow == null)
@@ -563,14 +773,15 @@ public class RevisionGraphTests
                     // Segment shifts one lane to the right
                     actions.Add(() =>
                     {
-                        if (line[fromPos + 1] == '/')
+                        ref char c = ref line[fromPos + 1];
+                        if (c == '/' || c == 'X')
                         {
                             // , crossing another shifting left
-                            line[fromPos + 1] = 'X';
+                            c = 'X';
                         }
                         else
                         {
-                            line[fromPos + 1] = '\\';
+                            c = '\\';
                         }
                     });
                 }
@@ -579,14 +790,15 @@ public class RevisionGraphTests
                     // Segment shifts one lane to the left
                     actions.Add(() =>
                     {
-                        if (line[fromPos - 1] == '\\')
+                        ref char c = ref line[fromPos - 1];
+                        if (c == '\\' || c == 'X')
                         {
                             // , crossing another shifting right
-                            line[fromPos - 1] = 'X';
+                            c = 'X';
                         }
                         else
                         {
-                            line[fromPos - 1] = '/';
+                            c = '/';
                         }
                     });
                 }
@@ -622,6 +834,16 @@ public class RevisionGraphTests
         }
 
         return graph;
+    }
+
+    private static void VerifyGraphConsistency(RevisionGraph graph)
+    {
+        for (int rowIndex = 0; rowIndex < graph.GetCachedCount(); ++rowIndex)
+        {
+            IRevisionGraphRow row = graph.GetSegmentsForRow(rowIndex)!;
+            List<int> usedLanes = row.Segments.Select(s => row.GetLaneForSegment(s).Index).Append(row.GetCurrentRevisionLane()).Distinct().ToList();
+            row.GetLaneCount().Should().Be(usedLanes.Max() + 1);
+        }
     }
 
     private static async Task VerifyGraphLayoutAsync(RevisionGraph revisionGraph)
