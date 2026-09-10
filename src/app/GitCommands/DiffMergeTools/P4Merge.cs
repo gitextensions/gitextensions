@@ -1,9 +1,9 @@
-namespace GitCommands.DiffMergeTools;
+﻿namespace GitCommands.DiffMergeTools;
 
 internal sealed class P4Merge : DiffMergeTool
 {
     /// <inheritdoc />
-    public override string ExeFileName => "p4merge.exe";
+    public override string ExeFileName => OperatingSystem.IsWindows() ? "p4merge.exe" : "p4merge";
 
     /// <inheritdoc />
     public override string MergeCommand => "\"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";

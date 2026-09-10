@@ -5726,11 +5726,6 @@ Exemple pe numele ramurii: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>&amp;Creează noul worktree</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>&amp;Deschide noul worktree după creare</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>Ce să extragi:</target>
@@ -11924,11 +11919,6 @@ Resetează filtrul din View &gt; Arată toate ramurile.</target>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>Comitul de bază pentru comparare nu este selectat.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>Nu-mi mai arăta acest mesaj din nou.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

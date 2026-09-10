@@ -301,8 +301,7 @@ public partial class FormPush : GitModuleForm
                 !IsBranchKnownToRemote(selectedRemoteName, RemoteBranch.Text))
             {
                 // Ask if this is really what the user wants
-                if (!AppSettings.DontConfirmPushNewBranch &&
-                    MessageBoxes.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                if (!MessageBoxes.ConfirmSuppressible(owner ?? this, _branchNewForRemote.Text, _pushCaption.Text, AppSettings.DontConfirmPushNewBranch))
                 {
                     return false;
                 }
@@ -541,7 +540,7 @@ public partial class FormPush : GitModuleForm
 
         // if push was rejected, offer force push and for current branch also pull/merge
         // Note that the Git output contains color codes etc too
-        Regex isRejected = new($"! \\[rejected\\]\\s*((?<currBranch>{Regex.Escape(_currentBranchName!)})|.*) -> ");
+        Regex isRejected = new($"! \\[rejected\\]( .* )?((?<currBranch>{Regex.Escape(_currentBranchName!)})|.*) -> ");
         Match match = isRejected.Match(form.GetOutputString());
         if (match.Success && !Module.IsBareRepository())
         {
@@ -1046,7 +1045,7 @@ public partial class FormPush : GitModuleForm
             foreach (IGitRef head in localHeads)
             {
                 string remoteName = head.Remote == remote
-                    ? head.MergeWith ?? head.Name
+                    ? head.MergeWith ?? head.LocalName
                     : string.Empty;
                 bool isKnownAtRemote = remoteBranches.TryGetValue(head.Name, out IGitRef? remoteBranch);
                 DataRow row = _branchTable.NewRow();

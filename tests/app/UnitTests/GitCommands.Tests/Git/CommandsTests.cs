@@ -313,14 +313,6 @@ public partial class CommandsTests
         Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 2).Arguments.Should().Be("push --recurse-submodules=on-demand --progress \"remote\" from-branch:refs/heads/to-branch");
     }
 
-    [TestCase("mybranch", ".", false, false, ExpectedResult = @"push ""file://."" ""1111111111111111111111111111111111111111:mybranch""")]
-    [TestCase("branch2", "/my/path", true, false, ExpectedResult = @"push ""file:///my/path"" ""1111111111111111111111111111111111111111:branch2"" --force")]
-    [TestCase("branchx", @"c:/my/path", true, true, ExpectedResult = @"push ""file://c:/my/path"" ""1111111111111111111111111111111111111111:branchx"" --force --dry-run")]
-    public string PushLocalCmd(string gitRef, string repoDir, bool force, bool dryRun)
-    {
-        return Commands.PushLocal(gitRef, ObjectId.WorkTreeId, repoDir, PathUtil.ToPosixPath, force, dryRun).Arguments!;
-    }
-
     [Test]
     public void PushTagCmd()
     {

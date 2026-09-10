@@ -1,6 +1,8 @@
+using GitUI.Shells;
+
 namespace GitUI.ConsoleEmulation.ConEmu;
 
-internal sealed class ConEmuConsoleEmulator : IConsoleEmulator
+internal sealed class ConEmuConsoleEmulator(IShellProvider shellProvider) : IConsoleEmulator
 {
     private const string DarkThemeFallback = "<Tomorrow Night>";
     private const string LightThemeFallback = "<Tomorrow>";
@@ -56,7 +58,7 @@ internal sealed class ConEmuConsoleEmulator : IConsoleEmulator
 
     public IConsoleShellRunner CreateShellRunner(ConsoleEmulatorSettings settings)
     {
-        return new ConEmuConsoleShellRunner(settings with
+        return new ConEmuConsoleShellRunner(shellProvider, settings with
         {
             Theme = ResolveTheme(settings.Theme),
             Font = settings.Font ?? DefaultFont,

@@ -296,7 +296,26 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
 
     private static IEnumerable<Repository> AdjustHistorySize(IEnumerable<Repository> repositories, int recentRepositoriesHistorySize)
     {
-        return repositories.Take(recentRepositoriesHistorySize);
+        // Anchored repositories are kept permanently, so the size limit only applies to unanchored
+        // repositories. When the limit is reached, the oldest unanchored repositories (which appear
+        // last, as the history is ordered most-recent-first) are dropped first to make space.
+        List<Repository> orderedRepositories = repositories as List<Repository> ?? [.. repositories];
+        int anchoredCount = orderedRepositories.Count(static repository => repository.Anchor is not Repository.RepositoryAnchor.None);
+        int unanchoredAllowed = Math.Max(0, recentRepositoriesHistorySize - anchoredCount);
+
+        int unanchoredKept = 0;
+        foreach (Repository repository in orderedRepositories)
+        {
+            if (repository.Anchor is not Repository.RepositoryAnchor.None)
+            {
+                yield return repository;
+            }
+            else if (unanchoredKept < unanchoredAllowed)
+            {
+                unanchoredKept++;
+                yield return repository;
+            }
+        }
     }
 
     public async Task RemoveInvalidRepositoriesAsync(Func<string, bool> predicate)

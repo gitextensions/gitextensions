@@ -1,0 +1,235 @@
+name: App build core
+
+# Reusable build/test/package pipeline shared by app-build.yml (CI) and app-release.yml (release).
+# 'release' toggles the two roles: CI runs tests, release packages artifacts for deployment.
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: Runner image to build on.
+        required: true
+        type: string
+      release:
+        description: When true, package artifacts for deployment instead of running tests.
+        required: false
+        type: boolean
+        default: false
+    outputs:
+      has-test-results:
+        description: Whether test result artifacts were produced.
+        value: ${{ jobs.build.outputs.has-test-results }}
+      version:
+        description: Resolved numeric build version (e.g. 7.3.0.123).
+        value: ${{ jobs.build.outputs.version }}
+      version-text:
+        description: Resolved informational version, may carry a pre-release marker (e.g. 7.3.0.123-dev).
+        value: ${{ jobs.build.outputs.version-text }}
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  # Single source of truth for the build version base, shared by CI and release.
+  BUILD_VERSION_BASE: 7.3.0
+
+jobs:
+  build:
+    name: ${{ inputs.release && 'Build + package' || 'Build + test' }}
+    # A separate job for test takes too much time for transferring artifacts and setting up the job.
+    # So we build and test in the same job, but upload test results as a separate artifact to be consumed by the test-report job.
+    runs-on: ${{ inputs.os }}
+    # Hangs are caught quickly by --blame-hang-timeout on the test step, so the job cap only needs to accommodate a
+    # healthy run. The arm64 runner executes the suite ~2x slower than x64 and needs more than 30 min, so give it a
+    # higher cap; x64 keeps the tighter cap.
+    timeout-minutes: ${{ inputs.os == 'windows-11-arm' && 60 || 30 }}
+    permissions:
+      contents: read
+    outputs:
+      has-test-results: ${{ steps.upload-test-results.outputs.artifact-id != '' }}
+      version: ${{ steps.resolve.outputs.version }}
+      version-text: ${{ steps.resolve.outputs.version-text }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+      with:
+        global-json-file: global.json
+
+    - name: Cache NuGet packages
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+      with:
+        path: ~/.nuget/packages
+        key: nuget-${{ runner.os }}-${{ hashFiles('Directory.Packages.props') }}
+        restore-keys: |
+          nuget-${{ runner.os }}-
+
+    - name: Show tool versions
+      run: |
+        dotnet --version
+        git --version
+
+    - name: Install WiX
+      if: inputs.release
+      run: dotnet tool install --global wix
+
+    - name: Mark the repo as clean
+      if: inputs.release
+      run: .\eng\Mark-RepoClean.ps1
+
+    - name: Resolve build metadata
+      id: resolve
+      shell: pwsh
+      run: |
+        $version = "${{ env.BUILD_VERSION_BASE }}.${{ github.run_number }}"
+        $ref = "${{ github.ref }}"
+
+        if ("${{ inputs.release }}" -eq "true")
+        {
+          # Release builds are stable, so they carry no pre-release marker.
+          $suffix = ""
+        }
+        elseif ($ref -eq "refs/heads/release" -or $ref.StartsWith("refs/heads/release/"))
+        {
+          $suffix = "-preview"
+        }
+        else
+        {
+          $suffix = "-dev"
+        }
+
+        $versionText = "$version$suffix"
+
+        # arm64 runners cross-target arm64; TargetPlatform feeds the portable/MSI file names (GitExtensions-Portable-<platform>-...)
+        # so it must be set, otherwise the arm64 leg produces x64-named artifacts that collide with the x64 leg.
+        # The informational version is also marked so the two builds are distinguishable at runtime.
+        if ($env:RUNNER_ARCH -eq 'arm64')
+        {
+          $versionText = "$versionText-arm64"
+          "TargetPlatform=arm64" >> $env:GITHUB_ENV
+        }
+
+        "VERSION=$version" >> $env:GITHUB_ENV
+        "VERSION_TEXT=$versionText" >> $env:GITHUB_ENV
+        # ARTIFACT_BUILD_SUFFIX carries the pre-release marker so packaged file names match the informational version.
+        "ARTIFACT_BUILD_SUFFIX=$suffix" >> $env:GITHUB_ENV
+        # Exposed as job/workflow outputs so callers (e.g. the release signing job) can name artifacts consistently.
+        "version=$version" >> $env:GITHUB_OUTPUT
+        "version-text=$versionText" >> $env:GITHUB_OUTPUT
+
+        # ContinuousIntegrationBuild is always set; PR builds additionally stamp the originating commit.
+        $buildArgs = "/p:ContinuousIntegrationBuild=true"
+        $prSha = "${{ github.event.pull_request.head.sha }}"
+        if ($prSha -ne "")
+        {
+          $gitCommit = git rev-parse --short $prSha
+          $buildArgs = "$buildArgs /p:GitCommit=$gitCommit /p:GitSha=$prSha"
+        }
+
+        "BUILD_ARGS=$buildArgs" >> $env:GITHUB_ENV
+
+    - name: Set version
+      working-directory: eng
+      run: dotnet run set_version_to.cs -- -v ${{ env.VERSION }} -t ${{ env.VERSION_TEXT }}
+
+    - name: Build native code
+      run: dotnet build src\native\build.proj -c Release --verbosity q --nologo /bl:artifacts\log\native.binlog
+
+    - name: Build .NET
+      shell: pwsh
+      run: dotnet build -c Release --verbosity q --nologo /bl:artifacts\log\build.binlog $env:BUILD_ARGS.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+
+    - name: Verify localisation
+      shell: pwsh
+      run: |
+        git reset --hard HEAD
+        Push-Location src\app\GitExtensions
+        dotnet msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:${{ github.workspace }}\artifacts\log\localise.binlog
+        $exitCode = $LASTEXITCODE
+        Pop-Location
+        if ($exitCode -ne 0) { exit $exitCode }
+
+    - name: Publish
+      shell: pwsh
+      run: dotnet publish -c Release --no-build /bl:artifacts\log\publish.binlog $env:BUILD_ARGS.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+
+    - name: Resolve portable archive name
+      id: portable-name
+      if: ${{ !inputs.release }}
+      shell: pwsh
+      run: |
+        $zip = Get-ChildItem artifacts\Release\publish\*.zip | Select-Object -First 1
+        if (-not $zip) { throw 'No publish zip found under artifacts\Release\publish' }
+        "name=$($zip.BaseName)" >> $env:GITHUB_OUTPUT
+
+    - name: Upload portable archive
+      if: ${{ !inputs.release }}
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      with:
+        name: ${{ steps.portable-name.outputs.name }}
+        # Upload the published folder contents, not the .zip: actions/upload-artifact always zips its input,
+        # so uploading the pre-built .zip would nest a zip inside GitHub's artifact zip.
+        path: 'artifacts\Release\publish\GitExtensions\**'
+        retention-days: 7
+
+    - name: Display artifacts
+      if: inputs.release
+      run: ls -R artifacts/Release/publish/
+
+    - name: Upload distribution files
+      if: inputs.release
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      with:
+        name: GE-v${{ env.VERSION }}-${{ runner.arch }}-dist
+        path: |
+          artifacts/Release/publish/*.msi
+          artifacts/Release/publish/*.zip
+        retention-days: 7
+
+    - name: Run tests
+      if: ${{ !inputs.release }}
+      # -m:1 runs the test projects sequentially (one test host at a time). The suite already serializes assemblies
+      # via a machine-wide named semaphore (CommonTestUtils.TestAppSettingsAttribute), so parallel hosts gain nothing
+      # and merely sit idle waiting for that semaphore; --blame-hang-timeout then kills those idle waiters as if hung.
+      # Sequential execution removes the idle waiters so the hang timeout only ever fires on a genuinely stuck test.
+      #
+      # --blame-hang-timeout is a per-test cap: any single test running longer than this is treated as hung, then
+      # aborted and named in a Sequence_*.xml, so a deadlocked test fails fast instead of eating the whole job timeout.
+      # The slowest healthy test is ~25s on x64 / ~50s on the slower arm64 runner, so 3m leaves ample headroom.
+      # --blame-hang-dump-type mini captures a minidump (all managed thread stacks) of the hung test host so the
+      # actual deadlock is diagnosable from the artifact, instead of only knowing which test was running.
+      run: dotnet test -c Release -m:1 --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx --blame-hang-timeout 3m --blame-hang-dump-type mini /bl:artifacts\log\tests.binlog
+
+    - name: Upload test results
+      id: upload-test-results
+      if: always() && !inputs.release
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      with:
+        # Suffixed with the runner architecture so parallel matrix legs do not collide on a shared artifact name.
+        name: test-results-${{ runner.arch }}
+        path: 'artifacts\Release\TestsResults\**\*.trx'
+        retention-days: 7
+        if-no-files-found: ignore
+
+    - name: Upload build logs on failure
+      # Also run on cancellation (e.g. the job hits its timeout while a test is stuck) so a stuck pipeline still
+      # yields the hang dump and blame sequence needed to diagnose the deadlock, not just on a clean step failure.
+      if: failure() || cancelled()
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      with:
+        # Suffixed with the runner image so parallel release matrix legs do not collide on a shared artifact name.
+        name: build-logs-${{ inputs.os }}
+        path: |
+          artifacts\**\log\**\*.binlog
+          **\English*.xlf
+          artifacts\Release\**\*.dgml
+          **\Sequence_*.xml
+          **\*.dmp
+        retention-days: 7
+        if-no-files-found: ignore

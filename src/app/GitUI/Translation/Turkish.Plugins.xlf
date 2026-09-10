@@ -70,7 +70,7 @@
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>Her şeyi getir (saniye) - devre dışı bırakmak için 0 yap</target>
+        <target>Getirme aralığı (saniye) - devre dışı bırakmak için 0 yap</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
@@ -251,7 +251,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
-        <target>Büyük-küçük harfe duyarlı</target>
+        <target>Büyük-küçük harfe duyarsız</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
@@ -290,7 +290,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
-        <target>Regex (düzenli ifade) filtresi, büyük/küçük harf duyarlı mı?</target>
+        <target>Regex (düzenli ifade) filtresi, büyük/küçük harfe duyarsız mı?</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
@@ -605,7 +605,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
-        <target>Not: Jetonun geçmesi için Git Uzantılarının yeniden başlatılması gerekir.</target>
+        <target>Not: Jetonun dikkate alınması için Git Extensions&apos;ın yeniden başlatılması gerekir.</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
@@ -629,22 +629,27 @@ Devam etmek istediğine emin misin?</target>
     <body>
       <trans-unit id="lblApiToken.Text">
         <source>API &amp;Token</source>
+        <target>API &amp;Jetonu (Token)</target>
         
       </trans-unit>
       <trans-unit id="lblApiUrl.Text">
         <source>&amp;API URL</source>
+        <target>&amp;API URL</target>
         
       </trans-unit>
       <trans-unit id="lblOwner.Text">
         <source>&amp;Owner</source>
+        <target>&amp;Sahip</target>
         
       </trans-unit>
       <trans-unit id="lblRepository.Text">
         <source>&amp;Repository</source>
+        <target>&amp;Depo</target>
         
       </trans-unit>
       <trans-unit id="lnkTokenManagement.Text">
         <source>Create a GitHub personal access token</source>
+        <target>GitHub kişisel erişim jetonu oluştur</target>
         
       </trans-unit>
     </body>
@@ -782,7 +787,7 @@ Lütfen Gource&apos;u indirin ve eklenti ayarları iletişim kutusundaki yolu ay
       </trans-unit>
       <trans-unit id="_gourcePath.Caption">
         <source>Path to Gource</source>
-        <target>Gource&apos;sun Yolu</target>
+        <target>Gource&apos;nin Yolu</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
@@ -825,7 +830,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
-        <target>Gource&apos;sun Yolu</target>
+        <target>Gource&apos;nin Yolu</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">

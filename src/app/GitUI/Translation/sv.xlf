@@ -5726,11 +5726,6 @@ Exempel på grennamn: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>&amp;Skapa det nya arbetsträdet</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>&amp;Öppna det nya arbetsträdet efter skapandet</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>Vad som ska checkas ut:</target>
@@ -11923,11 +11918,6 @@ Håll ner CTRL medan du klickar för att markera/avmarkera flera, och håll dess
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>Basincheckning för jämförelse är inte vald.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>Visa inte detta meddelande igen.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

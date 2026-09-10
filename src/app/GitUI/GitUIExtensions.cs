@@ -164,8 +164,8 @@ public static partial class GitUIExtensions
             cancellationToken.ThrowIfCancellationRequested();
             string subText = status is null
                 ? $"Failed to get status for submodule \"{item.Item.Name}\""
-                : await Task.Run(() => SubmoduleResources.GetSubmoduleStatusText(fileViewer.Module, status))
-                    .ConfigureAwait(false);
+                : await Task.Run(() => SubmoduleResources.GetSubmoduleStatusText(fileViewer.Module, status), cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await fileViewer.ViewPatchAsync(item, text: subText, line: line, openWithDifftool: openWithDiffTool, cancellationToken: cancellationToken);

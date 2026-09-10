@@ -162,7 +162,7 @@
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
-        <target>Выберите ветки которые хотите удалить. Только полностью слитые ветки в &apos;{0}&apos; будут удалены. </target>
+        <target>Выберите ветки, которые хотите удалить. Только полностью объединённые ветки в &apos;{0}&apos; будут удалены.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
@@ -186,7 +186,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>Удаление не слитых веток привет к висячим коммитам. Используйте с осторожностью!</target>
+        <target>Удаление необъединённых веток приведёт к висячим коммитам. Используйте с осторожностью!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -221,7 +221,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>Включить неслитые ветки</target>
+        <target>Включить необъединённые ветки</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -231,7 +231,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>Удалить ветки полностью слитые в ветку</target>
+        <target>Удалить ветки, полностью объединённые в ветку</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -280,12 +280,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
-        <target>Удалить неслитые ветки</target>
+        <target>Удалить необъединённые ветки</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
-        <target>Ветка в которую все ветки должны быть слиты</target>
+        <target>Ветка, в которую все ветки должны быть объединены</target>
         
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
@@ -634,18 +634,22 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="lblApiUrl.Text">
         <source>&amp;API URL</source>
+        <target>&amp;API URL</target>
         
       </trans-unit>
       <trans-unit id="lblOwner.Text">
         <source>&amp;Owner</source>
+        <target>&amp;Владелец</target>
         
       </trans-unit>
       <trans-unit id="lblRepository.Text">
         <source>&amp;Repository</source>
+        <target>&amp;Репозиторий</target>
         
       </trans-unit>
       <trans-unit id="lnkTokenManagement.Text">
         <source>Create a GitHub personal access token</source>
+        <target>Создание личного токена доступа GitHub</target>
         
       </trans-unit>
     </body>
@@ -1045,7 +1049,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
         <target>(Выражения коммита могут быть хешами,
-именами веток, тегами)</target>
+именами веток, именами меток)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">

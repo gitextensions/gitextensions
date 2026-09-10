@@ -5724,11 +5724,6 @@ Voorbeelden op branchnaam: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>&amp;Creëer de nieuwe worktree</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>&amp;Open de nieuwe worktree na het aanmaken</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>Wat uit te checken:</target>
@@ -11916,11 +11911,6 @@ Reset het filter via Beeld &gt; Alle vertakkingen tonen.</target>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>De basis-commit voor vergelijken is niet geselecteerd.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>Deze melding niet meer tonen</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

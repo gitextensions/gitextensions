@@ -38,7 +38,7 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
         base.Dispose(disposing);
     }
 
-    public override void OnInitialized()
+    protected override void OnInitialized()
     {
         base.OnInitialized();
 

@@ -5724,11 +5724,6 @@ Příklady na názvu větve: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>Vytvořit nový worktree (&amp;C)</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>Otevřít nový worktree po vytvoření (&amp;O)</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>Co získat:</target>
@@ -11915,11 +11910,6 @@ Filtr zrušíte přes Zobrazit &gt; Zobrazit všechny větve.</target>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>Není vybráno základní odevzdání pro porovnání.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>Tuto zprávu již nezobrazovat.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

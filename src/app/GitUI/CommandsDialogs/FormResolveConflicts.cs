@@ -286,8 +286,9 @@ public partial class FormResolveConflicts : GitModuleForm
 
                 if (!Module.InTheMiddleOfPatch() && !_inTheMiddleOfRebase && _offerCommit)
                 {
-                    if (AppSettings.DontConfirmCommitAfterConflictsResolved ||
-                        MessageBoxes.Show(this, _allConflictsResolved.Text, _allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    bool commitConfirmed = MessageBoxes.ConfirmSuppressible(this, _allConflictsResolved.Text, _allConflictsResolvedCaption.Text, AppSettings.DontConfirmCommitAfterConflictsResolved);
+
+                    if (commitConfirmed)
                     {
                         UICommands.StartCommitDialog(this);
                     }
@@ -756,9 +757,7 @@ public partial class FormResolveConflicts : GitModuleForm
         if (MessageBoxes.Show(_abortCurrentOperation.Text, _resetCaption.Text,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
-            if (AppSettings.DontConfirmSecondAbortConfirmation ||
-                MessageBoxes.Show(_areYouSureYouWantDeleteFiles.Text, _areYouSureYouWantDeleteFilesCaption.Text,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            if (MessageBoxes.ConfirmSuppressible(this, _areYouSureYouWantDeleteFiles.Text, _areYouSureYouWantDeleteFilesCaption.Text, AppSettings.DontConfirmSecondAbortConfirmation, icon: TaskDialogIcon.Warning))
             {
                 return true;
             }

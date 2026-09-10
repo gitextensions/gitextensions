@@ -1,950 +1,1099 @@
 <?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0" GitExVersion="">
-  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="sr">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>نمایش نتایج تست در خلاصه وضعیت build برای هر نتیجه build (پرمصرف از نظر شبکه!)</target>
+        <target>Прикажи резултате тестова у сажетку статуса билда за сваки резултат билда (интензивно користи мрежу!)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="sr">
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
+        <target>Аутоматско компајлирање подмодула</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
         <source>Do you want to build {0}?
 
 {1}</source>
+        <target>Да ли желите да билдујете {0}?
+
+{1}</target>
         
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
+        <target>Унесите исправну путању до MSBuild-а у прозору за подешавања додатка и покушајте поново.</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
+        <target>Аргументи за msbuild.exe</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
         <source>Enabled</source>
+        <target>Омогућено</target>
         
       </trans-unit>
       <trans-unit id="_msBuildPath.Caption">
         <source>Path to msbuild.exe</source>
+        <target>Путања до msbuild.exe</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="sr">
     <body>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
-        <target>دریافت دوره‌ای در پس‌زمینه</target>
+        <target>Периодично добављање у позадини</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
         <source>Refresh view after fetch</source>
+        <target>Освежи приказ након добављања</target>
         
       </trans-unit>
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
+        <target>Добави све подмодуле</target>
         
       </trans-unit>
       <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
         <source>Fetch immediately on repository opening</source>
-        <target>دریافت فوری هنگام باز کردن مخزن</target>
+        <target>Одмах добави приликом отварања репозиторијума</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
+        <target>Добављај сваких (секунди) - поставите на 0 да онемогућите</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
+        <target>Аргументи git наредбе за покретање</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="sr">
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
+        <target>Направи локалне праћене гране</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
+        <target>Направи локалне праћене гране</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
+        <target>Удаљени репозиторијум за који се праве праћене гране</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="sr">
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
+        <target>Направи локалне праћене гране</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="sr">
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
+        <target>Обриши застареле гране</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
+        <target>Последњи аутор</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
+        <target>Затвори</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
+        <target>Обриши</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
+        <target>Обриши удаљене гране са</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
+        <target>Последња порука</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
+        <target>Претражи гране</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
+        <target>Да ли сте сигурни да желите да обришете {0} изабраних грана?</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
         <source>{0}/{1} branches selected.</source>
+        <target>{0}/{1} грана изабрано.</target>
         
       </trans-unit>
       <trans-unit id="_cancel.Text">
         <source>Cancel</source>
+        <target>Откажи</target>
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
+        <target>Изаберите гране за брисање. Биће обрисане само гране које су у потпуности спојене у &apos;{0}&apos;.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>عملیات خطرناک!
-شاخه‌ها روی Remote &apos;{0}&apos; حذف خواهند شد. این عمل قابل بازگشت نیست.
-آیا مطمئن هستید که می‌خواهید ادامه دهید؟</target>
+        <target>ОПАСНА РАДЊА!
+Гране ће бити обрисане на удаљеном репозиторијуму &apos;{0}&apos;. Ово се не може поништити.
+Да ли сте сигурни да желите да наставите?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
+        <target>Обриши</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
         <source>Deleting branches...</source>
+        <target>Брисање грана...</target>
         
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
+        <target>Брисање неспојених грана резултираће висећим комитима. Користите опрезно!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
+        <target>Учитавање...</target>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press &apos;{0}&apos; to search for branches to delete.</source>
+        <target>Притисните &apos;{0}&apos; да претражите гране за брисање.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
+        <target>Претражи гране</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
+        <target>Изаберите гране за брисање помоћу поља за потврду у колони &apos;{0}&apos;.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
+        <target>Подешавања</target>
         
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
+        <target>Последња активност</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
+        <target>Укључи неспојене гране</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
+        <target>Обриши гране старије од x дана</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
+        <target>Обриши гране у потпуности спојене у грану</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
+        <target>Назив</target>
         
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
         <source>Does not match</source>
+        <target>Не одговара</target>
         
       </trans-unit>
       <trans-unit id="regexFilter.Text">
         <source>/(feature|develop)/</source>
+        <target>/(feature|develop)/</target>
         
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
+        <target>Не разликуј велика и мала слова</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
+        <target>Користи regex за филтрирање грана</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="sr">
     <body>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
+        <target>Обриши застареле гране</target>
         
       </trans-unit>
       <trans-unit id="_daysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
+        <target>Обриши застареле гране старије од (дана)</target>
         
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
+        <target>Обриши застареле гране са удаљеног репозиторијума</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
+        <target>Обриши неспојене гране</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
+        <target>Грана у коју све гране треба да буду спојене</target>
         
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
+        <target>Да ли regex филтер не разликује велика и мала слова?</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
+        <target>Regex за филтрирање грана за брисање</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
+        <target>Претражи гране које не одговарају regex-у</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
+        <target>Назив удаљеног репозиторијума са којег треба обрисати застареле гране</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
+        <target>Користи regex за филтрирање грана за брисање</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="sr">
     <body>
       <trans-unit id="$this.Text">
         <source>Find large files</source>
+        <target>Пронађи велике датотеке</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
+        <target>Затвори</target>
         
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
+        <target>Компресована величина</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
+        <target>Обриши</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
+        <target>Да ли сте сигурни да желите да обришете изабране датотеке?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
+        <target>Обриши</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
         <source>Commit count</source>
+        <target>Број комита</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
+        <target>Обриши</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>بازنشانی تغییرات local پیش از حذف فایل‌ها. فایل‌های مورد نظر برای حذف را انتخاب کنید. برای جایگزینی داده‌ها روی مخزن Remote از Push اجباری استفاده کنید.</target>
+        <target>Ресетујте локалне измене пре брисања датотека. Изаберите датотеке за брисање. Принудно гурање за замену података на удаљеном репозиторијуму.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
+        <target>Датум последњег комита</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
         <source>Path</source>
+        <target>Путања</target>
         
       </trans-unit>
       <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
         <source>SHA</source>
+        <target>SHA</target>
         
       </trans-unit>
       <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
         <source>Size</source>
+        <target>Величина</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="sr">
     <body>
       <trans-unit id="Description.Text">
         <source>Find large files</source>
+        <target>Пронађи велике датотеке</target>
         
       </trans-unit>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
+        <target>Пронађи велике датотеке веће од (Mb)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="sr">
     <body>
       <trans-unit id="$this.Text">
         <source>Statistics</source>
+        <target>Статистика</target>
         
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
+        <target>Учитавање..</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
         <source>Loading...</source>
+        <target>Учитавање...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerTypeText.Text">
         <source>Loading...</source>
+        <target>Учитавање...</target>
         
       </trans-unit>
       <trans-unit id="LoadingLabel.Text">
         <source>Loading...</source>
+        <target>Учитавање...</target>
         
       </trans-unit>
       <trans-unit id="TestCodeText.Text">
         <source>Loading...</source>
+        <target>Учитавање...</target>
         
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
+        <target>Укупно комита</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
+        <target>Укупно линија кода</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
+        <target>Укупно линија кода</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
+        <target>Укупно линија кода</target>
         
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
-        <target>{0:N0} خط خالی ({1:P1})</target>
+        <target>{0:N0} Празних линија ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
+        <target>{0:N0} Линија коментара ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
+        <target>{0:N0} комита</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
+        <target>{0:N0} комита од {1}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
+        <target>{0:N0} линија кода</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>{0:N0} خط کد در {1} فایل ({2:P1})</target>
+        <target>{0:N0} линија кода у {1} датотека ({2:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>{0:N0} خط کد ({1:P1})</target>
+        <target>{0:N0} линија кода ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
-        <target>{0:N0} خط در فایل‌های Designer ({1:P1})</target>
+        <target>{0:N0} линија у designer датотекама ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
-        <target>{0:N0} خط کد production ({1:P1})</target>
+        <target>{0:N0} линија производног кода ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
-        <target>{0:N0} خط کد تست</target>
+        <target>{0:N0} линија тест кода</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>{0:N0} خط کد تست ({1:P1})</target>
+        <target>{0:N0} линија тест кода ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
-        <target>خطوط کد بر اساس زبان</target>
+        <target>Линије кода по језику</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
-        <target>Commit به ازای هر مشارکت‌کننده</target>
+        <target>Комити по сараднику</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
-        <target>خطوط کد بر اساس نوع</target>
+        <target>Линије кода по типу</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
         <source>Lines of test code</source>
-        <target>خطوط کد تست</target>
+        <target>Линије тест кода</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="sr">
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
-        <target>تأثیر</target>
+        <target>Утицај</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>{0} ({1} Commit، {2} خط تغییر یافته)</target>
+        <target>{0} ({1} комита, {2} измењених линија)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
-        <target>شامل زیر ماژول‌ها</target>
+        <target>Укључујући подмодуле</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
         <source>Author</source>
+        <target>Аутор</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="sr">
     <body>
       <trans-unit id="Description.Text">
         <source>GitHub</source>
+        <target>GitHub</target>
         
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
+        <target>GitHub (Enterprise) назив хоста</target>
         
       </trans-unit>
       <trans-unit id="PersonalAccessToken.Caption">
         <source>Personal Access Token</source>
+        <target>Лични приступни токен</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
-        <target>خطا</target>
+        <target>Грешка</target>
         
       </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
+        <target>Генериши GitHub лични приступни токен</target>
         
       </trans-unit>
       <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
         <source>Enable commit message issue helper</source>
-        <target>فعال‌سازی دستیار issue در پیام commit</target>
+        <target>Омогући помоћника за issue-ове у поруци комита</target>
         
       </trans-unit>
       <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
         <source>Maximum number of issues retrieved</source>
-        <target>حداکثر تعداد issue های بازیابی‌شده</target>
+        <target>Максималан број преузетих issue-ова</target>
         
       </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
+        <target>Управљај GitHub личним приступним токеном</target>
         
       </trans-unit>
       <trans-unit id="_noAssignedIssues.Text">
         <source>No assigned GitHub issues found</source>
-        <target>هیچ issue تخصیص‌داده‌شده‌ای در GitHub یافت نشد</target>
+        <target>Нису пронађени додељени GitHub issue-ови</target>
         
       </trans-unit>
       <trans-unit id="_noTokenError.Text">
         <source>No GitHub personal access token (PAT) defined</source>
-        <target>هیچ GitHub personal access token (PAT) تعریف نشده است</target>
+        <target>Није дефинисан GitHub лични приступни токен (PAT)</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
-        <target>توجه: برای اعمال شدن token، باید Git Extensions مجدداً راه‌اندازی شود.</target>
+        <target>Напомена: Git Extensions треба поново покренути да би токен био узет у обзир.</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
         <source>Fail to open the link. Reason: </source>
+        <target>Неуспешно отварање везе. Разлог: </target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
-        <target>شما از قبل یک personal access token دارید. برای دریافت یک token جدید، ابتدا token قدیمی خود را در Plugins &gt; Plugin Settings حذف کنید.</target>
+        <target>Већ имате лични приступни токен. Да бисте добили нови, прво обришите стари у Додаци &gt; Подешавања додатка.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
+        <target>Прикажи на {0}</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="sr">
     <body>
       <trans-unit id="lblApiToken.Text">
         <source>API &amp;Token</source>
-        <target>API &amp;Token</target>
+        <target>API То&amp;кен</target>
         
       </trans-unit>
       <trans-unit id="lblApiUrl.Text">
         <source>&amp;API URL</source>
-        <target>&amp;API URL</target>
+        <target>API &amp;URL</target>
         
       </trans-unit>
       <trans-unit id="lblOwner.Text">
         <source>&amp;Owner</source>
-        <target>&amp;مالک</target>
+        <target>&amp;Власник</target>
         
       </trans-unit>
       <trans-unit id="lblRepository.Text">
         <source>&amp;Repository</source>
-        <target>&amp;مخزن</target>
+        <target>&amp;Репозиторијум</target>
         
       </trans-unit>
       <trans-unit id="lnkTokenManagement.Text">
         <source>Create a GitHub personal access token</source>
-        <target>یک personal access token برای GitHub بسازید</target>
+        <target>Направи GitHub лични приступни токен</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="sr">
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
-        <target>نمودار تأثیر</target>
+        <target>Графикон утицаја</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="sr">
     <body>
       <trans-unit id="GetProjectIdLink.Text">
         <source>Get Project ID from server</source>
+        <target>Преузми ID пројекта са сервера</target>
         
       </trans-unit>
       <trans-unit id="GetProjectIdStatusText.Text">
         <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
-        <target>دریافت پروژه از سرور ناموفق بود. یک API token معتبر مشخص کنید یا URL instance را بررسی کنید</target>
+        <target>Неуспешно преузимање пројекта са сервера. Покушајте да наведете важећи API токен или проверите URL инстанце</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
-        <target>رفتن به صفحه مدیریت token</target>
+        <target>Иди на страницу за управљање токенима</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Instance URL</source>
+        <target>URL инстанце</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Api Token</source>
+        <target>API токен</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
+        <target>ID пројекта</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="sr">
     <body>
       <trans-unit id="Description.Text">
         <source>Statistics</source>
+        <target>Статистика</target>
         
       </trans-unit>
       <trans-unit id="_codeFiles.Caption">
         <source>Code files</source>
+        <target>Датотеке кода</target>
         
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
-        <target>پوشه‌هایی برای نادیده گرفتن (EndsWith)</target>
+        <target>Директоријуми за игнорисање (завршава са)</target>
         
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
         <source>Ignore submodules</source>
+        <target>Игнориши подмодуле</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="sr">
     <body>
       <trans-unit id="Description.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
+        <target>{0} бајтова преузето.</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Не могу да пронађем Gource.
+Преузмите Gource и подесите путању у прозору за подешавања додатака.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
+        <target>Тренутни директоријум није важећи git репозиторијум.
+
+Gource се може покренути само из важећег git репозиторијума.</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
+        <target>Путања до Gource-а није подешена.
+
+Да ли желите да аутоматски преузмете Gource?</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
         <source>Download</source>
+        <target>Преузми</target>
         
       </trans-unit>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Преузимање није успело.
+Преузмите Gource и подесите путању у прозору за подешавања додатака.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="_gourceArguments.Caption">
         <source>Arguments</source>
+        <target>Аргументи</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
+        <target>Gource је преузет и распакован.</target>
         
       </trans-unit>
       <trans-unit id="_gourcePath.Caption">
         <source>Path to Gource</source>
+        <target>Путања до Gource-а</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
+        <target>Не могу да пронађем Gource на подешеној путањи: {0}.
+
+Да ли желите да ресетујете подешену путању?</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="sr">
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
+        <target>Аргументи</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
         <source>Browse</source>
+        <target>Преглед</target>
         
       </trans-unit>
       <trans-unit id="WorkingDirBrowse.Text">
         <source>Browse</source>
+        <target>Преглед</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Start</source>
+        <target>Покрени</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
+        <target>Путања до Gource-а</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Repository</source>
+        <target>Репозиторијум</target>
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
+        <target>Gource пројекат</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
         <source>Gource command line</source>
+        <target>Gource командна линија</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="sr">
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
+        <target>Игнориши билд за грану</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
+        <target>URL Jenkins сервера</target>
         
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
+        <target>Назив пројекта</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="sr">
     <body>
       <trans-unit id="$this.Text">
         <source>Proxy Switcher</source>
+        <target>Мењач проксија</target>
         
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
+        <target>Примени глобално</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
         <source>Global http.proxy:</source>
+        <target>Глобални http.proxy:</target>
         
       </trans-unit>
       <trans-unit id="LocalHttpProxy_Label.Text">
         <source>Local http.proxy:</source>
+        <target>Локални http.proxy:</target>
         
       </trans-unit>
       <trans-unit id="SetProxy_Button.Text">
         <source>Set proxy</source>
+        <target>Постави прокси</target>
         
       </trans-unit>
       <trans-unit id="UnsetProxy_Button.Text">
         <source>Unset proxy</source>
+        <target>Уклони прокси</target>
         
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>هیچ proxy‌ای پیکربندی نشده است. لطفاً host مربوط به proxy را در تنظیمات افزونه مشخص کنید.</target>
+        <target>Прокси није подешен. Подесите хост проксија у подешавањима додатка.</target>
         
       </trans-unit>
       <trans-unit id="_pluginDescription.Text">
         <source>Proxy Switcher</source>
+        <target>Мењач проксија</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="sr">
     <body>
       <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
+        <target>Мењач проксија</target>
         
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
         <source>HTTP proxy</source>
+        <target>HTTP прокси</target>
         
       </trans-unit>
       <trans-unit id="HttpProxyPort.Caption">
         <source>HTTP proxy port</source>
+        <target>Порт HTTP проксија</target>
         
       </trans-unit>
       <trans-unit id="Password.Caption">
         <source>Password</source>
+        <target>Лозинка</target>
         
       </trans-unit>
       <trans-unit id="Username.Caption">
         <source>Username</source>
+        <target>Корисничко име</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="sr">
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
-        <target>تولیدکننده Release Notes</target>
+        <target>Генератор напомена о издању</target>
         
       </trans-unit>
       <trans-unit id="_caption.Text">
         <source>Invalid input</source>
+        <target>Неисправан унос</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
-        <target>لاگ Commit از &apos;{0}&apos; تا &apos;{1}&apos; ({2}):</target>
+        <target>Лог комита од &apos;{0}&apos; до &apos;{1}&apos; ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>&apos;From&apos; commit must be specified</source>
-        <target>commit مربوط به &apos;From&apos; باید مشخص شود</target>
+        <target>Комит &apos;Од&apos; мора бити наведен</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>&apos;To&apos; commit must be specified</source>
-        <target>commit مربوط به &apos;To&apos; باید مشخص شود</target>
+        <target>Комит &apos;До&apos; мора бити наведен</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
+        <target>као HTML табела</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
-        <target>به‌صورت جدول متنی (فاصله)</target>
+        <target>као текстуална табела (размаци)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
-        <target>به‌صورت جدول متنی (تب)</target>
+        <target>као текстуална табела (табулатори)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
+        <target>оригинални излаз</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
+        <target>Генериши</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
+        <target>Резултат</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
         <source>Copy to clipboard</source>
+        <target>Копирај у оставу</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>عبارت Commit «To» (شامل):</target>
+        <target>Израз комита &quot;До&quot; (укључујући):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
-        <target>جدا کردن ستون‌ها با فاصله</target>
+        <target>раздвој колоне размацима</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
-        <target>کلیپ‌بورد شامل کد HTML (متن ساده) و فرمت HTML خواهد بود
-که می‌توان آن را در برنامه‌هایی مانند MS Word یا LibreOffice Writer جای‌گذاری کرد.</target>
+        <target>Остава ће садржати HTML код (обичан текст) и HTML формат
+који се може налепити у програме попут MS Word-а или LibreOffice Writer-а.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>عبارت Commit «From» (به‌جز):</target>
+        <target>Израз комита &quot;Од&quot; (изузимајући):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
-        <target>آرگومان‌های git log:</target>
+        <target>аргументи git log наредбе:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
-        <target>{0} = از؛ {1} = تا</target>
+        <target>{0} = од; {1} = до</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>ترتیب: جدیدترین revision ها در بالا نمایش داده می‌شوند.</target>
+        <target>Сортирање: Најновије ревизије су наведене на врху.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
-        <target>تعداد revision = </target>
+        <target>Број ревизија = </target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
-        <target>(عبارت‌های Commit می‌توانند commit hash،
-نام شاخه، یا نام تگ باشند)</target>
+        <target>(Изрази комита могу бити хешеви комита,
+називи грана, називи ознака)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
-        <target>همان‌طور که هست</target>
+        <target>као што јесте</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
-        <target>جدا کردن ستون‌ها با تب</target>
+        <target>раздвој колоне табулаторима</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
         <source>n/a</source>
+        <target>n/a</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="sr">
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
-        <target>تولیدکننده Release Notes</target>
+        <target>Генератор напомена о издању</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="sr">
     <body>
       <trans-unit id="ExtractLink.Text">
         <source>Extract data from a build result url copied in the clipboard</source>
-        <target>استخراج داده از url نتیجه build کپی‌شده در کلیپ‌بورد</target>
+        <target>Издвој податке из URL-а резултата билда копираног у оставу</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
+        <target>Иди на страницу за управљање токенима</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Could not extract data</source>
-        <target>استخراج داده ناموفق بود</target>
+        <target>Није могуће издвојити податке</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -952,24 +1101,24 @@ branch names, tag names)</source>
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
-        <target>کلیپ‌بورد شامل یک url معتبر برای build نیست.
+        <target>Остава не садржи важећи URL билда.
 
-لطفاً پیش از تلاش مجدد، url مربوط به build را در کلیپ‌بورد کپی کنید.
-(باید حداقل شامل پارامتر &quot;buildId&quot; باشد)</target>
+Копирајте URL билда у оставу пре поновног покушаја.
+(Треба да садржи бар параметар &quot;buildId&quot;)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
         <source>Error while trying to retrieve build definition information from url.
 
 Please ensure that the url is valid and that the API token has access to build and project information.</source>
-        <target>خطا هنگام تلاش برای دریافت اطلاعات build definition از url.
+        <target>Грешка приликом покушаја преузимања информација о дефиницији билда са URL-а.
 
-لطفاً مطمئن شوید url معتبر است و API token به اطلاعات build و پروژه دسترسی دارد.</target>
+Проверите да ли је URL важећи и да ли API токен има приступ информацијама о билду и пројекту.</target>
         
       </trans-unit>
       <trans-unit id="_infoNoApiTokenMessage.Text">
         <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
-        <target>بدون API token امکان دریافت اطلاعات build definition وجود ندارد. این فیلد خالی باقی خواهد ماند.</target>
+        <target>Није могуће преузети информације о дефиницији билда без API токена. Поље ће остати празно.</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -977,7 +1126,7 @@ Please ensure that the url is valid and that the API token has access to build a
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
-        <target>مثال‌ها:
+        <target>Примери:
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</target>
@@ -987,27 +1136,28 @@ Please ensure that the url is valid and that the API token has access to build a
         <source>You need to create a token with the following scopes:
  - &apos;Build (read)&apos;
  - &apos;Project and team (read)&apos;</source>
-        <target>باید یک token با scope های زیر بسازید:
+        <target>Морате направити токен са следећим овлашћењима:
  - &apos;Build (read)&apos;
  - &apos;Project and team (read)&apos;</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
-        <target>عبارت باقاعده &apos;Build definition name&apos; معتبر نیست و ذخیره نخواهد شد!</target>
+        <target>Регуларни израз за &apos;Назив дефиниције билда&apos; није важећи и неће бити сачуван!</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="fa-IR">
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="sr">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
-        <target>ورود به‌عنوان مهمان برای نمایش build report</target>
+        <target>Пријави се као гост да прикажеш извештај о билду</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
+        <target>URL билда није важећи</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1015,32 +1165,32 @@ Please ensure that the url is valid and that the API token has access to build a
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>کلیپ‌بورد شامل یک url معتبر برای build نیست.
+        <target>Остава не садржи важећи URL билда.
 
-لطفاً پیش از تلاش مجدد، url مربوط به build را در کلیپ‌بورد کپی کنید.
-(باید حداقل شامل پارامتر &quot;buildTypeId&quot; باشد)</target>
+Копирајте URL билда у оставу пре поновног покушаја.
+(Треба да садржи бар параметар &quot;buildTypeId&quot;)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
-        <target>خطا هنگام بارگذاری لیست پروژه‌ها و build ها</target>
+        <target>Грешка приликом учитавања листе пројеката и билдова</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
-        <target>بارگذاری لیست پروژه‌ها و build ها ناموفق بود.
-لطفاً url سرور را بررسی کنید.</target>
+        <target>Неуспешно учитавање листе пројеката и билдова.
+Проверите URL сервера.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
-        <target>عبارت باقاعده &quot;Build Id Filter&quot; معتبر نیست و ذخیره نخواهد شد!</target>
+        <target>Регуларни израз за &quot;Филтер ID билда&quot; није важећи и неће бити сачуван!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
-        <target>استخراج داده از url مربوط به build کپی‌شده در کلیپ‌بورد</target>
+        <target>Издвој податке из URL-а билда копираног у оставу</target>
         
       </trans-unit>
     </body>

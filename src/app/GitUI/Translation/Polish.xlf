@@ -5726,11 +5726,6 @@ Przykłady dla nazwy gałęzi: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>&amp;Utwórz nowe drzewo robocze</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>&amp;Otwórz nowe drzewo robocze po utworzeniu</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>Co przełączyć:</target>
@@ -11924,11 +11919,6 @@ Zresetuj filtr przez Widok &gt; Pokaż wszystkie gałęzie.</target>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>Bazowe zatwierdzenie do porównania nie zostało wybrane.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>Nie pokazuj mi tej wiadomości ponownie</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

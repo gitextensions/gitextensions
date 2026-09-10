@@ -148,7 +148,6 @@ internal sealed class UIReporter : IBugReporter
             Icon = operationInfo.Icon,
             Caption = TranslatedStrings.Error,
             Heading = rootError,
-            AllowCancel = true,
             SizeToContent = true
         };
 

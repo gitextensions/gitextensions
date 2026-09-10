@@ -44,13 +44,6 @@ public partial class FormRemotes : GitModuleForm
         new("Invalid ´{1}´ found for branch ´{0}´." + Environment.NewLine +
                               "Value has been reset to empty value.");
 
-    private readonly TranslationString _questionAutoPullBehaviour =
-        new("You have added a new remote repository." + Environment.NewLine +
-                              "Do you want to automatically configure the default push and pull behavior for this remote?");
-
-    private readonly TranslationString _questionAutoPullBehaviourCaption =
-        new("New remote");
-
     private readonly TranslationString _gitMessage =
       new("Message");
 
@@ -553,22 +546,10 @@ Inactive remote is completely invisible to git.");
                 });
             }
 
-            // if the user has just created a fresh new remote
-            // there may be a need to configure it
-            if (result.ShouldUpdateRemote &&
-                !string.IsNullOrEmpty(remoteUrl) &&
-                MessageBoxes.Show(this,
-                    _questionAutoPullBehaviour.Text,
-                    _questionAutoPullBehaviourCaption.Text,
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                UICommands.StartPullDialogAndPullImmediately(
-                    remote: remote,
-                    pullAction: GitPullAction.Fetch);
-                _remotesManager.ConfigureRemotes(remote);
-                UICommands.RepoChangedNotifier.Notify();
-            }
+            UICommands.StartPullDialogAndPullImmediately(
+                remote: remote,
+                pullAction: GitPullAction.Fetch);
+            UICommands.RepoChangedNotifier.Notify();
         }
         finally
         {

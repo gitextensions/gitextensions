@@ -457,7 +457,7 @@ public class FormCommitTests
     public void ResetSoft()
     {
         AppSettings.CommitAndPushForcedWhenAmend = true;
-        AppSettings.DontConfirmAmend = true;
+        AppSettings.DontConfirmAmend.Value = true;
         AppSettings.CloseCommitDialogAfterCommit = false;
         AppSettings.CloseCommitDialogAfterLastCommit = false;
         AppSettings.CloseProcessDialog = true;

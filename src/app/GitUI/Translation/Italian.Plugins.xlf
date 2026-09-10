@@ -560,12 +560,12 @@ Sei sicuro di voler continuare?</target>
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
-        <target>GitHub (Enterprise) hostname</target>
+        <target>Hostname di GitHub (Enterprise)</target>
         
       </trans-unit>
       <trans-unit id="PersonalAccessToken.Caption">
         <source>Personal Access Token</source>
-        <target>Personal Access Token</target>
+        <target>Token di accesso personale</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -629,22 +629,27 @@ Sei sicuro di voler continuare?</target>
     <body>
       <trans-unit id="lblApiToken.Text">
         <source>API &amp;Token</source>
+        <target>API &amp;Token</target>
         
       </trans-unit>
       <trans-unit id="lblApiUrl.Text">
         <source>&amp;API URL</source>
+        <target>&amp;URL API</target>
         
       </trans-unit>
       <trans-unit id="lblOwner.Text">
         <source>&amp;Owner</source>
+        <target>&amp;Proprietario</target>
         
       </trans-unit>
       <trans-unit id="lblRepository.Text">
         <source>&amp;Repository</source>
+        <target>&amp;Repository</target>
         
       </trans-unit>
       <trans-unit id="lnkTokenManagement.Text">
         <source>Create a GitHub personal access token</source>
+        <target>Crea un token di accesso personale GitHub</target>
         
       </trans-unit>
     </body>
@@ -682,7 +687,7 @@ Sei sicuro di voler continuare?</target>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Api Token</source>
-        <target>Api Token</target>
+        <target>Token API</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -820,7 +825,7 @@ Vuoi reimpostare il percorso configurato?</target>
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Start</source>
-        <target>Start</target>
+        <target>Avvia</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">

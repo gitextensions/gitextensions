@@ -4241,6 +4241,10 @@ You can unset the template:
         <source>(untracked)</source>
         <target />
       </trans-unit>
+      <trans-unit id="_wordWrapCommitMessageBody.Text">
+        <source>&amp;Word wrap (except subject line)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="branchNameLabel.Text">
         <source>(Branch name)</source>
         <target />
@@ -4573,10 +4577,6 @@ Examples on branch name: "feature/ABC-4587-commitMessageRegex"
       </trans-unit>
       <trans-unit id="btnCreateWorktree.Text">
         <source>&amp;Create the new worktree</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
         <target />
       </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
@@ -6708,15 +6708,6 @@ Inactive remote is completely invisible to git.</source>
       </trans-unit>
       <trans-unit id="_lvgEnabledHeader.Text">
         <source>Active</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_questionAutoPullBehaviour.Text">
-        <source>You have added a new remote repository.
-Do you want to automatically configure the default push and pull behavior for this remote?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_questionAutoPullBehaviourCaption.Text">
-        <source>New remote</source>
         <target />
       </trans-unit>
       <trans-unit id="_questionDeleteRemote.Text">
@@ -9472,10 +9463,6 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don't show me this message again.</source>
         <target />
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

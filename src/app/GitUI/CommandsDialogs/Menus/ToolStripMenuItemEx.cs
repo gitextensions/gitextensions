@@ -42,7 +42,7 @@ internal abstract class ToolStripMenuItemEx : ToolStripMenuItem, ITranslate
     /// <summary>
     ///  Allows the menu item to perform any initialization logic.
     /// </summary>
-    public virtual void OnInitialized()
+    protected virtual void OnInitialized()
     {
     }
 

@@ -60,6 +60,7 @@ For example:
 
 * Apply code-formatting style defined in `.editorconfig`.
 * Prefer file-scoped namespace declarations and single-line `using` declarations.
+* Order `using` directives alphabetically by namespace, with `System.*` directives first (StyleCop SA1208/SA1210). When adding a new `using`, insert it at the correct alphabetical position rather than appending it to the end of the list.
 * Insert a newline before the opening curly brace of any code block (e.g., after `if`, `for`, `while`, `foreach`, `using`, `try`, etc.).
 * Ensure that the final return statement of a method is on its own line.
 * Use pattern matching and switch expressions wherever possible.
@@ -99,6 +100,13 @@ For example:
 * Avoid null-forgiving (`!`) suppressions. Prefer making nullability explicit in the type system — for example, by declaring a parameter or property as nullable, adding a null guard, or restructuring code so that null states are unrepresentable. Use `!` only as a last resort when the type system cannot express a known invariant.
 * When modifying code that contains existing `!` suppressions, look for opportunities to remove them safely. Use `Validates.NotNull` for runtime null checks where a value is expected to be non-null but the type system cannot prove it.
 
+## constants
+
+* In GitExtensions, libraries may be used by plugins, also not in GitExtensions.Extensibility.
+  Prefix/suffix string members must remain public static string auto-properties
+  (not const), because const would inline values into dependent plugin assemblies
+  and break binary compatibility.
+
 ## WinForms UI
 
 * Follow the naming conventions in `.github/ui_design_guidelines.md` for all WinForms controls:
@@ -115,6 +123,11 @@ For example:
 
 ## Testing
 
+* **ALWAYS run the associated tests locally before pushing to CI.** Whenever you change code, identify the tests that
+  cover it and run them locally (e.g. `dotnet test <project> --filter "FullyQualifiedName~<Type>"`) and confirm they
+  pass. **NEVER** rely on CI as the first place a change is tested — pushing untested changes wastes CI compute and
+  hides failures behind slow feedback. If a change cannot be tested locally (e.g. an architecture-specific path),
+  say so explicitly and state what was and was not verified.
 * We use NUnit SDK.
 * Do not emit "Act", "Arrange" or "Assert" comments.
 * The test names must follow snake-casing in the suffix BUT keeping the methods under test intact.

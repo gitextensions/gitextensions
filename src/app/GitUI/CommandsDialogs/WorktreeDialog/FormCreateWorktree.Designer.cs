@@ -19,7 +19,6 @@ partial class FormCreateWorktree
         txtNewBranchName = new TextBox();
         rbCreateNewBranch = new RadioButton();
         rbCheckoutExistingBranch = new RadioButton();
-        chkOpenWorktree = new CheckBox();
         txtWorktreeDirectory = new TextBox();
         lblNewWorktreeFolder = new Label();
         cbxBranches = new ComboBox();
@@ -69,6 +68,7 @@ partial class FormCreateWorktree
         txtNewBranchName.Size = new Size(419, 21);
         txtNewBranchName.TabIndex = 3;
         txtNewBranchName.TextChanged += UpdateWorktreePathAndValidateWorktreeOptions;
+        txtNewBranchName.Leave += txtNewBranchName_Leave;
         //
         // rbCreateNewBranch
         //
@@ -96,19 +96,6 @@ partial class FormCreateWorktree
         rbCheckoutExistingBranch.Text = "Checkout an &existing branch:";
         rbCheckoutExistingBranch.UseVisualStyleBackColor = true;
         rbCheckoutExistingBranch.Click += UpdateWorktreePathAndValidateWorktreeOptions;
-        //
-        // chkOpenWorktree
-        //
-        chkOpenWorktree.AutoSize = true;
-        chkOpenWorktree.Checked = true;
-        chkOpenWorktree.CheckState = CheckState.Checked;
-        tlpnlMain.SetColumnSpan(chkOpenWorktree, 3);
-        chkOpenWorktree.Location = new Point(3, 123);
-        chkOpenWorktree.Name = "chkOpenWorktree";
-        chkOpenWorktree.Size = new Size(228, 17);
-        chkOpenWorktree.TabIndex = 4;
-        chkOpenWorktree.Text = "&Open the new worktree after the creation";
-        chkOpenWorktree.UseVisualStyleBackColor = true;
         //
         // txtWorktreeDirectory
         //
@@ -204,13 +191,11 @@ partial class FormCreateWorktree
         tlpnlMain.Controls.Add(lblNewWorktreeFolder, 0, 1);
         tlpnlMain.Controls.Add(txtWorktreeDirectory, 1, 1);
         tlpnlMain.Controls.Add(btnBrowseWorktreeDir, 2, 1);
-        tlpnlMain.Controls.Add(chkOpenWorktree, 0, 2);
         tlpnlMain.Dock = DockStyle.Fill;
         tlpnlMain.Location = new Point(12, 12);
         tlpnlMain.Margin = new Padding(0);
         tlpnlMain.Name = "tlpnlMain";
-        tlpnlMain.RowCount = 3;
-        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowCount = 2;
         tlpnlMain.RowStyles.Add(new RowStyle());
         tlpnlMain.RowStyles.Add(new RowStyle());
         tlpnlMain.Size = new Size(584, 143);
@@ -250,7 +235,6 @@ partial class FormCreateWorktree
     private UserControls.FolderBrowserButton btnBrowseWorktreeDir;
     private TextBox txtWorktreeDirectory;
     private Label lblNewWorktreeFolder;
-    private CheckBox chkOpenWorktree;
     private RadioButton rbCheckoutExistingBranch;
     private RadioButton rbCreateNewBranch;
     private TextBox txtNewBranchName;

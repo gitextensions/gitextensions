@@ -1,5 +1,6 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.Loader;
 using GitUI;
 using Microsoft.VisualStudio.Composition;
 
@@ -65,7 +66,7 @@ public static class ManagedExtensibility
         else
         {
             Assembly[] assemblies = [.. pluginFiles.Union(userPluginFiles)
-                                               .Select(assemblyFile => TryLoadAssembly(assemblyFile))
+                                               .Select(TryLoadAssembly)
                                                .WhereNotNull()];
 
             PartDiscovery? discovery = PartDiscovery.Combine(
@@ -91,17 +92,26 @@ public static class ManagedExtensibility
         }
 
         return exportProviderFactory.CreateExportProvider();
-    }
 
-    private static Assembly? TryLoadAssembly(FileInfo file)
-    {
-        try
+        static Assembly? TryLoadAssembly(FileInfo file)
         {
-            return Assembly.LoadFile(file.FullName);
-        }
-        catch
-        {
-            return null;
+            try
+            {
+                Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName);
+
+                // Eagerly validate that all types in the assembly can be resolved.
+                // Outdated plugins targeting an incompatible interface version succeed
+                // at load time but throw ReflectionTypeLoadException here when any
+                // referenced type cannot be found in the currently loaded dependencies.
+                _ = assembly.GetTypes();
+
+                return assembly;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine($"Failed to load plugin {file.FullName}: {ex}");
+                return null;
+            }
         }
     }
 
@@ -173,7 +183,7 @@ public static class ManagedExtensibility
 
                     return fileDescription is not null && args.Name.StartsWith(fileDescription);
                 });
-            return dll is null ? null : Assembly.LoadFile(dll);
+            return dll is null ? null : AssemblyLoadContext.Default.LoadFromAssemblyPath(dll);
         }
         catch
         {

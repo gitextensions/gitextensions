@@ -481,6 +481,7 @@ public record FilterInfo
             if (!AppSettings.ShowSessionRefs)
             {
                 filter.Add($"--exclude={GitRefName.RefsSessionsPrefix}**");
+                filter.Add($"--exclude={GitRefName.RefsCopilotCheckpointsPrefix}**");
             }
 
             // All refs/

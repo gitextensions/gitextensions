@@ -340,7 +340,7 @@ public partial class PatchGrid : GitModuleControl
         Validates.NotNull(PatchFiles);
 
         IReadOnlyList<PatchFile> updatedPatches = GetPatches();
-        if (updatedPatches.Count != PatchFiles.Count)
+        if (updatedPatches.Count != PatchFiles.Count && !_isManagingRebase)
         {
             // Fail for popup in Debug
             string s = $"PatchGrid: RefreshGrid: PatchFiles count {PatchFiles.Count} is different from updatedPatches count {updatedPatches.Count}. This should not happen.";

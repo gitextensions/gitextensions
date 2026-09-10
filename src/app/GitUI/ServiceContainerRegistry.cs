@@ -10,6 +10,7 @@ using GitUI.ConsoleEmulation.Mintty;
 using GitUI.Hotkey;
 using GitUI.Models;
 using GitUI.ScriptsEngine;
+using GitUI.Shells;
 using ResourceManager;
 
 namespace GitUI;
@@ -51,9 +52,11 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IInvalidRepositoryRemover>(invalidRepositoryRemover);
         serviceContainer.AddService<IRepositoryHistoryUIService>(new RepositoryHistoryUIService(serviceContainer.GetRequiredService<IGitExecutorProvider>(), branchNameCache, invalidRepositoryRemover));
 
+        serviceContainer.AddService<IShellProvider>(new ShellProvider());
+
         serviceContainer.AddService<IConsoleEmulatorsRegistry>(
             new ConsoleEmulatorsRegistry(
-                consoleEmulators: [new ConEmuConsoleEmulator(), new MinttyConsoleEmulator()],
+                consoleEmulators: [new ConEmuConsoleEmulator(serviceContainer.GetRequiredService<IShellProvider>()), new MinttyConsoleEmulator()],
                 useConsoleEmulation: AppSettings.UseConsoleEmulatorForCommands,
                 consoleEmulatorName: AppSettings.ConsoleEmulatorName,
                 consoleEmulatorTheme: AppSettings.ConEmuStyle,

@@ -119,6 +119,6 @@ public static class EnvironmentConfiguration
             return Env.GetEnvironmentVariable("USERPROFILE");
         }
 
-        return Env.GetFolderPath(Environment.SpecialFolder.Personal);
+        return Env.GetFolderPath(Environment.SpecialFolder.UserProfile);
     }
 }

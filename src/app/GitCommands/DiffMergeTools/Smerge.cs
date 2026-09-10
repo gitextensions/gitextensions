@@ -1,9 +1,9 @@
-namespace GitCommands.DiffMergeTools;
+﻿namespace GitCommands.DiffMergeTools;
 
 internal sealed class Smerge : DiffMergeTool
 {
     /// <inheritdoc />
-    public override string ExeFileName => "smerge.exe";
+    public override string ExeFileName => OperatingSystem.IsWindows() ? "smerge.exe" : "smerge";
 
     /// <inheritdoc />
     public override string DiffCommand => "mergetool \"$LOCAL\" \"$REMOTE\" -o=\"$MERGED\"";

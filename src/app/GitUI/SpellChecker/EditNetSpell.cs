@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
@@ -18,6 +18,12 @@ namespace GitUI.SpellChecker;
 public partial class EditNetSpell : GitModuleControl
 {
     public event EventHandler? TextAssigned;
+
+    /// <summary>
+    ///  Raised after all built-in items have been added to the spell-check context menu,
+    ///  allowing consumers to append additional items.
+    /// </summary>
+    public event EventHandler<ContextMenuStrip>? ContextMenuPopulating;
 
     private readonly TranslationString _cutMenuItemText = new("Cut");
     private readonly TranslationString _copyMenuItemText = new("Copy");
@@ -569,6 +575,8 @@ public partial class EditNetSpell : GitModuleControl
             ToggleAutoCompletion();
         };
         SpellCheckContextMenu.Items.Add(mi);
+
+        ContextMenuPopulating?.Invoke(this, SpellCheckContextMenu);
     }
 
     private void RemoveWordClick(object? sender, EventArgs e)
@@ -1023,7 +1031,7 @@ public partial class EditNetSpell : GitModuleControl
 
         if (!_autoCompleteListTask.IsValueFactoryCompleted)
         {
-            _autoCompleteListTask.GetValueAsync().Forget();
+            _autoCompleteListTask.GetValueAsync(_autoCompleteCancellationTokenSource.Token).Forget();
 
             if (calledByUser)
             {

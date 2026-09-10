@@ -1,4 +1,4 @@
-namespace GitCommands.DiffMergeTools;
+﻿namespace GitCommands.DiffMergeTools;
 
 internal sealed class VsCode : DiffMergeTool
 {
@@ -8,7 +8,7 @@ internal sealed class VsCode : DiffMergeTool
     public override string DiffCommand => "--new-window --wait --diff \"$LOCAL\" \"$REMOTE\"";
 
     /// <inheritdoc />
-    public override string ExeFileName => "Code.exe";
+    public override string ExeFileName => OperatingSystem.IsWindows() ? "Code.exe" : "code";
 
     /// <inheritdoc />
     public override string MergeCommand => "--new-window --wait --merge \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\"";
