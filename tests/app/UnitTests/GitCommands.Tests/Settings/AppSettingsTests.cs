@@ -130,6 +130,12 @@ internal sealed class AppSettingsTests
         }
     }
 
+    [Test]
+    public void ShowCurrentBranchOnly_should_be_persistent()
+    {
+        AppSettings.ShowCurrentBranchOnly.Should().NotBeAssignableTo<IRuntimeSetting>();
+    }
+
     /// <summary>
     ///  Verifies that ISetting property names (storage keys) remain stable across changes.
     /// </summary>

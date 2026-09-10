@@ -26,7 +26,7 @@ public class FilterInfoTests
     public async Task FilterInfo_ctor_expected()
     {
         bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
-        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly.Value;
         bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
@@ -50,7 +50,7 @@ public class FilterInfoTests
     public async Task FilterInfo_ctor_with_Raw_expected()
     {
         bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
-        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly.Value;
         bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
@@ -431,7 +431,7 @@ public class FilterInfoTests
     public void FilterInfo_ByBranchFilter_expected()
     {
         bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
-        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly.Value;
         bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
@@ -473,7 +473,7 @@ public class FilterInfoTests
     public void FilterInfo_BranchFilter_with_Raw_expected(bool isRaw, bool byBranchFilter)
     {
         bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
-        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly.Value;
         bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
@@ -513,7 +513,7 @@ public class FilterInfoTests
     public void FilterInfo_IsShowAllBranchesChecked_expected(bool byBranchFilter, bool showCurrentBranchOnly, bool expected)
     {
         bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
-        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly.Value;
         bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
@@ -546,7 +546,7 @@ public class FilterInfoTests
     public void FilterInfo_IsShowCurrentBranchOnlyChecked_expected(bool byBranchFilter, bool showCurrentBranchOnly, bool expected)
     {
         bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
-        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly.Value;
         bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
@@ -579,7 +579,7 @@ public class FilterInfoTests
     public void FilterInfo_IsShowFilteredBranchesChecked_expected(bool byBranchFilter, bool showCurrentBranchOnly, bool expected)
     {
         bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
-        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly.Value;
         bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
@@ -609,7 +609,7 @@ public class FilterInfoTests
     public void FilterInfo_ShowCurrentBranchOnly_expected()
     {
         bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
-        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly.Value;
         bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
@@ -678,10 +678,21 @@ public class FilterInfoTests
     }
 
     [Test]
+    public void FilterInfo_ResetAllFilters_should_preserve_ShowOnlyFirstParent()
+    {
+        AppSettings.ShowOnlyFirstParent = true;
+        FilterInfo filterInfo = new();
+
+        filterInfo.ResetAllFilters();
+
+        filterInfo.ShowOnlyFirstParent.Should().BeTrue();
+    }
+
+    [Test]
     public void FilterInfo_ShowReflogReferences_expected()
     {
         bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
-        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly.Value;
         bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
@@ -727,7 +738,7 @@ public class FilterInfoTests
     public void FilterInfo_ShowReflogReferences_dominates_other_filters(bool byBranchFilter, bool showCurrentBranchOnly, bool showReflog)
     {
         bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
-        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly.Value;
         bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
