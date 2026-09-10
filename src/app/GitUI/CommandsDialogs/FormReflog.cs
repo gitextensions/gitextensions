@@ -98,7 +98,7 @@ public partial class FormReflog : GitModuleForm
                     select ReflogRegex.Match(line)
                     into match
                     where match.Success
-                    select new RefLine(ObjectId.Parse(match.Groups["sha"].Value), match.Groups["ref"].Value, match.Groups["action"].Value);
+                    select new RefLine(ObjectId.Parse(match.Groups["sha"].ValueSpan), match.Groups["ref"].Value, match.Groups["action"].Value);
         }
     }
 

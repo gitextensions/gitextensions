@@ -104,9 +104,9 @@ partial class FormVerify
                 // TODO: cache
                 Author = module.ReEncodeStringFromLossless(logPatternMatch.Groups["author"].Value);
                 Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups["subject"].Value) ?? "";
-                Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups["date"].Value);
-                string firstParent = logPatternMatch.Groups["first_parent"].Value;
-                if (!string.IsNullOrEmpty(firstParent))
+                Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups["date"].ValueSpan);
+                ReadOnlySpan<char> firstParent = logPatternMatch.Groups["first_parent"].ValueSpan;
+                if (!firstParent.IsEmpty)
                 {
                     Parent = ObjectId.Parse(firstParent);
                 }
@@ -153,7 +153,7 @@ partial class FormVerify
                     result.Author = module.ReEncodeStringFromLossless(tagPatternMatch.Groups["author"].Value);
                     result.TagName = tagPatternMatch.Groups["tagname"].Value;
                     result.Subject = $"{result.TagName}:{tagPatternMatch.Groups["subject"].ValueSpan}";
-                    result.Date = DateTimeUtils.ParseUnixTime(tagPatternMatch.Groups["date"].Value);
+                    result.Date = DateTimeUtils.ParseUnixTime(tagPatternMatch.Groups["date"].ValueSpan);
                 }
             }
             else if (objectType == LostObjectType.Blob)
