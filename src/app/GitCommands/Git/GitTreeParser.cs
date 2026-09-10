@@ -100,12 +100,10 @@ public sealed partial class GitTreeParser : IGitTreeParser
         foreach ((int beginning, int length) in tree.LazySplitRanges('\0', StringSplitOptions.RemoveEmptyEntries))
         {
             Match match = LsFilesLineRegex.Match(tree, beginning, length);
-            if (!match.Success)
+            if (match.Success)
             {
-                continue;
+                yield return ParseSingleLsFromSuccessfulMatch(match);
             }
-
-            yield return ParseSingleLsFromSuccessfulMatch(match);
         }
     }
 
