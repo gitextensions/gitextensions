@@ -61,12 +61,10 @@ public sealed partial class GitTreeParser : IGitTreeParser
         foreach ((int beginning, int length) in tree.LazySplitRanges('\0', StringSplitOptions.RemoveEmptyEntries))
         {
             Match match = TreeLineRegex.Match(tree, beginning, length);
-            if (!match.Success)
+            if (match.Success)
             {
-                continue;
+                yield return ParseSingleFromSuccessfulMatch(match);
             }
-
-            yield return ParseSingleFromSuccessfulMatch(match);
         }
     }
 
