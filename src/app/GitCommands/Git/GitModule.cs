@@ -2,6 +2,7 @@
 using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Config;
@@ -735,27 +736,27 @@ public sealed partial class GitModule : IGitModule
         ExecutionResult result = await GitExecutable.ExecuteAsync(args, throwOnErrorExit: false).ConfigureAwait(false);
         string[] unmerged = result.StandardOutput.Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries);
 
-        ConflictedFileData[] item = new ConflictedFileData[3];
+        InlineArray3<ConflictedFileData> item = new();
 
         string? prevItemName = null;
 
         foreach (string line in unmerged)
         {
             int findSecondWhitespace = line.IndexOfAny(_spaceAndTabSearchValues);
-            string fileStage = findSecondWhitespace >= 0 ? line[findSecondWhitespace..].Trim() : "";
+            ReadOnlySpan<char> fileStage = findSecondWhitespace >= 0 ? line.AsSpan(findSecondWhitespace).Trim() : "";
 
             findSecondWhitespace = fileStage.IndexOfAny(_spaceAndTabSearchValues);
 
-            ReadOnlySpan<char> hash = findSecondWhitespace >= 0 ? fileStage.AsSpan(0, findSecondWhitespace).Trim() : "";
+            ReadOnlySpan<char> hash = findSecondWhitespace >= 0 ? fileStage[..findSecondWhitespace].Trim() : "";
             fileStage = findSecondWhitespace >= 0 ? fileStage[findSecondWhitespace..].Trim() : "";
 
-            if (fileStage.Length > 2 && int.TryParse(fileStage.AsSpan(0, 1), out int stage) && stage is (>= 1 and <= 3))
+            if (fileStage.Length > 2 && int.TryParse(fileStage[..1], out int stage) && stage is (>= 1 and <= 3))
             {
-                string itemName = fileStage[2..];
+                string itemName = new(fileStage[2..]);
                 if (prevItemName != itemName && prevItemName is not null)
                 {
                     list.Add(new ConflictData(item[0], item[1], item[2]));
-                    item = new ConflictedFileData[3];
+                    item = new InlineArray3<ConflictedFileData>();
                 }
 
                 item[stage - 1] = new ConflictedFileData(ObjectId.Parse(hash), itemName);
