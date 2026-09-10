@@ -869,7 +869,7 @@ public sealed partial class GitModule : IGitModule
     public string GetCommitCountString(ObjectId fromId, string to)
     {
         bool cache = !fromId.IsArtificial && ObjectId.TryParse(to, out ObjectId toId) && !toId.IsArtificial;
-        (int? added, int? removed) = GetRevListLeftRightCount(fromId, to, cache);
+        (int? removed, int? added) = GetRevListLeftRightCount(fromId, to, cache);
 
         if (removed is null || added is null)
         {
