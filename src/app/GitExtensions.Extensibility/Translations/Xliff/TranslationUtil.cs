@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -15,6 +16,7 @@ public static class TranslationUtil
           BindingFlags.NonPublic | BindingFlags.SetField;
 
     private static readonly HashSet<string> _processedAssemblies = [];
+    private static readonly ConcurrentDictionary<Type, string[]?> _localizablePropertiesAttributeCache = new();
 
     private static readonly string[] _translatableItemInComponentNames =
     [
@@ -437,9 +439,8 @@ public static class TranslationUtil
 
     private static string[]? GetLocalizablePropertiesFromAttribute(object item)
     {
-        return item.GetType()
-            .GetCustomAttribute<LocalizablePropertiesAttribute>()
-            ?.TranslatableProperties;
+        return _localizablePropertiesAttributeCache.GetOrAdd(item.GetType(), static type => type
+            .GetCustomAttribute<LocalizablePropertiesAttribute>()?.TranslatableProperties);
     }
 
     private static readonly char PosixDirectorySeparatorChar = '/';
