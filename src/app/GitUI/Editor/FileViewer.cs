@@ -1192,8 +1192,9 @@ public partial class FileViewer : GitModuleControl
                     && AppSettings.DiffDisplayAppearance.Value != DiffDisplayAppearance.GitWordDiff
                     && File.Exists(_fullPathResolver.Resolve(fileName)))
 
-                // New files, patches only applies for artificial or if the file does not exist
-                || ((item?.Item.IsNew ?? false)
+                // Added files, i.e. new or copied ones, patches only applies for artificial
+                // or if the file does not exist
+                || ((item?.Item.IsAdded ?? false)
                     && ((item.Item.Staged is StagedStatus.WorkTree or StagedStatus.Index)
                         || !File.Exists(_fullPathResolver.Resolve(fileName)))))
 
