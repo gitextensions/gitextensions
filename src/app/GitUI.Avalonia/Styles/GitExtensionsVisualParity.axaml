@@ -1160,6 +1160,13 @@
     <Setter Property="SelectionBrush" Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
     <Setter Property="SelectionForeground" Value="{DynamicResource GitExtensionsSelectionForegroundBrush}" />
   </Style>
+  <Style Selector="FlyoutPresenter.gitextensions-toolstrip-flyout">
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
   <Style Selector="SelectableTextBlock.gitextensions-commit-header">
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsMonospaceFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsMonospaceFontSize}" />

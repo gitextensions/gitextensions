@@ -1922,27 +1922,8 @@ public sealed partial class ParityScreenshotTests
             }
 
             IsLoadingComplete(loadingStatus.Text).Should().BeTrue();
-            formBrowse.RevisionGrid.SetSelectedRevision(context.HeadRevision.ObjectId).Should().BeTrue();
-            Dispatcher.UIThread.RunJobs();
-            formBrowse.RevisionGrid.GetSelectedRevisions().Should().ContainSingle()
-                .Which.ObjectId.Should().Be(context.HeadRevision.ObjectId);
-
-            // The revision list and primary commit-details loaders complete independently.
-            // Wait for the selected revision's header and message before recording it.
-            CommitInfo.TestAccessor commitInfo = formBrowse.RevisionInfo.GetTestAccessor();
-            Stopwatch commitInfoStopwatch = Stopwatch.StartNew();
-            while ((!commitInfo.Header.GetTestAccessor().RevisionHeader.GetPlainText()
-                .Contains(context.HeadRevision.ObjectId.ToString(), StringComparison.Ordinal)
-                    || string.IsNullOrWhiteSpace(commitInfo.CommitMessage.GetPlainText()))
-                   && commitInfoStopwatch.Elapsed < TimeSpan.FromSeconds(15))
-            {
-                Dispatcher.UIThread.RunJobs();
-                await Task.Delay(10);
-            }
-
-            commitInfo.Header.GetTestAccessor().RevisionHeader.GetPlainText()
-                .Should().Contain(context.HeadRevision.ObjectId.ToString());
-            commitInfo.CommitMessage.GetPlainText().Should().NotBeNullOrWhiteSpace();
+            await formBrowse.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(15));
+            await SelectAndWaitForFormBrowseRevisionAsync(formBrowse, context.HeadRevision);
 
             // Wait for the seeded repository's status count so captures cannot race the monitor.
             Button commitButton = GetRequiredControl<Button>(formBrowse, "toolStripButtonCommit");
@@ -2033,6 +2014,33 @@ public sealed partial class ParityScreenshotTests
         }
 
         loadingStatuses.Should().OnlyContain(status => IsLoadingComplete(status.Text));
+    }
+
+    private static async Task SelectAndWaitForFormBrowseRevisionAsync(FormBrowse formBrowse, GitRevision revision)
+    {
+        formBrowse.RevisionGrid.SetSelectedRevision(revision.ObjectId).Should().BeTrue();
+        Dispatcher.UIThread.RunJobs();
+        formBrowse.RevisionGrid.GetSelectedRevisions().Should().ContainSingle()
+            .Which.ObjectId.Should().Be(revision.ObjectId);
+
+        // The revision list and primary commit-details loaders complete independently.
+        // Wait for the selected revision's header and message before recording it.
+        CommitInfo.TestAccessor commitInfo = formBrowse.RevisionInfo.GetTestAccessor();
+        Stopwatch commitInfoStopwatch = Stopwatch.StartNew();
+        while ((!commitInfo.Header.GetTestAccessor().RevisionHeader.GetPlainText()
+            .Contains(revision.ObjectId.ToString(), StringComparison.Ordinal)
+                || string.IsNullOrWhiteSpace(commitInfo.CommitMessage.GetPlainText())
+                || string.IsNullOrWhiteSpace(commitInfo.RevisionInfo.GetPlainText()))
+               && commitInfoStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+        {
+            Dispatcher.UIThread.RunJobs();
+            await Task.Delay(10);
+        }
+
+        commitInfo.Header.GetTestAccessor().RevisionHeader.GetPlainText()
+            .Should().Contain(revision.ObjectId.ToString());
+        commitInfo.CommitMessage.GetPlainText().Should().NotBeNullOrWhiteSpace();
+        commitInfo.RevisionInfo.GetPlainText().Should().NotBeNullOrWhiteSpace();
     }
 
     // parity-scaffolding: File-backed editor dialogs must be compared only after their real loader settles.
