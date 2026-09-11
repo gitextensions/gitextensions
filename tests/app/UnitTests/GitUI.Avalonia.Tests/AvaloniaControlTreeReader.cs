@@ -234,12 +234,13 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (comboBox.SelectedItem as ComboBoxItem)?.Content as string;
         }
 
-        return text is null
+        string value = text is null
             ? string.Empty
             : (control is MenuItem or Button or Label || control.Name == "btnRemoteColor")
               && TranslationCompat.GetConvertMnemonics(control)
                 ? ToWinFormsMnemonics(text)
                 : text;
+        return value.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
     }
 
     private static string GetXhtmlText(XhtmlTextBlock textBlock)
@@ -259,7 +260,7 @@ internal sealed class AvaloniaControlTreeReader
                     break;
 
                 case Avalonia.Controls.Documents.LineBreak:
-                    text.AppendLine();
+                    text.Append('\n');
                     break;
 
                 case Avalonia.Controls.Documents.InlineUIContainer container
@@ -501,18 +502,18 @@ internal sealed class AvaloniaControlTreeReader
               ?? (control is MenuItem or Separator || string.IsNullOrEmpty(control.Name) ? null : control.Name);
         if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
             && (control.Name?.StartsWith("pull_shortcut_", StringComparison.Ordinal) == true
-                || control.Name == "OutputHistoryTab"
-                || (control.Name is "toolStripSeparator11" or "toolStripSeparator14"
-                    && control.GetLogicalAncestors().OfType<Control>().Any(
-                        ancestor => ancestor.Name == "toolStripButtonPull"))))
+                || control.Name == "OutputHistoryTab"))
         {
             // These controls are runtime/local variables in the source rather than fields.
             fieldName = null;
         }
 
-        if (control.Name == "tableLayoutPanel1"
-            && control.Parent?.GetType().FullName == "GitUI.UserControls.CommitPickerSmallControl"
-            && fieldNames.Count == 0)
+        bool isSourceLocalTableLayout = control.Name == "tableLayoutPanel1"
+            && fieldNames.Count == 0
+            && control.Parent?.GetType().FullName is
+                "GitUI.UserControls.CommitPickerSmallControl" or
+                "GitUI.CommitInfo.CommitInfoHeader";
+        if (isSourceLocalTableLayout)
         {
             // The WinForms Designer names this local layout variable but does not declare a
             // control field. Preserve its tree name without inventing a structural member.
@@ -725,8 +726,10 @@ internal sealed class AvaloniaControlTreeReader
                     : hasWinFormsTextBoxClientInset
                         ? GetSourceTextBoxClientWidth(bounds, designerLayout?.BorderStyle, hasSourceVerticalTextScrollBar)
                     : isNativeListView ? Math.Max(0, bounds.Width - 4) : bounds.Width),
-                Height = ToPixel(isSourceList
-                    ? designerLayout?.BorderStyle == "None" ? bounds.Height : Math.Max(0, bounds.Height - (hasSourceFixedSingleClientInset ? 2 : 4))
+                Height = ToPixel(control.Name == "treeMain"
+                    ? Math.Max(0, bounds.Height - 17)
+                    : isSourceList
+                        ? designerLayout?.BorderStyle == "None" ? bounds.Height : Math.Max(0, bounds.Height - (hasSourceFixedSingleClientInset ? 2 : 4))
                     : hasSourceFixedSingleClientInset
                         ? Math.Max(0, bounds.Height - 2)
                     : isSpellCheckAutoComplete
@@ -750,8 +753,10 @@ internal sealed class AvaloniaControlTreeReader
                     : hasWinFormsTextBoxClientInset
                         ? GetSourceTextBoxClientWidth(bounds, designerLayout?.BorderStyle, hasSourceVerticalTextScrollBar)
                     : isNativeListView ? Math.Max(0, bounds.Width - 4) : bounds.Width),
-                Height = ToDecimal(isSourceList
-                    ? designerLayout?.BorderStyle == "None" ? bounds.Height : Math.Max(0, bounds.Height - (hasSourceFixedSingleClientInset ? 2 : 4))
+                Height = ToDecimal(control.Name == "treeMain"
+                    ? Math.Max(0, bounds.Height - 17)
+                    : isSourceList
+                        ? designerLayout?.BorderStyle == "None" ? bounds.Height : Math.Max(0, bounds.Height - (hasSourceFixedSingleClientInset ? 2 : 4))
                     : hasSourceFixedSingleClientInset
                         ? Math.Max(0, bounds.Height - 2)
                     : isSpellCheckAutoComplete
@@ -1109,6 +1114,7 @@ internal sealed class AvaloniaControlTreeReader
                                     : isRevisionGridView || isNativeListView || isNativeTabControl ? "Fill" : null),
             AutoSize = isComboBoxPopupItem ? false
                 : isLocalSourceFlowLayoutPanel || isShellPreviewPanel || isSearchWindowControl || isCommitPickerLocalLayout ? true
+                : isFormBrowseMenuStrip && semanticName == "mainMenuStrip" ? true
                 : designerLayout?.AutoSize
                 ?? (isSurfaceRoot && !isPopupRoot
                     ? WinFormsInputMetadata.AutoSizeRootTypes.Contains(GetMetadataTypeName(_root.GetType()))

@@ -190,9 +190,11 @@ public class ToolStripContainer : Avalonia.Controls.Panel
     private const double LeadingInset = 7;
     private const double FilterWidth = 50;
     private const double FilterTrailingReserve = 104;
-    private const double ScriptsTrailingInset = 30;
+    private const double ScriptsWidth = 50;
+    private const double TrailingInset = 4;
     private const double ContentTop = 27;
     private const double ToolStripHeight = 25;
+    private const double FilterToolStripHeight = 27;
 
     protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
     {
@@ -214,12 +216,12 @@ public class ToolStripContainer : Avalonia.Controls.Panel
 
         if (Children.Count > 1)
         {
-            Children[1].Measure(new Avalonia.Size(FilterWidth, ToolStripHeight));
+            Children[1].Measure(new Avalonia.Size(FilterWidth, FilterToolStripHeight));
         }
 
         if (Children.Count > 2)
         {
-            Children[2].Measure(new Avalonia.Size(double.PositiveInfinity, ToolStripHeight));
+            Children[2].Measure(new Avalonia.Size(ScriptsWidth, ToolStripHeight));
         }
 
         if (Children.Count > 3)
@@ -241,15 +243,15 @@ public class ToolStripContainer : Avalonia.Controls.Panel
 
             if (Children.Count > 1)
             {
-                Children[1].Arrange(new Avalonia.Rect(filterX, 0, FilterWidth, ToolStripHeight));
+                Children[1].Arrange(new Avalonia.Rect(filterX, 0, FilterWidth, FilterToolStripHeight));
             }
 
             if (Children.Count > 2)
             {
                 Children[2].Arrange(new Avalonia.Rect(
-                    Math.Max(0, finalSize.Width - ScriptsTrailingInset),
+                    Math.Max(0, finalSize.Width - ScriptsWidth - TrailingInset),
                     0,
-                    Children[2].DesiredSize.Width,
+                    ScriptsWidth,
                     ToolStripHeight));
             }
         }

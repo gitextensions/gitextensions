@@ -174,13 +174,13 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
                 style |= GitExtensions.Shims.WinForms.FontStyle.Italic;
             }
 
-            return new Font(TextEditor.FontFamily.Name, (float)TextEditor.FontSize, style);
+            return new Font(TextEditor.FontFamily.Name, AvaloniaFontSettings.ToPoints(TextEditor.FontSize), style);
         }
 
         set
         {
             TextEditor.FontFamily = new FontFamily(value.Name);
-            TextEditor.FontSize = value.Size;
+            TextEditor.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(value.Size);
             TextEditor.FontWeight = value.Bold ? FontWeight.Bold : FontWeight.Normal;
             TextEditor.FontStyle = value.Italic ? FontStyle.Italic : FontStyle.Normal;
         }

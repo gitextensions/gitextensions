@@ -36,6 +36,7 @@ using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
 using ResourceManager;
+using ResourceManager.CommitDataRenders;
 using ResourceManager.Hotkey;
 using Keys = GitExtensions.Shims.WinForms.Keys;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -73,6 +74,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private FormBrowseMenus? _formBrowseMenus;
     private readonly IGpgInfoProvider? _controller;
     private readonly IUpdateCheckService? _updateCheckService;
+    private readonly ICommitDataManager _commitDataManager;
     private readonly CancellationTokenSequence _gpgInfoLoadSequence = new();
     private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
 
@@ -105,12 +107,16 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     public FormBrowse()
     {
+        _commitDataManager = new CommitDataManager(() => Module);
+        _commitDataManager.RevisionDetailsLoaded += (_, _) => RevisionGrid.InvalidateVisual();
         InitializeComponent();
+        ApplySourceToolbarAutoSize();
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip, RevisionGrid, repositoryToolStripMenuItem);
         InitializeWorkspaceLayout();
         InitializeToolbarOverflow();
         InitializeComplete();
         InitMenusAndToolbars(revFilter: null, pathFilter: null);
+        InitializeToolbarsMenus();
     }
 
     public FormBrowse(IGitUICommands commands)
@@ -138,7 +144,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private FormBrowse(IGitUICommands commands, BrowseArguments args, IGpgInfoProvider? gpgInfoProvider)
         : base(commands, enablePositionRestore: true)
     {
+        _commitDataManager = new CommitDataManager(() => Module);
+        _commitDataManager.RevisionDetailsLoaded += (_, _) => RevisionGrid.InvalidateVisual();
         InitializeComponent();
+        ApplySourceToolbarAutoSize();
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip, RevisionGrid, repositoryToolStripMenuItem);
 
         _hasRuntimeCommands = true;
@@ -159,6 +168,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         toolsToolStripMenuItem.Initialize(() => UICommands);
         toolsToolStripMenuItem.SettingsChanged += toolsToolStripMenuItem_SettingsChanged;
         RevisionGrid.UICommandsSource = this;
+        RevisionInfo.UICommandsSource = this;
         RevisionGrid.ShowBuildServerInfo = true;
         revisionDiff.UICommandsSource = this;
         fileTree.UICommandsSource = this;
@@ -304,6 +314,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         ToolStripFilters.RefreshRevisionGridShortcutKeys(revisionGridHotkeys);
         RevisionGrid.RefreshMenuShortcutKeys(revisionGridHotkeys);
         InitMenusAndToolbars(args.RevFilter, args.PathFilter.ToPosixPath());
+        InitializeToolbarsMenus();
         LoadUserMenu();
         ReloadRepository();
     }
@@ -314,7 +325,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         ToolStripScripts.Children.Clear();
         if (_scriptsManager is null)
         {
-            ToolStripScripts.IsVisible = false;
+            ToolStripScripts.IsVisible = true;
             return;
         }
 
@@ -338,7 +349,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             ToolStripScripts.Children.Add(button);
         }
 
-        ToolStripScripts.IsVisible = ToolStripScripts.Children.Count > 0;
+        ToolStripScripts.IsVisible = true;
     }
 
     private static void ToggleToolbarOverflow(Control content, ScrollViewer viewport, Button overflowButton)
@@ -415,6 +426,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _NO_TRANSLATE_WorkingDir.TranslateControlItems(translation);
 
         RefreshCommitInfoPositionToolTip();
+        UpdateTooltipWithShortcut(toolStripButtonPull, Command.QuickPullOrFetch);
+        UpdateTooltipWithShortcut(toolStripFileExplorer, fileExplorerToolStripMenuItem.InputGesture);
 
         return;
 
@@ -495,7 +508,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         ToolStripFilters.IsEnabled = isValidWorkingDir;
         branchSelect.Content = string.IsNullOrEmpty(branchName) ? "Branch" : branchName;
         pluginsToolStripMenuItem.IsVisible = isValidWorkingDir;
-        UpdateRepositoryHostsMenu(isValidWorkingDir);
+        UpdateRepositoryHostsMenu();
         UpdatePluginMenu(isValidWorkingDir);
         RefreshDefaultPullAction();
 
@@ -541,7 +554,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         toolPanel.IsVisible = true;
         toolStripMainHost.IsVisible = true;
         toolStripFiltersHost.IsVisible = true;
-        ToolStripScripts.IsVisible = ToolStripScripts.Children.Count > 0;
+        ToolStripScripts.IsVisible = true;
         _repositoryHistoryUIService?.TriggerBranchNameCacheUpdate(onlyIfEmpty: true);
     }
 
@@ -741,7 +754,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     public void GoToRef(string refName, bool showNoRevisionMsg, bool toggleSelection = false) => RevisionGrid.GoToRef(refName, showNoRevisionMsg, toggleSelection);
 
-    private void UpdateRepositoryHostsMenu(bool validWorkingDir)
+    private void UpdateRepositoryHostsMenu()
     {
         IRepositoryHostPlugin? firstHost = PluginRegistry.GitHosters.FirstOrDefault();
         _repositoryHostsToolStripMenuItem.IsVisible = firstHost is not null;
@@ -749,11 +762,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             _repositoryHostsToolStripMenuItem.Header = firstHost.Name;
         }
-
-        _forkCloneRepositoryToolStripMenuItem.IsEnabled = firstHost is not null;
-        _viewPullRequestsToolStripMenuItem.IsEnabled = firstHost is not null && validWorkingDir;
-        _createPullRequestsToolStripMenuItem.IsEnabled = firstHost is not null && validWorkingDir;
-        _addUpstreamRemoteToolStripMenuItem.IsEnabled = firstHost is not null && validWorkingDir;
     }
 
     /// <summary>
@@ -825,7 +833,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         PopulatePluginMenu();
-        UpdateRepositoryHostsMenu(Module.IsValidGitWorkingDir());
+        UpdateRepositoryHostsMenu();
         UpdatePluginMenu(Module.IsValidGitWorkingDir());
         revisionDiff.RegisterGitHostingPluginInBlameControl();
         fileTree.RegisterGitHostingPluginInBlameControl();
@@ -944,8 +952,30 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         _selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
 
-        // The native grid does not yet expose the original revision-children query.
-        RevisionInfo.SetRevisionWithChildren(revision, children: null);
+        if (revision is null)
+        {
+            return;
+        }
+
+        IReadOnlyList<ObjectId> children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
+        RevisionInfo.SetRevisionWithChildren(revision, children);
+    }
+
+    private void ApplySourceToolbarAutoSize()
+    {
+        // WinForms ToolStrip item preferred widths include renderer-owned chrome which is
+        // not part of Avalonia's content measurement.
+        WinFormsAutoSizeContentControl.Attach(_NO_TRANSLATE_WorkingDir, 39, 22);
+        WinFormsAutoSizeContentControl.Attach(branchSelect, 39, 22);
+    }
+
+    private void InitializeToolbarsMenus()
+    {
+        _formBrowseMenus!.CreateToolbarsMenus(
+            (ToolStripMain, "Standard"),
+            (ToolStripFilters, "Filters"),
+            (ToolStripScripts, "Scripts"));
+        toolPanel.ContextMenu = _formBrowseMenus.ToolStripContextMenu;
     }
 
     private void InitializeWorkspaceLayout()
@@ -2246,6 +2276,53 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         });
     }
 
+    private void RevisionInfo_CommandClicked(object? sender, CommandEventArgs e)
+    {
+        // TODO this code duplicated in FormFileHistory.Blame_CommandClick
+        switch (e.Command)
+        {
+            case "gotocommit":
+                Validates.NotNull(e.Data);
+                if (!Module.TryResolvePartialCommitId(e.Data, out ObjectId commitId)
+                    || !RevisionGrid.SetSelectedRevision(commitId))
+                {
+                    if (commitId.IsZero)
+                    {
+                        return;
+                    }
+
+                    // This may occur at various filters, like AppSettings.ShowOnlyFirstParent
+                    // will hide other than the first parent.
+                    MessageBoxes.RevisionFilteredInGrid(this, commitId);
+                }
+
+                break;
+            case "gotobranch":
+            case "gototag":
+                Validates.NotNull(e.Data);
+                CommitData? commit = _commitDataManager.GetCommitData(e.Data);
+                if (commit is null)
+                {
+                    break;
+                }
+
+                if (!RevisionGrid.SetSelectedRevision(commit.ObjectId))
+                {
+                    MessageBoxes.RevisionFilteredInGrid(this, commit.ObjectId);
+                }
+
+                break;
+            case "navigatebackward":
+                RevisionGrid.NavigateBackward();
+                break;
+            case "navigateforward":
+                RevisionGrid.NavigateForward();
+                break;
+            default:
+                throw new InvalidOperationException($"unexpected internal link: {e.Command}/{e.Data}");
+        }
+    }
+
     private void SubmoduleToolStripButtonClick(object? sender, EventArgs e)
     {
         if (sender is not MenuItem { Tag: string path })
@@ -2702,7 +2779,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     }
 
     internal void PopulatePluginMenuForTest() => PopulatePluginMenu();
-    internal void UpdateRepositoryHostsMenuForTest(bool validWorkingDir) => UpdateRepositoryHostsMenu(validWorkingDir);
+    internal void UpdateRepositoryHostsMenuForTest() => UpdateRepositoryHostsMenu();
     internal Task JoinLoadOperationsForTestAsync(CancellationToken cancellationToken = default)
         => _loadOperations.JoinPendingOperationsAsync(cancellationToken);
 

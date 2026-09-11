@@ -12,11 +12,11 @@
   </MenuItem>
   <MenuItem x:Name="tsmiFavouriteRepositories" Header="_Favorite repositories">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Star}" /></MenuItem.Icon>
-    <MenuItem Header="..." IsEnabled="False" />
+    <MenuItem Header="..." />
   </MenuItem>
   <MenuItem x:Name="tsmiRecentRepositories" Header="_Recent repositories">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RecentRepositories}" /></MenuItem.Icon>
-    <MenuItem Header="..." IsEnabled="False" />
+    <MenuItem Header="..." />
     <Separator x:Name="clearRecentRepositoriesListToolStripMenuItem" />
     <MenuItem x:Name="tsmiRecentRepositoriesClear" Header="Clear list" />
   </MenuItem>

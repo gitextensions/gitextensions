@@ -18,7 +18,7 @@
   <MenuItem x:Name="donateToolStripMenuItem" Header="_Donate">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.DollarSign}" /></MenuItem.Icon>
   </MenuItem>
-  <MenuItem x:Name="tsmiTelemetryEnabled" Header="_Yes, I allow telemetry" ToggleType="CheckBox" />
+  <MenuItem x:Name="tsmiTelemetryEnabled" Header="_Yes, I allow telemetry" ToggleType="CheckBox" IsChecked="True" />
   <MenuItem x:Name="reportAnIssueToolStripMenuItem" Header="_Report an issue">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BugReport}" /></MenuItem.Icon>
   </MenuItem>

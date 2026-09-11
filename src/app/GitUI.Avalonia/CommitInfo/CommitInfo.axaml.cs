@@ -207,11 +207,18 @@ public partial class CommitInfo : GitModuleControl
         commitInfoHeader.ShowCommitInfo(revision, children);
         if (!TryGetUICommandsDirect(out _))
         {
-            // Avalonia designers and headless capture hosts construct the original control
-            // without a containing GitModuleForm; keep that construction path renderable.
-            rtbxCommitMessage.SetXHTMLText(WebUtility.HtmlEncode(revision.Body ?? revision.Subject ?? string.Empty));
-            RevisionInfo.Clear();
-            return;
+            try
+            {
+                // Match the original lazy ancestor lookup when a hosted control first needs
+                // repository services. Standalone designer controls have no such ancestor.
+                _ = UICommandsSource;
+            }
+            catch (InvalidOperationException)
+            {
+                rtbxCommitMessage.SetXHTMLText(WebUtility.HtmlEncode(revision.Body ?? revision.Subject ?? string.Empty));
+                RevisionInfo.Clear();
+                return;
+            }
         }
 
         ReloadCommitInfo(cancellationToken);

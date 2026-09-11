@@ -63,7 +63,7 @@ public sealed class CommitInfoTests
                 .ReadPrimary(block, new PixelSize(200, 50))
                 .Root;
 
-            node.Text.Should().Be($"Contained in branches:{Environment.NewLine}main|||gitext://gotobranch/main");
+            node.Text.Should().Be("Contained in branches:\nmain|||gitext://gotobranch/main");
         }
         finally
         {
