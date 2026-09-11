@@ -68,9 +68,8 @@ public sealed class HotkeyTests
 
             IReadOnlyList<HotkeyCommand> hotkeys = loader.LoadHotkeys(FormBrowse.HotkeySettingsName);
 
-            hotkeys.Should().ContainSingle(command =>
-                command.CommandCode == (int)FormBrowse.Command.Refresh
-                && command.KeyData == WinFormsShims.Keys.F5);
+            hotkeys.Should().HaveCount(49);
+            hotkeys.Should().NotContain(command => command.CommandCode == (int)FormBrowse.Command.Refresh);
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.Commit
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Space));
@@ -116,6 +115,15 @@ public sealed class HotkeyTests
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.QuickFetch
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.Down));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.QuickPullOrFetch
+                && command.KeyData == WinFormsShims.Keys.F8);
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.OpenWithDifftoolFirstToLocal
+                && command.KeyData == (WinFormsShims.Keys.Alt | WinFormsShims.Keys.F3));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.StashStaged
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.Alt | WinFormsShims.Keys.Up));
         }
         finally
         {
@@ -315,7 +323,7 @@ public sealed class HotkeyTests
             [
                 new HotkeySettings(
                     FormBrowse.HotkeySettingsName,
-                    new HotkeyCommand((int)FormBrowse.Command.Refresh, nameof(FormBrowse.Command.Refresh))
+                    new HotkeyCommand((int)FormBrowse.Command.QuickPullOrFetch, nameof(FormBrowse.Command.QuickPullOrFetch))
                     {
                         KeyData = WinFormsShims.Keys.F6,
                     }),
@@ -334,7 +342,7 @@ public sealed class HotkeyTests
             IReadOnlyList<HotkeyCommand> hotkeys = loader.LoadHotkeys(FormBrowse.HotkeySettingsName);
 
             hotkeys.Should().ContainSingle(command =>
-                command.CommandCode == (int)FormBrowse.Command.Refresh
+                command.CommandCode == (int)FormBrowse.Command.QuickPullOrFetch
                 && command.KeyData == WinFormsShims.Keys.F6);
         }
         finally
@@ -344,7 +352,7 @@ public sealed class HotkeyTests
     }
 
     [Test]
-    public void HotkeySettingsManager_should_save_the_edited_reduced_settings()
+    public void HotkeySettingsManager_should_save_the_edited_settings()
     {
         string? serializedHotkeys = AppSettings.SerializedHotkeys;
         AppSettings.SerializedHotkeys = string.Empty;
@@ -352,20 +360,20 @@ public sealed class HotkeyTests
         {
             IHotkeySettingsManager manager = new HotkeySettingsManager();
             IReadOnlyList<HotkeySettings> settings = manager.LoadSettings();
-            HotkeyCommand refresh = settings
+            HotkeyCommand quickPullOrFetch = settings
                 .Single(setting => setting.Name == FormBrowse.HotkeySettingsName)
                 .Commands!
-                .Single(command => command.CommandCode == (int)FormBrowse.Command.Refresh);
-            refresh.KeyData = WinFormsShims.Keys.F6;
+                .Single(command => command.CommandCode == (int)FormBrowse.Command.QuickPullOrFetch);
+            quickPullOrFetch.KeyData = WinFormsShims.Keys.F6;
 
             manager.SaveSettings(settings);
 
-            AppSettings.SerializedHotkeys.Should().Contain(nameof(FormBrowse.Command.Refresh));
+            AppSettings.SerializedHotkeys.Should().Contain(nameof(FormBrowse.Command.QuickPullOrFetch));
             manager.IsUniqueKey(WinFormsShims.Keys.F6).Should().BeTrue();
             manager.LoadHotkeys(FormBrowse.HotkeySettingsName)
                 .Should()
                 .ContainSingle(command =>
-                    command.CommandCode == (int)FormBrowse.Command.Refresh
+                    command.CommandCode == (int)FormBrowse.Command.QuickPullOrFetch
                     && command.KeyData == WinFormsShims.Keys.F6);
         }
         finally
@@ -901,6 +909,7 @@ public sealed class HotkeyTests
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(repositoryHistory);
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         commands.GetService(typeof(IScriptsManager)).Returns(scriptsManager);
         commands.GetService(typeof(IScriptsRunner)).Returns(scriptsRunner);
 

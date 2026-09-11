@@ -913,12 +913,12 @@ public sealed class FormBrowseTests
 
         form.mainMenuStrip.Items.OfType<MenuItem>().Select(item => item.Name).Should().Equal(
             "fileToolStripMenuItem",
+            "dashboardToolStripMenuItem",
             "repositoryToolStripMenuItem",
             "navigateToolStripMenuItem",
             "viewToolStripMenuItem",
             "commandsToolStripMenuItem",
             "_repositoryHostsToolStripMenuItem",
-            "dashboardToolStripMenuItem",
             "pluginsToolStripMenuItem",
             "toolsToolStripMenuItem",
             "helpToolStripMenuItem");
@@ -984,15 +984,9 @@ public sealed class FormBrowseTests
             "TopoOrder",
             "|",
             "Settings_persistenceToolStripMenuItem",
-            "SaveAsDefault");
-
-        string[] unsupportedCommands =
-        [
-            "toolbarsMenuItem",
-        ];
-        GetTaggedItemNames(navigate)
-            .Concat(GetTaggedItemNames(view))
-            .Should().NotContain(unsupportedCommands);
+            "SaveAsDefault",
+            "|",
+            "toolbarsMenuItem");
 
         foreach (string captionTag in new[]
         {
@@ -1010,6 +1004,18 @@ public sealed class FormBrowseTests
             caption.IsHitTestVisible.Should().BeFalse();
             caption.Classes.Should().Contain("gitextensions-menu-caption");
         }
+
+        MenuItem toolbars = GetTaggedMenuItem(view, "toolbarsMenuItem");
+        toolbars.Items.OfType<MenuItem>().Select(item => item.Header).Should().Equal("Standard", "Filters", "Scripts");
+        MenuItem[] toolbarItems = [.. toolbars.Items.OfType<MenuItem>()];
+        toolbarItems[0].Items.Should().HaveCount(25);
+        toolbarItems[1].Items.Should().HaveCount(7);
+        toolbarItems[2].Items.Should().BeEmpty();
+        MenuItem scripts = toolbars.Items.OfType<MenuItem>().Last();
+        StackPanel scriptsToolbar = form.FindControl<StackPanel>("ToolStripScripts")!;
+        scriptsToolbar.IsVisible.Should().BeTrue();
+        scripts.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        scriptsToolbar.IsVisible.Should().BeFalse();
     }
 
     [AvaloniaTest]
@@ -1039,6 +1045,8 @@ public sealed class FormBrowseTests
             nameof(FormBrowse), "navigateToolStripMenuItem", "Text", "&Navigate");
         translation.Received(1).AddTranslationItem(
             nameof(FormBrowse), "viewToolStripMenuItem", "Text", "&View");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse), "toolbarsMenuItem", "Text", "Toolbars");
         translation.Received(1).AddTranslationItem(
             "RevisionGrid", "BranchesToolStripMenuItem", "Text", "Branches");
         translation.Received(1).AddTranslationItem(
@@ -1466,7 +1474,7 @@ public sealed class FormBrowseTests
         {
             form = new FormBrowse(commands);
             form.Show();
-            form.UpdateRepositoryHostsMenuForTest(validWorkingDir: true);
+            form.UpdateRepositoryHostsMenuForTest();
             MenuItem hostMenu = form.FindControl<MenuItem>("_repositoryHostsToolStripMenuItem")!;
             MenuItem forkClone = form.FindControl<MenuItem>("_forkCloneRepositoryToolStripMenuItem")!;
             MenuItem viewPullRequests = form.FindControl<MenuItem>("_viewPullRequestsToolStripMenuItem")!;

@@ -23,10 +23,31 @@ public static class AvaloniaThreadingExtensions
 
     /// <summary>Asynchronously runs <paramref name="asyncAction"/> on the UI thread, forwarding exceptions like WinForms' InvokeAndForget.</summary>
     public static void InvokeAndForget(this Visual control, Func<Task> asyncAction, CancellationToken cancellationToken = default)
-        => ThreadHelper.FileAndForget(async () =>
+        => _ = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
         {
-            await control.SwitchToMainThreadAsync(cancellationToken);
-            await asyncAction();
+            try
+            {
+                if (!control.Dispatcher.CheckAccess())
+                {
+                    await control.SwitchToMainThreadAsync(cancellationToken);
+                }
+
+                cancellationToken.ThrowIfCancellationRequested();
+                await asyncAction();
+            }
+            catch (OperationCanceledException)
+            {
+                // Match TaskManager.InvokeAndForget: cancellation is an expected terminal state.
+            }
+            catch (Exception ex)
+            {
+                if (!control.Dispatcher.CheckAccess())
+                {
+                    await control.SwitchToMainThreadAsync();
+                }
+
+                GitExtensions.Shims.WinForms.Application.OnThreadException(ex);
+            }
         });
 
     /// <summary>Switches to the UI thread, like the WinForms control extension.</summary>

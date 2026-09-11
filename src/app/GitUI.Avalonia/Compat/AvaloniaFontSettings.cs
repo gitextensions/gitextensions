@@ -73,6 +73,9 @@ public static class AvaloniaFontSettings
     internal static double ToDeviceIndependentPixels(float points)
         => points * DeviceIndependentPixelsPerPoint;
 
+    internal static float ToPoints(double deviceIndependentPixels)
+        => (float)(deviceIndependentPixels / DeviceIndependentPixelsPerPoint);
+
     private static string GetPlatformMonospaceFontName()
         => OperatingSystem.IsMacOS() ? "Menlo" : "DejaVu Sans Mono";
 }
