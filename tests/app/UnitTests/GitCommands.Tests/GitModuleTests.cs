@@ -409,6 +409,21 @@ public sealed partial class GitModuleTests
     }
 
     [Test]
+    public void GetSubmodulesInfo_should_not_throw_if_gitmodules_entry_lacks_path()
+    {
+        using GitModuleTestHelper parentHelper = new("parent");
+        using GitModuleTestHelper submoduleHelper = new("submodule");
+        parentHelper.AddSubmodule(submoduleHelper, "sub");
+
+        // Drop the "path" key, so .gitmodules no longer maps the gitlink recorded in the index.
+        // `git submodule status` then fails with "no submodule mapping found in .gitmodules for path".
+        parentHelper.CreateFile(parentHelper.Module.WorkingDir, ".gitmodules", @"[submodule ""sub""]
+    url = ../submodule");
+
+        parentHelper.Module.GetSubmodulesInfo().Should().BeEmpty();
+    }
+
+    [Test]
     public async Task GetSuperprojectCurrentCheckout()
     {
         // Create super and sub repo
