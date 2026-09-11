@@ -1177,6 +1177,11 @@ public sealed partial class ParityScreenshotTests
         {
             PrepareView(captureHost, context);
             window.Show();
+            // parity-scaffolding: The real application activates FormBrowse before its async
+            // revision load settles. Activate the isolated window at the same lifecycle point;
+            // activating after selecting HEAD lets Avalonia establish a new first-row anchor.
+            window.Activate();
+            Dispatcher.UIThread.RunJobs();
             // parity-scaffolding: A form may restore its persisted bounds during OnOpened;
             // the paired plan's declared size remains authoritative for every state.
             window.Width = requiresExtendedPopupViewport ? 1200 : width;
@@ -1245,10 +1250,6 @@ public sealed partial class ParityScreenshotTests
                 fileStatusList.GetTestAccessor().UpdateContextMenu().Should().BeFalse();
             }
 
-            // parity-scaffolding: Each planned state owns a fresh headless window; activate it
-            // before driving focus so a previously closed capture cannot retain the input root.
-            window.Activate();
-            Dispatcher.UIThread.RunJobs();
             Control? defaultFocusedControl = GetStandaloneDefaultFocusedControl(view);
             if (defaultFocusedControl is not null)
             {
@@ -1259,6 +1260,29 @@ public sealed partial class ParityScreenshotTests
             }
 
             using AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(view, state);
+            if (view is FormBrowse capturedBrowse)
+            {
+                // The headless ListBox can establish its first-row anchor while queued layout
+                // work is drained for the requested state. Reassert the paired HEAD boundary
+                // after that drain, just as the WinForms capture worker does before rendering.
+                await SelectAndWaitForFormBrowseRevisionAsync(capturedBrowse, context.HeadRevision);
+                if (state.Kind == CaptureStateKind.MenuOpen
+                    && state.TargetField == "commandsToolStripMenuItem")
+                {
+                    MethodInfo openingHandler = typeof(FormBrowse).GetMethod(
+                        "CommandsToolStripMenuItem_DropDownOpening",
+                        BindingFlags.Instance | BindingFlags.NonPublic)
+                        ?? throw new InvalidOperationException("FormBrowse commands-menu opening handler was not found.");
+                    openingHandler.Invoke(
+                        capturedBrowse,
+                        [capturedBrowse.commandsToolStripMenuItem, EventArgs.Empty]);
+                }
+            }
+
+            // Activation and state routing can append diagnostics or complete an editor load;
+            // the plan's deterministic text remains authoritative at the capture boundary.
+            ApplyTextValues(view, component);
+            Dispatcher.UIThread.RunJobs();
             using WriteableBitmap primaryFrame = CaptureRenderedFrame(window);
             PixelRect primarySurfaceBounds = cropToComponent
                 ? GetScreenBounds(view, window, renderScale)

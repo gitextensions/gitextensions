@@ -238,7 +238,7 @@ public sealed class VisualParityTests
                 FilterToolBar toolStripFilters = form.FindControl<FilterToolBar>("ToolStripFilters")!;
                 toolPanel.Bounds.Should().Be(new Rect(0, 27, 923, 546));
                 form.toolStripMainHost.Bounds.Should().Be(new Rect(7, 0, 812, 25));
-                form.toolStripFiltersHost.Bounds.Should().Be(new Rect(819, 0, 50, 25));
+                form.toolStripFiltersHost.Bounds.Should().Be(new Rect(819, 0, 50, 27));
                 form.toolStripFiltersOverflow.IsVisible.Should().BeTrue();
                 form.toolStripFiltersOverflow.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
                 Dispatcher.UIThread.RunJobs();
@@ -1301,6 +1301,7 @@ public sealed class VisualParityTests
             GetColor(listPresenter.Background).Should().Be(selectionColor);
             treeItem.MinHeight.Should().Be(24);
             GetColor(treeLayoutRoot.Background).Should().Be(selectionColor);
+            editor.FontSize.Should().Be(GetResource<double>(Application.Current!, "GitExtensionsFixedWidthFontSize"));
             GetColor(editor.TextArea.SelectionBrush).Should().Be(selectionColor);
             GetColor(editor.TextArea.SelectionForeground).Should().Be(selectionForegroundColor);
 

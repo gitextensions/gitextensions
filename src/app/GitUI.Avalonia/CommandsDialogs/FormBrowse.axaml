@@ -61,6 +61,12 @@
   <DockPanel>
     <wf:MenuStripEx x:Name="mainMenuStrip" DockPanel.Dock="Top" Height="27">
       <menus:StartToolStripMenuItem x:Name="fileToolStripMenuItem" />
+      <wf:ToolStripMenuItem x:Name="dashboardToolStripMenuItem" Header="_Dashboard">
+        <wf:ToolStripMenuItem x:Name="refreshDashboardToolStripMenuItem" Header="_Refresh">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ReloadRevisions}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator42" />
+      </wf:ToolStripMenuItem>
       <wf:ToolStripMenuItem x:Name="repositoryToolStripMenuItem" Header="_Repository">
         <wf:ToolStripMenuItem x:Name="refreshToolStripMenuItem" Header="_Refresh">
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ReloadRevisions}" /></MenuItem.Icon>
@@ -208,12 +214,6 @@
                   Header="_Create pull requests..." />
         <wf:ToolStripMenuItem x:Name="_addUpstreamRemoteToolStripMenuItem"
                   Header="_Add upstream remote" />
-      </wf:ToolStripMenuItem>
-      <wf:ToolStripMenuItem x:Name="dashboardToolStripMenuItem" Header="_Dashboard">
-        <wf:ToolStripMenuItem x:Name="refreshDashboardToolStripMenuItem" Header="_Refresh">
-          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ReloadRevisions}" /></MenuItem.Icon>
-        </wf:ToolStripMenuItem>
-        <wf:ToolStripSeparator x:Name="toolStripSeparator42" />
       </wf:ToolStripMenuItem>
       <wf:ToolStripMenuItem x:Name="pluginsToolStripMenuItem" Width="58" Header="_Plugins">
         <wf:ToolStripMenuItem x:Name="pluginsLoadingToolStripMenuItem"
@@ -387,10 +387,10 @@
                 Content="»"
                 ToolTip.Tip="More toolbar commands" />
       </Grid>
-      <Grid x:Name="toolStripFiltersHost" ColumnDefinitions="*,Auto" Height="25" ClipToBounds="True">
+      <Grid x:Name="toolStripFiltersHost" ColumnDefinitions="*,Auto" Height="27" ClipToBounds="True">
         <ScrollViewer x:Name="toolStripFiltersViewport"
                       Grid.Column="0"
-                      Height="25"
+                      Height="27"
                       HorizontalScrollBarVisibility="Hidden"
                       VerticalScrollBarVisibility="Disabled">
           <controls:FilterToolBar x:Name="ToolStripFilters" />
@@ -406,10 +406,10 @@
                 ToolTip.Tip="More filter commands" />
       </Grid>
       <StackPanel x:Name="ToolStripScripts"
+                  Width="50"
                   Height="25"
                   Orientation="Horizontal"
-                  Spacing="1"
-                  IsVisible="False" />
+                  Spacing="1" />
     <Grid x:Name="_contentPanel"
           Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
       <TextBlock x:Name="lblRepoPath" IsVisible="False" />
@@ -471,7 +471,8 @@
                    Header="Commit"
                    Icon="{x:Static properties:Images.CommitSummary}">
             <Border x:Name="commitInfoBelowHost" Classes="gitextensions-section">
-              <commitinfo:CommitInfo x:Name="RevisionInfo" />
+              <commitinfo:CommitInfo x:Name="RevisionInfo"
+                                     CommandClicked="RevisionInfo_CommandClicked" />
             </Border>
           </wf:TabPage>
           <wf:TabPage x:Name="DiffTabPage"

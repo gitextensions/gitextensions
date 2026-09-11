@@ -348,6 +348,9 @@ internal static class CaptureRunner
                 EnsureManagedControlDpi(root, root.DeviceDpi);
             }
 
+            // Activation and state routing can append diagnostics or complete an editor load;
+            // the plan's deterministic text remains authoritative at the capture boundary.
+            ComponentFactory.ApplyTextValues(root, component);
             bootstrap.ThrowIfThreadException();
             using CaptureImageResult image = ImageCapture.Capture(root, driver.Popups, driver.ComboBoxPopups);
             string relativeDirectory = Path.Combine(Sanitize(componentType), Sanitize(theme.Id), scale.ToString(CultureInfo.InvariantCulture));

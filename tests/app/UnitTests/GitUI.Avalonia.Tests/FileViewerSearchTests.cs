@@ -379,6 +379,7 @@ public sealed class FileViewerSearchTests
 
             GetToolTipText(accessor.NextChangeButton).Should().Be("Next change\u00A0(Ctrl+Down)");
             viewer.Font.Name.Should().Be("Consolas");
+            viewer.Font.Size.Should().Be(10);
             _ = loader.Received().LoadHotkeys(FileViewer.HotkeySettingsName);
         }
         finally
