@@ -66,6 +66,7 @@ public sealed class AboutDialogsTests
         textBoxes.Should().OnlyContain(textBox => textBox.IsReadOnly && !textBox.IsTabStop);
         textBoxes.Should().OnlyContain(textBox => textBox.BorderThickness == new Thickness(0));
         textBoxes.Should().OnlyContain(textBox => textBox.VerticalContentAlignment == Avalonia.Layout.VerticalAlignment.Top);
+        textBoxes.Should().OnlyContain(textBox => textBox.TextWrapping == Avalonia.Media.TextWrapping.Wrap);
         textBoxes[0].Text.Should().Contain("Team:").And.Contain("Contributors:");
     }
 
@@ -122,12 +123,18 @@ public sealed class AboutDialogsTests
             form.FindControl<Image>("logoPictureBox")!.Bounds.Should().Be(new Rect(12, 12, 128, 128));
             form.FindControl<TextBlock>("label2")!.Bounds.Should().Be(new Rect(12, 156, 133, 30));
             form.FindControl<Border>("pictureDonate")!.Bounds.Should().Be(new Rect(6, 202, 145, 32));
-            form.FindControl<HyperlinkButton>("_NO_TRANSLATE_labelProductName")!.Bounds.Height.Should().Be(19);
-            form.FindControl<TextBlock>("_NO_TRANSLATE_labelProductDescription")!.Bounds.Height.Should().Be(13);
-            form.FindControl<HyperlinkButton>("_NO_TRANSLATE_ThanksTo")!.Bounds.Height.Should().Be(13);
-            form.FindControl<HyperlinkButton>("linkLabelIcons")!.Bounds.Height.Should().Be(13);
-            form.FindControl<EnvironmentInfo>("environmentInfo")!.Bounds.Should().Be(new Rect(0, 81, 420, 139));
-            form.FindControl<TextBlock>("label1")!.Bounds.Should().Be(new Rect(0, 228, 420, 54));
+            form.FindControl<Border>("panel1")!.Bounds.Should().Be(new Rect(157, 0, 444, 318));
+            Border tableLayoutPanel1 = (Border)form.FindControl<Border>("panel1")!.Child!;
+            tableLayoutPanel1.Bounds.Should().Be(new Rect(0, 0, 444, 318));
+            GetBoundsInTable(form.FindControl<HyperlinkButton>("_NO_TRANSLATE_labelProductName")!).Should().Be(new Rect(12, 24, 420, 19));
+            GetBoundsInTable(form.FindControl<TextBlock>("_NO_TRANSLATE_labelProductDescription")!).Should().Be(new Rect(12, 43, 420, 13));
+            GetBoundsInTable(form.FindControl<HyperlinkButton>("_NO_TRANSLATE_ThanksTo")!).Should().Be(new Rect(12, 79, 420, 13));
+            GetBoundsInTable(form.FindControl<HyperlinkButton>("linkLabelIcons")!).Should().Be(new Rect(12, 92, 213, 13));
+            GetBoundsInTable(form.FindControl<EnvironmentInfo>("environmentInfo")!).Should().Be(new Rect(12, 105, 420, 139));
+            GetBoundsInTable(form.FindControl<TextBlock>("label1")!).Should().Be(new Rect(12, 252, 420, 54));
+
+            Rect GetBoundsInTable(Control control)
+                => new(control.TranslatePoint(default, tableLayoutPanel1)!.Value, control.Bounds.Size);
         }
         finally
         {
