@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -12,6 +12,7 @@ namespace GitUI.CommitInfo;
 
 public partial class CommitInfoHeader : GitModuleControl
 {
+    private const int TextRendererOverhang = 7;
     private readonly IDateFormatter _dateFormatter = new DateFormatter();
     private readonly ILinkFactory _linkFactory = new LinkFactory();
     private readonly ICommitDataManager _commitDataManager;
@@ -31,6 +32,11 @@ public partial class CommitInfoHeader : GitModuleControl
 
         _commitDataManager = new CommitDataManager(() => Module);
         _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);
+
+        // The source tab-stop calculation uses TextRenderer, whose preferred width includes
+        // renderer-owned overhang not returned by the portable glyph measurer.
+        rtbRevisionHeader.SetTabStops(
+            _commitDataHeaderRenderer.GetTabStops().Select(tabStop => tabStop + TextRendererOverhang));
     }
 
     // Avalonia constraint: ContextMenu is the native counterpart of ContextMenuStrip.
@@ -50,6 +56,12 @@ public partial class CommitInfoHeader : GitModuleControl
             rtbRevisionHeader.SetXHTMLText(header);
             rtbRevisionHeader.SelectionStart = 0; // scroll up
             rtbRevisionHeader.SelectionEnd = 0;   // scroll up
+
+            int lineCount = header.Count(character => character == '\n');
+            double avatarHeight = AppSettings.ShowAuthorAvatarInCommitInfo
+                ? AppSettings.AuthorImageSizeInCommitInfo
+                : 0;
+            Height = Math.Max(avatarHeight, lineCount * rtbRevisionHeader.LineHeight);
 
             LoadAuthorImage(revision);
         });

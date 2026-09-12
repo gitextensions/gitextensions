@@ -1,7 +1,9 @@
-using Avalonia;
+﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Compat;
@@ -119,6 +121,7 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
                 Tag = toolStrip,
                 ToggleType = MenuItemToggleType.CheckBox,
             };
+            AutomationProperties.SetName(item, text);
             CreateToolStripSubMenus(toolStrip, item);
             toolStrip.PropertyChanged += (_, e) =>
             {
@@ -134,6 +137,7 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
 
     private static void CreateToolStripSubMenus(Control senderToolStrip, MenuItem toolStripItem)
     {
+        const string toolbarSettingsPrefix = "formbrowse_toolbar_visibility_";
         IEnumerable<Control> controls = senderToolStrip is Panel panel
             ? panel.Children
             : senderToolStrip.GetLogicalDescendants()
@@ -156,21 +160,38 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
                      ?? toolbarItem.Name
                      ?? string.Empty,
             };
+            string key = toolbarItem.Name ?? string.Empty;
+            bool visible = AppSettings.GetBool(
+                toolbarSettingsPrefix + key,
+                defaultValue: !key.Contains(FormBrowse.FetchPullToolbarShortcutsPrefix, StringComparison.Ordinal));
+
+            // Worktree availability is loaded asynchronously with the left-panel model. Keep
+            // its configured menu state without exposing the button before that load finishes.
+            if (key != "toolStripWorktrees")
+            {
+                toolbarItem.IsVisible = visible;
+            }
+
             MenuItem menuToolbarItem = new()
             {
                 Header = text,
-                IsChecked = toolbarItem.IsVisible,
+                IsChecked = visible,
                 Tag = toolbarItem,
                 ToggleType = MenuItemToggleType.CheckBox,
             };
-            toolbarItem.PropertyChanged += (_, e) =>
+            AutomationProperties.SetName(
+                menuToolbarItem,
+                AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(text));
+            menuToolbarItem.Click += (_, _) =>
             {
-                if (e.Property == Visual.IsVisibleProperty)
-                {
-                    menuToolbarItem.IsChecked = toolbarItem.IsVisible;
-                }
+                bool selectedVisibility = menuToolbarItem.IsChecked;
+                toolbarItem.IsVisible = selectedVisibility;
+                AppSettings.SetBool(
+                    toolbarSettingsPrefix + key,
+                    selectedVisibility == !key.Contains(FormBrowse.FetchPullToolbarShortcutsPrefix, StringComparison.Ordinal)
+                        ? null
+                        : selectedVisibility);
             };
-            menuToolbarItem.Click += (_, _) => toolbarItem.IsVisible = !toolbarItem.IsVisible;
             toolStripItem.Items.Add(menuToolbarItem);
         }
 
@@ -217,6 +238,17 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
             }
 
             target.Header = source.Header;
+            string? automationName = AutomationProperties.GetName(source);
+            if (string.IsNullOrWhiteSpace(automationName) && source.Header is string header)
+            {
+                automationName = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(header);
+            }
+
+            if (!string.IsNullOrWhiteSpace(automationName))
+            {
+                AutomationProperties.SetName(target, automationName);
+            }
+
             target.InputGesture = source.InputGesture;
             target.ToggleType = source.ToggleType;
             target.IsChecked = source.IsChecked;
@@ -301,6 +333,17 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
             foreach (string className in source.Classes.Where(className => !className.StartsWith(':')))
             {
                 target.Classes.Add(className);
+            }
+
+            string? automationName = AutomationProperties.GetName(source);
+            if (string.IsNullOrWhiteSpace(automationName) && source.Header is string header)
+            {
+                automationName = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(header);
+            }
+
+            if (!string.IsNullOrWhiteSpace(automationName))
+            {
+                AutomationProperties.SetName(target, automationName);
             }
 
             CopyItems(source, target);

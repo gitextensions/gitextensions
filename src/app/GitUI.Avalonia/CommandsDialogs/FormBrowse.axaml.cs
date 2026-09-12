@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -110,6 +110,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _commitDataManager = new CommitDataManager(() => Module);
         _commitDataManager.RevisionDetailsLoaded += (_, _) => RevisionGrid.InvalidateVisual();
         InitializeComponent();
+        commitInfoBelowHost.SizeChanged += CommitInfoHost_SizeChanged;
+        commitInfoLeftHost.SizeChanged += CommitInfoHost_SizeChanged;
+        commitInfoRightHost.SizeChanged += CommitInfoHost_SizeChanged;
         ApplySourceToolbarAutoSize();
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip, RevisionGrid, repositoryToolStripMenuItem);
         InitializeWorkspaceLayout();
@@ -986,6 +989,15 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         commitInfoLeftwardMenuItem.Click += (_, _) => SetCommitInfoPosition(CommitInfoPosition.LeftwardFromList);
         commitInfoRightwardMenuItem.Click += (_, _) => SetCommitInfoPosition(CommitInfoPosition.RightwardFromList);
         RefreshWorkspaceLayout();
+    }
+
+    private void CommitInfoHost_SizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        if (sender is Border host && ReferenceEquals(host.Child, RevisionInfo))
+        {
+            RevisionInfo.Width = e.NewSize.Width;
+            RevisionInfo.Height = e.NewSize.Height;
+        }
     }
 
     private async Task FillGpgInfoAsync(GitRevision? revision, CancellationToken cancellationToken)

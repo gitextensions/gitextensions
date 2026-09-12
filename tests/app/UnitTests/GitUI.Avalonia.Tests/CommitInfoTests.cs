@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
@@ -46,6 +46,18 @@ public sealed class CommitInfoTests
 
         link.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         activatedUri.Should().Be("gitext://gototag/v1");
+    }
+
+    [AvaloniaTest]
+    public void XhtmlTextBlock_should_preserve_source_tab_stop_width()
+    {
+        XhtmlTextBlock block = new();
+        block.SetTabStops([80, 81]);
+
+        block.SetXHTMLText("Author:\t\tA very long author identity");
+
+        block.MinWidth.Should().BeGreaterThan(81);
+        block.GetPlainText().Should().Be("Author:\t\tA very long author identity");
     }
 
     [AvaloniaTest]

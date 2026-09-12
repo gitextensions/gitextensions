@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -499,6 +499,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
         if (target is Control controlWithFlyout && GetFlyout(controlWithFlyout) is PopupFlyoutBase flyout)
         {
+            IInputElement? previouslyFocusedElement = _topLevel.FocusManager?.GetFocusedElement();
             flyout.ShowAt(controlWithFlyout);
             Dispatcher.UIThread.RunJobs();
             if (!flyout.IsOpen)
@@ -507,6 +508,15 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             }
 
             TrackPopup(flyout.Popup);
+            if (previouslyFocusedElement is Control previouslyFocusedControl)
+            {
+                // WinForms keeps focus on the pre-existing control when a ToolStripDropDown
+                // is opened by pointer. ShowAt otherwise gives the first Avalonia flyout item
+                // keyboard focus, which changes both the product state and captured visual.
+                previouslyFocusedControl.Focus();
+                Dispatcher.UIThread.RunJobs();
+            }
+
             _restoreActions.Add(flyout.Hide);
             return;
         }
