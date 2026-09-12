@@ -1051,6 +1051,14 @@ public sealed partial class ParityScreenshotTests
 
     private static void PrepareView(Control root, CaptureContext context)
     {
+        if (root is FormSettings formSettings)
+        {
+            // parity-scaffolding: The WinForms capture tool is built in Release, where the
+            // source's DEBUG-only discard button stays hidden. Keep the paired render in the
+            // same compilation state without changing the debug-only product affordance.
+            formSettings.GetTestAccessor().DiscardButton.IsVisible = false;
+        }
+
         if (root is FormAbout formAbout)
         {
             FieldInfo thanksTimer = typeof(FormAbout).GetField("_thanksTimer", BindingFlags.Instance | BindingFlags.NonPublic)
@@ -1562,8 +1570,11 @@ public sealed partial class ParityScreenshotTests
             status.Content = message;
             status.IsVisible = true;
             status.Background = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(background));
+            System.Drawing.Color controlText = status.ActualThemeVariant == ThemeVariant.Dark
+                ? System.Drawing.Color.FromArgb(240, 240, 240)
+                : System.Drawing.Color.Black;
             status.Foreground = new SolidColorBrush(
-                AvaloniaThemeResources.ToMediaColor(ColorHelper.GetTextColor(background)));
+                AvaloniaThemeResources.ToMediaColor(controlText.AdaptForeColor(background)));
             fix.IsVisible = !valid;
         }
 

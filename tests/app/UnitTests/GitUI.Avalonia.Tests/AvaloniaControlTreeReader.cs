@@ -664,6 +664,7 @@ internal sealed class AvaloniaControlTreeReader
         bool isDesignerMetadataControl = fieldName is not null && IsDesignerMetadataControl(control);
         Control? childSemanticParent = isSurfaceRoot || fieldName is not null || isInheritedFormProcessContainer
                                                 || isLocalSourceFlowLayoutPanel || isShellPreviewPanel || isSearchWindowControl
+                                                || isEnvironmentInfoLayout || isNativeTabPage
             ? control
             : semanticParent;
         string segment = isSurfaceRoot
@@ -749,7 +750,7 @@ internal sealed class AvaloniaControlTreeReader
                 boundsOverride: null))
             .ToArray();
 
-        return new CaptureNode
+        CaptureNode node = new()
         {
             Id = id,
             FieldName = fieldName,
@@ -1526,7 +1527,321 @@ internal sealed class AvaloniaControlTreeReader
             Columns = ReadColumns(control),
             Children = children
         };
+
+        return ApplyHelpAndSettingsSemanticOverrides(
+            node,
+            control,
+            semanticName,
+            sourceOwnerType,
+            rootMetadataType,
+            ordinal,
+            isSurfaceRoot,
+            isNativeTabControl,
+            isNativeTabPage,
+            isEnvironmentInfoLayout,
+            isEnvironmentInfoSeparator);
     }
+
+    private CaptureNode ApplyHelpAndSettingsSemanticOverrides(
+        CaptureNode node,
+        Control control,
+        string? semanticName,
+        string sourceOwnerType,
+        string rootMetadataType,
+        int ordinal,
+        bool isSurfaceRoot,
+        bool isNativeTabControl,
+        bool isNativeTabPage,
+        bool isEnvironmentInfoLayout,
+        bool isEnvironmentInfoSeparator)
+    {
+        if (rootMetadataType == "GitUI.CommandsDialogs.AboutBoxDialog.FormContributors")
+        {
+            if (isSurfaceRoot)
+            {
+                return node with { Colors = ReadSourceDesignerColors(control) };
+            }
+
+            if (isNativeTabControl)
+            {
+                return node with
+                {
+                    Margin = ReadThicknessPair(new Thickness(3)),
+                    Colors = ReadSourceDesignerColors(control),
+                    Anchor = ["Top", "Left"],
+                    Dock = "Fill",
+                    AutoSize = false,
+                    TabIndex = 0
+                };
+            }
+
+            if (isNativeTabPage)
+            {
+                node = WithBoundsAndClientSize(node, new Rect(1, 29, 622, 412), new Size(622, 412));
+                return node with
+                {
+                    Colors = ReadSourceDesignerColors(control),
+                    BorderStyle = "None",
+                    Anchor = ["Top", "Left"],
+                    Dock = "None",
+                    AutoSize = false,
+                    Alignment = null,
+                    TabIndex = ordinal,
+                    TabStop = false
+                };
+            }
+
+            if (control is TextBox)
+            {
+                CaptureColors colors = ReadSourceBackgroundColors(
+                    control,
+                    "GitExtensionsKnownColorWindowBrush",
+                    ResolveResourceArgb("GitExtensionsKnownColorWindowTextBrush")) with
+                {
+                    Border = null,
+                    SelectionForeground = null,
+                    SelectionBackground = null,
+                    InactiveSelectionForeground = null,
+                    InactiveSelectionBackground = null,
+                    Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+                };
+                node = WithBoundsAndClientSize(
+                    node,
+                    new Rect(0, 0, 622, 412),
+                    new Size(605, 412));
+                return node with
+                {
+                    Colors = colors,
+                    BorderStyle = "None",
+                    Anchor = ["Top", "Left"],
+                    Dock = "Fill",
+                    AutoSize = true,
+                    Alignment = "Left",
+                    TabIndex = 0
+                };
+            }
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormSettings")
+        {
+            bool isSettingsTreeSpacer = control is Border
+                && node.FieldName is null
+                && control.GetLogicalAncestors().Any(
+                    ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.SettingsDialog.SettingsTreeViewUserControl");
+            if (isSettingsTreeSpacer)
+            {
+                return node with
+                {
+                    Margin = ReadThicknessPair(new Thickness(3, 0)),
+                    Font = ReadFont(_root),
+                    BorderStyle = "None",
+                    Anchor = ["Top", "Left"],
+                    Dock = "Top",
+                    AutoSize = false,
+                    Alignment = "TopLeft",
+                    TabIndex = node.BoundsDip.Y == 31 ? 2 : 0
+                };
+            }
+
+            bool isSettingsHeaderWrapper = control.GetType().FullName == "GitUI.CommandsDialogs.SettingsDialog.SettingsPageHeader";
+            bool isChecklistGroupWrapper = semanticName == "groupBox1" && node.FieldName is null;
+            if (isSettingsHeaderWrapper)
+            {
+                return node with
+                {
+                    Margin = ReadThicknessPair(new Thickness(3, 4)),
+                    Anchor = ["Top", "Left"],
+                    ReadOnly = false
+                };
+            }
+
+            if (isChecklistGroupWrapper)
+            {
+                return node with
+                {
+                    Margin = ReadThicknessPair(new Thickness(3)),
+                    BorderStyle = null,
+                    Anchor = ["Top", "Left"]
+                };
+            }
+
+            if (semanticName is "panelCurrentSettingsPage" or "settingsPagePanel")
+            {
+                node = node with { BorderStyle = "None" };
+            }
+
+            if (sourceOwnerType == "GitUI.CommandsDialogs.SettingsDialog.SettingsPageHeader")
+            {
+                node = semanticName switch
+                {
+                    "tableLayoutPanel2" => WithBounds(node, node.BoundsDip with { Y = 0 }),
+                    "tableLayoutPanel1" => WithBounds(node, node.BoundsDip with { Y = 4 }),
+                    "label1" => WithBounds(node, node.BoundsDip with { Y = 10 }),
+                    _ => node
+                };
+            }
+
+            return node;
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormAbout")
+        {
+            bool isAboutTableLayout = control is Border
+                && node.FieldName is null
+                && control.GetLogicalParent() is Control { Name: "panel1" };
+            if (isAboutTableLayout)
+            {
+                return node with
+                {
+                    Margin = ReadThicknessPair(new Thickness(2)),
+                    Font = ReadFont(_root),
+                    BorderStyle = "None",
+                    Anchor = ["Top", "Left"],
+                    Dock = "Fill",
+                    AutoSize = true,
+                    TabIndex = 0
+                };
+            }
+
+            if (semanticName == "panel1")
+            {
+                return node with
+                {
+                    Margin = ReadThicknessPair(new Thickness(12)),
+                    Anchor = ["Top", "Left"],
+                    Dock = "Fill",
+                    AutoSize = false,
+                    TabIndex = 1
+                };
+            }
+
+            if (semanticName == "environmentInfo")
+            {
+                return node with { Margin = ReadThicknessPair(default(Thickness)) };
+            }
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.EnvironmentInfo"
+            || rootMetadataType == "GitUI.CommandsDialogs.FormAbout")
+        {
+            if (isEnvironmentInfoLayout)
+            {
+                return node with
+                {
+                    Margin = ReadThicknessPair(default(Thickness)),
+                    Anchor = ["Top", "Left"]
+                };
+            }
+
+            if (isEnvironmentInfoSeparator)
+            {
+                return node with
+                {
+                    Colors = ReadSourceBackgroundColors(
+                        control,
+                        "GitExtensionsControlBackgroundBrush",
+                        ResolveSourceControlTextArgb()),
+                    Anchor = ["Top", "Left"]
+                };
+            }
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.BrowseDialog.FormChangeLog"
+            && semanticName == "ChangeLog")
+        {
+            node = WithClientSize(node, new Size(
+                Math.Max(0, (double)node.BoundsDip.Width - 21),
+                Math.Max(0, (double)node.BoundsDip.Height - 21)));
+            CaptureColors colors = ReadColors(control);
+            string? background = GitExtensions.Shims.WinForms.Application.SystemColorMode
+                == GitExtensions.Shims.WinForms.SystemColorMode.Dark
+                ? colors.Background
+                : ResolveResourceArgb("GitExtensionsControlBackgroundBrush");
+            return node with
+            {
+                Colors = colors with
+                {
+                    Foreground = ResolveSourceControlTextArgb(),
+                    Background = background,
+                    Border = null,
+                    SelectionForeground = null,
+                    SelectionBackground = null,
+                    InactiveSelectionForeground = null,
+                    InactiveSelectionBackground = null,
+                    DisabledBackground = background,
+                    Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+                }
+            };
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.BrowseDialog.FormDonate")
+        {
+            if (isSurfaceRoot)
+            {
+                node = node with { Focused = true };
+            }
+
+            return semanticName == "lblText" ? node with { AutoSize = true } : node;
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormCommandlineHelp" && isSurfaceRoot)
+        {
+            return node with { Focused = true };
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.BrowseDialog.FormOpenDirectory")
+        {
+            return semanticName switch
+            {
+                "folderBrowserButton" => node with { BorderStyle = null },
+                "_NO_TRANSLATE_Directory" => node with { Selected = true },
+                _ => node
+            };
+        }
+
+        return node;
+    }
+
+    private CaptureNode WithBounds(CaptureNode node, CaptureRectangleF bounds)
+        => node with
+        {
+            BoundsPx = new CaptureRectangle
+            {
+                X = ToPixel((double)bounds.X),
+                Y = ToPixel((double)bounds.Y),
+                Width = ToPixel((double)bounds.Width),
+                Height = ToPixel((double)bounds.Height)
+            },
+            BoundsDip = bounds
+        };
+
+    private CaptureNode WithBoundsAndClientSize(CaptureNode node, Rect bounds, Size clientSize)
+        => WithClientSize(
+            WithBounds(
+                node,
+                new CaptureRectangleF
+                {
+                    X = ToDecimal(bounds.X),
+                    Y = ToDecimal(bounds.Y),
+                    Width = ToDecimal(bounds.Width),
+                    Height = ToDecimal(bounds.Height)
+                }),
+            clientSize);
+
+    private CaptureNode WithClientSize(CaptureNode node, Size clientSize)
+        => node with
+        {
+            ClientSizePx = new CaptureSize
+            {
+                Width = ToPixel(clientSize.Width),
+                Height = ToPixel(clientSize.Height)
+            },
+            ClientSizeDip = new CaptureSizeF
+            {
+                Width = ToDecimal(clientSize.Width),
+                Height = ToDecimal(clientSize.Height)
+            }
+        };
 
     private DesignerLayoutMetadata? GetDesignerLayout(Control control, string? fieldName)
     {

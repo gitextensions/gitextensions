@@ -32,6 +32,8 @@
             Margin="3"
             HorizontalAlignment="Right">
         <TextBlock x:Name="labelInstantSaveNotice"
+                   Width="349"
+                   HorizontalAlignment="Left"
                    VerticalAlignment="Center"
                    TextAlignment="Right"
                    TextWrapping="NoWrap"
