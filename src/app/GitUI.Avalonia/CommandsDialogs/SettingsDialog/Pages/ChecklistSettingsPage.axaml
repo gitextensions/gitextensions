@@ -31,7 +31,7 @@
                             Padding="0"
                             HorizontalContentAlignment="Stretch"
                             VerticalAlignment="Top">
-      <Grid Margin="12,11,12,8"
+      <Grid Margin="12"
             RowDefinitions="Auto,36">
         <Grid x:Name="tableLayoutPanel1"
               Grid.Row="0"
@@ -68,6 +68,7 @@
           <CheckBox x:Name="CheckAtStartup"
                     Grid.Row="11"
                     Margin="3"
+                    HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     Content="Check settings at startup (disables automatically if all settings are correct)" />
         </Grid>

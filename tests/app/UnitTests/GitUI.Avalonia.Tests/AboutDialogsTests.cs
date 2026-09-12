@@ -57,6 +57,7 @@ public sealed class AboutDialogsTests
 
         TabControl tabs = (TabControl)form.Content!;
         tabs.ItemCount.Should().Be(3);
+        tabs.Classes.Should().Contain("gitextensions-native-tabs");
 
         TabItem[] pages = tabs.Items.Cast<TabItem>().ToArray();
         pages.Select(page => page.Header).Should().Equal("Developers", "Translators", "Designers");
