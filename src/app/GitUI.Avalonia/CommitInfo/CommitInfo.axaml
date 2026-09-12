@@ -39,6 +39,7 @@
                 VerticalScrollBarVisibility="Auto">
     <Grid x:Name="tableLayout"
           RowDefinitions="Auto,Auto,Auto"
+          VerticalAlignment="Top"
           Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
           IsVisible="False">
       <local:CommitInfoHeader x:Name="commitInfoHeader"
@@ -48,13 +49,14 @@
               Grid.Row="1"
               Background="{DynamicResource GitExtensionsCommitMessageBackgroundBrush}">
         <compat:XhtmlTextBlock x:Name="rtbxCommitMessage"
-                               Margin="8"
+                               Margin="8,8,24,8"
                                Background="{DynamicResource GitExtensionsCommitMessageBackgroundBrush}"
                                ContextMenu="{StaticResource CommitInfoContextMenu}"
                                FontFamily="{DynamicResource GitExtensionsCommitFontFamily}"
                                FontSize="{DynamicResource GitExtensionsCommitFontSize}"
                                FontStyle="{DynamicResource GitExtensionsCommitFontStyle}"
                                FontWeight="{DynamicResource GitExtensionsCommitFontWeight}"
+                               LineHeight="15"
                                TextWrapping="Wrap"
                                LinkClicked="LinkClicked"
                                KeyDown="RichTextBox_KeyDown"
@@ -69,6 +71,7 @@
                              FontSize="{DynamicResource GitExtensionsUiFontSize}"
                              FontStyle="{DynamicResource GitExtensionsUiFontStyle}"
                              FontWeight="{DynamicResource GitExtensionsUiFontWeight}"
+                             LineHeight="15"
                              TextWrapping="Wrap"
                              LinkClicked="LinkClicked"
                              KeyDown="RichTextBox_KeyDown"

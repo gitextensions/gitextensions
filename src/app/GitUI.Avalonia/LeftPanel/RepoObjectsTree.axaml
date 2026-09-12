@@ -65,6 +65,8 @@
                          Classes="gitextensions-toolbar-button gitextensions-icon-only"
                          Width="26"
                          Height="26"
+                         Margin="0"
+                         Padding="2"
                          Content=""
                          Icon="{x:Static properties:Images.Preview}" />
     </Grid>

@@ -1065,6 +1065,7 @@ internal static class WinFormsInputMetadata
                 new("DiffFiles", 1, null, null),
                 new("DiffSplitContainer", 0, null, null),
                 new("DiffText", 0, null, null),
+                new("LeftSplitContainer", 0, false, null),
             ],
             ["GitUI.CommandsDialogs.RevisionGpgInfoControl"] =
             [
@@ -2422,9 +2423,7 @@ internal static class WinFormsInputMetadata
                 new("toolStripSeparator0", "ToolStripSeparator"),
                 new("toolStripSeparator1", "ToolStripSeparator"),
                 new("toolStripSeparator10", "ToolStripSeparator"),
-                new("toolStripSeparator11", "ToolStripSeparator"),
                 new("toolStripSeparator13", "ToolStripSeparator"),
-                new("toolStripSeparator14", "ToolStripSeparator"),
                 new("toolStripSeparator15", "ToolStripSeparator"),
                 new("toolStripSeparator17", "ToolStripSeparator"),
                 new("toolStripSeparator2", "ToolStripSeparator"),
@@ -3398,6 +3397,7 @@ internal static class WinFormsInputMetadata
                 new("DiffFiles", "FileStatusList"),
                 new("DiffSplitContainer", "SplitContainer"),
                 new("DiffText", "GitUI.Editor.FileViewer"),
+                new("LeftSplitContainer", "SplitContainer"),
             ],
             ["GitUI.CommandsDialogs.RevisionGpgInfoControl"] =
             [
@@ -5744,6 +5744,7 @@ internal static class WinFormsInputMetadata
                 new("DiffFiles", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
                 new("DiffSplitContainer", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, true),
                 new("DiffText", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
+                new("LeftSplitContainer", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, true),
             ],
             ["GitUI.CommandsDialogs.RevisionGpgInfoControl"] =
             [

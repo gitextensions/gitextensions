@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Text;
 using Avalonia;
@@ -25,6 +25,7 @@ using GitUI.SpellChecker;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using ToolStripMenuItem = GitUI.Compat.WinFormsControls.ToolStripMenuItem;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -432,8 +433,8 @@ public sealed class FormCommitTests
         FormCommit form = new(new GitUICommands(_serviceContainer, module));
         try
         {
-            form.FindControl<CheckBox>("signOffToolStripMenuItem")!.IsChecked = true;
-            form.FindControl<CheckBox>("noVerifyToolStripMenuItem")!.IsChecked = true;
+            form.FindControl<ToolStripMenuItem>("signOffToolStripMenuItem")!.IsChecked = true;
+            form.FindControl<ToolStripMenuItem>("noVerifyToolStripMenuItem")!.IsChecked = true;
             form.FindControl<CheckBox>("ResetAuthor")!.IsChecked = true;
             form.FindControl<TextBox>("toolAuthor")!.Text = "Custom Author <author@example.com>";
             form.FindControl<ComboBox>("gpgSignCommitToolStripComboBox")!.SelectedIndex = 3;
@@ -737,8 +738,8 @@ public sealed class FormCommitTests
 
             form.GetTestAccessor().Message.Text = "Commit with options";
             form.FindControl<TextBox>("toolAuthor")!.Text = "Custom Author <author@example.com>";
-            form.FindControl<CheckBox>("signOffToolStripMenuItem")!.IsChecked = true;
-            form.FindControl<CheckBox>("noVerifyToolStripMenuItem")!.IsChecked = true;
+            form.FindControl<ToolStripMenuItem>("signOffToolStripMenuItem")!.IsChecked = true;
+            form.FindControl<ToolStripMenuItem>("noVerifyToolStripMenuItem")!.IsChecked = true;
             form.FindControl<ComboBox>("gpgSignCommitToolStripComboBox")!.SelectedIndex = 1;
             Button commit = form.FindControl<Button>("Commit")!;
             await WaitUntilAsync(() => commit.IsEnabled);

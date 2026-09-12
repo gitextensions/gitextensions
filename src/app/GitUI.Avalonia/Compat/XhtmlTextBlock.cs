@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using Avalonia;
@@ -20,8 +20,11 @@ namespace GitUI.Compat;
 /// </remarks>
 public sealed partial class XhtmlTextBlock : SelectableTextBlock
 {
+    private const double RichTextContentOverhang = 12;
+    private const double TextRendererOverhang = 7;
     private static readonly Regex _tokenRegex = TokenRegex();
     private string _plainText = string.Empty;
+    private IReadOnlyList<double> _tabStops = [];
 
     /// <summary>Occurs when an XHTML anchor is activated.</summary>
     public event EventHandler<LinkClickedEventArgs>? LinkClicked;
@@ -37,6 +40,13 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     /// <summary>Clears the rendered content.</summary>
     public void Clear() => SetXHTMLText(string.Empty);
+
+    /// <summary>Applies the absolute tab stops used by the source RichTextBox.</summary>
+    public void SetTabStops(IEnumerable<int> tabStops)
+    {
+        _tabStops = [.. tabStops.Select(value => (double)value)];
+        UpdateTabbedMinimumWidth();
+    }
 
     /// <summary>Renders the supported XHTML subset.</summary>
     public void SetXHTMLText(string? xhtml)
@@ -84,6 +94,40 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         }
 
         _plainText = plainText.ToString();
+        UpdateTabbedMinimumWidth();
+    }
+
+    private void UpdateTabbedMinimumWidth()
+    {
+        if (_tabStops.Count == 0 || string.IsNullOrEmpty(_plainText))
+        {
+            return;
+        }
+
+        double maximumLineWidth = 0;
+        foreach (string line in _plainText.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
+        {
+            double lineWidth = 0;
+            int tabIndex = 0;
+            string[] parts = line.Split('\t');
+            for (int index = 0; index < parts.Length; index++)
+            {
+                if (index > 0)
+                {
+                    lineWidth = tabIndex < _tabStops.Count
+                        ? Math.Max(lineWidth, _tabStops[tabIndex++])
+                        : lineWidth + WinFormsTextMeasurer.Measure(this, "    ");
+                }
+
+                lineWidth += WinFormsTextMeasurer.Measure(this, parts[index]);
+            }
+
+            maximumLineWidth = Math.Max(maximumLineWidth, lineWidth);
+        }
+
+        // TextRenderer and a borderless RichEdit contents rectangle retain renderer-owned
+        // horizontal overhang outside the measured glyph advances.
+        MinWidth = Math.Ceiling(maximumLineWidth + TextRendererOverhang + RichTextContentOverhang);
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)

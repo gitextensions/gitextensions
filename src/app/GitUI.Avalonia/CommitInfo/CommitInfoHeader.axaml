@@ -2,8 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:compat="using:GitUI.Compat"
              xmlns:local="using:GitUI"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
              x:Class="GitUI.CommitInfo.CommitInfoHeader">
-  <Grid ColumnDefinitions="Auto,*">
+  <wf:TableLayoutPanel ColumnDefinitions="Auto,*">
     <local:AvatarControl x:Name="avatarControl"
                          Margin="0,0,8,0"
                          VerticalAlignment="Top" />
@@ -14,10 +15,11 @@
                            FontSize="{DynamicResource GitExtensionsUiFontSize}"
                            FontStyle="{DynamicResource GitExtensionsUiFontStyle}"
                            FontWeight="{DynamicResource GitExtensionsUiFontWeight}"
+                           LineHeight="15"
                            TextWrapping="NoWrap"
                            VerticalAlignment="Top"
                            LinkClicked="rtbRevisionHeader_LinkClicked"
                            KeyDown="rtbRevisionHeader_KeyDown"
                            PointerPressed="rtbRevisionHeader_MouseDown" />
-  </Grid>
+  </wf:TableLayoutPanel>
 </UserControl>

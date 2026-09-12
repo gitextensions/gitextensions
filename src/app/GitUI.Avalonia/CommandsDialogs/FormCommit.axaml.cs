@@ -2339,6 +2339,11 @@ public sealed partial class FormCommit : GitModuleForm
 
         ResetSoft.IsEnabled = amend && !Module.RevParse(_resetSoftRevision).IsZero;
         UpdateStageButtons();
+
+        if (AppSettings.CommitDialogSelectStagedOnEnterMessage.Value)
+        {
+            SelectStaged();
+        }
     }
 
     private void StageInSuperproject_CheckedChanged(object? sender, EventArgs e)

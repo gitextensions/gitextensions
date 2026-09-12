@@ -692,8 +692,8 @@ internal sealed class ControlTreeReader
             Dock = control.Dock.ToString(),
             AutoSize = control.AutoSize,
             Alignment = GetPropertyValue(control, "TextAlign") ?? GetPropertyValue(control, "ContentAlignment"),
-            Text = control.Text,
-            ToolTip = GetToolTip(control),
+            Text = NormalizeText(control.Text),
+            ToolTip = NormalizeText(GetToolTip(control)),
             TranslationSource = names.FirstOrDefault(),
             TabIndex = control.TabIndex,
             TabStop = control.TabStop,
@@ -793,8 +793,8 @@ internal sealed class ControlTreeReader
             Dock = null,
             AutoSize = item.AutoSize,
             Alignment = item.TextAlign.ToString(),
-            Text = item.Text,
-            ToolTip = item.ToolTipText,
+            Text = NormalizeText(item.Text),
+            ToolTip = NormalizeText(item.ToolTipText),
             TranslationSource = names.FirstOrDefault(),
             TabIndex = null,
             TabStop = null,
@@ -815,6 +815,11 @@ internal sealed class ControlTreeReader
             Children = children
         };
     }
+
+    private static string? NormalizeText(string? text)
+        => text?
+            .Replace("\r\n", "\n", StringComparison.Ordinal)
+            .Replace('\r', '\n');
 
     private CaptureNode ReadToolStripItemCollection(ToolStrip popup, string id, Point primaryScreenOrigin)
     {
