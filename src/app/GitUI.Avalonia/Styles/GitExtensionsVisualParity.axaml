@@ -880,6 +880,8 @@
     <Setter Property="MinHeight" Value="23" />
     <Setter Property="FontSize" Value="12" />
     <Setter Property="FontWeight" Value="Normal" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
     <Setter Property="Margin" Value="0" />
     <Setter Property="Padding" Value="6,1" />
     <Setter Property="CornerRadius" Value="0" />
@@ -1358,6 +1360,7 @@
   </Style>
 
   <Style Selector="MenuItem">
+    <Setter Property="Height" Value="22" />
     <Setter Property="MinHeight" Value="22" />
     <Setter Property="Padding" Value="0,1" />
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
@@ -1465,6 +1468,7 @@
   </Style>
   <Style Selector="Button:pressed">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPressedBackgroundBrush}" />
+    <Setter Property="RenderTransform" Value="none" />
   </Style>
   <Style Selector="Button[IsDefault=true]">
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />

@@ -10,6 +10,22 @@ namespace WinFormsParityCapture.Tests;
 public sealed class ControlTreeReaderTests
 {
     [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_normalize_control_and_tooltip_line_endings()
+    {
+        using ToolTipForm form = new();
+        form.CreateControl();
+        form.Message.CreateControl();
+
+        CaptureNode capturedLabel = new ControlTreeReader(form, dpi: 96)
+            .ReadPrimary(form, form.Bounds)
+            .Root.Children.Single();
+
+        capturedLabel.Text.Should().Be("First\nSecond\nThird");
+        capturedLabel.ToolTip.Should().Be("Tip one\nTip two");
+    }
+
+    [Test]
     public void ReadPrimary_should_record_TabPage_owned_tooltip_text()
     {
         using Form form = new();
@@ -484,5 +500,19 @@ public sealed class ControlTreeReaderTests
         }
 
         public Button TestButton => _btnAction;
+    }
+
+    private sealed class ToolTipForm : Form
+    {
+        private readonly Label _message = new() { Name = "message", Text = "First\r\nSecond\rThird" };
+        private readonly ToolTip _toolTip = new();
+
+        public ToolTipForm()
+        {
+            _toolTip.SetToolTip(_message, "Tip one\r\nTip two");
+            Controls.Add(_message);
+        }
+
+        public Label Message => _message;
     }
 }

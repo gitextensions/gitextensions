@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -51,11 +51,14 @@ public sealed class InputAccessibilityTests
                 Path.Combine(repositoryRoot, "src", "plugins", "Gource")),
         ]));
         WinFormsInputMetadata.ByType.Should().HaveCount(142);
-        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1515);
+        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1516);
         WinFormsInputMetadata.SourceByType.Should().ContainKey("GitUI.CommandsDialogs.FormBrowse");
         WinFormsInputMetadata.SourceByType["GitUI.CommandsDialogs.FormBrowse"]
             .Single(item => item.FieldName == "toolStripButtonPull")
             .SourceType.Should().Be("ToolStripSplitButton");
+        WinFormsInputMetadata.SourceByType["GitUI.CommandsDialogs.RevisionDiffControl"]
+            .Single(item => item.FieldName == "LeftSplitContainer")
+            .SourceType.Should().Be("SplitContainer");
         WinFormsInputMetadata.AutoSizeRootTypes.Should().Contain("GitUI.CommandsDialogs.FormCompareToBranch");
         WinFormsInputMetadata.DesignerDpiByType["GitUI.CommandsDialogs.FormFormatPatch"]
             .Should().Be(new DesignerDpiMetadata(120, 120));

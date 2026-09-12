@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -605,7 +605,9 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormBrowse))
         {
-            return new FormBrowse(context.Commands);
+            FormBrowse form = new(context.Commands);
+            GetFieldValue<GitUI.CommitInfo.CommitInfo>(form, "RevisionInfo").ShowBranchesAsLinks = true;
+            return form;
         }
 
         if (viewType == typeof(FormCleanupRepository))
@@ -1029,6 +1031,22 @@ public sealed partial class ParityScreenshotTests
 
         return (Control)(Activator.CreateInstance(viewType)
             ?? throw new InvalidOperationException($"Could not construct {viewType.FullName}."));
+    }
+
+    private static T GetFieldValue<T>(object owner, string fieldName) where T : class
+    {
+        for (Type? type = owner.GetType(); type is not null; type = type.BaseType)
+        {
+            FieldInfo? field = type.GetField(
+                fieldName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+            if (field?.GetValue(owner) is T value)
+            {
+                return value;
+            }
+        }
+
+        throw new InvalidOperationException($"Field '{fieldName}' was not found on {owner.GetType().FullName}.");
     }
 
     private static void PrepareView(Control root, CaptureContext context)

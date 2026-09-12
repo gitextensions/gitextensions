@@ -317,7 +317,7 @@
           <compat:IconSplitButton.Flyout>
             <MenuFlyout>
               <wf:ToolStripMenuItem x:Name="pullToolStripMenuItem1" Header="Open _pull dialog..." />
-              <wf:ToolStripSeparator x:Name="toolStripSeparator11" />
+              <wf:ToolStripSeparator />
               <wf:ToolStripMenuItem x:Name="mergeToolStripMenuItem" Header="Pull - _merge" />
               <wf:ToolStripMenuItem x:Name="rebaseToolStripMenuItem1" Header="Pull - _rebase" />
               <wf:ToolStripMenuItem x:Name="fetchToolStripMenuItem"
@@ -330,7 +330,7 @@
               <wf:ToolStripMenuItem x:Name="fetchPruneAllToolStripMenuItem"
                                     Header="F_etch and prune all"
                                     ToolTip.Tip="Fetch branches and tags from all remote repositories also prune deleted branches" />
-              <wf:ToolStripSeparator x:Name="toolStripSeparator14" />
+              <wf:ToolStripSeparator />
               <wf:ToolStripMenuItem x:Name="setDefaultPullButtonActionToolStripMenuItem" Header="Set _default Pull button action" />
             </MenuFlyout>
           </compat:IconSplitButton.Flyout>
@@ -463,6 +463,8 @@
                                               Grid.Row="2"
                                               SelectedIndex="0"
                                               Padding="0"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Stretch"
                                               Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
                                               Classes="gitextensions-workspace-tabs">
           <wf:TabPage x:Name="CommitInfoTabPage"
