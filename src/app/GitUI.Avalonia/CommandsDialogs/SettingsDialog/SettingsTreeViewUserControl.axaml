@@ -15,9 +15,11 @@
     </Style>
   </UserControl.Styles>
   <Grid RowDefinitions="8,Auto,8,*">
+    <Border Grid.Row="2" />
     <TextBox x:Name="textBoxFind"
              Grid.Row="1"
              PlaceholderText="Type to find..." />
+    <Border Grid.Row="0" />
     <TreeView x:Name="treeView1"
               Classes="gitextensions-native-tree"
               Grid.Row="3"
