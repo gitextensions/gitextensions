@@ -24,11 +24,70 @@ internal sealed class WorkingDirectoryToolStripSplitButton : ToolStripSplitButto
         Right click starts the "Open repository" dialog.
         """);
 
+    // This is used as Tag in order to mark controls which are to be excluded from the filtering considerations.
+    internal static readonly object ExcludeFromFilterMarker = new();
+
+    /// <summary>
+    ///  Creates a search box that filters the recent-repository entries of the given drop-down
+    ///  owner. Shared by the original split button (<see cref="Implementation"/>) and by cloned
+    ///  instances placed on custom toolbars (<see cref="ToolbarItemConverter"/>), so both produce
+    ///  an identical, functional search box.
+    /// </summary>
+    internal static ToolStripTextBox CreateFilterTextBox(ToolStripDropDownItem owner, string placeholderText)
+    {
+        ToolStripTextBox filter = new() { Tag = ExcludeFromFilterMarker };
+
+        TextBox filterTextbox = filter.TextBox;
+        filterTextbox.PlaceholderText = placeholderText;
+        filterTextbox.TextChanged += (s, e) =>
+        {
+            if (filter.GetCurrentParent() is null)
+            {
+                // We are clearing the textbox while opening the dropdown
+                return;
+            }
+
+            // Default items include:
+            //  1. filter
+            //  2. separator
+            //  3. favourite items
+            //      ... recent items
+            //  4. "Open repo..."
+            //  5. "Close repo..."
+            //  6. separator
+            //  7. "Configure menu"
+            const int defaultItemCount = 7;
+            if (owner.DropDown.Items.Count <= defaultItemCount)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(filterTextbox.Text))
+            {
+                foreach (ToolStripItem item in owner.DropDown.Items)
+                {
+                    item.Visible = true;
+                }
+
+                return;
+            }
+
+            foreach (ToolStripItem item in owner.DropDown.Items)
+            {
+                if (item is ToolStripSeparator || item.Tag == ExcludeFromFilterMarker)
+                {
+                    continue;
+                }
+
+                item.Visible = item.Text?.Contains(filterTextbox.Text, StringComparison.CurrentCultureIgnoreCase) is true;
+            }
+        };
+
+        return filter;
+    }
+
     private sealed class Implementation
     {
-        // This is used as Tag in order to mark controls which are to be excluded from the filtering considerations.
-        private static readonly object _excludeFromFilterMarker = new();
-
         /// <summary>
         ///  Gets the current instance of the git module.
         /// </summary>
@@ -56,7 +115,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : ToolStripSplitButto
         private readonly ToolStripMenuItem _tsmiOpenLocalRepository;
         private readonly ToolStripMenuItem _tsmiCloseRepo;
         private readonly ToolStripMenuItem _tsmiRecentReposSettings;
-        private readonly ToolStripTextBox _txtFilter = new();
+        private readonly ToolStripTextBox _txtFilter;
 
         private readonly StartToolStripMenuItem _startToolStripMenuItem;
         private readonly ToolStripMenuItem _closeToolStripMenuItem;
@@ -68,7 +127,11 @@ internal sealed class WorkingDirectoryToolStripSplitButton : ToolStripSplitButto
             StartToolStripMenuItem startToolStripMenuItem,
             ToolStripMenuItem closeToolStripMenuItem)
         {
-            button.ButtonClick += (s, e) => button.ShowDropDown();
+            // Defer ShowDropDown out of the OnMouseUp stack. Opening the dropdown synchronously
+            // from within ButtonClick (raised during the control's internal OnMouseUp) gets
+            // cancelled by the end of mouse processing / the dropdown grabbing capture, so the
+            // first click "doesn't stick" and the menu only appears on the second click.
+            button.ButtonClick += (s, e) => button.Owner?.BeginInvoke(() => button.ShowDropDown());
             button.DropDownOpening += (s, e) => FillDropDown(button);
             button.MouseUp += MouseUpHandler;
             button.ToolTipText = _toolTip.Text;
@@ -78,78 +141,32 @@ internal sealed class WorkingDirectoryToolStripSplitButton : ToolStripSplitButto
             _startToolStripMenuItem = startToolStripMenuItem;
             _closeToolStripMenuItem = closeToolStripMenuItem;
 
-            _txtFilter.Tag = _excludeFromFilterMarker;
-
-            TextBox filterTextbox = _txtFilter.TextBox;
-            filterTextbox.PlaceholderText = _repositorySearchPlaceholder.Text;
-            filterTextbox.TextChanged += (s, e) =>
-            {
-                if (_txtFilter.GetCurrentParent() is null)
-                {
-                    // We are clearing the textbox while opening the dropdown
-                    return;
-                }
-
-                // Default items include:
-                //  1. filter
-                //  2. separator
-                //  3. favourite items
-                //      ... recent items
-                //  4. "Open repo..."
-                //  5. "Close repo..."
-                //  6. separator
-                //  7. "Configure menu"
-                const int defaultItemCount = 7;
-                if (button.DropDown.Items.Count <= defaultItemCount)
-                {
-                    return;
-                }
-
-                if (string.IsNullOrWhiteSpace(filterTextbox.Text))
-                {
-                    foreach (ToolStripItem item in button.DropDown.Items)
-                    {
-                        item.Visible = true;
-                    }
-
-                    return;
-                }
-
-                foreach (ToolStripItem item in button.DropDown.Items)
-                {
-                    if (item is ToolStripSeparator || item.Tag == _excludeFromFilterMarker)
-                    {
-                        continue;
-                    }
-
-                    item.Visible = item.Text?.Contains(filterTextbox.Text, StringComparison.CurrentCultureIgnoreCase) is true;
-                }
-            };
+            _txtFilter = CreateFilterTextBox(button, _repositorySearchPlaceholder.Text);
 
             // Initialize toolstip menu items
             // ----------------------------------------
             _tsmiCategorisedRepos = new(_startToolStripMenuItem.FavouriteRepositoriesMenuItem.Text, _startToolStripMenuItem.FavouriteRepositoriesMenuItem.Image)
             {
-                Tag = _excludeFromFilterMarker
+                Tag = ExcludeFromFilterMarker
             };
 
             _tsmiOpenLocalRepository = new(_startToolStripMenuItem.OpenRepositoryMenuItem.Text, _startToolStripMenuItem.OpenRepositoryMenuItem.Image)
             {
                 ShortcutKeyDisplayString = _startToolStripMenuItem.OpenRepositoryMenuItem.ShortcutKeyDisplayString,
-                Tag = _excludeFromFilterMarker
+                Tag = ExcludeFromFilterMarker
             };
             _tsmiOpenLocalRepository.Click += (s, e) => _startToolStripMenuItem.OpenRepositoryMenuItem.PerformClick();
 
             _tsmiCloseRepo = new(_closeToolStripMenuItem.Text, _closeToolStripMenuItem.Image)
             {
                 ShortcutKeyDisplayString = _closeToolStripMenuItem.ShortcutKeyDisplayString,
-                Tag = _excludeFromFilterMarker
+                Tag = ExcludeFromFilterMarker
             };
             _tsmiCloseRepo.Click += (hs, he) => _closeToolStripMenuItem.PerformClick();
 
             _tsmiRecentReposSettings = new(_configureWorkingDirMenu.Text)
             {
-                Tag = _excludeFromFilterMarker
+                Tag = ExcludeFromFilterMarker
             };
             _tsmiRecentReposSettings.Click += (hs, he) =>
             {

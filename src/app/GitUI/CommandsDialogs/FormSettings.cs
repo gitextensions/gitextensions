@@ -124,6 +124,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this, serviceProvider), appearanceSettingsPage, Images.Colors);
         settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceFontsSettingsPage>(this, serviceProvider), appearanceSettingsPage, Images.Font.AdaptLightness());
         settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ConsoleStyleSettingsPage>(this, serviceProvider), appearanceSettingsPage, Images.Console);
+        settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ToolbarsSettingsPage>(this, serviceProvider), appearanceSettingsPage, Images.Settings);
         settingsTreeView.AddSettingsPage(SettingsPageBase.Create<RevisionLinksSettingsPage>(this, serviceProvider), gitExtPageRef, Images.Link.AdaptLightness());
 
         settingsTreeView.AddSettingsPage(SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(this, serviceProvider), gitExtPageRef, Images.Integration);
@@ -203,6 +204,12 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
 
             Text = _translatedTitle + " - " + title;
             Application.DoEvents();
+
+            if (settingsPage is ToolbarsSettingsPage toolbarsPage &&
+                _initialPage is ToolbarsSettingsPage.ToolbarsSettingsPageReference toolbarsRef)
+            {
+                toolbarsPage.InitialToolbarName = toolbarsRef.InitialToolbarName;
+            }
 
             using (WaitCursorScope.Enter())
             {

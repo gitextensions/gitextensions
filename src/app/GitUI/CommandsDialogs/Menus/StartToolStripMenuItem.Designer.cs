@@ -82,12 +82,12 @@ partial class StartToolStripMenuItem
         tsmiRecentRepositories.Size = new Size(198, 22);
         tsmiRecentRepositories.Text = "&Recent repositories";
         tsmiRecentRepositories.DropDownOpening += tsmiRecentRepositories_DropDownOpening;
-        // 
+        //
         // clearRecentRepositoriesListToolStripMenuItem
-        // 
+        //
         clearRecentRepositoriesListToolStripMenuItem.Name = "clearRecentRepositoriesListToolStripMenuItem";
         clearRecentRepositoriesListToolStripMenuItem.Size = new Size(119, 6);
-        // 
+        //
         // tsmiRecentRepositoriesClear
         // 
         tsmiRecentRepositoriesClear.Name = "tsmiRecentRepositoriesClear";

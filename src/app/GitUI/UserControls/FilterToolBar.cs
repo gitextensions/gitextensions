@@ -9,7 +9,7 @@ using ResourceManager.Hotkey;
 
 namespace GitUI.UserControls;
 
-internal partial class FilterToolBar : ToolStripEx
+public partial class FilterToolBar : ToolStripEx
 {
     internal const string ReflogButtonName = nameof(tsbShowReflog);
     private static readonly string[] _noResultsFound = [TranslatedStrings.NoResultsFound];
@@ -340,7 +340,7 @@ internal partial class FilterToolBar : ToolStripEx
         }
     }
 
-    public void SetShortcutKeys(Action<ToolStripMenuItem, RevisionGridControl.Command> setShortcutString)
+    internal void SetShortcutKeys(Action<ToolStripMenuItem, RevisionGridControl.Command> setShortcutString)
     {
         setShortcutString(tsmiResetPathFilters, RevisionGridControl.Command.ResetRevisionPathFilter);
         setShortcutString(tsmiResetAllFilters, RevisionGridControl.Command.ResetRevisionFilter);
