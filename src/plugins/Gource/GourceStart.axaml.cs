@@ -14,12 +14,22 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
     public GourceStart()
     {
         InitializeComponent();
+        WinFormsAutoSizeTextBlock.Attach(label1);
+        WinFormsAutoSizeTextBlock.Attach(label2);
+        WinFormsAutoSizeTextBlock.Attach(ArgumentsLabel);
+        WinFormsAutoSizeContentControl.Attach(linkLabel1, 7, 15);
+        WinFormsAutoSizeContentControl.Attach(linkLabel2, 7, 15);
         InitializeComplete();
     }
 
     public GourceStart(string pathToGource, GitUIEventArgs gitUIArgs, string gourceArguments)
     {
         InitializeComponent();
+        WinFormsAutoSizeTextBlock.Attach(label1);
+        WinFormsAutoSizeTextBlock.Attach(label2);
+        WinFormsAutoSizeTextBlock.Attach(ArgumentsLabel);
+        WinFormsAutoSizeContentControl.Attach(linkLabel1, 7, 15);
+        WinFormsAutoSizeContentControl.Attach(linkLabel2, 7, 15);
         button1.Click += Button1Click;
         GourceBrowse.Click += GourceBrowseClick;
         WorkingDirBrowse.Click += WorkingDirBrowseClick;

@@ -68,9 +68,15 @@ public static class ColorHelper
     /// </summary>
     /// <param name="original">The original <see cref="Color"/></param>
     /// <returns>The adapted color.</returns>
-    public static Color AdaptBackColor(this Color original)
+    public static Color AdaptBackColor(this Color original) => original.AdaptBackColor(ThemeSettings);
+
+    /// <summary>Adapts an invariant background color through an explicit theme snapshot.</summary>
+    /// <param name="original">The invariant color.</param>
+    /// <param name="themeSettings">The theme snapshot that owns the transformation.</param>
+    /// <returns>The adapted color.</returns>
+    public static Color AdaptBackColor(this Color original, ThemeSettings themeSettings)
     {
-        if (IsDefaultTheme)
+        if (themeSettings.Theme.Id == ThemeId.DefaultLight)
         {
             return original;
         }
@@ -83,11 +89,11 @@ public static class ColorHelper
                  index: i)).index;
 
         (KnownColor back, KnownColor fore) option = BackForeExamples[index];
-        return AdaptColor(original, option.back, option.fore);
+        return AdaptColor(original, option.back, option.fore, themeSettings);
 
         double DistanceTo(KnownColor c2)
         {
-            HslColor hsl2 = ThemeSettings.InvariantTheme.GetNonEmptyColor(c2).ToPerceptedHsl();
+            HslColor hsl2 = themeSettings.InvariantTheme.GetNonEmptyColor(c2).ToPerceptedHsl();
             return Math.Abs(hsl1.L - hsl2.L) + (0.25 * Math.Abs(hsl1.S - hsl2.S));
         }
     }
@@ -104,14 +110,18 @@ public static class ColorHelper
     /// <param name="exampleName">The name of foreground/background for the pair.</param>
     /// <param name="oppositeName">The name of background/foreground for the pair.</param>
     /// <returns>The transformed color.</returns>
-    private static Color AdaptColor(Color original, KnownColor exampleName, KnownColor oppositeName)
+    private static Color AdaptColor(
+        Color original,
+        KnownColor exampleName,
+        KnownColor oppositeName,
+        ThemeSettings themeSettings)
     {
-        Color exampleOriginal = ThemeSettings.InvariantTheme.GetNonEmptyColor(exampleName);
-        Color oppositeOriginal = ThemeSettings.InvariantTheme.GetNonEmptyColor(oppositeName);
-        Color example = ThemeSettings.Theme.GetNonEmptyColor(exampleName);
-        Color opposite = ThemeSettings.Theme.GetNonEmptyColor(oppositeName);
+        Color exampleOriginal = themeSettings.InvariantTheme.GetNonEmptyColor(exampleName);
+        Color oppositeOriginal = themeSettings.InvariantTheme.GetNonEmptyColor(oppositeName);
+        Color example = themeSettings.Theme.GetNonEmptyColor(exampleName);
+        Color opposite = themeSettings.Theme.GetNonEmptyColor(oppositeName);
 
-        if (ThemeSettings.Variations.Contains(ThemeVariations.Colorblind))
+        if (themeSettings.Variations.Contains(ThemeVariations.Colorblind))
         {
             original = original.AdaptToColorblindness();
         }
@@ -256,13 +266,6 @@ public static class ColorHelper
         double correctedH = (excludeHTo + correctedDelta).Modulo(360);
         return new HslColor(correctedH / 360d, hsl.S, hsl.L).ToColor();
     }
-
-    /// <summary>
-    /// Find if the theme is the default.
-    /// Note that the theme is parsed, so ThemeSettings.DefaultLight is another instance.
-    /// </summary>
-    /// <returns><see langword="true"/> if the theme is default; otherwise <see langword="false"/>.</returns>
-    private static bool IsDefaultTheme => ThemeSettings.Theme.Id == ThemeId.DefaultLight;
 
     public static Color Lerp(Color colour, Color to, float amount)
     {

@@ -48,6 +48,11 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
         target = ResolveFrameworkSplitTarget(root, target);
 
+        if (state.Kind != CaptureStateKind.Focus)
+        {
+            driver.FocusSourceDefault();
+        }
+
         switch (state.Kind)
         {
             case CaptureStateKind.Normal:
@@ -85,8 +90,42 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
                 throw new AvaloniaCaptureStateUnsupportedException($"State kind '{state.Kind}' is not implemented.");
         }
 
+        if (state.Kind == CaptureStateKind.Disabled
+            && topLevel.FocusManager?.GetFocusedElement() is null)
+        {
+            driver.FocusSourceDefault();
+        }
+
         Dispatcher.UIThread.RunJobs();
         return driver;
+    }
+
+    private void FocusSourceDefault()
+    {
+        object? preferred = _root.GetType().FullName switch
+        {
+            "GitExtensions.Plugins.Gource.GourceStart" => FindFieldValue(_root, "button1"),
+            "GitUI.UserControls.BranchSelector" => FindFieldValue(_root, "LocalBranch"),
+            "GitUI.UserControls.InteractiveGitActionControl" => FindFieldValue(_root, "ButtonContainer"),
+            "GitUI.UserControls.Settings.SettingsCheckBox" => FindFieldValue(_root, "checkBox"),
+            "GitUI.UserControls.CaseSensitiveComboBox" or
+            "GitUI.UserControls.WatermarkComboBox" or
+            "GitUI.UserControls.WaitSpinner" => _root,
+            _ => null,
+        };
+        Control? focusTarget = preferred as Control;
+        if (focusTarget?.Focusable != true
+            || !focusTarget.IsEffectivelyVisible
+            || !focusTarget.IsEffectivelyEnabled)
+        {
+            focusTarget = EnumerateLogicalControls(_root)
+                .Where(control => control.Focusable && control.IsEffectivelyVisible && control.IsEffectivelyEnabled)
+                .OrderBy(KeyboardNavigation.GetTabIndex)
+                .FirstOrDefault();
+        }
+
+        focusTarget?.Focus(NavigationMethod.Tab);
+        Dispatcher.UIThread.RunJobs();
     }
 
     private void ApplyRequestedSize(CaptureStatePlan state)

@@ -6,7 +6,7 @@ namespace GitUI.Compat;
 /// <summary>
 /// Applies the WinForms TextRenderer preferred-size boundary to ported AutoSize content controls.
 /// </summary>
-internal static class WinFormsAutoSizeContentControl
+public static class WinFormsAutoSizeContentControl
 {
     public static void Attach(TemplatedControl control, double nonTextWidth, double minimumHeight)
     {

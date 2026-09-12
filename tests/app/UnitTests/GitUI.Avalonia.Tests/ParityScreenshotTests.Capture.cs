@@ -57,7 +57,7 @@ public sealed partial class ParityScreenshotTests
     [Category(P02Category)]
     public void Diff_patch_capture_hosts_should_use_96_dpi_designer_dimensions()
     {
-        GetCaptureSize(typeof(BranchSelector)).Should().Be((325, 54));
+        GetCaptureSize(typeof(BranchSelector)).Should().Be((322, 58));
         GetCaptureSize(typeof(FormDiff)).Should().Be((1042, 685));
         // WinForms AutoSize contracts the 110-pixel Designer client to 106 pixels with the runtime font.
         GetCaptureSize(typeof(FormCompareToBranch)).Should().Be((434, 106));

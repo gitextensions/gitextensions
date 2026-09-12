@@ -133,14 +133,7 @@ public partial class InteractiveGitActionControl : GitModuleControl
         }
 
         IconBox.Source = _hasConflicts ? Images.SolveMerge : Images.Information;
-        string backgroundResource = _hasConflicts
-            ? "GitExtensionsInteractiveConflictBackgroundBrush"
-            : "GitExtensionsInteractiveActionBackgroundBrush";
-        string foregroundResource = _hasConflicts
-            ? "GitExtensionsInteractiveConflictForegroundBrush"
-            : "GitExtensionsInteractiveActionForegroundBrush";
-        Background = FindBrush(backgroundResource);
-        TextLabel.Foreground = FindBrush(foregroundResource);
+        Classes.Set("conflict", _hasConflicts);
 
         string actionStr = string.Empty;
 
@@ -182,13 +175,6 @@ public partial class InteractiveGitActionControl : GitModuleControl
                 actionStr);
 
         IsVisible = true;
-    }
-
-    private IBrush FindBrush(string resourceName)
-    {
-        return this.TryFindResource(resourceName, ActualThemeVariant, out object? value) && value is IBrush brush
-            ? brush
-            : Brushes.Transparent;
     }
 
     private void ResolveButton_Click(object? sender, EventArgs e)
@@ -293,7 +279,8 @@ public partial class InteractiveGitActionControl : GitModuleControl
         internal Button AbortButton => control.AbortButton;
         internal Button MoreButton => control.MoreButton;
         internal IImage? Icon => control.IconBox.Source;
-        internal bool HasIconClass(string className) => control.IconBox.Classes.Contains(className);
+        internal double IconWidth => control.IconBox.Width;
+        internal double IconHeight => control.IconBox.Height;
         internal TextBlock TextLabel => control.TextLabel;
         internal void SetGitAction(GitAction action, bool conflicts) => control.SetGitAction(action, conflicts);
     }
