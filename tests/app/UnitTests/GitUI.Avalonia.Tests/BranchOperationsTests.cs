@@ -258,7 +258,8 @@ public sealed class BranchOperationsTests
             Control summary = form.FindControl<CommitSummaryUserControl>("commitSummaryUserControl")!;
             Control buttons = form.FindControl<Grid>("flowLayoutPanel1")!;
 
-            AssertBounds(table, 8, 8, 529, 331);
+            AssertBounds(table, 0, 0, 529, 331);
+            AssertBoundsRelativeTo(table, form, 8, 8, 529, 331);
             AssertBoundsRelativeTo(warning, table, 5, 5, 519, 30);
             AssertBoundsRelativeTo(form.FindControl<Control>("pictureBox1")!, warning, 3, 3, 16, 24);
             AssertBoundsRelativeTo(form.FindControl<TextBlock>("lblResetBranchWarning")!, warning, 25, 0, 491, 30);
