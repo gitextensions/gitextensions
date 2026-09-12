@@ -2250,7 +2250,8 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(EnvironmentInfo))
         {
-            return (137, 78);
+            // WinForms AutoSize expands the Designer's 165x78 control for the deterministic runtime text.
+            return (346, 123);
         }
 
         if (viewType == typeof(FormCommandlineHelp))
