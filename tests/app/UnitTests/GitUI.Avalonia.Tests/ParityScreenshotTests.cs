@@ -2101,7 +2101,8 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(BranchSelector))
         {
-            return (325, 54);
+            // The source AutoSize layout contracts the blank change label and grows the second row.
+            return (322, 58);
         }
 
         if (viewType == typeof(InteractiveGitActionControl))
@@ -2111,12 +2112,12 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(GitUI.UserControls.Settings.SettingsCheckBox))
         {
-            return (200, 20);
+            return (200, 19);
         }
 
         if (viewType == typeof(WaitSpinner))
         {
-            return (38.4, 38.4);
+            return (48, 48);
         }
 
         if (viewType == typeof(EmptyRepoControl))
@@ -2146,7 +2147,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(WatermarkComboBox) || viewType == typeof(CaseSensitiveComboBox))
         {
-            return (200, 22.4);
+            return (250, 23);
         }
 
         if (viewType == typeof(SimplePrompt))
@@ -2558,7 +2559,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(GourceStart))
         {
-            return (574.4, 132);
+            return (574, 132);
         }
 
         if (typeof(Window).IsAssignableFrom(viewType))

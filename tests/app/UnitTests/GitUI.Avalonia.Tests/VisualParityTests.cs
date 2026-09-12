@@ -1552,6 +1552,9 @@ public sealed class VisualParityTests
                 isDark
                     ? editor.MakeDarkerBy(-0.06)
                     : AvaloniaThemeResources.ResolveSystemColor(settings, System.Drawing.KnownColor.ControlLight)));
+        Color expectedInteractiveAction = Color.Parse(isDark ? "#0778BE" : "#87CEFA");
+        GetResourceBrushColor(application, "GitExtensionsInteractiveActionBackgroundBrush", themeVariant)
+            .Should().Be(expectedInteractiveAction);
 
         System.Drawing.Color[] blameAges =
         [
