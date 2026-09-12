@@ -326,6 +326,24 @@ public sealed partial class ParityScreenshotTests
         comboBox.IsDropDownOpen.Should().BeFalse();
     }
 
+    [AvaloniaTest]
+    [Category(P02Category)]
+    public void Capture_text_seeding_should_prefer_the_source_owner_field_over_a_nested_name()
+    {
+        DuplicateNameTextHost host = new();
+        CaptureComponentPlan component = new()
+        {
+            TypeName = typeof(DuplicateNameTextHost).FullName!,
+            TextValues = new Dictionary<string, string> { ["_textEditor"] = "Owner text" },
+            States = [new CaptureStatePlan { Id = "normal", Kind = CaptureStateKind.Normal }],
+        };
+
+        ApplyTextValues(host, component);
+
+        host.OwnerEditor.Text.Should().Be("Owner text");
+        host.NestedEditor.Text.Should().Be("Nested text");
+    }
+
     [Test]
     [Category(P02Category)]
     public void EditNetSpell_capture_host_should_scale_the_96_dpi_Designer_dimensions()
@@ -760,8 +778,11 @@ public sealed partial class ParityScreenshotTests
                 ItemsSource = new[] { new MenuItem { Header = "Choice" } }
             }
         };
-        flyoutWindow.Content = flyoutButton;
+        TextBox flyoutFocusOwner = new() { Text = "Focus owner" };
+        flyoutWindow.Content = new StackPanel { Children = { flyoutFocusOwner, flyoutButton } };
         flyoutWindow.Show();
+        Dispatcher.UIThread.RunJobs();
+        flyoutFocusOwner.Focus();
         Dispatcher.UIThread.RunJobs();
         CaptureStatePlan flyoutState = new()
         {
@@ -774,6 +795,7 @@ public sealed partial class ParityScreenshotTests
             flyoutButton.Flyout!.IsOpen.Should().BeTrue();
             flyoutDriver.PopupSurfaceRoots.Should().ContainSingle();
             flyoutDriver.RequiresExternalSurfaceCapture.Should().BeFalse();
+            flyoutFocusOwner.IsFocused.Should().BeTrue();
         }
 
         flyoutWindow.Close();
@@ -1266,6 +1288,15 @@ public sealed partial class ParityScreenshotTests
                 // work is drained for the requested state. Reassert the paired HEAD boundary
                 // after that drain, just as the WinForms capture worker does before rendering.
                 await SelectAndWaitForFormBrowseRevisionAsync(capturedBrowse, context.HeadRevision);
+                if ((state.Kind == CaptureStateKind.Focus && state.TargetField == "RevisionGrid")
+                    || state.Kind == CaptureStateKind.MenuOpen)
+                {
+                    capturedBrowse.GetLogicalDescendants().OfType<Control>()
+                        .First(control => control.Name == "_gridView")
+                        .Focus();
+                    Dispatcher.UIThread.RunJobs();
+                }
+
                 if (state.Kind == CaptureStateKind.MenuOpen
                     && state.TargetField == "commandsToolStripMenuItem")
                 {
@@ -1703,7 +1734,7 @@ public sealed partial class ParityScreenshotTests
     {
         foreach ((string fieldName, string text) in component.TextValues)
         {
-            Control? target = FindNamedControl(root, fieldName);
+            Control? target = FindRootFieldControl(root, fieldName) ?? FindNamedControl(root, fieldName);
             if (target is null)
             {
                 throw new InvalidDataException($"Text seed field '{fieldName}' was not found on {component.TypeName}.");
@@ -1740,6 +1771,22 @@ public sealed partial class ParityScreenshotTests
                     throw new InvalidDataException($"Text seed field '{fieldName}' does not expose a supported text boundary.");
             }
         }
+    }
+
+    private static Control? FindRootFieldControl(Control root, string fieldName)
+    {
+        for (Type? type = root.GetType(); type is not null; type = type.BaseType)
+        {
+            FieldInfo? field = type.GetField(
+                fieldName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+            if (field?.GetValue(root) is Control control)
+            {
+                return control;
+            }
+        }
+
+        return null;
     }
 
     private static Control? FindNamedControl(Control root, string fieldName)
@@ -1930,6 +1977,22 @@ public sealed partial class ParityScreenshotTests
     {
         char[] invalid = Path.GetInvalidFileNameChars();
         return new string(value.Select(character => invalid.Contains(character) || character is '.' ? '_' : character).ToArray());
+    }
+
+    private sealed class DuplicateNameTextHost : Grid
+    {
+        private readonly TextBox _textEditor = new() { Name = "_textEditor", Text = "Owner text before seed" };
+
+        public DuplicateNameTextHost()
+        {
+            NestedEditor = new TextBox { Name = "_textEditor", Text = "Nested text" };
+            Children.Add(new Border { Child = NestedEditor });
+            Children.Add(_textEditor);
+        }
+
+        public TextBox OwnerEditor => _textEditor;
+
+        public TextBox NestedEditor { get; }
     }
 
     private sealed record CaptureSettingsProfile
