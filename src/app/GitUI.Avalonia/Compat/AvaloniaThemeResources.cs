@@ -180,6 +180,7 @@ internal static class AvaloniaThemeResources
         DrawingColor sectionBorder = isDark
             ? DrawingColor.FromArgb(47, 47, 47)
             : DrawingColor.FromArgb(224, 224, 224);
+        ThemeSettings adaptationSettings = CreatePortableAdaptationSettings(settings);
 
         // OtherColors uses AdaptBackColor for these invariant values. The resolved results
         // are published explicitly because Avalonia resources are produced per theme rather
@@ -204,8 +205,8 @@ internal static class AvaloniaThemeResources
         DrawingColor resetMixed = DrawingColor.FromArgb(255, 255, 128);
         DrawingColor resetHard = DrawingColor.FromArgb(255, 128, 128);
         DrawingColor warningPanel = DrawingColor.FromArgb(230, 99, 99);
-        DrawingColor interactiveAction = DrawingColor.LightSkyBlue.AdaptBackColor();
-        DrawingColor interactiveConflict = DrawingColor.Orange.AdaptBackColor();
+        DrawingColor interactiveAction = DrawingColor.LightSkyBlue.AdaptBackColor(adaptationSettings);
+        DrawingColor interactiveConflict = DrawingColor.Orange.AdaptBackColor(adaptationSettings);
         DrawingColor commitSummaryTags = DrawingColor.LightSteelBlue.AdaptBackColor();
         DrawingColor commitSummaryBranches = DrawingColor.LightSalmon.AdaptBackColor();
         if (isDark)
@@ -409,6 +410,20 @@ internal static class AvaloniaThemeResources
         // The portable System.Drawing fallback is host-dependent. Preserve invariant.css's
         // Windows reference colors when a partial/test theme has no invariant value.
         return TryGetLightSystemColor(name, out color) ? color : DrawingColor.FromKnownColor(name);
+    }
+
+    private static ThemeSettings CreatePortableAdaptationSettings(ThemeSettings settings)
+    {
+        Dictionary<AppColor, DrawingColor> appColors = Theme.AppColorNames
+            .ToDictionary(name => name, name => ResolveAppColor(settings, name));
+        Dictionary<KnownColor, DrawingColor> systemColors = MappedSystemColors
+            .ToDictionary(name => name, name => ResolveSystemColor(settings, name));
+        Theme projectedTheme = new(appColors, systemColors, settings.Theme.Id);
+        return new ThemeSettings(
+            projectedTheme,
+            settings.InvariantTheme,
+            settings.Variations,
+            settings.UseSystemVisualStyle);
     }
 
     private static bool TryGetLightSystemColor(KnownColor name, out DrawingColor color)

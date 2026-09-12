@@ -549,6 +549,8 @@ internal sealed class AvaloniaControlTreeReader
         sourceType ??= isShellPreviewPanel ? "Panel" : null;
         string sourceOwnerType = GetSourceOwnerType(control);
         string rootMetadataType = GetMetadataTypeName(_root.GetType());
+        bool isStandaloneSourceComboBox = isSurfaceRoot
+            && rootMetadataType is "GitUI.UserControls.CaseSensitiveComboBox" or "GitUI.UserControls.WatermarkComboBox";
         bool isSearchWindowControl = rootMetadataType == "GitUI.CommandsDialogs.SearchWindow"
             && fieldName == "_searchControl";
         bool isSourceList = IsSourceListControl(sourceType);
@@ -668,6 +670,20 @@ internal sealed class AvaloniaControlTreeReader
             // A borderless WinForms RichTextBox retains one outer control pixel beyond the
             // native contents-height notification used to size its parent row.
             bounds = new Rect(bounds.Position, new Size(bounds.Width, bounds.Height + 1));
+        }
+
+        if (rootMetadataType == "GitUI.UserControls.InteractiveGitActionControl"
+            && semanticName == "TextLabel")
+        {
+            // The source Dock=Fill label extends behind the right-docked button panel.
+            bounds = new Rect(28, 0, _root.Bounds.Width - 28, _root.Bounds.Height);
+        }
+
+        if (rootMetadataType == "GitUI.UserControls.InteractiveGitActionControl"
+            && semanticName == "ButtonContainer")
+        {
+            // FlowLayoutPanel includes its right padding in AutoSize and remains docked to the full source height.
+            bounds = new Rect(_root.Bounds.Width - control.Bounds.Width - 2, 0, control.Bounds.Width + 2, _root.Bounds.Height);
         }
 
         if (isFormBrowseToolStripPanel && semanticName == "_topPanel")
@@ -809,7 +825,7 @@ internal sealed class AvaloniaControlTreeReader
             ItemHeightDip = isRevisionGridView
                 ? ReadRevisionGridItemHeight(control)
                 : isComboBoxPopup ? 15 : null,
-            Padding = ReadThicknessPair(isComboBoxPopup || isComboBoxPopupItem
+            Padding = ReadThicknessPair(isComboBoxPopup || isComboBoxPopupItem || isStandaloneSourceComboBox
                 ? default(Thickness)
                 : isFileViewerInternal ? default(Thickness)
                 : isFormCommitToolStripPanel ? default(Thickness)
@@ -855,7 +871,9 @@ internal sealed class AvaloniaControlTreeReader
                 : isCommitPickerLocalLayout
                     ? new Thickness(2)
                 : isSurfaceRoot && !isPopupRoot
-                    ? rootMetadataType == "GitUI.CommandsDialogs.SearchControl"
+                    ? rootMetadataType == "GitUI.UserControls.Settings.SettingsCheckBox"
+                        ? new Thickness(4, 3)
+                    : rootMetadataType == "GitUI.CommandsDialogs.SearchControl"
                         ? default(Thickness)
                     : _root.GetType().FullName == "GitUI.CommandsDialogs.FormCommit"
                         ? new Thickness(2)
@@ -880,7 +898,9 @@ internal sealed class AvaloniaControlTreeReader
                         : isRevisionGrid || isRevisionGridView
                             ? new Thickness(3)
                         : hasNativeListComposite ? nativeListComposite!.Margin : control.Margin)),
-            Font = (isMenuCaption
+            Font = (rootMetadataType == "GitUI.UserControls.WaitSpinner"
+                ? ReadUiFont()
+                : isMenuCaption
                 ? ReadFont(control) is { } menuCaptionFont
                     ? menuCaptionFont with { Style = ["Italic"] }
                     : null
@@ -913,6 +933,8 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (fieldName is not null ? ReadFont(_root) : null),
             Colors = isComboBoxPopup || isComboBoxPopupItem
                 ? ReadComboBoxPopupColors()
+                : isStandaloneSourceComboBox
+                    ? ReadStandaloneSourceInputColors(control)
                 : isCommitInfoHeaderLocalLayout
                     ? ReadSourceBackgroundColors(
                         control,
@@ -1090,6 +1112,7 @@ internal sealed class AvaloniaControlTreeReader
                 || isFormBrowseMenuStrip
                 || isSemanticToolStrip || isSemanticToolStripItem || isFileViewerTextEditor
                 || isSpellCheckAutoComplete || isSpellCheckTextBox || isSourceLabelSubstitute || isWatermarkComboBox
+                || isStandaloneSourceComboBox
                 || isRepositoryHostDiscussion
                 ? null
                 : ReadBorderWidth(control),
@@ -2278,6 +2301,27 @@ internal sealed class AvaloniaControlTreeReader
             SizePoints = ToDecimal(sizeDip * 72 / 96),
             SizeDip = ToDecimal(sizeDip),
             Style = styles
+        };
+    }
+
+    private CaptureFont ReadUiFont()
+    {
+        if (!_root.TryFindResource("GitExtensionsUiFontFamily", _root.ActualThemeVariant, out object? familyResource)
+            || familyResource is not FontFamily family
+            || !_root.TryFindResource("GitExtensionsUiFontSize", _root.ActualThemeVariant, out object? sizeResource)
+            || sizeResource is not double sizeDip)
+        {
+            throw new InvalidDataException("The resolved Git Extensions UI font is unavailable.");
+        }
+
+        return new CaptureFont
+        {
+            Family = family.Name,
+            EmSize = ToDecimal(sizeDip),
+            Unit = "Dip",
+            SizePoints = ToDecimal(sizeDip * 72 / 96),
+            SizeDip = ToDecimal(sizeDip),
+            Style = ["Regular"]
         };
     }
 
@@ -3642,7 +3686,11 @@ internal sealed class AvaloniaControlTreeReader
         string? background = ResolveSourceAmbientBackground(control, "GitExtensionsWindowBackgroundBrush");
         return colors with
         {
-            Foreground = isPreviewLink || isHelpLink || isDesignerLink
+            Foreground = isDesignerLink
+                ? ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                  ?? ResolveSourceControlTextArgb()
+                  ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush")
+                : isPreviewLink || isHelpLink
                 ? ResolveSourceControlTextArgb()
                   ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush")
                 : colors.Foreground,
@@ -3802,6 +3850,16 @@ internal sealed class AvaloniaControlTreeReader
             InactiveSelectionForeground = null,
             InactiveSelectionBackground = null,
             Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+        };
+    }
+
+    private CaptureColors ReadStandaloneSourceInputColors(Control control)
+    {
+        CaptureColors resolvedColors = ReadColors(control);
+        return ReadSourceInputColors(control) with
+        {
+            // The surface root owns the theme-wide semantic palette in both capture harnesses.
+            Additional = resolvedColors.Additional
         };
     }
 

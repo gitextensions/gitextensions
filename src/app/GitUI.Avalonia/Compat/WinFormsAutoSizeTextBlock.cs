@@ -5,7 +5,7 @@ namespace GitUI.Compat;
 /// <summary>
 ///  Applies the WinForms Label preferred-width boundary to ported AutoSize labels.
 /// </summary>
-internal static class WinFormsAutoSizeTextBlock
+public static class WinFormsAutoSizeTextBlock
 {
     private const double TextRendererOverhang = 7;
 
