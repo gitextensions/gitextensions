@@ -290,7 +290,7 @@ public sealed partial class FormCommit : GitModuleForm
         btnResetAllChanges.Visible = AppSettings.ShowResetAllChanges;
         btnResetUnstagedChanges.Visible = AppSettings.ShowResetWorkTreeChanges;
         CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
-        splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
+        splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height + flowCommitButtons.Margin.Vertical + splitRight.Panel2.Padding.Vertical);
         splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
 
         SelectedDiff.EscapePressed += () => DialogResult = DialogResult.Cancel;
