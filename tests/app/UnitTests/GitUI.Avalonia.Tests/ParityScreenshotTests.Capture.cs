@@ -135,7 +135,7 @@ public sealed partial class ParityScreenshotTests
     public void Help_about_capture_hosts_should_use_native_96_dpi_runtime_dimensions()
     {
         GetCaptureSize(typeof(FormAbout)).Should().Be((601, 318));
-        GetCaptureSize(typeof(EnvironmentInfo)).Should().Be((137, 78));
+        GetCaptureSize(typeof(EnvironmentInfo)).Should().Be((346, 123));
         GetCaptureSize(typeof(FormCommandlineHelp)).Should().Be((394, 662));
         GetCaptureSize(typeof(FormDonate)).Should().Be((508, 237));
         GetCaptureSize(typeof(FormChangeLog)).Should().Be((849, 411));
