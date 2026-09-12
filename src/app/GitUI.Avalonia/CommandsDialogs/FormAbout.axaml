@@ -9,7 +9,8 @@
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Title=" ">
-  <Grid ColumnDefinitions="157,*">
+  <Grid x:Name="panel1"
+        ColumnDefinitions="157,*">
     <StackPanel x:Name="flowLayoutPanel1"
                 Grid.Column="0"
                 Width="157"

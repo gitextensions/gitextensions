@@ -38,14 +38,14 @@ public sealed class HelpInfoDialogsTests
     }
 
     [AvaloniaTest]
-    public void EnvironmentInfo_should_match_native_96_dpi_designer_geometry()
+    public void EnvironmentInfo_should_match_native_96_dpi_runtime_geometry()
     {
         UserEnvironmentInformation.Initialise("9999999999999999999999999999999999abcdef", isDirty: true);
         EnvironmentInfo control = new();
         Window host = new()
         {
-            Width = 165,
-            Height = 78,
+            Width = 346,
+            Height = 123,
             Content = control,
             SizeToContent = SizeToContent.Manual,
         };
@@ -55,12 +55,12 @@ public sealed class HelpInfoDialogsTests
             host.Show();
             Dispatcher.UIThread.RunJobs();
 
-            control.Bounds.Should().Be(new Rect(0, 0, 165, 78));
-            AssertBoundsRelativeTo(control.FindControl<Border>("tableLayoutPanel1")!, control, 0, 4, 165, 70);
-            AssertBoundsRelativeTo(control.FindControl<TextBlock>("environmentIssueInfo")!, control, 0, 12, 132, 60);
-            AssertBoundsRelativeTo(control.FindControl<Button>("copyButton")!, control, 140, 12, 25, 26);
-            AssertBoundsRelativeTo(control.FindControl<Border>("lblSeparatorTop")!, control, 0, 4, 165, 2);
-            AssertBoundsRelativeTo(control.FindControl<Border>("lblSeparatorBottom")!, control, 0, 72, 165, 2);
+            control.Bounds.Should().Be(new Rect(0, 0, 346, 123));
+            AssertBoundsRelativeTo(control.FindControl<Border>("tableLayoutPanel1")!, control, 0, 0, 346, 121);
+            AssertBoundsRelativeTo(control.FindControl<TextBlock>("environmentIssueInfo")!, control, 0, 8, 313, 105);
+            AssertBoundsRelativeTo(control.FindControl<Button>("copyButton")!, control, 321, 8, 25, 26);
+            AssertBoundsRelativeTo(control.FindControl<Border>("lblSeparatorTop")!, control, 0, 0, 346, 2);
+            AssertBoundsRelativeTo(control.FindControl<Border>("lblSeparatorBottom")!, control, 0, 121, 346, 2);
         }
         finally
         {

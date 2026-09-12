@@ -3,9 +3,15 @@
              xmlns:compat="using:GitUI.Compat"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.CommandsDialogs.EnvironmentInfo">
-  <Grid Margin="0,4">
+  <Grid>
+    <Border x:Name="lblSeparatorTop"
+            Height="2"
+            VerticalAlignment="Top"
+            Classes="gitextensions-section-separator" />
+
     <Border x:Name="tableLayoutPanel1"
-            Padding="0,8">
+            Padding="0,8"
+            Margin="0,0,0,2">
       <Grid ColumnDefinitions="*,Auto">
         <TextBlock x:Name="environmentIssueInfo"
                    Grid.Column="0"
@@ -20,16 +26,11 @@
                            Classes="gitextensions-icon-only"
                            VerticalAlignment="Top"
                            Width="25" Height="26"
-                           ToolTip.Tip="Copy environment info"
                            AutomationProperties.Name="Copy environment info"
                            Icon="{x:Static properties:Images.CopyToClipboard}" />
       </Grid>
     </Border>
 
-    <Border x:Name="lblSeparatorTop"
-            Height="2"
-            VerticalAlignment="Top"
-            Classes="gitextensions-section-separator" />
     <Border x:Name="lblSeparatorBottom"
             Height="2"
             VerticalAlignment="Bottom"
