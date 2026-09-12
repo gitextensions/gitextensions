@@ -971,6 +971,27 @@
       </ControlTemplate>
     </Setter>
   </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs.gitextensions-contributors-tabs">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel>
+          <ItemsPresenter x:Name="PART_ItemsPresenter"
+                          DockPanel.Dock="Top"
+                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+          <Grid>
+            <Border BorderBrush="{DynamicResource GitExtensionsNativeTabBorderBrush}"
+                    BorderThickness="1"
+                    Background="{DynamicResource GitExtensionsNativeTabPageBackgroundBrush}" />
+            <ContentPresenter x:Name="PART_SelectedContentHost"
+                              Margin="1,0,1,1"
+                              Content="{TemplateBinding SelectedContent}"
+                              ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+          </Grid>
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
   <Style Selector="TabControl.gitextensions-full-bleed-tabs TabItem.gitextensions-dialog-tab">
     <Setter Property="Height" Value="23" />
     <Setter Property="MinHeight" Value="23" />

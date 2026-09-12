@@ -92,8 +92,8 @@ public sealed class HelpInfoDialogsTests
 
             form.ClientSize.Should().Be(new Size(394, 662));
             form.FindControl<StackPanel>("flowLayoutPanel1")!.Bounds.Should().Be(new Rect(0, 0, 394, 662));
-            form.FindControl<TextBlock>("label1")!.Bounds.Should().Be(new Rect(3, 0, 373, 52));
-            form.FindControl<TextBlock>("_NO_TRANSLATE_commands")!.Bounds.Should().Be(new Rect(3, 52, 382, 649));
+            form.FindControl<TextBlock>("label1")!.Bounds.Should().Be(new Rect(3, 0, 373, 50));
+            form.FindControl<TextBlock>("_NO_TRANSLATE_commands")!.Bounds.Should().Be(new Rect(3, 50, 382, 625));
         }
         finally
         {
@@ -169,7 +169,7 @@ public sealed class HelpInfoDialogsTests
             Dispatcher.UIThread.RunJobs();
 
             form.ClientSize.Should().Be(new Size(615, 77));
-            form.FindControl<Label>("label1")!.Bounds.Should().Be(new Rect(13, 13, 51, 15));
+            form.FindControl<Label>("label1")!.Bounds.Should().Be(new Rect(13, 13, 58, 15));
             form.FindControl<ComboBox>("_NO_TRANSLATE_Directory")!.Bounds.Should().Be(new Rect(85, 9, 360, 23));
             form.FindControl<Button>("folderGoUpButton")!.Bounds.Should().Be(new Rect(448, 7, 26, 25));
             form.FindControl<Button>("folderBrowserButton")!.Bounds.Should().Be(new Rect(477, 7, 135, 25));
