@@ -2,30 +2,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:properties="using:GitUI.Properties"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
              x:Class="GitUI.UserControls.InteractiveGitActionControl"
              d:DesignWidth="424"
              d:DesignHeight="34"
              Height="34"
              Background="{DynamicResource GitExtensionsInteractiveActionBackgroundBrush}">
-  <Grid ColumnDefinitions="28,*,Auto">
-    <Image x:Name="IconBox"
-           Classes="gitextensions-icon-16"
-           HorizontalAlignment="Center"
-           VerticalAlignment="Center"
-           Source="{x:Static properties:Images.Information}" />
+  <UserControl.Styles>
+    <Style Selector="UserControl.conflict">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsInteractiveConflictBackgroundBrush}" />
+    </Style>
+    <Style Selector="UserControl.conflict TextBlock#TextLabel">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsInteractiveConflictForegroundBrush}" />
+    </Style>
+  </UserControl.Styles>
+  <Grid>
+    <wf:PictureBox x:Name="IconBox"
+                   Width="28"
+                   Height="34"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   SizeMode="CenterImage"
+                   Source="{x:Static properties:Images.Information}" />
     <TextBlock x:Name="TextLabel"
-               Grid.Column="1"
+               Margin="28,0,0,0"
+               HorizontalAlignment="Stretch"
                VerticalAlignment="Center"
                Foreground="{DynamicResource GitExtensionsInteractiveActionForegroundBrush}" />
     <StackPanel x:Name="ButtonContainer"
-                Grid.Column="2"
-                Margin="0,2,2,2"
+                Height="34"
+                Focusable="True"
+                HorizontalAlignment="Right"
                 Orientation="Horizontal"
-                Spacing="6">
-      <Button x:Name="ResolveButton" Width="75" Height="23" Content="Resolve..." />
-      <Button x:Name="ContinueButton" Width="75" Height="23" Content="Continue" />
-      <Button x:Name="AbortButton" Width="75" Height="23" Content="Abort" />
-      <Button x:Name="MoreButton" Width="75" Height="23" Content="M_ore..." />
+                Spacing="0">
+      <Button x:Name="ResolveButton" Width="75" Height="23" Margin="3,5,3,6" VerticalAlignment="Top" Content="Resolve..." />
+      <Button x:Name="ContinueButton" Width="75" Height="23" Margin="3,5,3,6" VerticalAlignment="Top" Content="Continue" />
+      <Button x:Name="AbortButton" Width="75" Height="23" Margin="3,5,3,6" VerticalAlignment="Top" Content="Abort" />
+      <Button x:Name="MoreButton" Width="75" Height="23" Margin="3,5,3,6" VerticalAlignment="Top" Content="M_ore..." />
     </StackPanel>
   </Grid>
 </UserControl>

@@ -39,6 +39,7 @@ public sealed class WaitSpinner : Control
 
     public WaitSpinner()
     {
+        Focusable = true;
         _angles = GetAngles();
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000d / 30d) }; // 30 fps

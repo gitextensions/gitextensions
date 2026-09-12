@@ -104,7 +104,8 @@ public sealed class SmallControlParityTests
         accessor.HasConflicts.Should().Be(conflicts);
         if (accessor.Visible)
         {
-            accessor.HasIconClass("gitextensions-icon-16").Should().BeTrue();
+            accessor.IconWidth.Should().Be(28);
+            accessor.IconHeight.Should().Be(34);
             accessor.Icon.Should().BeSameAs(conflicts ? Images.SolveMerge : Images.Information);
             accessor.TextLabel.Text.Should().Be(ExpectedMessage(action, conflicts));
         }

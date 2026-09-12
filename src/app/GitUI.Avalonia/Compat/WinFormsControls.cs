@@ -103,6 +103,15 @@ public class DataGridView : ListBox
 }
 
 /// <summary>
+/// Describes the source picture-box image placement used by the portable control.
+/// </summary>
+public enum PictureBoxSizeMode
+{
+    Normal,
+    CenterImage,
+}
+
+/// <summary>
 /// Preserves the source picture-box boundary while an inner Avalonia image performs native rendering.
 /// </summary>
 public class PictureBox : Border
@@ -123,6 +132,23 @@ public class PictureBox : Border
     {
         get => _image.Source;
         set => _image.Source = value;
+    }
+
+    public PictureBoxSizeMode SizeMode
+    {
+        get => _image.HorizontalAlignment == Avalonia.Layout.HorizontalAlignment.Center
+            ? PictureBoxSizeMode.CenterImage
+            : PictureBoxSizeMode.Normal;
+        set
+        {
+            bool center = value == PictureBoxSizeMode.CenterImage;
+            _image.HorizontalAlignment = center
+                ? Avalonia.Layout.HorizontalAlignment.Center
+                : Avalonia.Layout.HorizontalAlignment.Left;
+            _image.VerticalAlignment = center
+                ? Avalonia.Layout.VerticalAlignment.Center
+                : Avalonia.Layout.VerticalAlignment.Top;
+        }
     }
 
     protected override Type StyleKeyOverride => typeof(Border);
