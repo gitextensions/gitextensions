@@ -207,8 +207,8 @@ internal static class AvaloniaThemeResources
         DrawingColor warningPanel = DrawingColor.FromArgb(230, 99, 99);
         DrawingColor interactiveAction = DrawingColor.LightSkyBlue.AdaptBackColor(adaptationSettings);
         DrawingColor interactiveConflict = DrawingColor.Orange.AdaptBackColor(adaptationSettings);
-        DrawingColor commitSummaryTags = DrawingColor.LightSteelBlue.AdaptBackColor();
-        DrawingColor commitSummaryBranches = DrawingColor.LightSalmon.AdaptBackColor();
+        DrawingColor commitSummaryTags = DrawingColor.LightSteelBlue.AdaptBackColor(adaptationSettings);
+        DrawingColor commitSummaryBranches = DrawingColor.LightSalmon.AdaptBackColor(adaptationSettings);
         if (isDark)
         {
             resetSoft = resetSoft.DimColor();

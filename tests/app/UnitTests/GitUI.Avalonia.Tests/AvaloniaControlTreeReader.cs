@@ -591,6 +591,13 @@ internal sealed class AvaloniaControlTreeReader
             "GitUI.CommandsDialogs.FormMailMap" or
             "GitUI.CommandsDialogs.FormLog";
         string? semanticName = fieldName ?? control.Name;
+        if (semanticName is null
+            && rootMetadataType == "GitUI.CommandsDialogs.CommitDialog.FormCommitTemplateSettings"
+            && control.Classes.Contains("commit-template-main-panel"))
+        {
+            semanticName = "MainPanel";
+        }
+
         bool isChecklistStatusButton = isFormSettingsSurface
             && sourceOwnerType == "GitUI.CommandsDialogs.SettingsDialog.Pages.ChecklistSettingsPage"
             && IsChecklistStatusButton(semanticName);
@@ -664,7 +671,7 @@ internal sealed class AvaloniaControlTreeReader
         bool isDesignerMetadataControl = fieldName is not null && IsDesignerMetadataControl(control);
         Control? childSemanticParent = isSurfaceRoot || fieldName is not null || isInheritedFormProcessContainer
                                                 || isLocalSourceFlowLayoutPanel || isShellPreviewPanel || isSearchWindowControl
-                                                || isEnvironmentInfoLayout || isNativeTabPage
+                                                || isEnvironmentInfoLayout || isKnownSourceLocalControl || isNativeTabPage
             ? control
             : semanticParent;
         string segment = isSurfaceRoot
@@ -1528,7 +1535,7 @@ internal sealed class AvaloniaControlTreeReader
             Children = children
         };
 
-        return ApplyHelpAndSettingsSemanticOverrides(
+        return ApplyComponentSemanticOverrides(
             node,
             control,
             semanticName,
@@ -1542,7 +1549,7 @@ internal sealed class AvaloniaControlTreeReader
             isEnvironmentInfoSeparator);
     }
 
-    private CaptureNode ApplyHelpAndSettingsSemanticOverrides(
+    private CaptureNode ApplyComponentSemanticOverrides(
         CaptureNode node,
         Control control,
         string? semanticName,
@@ -1799,6 +1806,261 @@ internal sealed class AvaloniaControlTreeReader
             };
         }
 
+        if (rootMetadataType == "GitUI.HelperDialogs.FormResetAnotherBranch"
+            && sourceOwnerType == "GitUI.UserControls.CommitSummaryUserControl")
+        {
+            if (semanticName is "labelMessage" or "labelAuthor" or "labelDate" or "labelBranches" or "labelTags")
+            {
+                node = node with { Margin = ReadThicknessPair(new Thickness(2, 0)) };
+            }
+
+            if (semanticName == "groupBox1")
+            {
+                node = node with
+                {
+                    Margin = ReadThicknessPair(new Thickness(2)),
+                    Colors = node.Colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush"),
+                        DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                    }
+                };
+            }
+
+            if (control.Name == "tableLayoutPanel1")
+            {
+                node = node with
+                {
+                    Margin = ReadThicknessPair(new Thickness(2)),
+                    Colors = node.Colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                    },
+                    BorderStyle = "None",
+                    Anchor = ["Top", "Left"],
+                    Dock = "Fill",
+                    AutoSize = true,
+                    Alignment = null,
+                    TabIndex = 0
+                };
+            }
+
+            if (semanticName == "labelBranches")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Background = ResolveResourceArgb("GitExtensionsCommitSummaryBranchesBackgroundBrush"),
+                        DisabledBackground = ResolveResourceArgb("GitExtensionsCommitSummaryBranchesBackgroundBrush")
+                    }
+                };
+            }
+        }
+
+        if (rootMetadataType == "GitUI.HelperDialogs.FormResetAnotherBranch")
+        {
+            if (semanticName == "tableLayoutPanel1")
+            {
+                node = node with { Dock = "Fill" };
+            }
+
+            if (semanticName == "commitSummaryUserControl")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush"),
+                        DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                    }
+                };
+            }
+
+            bool cancelHasDefaultFocus = _root.FindControl<Button>("Cancel")?.IsKeyboardFocusWithin == true;
+            if (semanticName == "Branches" && cancelHasDefaultFocus)
+            {
+                node = node with { Focused = true };
+            }
+            else if (semanticName == "Cancel" && cancelHasDefaultFocus)
+            {
+                node = node with { Focused = false };
+            }
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.CommitDialog.FormCommitTemplateSettings")
+        {
+            if (semanticName == "MainPanel")
+            {
+                return node with
+                {
+                    FieldName = null,
+                    FieldAliases = [],
+                    Name = null,
+                    Type = "System.Windows.Forms.Panel",
+                    ControlKind = "control",
+                    Padding = ReadThicknessPair(new Thickness(9)),
+                    Margin = ReadThicknessPair(default(Thickness)),
+                    Colors = ReadSourceBackgroundColors(
+                        control,
+                        "GitExtensionsPanelBackgroundBrush",
+                        ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")),
+                    BorderStyle = "None",
+                    Anchor = ["Top", "Left"],
+                    Dock = "Fill",
+                    AutoSize = true,
+                    Alignment = null,
+                    Font = ReadFont(_root),
+                    TabIndex = 1,
+                    TabStop = false,
+                    TranslationSource = null
+                };
+            }
+
+            if (semanticName == "ControlsPanel")
+            {
+                return node with
+                {
+                    FieldName = null,
+                    FieldAliases = [],
+                    Name = null,
+                    Type = "System.Windows.Forms.FlowLayoutPanel",
+                    ControlKind = "control",
+                    Padding = ReadThicknessPair(new Thickness(5)),
+                    Margin = ReadThicknessPair(default(Thickness)),
+                    Colors = ReadSourceBackgroundColors(
+                        control,
+                        "GitExtensionsDialogControlsBackgroundBrush",
+                        ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")),
+                    BorderStyle = "None",
+                    Anchor = ["Top", "Left"],
+                    Dock = "Bottom",
+                    AutoSize = true,
+                    Alignment = null,
+                    TabIndex = 0,
+                    TabStop = false,
+                    TranslationSource = null
+                };
+            }
+
+            if (semanticName is "tabControl1" or "tabPage1" or "tabPage2")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                    }
+                };
+            }
+
+            if (!IsDarkTheme()
+                && GetSourceTypeName(GetSourceType(control, semanticName)) is "Label" or "CheckBox" or "TableLayoutPanel")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Background = "#00FFFFFF",
+                        DisabledBackground = "#00FFFFFF"
+                    }
+                };
+            }
+
+            if (semanticName is ("_NO_TRANSLATE_numericMaxFirstLineLength"
+                or "_NO_TRANSLATE_numericMaxLineLength"
+                or "_NO_TRANSLATE_textBoxCommitValidationRegex")
+                && !IsInSelectedTab(control))
+            {
+                node = node with
+                {
+                    Colors = ReadSourceBackgroundColors(
+                        control,
+                        "GitExtensionsKnownColorWindowBrush",
+                        node.Colors.Foreground)
+                };
+            }
+
+            if (semanticName == "_NO_TRANSLATE_textBoxCommitValidationRegex")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        SelectionForeground = null,
+                        SelectionBackground = null,
+                        Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+                    }
+                };
+            }
+
+            // WinForms reports the native tab-page client coordinates and the runtime
+            // TableLayoutPanel column allocation. Avalonia's presenter transforms and text
+            // measurement are renderer details, so project those source-owned semantic bounds.
+            node = semanticName switch
+            {
+                "tableLayoutPanel5" or "tableLayoutPanel3" => WithBounds(
+                    node,
+                    node.BoundsDip with { X = 3, Y = 3, Width = 666, Height = 262 }),
+                "checkBoxRegexEnabled" => WithBounds(
+                    node,
+                    node.BoundsDip with { X = 3, Y = 243, Width = 92, Height = 19 }),
+                "_NO_TRANSLATE_textCommitTemplateText" => WithClientSize(node, new Size(529, 194)),
+                "_NO_TRANSLATE_numericMaxFirstLineLength" or
+                "_NO_TRANSLATE_numericMaxLineLength" or
+                "checkBoxAutoWrap" or
+                "checkBoxUseIndent" or
+                "checkBoxSecondLineEmpty" => WithBounds(node, node.BoundsDip with { X = 376 }),
+                "_NO_TRANSLATE_textBoxCommitValidationRegex" => WithClientSize(
+                    WithBounds(node, node.BoundsDip with { X = 376, Width = 287 }),
+                    new Size(283, (double)node.ClientSizeDip.Height)),
+                "labelMaxFirstLineLength" => WithClientSize(
+                    WithBounds(node, node.BoundsDip with { Width = 367 }),
+                    new Size(367, (double)node.ClientSizeDip.Height)),
+                "labelMaxLineLength" => WithClientSize(
+                    WithBounds(node, node.BoundsDip with { Width = 331 }),
+                    new Size(331, (double)node.ClientSizeDip.Height)),
+                "labelAutoWrap" => WithClientSize(
+                    WithBounds(node, node.BoundsDip with { Width = 266 }),
+                    new Size(266, (double)node.ClientSizeDip.Height)),
+                "labelRegExCheck" => WithClientSize(
+                    WithBounds(node, node.BoundsDip with { Width = 345 }),
+                    new Size(345, (double)node.ClientSizeDip.Height)),
+                "labelUseIndent" => WithBounds(node, node.BoundsDip with { Y = 121 }),
+                "labelSecondLineEmpty" => WithBounds(node, node.BoundsDip with { Y = 149 }),
+                _ => node
+            };
+
+            if (semanticName is "buttonOk" or "buttonCancel")
+            {
+                node = node with
+                {
+                    Colors = ReadSourceBackgroundColors(
+                        control,
+                        "GitExtensionsDialogControlsBackgroundBrush",
+                        ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush"))
+                };
+            }
+
+            bool hasExplicitFocusedInput = new[]
+                {
+                    "_NO_TRANSLATE_comboBoxCommitTemplates",
+                    "_NO_TRANSLATE_textBoxCommitTemplateName",
+                    "_NO_TRANSLATE_numericMaxFirstLineLength",
+                    "_NO_TRANSLATE_textBoxCommitValidationRegex"
+                }
+                .Select(name => _root.FindControl<Control>(name))
+                .Any(candidate => candidate?.IsKeyboardFocusWithin == true);
+            if (semanticName == "buttonOk" && !hasExplicitFocusedInput)
+            {
+                node = node with { Focused = true };
+            }
+            else if (semanticName == "tabControl1")
+            {
+                node = node with { Focused = false };
+            }
+        }
+
         return node;
     }
 
@@ -1910,6 +2172,8 @@ internal sealed class AvaloniaControlTreeReader
     private static bool IsKnownSourceLocalControl(string sourceOwnerType, string? name)
         => (sourceOwnerType == "GitUI.CommandsDialogs.EnvironmentInfo"
                 && name is "tableLayoutPanel1" or "lblSeparatorTop" or "lblSeparatorBottom")
+           || (sourceOwnerType == "GitUI.UserControls.CommitSummaryUserControl"
+               && name == "tableLayoutPanel1")
            || (sourceOwnerType == "GitUI.CommandsDialogs.SettingsDialog.Pages.ChecklistSettingsPage"
                && name == "groupBox1");
 
@@ -1918,6 +2182,7 @@ internal sealed class AvaloniaControlTreeReader
         {
             ("GitUI.CommandsDialogs.EnvironmentInfo", "tableLayoutPanel1") => "System.Windows.Forms.TableLayoutPanel",
             ("GitUI.CommandsDialogs.EnvironmentInfo", "lblSeparatorTop" or "lblSeparatorBottom") => "System.Windows.Forms.Label",
+            ("GitUI.UserControls.CommitSummaryUserControl", "tableLayoutPanel1") => "System.Windows.Forms.TableLayoutPanel",
             ("GitUI.CommandsDialogs.SettingsDialog.Pages.ChecklistSettingsPage", "groupBox1") => "System.Windows.Forms.GroupBox",
             _ => null
         };
@@ -2290,15 +2555,13 @@ internal sealed class AvaloniaControlTreeReader
             return tabItem.Content is Control content ? [content] : [];
         }
 
-        if (control is HeaderedContentControl)
+        if (control is HeaderedContentControl headeredContentControl)
         {
             // parity-scaffolding: The string Header is emitted on the owning semantic control;
-            // retain its product content but omit the generated header AccessText.
-            return control.GetLogicalChildren()
-                .OfType<Control>()
-                .Where(child => child is not AccessText
-                                && child.TemplatedParent is null
-                                && child.GetType().Name != "TopLevelHost");
+            // retain its product content but omit every generated header presenter. A custom
+            // HeaderTemplate may produce an untemplated TextBlock, so filtering by parent alone
+            // cannot distinguish it from product content.
+            return headeredContentControl.Content is Control content ? [content] : [];
         }
 
         if (IsPopupPresenter(control) || IsOverlayPopupHost(control))

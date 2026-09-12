@@ -951,6 +951,12 @@
     <Setter Property="Margin" Value="0" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTabSelectedBackgroundBrush}" />
   </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs.gitextensions-dialog-inset-tabs /template/ ContentPresenter#PART_SelectedContentHost">
+    <Setter Property="Margin" Value="4,3,4,2" />
+  </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs.gitextensions-dialog-inset-tabs /template/ ContentPresenter#PART_SelectedContentHost2">
+    <Setter Property="Margin" Value="4,3,4,2" />
+  </Style>
   <Style Selector="TabControl.gitextensions-native-tabs.gitextensions-full-bleed-tabs">
     <Setter Property="Template">
       <ControlTemplate>
