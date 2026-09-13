@@ -3,60 +3,74 @@
         xmlns:editor="using:GitUI.Editor"
         xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.FormVerify"
-        Width="900"
-        Height="600"
-        MinWidth="700"
-        MinHeight="430"
+        Width="859"
+        Height="575"
         WindowStartupLocation="CenterOwner"
         Title="Verify database">
-  <Grid RowDefinitions="Auto,*,Auto">
-    <Grid x:Name="panel2"
-          Margin="6"
-          ColumnDefinitions="2*,3*">
-      <StackPanel x:Name="flowLayoutPanel1"
-                  Margin="2"
-                  Spacing="5">
+  <Grid RowDefinitions="134,*,61">
+    <Canvas x:Name="panel2"
+            Height="138"
+            VerticalAlignment="Top">
+      <Canvas x:Name="flowLayoutPanel1"
+              Width="351"
+              Height="138"
+              HorizontalAlignment="Left">
         <TextBlock x:Name="label2"
+                   Canvas.Left="8"
+                   Canvas.Top="5"
+                   Width="335"
+                   Height="105"
                    TextWrapping="Wrap"
                    Text="By default only unreferenced objects that are older than &#10;2 weeks are removed when cleaning up the database. All&#10;other object are only deleted when you run &quot;Remove all&#10;dangling objects&quot;&#10;&#10;Check commits you want to recover and press Recover button&#10;Context menu for additional operations" />
         <TextBlock x:Name="label1"
-                   Margin="0,5,0,0"
+                   Canvas.Left="8"
+                   Canvas.Top="115"
+                   Width="200"
+                   Height="15"
                    Text="Double-click on a row for quick view" />
-      </StackPanel>
+      </Canvas>
 
-      <Grid Grid.Column="1"
-            Margin="12,2,2,2"
-            RowDefinitions="Auto,Auto,Auto,Auto"
-            ColumnDefinitions="Auto,*">
-        <CheckBox x:Name="ShowCommitsAndTags"
-                  IsChecked="True"
-                  Content="Show commits and annotated tags"
-                  ToolTip.Tip="To recover unreachable commits or annotated tags" />
-        <CheckBox x:Name="ShowOtherObjects"
-                  Grid.Column="1"
-                  Content="Show blobs and trees"
-                  ToolTip.Tip="To recover contents of files once staged but mistakenly deleted" />
-        <CheckBox x:Name="NoReflogs"
-                  Grid.Row="1"
-                  Grid.ColumnSpan="2"
-                  IsChecked="True"
-                  Content="Do not consider commits that are referenced only by an entry in a &#10;reflog to be reachable." />
-        <CheckBox x:Name="Unreachable"
-                  Grid.Row="2"
-                  Grid.ColumnSpan="2"
-                  Content="Print out objects that exist but that aren't readable from any of the reference &#10;nodes.&#10;" />
-        <CheckBox x:Name="FullCheck"
-                  Grid.Row="3"
-                  Grid.ColumnSpan="2"
-                  Content="Check not just objects in GIT__OBJECT__DIRECTORY ($GIT__DIR/objects), &#10;but also the ones found in alternate object pools.&#10;" />
-      </Grid>
-    </Grid>
+      <CheckBox x:Name="ShowOtherObjects"
+                Canvas.Left="660"
+                Canvas.Top="9"
+                Width="138"
+                Height="19"
+                Content="Show blobs and trees"
+                ToolTip.Tip="To recover contents of files once staged but mistakenly deleted" />
+      <CheckBox x:Name="ShowCommitsAndTags"
+                Canvas.Left="430"
+                Canvas.Top="9"
+                Width="210"
+                Height="19"
+                IsChecked="True"
+                Content="Show commits and annotated tags"
+                ToolTip.Tip="To recover unreachable commits or annotated tags" />
+      <CheckBox x:Name="NoReflogs"
+                Canvas.Left="430"
+                Canvas.Top="35"
+                Width="375"
+                Height="34"
+                IsChecked="True"
+                Content="Do not consider commits that are referenced only by an entry in a &#10;reflog to be reachable." />
+      <CheckBox x:Name="FullCheck"
+                Canvas.Left="430"
+                Canvas.Top="101"
+                Width="396"
+                Height="34"
+                Content="Check not just objects in GIT__OBJECT__DIRECTORY ($GIT__DIR/objects), &#10;but also the ones found in alternate object pools.&#10;" />
+      <CheckBox x:Name="Unreachable"
+                Canvas.Left="430"
+                Canvas.Top="68"
+                Width="429"
+                Height="34"
+                Content="Print out objects that exist but that aren't readable from any of the reference &#10;nodes.&#10;" />
+    </Canvas>
 
     <Grid x:Name="splitContainer1"
           Grid.Row="1"
-          ColumnDefinitions="4*,6,1.2*">
-      <Border Classes="gitextensions-section">
-        <Grid RowDefinitions="Auto,*">
+          Margin="0,0,0,6"
+          ColumnDefinitions="700,6,*">
+      <Grid RowDefinitions="25,*">
           <Grid ColumnDefinitions="28,80,100,*,150,92,92">
             <Border Padding="3,2"
                     BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
@@ -97,11 +111,11 @@
             </Border>
           </Grid>
 
-          <ListBox x:Name="Warnings"
-                   Classes="gitextensions-dense-items"
-                   Grid.Row="1"
-                   SelectionMode="Single"
-                   ScrollViewer.HorizontalScrollBarVisibility="Auto">
+        <ListBox x:Name="Warnings"
+                 Classes="gitextensions-dense-items"
+                 Grid.Row="1"
+                 SelectionMode="Single"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <ListBox.ContextMenu>
               <ContextMenu x:Name="mnuLostObjects">
                 <MenuItem x:Name="mnuLostObjectView" Header="View">
@@ -124,44 +138,51 @@
                 </MenuItem>
               </ContextMenu>
             </ListBox.ContextMenu>
-          </ListBox>
-        </Grid>
-      </Border>
+        </ListBox>
+      </Grid>
 
       <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
 
-      <Border Grid.Column="2" Classes="gitextensions-section">
-        <editor:FileViewer x:Name="fileViewer" />
-      </Border>
+      <editor:FileViewer x:Name="fileViewer" Grid.Column="2" />
     </Grid>
 
     <Grid x:Name="panel1"
           Grid.Row="2"
-          Margin="6"
-          RowDefinitions="Auto,Auto"
-          ColumnDefinitions="260,*,220">
+          ColumnDefinitions="3,252,43,*,32,208,4">
       <Button x:Name="Remove"
-              MinHeight="25"
+              Grid.Column="1"
+              Height="25"
+              Margin="0,6,0,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
               Content="Remove all dangling objects" />
       <Button x:Name="btnRestoreSelectedObjects"
-              Grid.Column="1"
-              Margin="16,0"
-              MinHeight="25"
+              Grid.Column="3"
+              Height="25"
+              Margin="0,21,0,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
               Content="Recover selected objects" />
       <Button x:Name="SaveObjects"
-              Grid.Column="2"
-              MinHeight="25"
+              Grid.Column="5"
+              Height="25"
+              Margin="0,6,0,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
               Content="Save objects to .git/lost-found" />
       <Button x:Name="DeleteAllLostAndFoundTags"
-              Grid.Row="1"
-              Margin="0,4,0,0"
-              MinHeight="25"
+              Grid.Column="1"
+              Height="25"
+              Margin="0,33,0,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
               Content="Delete all LOST__AND__FOUND tags" />
       <Button x:Name="btnCloseDialog"
-              Grid.Row="1"
-              Grid.Column="2"
-              Margin="0,4,0,0"
-              MinHeight="25"
+              Grid.Column="5"
+              Height="25"
+              Margin="0,33,0,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
               Content="Cancel" />
     </Grid>
   </Grid>
