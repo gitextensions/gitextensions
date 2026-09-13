@@ -88,9 +88,11 @@
                    IsVisible="False"
                    VerticalAlignment="Stretch"
                    VerticalContentAlignment="Center" />
+            <!-- Avalonia's editable presenter needs one extra top pixel to align the source's
+                 runtime 96-DPI control rectangle. -->
             <usercontrols:CaseSensitiveComboBox x:Name="comboBoxPushUrl"
                       Grid.Row="5" Grid.Column="1"
-                      Margin="3"
+                      Margin="3,4,3,2"
                       HorizontalAlignment="Stretch"
                       IsVisible="False"
                       IsEditable="True"

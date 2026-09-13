@@ -79,6 +79,20 @@ public sealed class RemotesTests
     }
 
     [AvaloniaTest]
+    public void FormRemotes_should_grow_the_source_auto_size_chain_for_a_separate_push_url()
+    {
+        FormRemotes form = new();
+
+        form.FindControl<CheckBox>("checkBoxSepPushUrl")!.IsChecked = true;
+
+        form.FindControl<Control>("gbMgtPanel")!.Height.Should().Be(203);
+        form.FindControl<Control>("flpnlRemoteManagement")!.Height.Should().Be(181);
+        form.FindControl<Control>("pnlMgtDetails")!.Height.Should().Be(138);
+        form.FindControl<Control>("tblpnlMgtDetails")!.Height.Should().Be(116);
+        form.FindControl<Control>("comboBoxPushUrl")!.IsVisible.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
     public void FormRemotes_should_use_existing_translation_keys_once()
     {
         FormRemotes form = new();

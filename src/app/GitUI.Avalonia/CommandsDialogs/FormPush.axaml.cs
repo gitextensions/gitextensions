@@ -1052,6 +1052,10 @@ public sealed partial class FormPush : GitModuleForm
         else if (TabControlTagBranch.SelectedItem == TagTab)
         {
             FillTagDropDown();
+
+            // WinForms activates the Checked binding when the hidden tag page becomes
+            // current. Keep that lazy synchronization instead of mutating a hidden option.
+            ForcePushTags.IsChecked = ckForceWithLease.IsChecked;
         }
         else
         {
@@ -1093,7 +1097,11 @@ public sealed partial class FormPush : GitModuleForm
             ForcePushBranches.IsChecked = false;
         }
 
-        ForcePushTags.IsChecked = ckForceWithLease.IsChecked;
+        if (TabControlTagBranch.SelectedItem == TagTab)
+        {
+            ForcePushTags.IsChecked = ckForceWithLease.IsChecked;
+        }
+
         _updatingForceOptions = false;
     }
 

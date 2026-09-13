@@ -2063,6 +2063,16 @@ internal sealed class AvaloniaControlTreeReader
             }
         }
 
+        node = ApplyRemoteWorkflowSemanticOverrides(
+            node,
+            control,
+            semanticName,
+            sourceOwnerType,
+            rootMetadataType,
+            isSurfaceRoot,
+            isNativeTabControl,
+            isNativeTabPage);
+
         return ApplyRepositoryOperationSemanticOverrides(
             node,
             control,
@@ -2070,6 +2080,138 @@ internal sealed class AvaloniaControlTreeReader
             sourceOwnerType,
             rootMetadataType,
             isSurfaceRoot);
+    }
+
+    private CaptureNode ApplyRemoteWorkflowSemanticOverrides(
+        CaptureNode node,
+        Control control,
+        string? semanticName,
+        string sourceOwnerType,
+        string rootMetadataType,
+        bool isSurfaceRoot,
+        bool isNativeTabControl,
+        bool isNativeTabPage)
+    {
+        bool isRemoteWorkflow = rootMetadataType is
+            "GitUI.CommandsDialogs.FormPull" or
+            "GitUI.CommandsDialogs.FormPush" or
+            "GitUI.CommandsDialogs.FormRemotes" or
+            "GitUI.CommandsDialogs.FormDeleteRemoteBranch";
+        if (!isRemoteWorkflow)
+        {
+            return node;
+        }
+
+        string? sourceType = GetSourceTypeName(GetSourceType(control, semanticName));
+        string? controlText = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush");
+        bool isSourceInput = sourceType is "ComboBox" or "CaseSensitiveComboBox" or "TextBox" or "TextBoxEx";
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormDeleteRemoteBranch")
+        {
+            bool isControlsPanel = control.Name == "ControlsPanel"
+                || control.GetLogicalAncestors().OfType<Control>().Any(ancestor => ancestor.Name == "ControlsPanel");
+            if (isSurfaceRoot)
+            {
+                node = WithSemanticColors(node, "GitExtensionsControlBackgroundBrush", controlText);
+            }
+            else if (isSourceInput)
+            {
+                node = node with { Colors = ReadSourceInputColors(control) };
+            }
+            else
+            {
+                node = WithSemanticColors(
+                    node,
+                    isControlsPanel
+                        ? "GitExtensionsDialogControlsBackgroundBrush"
+                        : "GitExtensionsPanelBackgroundBrush",
+                    controlText);
+            }
+
+            node = semanticName switch
+            {
+                "MainPanel" => node with { AutoSize = true },
+                "Branches" => node with
+                {
+                    BorderStyle = "None",
+                    TabStop = true
+                },
+                "_NO_TRANSLATE_labelLocalTrackingBranches" when string.IsNullOrEmpty(node.Text)
+                    => WithBoundsAndClientSize(node, new Rect(98, 78, 0, 15), new Size(0, 15)),
+                _ => node
+            };
+
+            return node;
+        }
+
+        if (!isSurfaceRoot && !isSourceInput && sourceType is not "ListView" and not "NativeListView")
+        {
+            node = node with { Colors = node.Colors with { Foreground = controlText } };
+        }
+
+        bool isInsideSourceTabPage = isNativeTabPage
+            || control.GetLogicalAncestors().OfType<TabItem>().Any(IsNativeTabPage);
+        if (!IsDarkTheme()
+            && rootMetadataType is "GitUI.CommandsDialogs.FormPush" or "GitUI.CommandsDialogs.FormRemotes"
+            && isInsideSourceTabPage
+            && !isSourceInput
+            && sourceType is not "ListView" and not "NativeListView" and not "DataGridView")
+        {
+            node = WithSemanticColors(node, null, controlText, transparent: true);
+        }
+
+        if (sourceType is "Panel" or "FlowLayoutPanel" or "TableLayoutPanel" or "GroupBox" or "TabPage")
+        {
+            node = node with { TabStop = false };
+        }
+
+        if (isNativeTabControl)
+        {
+            node = node with { Focused = false };
+        }
+
+        if (semanticName == "Remotes" && rootMetadataType == "GitUI.CommandsDialogs.FormRemotes")
+        {
+            node = WithClientSize(
+                node,
+                new Size(
+                    Math.Max(0, (double)node.BoundsDip.Width - 4),
+                    (double)node.ClientSizeDip.Height)) with
+            {
+                ControlKind = "list",
+                Text = string.Empty,
+                Selected = null
+            };
+        }
+
+        if (semanticName == "BranchGrid" && rootMetadataType == "GitUI.CommandsDialogs.FormPush")
+        {
+            node = node with
+            {
+                ReadOnly = false,
+                Colors = node.Colors with
+                {
+                    Foreground = controlText,
+                    SelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush")
+                                          ?? node.Colors.SelectionBackground
+                }
+            };
+        }
+        else if (semanticName == "RemoteBranches" && rootMetadataType == "GitUI.CommandsDialogs.FormRemotes")
+        {
+            node = node with
+            {
+                ReadOnly = true,
+                Colors = node.Colors with
+                {
+                    Foreground = controlText,
+                    SelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush")
+                                          ?? node.Colors.SelectionBackground
+                }
+            };
+        }
+
+        return node;
     }
 
     private CaptureNode ApplyRepositoryOperationSemanticOverrides(
@@ -2980,6 +3122,20 @@ internal sealed class AvaloniaControlTreeReader
         }
 
         IEnumerable<Control> children = GetCaptureChildren(control).SelectMany(ExpandSemanticChild);
+        if (ReferenceEquals(control, _root)
+            && _root.GetType().FullName == "GitUI.CommandsDialogs.FormDeleteRemoteBranch")
+        {
+            // WinForms FormProcess adds MainPanel before the bottom ControlsPanel. Avalonia's
+            // DockPanel keeps the bottom child first for layout, so restore source order only
+            // in the semantic tree.
+            children = children.OrderBy(child => child.Name switch
+            {
+                "MainPanel" => 0,
+                "ControlsPanel" => 1,
+                _ => 2
+            });
+        }
+
         if (ReferenceEquals(control, _root)
             && _root.GetType().FullName == "GitUI.CommandsDialogs.FormCommit")
         {
@@ -5100,7 +5256,8 @@ internal sealed class AvaloniaControlTreeReader
     private bool IsInheritedFormProcessContainer(Control control)
         => (_root.GetType().FullName is
                "GitUI.CommandsDialogs.FormCheckoutRevision" or
-               "GitUI.CommandsDialogs.FormPull")
+               "GitUI.CommandsDialogs.FormPull" or
+               "GitUI.CommandsDialogs.FormDeleteRemoteBranch")
            && (control.Name is "MainPanel" or "ControlsPanel");
 
     private Thickness GetInheritedFormProcessPadding(Control control)
