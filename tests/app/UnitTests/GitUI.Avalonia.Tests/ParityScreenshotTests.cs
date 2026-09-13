@@ -2263,6 +2263,28 @@ public sealed partial class ParityScreenshotTests
             return (784, 561);
         }
 
+        if (viewType == typeof(FormCreateBranch))
+        {
+            return (570, 386);
+        }
+
+        if (viewType == typeof(FormCheckoutBranch))
+        {
+            // WinForms expands to the runtime preferred width, then contracts the clean
+            // local-branch state to the visible rows before the reference capture.
+            return (724, 122);
+        }
+
+        if (viewType == typeof(FormDeleteBranch))
+        {
+            return (412, 91);
+        }
+
+        if (viewType == typeof(FormRenameBranch))
+        {
+            return (484, 42);
+        }
+
         if (viewType == typeof(FormDeleteRemoteBranch))
         {
             // WinForms AutoSize expands the 139-pixel Designer client to 152 pixels when the

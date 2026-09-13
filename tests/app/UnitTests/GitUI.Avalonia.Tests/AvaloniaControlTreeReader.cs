@@ -2073,6 +2073,20 @@ internal sealed class AvaloniaControlTreeReader
             isNativeTabControl,
             isNativeTabPage);
 
+        node = ApplyBranchDialogSemanticOverrides(
+            node,
+            control,
+            semanticName,
+            sourceOwnerType,
+            rootMetadataType,
+            isSurfaceRoot);
+
+        node = ApplyRepositoryMaintenanceSemanticOverrides(
+            node,
+            control,
+            semanticName,
+            rootMetadataType);
+
         return ApplyRepositoryOperationSemanticOverrides(
             node,
             control,
@@ -2080,6 +2094,345 @@ internal sealed class AvaloniaControlTreeReader
             sourceOwnerType,
             rootMetadataType,
             isSurfaceRoot);
+    }
+
+    private CaptureNode ApplyRepositoryMaintenanceSemanticOverrides(
+        CaptureNode node,
+        Control control,
+        string? semanticName,
+        string rootMetadataType)
+    {
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormCleanupRepository")
+        {
+            if (semanticName is "textBoxIncludePaths" or "textBoxExcludePaths")
+            {
+                return WithClientSize(
+                    node,
+                    new Size(
+                        Math.Max(0, (double)node.BoundsDip.Width - 21),
+                        (double)node.ClientSizeDip.Height));
+            }
+
+            if (semanticName == "PreviewOutput")
+            {
+                node = WithClientSize(
+                    node,
+                    new Size(
+                        Math.Max(0, (double)node.BoundsDip.Width - 21),
+                        Math.Max(0, (double)node.BoundsDip.Height - 21)));
+                string? background = ResolveResourceArgb("GitExtensionsTextInputBackgroundBrush");
+                return node with
+                {
+                    Colors = ReadSourceInputColors(control) with
+                    {
+                        Background = background,
+                        DisabledBackground = background
+                    }
+                };
+            }
+
+            return node;
+        }
+
+        if (rootMetadataType != "GitUI.CommandsDialogs.FormSparseWorkingCopy")
+        {
+            return node;
+        }
+
+        return semanticName switch
+        {
+            "_NO_TRANSLATE_lblShowPreview" => WithSemanticColors(
+                node,
+                "GitExtensionsKnownColorControlBrush",
+                ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")) with
+            {
+                Anchor = ["Top", "Left"],
+                Dock = "None",
+                AutoSize = true
+            },
+            "internalFileViewer" => WithBounds(
+                node,
+                node.BoundsDip with { Y = 0 }) with
+            {
+                Anchor = ["Top", "Left"],
+                Dock = "Fill",
+                AutoSize = false,
+                Alignment = null
+            },
+            "TextEditor" => WithSemanticColors(
+                node,
+                "GitExtensionsKnownColorControlBrush",
+                ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")) with
+            {
+                Anchor = ["Top", "Left"],
+                Dock = "Fill",
+                AutoSize = false
+            },
+            "PictureBox" => node with
+            {
+                Anchor = ["Top", "Left"],
+                Dock = "Fill",
+                AutoSize = false
+            },
+            "fileviewerToolbar" => node with { Anchor = ["Top", "Right"] },
+            _ => node
+        };
+    }
+
+    private CaptureNode ApplyBranchDialogSemanticOverrides(
+        CaptureNode node,
+        Control control,
+        string? semanticName,
+        string sourceOwnerType,
+        string rootMetadataType,
+        bool isSurfaceRoot)
+    {
+        bool isBranchDialog = rootMetadataType is
+            "GitUI.CommandsDialogs.FormCreateBranch" or
+            "GitUI.CommandsDialogs.FormCheckoutBranch" or
+            "GitUI.CommandsDialogs.FormDeleteBranch" or
+            "GitUI.CommandsDialogs.FormRenameBranch";
+        if (!isBranchDialog)
+        {
+            return node;
+        }
+
+        string? sourceType = GetSourceTypeName(GetSourceType(control, semanticName));
+        bool isSourceInput = sourceType is "ComboBox" or "TextBox" or "BranchComboBox";
+        bool isControlsPanel = semanticName == "ControlsPanel"
+            || control.GetLogicalAncestors().OfType<Control>().Any(ancestor => ancestor.Name == "ControlsPanel");
+        string? controlText = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush");
+
+        if (isSurfaceRoot)
+        {
+            node = WithSemanticColors(node, "GitExtensionsKnownColorControlBrush", controlText);
+            node = node with
+            {
+                Children = node.Children
+                    .Where(child => rootMetadataType != "GitUI.CommandsDialogs.FormCheckoutBranch"
+                                    || child.FieldName != "flowLayoutPanel1")
+                    .OrderBy(child => (double)child.BoundsDip.Y)
+                    .ThenBy(child => (double)child.BoundsDip.X)
+                    .ToArray()
+            };
+        }
+        else if (isSourceInput)
+        {
+            node = node with { Colors = ReadSourceInputColors(control) };
+        }
+        else if (isControlsPanel)
+        {
+            node = node with
+            {
+                Colors = ReadDialogControlsPanelColors(control) with
+                {
+                    Foreground = controlText,
+                    Border = null
+                }
+            };
+        }
+
+        if (semanticName is "MainPanel" or "ControlsPanel")
+        {
+            bool isMainPanel = semanticName == "MainPanel";
+            node = node with
+            {
+                FieldName = null,
+                FieldAliases = [],
+                Name = null,
+                TranslationSource = null,
+                Margin = ReadThicknessPair(default(Thickness)),
+                Padding = isMainPanel
+                    ? ReadThicknessPair(rootMetadataType switch
+                    {
+                        "GitUI.CommandsDialogs.FormCreateBranch" => new Thickness(12),
+                        "GitUI.CommandsDialogs.FormCheckoutBranch" => new Thickness(14),
+                        "GitUI.CommandsDialogs.FormDeleteBranch" => new Thickness(9),
+                        _ => default
+                    })
+                    : ReadThicknessPair(new Thickness(5)),
+                Dock = isMainPanel ? "Fill" : "Bottom",
+                AutoSize = !isMainPanel,
+                TabIndex = isMainPanel ? 1 : 0
+            };
+
+            return isMainPanel
+                ? WithSemanticColors(node, "GitExtensionsPanelBackgroundBrush", controlText)
+                : node;
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormCreateBranch"
+            && semanticName == "tableLayoutPanel1"
+            && control.GetLogicalAncestors().Any(
+                ancestor => ancestor.GetType().FullName == "GitUI.UserControls.CommitPickerSmallControl"))
+        {
+            return node with
+            {
+                FieldName = null,
+                FieldAliases = [],
+                Name = null,
+                TranslationSource = null,
+                Margin = ReadThicknessPair(new Thickness(2)),
+                Colors = node.Colors with
+                {
+                    Foreground = ResolveResourceArgb("GitExtensionsSourceControlTextBrush")
+                },
+                BorderStyle = "None",
+                Anchor = ["Top", "Left"],
+                Dock = "Fill",
+                AutoSize = true,
+                TabIndex = 0
+            };
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormCreateBranch")
+        {
+            if (semanticName == "tableLayout")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsSourceControlTextBrush")
+                    },
+                    Margin = ReadThicknessPair(default(Thickness)),
+                    Dock = "Fill",
+                    AutoSize = true,
+                    TabIndex = 0
+                };
+            }
+
+            if (semanticName is "commitPicker" or "commitSummaryUserControl1")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsSourceControlTextBrush")
+                    }
+                };
+            }
+
+            if (sourceOwnerType == "GitUI.UserControls.CommitSummaryUserControl")
+            {
+                if (semanticName == "tableLayoutPanel1")
+                {
+                    node = node with
+                    {
+                        FieldName = null,
+                        FieldAliases = [],
+                        Name = null,
+                        TranslationSource = null,
+                        Margin = ReadThicknessPair(new Thickness(2)),
+                        BorderStyle = "None",
+                        Anchor = ["Top", "Left"],
+                        Dock = "Fill",
+                        AutoSize = true,
+                        TabIndex = 0
+                    };
+                }
+                else if (semanticName == "groupBox1")
+                {
+                    node = node with { Margin = ReadThicknessPair(new Thickness(2)) };
+                }
+                else if (semanticName is "labelAuthor" or "labelMessage" or "labelBranches" or "labelTags" or "labelDate")
+                {
+                    node = node with { Margin = ReadThicknessPair(new Thickness(2, 0)) };
+                    if (semanticName == "labelTags")
+                    {
+                        node = WithSemanticColors(
+                            node,
+                            "GitExtensionsKnownColorControlBrush",
+                            node.Colors.Foreground);
+                    }
+                }
+            }
+
+            if (semanticName == "lbCommits")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                    }
+                };
+            }
+        }
+        else if (rootMetadataType == "GitUI.CommandsDialogs.FormCheckoutBranch")
+        {
+            node = semanticName switch
+            {
+                "localChangesGB" or "tlpnlBranches" => node with
+                {
+                    Anchor = ["Top", "Left", "Right"],
+                    AutoSize = true
+                },
+                "tlpnlRemoteOptions" => node with { Anchor = ["Top", "Left", "Right"] },
+                "horLine" => WithSemanticColors(
+                    WithClientSize(node, new Size(690, 0)),
+                    "GitExtensionsPanelBackgroundBrush",
+                    controlText) with
+                {
+                    Anchor = ["Top", "Left", "Right"],
+                    AutoSize = true,
+                    Alignment = "TopLeft"
+                },
+                _ => node
+            };
+
+            if (semanticName == "lbChanges")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                    }
+                };
+            }
+        }
+        else if (rootMetadataType == "GitUI.CommandsDialogs.FormDeleteBranch")
+        {
+            if (semanticName is "Branches" or "labelSelectBranches")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsSourceControlTextBrush")
+                    }
+                };
+            }
+
+            if (semanticName == "tlpnlMain")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsSourceControlTextBrush")
+                    },
+                    Margin = ReadThicknessPair(default(Thickness)),
+                    Dock = "Fill",
+                    AutoSize = true,
+                    TabIndex = 0
+                };
+            }
+        }
+        else if (rootMetadataType == "GitUI.CommandsDialogs.FormRenameBranch"
+                 && semanticName == "label1")
+        {
+            node = node with
+            {
+                Colors = node.Colors with
+                {
+                    Foreground = ResolveResourceArgb("GitExtensionsSourceControlTextBrush")
+                }
+            };
+        }
+
+        return node;
     }
 
     private CaptureNode ApplyRemoteWorkflowSemanticOverrides(

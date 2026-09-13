@@ -1,41 +1,55 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="GitUI.CommandsDialogs.FormCheckoutBranch"
-        Width="626" SizeToContent="Height"
+        Width="724" SizeToContent="Height"
         MinWidth="500"
         WindowStartupLocation="CenterOwner"
         CanResize="False"
+        Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
         Title="Checkout branch">
   <DockPanel>
-    <StackPanel x:Name="ControlsPanel"
-                Classes="gitextensions-dialog-controls"
-                DockPanel.Dock="Bottom"
-                Spacing="8"
-                Margin="8">
-      <Button x:Name="Ok" Classes="gitextensions-dialog-action" Content="_Checkout" IsDefault="True" />
-    </StackPanel>
+    <Grid x:Name="ControlsPanel"
+          Classes="gitextensions-dialog-controls"
+          DockPanel.Dock="Bottom"
+          Height="41">
+      <Button x:Name="Ok" Classes="gitextensions-dialog-action"
+              Margin="0,8,13,8" Width="75" Height="25"
+              HorizontalAlignment="Right"
+              Content="_Checkout" IsDefault="True" />
+    </Grid>
 
     <!-- Retained for field-name parity with the WinForms Designer; it has no children there. -->
     <StackPanel x:Name="flowLayoutPanel1" IsVisible="False" />
 
-    <Border x:Name="MainPanel" Classes="gitextensions-dialog-main" Padding="14">
-      <Grid x:Name="tlpnlMain" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
-        <Grid x:Name="tlpnlBranches" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto"
-              ColumnSpacing="8" RowSpacing="8">
-          <RadioButton x:Name="LocalBranch" IsChecked="True" Content="Local _branch" />
-          <RadioButton x:Name="Remotebranch" Grid.Column="1" Content="Remote _branch" />
-          <Label x:Name="label1" Grid.Row="1" Content="_Select branch" Target="{Binding #Branches}"
-                 VerticalAlignment="Center"
+    <Border x:Name="MainPanel" Classes="gitextensions-dialog-main" Height="81"
+            Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
+      <Canvas x:Name="tlpnlMain" Width="698" Height="62"
+              HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Canvas x:Name="tlpnlBranches" Width="698" Height="50">
+          <RadioButton x:Name="LocalBranch" Canvas.Left="2" Canvas.Top="2"
+                       Width="93" Height="19" MinHeight="0"
+                       IsChecked="True" Content="Local _branch" />
+          <RadioButton x:Name="Remotebranch" Canvas.Left="99" Canvas.Top="2"
+                       Width="576" Height="19" MinHeight="0"
+                       Content="Remote _branch" />
+          <Label x:Name="label1" Canvas.Left="3" Canvas.Top="23"
+                 Width="91" Height="27" Padding="0"
+                 Content="_Select branch" Target="{Binding #Branches}"
+                 VerticalContentAlignment="Center"
                  HorizontalContentAlignment="Right" />
-          <ComboBox x:Name="Branches" Grid.Row="1" Grid.Column="1" MinWidth="320" IsEditable="True" />
-          <TextBlock x:Name="lbChanges" Grid.Row="1" Grid.Column="2" Opacity="0.65"
+          <ComboBox x:Name="Branches" Canvas.Left="100" Canvas.Top="26"
+                    Width="574" Height="23" MinHeight="0" IsEditable="True" />
+          <TextBlock x:Name="lbChanges" Canvas.Left="680" Canvas.Top="23"
+                     Width="15" Height="27" Text="="
+                     Foreground="{DynamicResource GitExtensionsKnownColorGrayTextBrush}"
                      VerticalAlignment="Center" />
-        </Grid>
+        </Canvas>
 
-        <Border x:Name="horLine" Grid.Row="1" Height="1" Background="{DynamicResource ThemeBorderLowBrush}" />
+        <Border x:Name="horLine" Canvas.Left="3" Canvas.Top="57"
+                Width="692" Height="2" Background="{DynamicResource ThemeBorderLowBrush}" />
 
         <!-- Shown while "Remote branch" is selected (RecalculateSizeConstraints). -->
-        <Grid x:Name="tlpnlRemoteOptions" Grid.Row="2" ColumnDefinitions="Auto,*"
+        <Grid x:Name="tlpnlRemoteOptions" Canvas.Top="62" Width="698" Height="1" ColumnDefinitions="Auto,*"
               RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="6" ColumnSpacing="8"
               IsVisible="False">
           <RadioButton x:Name="rbResetBranch" IsChecked="True" Content="R_eset local branch with the name:" />
@@ -49,7 +63,7 @@
 
         <HeaderedContentControl x:Name="localChangesGB"
                                 Classes="gitextensions-group-box"
-                                Grid.Row="3"
+                                Canvas.Top="62" Width="698" Height="55"
                                 Header="Local changes">
           <Border>
             <StackPanel x:Name="flpnlLocalOptions" Orientation="Horizontal" Spacing="8">
@@ -61,7 +75,7 @@
             </StackPanel>
           </Border>
         </HeaderedContentControl>
-      </Grid>
+      </Canvas>
     </Border>
   </DockPanel>
 </Window>
