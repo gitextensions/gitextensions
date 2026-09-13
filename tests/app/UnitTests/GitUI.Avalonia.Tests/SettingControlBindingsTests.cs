@@ -1,9 +1,13 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using GitExtensions.Extensibility.Settings;
+using GitExtensions.ParityCapture;
 using GitUI.Compat;
 using GitUI.SettingControlBindings;
+using GitUI.Theming;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -44,6 +48,7 @@ public sealed class SettingControlBindingsTests
         binding.LoadSetting(effective);
         CheckBox control = binding.GetControl().Should().BeOfType<CheckBox>().Subject;
         control.IsThreeState.Should().BeTrue();
+        control.Height.Should().Be(24);
         control.IsChecked.Should().BeTrue();
         binding.SaveSetting(effective);
         effective.SetCount.Should().Be(0);
@@ -65,6 +70,8 @@ public sealed class SettingControlBindingsTests
         PluginSettingBinding stringBinding = SettingControlBindingsProvider.CreateControlBinding(stringSetting);
         stringBinding.LoadSetting(effective);
         TextBox stringControl = stringBinding.GetControl().Should().BeOfType<TextBox>().Subject;
+        stringControl.Height.Should().Be(23);
+        stringControl.Classes.Should().Contain("plugin-setting-text");
         stringControl.Text.Should().Be("default");
         stringControl.PlaceholderText.Should().Be("unset; enter <empty string> for empty");
         stringBinding.SaveSetting(effective);
@@ -136,6 +143,7 @@ public sealed class SettingControlBindingsTests
         };
         PluginSettingBinding binding = SettingControlBindingsProvider.CreateControlBinding(setting);
         TextBox control = binding.GetControl().Should().BeOfType<TextBox>().Subject;
+        control.Classes.Should().Contain("plugin-setting-number");
         TestSettingsSource settings = new() { SettingLevel = SettingLevel.Global };
 
         control.Text = "invalid";
@@ -244,8 +252,8 @@ public sealed class SettingControlBindingsTests
             "pseudoControl",
         ];
 
-        normal.Children.OfType<TextBlock>().Should().HaveCount(8);
-        names.Should().OnlyContain(name => normal.Children.OfType<Control>().Any(control => control.Name == name));
+        normal.Children.OfType<Grid>().Single().Children.OfType<TextBlock>().Should().HaveCount(8);
+        names.Should().OnlyContain(name => normal.GetLogicalDescendants().OfType<Control>().Any(control => control.Name == name));
         Find<CheckBox>(normal, "boolControl").IsChecked.Should().BeTrue();
         Find<ComboBox>(normal, "choiceControl").SelectedItem.Should().Be("two");
         Find<TextBox>(normal, "numberTextControl").Text.Should().Be("1.5");
@@ -256,7 +264,73 @@ public sealed class SettingControlBindingsTests
         Find<Grid>(edge, "credentialsControl").IsEnabled.Should().BeFalse();
 
         static T Find<T>(Grid surface, string name) where T : Control
-            => surface.Children.OfType<T>().Single(control => control.Name == name);
+            => surface.GetLogicalDescendants().OfType<T>().Single(control => control.Name == name);
+    }
+
+    [AvaloniaTest]
+    public void Capture_reader_should_emit_the_source_setting_control_layout_contract()
+    {
+        AvaloniaThemeResources.Apply(Application.Current!, ThemeModule.Settings);
+        SettingControlBindingsCaptureSurface surface = new();
+        Window window = new() { Width = 800, Height = 320, Content = surface };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureNode root;
+        try
+        {
+            root = new AvaloniaControlTreeReader(surface, renderScale: 1)
+                .ReadPrimary(surface, new PixelSize(800, 320)).Root;
+        }
+        finally
+        {
+            window.Close();
+        }
+
+        CaptureNode layout = root.Children.Should().ContainSingle().Subject;
+        IReadOnlyDictionary<string, CaptureNode> nodes = Flatten(root)
+            .Where(node => node.FieldName is not null || node.Name is not null)
+            .GroupBy(node => node.FieldName ?? node.Name!, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
+
+        root.Padding.Dip.Should().Be(new CaptureThicknessF { Left = 12, Top = 12, Right = 12, Bottom = 12 });
+        layout.FieldName.Should().Be("_layout");
+        layout.Type.Should().Be("System.Windows.Forms.TableLayoutPanel");
+        layout.BoundsDip.Should().Be(new CaptureRectangleF { X = 12, Y = 12, Width = 776, Height = 296 });
+        nodes["boolControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 3, Width = 600, Height = 24 });
+        nodes["choiceControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 33, Width = 600, Height = 23 });
+        nodes["stringControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 62, Width = 600, Height = 23 });
+        nodes["_parent"].Name.Should().Be("numberControl");
+        nodes["_parent"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 120, Width = 600, Height = 23 });
+        nodes["credentialsControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 178, Width = 600, Height = 24 });
+        nodes["mainTableLayoutPanel"].Children.Select(node => node.FieldName).Should().Equal(
+            "userNameLabel",
+            "userNameTextBox",
+            "passwordTextBox",
+            "passwordLabel");
+        CaptureRectangleF userNameBounds = nodes["userNameTextBox"].BoundsDip;
+        userNameBounds.Y.Should().Be(0);
+        userNameBounds.Height.Should().Be(23);
+        (userNameBounds.X + userNameBounds.Width).Should().Be(269);
+        if (OperatingSystem.IsWindows())
+        {
+            // The AutoSize column begins at the real WinForms TextRenderer width on Windows;
+            // other platforms retain their native UI font while preserving the fill boundary.
+            userNameBounds.X.Should().Be(71);
+            userNameBounds.Width.Should().Be(198);
+        }
+
+        CaptureRectangleF passwordBounds = nodes["passwordTextBox"].BoundsDip;
+        passwordBounds.Y.Should().Be(0);
+        passwordBounds.Height.Should().Be(23);
+        (passwordBounds.X + passwordBounds.Width).Should().Be(600);
+        if (OperatingSystem.IsWindows())
+        {
+            passwordBounds.X.Should().Be(398);
+            passwordBounds.Width.Should().Be(202);
+        }
+
+        nodes["pseudoControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 230, Width = 600, Height = 40 });
     }
 
     [AvaloniaTest]
@@ -274,15 +348,22 @@ public sealed class SettingControlBindingsTests
         binding.LoadSetting(settings);
 
         Grid control = binding.GetControl().Should().BeOfType<Grid>().Subject;
-        control.Height.Should().Be(21);
-        control.Children.OfType<TextBox>().Should().OnlyContain(textBox => textBox.Height == 20);
-        control.Children.OfType<Control>().Select(child => child.Name).Should().Contain(
+        control.Height.Should().Be(24);
+        Grid layout = control.GetLogicalDescendants().OfType<Grid>().Single(grid => grid.Name == "mainTableLayoutPanel");
+        layout.Height.Should().Be(24);
+        layout.GetLogicalChildren().OfType<Control>().Select(child => child.Name).Should().Equal(
+            "userNameLabel",
+            "userNameTextBox",
+            "passwordTextBox",
+            "passwordLabel");
+        control.GetLogicalDescendants().OfType<TextBox>().Should().OnlyContain(textBox => textBox.Height == 23);
+        control.GetLogicalDescendants().OfType<Control>().Select(child => child.Name).Should().Contain(
             "userNameLabel",
             "userNameTextBox",
             "passwordLabel",
             "passwordTextBox");
         control.IsEnabled.Should().BeFalse();
-        control.Children.OfType<TextBox>().Should().OnlyContain(textBox => string.IsNullOrEmpty(textBox.Text));
+        control.GetLogicalDescendants().OfType<TextBox>().Should().OnlyContain(textBox => string.IsNullOrEmpty(textBox.Text));
         setting.CustomControl.UserName.Should().BeEmpty();
         setting.CustomControl.Password.Should().BeEmpty();
     }
@@ -294,7 +375,7 @@ public sealed class SettingControlBindingsTests
         PluginSettingBinding binding = SettingControlBindingsProvider.CreateControlBinding(setting);
         TestSettingsSource settings = new() { SettingLevel = SettingLevel.Global };
         Grid control = binding.GetControl().Should().BeOfType<Grid>().Subject;
-        TextBox[] fields = control.Children.OfType<TextBox>().ToArray();
+        TextBox[] fields = control.GetLogicalDescendants().OfType<TextBox>().ToArray();
         fields[0].Text = "user";
         fields[1].Text = "secret";
 
@@ -330,6 +411,18 @@ public sealed class SettingControlBindingsTests
         {
             SetCount++;
             _values[name] = value;
+        }
+    }
+
+    private static IEnumerable<CaptureNode> Flatten(CaptureNode root)
+    {
+        yield return root;
+        foreach (CaptureNode child in root.Children)
+        {
+            foreach (CaptureNode descendant in Flatten(child))
+            {
+                yield return descendant;
+            }
         }
     }
 

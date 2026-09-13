@@ -9,6 +9,7 @@ internal class PasswordSettingControlBinding : SettingControlBinding<PasswordSet
     public PasswordSettingControlBinding(PasswordSetting setting, TextBox? customControl)
         : base(setting, customControl)
     {
+        customControl?.Classes.Add("plugin-setting-text");
     }
 
     public override TextBox CreateControl()

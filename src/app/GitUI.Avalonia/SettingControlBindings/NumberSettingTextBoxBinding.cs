@@ -11,6 +11,8 @@ internal class NumberSettingTextBoxBinding<T> : SettingControlBinding<NumberSett
     {
         if (customControl is not null)
         {
+            customControl.Classes.Add("plugin-setting-text");
+            customControl.Classes.Add("plugin-setting-number");
             customControl.TextChanged += OnTextChanged;
         }
     }
@@ -24,6 +26,7 @@ internal class NumberSettingTextBoxBinding<T> : SettingControlBinding<NumberSett
     {
         // Avalonia renders the portable custom-control model through a native control.
         TextBox textBox = PluginSettingControlFactory.CreateTextBox(Setting.CustomControl as GitExtensions.Shims.WinForms.TextBox);
+        textBox.Classes.Add("plugin-setting-number");
         textBox.TextChanged += OnTextChanged;
         return textBox;
     }
