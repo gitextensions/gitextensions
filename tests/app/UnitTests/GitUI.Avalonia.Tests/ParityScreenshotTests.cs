@@ -2011,6 +2011,25 @@ public sealed partial class ParityScreenshotTests
             diff.TextEditor.Text.Should().NotBeEmpty();
         }
 
+        if (Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
+            && root is FormStash formStash)
+        {
+            // The source capture waits for the asynchronous worktree refresh before rendering.
+            // Do the same here so a transient loading overlay is never treated as dialog state.
+            Control loading = GetRequiredControl<Control>(formStash, "Loading");
+            ComboBox stashes = GetRequiredControl<ComboBox>(formStash, "Stashes");
+            Stopwatch stashStopwatch = Stopwatch.StartNew();
+            while ((loading.IsVisible || !stashes.IsEnabled)
+                   && stashStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            loading.IsVisible.Should().BeFalse();
+            stashes.IsEnabled.Should().BeTrue();
+        }
+
         CommitDiff? commitDiff = root as CommitDiff
             ?? root.GetLogicalDescendants()
                 .OfType<CommitDiff>()
@@ -2212,6 +2231,17 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormGitCommandLog))
         {
             return (659, 470);
+        }
+
+        if (viewType == typeof(FormFileHistory))
+        {
+            return (748, 444);
+        }
+
+        if (viewType == typeof(FormStash))
+        {
+            // The source Designer is authored at 192 DPI; use its native-96 client size.
+            return (708, 520);
         }
 
         if (viewType == typeof(FormCleanupRepository))

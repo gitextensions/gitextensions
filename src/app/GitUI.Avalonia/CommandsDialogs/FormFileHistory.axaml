@@ -3,18 +3,20 @@
         xmlns:gitui="clr-namespace:GitUI"
         xmlns:properties="using:GitUI.Properties"
         xmlns:compat="using:GitUI.Compat"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
         xmlns:usercontrols="clr-namespace:GitUI.UserControls"
         xmlns:revisionGrid="clr-namespace:GitUI.UserControls.RevisionGrid"
         xmlns:blame="clr-namespace:GitUI.Blame"
         xmlns:editor="clr-namespace:GitUI.Editor"
         x:Class="GitUI.CommandsDialogs.FormFileHistory"
-        Width="900" Height="620"
-        MinWidth="600" MinHeight="400"
+        Width="748" Height="444"
+        MinWidth="299" MinHeight="198"
+        Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
+        Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
         WindowStartupLocation="CenterOwner"
         Title="File History">
   <Grid x:Name="MainPanel"
-        RowDefinitions="Auto,*,5,3*"
-        Margin="8">
+        RowDefinitions="25,107,6,*">
     <Grid.ContextMenu>
       <ContextMenu x:Name="FileHistoryContextMenu">
         <revisionGrid:CopyContextMenuItem x:Name="copyToClipboardToolStripMenuItem" Header="Copy to clipboard" />
@@ -48,8 +50,12 @@
       </ContextMenu>
     </Grid.ContextMenu>
 
-    <StackPanel Height="25" Orientation="Horizontal" Spacing="1">
-      <usercontrols:FilterToolBar x:Name="ToolStripFilters" />
+    <StackPanel Height="25"
+                Orientation="Horizontal"
+                Spacing="1"
+                Background="Transparent">
+      <usercontrols:FilterToolBar x:Name="ToolStripFilters"
+                                  Foreground="{DynamicResource GitExtensionsWindowTextBrush}" />
       <Border Classes="gitextensions-toolbar-separator" />
       <compat:IconSplitButton x:Name="toolStripSplitLoad"
                               Classes="gitextensions-toolbar-button gitextensions-icon-only"
@@ -86,6 +92,8 @@
       <compat:IconDropDownButton x:Name="toolStripBlameOptions"
                                  Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                  Content="Blame options"
+                                 ToolTip.Tip="Blame options"
+                                 compat:TranslationCompat.UseToolTipText="True"
                                  Icon="{x:Static properties:Images.Blame}">
         <compat:IconDropDownButton.Flyout>
           <MenuFlyout>
@@ -139,37 +147,37 @@
     <gitui:RevisionGridControl x:Name="RevisionGrid" Grid.Row="1" />
 
     <GridSplitter Grid.Row="2"
-                  Height="5"
+                  Height="4"
                   ResizeDirection="Rows" />
 
     <TabControl x:Name="tabControl1"
                 Grid.Row="3"
                 Padding="0"
                 Classes="gitextensions-workspace-tabs">
-      <TabItem x:Name="CommitInfoTabPage"
+      <wf:TabPage x:Name="CommitInfoTabPage"
                Classes="gitextensions-workspace-tab"
                Header="Commit"
                Icon="{x:Static properties:Images.CommitSummary}">
         <usercontrols:CommitDiff x:Name="CommitDiff" />
-      </TabItem>
-      <TabItem x:Name="DiffTab"
+      </wf:TabPage>
+      <wf:TabPage x:Name="DiffTab"
                Classes="gitextensions-workspace-tab"
                Header="Diff"
                Icon="{x:Static properties:Images.Diff}">
         <editor:FileViewer x:Name="Diff" />
-      </TabItem>
-      <TabItem x:Name="ViewTab"
+      </wf:TabPage>
+      <wf:TabPage x:Name="ViewTab"
                Classes="gitextensions-workspace-tab"
                Header="View"
                Icon="{x:Static properties:Images.ViewFile}">
         <editor:FileViewer x:Name="View" />
-      </TabItem>
-      <TabItem x:Name="BlameTab"
+      </wf:TabPage>
+      <wf:TabPage x:Name="BlameTab"
                Classes="gitextensions-workspace-tab"
                Header="Blame"
                Icon="{x:Static properties:Images.Blame}">
         <blame:BlameControl x:Name="Blame" />
-      </TabItem>
+      </wf:TabPage>
     </TabControl>
   </Grid>
 </Window>

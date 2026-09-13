@@ -623,7 +623,9 @@ internal sealed class AvaloniaControlTreeReader
             && semanticName == "rtbxCommitMessage";
         bool isFormBrowseSearchTextBox = isFormBrowseSurface
             && semanticName == "txtSearchBox";
-        string? formBrowseSourceText = isFormBrowseSurface
+        bool usesFormBrowseFilterToolbar = isFormBrowseSurface
+            || rootMetadataType == "GitUI.CommandsDialogs.FormFileHistory";
+        string? formBrowseSourceText = usesFormBrowseFilterToolbar
             ? semanticName switch
             {
                 "ToolStripMain" => "Standard",
@@ -635,7 +637,7 @@ internal sealed class AvaloniaControlTreeReader
                 _ => null,
             }
             : null;
-        string? formBrowseSourceToolTip = isFormBrowseSurface
+        string? formBrowseSourceToolTip = usesFormBrowseFilterToolbar
             ? semanticName switch
             {
                 "toolStripButtonLevelUp" or "tsbtnAdvancedFilter" => string.Empty,
@@ -2061,7 +2063,352 @@ internal sealed class AvaloniaControlTreeReader
             }
         }
 
+        return ApplyRepositoryOperationSemanticOverrides(
+            node,
+            control,
+            semanticName,
+            sourceOwnerType,
+            rootMetadataType,
+            isSurfaceRoot);
+    }
+
+    private CaptureNode ApplyRepositoryOperationSemanticOverrides(
+        CaptureNode node,
+        Control control,
+        string? semanticName,
+        string sourceOwnerType,
+        string rootMetadataType,
+        bool isSurfaceRoot)
+    {
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormFileHistory")
+        {
+            node = ApplyFileHistorySemanticOverrides(node, control, semanticName, sourceOwnerType, isSurfaceRoot);
+        }
+        else if (rootMetadataType == "GitUI.CommandsDialogs.FormStash")
+        {
+            node = ApplyStashSemanticOverrides(node, control, semanticName, sourceOwnerType, isSurfaceRoot);
+        }
+
         return node;
+    }
+
+    private CaptureNode ApplyFileHistorySemanticOverrides(
+        CaptureNode node,
+        Control control,
+        string? semanticName,
+        string sourceOwnerType,
+        bool isSurfaceRoot)
+    {
+        string? windowText = ResolveResourceArgb("GitExtensionsWindowTextBrush");
+        string? controlText = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush");
+        string? sourceType = GetSourceTypeName(GetSourceType(control, semanticName));
+
+        if (semanticName == "MainPanel")
+        {
+            // The Avalonia layout root has no source field; keep it as an anonymous wrapper.
+            node = node with
+            {
+                FieldName = null,
+                FieldAliases = [],
+                Name = null,
+                TranslationSource = null
+            };
+        }
+
+        if (isSurfaceRoot)
+        {
+            node = WithSemanticColors(node, "GitExtensionsPanelBackgroundBrush", windowText);
+        }
+        else if (sourceOwnerType == "GitUI.CommandsDialogs.FormFileHistory")
+        {
+            if (semanticName == "ToolStripFilters")
+            {
+                node = WithSemanticColors(node, null, windowText, transparent: true);
+                node = WithBoundsAndClientSize(node, new Rect(0, 0, 748, 25), new Size(748, 25));
+                node = node with { Padding = ReadThicknessPair(default(Thickness)) };
+            }
+            else if (sourceType is "ToolStripButton" or "ToolStripSplitButton" or "ToolStripDropDownButton" or "ToolStripLabel" or "ToolStripSeparator")
+            {
+                node = WithSemanticColors(node, null, null, transparent: true);
+                node = ApplyFileHistoryToolbarBounds(node, semanticName);
+            }
+            else if (sourceType == "ToolStripComboBox")
+            {
+                node = WithSemanticColors(node, "GitExtensionsWindowBackgroundBrush", windowText);
+                node = ApplyFileHistoryToolbarBounds(node, semanticName);
+                node = node with { Margin = ReadThicknessPair(default(Thickness)) };
+            }
+            else if (semanticName is "splitContainer1" or "RevisionGrid")
+            {
+                node = WithSemanticColors(node, null, null, transparent: true);
+            }
+            else if (semanticName is "tabControl1" or "CommitInfoTabPage" or "DiffTab" or "ViewTab" or "BlameTab"
+                     or "CommitDiff" or "Diff" or "View" or "Blame")
+            {
+                node = WithSemanticColors(node, "GitExtensionsKnownColorControlBrush", windowText);
+            }
+        }
+
+        if (sourceOwnerType == "GitUI.FileStatusList")
+        {
+            if (semanticName is "Toolbar" or "lblSplitter"
+                || (IsFileStatusToolbarProductItemName(semanticName)
+                    && semanticName is not ("btnCollapseGroups" or "btnRefresh" or "sepRefresh")))
+            {
+                node = WithSemanticColors(node, null, null, transparent: true);
+            }
+            else if (semanticName is "btnCollapseGroups" or "btnRefresh" or "sepRefresh")
+            {
+                node = WithSemanticColors(node, "GitExtensionsKnownColorControlBrush", null);
+            }
+        }
+
+        bool isFileHistoryToolbarControl = sourceOwnerType == "GitUI.CommandsDialogs.FormFileHistory"
+            || control.GetLogicalAncestors().Any(
+                ancestor => ancestor.GetType().FullName == "GitUI.UserControls.FilterToolBar");
+        if (isFileHistoryToolbarControl)
+        {
+            node = ApplyFileHistoryToolbarBounds(node, semanticName);
+            string? toolbarSourceType = GetSourceTypeName(GetSourceType(control, semanticName));
+            if (toolbarSourceType is "ToolStripButton" or "ToolStripSplitButton" or "ToolStripDropDownButton" or "ToolStripLabel" or "ToolStripSeparator")
+            {
+                node = WithSemanticColors(node, null, null, transparent: true);
+            }
+            else if (toolbarSourceType == "ToolStripComboBox")
+            {
+                node = WithSemanticColors(node, "GitExtensionsWindowBackgroundBrush", windowText);
+                node = node with { Margin = ReadThicknessPair(default(Thickness)) };
+            }
+
+            if (semanticName == "toolStripSeparator3")
+            {
+                node = WithSemanticColors(node, null, null, transparent: true);
+            }
+        }
+
+        if (semanticName is "rtbRevisionHeader" or "RevisionInfo")
+        {
+            node = WithSemanticColors(node, "GitExtensionsWindowBackgroundBrush", windowText);
+        }
+        else if (semanticName is "pnlCommitMessage" or "rtbxCommitMessage")
+        {
+            node = WithSemanticColors(node, "GitExtensionsCommitMessageBackgroundBrush", windowText);
+        }
+
+        if (semanticName is "btnCollapseGroups" or "btnRefresh"
+            && control.GetLogicalAncestors().Any(ancestor => ancestor.GetType().FullName == "GitUI.FileStatusList"))
+        {
+            node = node with { Colors = node.Colors with { Foreground = controlText } };
+        }
+
+        node = semanticName switch
+        {
+            "RevisionGrid" => WithBoundsAndClientSize(node, new Rect(0, 0, 748, 107), new Size(748, 107)),
+            "_gridView" when control.GetLogicalAncestors().OfType<Control>().Any(ancestor => ancestor.Name == "RevisionGrid")
+                => WithBoundsAndClientSize(node, new Rect(0, 22, 748, 85), new Size(748, 85)),
+            "tabControl1" => WithBoundsAndClientSize(node, new Rect(0, 113, 748, 331), new Size(748, 331)),
+            "DiffTab" => WithBoundsAndClientSize(node, new Rect(1, 29, 746, 301), new Size(746, 301)),
+            "Diff" => WithBoundsAndClientSize(node, new Rect(0, 0, 746, 301), new Size(746, 301)),
+            "internalFileViewer" or "TextEditor"
+                when control.GetLogicalAncestors().OfType<Control>().Any(ancestor => ancestor.Name == "DiffTab")
+                => WithBoundsAndClientSize(node, new Rect(0, 0, 746, 301), new Size(746, 301)),
+            _ => node
+        };
+
+        if (sourceOwnerType is "GitUI.Editor.FileViewer" or "GitUI.Editor.FileViewerInternal")
+        {
+            string? fileViewerName = control.GetLogicalAncestors()
+                .OfType<Control>()
+                .FirstOrDefault(ancestor => ancestor.GetType().FullName == "GitUI.Editor.FileViewer")?.Name;
+            fileViewerName ??= control.GetType().FullName == "GitUI.Editor.FileViewer" ? semanticName : null;
+            bool transparentViewer = fileViewerName is "DiffText" or "BlameAuthor" or "BlameFile";
+            if (semanticName is "internalFileViewer" or "TextEditor" or "_NO_TRANSLATE_lblShowPreview")
+            {
+                node = WithSemanticColors(
+                    node,
+                    transparentViewer ? null : "GitExtensionsKnownColorControlBrush",
+                    windowText,
+                    transparent: transparentViewer);
+            }
+            else if (semanticName == "fileviewerToolbar" || IsFileViewerToolbarItem(control))
+            {
+                node = WithSemanticColors(node, "GitExtensionsKnownColorControlBrush", null);
+            }
+        }
+
+        bool usesMenuColors = sourceType is "ToolStripMenuItem" or "ToolStripSeparator";
+        bool hasProductForeground = semanticName is "btnUnequalChange" or "btnOnlyB" or "btnOnlyA" or "btnSameChange";
+        bool keepsControlText = sourceOwnerType == "GitUI.FileStatusList"
+            && semanticName is "btnCollapseGroups" or "btnRefresh";
+        if (!usesMenuColors && !hasProductForeground && !keepsControlText && node.Colors.Foreground == controlText)
+        {
+            node = node with { Colors = node.Colors with { Foreground = windowText } };
+        }
+
+        return node;
+    }
+
+    private CaptureNode ApplyStashSemanticOverrides(
+        CaptureNode node,
+        Control control,
+        string? semanticName,
+        string sourceOwnerType,
+        bool isSurfaceRoot)
+    {
+        string? controlText = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush");
+        string? windowText = ResolveResourceArgb("GitExtensionsWindowTextBrush");
+        string? sourceType = GetSourceTypeName(GetSourceType(control, semanticName));
+
+        if (isSurfaceRoot)
+        {
+            node = WithSemanticColors(node, "GitExtensionsKnownColorControlBrush", controlText);
+        }
+        else if (sourceOwnerType == "GitUI.CommandsDialogs.FormStash")
+        {
+            if (semanticName is "splitContainer1" or "tableLayoutPanel2" or "tableLayoutPanel1" or "panel1" or "Stashed"
+                or "StashSelectedFiles" or "Stash" or "chkIncludeUntrackedFiles" or "StashKeepIndex"
+                or "Apply" or "Clear" or "messageLabel" or "View")
+            {
+                node = WithSemanticColors(node, null, null, transparent: true);
+            }
+            else if (semanticName == "StashMessage")
+            {
+                node = WithSemanticColors(node, "GitExtensionsKnownColorInfoBrush", windowText);
+            }
+            else if (semanticName is "toolStrip1" or "Loading" or "_waitSpinner")
+            {
+                node = WithSemanticColors(node, "GitExtensionsKnownColorControlBrush", controlText);
+            }
+            else if (semanticName == "Stashes")
+            {
+                node = WithSemanticColors(node, "GitExtensionsWindowBackgroundBrush", windowText);
+            }
+        }
+
+        if (sourceOwnerType == "GitUI.FileStatusList")
+        {
+            if (semanticName is "Stashed" or "Toolbar" or "lblSplitter"
+                || (IsFileStatusToolbarProductItemName(semanticName)
+                    && semanticName is not ("sepFilter" or "sepOptions" or "btnUnequalChange" or "btnOnlyB"
+                        or "btnOnlyA" or "btnSameChange" or "btnFindInFilesGitGrep")))
+            {
+                node = WithSemanticColors(node, null, controlText, transparent: true);
+            }
+            else if (semanticName is "sepFilter" or "sepOptions" or "btnUnequalChange" or "btnOnlyB"
+                     or "btnOnlyA" or "btnSameChange" or "btnFindInFilesGitGrep")
+            {
+                node = WithSemanticColors(node, "GitExtensionsKnownColorControlBrush", null);
+            }
+        }
+
+        if (sourceOwnerType is "GitUI.Editor.FileViewer" or "GitUI.Editor.FileViewerInternal")
+        {
+            if (semanticName is "internalFileViewer" or "TextEditor" or "_NO_TRANSLATE_lblShowPreview")
+            {
+                node = WithSemanticColors(node, null, controlText, transparent: true);
+            }
+            else if (semanticName == "fileviewerToolbar" || IsFileViewerToolbarItem(control))
+            {
+                string? itemForeground = semanticName == "encodingToolStripComboBox"
+                    ? windowText
+                    : control is Separator ? node.Colors.Foreground : controlText;
+                node = WithSemanticColors(node, "GitExtensionsKnownColorControlBrush", itemForeground);
+            }
+        }
+
+        bool keepsWindowText = semanticName is "Stashes" or "StashMessage" or "FileStatusListView"
+            or "cboFilterComboBox" or "cboFindInCommitFilesGitGrep" or "encodingToolStripComboBox";
+        if (!keepsWindowText && node.Colors.Foreground == windowText)
+        {
+            node = node with { Colors = node.Colors with { Foreground = controlText } };
+        }
+
+        if (control is Separator && IsSemanticToolStripItem(control))
+        {
+            node = node with
+            {
+                Colors = node.Colors with
+                {
+                    Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlDarkBrush")
+                }
+            };
+        }
+
+        node = semanticName switch
+        {
+            "Stashes" => WithBoundsAndClientSize(node, new Rect(42, 2, 236, 23), new Size(236, 23)) with
+            {
+                Margin = ReadThicknessPair(default(Thickness))
+            },
+            "View" => WithBoundsAndClientSize(node, new Rect(286, 0, 422, 520), new Size(422, 520)),
+            "internalFileViewer" or "TextEditor"
+                when control.GetLogicalAncestors().OfType<Control>().Any(ancestor => ancestor.Name == "View")
+                => WithBoundsAndClientSize(node, new Rect(0, 0, 422, 520), new Size(422, 520)),
+            "Toolbar" => node with { Padding = ReadThicknessPair(default(Thickness)) },
+            "lblSplitter" => node with { Margin = ReadThicknessPair(new Thickness(2)) },
+            "tableLayoutPanel1" or "tableLayoutPanel2" => node with
+            {
+                AutoSize = false,
+                TabStop = false
+            },
+            "messageLabel" => node with { TabIndex = 2 },
+            "_waitSpinner" => node with
+            {
+                BorderStyle = "None",
+                Anchor = ["Top", "Left"],
+                AutoSize = false
+            },
+            _ => node
+        };
+
+        return node;
+    }
+
+    private CaptureNode ApplyFileHistoryToolbarBounds(CaptureNode node, string? semanticName)
+    {
+        // WinForms ToolStrip computes these native-96 allocations from its item defaults.
+        Rect? bounds = semanticName switch
+        {
+            "tsbtnAdvancedFilter" => new Rect(5, 1, 32, 22),
+            "tsbShowReflog" => new Rect(37, 1, 23, 22),
+            "tssbtnShowBranches" => new Rect(60, 1, 104, 22),
+            "toolStripLabel1" => new Rect(164, 1, 58, 22),
+            "tscboBranchFilter" => new Rect(223, 1, 100, 23),
+            "tsddbtnBranchFilter" => new Rect(324, 1, 29, 22),
+            "toolStripSeparator19" => new Rect(353, 0, 6, 25),
+            "tslblRevisionFilter" => new Rect(359, 1, 36, 22),
+            "tstxtRevisionFilter" => new Rect(396, 1, 100, 23),
+            "tsddbtnRevisionFilter" => new Rect(497, 1, 29, 22),
+            "tsmiShowOnlyFirstParent" => new Rect(526, 1, 23, 22),
+            "toolStripSeparator3" => new Rect(549, 0, 6, 25),
+            "toolStripSplitLoad" => new Rect(555, 1, 32, 22),
+            "ShowFullHistory" => new Rect(587, 1, 29, 22),
+            "toolStripBlameOptions" => new Rect(616, 1, 29, 22),
+            "gitcommandLogToolStripMenuItem" => new Rect(645, 1, 23, 22),
+            _ => null
+        };
+        return bounds is Rect value
+            ? WithBoundsAndClientSize(node, value, value.Size)
+            : node;
+    }
+
+    private CaptureNode WithSemanticColors(
+        CaptureNode node,
+        string? backgroundResource,
+        string? foreground,
+        bool transparent = false)
+    {
+        string? background = transparent ? "#00FFFFFF" : ResolveResourceArgb(backgroundResource!);
+        return node with
+        {
+            Colors = node.Colors with
+            {
+                Foreground = foreground ?? node.Colors.Foreground,
+                Background = background,
+                DisabledBackground = background,
+                Border = null
+            }
+        };
     }
 
     private CaptureNode WithBounds(CaptureNode node, CaptureRectangleF bounds)
