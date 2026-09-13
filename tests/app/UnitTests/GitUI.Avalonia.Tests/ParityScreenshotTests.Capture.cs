@@ -82,6 +82,15 @@ public sealed partial class ParityScreenshotTests
 
     [Test]
     [Category(P02Category)]
+    public void Repository_operation_capture_hosts_should_use_native_96_dpi_client_dimensions()
+    {
+        GetCaptureSize(typeof(FormFileHistory)).Should().Be((748, 444));
+        // The source FormStash Designer is authored at 192 DPI; these are its native-96 client dimensions.
+        GetCaptureSize(typeof(FormStash)).Should().Be((708, 520));
+    }
+
+    [Test]
+    [Category(P02Category)]
     public void Ignore_editor_capture_hosts_should_use_96_dpi_designer_dimensions()
     {
         GetCaptureSize(typeof(FormAddToGitIgnore)).Should().Be((599, 341));

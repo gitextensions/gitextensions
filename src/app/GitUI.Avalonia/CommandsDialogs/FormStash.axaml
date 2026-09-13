@@ -1,74 +1,92 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:compat="using:GitUI.Compat"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
         xmlns:local="using:GitUI"
         xmlns:editor="using:GitUI.Editor"
+        xmlns:revisionGrid="using:GitUI.UserControls.RevisionGrid"
         x:Class="GitUI.CommandsDialogs.FormStash"
         Width="708" Height="520"
         MinWidth="627" MinHeight="443"
+        Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
+        Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
         WindowStartupLocation="CenterOwner"
         Title="Stash">
-  <Grid x:Name="splitContainer1" ColumnDefinitions="280,5,*">
-    <Grid x:Name="tableLayoutPanel2"
-          RowDefinitions="Auto,*,Auto,75,Auto"
-          RowSpacing="6">
-      <Grid x:Name="toolStrip1" Margin="5" ColumnDefinitions="Auto,*" ColumnSpacing="5">
+  <wf:SplitContainer x:Name="splitContainer1" ColumnDefinitions="280,5,*">
+    <wf:TableLayoutPanel x:Name="tableLayoutPanel2"
+                         RowDefinitions="27,*,18,75,149">
+      <Grid x:Name="toolStrip1"
+            ColumnDefinitions="41,*"
+            Background="{DynamicResource GitExtensionsKnownColorControlBrush}">
         <Label x:Name="showToolStripLabel"
                Content="S_how:"
                Target="{Binding #Stashes}"
-               VerticalAlignment="Center" />
+               Margin="2,3,0,0"
+               Width="39"
+               Height="20"
+               VerticalAlignment="Top" />
         <ComboBox x:Name="Stashes"
                   compat:TranslationCompat.UseToolTipText="True"
+                  ToolTip.Tip="Select a stash"
                   Grid.Column="1"
+                  Margin="1,0,0,0"
+                  Width="236"
+                  Height="23"
                   MaxDropDownHeight="600"
-                  HorizontalAlignment="Stretch" />
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center" />
       </Grid>
 
-      <Grid x:Name="panel1" Grid.Row="1">
+      <wf:Panel x:Name="panel1" Grid.Row="1">
+        <Grid>
         <local:FileStatusList x:Name="Stashed" GroupByRevision="True" />
-        <Border Background="{DynamicResource ThemeBackgroundBrush}"
-                Opacity="0.9"
-                IsVisible="{Binding IsVisible, ElementName=Loading}">
-          <ProgressBar x:Name="Loading"
-                       Width="160"
-                       IsIndeterminate="True"
-                       IsVisible="False"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center" />
-        </Border>
-      </Grid>
+        <revisionGrid:LoadingControl x:Name="Loading"
+                                     Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
+                                     IsVisible="False" />
+        </Grid>
+      </wf:Panel>
 
       <Label x:Name="messageLabel"
              Grid.Row="2"
-             Margin="5,0,5,0"
+             Margin="2,0,0,0"
+             Width="137"
+             Height="18"
+             HorizontalAlignment="Left"
              Content="_Message:"
              Target="{Binding #StashMessage}" />
       <TextBox x:Name="StashMessage"
                Grid.Row="3"
-               Margin="5,0,5,0"
                AcceptsReturn="True"
                TextWrapping="Wrap"
-               IsReadOnly="True" />
+               IsReadOnly="True"
+               BorderThickness="0"
+               Background="{DynamicResource GitExtensionsKnownColorInfoBrush}"
+               Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
 
-      <Grid x:Name="tableLayoutPanel1"
-            Grid.Row="4"
-            Margin="5"
-            ColumnDefinitions="*,*"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto"
-            ColumnSpacing="8"
-            RowSpacing="6">
+      <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
+                           Grid.Row="4"
+                           ColumnDefinitions="140,140"
+                           RowDefinitions="25,31,31,31,31">
         <CheckBox x:Name="StashKeepIndex"
+                  Width="83"
+                  Height="19"
+                  Margin="3"
+                  HorizontalAlignment="Left"
                   Content="_Keep index"
                   ToolTip.Tip="All changes already added to the index are left intact" />
         <CheckBox x:Name="chkIncludeUntrackedFiles"
                   Grid.Column="1"
-                  HorizontalAlignment="Right"
+                  Width="134"
+                  Height="19"
+                  Margin="3"
+                  HorizontalAlignment="Left"
                   Content="_Include untracked files"
                   ToolTip.Tip="All untracked files are also stashed and then cleaned" />
         <Button x:Name="Stash"
                 Classes="gitextensions-dialog-action"
                 Grid.Row="1"
                 Grid.ColumnSpan="2"
+                Margin="3,3,0,3"
                 HorizontalAlignment="Stretch"
                 Content="S_tash all changes"
                 ToolTip.Tip="Save local changes to a new stash, then revert local changes" />
@@ -76,6 +94,7 @@
                 Classes="gitextensions-dialog-action"
                 Grid.Row="2"
                 Grid.ColumnSpan="2"
+                Margin="3,3,0,3"
                 HorizontalAlignment="Stretch"
                 Content="Stash _selected changes"
                 ToolTip.Tip="Stash changes for the selected files, then revert them to the original state" />
@@ -83,6 +102,7 @@
                 Classes="gitextensions-dialog-action"
                 Grid.Row="3"
                 Grid.ColumnSpan="2"
+                Margin="3,3,0,3"
                 HorizontalAlignment="Stretch"
                 Content="_Drop Selected Stash"
                 ToolTip.Tip="Remove the selected stash from the list" />
@@ -90,16 +110,17 @@
                 Classes="gitextensions-dialog-action"
                 Grid.Row="4"
                 Grid.ColumnSpan="2"
+                Margin="3,3,0,3"
                 HorizontalAlignment="Stretch"
                 Content="_Apply Selected Stash"
                 ToolTip.Tip="Apply the selected stash on top of the current working directory state" />
-      </Grid>
-    </Grid>
+      </wf:TableLayoutPanel>
+    </wf:TableLayoutPanel>
 
     <GridSplitter Grid.Column="1"
-                  Width="5"
+                  Width="6"
                   ResizeDirection="Columns" />
 
-    <editor:FileViewer x:Name="View" Grid.Column="2" Margin="8" />
-  </Grid>
+    <editor:FileViewer x:Name="View" Grid.Column="2" />
+  </wf:SplitContainer>
 </Window>

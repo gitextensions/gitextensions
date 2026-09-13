@@ -144,6 +144,8 @@ public sealed class StashTests
         form.Clear.IsEnabled.Should().BeFalse();
         form.Apply.IsEnabled.Should().BeFalse();
         form.StashSelectedFiles.IsEnabled.Should().BeTrue("the first changed file is selected automatically");
+        form.Stashed.GetTestAccessor().RefreshButton.IsVisible.Should().BeTrue();
+        form.Stashed.GetTestAccessor().Splitter.Height.Should().Be(0);
 
         form.StashSelectedFiles.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
