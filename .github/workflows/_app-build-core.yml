@@ -166,23 +166,14 @@ jobs:
       run: |
         $zip = Get-ChildItem artifacts\Release\publish\*.zip | Select-Object -First 1
         if (-not $zip) { throw 'No publish zip found under artifacts\Release\publish' }
-        "name=$($zip.BaseName)" >> $env:GITHUB_OUTPUT
-
-        # CreatePortable resets IsPortable back to False in artifacts\Release\publish\GitExtensions after zipping,
-        # so CreateMsi harvests a non-portable folder. Extract the actual .zip contents (where IsPortable is True)
-        # to a separate staging folder instead of uploading the reset publish folder directly.
-        $staging = 'artifacts\Release\portable-staging'
-        Expand-Archive -Path $zip.FullName -DestinationPath $staging -Force
-        "path=$staging" >> $env:GITHUB_OUTPUT
+        "name=$zip" >> $env:GITHUB_OUTPUT
 
     - name: Upload portable archive
       if: ${{ !inputs.release }}
       uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       with:
-        name: ${{ steps.portable-name.outputs.name }}
-        # Upload the extracted .zip contents, not the .zip itself: actions/upload-artifact always zips its input,
-        # so uploading the pre-built .zip would nest a zip inside GitHub's artifact zip.
-        path: '${{ steps.portable-name.outputs.path }}\**'
+        archive: false
+        path: ${{ steps.portable-name.outputs.name }}
         retention-days: 7
 
     - name: Display artifacts
