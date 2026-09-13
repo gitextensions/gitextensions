@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <!-- Solution dependencies -->
+  <ItemGroup Label="Solution dependencies">
     <PackageVersion Include="AdysTech.CredentialManager" Version="2.3.0" />
     <PackageVersion Include="AppInsights.WindowsDesktop" Version="2.18.1" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
@@ -22,25 +21,30 @@
     <PackageVersion Include="System.Reactive.Interfaces" Version="5.0.0" />
     <PackageVersion Include="System.Reactive.Linq" Version="5.0.0" />
     <PackageVersion Include="System.Reactive" Version="5.0.0" />
+  </ItemGroup>
 
-    <!-- Code generators (build-time only) -->
+  <ItemGroup Label="Code generators (build-time only)">
     <PackageVersion Include="GitInfo" Version="2.2.0" />
     <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.269" />
+  </ItemGroup>
     
-    <!-- Analyzers (build-time only) -->
+  <ItemGroup Label="Analyzers (build-time only)">
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
+  </ItemGroup>
 
-    <!-- IDE infra (build-time only) -->
+  <ItemGroup Label="IDE infra (build-time only)">
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.401" />
+  </ItemGroup>
 
-    <!-- Setup infra (build-time only) -->
+  <ItemGroup Label="Setup infra (build-time only)">
     <PackageVersion Include="vswhere" Version="3.1.7" />
     <PackageVersion Include="WiX" Version="3.14.1" />
+  </ItemGroup>
 
-    <!-- Test infra (build-time only)-->
+  <ItemGroup Label="Test infra (build-time only)">
     <PackageVersion Include="AwesomeAssertions" Version="9.4.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.7.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.13.0" />
