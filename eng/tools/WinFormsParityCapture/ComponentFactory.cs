@@ -42,7 +42,7 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormCommit" => CreateFormCommit(commands),
             "GitUI.CommandsDialogs.FormFileHistory" => new FormFileHistory(commands, "src/App.cs", CreateRevision(commands)),
             "GitUI.CommandsDialogs.FormStash" => new FormStash(commands),
-            "GitUI.CommandsDialogs.FormVerify" => new FormVerify(commands),
+            "GitUI.CommandsDialogs.FormVerify" => CreateFormVerify(commands),
             "GitUI.CommandsDialogs.FormPull" => new FormPull(commands, "main", "origin", GitPullAction.Merge),
             "GitUI.CommandsDialogs.FormPush" => new FormPush(commands, "main"),
             "GitUI.CommandsDialogs.FormRemotes" => new FormRemotes(commands) { PreselectRemoteOnLoad = "origin" },
@@ -126,6 +126,142 @@ internal static class ComponentFactory
         DeleteCaptureStateFile(Path.Combine(gitDirectory, "COMMITMESSAGE"));
         DeleteCaptureStateFile(Path.Combine(gitDirectory, "GitExtensions.amend"));
         return new FormCommit(commands);
+    }
+
+    // parity-scaffolding: FormVerify normally starts a modal fsck process from Shown. The
+    // isolated worker instead hosts the same representative lost-object model as the Avalonia
+    // capture side, avoiding a second UI process while leaving the original form untouched.
+    private static FormVerify CreateFormVerify(GitUICommands commands)
+    {
+        FormVerify form = new(commands);
+        System.Reflection.MethodInfo shownMethod = typeof(FormVerify).GetMethod(
+            "FormVerifyShown",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("FormVerify did not expose its Shown handler.");
+        form.Shown -= (EventHandler)shownMethod.CreateDelegate(typeof(EventHandler), form);
+
+        Type lostObjectType = typeof(FormVerify).GetNestedType(
+            "LostObject",
+            System.Reflection.BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("FormVerify did not expose its lost-object model.");
+        Type lostObjectKind = typeof(FormVerify).GetNestedType(
+            "LostObjectType",
+            System.Reflection.BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("FormVerify did not expose its lost-object kind.");
+        System.Collections.IList lostObjects = (System.Collections.IList?)FindFieldValue(form, "_lostObjects")
+            ?? throw new InvalidOperationException("FormVerify did not create its lost-object collection.");
+        lostObjects.Add(CreateLostObject(
+            lostObjectType,
+            lostObjectKind,
+            "Commit",
+            "dangling commit",
+            "1111111111111111111111111111111111111111",
+            new DateTime(2026, 7, 21, 10, 30, 0),
+            "Recover the lost feature work",
+            "Ada Developer",
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
+        lostObjects.Add(CreateLostObject(
+            lostObjectType,
+            lostObjectKind,
+            "Commit",
+            "unreachable commit",
+            "2222222222222222222222222222222222222222",
+            new DateTime(2026, 7, 19, 9, 15, 0),
+            "Temporary experiment",
+            "Grace Contributor"));
+        lostObjects.Add(CreateLostObject(
+            lostObjectType,
+            lostObjectKind,
+            "Blob",
+            "dangling blob (seemingly: cs)",
+            "3333333333333333333333333333333333333333",
+            new DateTime(2026, 7, 18, 8, 0, 0),
+            subject: null,
+            author: null));
+
+        DataGridView warnings = (DataGridView?)FindFieldValue(form, "Warnings")
+            ?? throw new InvalidOperationException("FormVerify did not create Warnings.");
+        System.Reflection.MethodInfo selectionChangedMethod = typeof(FormVerify).GetMethod(
+            "Warnings_SelectionChanged",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("FormVerify did not expose its selection handler.");
+        warnings.SelectionChanged -= (EventHandler)selectionChangedMethod.CreateDelegate(typeof(EventHandler), form);
+
+        // Option changes normally rerun fsck through a modal FormProcess. Isolated state captures
+        // retain the real checkbox state but must not start another UI process.
+        DetachCheckedChanged(form, "Unreachable", "UnreachableCheckedChanged");
+        DetachCheckedChanged(form, "FullCheck", "FullCheckCheckedChanged");
+        DetachCheckedChanged(form, "NoReflogs", "NoReflogsCheckedChanged");
+
+        // The fixture already supplies the display type for its blob. Mark type detection complete so
+        // UpdateFilteredLostObjects does not invoke Git against the intentionally synthetic object IDs.
+        SetNonPublicField(form, "_typeDetected", true);
+        CheckBox showOther = (CheckBox?)FindFieldValue(form, "ShowOtherObjects")
+            ?? throw new InvalidOperationException("FormVerify did not create ShowOtherObjects.");
+        showOther.Checked = true;
+        InvokeNonPublic(form, "UpdateFilteredLostObjects");
+        object filteredLostObjects = FindFieldValue(form, "_filteredLostObjects")
+            ?? throw new InvalidOperationException("FormVerify did not create its filtered lost-object collection.");
+        warnings.DataSource = filteredLostObjects;
+        DataGridViewColumn dateColumn = (DataGridViewColumn?)FindFieldValue(form, "columnDate")
+            ?? throw new InvalidOperationException("FormVerify did not create columnDate.");
+        warnings.Sort(dateColumn, System.ComponentModel.ListSortDirection.Descending);
+
+        GitUI.Editor.FileViewer fileViewer = (GitUI.Editor.FileViewer?)FindFieldValue(form, "fileViewer")
+            ?? throw new InvalidOperationException("FormVerify did not create fileViewer.");
+        fileViewer.ViewFixedPatch(
+            "commit.patch",
+            "commit 1111111111111111111111111111111111111111\nAuthor: Ada Developer\n\n"
+            + "    Recover the lost feature work\n\ndiff --git a/recovered.cs b/recovered.cs\n"
+            + "--- a/recovered.cs\n+++ b/recovered.cs\n@@ -1 +1 @@\n-old content\n+recovered content\n");
+        return form;
+
+        static void DetachCheckedChanged(FormVerify form, string fieldName, string methodName)
+        {
+            CheckBox checkBox = (CheckBox?)FindFieldValue(form, fieldName)
+                ?? throw new InvalidOperationException($"FormVerify did not create {fieldName}.");
+            System.Reflection.MethodInfo method = typeof(FormVerify).GetMethod(
+                methodName,
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?? throw new InvalidOperationException($"FormVerify did not expose {methodName}.");
+            checkBox.CheckedChanged -= (EventHandler)method.CreateDelegate(typeof(EventHandler), form);
+        }
+
+        static object CreateLostObject(
+            Type lostObjectType,
+            Type lostObjectKind,
+            string kind,
+            string rawType,
+            string objectId,
+            DateTime date,
+            string? subject,
+            string? author,
+            string? parent = null)
+        {
+            object instance = Activator.CreateInstance(
+                lostObjectType,
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic,
+                binder: null,
+                args: [Enum.Parse(lostObjectKind, kind), rawType, ObjectId.Parse(objectId)],
+                culture: null)
+                ?? throw new InvalidOperationException("FormVerify lost-object model could not be constructed.");
+            SetProperty("Date", date);
+            SetProperty("Subject", subject);
+            SetProperty("Author", author);
+            if (parent is not null)
+            {
+                SetProperty("Parent", ObjectId.Parse(parent));
+            }
+
+            return instance;
+
+            void SetProperty(string name, object? value)
+            {
+                System.Reflection.PropertyInfo property = lostObjectType.GetProperty(name)
+                    ?? throw new InvalidOperationException($"FormVerify lost-object model did not expose {name}.");
+                property.SetValue(instance, value);
+            }
+        }
     }
 
     private static void DeleteCaptureStateFile(string path)
@@ -295,6 +431,12 @@ internal static class ComponentFactory
                 // deterministically, so drive that same original callback before any focus
                 // state can enter a remote URL control.
                 InvokeNonPublic(formRemotes, "application_Idle", null!, EventArgs.Empty);
+                break;
+            case FormVerify formVerify:
+                DataGridView warnings = (DataGridView?)FindFieldValue(formVerify, "Warnings")
+                    ?? throw new InvalidOperationException("FormVerify did not create Warnings.");
+                warnings.ClearSelection();
+                warnings.CurrentCell = null;
                 break;
             case CommitInfo commitInfo:
                 commitInfo.UICommandsSource = source;

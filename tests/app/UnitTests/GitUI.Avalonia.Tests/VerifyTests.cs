@@ -1,11 +1,14 @@
 using System.ComponentModel.Design;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.ParityCapture;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
@@ -133,6 +136,67 @@ public sealed class VerifyTests
             && item.Subject == "lost change");
         objects.Should().Contain(item => item.RawType == "unreachable blob");
         objects.Should().Contain(item => item.RawType == "unreachable tree");
+    }
+
+    [AvaloniaTest]
+    public void FormVerify_should_emit_the_source_authored_layout_and_grid_contract()
+    {
+        FormVerify form = new();
+        try
+        {
+            form.GetTestAccessor().SetPreviewRows();
+            form.Width = 859;
+            form.Height = 575;
+            form.SizeToContent = SizeToContent.Manual;
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            CaptureSurface surface = new AvaloniaControlTreeReader(form, renderScale: 1)
+                .ReadPrimary(form, new PixelSize(859, 575));
+            IReadOnlyDictionary<string, CaptureNode> nodes = Flatten(surface.Root)
+                .Where(node => node.FieldName is not null || node.Name is not null)
+                .GroupBy(node => node.FieldName ?? node.Name!, StringComparer.Ordinal)
+                .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
+
+            surface.Root.BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 0, Width = 859, Height = 575 });
+            nodes["panel2"].BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 0, Width = 859, Height = 138 });
+            nodes["flowLayoutPanel1"].Padding.Dip.Should().Be(new CaptureThicknessF { Left = 5, Top = 5, Right = 5, Bottom = 5 });
+            nodes["splitContainer1"].BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 134, Width = 859, Height = 374 });
+            nodes["Warnings"].BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 0, Width = 700, Height = 374 });
+            nodes["Warnings"].ControlKind.Should().Be("dataGrid");
+            nodes["Warnings"].Columns.Select(column => column.FieldName).Should().Equal(
+                "columnIsLostObjectSelected",
+                "columnDate",
+                "columnType",
+                "columnSubject",
+                "columnAuthor",
+                "columnHash",
+                "columnParent");
+            nodes["Warnings"].Columns.Select(column => column.WidthDip).Should().Equal(21, 112, 164, 130, 150, 60, 60);
+            nodes["fileViewer"].BoundsDip.Should().Be(new CaptureRectangleF { X = 706, Y = 0, Width = 153, Height = 374 });
+            nodes["panel1"].BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 514, Width = 859, Height = 61 });
+            nodes["Remove"].BoundsDip.Should().Be(new CaptureRectangleF { X = 3, Y = 6, Width = 252, Height = 25 });
+            nodes["btnRestoreSelectedObjects"].BoundsDip.Should().Be(new CaptureRectangleF { X = 298, Y = 21, Width = 317, Height = 25 });
+            nodes["SaveObjects"].BoundsDip.Should().Be(new CaptureRectangleF { X = 647, Y = 6, Width = 208, Height = 25 });
+            nodes["DeleteAllLostAndFoundTags"].BoundsDip.Should().Be(new CaptureRectangleF { X = 3, Y = 33, Width = 252, Height = 25 });
+            nodes["btnCloseDialog"].BoundsDip.Should().Be(new CaptureRectangleF { X = 647, Y = 33, Width = 208, Height = 25 });
+        }
+        finally
+        {
+            form.Close();
+        }
+
+        static IEnumerable<CaptureNode> Flatten(CaptureNode root)
+        {
+            yield return root;
+            foreach (CaptureNode child in root.Children)
+            {
+                foreach (CaptureNode descendant in Flatten(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
     }
 
     [AvaloniaTest]

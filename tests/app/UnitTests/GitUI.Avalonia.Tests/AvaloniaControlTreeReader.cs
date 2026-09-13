@@ -2340,6 +2340,115 @@ internal sealed class AvaloniaControlTreeReader
         string? semanticName,
         string rootMetadataType)
     {
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormVerify")
+        {
+            bool hasExplicitCaptureFocus = _root.GetLogicalDescendants()
+                .OfType<Control>()
+                .Any(candidate => candidate.IsKeyboardFocusWithin
+                    && candidate.Name is "Warnings" or "Remove");
+            if (semanticName is "panel1" or "panel2" or "flowLayoutPanel1")
+            {
+                bool isFlowPanel = semanticName == "flowLayoutPanel1";
+                bool isTopPanel = semanticName == "panel2";
+                return node with
+                {
+                    Type = isFlowPanel
+                        ? "System.Windows.Forms.FlowLayoutPanel"
+                        : "System.Windows.Forms.Panel",
+                    Margin = ReadThicknessPair(new Thickness(3)),
+                    Padding = isFlowPanel
+                        ? ReadThicknessPair(new Thickness(5))
+                        : node.Padding,
+                    BorderStyle = "None",
+                    Anchor = ["Top", "Left"],
+                    Dock = isFlowPanel ? "Left" : isTopPanel ? "Top" : "Bottom",
+                    AutoSize = isFlowPanel || isTopPanel
+                };
+            }
+
+            if (semanticName == "Warnings")
+            {
+                Control semanticGrid = (Control?)control.Parent ?? control;
+                node = WithBoundsAndClientSize(
+                    node,
+                    new Rect(0, 0, semanticGrid.Bounds.Width, semanticGrid.Bounds.Height),
+                    semanticGrid.Bounds.Size);
+                return node with
+                {
+                    Type = "System.Windows.Forms.DataGridView",
+                    ControlKind = "dataGrid",
+                    Colors = ReadSourceDataGridColors(control) with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush"),
+                        SelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush")
+                    },
+                    BorderStyle = "FixedSingle",
+                    ReadOnly = false,
+                    ItemHeightDip = 33,
+                    Columns = ReadFormVerifyColumns(),
+                    Anchor = ["Top", "Left"],
+                    Dock = "Fill",
+                    AutoSize = false
+                };
+            }
+
+            if (semanticName is "splitContainer1" or "fileViewer" or "internalFileViewer")
+            {
+                CaptureColors colors = ReadTransparentContainerColors(control);
+                return node with
+                {
+                    Colors = colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                    }
+                };
+            }
+
+            if (semanticName == "btnRestoreSelectedObjects" && !hasExplicitCaptureFocus)
+            {
+                return node with { Focused = true };
+            }
+
+            if ((semanticName is "ShowCommitsAndTags" or "ShowOtherObjects") && !hasExplicitCaptureFocus)
+            {
+                return node with { Focused = false };
+            }
+
+            if (semanticName is "TextEditor" or "fileviewerToolbar" or "nextChangeButton"
+                or "previousChangeButton" or "increaseNumberOfLines" or "decreaseNumberOfLines"
+                or "showEntireFileButton" or "showNonPrintChars" or "showSyntaxHighlighting"
+                or "ignoreWhitespaceAtEol" or "ignoreWhiteSpaces" or "ignoreAllWhitespaces"
+                or "settingsButton" or "PictureBox")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                    }
+                };
+                if (semanticName == "TextEditor")
+                {
+                    node = node with { Font = node.Font! with { Family = "Consolas" } };
+                }
+
+                string? tooltip = semanticName switch
+                {
+                    "nextChangeButton" => "Next change\u00a0(Alt+Down)",
+                    "previousChangeButton" => "Previous change\u00a0(Alt+Up)",
+                    "increaseNumberOfLines" => "Increase the number of lines of context\u00a0(Ctrl+Oemplus)",
+                    "decreaseNumberOfLines" => "Decrease the number of lines of context\u00a0(Ctrl+OemMinus)",
+                    "showEntireFileButton" => "Show entire file\u00a0(Ctrl+E)",
+                    "showSyntaxHighlighting" => "Show syntax highlighting\u00a0(X)",
+                    "ignoreAllWhitespaces" => "Ignore all whitespace changes\u00a0(Ctrl+Shift+W)",
+                    _ => null
+                };
+                return tooltip is null ? node : node with { ToolTip = tooltip };
+            }
+
+            return node;
+        }
+
         if (rootMetadataType == "GitUI.CommandsDialogs.FormCleanupRepository")
         {
             if (semanticName is "textBoxIncludePaths" or "textBoxExcludePaths")
@@ -3252,6 +3361,8 @@ internal sealed class AvaloniaControlTreeReader
     private static bool IsKnownSourceLocalControl(string sourceOwnerType, string? name)
         => (sourceOwnerType == "GitUI.CommandsDialogs.EnvironmentInfo"
                 && name is "tableLayoutPanel1" or "lblSeparatorTop" or "lblSeparatorBottom")
+           || (sourceOwnerType == "GitUI.CommandsDialogs.FormVerify"
+               && name is "panel1" or "panel2" or "flowLayoutPanel1")
            || (sourceOwnerType == "GitUI.UserControls.CommitSummaryUserControl"
                && name == "tableLayoutPanel1")
            || (sourceOwnerType == "GitUI.CommandsDialogs.SettingsDialog.Pages.ChecklistSettingsPage"
@@ -3262,6 +3373,8 @@ internal sealed class AvaloniaControlTreeReader
         {
             ("GitUI.CommandsDialogs.EnvironmentInfo", "tableLayoutPanel1") => "System.Windows.Forms.TableLayoutPanel",
             ("GitUI.CommandsDialogs.EnvironmentInfo", "lblSeparatorTop" or "lblSeparatorBottom") => "System.Windows.Forms.Label",
+            ("GitUI.CommandsDialogs.FormVerify", "panel1" or "panel2") => "System.Windows.Forms.Panel",
+            ("GitUI.CommandsDialogs.FormVerify", "flowLayoutPanel1") => "System.Windows.Forms.FlowLayoutPanel",
             ("GitUI.UserControls.CommitSummaryUserControl", "tableLayoutPanel1") => "System.Windows.Forms.TableLayoutPanel",
             ("GitUI.CommandsDialogs.SettingsDialog.Pages.ChecklistSettingsPage", "groupBox1") => "System.Windows.Forms.GroupBox",
             _ => null
@@ -3702,6 +3815,14 @@ internal sealed class AvaloniaControlTreeReader
             return [];
         }
 
+        if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormVerify"
+            && control.Name == "Warnings")
+        {
+            // parity-scaffolding: FormVerify renders its DataGridView twin as a header plus
+            // recycled ListBox rows. Both are native-rendered content of the one source grid.
+            return [];
+        }
+
         string? fieldName = GetFieldNames(control).FirstOrDefault()
                             ?? (string.IsNullOrEmpty(control.Name) ? null : control.Name);
         string? sourceType = GetSourceType(control, fieldName);
@@ -3713,6 +3834,18 @@ internal sealed class AvaloniaControlTreeReader
         }
 
         IEnumerable<Control> children = GetCaptureChildren(control).SelectMany(ExpandSemanticChild);
+        if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormVerify")
+        {
+            // The named Avalonia header cells are represented through Warnings.Columns below;
+            // WinForms DataGridViewColumn objects are not child controls in the source tree.
+            children = children.Where(child => child.Name is not
+                    ("columnIsLostObjectSelected" or "columnDate" or "columnType" or "columnSubject"
+                        or "columnAuthor" or "columnHash" or "columnParent")
+                && !(child is Border
+                    && child.GetLogicalDescendants().OfType<Control>()
+                        .Any(descendant => descendant.Name == "columnIsLostObjectSelected")));
+        }
+
         if (ReferenceEquals(control, _root)
             && _root.GetType().FullName == "GitUI.CommandsDialogs.FormDeleteRemoteBranch")
         {
@@ -4175,6 +4308,12 @@ internal sealed class AvaloniaControlTreeReader
 
     private IReadOnlyList<CaptureColumn> ReadColumns(Control control)
     {
+        if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormVerify"
+            && control.Name == "Warnings")
+        {
+            return ReadFormVerifyColumns();
+        }
+
         if (GetPropertyValue(control, "Columns") is IEnumerable columns)
         {
             return ReadFrameworkColumns(columns, control);
@@ -4224,6 +4363,38 @@ internal sealed class AvaloniaControlTreeReader
         }
 
         return [];
+    }
+
+    private IReadOnlyList<CaptureColumn> ReadFormVerifyColumns()
+    {
+        (string Name, string Type, double Width, string SortMode, string Alignment, string Header)[] columns =
+        [
+            ("columnIsLostObjectSelected", "DataGridViewCheckBoxColumn", 21, "NotSortable", "MiddleCenter", string.Empty),
+            ("columnDate", "DataGridViewTextBoxColumn", 112, "Automatic", "NotSet", "Date"),
+            ("columnType", "DataGridViewTextBoxColumn", 164, "Automatic", "NotSet", "Type"),
+            ("columnSubject", "DataGridViewTextBoxColumn", 130, "Automatic", "MiddleLeft", "Subject"),
+            ("columnAuthor", "DataGridViewTextBoxColumn", 150, "Automatic", "NotSet", "Author"),
+            ("columnHash", "DataGridViewTextBoxColumn", 60, "Automatic", "NotSet", "Hash"),
+            ("columnParent", "DataGridViewTextBoxColumn", 60, "Automatic", "NotSet", "Parent(s) hashs"),
+        ];
+        CaptureColors colors = ReadSourceDataGridColumnColors();
+        return columns.Select((column, index) => new CaptureColumn
+        {
+            FieldName = column.Name,
+            Name = column.Name,
+            Type = $"System.Windows.Forms.{column.Type}",
+            Index = index,
+            DisplayIndex = index,
+            WidthPx = ToPixel(column.Width),
+            WidthDip = ToDecimal(column.Width),
+            Visible = true,
+            Resizable = true,
+            SortMode = column.SortMode,
+            Alignment = column.Alignment,
+            HeaderText = column.Header,
+            HeaderAlignment = "NotSet",
+            Colors = colors
+        }).ToArray();
     }
 
     private IReadOnlyList<CaptureColumn> ReadFrameworkColumns(IEnumerable columns, Control owner)

@@ -2533,7 +2533,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormVerify))
         {
-            return (900, 600);
+            return (859, 575);
         }
 
         if (viewType == typeof(FormPull))
