@@ -4,7 +4,6 @@ using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
-using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI;
 using GitUI.Compat;
 using GitUI.UserControls;
@@ -43,7 +42,7 @@ public sealed partial class FormStash : GitModuleForm
         Stashes.ItemTemplate = new FuncDataTemplate<GitStash>(
             (stash, _) => new TextBlock { Text = stash?.Summary ?? string.Empty },
             supportsRecycling: false);
-        Stashed.Bind(() => RefreshAll());
+        Stashed.Bind(refreshArtificial: () => RefreshAll());
         Stashed.BindContextMenu(View.CherryPickAllChanges, () => View.SupportLinePatching);
         Stashed.SelectedIndexChanged += StashedSelectedIndexChanged;
         View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(this, EventArgs.Empty); };
@@ -202,23 +201,6 @@ public sealed partial class FormStash : GitModuleForm
             Clear.IsEnabled = true;
             Apply.IsEnabled = true;
         }
-    }
-
-    public override void AddTranslationItems(ITranslation translation)
-    {
-        base.AddTranslationItems(translation);
-        translation.AddTranslationItem(nameof(FormStash), nameof(Stashes), "ToolTipText", "Select a stash");
-    }
-
-    public override void TranslateItems(ITranslation translation)
-    {
-        base.TranslateItems(translation);
-        string? toolTip = translation.TranslateItem(
-            nameof(FormStash),
-            nameof(Stashes),
-            "ToolTipText",
-            () => "Select a stash");
-        ToolTip.SetTip(Stashes, toolTip);
     }
 
     private void FileViewer_TopScrollReached(object? sender, EventArgs e)
