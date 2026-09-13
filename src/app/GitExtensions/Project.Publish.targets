@@ -222,10 +222,11 @@
           AfterTargets="Publish"
           DependsOnTargets="_RetrieveCurrentBuildVersion;_PatchRuntimeConfigJson;_CheckBundlesConsistent">
     <PropertyGroup>
-      <_TargetAppConfig>@(AppConfigFileDestination)</_TargetAppConfig>
-
-      <!-- Resolve app.config, so we can set/unset "portable" flag -->
-      <_PublishAppConfig>$([System.IO.Path]::GetFileName('$(_TargetAppConfig)'))</_PublishAppConfig>
+      <!-- Resolve app.config, so we can set/unset "portable" flag.
+           @(AppConfigFileDestination) is only populated by the Build target's _CopyAppConfigFile step, so it is
+           empty when Publish runs with the no-build switch (as CI does). Compute the published config file name
+           directly from $(TargetFileName) instead, which is always available regardless of that switch. -->
+      <_PublishAppConfig>$(TargetFileName).config</_PublishAppConfig>
       <_PublishAppConfigPath>$([System.IO.Path]::Combine('$(PublishDir)', '$(_PublishAppConfig)'))</_PublishAppConfigPath>
 
       <!-- Resolve the output file -->
