@@ -2,6 +2,7 @@
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -168,9 +169,9 @@ public sealed class PluginSettingsTests
         PluginSettingBinding binding = PluginSettingControlFactory.Create(setting);
 
         Grid control = binding.Control.Should().BeOfType<Grid>().Subject;
-        control.Children.OfType<TextBox>().Should().HaveCount(2);
-        control.Children.OfType<TextBox>().Last().PasswordChar.Should().Be('\u25CF');
-        control.Children.OfType<TextBlock>().Select(label => label.Text).Should().Equal(
+        control.GetLogicalDescendants().OfType<TextBox>().Should().HaveCount(2);
+        control.GetLogicalDescendants().OfType<TextBox>().Last().PasswordChar.Should().Be('\u25CF');
+        control.GetLogicalDescendants().OfType<TextBlock>().Select(label => label.Text).Should().Equal(
             "User name",
             "API token/Password");
     }

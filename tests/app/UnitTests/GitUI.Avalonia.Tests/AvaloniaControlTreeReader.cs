@@ -1564,6 +1564,14 @@ internal sealed class AvaloniaControlTreeReader
         bool isEnvironmentInfoLayout,
         bool isEnvironmentInfoSeparator)
     {
+        node = ApplySettingControlBindingsSemanticOverrides(
+            node,
+            control,
+            semanticName,
+            rootMetadataType,
+            ordinal,
+            isSurfaceRoot);
+
         if (rootMetadataType == "GitUI.CommandsDialogs.AboutBoxDialog.FormContributors")
         {
             if (isSurfaceRoot)
@@ -2094,6 +2102,236 @@ internal sealed class AvaloniaControlTreeReader
             sourceOwnerType,
             rootMetadataType,
             isSurfaceRoot);
+    }
+
+    private CaptureNode ApplySettingControlBindingsSemanticOverrides(
+        CaptureNode node,
+        Control control,
+        string? semanticName,
+        string rootMetadataType,
+        int ordinal,
+        bool isSurfaceRoot)
+    {
+        if (rootMetadataType is not
+            ("GitUI.SettingControlBindings.SettingControlBindingsCaptureSurface" or
+             "GitUI.SettingControlBindings.SettingControlBindingsNullCaptureSurface"))
+        {
+            return node;
+        }
+
+        const string sourceRootId = "$unnamed[0]:SettingControlBindingsCaptureSurface";
+        string id = node.Id
+            .Replace("$root:SettingControlBindingsCaptureSurface", sourceRootId, StringComparison.Ordinal)
+            .Replace("$root:SettingControlBindingsNullCaptureSurface", "$unnamed[0]:SettingControlBindingsNullCaptureSurface", StringComparison.Ordinal)
+            .Replace(":TextBlock", ":Label", StringComparison.Ordinal);
+        if (semanticName == "numberControl")
+        {
+            id = id.Replace("/numberControl", "/_parent", StringComparison.Ordinal);
+        }
+
+        bool isNullSurface = rootMetadataType == "GitUI.SettingControlBindings.SettingControlBindingsNullCaptureSurface";
+        if (isNullSurface)
+        {
+            id = id.Replace("/_layout", "/$unnamed[0]:TableLayoutPanel", StringComparison.Ordinal);
+        }
+
+        node = node with { Id = id };
+        if (isSurfaceRoot)
+        {
+            return node with
+            {
+                Padding = ReadThicknessPair(new Thickness(12)),
+                Font = ReadUiFont(),
+                BorderStyle = "None"
+            };
+        }
+
+        if (semanticName == "_layout")
+        {
+            return node with
+            {
+                FieldName = isNullSurface ? null : node.FieldName,
+                FieldAliases = isNullSurface ? [] : node.FieldAliases,
+                Type = "System.Windows.Forms.TableLayoutPanel",
+                Margin = ReadThicknessPair(new Thickness(3)),
+                Font = ReadUiFont(),
+                Colors = ReadSettingControlContainerColors(control),
+                Anchor = ["Top", "Left"],
+                Dock = "Fill",
+                AutoSize = false,
+                BorderStyle = "None",
+                TranslationSource = isNullSurface ? null : node.TranslationSource,
+                TabIndex = 0,
+                TabStop = false
+            };
+        }
+
+        bool isCaption = semanticName is null && control is TextBlock;
+        if (isCaption)
+        {
+            return node with
+            {
+                Type = "System.Windows.Forms.Label",
+                Margin = ReadThicknessPair(new Thickness(3, 6, 3, 3)),
+                Anchor = ["Left"],
+                Dock = "None",
+                AutoSize = true,
+                Alignment = "TopLeft",
+                Colors = ReadSettingControlContainerColors(control),
+                BorderStyle = "None",
+                TabIndex = ordinal,
+                TabStop = false
+            };
+        }
+
+        if (semanticName is "boolControl" or "choiceControl" or "stringControl" or
+            "passwordControl" or "numberControl" or "numberTextControl" or
+            "credentialsControl" or "pseudoControl")
+        {
+            bool isTextInput = semanticName is "stringControl" or "passwordControl" or "numberTextControl";
+            bool isPseudo = semanticName == "pseudoControl";
+            bool isNumeric = semanticName == "numberControl";
+            string sourceType = semanticName switch
+            {
+                "boolControl" => "System.Windows.Forms.CheckBox",
+                "choiceControl" => "System.Windows.Forms.ComboBox",
+                "numberControl" => "System.Windows.Forms.NumericUpDown",
+                "credentialsControl" => "GitExtensions.Extensibility.Settings.UserControls.CredentialsControl",
+                _ => "System.Windows.Forms.TextBox"
+            };
+            bool isChoice = semanticName == "choiceControl";
+            CaptureColors colors = isTextInput || isNumeric || isPseudo || isChoice
+                ? ReadSettingControlInputColors(
+                    control,
+                    useWindowBackground: isChoice || semanticName == "numberTextControl")
+                : ReadSettingControlContainerColors(control);
+            CaptureNode result = node with
+            {
+                FieldName = isNumeric ? "_parent" : null,
+                FieldAliases = [],
+                Type = sourceType,
+                Padding = ReadThicknessPair(default(Thickness)),
+                Colors = colors,
+                Font = semanticName == "credentialsControl" ? ReadUiFont() : node.Font,
+                Anchor = ["Left", "Right"],
+                Dock = "None",
+                AutoSize = isTextInput || isPseudo,
+                Alignment = semanticName switch
+                {
+                    "boolControl" => "MiddleLeft",
+                    "choiceControl" or "credentialsControl" => null,
+                    _ => "Left"
+                },
+                TranslationSource = isNumeric ? "_parent" : null,
+                ToolTip = null,
+                BorderStyle = isTextInput || isNumeric
+                    ? "Fixed3D"
+                    : isPseudo || semanticName == "credentialsControl" ? "None" : null,
+                BorderWidthDip = null,
+                FlatStyle = semanticName == "boolControl" ? "Standard" : null,
+                CornerRadiusDip = null,
+                TabIndex = ordinal,
+                TabStop = true
+            };
+            return isPseudo
+                ? WithClientSize(result, new Size((double)result.BoundsDip.Width, (double)result.BoundsDip.Height))
+                : result;
+        }
+
+        if (semanticName == "mainTableLayoutPanel")
+        {
+            return node with
+            {
+                Type = "System.Windows.Forms.TableLayoutPanel",
+                Margin = ReadThicknessPair(new Thickness(4, 3)),
+                Font = ReadUiFont(),
+                Colors = ReadSettingControlContainerColors(control),
+                Anchor = ["Top", "Left"],
+                Dock = "Fill",
+                AutoSize = false,
+                BorderStyle = "None",
+                TabIndex = 0,
+                TabStop = false
+            };
+        }
+
+        if (semanticName is "userNameLabel" or "passwordLabel")
+        {
+            return node with
+            {
+                Type = "System.Windows.Forms.Label",
+                Margin = ReadThicknessPair(semanticName == "userNameLabel"
+                    ? new Thickness(0, 3, 4, 0)
+                    : new Thickness(4, 3, 4, 0)),
+                Colors = ReadSettingControlContainerColors(control),
+                Anchor = ["Top", "Left"],
+                Dock = "Fill",
+                AutoSize = true,
+                Alignment = "TopLeft",
+                BorderStyle = "None",
+                TabIndex = semanticName == "userNameLabel" ? 0 : 1,
+                TabStop = false
+            };
+        }
+
+        if (semanticName is "userNameTextBox" or "passwordTextBox")
+        {
+            return node with
+            {
+                Type = "System.Windows.Forms.TextBox",
+                Padding = ReadThicknessPair(default(Thickness)),
+                Margin = ReadThicknessPair(semanticName == "userNameTextBox"
+                    ? new Thickness(4, 0)
+                    : new Thickness(4, 0, 0, 0)),
+                Colors = ReadSettingControlInputColors(control, useWindowBackground: false),
+                Anchor = ["Top", "Left"],
+                Dock = "Fill",
+                AutoSize = true,
+                Alignment = "Left",
+                BorderStyle = "Fixed3D",
+                BorderWidthDip = null,
+                TabIndex = semanticName == "userNameTextBox" ? 2 : 3,
+                TabStop = true
+            };
+        }
+
+        return node;
+    }
+
+    private CaptureColors ReadSettingControlContainerColors(Control control)
+        => ReadSourceBackgroundColors(
+            control,
+            "GitExtensionsKnownColorControlBrush",
+            ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")) with
+        {
+            SelectionForeground = null,
+            SelectionBackground = null,
+            InactiveSelectionForeground = null,
+            InactiveSelectionBackground = null,
+            Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+        };
+
+    private CaptureColors ReadSettingControlInputColors(Control control, bool useWindowBackground)
+    {
+        CaptureColors colors = ReadSourceInputColors(control);
+        bool isInvalid = control.Classes.Contains("plugin-setting-invalid");
+        bool isReadOnly = GetNullableBoolProperty(control, "IsReadOnly") == true;
+        string backgroundResource = isInvalid
+            ? "GitExtensionsInvalidSettingBackgroundBrush"
+            : isReadOnly
+                ? "GitExtensionsSettingReadOnlyBackgroundBrush"
+                : useWindowBackground
+                    ? "GitExtensionsKnownColorWindowBrush"
+                    : "GitExtensionsTextInputBackgroundBrush";
+        string? background = ResolveResourceArgb(backgroundResource);
+        return colors with
+        {
+            Foreground = isInvalid
+                ? ResolveResourceArgb("GitExtensionsInvalidSettingForegroundBrush")
+                : colors.Foreground,
+            Background = background,
+            DisabledBackground = background
+        };
     }
 
     private CaptureNode ApplyRepositoryMaintenanceSemanticOverrides(
@@ -3164,14 +3402,14 @@ internal sealed class AvaloniaControlTreeReader
         => IsSourceTreeControl(sourceType)
             ? "Fixed3D"
             : control switch
-        {
-            TextBox or NumericUpDown => "Fixed3D",
-            ListBox => "Fixed3D",
-            Panel or Decorator or TabItem or Image or TextBlock or Label or HyperlinkButton => "None",
-            _ when control.Name == "browseForCloneToDirbtn" => "None",
-            _ when control.GetType().FullName == "GitUI.SpellChecker.EditNetSpell" => "None",
-            _ => null
-        };
+            {
+                TextBox or NumericUpDown => "Fixed3D",
+                ListBox => "Fixed3D",
+                Panel or Decorator or TabItem or Image or TextBlock or Label or HyperlinkButton => "None",
+                _ when control.Name == "browseForCloneToDirbtn" => "None",
+                _ when control.GetType().FullName == "GitUI.SpellChecker.EditNetSpell" => "None",
+                _ => null
+            };
 
     private static bool IsSourceCustomControl(Control control, string? fieldName)
         => fieldName is not null

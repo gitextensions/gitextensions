@@ -14,7 +14,11 @@ internal sealed class BoolSettingControlBinding : SettingControlBinding<BoolSett
     public override CheckBox CreateControl()
     {
         // Avalonia renders the portable custom-control model through a native control.
-        CheckBox control = new() { IsThreeState = true };
+        CheckBox control = new()
+        {
+            Height = 24,
+            IsThreeState = true,
+        };
         PluginSettingControlFactory.ApplyModel(Setting.CustomControl, control);
         return control;
     }

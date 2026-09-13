@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using GitExtensions.Extensibility.Settings;
 using GitUI.Compat;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -10,6 +11,8 @@ namespace GitUI.SettingControlBindings;
 // parity-scaffolding: Hosts every native setting binding in the same deterministic paired surface as WinForms.
 internal class SettingControlBindingsCaptureSurface : Grid
 {
+    private readonly Grid _layout = new();
+
     public SettingControlBindingsCaptureSurface()
         : this(useNullAndInvalidValues: false)
     {
@@ -17,8 +20,10 @@ internal class SettingControlBindingsCaptureSurface : Grid
 
     protected SettingControlBindingsCaptureSurface(bool useNullAndInvalidValues)
     {
-        Margin = new Thickness(12);
-        ColumnDefinitions = new ColumnDefinitions("170,*");
+        _layout.Margin = new Thickness(12);
+        _layout.ColumnDefinitions = new ColumnDefinitions("170,*");
+        _layout.RowSpacing = 0;
+        Children.Add(_layout);
 
         CaptureSettingsSource settings = new(useNullAndInvalidValues);
         AddBinding("Boolean", new BoolSetting("Enabled", defaultValue: false), "boolControl", settings);
@@ -50,7 +55,7 @@ internal class SettingControlBindingsCaptureSurface : Grid
         }
         else
         {
-            TextBox[] fields = ((Grid)credentialsControl).Children.OfType<TextBox>().ToArray();
+            TextBox[] fields = ((Grid)credentialsControl).GetLogicalDescendants().OfType<TextBox>().ToArray();
             fields[0].Text = "capture-user";
             fields[1].Text = "capture-secret";
         }
@@ -73,21 +78,42 @@ internal class SettingControlBindingsCaptureSurface : Grid
 
     private void AddControl(string caption, Control control)
     {
-        int row = RowDefinitions.Count;
-        RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+        int row = _layout.RowDefinitions.Count;
+        double rowHeight = control.Name switch
+        {
+            "boolControl" => 29,
+            "credentialsControl" => 51,
+            "pseudoControl" => 45,
+            _ => 28,
+        };
+        // WinForms TableLayoutPanel's AutoSize algorithm uses each source control's
+        // preferred height. Avalonia's arranged track contributes the shared final boundary
+        // DIP, so these integer definitions are one less than the effective WinForms rows.
+        // CredentialsControl contributes its inherited 46-DIP preferred height while its
+        // contradictory min/max contract arranges the control at 24 DIPs.
+        _layout.RowDefinitions.Add(new RowDefinition(new GridLength(rowHeight)));
         TextBlock label = new()
         {
-            Margin = new Thickness(3, 6, 3, 3),
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Margin = control.Name switch
+            {
+                "credentialsControl" => new Thickness(3, 9, 3, 3),
+                "pseudoControl" => new Thickness(3, 17, 3, 3),
+                "boolControl" => new Thickness(3, 9, 3, 3),
+                _ => new Thickness(3, 8, 3, 3),
+            },
             Text = caption,
-            VerticalAlignment = VerticalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Top,
         };
+        WinFormsAutoSizeTextBlock.Attach(label, includePadding: true);
         control.HorizontalAlignment = HorizontalAlignment.Stretch;
         control.Margin = new Thickness(3);
+        control.VerticalAlignment = VerticalAlignment.Top;
         SetRow(label, row);
         SetColumn(control, 1);
         SetRow(control, row);
-        Children.Add(label);
-        Children.Add(control);
+        _layout.Children.Add(label);
+        _layout.Children.Add(control);
     }
 
     private sealed class CaptureSettingsSource(bool useNullAndInvalidValues) : SettingsSource

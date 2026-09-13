@@ -326,6 +326,9 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsResetSoftBackgroundBrush", resetSoft);
         SetBrush(resources, "GitExtensionsResetMixedBackgroundBrush", resetMixed);
         SetBrush(resources, "GitExtensionsResetHardBackgroundBrush", resetHard);
+        SetBrush(resources, "GitExtensionsInvalidSettingBackgroundBrush", resetHard);
+        SetBrush(resources, "GitExtensionsInvalidSettingForegroundBrush", resetHard.GetTextColor());
+        SetBrush(resources, "GitExtensionsSettingReadOnlyBackgroundBrush", isDark ? textInputBackground : control);
         SetBrush(resources, "GitExtensionsResetSoftForegroundBrush", resetSoft.GetTextColor());
         SetBrush(resources, "GitExtensionsResetMixedForegroundBrush", resetMixed.GetTextColor());
         SetBrush(resources, "GitExtensionsResetHardForegroundBrush", resetHard.GetTextColor());
