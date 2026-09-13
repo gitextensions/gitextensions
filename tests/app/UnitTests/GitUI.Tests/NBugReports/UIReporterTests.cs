@@ -272,4 +272,56 @@ public sealed class UIReporterTests
             yield return new TestCaseData(new Exception("outer", new Exception("inner")));
         }
     }
+
+    [Test, TestCaseSource(nameof(GetPluginAssemblyNameTestCases))]
+    public void GetPluginAssemblyName_should_extract_assembly_name(TypeLoadException exception, string expectedName)
+    {
+        string result = UIReporter.TestAccessor.GetPluginAssemblyName(exception);
+        result.Should().Be(expectedName);
+    }
+
+    private static IEnumerable<TestCaseData> GetPluginAssemblyNameTestCases
+    {
+        get
+        {
+            yield return new TestCaseData(
+                new TypeLoadException("Could not load type 'GitExtensions.Extensibility.Git.ObjectId' from assembly 'GitExtensions.AzureDevOps, Version=1.0.3.0, Culture=neutral, PublicKeyToken=null' due to value type mismatch."),
+                "GitExtensions.AzureDevOps");
+            yield return new TestCaseData(
+                new TypeLoadException("Could not load type 'SomeType' from assembly 'MyPlugin' due to value type mismatch."),
+                "MyPlugin");
+            yield return new TestCaseData(
+                new TypeLoadException("Could not load type 'SomeType' from assembly 'MyPlugin, Version=2.0.0.0' due to value type mismatch."),
+                "MyPlugin");
+            yield return new TestCaseData(
+                new TypeLoadException("Some unrelated message without from assembly prefix"),
+                "unknown");
+        }
+    }
+
+    [Test]
+    public void CreateIncompatiblePluginReport_should_create_page_with_expected_structure()
+    {
+        TypeLoadException exception = new("Could not load type 'GitExtensions.Extensibility.Git.ObjectId' from assembly 'GitExtensions.AzureDevOps, Version=1.0.3.0, Culture=neutral, PublicKeyToken=null' due to value type mismatch.");
+
+        TaskDialogPage page = UIReporter.TestAccessor.CreateIncompatiblePluginReport(exception);
+
+        page.Icon.Should().Be(TaskDialogIcon.Warning);
+        page.AllowCancel.Should().BeTrue();
+        page.Heading.Should().Contain("GitExtensions.AzureDevOps");
+        page.Buttons.Should().HaveCount(1);
+        page.Expander.Should().NotBeNull();
+        page.Expander!.Text.Should().Be(exception.Message);
+    }
+
+    [Test]
+    public void ReportIncompatiblePlugin_should_return_false_for_non_value_type_mismatch_exception()
+    {
+        UIReporter reporter = new();
+        TypeLoadException exception = new("Could not load type 'Foo' from assembly 'Bar' for some other reason.");
+
+        bool result = reporter.ReportIncompatiblePlugin(exception);
+
+        result.Should().BeFalse();
+    }
 }
