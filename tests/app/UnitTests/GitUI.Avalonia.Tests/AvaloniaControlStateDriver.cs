@@ -105,6 +105,10 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         object? preferred = _root.GetType().FullName switch
         {
             "GitExtensions.Plugins.Gource.GourceStart" => FindFieldValue(_root, "button1"),
+            "GitUI.CommandsDialogs.FormDeleteRemoteBranch" => FindFieldValue(_root, "Branches"),
+            "GitUI.CommandsDialogs.FormPull" or
+            "GitUI.CommandsDialogs.FormPush" => FindFieldValue(_root, "_NO_TRANSLATE_Remotes"),
+            "GitUI.CommandsDialogs.FormRemotes" => FindFieldValue(_root, "Remotes"),
             "GitUI.CommandsDialogs.FormSettings" => FindFieldValue(_root, "textBoxFind"),
             "GitUI.UserControls.BranchSelector" => FindFieldValue(_root, "LocalBranch"),
             "GitUI.UserControls.InteractiveGitActionControl" => FindFieldValue(_root, "ButtonContainer"),

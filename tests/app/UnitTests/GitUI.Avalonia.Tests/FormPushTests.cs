@@ -565,6 +565,31 @@ public sealed class FormPushTests
     }
 
     [AvaloniaTest]
+    public void FormPush_should_activate_the_force_binding_when_the_tag_page_is_selected()
+    {
+        GitModule module = CreateRepositoryAndRemote();
+        FormPush form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            TabControl tabs = form.FindControl<TabControl>("TabControlTagBranch")!;
+            CheckBox forceWithLease = form.FindControl<CheckBox>("ckForceWithLease")!;
+            CheckBox forceTags = form.FindControl<CheckBox>("ForcePushTags")!;
+
+            forceWithLease.IsChecked = true;
+
+            forceTags.IsChecked.Should().BeFalse("the WinForms binding on the hidden tag page is not active yet");
+
+            tabs.SelectedItem = form.FindControl<TabItem>("TagTab")!;
+
+            forceTags.IsChecked.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FormPush_should_build_mutually_exclusive_multiple_branch_actions()
     {
         GitModule module = CreateRepositoryAndRemote();

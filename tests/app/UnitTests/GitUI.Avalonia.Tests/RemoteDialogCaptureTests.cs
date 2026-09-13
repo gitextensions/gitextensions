@@ -17,6 +17,7 @@ public sealed class RemoteDialogCaptureTests
         AssertFormPull();
         AssertFormPush();
         AssertFormRemotes();
+        AssertFormDeleteRemoteBranch();
     }
 
     [AvaloniaTest]
@@ -61,6 +62,10 @@ public sealed class RemoteDialogCaptureTests
             nodes["PullFromRemote"].Alignment.Should().Be("MiddleLeft");
             nodes["PullFromRemote"].CornerRadiusDip.Should().BeNull();
             nodes["PullFromRemote"].CheckState.Should().BeNull();
+            nodes["MainLayout"].TabStop.Should().BeFalse();
+            nodes["PanelRightInner"].TabStop.Should().BeFalse();
+            nodes["PanelMergeOptions"].TabStop.Should().BeFalse();
+            nodes["PanelTagOptions"].TabStop.Should().BeFalse();
         }
         finally
         {
@@ -81,6 +86,9 @@ public sealed class RemoteDialogCaptureTests
             nodes["Push"].Anchor.Should().Equal("Bottom", "Right");
             nodes["PushToRemote"].FlatStyle.Should().Be("Standard");
             nodes["PushToRemote"].CheckState.Should().BeNull();
+            nodes["tableLayoutPanel1"].TabStop.Should().BeFalse();
+            nodes["BranchGrid"].ReadOnly.Should().BeFalse();
+            nodes["BranchGrid"].Colors.SelectionBackground.Should().Be("#FF0078D4");
         }
         finally
         {
@@ -100,6 +108,14 @@ public sealed class RemoteDialogCaptureTests
             nodes["gbMgtPanel"].AutoSize.Should().BeTrue();
             nodes["label1"].Alignment.Should().Be("MiddleLeft");
             nodes["Remotes"].BorderStyle.Should().Be("Fixed3D");
+            nodes["Remotes"].ControlKind.Should().Be("list");
+            nodes["Remotes"].Text.Should().BeEmpty();
+            nodes["Remotes"].Selected.Should().BeNull();
+            nodes["tabControl1"].Focused.Should().BeFalse();
+            nodes["flpnlRemoteManagement"].TabStop.Should().BeFalse();
+            nodes["flowLayoutPanel2"].TabStop.Should().BeFalse();
+            nodes["tblpnlMgtDetails"].TabStop.Should().BeFalse();
+            nodes["tableLayoutPanel2"].TabStop.Should().BeFalse();
             nodes["flowLayoutPanelSsh"].Children
                 .Select(child => child.FieldName)
                 .Should().Equal("TestConnection", "LoadSSHKey");
@@ -107,11 +123,32 @@ public sealed class RemoteDialogCaptureTests
             nodes["RemoteBranches"].Colors.GridLine.Should().Be("#FFE3E3E3");
             nodes["RemoteBranches"].Colors.SelectionBackground.Should().Be("#FF0078D4");
             nodes["RemoteBranches"].Colors.InactiveSelectionForeground.Should().Be("#FFFFFFFF");
+            nodes["RemoteBranches"].ReadOnly.Should().BeTrue();
             form.FindControl<ListBox>("Remotes")!.Classes.Should().Contain("gitextensions-native-list-items");
             foreach (string buttonName in new[] { "New", "Delete", "btnToggleState", "Save" })
             {
                 form.FindControl<Button>(buttonName)!.Classes.Should().Contain("gitextensions-native-dialog-action");
             }
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    private static void AssertFormDeleteRemoteBranch()
+    {
+        FormDeleteRemoteBranch form = new();
+        try
+        {
+            IReadOnlyDictionary<string, CaptureNode> nodes = ReadNodes(form);
+
+            nodes["MainPanel"].AutoSize.Should().BeTrue();
+            nodes["MainPanel"].Dock.Should().Be("Fill");
+            nodes["ControlsPanel"].AutoSize.Should().BeTrue();
+            nodes["ControlsPanel"].Dock.Should().Be("Bottom");
+            nodes["Branches"].BorderStyle.Should().Be("None");
+            nodes["Branches"].TabStop.Should().BeTrue();
         }
         finally
         {
