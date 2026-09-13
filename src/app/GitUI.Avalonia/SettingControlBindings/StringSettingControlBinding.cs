@@ -24,6 +24,7 @@ internal class StringSettingControlBinding : SettingControlBinding<StringSetting
     public StringSettingControlBinding(StringSetting setting, TextBox? customControl)
         : base(setting, customControl)
     {
+        customControl?.Classes.Add("plugin-setting-text");
     }
 
     public override TextBox CreateControl()
