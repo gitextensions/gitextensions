@@ -46,8 +46,8 @@ public sealed partial class FormVerify : GitModuleForm
         }
     }
 
-    private const string _commitColumns = "28,80,100,*,150,92,92";
-    private const string _objectColumns = "28,80,*,0,0,150,0";
+    private const string _commitColumns = "21,112,164,*,150,60,60";
+    private const string _objectColumns = "21,112,*,0,0,150,0";
     private const string _restoredObjectsTagPrefix = "LOST_FOUND_";
 
     private readonly TranslationString _removeDanglingObjectsCaption = new("Remove");
@@ -222,10 +222,10 @@ public sealed partial class FormVerify : GitModuleForm
         row.Children.Add(selected);
         row.Children.Add(CreateCell(lostObject.Date?.ToString("g") ?? string.Empty, 1));
         row.Children.Add(CreateCell(lostObject.RawType, 2));
-        row.Children.Add(CreateCell(lostObject.Subject ?? string.Empty, 3));
+        row.Children.Add(CreateCell(lostObject.Subject ?? string.Empty, 3, wrap: true));
         row.Children.Add(CreateCell(lostObject.Author ?? string.Empty, 4));
-        row.Children.Add(CreateCell(lostObject.ObjectId.ToString(), 5, monospace: true, wrap: true));
-        row.Children.Add(CreateCell(lostObject.Parent.IsZero ? string.Empty : lostObject.Parent.ToString(), 6, monospace: true, wrap: true));
+        row.Children.Add(CreateCell(lostObject.ObjectId.ToString(), 5, monospace: true));
+        row.Children.Add(CreateCell(lostObject.Parent.IsZero ? string.Empty : lostObject.Parent.ToString(), 6, monospace: true));
         return row;
 
         static TextBlock CreateCell(string text, int column, bool monospace = false, bool wrap = false)
