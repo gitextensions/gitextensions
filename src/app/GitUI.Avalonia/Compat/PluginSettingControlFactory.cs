@@ -71,7 +71,10 @@ internal static class PluginSettingControlFactory
 
     internal static TextBox CreateTextBox(WinFormsShims.TextBox? model)
     {
-        TextBox control = new();
+        // WinForms' single-line TextBox preferred height is 23 DIPs at the shared 9 pt
+        // UI font. Preserve that implicit source default at the toolkit boundary.
+        TextBox control = new() { Height = 23 };
+        control.Classes.Add("plugin-setting-text");
         if (model is null)
         {
             return control;

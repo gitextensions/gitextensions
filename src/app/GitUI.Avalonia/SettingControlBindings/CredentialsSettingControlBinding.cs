@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Settings.UserControls;
+using GitUI.Compat;
 
 namespace GitUI.SettingControlBindings;
 
@@ -20,42 +21,63 @@ internal sealed class CredentialsSettingControlBinding : SettingControlBinding<C
         CredentialsControl model = Setting.CustomControl ??= new CredentialsControl();
         TextBox passwordTextBox = new()
         {
-            Height = 20,
+            Height = 23,
             Name = "passwordTextBox",
             PasswordChar = '\u25CF',
+            VerticalAlignment = VerticalAlignment.Top,
         };
         TextBox userNameTextBox = new()
         {
-            Height = 20,
+            Height = 23,
             Name = "userNameTextBox",
+            VerticalAlignment = VerticalAlignment.Top,
+        };
+        Grid mainTableLayoutPanel = new()
+        {
+            Name = "mainTableLayoutPanel",
+            ColumnDefinitions = new ColumnDefinitions(model.ShowUserName ? "Auto,*,Auto,*" : "0,0,Auto,*"),
+            Height = 24,
         };
         Grid control = new()
         {
-            ColumnDefinitions = new ColumnDefinitions(model.ShowUserName ? "Auto,*,Auto,*" : "0,0,Auto,*"),
-            Height = 21,
+            Height = 24,
+            Children = { mainTableLayoutPanel },
         };
         control.Tag = (model, userNameTextBox, passwordTextBox);
-        AddField(model.UserNameLabelText, "userNameLabel", userNameTextBox, column: 0, model.ShowUserName);
-        AddField(model.PasswordLabelText, "passwordLabel", passwordTextBox, column: 2, isVisible: true);
+        TextBlock userNameLabel = CreateLabel(model.UserNameLabelText, "userNameLabel", column: 0, model.ShowUserName);
+        TextBlock passwordLabel = CreateLabel(model.PasswordLabelText, "passwordLabel", column: 2, isVisible: true);
+        PlaceTextBox(userNameTextBox, column: 1, model.ShowUserName);
+        PlaceTextBox(passwordTextBox, column: 3, isVisible: true);
+
+        // Match the source TableLayoutPanel.Controls order, which is also the semantic
+        // accessibility and capture-tree order.
+        mainTableLayoutPanel.Children.Add(userNameLabel);
+        mainTableLayoutPanel.Children.Add(userNameTextBox);
+        mainTableLayoutPanel.Children.Add(passwordTextBox);
+        mainTableLayoutPanel.Children.Add(passwordLabel);
         return control;
 
-        void AddField(string labelText, string labelName, TextBox textBox, int column, bool isVisible)
+        static TextBlock CreateLabel(string labelText, string labelName, int column, bool isVisible)
         {
             TextBlock label = new()
             {
+                Height = 20,
                 IsVisible = isVisible,
-                Margin = column == 0 ? new Thickness(0, 3, 3, 0) : new Thickness(3, 3, 3, 0),
+                Margin = column == 0 ? new Thickness(0, 3, 4, 0) : new Thickness(4, 3, 4, 0),
                 Name = labelName,
                 Text = labelText,
-                VerticalAlignment = VerticalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Top,
             };
-            textBox.IsVisible = isVisible;
-            textBox.Margin = column == 0 ? new Thickness(3, 0) : new Thickness(3, 0, 0, 0);
             Grid.SetColumn(label, column);
-            control.Children.Add(label);
+            WinFormsAutoSizeTextBlock.Attach(label);
+            return label;
+        }
 
-            Grid.SetColumn(textBox, column + 1);
-            control.Children.Add(textBox);
+        static void PlaceTextBox(TextBox textBox, int column, bool isVisible)
+        {
+            textBox.IsVisible = isVisible;
+            textBox.Margin = column == 1 ? new Thickness(4, 0) : new Thickness(4, 0, 0, 0);
+            Grid.SetColumn(textBox, column);
         }
     }
 

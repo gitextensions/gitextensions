@@ -29,8 +29,7 @@
       <Thickness x:Key="GitExtensionsTreeViewChevronMargin">4,0</Thickness>
       <SolidColorBrush x:Key="GitExtensionsTransparentBrush" Color="Transparent" />
       <SolidColorBrush x:Key="GitExtensionsErrorForegroundBrush" Color="Red" />
-      <SolidColorBrush x:Key="GitExtensionsInvalidSettingBackgroundBrush" Color="#FFFF8080" />
-      <SolidColorBrush x:Key="GitExtensionsInvalidSettingForegroundBrush" Color="Black" />
+      <SolidColorBrush x:Key="GitExtensionsSettingReadOnlyBackgroundBrush" Color="#F0F0F0" />
       <compat:WinFormsFocusAdornerTemplate x:Key="GitExtensionsFocusAdorner" />
 
       <!-- Avalonia popup descendants live in a detached visual root, so an outer style cannot
@@ -569,9 +568,15 @@
   <Style Selector="ComboBox.file-filter-invalid /template/ TextBox#PART_EditableTextBox">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsInvalidFilterBackgroundBrush}" />
   </Style>
+  <Style Selector="TextBox.plugin-setting-number">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+  </Style>
   <Style Selector="TextBox.plugin-setting-invalid">
-    <Setter Property="Background" Value="{StaticResource GitExtensionsInvalidSettingBackgroundBrush}" />
-    <Setter Property="Foreground" Value="{StaticResource GitExtensionsInvalidSettingForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInvalidSettingBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsInvalidSettingForegroundBrush}" />
+  </Style>
+  <Style Selector="TextBox.plugin-setting-text:read-only">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsSettingReadOnlyBackgroundBrush}" />
   </Style>
   <Style Selector="TextBox.gitextensions-borderless-readonly">
     <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
