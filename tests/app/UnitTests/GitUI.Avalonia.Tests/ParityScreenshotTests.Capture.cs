@@ -112,7 +112,7 @@ public sealed partial class ParityScreenshotTests
     [Category(P02Category)]
     public void Branch_operation_capture_hosts_should_use_native_96_dpi_runtime_dimensions()
     {
-        GetCaptureSize(typeof(FormDeleteRemoteBranch)).Should().Be((403, 167));
+        GetCaptureSize(typeof(FormDeleteRemoteBranch)).Should().Be((403, 152));
         GetCaptureSize(typeof(FormResetAnotherBranch)).Should().Be((545, 347));
     }
 
