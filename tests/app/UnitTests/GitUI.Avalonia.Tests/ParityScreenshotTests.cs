@@ -2265,7 +2265,9 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormDeleteRemoteBranch))
         {
-            return (403, 167);
+            // WinForms AutoSize expands the 139-pixel Designer client to 152 pixels when the
+            // deterministic fixture has no local tracking-branch candidates.
+            return (403, 152);
         }
 
         if (viewType == typeof(FormResetAnotherBranch))

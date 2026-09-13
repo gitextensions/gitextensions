@@ -840,6 +840,14 @@ Inactive remote is completely invisible to git.");
         comboBoxPushUrl.IsVisible = visible;
         folderBrowserButtonPushUrl.IsVisible = visible;
 
+        // WinForms' nested AutoSize containers grow by the newly visible 31-pixel row.
+        // These are the source's native-96-DPI sizes; Avalonia applies monitor scaling.
+        double pushUrlRowHeight = visible ? 31 : 0;
+        gbMgtPanel.Height = 172 + pushUrlRowHeight;
+        flpnlRemoteManagement.Height = 150 + pushUrlRowHeight;
+        pnlMgtDetails.Height = 107 + pushUrlRowHeight;
+        tblpnlMgtDetails.Height = 85 + pushUrlRowHeight;
+
         label2.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(visible
             ? _labelUrlAsFetch.Text
             : _labelUrlAsFetchPush.Text);
