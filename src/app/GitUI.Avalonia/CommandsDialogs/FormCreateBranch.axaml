@@ -4,60 +4,78 @@
         xmlns:properties="using:GitUI.Properties"
         xmlns:usercontrols="clr-namespace:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormCreateBranch"
-        Width="580" Height="425"
-        MinWidth="580" MinHeight="425"
+        Width="570" Height="386"
+        MinWidth="570" MinHeight="386"
         CanResize="False"
         WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
         Title="Create branch">
   <DockPanel>
-    <StackPanel x:Name="ControlsPanel"
-                Classes="gitextensions-dialog-controls"
-                DockPanel.Dock="Bottom"
-                Spacing="8"
-                Margin="10">
+    <Grid x:Name="ControlsPanel"
+          Classes="gitextensions-dialog-controls"
+          DockPanel.Dock="Bottom"
+          Height="41">
       <compat:IconButton x:Name="cmdOk"
                          Classes="gitextensions-dialog-action"
-                         MinWidth="110"
+                         Margin="0,8,13,8"
+                         Width="107" Height="25"
+                         HorizontalAlignment="Right"
                          Icon="{x:Static properties:Images.BranchCreate}"
                          Content="_Create branch"
                          IsDefault="True" />
-    </StackPanel>
-    <Grid x:Name="MainPanel" Classes="gitextensions-dialog-main" ColumnDefinitions="Auto,*"
-          RowDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="10" RowSpacing="8">
+    </Grid>
+    <Border x:Name="MainPanel" Classes="gitextensions-dialog-main" Height="345" Padding="12"
+            Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
+      <Canvas x:Name="tableLayout" Width="546" Height="321"
+              HorizontalAlignment="Left" VerticalAlignment="Top">
       <Label x:Name="label1"
              Classes="gitextensions-dialog-label"
+             Canvas.Left="0" Canvas.Top="0"
+             Width="160" Height="22"
              Padding="0"
              Content="_Branch name"
              Target="{Binding #BranchNameTextBox}" />
-      <TextBox x:Name="BranchNameTextBox" Grid.Column="1" />
+      <TextBox x:Name="BranchNameTextBox"
+               Canvas.Left="169" Canvas.Top="3"
+               Width="374" Height="23" />
 
       <Label x:Name="lblCreateBranch"
              Classes="gitextensions-dialog-label"
-             Grid.Row="1"
+             Canvas.Left="0" Canvas.Top="28"
+             Width="160" Height="22"
              Padding="0"
              Content="Create b_ranch at this revision"
              Target="{Binding #commitPicker}" />
-      <usercontrols:CommitPickerSmallControl x:Name="commitPicker" Grid.Row="1" Grid.Column="1" />
+      <usercontrols:CommitPickerSmallControl x:Name="commitPicker"
+                                             Canvas.Left="169" Canvas.Top="31"
+                                             Width="374" Height="26" />
 
-      <CheckBox x:Name="chkCheckoutAfterCreate" Grid.Row="2" Grid.Column="1"
+      <CheckBox x:Name="chkCheckoutAfterCreate"
+                Canvas.Left="169" Canvas.Top="59"
+                Width="374" Height="22" MinHeight="0"
                 IsChecked="True" Content="Checkout _after create" />
 
       <usercontrols:CommitSummaryUserControl x:Name="commitSummaryUserControl1"
-                                             Grid.Row="3" Grid.ColumnSpan="2" />
+                                             Canvas.Left="2" Canvas.Top="86"
+                                             Width="542" Height="150" />
 
       <HeaderedContentControl x:Name="grpOrphan"
                               Classes="gitextensions-group-box"
-                              Grid.Row="4"
-                              Grid.ColumnSpan="2"
+                              Canvas.Left="3" Canvas.Top="241"
+                              Width="540" Height="57"
                               Header="Orphan">
-        <WrapPanel x:Name="flowLayoutPanel1" Margin="8,0,0,0" Orientation="Horizontal">
-          <CheckBox x:Name="chkCreateOrphan" Margin="0,0,16,0"
+        <WrapPanel x:Name="flowLayoutPanel1" Orientation="Horizontal">
+          <CheckBox x:Name="chkCreateOrphan" Margin="11,3,3,3"
+                    Width="101" Height="19" MinHeight="0"
                     Content="Create or_phan" ToolTip.Tip="New branch will have NO parents" />
-          <CheckBox x:Name="chkClearOrphan" IsChecked="True" IsEnabled="False"
+          <CheckBox x:Name="chkClearOrphan" Margin="3"
+                    Width="203" Height="19" MinHeight="0"
+                    IsChecked="True" IsEnabled="False"
                     Content="Clear _working directory and index"
                     ToolTip.Tip="Remove files from the working directory and from the index" />
         </WrapPanel>
       </HeaderedContentControl>
-    </Grid>
+      </Canvas>
+    </Border>
   </DockPanel>
 </Window>

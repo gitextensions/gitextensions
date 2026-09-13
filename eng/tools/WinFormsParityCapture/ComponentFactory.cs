@@ -59,6 +59,12 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormCleanupRepository" => new FormCleanupRepository(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormBisect" => CreateFormBisect(commands),
             "GitUI.CommandsDialogs.FormSparseWorkingCopy" => new FormSparseWorkingCopy(commands),
+            "GitUI.CommandsDialogs.FormCreateBranch" =>
+                new FormCreateBranch(commands, CreateRevision(commands).ObjectId, "feature/"),
+            "GitUI.CommandsDialogs.FormCheckoutBranch" =>
+                new FormCheckoutBranch(commands, "feature/visual-parity", remote: false),
+            "GitUI.CommandsDialogs.FormDeleteBranch" => new FormDeleteBranch(commands, ["feature/visual-parity"]),
+            "GitUI.CommandsDialogs.FormRenameBranch" => new FormRenameBranch(commands, "feature/visual-parity"),
             "GitUI.CommandsDialogs.FormDeleteRemoteBranch" => new FormDeleteRemoteBranch(commands, "origin/feature/delete-me"),
             "GitUI.HelperDialogs.FormResetAnotherBranch" => FormResetAnotherBranch.Create(commands, CreateRevision(commands)),
             "GitUI.CommandsDialogs.CommitDialog.FormCommitTemplateSettings" => new FormCommitTemplateSettings(commands),

@@ -15,8 +15,8 @@
                        Icon="{x:Static properties:Images.SelectRevision}" />
     <TextBlock x:Name="lbCommits"
                Grid.Column="2"
-               MinWidth="1"
-               Margin="0,0,2,0"
+               Width="15"
+               Margin="0,0,3,0"
                Padding="0,5,0,0"
                Foreground="{DynamicResource GitExtensionsKnownColorGrayTextBrush}"
                VerticalAlignment="Stretch" />
