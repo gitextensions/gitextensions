@@ -30,7 +30,7 @@ internal sealed class WorktreeTree(TreeNode treeNode, IGitUICommandsSource uiCom
     private Nodes FillWorktreeTree(CancellationToken token)
     {
         Nodes nodes = new(this);
-        string currentWorkingDir = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
+        string currentWorkingDir = Module.WorkingDir;
 
         IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
 
@@ -49,10 +49,7 @@ internal sealed class WorktreeTree(TreeNode treeNode, IGitUICommandsSource uiCom
         {
             token.ThrowIfCancellationRequested();
 
-            bool isCurrent = string.Equals(
-                worktree.Path.TrimEnd(Path.DirectorySeparatorChar),
-                currentWorkingDir,
-                StringComparison.OrdinalIgnoreCase);
+            bool isCurrent = PathUtil.AreSameDirectory(worktree.Path, currentWorkingDir);
 
             string relativePath;
             try
@@ -84,7 +81,7 @@ internal sealed class WorktreeTree(TreeNode treeNode, IGitUICommandsSource uiCom
                 ? relativePath[commonPrefix.Length..]
                 : relativePath;
 
-            WorktreeNode node = new(this, worktree, isCurrent, displayPath);
+            WorktreeNode node = new(this, worktree, isCurrent, isMain: i == 0, displayPath);
             nodes.AddNode(node);
         }
 
@@ -218,5 +215,12 @@ internal sealed class WorktreeTree(TreeNode treeNode, IGitUICommandsSource uiCom
         }
 
         return Module.WorkingDir;
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(WorktreeTree tree)
+    {
+        internal Nodes FillWorktreeTree() => tree.FillWorktreeTree(CancellationToken.None);
     }
 }

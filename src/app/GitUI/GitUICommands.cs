@@ -259,6 +259,12 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool WorktreeDelete(IWin32Window? owner, string worktreePath)
     {
+        if (PathUtil.AreSameDirectory(Module.WorkingDir, worktreePath)
+            || !Module.GetWorktrees().Skip(1).Any(worktree => !worktree.IsDeleted && PathUtil.AreSameDirectory(worktree.Path, worktreePath)))
+        {
+            return false;
+        }
+
         return DoActionOnRepo(owner, action: () =>
         {
             TaskDialogButton result = TaskDialog.ShowDialog(owner!, new TaskDialogPage
@@ -276,21 +282,7 @@ public sealed class GitUICommands : IGitUICommands
                 return false;
             }
 
-            if (!worktreePath.TryDeleteDirectory(out string? errorMessage))
-            {
-                TaskDialog.ShowDialog(owner!, new TaskDialogPage
-                {
-                    Text = $"{string.Format(TranslatedStrings.DeleteWorktreeFailed, worktreePath)}\n{errorMessage}",
-                    Caption = TranslatedStrings.Error,
-                    Icon = TaskDialogIcon.Error,
-                    SizeToContent = true
-                });
-
-                return false;
-            }
-
-            StartCommandLineProcessDialog(owner, command: null, "worktree prune");
-            return true;
+            return StartCommandLineProcessDialog(owner, Commands.RemoveWorktree(Module.GetPathForGitExecution(worktreePath)));
         });
     }
 

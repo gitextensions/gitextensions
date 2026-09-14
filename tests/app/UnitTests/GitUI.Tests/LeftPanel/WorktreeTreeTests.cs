@@ -1,10 +1,42 @@
-﻿using GitUI.LeftPanel;
+﻿using GitExtensions.Extensibility.Git;
+using GitUI;
+using GitUI.LeftPanel;
+using NSubstitute;
 
 namespace GitUITests.LeftPanel;
 
 public sealed class WorktreeTreeTests
 {
     private static readonly char Sep = Path.DirectorySeparatorChar;
+
+    [TestCase(GitWorktreeHeadType.Branch)]
+    [TestCase(GitWorktreeHeadType.Detached)]
+    [TestCase(GitWorktreeHeadType.Bare)]
+    public void FillWorktreeTree_should_only_allow_deleting_other_existing_linked_worktrees(GitWorktreeHeadType mainHeadType)
+    {
+        const string mainPath = @"C:\repos\main";
+        const string currentPath = @"C:\repos\current";
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Module.WorkingDir.Returns(currentPath + Sep);
+        source.UICommands.Module.GetWorktrees().Returns(
+        [
+            new GitWorktree(mainPath, mainHeadType, null, null, IsDeleted: false),
+            new GitWorktree(currentPath, GitWorktreeHeadType.Branch, null, "current", IsDeleted: false),
+            new GitWorktree(@"C:\repos\linked", GitWorktreeHeadType.Detached, null, null, IsDeleted: false),
+            new GitWorktree(@"C:\repos\deleted", GitWorktreeHeadType.Branch, null, "deleted", IsDeleted: true),
+        ]);
+        using WorktreeTree tree = new(new TreeNode(), source);
+
+        WorktreeNode[] nodes = tree.GetTestAccessor().FillWorktreeTree().Cast<WorktreeNode>().ToArray();
+
+        nodes.Select(node => node.IsMain).Should().Equal(true, false, false, false);
+        nodes.Select(node => node.IsCurrent).Should().Equal(false, true, false, false);
+        nodes.Select(node => node.CanDelete).Should().Equal(false, false, true, false);
+        nodes[0].DeleteWorktree();
+        nodes[1].DeleteWorktree();
+        nodes[3].DeleteWorktree();
+        source.UICommands.DidNotReceive().WorktreeDelete(Arg.Any<IWin32Window?>(), Arg.Any<string>());
+    }
 
     [Test]
     public void GetCommonPrefix_should_return_empty_for_no_paths()

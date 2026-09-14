@@ -75,7 +75,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
 
     private void buttonDeleteSelectedWorktree_Click(object sender, EventArgs e)
     {
-        if (!CanActOnSelectedWorkspace(out GitWorktree? workTree))
+        if (!CanDeleteSelectedWorkspace() || !CanActOnSelectedWorkspace(out GitWorktree? workTree))
         {
             return;
         }
@@ -146,7 +146,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
     }
 
     private bool IsCurrentlyOpenedWorktree(GitWorktree workTree)
-        => new DirectoryInfo(UICommands.Module.WorkingDir).FullName.TrimEnd('\\') == new DirectoryInfo(workTree.Path).FullName.TrimEnd('\\');
+        => PathUtil.AreSameDirectory(UICommands.Module.WorkingDir, workTree.Path);
 
     private void buttonCreateNewWorktree_Click(object sender, EventArgs e)
     {
