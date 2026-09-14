@@ -1,5 +1,5 @@
-﻿using GitExtensions.Extensibility;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
+using GitUI;
 using GitUI.LeftPanel;
 using NSubstitute;
 
