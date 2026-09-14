@@ -5,10 +5,20 @@ using GitUI.Properties;
 namespace GitUI.LeftPanel;
 
 [DebuggerDisplay("(Worktree) Path = {Worktree.Path}, Branch = {Worktree.Branch}")]
-internal sealed class WorktreeNode(Tree tree, GitWorktree worktree, bool isCurrent, string displayPath) : Node(tree)
+internal sealed class WorktreeNode(Tree tree, GitWorktree worktree, bool isCurrent, bool isMain, string displayPath) : Node(tree)
 {
     public GitWorktree Worktree { get; } = worktree;
     public bool IsCurrent { get; } = isCurrent;
+
+    /// <summary>
+    ///  Indicates whether this is the first entry reported by Git, including a bare repository.
+    /// </summary>
+    public bool IsMain { get; } = isMain;
+
+    /// <summary>
+    ///  Indicates whether this is an existing linked worktree other than the current worktree.
+    /// </summary>
+    public bool CanDelete => !IsMain && !IsCurrent && !Worktree.IsDeleted;
     private string DisplayPath { get; } = displayPath;
 
     internal override void OnSelected()
@@ -44,6 +54,11 @@ internal sealed class WorktreeNode(Tree tree, GitWorktree worktree, bool isCurre
 
     public void DeleteWorktree()
     {
+        if (!CanDelete)
+        {
+            return;
+        }
+
         if (UICommands.WorktreeDelete(ParentWindow(), Worktree.Path))
         {
             ((WorktreeTree)Tree).Refresh();

@@ -102,6 +102,22 @@ public static partial class Commands
             });
     }
 
+    /// <summary>
+    ///  Removes a linked worktree while preserving Git's protection of the main worktree.
+    /// </summary>
+    public static IGitCommand RemoveWorktree(string path)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(path);
+
+        return new GitCommand(accessesRemote: false, changesRepoState: true,
+            new GitArgumentBuilder("worktree remove")
+            {
+                "--force",
+                "--",
+                path.Quote()
+            });
+    }
+
     public static IGitCommand DeleteRemoteBranches(string remote, IEnumerable<string> branchLocalNames)
     {
         ArgumentNullException.ThrowIfNull(remote);

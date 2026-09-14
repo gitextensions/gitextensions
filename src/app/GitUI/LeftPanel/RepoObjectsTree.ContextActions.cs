@@ -107,7 +107,7 @@ partial class RepoObjectsTree : IMenuItemFactory
         mnubtnOpenWorktree.Enable(isSingleWorktreeSelected);
         mnubtnOpenWorktree.Enabled = canActOnWorktree;
         mnubtnDeleteWorktree.Enable(isSingleWorktreeSelected);
-        mnubtnDeleteWorktree.Enabled = canActOnWorktree;
+        mnubtnDeleteWorktree.Enabled = isSingleWorktreeSelected && worktreeNode is { CanDelete: true };
         mnubtnCopyWorktreePath.Enable(isSingleWorktreeSelected);
         mnubtnShowWorktreeInFolder.Enable(isSingleWorktreeSelected);
         mnubtnShowWorktreeInFolder.Enabled = worktreePathExists;

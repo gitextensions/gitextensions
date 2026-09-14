@@ -123,7 +123,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
             return selectedBranches;
         }
 
-        string currentWorkingDir = Path.GetFullPath(Module.WorkingDir).TrimEnd(Path.DirectorySeparatorChar);
+        string currentWorkingDir = Module.WorkingDir;
 
         WorktreeBranchClassification classification = ClassifyWorktreeBranches(
             selectedBranches, worktrees, currentWorkingDir);
@@ -175,28 +175,12 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
 
             if (TaskDialog.ShowDialog(Handle, page) == TaskDialogButton.Yes)
             {
-                bool anyDeleted = false;
                 foreach ((IGitRef branch, GitWorktree worktree) in classification.LinkedWorktreeBranches)
                 {
-                    if (worktree.Path.TryDeleteDirectory(out string? errorMessage))
+                    if (!UICommands.StartCommandLineProcessDialog(this, Commands.RemoveWorktree(Module.GetPathForGitExecution(worktree.Path))))
                     {
-                        anyDeleted = true;
-                    }
-                    else
-                    {
-                        MessageBoxes.Show(
-                            this,
-                            $"{string.Format(TranslatedStrings.DeleteWorktreeFailed, worktree.Path)}\n{errorMessage}",
-                            TranslatedStrings.Error,
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
                         excludedBranches.Add(branch.Name);
                     }
-                }
-
-                if (anyDeleted)
-                {
-                    UICommands.StartCommandLineProcessDialog(Owner, command: null, "worktree prune");
                 }
             }
             else
@@ -245,8 +229,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
                 continue;
             }
 
-            string worktreeDir = Path.GetFullPath(worktree.Path).TrimEnd(Path.DirectorySeparatorChar);
-            if (string.Equals(worktreeDir, currentWorkingDir, StringComparison.OrdinalIgnoreCase))
+            if (PathUtil.AreSameDirectory(worktree.Path, currentWorkingDir))
             {
                 continue;
             }
