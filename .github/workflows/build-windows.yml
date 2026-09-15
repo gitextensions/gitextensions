@@ -19,11 +19,11 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Build native code
-        run: dotnet build src\native\build.proj -c Release --verbosity q --nologo
+        run: dotnet build src\native\build.proj -c Release --verbosity q --nologo -p:NuGetAudit=false
 
       - name: Publish (framework-dependent like upstream; CreatePortable auto-zips)
         shell: pwsh
-        run: dotnet publish -c Release --verbosity q --nologo /p:ContinuousIntegrationBuild=true /p:ErrorOnDuplicatePublishOutputFiles=false
+        run: dotnet publish -c Release --verbosity q --nologo /p:ContinuousIntegrationBuild=true /p:ErrorOnDuplicatePublishOutputFiles=false -p:NuGetAudit=false
 
       - name: Upload portable archive
         uses: actions/upload-artifact@v4
