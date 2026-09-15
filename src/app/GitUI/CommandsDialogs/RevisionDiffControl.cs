@@ -615,7 +615,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
             return;
         }
 
-        if (IsFileTreeMode || AppSettings.UseDiffViewerForBlame.Value)
+        if (IsFileTreeMode || AppSettings.UseDiffViewerForBlame)
         {
             int? line = DiffText.Visible ? DiffText.CurrentFileLine : BlameControl.CurrentFileLine;
             DiffFiles.tsmiBlame.Checked = !DiffFiles.tsmiBlame.Checked;

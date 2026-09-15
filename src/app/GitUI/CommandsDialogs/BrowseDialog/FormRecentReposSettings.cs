@@ -29,7 +29,7 @@ public partial class FormRecentReposSettings : GitExtensionsForm
     private void LoadSettings()
     {
         SetShorteningStrategy(AppSettings.ShorteningRecentRepoPathStrategy);
-        hideTopRepositoriesFromRecentList.Checked = AppSettings.HideTopRepositoriesFromRecentList.Value;
+        hideTopRepositoriesFromRecentList.Checked = AppSettings.HideTopRepositoriesFromRecentList;
         sortTopRepos.Checked = AppSettings.SortTopRepos;
         sortRecentRepos.Checked = AppSettings.SortRecentRepos;
         comboMinWidthEdit.Value = AppSettings.RecentReposComboMinWidth;
