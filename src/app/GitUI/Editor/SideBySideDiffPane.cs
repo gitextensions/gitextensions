@@ -54,9 +54,25 @@ public sealed class SideBySideDiffPane : IDisposable
         // keep the two panes scrolled in lock-step
         _left.VScrollPositionChanged += (_, _) => SyncScroll(fromRight: false);
         _right.VScrollPositionChanged += (_, _) => SyncScroll(fromRight: true);
+
+        // forward hover events so the host can show/hide its floating toolbar
+        _left.MouseMove += (sender, e) => MouseMove?.Invoke(sender, e);
+        _right.MouseMove += (sender, e) => MouseMove?.Invoke(sender, e);
+        _left.MouseLeave += (sender, e) => MouseLeave?.Invoke(sender, e);
+        _right.MouseLeave += (sender, e) => MouseLeave?.Invoke(sender, e);
     }
 
     public Control Control => _container;
+
+    /// <summary>
+    /// Raised when the mouse moves over either pane (needed so the host can show its toolbar).
+    /// </summary>
+    public event MouseEventHandler? MouseMove;
+
+    /// <summary>
+    /// Raised when the mouse leaves either pane (needed so the host can hide its toolbar).
+    /// </summary>
+    public event EventHandler? MouseLeave;
 
     public bool Visible => _container.Visible;
 

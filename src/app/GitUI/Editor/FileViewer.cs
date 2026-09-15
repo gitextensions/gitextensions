@@ -65,6 +65,7 @@ public partial class FileViewer : GitModuleControl
     private Func<Task>? _deferShowFunc;
     private FileStatusItem? _viewItem;
     private SideBySideDiffPane? _sideBySidePane;
+    private event Action? _sideBySidePaneCreated;
 
     [GeneratedRegex(@"warning: .*has type .* expected .*", RegexOptions.ExplicitCapture)]
     private static partial Regex FileModeWarningRegex { get; }
@@ -163,6 +164,28 @@ public partial class FileViewer : GitModuleControl
             {
                 fileviewerToolbar.Visible = false;
             }
+        };
+        _sideBySidePaneCreated += () =>
+        {
+            SideBySideDiffPane pane = _sideBySidePane
+                ?? throw new InvalidOperationException($"{nameof(_sideBySidePane)} must be created before {_sideBySidePaneCreated} fires");
+            pane.MouseMove += (_, e) =>
+            {
+                if (!fileviewerToolbar.Visible)
+                {
+                    fileviewerToolbar.Visible = true;
+                    fileviewerToolbar.Location = new Point(Width - fileviewerToolbar.Width - 40, 0);
+                    fileviewerToolbar.BringToFront();
+                }
+            };
+            pane.MouseLeave += (_, e) =>
+            {
+                if (GetChildAtPoint(PointToClient(MousePosition)) != fileviewerToolbar &&
+                    fileviewerToolbar is not null)
+                {
+                    fileviewerToolbar.Visible = false;
+                }
+            };
         };
         internalFileViewer.TextChanged += (sender, e) =>
         {
@@ -975,8 +998,13 @@ public partial class FileViewer : GitModuleControl
             return;
         }
 
+        bool paneJustCreated = _sideBySidePane is null;
         _sideBySidePane ??= new SideBySideDiffPane(this);
         _sideBySidePane.SetNonPrintingChars(show: showNonprintableCharactersToolStripMenuItem.Checked);
+        if (paneJustCreated)
+        {
+            _sideBySidePaneCreated?.Invoke();
+        }
 
         try
         {
