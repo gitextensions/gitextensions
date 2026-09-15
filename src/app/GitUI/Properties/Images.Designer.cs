@@ -70,6 +70,14 @@ public class Images {
         }
     }
     
+    //   Looks up a localized resource of type System.Drawing.Bitmap.
+    public static System.Drawing.Bitmap ApplicationBlue {
+        get {
+            object obj = ResourceManager.GetObject("ApplicationBlue", resourceCulture);
+            return ((System.Drawing.Bitmap)(obj));
+        }
+    }
+    
     /// <summary>
     ///   Looks up a localized resource of type System.Drawing.Bitmap.
     /// </summary>
@@ -1936,6 +1944,62 @@ public class Images {
     public static System.Drawing.Bitmap RemoteDelete {
         get {
             object obj = ResourceManager.GetObject("RemoteDelete", resourceCulture);
+            return ((System.Drawing.Bitmap)(obj));
+        }
+    }
+    
+    //   Looks up a localized resource of type System.Drawing.Bitmap.
+    public static System.Drawing.Bitmap ToolbarArrowUp {
+        get {
+            object obj = ResourceManager.GetObject("ToolbarArrowUp", resourceCulture);
+            return ((System.Drawing.Bitmap)(obj));
+        }
+    }
+    
+    //   Looks up a localized resource of type System.Drawing.Bitmap.
+    public static System.Drawing.Bitmap ToolbarArrowDown {
+        get {
+            object obj = ResourceManager.GetObject("ToolbarArrowDown", resourceCulture);
+            return ((System.Drawing.Bitmap)(obj));
+        }
+    }
+    
+    //   Looks up a localized resource of type System.Drawing.Bitmap.
+    public static System.Drawing.Bitmap ToolbarArrowLeft {
+        get {
+            object obj = ResourceManager.GetObject("ToolbarArrowLeft", resourceCulture);
+            return ((System.Drawing.Bitmap)(obj));
+        }
+    }
+    
+    //   Looks up a localized resource of type System.Drawing.Bitmap.
+    public static System.Drawing.Bitmap ToolbarArrowRight {
+        get {
+            object obj = ResourceManager.GetObject("ToolbarArrowRight", resourceCulture);
+            return ((System.Drawing.Bitmap)(obj));
+        }
+    }
+    
+    //   Looks up a localized resource of type System.Drawing.Bitmap.
+    public static System.Drawing.Bitmap ToolbarCross {
+        get {
+            object obj = ResourceManager.GetObject("ToolbarCross", resourceCulture);
+            return ((System.Drawing.Bitmap)(obj));
+        }
+    }
+    
+    //   Looks up a localized resource of type System.Drawing.Bitmap.
+    public static System.Drawing.Bitmap ToolbarArrowAddAll {
+        get {
+            object obj = ResourceManager.GetObject("ToolbarArrowAddAll", resourceCulture);
+            return ((System.Drawing.Bitmap)(obj));
+        }
+    }
+
+    //   Looks up a localized resource of type System.Drawing.Bitmap.
+    public static System.Drawing.Bitmap ToolbarUndo {
+        get {
+            object obj = ResourceManager.GetObject("ToolbarUndo", resourceCulture);
             return ((System.Drawing.Bitmap)(obj));
         }
     }

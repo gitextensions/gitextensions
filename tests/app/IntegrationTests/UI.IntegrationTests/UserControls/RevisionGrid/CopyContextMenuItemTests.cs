@@ -40,13 +40,16 @@ public class CopyContextMenuItemTests
     }
 
     [Test]
-    public void Should_should_contain_single_item_if_no_revision_supplied()
+    public void Should_contain_persistent_fixed_items_if_no_revision_supplied()
     {
         _copyContextMenuItem.SetRevisionFunc(() => null!);
 
         _copyContextMenuItem.ShowDropDown();
 
-        _copyContextMenuItem.DropDownItems.Count.Should().Be(1);
+        // The four named sub-actions (commit hash, message, author, date) are seeded permanently so
+        // toolbar introspection can discover them before any revision is selected. The drop-down is
+        // hidden when there is no revision, so these items are never shown to the user.
+        _copyContextMenuItem.DropDownItems.Count.Should().Be(4);
     }
 
     [TestCaseSource(nameof(GetArtificialCommits))]

@@ -80,6 +80,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _explorerNavigationDecorator = new NativeTreeViewExplorerNavigationDecorator(treeMain);
         _explorerNavigationDecorator.AfterSelect += OnNodeSelected;
 
+        // Keep toolbar buttons that mirror context-menu actions in sync with the tree selection.
+        // Only the lightweight state update runs here; the user-script menu rebuild stays in
+        // contextMenu_Opening so it does not run on every selection change.
+        treeMain.AfterSelect += (s, e) => UpdateContextMenuItemStates();
+
         treeMain.NodeMouseClick += OnNodeClick;
         treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
 
@@ -595,6 +600,8 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         OnBtnSearchClicked(this, EventArgs.Empty);
         e.Handled = true;
     }
+
+    public ContextMenuStrip MainContextMenu => menuMain;
 
     public override bool ProcessHotkey(Keys keyData)
     {
