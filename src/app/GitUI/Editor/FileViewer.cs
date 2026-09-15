@@ -64,6 +64,7 @@ public partial class FileViewer : GitModuleControl
     private Encoding? _encoding;
     private Func<Task>? _deferShowFunc;
     private FileStatusItem? _viewItem;
+    private SideBySideDiffPane? _sideBySidePane;
 
     [GeneratedRegex(@"warning: .*has type .* expected .*", RegexOptions.ExplicitCapture)]
     private static partial Regex FileModeWarningRegex { get; }
@@ -949,9 +950,41 @@ public partial class FileViewer : GitModuleControl
                     internalFileViewer.GoToFirstChange(NumberOfContextLines);
                 }
 
+                UpdateSideBySidePane(text, openLineNumbers: true);
                 TextLoaded?.Invoke(this, null!);
                 return Task.CompletedTask;
             });
+    }
+
+    /// <summary>
+    /// Shows the side-by-side two-pane view for patch diffs when enabled; hides it otherwise.
+    /// </summary>
+    private void UpdateSideBySidePane(string text, bool openLineNumbers)
+    {
+        if (_viewMode is not (ViewMode.Diff or ViewMode.FixedDiff))
+        {
+            _sideBySidePane?.Hide();
+            internalFileViewer.Visible = true;
+            return;
+        }
+
+        if (!AppSettings.SideBySideDiff.Value)
+        {
+            _sideBySidePane?.Hide();
+            internalFileViewer.Visible = true;
+            return;
+        }
+
+        _sideBySidePane ??= new SideBySideDiffPane(this);
+        if (_sideBySidePane.TryShow(text, openLineNumbers))
+        {
+            internalFileViewer.Visible = false;
+        }
+        else
+        {
+            _sideBySidePane.Hide();
+            internalFileViewer.Visible = true;
+        }
     }
 
     private StagedStatus ViewItemStagedStatus()
@@ -1000,6 +1033,10 @@ public partial class FileViewer : GitModuleControl
 
         bool isDiffAppearanceVisible = viewMode is ViewMode.Diff or ViewMode.Difftastic;
         diffAppearanceToolStripMenuItem.Visible = isDiffAppearanceVisible;
+
+        showSideBySideToolStripMenuItem.Visible = isDiffAppearanceVisible;
+        showSideBySideToolStripMenuItem.Enabled = viewMode is ViewMode.Diff;
+        showSideBySideToolStripMenuItem.Checked = AppSettings.SideBySideDiff.Value;
 
         showGitWordColoringToolStripMenuItem.Enabled = isDiffAppearanceVisible;
         showGitWordColoringToolStripMenuItem.Checked = AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.GitWordDiff;
@@ -1513,6 +1550,12 @@ public partial class FileViewer : GitModuleControl
     private void ToggleDifftasticToolStripMenuItemClick(object sender, EventArgs e)
     {
         AppSettings.DiffDisplayAppearance.Value = !showDifftasticToolStripMenuItem.Checked ? DiffDisplayAppearance.Difftastic : DiffDisplayAppearance.Patch;
+        OnExtraDiffArgumentsChanged();
+    }
+
+    private void ToggleSideBySideToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        AppSettings.SideBySideDiff.Value = showSideBySideToolStripMenuItem.Checked;
         OnExtraDiffArgumentsChanged();
     }
 

@@ -1566,6 +1566,20 @@ public static partial class AppSettings
 
     public static BoolRuntimeSetting ShowEntireFile { get; } = new(RootSettingsPath, nameof(ShowEntireFile), false);
 
+    /// <summary>
+    /// Shows diffs as two aligned panes (old file on the left, new file on the right) instead of a unified patch, like VS Code.
+    /// </summary>
+    public static BoolRuntimeSetting SideBySideDiff { get; } = new(RootSettingsPath, nameof(SideBySideDiff), false);
+
+    /// <summary>
+    /// The relative position of the splitter between the two side-by-side diff panes, in per mille (0..1000).
+    /// </summary>
+    public static int SideBySideDiffSplitPerMille
+    {
+        get => GetInt("sidebysidediffsplitpermille", 500);
+        set => SetInt("sidebysidediffsplitpermille", value);
+    }
+
     public static bool RememberShowEntireFilePreference
     {
         get => GetBool("RememberShowEntireFilePreference", false);

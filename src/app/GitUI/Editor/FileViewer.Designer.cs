@@ -41,6 +41,7 @@ partial class FileViewer
         showPatchToolStripMenuItem = new ToolStripMenuItem();
         showGitWordColoringToolStripMenuItem = new ToolStripMenuItem();
         showDifftasticToolStripMenuItem = new ToolStripMenuItem();
+        showSideBySideToolStripMenuItem = new ToolStripMenuItem();
         toolStripSeparator2 = new ToolStripSeparator();
         treatAllFilesAsTextToolStripMenuItem = new ToolStripMenuItem();
         automaticContinuousScrollToolStripMenuItem = new ToolStripMenuItem();
@@ -233,6 +234,7 @@ partial class FileViewer
             showPatchToolStripMenuItem,
             showGitWordColoringToolStripMenuItem,
             showDifftasticToolStripMenuItem,
+            showSideBySideToolStripMenuItem,
         });
         diffAppearanceToolStripMenuItem.Size = new Size(243, 22);
         diffAppearanceToolStripMenuItem.Text = "Diff appea&rance";
@@ -261,6 +263,14 @@ partial class FileViewer
         showDifftasticToolStripMenuItem.Size = new Size(243, 22);
         showDifftasticToolStripMenuItem.Text = "Diff&tastic";
         showDifftasticToolStripMenuItem.Click += ToggleDifftasticToolStripMenuItemClick;
+        //
+        // showSideBySideToolStripMenuItem
+        //
+        showSideBySideToolStripMenuItem.CheckOnClick = true;
+        showSideBySideToolStripMenuItem.Name = "showSideBySideToolStripMenuItem";
+        showSideBySideToolStripMenuItem.Size = new Size(243, 22);
+        showSideBySideToolStripMenuItem.Text = "Side &by side";
+        showSideBySideToolStripMenuItem.Click += ToggleSideBySideToolStripMenuItemClick;
 
         // 
         // toolStripSeparator2
@@ -519,6 +529,7 @@ partial class FileViewer
     private ToolStripMenuItem showPatchToolStripMenuItem;
     private ToolStripMenuItem showGitWordColoringToolStripMenuItem;
     private ToolStripMenuItem showDifftasticToolStripMenuItem;
+    private ToolStripMenuItem showSideBySideToolStripMenuItem;
     private ToolStripSeparator toolStripSeparator2;
     private ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
     private ToolStripMenuItem copyToolStripMenuItem;
