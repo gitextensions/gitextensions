@@ -14,6 +14,9 @@ public static partial class SideBySideSplitter
     [GeneratedRegex(@"^(diff |index |--- |\+\+\+ |@@ |new file mode|old mode|new mode|deleted file mode|similarity index|rename from|rename to|copy from|copy to)", RegexOptions.ExplicitCapture)]
     private static partial Regex MetadataLineRegex();
 
+    [GeneratedRegex(@"\x1B\[[0-9;]*[A-Za-z]", RegexOptions.ExplicitCapture)]
+    private static partial Regex AnsiEscapeRegex();
+
     /// <summary>
     /// A single rendered row in one pane.
     /// </summary>
@@ -40,6 +43,10 @@ public static partial class SideBySideSplitter
         {
             return null;
         }
+
+        // diffs rendered with git coloring contain inline ANSI escape sequences which would
+        // break the hunk-header and line-prefix parsing - strip them first
+        patch = AnsiEscapeRegex().Replace(patch, "");
 
         string[] lines = patch.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
 
