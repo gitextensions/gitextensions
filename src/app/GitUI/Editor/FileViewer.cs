@@ -976,14 +976,25 @@ public partial class FileViewer : GitModuleControl
         }
 
         _sideBySidePane ??= new SideBySideDiffPane(this);
-        if (_sideBySidePane.TryShow(text, openLineNumbers))
+
+        try
         {
-            internalFileViewer.Visible = false;
+            if (_sideBySidePane.TryShow(text, openLineNumbers))
+            {
+                internalFileViewer.Visible = false;
+            }
+            else
+            {
+                _sideBySidePane.Hide();
+                internalFileViewer.Visible = true;
+            }
         }
-        else
+        catch (Exception ex)
         {
+            // the side-by-side pane must never break the diff view - fall back to unified
             _sideBySidePane.Hide();
             internalFileViewer.Visible = true;
+            MessageBoxes.ShowError(this, $"Side-by-side diff failed, showing unified diff instead.{Environment.NewLine}{ex.Message}");
         }
     }
 

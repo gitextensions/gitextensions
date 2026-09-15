@@ -8,7 +8,9 @@ namespace GitUI.Editor.Diff;
 /// </summary>
 public static partial class SideBySideSplitter
 {
-    [GeneratedRegex(@"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@", RegexOptions.ExplicitCapture)]
+    // named groups required: RegexOptions.ExplicitCapture ignores plain ( ) groups,
+    // so unnamed group indexes would always yield empty strings
+    [GeneratedRegex(@"^@@ -(?<oldStart>\d+)(?:,(?<oldCount>\d+))? \+(?<newStart>\d+)(?:,(?<newCount>\d+))? @@", RegexOptions.ExplicitCapture)]
     private static partial Regex HunkHeaderRegex();
 
     [GeneratedRegex(@"^(diff |index |--- |\+\+\+ |@@ |new file mode|old mode|new mode|deleted file mode|similarity index|rename from|rename to|copy from|copy to)", RegexOptions.ExplicitCapture)]
@@ -70,8 +72,8 @@ public static partial class SideBySideSplitter
             if (m.Success)
             {
                 sawHunk = true;
-                oldLine = int.Parse(m.Groups[1].Value);
-                newLine = int.Parse(m.Groups[3].Value);
+                oldLine = int.Parse(m.Groups["oldStart"].Value);
+                newLine = int.Parse(m.Groups["newStart"].Value);
                 continue;
             }
 
