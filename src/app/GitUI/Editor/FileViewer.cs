@@ -950,7 +950,7 @@ public partial class FileViewer : GitModuleControl
                     internalFileViewer.GoToFirstChange(NumberOfContextLines);
                 }
 
-                UpdateSideBySidePane(text, openLineNumbers: true);
+                UpdateSideBySidePane(text, openLineNumbers: true, fileName);
                 TextLoaded?.Invoke(this, null!);
                 return Task.CompletedTask;
             });
@@ -959,7 +959,7 @@ public partial class FileViewer : GitModuleControl
     /// <summary>
     /// Shows the side-by-side two-pane view for patch diffs when enabled; hides it otherwise.
     /// </summary>
-    private void UpdateSideBySidePane(string text, bool openLineNumbers)
+    private void UpdateSideBySidePane(string text, bool openLineNumbers, string? fileName)
     {
         if (_viewMode is not (ViewMode.Diff or ViewMode.FixedDiff))
         {
@@ -976,10 +976,11 @@ public partial class FileViewer : GitModuleControl
         }
 
         _sideBySidePane ??= new SideBySideDiffPane(this);
+        _sideBySidePane.SetNonPrintingChars(show: showNonprintableCharactersToolStripMenuItem.Checked);
 
         try
         {
-            if (_sideBySidePane.TryShow(text, openLineNumbers))
+            if (_sideBySidePane.TryShow(text, openLineNumbers, fileName))
             {
                 internalFileViewer.Visible = false;
             }
@@ -1448,6 +1449,7 @@ public partial class FileViewer : GitModuleControl
             : ICSharpCode.TextEditor.Document.EolMarkerStyle.None;
         internalFileViewer.ShowSpaces = show;
         internalFileViewer.ShowTabs = show;
+        _sideBySidePane?.SetNonPrintingChars(show);
     }
 
     // Event handlers

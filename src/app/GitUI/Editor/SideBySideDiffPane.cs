@@ -92,7 +92,7 @@ public sealed class SideBySideDiffPane : IDisposable
     /// Try to present the given text as a side-by-side diff. Returns false when the text
     /// is not a unified patch (caller then keeps showing it in the normal viewer).
     /// </summary>
-    public bool TryShow(string patchText, bool openLineNumbers)
+    public bool TryShow(string patchText, bool openLineNumbers, string? fileName)
     {
         Diff.SideBySideSplitter.SplitResult? split = SideBySideSplitter.TrySplit(patchText);
         if (split is null)
@@ -121,13 +121,47 @@ public sealed class SideBySideDiffPane : IDisposable
             _container.SplitterDistance = (int)(_container.Width * ratio);
         }
 
+        // match the unified viewer: fixed-width font from settings (TextEditor defaults to Courier New otherwise)
+        Font font = AppSettings.FixedWidthFont;
+        _left.Font = font;
+        _right.Font = font;
+
         _left.SetText(leftText, null, ViewMode.Text, useGitColoring: false, contentIdentification: null);
         _right.SetText(rightText, null, ViewMode.Text, useGitColoring: false, contentIdentification: null);
         _container.SplitterMoved += _splitterMovedHandler;
 
+        if (AppSettings.ShowSyntaxHighlightingInDiff.Value && !string.IsNullOrEmpty(fileName))
+        {
+            _left.SetHighlightingForFile(fileName);
+            _right.SetHighlightingForFile(fileName);
+        }
+        else
+        {
+            _left.SetHighlighting("");
+            _right.SetHighlighting("");
+        }
+
         ApplyHighlighting(_left, split.Left, leftSegments, split.Right);
         ApplyHighlighting(_right, split.Right, rightSegments, split.Left);
         return true;
+    }
+
+    /// <summary>
+    /// Apply the "show nonprinting characters" state of the unified viewer to both panes.
+    /// </summary>
+    public void SetNonPrintingChars(bool show)
+    {
+        ICSharpCode.TextEditor.Document.EolMarkerStyle style = show
+            ? (AppSettings.ShowEolMarkerAsGlyph
+                ? ICSharpCode.TextEditor.Document.EolMarkerStyle.Glyph
+                : ICSharpCode.TextEditor.Document.EolMarkerStyle.Text)
+            : ICSharpCode.TextEditor.Document.EolMarkerStyle.None;
+        _left.EolMarkerStyle = style;
+        _right.EolMarkerStyle = style;
+        _left.ShowSpaces = show;
+        _left.ShowTabs = show;
+        _right.ShowSpaces = show;
+        _right.ShowTabs = show;
     }
 
     /// <summary>
