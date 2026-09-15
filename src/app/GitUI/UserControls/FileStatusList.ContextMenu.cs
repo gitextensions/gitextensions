@@ -2,8 +2,10 @@
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Extended;
+using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -75,6 +77,9 @@ partial class FileStatusList
     private readonly CancellationTokenSequence _interactiveAddResetChunkSequence = new();
     private readonly RememberFileContextMenuController _rememberFileContextMenuController = RememberFileContextMenuController.Default;
 
+    private readonly TranslationString _aiCaption = new("AI prompt");
+    private readonly TranslationString _aiNoChanges = new("No changes found for the selected files.");
+    private readonly TranslationString _aiPromptCopied = new("AI prompt with {0} chars copied to clipboard.");
     private readonly TranslationString _deleteSelectedFilesCaption = new("Delete");
     private readonly TranslationString _deleteSelectedFiles = new("Are you sure you want to delete the selected file(s)?");
     private readonly TranslationString _deleteFailed = new("Delete file failed");
@@ -217,6 +222,115 @@ partial class FileStatusList
     private void CherryPickChanges_Click(object sender, EventArgs e)
     {
         _cherryPickChanges?.Invoke();
+    }
+
+    private void CopyAiPromptToClipboard_Click(object sender, EventArgs e)
+    {
+        List<FileStatusItem> selectedItems = [.. SelectedItems];
+        IGitModule module = Module;
+        ThreadHelper.FileAndForget(CopyAiPromptToClipboardAsync);
+        return;
+
+        async Task CopyAiPromptToClipboardAsync()
+        {
+            StringBuilder prompt = new();
+            SettingsSource effectiveSettings = module.GetEffectiveSettings();
+            prompt.AppendLine(DetailedSettings.AiDiffPromptPrefix.ValueOrDefault(effectiveSettings));
+            int lengthBeforeDiffs = prompt.Length;
+
+            // Group by revision pair so each unique context is one git diff call.
+            IEnumerable<IGrouping<(string? First, string Second), FileStatusItem>> groups
+                = selectedItems.GroupBy(item => (item.FirstRevision?.Guid, item.SecondRevision.Guid));
+            RevisionDiffProvider diffProvider = new();
+            foreach (IGrouping<(string? First, string Second), FileStatusItem> group in groups)
+            {
+                // CombinedDiff artificial commits cannot be diffed explicitly.
+                if (group.Key.First == GitRevision.CombinedDiffGuid || group.Key.Second == GitRevision.CombinedDiffGuid)
+                {
+                    continue;
+                }
+
+                // Untracked files are read directly from the filesystem and formatted as a
+                // synthetic unified diff so no git process is needed per file.
+                List<FileStatusItem> untrackedItems = [.. group.Where(item => !item.Item.IsTracked)];
+                foreach (FileStatusItem item in untrackedItems)
+                {
+                    string fullPath = Path.Combine(module.WorkingDir, item.Item.Name);
+                    if (!File.Exists(fullPath))
+                    {
+                        continue;
+                    }
+
+                    string[] lines = await File.ReadAllLinesAsync(fullPath);
+                    prompt.AppendLine("--- /dev/null");
+                    prompt.AppendLine($"+++ b/{item.Item.Name}");
+                    prompt.AppendLine($"@@ -0,0 +1,{lines.Length} @@");
+                    foreach (string line in lines)
+                    {
+                        prompt.Append('+').AppendLine(line);
+                    }
+                }
+
+                List<FileStatusItem> trackedItems = [.. group.Where(item => item.Item.IsTracked)];
+                if (trackedItems.Count == 0)
+                {
+                    continue;
+                }
+
+                // For an initial commit (no parent), use diff-tree --root to avoid
+                // RevisionDiffProvider interpreting null as the worktree and generating -R.
+                string output;
+                if (group.Key.First is null && !group.First().SecondRevision.IsArtificial)
+                {
+                    GitArgumentBuilder args = new("diff-tree")
+                    {
+                        "--root",
+                        "-p",
+                        "--no-color",
+                        group.Key.Second,
+                        "--"
+                    };
+                    foreach (FileStatusItem item in trackedItems)
+                    {
+                        args.Add(item.Item.Name.QuoteNE());
+                    }
+
+                    output = await module.GitExecutable.GetOutputAsync(args);
+                }
+                else
+                {
+                    ArgumentString revArgs = diffProvider.Get(group.Key.First, group.Key.Second);
+                    GitArgumentBuilder args = new("diff")
+                    {
+                        "--no-ext-diff",
+                        "--no-color",
+                        "--unified=10", // some more context for the AI prompt
+                        revArgs,
+                        "--"
+                    };
+                    foreach (FileStatusItem item in trackedItems)
+                    {
+                        args.Add(item.Item.Name.QuoteNE());
+                    }
+
+                    output = await module.GitExecutable.GetOutputAsync(args);
+                }
+
+                prompt.Append(output);
+            }
+
+            await this.SwitchToMainThreadAsync();
+
+            if (prompt.Length == lengthBeforeDiffs)
+            {
+                MessageBoxes.Show(this, _aiNoChanges.Text, _aiCaption.Text, MessageBoxButtons.OK);
+                return;
+            }
+
+            prompt.Append(DetailedSettings.AiDiffPromptSuffix.ValueOrDefault(effectiveSettings));
+            Clipboard.SetText(prompt.ToString());
+            MessageBoxes.Show(this, string.Format(_aiPromptCopied.Text, prompt.Length), _aiCaption.Text, MessageBoxButtons.OK);
+        }
     }
 
     private void CommitSubmoduleChanges_Click(object sender, EventArgs e)
@@ -1300,6 +1414,8 @@ partial class FileStatusList
 
         tsmiSkipWorktree.ToolTipText = _skipWorktreeToolTip.Text;
         tsmiAssumeUnchanged.ToolTipText = _assumeUnchangedToolTip.Text;
+
+        tsmiCopyAiPromptToClipboard.Enabled = selectionInfo.SelectedGitItemCount > 0;
     }
 
     private void UpdateSubmodule_Click(object sender, EventArgs e)
