@@ -1238,6 +1238,11 @@ public partial class FileViewer : GitModuleControl
         }
 
         AppSettings.IgnoreWhitespaceKind.Value = IgnoreWhitespace;
+
+        if (AppSettings.RememberIgnoreWhiteSpacePreference)
+        {
+            AppSettings.IgnoreWhitespaceKind.Save();
+        }
     }
 
     /// <summary>
@@ -1562,6 +1567,12 @@ public partial class FileViewer : GitModuleControl
         showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
         showSyntaxHighlightingToolStripMenuItem.Checked = ShowSyntaxHighlightingInDiff;
         AppSettings.ShowSyntaxHighlightingInDiff.Value = ShowSyntaxHighlightingInDiff;
+
+        if (AppSettings.RememberShowSyntaxHighlightingInDiff)
+        {
+            AppSettings.ShowSyntaxHighlightingInDiff.Save();
+        }
+
         OnExtraDiffArgumentsChanged();
     }
 
@@ -1572,31 +1583,53 @@ public partial class FileViewer : GitModuleControl
         showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
         SetStateOfContextLinesButtons();
         AppSettings.ShowEntireFile.Value = ShowEntireFile;
+
+        if (AppSettings.RememberShowEntireFilePreference)
+        {
+            AppSettings.ShowEntireFile.Save();
+        }
+
         OnExtraDiffArgumentsChanged();
+    }
+
+    /// <summary>
+    /// Persist the diff appearance when "Remember the 'diff appearance' preference" is enabled,
+    /// so the current choice survives an application restart.
+    /// </summary>
+    private void SaveDiffDisplayAppearanceIfRemembered()
+    {
+        if (AppSettings.RememberDiffDisplayAppearance.Value)
+        {
+            AppSettings.DiffDisplayAppearance.Save();
+        }
     }
 
     private void ResetPatchAppearanceToolStripMenuItemClick(object sender, EventArgs e)
     {
         // The other settings toggle, this just resets the appearance
         AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+        SaveDiffDisplayAppearanceIfRemembered();
         OnExtraDiffArgumentsChanged();
     }
 
     private void ToggleGitWordColoringToolStripMenuItemClick(object sender, EventArgs e)
     {
         AppSettings.DiffDisplayAppearance.Value = !showGitWordColoringToolStripMenuItem.Checked ? DiffDisplayAppearance.GitWordDiff : DiffDisplayAppearance.Patch;
+        SaveDiffDisplayAppearanceIfRemembered();
         OnExtraDiffArgumentsChanged();
     }
 
     private void ToggleDifftasticToolStripMenuItemClick(object sender, EventArgs e)
     {
         AppSettings.DiffDisplayAppearance.Value = !showDifftasticToolStripMenuItem.Checked ? DiffDisplayAppearance.Difftastic : DiffDisplayAppearance.Patch;
+        SaveDiffDisplayAppearanceIfRemembered();
         OnExtraDiffArgumentsChanged();
     }
 
     private void ToggleSideBySideToolStripMenuItemClick(object sender, EventArgs e)
     {
         AppSettings.SideBySideDiff.Value = showSideBySideToolStripMenuItem.Checked;
+        AppSettings.SideBySideDiff.Save();
         OnExtraDiffArgumentsChanged();
     }
 
@@ -2124,6 +2157,11 @@ public partial class FileViewer : GitModuleControl
 
         ToggleNonPrintingChars(show: showNonprintableCharactersToolStripMenuItem.Checked);
         AppSettings.ShowNonPrintingChars.Value = showNonPrintChars.Checked;
+
+        if (AppSettings.RememberShowNonPrintingCharsPreference)
+        {
+            AppSettings.ShowNonPrintingChars.Save();
+        }
     }
 
     private void FindToolStripMenuItemClick(object sender, EventArgs e)

@@ -328,6 +328,7 @@ public sealed class SideBySideDiffPane : IDisposable
 
     public void Dispose()
     {
+        StoreSplitterDistance();
         _container.Dispose();
         _left.Dispose();
         _right.Dispose();
