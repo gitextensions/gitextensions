@@ -27,6 +27,8 @@ public sealed class SideBySideDiffPane : IDisposable
     private SplitterEventHandler? _splitterMovedHandler;
     private bool _syncingScroll;
     private bool _addedToOwner;
+    private bool _isRestoringSplitter;
+    private bool _splitterPositionApplied;
 
     private static readonly Color AddedBackColor = AppColor.AnsiTerminalGreenBackNormal.GetThemeColor();
     private static readonly Color RemovedBackColor = AppColor.AnsiTerminalRedBackNormal.GetThemeColor();
@@ -50,6 +52,7 @@ public sealed class SideBySideDiffPane : IDisposable
         _container.Panel1.Controls.Add(_left);
         _container.Panel2.Controls.Add(_right);
         _container.SplitterMoved += _splitterMovedHandler;
+        _container.SizeChanged += (_, _) => ApplySplitterRatio();
 
         // keep the two panes scrolled in lock-step
         _left.VScrollPositionChanged += (_, _) => SyncScroll(fromRight: false);
@@ -78,9 +81,39 @@ public sealed class SideBySideDiffPane : IDisposable
 
     private void StoreSplitterDistance()
     {
-        if (_container.Width > 0 && !_container.IsDisposed)
+        if (_container.Width > 100 && !_container.IsDisposed && !_isRestoringSplitter)
         {
             AppSettings.SideBySideDiffSplitPerMille = (int)Math.Round(1000.0 * _container.SplitterDistance / _container.Width);
+        }
+    }
+
+    /// <summary>
+    /// Re-apply the persisted split ratio whenever the container gets a new real width
+    /// (the control is not laid out at the moment it is parented, so TryShow may run
+    /// while the width is still zero).
+    /// </summary>
+    private void ApplySplitterRatio()
+    {
+        if (_isRestoringSplitter || _container.IsDisposed || _container.Width <= 100)
+        {
+            return;
+        }
+
+        double ratio = Math.Clamp(AppSettings.SideBySideDiffSplitPerMille / 1000.0, 0.15, 0.85);
+        int distance = (int)(_container.Width * ratio);
+        if (_container.SplitterDistance != distance)
+        {
+            _isRestoringSplitter = true;
+            try
+            {
+                _container.SplitterDistance = distance;
+            }
+            finally
+            {
+                _isRestoringSplitter = false;
+            }
+
+            _splitterPositionApplied = true;
         }
     }
 
@@ -131,10 +164,19 @@ public sealed class SideBySideDiffPane : IDisposable
 
         // avoid storing the distance while we are restoring it
         _container.SplitterMoved -= _splitterMovedHandler;
-        double ratio = Math.Clamp(AppSettings.SideBySideDiffSplitPerMille / 1000.0, 0.15, 0.85);
-        if (_container.Width > 100)
+        _isRestoringSplitter = true;
+        try
         {
-            _container.SplitterDistance = (int)(_container.Width * ratio);
+            double ratio = Math.Clamp(AppSettings.SideBySideDiffSplitPerMille / 1000.0, 0.15, 0.85);
+            if (_container.Width > 100)
+            {
+                _container.SplitterDistance = (int)(_container.Width * ratio);
+                _splitterPositionApplied = true;
+            }
+        }
+        finally
+        {
+            _isRestoringSplitter = false;
         }
 
         // match the unified viewer: fixed-width font from settings (TextEditor defaults to Courier New otherwise)
@@ -328,7 +370,11 @@ public sealed class SideBySideDiffPane : IDisposable
 
     public void Dispose()
     {
-        StoreSplitterDistance();
+        if (_splitterPositionApplied)
+        {
+            StoreSplitterDistance();
+        }
+
         _container.Dispose();
         _left.Dispose();
         _right.Dispose();
