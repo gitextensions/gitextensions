@@ -24,10 +24,9 @@ public sealed class SideBySideDiffPane : IDisposable
     private readonly FileViewerInternal _right;
     private readonly SplitContainer _container;
     private readonly FileViewer _owner;
-    private bool _splitterDragging;
+    private bool _suppressSplitterStore;
     private bool _syncingScroll;
     private bool _addedToOwner;
-    private bool _splitterPositionApplied;
 
     private static readonly Color AddedBackColor = AppColor.AnsiTerminalGreenBackNormal.GetThemeColor();
     private static readonly Color RemovedBackColor = AppColor.AnsiTerminalRedBackNormal.GetThemeColor();
@@ -41,6 +40,12 @@ public sealed class SideBySideDiffPane : IDisposable
             Dock = DockStyle.Fill,
             Name = "sideBySideContainer",
             TabIndex = 1,
+
+            // Panel1 keeps its exact pixel width on resize: the SplitContainer's own
+            // FixedPanel.None ratio logic would otherwise fight our persisted ratio
+            // (its internal ratio is captured while the control still has its default
+            // size and then re-applies ~1/3 split on every layout pass).
+            FixedPanel = FixedPanel.Panel1,
         };
 
         _left = new FileViewerInternal { Dock = DockStyle.Fill, Margin = new Padding(0), Name = "sideBySideLeft" };
@@ -49,20 +54,10 @@ public sealed class SideBySideDiffPane : IDisposable
         _container.Panel1.Controls.Add(_left);
         _container.Panel2.Controls.Add(_right);
 
-        // store the split position only for real user drags: SplitterMoved also fires during
-        // layout scaling (dock-fill resize), which would overwrite the saved ratio with
-        // intermediate layout values (the container starts at the default 150x150 size)
-        _container.MouseDown += (_, _) => _splitterDragging = true;
-        _container.MouseUp += (_, _) =>
-        {
-            bool wasDragging = _splitterDragging;
-            _splitterDragging = false;
-            if (wasDragging)
-            {
-                StoreSplitterDistance();
-            }
-        };
-        _container.SizeChanged += (_, _) => ApplySplitterRatio();
+        // SplitterMoved fires when the user drags the splitter (mouse or arrow keys) and when
+        // SplitterDistance is set programmatically (guarded by _suppressSplitterStore); the
+        // dock-fill layout path does not raise it (FixedPanel.Panel1).
+        _container.SplitterMoved += (_, _) => StoreSplitterDistance();
 
         // keep the two panes scrolled in lock-step
         _left.VScrollPositionChanged += (_, _) => SyncScroll(fromRight: false);
@@ -91,10 +86,13 @@ public sealed class SideBySideDiffPane : IDisposable
 
     private void StoreSplitterDistance()
     {
-        if (_container.Width > 100 && !_container.IsDisposed)
+        if (_suppressSplitterStore || _container.IsDisposed || _container.Width <= 100)
         {
-            AppSettings.SideBySideDiffSplitPerMille = (int)Math.Round(1000.0 * _container.SplitterDistance / _container.Width);
+            return;
         }
+
+        // Panel1.Width is the ground truth (the SplitterDistance getter can return a stale value)
+        AppSettings.SideBySideDiffSplitPerMille = (int)Math.Round(1000.0 * _container.Panel1.Width / _container.Width);
     }
 
     /// <summary>
@@ -117,10 +115,17 @@ public sealed class SideBySideDiffPane : IDisposable
             return;
         }
 
-        if (_container.SplitterDistance != distance)
+        if (_container.Panel1.Width != distance)
         {
-            _container.SplitterDistance = distance;
-            _splitterPositionApplied = true;
+            _suppressSplitterStore = true;
+            try
+            {
+                _container.SplitterDistance = distance;
+            }
+            finally
+            {
+                _suppressSplitterStore = false;
+            }
         }
     }
 
@@ -361,11 +366,7 @@ public sealed class SideBySideDiffPane : IDisposable
 
     public void Dispose()
     {
-        if (_splitterPositionApplied)
-        {
-            StoreSplitterDistance();
-        }
-
+        StoreSplitterDistance();
         _container.Dispose();
         _left.Dispose();
         _right.Dispose();
