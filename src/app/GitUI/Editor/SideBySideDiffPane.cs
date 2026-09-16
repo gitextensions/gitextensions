@@ -27,6 +27,9 @@ public sealed class SideBySideDiffPane : IDisposable
     private bool _suppressSplitterStore;
     private bool _syncingScroll;
     private bool _addedToOwner;
+    private Font? _lastAppliedFont;
+    private bool? _lastShowNonPrinting;
+    private ICSharpCode.TextEditor.Document.EolMarkerStyle _lastEolStyle;
 
     private static readonly Color AddedBackColor = AppColor.AnsiTerminalGreenBackNormal.GetThemeColor();
     private static readonly Color RemovedBackColor = AppColor.AnsiTerminalRedBackNormal.GetThemeColor();
@@ -176,10 +179,16 @@ public sealed class SideBySideDiffPane : IDisposable
 
         ApplySplitterRatio();
 
-        // match the unified viewer: fixed-width font from settings (TextEditor defaults to Courier New otherwise)
+        // match the unified viewer: fixed-width font from settings (TextEditor defaults to Courier New otherwise);
+        // FixedWidthFont allocates a new Font on every read and each set fires the editor's
+        // OptionsChanged (caret recreate + full refresh), so only assign when it really changed
         Font font = AppSettings.FixedWidthFont;
-        _left.Font = font;
-        _right.Font = font;
+        if (!font.Equals(_lastAppliedFont))
+        {
+            _left.Font = font;
+            _right.Font = font;
+            _lastAppliedFont = font;
+        }
 
         _left.SetText(leftText, null, ViewMode.Text, useGitColoring: false, contentIdentification: null);
         _right.SetText(rightText, null, ViewMode.Text, useGitColoring: false, contentIdentification: null);
@@ -210,12 +219,23 @@ public sealed class SideBySideDiffPane : IDisposable
                 ? ICSharpCode.TextEditor.Document.EolMarkerStyle.Glyph
                 : ICSharpCode.TextEditor.Document.EolMarkerStyle.Text)
             : ICSharpCode.TextEditor.Document.EolMarkerStyle.None;
+
+        // each of the property sets below triggers OptionsChanged (caret recreate + refresh);
+        // this runs on every diff load, so skip when the state did not change
+        // (nullable guard: the first call must always apply, ICSharpCode defaults are unknown here)
+        if (_lastShowNonPrinting == show && style == _lastEolStyle)
+        {
+            return;
+        }
+
         _left.EolMarkerStyle = style;
         _right.EolMarkerStyle = style;
         _left.ShowSpaces = show;
         _left.ShowTabs = show;
         _right.ShowSpaces = show;
         _right.ShowTabs = show;
+        _lastShowNonPrinting = show;
+        _lastEolStyle = style;
     }
 
     /// <summary>
