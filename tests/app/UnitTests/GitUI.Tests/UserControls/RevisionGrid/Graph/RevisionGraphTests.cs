@@ -422,6 +422,18 @@ public class RevisionGraphTests
     }
 
     [Test]
+    public async Task ReservedLaneCanBeReusedWhenNoLongerNeeded([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        AppSettings.ReservedLanesBranchNames = "A;B;C;D";
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:1 4:2 A:3:A D:A:D 5:4 6:1 B:6:B C:6:C 7:5 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
     public async Task CGetsTheThirdLane_DespiteLaneReuse([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
     {
         AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;

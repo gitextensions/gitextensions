@@ -488,6 +488,35 @@ public class RevisionGraph : IRevisionGraphRowProvider
 
             RevisionGraphRevision revision = orderedNodesCache[nextIndex];
             RevisionGraphSegment[] revisionStartSegments = revision.GetStartSegments();
+
+            // Identify segments with a reserved lane, i.e. along the first parent chain from a node with a reserved lane.
+            if (revisionStartSegments.Length > 0)
+            {
+                RevisionGraphSegment firstStartSegment = revisionStartSegments[0];
+
+                if (reserveLaneForCurrentRevision)
+                {
+                    // First parent segment gets the node's reserved lane
+                    firstStartSegment.ReservedLaneIndex = laneForCurrentRevision;
+                }
+                else if (nextIndex > 0)
+                {
+                    int count = _orderedRowCache[nextIndex - 1].Segments.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        RevisionGraphSegment prevRowSegment = _orderedRowCache[nextIndex - 1].Segments[i];
+                        if (prevRowSegment.Parent == revision)
+                        {
+                            // Inherit reserved lane from segment ending in the node
+                            if (prevRowSegment.ReservedLaneIndex < firstStartSegment.ReservedLaneIndex)
+                            {
+                                firstStartSegment.ReservedLaneIndex = prevRowSegment.ReservedLaneIndex;
+                            }
+                        }
+                    }
+                }
+            }
+
             if (orderSegments)
             {
                 revisionStartSegments = Order(revisionStartSegments, orderedNodesCache, nextIndex);
@@ -612,13 +641,16 @@ public class RevisionGraph : IRevisionGraphRowProvider
 
                 if (reserveLaneForCurrentRevision)
                 {
-                    // Now we can insert the segments for this node, after all segments that belong to higher-pri occupied reserved lanes.
-                    int occupiedReservedLaneCount = Math.Min(firstIndexForReservedLane.Take(laneForCurrentRevision).Count(x => x <= nextIndex), segments.Count);
-                    segments.InsertRange(occupiedReservedLaneCount, segmentsForNode);
+                    // Now we can insert the segments for this node first in the row.
+                    segments.InsertRange(0, segmentsForNode);
                 }
             }
 
+            // Ensure that all segments with a reserved lane are first, in the correct order
+            segments = [.. segments.OrderBy(s => s.ReservedLaneIndex)];
+
             RevisionGraphRow row = new(revision, segments, Config.MergeGraphLanesHavingCommonParent, reserveLaneForCurrentRevision);
+
             if (emptyReservedLaneCount > 0 || (reserveLaneForCurrentRevision && row.GetCurrentRevisionLane() != laneForCurrentRevision))
             {
                 _ = row.GetLaneCount();
@@ -648,7 +680,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
         loadingCompleted = loadingCompleted && lastToCacheRowIndex == lastOrderedNodeIndex;
         int straightenLanesStartIndex = Math.Max(1, startIndex - _straightenLanesLookAhead);
         int straightenLanesLastIndex = loadingCompleted ? lastToCacheRowIndex - 1 : lastToCacheRowIndex - _straightenLanesLookAhead;
-        StraightenLanes(straightenLanesStartIndex, straightenLanesLastIndex, lastLookAheadIndex: lastToCacheRowIndex, _orderedRowCache, Config.StraightenGraphSegmentsLimit);
+        StraightenLanes(straightenLanesStartIndex, straightenLanesLastIndex, lastLookAheadIndex: lastToCacheRowIndex, _orderedRowCache, Config.StraightenGraphSegmentsLimit, firstIndexForReservedLane);
 
         int straightenDiagonalsLookAhead = _straightenDiagonalsLookAhead;
         if (straightenDiagonalsLookAhead > 0)
@@ -727,7 +759,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 })];
         }
 
-        static void StraightenLanes(int startIndex, int lastStraightenIndex, int lastLookAheadIndex, IReadOnlyList<RevisionGraphRow> localOrderedRowCache, int straightenGraphSegmentsLimit)
+        static void StraightenLanes(int startIndex, int lastStraightenIndex, int lastLookAheadIndex, IReadOnlyList<RevisionGraphRow> localOrderedRowCache, int straightenGraphSegmentsLimit, int[] firstIndexForReservedLane)
         {
             // Try to detect this:
             // | | |<-- previous lane
@@ -786,16 +818,18 @@ public class RevisionGraph : IRevisionGraphRowProvider
                     }
 
                     int straightenedCurrentLane = currentLane + 1;
+
+                    while (firstIndexForReservedLane.Length > straightenedCurrentLane && firstIndexForReservedLane[straightenedCurrentLane] > currentIndex)
+                    {
+                        // Skip across reserved lane
+                        ++straightenedCurrentLane;
+                    }
+
                     int lookAheadLane = currentLane;
                     RevisionGraphSegment segmentOrAncestor = currentRow.FirstParentOrSelf(revisionGraphSegment);
                     for (int lookAheadIndex = currentIndex + 1; lookAheadLane == currentLane && lookAheadIndex <= Math.Min(currentIndex + _straightenLanesLookAhead, lastLookAheadIndex); ++lookAheadIndex)
                     {
                         RevisionGraphRow lookAheadRow = localOrderedRowCache[lookAheadIndex];
-
-                        if (!lookAheadRow.LaneMayBeMoved(currentLane))
-                        {
-                            break; // from for lookAheadIndex
-                        }
 
                         lookAheadLane = lookAheadRow.GetLaneForSegment(segmentOrAncestor).Index;
                         if ((lookAheadLane == straightenedCurrentLane) || (lookAheadLane > straightenedCurrentLane && previousLane == straightenedCurrentLane))
@@ -806,6 +840,11 @@ public class RevisionGraph : IRevisionGraphRowProvider
                             }
 
                             moved = true;
+                            break; // from for lookAheadIndex
+                        }
+
+                        if (!lookAheadRow.LaneMayBeMoved(currentLane))
+                        {
                             break; // from for lookAheadIndex
                         }
 
