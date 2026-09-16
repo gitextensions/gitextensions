@@ -52,15 +52,11 @@ partial class FileStatusList
         {
             collapsed = CollapseGroupByGroups(FileStatusListView.Nodes);
 
-            // plain path tree (commit window): collapse expanded folders like the
-            // revision-diff groups above
+            // plain path tree (commit window): collapse every expanded folder node
+            // recursively, so nested subfolders are collapsed as well
             foreach (TreeNode node in FileStatusListView.Nodes)
             {
-                if (node.IsExpanded && node.Nodes.Count > 0)
-                {
-                    node.Collapse(ignoreChildren: true);
-                    collapsed = true;
-                }
+                CollapseFolderTree(node, ref collapsed);
             }
         }
 
@@ -80,6 +76,21 @@ partial class FileStatusList
         }
 
         return;
+
+        static void CollapseFolderTree(TreeNode node, ref bool collapsed)
+        {
+            // depth-first: collapse children first so each level is folded in turn
+            foreach (TreeNode child in node.Nodes)
+            {
+                CollapseFolderTree(child, ref collapsed);
+            }
+
+            if (node.IsExpanded && node.Nodes.Count > 0 && node.Tag is not GroupKey)
+            {
+                node.Collapse(ignoreChildren: false);
+                collapsed = true;
+            }
+        }
 
         static bool CollapseGroupByGroups(TreeNodeCollection nodes)
         {
