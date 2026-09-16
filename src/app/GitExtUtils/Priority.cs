@@ -50,7 +50,7 @@ public static class Priority
             {
                 try
                 {
-                    if (Regex.IsMatch(key, regex, RegexOptions.ExplicitCapture, TimeSpan.FromSeconds(0.1)))
+                    if (Regex.IsMatch(key, regex, RegexOptions.ExplicitCapture))
                     {
                         priorityByNode[node] = currentOrder;
                         break;
