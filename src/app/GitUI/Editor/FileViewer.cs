@@ -207,7 +207,7 @@ public partial class FileViewer : GitModuleControl
 
         contextMenu.Opening += (sender, e) =>
         {
-            copyToolStripMenuItem.Enabled = internalFileViewer.GetSelectionLength() > 0;
+            copyToolStripMenuItem.Enabled = GetActiveTextViewer().GetSelectionLength() > 0;
             ContextMenuOpening?.Invoke(sender, e);
         };
 
@@ -2039,23 +2039,32 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
+    /// The viewer whose selection the Copy command should use: the side-by-side pane when
+    /// it is visible (the unified viewer is hidden then), otherwise the unified viewer.
+    /// </summary>
+    private FileViewerInternal GetActiveTextViewer() =>
+        _sideBySidePane is not null && _sideBySidePane.Visible ? _sideBySidePane.GetSelectionViewer() : internalFileViewer;
+
+    /// <summary>
     /// Copy selected text, excluding diff added/deleted information.
     /// </summary>
     /// <param name="sender">sender object.</param>
     /// <param name="e">event args.</param>
     private void CopyToolStripMenuItemClick(object sender, EventArgs e)
     {
-        string code = internalFileViewer.GetSelectedText();
+        FileViewerInternal sourceViewer = GetActiveTextViewer();
+        string code = sourceViewer.GetSelectedText();
 
         if (string.IsNullOrEmpty(code))
         {
             return;
         }
 
-        if (_viewMode.IsDiffView() && _viewMode != ViewMode.Difftastic)
+        bool fromSideBySide = sourceViewer != internalFileViewer;
+        if (!fromSideBySide && _viewMode.IsDiffView() && _viewMode != ViewMode.Difftastic)
         {
-            int pos = internalFileViewer.GetSelectionPosition();
-            string fileText = internalFileViewer.GetText();
+            int pos = sourceViewer.GetSelectionPosition();
+            string fileText = sourceViewer.GetText();
             int hpos = fileText.IndexOf("\n@@");
 
             // if header is selected then don't remove diff extra chars
@@ -2081,7 +2090,7 @@ public partial class FileViewer : GitModuleControl
 
         string RemovePrefix(string line)
         {
-            string[] specials = internalFileViewer.GetFullDiffPrefixes();
+            string[] specials = sourceViewer.GetFullDiffPrefixes();
 
             foreach (string special in specials.Where(line.StartsWith))
             {

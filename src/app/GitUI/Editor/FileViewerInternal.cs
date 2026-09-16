@@ -116,6 +116,15 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
         _textHighlightService.AddTextHighlighting(TextEditor.Document);
         TextEditor.ActiveTextAreaControl.TextArea.Invalidate();
+        OnSelectionOccurrenceHighlight();
+    }
+
+    /// <summary>
+    /// Called after the selection-changed handler cleared the marker strategy and applied
+    /// its occurrence highlights; lets derived viewers restore their own markers.
+    /// </summary>
+    protected virtual void OnSelectionOccurrenceHighlight()
+    {
     }
 
     /// <summary>

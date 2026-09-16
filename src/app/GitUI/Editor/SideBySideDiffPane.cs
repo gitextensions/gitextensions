@@ -20,8 +20,25 @@ namespace GitUI.Editor;
 /// </summary>
 public sealed class SideBySideDiffPane : IDisposable
 {
-    private readonly FileViewerInternal _left;
-    private readonly FileViewerInternal _right;
+    /// <summary>
+    /// FileViewerInternal variant for the two side-by-side columns: after the base class
+    /// clears the marker strategy on selection change (it repaints its "highlight all
+    /// occurrences" markers), re-apply the diff line/fragment markers so the side-by-side
+    /// coloring survives text selection.
+    /// </summary>
+    private sealed class SideBySideFileViewerInternal : FileViewerInternal
+    {
+        public event EventHandler? OccurrenceHighlightApplied;
+
+        protected override void OnSelectionOccurrenceHighlight()
+        {
+            base.OnSelectionOccurrenceHighlight();
+            OccurrenceHighlightApplied?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    private readonly SideBySideFileViewerInternal _left;
+    private readonly SideBySideFileViewerInternal _right;
     private readonly SplitContainer _container;
     private readonly FileViewer _owner;
     private bool _suppressSplitterStore;
@@ -51,8 +68,8 @@ public sealed class SideBySideDiffPane : IDisposable
             FixedPanel = FixedPanel.Panel1,
         };
 
-        _left = new FileViewerInternal { Dock = DockStyle.Fill, Margin = new Padding(0), Name = "sideBySideLeft" };
-        _right = new FileViewerInternal { Dock = DockStyle.Fill, Margin = new Padding(0), Name = "sideBySideRight" };
+        _left = new SideBySideFileViewerInternal { Dock = DockStyle.Fill, Margin = new Padding(0), Name = "sideBySideLeft" };
+        _right = new SideBySideFileViewerInternal { Dock = DockStyle.Fill, Margin = new Padding(0), Name = "sideBySideRight" };
 
         _container.Panel1.Controls.Add(_left);
         _container.Panel2.Controls.Add(_right);
@@ -71,6 +88,37 @@ public sealed class SideBySideDiffPane : IDisposable
         _right.MouseMove += (sender, e) => MouseMove?.Invoke(sender, e);
         _left.MouseLeave += (sender, e) => MouseLeave?.Invoke(sender, e);
         _right.MouseLeave += (sender, e) => MouseLeave?.Invoke(sender, e);
+
+        // the base class wipes ALL markers on selection change (to draw its own
+        // occurrence highlights); re-apply the stored diff markers afterwards
+        _left.OccurrenceHighlightApplied += (_, _) => ReapplyMarkers(_left);
+        _right.OccurrenceHighlightApplied += (_, _) => ReapplyMarkers(_right);
+    }
+
+    private List<ICSharpCode.TextEditor.Document.TextMarker>? _lastMarkersLeft;
+    private List<ICSharpCode.TextEditor.Document.TextMarker>? _lastMarkersRight;
+
+    /// <summary>
+    /// The column holding a text selection (left first, then right); used by the host so
+    /// Copy reads from the visible pane instead of the hidden unified viewer.
+    /// </summary>
+    public FileViewerInternal GetSelectionViewer() =>
+        _left.GetSelectionLength() > 0 ? _left
+            : _right.GetSelectionLength() > 0 ? _right
+            : _left;
+
+    /// <summary>Re-add the diff markers the base selection handler just removed.</summary>
+    private void ReapplyMarkers(SideBySideFileViewerInternal pane)
+    {
+        List<ICSharpCode.TextEditor.Document.TextMarker>? markers = pane == _left ? _lastMarkersLeft : _lastMarkersRight;
+        if (markers is null || markers.Count == 0)
+        {
+            return;
+        }
+
+        ICSharpCode.TextEditor.TextEditorControl editor = pane.GetTestAccessor().TextEditor;
+        editor.Document.MarkerStrategy.AddMarkers(markers);
+        editor.Refresh();
     }
 
     public Control Control => _container;
@@ -286,7 +334,7 @@ public sealed class SideBySideDiffPane : IDisposable
     /// added line are paired (same row in the opposite column), the identical prefix/suffix
     /// of both is dimmed so only the actually changed part stands out.
     /// </summary>
-    private static void ApplyHighlighting(FileViewerInternal pane, List<Diff.SideBySideSplitter.ColumnLine> lines,
+    private void ApplyHighlighting(SideBySideFileViewerInternal pane, List<Diff.SideBySideSplitter.ColumnLine> lines,
         List<LineSegmentInfo> segments, List<Diff.SideBySideSplitter.ColumnLine> oppositeColumn)
     {
         ICSharpCode.TextEditor.TextEditorControl editor = pane.GetTestAccessor().TextEditor;
@@ -343,6 +391,17 @@ public sealed class SideBySideDiffPane : IDisposable
         }
 
         markerStrategy.AddMarkers(markers);
+
+        // remember for re-apply after the base class clears markers on selection change
+        if (pane == _left)
+        {
+            _lastMarkersLeft = markers;
+        }
+        else
+        {
+            _lastMarkersRight = markers;
+        }
+
         editor.Refresh();
     }
 

@@ -37,6 +37,11 @@ partial class FileStatusList
     {
         bool hasSubnodes = FileStatusListView.SelectedNodes.Any(node => node.Nodes.Count > 0);
 
+        // in the commit window the selection is usually a FILE (no children), which used
+        // to hide the tree commands entirely; also offer them when any root has children
+        bool rootsHaveSubnodes = FileStatusListView.Nodes.Cast<TreeNode>().Any(node => node.Nodes.Count > 0);
+        hasSubnodes = hasSubnodes || rootsHaveSubnodes;
+
         _collapseAll.Visible = hasSubnodes;
         _expandAll.Visible = hasSubnodes;
         _selectAll.Visible = hasSubnodes;
@@ -47,9 +52,21 @@ partial class FileStatusList
 
     private void CollapseAll_Click(object? sender, EventArgs e)
     {
-        foreach (TreeNode node in FileStatusListView.SelectedNodes)
+        // collapse the selection; when it holds no subnodes (typical in the commit
+        // window where a file is selected), collapse the whole tree instead
+        if (FileStatusListView.SelectedNodes.Any(node => node.Nodes.Count > 0))
         {
-            node.Collapse(ignoreChildren: false);
+            foreach (TreeNode node in FileStatusListView.SelectedNodes)
+            {
+                node.Collapse(ignoreChildren: false);
+            }
+        }
+        else
+        {
+            foreach (TreeNode node in FileStatusListView.Nodes)
+            {
+                node.Collapse(ignoreChildren: false);
+            }
         }
     }
 
@@ -73,7 +90,10 @@ partial class FileStatusList
 
     private void ExpandAll_Click(object? sender, EventArgs e)
     {
-        foreach (TreeNode node in FileStatusListView.SelectedNodes)
+        IEnumerable<TreeNode> targets = FileStatusListView.SelectedNodes.Any(node => node.Nodes.Count > 0)
+            ? FileStatusListView.SelectedNodes
+            : FileStatusListView.Nodes.Cast<TreeNode>();
+        foreach (TreeNode node in targets)
         {
             ExpandAll(node);
         }
@@ -82,7 +102,10 @@ partial class FileStatusList
     private void SelectAll_Click(object? sender, EventArgs e)
     {
         HashSet<TreeNode> selectedItems = [];
-        foreach (TreeNode node in FileStatusListView.SelectedNodes)
+        IEnumerable<TreeNode> targets = FileStatusListView.SelectedNodes.Any(node => node.Nodes.Count > 0)
+            ? FileStatusListView.SelectedNodes
+            : FileStatusListView.Nodes.Cast<TreeNode>();
+        foreach (TreeNode node in targets)
         {
             ExpandAll(node);
             foreach (TreeNode leaf in node.Items().Where(node => node.Tag is FileStatusItem))
