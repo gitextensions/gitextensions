@@ -132,7 +132,7 @@ public partial class FileViewer : GitModuleControl
 
         showNonPrintChars.AdaptImageLightness();
         showNonprintableCharactersToolStripMenuItem.Image = showNonPrintChars.Image;
-        bool showNonPrintingChars = AppSettings.ShowNonPrintingChars.GetValue(reload: !AppSettings.RememberShowNonPrintingCharsPreference);
+        bool showNonPrintingChars = AppSettings.ShowNonPrintingChars.GetValue(reload: true);
         showNonPrintChars.Checked = showNonPrintingChars;
         showNonprintableCharactersToolStripMenuItem.Checked = showNonPrintingChars;
         ToggleNonPrintingChars(showNonPrintingChars);
@@ -2157,11 +2157,7 @@ public partial class FileViewer : GitModuleControl
 
         ToggleNonPrintingChars(show: showNonprintableCharactersToolStripMenuItem.Checked);
         AppSettings.ShowNonPrintingChars.Value = showNonPrintChars.Checked;
-
-        if (AppSettings.RememberShowNonPrintingCharsPreference)
-        {
-            AppSettings.ShowNonPrintingChars.Save();
-        }
+        AppSettings.ShowNonPrintingChars.Save();
     }
 
     private void FindToolStripMenuItemClick(object sender, EventArgs e)
