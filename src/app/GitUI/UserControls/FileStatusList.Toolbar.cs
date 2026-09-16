@@ -51,6 +51,17 @@ partial class FileStatusList
         else
         {
             collapsed = CollapseGroupByGroups(FileStatusListView.Nodes);
+
+            // plain path tree (commit window): collapse expanded folders like the
+            // revision-diff groups above
+            foreach (TreeNode node in FileStatusListView.Nodes)
+            {
+                if (node.IsExpanded && node.Nodes.Count > 0)
+                {
+                    node.Collapse(ignoreChildren: true);
+                    collapsed = true;
+                }
+            }
         }
 
         if (collapsed)
@@ -258,7 +269,11 @@ partial class FileStatusList
     private void UpdateToolbar()
     {
         bool hasGroups = CanUseFindInCommitFilesGitGrep || (FileStatusListView.Nodes.Count > 0 && FileStatusListView.Nodes[0].Tag is GitRevision);
-        btnCollapseGroups.Visible = hasGroups;
+
+        // the commit window renders a plain path tree (folders, no revision-diff groups);
+        // offer the collapse button there too
+        bool hasTreeFolders = FileStatusListView.Nodes.Cast<TreeNode>().Any(node => node.Nodes.Count > 0);
+        btnCollapseGroups.Visible = hasGroups || hasTreeFolders;
         sepRefresh.Visible = hasGroups && btnRefresh.Visible;
         sepAsTree.Visible = hasGroups || btnRefresh.Visible;
 

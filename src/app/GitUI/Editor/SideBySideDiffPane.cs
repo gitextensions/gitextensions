@@ -71,6 +71,11 @@ public sealed class SideBySideDiffPane : IDisposable
         _left = new SideBySideFileViewerInternal { Dock = DockStyle.Fill, Margin = new Padding(0), Name = "sideBySideLeft" };
         _right = new SideBySideFileViewerInternal { Dock = DockStyle.Fill, Margin = new Padding(0), Name = "sideBySideRight" };
 
+        // the pane renders a read-only diff view: blocks typing, cut/paste and undo/redo
+        // (Document.ReadOnly guards in the editor actions); copying stays enabled
+        _left.IsReadOnly = true;
+        _right.IsReadOnly = true;
+
         _container.Panel1.Controls.Add(_left);
         _container.Panel2.Controls.Add(_right);
 
