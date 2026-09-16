@@ -1054,6 +1054,42 @@ public sealed partial class FileStatusList : GitModuleControl
         GitUICommands.LaunchBrowse(workingDir: path, selectedId, firstId);
     }
 
+    /// <summary>
+    /// Collects the paths of currently expanded path-folder nodes (Tag is RelativePath)
+    /// so the expansion state survives a list rebuild (stage/unstage refresh).
+    /// </summary>
+    private HashSet<string> SnapshotExpandedFolderPaths()
+    {
+        HashSet<string> expanded = new(StringComparer.Ordinal);
+
+        foreach (TreeNode node in FileStatusListView.Items())
+        {
+            if (node.IsExpanded && node.Tag is RelativePath relativePath)
+            {
+                expanded.Add(relativePath.Value);
+            }
+        }
+
+        return expanded;
+    }
+
+    /// <summary>
+    /// Collapses path-folder nodes that were collapsed before the rebuild; the built-in
+    /// ExpandCollapseState logic (which expands everything for single-group lists) has
+    /// already run, so this only restores the user's manual collapsing.
+    /// </summary>
+    private void RestoreExpandedFolderPaths(HashSet<string> expandedFolderPaths)
+    {
+        foreach (TreeNode node in FileStatusListView.Items())
+        {
+            if (node.Nodes.Count > 0 && node.Tag is RelativePath relativePath && node.IsExpanded
+                && !expandedFolderPaths.Contains(relativePath.Value))
+            {
+                node.Collapse(ignoreChildren: false);
+            }
+        }
+    }
+
     private void SelectItems(Func<TreeNode, bool> predicate)
     {
         try
@@ -1147,6 +1183,8 @@ public sealed partial class FileStatusList : GitModuleControl
 
         SetFileStatusListVisibility(showNoFiles: !filesPresent && items.Count <= 1 && !_isFileTreeMode);
 
+        HashSet<string> expandedFolderPaths = SnapshotExpandedFolderPaths();
+
         try
         {
             FileStatusListView.BeginUpdate();
@@ -1176,6 +1214,8 @@ public sealed partial class FileStatusList : GitModuleControl
                         break;
                 }
             }
+
+            RestoreExpandedFolderPaths(expandedFolderPaths);
 
             switch (FileStatusListView.Nodes.Count)
             {
