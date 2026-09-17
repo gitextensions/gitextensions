@@ -678,6 +678,10 @@ public partial class FileViewer : GitModuleControl
                     }
                 }
 
+                // keep the side-by-side pane in sync with plain-text views (e.g. previews of
+                // previously untracked files): it must not linger with stale diff content
+                UpdateSideBySidePane(text, openLineNumbers: true, fileName);
+
                 TextLoaded?.Invoke(this, null!);
                 return Task.CompletedTask;
             });

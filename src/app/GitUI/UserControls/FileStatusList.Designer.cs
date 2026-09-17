@@ -294,7 +294,7 @@ partial class FileStatusList
         btnCollapseGroups.Image = Properties.Images.CollapseAll;
         btnCollapseGroups.Name = "btnCollapseGroups";
         btnCollapseGroups.Size = new Size(23, 22);
-        btnCollapseGroups.ToolTipText = "Collapse all groups, otherwise expand the selected group";
+        btnCollapseGroups.ToolTipText = "Collapse all, or expand all when everything is collapsed";
         btnCollapseGroups.Visible = false;
         btnCollapseGroups.Click += CollapseGroups_Click;
         // 

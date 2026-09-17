@@ -2,6 +2,7 @@
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 
 namespace GitUI;
@@ -36,27 +37,13 @@ partial class FileStatusList
     {
         bool collapsed = false;
 
-        if (_showDiffGroups)
+        // collapse/expand-all toggle: when anything is expanded anywhere, fold the whole
+        // tree recursively; when everything is collapsed, expand everything recursively
+        foreach (TreeNode node in FileStatusListView.Items())
         {
-            foreach (TreeNode diffGroup in FileStatusListView.Nodes)
+            if (node.Nodes.Count > 0)
             {
-                collapsed |= CollapseGroupByGroups(diffGroup.Nodes);
-                if (diffGroup.IsExpanded)
-                {
-                    diffGroup.Collapse(ignoreChildren: true);
-                    collapsed = true;
-                }
-            }
-        }
-        else
-        {
-            collapsed = CollapseGroupByGroups(FileStatusListView.Nodes);
-
-            // plain path tree (commit window): collapse every expanded folder node
-            // recursively, so nested subfolders are collapsed as well
-            foreach (TreeNode node in FileStatusListView.Nodes)
-            {
-                CollapseFolderTree(node, ref collapsed);
+                CollapseOrExpandAll(node, ref collapsed);
             }
         }
 
@@ -72,40 +59,31 @@ partial class FileStatusList
         }
         else
         {
-            FileStatusListView.FocusedNode?.Expand();
+            foreach (TreeNode root in FileStatusListView.Nodes)
+            {
+                if (root.Nodes.Count > 0)
+                {
+                    root.ExpandAll();
+                    collapsed = true;
+                }
+            }
         }
 
         return;
 
-        static void CollapseFolderTree(TreeNode node, ref bool collapsed)
+        static void CollapseOrExpandAll(TreeNode node, ref bool collapsed)
         {
-            // depth-first: collapse children first so each level is folded in turn
+            // depth-first: children first, so every level is folded in turn
             foreach (TreeNode child in node.Nodes)
             {
-                CollapseFolderTree(child, ref collapsed);
+                CollapseOrExpandAll(child, ref collapsed);
             }
 
-            if (node.IsExpanded && node.Nodes.Count > 0 && node.Tag is not GroupKey)
+            if (node.IsExpanded && node.Nodes.Count > 0)
             {
                 node.Collapse(ignoreChildren: false);
                 collapsed = true;
             }
-        }
-
-        static bool CollapseGroupByGroups(TreeNodeCollection nodes)
-        {
-            bool collapsed = false;
-
-            foreach (TreeNode group in nodes)
-            {
-                if (group.IsExpanded && group.Tag is GroupKey)
-                {
-                    group.Collapse(ignoreChildren: true);
-                    collapsed = true;
-                }
-            }
-
-            return collapsed;
         }
     }
 

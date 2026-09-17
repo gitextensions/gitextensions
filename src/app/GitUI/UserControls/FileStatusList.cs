@@ -116,6 +116,7 @@ public sealed partial class FileStatusList : GitModuleControl
         FileStatusListView.Indent = DpiUtil.Scale(14);
         FileStatusListView.ImageList = _imageListData.ImageList;
         FileStatusListView.StateImageList = _imageListData.ImageList;
+        FileStatusListView.NodeMouseClick += FileStatusListView_NodeMouseClick;
 
         NoFiles.Text = TranslatedStrings.NoChanges;
         NoFiles.BackColor = AppColor.PanelBackground.GetThemeColor();
@@ -1087,6 +1088,30 @@ public sealed partial class FileStatusList : GitModuleControl
             {
                 node.Collapse(ignoreChildren: false);
             }
+        }
+    }
+
+    /// <summary>
+    /// Alt+Click on a node's +/- button toggles the whole subtree recursively
+    /// (plain single click keeps the built-in one-level toggle).
+    /// </summary>
+    private void FileStatusListView_NodeMouseClick(object? sender, TreeNodeMouseClickEventArgs e)
+    {
+        if (e.Node is not TreeNode clickedNode
+            || (ModifierKeys & Keys.Alt) == 0
+            || clickedNode.Nodes.Count == 0
+            || (FileStatusListView.HitTest(e.Location).Location & TreeViewHitTestLocations.PlusMinus) == 0)
+        {
+            return;
+        }
+
+        if (clickedNode.IsExpanded)
+        {
+            clickedNode.Collapse(ignoreChildren: false);
+        }
+        else
+        {
+            clickedNode.ExpandAll();
         }
     }
 
