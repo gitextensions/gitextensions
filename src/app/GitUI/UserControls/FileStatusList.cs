@@ -1714,6 +1714,23 @@ public sealed partial class FileStatusList : GitModuleControl
 
     private void FileStatusListView_DoubleClick(object? sender, EventArgs e)
     {
+        // double-clicking a group/folder node toggles its fold state instead of firing
+        // the DoubleClick action (stage/unstage in the commit window); the first click of
+        // the double click made it the focused node
+        if (FileStatusListView.FocusedNode is TreeNode focusedNode && focusedNode.Tag is not FileStatusItem)
+        {
+            if (focusedNode.IsExpanded)
+            {
+                focusedNode.Collapse(ignoreChildren: true);
+            }
+            else
+            {
+                focusedNode.Expand();
+            }
+
+            return;
+        }
+
         if (DoubleClick is null)
         {
             if (SelectedItem?.Item is null)
