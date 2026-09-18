@@ -1774,6 +1774,7 @@ public partial class FileStatusList : GitModuleControl
         _diffCalculator.DescribeRevision = describeRevision;
         _diffCalculator.GetActualRevision = getActualRevision;
         SetFileTreeMode(isFileTreeMode);
+        lblSplitter.Height = isFileTreeMode ? 1 : 0;
     }
 
     private IEnumerable<FileStatusItem> GetVisibleFileStatusItems()
@@ -1806,9 +1807,14 @@ public partial class FileStatusList : GitModuleControl
 
     private void SetFileTreeMode(bool isFileTreeMode)
     {
+        bool modeChanged = _isFileTreeMode != isFileTreeMode;
         _isFileTreeMode = isFileTreeMode;
         Toolbar.IsVisible = !isFileTreeMode;
-        lblSplitter.Height = isFileTreeMode ? 1 : 0;
+        if (modeChanged)
+        {
+            lblSplitter.Height = isFileTreeMode ? 1 : 0;
+        }
+
         lstFiles.IsVisible = !isFileTreeMode;
         tvDiffFiles.IsVisible = false;
         tvFiles.IsVisible = isFileTreeMode;

@@ -9,6 +9,7 @@
         MinWidth="560"
         MinHeight="420"
         WindowStartupLocation="CenterOwner"
+        Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
         Title="Remote repository fork and clone">
   <Window.Styles>
     <!-- Framework constraint: the content presenter stays at the GroupBox origin so Designer child coordinates remain 1:1 DIPs. -->
@@ -105,6 +106,7 @@
                      Height="23"
                      Margin="3"
                      MinHeight="0"
+                     Background="{DynamicResource GitExtensionsKnownColorWindowBrush}"
                      Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
                      VerticalAlignment="Top" />
             <Button x:Name="searchBtn"

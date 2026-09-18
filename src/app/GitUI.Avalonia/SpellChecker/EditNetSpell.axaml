@@ -16,6 +16,10 @@
   <UserControl.Styles>
     <Style Selector="TextBox#TextBox">
       <Setter Property="Background" Value="{DynamicResource GitExtensionsCommitEditorBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    </Style>
+    <Style Selector="TextBox#TextBox.winforms-watermark">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
     </Style>
     <Style Selector="ListBox#AutoComplete > ListBoxItem">
       <Setter Property="Height" Value="15" />
@@ -52,7 +56,6 @@
              BorderBrush="Transparent"
              BorderThickness="0"
              FocusAdorner="{x:Null}"
-             Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
              HorizontalContentAlignment="Left"
              Padding="0"
              ScrollViewer.HorizontalScrollBarVisibility="Auto"

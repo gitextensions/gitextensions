@@ -242,7 +242,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _detailsSequence.CancelCurrent();
         _discussionSequence.CancelCurrent();
         ResetAllAndShowLoadingPullRequests();
-        bool transferFocus = _selectHostedRepoCB.IsKeyboardFocusWithin;
+        bool transferFocus = _selectHostedRepoCB.IsFocused || _selectHostedRepoCB.IsKeyboardFocusWithin;
         _selectHostedRepoCB.IsEnabled = false;
         if (transferFocus)
         {

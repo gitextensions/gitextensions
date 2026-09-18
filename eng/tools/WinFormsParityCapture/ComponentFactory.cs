@@ -308,11 +308,27 @@ internal static class ComponentFactory
         string stateId,
         GitUICommands commands)
     {
+        string currentRemote = commands.Module.GetCurrentRemote();
+        string[] remoteNames = ThreadHelper.JoinableTaskFactory.Run(commands.Module.GetRemotesAsync)
+            .Select(remote => remote.Name)
+            .ToArray();
+        if (!HasRemoteForCurrentSelection(currentRemote, remoteNames))
+        {
+            // The unchanged WinForms form uses First(...) during asynchronous Load and would
+            // otherwise show a modal error popup outside the capture worker's result channel.
+            throw new CaptureStateUnsupportedException(
+                "ViewPullRequestsForm requires a Git remote matching the current remote.");
+        }
+
         RepositoryHostCaptureFixture fixture = RepositoryHostCaptureFixture.Create(commands, componentType, stateId);
         ViewPullRequestsForm form = new(commands, fixture.Host);
         RepositoryHostFixtures.Add(form, fixture);
         return form;
     }
+
+    internal static bool HasRemoteForCurrentSelection(string? currentRemote, IEnumerable<string> remoteNames)
+        => remoteNames.Any(name => string.IsNullOrEmpty(currentRemote)
+                                   || string.Equals(name, currentRemote, StringComparison.Ordinal));
 
     // parity-scaffolding: Standalone settings pages are normally loaded by FormSettings.
     private static T CreateSettingsPage<T>(T page) where T : SettingsPageBase

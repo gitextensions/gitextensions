@@ -90,7 +90,9 @@ public partial class EditNetSpell : GitModuleControl, IDisposable
             _textBoxFont = value;
             TextBox.FontFamily = new FontFamily(value.Name);
             TextBox.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(value.Size);
-            TextBox.FontStyle = value.Italic ? Avalonia.Media.FontStyle.Italic : Avalonia.Media.FontStyle.Normal;
+            TextBox.FontStyle = value.Italic || _isWatermarkShowing
+                ? Avalonia.Media.FontStyle.Italic
+                : Avalonia.Media.FontStyle.Normal;
             TextBox.FontWeight = value.Bold ? FontWeight.Bold : FontWeight.Normal;
         }
     }
@@ -821,13 +823,22 @@ public partial class EditNetSpell : GitModuleControl, IDisposable
 
     private void ShowWatermark()
     {
-        _isWatermarkShowing = !TextBox.IsFocused && string.IsNullOrEmpty(TextBox.Text) && _watermarkText.Length > 0;
+        // WinForms switches the inner editor to italic GrayText even for an empty watermark.
+        _isWatermarkShowing = !TextBox.IsFocused && string.IsNullOrEmpty(TextBox.Text);
+        TextBox.Classes.Set("winforms-watermark", _isWatermarkShowing);
+        TextBox.FontStyle = _isWatermarkShowing || _textBoxFont.Italic
+            ? Avalonia.Media.FontStyle.Italic
+            : Avalonia.Media.FontStyle.Normal;
         TextBox.PlaceholderText = _watermarkText;
     }
 
     private void HideWatermark()
     {
         _isWatermarkShowing = false;
+        TextBox.Classes.Set("winforms-watermark", false);
+        TextBox.FontStyle = _textBoxFont.Italic
+            ? Avalonia.Media.FontStyle.Italic
+            : Avalonia.Media.FontStyle.Normal;
     }
 
     private void TextBox_LostFocus(object? sender, RoutedEventArgs e)
