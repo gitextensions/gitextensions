@@ -256,6 +256,15 @@ public sealed class EndToEndCaptureTests
         RepositoryHostCaptureFixture.ResolveBaseRevision(head, ObjectId.IndexId).Should().Be(ObjectId.IndexId);
     }
 
+    [Test]
+    public void View_pull_requests_capture_should_reject_a_repository_without_a_matching_remote()
+    {
+        ComponentFactory.HasRemoteForCurrentSelection(string.Empty, []).Should().BeFalse();
+        ComponentFactory.HasRemoteForCurrentSelection("origin", ["upstream"]).Should().BeFalse();
+        ComponentFactory.HasRemoteForCurrentSelection(string.Empty, ["upstream"]).Should().BeTrue();
+        ComponentFactory.HasRemoteForCurrentSelection("origin", ["upstream", "origin"]).Should().BeTrue();
+    }
+
     [TestCase(120, 959, 678)]
     [TestCase(144, 1147, 806)]
     [TestCase(192, 1524, 1061)]

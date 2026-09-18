@@ -250,9 +250,10 @@ fi
 lsof -a -p "$app_pid" -U >"$connection_log" 2>&1 || true
 
 capture_script=${GITEXTENSIONS_CAPTURE_SCRIPT:-}
+settle_seconds=${GITEXTENSIONS_SMOKE_SETTLE_SECONDS:-8}
 if [[ "$session_host" == "nestedWestonOnWslgX11" ]] \
     && command -v weston-screenshooter >/dev/null 2>&1; then
-    sleep 8
+    sleep "$settle_seconds"
     rm -f -- "$evidence_dir"/wayland-screenshot-*.png
     (
         cd "$evidence_dir"
@@ -278,7 +279,7 @@ elif [[ "$session_host" == "nestedXephyrOnWslgX11" ]] \
         echo "error: no visible X11 window matching 'Git Extensions' appeared" >&2
         exit 1
     fi
-    sleep 8
+    sleep "$settle_seconds"
     xwd_image="$evidence_dir/window.xwd"
     rm -f -- "$xwd_image"
     xwd -silent -id "$window_id" -out "$xwd_image" >"$capture_log" 2>&1
