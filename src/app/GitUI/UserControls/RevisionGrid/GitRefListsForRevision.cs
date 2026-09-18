@@ -35,6 +35,15 @@ internal sealed class GitRefListsForRevision
 
     public IReadOnlyList<IGitRef> BranchesWithNoIdenticalRemotes => _branchesWithNoIdenticalRemotes;
 
+    /// <summary>
+    ///  Returns the local branch which tracks <paramref name="remoteRef"/> and points at this revision,
+    ///  i.e. the branch whose label the remote is condensed into.
+    /// </summary>
+    /// <param name="remoteRef">The remote branch to find the tracking local branch for.</param>
+    /// <returns>The tracking local branch, or <see langword="null"/> if there is none.</returns>
+    public IGitRef? GetTrackingLocalBranch(IGitRef? remoteRef)
+        => remoteRef?.IsRemote is true ? Array.Find(_localBranches, localBranch => localBranch.IsTrackingRemote(remoteRef)) : null;
+
     public IReadOnlyList<string> GetAllBranchNames()
     {
         return Array.ConvertAll(_allBranches, b => b.Name);

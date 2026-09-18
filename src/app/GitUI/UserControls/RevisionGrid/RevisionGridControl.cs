@@ -2243,10 +2243,17 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             (focused && advanced ? tsmiOtherActions.DropDownItems : mainContextMenu.Items).Add(item);
         }
 
+        GitRevision revision = LatestSelectedRevision;
+        GitRefListsForRevision gitRefListsForRevision = new(revision);
+
         IGitRef? clickedRef = _rightClickedHitInfo?.GitRef;
+
+        // A label which is drawn nestled into another one acts on that neighbour, too: an ahead/behind
+        // label resolves to the ref it is attached to, and a tracked remote which is condensed into the
+        // label of its local branch resolves to that local branch.
         string? relatedBranch = clickedRef is NestledVirtualRef
             ? (clickedRef.IsRemote ? clickedRef.Remote + "/" : "") + clickedRef.MergeWith
-            : null;
+            : gitRefListsForRevision.GetTrackingLocalBranch(clickedRef)?.Name;
         _rightClickedHitInfo = null;
         Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefs = clickedRef is null
             ? refs => refs
@@ -2270,8 +2277,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         ContextMenuStrip renameDropDown = new();
         ContextMenuStrip selectInLeftPanelDropDown = new();
 
-        GitRevision revision = LatestSelectedRevision;
-        GitRefListsForRevision gitRefListsForRevision = new(revision);
         _rebaseOnTopOf = null;
 
         foreach (IGitRef head in filterRefs(gitRefListsForRevision.AllTags))

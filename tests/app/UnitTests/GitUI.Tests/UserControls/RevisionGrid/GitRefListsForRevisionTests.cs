@@ -81,4 +81,65 @@ public class GitRefListsForRevisionTests
         GitRefListsForRevision grl = new(_revision);
         grl.GetRenameableLocalBranches().Should().BeEquivalentTo([_refs[1]]);
     }
+
+    [Test]
+    public void GetTrackingLocalBranch_must_return_the_branch_tracking_the_remote()
+    {
+        IGitRef localBranch = CreateLocalBranchTracking("branch1", "origin");
+        IGitRef remoteBranch = CreateRemoteBranch("branch1", "origin");
+        GitRefListsForRevision grl = new(CreateRevision(localBranch, remoteBranch));
+
+        grl.GetTrackingLocalBranch(remoteBranch).Should().BeSameAs(localBranch);
+    }
+
+    [Test]
+    public void GetTrackingLocalBranch_must_return_null_for_an_untracked_remote()
+    {
+        IGitRef localBranch = CreateLocalBranchTracking("branch1", "origin");
+        IGitRef remoteBranch = CreateRemoteBranch("other", "origin");
+        GitRefListsForRevision grl = new(CreateRevision(localBranch, remoteBranch));
+
+        grl.GetTrackingLocalBranch(remoteBranch).Should().BeNull();
+    }
+
+    [Test]
+    public void GetTrackingLocalBranch_must_return_null_for_a_local_branch()
+    {
+        IGitRef localBranch = CreateLocalBranchTracking("branch1", "origin");
+        GitRefListsForRevision grl = new(CreateRevision(localBranch, CreateRemoteBranch("branch1", "origin")));
+
+        grl.GetTrackingLocalBranch(localBranch).Should().BeNull();
+    }
+
+    [Test]
+    public void GetTrackingLocalBranch_must_return_null_if_no_ref_is_given()
+    {
+        GitRefListsForRevision grl = new(_revision);
+
+        grl.GetTrackingLocalBranch(null).Should().BeNull();
+    }
+
+    [Test]
+    public void BranchesWithNoIdenticalRemotes_must_not_contain_a_tracked_remote()
+    {
+        IGitRef localBranch = CreateLocalBranchTracking("branch1", "origin");
+        IGitRef remoteBranch = CreateRemoteBranch("branch1", "origin");
+        GitRefListsForRevision grl = new(CreateRevision(localBranch, remoteBranch));
+
+        grl.BranchesWithNoIdenticalRemotes.Should().BeEquivalentTo([localBranch]);
+    }
+
+    private static GitRevision CreateRevision(params IGitRef[] refs)
+        => new(ObjectId.Random()) { Refs = refs };
+
+    private static IGitRef CreateLocalBranchTracking(string remoteBranchName, string remoteName)
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetEffectiveSetting("branch.local_branch.merge").Returns($"{GitRefName.RefsHeadsPrefix}{remoteBranchName}");
+        module.GetEffectiveSetting("branch.local_branch.remote").Returns(remoteName);
+        return new GitRef(module, ObjectId.Random(), $"{GitRefName.RefsHeadsPrefix}local_branch");
+    }
+
+    private static IGitRef CreateRemoteBranch(string branchName, string remoteName)
+        => new GitRef(Substitute.For<IGitModule>(), ObjectId.Random(), $"{GitRefName.RefsRemotesPrefix}{remoteName}/{branchName}", remoteName);
 }
