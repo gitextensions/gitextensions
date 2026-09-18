@@ -175,6 +175,9 @@ public sealed class RepositoryHostCreatePullRequestTests
         CaptureNode targetRepository = nodes.Single(candidate => candidate.FieldName == "_pullReqTargetsCB");
         CaptureNode sourceBranch = nodes.Single(candidate => candidate.FieldName == "_yourBranchesCB");
         CaptureNode body = nodes.Single(candidate => candidate.FieldName == "_bodyTB");
+        CaptureNode bodyEditorNode = nodes.Single(candidate => candidate.FieldName == "TextBox");
+        TextBox bodyEditor = form.FindControl<GitUI.SpellChecker.EditNetSpell>("_bodyTB")!
+            .FindControl<TextBox>("TextBox")!;
         title.Background.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse(inputBackground));
         group.Classes.Should().Contain("gitextensions-native-group-border");
         groupFrame.BorderBrush.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse("#DCDCDC"));
@@ -194,6 +197,14 @@ public sealed class RepositoryHostCreatePullRequestTests
         targetRepository.Selected.Should().BeFalse();
         targetRepository.BorderWidthDip.Should().BeNull();
         body.TabStop.Should().BeTrue();
+        bodyEditor.Classes.Should().Contain("winforms-watermark");
+        bodyEditor.FontStyle.Should().Be(FontStyle.Italic);
+        bodyEditorNode.Font!.Style.Should().Equal("Italic");
+        if (themeVariant == ThemeVariant.Light)
+        {
+            bodyEditorNode.Colors.Foreground.Should().Be("#FF6D6D6D");
+        }
+
         nodes.Where(candidate => candidate != nodes[0]
                                  && candidate.FieldName is null
                                  && candidate.Name is null)

@@ -76,6 +76,8 @@
                    Text="Body:" />
         <spellChecker:EditNetSpell x:Name="_bodyTB"
                                    Grid.Row="1"
+                                   WatermarkText=""
+                                   Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
                                    Grid.Column="1" />
       </Grid>
     </winformsControls:GroupBox>

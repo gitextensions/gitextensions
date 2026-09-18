@@ -426,7 +426,7 @@ public sealed class RepositoryHostPullRequestTests
         CaptureNode commentsPage = initialNodes.Single(node => node.FieldName == "tabPage2");
         CaptureNode diffLayout = initialNodes.Single(node => node.FieldName == "splitContainer3");
 
-        tabs.BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 0, Width = 754, Height = 359 });
+        tabs.BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 152, Width = 754, Height = 359 });
         tabs.Dock.Should().Be("Fill");
         tabs.TabStop.Should().BeTrue();
         diffPage.BoundsDip.Should().Be(new CaptureRectangleF { X = 4, Y = 30, Width = 746, Height = 325 });
@@ -545,6 +545,34 @@ public sealed class RepositoryHostPullRequestTests
         accessor.HostedRepositories.SelectedIndex.Should().Be(0);
         accessor.PullRequests.ItemCount.Should().Be(1);
         accessor.DiffItems.Should().ContainSingle(item => item.Name == "src/file.txt");
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_transfer_focus_when_loading_disables_the_repository_selector()
+    {
+        IHostedRemote remote = CreateRemote("origin", CreateRepository(CreatePullRequest()));
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetHostedRemotesForModule().Returns([remote]);
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetCurrentRemote().Returns("origin");
+        module.GetRemotesAsync().Returns([]);
+        using ViewPullRequestsForm form = CreateForm(host, module);
+
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+        await form.GetTestAccessor().JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        Dispatcher.UIThread.RunJobs();
+
+        form.FindControl<Button>("_fetchBtn")!.IsFocused.Should().BeTrue();
+        form.FindControl<ComboBox>("_selectHostedRepoCB")!.IsFocused.Should().BeFalse();
+        using (AvaloniaControlStateDriver.Apply(
+                   form,
+                   new CaptureStatePlan { Id = "normal", Kind = CaptureStateKind.Normal }))
+        {
+            form.FindControl<Button>("_fetchBtn")!.IsFocused.Should().BeTrue();
+        }
+
+        form.Close();
     }
 
     [AvaloniaTest]
