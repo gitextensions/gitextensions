@@ -994,6 +994,10 @@ public sealed partial class FileStatusList : GitModuleControl
         {
             _selectedIndexChangeSubscription?.Dispose();
             _diffListSortSubscription?.Dispose();
+
+            // Stop the throttled filtering: a pending callback would otherwise run after the form was
+            // closed and resurrect the handle of the disposed list view.
+            _filterSubscription?.Dispose();
         }
         catch (InvalidOperationException)
         {
@@ -1881,6 +1885,7 @@ public sealed partial class FileStatusList : GitModuleControl
 
     private string _toolTipText = "";
     private readonly Subject<string> _filterSubject = new();
+    private IDisposable? _filterSubscription;
     private Regex? _filter;
 
     public void SetFilter(string value)
@@ -1943,7 +1948,7 @@ public sealed partial class FileStatusList : GitModuleControl
         // TODO this code is very similar to code in FormCommit
         SynchronizationContext? synchronizationContext = SynchronizationContext.Current;
         Validates.NotNull(synchronizationContext);
-        _filterSubject
+        _filterSubscription = _filterSubject
             .Throttle(TimeSpan.FromMilliseconds(250))
             .ObserveOn(synchronizationContext)
             .Subscribe(
