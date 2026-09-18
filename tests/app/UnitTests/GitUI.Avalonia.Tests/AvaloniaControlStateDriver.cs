@@ -102,6 +102,13 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
     private void FocusSourceDefault()
     {
+        // The original pull-request form moves focus during its asynchronous repository load.
+        // Its settled normal state must retain that focus rather than restart tab navigation.
+        if (_root.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm")
+        {
+            return;
+        }
+
         object? preferred = _root.GetType().FullName switch
         {
             "GitExtensions.Plugins.Gource.GourceStart" => FindFieldValue(_root, "button1"),

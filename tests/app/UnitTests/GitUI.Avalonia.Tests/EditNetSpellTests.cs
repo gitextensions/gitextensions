@@ -114,7 +114,16 @@ public sealed class EditNetSpellTests
     [AvaloniaTest]
     public async Task EditNetSpell_should_execute_the_original_ignore_remove_and_edit_menu_actions()
     {
-        WinFormsShims.IClipboard originalClipboard = WinFormsShims.ShimHost.Clipboard;
+        WinFormsShims.IClipboard? originalClipboard;
+        try
+        {
+            originalClipboard = WinFormsShims.ShimHost.Clipboard;
+        }
+        catch (InvalidOperationException)
+        {
+            originalClipboard = null;
+        }
+
         RecordingClipboard clipboard = new();
         WinFormsShims.ShimHost.Clipboard = clipboard;
         EditNetSpell control = new();
@@ -177,7 +186,7 @@ public sealed class EditNetSpellTests
         }
         finally
         {
-            WinFormsShims.ShimHost.Clipboard = originalClipboard;
+            WinFormsShims.ShimHost.Clipboard = originalClipboard!;
             window.Close();
         }
     }

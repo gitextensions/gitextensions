@@ -11,8 +11,12 @@
         MinWidth="620"
         MinHeight="420"
         WindowStartupLocation="CenterOwner"
+        Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
         Title="View Pull Requests">
   <Window.Styles>
+    <Style Selector="TextBlock#lblSplitter">
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
     <Style Selector="ComboBox#_selectHostedRepoCB:disabled">
       <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
