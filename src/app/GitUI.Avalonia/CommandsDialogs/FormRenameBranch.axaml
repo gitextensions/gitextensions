@@ -16,7 +16,7 @@
              Canvas.Left="72" Canvas.Top="9"
              Width="344" Height="23" />
     <Button x:Name="Ok"
-            Classes="gitextensions-dialog-action"
+            Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
             Canvas.Left="422" Canvas.Top="7"
             Width="59" Height="28" MinWidth="0"
             Content="Rename"

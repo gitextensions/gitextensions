@@ -12,7 +12,7 @@
           Classes="gitextensions-dialog-controls"
           DockPanel.Dock="Bottom"
           Height="41">
-      <Button x:Name="Ok" Classes="gitextensions-dialog-action"
+      <Button x:Name="Ok" Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
               Margin="0,8,13,8" Width="75" Height="25"
               HorizontalAlignment="Right"
               Content="_Checkout" IsDefault="True" />

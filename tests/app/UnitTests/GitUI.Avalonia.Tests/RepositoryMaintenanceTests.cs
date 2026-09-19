@@ -1,13 +1,19 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
+using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Compat;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -41,6 +47,48 @@ public sealed class RepositoryMaintenanceTests
 
         // RemoveAll is checked by default, mirroring the original.
         accessor.RemoveAll.IsChecked.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    [Category("P8_6i")]
+    public void FormCleanupRepository_readonly_preview_should_use_the_source_control_background()
+    {
+        AvaloniaThemeResources.Apply(Application.Current!, ThemeModule.Settings);
+        FormCleanupRepository form = new() { RequestedThemeVariant = ThemeVariant.Light };
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            SolidColorBrush background = form.GetTestAccessor().PreviewOutput.Background.Should()
+                .BeOfType<SolidColorBrush>().Which;
+            form.TryFindResource("GitExtensionsCleanupPreviewBackgroundBrush", form.ActualThemeVariant, out object? previewResource)
+                .Should().BeTrue();
+            background.Color.Should().Be(previewResource.Should().BeOfType<SolidColorBrush>().Which.Color);
+
+            Border previewBorder = form.GetTestAccessor().PreviewOutput.GetVisualDescendants()
+                .OfType<Border>().Single(border => border.Name == "PART_BorderElement");
+            previewBorder.Background.Should().BeOfType<SolidColorBrush>().Which.Color
+                .Should().Be(background.Color);
+
+            TextBox include = form.FindControl<TextBox>("textBoxIncludePaths")!;
+            include.IsEnabled = false;
+            Dispatcher.UIThread.RunJobs();
+            Border includeBorder = include.GetVisualDescendants()
+                .OfType<Border>().Single(border => border.Name == "PART_BorderElement");
+            form.TryFindResource("GitExtensionsWindowBackgroundBrush", form.ActualThemeVariant, out object? windowResource)
+                .Should().BeTrue();
+            includeBorder.Background.Should().BeOfType<SolidColorBrush>().Which.Color
+                .Should().Be(windowResource.Should().BeOfType<SolidColorBrush>().Which.Color);
+
+            Button addPath = form.FindControl<Button>("AddInclusivePath")!;
+            Border buttonChrome = addPath.GetVisualDescendants()
+                .OfType<Border>().Single(border => border.Name == "PART_NativeButtonChrome");
+            buttonChrome.CornerRadius.Should().Be(new CornerRadius(4));
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]

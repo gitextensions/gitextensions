@@ -250,7 +250,10 @@ fi
 lsof -a -p "$app_pid" -U >"$connection_log" 2>&1 || true
 
 capture_script=${GITEXTENSIONS_CAPTURE_SCRIPT:-}
-settle_seconds=${GITEXTENSIONS_SMOKE_SETTLE_SECONDS:-8}
+# Native Wayland can load its backend several seconds before the first product surface is
+# committed. Keep the default beyond that startup window so a compositor-only frame cannot
+# be mistaken for application evidence.
+settle_seconds=${GITEXTENSIONS_SMOKE_SETTLE_SECONDS:-25}
 if [[ "$session_host" == "nestedWestonOnWslgX11" ]] \
     && command -v weston-screenshooter >/dev/null 2>&1; then
     sleep "$settle_seconds"
