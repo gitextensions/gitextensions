@@ -1,4 +1,5 @@
 ﻿using CommonTestUtils;
+using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 
@@ -49,6 +50,24 @@ public class FormCloneTests
                     url.Should().Be(expectedUrl);
                 }
             });
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public void Initializing_the_submodules_must_be_preset_as_it_was_chosen_before(bool initializeSubmodules)
+    {
+        bool originalSetting = AppSettings.CloneInitializeAllSubmodules;
+
+        try
+        {
+            AppSettings.CloneInitializeAllSubmodules = initializeSubmodules;
+
+            RunFormTest(form => form.GetTestAccessor().InitializeAllSubmodules.Checked.Should().Be(initializeSubmodules));
+        }
+        finally
+        {
+            AppSettings.CloneInitializeAllSubmodules = originalSetting;
+        }
     }
 
     private void RunFormTest(Action<FormClone> testDriver)

@@ -221,6 +221,8 @@ public partial class FormClone : GitExtensionsDialog
             // currently open module which may live on a different subsystem.
             IGitUICommands destUICommands = UICommands.WithWorkingDirectory(dirTo);
 
+            AppSettings.CloneInitializeAllSubmodules = cbIntializeAllSubmodules.Checked;
+
             ArgumentString cloneCmd = Commands.Clone(_NO_TRANSLATE_From.Text,
                 dirTo,
                 destUICommands.Module.GetPathForGitExecution,
@@ -314,6 +316,8 @@ public partial class FormClone : GitExtensionsDialog
         {
             LoadSSHKey.Visible = false;
         }
+
+        cbIntializeAllSubmodules.Checked = AppSettings.CloneInitializeAllSubmodules;
     }
 
     private void FromSelectedIndexChanged(object sender, EventArgs e)
@@ -514,6 +518,7 @@ public partial class FormClone : GitExtensionsDialog
             _form = form;
         }
 
+        public CheckBox InitializeAllSubmodules => _form.cbIntializeAllSubmodules;
         public bool TryExtractUrl(string text, out string url) => FormClone.TryExtractUrl(text, out url);
     }
 }
