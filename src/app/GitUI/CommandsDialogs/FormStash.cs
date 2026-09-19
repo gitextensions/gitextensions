@@ -44,7 +44,11 @@ public sealed partial class FormStash : GitModuleForm
     {
         KeyPreview = true;
         View.EscapePressed += () => DialogResult = DialogResult.Cancel;
-        splitContainer1.SplitterDistance = DpiUtil.Scale(280);
+
+        // The buttons and the check boxes above them have to fit even when the Windows accessibility
+        // text size enlarges the system font without changing the DPI, which DpiUtil cannot see.
+        // Keep the scaled width as a lower bound, so that the layout tuned for high DPI is preserved.
+        splitContainer1.SplitterDistance = Math.Max(DpiUtil.Scale(280), tableLayoutPanel1.GetPreferredSize(Size.Empty).Width);
         InitializeComplete();
     }
 
