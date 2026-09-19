@@ -190,6 +190,7 @@ public class MultiSelectTreeView : NativeTreeView
     protected override void OnMouseDown(MouseEventArgs e)
     {
         Keys modifierKeys = ModifierKeys;
+        TreeNode? clickedNode = HitTest(e.Location).Node;
 
         if (e.Button != MouseButtons.Left
 
@@ -197,12 +198,21 @@ public class MultiSelectTreeView : NativeTreeView
             || (modifierKeys | Keys.Control | Keys.Shift) != (Keys.Control | Keys.Shift)
 
             // or no node clicked
-            || HitTest(e.Location).Node is not TreeNode newFocusedNode
+            || clickedNode is not TreeNode newFocusedNode
 
             // or starting drag operation
             || (_selectedNodes.Contains(newFocusedNode) && modifierKeys == Keys.None && !ShallHandleRootIconClick(e.X, newFocusedNode, modifierKeys)))
         {
             _mouseClickHandled = false;
+
+            // Clicking beside the items clears the selection, as the list which this tree replaced did
+            if (e.Button == MouseButtons.Left && modifierKeys == Keys.None && clickedNode is null && _selectedNodes.Count > 0)
+            {
+                _selectedNodes = [];
+                Invalidate();
+                OnSelectionChanged();
+            }
+
             base.OnMouseDown(e);
             return;
         }
@@ -372,5 +382,20 @@ public class MultiSelectTreeView : NativeTreeView
         {
             Invalidate();
         }
+    }
+
+    internal TestAccessor GetTestAccessor()
+        => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly MultiSelectTreeView _treeView;
+
+        public TestAccessor(MultiSelectTreeView treeView)
+        {
+            _treeView = treeView;
+        }
+
+        public void OnMouseDown(MouseEventArgs e) => _treeView.OnMouseDown(e);
     }
 }
