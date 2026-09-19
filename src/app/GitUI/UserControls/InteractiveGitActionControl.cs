@@ -39,6 +39,12 @@ public partial class InteractiveGitActionControl : GitModuleControl
         InitializeComponent();
         BackColor.AdaptBackColor();
         InitializeComplete();
+
+        // The buttons are laid out by the docked ButtonContainer, which is as high as this control
+        // and no higher, so the captions would be cut off unless the height the buttons need is
+        // reserved here. Measuring covers an enlarged system font as well, which the DPI scaling
+        // of the designer values does not see.
+        MinimumSize = new Size(0, ButtonContainer.GetPreferredSize(Size.Empty).Height);
     }
 
     // It is possible for a repo to be in a middle of a bisect operation and
