@@ -14,7 +14,7 @@
           DockPanel.Dock="Bottom"
           Height="41">
       <Button x:Name="Delete"
-              Classes="gitextensions-dialog-action"
+              Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
               Margin="0,8,13,8"
               Width="75" Height="25"
               HorizontalAlignment="Right"

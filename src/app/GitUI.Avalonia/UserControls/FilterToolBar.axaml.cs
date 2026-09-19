@@ -103,8 +103,6 @@ internal sealed partial class FilterToolBar : TranslatedControl
             .ToList();
         RefreshRevisionFilterItems();
 
-        ToolTip.SetTip(tsbShowReflog, TranslatedStrings.ShowReflogTooltip);
-        ToolTip.SetTip(tsmiShowOnlyFirstParent, TranslatedStrings.ShowOnlyFirstParent);
         SetBranchMode(tsmiShowBranchesAll, Properties.Images.BranchLocal);
         InitializeComplete();
         _advancedFilterToolTip = ToolTip.GetTip(tsbtnAdvancedFilter)?.ToString() ?? string.Empty;

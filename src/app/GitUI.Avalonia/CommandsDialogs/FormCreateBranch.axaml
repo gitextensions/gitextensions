@@ -16,7 +16,7 @@
           DockPanel.Dock="Bottom"
           Height="41">
       <compat:IconButton x:Name="cmdOk"
-                         Classes="gitextensions-dialog-action"
+                         Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                          Margin="0,8,13,8"
                          Width="107" Height="25"
                          HorizontalAlignment="Right"

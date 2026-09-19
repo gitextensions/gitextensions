@@ -582,6 +582,16 @@
     <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
     <Setter Property="BorderThickness" Value="0" />
   </Style>
+  <Style Selector="TextBox.gitextensions-stash-message /template/ Border#PART_BorderElement">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsKnownColorInfoBrush}" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="TextBox.gitextensions-cleanup-preview /template/ Border#PART_BorderElement">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsCleanupPreviewBackgroundBrush}" />
+  </Style>
+  <Style Selector="TextBox.gitextensions-cleanup-path-input:disabled /template/ Border#PART_BorderElement">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+  </Style>
   <Style Selector="ComboBox">
     <Setter Property="Theme" Value="{StaticResource GitExtensionsNativeComboBoxTheme}" />
     <Setter Property="MinHeight" Value="23" />
@@ -1471,7 +1481,7 @@
     <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeButtonPointerOverBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeButtonPointerOverBorderBrush}" />
   </Style>
-  <Style Selector="Button.gitextensions-native-dialog-action:focus /template/ Border#PART_NativeButtonChrome">
+  <Style Selector="Button.gitextensions-native-dialog-action:focus:not(:pointerover) /template/ Border#PART_NativeButtonChrome">
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
   </Style>
   <Style Selector="Button.gitextensions-native-dialog-action:pressed /template/ Border#PART_NativeButtonChrome">
