@@ -1194,7 +1194,7 @@ public partial class FileViewer : GitModuleControl
 
                 // Added files, i.e. new or copied ones: patching only applies for an artificial
                 // revision, or if the file does not exist
-                || ((item?.Item.IsAdded ?? false)
+                || (item?.Item.IsAdded is true
                     && ((item.Item.Staged is StagedStatus.WorkTree or StagedStatus.Index)
                         || !File.Exists(_fullPathResolver.Resolve(fileName)))))
 
