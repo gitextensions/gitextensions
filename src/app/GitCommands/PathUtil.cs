@@ -416,28 +416,46 @@ public static partial class PathUtil
         return false;
     }
 
+    /// <summary>
+    ///  Looks for a shell in an installation of Git for Windows.
+    /// </summary>
+    /// <param name="gitDir">The installation directory of Git for Windows.</param>
+    /// <param name="shell">The file name of the shell, e.g. <c>sh.exe</c>.</param>
+    /// <param name="shellPath">The path of the shell, if it was found.</param>
+    /// <returns><see langword="true"/> if the shell was found; otherwise <see langword="false"/>.</returns>
+    internal static bool TryFindShellInGitDir(string gitDir, string shell, [NotNullWhen(returnValue: true)] out string? shellPath)
+    {
+        // git-bash.exe sits in the installation directory itself, while sh.exe and bash.exe are
+        // shipped below it - so looking in the installation directory alone never finds them, and
+        // an unrelated shell which happens to be in the PATH would be preferred over the one which
+        // belongs to the configured Git.
+        foreach (string dir in new[] { gitDir, Path.Join(gitDir, "bin"), Path.Join(gitDir, "usr", "bin") })
+        {
+            shellPath = Path.Join(dir, shell);
+            if (File.Exists(shellPath))
+            {
+                return true;
+            }
+        }
+
+        shellPath = null;
+        return false;
+    }
+
     public static bool TryFindShellPath(string shell, [NotNullWhen(returnValue: true)] out string? shellPath)
     {
         try
         {
             string? programW6432 = EnvironmentAbstraction.GetEnvironmentVariable("ProgramW6432");
-            if (!string.IsNullOrEmpty(programW6432))
+            if (!string.IsNullOrEmpty(programW6432) && TryFindShellInGitDir(Path.Join(programW6432, "Git"), shell, out shellPath))
             {
-                shellPath = Path.Join(programW6432, "Git", shell);
-                if (File.Exists(shellPath))
-                {
-                    return true;
-                }
+                return true;
             }
 
             string programFilesX86 = EnvironmentAbstraction.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
-            if (!string.IsNullOrEmpty(programFilesX86))
+            if (!string.IsNullOrEmpty(programFilesX86) && TryFindShellInGitDir(Path.Join(programFilesX86, "Git"), shell, out shellPath))
             {
-                shellPath = Path.Join(programFilesX86, "Git", shell);
-                if (File.Exists(shellPath))
-                {
-                    return true;
-                }
+                return true;
             }
 
             string linuxToolsDir = AppSettings.LinuxToolsDir;
