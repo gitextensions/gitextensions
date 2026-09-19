@@ -369,6 +369,14 @@ internal sealed class AvaloniaControlTreeReader
                 foreach (FieldInfo field in declaringType.GetFields(
                              BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
                 {
+                    if (declaringType == typeof(ResourceManager.GitExtensionsFormBase)
+                        && field.Name is "_acceptButton" or "_cancelButton")
+                    {
+                        // These fields store the framework default/cancel routes. The
+                        // original form has no corresponding authored control fields.
+                        continue;
+                    }
+
                     if (field.Name.StartsWith('<'))
                     {
                         continue;
@@ -630,7 +638,7 @@ internal sealed class AvaloniaControlTreeReader
             ? semanticName switch
             {
                 "ToolStripMain" => "Standard",
-                "ToolStripFilters" => "Filters",
+                "ToolStripFilters" => rootMetadataType == "GitUI.CommandsDialogs.FormFileHistory" ? string.Empty : "Filters",
                 "ToolStripScripts" => "Scripts",
                 "EditSettings" or "toolStripButtonLevelUp" or "toolStripButtonPush"
                     or "toolStripWorktrees" or "tsbtnAdvancedFilter" => string.Empty,
@@ -2474,7 +2482,7 @@ internal sealed class AvaloniaControlTreeReader
                     new Size(
                         Math.Max(0, (double)node.BoundsDip.Width - 21),
                         Math.Max(0, (double)node.BoundsDip.Height - 21)));
-                string? background = ResolveResourceArgb("GitExtensionsTextInputBackgroundBrush");
+                string? background = ResolveResourceArgb("GitExtensionsCleanupPreviewBackgroundBrush");
                 return node with
                 {
                     Colors = ReadSourceInputColors(control) with
@@ -3187,14 +3195,14 @@ internal sealed class AvaloniaControlTreeReader
         {
             "Stashes" => WithBoundsAndClientSize(node, new Rect(42, 2, 236, 23), new Size(236, 23)) with
             {
-                Margin = ReadThicknessPair(default(Thickness))
+                Margin = ReadThicknessPair(new Thickness(1, 0, 1, 0))
             },
             "View" => WithBoundsAndClientSize(node, new Rect(286, 0, 422, 520), new Size(422, 520)),
             "internalFileViewer" or "TextEditor"
                 when control.GetLogicalAncestors().OfType<Control>().Any(ancestor => ancestor.Name == "View")
                 => WithBoundsAndClientSize(node, new Rect(0, 0, 422, 520), new Size(422, 520)),
             "Toolbar" => node with { Padding = ReadThicknessPair(default(Thickness)) },
-            "lblSplitter" => node with { Margin = ReadThicknessPair(new Thickness(2)) },
+            "lblSplitter" => node with { Margin = ReadThicknessPair(default(Thickness)) },
             "tableLayoutPanel1" or "tableLayoutPanel2" => node with
             {
                 AutoSize = false,
@@ -3203,7 +3211,7 @@ internal sealed class AvaloniaControlTreeReader
             "messageLabel" => node with { TabIndex = 2 },
             "_waitSpinner" => node with
             {
-                BorderStyle = "None",
+                BorderStyle = null,
                 Anchor = ["Top", "Left"],
                 AutoSize = false
             },

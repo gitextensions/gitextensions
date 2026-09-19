@@ -1,12 +1,16 @@
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Text;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -16,6 +20,8 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.Compat;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -104,6 +110,41 @@ public sealed class StashTests
         });
 
         form.DialogResult.Should().Be(GitExtensions.Shims.WinForms.DialogResult.Cancel);
+    }
+
+    [AvaloniaTest]
+    [Category("P8_6i")]
+    public void FormStash_message_should_keep_source_info_background_when_focused()
+    {
+        AvaloniaThemeResources.Apply(Application.Current!, ThemeModule.Settings);
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        module.GetStashes(false).Returns([]);
+        module.GetAllChangedFiles().Returns([]);
+        module.RevParse("HEAD").Returns(HeadId);
+
+        FormStash form = new(commands) { RequestedThemeVariant = ThemeVariant.Light };
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            TextBox message = form.StashMessage;
+            message.Focus();
+            Dispatcher.UIThread.RunJobs();
+
+            Border border = message.GetVisualDescendants()
+                .OfType<Border>().Single(item => item.Name == "PART_BorderElement");
+            border.Background.Should().BeOfType<SolidColorBrush>().Which.Color
+                .Should().Be(Color.FromRgb(255, 255, 225));
+            border.BorderThickness.Should().Be(default(Thickness));
+
+            Border buttonChrome = form.Stash.GetVisualDescendants()
+                .OfType<Border>().Single(item => item.Name == "PART_NativeButtonChrome");
+            buttonChrome.CornerRadius.Should().Be(new CornerRadius(4));
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]
