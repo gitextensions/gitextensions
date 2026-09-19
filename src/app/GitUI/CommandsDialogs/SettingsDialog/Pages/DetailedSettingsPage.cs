@@ -28,9 +28,9 @@ public partial class DetailedSettingsPage : DistributedSettingsPage
     {
         gbRevisionGraph.Enabled = GetCurrentSettings().SettingLevel == SettingLevel.Global;
 
-        chkMergeGraphLanesHavingCommonParent.Checked = AppSettings.MergeGraphLanesHavingCommonParent.Value;
-        chkRenderGraphWithDiagonals.Checked = AppSettings.RenderGraphWithDiagonals.Value;
-        chkStraightenGraphDiagonals.Checked = AppSettings.StraightenGraphDiagonals.Value;
+        chkMergeGraphLanesHavingCommonParent.Checked = AppSettings.MergeGraphLanesHavingCommonParent;
+        chkRenderGraphWithDiagonals.Checked = AppSettings.RenderGraphWithDiagonals;
+        chkStraightenGraphDiagonals.Checked = AppSettings.StraightenGraphDiagonals;
 
         foreach (ISettingControlBinding controlBinding in _controlBindings)
         {
