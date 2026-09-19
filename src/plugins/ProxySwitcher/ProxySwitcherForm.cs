@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -121,11 +122,17 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
 
     private void UnsetProxy_Button_Click(object sender, EventArgs e)
     {
-        string arguments = ApplyGlobally_CheckBox.Checked
-            ? "config --global --unset http.proxy"
-            : "config --unset http.proxy";
-
-        _gitCommands.GitExecutable.GetOutput(arguments);
+        // Git exits with code 5 when the setting does not exist at the level it is unset at, which
+        // SetGitSetting tolerates - unlike a bare "git config --unset". Unsetting locally goes through
+        // the module, so that the effective settings it caches are invalidated as well.
+        if (ApplyGlobally_CheckBox.Checked)
+        {
+            _gitCommands.GitExecutable.SetGitSetting(GitSettingLevel.Global, "http.proxy", value: null, append: false);
+        }
+        else
+        {
+            _gitCommands.UnsetSetting("http.proxy");
+        }
 
         RefreshProxy();
     }
