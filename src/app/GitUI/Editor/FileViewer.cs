@@ -198,6 +198,10 @@ public partial class FileViewer : GitModuleControl
             Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
             DefaultButton = TaskDialogButton.Yes,
             SizeToContent = true,
+
+            // Yes and No alone do not make the dialog cancelable, so Esc and the title bar's close
+            // button would be ignored. Cancelling is evaluated as declining below.
+            AllowCancel = true,
         };
 
         PictureBox.PaintFailed += (_, ex) => this.InvokeAndForget(() =>
@@ -1754,7 +1758,8 @@ public partial class FileViewer : GitModuleControl
             return;
         }
 
-        if (TaskDialog.ShowDialog(Handle, _NO_TRANSLATE_resetSelectedLinesConfirmationDialog) == TaskDialogButton.No)
+        // Reset only on an explicit confirmation, so that cancelling declines the destructive action
+        if (TaskDialog.ShowDialog(Handle, _NO_TRANSLATE_resetSelectedLinesConfirmationDialog) != TaskDialogButton.Yes)
         {
             return;
         }
