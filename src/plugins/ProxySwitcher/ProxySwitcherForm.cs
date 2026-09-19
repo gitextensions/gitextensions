@@ -123,11 +123,14 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
     private void UnsetProxy_Button_Click(object sender, EventArgs e)
     {
         // Git exits with code 5 when the setting does not exist at the level it is unset at, which
-        // SetGitSetting tolerates - unlike a bare "git config --unset". Unsetting locally goes through
-        // the module, so that the effective settings it caches are invalidated as well.
+        // SetGitSetting tolerates - unlike a bare "git config --unset".
         if (ApplyGlobally_CheckBox.Checked)
         {
             _gitCommands.GitExecutable.SetGitSetting(GitSettingLevel.Global, "http.proxy", value: null, append: false);
+
+            // Writing the global setting directly does not invalidate the effective settings which
+            // the module caches, so the dialog would show the proxy which was just removed.
+            _gitCommands.InvalidateGitSettings();
         }
         else
         {
