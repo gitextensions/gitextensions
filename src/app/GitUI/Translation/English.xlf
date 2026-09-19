@@ -7187,6 +7187,10 @@ The file has been deleted locally ({1}) but modified remotely ({2}).
 Choose to delete the file or keep the modified version.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_fileDeletedLocallyAndRemotely.Text">
+        <source>The file has been deleted both locally ({0}) and remotely ({1}).</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_fileIsBinary.Text">
         <source>The selected file appears to be a binary file.
 Are you sure you want to open this file in {0}?</source>
