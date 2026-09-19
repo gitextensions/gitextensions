@@ -133,6 +133,19 @@ public sealed class FileHistoryTests
     }
 
     [AvaloniaTest]
+    [Category("P8_6i")]
+    public void Filter_toolbar_should_defer_revision_shortcut_tooltips_and_keep_toolstrip_combo_margins()
+    {
+        GitUI.UserControls.FilterToolBar toolbar = new();
+        GitUI.UserControls.FilterToolBar.TestAccessor controls = toolbar.GetTestAccessor();
+
+        ToolTip.GetTip(controls.ShowReflog).Should().BeNull();
+        ToolTip.GetTip(controls.ShowOnlyFirstParent).Should().BeNull();
+        controls.BranchFilter.Margin.Should().Be(new Avalonia.Thickness(1, 0, 1, 0));
+        controls.RevisionFilter.Margin.Should().Be(new Avalonia.Thickness(1, 0, 1, 0));
+    }
+
+    [AvaloniaTest]
     public void FormFileHistory_should_expose_and_execute_the_original_git_command_log_toolbar_command()
     {
         FormGitCommandLog.TestAccessor.OpenInstance?.Close();

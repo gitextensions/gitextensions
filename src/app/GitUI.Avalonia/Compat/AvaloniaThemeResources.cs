@@ -264,6 +264,7 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsTextInputBackgroundBrush", textInputBackground);
         SetBrush(resources, "GitExtensionsDialogControlsBackgroundBrush", dialogControlsBackground);
         SetBrush(resources, "GitExtensionsReadOnlyTextInputBackgroundBrush", readOnlyTextInputBackground);
+        SetBrush(resources, "GitExtensionsCleanupPreviewBackgroundBrush", isDark ? controlLight : control);
         SetBrush(resources, "GitExtensionsDataGridViewGridLineBrush", dataGridViewGridLine);
         SetBrush(resources, "GitExtensionsNativeGroupBoxBorderBrush", nativeGroupBoxBorder);
         SetBrush(resources, "GitExtensionsNativeButtonBackgroundBrush", nativeButtonBackground);

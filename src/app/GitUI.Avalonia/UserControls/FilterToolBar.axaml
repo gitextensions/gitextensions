@@ -48,6 +48,7 @@
     <compat:ToolbarComboBox x:Name="tscboBranchFilter"
                             Width="100"
                             Height="23"
+                            Margin="1,0,1,0"
                             IsEditable="True" />
     <compat:IconDropDownButton x:Name="tsddbtnBranchFilter"
                                compat:TranslationCompat.UseToolTipText="True"
@@ -72,6 +73,7 @@
     <compat:ToolbarComboBox x:Name="tstxtRevisionFilter"
                             Width="100"
                             Height="23"
+                            Margin="1,0,1,0"
                             IsEditable="True" />
     <compat:IconDropDownButton x:Name="tsddbtnRevisionFilter"
                                compat:TranslationCompat.UseToolTipText="True"
