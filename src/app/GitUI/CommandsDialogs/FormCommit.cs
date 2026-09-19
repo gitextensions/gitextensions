@@ -1655,6 +1655,16 @@ public sealed partial class FormCommit : GitModuleForm
                     }
 
                     item.IsTracked = !item.IsNew || item.IsChanged || item.IsDeleted;
+
+                    if (!item.IsTracked)
+                    {
+                        // The item is reused instead of being re-read from git-status, which reports a
+                        // no longer tracked path as a plain untracked directory, without the submodule
+                        // information it supplies for a staged one. Drop the stale flag, so that the
+                        // item does not offer submodule actions until the next rescan removes them anyway.
+                        item.IsSubmodule = false;
+                    }
+
                     int index = unstagedFiles.FindIndex(i => i.Name == item.Name);
 
                     if (index >= 0)
@@ -2902,6 +2912,8 @@ public sealed partial class FormCommit : GitModuleForm
         internal Button ResetSoft => _formCommit.ResetSoft;
 
         internal void RescanChanges() => _formCommit.RescanChanges();
+
+        internal void Unstage() => _formCommit.Unstage();
 
         internal (string message, int selectionStart) PrefixOrReplaceKeyword(string keyword)
             => _formCommit.PrefixOrReplaceKeyword(keyword);
