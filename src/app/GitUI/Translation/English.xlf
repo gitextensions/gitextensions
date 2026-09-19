@@ -9234,7 +9234,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="txtCommitGpgInfo.Text">
-        <source>Commit is not signed</source>
+        <source>Loading data...</source>
         <target />
       </trans-unit>
     </body>

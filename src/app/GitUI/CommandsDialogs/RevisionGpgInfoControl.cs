@@ -16,7 +16,7 @@ public partial class RevisionGpgInfoControl : GitModuleControl
         InitializeComponent();
         InitializeComplete();
 
-        DisplayGpgInfo(null);
+        DisplayVerificationPending();
     }
 
     public void DisplayGpgInfo(GpgInfo? info)
@@ -114,28 +114,60 @@ public partial class RevisionGpgInfoControl : GitModuleControl
                     break;
             }
         }
+    }
 
-        void ApplyLayout()
+    /// <summary>
+    ///  Indicates that the signature is still being verified, so that neither the result for the
+    ///  previously displayed revision nor the default "not signed" is presented as verified.
+    /// </summary>
+    public void DisplayVerificationPending()
+    {
+        commitSignPicture.Visible = false;
+        txtCommitGpgInfo.Text = TranslatedStrings.LoadingData;
+        tagSignPicture.Visible = false;
+
+        /* This hides the Tag row in ApplyLayout */
+        txtTagGpgInfo.Visible = false;
+
+        ApplyLayout();
+    }
+
+    private void ApplyLayout()
+    {
+        float heightRowCommit;
+        float heightRowTag;
+
+        if (txtTagGpgInfo.Visible)
         {
-            float heightRowCommit;
-            float heightRowTag;
-
-            if (txtTagGpgInfo.Visible)
-            {
-                heightRowCommit = 50f;
-                heightRowTag = 50f;
-            }
-            else
-            {
-                heightRowCommit = 100f;
-                heightRowTag = 0f;
-            }
-
-            tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Percent;
-            tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Percent;
-
-            tableLayoutPanel1.RowStyles[0].Height = heightRowCommit;
-            tableLayoutPanel1.RowStyles[1].Height = heightRowTag;
+            heightRowCommit = 50f;
+            heightRowTag = 50f;
         }
+        else
+        {
+            heightRowCommit = 100f;
+            heightRowTag = 0f;
+        }
+
+        tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Percent;
+        tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Percent;
+
+        tableLayoutPanel1.RowStyles[0].Height = heightRowCommit;
+        tableLayoutPanel1.RowStyles[1].Height = heightRowTag;
+    }
+
+    internal TestAccessor GetTestAccessor()
+        => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly RevisionGpgInfoControl _control;
+
+        public TestAccessor(RevisionGpgInfoControl control)
+        {
+            _control = control;
+        }
+
+        public string CommitGpgInfoText => _control.txtCommitGpgInfo.Text;
+        public bool CommitSignPictureVisible => _control.commitSignPicture.Visible;
     }
 }
