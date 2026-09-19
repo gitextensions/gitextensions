@@ -84,11 +84,10 @@ internal sealed class RevisionGridToolTipProvider
             string newText = GetToolTipText(revision, highlightRef);
             if (_toolTip.GetToolTip(_gridView) != newText)
             {
-                // The whole grid is registered as a single tooltip "tool", so Windows neither refreshes
-                // nor re-shows the tooltip while the pointer stays inside the grid: a tooltip which is
-                // currently displayed would keep the outdated text until AutoPopDelay elapses.
-                // Deactivating closes it, the activation below shows the new text again.
-                _toolTip.Active = false;
+                // Do not deactivate the tooltip to force it to be shown again: deactivating resets its
+                // state, so the new text would only appear once the initial delay elapsed - and as the
+                // graph column builds its text for every hovered pixel, that delay would restart with
+                // nearly every mouse move. Windows updates the text of a displayed tooltip in place.
                 _toolTip.SetToolTip(_gridView, newText);
             }
 
