@@ -65,6 +65,11 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
         if (TabControl.SelectedTab == tabPageCommandLog)
         {
             RefreshListBox(LogItems, CommandLog.Commands.ToArray());
+
+            // Commands are frequently run synchronously from the UI thread, which blocks the message
+            // loop and thus the paint of the list. Repaint it right away instead, so that a command
+            // is listed while it runs rather than once it finished.
+            LogItems.Update();
         }
     }
 
