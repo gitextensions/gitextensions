@@ -26,6 +26,13 @@ public sealed record GitWorktree(
     bool IsDeleted)
 {
     /// <summary>
+    /// <see langword="true"/> for the main worktree, which <c>git worktree list</c> always reports
+    /// first. Git refuses to remove it even with <c>--force</c>, because its directory holds the
+    /// repository itself.
+    /// </summary>
+    public bool IsMain { get; init; }
+
+    /// <summary>
     /// Formats a display name by combining <paramref name="name"/> with the branch, detached HEAD, or bare status.
     /// </summary>
     /// <param name="name">The name portion to display (e.g. directory name or relative path).</param>

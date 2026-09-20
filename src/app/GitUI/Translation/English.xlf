@@ -10302,6 +10302,12 @@ Select this commit to populate the full message.</source>
         <source>{0:Delete file|Delete files}</source>
         <target />
       </trans-unit>
+      <trans-unit id="_deleteMainWorktreeRefused.Text">
+        <source>{0} is the main worktree of the repository.
+
+Deleting it would delete the repository itself, with all of its branches and stashes, so git refuses to remove it as well.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_deleteWorktreeCaption.Text">
         <source>Delete worktree</source>
         <target />
