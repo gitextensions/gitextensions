@@ -560,6 +560,40 @@ public class FormCommitTests
     }
 
     [Test]
+    public void MainSplitter_remembers_distance_of_a_window_larger_than_its_design_time_size()
+    {
+        // The design time width of the dialog, see FormCommit.Designer.cs. The window has to become
+        // wider than this, because a distance stored for a window of the design time size is valid
+        // whenever it is restored, which would make this test pass without telling anything.
+        const int designTimeWidth = 918;
+
+        int distance = 0;
+
+        RunFormTest(form =>
+        {
+            SplitContainer splitter = form.GetTestAccessor().MainSplitter;
+
+            form.WindowState = FormWindowState.Maximized;
+            Application.DoEvents();
+            splitter.Width.Should().BeGreaterThan(designTimeWidth, "the screen must offer more than the design time size");
+
+            // Leave the left side wide, as reported: only such a distance is out of the range which
+            // is valid while the form still has its design time size.
+            distance = splitter.Width - splitter.Panel2MinSize - 50;
+            splitter.SplitterDistance = distance;
+            splitter.SplitterDistance.Should().Be(distance, "the distance must fit the enlarged window");
+        });
+
+        RunFormTest(form =>
+        {
+            form.GetTestAccessor().MainSplitter.SplitterDistance.Should().Be(distance);
+
+            // Do not leave a maximized window behind for the other tests of the geometry.
+            form.WindowState = FormWindowState.Normal;
+        });
+    }
+
+    [Test]
     public void SelectedDiff_remembers_geometry()
     {
         RunGeometryMemoryTest(
