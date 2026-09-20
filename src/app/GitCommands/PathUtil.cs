@@ -30,7 +30,10 @@ public static partial class PathUtil
     /// </summary>
     public static bool IsValidPathChar(char c)
     {
-        return c is (> ' ' and < '~' and not ('^' or ':')) &&
+        // '"', '<' and '>' have to be named explicitly since .NET Core, which removed them from
+        // Path.GetInvalidPathChars(). Windows still refuses them in a file name, so a branch using
+        // one of them could not be written as a loose ref.
+        return c is (> ' ' and < '~' and not ('^' or ':' or '"' or '<' or '>')) &&
                 Array.IndexOf(Path.GetInvalidPathChars(), c) < 0;
     }
 
