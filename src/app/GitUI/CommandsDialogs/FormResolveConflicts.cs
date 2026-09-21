@@ -878,6 +878,10 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
+            // Each context-menu action is a fresh batch: an "apply to all" choice left ticked by a
+            // previous, unrelated action (e.g. choose local) must not silently carry over here.
+            _solveMergeConflictApplyToAll = false;
+
             foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForBaseRevision(conflictItem))
@@ -905,6 +909,10 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
+            // Each context-menu action is a fresh batch: an "apply to all" choice left ticked by a
+            // previous, unrelated action (e.g. choose base) must not silently carry over here.
+            _solveMergeConflictApplyToAll = false;
+
             foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForLocalRevision(conflictItem))
@@ -932,6 +940,10 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
+            // Each context-menu action is a fresh batch: an "apply to all" choice left ticked by a
+            // previous, unrelated action (e.g. choose local) must not silently carry over here.
+            _solveMergeConflictApplyToAll = false;
+
             foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForRemoteRevision(conflictItem))
@@ -1010,7 +1022,16 @@ public partial class FormResolveConflicts : GitModuleForm
             TaskDialogPage page = CreateSolveMergeConflictTaskDialogPage(dialogText, dialogInstructionText, dialogCaption, dialogFooterCheckboxText,
                 keepLocalButtonText, keepRemoteButtonText, keepBaseButtonText);
 
-            TaskDialog.ShowDialog(Handle, page);
+            TaskDialogButton answer = TaskDialog.ShowDialog(Handle, page);
+
+            // Dismissing the dialog (Cancel/Esc) is not an answer, so it must not be remembered as
+            // one, and the previously selected action (from _solveMergeConflictDialogResult) must
+            // not be silently (re-)applied to this file.
+            if (answer == TaskDialogButton.Cancel)
+            {
+                return;
+            }
+
             _solveMergeConflictApplyToAll = page.Verification?.Checked ?? false;
         }
 
