@@ -2,139 +2,88 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="using:GitUI"
         xmlns:help="using:GitUI.Help"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
         x:Class="GitUI.CommandsDialogs.FormMergeBranch"
         Width="783"
-        SizeToContent="Height"
         MinWidth="462"
+        MinHeight="424"
+        SizeToContent="Height"
         WindowStartupLocation="CenterOwner"
         CanResize="False"
         Title="Merge branches">
-  <Grid x:Name="tableLayoutPanel1"
-        ColumnDefinitions="Auto,*"
-        RowDefinitions="Auto,Auto"
-        ColumnSpacing="3"
-        RowSpacing="3">
+  <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
+                       MinHeight="424"
+                       ColumnDefinitions="295,*"
+                       RowDefinitions="Auto,38">
     <help:HelpImageDisplayUserControl x:Name="helpImageDisplayUserControl1"
                                       Grid.RowSpan="2"
                                       Margin="3"
-                                      MinHeight="416"
+                                      Width="289"
+                                      Height="418"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Top"
                                       IsExpanded="True"
                                       IsOnHoverShowImage2="True"
                                       UniqueIsExpandedSettingsId="MergeBranches" />
-
-    <HeaderedContentControl x:Name="groupBox1"
-                            Classes="gitextensions-group-box"
-                            Grid.Column="1"
-                            Margin="3"
-                            Header="Merge">
-      <Border>
-        <Grid x:Name="tableLayoutPanel2"
-              ColumnDefinitions="Auto,*"
-              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-              ColumnSpacing="8"
-              RowSpacing="7">
-          <TextBlock x:Name="label2"
-                     VerticalAlignment="Center"
-                     Text="Merge branch" />
-          <local:BranchComboBox x:Name="Branches"
-                                Grid.Column="1"
-                                MinWidth="330" />
-
-          <TextBlock x:Name="Currentbranch"
-                     Grid.Row="1"
-                     VerticalAlignment="Center"
-                     Text="Into current branch" />
-          <TextBlock x:Name="currentBranchLabel"
-                     Grid.Row="1"
-                     Grid.Column="1"
-                     FontWeight="Bold"
-                     VerticalAlignment="Center"
-                     Text="?" />
-
-          <RadioButton x:Name="fastForward"
-                       Grid.Row="2"
-                       Grid.ColumnSpan="2"
-                       IsChecked="True"
-                       Content="Keep a single branch line if possible (fast forward)" />
-          <RadioButton x:Name="noFastForward"
-                       Grid.Row="3"
-                       Grid.ColumnSpan="2"
-                       Content="Always create a new merge commit" />
-          <CheckBox x:Name="noCommit"
-                    Grid.Row="4"
-                    Grid.ColumnSpan="2"
-                    Content="Do not commit" />
-          <CheckBox x:Name="advanced"
-                    Grid.Row="5"
-                    Grid.ColumnSpan="2"
-                    Content="Show advanced options" />
-
-          <Grid x:Name="advancedPanel"
-                Grid.Row="6"
-                Grid.ColumnSpan="2"
-                ColumnDefinitions="Auto,*"
-                RowDefinitions="Auto,Auto,Auto,Auto,Auto,90"
-                ColumnSpacing="8"
-                RowSpacing="6">
-            <CheckBox x:Name="NonDefaultMergeStrategy"
-                      Content="Use non-default merge strategy" />
-            <StackPanel x:Name="flowLayoutPanel1"
-                        Grid.Column="1"
-                        Orientation="Horizontal"
-                        Spacing="6">
-              <ComboBox x:Name="_NO_TRANSLATE_mergeStrategy"
-                        Width="158"
-                        IsEditable="True"
-                        IsVisible="False" />
-              <HyperlinkButton x:Name="strategyHelp"
-                               VerticalAlignment="Center"
-                               Content="Help"
-                               IsVisible="False" />
-            </StackPanel>
-
-            <CheckBox x:Name="squash"
-                      Grid.Row="1"
-                      Grid.ColumnSpan="2"
-                      Content="Squash commits" />
-            <CheckBox x:Name="allowUnrelatedHistories"
-                      Grid.Row="2"
-                      Grid.ColumnSpan="2"
-                      Content="Allow unrelated histories" />
-            <CheckBox x:Name="addLogMessages"
-                      Grid.Row="3"
-                      Content="Add log messages" />
-            <NumericUpDown x:Name="nbMessages"
-                           Grid.Row="3"
-                           Grid.Column="1"
-                           Width="70"
+    <wf:GroupBox x:Name="groupBox1"
+                 Grid.Column="1"
+                 Margin="3"
+                 Width="482"
+                 MinHeight="214"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 Header="Merge">
+      <wf:TableLayoutPanel x:Name="tableLayoutPanel2"
+                           Margin="10,1,0,0"
+                           Width="463"
+                           RowDefinitions="172,Auto"
                            HorizontalAlignment="Left"
-                           Minimum="1"
-                           Maximum="999"
-                           Value="20"
-                           IsEnabled="False" />
-            <CheckBox x:Name="addMergeMessage"
-                      Grid.Row="4"
-                      Grid.ColumnSpan="2"
-                      Content="Specify merge message" />
-            <TextBox x:Name="mergeMessage"
-                     Grid.Row="5"
-                     Grid.ColumnSpan="2"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     IsEnabled="False" />
-          </Grid>
-        </Grid>
-      </Border>
-    </HeaderedContentControl>
-
+                           VerticalAlignment="Top">
+        <Canvas Width="463" Height="172">
+          <TextBlock x:Name="label2" Canvas.Left="3" Width="109" Height="24" VerticalAlignment="Center" Text="Merge branch" />
+          <local:BranchComboBox x:Name="Branches" Canvas.Left="115" Width="348" Height="24" MinHeight="0" />
+          <TextBlock x:Name="Currentbranch" Canvas.Left="3" Canvas.Top="24" Width="109" Height="48" Padding="0,3,0,30" Text="Into current branch" />
+          <TextBlock x:Name="currentBranchLabel" Canvas.Left="118" Canvas.Top="24" Width="342" Height="48" Padding="0,3,0,0" FontWeight="Bold" Text="?" />
+          <RadioButton x:Name="fastForward" Canvas.Left="3" Canvas.Top="75" Width="286" Height="19" IsChecked="True" Content="Keep a single branch line if possible (fast forward)" />
+          <RadioButton x:Name="noFastForward" Canvas.Left="3" Canvas.Top="100" Width="213" Height="19" Content="Always create a new merge commit" />
+          <CheckBox x:Name="noCommit" Canvas.Left="3" Canvas.Top="125" Width="107" Height="19" Content="Do not commit" />
+          <CheckBox x:Name="advanced" Canvas.Left="3" Canvas.Top="150" Width="152" Height="19" Content="Show advanced options" />
+        </Canvas>
+        <wf:TableLayoutPanel x:Name="advancedPanel"
+                             Grid.Row="1"
+                             Margin="3,3,3,0"
+                             Width="457"
+                             Height="212"
+                             HorizontalAlignment="Left"
+                             IsVisible="False">
+          <Canvas Width="457" Height="212">
+            <CheckBox x:Name="NonDefaultMergeStrategy" Canvas.Left="3" Canvas.Top="3" Width="193" Height="19" Content="Use non-default merge strategy" />
+            <wf:FlowLayoutPanel x:Name="flowLayoutPanel1" Canvas.Left="202" Canvas.Top="3">
+              <Canvas>
+                <ComboBox x:Name="_NO_TRANSLATE_mergeStrategy" Width="158" Height="23" IsEditable="True" IsVisible="False" />
+                <HyperlinkButton x:Name="strategyHelp" Canvas.Left="161" Canvas.Top="4" Width="28" Height="13" Padding="0" Content="Help" IsVisible="False" />
+              </Canvas>
+            </wf:FlowLayoutPanel>
+            <CheckBox x:Name="squash" Canvas.Left="3" Canvas.Top="28" Width="114" Height="19" Content="Squash commits" />
+            <CheckBox x:Name="allowUnrelatedHistories" Canvas.Left="3" Canvas.Top="53" Width="156" Height="19" Content="Allow unrelated histories" />
+            <CheckBox x:Name="addLogMessages" Canvas.Left="3" Canvas.Top="80" Width="122" Height="19" Content="Add log messages" />
+            <NumericUpDown x:Name="nbMessages" Canvas.Left="202" Canvas.Top="78" Width="53" Height="23" Minimum="1" Maximum="999" Value="20" IsEnabled="False" />
+            <CheckBox x:Name="addMergeMessage" Canvas.Left="3" Canvas.Top="107" Width="150" Height="19" Content="Specify merge message" />
+            <TextBox x:Name="mergeMessage" Canvas.Left="3" Canvas.Top="132" Width="451" Height="77" AcceptsReturn="True" TextWrapping="Wrap" IsEnabled="False" />
+          </Canvas>
+        </wf:TableLayoutPanel>
+      </wf:TableLayoutPanel>
+    </wf:GroupBox>
     <Button x:Name="Ok"
             Classes="gitextensions-dialog-action"
             Grid.Row="1"
             Grid.Column="1"
-            Margin="3"
-            MinWidth="108"
+            Margin="0,3,10,0"
+            Width="108"
+            Height="25"
             HorizontalAlignment="Right"
+            VerticalAlignment="Top"
             Content="_Merge"
             IsDefault="True" />
-  </Grid>
+  </wf:TableLayoutPanel>
 </Window>

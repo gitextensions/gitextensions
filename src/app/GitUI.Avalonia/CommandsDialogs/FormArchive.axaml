@@ -3,6 +3,7 @@
         xmlns:compat="using:GitUI.Compat"
         xmlns:properties="using:GitUI.Properties"
         xmlns:userControls="using:GitUI.UserControls"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
         x:Class="GitUI.CommandsDialogs.FormArchive"
         Width="594"
         Height="571"
@@ -10,11 +11,14 @@
         MinHeight="571"
         WindowStartupLocation="CenterOwner"
         Title="Archive">
-  <Grid x:Name="tableLayoutPanel4"
+  <wf:TableLayoutPanel x:Name="tableLayoutPanel4"
         RowDefinitions="30,166,320,55">
     <TextBlock x:Name="label1"
-               Margin="3,0"
-               VerticalAlignment="Center"
+               Margin="3,7,0,0"
+               Width="161"
+               Height="15"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
                Text="This revision will be archived:" />
 
     <Grid Grid.Row="1"
@@ -23,21 +27,28 @@
                                              Margin="16,3,5,3"
                                              Width="458"
                                              Height="160" />
-      <StackPanel x:Name="flowLayoutPanel1"
+      <wf:FlowLayoutPanel x:Name="flowLayoutPanel1"
                   Grid.Column="1"
                   Margin="0,2,2,2"
-                  Spacing="3">
+                  HorizontalAlignment="Stretch">
+        <Canvas Width="109" Height="162">
         <TextBlock x:Name="label2"
+                   Canvas.Left="2"
+                   Width="91"
+                   Height="30"
                    Text="Choose another&#10;revision:" />
         <Button x:Name="btnChooseRevision"
                 Classes="gitextensions-icon-only"
+                Canvas.Left="2"
+                Canvas.Top="33"
                 Width="25"
                 Height="24"
                 Padding="3"
                 HorizontalAlignment="Left">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SelectRevision}" />
         </Button>
-      </StackPanel>
+        </Canvas>
+      </wf:FlowLayoutPanel>
     </Grid>
 
     <HeaderedContentControl x:Name="groupBox2"
@@ -45,75 +56,89 @@
                             Grid.Row="2"
                             Margin="3,20,3,0"
                             Header="Filter files">
-      <Grid RowDefinitions="Auto,75,Auto,Auto,100"
-            RowSpacing="4">
+      <Canvas>
         <CheckBox x:Name="checkBoxPathFilter"
+                  Canvas.Left="-2"
+                  Canvas.Top="3"
+                  Width="167"
                   Content="Archive specific paths only" />
         <TextBox x:Name="textBoxPaths"
-                 Grid.Row="1"
-                 Margin="15,0,0,0"
+                 Canvas.Left="13"
+                 Canvas.Top="28"
+                 Width="553"
+                 Height="75"
                  AcceptsReturn="True"
                  TextWrapping="NoWrap"
                  ScrollViewer.VerticalScrollBarVisibility="Auto" />
         <TextBlock x:Name="label4"
-                   Grid.Row="2"
-                   Margin="18,0,0,0"
+                   Canvas.Left="16"
+                   Canvas.Top="106"
+                   Width="194"
+                   Height="15"
                    Text="separate each new path by new line" />
         <CheckBox x:Name="checkboxRevisionFilter"
-                  Grid.Row="3"
+                  Canvas.Left="-2"
+                  Canvas.Top="143"
+                  Width="504"
                   Content="Take the files that have changed from the revision above to this one and archive only those" />
 
-        <Grid Grid.Row="4"
-              ColumnDefinitions="*,110">
           <HeaderedContentControl x:Name="gbDiffRevision"
                                   Classes="gitextensions-group-box"
-                                  Margin="7,0,3,0"
+                                  Canvas.Left="5"
+                                  Canvas.Top="168"
+                                  Width="458"
+                                  Height="100"
                                   Header="...">
-            <Grid RowDefinitions="*,Auto"
-                  ColumnDefinitions="Auto,*,Auto,Auto"
-                  ColumnSpacing="5">
+            <Canvas>
               <TextBlock x:Name="labelMessage"
-                         Grid.ColumnSpan="4"
-                         VerticalAlignment="Center"
+                         Canvas.Left="-3"
+                         Canvas.Top="-5"
+                         Width="422"
+                         Height="50"
                          FontWeight="Bold"
                          Text="..."
                          TextTrimming="CharacterEllipsis"
                          TextWrapping="Wrap" />
               <TextBlock x:Name="labelAuthorCaption"
-                         Grid.Row="1"
-                         VerticalAlignment="Center"
+                         Canvas.Left="-3"
+                         Canvas.Top="54"
+                         Width="47"
+                         Height="15"
                          Text="Author:" />
               <TextBlock x:Name="labelAuthor"
-                         Grid.Row="1"
-                         Grid.Column="1"
-                         VerticalAlignment="Center"
+                         Canvas.Left="90"
+                         Canvas.Top="55"
+                         Width="122"
+                         Height="15"
                          FontWeight="Bold"
                          Text="..."
                          TextTrimming="CharacterEllipsis" />
               <TextBlock x:Name="labelDateCaption"
-                         Grid.Row="1"
-                         Grid.Column="2"
-                         VerticalAlignment="Center"
+                         Canvas.Left="219"
+                         Canvas.Top="54"
+                         Width="201"
+                         Height="15"
                          Text="Commit date:" />
-            </Grid>
+            </Canvas>
           </HeaderedContentControl>
 
-          <StackPanel Grid.Column="1"
-                      Margin="3,6,0,0"
-                      Spacing="3">
             <TextBlock x:Name="lblChooseDiffRevision"
+                       Canvas.Left="471"
+                       Canvas.Top="174"
+                       Width="112"
+                       Height="35"
                        Text="Choose revision to &#10;compare with first:" />
             <Button x:Name="btnDiffChooseRevision"
                     Classes="gitextensions-icon-only"
+                    Canvas.Left="471"
+                    Canvas.Top="210"
                     Width="25"
                     Height="24"
                     Padding="3"
                     HorizontalAlignment="Left">
               <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SelectRevision}" />
             </Button>
-          </StackPanel>
-        </Grid>
-      </Grid>
+      </Canvas>
     </HeaderedContentControl>
 
     <Canvas Grid.Row="3">
@@ -124,17 +149,22 @@
                               Width="109"
                               Height="48"
                               Header="Archive format">
-        <StackPanel x:Name="tableLayoutPanel2"
-                    Orientation="Horizontal"
-                    Spacing="6">
+        <wf:TableLayoutPanel x:Name="tableLayoutPanel2"
+                            Margin="-5"
+                            ColumnDefinitions="51,52">
           <RadioButton x:Name="_NO_TRANSLATE_radioButtonFormatZip"
+                       Margin="3"
+                       Width="40"
                        GroupName="ArchiveFormat"
                        Content="zip"
                        IsChecked="True" />
           <RadioButton x:Name="_NO_TRANSLATE_radioButtonFormatTar"
+                       Grid.Column="1"
+                       Margin="3"
+                       Width="39"
                        GroupName="ArchiveFormat"
                        Content="tar" />
-        </StackPanel>
+        </wf:TableLayoutPanel>
       </HeaderedContentControl>
       <compat:IconButton x:Name="buttonArchiveRevision"
                          Classes="gitextensions-dialog-action"
@@ -145,5 +175,5 @@
                          Icon="{x:Static properties:Images.SaveAs}"
                          Content="Save as..." />
     </Canvas>
-  </Grid>
+  </wf:TableLayoutPanel>
 </Window>

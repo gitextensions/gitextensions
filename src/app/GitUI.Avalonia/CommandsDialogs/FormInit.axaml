@@ -1,20 +1,26 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:usercontrols="clr-namespace:GitUI.UserControls"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
         x:Class="GitUI.CommandsDialogs.FormInit"
         Width="542" SizeToContent="Height"
         CanResize="False"
         WindowStartupLocation="CenterOwner"
         Title="Create new repository">
-  <Grid Classes="gitextensions-dialog-main" RowDefinitions="125,*">
-    <Grid x:Name="tpnlMain"
-          Grid.Row="0"
+  <Grid RowDefinitions="149,41">
+    <wf:Panel x:Name="MainPanel"
+              Padding="12"
+              Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
+    <wf:TableLayoutPanel x:Name="tpnlMain"
           RowDefinitions="31,94">
-      <Grid x:Name="tableLayoutPanel1"
+      <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
             ColumnDefinitions="61,*,120">
       <TextBlock x:Name="label1"
-                 Classes="gitextensions-dialog-label"
-                 Margin="3"
+                 Margin="3,0"
+                 Width="55"
+                 Height="15"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
                  Text="Directory" />
       <ComboBox x:Name="_NO_TRANSLATE_Directory"
                 Grid.Column="1"
@@ -25,8 +31,9 @@
                                         Grid.Column="2"
                                         Margin="3"
                                         Width="106"
+                                        Height="25"
                                         HorizontalAlignment="Right" />
-      </Grid>
+      </wf:TableLayoutPanel>
 
     <HeaderedContentControl x:Name="groupBox1"
                             Classes="gitextensions-group-box"
@@ -34,24 +41,38 @@
                             Margin="3"
                             Height="88"
                             Header="Repository type">
-      <StackPanel Spacing="6">
+      <Canvas>
         <RadioButton x:Name="Personal"
+                     Canvas.Left="7"
+                     Canvas.Top="1"
+                     Width="126"
+                     Height="19"
                      Content="Personal repository"
                      IsChecked="True" />
         <RadioButton x:Name="Central"
+                     Canvas.Left="7"
+                     Canvas.Top="24"
+                     Width="350"
+                     Height="19"
                      Content="Central repository, no working directory  (--bare --shared=all)" />
-      </StackPanel>
+      </Canvas>
     </HeaderedContentControl>
-    </Grid>
+    </wf:TableLayoutPanel>
+    </wf:Panel>
 
-    <!-- ControlsPanel -->
-    <StackPanel x:Name="ControlsPanel"
-                Classes="gitextensions-dialog-controls"
-                Grid.Row="1">
+    <wf:FlowLayoutPanel x:Name="ControlsPanel" Grid.Row="1">
+      <Grid Width="542"
+            Height="41"
+            Background="{DynamicResource GitExtensionsDialogControlsBackgroundBrush}">
       <Button x:Name="Init"
               Classes="gitextensions-dialog-action"
+              Margin="0,8,13,8"
+              Width="75"
+              Height="25"
+              HorizontalAlignment="Right"
               Content="Create"
               IsDefault="True" />
-    </StackPanel>
+      </Grid>
+    </wf:FlowLayoutPanel>
   </Grid>
 </Window>
