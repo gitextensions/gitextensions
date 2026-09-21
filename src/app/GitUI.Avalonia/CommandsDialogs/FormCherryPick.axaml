@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:properties="using:GitUI.Properties"
         xmlns:usercontrols="using:GitUI.UserControls"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
         x:Class="GitUI.CommandsDialogs.FormCherryPick"
         Width="614"
         SizeToContent="Height"
@@ -10,54 +11,74 @@
         WindowStartupLocation="CenterOwner"
         CanResize="False"
         Title="Cherry pick commit">
-  <DockPanel>
-    <StackPanel x:Name="ControlsPanel"
-                Classes="gitextensions-dialog-controls"
-                DockPanel.Dock="Bottom">
+  <Grid RowDefinitions="Auto,41">
+    <wf:FlowLayoutPanel x:Name="ControlsPanel" Grid.Row="1">
+      <Grid Width="614"
+            Height="41"
+            Background="{DynamicResource GitExtensionsDialogControlsBackgroundBrush}">
       <Button x:Name="btnPick"
               Classes="gitextensions-dialog-action"
+              Margin="0,8,94,8"
               MinWidth="109"
+              Width="109"
               Height="25"
+              HorizontalAlignment="Right"
               Content="_Cherry pick" />
       <Button x:Name="btnAbort"
+              Margin="0,8,13,8"
               MinWidth="75"
+              Width="75"
               Height="25"
+              HorizontalAlignment="Right"
               Content="A_bort" />
-    </StackPanel>
+      </Grid>
+    </wf:FlowLayoutPanel>
 
-    <Border x:Name="MainPanel"
+    <wf:Panel x:Name="MainPanel"
             Classes="gitextensions-dialog-main"
-            Padding="12">
-      <Grid x:Name="tlPnlMain"
-            RowDefinitions="Auto,160,30,Auto,Auto,Auto"
-            RowSpacing="3">
+            Padding="12"
+            Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
+      <wf:TableLayoutPanel x:Name="tlPnlMain"
+            Height="267"
+            RowDefinitions="15,169,32,Auto,25,25">
         <TextBlock x:Name="lblBranchInfo"
+                   Margin="3,0"
+                   Height="15"
                    Text="Cherry pick this commit:" />
 
         <usercontrols:CommitSummaryUserControl x:Name="commitSummaryUserControl1"
                                                Grid.Row="1"
-                                               Margin="13,0,3,0"
+                                               Margin="16,1,3,3"
+                                               Height="160"
                                                MinWidth="440"
                                                MinHeight="160" />
 
-        <StackPanel x:Name="chooseRevPanel"
+        <wf:FlowLayoutPanel x:Name="chooseRevPanel"
                     Grid.Row="2"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal"
-                    Spacing="6">
+                    Margin="3,-1,3,0"
+                    Height="30"
+                    HorizontalAlignment="Stretch">
+          <Canvas Width="584" Height="30">
           <Label x:Name="lblAnotherRev"
+                 Canvas.Left="412"
+                 Width="138"
+                 Height="30"
                  Padding="0"
                  VerticalAlignment="Center"
+                 VerticalContentAlignment="Center"
                  Content="C_hoose another revision:"
                  Target="{Binding #btnChooseRevision}" />
           <Button x:Name="btnChooseRevision"
                   Classes="gitextensions-icon-only"
+                  Canvas.Left="556"
+                  Canvas.Top="3"
                   Width="25"
                   Height="24"
                   Padding="3">
             <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SelectRevision}" />
           </Button>
-        </StackPanel>
+          </Canvas>
+        </wf:FlowLayoutPanel>
 
         <Grid x:Name="parentsPanel"
               Grid.Row="3"
@@ -74,45 +95,47 @@
               <Grid ColumnDefinitions="43,*,120,80">
                 <Border Classes="gitextensions-list-header-cell"
                         BorderThickness="0,0,1,1">
-                  <TextBlock x:Name="columnHeader1"
-                             FontWeight="SemiBold"
-                             Text="No." />
+                  <TextBlock FontWeight="SemiBold" Text="No." />
                 </Border>
                 <Border Classes="gitextensions-list-header-cell" Grid.Column="1"
                         BorderThickness="0,0,1,1">
-                  <TextBlock x:Name="columnHeader2"
-                             FontWeight="SemiBold"
-                             Text="Message" />
+                  <TextBlock FontWeight="SemiBold" Text="Message" />
                 </Border>
                 <Border Classes="gitextensions-list-header-cell" Grid.Column="2"
                         BorderThickness="0,0,1,1">
-                  <TextBlock x:Name="columnHeader3"
-                             FontWeight="SemiBold"
-                             Text="Author" />
+                  <TextBlock FontWeight="SemiBold" Text="Author" />
                 </Border>
                 <Border Classes="gitextensions-list-header-cell" Grid.Column="3"
                         BorderThickness="0,0,0,1">
-                  <TextBlock x:Name="columnHeader4"
-                             FontWeight="SemiBold"
-                             Text="Date" />
+                  <TextBlock FontWeight="SemiBold" Text="Date" />
                 </Border>
               </Grid>
-              <ListBox x:Name="lvParentsList"
-                       Classes="gitextensions-dense-items"
-                       Grid.Row="1"
-                       SelectionMode="Single" />
+              <usercontrols:NativeListView x:Name="lvParentsList"
+                                           Classes="gitextensions-dense-items gitextensions-native-list-items"
+                                           Grid.Row="1"
+                                           SelectionMode="Single" />
+              <wf:ColumnHeader x:Name="columnHeader1" SourceWidth="43" Text="No." IsVisible="False" />
+              <!-- Source FormCherryPick.lvParentsList_Resize fills the message column from the 574-DIP client. -->
+              <wf:ColumnHeader x:Name="columnHeader2" SourceWidth="331" Text="Message" IsVisible="False" />
+              <wf:ColumnHeader x:Name="columnHeader3" SourceWidth="120" Text="Author" IsVisible="False" />
+              <wf:ColumnHeader x:Name="columnHeader4" SourceWidth="80" Text="Date" IsVisible="False" />
             </Grid>
           </Border>
         </Grid>
 
         <CheckBox x:Name="cbxAutoCommit"
                   Grid.Row="4"
-                  Margin="0,3,0,0"
+                  Margin="3"
+                  Width="584"
+                  Height="19"
                   Content="_Automatically create a commit" />
         <CheckBox x:Name="cbxAddReference"
                   Grid.Row="5"
+                  Margin="3"
+                  Width="584"
+                  Height="19"
                   Content="A_dd commit reference to commit message" />
-      </Grid>
-    </Border>
-  </DockPanel>
+      </wf:TableLayoutPanel>
+    </wf:Panel>
+  </Grid>
 </Window>
