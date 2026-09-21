@@ -91,9 +91,27 @@ partial class FormVerify
         /// <returns>the metadata for all the commits.</returns>
         public static string[] GetCommitsMetadata(IGitModule module, IEnumerable<string> commitIds)
         {
-            return module.GitExecutable
-                .GetOutput(string.Format(ShowCommandArgumentsFormat, string.Join(" ", commitIds)), outputEncoding: GitModule.LosslessEncoding)
-                .Split('\n');
+            string[] ids = [.. commitIds];
+
+            ExecutionResult result = module.GitExecutable.Execute(
+                string.Format(ShowCommandArgumentsFormat, string.Join(" ", ids)),
+                outputEncoding: GitModule.LosslessEncoding,
+                throwOnErrorExit: false);
+
+            // Fall back to querying each commit individually so a single unreadable object
+            // does not prevent the rest of the batch from being displayed.
+            return result.ExitedSuccessfully
+                ? result.StandardOutput.Split('\n')
+                : [.. ids.Select(id => GetCommitMetadataOrEmpty(module, id))];
+        }
+
+        private static string GetCommitMetadataOrEmpty(IGitModule module, string commitId)
+        {
+            ExecutionResult result = module.GitExecutable.Execute(
+                string.Format(ShowCommandArgumentsFormat, commitId),
+                outputEncoding: GitModule.LosslessEncoding,
+                throwOnErrorExit: false);
+            return result.ExitedSuccessfully ? result.StandardOutput : "";
         }
 
         public void FillCommitData(IGitModule module, string commitLog)
