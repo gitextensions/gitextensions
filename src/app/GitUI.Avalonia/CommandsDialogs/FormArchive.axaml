@@ -4,29 +4,28 @@
         xmlns:properties="using:GitUI.Properties"
         xmlns:userControls="using:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormArchive"
-        Width="610"
-        Height="609"
-        MinWidth="610"
-        MinHeight="609"
+        Width="594"
+        Height="571"
+        MinWidth="594"
+        MinHeight="571"
         WindowStartupLocation="CenterOwner"
         Title="Archive">
   <Grid x:Name="tableLayoutPanel4"
-        Margin="3"
-        RowDefinitions="30,166,*,Auto"
-        RowSpacing="3">
+        RowDefinitions="30,166,320,55">
     <TextBlock x:Name="label1"
+               Margin="3,0"
                VerticalAlignment="Center"
                Text="This revision will be archived:" />
 
     <Grid Grid.Row="1"
-          ColumnDefinitions="*,110">
+          ColumnDefinitions="479,*">
       <userControls:CommitSummaryUserControl x:Name="commitSummaryUserControl1"
-                                             Margin="13,0,3,3"
-                                             MinWidth="440"
-                                             MinHeight="160" />
+                                             Margin="16,3,5,3"
+                                             Width="458"
+                                             Height="160" />
       <StackPanel x:Name="flowLayoutPanel1"
                   Grid.Column="1"
-                  Margin="3,0"
+                  Margin="0,2,2,2"
                   Spacing="3">
         <TextBlock x:Name="label2"
                    Text="Choose another&#10;revision:" />
@@ -44,7 +43,7 @@
     <HeaderedContentControl x:Name="groupBox2"
                             Classes="gitextensions-group-box"
                             Grid.Row="2"
-                            Margin="0,17,0,0"
+                            Margin="3,20,3,0"
                             Header="Filter files">
       <Grid RowDefinitions="Auto,75,Auto,Auto,100"
             RowSpacing="4">
@@ -117,14 +116,13 @@
       </Grid>
     </HeaderedContentControl>
 
-    <StackPanel Grid.Row="3"
-                HorizontalAlignment="Right"
-                Orientation="Horizontal"
-                Spacing="6">
+    <Canvas Grid.Row="3">
       <HeaderedContentControl x:Name="groupBox1"
                               Classes="gitextensions-group-box"
+                              Canvas.Left="365"
+                              Canvas.Top="6"
                               Width="109"
-                              Height="60"
+                              Height="48"
                               Header="Archive format">
         <StackPanel x:Name="tableLayoutPanel2"
                     Orientation="Horizontal"
@@ -140,11 +138,12 @@
       </HeaderedContentControl>
       <compat:IconButton x:Name="buttonArchiveRevision"
                          Classes="gitextensions-dialog-action"
+                         Canvas.Left="480"
+                         Canvas.Top="29"
                          Width="111"
                          Height="25"
-                         VerticalAlignment="Bottom"
                          Icon="{x:Static properties:Images.SaveAs}"
                          Content="Save as..." />
-    </StackPanel>
+    </Canvas>
   </Grid>
 </Window>

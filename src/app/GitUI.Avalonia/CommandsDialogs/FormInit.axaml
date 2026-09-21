@@ -2,27 +2,37 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:usercontrols="clr-namespace:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormInit"
-        Width="560" SizeToContent="Height"
-        MinWidth="450" CanResize="False"
+        Width="542" SizeToContent="Height"
+        CanResize="False"
         WindowStartupLocation="CenterOwner"
         Title="Create new repository">
-  <Grid Classes="gitextensions-dialog-main" RowDefinitions="Auto,Auto,Auto">
-    <Grid ColumnDefinitions="Auto,*,120" ColumnSpacing="8">
+  <Grid Classes="gitextensions-dialog-main" RowDefinitions="125,*">
+    <Grid x:Name="tpnlMain"
+          Grid.Row="0"
+          RowDefinitions="31,94">
+      <Grid x:Name="tableLayoutPanel1"
+            ColumnDefinitions="61,*,120">
       <TextBlock x:Name="label1"
                  Classes="gitextensions-dialog-label"
+                 Margin="3"
                  Text="Directory" />
       <ComboBox x:Name="_NO_TRANSLATE_Directory"
                 Grid.Column="1"
+                Margin="3,4"
                 HorizontalAlignment="Stretch"
                 IsEditable="True" />
       <usercontrols:FolderBrowserButton x:Name="Browse"
-                                        Grid.Column="2" />
-    </Grid>
+                                        Grid.Column="2"
+                                        Margin="3"
+                                        Width="106"
+                                        HorizontalAlignment="Right" />
+      </Grid>
 
     <HeaderedContentControl x:Name="groupBox1"
                             Classes="gitextensions-group-box"
                             Grid.Row="1"
-                            Margin="0,10,0,0"
+                            Margin="3"
+                            Height="88"
                             Header="Repository type">
       <StackPanel Spacing="6">
         <RadioButton x:Name="Personal"
@@ -32,12 +42,12 @@
                      Content="Central repository, no working directory  (--bare --shared=all)" />
       </StackPanel>
     </HeaderedContentControl>
+    </Grid>
 
     <!-- ControlsPanel -->
     <StackPanel x:Name="ControlsPanel"
                 Classes="gitextensions-dialog-controls"
-                Grid.Row="2"
-                Margin="0,14,0,0">
+                Grid.Row="1">
       <Button x:Name="Init"
               Classes="gitextensions-dialog-action"
               Content="Create"

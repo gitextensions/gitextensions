@@ -114,6 +114,23 @@ public sealed class ApplyPatchTests
     }
 
     [AvaloniaTest]
+    public void FormApplyPatch_should_preserve_upstream_designer_button_states_on_load()
+    {
+        GitModule module = CreateRepository();
+        GitUICommands commands = new(_serviceContainer, module);
+        FormApplyPatch form = new(commands);
+
+        form.Show();
+
+        form.AddFiles.IsEnabled.Should().BeTrue("the unchanged WinForms load path leaves continuation buttons at their Designer defaults");
+        form.Resolved.IsEnabled.Should().BeTrue();
+        form.Mergetool.IsEnabled.Should().BeTrue();
+        form.Skip.IsEnabled.Should().BeTrue();
+        form.Abort.IsEnabled.Should().BeTrue();
+        form.Close();
+    }
+
+    [AvaloniaTest]
     public void FormApplyPatch_should_apply_a_real_raw_diff()
     {
         GitModule module = CreateRepository();

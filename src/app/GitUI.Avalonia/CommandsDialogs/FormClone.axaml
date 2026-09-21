@@ -4,15 +4,17 @@
         xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.FormClone"
         Width="647" SizeToContent="Height"
-        MinWidth="450" MaxWidth="950" CanResize="False"
+        MinWidth="434" MaxWidth="934" CanResize="False"
         WindowStartupLocation="CenterOwner"
         Title="Clone">
-  <!-- MainPanel (tpnlMain rows) + bottom ControlsPanel like the WinForms dialog chrome. -->
-  <Grid Classes="gitextensions-dialog-main" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-    <Grid x:Name="tableLayoutPanel1"
+  <Grid Classes="gitextensions-dialog-main" RowDefinitions="307,*">
+    <Grid x:Name="tpnlMain"
+          Grid.Row="0"
+          RowDefinitions="125,55,98,29">
+      <Grid x:Name="tableLayoutPanel1"
           ColumnDefinitions="Auto,*,100"
-          RowDefinitions="Auto,Auto,Auto,Auto"
-          ColumnSpacing="8" RowSpacing="6">
+          RowDefinitions="31,31,31,32"
+          ColumnSpacing="6">
       <Label x:Name="repositoryLabel"
              Classes="gitextensions-dialog-label"
              Content="Repository to _clone:"
@@ -23,6 +25,9 @@
                 IsEditable="True" />
       <compat:IconButton x:Name="FromBrowse"
                          Grid.Column="2"
+                         Margin="3"
+                         Width="94"
+                         Height="24"
                          HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Center"
                          Icon="{x:Static properties:Images.BrowseFileExplorer}"
@@ -39,6 +44,9 @@
                 IsEditable="True" />
       <compat:IconButton x:Name="ToBrowse"
                          Grid.Row="1" Grid.Column="2"
+                         Margin="3"
+                         Width="94"
+                         Height="24"
                          HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Center"
                          Icon="{x:Static properties:Images.BrowseFileExplorer}"
@@ -62,11 +70,11 @@
                 Grid.Row="3" Grid.Column="1"
                 HorizontalAlignment="Stretch"
                 IsEditable="True" />
-    </Grid>
+      </Grid>
 
     <Border Grid.Row="1"
-            Margin="0,13,0,0"
-            MinHeight="42"
+            Margin="3,13,3,0"
+            Height="42"
             BorderThickness="1"
             BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
             Padding="6,4">
@@ -78,7 +86,8 @@
     <HeaderedContentControl x:Name="groupBox1"
                             Classes="gitextensions-group-box"
                             Grid.Row="2"
-                            Margin="0,10,0,0"
+                            Margin="3,4,3,6"
+                            Height="88"
                             Header="Repository type">
       <StackPanel Spacing="6">
         <RadioButton x:Name="PersonalRepository"
@@ -91,7 +100,8 @@
 
     <StackPanel x:Name="optionsPanel"
                 Grid.Row="3"
-                Margin="0,10,0,0"
+                Margin="0,4,0,0"
+                Height="25"
                 Orientation="Horizontal"
                 Spacing="24">
       <CheckBox x:Name="cbIntializeAllSubmodules"
@@ -102,12 +112,12 @@
                 Content="Download full _history"
                 IsChecked="True" />
     </StackPanel>
+    </Grid>
 
     <!-- ControlsPanel -->
     <StackPanel x:Name="ControlsPanel"
                 Classes="gitextensions-dialog-controls"
-                Grid.Row="4"
-                Margin="0,14,0,0">
+                Grid.Row="1">
       <Button x:Name="Ok"
               Classes="gitextensions-dialog-action"
               Content="Clone"

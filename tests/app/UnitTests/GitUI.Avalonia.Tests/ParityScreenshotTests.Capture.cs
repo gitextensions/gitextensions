@@ -66,6 +66,20 @@ public sealed partial class ParityScreenshotTests
 
     [Test]
     [Category(P02Category)]
+    public void Repository_workflow_capture_hosts_should_use_source_runtime_dimensions()
+    {
+        GetCaptureSize(typeof(FormAddFiles)).Should().Be((443, 65));
+        GetCaptureSize(typeof(FormApplyPatch)).Should().Be((711, 436));
+        GetCaptureSize(typeof(FormArchive)).Should().Be((594, 571));
+        GetCaptureSize(typeof(FormCherryPick)).Should().Be((614, 332));
+        GetCaptureSize(typeof(FormClone)).Should().Be((647, 372));
+        GetCaptureSize(typeof(FormInit)).Should().Be((542, 190));
+        GetCaptureSize(typeof(FormMergeBranch)).Should().Be((783, 424));
+        GetCaptureSize(typeof(FormRebase)).Should().Be((1034, 461));
+    }
+
+    [Test]
+    [Category(P02Category)]
     public void Commit_capture_host_should_use_the_96_dpi_designer_client_size()
     {
         GetCaptureSize(typeof(FormCommit)).Should().Be((918, 644));
