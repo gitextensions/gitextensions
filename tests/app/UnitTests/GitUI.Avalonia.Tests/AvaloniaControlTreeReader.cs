@@ -140,6 +140,7 @@ internal sealed class AvaloniaControlTreeReader
             ListBox { Name: "listBoxSearchResult" } when _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse" => "control",
             _ when GetSourceTypeName(sourceType) == "SplitContainer" => "split",
             _ when GetSourceTypeName(sourceType) is "RichTextBox" or "TextBoxBase" => "text",
+            _ when GetSourceTypeName(sourceType) == "DataGridView" => "dataGrid",
             _ when IsSemanticToolStrip(control) || isSourceToolStrip => "toolStrip",
             _ when IsSemanticToolStripItem(control) || isSourceToolStripItem => "menuItem",
             _ when IsFileStatusListView(control) => "tree",
@@ -552,6 +553,7 @@ internal sealed class AvaloniaControlTreeReader
         string? sourceType = GetSourceType(control, fieldName);
         sourceType ??= isCommitInfoHeaderLocalLayout ? "System.Windows.Forms.TableLayoutPanel" : null;
         sourceType ??= isKnownSourceLocalControl ? GetKnownSourceLocalType(sourceOwnerType, control.Name) : null;
+        isSourceDataGrid |= GetSourceTypeName(sourceType) == "DataGridView";
         bool hasWinFormsTextBoxClientInset = control is TextBox
             && !isSpellCheckTextBox
             && !IsSourceRichTextControl(control)
@@ -699,7 +701,12 @@ internal sealed class AvaloniaControlTreeReader
         // FormCommit's Avalonia action grid has no SplitContainer.Panel2 owner. Project its
         // source-authored root-client button bounds so the shared tree keeps the original
         // flattened WinForms coordinate space while rendered pixels remain untouched.
-        Rect bounds = isFormCommitSurface && semanticName == "Ok"
+        bool isPatchGridDataGrid = isSourceDataGrid
+            && control.Name == "Patches"
+            && control.GetLogicalAncestors().OfType<PatchGrid>().FirstOrDefault() is { };
+        Rect bounds = isPatchGridDataGrid
+            ? GetSemanticBounds(control.GetLogicalAncestors().OfType<PatchGrid>().First(), semanticParent)
+            : isFormCommitSurface && semanticName == "Ok"
             ? new Rect(334, 10, 75, 23)
             : isFormCommitSurface && semanticName == "Cancel"
                 ? new Rect(134, 441, 129, 23)
@@ -884,7 +891,9 @@ internal sealed class AvaloniaControlTreeReader
                             ? GetSourceTextBoxClientHeight(bounds, designerLayout?.BorderStyle)
                         : isNativeListView ? Math.Max(0, bounds.Height - 4) : bounds.Height)
             },
-            ItemHeightDip = isRevisionGridView
+            ItemHeightDip = isPatchGridDataGrid
+                ? 25
+                : isRevisionGridView
                 ? ReadRevisionGridItemHeight(control)
                 : isComboBoxPopup ? 15 : null,
             Padding = ReadThicknessPair(isComboBoxPopup || isComboBoxPopupItem || isStandaloneSourceComboBox
@@ -1485,7 +1494,9 @@ internal sealed class AvaloniaControlTreeReader
                 : isSpellCheckTextBox && (control.IsFocused || control.ContextMenu?.IsOpen == true)
                     ? true
                 : isPopupRoot || isComboBoxPopupItem ? false : IsFocused(semanticStateControl),
-            ReadOnly = isComboBoxPopup
+            ReadOnly = isPatchGridDataGrid
+                ? true
+                : isComboBoxPopup
                 ? true
                 : isSurfaceRoot && _usesDesignerLayoutMetadata && control is not Window
                     ? GetNullableBoolProperty(control, "ReadOnly")
@@ -4330,6 +4341,12 @@ internal sealed class AvaloniaControlTreeReader
 
     private IReadOnlyList<CaptureColumn> ReadColumns(Control control)
     {
+        if (control is ListBox { Name: "Patches" }
+            && control.GetLogicalAncestors().OfType<PatchGrid>().FirstOrDefault() is { } patchGrid)
+        {
+            return ReadPatchGridColumns(patchGrid);
+        }
+
         if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormVerify"
             && control.Name == "Warnings")
         {
@@ -4385,6 +4402,48 @@ internal sealed class AvaloniaControlTreeReader
         }
 
         return [];
+    }
+
+    private IReadOnlyList<CaptureColumn> ReadPatchGridColumns(PatchGrid patchGrid)
+    {
+        Grid columnsGrid = patchGrid.GetLogicalDescendants().OfType<Grid>().Single(grid => grid.Name == "columnsGrid");
+        bool isManagingRebase = patchGrid.IsManagingRebase;
+        string[] fieldNames =
+        [
+            "Status",
+            "Action",
+            "FileName",
+            "subjectDataGridViewTextBoxColumn",
+            "authorDataGridViewTextBoxColumn",
+            "dateDataGridViewTextBoxColumn",
+            "CommitHash"
+        ];
+        string[] headerTexts = ["Status", "Action", "Name", "Subject", "Author", "Date", "Commit hash"];
+        bool[] visible = [true, isManagingRebase, !isManagingRebase, true, true, true, isManagingRebase];
+        double fixedWidth = isManagingRebase ? 45 + 48 + 140 + 37 + 85 : 45 + 50 + 140 + 37;
+        double subjectWidth = Math.Max(0, columnsGrid.Bounds.Width - fixedWidth - 1);
+        double[] widths = isManagingRebase
+            ? [45, 48, 50, subjectWidth, 140, 37, 85]
+            : [45, 100, 50, subjectWidth, 140, 37, 55];
+        CaptureColors colors = ReadSourceDataGridColumnColors();
+
+        return fieldNames.Select((fieldName, index) => new CaptureColumn
+        {
+            FieldName = fieldName,
+            Name = fieldName,
+            Type = "System.Windows.Forms.DataGridViewTextBoxColumn",
+            Index = index,
+            DisplayIndex = index,
+            WidthPx = ToPixel(widths[index]),
+            WidthDip = ToDecimal(widths[index]),
+            Visible = visible[index],
+            Resizable = true,
+            SortMode = "NotSortable",
+            Alignment = "NotSet",
+            HeaderText = headerTexts[index],
+            HeaderAlignment = "NotSet",
+            Colors = colors
+        }).ToArray();
     }
 
     private IReadOnlyList<CaptureColumn> ReadFormVerifyColumns()
@@ -4833,6 +4892,9 @@ internal sealed class AvaloniaControlTreeReader
            || (control.GetType().Namespace == "GitUI.Compat.WinFormsControls"
                 && (control.GetType().Name == "ColumnHeader"
                     || control.GetType().Name.EndsWith("Column", StringComparison.Ordinal)))
+           || (control is Border
+               && control.Parent is Grid { Name: "columnsGrid" }
+               && control.GetLogicalAncestors().OfType<PatchGrid>().Any())
            || (control is Image
                && control.Parent?.GetType().FullName == "GitUI.Compat.WinFormsControls.PictureBox")
            || control.GetType().FullName == "GitUI.SpellChecker.SpellCheckAdorner"
@@ -6053,7 +6115,10 @@ internal sealed class AvaloniaControlTreeReader
         => (_root.GetType().FullName is
                "GitUI.CommandsDialogs.FormCheckoutRevision" or
                "GitUI.CommandsDialogs.FormPull" or
-               "GitUI.CommandsDialogs.FormDeleteRemoteBranch")
+               "GitUI.CommandsDialogs.FormDeleteRemoteBranch" or
+               "GitUI.CommandsDialogs.FormClone" or
+               "GitUI.CommandsDialogs.FormInit" or
+               "GitUI.CommandsDialogs.FormRebase")
            && (control.Name is "MainPanel" or "ControlsPanel");
 
     private Thickness GetInheritedFormProcessPadding(Control control)

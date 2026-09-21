@@ -50,6 +50,15 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormDiff" => CreateFormDiff(commands),
             "GitUI.CommandsDialogs.FormCompareToBranch" => new FormCompareToBranch(commands, commands.Module.RevParse("HEAD")),
             "GitUI.CommandsDialogs.FormFormatPatch" => new FormFormatPatch(commands),
+            "GitUI.CommandsDialogs.FormAddFiles" => new FormAddFiles(commands),
+            "GitUI.CommandsDialogs.FormApplyPatch" => new FormApplyPatch(commands),
+            "GitUI.CommandsDialogs.FormArchive" => CreateFormArchive(commands),
+            "GitUI.CommandsDialogs.FormCherryPick" => new FormCherryPick(commands, CreateRevision(commands)),
+            "GitUI.CommandsDialogs.FormClone" =>
+                new FormClone(commands, "https://github.com/gitextensions/gitextensions.git", false, null),
+            "GitUI.CommandsDialogs.FormInit" => new FormInit(commands, commands.Module.WorkingDir, null),
+            "GitUI.CommandsDialogs.FormMergeBranch" => new FormMergeBranch(commands, "feature/visual-parity"),
+            "GitUI.CommandsDialogs.FormRebase" => new FormRebase(commands, "feature/visual-parity"),
             "GitUI.CommandsDialogs.FormBlame" => CreateFormBlame(commands),
             "GitUI.CommandsDialogs.FormLog" => new FormLog(commands),
             "GitUI.CommandsDialogs.FormAddToGitIgnore" => new FormAddToGitIgnore(commands, localExclude: false, "src/*.cs"),
@@ -126,6 +135,15 @@ internal static class ComponentFactory
         DeleteCaptureStateFile(Path.Combine(gitDirectory, "COMMITMESSAGE"));
         DeleteCaptureStateFile(Path.Combine(gitDirectory, "GitExtensions.amend"));
         return new FormCommit(commands);
+    }
+
+    // parity-scaffolding: Seeds both revision selectors through the original public archive API.
+    private static FormArchive CreateFormArchive(GitUICommands commands)
+    {
+        GitRevision revision = CreateRevision(commands);
+        FormArchive form = new(commands) { SelectedRevision = revision };
+        form.SetDiffSelectedRevision(revision);
+        return form;
     }
 
     // parity-scaffolding: FormVerify normally starts a modal fsck process from Shown. The

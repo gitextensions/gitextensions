@@ -151,7 +151,7 @@ public sealed class RebaseTests
         form.chkInteractive.IsChecked = true;
         form.chkAutosquash.IsEnabled.Should().BeTrue();
         form.btnEditTodo.IsVisible.Should().BeFalse();
-        form.PatchGrid.IsVisible.Should().BeFalse();
+        form.PatchGrid.IsVisible.Should().BeTrue("upstream keeps the empty commit grid visible before a rebase starts");
         form.Close();
     }
 

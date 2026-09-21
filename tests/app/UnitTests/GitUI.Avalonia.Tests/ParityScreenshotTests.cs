@@ -773,17 +773,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormCherryPick))
         {
-            IGitModule module = Substitute.For<IGitModule>();
-            module.WorkingDir.Returns(context.WorkingDirectory);
-            module.IsMerge(context.HeadRevision.ObjectId).Returns(true);
-            GitRevision secondParent = context.ParentRevision.Clone();
-            secondParent.Author = "Second Parent Author";
-            secondParent.Subject = "Preserve the second side of the representative merge";
-            module.GetParentRevisions(context.HeadRevision.ObjectId).Returns([context.ParentRevision, secondParent]);
-            IGitUICommands commands = Substitute.For<IGitUICommands>();
-            commands.Module.Returns(module);
-            commands.GetService(Arg.Any<Type>()).Returns(call => context.Commands.GetService(call.Arg<Type>()));
-            return new FormCherryPick(commands, context.HeadRevision);
+            return new FormCherryPick(context.Commands, context.HeadRevision);
         }
 
         if (viewType == typeof(FormRevertCommit))
@@ -924,7 +914,7 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormArchive))
         {
             FormArchive form = new(context.Commands) { SelectedRevision = context.HeadRevision };
-            form.SetDiffSelectedRevision(context.ParentRevision);
+            form.SetDiffSelectedRevision(context.HeadRevision);
             return form;
         }
 
@@ -2218,6 +2208,40 @@ public sealed partial class ParityScreenshotTests
             return (824, 532);
         }
 
+        if (viewType == typeof(FormAddFiles))
+        {
+            // parity-scaffolding: The 120-DPI Designer normalizes to the source's native-96 runtime client.
+            return (443, 65);
+        }
+
+        if (viewType == typeof(FormApplyPatch))
+        {
+            return (711, 436);
+        }
+
+        if (viewType == typeof(FormClone))
+        {
+            // parity-scaffolding: Source AutoSize grows the client to the deterministic runtime content.
+            return (647, 372);
+        }
+
+        if (viewType == typeof(FormInit))
+        {
+            // parity-scaffolding: Source AutoSize grows the client to the deterministic runtime content.
+            return (542, 190);
+        }
+
+        if (viewType == typeof(FormMergeBranch))
+        {
+            // parity-scaffolding: Source AutoSize resolves the translated help and options content at runtime.
+            return (783, 424);
+        }
+
+        if (viewType == typeof(FormRebase))
+        {
+            return (1034, 461);
+        }
+
         if (viewType == typeof(FormBlame))
         {
             return (784, 762);
@@ -2498,12 +2522,13 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormArchive))
         {
-            return (610, 609);
+            return (594, 571);
         }
 
         if (viewType == typeof(FormCherryPick))
         {
-            return (630, 470);
+            // parity-scaffolding: Source AutoSize contracts the single-parent state to its runtime client.
+            return (614, 332);
         }
 
         if (viewType == typeof(FormRevertCommit))

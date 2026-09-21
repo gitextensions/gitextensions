@@ -239,9 +239,6 @@ public partial class FormRebase : GitExtensionsDialog
         btnSkip.IsVisible = inRebase;
         btnAbort.IsVisible = inRebase;
         btnSolveMergeconflicts.IsVisible = conflictedMerge;
-        PatchGrid.IsVisible = inRebase;
-        lblCommitsToReapply.IsVisible = inRebase;
-
         btnContinueRebase.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_continueRebaseText.Text);
         btnSolveConflicts.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_solveConflictsText.Text);
         MergeToolPanel.Background = null;
