@@ -88,6 +88,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private readonly TranslationString _chooseBaseFileFailedText = new("Choose base file failed.");
     private readonly TranslationString _chooseLocalFileFailedText = new("Choose local file failed.");
     private readonly TranslationString _chooseRemoteFileFailedText = new("Choose remote file failed.");
+    private readonly TranslationString _chooseFileFailedDetailText = new("{0}" + Environment.NewLine + Environment.NewLine + "File: {1}" + Environment.NewLine + "{2}");
 
     private readonly TranslationString _currentFormatFilter =
         new("Current format (*.{0})");
@@ -899,9 +900,9 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void ChooseBaseOnConflict(string fileName)
     {
-        if (!Module.HandleConflictSelectSide(fileName, "BASE"))
+        if (!Module.HandleConflictSelectSide(fileName, "BASE", out string errorMessage))
         {
-            MessageBoxes.Show(this, _chooseBaseFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, string.Format(_chooseFileFailedDetailText.Text, _chooseBaseFileFailedText.Text, fileName, errorMessage), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -930,9 +931,9 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void ChooseLocalOnConflict(string fileName)
     {
-        if (!Module.HandleConflictSelectSide(fileName, "LOCAL"))
+        if (!Module.HandleConflictSelectSide(fileName, "LOCAL", out string errorMessage))
         {
-            MessageBoxes.Show(this, _chooseLocalFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, string.Format(_chooseFileFailedDetailText.Text, _chooseLocalFileFailedText.Text, fileName, errorMessage), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -961,9 +962,9 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void ChooseRemoteOnConflict(string fileName)
     {
-        if (!Module.HandleConflictSelectSide(fileName, "REMOTE"))
+        if (!Module.HandleConflictSelectSide(fileName, "REMOTE", out string errorMessage))
         {
-            MessageBoxes.Show(this, _chooseRemoteFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, string.Format(_chooseFileFailedDetailText.Text, _chooseRemoteFileFailedText.Text, fileName, errorMessage), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
