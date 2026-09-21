@@ -107,11 +107,7 @@ partial class RepoObjectsTree : IMenuItemFactory
         mnubtnOpenWorktree.Enable(isSingleWorktreeSelected);
         mnubtnOpenWorktree.Enabled = canActOnWorktree;
         mnubtnDeleteWorktree.Enable(isSingleWorktreeSelected);
-
-        // Deleting the main worktree would delete the repository along with it, which is why git
-        // itself refuses to remove it. Its detection does not rely on comparing paths, so it holds
-        // even where the current worktree is not recognised (e.g. behind a junction or mount point).
-        mnubtnDeleteWorktree.Enabled = canActOnWorktree && worktreeNode?.Worktree.IsMain is false;
+        mnubtnDeleteWorktree.Enabled = canActOnWorktree && worktreeNode is { Worktree.IsMain: false };
         mnubtnCopyWorktreePath.Enable(isSingleWorktreeSelected);
         mnubtnShowWorktreeInFolder.Enable(isSingleWorktreeSelected);
         mnubtnShowWorktreeInFolder.Enabled = worktreePathExists;
