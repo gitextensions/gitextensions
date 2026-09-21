@@ -144,7 +144,16 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
 
         Width = width;
         MinWidth = width;
-        if (TopLevel.GetTopLevel(this) is not Window form || widthDelta == 0)
+        if (TopLevel.GetTopLevel(this) is not Window form)
+        {
+            // The control already contributes this width when it is first attached. Remember
+            // that pre-attachment state so loading an expanded preference does not add the
+            // same width to the host window a second time.
+            _hostContributionWidth = width;
+            return;
+        }
+
+        if (widthDelta == 0)
         {
             return;
         }

@@ -1,40 +1,52 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="GitUI.CommandsDialogs.FormAddFiles"
-        Width="570"
-        Height="120"
-        MinWidth="570"
-        MinHeight="120"
-        MaxHeight="120"
+        Width="443"
+        Height="65"
+        MinWidth="443"
+        MinHeight="65"
+        MaxHeight="65"
         CanResize="True"
         WindowStartupLocation="CenterOwner"
         Title="Add files">
-  <Grid Classes="gitextensions-dialog-main"
-        RowDefinitions="Auto,Auto"
-        ColumnDefinitions="Auto,*,Auto,Auto"
-        RowSpacing="8"
-        ColumnSpacing="8">
+  <!-- The WinForms source was authored at 120 DPI. These integral bounds are its
+       native 96-DPI layout, not dimensions inferred from a scaled screenshot. -->
+  <Canvas>
     <Label x:Name="label1"
+           Canvas.Left="12"
+           Canvas.Top="5"
+           Width="33"
+           Height="15"
+           Padding="0"
            Content="Filter"
            Target="{Binding #Filter}"
            VerticalAlignment="Center" />
     <TextBox x:Name="Filter"
-             Grid.Column="1"
+             Canvas.Left="71"
+             Canvas.Top="5"
+             Width="174"
+             Height="23"
              Text="." />
     <Button x:Name="ShowFiles"
             Classes="gitextensions-dialog-action"
-            Grid.Column="2"
-            MinWidth="94"
+            Canvas.Left="272"
+            Canvas.Top="3"
+            Width="75"
+            Height="25"
             Content="Show files" />
     <Button x:Name="AddFiles"
             Classes="gitextensions-dialog-action"
-            Grid.Column="3"
-            MinWidth="94"
+            Canvas.Left="354"
+            Canvas.Top="3"
+            Width="75"
+            Height="25"
             Content="Add files"
             IsDefault="True" />
     <CheckBox x:Name="force"
-              Grid.Row="1"
-              Grid.Column="1"
+              Canvas.Left="71"
+              Canvas.Top="32"
+              Width="55"
+              Height="19"
               Content="Force" />
-  </Grid>
+  </Canvas>
 </Window>
