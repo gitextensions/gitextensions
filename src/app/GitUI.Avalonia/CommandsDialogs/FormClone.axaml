@@ -2,25 +2,35 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:compat="using:GitUI.Compat"
         xmlns:properties="using:GitUI.Properties"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
         x:Class="GitUI.CommandsDialogs.FormClone"
         Width="647" SizeToContent="Height"
         MinWidth="434" MaxWidth="934" CanResize="False"
         WindowStartupLocation="CenterOwner"
         Title="Clone">
-  <Grid Classes="gitextensions-dialog-main" RowDefinitions="307,*">
-    <Grid x:Name="tpnlMain"
-          Grid.Row="0"
+  <Grid RowDefinitions="331,41">
+    <wf:Panel x:Name="MainPanel"
+              Padding="12"
+              Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
+    <wf:TableLayoutPanel x:Name="tpnlMain"
           RowDefinitions="125,55,98,29">
-      <Grid x:Name="tableLayoutPanel1"
-          ColumnDefinitions="Auto,*,100"
+      <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
+          ColumnDefinitions="132,*,100"
           RowDefinitions="31,31,31,32"
-          ColumnSpacing="6">
+          Margin="0">
       <Label x:Name="repositoryLabel"
-             Classes="gitextensions-dialog-label"
+             Margin="3,0"
+             Width="112"
+             Height="31"
+             Padding="0"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Top"
+             VerticalContentAlignment="Center"
              Content="Repository to _clone:"
              Target="{Binding #_NO_TRANSLATE_From}" />
       <ComboBox x:Name="_NO_TRANSLATE_From"
                 Grid.Column="1"
+                Margin="3,4"
                 HorizontalAlignment="Stretch"
                 IsEditable="True" />
       <compat:IconButton x:Name="FromBrowse"
@@ -29,17 +39,25 @@
                          Width="94"
                          Height="24"
                          HorizontalAlignment="Stretch"
+                         VerticalAlignment="Top"
                          HorizontalContentAlignment="Center"
                          Icon="{x:Static properties:Images.BrowseFileExplorer}"
                          Content="_Browse" />
 
       <Label x:Name="destinationLabel"
-             Classes="gitextensions-dialog-label"
              Grid.Row="1"
+             Margin="3,0"
+             Width="70"
+             Height="31"
+             Padding="0"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Top"
+             VerticalContentAlignment="Center"
              Content="_Destination:"
              Target="{Binding #_NO_TRANSLATE_To}" />
       <ComboBox x:Name="_NO_TRANSLATE_To"
                 Grid.Row="1" Grid.Column="1"
+                Margin="3,4"
                 HorizontalAlignment="Stretch"
                 IsEditable="True" />
       <compat:IconButton x:Name="ToBrowse"
@@ -53,35 +71,48 @@
                          Content="B_rowse" />
 
       <Label x:Name="subdirectoryLabel"
-             Classes="gitextensions-dialog-label"
              Grid.Row="2"
+             Margin="3,0"
+             Width="126"
+             Height="31"
+             Padding="0"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Top"
+             VerticalContentAlignment="Center"
              Content="_Subdirectory to create:"
              Target="{Binding #_NO_TRANSLATE_NewDirectory}" />
       <TextBox x:Name="_NO_TRANSLATE_NewDirectory"
                Grid.Row="2" Grid.Column="1"
+               Margin="3,4"
+               Height="23"
                HorizontalAlignment="Stretch" />
 
       <Label x:Name="brachLabel"
-             Classes="gitextensions-dialog-label"
              Grid.Row="3"
+             Margin="3,0"
+             Width="47"
+             Height="32"
+             Padding="0"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Top"
+             VerticalContentAlignment="Center"
              Content="Br_anch:"
              Target="{Binding #_NO_TRANSLATE_Branches}" />
       <ComboBox x:Name="_NO_TRANSLATE_Branches"
                 Grid.Row="3" Grid.Column="1"
+                Margin="3,4"
                 HorizontalAlignment="Stretch"
                 IsEditable="True" />
-      </Grid>
+      </wf:TableLayoutPanel>
 
-    <Border Grid.Row="1"
-            Margin="3,13,3,0"
-            Height="42"
-            BorderThickness="1"
-            BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
-            Padding="6,4">
-      <TextBlock x:Name="Info"
-                 TextWrapping="Wrap"
-                 VerticalAlignment="Center" />
-    </Border>
+    <TextBlock x:Name="Info"
+               Grid.Row="1"
+               Margin="3,13,3,0"
+               Height="42"
+               Padding="6,4"
+               Background="{DynamicResource GitExtensionsKnownColorInfoBrush}"
+               TextWrapping="Wrap"
+               VerticalAlignment="Top" />
 
     <HeaderedContentControl x:Name="groupBox1"
                             Classes="gitextensions-group-box"
@@ -89,39 +120,58 @@
                             Margin="3,4,3,6"
                             Height="88"
                             Header="Repository type">
-      <StackPanel Spacing="6">
+      <Canvas>
         <RadioButton x:Name="PersonalRepository"
+                     Canvas.Left="12"
+                     Canvas.Top="1"
+                     Width="126"
+                     Height="19"
                      Content="_Personal repository"
                      IsChecked="True" />
         <RadioButton x:Name="CentralRepository"
+                     Canvas.Left="12"
+                     Canvas.Top="24"
+                     Width="277"
+                     Height="19"
                      Content="P_ublic repository, no working directory  (--bare)" />
-      </StackPanel>
+      </Canvas>
     </HeaderedContentControl>
 
-    <StackPanel x:Name="optionsPanel"
+    <wf:FlowLayoutPanel x:Name="optionsPanel"
                 Grid.Row="3"
-                Margin="0,4,0,0"
+                Margin="0,7,0,0"
                 Height="25"
-                Orientation="Horizontal"
-                Spacing="24">
+                HorizontalAlignment="Stretch">
+      <StackPanel Orientation="Horizontal">
       <CheckBox x:Name="cbIntializeAllSubmodules"
+                Margin="15,3,9,3"
+                Width="152"
                 Content="Initialize all submodules"
                 IsChecked="True" />
       <CheckBox x:Name="cbDownloadFullHistory"
                 compat:TranslationCompat.ToolTipPropertyName="ttHints"
+                Margin="15,3,9,3"
+                Width="139"
                 Content="Download full _history"
                 IsChecked="True" />
-    </StackPanel>
-    </Grid>
+      </StackPanel>
+    </wf:FlowLayoutPanel>
+    </wf:TableLayoutPanel>
+    </wf:Panel>
 
-    <!-- ControlsPanel -->
-    <StackPanel x:Name="ControlsPanel"
-                Classes="gitextensions-dialog-controls"
-                Grid.Row="1">
+    <wf:FlowLayoutPanel x:Name="ControlsPanel" Grid.Row="1">
+      <Grid Width="647"
+            Height="41"
+            Background="{DynamicResource GitExtensionsDialogControlsBackgroundBrush}">
       <Button x:Name="Ok"
               Classes="gitextensions-dialog-action"
+              Margin="0,8,13,8"
+              Width="75"
+              Height="25"
+              HorizontalAlignment="Right"
               Content="Clone"
               IsDefault="True" />
-    </StackPanel>
+      </Grid>
+    </wf:FlowLayoutPanel>
   </Grid>
 </Window>

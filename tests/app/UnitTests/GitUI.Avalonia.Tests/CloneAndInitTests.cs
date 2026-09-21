@@ -161,6 +161,8 @@ public sealed class CloneAndInitTests
 
         ComboBox branches = form.FindControl<ComboBox>("_NO_TRANSLATE_Branches")!;
         branches.ItemCount.Should().Be(2, "the default remote-HEAD and no-checkout items are listed");
+        branches.SelectedIndex.Should().Be(0, "WinForms selects the first DataSource item by default");
+        branches.SelectedItem.Should().Be("(default: remote HEAD)");
         form.FindControl<RadioButton>("PersonalRepository")!.IsChecked.Should().BeTrue();
         form.FindControl<CheckBox>("cbDownloadFullHistory")!.IsChecked.Should().BeTrue();
         form.FindControl<CheckBox>("cbIntializeAllSubmodules")!.IsChecked.Should().BeTrue();

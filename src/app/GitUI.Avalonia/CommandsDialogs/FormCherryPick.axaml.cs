@@ -46,6 +46,7 @@ public partial class FormCherryPick : GitExtensionsDialog
 
     private void WireControls()
     {
+        lvParentsList.AddColumns(columnHeader1, columnHeader2, columnHeader3, columnHeader4);
         lvParentsList.ItemTemplate = new FuncDataTemplate<CherryPickParentRow>(CreateParentRow, supportsRecycling: false);
         btnPick.Click += btnPick_Click;
         btnAbort.Click += btnAbort_Click;

@@ -883,7 +883,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormInit))
         {
-            return new FormInit(context.Commands, context.WorkingDirectory, gitModuleChanged: null);
+            return new FormInit(context.Commands, context.Module.WorkingDir, gitModuleChanged: null);
         }
 
         if (viewType == typeof(FormMergeBranch))
