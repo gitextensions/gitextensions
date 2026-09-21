@@ -562,7 +562,9 @@ internal sealed class AvaloniaControlTreeReader
             && ((_root.GetType().FullName == "GitUI.CommandsDialogs.FormAddToGitIgnore"
                     && control.Name == "FilePattern")
                 || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormGitIgnore"
-                    && control.Name == "label1"));
+                    && control.Name == "label1")
+                || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormArchive"
+                    && control.Name == "textBoxPaths"));
         bool isShellPreviewPanel = _root.GetType().FullName == "GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage"
             && control is Border
             && string.IsNullOrEmpty(control.Name)
@@ -1106,8 +1108,10 @@ internal sealed class AvaloniaControlTreeReader
                                                     ? ReadSourceDesignerButtonColors(control)
                                                  : isSourceDataGrid
                                                      ? ReadSourceDataGridColors(control)
-                                                 : isDialogControlsPanel
+                                                : isDialogControlsPanel
                                                      ? ReadDialogControlsPanelColors(control)
+                                                : isInheritedFormProcessContainer
+                                                    ? ReadInheritedFormProcessColors(control)
                                                 : hasSourceTransparentColors
                                                     ? ReadTransparentContainerColors(control)
                                                 : hasSourceLightTransparentColors && !IsDarkTheme()
@@ -1177,6 +1181,8 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (isSpellCheckEditor ? "None" : null)
                 ?? (isSpellCheckTextBox || isSourceLabelSubstitute || isSourceTransparentContainer || isFileViewerInternal ? "None" : null)
                 ?? (isFileViewerTextEditor ? "None" : null)
+                ?? (control is BranchComboBox ? "None" : null)
+                ?? (control is PatchGrid ? "None" : null)
                 ?? (isSourceDataGrid ? "FixedSingle" : null)
                 ?? (isDesignerMetadataControl
                     ? GetDefaultDesignerBorderStyle(control, sourceType)
@@ -1842,8 +1848,47 @@ internal sealed class AvaloniaControlTreeReader
             };
         }
 
-        if (rootMetadataType == "GitUI.HelperDialogs.FormResetAnotherBranch"
-            && sourceOwnerType == "GitUI.UserControls.CommitSummaryUserControl")
+        if (rootMetadataType is "GitUI.CommandsDialogs.FormClone" or "GitUI.CommandsDialogs.FormInit")
+        {
+            if (semanticName == "tpnlMain")
+            {
+                node = node with
+                {
+                    Margin = ReadThicknessPair(default(Thickness)),
+                    Dock = "Fill",
+                    AutoSize = true,
+                    TabIndex = 0,
+                    TabStop = false
+                };
+            }
+
+            if (rootMetadataType == "GitUI.CommandsDialogs.FormInit" && semanticName == "tableLayoutPanel1")
+            {
+                node = node with
+                {
+                    Margin = ReadThicknessPair(default(Thickness)),
+                    Dock = "Top",
+                    AutoSize = true,
+                    TabIndex = 0,
+                    TabStop = false
+                };
+            }
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormRebase"
+            && semanticName is "MergeToolPanel" or "btnSolveConflicts")
+        {
+            node = node with
+            {
+                Colors = node.Colors with
+                {
+                    Background = "#00FFFFFF",
+                    DisabledBackground = "#00FFFFFF"
+                }
+            };
+        }
+
+        if (sourceOwnerType == "GitUI.UserControls.CommitSummaryUserControl")
         {
             if (semanticName is "labelMessage" or "labelAuthor" or "labelDate" or "labelBranches" or "labelTags")
             {
@@ -3389,6 +3434,8 @@ internal sealed class AvaloniaControlTreeReader
                 && name is "tableLayoutPanel1" or "lblSeparatorTop" or "lblSeparatorBottom")
            || (sourceOwnerType == "GitUI.CommandsDialogs.FormVerify"
                && name is "panel1" or "panel2" or "flowLayoutPanel1")
+           || (sourceOwnerType == "GitUI.CommandsDialogs.FormRebase"
+               && name is "PanelCurrentBranch" or "flowLayoutPanel1" or "flowLayoutPanel2")
            || (sourceOwnerType == "GitUI.UserControls.CommitSummaryUserControl"
                && name == "tableLayoutPanel1")
            || (sourceOwnerType == "GitUI.CommandsDialogs.SettingsDialog.Pages.ChecklistSettingsPage"
@@ -3401,6 +3448,8 @@ internal sealed class AvaloniaControlTreeReader
             ("GitUI.CommandsDialogs.EnvironmentInfo", "lblSeparatorTop" or "lblSeparatorBottom") => "System.Windows.Forms.Label",
             ("GitUI.CommandsDialogs.FormVerify", "panel1" or "panel2") => "System.Windows.Forms.Panel",
             ("GitUI.CommandsDialogs.FormVerify", "flowLayoutPanel1") => "System.Windows.Forms.FlowLayoutPanel",
+            ("GitUI.CommandsDialogs.FormRebase", "PanelCurrentBranch" or "flowLayoutPanel1" or "flowLayoutPanel2")
+                => "System.Windows.Forms.FlowLayoutPanel",
             ("GitUI.UserControls.CommitSummaryUserControl", "tableLayoutPanel1") => "System.Windows.Forms.TableLayoutPanel",
             ("GitUI.CommandsDialogs.SettingsDialog.Pages.ChecklistSettingsPage", "groupBox1") => "System.Windows.Forms.GroupBox",
             _ => null
@@ -3880,11 +3929,11 @@ internal sealed class AvaloniaControlTreeReader
         }
 
         if (ReferenceEquals(control, _root)
-            && _root.GetType().FullName == "GitUI.CommandsDialogs.FormDeleteRemoteBranch")
+            && children.Any(IsInheritedFormProcessContainer))
         {
             // WinForms FormProcess adds MainPanel before the bottom ControlsPanel. Avalonia's
-            // DockPanel keeps the bottom child first for layout, so restore source order only
-            // in the semantic tree.
+            // layout may keep the bottom child first, so restore source order only in the
+            // semantic tree for every inherited FormProcess surface.
             children = children.OrderBy(child => child.Name switch
             {
                 "MainPanel" => 0,
@@ -4866,6 +4915,8 @@ internal sealed class AvaloniaControlTreeReader
            || (control is StackPanel
                 && string.IsNullOrEmpty(control.Name)
                 && control.Parent?.GetType().FullName == "GitUI.Compat.WinFormsControls.FlowLayoutPanel")
+           || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormCherryPick"
+               && control is Grid { Name: "parentsPanel" })
            || (_root.GetType().FullName == "GitUI.SpellChecker.EditNetSpell"
                && control is Grid or Canvas
                && string.IsNullOrEmpty(control.Name))
@@ -5776,7 +5827,12 @@ internal sealed class AvaloniaControlTreeReader
         DesignerLayoutMetadata? designerLayout = null)
     {
         CaptureColors colors = ReadColors(control);
-        string? background = ResolveSourceAmbientBackground(control, "GitExtensionsControlBackgroundBrush");
+        // A WinForms control without an explicit BackColor inherits its parent's resolved
+        // color. Do not let an Avalonia implicit style on the substitute control masquerade
+        // as a source-authored color.
+        string? background = designerLayout?.HasExplicitBackground == true
+            ? colors.Background
+            : ResolveSourceAncestorBackground(control, "GitExtensionsControlBackgroundBrush");
         return colors with
         {
             Foreground = designerLayout?.HasExplicitForeground == true
@@ -5784,7 +5840,7 @@ internal sealed class AvaloniaControlTreeReader
                 : ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
                   ?? ResolveSourceControlTextArgb()
                   ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
-            Background = designerLayout?.HasExplicitBackground == true ? colors.Background : background,
+            Background = background,
             Border = null,
             SelectionForeground = null,
             SelectionBackground = null,
@@ -5878,19 +5934,34 @@ internal sealed class AvaloniaControlTreeReader
         };
     }
 
+    private CaptureColors ReadInheritedFormProcessColors(Control control)
+    {
+        CaptureColors colors = ReadColors(control);
+        string backgroundResource = control.Name == "ControlsPanel"
+            ? "GitExtensionsDialogControlsBackgroundBrush"
+            : "GitExtensionsPanelBackgroundBrush";
+        string? background = ResolveResourceArgb(backgroundResource);
+        return colors with
+        {
+            Foreground = ResolveSourceControlTextArgb() ?? colors.Foreground,
+            Background = background,
+            DisabledBackground = background
+        };
+    }
+
     private CaptureColors ReadSourceDataGridColors(Control control)
     {
         bool usesWindowBackground = control.Name == "RemoteBranches";
         string? background = ResolveResourceArgb(usesWindowBackground
             ? "GitExtensionsKnownColorWindowBrush"
-            : "GitExtensionsKnownColorControlDarkBrush");
+            : "GitExtensionsKnownColorControlLightBrush");
         return new CaptureColors
         {
-            Foreground = ResolveSourceControlTextArgb(),
+            Foreground = ResolveResourceArgb("GitExtensionsKnownColorWindowTextBrush"),
             Background = background,
             Border = ResolveResourceArgb("GitExtensionsKnownColorControlBrush"),
             SelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush"),
-            SelectionBackground = ResolveResourceArgb("GitExtensionsDataGridViewSelectionBackgroundBrush"),
+            SelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush"),
             InactiveSelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush")
                                           ?? ResolveResourceArgb("GitExtensionsHighlightForegroundBrush"),
             InactiveSelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorInactiveCaptionBrush"),
@@ -6116,6 +6187,7 @@ internal sealed class AvaloniaControlTreeReader
                "GitUI.CommandsDialogs.FormCheckoutRevision" or
                "GitUI.CommandsDialogs.FormPull" or
                "GitUI.CommandsDialogs.FormDeleteRemoteBranch" or
+               "GitUI.CommandsDialogs.FormCherryPick" or
                "GitUI.CommandsDialogs.FormClone" or
                "GitUI.CommandsDialogs.FormInit" or
                "GitUI.CommandsDialogs.FormRebase")

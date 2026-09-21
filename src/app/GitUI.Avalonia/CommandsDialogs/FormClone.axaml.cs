@@ -60,6 +60,7 @@ public sealed partial class FormClone : GitExtensionsDialog
         _url = url;
         _defaultBranchItems = new[] { _branchDefaultRemoteHead.Text, _branchNone.Text };
         _NO_TRANSLATE_Branches.ItemsSource = _defaultBranchItems;
+        _NO_TRANSLATE_Branches.SelectedIndex = 0;
     }
 
     private void WireControls()
