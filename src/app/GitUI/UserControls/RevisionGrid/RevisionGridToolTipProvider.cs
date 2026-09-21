@@ -143,19 +143,10 @@ internal sealed class RevisionGridToolTipProvider
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal readonly struct TestAccessor
+    internal readonly struct TestAccessor(RevisionGridToolTipProvider provider)
     {
-        private readonly RevisionGridToolTipProvider _provider;
-
-        public TestAccessor(RevisionGridToolTipProvider provider)
-        {
-            _provider = provider;
-        }
-
-        public ToolTip ToolTip => _provider._toolTip;
-
-        public int PreviousRowIndex => _provider._previousRowIndex;
-
-        public string? GetToolTipText() => _provider._toolTip.GetToolTip(_provider._gridView);
+        public ToolTip ToolTip => provider._toolTip;
+        public int PreviousRowIndex => provider._previousRowIndex;
+        public string? GetToolTipText() => provider._toolTip.GetToolTip(provider._gridView);
     }
 }
