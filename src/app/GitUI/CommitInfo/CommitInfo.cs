@@ -216,6 +216,7 @@ public partial class CommitInfo : GitModuleControl
 
         // Cancel unconditionally: any in-flight load belongs to the previous repository.
         CancellationToken cancellationToken = _asyncLoadCancellation.Next();
+        _tagsOrderDict = null;
 
         ClearRevisionDetailsDisplay();
         UpdateRevisionInfo();
@@ -234,6 +235,8 @@ public partial class CommitInfo : GitModuleControl
 
     private void RefreshSortedTags()
     {
+        _tagsOrderDict = null;
+
         if (!Module.IsValidGitWorkingDir())
         {
             return;
