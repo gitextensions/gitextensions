@@ -158,16 +158,9 @@ public partial class RevisionGpgInfoControl : GitModuleControl
     internal TestAccessor GetTestAccessor()
         => new(this);
 
-    internal readonly struct TestAccessor
+    internal readonly struct TestAccessor(RevisionGpgInfoControl control)
     {
-        private readonly RevisionGpgInfoControl _control;
-
-        public TestAccessor(RevisionGpgInfoControl control)
-        {
-            _control = control;
-        }
-
-        public string CommitGpgInfoText => _control.txtCommitGpgInfo.Text;
-        public bool CommitSignPictureVisible => _control.commitSignPicture.Visible;
+        public string CommitGpgInfoText => control.txtCommitGpgInfo.Text;
+        public bool CommitSignPictureVisible => control.commitSignPicture.Visible;
     }
 }
