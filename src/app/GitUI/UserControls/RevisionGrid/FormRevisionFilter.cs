@@ -142,18 +142,10 @@ public partial class FormRevisionFilter : GitExtensionsDialog
     internal TestAccessor GetTestAccessor()
         => new(this);
 
-    internal readonly struct TestAccessor
+    internal readonly struct TestAccessor(FormRevisionFilter form)
     {
-        private readonly FormRevisionFilter _form;
-
-        public TestAccessor(FormRevisionFilter form)
-        {
-            _form = form;
-        }
-
-        public CheckBox FullHistoryCheck => _form.FullHistoryCheck;
-        public CheckBox SimplifyMergesCheck => _form.SimplifyMergesCheck;
-
-        public void UpdateFilters() => _form.UpdateFilters();
+        public CheckBox FullHistoryCheck => form.FullHistoryCheck;
+        public CheckBox SimplifyMergesCheck => form.SimplifyMergesCheck;
+        public void UpdateFilters() => form.UpdateFilters();
     }
 }
