@@ -3,10 +3,10 @@
         xmlns:properties="using:GitUI.Properties"
         xmlns:usercontrols="using:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormCherryPick"
-        Width="630"
+        Width="614"
         SizeToContent="Height"
-        MinWidth="630"
-        MinHeight="370"
+        MinWidth="614"
+        MinHeight="331"
         WindowStartupLocation="CenterOwner"
         CanResize="False"
         Title="Cherry pick commit">

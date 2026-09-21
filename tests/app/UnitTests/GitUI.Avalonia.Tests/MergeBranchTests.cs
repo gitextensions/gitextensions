@@ -168,6 +168,19 @@ public sealed class MergeBranchTests
     }
 
     [AvaloniaTest]
+    public void Expanded_help_should_not_add_its_pre_attach_width_to_the_host_twice()
+    {
+        (IGitUICommands commands, _) = CreateCommands("main", "feature");
+        FormMergeBranch form = new(commands, "feature") { Width = 783 };
+
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        form.Width.Should().Be(783);
+        form.Close();
+    }
+
+    [AvaloniaTest]
     public void FormMergeBranch_should_load_refs_and_honor_the_default_branch()
     {
         (IGitUICommands commands, IGitModule module) = CreateCommands("main", "feature", "origin/main");

@@ -4,13 +4,13 @@
   <Grid x:Name="columnsGrid"
         RowDefinitions="Auto,*">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="82" />
-      <ColumnDefinition Width="82" />
-      <ColumnDefinition Width="70" />
+      <ColumnDefinition Width="45" />
+      <ColumnDefinition Width="48" />
+      <ColumnDefinition Width="50" />
       <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="150" />
       <ColumnDefinition Width="140" />
-      <ColumnDefinition Width="110" />
+      <ColumnDefinition Width="37" />
+      <ColumnDefinition Width="85" />
     </Grid.ColumnDefinitions>
     <Border x:Name="Status"
             Padding="6,4"

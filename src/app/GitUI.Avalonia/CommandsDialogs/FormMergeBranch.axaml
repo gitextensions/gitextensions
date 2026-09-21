@@ -3,20 +3,20 @@
         xmlns:local="using:GitUI"
         xmlns:help="using:GitUI.Help"
         x:Class="GitUI.CommandsDialogs.FormMergeBranch"
-        Width="772"
+        Width="783"
         SizeToContent="Height"
-        MinWidth="478"
+        MinWidth="462"
         WindowStartupLocation="CenterOwner"
         CanResize="False"
         Title="Merge branches">
   <Grid x:Name="tableLayoutPanel1"
-        Margin="8"
         ColumnDefinitions="Auto,*"
         RowDefinitions="Auto,Auto"
-        ColumnSpacing="8"
-        RowSpacing="8">
+        ColumnSpacing="3"
+        RowSpacing="3">
     <help:HelpImageDisplayUserControl x:Name="helpImageDisplayUserControl1"
                                       Grid.RowSpan="2"
+                                      Margin="3"
                                       MinHeight="416"
                                       IsExpanded="True"
                                       IsOnHoverShowImage2="True"
@@ -25,6 +25,7 @@
     <HeaderedContentControl x:Name="groupBox1"
                             Classes="gitextensions-group-box"
                             Grid.Column="1"
+                            Margin="3"
                             Header="Merge">
       <Border>
         <Grid x:Name="tableLayoutPanel2"
@@ -130,6 +131,7 @@
             Classes="gitextensions-dialog-action"
             Grid.Row="1"
             Grid.Column="1"
+            Margin="3"
             MinWidth="108"
             HorizontalAlignment="Right"
             Content="_Merge"

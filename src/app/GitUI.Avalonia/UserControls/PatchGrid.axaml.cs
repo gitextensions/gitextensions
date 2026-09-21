@@ -355,9 +355,9 @@ public partial class PatchGrid : GitModuleControl
         Action.IsVisible = isManagingRebase;
         FileName.IsVisible = !isManagingRebase;
         CommitHash.IsVisible = isManagingRebase;
-        columnsGrid.ColumnDefinitions[1].Width = new GridLength(isManagingRebase ? 82 : 0);
-        columnsGrid.ColumnDefinitions[2].Width = new GridLength(isManagingRebase ? 0 : 70);
-        columnsGrid.ColumnDefinitions[6].Width = new GridLength(isManagingRebase ? 110 : 0);
+        columnsGrid.ColumnDefinitions[1].Width = new GridLength(isManagingRebase ? 48 : 0);
+        columnsGrid.ColumnDefinitions[2].Width = new GridLength(isManagingRebase ? 0 : 50);
+        columnsGrid.ColumnDefinitions[6].Width = new GridLength(isManagingRebase ? 85 : 0);
         Patches.ItemTemplate = new FuncDataTemplate<PatchFile>(
             (_, _) => new PatchRow(this),
             supportsRecycling: true);
