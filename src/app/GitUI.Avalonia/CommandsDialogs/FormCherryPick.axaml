@@ -12,7 +12,7 @@
         CanResize="False"
         Title="Cherry pick commit">
   <Grid RowDefinitions="Auto,41">
-    <wf:FlowLayoutPanel x:Name="ControlsPanel" Grid.Row="1">
+    <wf:FlowLayoutPanel x:Name="ControlsPanel" Grid.Row="1" TabIndex="1">
       <Grid Width="614"
             Height="41"
             Background="{DynamicResource GitExtensionsDialogControlsBackgroundBrush}">
@@ -36,9 +36,11 @@
 
     <wf:Panel x:Name="MainPanel"
             Classes="gitextensions-dialog-main"
+            TabIndex="0"
             Padding="12"
             Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
       <wf:TableLayoutPanel x:Name="tlPnlMain"
+            TabIndex="0"
             Height="267"
             RowDefinitions="15,169,32,Auto,25,25">
         <TextBlock x:Name="lblBranchInfo"
@@ -55,10 +57,21 @@
 
         <wf:FlowLayoutPanel x:Name="chooseRevPanel"
                     Grid.Row="2"
+                    TabIndex="3"
                     Margin="3,-1,3,0"
                     Height="30"
                     HorizontalAlignment="Stretch">
           <Canvas Width="584" Height="30">
+          <Button x:Name="btnChooseRevision"
+                  Classes="gitextensions-icon-only"
+                  TabIndex="5"
+                  Canvas.Left="556"
+                  Canvas.Top="3"
+                  Width="25"
+                  Height="24"
+                  Padding="3">
+            <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SelectRevision}" />
+          </Button>
           <Label x:Name="lblAnotherRev"
                  Canvas.Left="412"
                  Width="138"
@@ -68,15 +81,6 @@
                  VerticalContentAlignment="Center"
                  Content="C_hoose another revision:"
                  Target="{Binding #btnChooseRevision}" />
-          <Button x:Name="btnChooseRevision"
-                  Classes="gitextensions-icon-only"
-                  Canvas.Left="556"
-                  Canvas.Top="3"
-                  Width="25"
-                  Height="24"
-                  Padding="3">
-            <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SelectRevision}" />
-          </Button>
           </Canvas>
         </wf:FlowLayoutPanel>
 
@@ -112,6 +116,7 @@
               </Grid>
               <usercontrols:NativeListView x:Name="lvParentsList"
                                            Classes="gitextensions-dense-items gitextensions-native-list-items"
+                                           TabIndex="7"
                                            Grid.Row="1"
                                            SelectionMode="Single" />
               <wf:ColumnHeader x:Name="columnHeader1" SourceWidth="43" Text="No." IsVisible="False" />
@@ -125,12 +130,14 @@
 
         <CheckBox x:Name="cbxAutoCommit"
                   Grid.Row="4"
+                  TabIndex="8"
                   Margin="3"
                   Width="584"
                   Height="19"
                   Content="_Automatically create a commit" />
         <CheckBox x:Name="cbxAddReference"
                   Grid.Row="5"
+                  TabIndex="9"
                   Margin="3"
                   Width="584"
                   Height="19"

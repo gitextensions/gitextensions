@@ -57,11 +57,6 @@
                             Margin="3,20,3,0"
                             Header="Filter files">
       <Canvas>
-        <CheckBox x:Name="checkBoxPathFilter"
-                  Canvas.Left="-2"
-                  Canvas.Top="3"
-                  Width="167"
-                  Content="Archive specific paths only" />
         <TextBox x:Name="textBoxPaths"
                  Canvas.Left="13"
                  Canvas.Top="28"
@@ -81,6 +76,11 @@
                   Canvas.Top="143"
                   Width="504"
                   Content="Take the files that have changed from the revision above to this one and archive only those" />
+        <CheckBox x:Name="checkBoxPathFilter"
+                  Canvas.Left="-2"
+                  Canvas.Top="3"
+                  Width="167"
+                  Content="Archive specific paths only" />
 
           <HeaderedContentControl x:Name="gbDiffRevision"
                                   Classes="gitextensions-group-box"

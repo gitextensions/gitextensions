@@ -26,6 +26,32 @@ public sealed class ControlTreeReaderTests
     }
 
     [Test]
+    public void ReadPrimary_should_capture_tooltips_from_a_local_component_container()
+    {
+        using ContainerToolTipForm form = new();
+        form.CreateControl();
+
+        CaptureSurface surface = new ControlTreeReader(form, dpi: 96)
+            .ReadPrimary(form, form.Bounds);
+
+        FindNode(surface.Root, "_message").ToolTip.Should().Be("Contained tip");
+    }
+
+    [Test]
+    public void ReadPrimary_should_capture_the_custom_IsReadOnly_contract()
+    {
+        using Form form = new();
+        ReadOnlyControl editor = new() { Name = "editor", IsReadOnly = false };
+        form.Controls.Add(editor);
+        form.CreateControl();
+
+        CaptureSurface surface = new ControlTreeReader(form, dpi: 96)
+            .ReadPrimary(form, form.Bounds);
+
+        FindNode(surface.Root, "editor").ReadOnly.Should().BeFalse();
+    }
+
+    [Test]
     public void ReadPrimary_should_record_TabPage_owned_tooltip_text()
     {
         using Form form = new();
@@ -60,6 +86,24 @@ public sealed class ControlTreeReaderTests
         button.Colors.Foreground.Should().MatchRegex("^#[0-9A-F]{8}$");
         button.Colors.Background.Should().MatchRegex("^#[0-9A-F]{8}$");
         button.Expanded.Should().BeNull("expanded state applies only to expandable controls");
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_not_emit_private_framework_fields_as_product_fields()
+    {
+        using Form form = new();
+        using TableLayoutPanel layout = new() { Dock = DockStyle.Fill };
+        using Panel panel = new();
+        layout.Controls.Add(panel);
+        form.Controls.Add(layout);
+        form.CreateControl();
+
+        CaptureNode root = new ControlTreeReader(form, dpi: 96)
+            .ReadPrimary(form, new Rectangle(0, 0, 300, 200))
+            .Root;
+
+        Flatten(root).Should().NotContain(node => node.FieldName == "_parent");
     }
 
     [Test]
@@ -483,6 +527,18 @@ public sealed class ControlTreeReaderTests
         return root.Children.Select(child => FindNodeOrDefault(child, fieldName)).FirstOrDefault(match => match is not null);
     }
 
+    private static IEnumerable<CaptureNode> Flatten(CaptureNode root)
+    {
+        yield return root;
+        foreach (CaptureNode child in root.Children)
+        {
+            foreach (CaptureNode descendant in Flatten(child))
+            {
+                yield return descendant;
+            }
+        }
+    }
+
     private sealed class TestForm : Form
     {
         private readonly Button _btnAction = new()
@@ -514,5 +570,34 @@ public sealed class ControlTreeReaderTests
         }
 
         public Label Message => _message;
+    }
+
+    private sealed class ContainerToolTipForm : Form
+    {
+        private readonly IDisposable _disposable1;
+        private readonly Label _message = new() { Name = "_message" };
+
+        public ContainerToolTipForm()
+        {
+            System.ComponentModel.Container container = new();
+            _disposable1 = container;
+            ToolTip toolTip = new(container);
+            toolTip.SetToolTip(_message, "Contained tip");
+            Controls.Add(_message);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing)
+            {
+                _disposable1.Dispose();
+            }
+        }
+    }
+
+    private sealed class ReadOnlyControl : Control
+    {
+        public bool IsReadOnly { get; set; }
     }
 }

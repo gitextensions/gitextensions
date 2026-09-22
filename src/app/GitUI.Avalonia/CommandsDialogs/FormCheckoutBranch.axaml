@@ -25,6 +25,22 @@
             Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
       <Canvas x:Name="tlpnlMain" Width="698" Height="125"
               HorizontalAlignment="Left" VerticalAlignment="Top">
+        <HeaderedContentControl x:Name="localChangesGB"
+                                Classes="gitextensions-group-box"
+                                Canvas.Top="62" Width="698" Height="55"
+                                Header="Local changes">
+          <Canvas x:Name="flpnlLocalOptions"
+                  Margin="-5,-5,0,0"
+                  Width="692" Height="33"
+                  HorizontalAlignment="Left" VerticalAlignment="Top">
+            <RadioButton x:Name="rbDontChange" Canvas.Left="9" Canvas.Top="4" Margin="2" Width="96" Height="21" MinHeight="0" Content="Do_n't change" />
+            <RadioButton x:Name="rbMerge" Canvas.Left="109" Canvas.Top="4" Margin="2" Width="59" Height="21" MinHeight="0" Content="_Merge" />
+            <RadioButton x:Name="rbStash" Canvas.Left="172" Canvas.Top="4" Margin="2" Width="53" Height="21" MinHeight="0" Content="S_tash" />
+            <RadioButton x:Name="rbReset" Canvas.Left="229" Canvas.Top="4" Margin="2" Width="53" Height="21" MinHeight="0" Content="_Reset" />
+            <CheckBox x:Name="chkSetLocalChangesActionAsDefault" Canvas.Left="286" Canvas.Top="4" Margin="3" Width="96" Height="19" MinHeight="0" Content="Set as _default" />
+          </Canvas>
+        </HeaderedContentControl>
+
         <Canvas x:Name="tlpnlBranches" Width="698" Height="50">
           <RadioButton x:Name="LocalBranch" Canvas.Left="2" Canvas.Top="2"
                        Width="93" Height="19" MinHeight="0"
@@ -61,21 +77,6 @@
                        Content="Ch_eckout the commit (in detached head)" />
         </Grid>
 
-        <HeaderedContentControl x:Name="localChangesGB"
-                                Classes="gitextensions-group-box"
-                                Canvas.Top="62" Width="698" Height="55"
-                                Header="Local changes">
-          <Canvas x:Name="flpnlLocalOptions"
-                  Margin="-5,-5,0,0"
-                  Width="692" Height="33"
-                  HorizontalAlignment="Left" VerticalAlignment="Top">
-            <RadioButton x:Name="rbDontChange" Canvas.Left="9" Canvas.Top="4" Margin="2" Width="96" Height="21" MinHeight="0" Content="Do_n't change" />
-            <RadioButton x:Name="rbMerge" Canvas.Left="109" Canvas.Top="4" Margin="2" Width="59" Height="21" MinHeight="0" Content="_Merge" />
-            <RadioButton x:Name="rbStash" Canvas.Left="172" Canvas.Top="4" Margin="2" Width="53" Height="21" MinHeight="0" Content="S_tash" />
-            <RadioButton x:Name="rbReset" Canvas.Left="229" Canvas.Top="4" Margin="2" Width="53" Height="21" MinHeight="0" Content="_Reset" />
-            <CheckBox x:Name="chkSetLocalChangesActionAsDefault" Canvas.Left="286" Canvas.Top="4" Margin="3" Width="96" Height="19" MinHeight="0" Content="Set as _default" />
-          </Canvas>
-        </HeaderedContentControl>
       </Canvas>
     </Border>
   </DockPanel>

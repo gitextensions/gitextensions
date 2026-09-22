@@ -66,6 +66,7 @@
              Grid.Row="1"
              Grid.ColumnSpan="7"
              Background="{DynamicResource GitExtensionsKnownColorControlLightBrush}"
+             Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
              SelectionMode="Single">
       <ListBox.Styles>
         <Style Selector="ListBoxItem">
