@@ -7,6 +7,7 @@ using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
+using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
@@ -119,12 +120,20 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
             RowDefinitions = new RowDefinitions("Auto,Auto,Auto,*,Auto,Auto"),
         };
         AddRow(root, 0, panelHeader);
-        AddRow(root, 1, CreateViewSeparator());
+        Control separatorAfterHeader = CreateViewSeparator();
+        AddRow(root, 1, separatorAfterHeader);
         AddRow(root, 2, panelOnOff);
         AddRow(root, 3, panelRules);
         AddRow(root, 4, CreateViewSeparator());
         AddRow(root, 5, panelFooter);
         Content = root;
+
+        Opened += delegate
+        {
+            Dispatcher.UIThread.Post(
+                () => separatorAfterHeader.Focus(),
+                DispatcherPriority.Background);
+        };
 
         AcceptButton = btnSave;
         CancelButton = btnCancel;
@@ -158,20 +167,24 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
         SetDynamicBackground(tableFooterButtons, "GitExtensionsKnownColorControlLightLightBrush");
 
         CheckBox check = new() { Content = Globalized.Strings.RefreshWorkingCopyUsingTheCurrentSettingsAndRules.Text, IsChecked = sparse.IsRefreshWorkingCopyOnSave, Width = 598, Height = 23, MinHeight = 0, HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center };
+        KeyboardNavigation.SetTabIndex(check, 0);
         check.IsCheckedChanged += delegate { sparse.IsRefreshWorkingCopyOnSave = check.IsChecked == true; };
         ToolTip.SetTip(check, string.Format(Globalized.Strings.RefreshWorkingCopyCheckboxHint.Text, FormSparseWorkingCopyViewModel.RefreshWorkingCopyCommandName));
         Grid.SetColumn(check, 0);
         tableFooterButtons.Children.Add(check);
 
         btnSave = new Button { Width = 75, Height = 23, Padding = new Thickness(4, 0), Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(Globalized.Strings.Save.Text), VerticalContentAlignment = VerticalAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom };
+        KeyboardNavigation.SetTabIndex(btnSave, 1);
         Grid.SetColumn(btnSave, 1);
         tableFooterButtons.Children.Add(btnSave);
 
-        Control spacer = new Panel { Width = 10 };
+        Control spacer = new Panel { Width = 10, Focusable = true };
+        KeyboardNavigation.SetTabIndex(spacer, 2);
         Grid.SetColumn(spacer, 2);
         tableFooterButtons.Children.Add(spacer);
 
         btnCancel = new Button { Width = 75, Height = 23, Padding = new Thickness(4, 0), Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(Globalized.Strings.Cancel.Text), VerticalContentAlignment = VerticalAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom };
+        KeyboardNavigation.SetTabIndex(btnCancel, 3);
         Grid.SetColumn(btnCancel, 3);
         tableFooterButtons.Children.Add(btnCancel);
 
@@ -184,9 +197,11 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
         SetDynamicBackground(panelHeaderMain, "GitExtensionsKnownColorControlLightLightBrush");
 
         TextBlock labelTitle = new() { Text = Globalized.Strings.SparseWorkingCopy.Text, Margin = new Thickness(10, 10, 10, 0), Height = 15, FontWeight = FontWeight.Bold };
+        KeyboardNavigation.SetTabIndex(labelTitle, 0);
         panelHeaderMain.Children.Add(labelTitle);
 
         TextBlock labelDetails = new() { Text = Globalized.Strings.HeaderDetailsText.Text, Margin = new Thickness(25, 6, 10, 10), Height = 30, LineHeight = 15, TextWrapping = TextWrapping.Wrap };
+        KeyboardNavigation.SetTabIndex(labelDetails, 1);
         Grid.SetRow(labelDetails, 1);
         panelHeaderMain.Children.Add(labelDetails);
 
@@ -199,10 +214,12 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
         Grid panelWhenDisabled = new() { ColumnDefinitions = new ColumnDefinitions("*,Auto"), Margin = new Thickness(10, 5, 10, 5) };
         SetDynamicBackground(panelWhenDisabled, "GitExtensionsKnownColorInfoBrush");
         TextBlock disabledText = new() { Text = Globalized.Strings.SparseWorkingCopySupportHasNotBeenEnabledForThisRepository.Text, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap };
+        KeyboardNavigation.SetTabIndex(disabledText, 0);
         SetDynamicForeground(disabledText, "GitExtensionsKnownColorInfoTextBrush");
         Grid.SetColumn(disabledText, 0);
         panelWhenDisabled.Children.Add(disabledText);
         Button btnEnable = new() { Width = 75, Height = 23, Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(Globalized.Strings.Enable.Text), HorizontalAlignment = HorizontalAlignment.Right };
+        KeyboardNavigation.SetTabIndex(btnEnable, 1);
         btnEnable.Click += delegate { sparse.IsSparseCheckoutEnabled = true; };
         ToolTip.SetTip(btnEnable, string.Format(Globalized.Strings.SetsTheGitPropertyToTrueForTheLocalRepository.Text, FormSparseWorkingCopyViewModel.SettingCoreSparseCheckout));
         Grid.SetColumn(btnEnable, 1);
@@ -211,10 +228,12 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
 
         // When-disabled case should have a separator
         Control separatorWhenDisabled = CreateViewSeparator();
+        KeyboardNavigation.SetTabIndex(separatorWhenDisabled, 1);
         sparse.PropertyChanged += delegate { separatorWhenDisabled.IsVisible = !sparse.IsSparseCheckoutEnabled; };
 
         // When enabled: a less bold link to disable
         StackPanel labelWhenEnabled = new() { Orientation = Orientation.Horizontal, Height = 36 };
+        KeyboardNavigation.SetTabIndex(labelWhenEnabled, 2);
         labelWhenEnabled.Children.Add(new TextBlock { Text = Globalized.Strings.SparseWorkingCopySupportIsEnabled.Text + ' ', Margin = new Thickness(10, 10, 0, 5), Height = 21, VerticalAlignment = VerticalAlignment.Top });
         HyperlinkButton linkDisable = new() { Content = Globalized.Strings.DisableForThisRepository.Text, Margin = new Thickness(0, 10, 10, 5), Height = 21, MinHeight = 0, Padding = new Thickness(0) };
         linkDisable.Click += delegate { sparse.IsSparseCheckoutEnabled = false; };
@@ -240,16 +259,14 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
         sparse.PropertyChanged += delegate { label1.IsVisible = label2.IsVisible = sparse.IsSparseCheckoutEnabled; };
         Grid.SetRow(label1, 0);
         Grid.SetRow(label2, 1);
-        panel.Children.Add(label1);
-        panel.Children.Add(label2);
 
         // Separator
         Control separator = CreateViewSeparator();
         Grid.SetRow(separator, 2);
-        panel.Children.Add(separator);
 
         // Text editor
         FileViewer editor = new() { UICommandsSource = commandsSource, IsReadOnly = false };
+        KeyboardNavigation.SetTabIndex(editor, 0);
         editor.TextLoaded += (sender, args) => sparse.SetRulesTextAsOnDisk(editor.GetText());
         try
         {
@@ -269,13 +286,19 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
         sparse.PropertyChanged += delegate { editor.IsVisible = separator.IsVisible = sparse.IsSparseCheckoutEnabled; };
         Grid.SetRow(editor, 3);
         panel.Children.Add(editor);
+        KeyboardNavigation.SetTabIndex(separator, 1);
+        panel.Children.Add(separator);
+        KeyboardNavigation.SetTabIndex(label2, 2);
+        panel.Children.Add(label2);
+        KeyboardNavigation.SetTabIndex(label1, 3);
+        panel.Children.Add(label1);
 
         return panel;
     }
 
     private static Control CreateViewSeparator()
     {
-        Border separator = new() { Height = 2 };
+        Border separator = new() { Height = 2, Focusable = true };
         SetDynamicBackground(separator, "GitExtensionsKnownColorControlDarkBrush");
         return separator;
     }
@@ -283,6 +306,7 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
     private static void AddRow(Grid grid, int row, Control control)
     {
         Grid.SetRow(control, row);
+        KeyboardNavigation.SetTabIndex(control, row);
         grid.Children.Add(control);
     }
 
@@ -358,6 +382,8 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
     internal readonly struct TestAccessor(FormSparseWorkingCopy form)
     {
         public Grid Root => (Grid)form.Content!;
+
+        public Control SeparatorAfterHeader => Root.Children[1];
 
         public FileViewer Editor => Root.GetLogicalDescendants().OfType<FileViewer>().Single();
     }

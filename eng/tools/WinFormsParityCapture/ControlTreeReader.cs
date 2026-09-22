@@ -539,8 +539,12 @@ internal sealed class ControlTreeReader
             }
 
             Type type = current.GetType();
-            foreach (FieldInfo field in type.GetFields(
-                         BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+            bool isFrameworkType = type.Namespace?.StartsWith("System.Windows.Forms", StringComparison.Ordinal) == true;
+            IEnumerable<FieldInfo> fields = isFrameworkType
+                ? []
+                : type.GetFields(
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+            foreach (FieldInfo field in fields)
             {
                 object? value;
                 try
@@ -560,6 +564,17 @@ internal sealed class ControlTreeReader
                 if (value is ToolTip toolTip && !_toolTips.Contains(toolTip))
                 {
                     _toolTips.Add(toolTip);
+                }
+
+                if (value is System.ComponentModel.IContainer container)
+                {
+                    foreach (System.ComponentModel.IComponent component in container.Components)
+                    {
+                        if (component is ToolTip containedToolTip && !_toolTips.Contains(containedToolTip))
+                        {
+                            _toolTips.Add(containedToolTip);
+                        }
+                    }
                 }
 
                 if (value is Control or ToolStripItem or DataGridViewColumn or ColumnHeader)
@@ -700,7 +715,8 @@ internal sealed class ControlTreeReader
             Enabled = control.Enabled,
             Visible = control.Visible,
             Focused = control.Focused,
-            ReadOnly = GetNullableBoolProperty(control, "ReadOnly"),
+            ReadOnly = GetNullableBoolProperty(control, "ReadOnly")
+                       ?? GetNullableBoolProperty(control, "IsReadOnly"),
             CheckState = control is CheckBox checkBox ? checkBox.CheckState.ToString() : null,
             Selected = control is ListControl listControl ? listControl.SelectedValue is not null : null,
             Expanded = control is TreeView treeView

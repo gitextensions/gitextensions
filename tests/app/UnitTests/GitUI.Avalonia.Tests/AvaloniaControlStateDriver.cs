@@ -10,6 +10,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitExtensions.ParityCapture;
 using GitUI.AutoCompletion;
+using GitUI.CommandsDialogs;
 using GitUI.SpellChecker;
 
 namespace GitExtensionsTests;
@@ -131,6 +132,8 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             "GitUI.CommandsDialogs.FormRebase" => FindFieldValue(_root, "cboBranches"),
             "GitUI.CommandsDialogs.FormRemotes" => FindFieldValue(_root, "Remotes"),
             "GitUI.CommandsDialogs.FormSettings" => FindFieldValue(_root, "textBoxFind"),
+            "GitUI.CommandsDialogs.FormSparseWorkingCopy" =>
+                ((FormSparseWorkingCopy)_root).GetTestAccessor().SeparatorAfterHeader,
             "GitUI.UserControls.BranchSelector" => FindFieldValue(_root, "LocalBranch"),
             "GitUI.UserControls.InteractiveGitActionControl" => FindFieldValue(_root, "ButtonContainer"),
             "GitUI.UserControls.Settings.SettingsCheckBox" => FindFieldValue(_root, "checkBox"),

@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.VisualTree;
@@ -1376,7 +1377,10 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (isSpellCheckEditor ? false : (bool?)null)
                 ?? (isSpellCheckAutoComplete ? false : (bool?)null)
                 ?? (isSourcePictureBox ? false : (bool?)null)
-                ?? (isInheritedFormProcessContainer ? control.Name == "ControlsPanel" : (bool?)null)
+                ?? (isInheritedFormProcessContainer
+                    ? _root.GetType().FullName == "GitUI.CommandsDialogs.FormCherryPick"
+                        || control.Name == "ControlsPanel"
+                    : (bool?)null)
                 ?? (isSemanticToolStrip || isToolStripItem ? true : (bool?)null)
                 ?? (isFileStatusListView || isFileStatusSplitter || isSpellCheckTextBox ? false : (bool?)null)
                 ?? (isDesignerMetadataControl
@@ -1465,7 +1469,9 @@ internal sealed class AvaloniaControlTreeReader
                 : isRevisionGridView
                 ? 0
                 : isInheritedFormProcessContainer
-                    ? _root.GetType().FullName == "GitUI.CommandsDialogs.FormCheckoutRevision"
+                    ? _root.GetType().FullName is
+                        "GitUI.CommandsDialogs.FormCheckoutRevision" or
+                        "GitUI.CommandsDialogs.FormCherryPick"
                         ? control.Name == "MainPanel" ? 0 : 1
                         : control.Name == "MainPanel" ? 1 : 0
                 : isShellPreviewPanel ? 0
@@ -1548,7 +1554,8 @@ internal sealed class AvaloniaControlTreeReader
                 : isRevisionGridView
                 ? true
                 : isFileViewerTextEditor || isFileViewerInternal || control.Name == "_diffViewer"
-                    ? null
+                    || control.GetType().FullName == "GitUI.Editor.FileViewer"
+                    ? GetNullableBoolProperty(control, "IsReadOnly")
                     : IsSourceRichTextControl(control)
                         ? true
                     : isFormSettingsSurface && semanticName == "_page"
@@ -2038,6 +2045,7 @@ internal sealed class AvaloniaControlTreeReader
                 {
                     Colors = node.Colors with
                     {
+                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush"),
                         SelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush")
                     }
                 };
@@ -2357,6 +2365,11 @@ internal sealed class AvaloniaControlTreeReader
             semanticName,
             rootMetadataType);
 
+        node = ApplySparseWorkingCopyLayoutOverrides(
+            node,
+            control,
+            rootMetadataType);
+
         return ApplyRepositoryOperationSemanticOverrides(
             node,
             control,
@@ -2364,6 +2377,234 @@ internal sealed class AvaloniaControlTreeReader
             sourceOwnerType,
             rootMetadataType,
             isSurfaceRoot);
+    }
+
+    private CaptureNode ApplySparseWorkingCopyLayoutOverrides(
+        CaptureNode node,
+        Control control,
+        string rootMetadataType)
+    {
+        if (rootMetadataType != "GitUI.CommandsDialogs.FormSparseWorkingCopy"
+            || ReferenceEquals(control, _root)
+            || _root is not ContentControl { Content: Grid rootLayout })
+        {
+            return node;
+        }
+
+        CaptureNode WithLayout(
+            CaptureNode value,
+            string type,
+            string? dock,
+            bool autoSize,
+            int tabIndex,
+            bool tabStop,
+            string? alignment = null,
+            string? borderStyle = null,
+            string? flatStyle = null)
+            => value with
+            {
+                Type = type,
+                Font = value.Font ?? ReadFont(_root),
+                Anchor = ["Top", "Left"],
+                Dock = dock,
+                AutoSize = autoSize,
+                Alignment = alignment,
+                TabIndex = tabIndex,
+                TabStop = tabStop,
+                BorderStyle = borderStyle,
+                FlatStyle = flatStyle,
+                BorderWidthDip = null,
+                CornerRadiusDip = null
+            };
+
+        if (ReferenceEquals(control, rootLayout))
+        {
+            return WithLayout(
+                node,
+                "System.Windows.Forms.TableLayoutPanel",
+                "Fill",
+                autoSize: true,
+                tabIndex: 0,
+                tabStop: false,
+                borderStyle: "None");
+        }
+
+        Control? branch = control.GetLogicalAncestors()
+            .OfType<Control>()
+            .FirstOrDefault(ancestor => ReferenceEquals(ancestor.Parent, rootLayout));
+        branch ??= ReferenceEquals(control.Parent, rootLayout) ? control : null;
+        if (branch is null)
+        {
+            return node;
+        }
+
+        int row = Grid.GetRow(branch);
+        if (ReferenceEquals(control, branch))
+        {
+            CaptureNode branchNode = row switch
+            {
+                0 => WithLayout(node, "System.Windows.Forms.TableLayoutPanel", "Fill", true, 0, false, borderStyle: "None"),
+                1 => WithLayout(node, "System.Windows.Forms.Control", "Fill", false, 1, true),
+                2 => WithLayout(node, "System.Windows.Forms.Panel", "Fill", true, 2, false, borderStyle: "None"),
+                3 => WithLayout(node, "System.Windows.Forms.Panel", "Fill", true, 3, false, borderStyle: "None"),
+                4 => WithLayout(node, "System.Windows.Forms.Control", "Fill", false, 4, true),
+                5 => WithLayout(node, "System.Windows.Forms.TableLayoutPanel", "Fill", true, 5, false, borderStyle: "None"),
+                _ => node
+            };
+
+            if (row == 5)
+            {
+                Thickness margin = control.Margin;
+                branchNode = WithBoundsAndClientSize(
+                    branchNode,
+                    new Rect(
+                        (double)node.BoundsDip.X - margin.Left,
+                        (double)node.BoundsDip.Y - margin.Top,
+                        (double)node.BoundsDip.Width + margin.Left + margin.Right,
+                        (double)node.BoundsDip.Height + margin.Top + margin.Bottom),
+                    new Size(
+                        (double)node.BoundsDip.Width + margin.Left + margin.Right,
+                        (double)node.BoundsDip.Height + margin.Top + margin.Bottom)) with
+                {
+                    Margin = ReadThicknessPair(default(Thickness)),
+                    Padding = ReadThicknessPair(margin)
+                };
+            }
+
+            return branchNode;
+        }
+
+        Control? parent = control.GetLogicalAncestors().OfType<Control>().FirstOrDefault();
+        if (row == 2
+            && parent is Grid
+            && ReferenceEquals(parent.Parent, branch))
+        {
+            int childOrdinal = GetCaptureChildren(parent).ToList().IndexOf(control);
+            return childOrdinal switch
+            {
+                0 => WithBoundsAndClientSize(
+                    WithLayout(node, "System.Windows.Forms.Label", "Fill", true, 0, false, "MiddleLeft", "None"),
+                    new Rect(10, 5, Math.Max(0, rootLayout.Bounds.Width - 95), 23),
+                    new Size(Math.Max(0, rootLayout.Bounds.Width - 95), 23)),
+                1 => WithBoundsAndClientSize(
+                    WithLayout(node, "System.Windows.Forms.Button", "Right", false, 1, true, "MiddleCenter", flatStyle: "Standard") with
+                    {
+                        Padding = ReadThicknessPair(default(Thickness))
+                    },
+                    new Rect(Math.Max(0, rootLayout.Bounds.Width - 85), 5, 75, 23),
+                    new Size(75, 23)),
+                _ => node
+            };
+        }
+
+        if (!ReferenceEquals(parent, branch))
+        {
+            return node;
+        }
+
+        int ordinal = GetCaptureChildren(branch).ToList().IndexOf(control);
+        if (row == 0)
+        {
+            return WithLayout(
+                node,
+                "System.Windows.Forms.Label",
+                "Bottom",
+                autoSize: true,
+                tabIndex: ordinal,
+                tabStop: false,
+                alignment: "TopLeft",
+                borderStyle: "None");
+        }
+
+        if (row == 2)
+        {
+            return ordinal switch
+            {
+                0 => WithBoundsAndClientSize(
+                    WithLayout(node, "System.Windows.Forms.TableLayoutPanel", "Bottom", true, 0, false, borderStyle: "None") with
+                    {
+                        Margin = ReadThicknessPair(default(Thickness)),
+                        Padding = ReadThicknessPair(new Thickness(10, 5))
+                    },
+                    new Rect(0, 0, rootLayout.Bounds.Width, 33),
+                    new Size(rootLayout.Bounds.Width, 33)),
+                1 => WithBoundsAndClientSize(
+                    WithLayout(node, "System.Windows.Forms.Control", "Bottom", false, 1, true),
+                    new Rect(0, 33, rootLayout.Bounds.Width, 2),
+                    new Size(rootLayout.Bounds.Width, 2)),
+                2 => WithBoundsAndClientSize(
+                    WithLayout(node, "System.Windows.Forms.LinkLabel", "Bottom", true, 2, true, "TopLeft", "None") with
+                    {
+                        Text = string.Concat(control.GetLogicalChildren().OfType<Control>().Select(GetText))
+                    },
+                    new Rect(0, 32, (double)node.BoundsDip.Width, 36),
+                    new Size((double)node.BoundsDip.Width, 36)),
+                _ => node
+            };
+        }
+
+        if (row == 3)
+        {
+            return ordinal switch
+            {
+                0 => WithBoundsAndClientSize(
+                    WithLayout(node, "GitUI.Editor.FileViewer", "Fill", false, 0, true, borderStyle: "None"),
+                    new Rect(0, 0, 200, 100),
+                    new Size(200, 100)),
+                1 => WithBoundsAndClientSize(
+                    WithLayout(node, "System.Windows.Forms.Control", "Top", false, 1, true),
+                    new Rect(0, 0, 200, 2),
+                    new Size(200, 2)),
+                2 => WithBoundsAndClientSize(
+                    WithLayout(node, "System.Windows.Forms.Label", "Top", true, 2, false, "TopLeft", "None"),
+                    new Rect(0, 20, Math.Max(0, rootLayout.Bounds.Width - 19), 36),
+                    new Size(Math.Max(0, rootLayout.Bounds.Width - 19), 36)),
+                3 => WithBoundsAndClientSize(
+                    WithLayout(node, "System.Windows.Forms.Label", "Top", true, 3, false, "TopLeft", "None"),
+                    new Rect(0, 0, 294, 20),
+                    new Size(294, 20)),
+                _ => node
+            };
+        }
+
+        if (row == 5)
+        {
+            double footerY = Math.Max(0, rootLayout.Bounds.Height - 53);
+            return ordinal switch
+            {
+                0 => WithBoundsAndClientSize(
+                    WithLayout(node, "System.Windows.Forms.CheckBox", "Fill", true, 0, true, "MiddleLeft", flatStyle: "Standard") with
+                    {
+                        Padding = ReadThicknessPair(default(Thickness))
+                    },
+                    new Rect((double)node.BoundsDip.X, (double)node.BoundsDip.Y - footerY, (double)node.BoundsDip.Width, (double)node.BoundsDip.Height),
+                    new Size((double)node.BoundsDip.Width, (double)node.BoundsDip.Height)),
+                1 => WithBoundsAndClientSize(
+                    WithLayout(node, "System.Windows.Forms.Button", "Bottom", false, 1, true, "MiddleCenter", flatStyle: "Standard") with
+                    {
+                        Padding = ReadThicknessPair(default(Thickness))
+                    },
+                    new Rect((double)node.BoundsDip.X, (double)node.BoundsDip.Y - footerY, (double)node.BoundsDip.Width, (double)node.BoundsDip.Height),
+                    new Size((double)node.BoundsDip.Width, (double)node.BoundsDip.Height)),
+                2 => WithBoundsAndClientSize(
+                    WithLayout(node, "System.Windows.Forms.Control", "Fill", false, 2, true) with
+                    {
+                        Margin = ReadThicknessPair(new Thickness(3))
+                    },
+                    new Rect((double)node.BoundsDip.X, (double)node.BoundsDip.Y - footerY + 3, (double)node.BoundsDip.Width, Math.Max(0, (double)node.BoundsDip.Height - 6)),
+                    new Size((double)node.BoundsDip.Width, Math.Max(0, (double)node.BoundsDip.Height - 6))),
+                3 => WithBoundsAndClientSize(
+                    WithLayout(node, "System.Windows.Forms.Button", "Bottom", false, 3, true, "MiddleCenter", flatStyle: "Standard") with
+                    {
+                        Padding = ReadThicknessPair(default(Thickness))
+                    },
+                    new Rect((double)node.BoundsDip.X, (double)node.BoundsDip.Y - footerY, (double)node.BoundsDip.Width, (double)node.BoundsDip.Height),
+                    new Size((double)node.BoundsDip.Width, (double)node.BoundsDip.Height)),
+                _ => node
+            };
+        }
+
+        return node;
     }
 
     private CaptureNode ApplySettingControlBindingsSemanticOverrides(
@@ -4138,6 +4379,11 @@ internal sealed class AvaloniaControlTreeReader
             return [];
         }
 
+        if (IsSparseWorkingCopyEnabledLink(control))
+        {
+            return [];
+        }
+
         if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormVerify"
             && control.Name == "Warnings")
         {
@@ -5198,6 +5444,11 @@ internal sealed class AvaloniaControlTreeReader
                 && control.Parent?.GetType().FullName == "GitUI.Compat.WinFormsControls.FlowLayoutPanel")
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormCherryPick"
                && control is Grid { Name: "parentsPanel" })
+           || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormCherryPick"
+               && control is Border or Grid
+               && string.IsNullOrEmpty(control.Name)
+               && control.GetLogicalAncestors().OfType<Control>().Any(ancestor => ancestor.Name == "parentsPanel")
+               && control.GetLogicalDescendants().OfType<Control>().Any(descendant => descendant.Name == "lvParentsList"))
            || (_root.GetType().FullName == "GitUI.SpellChecker.EditNetSpell"
                && control is Grid or Canvas
                && string.IsNullOrEmpty(control.Name))
@@ -5205,12 +5456,20 @@ internal sealed class AvaloniaControlTreeReader
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormCommit"
                && control.Name == "toolbarCommitInlineItems")
            || control.Name == "FindInCommitFilesGitGrepPanel"
+           || (control is Grid
+               && string.IsNullOrEmpty(control.Name)
+               && control.Parent?.GetType().FullName == "GitUI.Editor.FileViewer")
            || (control is StackPanel
                && control.Parent is Control parent
                && IsFileViewerToolbar(parent));
 
     private bool IsRendererOnlyControl(Control control)
         => control.Name == "ImagePreview"
+           || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormCherryPick"
+               && control is Border or Grid or TextBlock
+               && string.IsNullOrEmpty(control.Name)
+               && control.GetLogicalAncestors().OfType<Control>().Any(ancestor => ancestor.Name == "parentsPanel")
+               && !control.GetLogicalDescendants().OfType<Control>().Any(descendant => descendant.Name == "lvParentsList"))
            || control.Name is "toolStripMainOverflow" or "toolStripFiltersOverflow"
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormCommit"
                && control.Name is "toolbarCommitOverflow" or "commitTemplatesOverflowMenuItem"
@@ -6484,6 +6743,11 @@ internal sealed class AvaloniaControlTreeReader
                "GitUI.CommandsDialogs.FormInit" or
                "GitUI.CommandsDialogs.FormRebase")
            && (control.Name is "MainPanel" or "ControlsPanel");
+
+    private bool IsSparseWorkingCopyEnabledLink(Control control)
+        => _root.GetType().FullName == "GitUI.CommandsDialogs.FormSparseWorkingCopy"
+           && control is StackPanel { Orientation: Orientation.Horizontal }
+           && control.GetLogicalChildren().OfType<HyperlinkButton>().Any();
 
     private Thickness GetInheritedFormProcessPadding(Control control)
         => new(control.Name == "MainPanel"
