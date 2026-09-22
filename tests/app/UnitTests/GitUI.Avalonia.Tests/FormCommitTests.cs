@@ -285,6 +285,34 @@ public sealed class FormCommitTests
     }
 
     [AvaloniaTest]
+    public async Task FormCommit_should_keep_the_unstaged_list_current_and_focus_amend_for_a_clean_repository()
+    {
+        FormCommit form = new(new GitUICommands(_serviceContainer, CreateCleanRepository()));
+        FormCommit.TestAccessor accessor = form.GetTestAccessor();
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => accessor.Amend.IsFocused);
+
+            accessor.CurrentFilesList.Should().BeSameAs(accessor.Unstaged);
+            accessor.Message.IsFocused.Should().BeFalse();
+
+            using (AvaloniaControlStateDriver.Apply(
+                       form,
+                       new CaptureStatePlan { Id = "normal", Kind = CaptureStateKind.Normal }))
+            {
+                accessor.Amend.IsFocused.Should().BeTrue();
+                accessor.CurrentFilesList.Should().BeSameAs(accessor.Unstaged);
+            }
+        }
+        finally
+        {
+            form.Close();
+            await accessor.ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormCommit_should_apply_the_original_conventional_commit_prefix_rules()
     {
         FormCommit form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithTwoUnstagedChanges()));
@@ -889,6 +917,19 @@ public sealed class FormCommitTests
         File.AppendAllText(fileName, "staged line\n");
         module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" });
         File.AppendAllText(fileName, "unstaged line\n");
+        return module;
+    }
+
+    private GitModule CreateCleanRepository()
+    {
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
+        module.SetSetting("user.name", "Avalonia Test");
+        module.SetSetting("user.email", "avalonia@example.com");
+
+        File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), "initial line\n");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" });
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" });
         return module;
     }
 

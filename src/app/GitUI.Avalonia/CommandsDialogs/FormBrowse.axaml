@@ -366,7 +366,7 @@
         <Button x:Name="toolStripFileExplorer" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" />
         </Button>
-        <Button x:Name="userShell" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button">
+        <Button x:Name="userShell" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button" Width="32">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GitForWindows}" />
         </Button>
         <compat:IconButton x:Name="EditSettings"

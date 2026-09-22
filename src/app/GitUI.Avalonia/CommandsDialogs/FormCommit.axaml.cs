@@ -663,7 +663,18 @@ public sealed partial class FormCommit : GitModuleForm
             }
             else
             {
+                _currentFilesList = Unstaged;
                 Amend.Focus();
+
+                // Avalonia assigns initial focus after the first layout pass. Restore the
+                // source dialog's empty-repository focus once that framework pass completes.
+                Dispatcher.UIThread.Post(
+                    () =>
+                    {
+                        _currentFilesList = Unstaged;
+                        Amend.Focus();
+                    },
+                    DispatcherPriority.Background);
             }
 
             _loadUnstagedOutputFirstTime = false;
@@ -2554,6 +2565,9 @@ public sealed partial class FormCommit : GitModuleForm
     internal readonly struct TestAccessor(FormCommit form)
     {
         internal SpellChecker.EditNetSpell Message => form.Message;
+        internal CheckBox Amend => form.Amend;
+        internal FileStatusList CurrentFilesList => form._currentFilesList;
+        internal FileStatusList Unstaged => form.Unstaged;
         internal MenuFlyout CommitMessageFlyout => (MenuFlyout)form.commitMessageToolStripMenuItem.Flyout!;
         internal MenuFlyout CommitTemplatesFlyout => (MenuFlyout)form.commitTemplatesToolStripMenuItem.Flyout!;
         internal Task ClosePersistenceTask => form._closePersistenceTask;

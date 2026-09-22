@@ -733,6 +733,21 @@ internal sealed class AvaloniaControlTreeReader
             bounds = new Rect(bounds.Position, new Size(315, 222));
         }
 
+        if (isFormBrowseSurface
+            && sourceOwnerType == "GitUI.CommandsDialogs.FormBrowse"
+            && semanticName == "RevisionInfo"
+            && semanticParent is TabItem
+            && semanticParent.GetLogicalAncestors().OfType<TabControl>().FirstOrDefault() is { } revisionInfoTabs)
+        {
+            // The source child fills the complete native TabPage client. Avalonia's direct
+            // semantic parent is the clickable header, not its content presenter.
+            bounds = new Rect(
+                0,
+                0,
+                Math.Max(0, revisionInfoTabs.Bounds.Width - 2),
+                Math.Max(0, revisionInfoTabs.Bounds.Height - 30));
+        }
+
         if (hasSourceRichTextOuterExtent)
         {
             // A borderless WinForms RichTextBox retains one outer control pixel beyond the
@@ -1045,9 +1060,14 @@ internal sealed class AvaloniaControlTreeReader
                 : isPopupRoot && _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
                     ? ReadColors(control) with
                     {
-                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorMenuTextBrush")
+                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
                                      ?? ResolveResourceArgb("GitExtensionsMenuForegroundBrush")
                     }
+                : isPopupRoot && _root is RevisionGridControl
+                    ? ReadSourceBackgroundColors(
+                        control,
+                        "GitExtensionsKnownColorControlBrush",
+                        ResolveSourceControlTextArgb())
                 : formCommitSemanticColors is not null
                     ? formCommitSemanticColors
                 : formBrowseSemanticColors is not null
@@ -1095,6 +1115,11 @@ internal sealed class AvaloniaControlTreeReader
                             useControlText: IsSourceControlTextToolStripItem(control) || IsViewPullRequestsTree(control))
                         : isFileStatusListView
                             ? ReadFileStatusListViewColors(semanticStateControl)
+                            : isRevisionGridView
+                                ? ReadColors(semanticStateControl) with
+                                {
+                                    Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                                }
                             : isFileStatusEmptyLabel
                                 ? ReadFileStatusEmptyLabelColors(control)
                             : isWatermarkComboBox
@@ -3843,6 +3868,7 @@ internal sealed class AvaloniaControlTreeReader
             Control[] items = popupOwner.GetVisualDescendants()
                 .OfType<Control>()
                 .Where(item => item is MenuItem or Separator)
+                .Where(item => item.IsVisible)
                 .Where(item => !item.GetVisualAncestors()
                     .TakeWhile(ancestor => !ReferenceEquals(ancestor, popupOwner))
                     .OfType<MenuItem>()
@@ -3853,12 +3879,18 @@ internal sealed class AvaloniaControlTreeReader
                 .Take(Math.Max(0, itemIndex))
                 .Sum(item => item is Separator ? 6 : 22);
 
+            bool isPrimaryContextMenu = !string.IsNullOrEmpty(control.Name);
+
             // parity-scaffolding: ToolStrip lays out its popup canvas with two vertical insets;
             // separators occupy a six-DIP row and retain the native two-DIP leading inset.
             return new Rect(
                 control is Separator ? 2 : 0,
                 y,
-                Math.Max(0, popupOwner.Bounds.Width - (control is Separator ? 5 : 2)),
+                Math.Max(
+                    0,
+                    popupOwner.Bounds.Width - (control is Separator
+                        ? isPrimaryContextMenu ? 4 : 5
+                        : isPrimaryContextMenu ? 1 : 2)),
                 control is Separator ? 6 : 22);
         }
 
@@ -4842,6 +4874,7 @@ internal sealed class AvaloniaControlTreeReader
             or "GitUI.CommandsDialogs.RepoHosting.CreatePullRequestForm"
             or "GitUI.CommandsDialogs.RepoHosting.ForkAndCloneForm"
             or "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm"
+            or "GitUI.Editor.FileViewer"
             ? ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
             : ResolveResourceArgb("GitExtensionsSourceControlTextBrush");
 
@@ -4863,8 +4896,10 @@ internal sealed class AvaloniaControlTreeReader
             && control.Name is "_NO_TRANSLATE_WorkingDir" or "branchSelect" or "menuCommitInfoPosition"
                or "RefreshButton" or "toggleLeftPanel" or "toggleSplitViewLayout"
                or "toolStripButtonLevelUp" or "toolStripButtonPull" or "toolStripSeparator0"
-               or "toolStripSeparator1" or "toolStripSeparator17" or "toolStripWorktrees"
-               or "tsddbtnRevisionFilter" or "toolStripButtonPush")
+               or "toolStripSeparator1" or "toolStripSeparator2" or "toolStripSeparator17"
+               or "toolStripWorktrees" or "tsddbtnRevisionFilter" or "toolStripButtonPush"
+               or "toolStripButtonCommit" or "toolStripSplitStash" or "toolStripFileExplorer"
+               or "userShell")
            || (_root.GetType().FullName is "GitUI.CommandsDialogs.FormDiff" or "GitUI.CommandsDialogs.FormLog"
                && IsFileStatusToolbarItem(control)
                 && control.Name is not ("btnCollapseGroups" or "btnRefresh" or "sepRefresh"))
@@ -4903,7 +4938,10 @@ internal sealed class AvaloniaControlTreeReader
             or "btnUnequalChange" or "btnOnlyB" or "btnOnlyA" or "btnSameChange" or "sepOptions"
             or "btnFindInFilesGitGrep" or "sepSettings" or "btnSettings";
 
-    private static bool IsWindowTextToolStripItem(Control control) => false;
+    private bool IsWindowTextToolStripItem(Control control)
+        => _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+           && control.Name is "toolStripButtonCommit" or "toolStripSplitStash"
+               or "toolStripFileExplorer" or "userShell";
 
     private bool IsSourceControlTextToolStripItem(Control control)
         => (_root.GetType().FullName == "GitUI.CommandsDialogs.FormCommit"
@@ -4975,8 +5013,12 @@ internal sealed class AvaloniaControlTreeReader
 
     private static bool IsSpellCheckWatermarkVisible(Control control)
     {
+        Control? editor = control.GetLogicalAncestors()
+            .OfType<Control>()
+            .FirstOrDefault(ancestor => ancestor.GetType().FullName == "GitUI.SpellChecker.EditNetSpell");
         if (control is not TextBox textBox
             || !string.IsNullOrEmpty(textBox.Text)
+            || (editor is not null && !string.IsNullOrEmpty(GetPropertyValue(editor, "Text") as string))
             || textBox.IsKeyboardFocusWithin
             || !IsInSelectedTab(control))
         {
@@ -5825,7 +5867,7 @@ internal sealed class AvaloniaControlTreeReader
             CaptureColors colors = ReadSourceBackgroundColors(
                 control,
                 "GitExtensionsKnownColorControlBrush",
-                ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush"));
+                ResolveResourceArgb("GitExtensionsDataGridViewSelectionBackgroundBrush"));
             return AddSourceToolStripSelectionColors(colors);
         }
 

@@ -2155,6 +2155,11 @@ public sealed partial class ParityScreenshotTests
             return (682, 485);
         }
 
+        if (viewType == typeof(FileViewer))
+        {
+            return (757, 518);
+        }
+
         if (viewType == typeof(ErrorControl))
         {
             return (2080, 1447);
