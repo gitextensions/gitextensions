@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.Media;
 using Avalonia.Threading;
 using GitExtensions.ParityCapture;
 using GitUI;
@@ -122,6 +123,7 @@ public sealed class RemoteDialogCaptureTests
         FormRemotes form = new();
         try
         {
+            form.GetTestAccessor().RemoteColor.Color = Color.FromArgb(255, 123, 63, 178);
             IReadOnlyDictionary<string, CaptureNode> nodes = ReadNodes(form);
 
             form.UseLayoutRounding.Should().BeFalse();
@@ -145,7 +147,13 @@ public sealed class RemoteDialogCaptureTests
             nodes["RemoteBranches"].Colors.GridLine.Should().Be("#FFE3E3E3");
             nodes["RemoteBranches"].Colors.SelectionBackground.Should().Be("#FF0078D7");
             nodes["RemoteBranches"].Colors.InactiveSelectionForeground.Should().Be("#FFFFFFFF");
+            nodes["btnRemoteColor"].Colors.Background.Should().Be("#FF7B3FB2");
+            nodes["btnRemoteColor"].Colors.DisabledBackground.Should().Be("#FF7B3FB2");
             nodes["RemoteBranches"].ReadOnly.Should().BeTrue();
+
+            CaptureNode scaledRoot = ReadSurface(form, renderScale: 1.25).Root;
+            scaledRoot.Margin.Px.Should().Be(new CaptureThickness { Left = 3, Top = 3, Right = 3, Bottom = 3 });
+            scaledRoot.Margin.Dip.Should().Be(new CaptureThicknessF { Left = 2.4m, Top = 2.4m, Right = 2.4m, Bottom = 2.4m });
             form.FindControl<ListBox>("Remotes")!.Classes.Should().Contain("gitextensions-native-list-items");
             foreach (string buttonName in new[] { "New", "Delete", "btnToggleState", "Save" })
             {
@@ -182,13 +190,16 @@ public sealed class RemoteDialogCaptureTests
     private static IReadOnlyDictionary<string, CaptureNode> ReadNodes(Window form)
     {
         Dispatcher.UIThread.RunJobs();
-        CaptureSurface surface = new AvaloniaControlTreeReader(form, renderScale: 1)
-            .ReadPrimary(form, PixelSize.FromSize(form.ClientSize, 1));
+        CaptureSurface surface = ReadSurface(form, renderScale: 1);
         return Flatten(surface.Root)
             .Where(node => node.FieldName is not null || node.Name is not null)
             .GroupBy(node => node.FieldName ?? node.Name!, StringComparer.Ordinal)
             .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
     }
+
+    private static CaptureSurface ReadSurface(Window form, double renderScale)
+        => new AvaloniaControlTreeReader(form, renderScale)
+            .ReadPrimary(form, PixelSize.FromSize(form.ClientSize, renderScale));
 
     private static IEnumerable<CaptureNode> Flatten(CaptureNode root)
     {

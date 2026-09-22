@@ -424,6 +424,19 @@ public sealed class ParityDiffRunnerTests
             .And.Contain("Candidate cannot compose the popup.");
     }
 
+    [Test]
+    public void Run_should_compare_focus_order_within_each_container()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument reference = WithFocusHierarchy(fixture.CreateDocument("light"), useGlobalTabIndexes: false);
+        CaptureDocument candidate = WithFocusHierarchy(reference, useGlobalTabIndexes: true);
+        fixture.WriteCaptureSet("reference", [reference]);
+        fixture.WriteCaptureSet("candidate", [candidate]);
+
+        fixture.Run().Captures.Should().ContainSingle().Which.Findings
+            .Should().NotContain(finding => finding.Code == "focus.order");
+    }
+
     private static CaptureDocument ChangeTarget(
         CaptureDocument document,
         Func<CaptureNode, CaptureNode> transform)
@@ -438,6 +451,51 @@ public sealed class ParityDiffRunnerTests
                 surface with
                 {
                     Root = root with { Children = [transform(target)] }
+                }
+            ]
+        };
+    }
+
+    private static CaptureDocument WithFocusHierarchy(CaptureDocument document, bool useGlobalTabIndexes)
+    {
+        CaptureSurface surface = document.Surfaces.Single();
+        CaptureNode template = surface.Root.Children
+            .SelectMany(node => node.Children.Count == 0 ? [node] : node.Children)
+            .First();
+        CaptureNode First(string name, int localIndex, int globalIndex) => template with
+        {
+            Id = $"root/{name}",
+            FieldName = name,
+            Name = name,
+            Text = name,
+            TabIndex = useGlobalTabIndexes ? globalIndex : localIndex,
+            Children = []
+        };
+        CaptureNode Owner(string name, int tabIndex, params CaptureNode[] children) => template with
+        {
+            Id = $"root/{name}",
+            FieldName = name,
+            Name = name,
+            Text = name,
+            TabIndex = tabIndex,
+            TabStop = false,
+            Children = children
+        };
+
+        return document with
+        {
+            Surfaces =
+            [
+                surface with
+                {
+                    Root = surface.Root with
+                    {
+                        Children =
+                        [
+                            Owner("firstOwner", 0, First("first", 0, 0), First("second", 1, 1)),
+                            Owner("secondOwner", 1, First("third", 0, 2), First("fourth", 1, 3))
+                        ]
+                    }
                 }
             ]
         };

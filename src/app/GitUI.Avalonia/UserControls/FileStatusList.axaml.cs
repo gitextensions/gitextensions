@@ -805,6 +805,7 @@ public partial class FileStatusList : GitModuleControl
         IReadOnlyList<GitItemStatus> workTreeItems)
     {
         FileStatusListLoading();
+        UpdateToolbar([workTreeRev, indexRev]);
         SetDiffs(
         [
             new FileStatusWithDescription(indexRev, workTreeRev, workTreeDesc, workTreeItems),
