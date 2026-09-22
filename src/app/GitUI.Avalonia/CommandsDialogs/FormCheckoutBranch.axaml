@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="GitUI.CommandsDialogs.FormCheckoutBranch"
-        Width="724" SizeToContent="Height"
+        Width="724" Height="185"
         MinWidth="500"
         WindowStartupLocation="CenterOwner"
         CanResize="False"
@@ -21,16 +21,16 @@
     <!-- Retained for field-name parity with the WinForms Designer; it has no children there. -->
     <StackPanel x:Name="flowLayoutPanel1" IsVisible="False" />
 
-    <Border x:Name="MainPanel" Classes="gitextensions-dialog-main" Height="81"
+    <Border x:Name="MainPanel" Classes="gitextensions-dialog-main" Height="144"
             Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
-      <Canvas x:Name="tlpnlMain" Width="698" Height="62"
+      <Canvas x:Name="tlpnlMain" Width="698" Height="125"
               HorizontalAlignment="Left" VerticalAlignment="Top">
         <Canvas x:Name="tlpnlBranches" Width="698" Height="50">
           <RadioButton x:Name="LocalBranch" Canvas.Left="2" Canvas.Top="2"
                        Width="93" Height="19" MinHeight="0"
                        IsChecked="True" Content="Local _branch" />
           <RadioButton x:Name="Remotebranch" Canvas.Left="99" Canvas.Top="2"
-                       Width="576" Height="19" MinHeight="0"
+                       Width="551" Height="19" MinHeight="0"
                        Content="Remote _branch" />
           <Label x:Name="label1" Canvas.Left="3" Canvas.Top="23"
                  Width="91" Height="27" Padding="0"
@@ -38,9 +38,9 @@
                  VerticalContentAlignment="Center"
                  HorizontalContentAlignment="Right" />
           <ComboBox x:Name="Branches" Canvas.Left="100" Canvas.Top="26"
-                    Width="574" Height="23" MinHeight="0" IsEditable="True" />
-          <TextBlock x:Name="lbChanges" Canvas.Left="680" Canvas.Top="23"
-                     Width="15" Height="27" Text="="
+                    Width="549" Height="23" MinHeight="0" IsEditable="True" />
+          <TextBlock x:Name="lbChanges" Canvas.Left="655" Canvas.Top="23"
+                     Width="40" Height="27" Text="="
                      Foreground="{DynamicResource GitExtensionsKnownColorGrayTextBrush}"
                      VerticalAlignment="Center" />
         </Canvas>
@@ -65,15 +65,16 @@
                                 Classes="gitextensions-group-box"
                                 Canvas.Top="62" Width="698" Height="55"
                                 Header="Local changes">
-          <Border>
-            <StackPanel x:Name="flpnlLocalOptions" Orientation="Horizontal" Spacing="8">
-              <RadioButton x:Name="rbDontChange" Content="Do_n't change" />
-              <RadioButton x:Name="rbMerge" Content="_Merge" />
-              <RadioButton x:Name="rbStash" Content="S_tash" />
-              <RadioButton x:Name="rbReset" Content="_Reset" />
-              <CheckBox x:Name="chkSetLocalChangesActionAsDefault" Content="Set as _default" />
-            </StackPanel>
-          </Border>
+          <Canvas x:Name="flpnlLocalOptions"
+                  Margin="-5,-5,0,0"
+                  Width="692" Height="33"
+                  HorizontalAlignment="Left" VerticalAlignment="Top">
+            <RadioButton x:Name="rbDontChange" Canvas.Left="9" Canvas.Top="4" Margin="2" Width="96" Height="21" MinHeight="0" Content="Do_n't change" />
+            <RadioButton x:Name="rbMerge" Canvas.Left="109" Canvas.Top="4" Margin="2" Width="59" Height="21" MinHeight="0" Content="_Merge" />
+            <RadioButton x:Name="rbStash" Canvas.Left="172" Canvas.Top="4" Margin="2" Width="53" Height="21" MinHeight="0" Content="S_tash" />
+            <RadioButton x:Name="rbReset" Canvas.Left="229" Canvas.Top="4" Margin="2" Width="53" Height="21" MinHeight="0" Content="_Reset" />
+            <CheckBox x:Name="chkSetLocalChangesActionAsDefault" Canvas.Left="286" Canvas.Top="4" Margin="3" Width="96" Height="19" MinHeight="0" Content="Set as _default" />
+          </Canvas>
         </HeaderedContentControl>
       </Canvas>
     </Border>

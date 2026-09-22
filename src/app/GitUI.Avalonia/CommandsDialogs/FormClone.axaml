@@ -171,6 +171,17 @@
               HorizontalAlignment="Right"
               Content="Clone"
               IsDefault="True" />
+      <compat:IconButton x:Name="LoadSSHKey"
+                         Margin="0,8,94,8"
+                         MinWidth="120"
+                         Width="120"
+                         Height="25"
+                         TabIndex="1"
+                         Padding="8,0"
+                         HorizontalAlignment="Right"
+                         HorizontalContentAlignment="Center"
+                         Icon="{x:Static properties:Images.Putty}"
+                         Content="_Load SSH key" />
       </Grid>
     </wf:FlowLayoutPanel>
   </Grid>

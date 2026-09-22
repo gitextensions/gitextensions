@@ -320,7 +320,14 @@ internal sealed class AvaloniaControlTreeReader
             // WinForms ListControl.SelectedValue stays null for item-backed ComboBoxes but is
             // populated for the data-bound protocol selector used by ForkAndCloneForm.
             ComboBox comboBox when control.Name == "ProtocolDropdownList" => comboBox.SelectedIndex >= 0,
-            ComboBox comboBox when control.Name is "_NO_TRANSLATE_Remotes" or "RemoteRepositoryCombo" or "Url" or "comboBoxBranches" => comboBox.SelectedIndex >= 0,
+            ComboBox comboBox when control.Name is
+                "_NO_TRANSLATE_Remotes" or
+                "_NO_TRANSLATE_Branches" or
+                "RemoteRepositoryCombo" or
+                "Url" or
+                "comboBoxBranches" or
+                "cboBranches" or
+                "cboTo" => comboBox.SelectedIndex >= 0,
             ComboBox => false,
             _ => null
         };
@@ -653,7 +660,10 @@ internal sealed class AvaloniaControlTreeReader
         string? formBrowseSourceToolTip = usesFormBrowseFilterToolbar
             ? semanticName switch
             {
-                "toolStripButtonLevelUp" or "tsbtnAdvancedFilter" => string.Empty,
+                "toolStripButtonLevelUp" => string.Empty,
+                "tsbtnAdvancedFilter" when rootMetadataType != "GitUI.CommandsDialogs.FormFileHistory" => string.Empty,
+                "tsbShowReflog" or "tsmiShowOnlyFirstParent"
+                    when rootMetadataType == "GitUI.CommandsDialogs.FormFileHistory" => string.Empty,
                 "tsddbtnBranchFilter" => "Branch type",
                 "tsddbtnRevisionFilter" => "Filter type",
                 _ => null,
@@ -1868,11 +1878,77 @@ internal sealed class AvaloniaControlTreeReader
                 {
                     Margin = ReadThicknessPair(default(Thickness)),
                     Dock = "Top",
-                    AutoSize = true,
+                    AutoSize = false,
                     TabIndex = 0,
                     TabStop = false
                 };
             }
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormApplyPatch")
+        {
+            if (semanticName == "MainLayoutPanel")
+            {
+                node = node with
+                {
+                    Colors = ReadSourceDesignerColors(control),
+                    Dock = "Fill",
+                    AutoSize = false,
+                    TabIndex = 0,
+                    TabStop = false
+                };
+            }
+            else if (semanticName is "panel2" or "panel3")
+            {
+                node = node with
+                {
+                    Colors = ReadSourceDesignerColors(control),
+                    Anchor = ["Top", "Left"],
+                    Dock = "None",
+                    AutoSize = false,
+                    TabIndex = semanticName == "panel2" ? 16 : 18,
+                    TabStop = false
+                };
+            }
+            else if (semanticName is "Patches" or "PatchGrid")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                    }
+                };
+            }
+
+            string? backgroundResource = semanticName switch
+            {
+                "ContinuePanel" or "MergeToolPanel" or "Resolved" => "GitExtensionsKnownColorActiveCaptionBrush",
+                "Mergetool" => "GitExtensionsKnownColorControlDarkBrush",
+                "SolveMergeConflicts" => "GitExtensionsMergeConflictsBackgroundBrush",
+                _ => null
+            };
+            if (backgroundResource is not null)
+            {
+                string? background = ResolveResourceArgb(backgroundResource);
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        Foreground = semanticName == "SolveMergeConflicts"
+                            ? ResolveResourceArgb("GitExtensionsMergeConflictsForegroundBrush")
+                            : node.Colors.Foreground,
+                        Background = background,
+                        DisabledBackground = background
+                    }
+                };
+            }
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormMergeBranch"
+            && semanticName is "mergeMessage" or "nbMessages")
+        {
+            node = node with { Colors = ReadSourceInputColors(control) };
         }
 
         if (rootMetadataType == "GitUI.CommandsDialogs.FormRebase"
@@ -1886,6 +1962,64 @@ internal sealed class AvaloniaControlTreeReader
                     DisabledBackground = "#00FFFFFF"
                 }
             };
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormRebase"
+            && semanticName == "btnSolveMergeconflicts")
+        {
+            string? background = ResolveResourceArgb("GitExtensionsMergeConflictsBackgroundBrush");
+            node = node with
+            {
+                Colors = node.Colors with
+                {
+                    Foreground = ResolveResourceArgb("GitExtensionsMergeConflictsForegroundBrush"),
+                    Background = background,
+                    DisabledBackground = background
+                }
+            };
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormRebase")
+        {
+            if (semanticName == "PatchGrid")
+            {
+                node = node with { TabStop = true };
+            }
+            else if (semanticName == "Patches")
+            {
+                node = node with
+                {
+                    Colors = node.Colors with
+                    {
+                        SelectionBackground = ResolveResourceArgb("GitExtensionsDataGridViewSelectionBackgroundBrush")
+                    }
+                };
+            }
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormClone")
+        {
+            if (semanticName is "repositoryLabel" or "destinationLabel" or "subdirectoryLabel" or "brachLabel")
+            {
+                node = node with { Anchor = ["Top", "Left"] };
+            }
+            else if (semanticName == "LoadSSHKey")
+            {
+                node = node with
+                {
+                    AutoSize = true,
+                    TabIndex = 1
+                };
+            }
+            else if (semanticName == "MainPanel")
+            {
+                node = node with { AutoSize = true };
+            }
+        }
+
+        if (rootMetadataType == "GitUI.CommandsDialogs.FormInit" && semanticName == "MainPanel")
+        {
+            node = node with { AutoSize = true };
         }
 
         if (sourceOwnerType == "GitUI.UserControls.CommitSummaryUserControl")
@@ -1936,6 +2070,16 @@ internal sealed class AvaloniaControlTreeReader
                         DisabledBackground = ResolveResourceArgb("GitExtensionsCommitSummaryBranchesBackgroundBrush")
                     }
                 };
+            }
+
+            if (semanticName == "labelTags")
+            {
+                node = rootMetadataType is "GitUI.CommandsDialogs.FormArchive" or "GitUI.CommandsDialogs.FormCherryPick"
+                    ? WithSemanticColors(
+                        node,
+                        "GitExtensionsKnownColorControlBrush",
+                        node.Colors.Foreground)
+                    : node with { Colors = ReadSourceDesignerColors(control) };
             }
         }
 
@@ -2557,6 +2701,32 @@ internal sealed class AvaloniaControlTreeReader
             return node;
         }
 
+        if (ReferenceEquals(control, _root)
+            || semanticName is
+                "decreaseNumberOfLines" or
+                "fileviewerToolbar" or
+                "ignoreAllWhitespaces" or
+                "ignoreWhitespaceAtEol" or
+                "ignoreWhiteSpaces" or
+                "increaseNumberOfLines" or
+                "internalFileViewer" or
+                "nextChangeButton" or
+                "PictureBox" or
+                "previousChangeButton" or
+                "settingsButton" or
+                "showEntireFileButton" or
+                "showNonPrintChars" or
+                "showSyntaxHighlighting")
+        {
+            node = node with
+            {
+                Colors = node.Colors with
+                {
+                    Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                }
+            };
+        }
+
         return semanticName switch
         {
             "_NO_TRANSLATE_lblShowPreview" => WithSemanticColors(
@@ -2693,7 +2863,7 @@ internal sealed class AvaloniaControlTreeReader
                 Margin = ReadThicknessPair(new Thickness(2)),
                 Colors = node.Colors with
                 {
-                    Foreground = ResolveResourceArgb("GitExtensionsSourceControlTextBrush")
+                    Foreground = controlText
                 },
                 BorderStyle = "None",
                 Anchor = ["Top", "Left"],
@@ -2711,7 +2881,7 @@ internal sealed class AvaloniaControlTreeReader
                 {
                     Colors = node.Colors with
                     {
-                        Foreground = ResolveResourceArgb("GitExtensionsSourceControlTextBrush")
+                        Foreground = controlText
                     },
                     Margin = ReadThicknessPair(default(Thickness)),
                     Dock = "Fill",
@@ -2726,7 +2896,7 @@ internal sealed class AvaloniaControlTreeReader
                 {
                     Colors = node.Colors with
                     {
-                        Foreground = ResolveResourceArgb("GitExtensionsSourceControlTextBrush")
+                        Foreground = controlText
                     }
                 };
             }
@@ -2818,8 +2988,19 @@ internal sealed class AvaloniaControlTreeReader
                 {
                     Colors = node.Colors with
                     {
-                        Foreground = ResolveResourceArgb("GitExtensionsSourceControlTextBrush")
+                        Foreground = controlText
                     }
+                };
+            }
+
+            if (semanticName == "Branches")
+            {
+                node = WithSemanticColors(
+                    node,
+                    "GitExtensionsPanelBackgroundBrush",
+                    controlText) with
+                {
+                    BorderStyle = "None"
                 };
             }
 
@@ -2829,7 +3010,7 @@ internal sealed class AvaloniaControlTreeReader
                 {
                     Colors = node.Colors with
                     {
-                        Foreground = ResolveResourceArgb("GitExtensionsSourceControlTextBrush")
+                        Foreground = controlText
                     },
                     Margin = ReadThicknessPair(default(Thickness)),
                     Dock = "Fill",
@@ -2845,7 +3026,7 @@ internal sealed class AvaloniaControlTreeReader
             {
                 Colors = node.Colors with
                 {
-                    Foreground = ResolveResourceArgb("GitExtensionsSourceControlTextBrush")
+                    Foreground = controlText
                 }
             };
         }
@@ -3049,7 +3230,7 @@ internal sealed class AvaloniaControlTreeReader
             {
                 node = WithSemanticColors(node, "GitExtensionsWindowBackgroundBrush", windowText);
                 node = ApplyFileHistoryToolbarBounds(node, semanticName);
-                node = node with { Margin = ReadThicknessPair(default(Thickness)) };
+                node = node with { Margin = ReadThicknessPair(new Thickness(1, 0, 1, 0)) };
             }
             else if (semanticName is "splitContainer1" or "RevisionGrid")
             {
@@ -3058,7 +3239,11 @@ internal sealed class AvaloniaControlTreeReader
             else if (semanticName is "tabControl1" or "CommitInfoTabPage" or "DiffTab" or "ViewTab" or "BlameTab"
                      or "CommitDiff" or "Diff" or "View" or "Blame")
             {
-                node = WithSemanticColors(node, "GitExtensionsKnownColorControlBrush", windowText);
+                bool transparentTabContent = !IsDarkTheme()
+                    && semanticName is "DiffTab" or "ViewTab" or "BlameTab" or "View" or "Blame";
+                node = transparentTabContent
+                    ? WithSemanticColors(node, null, windowText, transparent: true)
+                    : WithSemanticColors(node, "GitExtensionsKnownColorControlBrush", windowText);
             }
         }
 
@@ -3090,7 +3275,7 @@ internal sealed class AvaloniaControlTreeReader
             else if (toolbarSourceType == "ToolStripComboBox")
             {
                 node = WithSemanticColors(node, "GitExtensionsWindowBackgroundBrush", windowText);
-                node = node with { Margin = ReadThicknessPair(default(Thickness)) };
+                node = node with { Margin = ReadThicknessPair(new Thickness(1, 0, 1, 0)) };
             }
 
             if (semanticName == "toolStripSeparator3")
@@ -3134,7 +3319,8 @@ internal sealed class AvaloniaControlTreeReader
                 .OfType<Control>()
                 .FirstOrDefault(ancestor => ancestor.GetType().FullName == "GitUI.Editor.FileViewer")?.Name;
             fileViewerName ??= control.GetType().FullName == "GitUI.Editor.FileViewer" ? semanticName : null;
-            bool transparentViewer = fileViewerName is "DiffText" or "BlameAuthor" or "BlameFile";
+            bool transparentViewer = !IsDarkTheme()
+                || fileViewerName is "DiffText" or "BlameAuthor" or "BlameFile";
             if (semanticName is "internalFileViewer" or "TextEditor" or "_NO_TRANSLATE_lblShowPreview")
             {
                 node = WithSemanticColors(
@@ -3258,10 +3444,10 @@ internal sealed class AvaloniaControlTreeReader
                 when control.GetLogicalAncestors().OfType<Control>().Any(ancestor => ancestor.Name == "View")
                 => WithBoundsAndClientSize(node, new Rect(0, 0, 422, 520), new Size(422, 520)),
             "Toolbar" => node with { Padding = ReadThicknessPair(default(Thickness)) },
-            "lblSplitter" => node with { Margin = ReadThicknessPair(default(Thickness)) },
+            "lblSplitter" => node with { Margin = ReadThicknessPair(new Thickness(2, 0, 2, 0)) },
             "tableLayoutPanel1" or "tableLayoutPanel2" => node with
             {
-                AutoSize = false,
+                AutoSize = semanticName == "tableLayoutPanel1",
                 TabStop = false
             },
             "messageLabel" => node with { TabIndex = 2 },
@@ -4627,9 +4813,15 @@ internal sealed class AvaloniaControlTreeReader
         => GetMetadataTypeName(_root.GetType()) is
             "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit" or
             "GitUI.CommandsDialogs.BrowseDialog.FormGitCommandLog" or
+            "GitUI.CommandsDialogs.FormApplyPatch" or
+            "GitUI.CommandsDialogs.FormArchive" or
             "GitUI.CommandsDialogs.FormCheckoutRevision" or
+            "GitUI.CommandsDialogs.FormCherryPick" or
+            "GitUI.CommandsDialogs.FormClone" or
             "GitUI.CommandsDialogs.FormCommit" or
             "GitUI.CommandsDialogs.FormCompareToBranch" or
+            "GitUI.CommandsDialogs.FormCreateBranch" or
+            "GitUI.CommandsDialogs.FormDeleteBranch" or
             "GitUI.CommandsDialogs.FormDiff" or
             "GitUI.CommandsDialogs.FormFormatPatch" or
             "GitUI.CommandsDialogs.FormGitAttributes" or
@@ -4637,7 +4829,12 @@ internal sealed class AvaloniaControlTreeReader
             "GitUI.CommandsDialogs.FormAbout" or
             "GitUI.CommandsDialogs.FormMailMap" or
             "GitUI.CommandsDialogs.FormLog" or
+            "GitUI.CommandsDialogs.FormInit" or
+            "GitUI.CommandsDialogs.FormMergeBranch" or
+            "GitUI.CommandsDialogs.FormRebase" or
+            "GitUI.CommandsDialogs.FormRenameBranch" or
             "GitUI.CommandsDialogs.FormSettings" or
+            "GitUI.CommandsDialogs.FormSparseWorkingCopy" or
             "GitUI.CommandsDialogs.EnvironmentInfo" or
             "GitUI.CommandsDialogs.AboutBoxDialog.FormContributors"
             or "GitUI.CommandsDialogs.SearchControl"
@@ -6194,10 +6391,9 @@ internal sealed class AvaloniaControlTreeReader
            && (control.Name is "MainPanel" or "ControlsPanel");
 
     private Thickness GetInheritedFormProcessPadding(Control control)
-        => _root.GetType().FullName == "GitUI.CommandsDialogs.FormCheckoutRevision"
-            && control.Name == "MainPanel"
-                ? new Thickness(12)
-                : new Thickness(control.Name == "MainPanel" ? 9 : 5);
+        => new(control.Name == "MainPanel"
+            ? _root.GetType().FullName == "GitUI.CommandsDialogs.FormRebase" ? 9 : 12
+            : 5);
 
     private bool IsEditorDialog()
         => _root.GetType().FullName is

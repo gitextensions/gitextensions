@@ -14,7 +14,7 @@
   <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
                        MinHeight="424"
                        ColumnDefinitions="295,*"
-                       RowDefinitions="Auto,38">
+                       RowDefinitions="386,38">
     <help:HelpImageDisplayUserControl x:Name="helpImageDisplayUserControl1"
                                       Grid.RowSpan="2"
                                       Margin="3"

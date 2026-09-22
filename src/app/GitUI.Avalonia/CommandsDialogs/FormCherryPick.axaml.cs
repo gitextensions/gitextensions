@@ -52,6 +52,21 @@ public partial class FormCherryPick : GitExtensionsDialog
         btnAbort.Click += btnAbort_Click;
         btnChooseRevision.Click += btnChooseRevision_Click;
         AcceptButton = btnPick;
+
+        EventHandler? focusInitialControl = null;
+        focusInitialControl = (_, _) =>
+        {
+            Activated -= focusInitialControl;
+            if (lvParentsList.IsVisible)
+            {
+                lvParentsList.Focus();
+            }
+            else
+            {
+                cbxAutoCommit.Focus();
+            }
+        };
+        Activated += focusInitialControl;
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -65,14 +80,6 @@ public partial class FormCherryPick : GitExtensionsDialog
 
         LoadSettings();
         OnRevisionChanged();
-        if (lvParentsList.IsVisible)
-        {
-            lvParentsList.Focus();
-        }
-        else
-        {
-            cbxAutoCommit.Focus();
-        }
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)
