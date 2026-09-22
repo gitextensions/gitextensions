@@ -30,6 +30,14 @@ public sealed class BranchDialogCaptureTests
             checkoutNodes["tlpnlBranches"].AutoSize.Should().BeTrue();
             checkoutNodes["horLine"].ClientSizeDip.Should().Be(new CaptureSizeF { Width = 690, Height = 0 });
             checkoutNodes["lbChanges"].Text.Should().Be("=");
+            CaptureNode checkoutMainLayout = ReadSurface(checkout).Root.Children
+                .SelectMany(Flatten)
+                .Single(node => node.FieldName == "tlpnlMain");
+            checkoutMainLayout.Children.Select(node => node.FieldName).Should().ContainInOrder(
+                "localChangesGB",
+                "tlpnlBranches",
+                "horLine",
+                "tlpnlRemoteOptions");
 
             IReadOnlyDictionary<string, CaptureNode> deleteNodes = ReadNodes(delete);
             deleteNodes["tlpnlMain"].Margin.Dip.Left.Should().Be(0);
@@ -62,13 +70,16 @@ public sealed class BranchDialogCaptureTests
             double.IsNaN(form.Height) ? form.DesiredSize.Height : form.Height);
         form.Arrange(new Rect(arrangedSize));
         Dispatcher.UIThread.RunJobs();
-        CaptureSurface surface = new AvaloniaControlTreeReader(form, renderScale: 1)
-            .ReadPrimary(form, PixelSize.FromSize(form.ClientSize, 1));
+        CaptureSurface surface = ReadSurface(form);
         return Flatten(surface.Root)
             .Where(node => node.FieldName is not null || node.Name is not null)
             .GroupBy(node => node.FieldName ?? node.Name!, StringComparer.Ordinal)
             .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
     }
+
+    private static CaptureSurface ReadSurface(Window form)
+        => new AvaloniaControlTreeReader(form, renderScale: 1)
+            .ReadPrimary(form, PixelSize.FromSize(form.ClientSize, 1));
 
     private static IEnumerable<CaptureNode> Flatten(CaptureNode root)
     {
