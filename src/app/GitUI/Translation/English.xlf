@@ -7819,6 +7819,10 @@ nodes.
 </source>
         <target />
       </trans-unit>
+      <trans-unit id="_lostObjectUnreadable.Text">
+        <source>Object could not be read. It may be corrupted or no longer available.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_removeDanglingObjectsCaption.Text">
         <source>Remove</source>
         <target />
