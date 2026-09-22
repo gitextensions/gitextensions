@@ -1482,13 +1482,13 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         SetVisible(
             revertCommitToolStripMenuItem,
             hasCommands
-            && !Module.IsBareRepository()
+            && !isBareRepository
             && selectedRevisions.Count > 0
             && selectedRevisions.All(selectedRevision => !selectedRevision.IsArtificial));
         SetVisible(
             cherryPickCommitToolStripMenuItem,
             hasCommands
-            && !Module.IsBareRepository()
+            && !isBareRepository
             && selectedRevisions.Count > 0
             && selectedRevisions.All(selectedRevision => !selectedRevision.IsArtificial));
         SetVisible(
@@ -1501,14 +1501,16 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         SetVisible(manipulateCommitToolStripMenuItem, regularRevision);
         fixupCommitToolStripMenuItem.IsEnabled = regularRevision;
         squashCommitToolStripMenuItem.IsEnabled = regularRevision;
-        amendCommitToolStripMenuItem.IsEnabled = regularRevision && Module.GitVersion.SupportAmendCommits;
+        amendCommitToolStripMenuItem.IsEnabled = regularRevision && commands!.Module.GitVersion.SupportAmendCommits;
         editCommitToolStripMenuItem.IsEnabled = regularRevision;
         rewordCommitToolStripMenuItem.IsEnabled = regularRevision;
         SetVisible(compareToolStripMenuItem, revision is not null);
         openCommitsWithDiffToolMenuItem.IsEnabled = selectedRevisions.Count > 0;
         (ObjectId first, GitRevision? selected) = GetFirstAndSelected();
         compareToBranchToolStripMenuItem.IsEnabled = selected is not null;
-        compareWithCurrentBranchToolStripMenuItem.IsEnabled = selected is not null && !string.IsNullOrWhiteSpace(Module.GetSelectedBranch());
+        compareWithCurrentBranchToolStripMenuItem.IsEnabled = selected is not null
+            && hasCommands
+            && !string.IsNullOrWhiteSpace(commands!.Module.GetSelectedBranch());
         selectAsBaseToolStripMenuItem.IsEnabled = selected is not null;
         compareToBaseToolStripMenuItem.IsEnabled = selected is not null && _baseCommitToCompare is not null;
         compareToWorkingDirectoryMenuItem.IsEnabled = selected is not null && selected.ObjectId != ObjectId.WorkTreeId;

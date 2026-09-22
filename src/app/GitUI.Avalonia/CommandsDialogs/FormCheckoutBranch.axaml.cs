@@ -10,8 +10,8 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs;
 
-// WinForms ErrorProvider validation becomes an on-checkout message box, and Avalonia's
-// SizeToContent replaces the ApplyLayout/RecalculateSizeConstraints row math.
+// WinForms ErrorProvider validation becomes an on-checkout message box; the source's
+// ApplyLayout/RecalculateSizeConstraints row math is reproduced with native controls below.
 public partial class FormCheckoutBranch : GitExtensionsDialog
 {
     #region Translation
@@ -118,6 +118,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
             localChangesGB.IsVisible = HasUncommittedChanges;
             ChangesMode = AppSettings.CheckoutBranchAction;
             rbCreateBranchWithCustomName.IsChecked = AppSettings.CreateLocalBranchForRemote;
+            RecalculateSizeConstraints();
         }
         finally
         {
@@ -515,8 +516,17 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
     private void RecalculateSizeConstraints()
     {
-        // SizeToContent tracks the visibility change; the WinForms row math is unnecessary.
-        tlpnlRemoteOptions.IsVisible = Remotebranch.IsChecked == true;
+        bool showRemoteOptions = Remotebranch.IsChecked == true;
+        tlpnlRemoteOptions.IsVisible = showRemoteOptions;
+
+        // The source fixes these TableLayoutPanel rows at 96-DPI Designer sizes, then
+        // recomputes the window height from the rows that are currently visible.
+        double remoteOptionsHeight = showRemoteOptions ? 77 : 0;
+        double localChangesHeight = localChangesGB.IsVisible ? 63 : 0;
+        tlpnlMain.Height = 62 + remoteOptionsHeight + localChangesHeight;
+        MainPanel.Height = tlpnlMain.Height + 19;
+        Height = MainPanel.Height + ControlsPanel.Height;
+        Avalonia.Controls.Canvas.SetTop(localChangesGB, 62 + remoteOptionsHeight);
     }
 
     private void rbReset_CheckedChanged(object? sender, EventArgs e)

@@ -15,8 +15,8 @@
       </DataTemplate>
     </HeaderedContentControl.HeaderTemplate>
     <Grid x:Name="tableLayoutPanel1"
-          ColumnDefinitions="85,*"
-          RowDefinitions="15,13,21,21,21,31">
+          ColumnDefinitions="86,*"
+          RowDefinitions="15,13,21,21,21,*">
       <TextBlock x:Name="labelMessage"
                  Grid.ColumnSpan="2"
                  Height="15"
@@ -25,14 +25,14 @@
                  Text="..."
                  TextTrimming="CharacterEllipsis"
                  TextWrapping="Wrap" />
-      <TextBlock x:Name="labelAuthorCaption" Grid.Row="2" Height="15" Margin="3,3,2,3" VerticalAlignment="Top" Text="Author:" />
+      <TextBlock x:Name="labelAuthorCaption" Grid.Row="2" Width="80" Height="15" Margin="3,3,2,3" HorizontalAlignment="Left" VerticalAlignment="Top" Text="Author:" />
       <TextBlock x:Name="labelAuthor" Grid.Row="2" Grid.Column="1" Height="21" Margin="2,0" VerticalAlignment="Top" FontWeight="Bold" Text="..." />
-      <TextBlock x:Name="labelDateCaption" Grid.Row="3" Height="15" Margin="3,3,2,3" VerticalAlignment="Top" Text="Commit date:" />
+      <TextBlock x:Name="labelDateCaption" Grid.Row="3" Width="80" Height="15" Margin="3,3,2,3" HorizontalAlignment="Left" VerticalAlignment="Top" Text="Commit date:" />
       <TextBlock x:Name="labelDate" Grid.Row="3" Grid.Column="1" Height="21" Margin="2,0" VerticalAlignment="Top" Text="..." />
-      <TextBlock x:Name="labelBranchesCaption" Grid.Row="4" Height="15" Margin="3,3,2,3" VerticalAlignment="Top" Text="Branch(es):" />
+      <TextBlock x:Name="labelBranchesCaption" Grid.Row="4" Width="80" Height="15" Margin="3,3,2,3" HorizontalAlignment="Left" VerticalAlignment="Top" Text="Branch(es):" />
       <TextBlock x:Name="labelBranches" Grid.Row="4" Grid.Column="1" Height="21" Margin="2,0" VerticalAlignment="Top" Text="..." TextWrapping="Wrap" />
-      <TextBlock x:Name="labelTagsCaption" Grid.Row="5" Height="25" Margin="3,3,2,3" VerticalAlignment="Top" Text="Tag(s):" />
-      <TextBlock x:Name="labelTags" Grid.Row="5" Grid.Column="1" Height="31" Margin="2,0" VerticalAlignment="Top" Text="..." TextWrapping="Wrap" />
+      <TextBlock x:Name="labelTagsCaption" Grid.Row="5" Width="80" Margin="3,3,2,3" HorizontalAlignment="Left" VerticalAlignment="Stretch" Text="Tag(s):" />
+      <TextBlock x:Name="labelTags" Grid.Row="5" Grid.Column="1" Margin="2,0" VerticalAlignment="Stretch" Text="..." TextWrapping="Wrap" />
     </Grid>
   </HeaderedContentControl>
 </UserControl>

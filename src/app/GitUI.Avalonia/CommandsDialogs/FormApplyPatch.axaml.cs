@@ -88,8 +88,6 @@ public partial class FormApplyPatch : GitModuleForm
 
         IgnoreWhitespace.IsChecked = AppSettings.ApplyPatchIgnoreWhitespace;
         SignOff.IsChecked = AppSettings.ApplyPatchSignOff;
-        PatchFile.Focus();
-        PatchFile.SelectAll();
 
         if (Module.InTheMiddleOfPatch())
         {
@@ -97,6 +95,20 @@ public partial class FormApplyPatch : GitModuleForm
             // continuation-state controller when the dialog opens during an existing patch.
             EnableButtons();
         }
+    }
+
+    protected override void OnShown(EventArgs e)
+    {
+        base.OnShown(e);
+
+        // Avalonia applies its initial focus after Loaded; restore the source Load focus here.
+        Avalonia.Threading.Dispatcher.UIThread.Post(
+            () =>
+            {
+                PatchFile.Focus();
+                PatchFile.SelectAll();
+            },
+            Avalonia.Threading.DispatcherPriority.Input);
     }
 
     private void InitializeStaticContent()
@@ -114,7 +126,6 @@ public partial class FormApplyPatch : GitModuleForm
         SolveMergeConflicts.Click += SolveMergeConflicts_Click;
         IgnoreWhitespace.IsCheckedChanged += IgnoreWhitespace_CheckedChanged;
         SignOff.IsCheckedChanged += SignOff_CheckedChanged;
-        SolveMergeConflicts.Background = new SolidColorBrush(Colors.Goldenrod);
     }
 
     private void EnableButtons()
