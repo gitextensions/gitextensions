@@ -205,7 +205,7 @@ internal static class AvaloniaThemeResources
         DrawingColor resetMixed = DrawingColor.FromArgb(255, 255, 128);
         DrawingColor resetHard = DrawingColor.FromArgb(255, 128, 128);
         DrawingColor warningPanel = DrawingColor.FromArgb(230, 99, 99);
-        DrawingColor interactiveAction = DrawingColor.LightSkyBlue.AdaptBackColor(adaptationSettings);
+        DrawingColor interactiveAction = DrawingColor.LightSkyBlue;
         DrawingColor interactiveConflict = DrawingColor.Orange.AdaptBackColor(adaptationSettings);
         DrawingColor commitSummaryTags = DrawingColor.LightSteelBlue.AdaptBackColor(adaptationSettings);
         DrawingColor commitSummaryBranches = DrawingColor.LightSalmon.AdaptBackColor(adaptationSettings);
