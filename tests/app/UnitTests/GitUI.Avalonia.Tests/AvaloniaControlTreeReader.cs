@@ -6193,14 +6193,14 @@ internal sealed class AvaloniaControlTreeReader
         bool usesWindowBackground = control.Name == "RemoteBranches";
         string? background = ResolveResourceArgb(usesWindowBackground
             ? "GitExtensionsKnownColorWindowBrush"
-            : "GitExtensionsKnownColorControlLightBrush");
+            : "GitExtensionsKnownColorControlDarkBrush");
         return new CaptureColors
         {
             Foreground = ResolveResourceArgb("GitExtensionsKnownColorWindowTextBrush"),
             Background = background,
             Border = ResolveResourceArgb("GitExtensionsKnownColorControlBrush"),
             SelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush"),
-            SelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush"),
+            SelectionBackground = ResolveResourceArgb("GitExtensionsDataGridViewSelectionBackgroundBrush"),
             InactiveSelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush")
                                           ?? ResolveResourceArgb("GitExtensionsHighlightForegroundBrush"),
             InactiveSelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorInactiveCaptionBrush"),
@@ -6434,7 +6434,7 @@ internal sealed class AvaloniaControlTreeReader
 
     private Thickness GetInheritedFormProcessPadding(Control control)
         => new(control.Name == "MainPanel"
-            ? _root.GetType().FullName == "GitUI.CommandsDialogs.FormRebase" ? 9 : 12
+            ? _root.GetType().FullName is "GitUI.CommandsDialogs.FormPull" or "GitUI.CommandsDialogs.FormRebase" ? 9 : 12
             : 5);
 
     private bool IsEditorDialog()
