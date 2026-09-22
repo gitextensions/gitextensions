@@ -361,16 +361,12 @@ public class FormBrowseTests
 
                     WaitForRevisionsToBeLoaded(form);
                     await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-
-                    ta.RevisionInfo.GetTestAccessor().CommitMessage.Text.Should().Contain("REPO_A_HEAD");
+                    WaitForCommitMessageContaining(form, "REPO_A_HEAD");
 
                     ta.SetWorkingDir(repoB.Module.WorkingDir);
                     WaitForRevisionsToBeLoaded(form);
                     await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-
-                    GitUI.CommitInfo.CommitInfo.TestAccessor commitInfoAccessor = ta.RevisionInfo.GetTestAccessor();
-                    commitInfoAccessor.CommitMessage.Text.Should().Contain("REPO_B_HEAD");
-                    commitInfoAccessor.CommitMessage.Text.Should().NotContain("REPO_A_HEAD");
+                    WaitForCommitMessageAfterRepositorySwitch(form, "REPO_B_HEAD", "REPO_A_HEAD");
                 },
                 commandsA);
         }
@@ -412,5 +408,28 @@ public class FormBrowseTests
     private static void WaitForRevisionsToBeLoaded(FormBrowse form, [CallerMemberName] string caller = "")
     {
         UITest.ProcessUntil($"{caller} loading revisions", () => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsDataLoadComplete, maxMilliseconds: 10_000);
+    }
+
+    private static void WaitForCommitMessageContaining(FormBrowse form, string subjectFragment, [CallerMemberName] string caller = "")
+    {
+        GitUI.CommitInfo.CommitInfo.TestAccessor commitInfo = form.GetTestAccessor().RevisionInfo.GetTestAccessor();
+        UITest.ProcessUntil(
+            $"{caller} commit message contains '{subjectFragment}'",
+            () => commitInfo.CommitMessage.Text.Contains(subjectFragment, StringComparison.Ordinal),
+            maxMilliseconds: 10_000);
+    }
+
+    private static void WaitForCommitMessageAfterRepositorySwitch(FormBrowse form, string expectedSubjectFragment, string staleSubjectFragment)
+    {
+        GitUI.CommitInfo.CommitInfo.TestAccessor commitInfo = form.GetTestAccessor().RevisionInfo.GetTestAccessor();
+        UITest.ProcessUntil(
+            "commit message after repository switch",
+            () =>
+            {
+                string text = commitInfo.CommitMessage.Text;
+                return text.Contains(expectedSubjectFragment, StringComparison.Ordinal)
+                    && !text.Contains(staleSubjectFragment, StringComparison.Ordinal);
+            },
+            maxMilliseconds: 10_000);
     }
 }
