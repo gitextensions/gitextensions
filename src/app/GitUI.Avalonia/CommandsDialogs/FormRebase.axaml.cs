@@ -61,6 +61,7 @@ public partial class FormRebase : GitExtensionsDialog
     {
         InitializeComponent();
         InitializeStaticContent();
+        WireInitialFocus();
         InitializeComplete();
     }
 
@@ -118,14 +119,8 @@ public partial class FormRebase : GitExtensionsDialog
         PatchGrid.SetSkipped(Skipped);
 
         AcceptButton = btnRebase;
+        WireInitialFocus();
         InitializeComplete();
-    }
-
-    public override void AddTranslationItems(ITranslation translation)
-    {
-        base.AddTranslationItems(translation);
-        translation.AddTranslationItem(nameof(FormRebase), nameof(chkIgnoreDate), "toolTip1", IgnoreDateToolTip.Replace("\n", Environment.NewLine, StringComparison.Ordinal));
-        translation.AddTranslationItem(nameof(FormRebase), nameof(chkCommitterDateIsAuthorDate), "toolTip1", CommitterDateToolTip.Replace("\n", Environment.NewLine, StringComparison.Ordinal));
     }
 
     public override void TranslateItems(ITranslation translation)
@@ -190,8 +185,28 @@ public partial class FormRebase : GitExtensionsDialog
         else
         {
             ShowOptions_LinkClicked(this, EventArgs.Empty);
-            cboBranches.Focus();
         }
+    }
+
+    protected override void OnShown(EventArgs e)
+    {
+        base.OnShown(e);
+
+        PatchGrid.SelectCurrentlyApplyingPatch();
+    }
+
+    private void WireInitialFocus()
+    {
+        EventHandler? focusInitialControl = null;
+        focusInitialControl = (_, _) =>
+        {
+            Activated -= focusInitialControl;
+            if (!_startRebaseImmediately)
+            {
+                cboBranches.Focus();
+            }
+        };
+        Activated += focusInitialControl;
     }
 
     private void InitializeStaticContent()

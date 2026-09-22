@@ -61,6 +61,14 @@ public sealed partial class FormInit : GitExtensionsDialog
     {
         Browse.PathShowingControl = _NO_TRANSLATE_Directory;
         Init.Click += InitClick;
+
+        EventHandler? focusInitialControl = null;
+        focusInitialControl = (_, _) =>
+        {
+            Activated -= focusInitialControl;
+            Init.Focus();
+        };
+        Activated += focusInitialControl;
     }
 
     private void InitClick(object sender, EventArgs e)

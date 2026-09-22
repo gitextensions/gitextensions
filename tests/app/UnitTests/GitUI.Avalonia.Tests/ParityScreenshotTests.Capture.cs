@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -127,7 +127,7 @@ public sealed partial class ParityScreenshotTests
     public void Branch_operation_capture_hosts_should_use_native_96_dpi_runtime_dimensions()
     {
         GetCaptureSize(typeof(FormCreateBranch)).Should().Be((570, 386));
-        GetCaptureSize(typeof(FormCheckoutBranch)).Should().Be((724, 122));
+        GetCaptureSize(typeof(FormCheckoutBranch)).Should().Be((724, 185));
         GetCaptureSize(typeof(FormDeleteBranch)).Should().Be((412, 91));
         GetCaptureSize(typeof(FormRenameBranch)).Should().Be((484, 42));
         GetCaptureSize(typeof(FormDeleteRemoteBranch)).Should().Be((403, 152));

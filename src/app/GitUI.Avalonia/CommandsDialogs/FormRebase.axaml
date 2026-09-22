@@ -72,15 +72,15 @@
           </wf:FlowLayoutPanel>
           <TextBlock x:Name="lblCommitsToReapply" Grid.Row="6" Margin="3,0" Height="15" Text="Commits to re-apply:" />
           <gitui:PatchGrid x:Name="PatchGrid" Grid.Row="7" Margin="3,2" IsTabStop="True" />
-          <wf:TableLayoutPanel x:Name="tlpnlSecondaryControls" Grid.Row="8" Margin="3" ColumnDefinitions="*,*">
-            <wf:FlowLayoutPanel x:Name="flowLayoutPanel1">
+          <wf:TableLayoutPanel x:Name="tlpnlSecondaryControls" Grid.Row="8" Margin="3" Height="6" ColumnDefinitions="*,*">
+            <wf:FlowLayoutPanel x:Name="flowLayoutPanel1" Margin="3" Height="1" VerticalAlignment="Top">
               <StackPanel Orientation="Horizontal">
                 <compat:IconButton x:Name="btnAddFiles" Classes="gitextensions-dialog-action" Margin="3" Width="79" Height="25" Icon="{x:Static properties:Images.BulletAdd}" Content="_Add files" IsVisible="False" />
                 <compat:IconButton x:Name="btnCommit" Classes="gitextensions-dialog-action" Margin="3" Width="86" Height="25" Icon="{x:Static properties:Images.RepoStateStaged}" Content="C_ommit..." IsVisible="False" />
                 <compat:IconButton x:Name="btnEditTodo" Classes="gitextensions-dialog-action" Margin="3" Width="90" Height="25" Icon="{x:Static properties:Images.EditFile}" Content="_Edit todo..." IsVisible="False" />
               </StackPanel>
             </wf:FlowLayoutPanel>
-            <wf:FlowLayoutPanel x:Name="flowLayoutPanel2" Grid.Column="1">
+            <wf:FlowLayoutPanel x:Name="flowLayoutPanel2" Grid.Column="1" Margin="3" Height="1" VerticalAlignment="Top">
               <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="btnSkip" Classes="gitextensions-dialog-action" Margin="3" Width="183" Height="25" Content="S_kip currently applying commit" IsVisible="False" />
               </StackPanel>

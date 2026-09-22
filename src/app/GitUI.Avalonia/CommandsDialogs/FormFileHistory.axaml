@@ -109,7 +109,7 @@
             <MenuItem x:Name="detectMoveAndCopyInAllFilesToolStripMenuItem"
                       Header="Detect move and copy in all files"
                       ToggleType="CheckBox" />
-            <Separator />
+            <Separator x:Name="toolStripSeparator5" />
             <MenuItem x:Name="displaySettingsToolStripMenuItem"
                       Header="Display result settings:"
                       IsEnabled="False" />

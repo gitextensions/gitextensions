@@ -115,12 +115,19 @@ public sealed partial class FormArchive : GitModuleForm
         checkboxRevisionFilter.IsCheckedChanged += checkboxRevisionFilter_CheckedChanged;
         AcceptButton = buttonArchiveRevision;
         UpdateFilterState();
+
+        EventHandler? focusInitialControl = null;
+        focusInitialControl = (_, _) =>
+        {
+            Activated -= focusInitialControl;
+            buttonArchiveRevision.Focus();
+        };
+        Activated += focusInitialControl;
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);
-        buttonArchiveRevision.Focus();
         UpdateFilterState();
     }
 
