@@ -56,6 +56,43 @@ public sealed class RepositoryWorkflowCaptureTests
     }
 
     [AvaloniaTest]
+    public void Capture_reader_should_preserve_source_workflow_container_and_focus_order()
+    {
+        FormArchive archive = new();
+        FormCherryPick cherryPick = new();
+        try
+        {
+            archive.Measure(new Size(594, 571));
+            archive.Arrange(new Rect(0, 0, 594, 571));
+            cherryPick.Measure(new Size(614, double.PositiveInfinity));
+            cherryPick.Arrange(new Rect(0, 0, 614, cherryPick.DesiredSize.Height));
+            Dispatcher.UIThread.RunJobs();
+
+            CaptureNode archiveRoot = ReadSurface(archive).Root;
+            CaptureNode archiveFilters = FindNode(archiveRoot, "groupBox2");
+            string[] archiveFilterChildren = archiveFilters.Children
+                .Select(node => node.FieldName)
+                .Where(name => name is not null)
+                .Cast<string>()
+                .ToArray();
+            Array.IndexOf(archiveFilterChildren, "checkboxRevisionFilter")
+                .Should().BeLessThan(Array.IndexOf(archiveFilterChildren, "checkBoxPathFilter"));
+
+            CaptureNode cherryRoot = ReadSurface(cherryPick).Root;
+            cherryRoot.Children.Select(node => node.TabIndex).Should().Equal(0, 1);
+            cherryRoot.Children.Should().OnlyContain(node => node.AutoSize == true);
+            CaptureNode mainLayout = FindNode(cherryRoot, "tlPnlMain");
+            FindNode(mainLayout, "lvParentsList").Should().BeSameAs(
+                mainLayout.Children.Single(node => node.FieldName == "lvParentsList"));
+        }
+        finally
+        {
+            cherryPick.Close();
+            archive.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void Normal_capture_should_restore_the_source_default_focus()
     {
         FormArchive form = new();
@@ -89,6 +126,9 @@ public sealed class RepositoryWorkflowCaptureTests
     private static CaptureSurface ReadSurface(Window window)
         => new AvaloniaControlTreeReader(window, renderScale: 1)
             .ReadPrimary(window, PixelSize.FromSize(window.ClientSize, 1));
+
+    private static CaptureNode FindNode(CaptureNode root, string fieldName)
+        => Flatten(root).Single(node => node.FieldName == fieldName);
 
     private static IEnumerable<CaptureNode> Flatten(CaptureNode root)
     {
