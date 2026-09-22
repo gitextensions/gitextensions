@@ -2018,6 +2018,17 @@ public sealed partial class ParityScreenshotTests
 
             loading.IsVisible.Should().BeFalse();
             stashes.IsEnabled.Should().BeTrue();
+
+            FileViewer view = GetRequiredControl<FileViewer>(formStash, "View");
+            Stopwatch diffStopwatch = Stopwatch.StartNew();
+            while (string.IsNullOrEmpty(view.TextEditor.Text)
+                   && diffStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            view.TextEditor.Text.Should().NotBeEmpty();
         }
 
         CommitDiff? commitDiff = root as CommitDiff
@@ -3042,6 +3053,11 @@ public sealed partial class ParityScreenshotTests
                 Module.GitExecutable.RunCommand(new GitArgumentBuilder("remote") { "add", RemoteName, "https://example.com/gitextensions/parity.git" });
                 Module.SetSetting($"remote.{RemoteName}.color", "#7B3FB2");
                 Module.GitExecutable.RunCommand(new GitArgumentBuilder("update-ref") { $"refs/remotes/{RemoteName}/{MainBranchName}", "HEAD" });
+
+                // FormSparseWorkingCopy loads the actual repository metadata file asynchronously.
+                // Seed representative content without enabling sparse checkout so every capture host
+                // observes the same editor state while the repository topology remains unchanged.
+                File.WriteAllText(Path.Combine(_workingDirectory, ".git", "info", "sparse-checkout"), "/src/\n/README.md\n");
 
                 File.AppendAllText(Path.Combine(sourceDirectory, "App.cs"), "// Unstaged visual parity adjustment\n");
                 File.WriteAllText(Path.Combine(_workingDirectory, "CHANGELOG.md"), "Avalonia visual parity harness\n");
