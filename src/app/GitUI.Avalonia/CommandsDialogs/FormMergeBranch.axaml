@@ -67,9 +67,9 @@
             <CheckBox x:Name="squash" Canvas.Left="3" Canvas.Top="28" Width="114" Height="19" Content="Squash commits" />
             <CheckBox x:Name="allowUnrelatedHistories" Canvas.Left="3" Canvas.Top="53" Width="156" Height="19" Content="Allow unrelated histories" />
             <CheckBox x:Name="addLogMessages" Canvas.Left="3" Canvas.Top="80" Width="122" Height="19" Content="Add log messages" />
-            <NumericUpDown x:Name="nbMessages" Canvas.Left="202" Canvas.Top="78" Width="53" Height="23" Minimum="1" Maximum="999" Value="20" IsEnabled="False" />
+            <NumericUpDown x:Name="nbMessages" Canvas.Left="202" Canvas.Top="78" Width="53" Height="23" Minimum="1" Maximum="999" Value="20" IsEnabled="False" Background="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
             <CheckBox x:Name="addMergeMessage" Canvas.Left="3" Canvas.Top="107" Width="150" Height="19" Content="Specify merge message" />
-            <TextBox x:Name="mergeMessage" Canvas.Left="3" Canvas.Top="132" Width="451" Height="77" AcceptsReturn="True" TextWrapping="Wrap" IsEnabled="False" />
+            <TextBox x:Name="mergeMessage" Canvas.Left="3" Canvas.Top="132" Width="451" Height="77" AcceptsReturn="True" TextWrapping="Wrap" IsEnabled="False" Background="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
           </Canvas>
         </wf:TableLayoutPanel>
       </wf:TableLayoutPanel>
