@@ -180,7 +180,7 @@ public partial class CommitInfo : GitModuleControl
             }
 
             // call this event handler also now (necessary for "Contained in branches/tags")
-            RefreshSortedTags();
+            TriggerRefreshSortedTags();
         }
     }
 
@@ -216,11 +216,10 @@ public partial class CommitInfo : GitModuleControl
 
         // Cancel unconditionally: any in-flight load belongs to the previous repository.
         CancellationToken cancellationToken = _asyncLoadCancellation.Next();
-        _tagsOrderDict = null;
+        TriggerRefreshSortedTags();
 
         ClearRevisionDetailsDisplay();
         UpdateRevisionInfo();
-        RefreshSortedTags();
 
         if (_revision is not null && tableLayout.Visible)
         {
@@ -233,7 +232,7 @@ public partial class CommitInfo : GitModuleControl
         LoadHotkeys(FormBrowse.HotkeySettingsName);
     }
 
-    private void RefreshSortedTags()
+    private void TriggerRefreshSortedTags()
     {
         _tagsOrderDict = null;
 

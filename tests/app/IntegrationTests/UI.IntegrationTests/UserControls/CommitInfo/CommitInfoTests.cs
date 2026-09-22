@@ -347,7 +347,7 @@ public class CommitInfoTests
     {
         if (stageEmptyTagListOutput)
         {
-            // CommitInfo.UICommandsSource assignment triggers RefreshSortedTags
+            // CommitInfo.UICommandsSource assignment triggers TriggerRefreshSortedTags
             _gitExecutable.StageOutput(@"for-each-ref --sort=""-taggerdate"" --format=""%(refname)"" refs/tags/", "");
         }
 
