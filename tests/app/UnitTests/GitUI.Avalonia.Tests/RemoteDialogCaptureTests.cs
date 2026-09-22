@@ -3,7 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
 using GitExtensions.ParityCapture;
+using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.Compat;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitExtensionsTests;
 
@@ -11,9 +14,17 @@ namespace GitExtensionsTests;
 [Category("P8_6i")]
 public sealed class RemoteDialogCaptureTests
 {
+    [SetUp]
+    public void SetUp()
+    {
+        AvaloniaSynchronizationContext.InstallIfNeeded();
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+    }
+
     [AvaloniaTest]
     public void Capture_reader_should_emit_remote_dialog_Designer_layout_contracts()
     {
+        AvaloniaThemeSettings.ApplyAppSettings();
         AssertFormPull();
         AssertFormPush();
         AssertFormRemotes();
@@ -53,6 +64,14 @@ public sealed class RemoteDialogCaptureTests
         {
             IReadOnlyDictionary<string, CaptureNode> nodes = ReadNodes(form);
 
+            form.UseLayoutRounding.Should().BeFalse();
+            nodes["MainPanel"].Padding.Dip.Should().Be(new CaptureThicknessF
+            {
+                Left = 9,
+                Top = 9,
+                Right = 9,
+                Bottom = 9,
+            });
             nodes["MainLayout"].Dock.Should().Be("Fill");
             nodes["GroupPullFrom"].Anchor.Should().Equal("Top", "Left", "Right");
             nodes["GroupPullFrom"].AutoSize.Should().BeTrue();
@@ -80,6 +99,7 @@ public sealed class RemoteDialogCaptureTests
         {
             IReadOnlyDictionary<string, CaptureNode> nodes = ReadNodes(form);
 
+            form.UseLayoutRounding.Should().BeFalse();
             nodes["groupBox2"].Anchor.Should().Equal("Top", "Left", "Right");
             nodes["BranchGrid"].Dock.Should().Be("Fill");
             nodes["ShowOptions"].AutoSize.Should().BeTrue();
@@ -88,7 +108,8 @@ public sealed class RemoteDialogCaptureTests
             nodes["PushToRemote"].CheckState.Should().BeNull();
             nodes["tableLayoutPanel1"].TabStop.Should().BeFalse();
             nodes["BranchGrid"].ReadOnly.Should().BeFalse();
-            nodes["BranchGrid"].Colors.SelectionBackground.Should().Be("#FF0078D4");
+            nodes["BranchGrid"].Colors.Background.Should().Be("#FFA0A0A0");
+            nodes["BranchGrid"].Colors.SelectionBackground.Should().Be("#FF0078D7");
         }
         finally
         {
@@ -103,6 +124,7 @@ public sealed class RemoteDialogCaptureTests
         {
             IReadOnlyDictionary<string, CaptureNode> nodes = ReadNodes(form);
 
+            form.UseLayoutRounding.Should().BeFalse();
             nodes["Remotes"].Dock.Should().Be("Fill");
             nodes["gbMgtPanel"].Dock.Should().Be("Top");
             nodes["gbMgtPanel"].AutoSize.Should().BeTrue();
@@ -121,7 +143,7 @@ public sealed class RemoteDialogCaptureTests
                 .Should().Equal("TestConnection", "LoadSSHKey");
             nodes["lblHeaderLine2"].Colors.Border.Should().BeNull();
             nodes["RemoteBranches"].Colors.GridLine.Should().Be("#FFE3E3E3");
-            nodes["RemoteBranches"].Colors.SelectionBackground.Should().Be("#FF0078D4");
+            nodes["RemoteBranches"].Colors.SelectionBackground.Should().Be("#FF0078D7");
             nodes["RemoteBranches"].Colors.InactiveSelectionForeground.Should().Be("#FFFFFFFF");
             nodes["RemoteBranches"].ReadOnly.Should().BeTrue();
             form.FindControl<ListBox>("Remotes")!.Classes.Should().Contain("gitextensions-native-list-items");
@@ -143,6 +165,7 @@ public sealed class RemoteDialogCaptureTests
         {
             IReadOnlyDictionary<string, CaptureNode> nodes = ReadNodes(form);
 
+            form.UseLayoutRounding.Should().BeFalse();
             nodes["MainPanel"].AutoSize.Should().BeTrue();
             nodes["MainPanel"].Dock.Should().Be("Fill");
             nodes["ControlsPanel"].AutoSize.Should().BeTrue();

@@ -516,6 +516,10 @@
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
     <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
     <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
+    <!-- Preserve the source Designer's 96-DPI coordinates through fractional render scales.
+         Recursive layout rounding compounds at nested container boundaries; resolving the
+         final rendered edges once avoids that accumulated drift. -->
+    <Setter Property="UseLayoutRounding" Value="False" />
   </Style>
   <Style Selector="UserControl">
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />

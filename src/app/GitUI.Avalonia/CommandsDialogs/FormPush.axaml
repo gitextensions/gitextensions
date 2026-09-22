@@ -220,7 +220,8 @@
           </Grid>
           <wf:DataGridView x:Name="BranchGrid"
                            Classes="gitextensions-stretch-items"
-                           Grid.Row="1" />
+                           Grid.Row="1"
+                           Background="{DynamicResource GitExtensionsKnownColorControlDarkBrush}" />
         </Grid>
       </wf:TabPage>
     </TabControl>
