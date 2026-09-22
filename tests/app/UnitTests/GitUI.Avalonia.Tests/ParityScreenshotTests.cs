@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -2294,9 +2294,9 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormCheckoutBranch))
         {
-            // WinForms expands to the runtime preferred width, then contracts the clean
-            // local-branch state to the visible rows before the reference capture.
-            return (724, 122);
+            // The shared dirty fixture keeps the local-changes row visible; use the source
+            // runtime client height rather than clipping its branch row and footer.
+            return (724, 185);
         }
 
         if (viewType == typeof(FormDeleteBranch))

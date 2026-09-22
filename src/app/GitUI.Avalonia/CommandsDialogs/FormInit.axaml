@@ -43,14 +43,14 @@
                             Header="Repository type">
       <Canvas>
         <RadioButton x:Name="Personal"
-                     Canvas.Left="7"
+                     Canvas.Left="11"
                      Canvas.Top="1"
                      Width="126"
                      Height="19"
                      Content="Personal repository"
                      IsChecked="True" />
         <RadioButton x:Name="Central"
-                     Canvas.Left="7"
+                     Canvas.Left="11"
                      Canvas.Top="24"
                      Width="350"
                      Height="19"

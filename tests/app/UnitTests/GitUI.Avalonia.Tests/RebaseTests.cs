@@ -105,13 +105,13 @@ public sealed class RebaseTests
             nameof(FormRebase),
             "chkCommitterDateIsAuthorDate",
             "toolTip1",
-            $"Sets the commit date to the original author date{Environment.NewLine}(instead of the current date).");
+            "Sets the commit date to the original author date\r\n(instead of the current date).");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "chkIgnoreDate", "Text", "Ignore &date");
         translation.Received(1).AddTranslationItem(
             nameof(FormRebase),
             "chkIgnoreDate",
             "toolTip1",
-            $"Sets the author date to the current date (same as{Environment.NewLine}commit date), ignoring the original author date.");
+            "Sets the author date to the current date (same as\r\ncommit date), ignoring the original author date.");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "chkPreserveMerges", "Text", "&Preserve Merges");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "chkInteractive", "Text", "&Interactive Rebase");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "chkSpecificRange", "Text", "Specific ra&nge");
