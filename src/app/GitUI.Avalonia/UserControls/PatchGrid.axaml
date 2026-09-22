@@ -65,11 +65,16 @@
              Classes="gitextensions-stretch-items"
              Grid.Row="1"
              Grid.ColumnSpan="7"
+             Background="{DynamicResource GitExtensionsKnownColorControlLightBrush}"
              SelectionMode="Single">
       <ListBox.Styles>
         <Style Selector="ListBoxItem">
           <Setter Property="Padding" Value="0" />
           <Setter Property="MinHeight" Value="28" />
+        </Style>
+        <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+          <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorHighlightTextBrush}" />
         </Style>
       </ListBox.Styles>
     </ListBox>

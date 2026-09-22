@@ -8,6 +8,7 @@ using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.VisualTree;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.ParityCapture;
 using GitUI;
@@ -325,9 +326,10 @@ internal sealed class AvaloniaControlTreeReader
                 "_NO_TRANSLATE_Branches" or
                 "RemoteRepositoryCombo" or
                 "Url" or
-                "comboBoxBranches" or
-                "cboBranches" or
-                "cboTo" => comboBox.SelectedIndex >= 0,
+                "comboBoxBranches" => comboBox.SelectedIndex >= 0,
+            ComboBox comboBox when control.Name is "cboBranches" or "cboTo" =>
+                comboBox.SelectedIndex >= 0
+                || comboBox.Items.OfType<IGitRef>().Any(gitRef => gitRef.Name == comboBox.Text),
             ComboBox => false,
             _ => null
         };
@@ -1604,6 +1606,15 @@ internal sealed class AvaloniaControlTreeReader
             Children = children
         };
 
+        if (isSurfaceRoot
+            && !isPopupRoot
+            && rootMetadataType is not ("GitUI.UserControls.Settings.SettingsCheckBox"
+                or "GitUI.CommandsDialogs.SearchControl"
+                or "GitUI.CommandsDialogs.FormCommit"))
+        {
+            node = node with { Margin = ReadPhysicalThicknessPair(new Thickness(3)) };
+        }
+
         return ApplyComponentSemanticOverrides(
             node,
             control,
@@ -2006,7 +2017,18 @@ internal sealed class AvaloniaControlTreeReader
 
         if (rootMetadataType == "GitUI.CommandsDialogs.FormRebase")
         {
-            if (semanticName == "PatchGrid")
+            if (node.FieldName is null
+                && semanticName is "PanelCurrentBranch" or "flowLayoutPanel1" or "flowLayoutPanel2")
+            {
+                node = node with
+                {
+                    Anchor = ["Top", "Left"],
+                    Dock = "Fill",
+                    AutoSize = true,
+                    BorderStyle = "None"
+                };
+            }
+            else if (semanticName == "PatchGrid")
             {
                 node = node with { TabStop = true };
             }
@@ -2016,7 +2038,7 @@ internal sealed class AvaloniaControlTreeReader
                 {
                     Colors = node.Colors with
                     {
-                        SelectionBackground = ResolveResourceArgb("GitExtensionsDataGridViewSelectionBackgroundBrush")
+                        SelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush")
                     }
                 };
             }
@@ -3131,6 +3153,7 @@ internal sealed class AvaloniaControlTreeReader
         if (!IsDarkTheme()
             && rootMetadataType is "GitUI.CommandsDialogs.FormPush" or "GitUI.CommandsDialogs.FormRemotes"
             && isInsideSourceTabPage
+            && semanticName != "btnRemoteColor"
             && !isSourceInput
             && sourceType is not "ListView" and not "NativeListView" and not "DataGridView")
         {
@@ -4573,6 +4596,25 @@ internal sealed class AvaloniaControlTreeReader
             }
         };
     }
+
+    private CaptureThicknessPair ReadPhysicalThicknessPair(Thickness value)
+        => new()
+        {
+            Px = new CaptureThickness
+            {
+                Left = checked((int)Math.Round(value.Left, MidpointRounding.AwayFromZero)),
+                Top = checked((int)Math.Round(value.Top, MidpointRounding.AwayFromZero)),
+                Right = checked((int)Math.Round(value.Right, MidpointRounding.AwayFromZero)),
+                Bottom = checked((int)Math.Round(value.Bottom, MidpointRounding.AwayFromZero))
+            },
+            Dip = new CaptureThicknessF
+            {
+                Left = ToDecimal(value.Left / _renderScale),
+                Top = ToDecimal(value.Top / _renderScale),
+                Right = ToDecimal(value.Right / _renderScale),
+                Bottom = ToDecimal(value.Bottom / _renderScale)
+            }
+        };
 
     private decimal? ReadBorderWidth(Control control)
     {
@@ -6120,15 +6162,19 @@ internal sealed class AvaloniaControlTreeReader
     {
         CaptureColors colors = ReadColors(control);
         string? background = ResolveSourceAncestorBackground(control, "GitExtensionsControlBackgroundBrush");
-        bool isTransparentSourceButton = control.Name == "btnRemoteColor";
+        if (control.Name == "btnRemoteColor")
+        {
+            background = BrushToArgb(GetPropertyValue(control, "Color"));
+        }
+
         return colors with
         {
             Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
                          ?? ResolveSourceControlTextArgb()
                          ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
-            Background = isTransparentSourceButton ? "#00FFFFFF" : background,
+            Background = background,
             Border = null,
-            DisabledBackground = isTransparentSourceButton ? "#00FFFFFF" : background,
+            DisabledBackground = background,
             DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
                                  ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
             SelectionForeground = null,
@@ -6191,16 +6237,19 @@ internal sealed class AvaloniaControlTreeReader
     private CaptureColors ReadSourceDataGridColors(Control control)
     {
         bool usesWindowBackground = control.Name == "RemoteBranches";
-        string? background = ResolveResourceArgb(usesWindowBackground
+        string backgroundResource = usesWindowBackground
             ? "GitExtensionsKnownColorWindowBrush"
-            : "GitExtensionsKnownColorControlDarkBrush");
+            : control.Name == "BranchGrid"
+                ? "GitExtensionsKnownColorControlDarkBrush"
+                : "GitExtensionsKnownColorControlLightBrush";
+        string? background = ResolveResourceArgb(backgroundResource);
         return new CaptureColors
         {
             Foreground = ResolveResourceArgb("GitExtensionsKnownColorWindowTextBrush"),
             Background = background,
             Border = ResolveResourceArgb("GitExtensionsKnownColorControlBrush"),
             SelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush"),
-            SelectionBackground = ResolveResourceArgb("GitExtensionsDataGridViewSelectionBackgroundBrush"),
+            SelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush"),
             InactiveSelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush")
                                           ?? ResolveResourceArgb("GitExtensionsHighlightForegroundBrush"),
             InactiveSelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorInactiveCaptionBrush"),
@@ -6228,7 +6277,11 @@ internal sealed class AvaloniaControlTreeReader
     {
         CaptureColors colors = ReadColors(control);
         bool isReadOnly = GetNullableBoolProperty(control, "IsReadOnly") == true;
-        string? background = control.Name is "searchTB" or "searchResultItemDescription"
+        bool usesWindowBackground = _root.GetType().FullName == "GitUI.CommandsDialogs.FormMergeBranch"
+            && control.Name is "nbMessages" or "mergeMessage";
+        string? background = usesWindowBackground
+            ? ResolveResourceArgb("GitExtensionsKnownColorWindowBrush")
+            : control.Name is "searchTB" or "searchResultItemDescription"
             ? BrushToArgb(GetPropertyValue(control, "Background"))
             : isReadOnly
             ? ResolveResourceArgb("GitExtensionsReadOnlyTextInputBackgroundBrush")

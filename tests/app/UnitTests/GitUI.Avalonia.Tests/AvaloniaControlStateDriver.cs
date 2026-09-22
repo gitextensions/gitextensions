@@ -114,12 +114,21 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         object? preferred = _root.GetType().FullName switch
         {
             "GitExtensions.Plugins.Gource.GourceStart" => FindFieldValue(_root, "button1"),
+            "GitUI.CommandsDialogs.FormApplyPatch" => FindFieldValue(_root, "PatchFile"),
+            "GitUI.CommandsDialogs.FormArchive" => FindFieldValue(_root, "buttonArchiveRevision"),
+            "GitUI.CommandsDialogs.FormCherryPick" =>
+                FindFieldValue(_root, "lvParentsList") is Control { IsEffectivelyVisible: true } parentList
+                    ? parentList
+                    : FindFieldValue(_root, "cbxAutoCommit"),
+            "GitUI.CommandsDialogs.FormClone" => FindFieldValue(_root, "Ok"),
             "GitUI.CommandsDialogs.FormDeleteRemoteBranch" => FindFieldValue(_root, "Branches"),
             "GitUI.CommandsDialogs.FormCreateBranch" => FindFieldValue(_root, "BranchNameTextBox"),
             "GitUI.CommandsDialogs.FormCheckoutBranch" => FindFieldValue(_root, "Branches"),
             "GitUI.CommandsDialogs.FormDeleteBranch" => FindFieldValue(_root, "Delete"),
+            "GitUI.CommandsDialogs.FormInit" => FindFieldValue(_root, "Init"),
             "GitUI.CommandsDialogs.FormPull" or
             "GitUI.CommandsDialogs.FormPush" => FindFieldValue(_root, "_NO_TRANSLATE_Remotes"),
+            "GitUI.CommandsDialogs.FormRebase" => FindFieldValue(_root, "cboBranches"),
             "GitUI.CommandsDialogs.FormRemotes" => FindFieldValue(_root, "Remotes"),
             "GitUI.CommandsDialogs.FormSettings" => FindFieldValue(_root, "textBoxFind"),
             "GitUI.UserControls.BranchSelector" => FindFieldValue(_root, "LocalBranch"),
