@@ -523,6 +523,17 @@ internal sealed class AvaloniaControlTreeReader
             ? null
             : fieldNames.FirstOrDefault()
               ?? (control is MenuItem or Separator || string.IsNullOrEmpty(control.Name) ? null : control.Name);
+        bool isFormBrowseContainerPanel = _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+            && control.Parent?.Name == "toolPanel"
+            && control.Name is ("_contentPanel" or "_leftPanel" or "_rightPanel" or "_topPanel" or "_bottomPanel");
+        if (isFormBrowseContainerPanel)
+        {
+            // ToolStripContainer creates these five real panels internally. They are not
+            // fields or named controls in the original, even though AXAML names them so
+            // the portable layout can address the same panel identities.
+            fieldName = null;
+        }
+
         if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
             && (control.Name?.StartsWith("pull_shortcut_", StringComparison.Ordinal) == true
                 || control.Name is "OutputHistoryTab" or "OutputHistoryControl"))
@@ -561,6 +572,15 @@ internal sealed class AvaloniaControlTreeReader
         bool isRuntimeOutputHistoryControl = control.Name == "OutputHistoryControl"
             && control.GetLogicalAncestors().OfType<Control>().Any(ancestor => ancestor.Name == "OutputHistoryTab");
         string? sourceType = GetSourceType(control, fieldName);
+        sourceType ??= isFormBrowseContainerPanel
+            ? control.Name == "_contentPanel"
+                ? "System.Windows.Forms.ToolStripContentPanel"
+                : "System.Windows.Forms.ToolStripPanel"
+            : null;
+        sourceType ??= _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+            && control.Name?.StartsWith("pull_shortcut_", StringComparison.Ordinal) == true
+                ? "System.Windows.Forms.ToolStripButton"
+                : null;
         sourceType ??= isCommitInfoHeaderLocalLayout ? "System.Windows.Forms.TableLayoutPanel" : null;
         sourceType ??= isKnownSourceLocalControl ? GetKnownSourceLocalType(sourceOwnerType, control.Name) : null;
         isSourceDataGrid |= GetSourceTypeName(sourceType) == "DataGridView";
@@ -602,6 +622,17 @@ internal sealed class AvaloniaControlTreeReader
         bool isFormBrowseToolStripContainer = sourceOwnerType == "GitUI.CommandsDialogs.FormBrowse"
             && control.Name == "toolPanel";
         bool isFormBrowseSurface = _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse";
+        // The selected commit's outer content viewport ends at its live vertical scrollbar;
+        // the inner RichTextBox twin retains its own full client width.
+        double browseRevisionInfoScrollBarWidth = isFormBrowseSurface
+            && control.GetType().FullName == "GitUI.CommitInfo.CommitInfo"
+            && control.Name == "RevisionInfo"
+            ? control.GetVisualDescendants().OfType<ScrollBar>()
+                .Where(scrollBar => scrollBar.Orientation == Avalonia.Layout.Orientation.Vertical
+                                    && scrollBar.IsVisible)
+                .Select(scrollBar => scrollBar.Bounds.Width)
+                .FirstOrDefault()
+            : 0;
         bool isFormCommitSurface = _root.GetType().FullName == "GitUI.CommandsDialogs.FormCommit";
         bool isFormSettingsSurface = _root.GetType().FullName == "GitUI.CommandsDialogs.FormSettings";
         bool isControlBackgroundDialog = _root.GetType().FullName is
@@ -697,7 +728,7 @@ internal sealed class AvaloniaControlTreeReader
             fieldName,
             isSurfaceRoot);
         bool isDesignerMetadataControl = fieldName is not null && IsDesignerMetadataControl(control);
-        Control? childSemanticParent = isSurfaceRoot || fieldName is not null || isInheritedFormProcessContainer
+        Control? childSemanticParent = isSurfaceRoot || fieldName is not null || isFormBrowseContainerPanel || isInheritedFormProcessContainer
                                                 || isLocalSourceFlowLayoutPanel || isShellPreviewPanel || isSearchWindowControl
                                                 || isEnvironmentInfoLayout || isKnownSourceLocalControl || isNativeTabPage
             ? control
@@ -810,7 +841,7 @@ internal sealed class AvaloniaControlTreeReader
             Id = id,
             FieldName = fieldName,
             FieldAliases = fieldNames.Skip(1).ToArray(),
-            Name = string.IsNullOrEmpty(control.Name) ? null : control.Name,
+            Name = isFormBrowseContainerPanel || string.IsNullOrEmpty(control.Name) ? null : control.Name,
             Type = isComboBoxPopupItem && control is ListBoxItem { Content: { } popupItem }
                 ? popupItem.GetType().FullName ?? popupItem.GetType().Name
                 : isSourceDataGrid
@@ -827,7 +858,7 @@ internal sealed class AvaloniaControlTreeReader
                                 ? control.Name == "MainPanel"
                                     ? "System.Windows.Forms.Panel"
                                     : "System.Windows.Forms.FlowLayoutPanel"
-                : control.GetType().FullName ?? control.GetType().Name,
+                : sourceType ?? control.GetType().FullName ?? control.GetType().Name,
             ControlKind = isRemoteColorButton
                 ? "button"
                 : isFormCommitStatusItem
@@ -855,6 +886,8 @@ internal sealed class AvaloniaControlTreeReader
             {
                 Width = ToPixel(isEnvironmentInfoSeparator
                     ? Math.Max(0, bounds.Width - 2)
+                    : browseRevisionInfoScrollBarWidth > 0
+                    ? Math.Max(0, bounds.Width - browseRevisionInfoScrollBarWidth)
                     : isSourceList
                     ? designerLayout?.BorderStyle == "None" ? bounds.Width : GetSourceListClientWidth(control, bounds, sourceType, designerLayout?.BorderStyle)
                     : isFormCommitOptionsInput
@@ -890,6 +923,8 @@ internal sealed class AvaloniaControlTreeReader
             {
                 Width = ToDecimal(isEnvironmentInfoSeparator
                     ? Math.Max(0, bounds.Width - 2)
+                    : browseRevisionInfoScrollBarWidth > 0
+                    ? Math.Max(0, bounds.Width - browseRevisionInfoScrollBarWidth)
                     : isSourceList
                     ? designerLayout?.BorderStyle == "None" ? bounds.Width : GetSourceListClientWidth(control, bounds, sourceType, designerLayout?.BorderStyle)
                     : isFormCommitOptionsInput
@@ -935,6 +970,7 @@ internal sealed class AvaloniaControlTreeReader
                 : isFormCommitToolStripPanel ? default(Thickness)
                 : isFormBrowseToolStripPanel && semanticName == "_topPanel" ? new Thickness(4, 0)
                 : isFormBrowseToolStripPanel ? default(Thickness)
+                : isFormBrowseContainerPanel && semanticName == "_contentPanel" ? new Thickness(6)
                 : isFormCommitSurface && semanticName is "Ok" or "Cancel" ? default(Thickness)
                 : isInheritedFormProcessContainer
                     ? GetInheritedFormProcessPadding(control)
@@ -1033,6 +1069,7 @@ internal sealed class AvaloniaControlTreeReader
                            || IsDetachedMenuItem(control)
                            || isFormCommitOptionsPopup
                            || IsFormCommitOptionsControl(semanticName)
+                           || isFormBrowseContainerPanel
                            || isSemanticToolStrip
                            || isSemanticToolStripItem
                            || isSourceTransparentContainer
@@ -1114,15 +1151,11 @@ internal sealed class AvaloniaControlTreeReader
                             isItem: true,
                             transparentBackground: IsTransparentToolStripItem(control),
                             windowBackground: IsWindowBackgroundToolStripItem(control),
-                            useWindowText: IsWindowTextToolStripItem(control),
                             useControlText: IsSourceControlTextToolStripItem(control) || IsViewPullRequestsTree(control))
                         : isFileStatusListView
                             ? ReadFileStatusListViewColors(semanticStateControl)
-                            : isRevisionGridView
-                                ? ReadColors(semanticStateControl) with
-                                {
-                                    Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
-                                }
+                        : isRevisionGridView
+                                ? ReadColors(semanticStateControl)
                             : isFileStatusEmptyLabel
                                 ? ReadFileStatusEmptyLabelColors(control)
                             : isWatermarkComboBox
@@ -1179,6 +1212,8 @@ internal sealed class AvaloniaControlTreeReader
                                                             : ReadColors(semanticStateControl),
             BorderStyle = isFormBrowseToolStripContainer
                 ? null
+                : isFormBrowseContainerPanel && semanticName == "_contentPanel"
+                    ? "None"
                 : isEnvironmentInfoSeparator
                     ? "Fixed3D"
                 : isEnvironmentInfoLayout
@@ -1266,7 +1301,7 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (isFormCommitSurface && (isFormCommitToolStripPanel || semanticName is "_waitSpinner" or "_currentFilesList" or "Ok" or "Cancel")
                     ? new[] { "Top", "Left" }
                     : null)
-                ?? (fieldName == "_contentPanel" ? new[] { "Top", "Left" } : null)
+                ?? (isFormBrowseContainerPanel && semanticName == "_contentPanel" ? new[] { "Top", "Left" } : null)
                 ?? (fieldName == "_txtBranchCriterion" ? new[] { "Left", "Right" } : null)
                 ?? (isSpellCheckEditor ? new[] { "Top", "Left" } : null)
                 ?? (isSpellCheckAutoComplete || isSpellCheckTextBox ? new[] { "Top", "Left" } : null)
@@ -1323,7 +1358,7 @@ internal sealed class AvaloniaControlTreeReader
                         _ => null,
                     }
                     : null)
-                ?? (fieldName == "_contentPanel" ? "Fill" : null)
+                ?? (isFormBrowseContainerPanel && semanticName == "_contentPanel" ? "Fill" : null)
                 ?? (fieldName == "_txtBranchCriterion" ? "None" : null)
                 ?? (isFormBrowseSurface && semanticName is "mainMenuStrip" or "leftPanelToolStrip" ? "Top" : null)
                 ?? (isFormBrowseSurface && semanticName is "commitSignPicture" or "tagSignPicture" ? "None" : null)
@@ -1372,6 +1407,7 @@ internal sealed class AvaloniaControlTreeReader
                     }
                     : (bool?)null)
                 ?? (isFormBrowseToolStripPanel ? true : (bool?)null)
+                ?? (isFormBrowseContainerPanel && semanticName == "_contentPanel" ? false : (bool?)null)
                 ?? (fieldName == "_contentPanel" ? false : (bool?)null)
                 ?? (fieldName == "_txtBranchCriterion" ? true : (bool?)null)
                 ?? (isSpellCheckEditor ? false : (bool?)null)
@@ -1452,7 +1488,7 @@ internal sealed class AvaloniaControlTreeReader
                 : isCommitPickerLocalLayout ? 0
                 : isCommitInfoHeaderLocalLayout || isRuntimeOutputHistoryControl ? 0
                 : GetSourceTabIndex(control, fieldName) is int sourceTabIndex ? sourceTabIndex
-                : fieldName == "_contentPanel" ? 0
+                : isFormBrowseContainerPanel && semanticName == "_contentPanel" ? 0
                 : isSemanticToolStrip ? 0
                 : isFileStatusListView ? 9
                 : isLoadingControl
@@ -3887,7 +3923,8 @@ internal sealed class AvaloniaControlTreeReader
     {
         string? typeName = GetSourceTypeName(sourceType);
         return typeName?.Contains("ToolStrip", StringComparison.Ordinal) == true
-               && typeName is not ("ToolStrip" or "ToolStripEx" or "ToolStripContainer" or "MenuStrip" or "MenuStripEx");
+               && typeName is not ("ToolStrip" or "ToolStripEx" or "ToolStripContainer"
+                   or "ToolStripPanel" or "ToolStripContentPanel" or "MenuStrip" or "MenuStripEx");
     }
 
     private static string? GetSourceTypeName(string? sourceType)
@@ -4403,6 +4440,35 @@ internal sealed class AvaloniaControlTreeReader
         }
 
         IEnumerable<Control> children = GetCaptureChildren(control).SelectMany(ExpandSemanticChild);
+        if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+            && control.Name == "toolPanel")
+        {
+            // The framework-owned ToolStripContainer panels enumerate content, left,
+            // right, top, bottom; AXAML declaration order is not that runtime order.
+            children = children.OrderBy(child => child.Name switch
+            {
+                "_contentPanel" => 0,
+                "_leftPanel" => 1,
+                "_rightPanel" => 2,
+                "_topPanel" => 3,
+                "_bottomPanel" => 4,
+                _ => 5,
+            });
+        }
+
+        if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+            && control.Name == "_topPanel")
+        {
+            // WinForms adds the scripts strip first, then filters, then the main strip.
+            children = children.OrderBy(child => child.Name switch
+            {
+                "ToolStripScripts" => 0,
+                "ToolStripFilters" => 1,
+                "ToolStripMain" => 2,
+                _ => 3,
+            });
+        }
+
         if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormVerify")
         {
             // The named Avalonia header cells are represented through Warnings.Columns below;
@@ -5181,13 +5247,12 @@ internal sealed class AvaloniaControlTreeReader
 
     private bool IsTransparentToolStripItem(Control control)
         => (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
-            && control.Name is "_NO_TRANSLATE_WorkingDir" or "branchSelect" or "menuCommitInfoPosition"
+            && (control.Name is "_NO_TRANSLATE_WorkingDir" or "branchSelect" or "menuCommitInfoPosition"
                or "RefreshButton" or "toggleLeftPanel" or "toggleSplitViewLayout"
                or "toolStripButtonLevelUp" or "toolStripButtonPull" or "toolStripSeparator0"
-               or "toolStripSeparator1" or "toolStripSeparator2" or "toolStripSeparator17"
-               or "toolStripWorktrees" or "tsddbtnRevisionFilter" or "toolStripButtonPush"
-               or "toolStripButtonCommit" or "toolStripSplitStash" or "toolStripFileExplorer"
-               or "userShell")
+               or "toolStripSeparator1" or "toolStripSeparator17"
+               or "toolStripWorktrees" or "tsddbtnRevisionFilter"
+               || control.Name?.StartsWith("pull_shortcut_", StringComparison.Ordinal) == true))
            || (_root.GetType().FullName is "GitUI.CommandsDialogs.FormDiff" or "GitUI.CommandsDialogs.FormLog"
                && IsFileStatusToolbarItem(control)
                 && control.Name is not ("btnCollapseGroups" or "btnRefresh" or "sepRefresh"))
@@ -5225,11 +5290,6 @@ internal sealed class AvaloniaControlTreeReader
             or "sepGroupBy" or "btnByPath" or "btnByExtension" or "btnByStatus" or "sepFilter"
             or "btnUnequalChange" or "btnOnlyB" or "btnOnlyA" or "btnSameChange" or "sepOptions"
             or "btnFindInFilesGitGrep" or "sepSettings" or "btnSettings";
-
-    private bool IsWindowTextToolStripItem(Control control)
-        => _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
-           && control.Name is "toolStripButtonCommit" or "toolStripSplitStash"
-               or "toolStripFileExplorer" or "userShell";
 
     private bool IsSourceControlTextToolStripItem(Control control)
         => (_root.GetType().FullName == "GitUI.CommandsDialogs.FormCommit"
@@ -5835,8 +5895,13 @@ internal sealed class AvaloniaControlTreeReader
             return ReadToolStripColors(
                 control,
                 isItem: true,
-                transparentBackground: true,
-                useWindowText: true);
+                transparentBackground: false,
+                useControlText: true);
+        }
+
+        if (name == "_topPanel")
+        {
+            return ReadToolStripColors(control, isItem: false, transparentBackground: true);
         }
 
         if (name is "_bottomPanel" or "_leftPanel" or "_rightPanel")

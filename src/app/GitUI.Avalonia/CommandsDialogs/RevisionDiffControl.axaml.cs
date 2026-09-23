@@ -115,15 +115,6 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
 
     internal IScriptOptionsProvider ScriptOptionsProvider => GetScriptOptionsProvider();
 
-    protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
-    {
-        base.OnUICommandsSourceSet(source);
-
-        // Avalonia has no WinForms OnRuntimeLoad; initialize the embedded controls when
-        // their containing browse form supplies its command source.
-        ReloadHotkeys();
-    }
-
     public void ReloadHotkeys()
     {
         DiffFiles.ReloadHotkeys();

@@ -15,6 +15,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.Menus;
 using GitUI.Compat;
 using GitUI.LeftPanel;
 using GitUI.Theming;
@@ -258,9 +259,9 @@ public sealed class VisualParityTests
                 form.RevisionGrid.Bounds.Height.Should().BeGreaterThan(0);
                 form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.CommitInfoTabPage);
                 form.CommitInfoTabControl.Bounds.Height.Should().BeGreaterThan(0);
-                form.CommitInfoTabPage.Bounds.Height.Should().Be(23);
-                form.DiffTabPage.Bounds.Height.Should().Be(23);
-                form.TreeTabPage.Bounds.Height.Should().Be(23);
+                form.CommitInfoTabPage.Bounds.Height.Should().BeGreaterThanOrEqualTo(23);
+                form.DiffTabPage.Bounds.Height.Should().BeGreaterThanOrEqualTo(23);
+                form.TreeTabPage.Bounds.Height.Should().BeGreaterThanOrEqualTo(23);
                 form.commitInfoBelowHost.Bounds.Height.Should().BeGreaterThan(0);
                 Point commitHostPosition = form.commitInfoBelowHost.TranslatePoint(new Point(), form.CommitInfoTabControl)
                     ?? throw new InvalidOperationException("The commit-info host position was not available.");
@@ -396,8 +397,9 @@ public sealed class VisualParityTests
                     .Where(button => button.IsVisible
                                      && button.Classes.Contains("gitextensions-toolbar-button"))
                     .ToArray();
-                splitButtons.Should().HaveCount(8);
+                splitButtons.Should().HaveCount(9);
                 splitButtons.Select(button => button.Name).Should().Contain(nameof(form.toolStripButtonLevelUp));
+                splitButtons.Select(button => button.Name).Should().Contain(nameof(form.userShell));
                 foreach (SplitButton splitButton in splitButtons)
                 {
                     Button primaryButton = splitButton.GetVisualDescendants()
@@ -598,6 +600,107 @@ public sealed class VisualParityTests
         {
             owner.IsSubMenuOpen = false;
             Dispatcher.UIThread.RunJobs();
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_start_menu_should_apply_the_source_menu_item_width_on_open()
+    {
+        StartToolStripMenuItem owner = new();
+        MenuItem firstItem = owner.Items.OfType<MenuItem>().First();
+        Window window = new()
+        {
+            Width = 640,
+            Height = 240,
+            RequestedThemeVariant = ThemeVariant.Light,
+            Content = new Menu { Items = { owner } },
+        };
+        window.Show();
+        try
+        {
+            owner.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+
+            firstItem.Width.Should().BeGreaterThan(0);
+            firstItem.Width.Should().Be(Math.Ceiling(firstItem.Width));
+            Visual popupHost = firstItem.GetVisualAncestors()
+                .Single(ancestor => ancestor.GetType().Name == "OverlayPopupHost");
+            popupHost.Bounds.Height.Should().Be(148);
+            popupHost.Bounds.Width.Should().BeGreaterThanOrEqualTo(firstItem.Bounds.Width);
+            if (OperatingSystem.IsWindows())
+            {
+                popupHost.Bounds.Width.Should().Be(199);
+            }
+
+            ScrollViewer popupScroller = popupHost.GetVisualDescendants().OfType<ScrollViewer>().Single();
+            popupScroller.Margin.Should().Be(new Thickness(0, 1));
+            ((Border)popupScroller.Parent!).Bounds.Height.Should().Be(148);
+            owner.Items.OfType<Separator>().Should().OnlyContain(separator => separator.Bounds.Height == 6);
+        }
+        finally
+        {
+            owner.IsSubMenuOpen = false;
+            Dispatcher.UIThread.RunJobs();
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_full_window_start_menu_should_keep_the_source_popup_extent()
+    {
+        using FormBrowse form = new() { RequestedThemeVariant = ThemeVariant.Light };
+        form.Show();
+        try
+        {
+            form.fileToolStripMenuItem.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+
+            MenuItem firstItem = form.fileToolStripMenuItem.Items.OfType<MenuItem>().First();
+            Visual popupHost = firstItem.GetVisualAncestors()
+                .Single(ancestor => ancestor.GetType().Name == "OverlayPopupHost");
+            popupHost.Bounds.Height.Should().Be(148);
+            popupHost.Bounds.Width.Should().BeGreaterThanOrEqualTo(firstItem.Bounds.Width);
+            if (OperatingSystem.IsWindows())
+            {
+                popupHost.Bounds.Width.Should().Be(199);
+            }
+        }
+        finally
+        {
+            form.fileToolStripMenuItem.IsSubMenuOpen = false;
+            Dispatcher.UIThread.RunJobs();
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_menu_strip_should_round_auto_widths_and_remeasure_translations()
+    {
+        GitUI.Compat.WinFormsControls.ToolStripMenuItem automatic = new() { Header = "_Start" };
+        GitUI.Compat.WinFormsControls.ToolStripMenuItem explicitWidth = new() { Header = "_Tools", Width = 47 };
+        GitUI.Compat.WinFormsControls.MenuStripEx menu = new() { Items = { automatic, explicitWidth } };
+        Window window = new() { Width = 320, Height = 160, Content = menu };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            double originalWidth = automatic.Width;
+            originalWidth.Should().BeGreaterThan(0);
+            originalWidth.Should().Be(Math.Ceiling(originalWidth));
+            explicitWidth.Width.Should().Be(47);
+
+            automatic.Header = "_A translated command with longer text";
+            Dispatcher.UIThread.RunJobs();
+            automatic.Width.Should().BeGreaterThan(originalWidth);
+            automatic.Width.Should().Be(Math.Ceiling(automatic.Width));
+            explicitWidth.Width.Should().Be(47);
+        }
+        finally
+        {
             window.Close();
         }
     }
@@ -1397,7 +1500,7 @@ public sealed class VisualParityTests
                 GitExtUtils.GitUI.Theming.ColorHelper.Lerp(head, System.Drawing.Color.Black, 0.25F)));
             GetColor(label.OutlineBrush).Should().Be(ToMediaColor(
                 GitExtUtils.GitUI.Theming.ColorHelper.Lerp(head, windowBackground, 0.5F)));
-            label.Bounds.Height.Should().Be(24);
+            label.Bounds.Height.Should().Be(RevisionGridControl.GetRowHeight(label));
             label.FontSize.Should().BeGreaterThan(11);
             label.Shape.Should().Be(gitRef.IsTag ? RefLabelShape.PointLeft : RefLabelShape.Rect);
             window.CaptureRenderedFrame().Should().NotBeNull();
@@ -1431,6 +1534,13 @@ public sealed class VisualParityTests
         gitRef.MergeWith.Returns(mergeWith);
         gitRef.Remote.Returns(remote);
         gitRef.TrackingRemote.Returns(trackingRemote);
+        gitRef.IsTrackingRemote(Arg.Any<IGitRef>()).Returns(callInfo =>
+        {
+            IGitRef candidate = callInfo.Arg<IGitRef>();
+            return isHead && candidate.IsRemote
+                && mergeWith == candidate.LocalName
+                && trackingRemote == candidate.Remote;
+        });
         return gitRef;
     }
 

@@ -8,8 +8,10 @@
     <local:AvatarControl x:Name="avatarControl"
                          Margin="0,0,8,0"
                          VerticalAlignment="Top" />
+    <!-- The source RichEdit contents rectangle retains one trailing device pixel after text measurement. -->
     <compat:XhtmlTextBlock x:Name="rtbRevisionHeader"
                            Grid.Column="1"
+                           NativeContentOverhang="1"
                            Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
                            FontFamily="{DynamicResource GitExtensionsUiFontFamily}"
                            FontSize="{DynamicResource GitExtensionsUiFontSize}"

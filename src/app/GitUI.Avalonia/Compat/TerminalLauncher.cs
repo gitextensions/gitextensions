@@ -5,6 +5,8 @@ namespace GitUI.Compat;
 internal interface ITerminalLauncher
 {
     void Launch(string workingDirectory);
+
+    void LaunchShell(string workingDirectory, string executablePath);
 }
 
 internal sealed class TerminalLauncher : ITerminalLauncher
@@ -45,6 +47,23 @@ internal sealed class TerminalLauncher : ITerminalLauncher
 
         ProcessStartInfo startInfo = CreateStartInfo(workingDirectory);
         _startProcess(startInfo);
+    }
+
+    public void LaunchShell(string workingDirectory, string executablePath)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(workingDirectory);
+        ArgumentException.ThrowIfNullOrWhiteSpace(executablePath);
+        if (_platform != TerminalPlatform.Windows)
+        {
+            throw new PlatformNotSupportedException("A shell executable cannot open a graphical terminal on this platform.");
+        }
+
+        _startProcess(new ProcessStartInfo
+        {
+            FileName = executablePath,
+            WorkingDirectory = workingDirectory,
+            UseShellExecute = false,
+        });
     }
 
     private ProcessStartInfo CreateStartInfo(string workingDirectory)
