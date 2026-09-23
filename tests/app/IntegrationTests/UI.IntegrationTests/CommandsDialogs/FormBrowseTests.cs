@@ -341,6 +341,42 @@ public class FormBrowseTests
             commands);
     }
 
+    [Test]
+    public void SetWorkingDir_should_reload_commit_info_for_auto_selected_revision_after_repository_switch()
+    {
+        using (CommitInfoPanelTestSettingsScope.ForBrowseRepositorySwitch())
+        {
+            using GitModuleTestHelper repoA = new("formBrowseRepoSwitchA");
+            using GitModuleTestHelper repoB = new("formBrowseRepoSwitchB");
+            CreateCommitWithSubject(repoA, "REPO_A_HEAD subject");
+            CreateCommitWithSubject(repoB, "REPO_B_HEAD subject");
+
+            GitUICommands commandsA = new(GlobalServiceContainer.CreateDefaultMockServiceContainer(), repoA.Module);
+
+            RunFormTest(
+                async form =>
+                {
+                    FormBrowse.TestAccessor ta = form.GetTestAccessor();
+                    ta.CommitInfoTabControl.SelectedTab = ta.CommitInfoTabPage;
+
+                    WaitForRevisionsToBeLoaded(form);
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                    WaitForCommitMessageContaining(form, "REPO_A_HEAD");
+
+                    ta.SetWorkingDir(repoB.Module.WorkingDir);
+                    WaitForRevisionsToBeLoaded(form);
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                    WaitForCommitMessageAfterRepositorySwitch(form, "REPO_B_HEAD", "REPO_A_HEAD");
+                },
+                commandsA);
+        }
+    }
+
+    private static void CreateCommitWithSubject(GitModuleTestHelper helper, string subject)
+    {
+        helper.Module.GitExecutable.GetOutput($@"commit --allow-empty -m ""{subject}""");
+    }
+
     private static void RunFormTest(Action<FormBrowse> testDriver, GitUICommands commands)
     {
         UITest.RunForm(
@@ -372,5 +408,28 @@ public class FormBrowseTests
     private static void WaitForRevisionsToBeLoaded(FormBrowse form, [CallerMemberName] string caller = "")
     {
         UITest.ProcessUntil($"{caller} loading revisions", () => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsDataLoadComplete, maxMilliseconds: 10_000);
+    }
+
+    private static void WaitForCommitMessageContaining(FormBrowse form, string subjectFragment, [CallerMemberName] string caller = "")
+    {
+        GitUI.CommitInfo.CommitInfo.TestAccessor commitInfo = form.GetTestAccessor().RevisionInfo.GetTestAccessor();
+        UITest.ProcessUntil(
+            $"{caller} commit message contains '{subjectFragment}'",
+            () => commitInfo.CommitMessage.Text.Contains(subjectFragment, StringComparison.Ordinal),
+            maxMilliseconds: 10_000);
+    }
+
+    private static void WaitForCommitMessageAfterRepositorySwitch(FormBrowse form, string expectedSubjectFragment, string staleSubjectFragment)
+    {
+        GitUI.CommitInfo.CommitInfo.TestAccessor commitInfo = form.GetTestAccessor().RevisionInfo.GetTestAccessor();
+        UITest.ProcessUntil(
+            "commit message after repository switch",
+            () =>
+            {
+                string text = commitInfo.CommitMessage.Text;
+                return text.Contains(expectedSubjectFragment, StringComparison.Ordinal)
+                    && !text.Contains(staleSubjectFragment, StringComparison.Ordinal);
+            },
+            maxMilliseconds: 10_000);
     }
 }
