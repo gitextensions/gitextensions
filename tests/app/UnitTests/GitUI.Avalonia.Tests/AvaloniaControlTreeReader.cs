@@ -5663,7 +5663,9 @@ internal sealed class AvaloniaControlTreeReader
         // visibility. A hidden WinForms control cannot become visible merely because its
         // unnamed/Grid wrapper was omitted from the semantic tree.
         return semanticStateControl.IsVisible
-               && control.GetLogicalAncestors().OfType<Control>().All(ancestor => ancestor.IsVisible);
+               && semanticStateControl.Opacity > 0
+               && control.GetLogicalAncestors().OfType<Control>().All(
+                   ancestor => ancestor.IsVisible && ancestor.Opacity > 0);
     }
 
     private static bool IsInsideClippedAncestors(Control control)
