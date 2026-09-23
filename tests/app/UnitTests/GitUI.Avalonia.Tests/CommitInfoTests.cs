@@ -3,6 +3,9 @@ using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
+using Avalonia.Styling;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -89,6 +92,59 @@ public sealed class CommitInfoTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    public void XhtmlTextBlock_should_place_links_at_absolute_tab_stops_on_each_line()
+    {
+        XhtmlTextBlock block = new();
+        block.SetXHTMLText("Author:\t\t<a href='gitext://author'>author</a><br/>Commit:\t<a href='gitext://commit'>commit</a>");
+        block.SetTabStops([80, 90, 100]);
+        Window window = new() { Width = 300, Height = 100, Content = block };
+        window.Show();
+
+        try
+        {
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            HyperlinkButton[] links = [.. block.GetVisualDescendants().OfType<HyperlinkButton>()];
+            links.Should().HaveCount(2);
+            links[0].TranslatePoint(new Point(0, 0), block)!.Value.X.Should().BeApproximately(90, 1);
+            links[1].TranslatePoint(new Point(0, 0), block)!.Value.X.Should().BeApproximately(80, 1);
+            block.GetPlainText().Should().Be($"Author:\t\tauthor{Environment.NewLine}Commit:\tcommit");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void XhtmlTextBlock_links_should_follow_the_native_light_and_dark_foregrounds()
+    {
+        foreach ((ThemeVariant theme, Color expected) in new[]
+        {
+            (ThemeVariant.Light, Color.Parse("#0066CC")),
+            (ThemeVariant.Dark, Color.Parse("#FFFFFF")),
+        })
+        {
+            XhtmlTextBlock block = new();
+            block.SetXHTMLText("<a href='gitext://commit'>commit</a>");
+            Window window = new() { Width = 200, Height = 40, RequestedThemeVariant = theme, Content = block };
+            window.Show();
+
+            try
+            {
+                Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+                HyperlinkButton link = block.GetVisualDescendants().OfType<HyperlinkButton>().Single();
+                link.Foreground.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(expected);
+            }
+            finally
+            {
+                window.Close();
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void XhtmlTextBlock_should_apply_the_source_RichEdit_content_overhang_per_instance()
     {
         XhtmlTextBlock block = new();
@@ -103,11 +159,28 @@ public sealed class CommitInfoTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void XhtmlTextBlock_should_measure_native_content_width_separately_from_rendered_tabs()
+    {
+        XhtmlTextBlock block = new();
+        block.SetTabStops([48, 96], [80, 81]);
+        block.SetXHTMLText("Author:\t\tName");
+        double sourceWidth = block.MinWidth;
+        block.Width.Should().Be(sourceWidth);
+
+        block.SetTabStops([48, 96]);
+
+        block.MinWidth.Should().BeGreaterThan(sourceWidth);
+        block.GetPlainText().Should().Be("Author:\t\tName");
+    }
+
+    [AvaloniaTest]
     public void Capture_tree_should_preserve_XHTML_text_and_link_targets()
     {
         AvaloniaThemeResources.Apply(Application.Current!, ThemeModule.Settings);
         XhtmlTextBlock block = new() { Name = "RevisionInfo" };
-        block.SetXHTMLText("Contained in branches:<br/><a href='gitext://gotobranch/main'>main</a>");
+        block.SetTabStops([48, 96]);
+        block.SetXHTMLText("Contained in branches:<br/>branch:\t<a href='gitext://gotobranch/main'>main</a>");
         Window window = new() { Width = 200, Height = 50, Content = block };
         window.Show();
 
@@ -117,7 +190,7 @@ public sealed class CommitInfoTests
                 .ReadPrimary(block, new PixelSize(200, 50))
                 .Root;
 
-            node.Text.Should().Be("Contained in branches:\nmain|||gitext://gotobranch/main");
+            node.Text.Should().Be("Contained in branches:\nbranch:\tmain|||gitext://gotobranch/main");
         }
         finally
         {
@@ -149,6 +222,62 @@ public sealed class CommitInfoTests
         accessor.Avatar.Name.Should().Be("avatarControl");
         accessor.RevisionHeader.Name.Should().Be("rtbRevisionHeader");
         accessor.RevisionHeader.ContextMenu.Should().BeSameAs(contextMenu);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void CommitInfoHeader_should_follow_the_rendered_RichEdit_default_tab_interval()
+    {
+        CommitInfoHeader header = new();
+        XhtmlTextBlock block = header.GetTestAccessor().RevisionHeader;
+        block.SetXHTMLText("Author:\t\t<a href='gitext://author'>author</a><br/>Commit hash:\t<a href='gitext://commit'>commit</a>");
+        Window window = new() { Width = 400, Height = 120, Content = header };
+        window.Show();
+
+        try
+        {
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            HyperlinkButton[] links = [.. block.GetVisualDescendants().OfType<HyperlinkButton>()];
+            links.Should().HaveCount(2);
+            links[0].TranslatePoint(new Point(0, 0), block)!.Value.X.Should().BeApproximately(96, 1);
+            links[1].TranslatePoint(new Point(0, 0), block)!.Value.X.Should().BeApproximately(96, 1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void CommitInfoHeader_should_show_the_complete_hash_within_its_native_content_width()
+    {
+        const string hash = "a37bf89fffa0b681b81ac532fc2188f0d54c7a90";
+        CommitInfoHeader header = new();
+        XhtmlTextBlock block = header.GetTestAccessor().RevisionHeader;
+        block.SetXHTMLText($"Author:\t\t<a href='mailto:parity@example.invalid'>Parity Capture &lt;parity@example.invalid&gt;</a>"
+            + $"<br/>Date:\t\t26 years ago (1/2/2001 1:00:00 PM)<br/>Commit hash:\t{hash}"
+            + "<br/>Child:\t\t<a href='gitext://child'>Commit index</a><br/>Parent:\t\t<a href='gitext://parent'>351f58d7</a>");
+        Window window = new() { Width = 500, Height = 150, Content = header };
+        window.Show();
+
+        try
+        {
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            TextLayout hashLayout = new(
+                hash,
+                new Typeface(block.FontFamily, block.FontStyle, block.FontWeight),
+                block.FontSize,
+                foreground: null,
+                letterSpacing: block.LetterSpacing);
+
+            (96 + hashLayout.WidthIncludingTrailingWhitespace).Should().BeLessThanOrEqualTo(block.Bounds.Width);
+            block.Bounds.Width.Should().Be(block.MinWidth);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]

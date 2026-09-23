@@ -8,13 +8,16 @@
     <local:AvatarControl x:Name="avatarControl"
                          Margin="0,0,8,0"
                          VerticalAlignment="Top" />
-    <!-- The source RichEdit contents rectangle retains one trailing device pixel after text measurement. -->
+    <!-- RichEdit keeps one trailing contents pixel. Its GDI glyph advances fit the 40-character
+         hash after the 96-DIP tab inside the measured 330-DIP width; Skia's defaults clip the
+         final character, so the measured letter-spacing correction retains it. -->
     <compat:XhtmlTextBlock x:Name="rtbRevisionHeader"
                            Grid.Column="1"
                            NativeContentOverhang="1"
                            Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
                            FontFamily="{DynamicResource GitExtensionsUiFontFamily}"
                            FontSize="{DynamicResource GitExtensionsUiFontSize}"
+                           LetterSpacing="-0.2"
                            FontStyle="{DynamicResource GitExtensionsUiFontStyle}"
                            FontWeight="{DynamicResource GitExtensionsUiFontWeight}"
                            LineHeight="15"
