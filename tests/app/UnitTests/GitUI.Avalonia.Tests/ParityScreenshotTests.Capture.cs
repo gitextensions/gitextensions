@@ -715,6 +715,40 @@ public sealed partial class ParityScreenshotTests
 
     [AvaloniaTest]
     [Category(P02Category)]
+    public void Avalonia_state_driver_should_preserve_the_reference_context_menu_capture_point()
+    {
+        ContextMenuCaptureHost host = new();
+        Window window = new() { Width = 300, Height = 200, Content = host };
+        PlacementMode originalPlacement = host.Menu.Placement;
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        using (AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(
+                   host,
+                   new CaptureStatePlan
+                   {
+                       Id = "menu.open",
+                       Kind = CaptureStateKind.MenuOpen,
+                       TargetField = "_mainContextMenu"
+                   }))
+        {
+            Control popupRoot = driver.PopupSurfaceRoots.Should().ContainSingle().Subject;
+            PixelRect actualBounds = GetScreenBounds(popupRoot, window, renderScale: 1);
+            PixelRect captureBounds = driver.GetCaptureBounds(popupRoot, actualBounds);
+
+            captureBounds.Position.Should().Be(new PixelPoint(150, 100));
+            captureBounds.Size.Should().Be(actualBounds.Size);
+            actualBounds.Y.Should().BeLessThan(captureBounds.Y,
+                "the headless overlay slides the popup into its owner instead of preserving the desktop point");
+            host.OpeningCount.Should().Be(1);
+        }
+
+        host.Menu.Placement.Should().Be(originalPlacement);
+        window.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
     public void Avalonia_state_driver_should_apply_supported_states_and_reject_wrong_targets()
     {
         foreach (CaptureStateKind kind in new[]
@@ -1402,7 +1436,23 @@ public sealed partial class ParityScreenshotTests
             // the plan's deterministic text remains authoritative at the capture boundary.
             ApplyTextValues(view, component);
             Dispatcher.UIThread.RunJobs();
-            using WriteableBitmap primaryFrame = CaptureRenderedFrame(window);
+            Control[] popupSurfaceRoots = driver.PopupSurfaceRoots.ToArray();
+            PixelRect[] actualPopupSurfaceBounds = popupSurfaceRoots
+                .Select(popupRoot => GetScreenBounds(
+                    popupRoot,
+                    TopLevel.GetTopLevel(popupRoot) ?? window,
+                    renderScale))
+                .ToArray();
+            // Headless overlay hosts clamp popup coordinates to the owner. Capture the real
+            // unobscured primary and popup pixels separately, then compose them at the state
+            // driver's requested screen bounds without scaling either bitmap.
+            bool separateOverlaySurfaces = ReferenceEquals(view, window) && popupSurfaceRoots.Length > 0;
+            using WriteableBitmap primaryFrame = separateOverlaySurfaces
+                ? CaptureWithoutOverlaySurfaces(window, popupSurfaceRoots)
+                : CaptureRenderedFrame(window);
+            using WriteableBitmap? overlayFrame = separateOverlaySurfaces
+                ? CaptureRenderedFrame(window)
+                : null;
             PixelRect primarySurfaceBounds = cropToComponent
                 ? GetScreenBounds(view, window, renderScale)
                 : ReferenceEquals(view, window)
@@ -1416,6 +1466,7 @@ public sealed partial class ParityScreenshotTests
                     primaryFrame,
                     GetScreenBounds(window, primaryFrame.PixelSize))
             ];
+            List<WriteableBitmap> overlayFrames = [];
             try
             {
                 foreach (TopLevel externalTopLevel in driver.ExternalTopLevels)
@@ -1430,29 +1481,47 @@ public sealed partial class ParityScreenshotTests
                         GetScreenBounds(externalTopLevel, externalFrame.PixelSize)));
                 }
 
-                PixelRect[] popupSurfaceBounds = driver.PopupSurfaceRoots
-                    .Select(popupRoot => GetScreenBounds(
+                PixelRect[] popupSurfaceBounds = popupSurfaceRoots
+                    .Select((popupRoot, index) => driver.GetCaptureBounds(
                         popupRoot,
-                        TopLevel.GetTopLevel(popupRoot) ?? window,
-                        renderScale))
+                        actualPopupSurfaceBounds[index]))
                     .ToArray();
-                PixelRect imageBounds = popupSurfaceBounds.Length > 0
+                List<CapturedTopLevelFrame> compositingFrames = [.. capturedFrames];
+                if (overlayFrame is not null)
+                {
+                    for (int index = 0; index < popupSurfaceRoots.Length; index++)
+                    {
+                        WriteableBitmap popupFrame = CropToScreenBounds(
+                            overlayFrame,
+                            window,
+                            actualPopupSurfaceBounds[index]);
+                        overlayFrames.Add(popupFrame);
+                        compositingFrames.Add(new CapturedTopLevelFrame(
+                            popupSurfaceRoots[index],
+                            popupFrame,
+                            popupSurfaceBounds[index]));
+                    }
+                }
+
+                PixelRect imageBounds = popupSurfaceBounds.Length > 0 && !separateOverlaySurfaces
                     ? UnionBounds([primarySurfaceBounds, .. popupSurfaceBounds])
                     : cropToComponent && capturedFrames.Count == 1
                         ? primarySurfaceBounds
-                        : UnionBounds(capturedFrames.Select(frame => frame.ScreenBounds));
-                CaptureMethod captureMethod = capturedFrames.Count == 1
+                        : UnionBounds(compositingFrames.Select(frame => frame.ScreenBounds));
+                CaptureMethod captureMethod = compositingFrames.Count == 1
                     ? CaptureMethod.HeadlessSkia
                     : CaptureMethod.HeadlessSkiaComposite;
-                using RenderTargetBitmap? composite = capturedFrames.Count == 1
+                using RenderTargetBitmap? composite = compositingFrames.Count == 1
                     ? null
-                    : ComposeTopLevels(capturedFrames, imageBounds, renderScale);
+                    : ComposeTopLevels(compositingFrames, imageBounds, renderScale);
                 using WriteableBitmap? componentCrop = cropToComponent
                                                          && capturedFrames.Count == 1
                                                          && popupSurfaceBounds.Length == 0
                     ? CropToComponent(primaryFrame, view, window, imageBounds.Size, renderScale)
                     : null;
-                using WriteableBitmap? overlayCrop = popupSurfaceBounds.Length > 0 && capturedFrames.Count == 1
+                using WriteableBitmap? overlayCrop = popupSurfaceBounds.Length > 0
+                                                          && capturedFrames.Count == 1
+                                                          && !separateOverlaySurfaces
                     ? CropToScreenBounds(primaryFrame, window, imageBounds)
                     : null;
                 if (componentCrop is not null)
@@ -1493,10 +1562,7 @@ public sealed partial class ParityScreenshotTests
                 surfaces.AddRange(driver.PopupSurfaceRoots.Select((popupRoot, index) => reader.ReadSurface(
                     popupRoot,
                     $"popup:{capturedFrames.Count - 1 + index}",
-                    GetScreenBounds(
-                        popupRoot,
-                        TopLevel.GetTopLevel(popupRoot) ?? window,
-                        renderScale))));
+                    popupSurfaceBounds[index])));
                 CaptureDocument document = CreateDocument(
                     view,
                     surfaces,
@@ -1530,6 +1596,11 @@ public sealed partial class ParityScreenshotTests
                 foreach (WriteableBitmap externalFrame in externalFrames)
                 {
                     externalFrame.Dispose();
+                }
+
+                foreach (WriteableBitmap overlaySurfaceFrame in overlayFrames)
+                {
+                    overlaySurfaceFrame.Dispose();
                 }
             }
         }
@@ -1972,6 +2043,34 @@ public sealed partial class ParityScreenshotTests
         throw new AvaloniaCaptureStateUnsupportedException(unsupportedMessage);
     }
 
+    private static WriteableBitmap CaptureWithoutOverlaySurfaces(
+        TopLevel topLevel,
+        IReadOnlyList<Control> popupSurfaceRoots)
+    {
+        bool[] originalVisibility = popupSurfaceRoots.Select(control => control.IsVisible).ToArray();
+        try
+        {
+            foreach (Control popupSurfaceRoot in popupSurfaceRoots)
+            {
+                popupSurfaceRoot.IsVisible = false;
+            }
+
+            Dispatcher.UIThread.RunJobs();
+            return CaptureRenderedFrame(
+                topLevel,
+                "Headless Skia did not render the popup owner's unobscured primary surface.");
+        }
+        finally
+        {
+            for (int index = 0; index < popupSurfaceRoots.Count; index++)
+            {
+                popupSurfaceRoots[index].IsVisible = originalVisibility[index];
+            }
+
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
     private static bool HasRenderedContent(WriteableBitmap bitmap)
     {
         using ILockedFramebuffer framebuffer = bitmap.Lock();
@@ -2083,6 +2182,31 @@ public sealed partial class ParityScreenshotTests
         public TextBox OwnerEditor => _textEditor;
 
         public TextBox NestedEditor { get; }
+    }
+
+    private sealed class ContextMenuCaptureHost : UserControl
+    {
+        private readonly ContextMenu _mainContextMenu;
+
+        public ContextMenuCaptureHost()
+        {
+            _mainContextMenu = new ContextMenu
+            {
+                ItemsSource = Enumerable.Range(1, 6)
+                    .Select(index => new MenuItem { Header = $"Command {index}" })
+                    .ToArray()
+            };
+            _mainContextMenu.Opening += (_, _) => OpeningCount++;
+            Content = new Button
+            {
+                Content = "Owner",
+                ContextMenu = _mainContextMenu
+            };
+        }
+
+        public int OpeningCount { get; private set; }
+
+        public ContextMenu Menu => _mainContextMenu;
     }
 
     private sealed record CaptureSettingsProfile

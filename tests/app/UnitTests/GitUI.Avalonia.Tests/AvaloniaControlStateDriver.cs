@@ -2,6 +2,7 @@ using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Headless;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -22,6 +23,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
     private readonly List<Action> _restoreActions = [];
     private readonly Control _root;
     private readonly TopLevel _topLevel;
+    private Control? _referencePlacedPopupRoot;
 
     private AvaloniaControlStateDriver(Control root, TopLevel topLevel)
     {
@@ -34,6 +36,24 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
     public IReadOnlyList<Control> PopupSurfaceRoots => _popupSurfaceRoots;
 
     public bool RequiresExternalSurfaceCapture => _externalTopLevels.Count > 0;
+
+    public PixelRect GetCaptureBounds(Control popupRoot, PixelRect actualBounds)
+    {
+        if (!ReferenceEquals(popupRoot, _referencePlacedPopupRoot))
+        {
+            return actualBounds;
+        }
+
+        PixelPoint rootOrigin = _root.PointToScreen(default);
+        PixelPoint rootCenter = _root.PointToScreen(new Point(
+            Math.Max(1, Math.Floor(_root.Bounds.Width / 2)),
+            Math.Max(1, Math.Floor(_root.Bounds.Height / 2))));
+        PixelPoint topLevelOrigin = _topLevel.PointToScreen(default);
+        PixelPoint normalizedCenter = new(
+            topLevelOrigin.X + rootCenter.X - rootOrigin.X,
+            topLevelOrigin.Y + rootCenter.Y - rootOrigin.Y);
+        return new PixelRect(normalizedCenter, actualBounds.Size);
+    }
 
     public static AvaloniaControlStateDriver Apply(Control root, CaptureStatePlan state)
     {
@@ -535,10 +555,18 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             owner.RaiseEvent(new ContextRequestedEventArgs());
             Dispatcher.UIThread.RunJobs();
             RequireOpenContextMenu(contextMenu);
+            PlaceContextMenuAtReferenceCapturePoint(contextMenu);
+            Dispatcher.UIThread.RunJobs();
             PrepareLongOverlayOwner(contextMenu);
             contextMenu.Open(owner);
             Dispatcher.UIThread.RunJobs();
+            int previousPopupCount = _popupSurfaceRoots.Count;
             TrackExternalTopLevels(contextMenu);
+            if (_popupSurfaceRoots.Count > previousPopupCount)
+            {
+                _referencePlacedPopupRoot = _popupSurfaceRoots[previousPopupCount];
+            }
+
             _restoreActions.Add(contextMenu.Close);
             return;
         }
@@ -700,6 +728,36 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
             return false;
         }
+    }
+
+    private void PlaceContextMenuAtReferenceCapturePoint(ContextMenu contextMenu)
+    {
+        PlacementMode originalPlacement = contextMenu.Placement;
+        Control? originalPlacementTarget = contextMenu.PlacementTarget;
+        Rect? originalPlacementRect = contextMenu.PlacementRect;
+        PopupAnchor originalPlacementAnchor = contextMenu.PlacementAnchor;
+        PopupGravity originalPlacementGravity = contextMenu.PlacementGravity;
+
+        // The WinForms capture driver opens a requested ContextMenuStrip at the captured
+        // root's client-area centre. Use the equivalent native popup placement rather than
+        // letting a synthetic ContextRequested event choose the selected row's pointer anchor.
+        contextMenu.Placement = PlacementMode.AnchorAndGravity;
+        contextMenu.PlacementTarget = _root;
+        contextMenu.PlacementRect = new Rect(
+            Math.Max(1, Math.Floor(_root.Bounds.Width / 2)),
+            Math.Max(1, Math.Floor(_root.Bounds.Height / 2)),
+            0,
+            0);
+        contextMenu.PlacementAnchor = PopupAnchor.TopLeft;
+        contextMenu.PlacementGravity = PopupGravity.BottomRight;
+        _restoreActions.Add(() =>
+        {
+            contextMenu.Placement = originalPlacement;
+            contextMenu.PlacementTarget = originalPlacementTarget;
+            contextMenu.PlacementRect = originalPlacementRect;
+            contextMenu.PlacementAnchor = originalPlacementAnchor;
+            contextMenu.PlacementGravity = originalPlacementGravity;
+        });
     }
 
     // parity-scaffolding: The headless backend must use its real OverlayPopupHost, but unlike a
