@@ -203,11 +203,18 @@ public sealed class FormBrowseTests
             dashboardForm.Show();
             Dispatcher.UIThread.RunJobs();
 
-            dashboardForm.GetVisualDescendants().OfType<Dashboard>()
-                .Should().ContainSingle(dashboard => dashboard.Name == "dashboard" && dashboard.IsVisible);
+            Dashboard dashboard = dashboardForm.GetVisualDescendants().OfType<Dashboard>()
+                .Should().ContainSingle(dashboard => dashboard.Name == "dashboard" && dashboard.IsVisible)
+                .Which;
             dashboardForm.FindControl<Grid>("mainContentGrid")!.IsVisible.Should().BeFalse();
             dashboardForm.FindControl<SourceControls.ToolStripContainer>("toolPanel")!.IsVisible.Should().BeTrue();
-            dashboardForm.FindControl<MenuItem>("dashboardToolStripMenuItem")!.IsVisible.Should().BeTrue();
+            MenuItem dashboardMenu = dashboardForm.FindControl<MenuItem>("dashboardToolStripMenuItem")!;
+            dashboardMenu.IsVisible.Should().BeTrue();
+            dashboardMenu.Items.OfType<MenuItem>()
+                .Should().ContainSingle(item => item.Name == "mnuConfigure");
+            dashboard.GetVisualDescendants().OfType<Button>()
+                .Should().NotContain(button => button.Name == "mnuConfigure");
+            dashboard.GetTestAccessor().Repositories.GetTestAccessor().Search.IsFocused.Should().BeTrue();
             dashboardForm.FindControl<MenuItem>("repositoryToolStripMenuItem")!.IsVisible.Should().BeFalse();
         }
 

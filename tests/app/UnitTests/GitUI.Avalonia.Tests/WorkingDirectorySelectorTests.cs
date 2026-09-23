@@ -21,8 +21,8 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class WorkingDirectorySelectorTests
 {
-    [OneTimeSetUp]
-    public void OneTimeSetUp()
+    [SetUp]
+    public void SetUp()
         => GitUI.ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
     [AvaloniaTest]
@@ -380,7 +380,19 @@ public sealed class WorkingDirectorySelectorTests
             translation.Received(1).AddTranslationItem(
                 nameof(FormRecentReposSettings), "anchorToTopReposToolStripMenuItem", "Text", "Anchor to top repositories");
             translation.Received(1).AddTranslationItem(
+                nameof(FormRecentReposSettings), "anchorToRecentReposToolStripMenuItem", "Text", "Anchor to recent repositories");
+            translation.Received(1).AddTranslationItem(
+                nameof(FormRecentReposSettings), "removeAnchorToolStripMenuItem", "Text", "Remove anchor");
+            translation.Received(1).AddTranslationItem(
                 nameof(FormRecentReposSettings), "removeRecentToolStripMenuItem", "Text", "Remove from recent repositories");
+            translation.Received(1).AddTranslationItem(
+                nameof(FormRecentReposSettings), "chdrRepository", "Text", "Header");
+            translation.Received(1).AddTranslationItem(
+                nameof(FormRecentReposSettings), "chdrRepository1", "Text", "Header");
+            translation.DidNotReceive().AddTranslationItem(
+                nameof(FormRecentReposSettings), "panel2", "Text", Arg.Any<string>());
+            translation.DidNotReceive().AddTranslationItem(
+                nameof(FormRecentReposSettings), "panel3", "Text", Arg.Any<string>());
         }
         finally
         {

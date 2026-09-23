@@ -1,4 +1,6 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -31,22 +33,24 @@ public partial class Dashboard : GitModuleControl
     public Dashboard()
     {
         InitializeComponent();
-        createItem.Click += (_, _) => UICommands.StartInitializeDialog(this, Module.WorkingDir, OnModuleChanged);
-        cloneItem.Click += (_, _) => UICommands.StartCloneDialog(this, null, false, OnModuleChanged);
-        openItem.Click += (_, _) => OpenRepositoryRequested?.Invoke(this, EventArgs.Empty);
-        developItem.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser("https://github.com/gitextensions/gitextensions");
-        donateItem.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser("https://opencollective.com/gitextensions");
-        translateItem.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser("https://github.com/gitextensions/gitextensions/wiki/Translations");
-        issuesItem.Click += (_, _) =>
-        {
-            UserEnvironmentInformation.CopyInformation();
-            OsShellUtil.OpenUrlInDefaultBrowser("https://github.com/gitextensions/gitextensions/issues");
-        };
+        ConfigureLink(createItem, createItem_Click);
+        ConfigureLink(cloneItem, cloneItem_Click);
+        ConfigureLink(openItem, openItem_Click);
+        ConfigureLink(developItem, GitHubItem_Click);
+        ConfigureLink(donateItem, DonateItem_Click);
+        ConfigureLink(translateItem, TranslateItem_Click);
+        ConfigureLink(issuesItem, IssuesItem_Click);
+        AttachedToLogicalTree += dashboard_ParentChanged;
+        DetachedFromLogicalTree += dashboard_ParentChanged;
+        IsVisible = false;
         InitializeComplete();
-    }
 
-    public event EventHandler? ConfigureRepositoriesRequested;
-    public event EventHandler? OpenRepositoryRequested;
+        // apply scaling
+        userRepositoriesList.HeaderHeight = 68;
+
+        static void ConfigureLink(Button linkLabel, EventHandler<RoutedEventArgs> handler)
+            => linkLabel.Click += handler;
+    }
 
     public void Initialize(IRepositoryHistoryUIService repositoryHistoryUIService)
         => Initialize(
@@ -61,8 +65,13 @@ public partial class Dashboard : GitModuleControl
             controller,
             repositoryHistoryUIService,
             () => UICommands);
-        userRepositoriesList.ConfigureRequested += (_, _) => ConfigureRepositoriesRequested?.Invoke(this, EventArgs.Empty);
         userRepositoriesList.GitModuleChanged += OnModuleChanged;
+    }
+
+    protected virtual void OnVisibleChanged(EventArgs e)
+    {
+        // Focus the control in order for the search bar to have focus once the dashboard is shown
+        userRepositoriesList.Focus();
     }
 
     public void RefreshContent()
@@ -86,14 +95,14 @@ public partial class Dashboard : GitModuleControl
         foreach (IRepositoryHostPlugin gitHoster in PluginRegistry.GitHosters)
         {
             // Avalonia uses the native button/access-key path for the original clickable LinkLabel.
-            Button button = new()
+            Button linkLabel = new()
             {
                 Classes = { "dashboard-link" },
                 Content = CreateLinkContent(Images.CloneRepoGitHub, string.Format(_cloneFork.Text, gitHoster.Name)),
                 Tag = gitHoster,
             };
-            button.Click += (_, _) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged);
-            flpnlStart.Children.Add(button);
+            linkLabel.Click += (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged);
+            flpnlStart.Children.Add(linkLabel);
         }
 
         backgroundImage.Source = selectedTheme.BackgroundImage;
@@ -101,6 +110,8 @@ public partial class Dashboard : GitModuleControl
         pnlStart.Background = new SolidColorBrush(selectedTheme.StartBackColor);
         pnlContribute.Background = new SolidColorBrush(selectedTheme.ContributeBackColor);
         lblContribute.Foreground = new SolidColorBrush(selectedTheme.SecondaryHeadingText);
+        lblContribute.FontFamily = new FontFamily(AppSettings.Font.Name);
+        lblContribute.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size + 5.5F);
         userRepositoriesList.MainBackColor = AvaloniaThemeResources.ToMediaColor(
             AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.Window));
         userRepositoriesList.BranchNameColor = selectedTheme.SecondaryText;
@@ -122,8 +133,8 @@ public partial class Dashboard : GitModuleControl
             {
                 new Image
                 {
-                    Width = 18,
-                    Height = 18,
+                    Width = 16,
+                    Height = 16,
                     Source = icon,
                 },
                 new TextBlock
@@ -134,8 +145,65 @@ public partial class Dashboard : GitModuleControl
             },
         };
 
-    private void OnModuleChanged(object? sender, GitModuleEventArgs e)
-        => GitModuleChanged?.Invoke(this, e);
+    protected virtual void OnModuleChanged(object? sender, GitModuleEventArgs e)
+    {
+        EventHandler<GitModuleEventArgs>? handler = GitModuleChanged;
+        handler?.Invoke(this, e);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsVisibleProperty)
+        {
+            OnVisibleChanged(EventArgs.Empty);
+        }
+    }
+
+    private void dashboard_ParentChanged(object sender, EventArgs e)
+    {
+        IsVisible = Parent is not null;
+    }
+
+    private static void TranslateItem_Click(object? sender, EventArgs e)
+    {
+        OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Translations");
+    }
+
+    private static void GitHubItem_Click(object? sender, EventArgs e)
+    {
+        OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions");
+    }
+
+    private static void IssuesItem_Click(object? sender, EventArgs e)
+    {
+        UserEnvironmentInformation.CopyInformation();
+        OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/issues");
+    }
+
+    private void openItem_Click(object? sender, EventArgs e)
+    {
+        IGitModule? module = FormOpenDirectory.OpenModule(this, UICommands.GetRequiredService<IGitExecutorProvider>(), currentModule: null);
+        if (module is not null)
+        {
+            OnModuleChanged(this, new GitModuleEventArgs(module));
+        }
+    }
+
+    private void cloneItem_Click(object? sender, EventArgs e)
+    {
+        UICommands.StartCloneDialog(this, null, false, OnModuleChanged);
+    }
+
+    private void createItem_Click(object? sender, EventArgs e)
+    {
+        UICommands.StartInitializeDialog(this, Module.WorkingDir, OnModuleChanged);
+    }
+
+    private static void DonateItem_Click(object? sender, EventArgs e)
+    {
+        OsShellUtil.OpenUrlInDefaultBrowser(FormDonate.DonationUrl);
+    }
 
     internal TestAccessor GetTestAccessor() => new(this);
 

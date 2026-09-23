@@ -389,6 +389,9 @@ public sealed class ParityInventoryTests
     [TestCase("Resize", "SizeChanged")]
     [TestCase("Enter", "GotFocus")]
     [TestCase("Leave", "LostFocus")]
+    [TestCase("MouseMove", "PointerMoved")]
+    [TestCase("MouseLeave", "PointerExited")]
+    [TestCase("MouseClick", "PointerReleased")]
     public void Run_should_match_framework_equivalent_event_names(string originalEvent, string twinEvent)
     {
         using InventoryFixture fixture = new();
@@ -412,6 +415,33 @@ public sealed class ParityInventoryTests
         InventoryReport report = fixture.Run();
 
         report.Findings.Should().NotContain(item => item.Code.StartsWith("event.wiring", StringComparison.Ordinal));
+    }
+
+    [Test]
+    public void Run_should_preserve_exact_event_names_for_unmatched_wiring()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                private void Wire() => control.Click += HandleChanged;
+                private void HandleChanged(object sender, EventArgs e) { }
+            }
+            """);
+        fixture.WriteTwin("Widget.axaml.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                private void Wire() => control.PointerReleased += HandleChanged;
+                private void HandleChanged(object sender, EventArgs e) { }
+            }
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.Findings.Should().Contain(item => item.Path == "event.wiring/control.Click->HandleChanged");
+        report.Findings.Should().Contain(item => item.Path == "event.wiring/control.PointerReleased->HandleChanged");
     }
 
     [Test]
@@ -1071,10 +1101,10 @@ public sealed class ParityInventoryTests
             {
                 private ContextMenuStrip menu;
                 private ToolStripMenuItem open;
-                private ToolStripSeparator separator;
+                private ToolStripSeparator toolStripMenuItem1;
                 private void InitializeComponent()
                 {
-                    menu.Items.AddRange(new ToolStripItem[] { open, separator });
+                    menu.Items.AddRange(new ToolStripItem[] { open, toolStripMenuItem1 });
                 }
             }
             """);
@@ -1087,7 +1117,7 @@ public sealed class ParityInventoryTests
                          x:Class="Sample.Widget">
               <wf:ContextMenuStrip x:Name="menu">
                 <wf:ToolStripMenuItem x:Name="open" Header="Open" />
-                <wf:ToolStripSeparator x:Name="separator" />
+                <wf:ToolStripSeparator x:Name="toolStripMenuItem1" />
               </wf:ContextMenuStrip>
             </UserControl>
             """);
@@ -1099,7 +1129,51 @@ public sealed class ParityInventoryTests
         report.Twin.Menus.Should().Contain(item =>
             item.Parent == "menu" && item.Name == "open");
         report.Twin.Menus.Should().Contain(item =>
-            item.Parent == "menu" && item.Name == "separator" && item.Kind == "separator");
+            item.Parent == "menu" && item.Name == "toolStripMenuItem1" && item.Kind == "separator");
+        report.Original.Menus.Should().Contain(item =>
+            item.Parent == "menu" && item.Name == "toolStripMenuItem1" && item.Kind == "separator");
+    }
+
+    [Test]
+    public void Run_should_not_mix_nested_type_fields_into_parent_menu_trees()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", """
+            namespace Sample;
+            public sealed class Widget
+            {
+                private ContextMenuStrip menu;
+                private ToolStripMenuItem open;
+                private void InitializeComponent() => menu.Items.Add(open);
+
+                private sealed class FirstRow
+                {
+                    private bool _isExpanded;
+                }
+
+                private sealed class SecondRow
+                {
+                    private bool _isExpanded;
+                    private ContextMenuStrip menu;
+                    private ToolStripMenuItem nested;
+                    private void InitializeComponent() => menu.Items.Add(nested);
+                }
+            }
+            """);
+        fixture.WriteTwin("Widget.cs", """
+            namespace Sample;
+            public sealed class Widget
+            {
+                private ContextMenuStrip menu;
+                private ToolStripMenuItem open;
+                private void InitializeComponent() => menu.Items.Add(open);
+            }
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.Original.Menus.Should().ContainSingle(item => item.Parent == "menu" && item.Name == "open");
+        report.Original.Menus.Should().NotContain(item => item.Name == "nested");
     }
 
     [Test]
