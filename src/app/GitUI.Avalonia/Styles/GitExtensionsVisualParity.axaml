@@ -1271,6 +1271,12 @@
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Background" Value="Transparent" />
   </Style>
+  <Style Selector="Border.gitextensions-toolstrip-overflow-host">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="1" />
+  </Style>
   <Style Selector="SelectableTextBlock.gitextensions-commit-header">
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsMonospaceFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsMonospaceFontSize}" />
