@@ -29,6 +29,7 @@ using GitUI.HelperDialogs;
 using GitUI.Models;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
+using GitUI.Shells;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -75,6 +76,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly IGpgInfoProvider? _controller;
     private readonly IUpdateCheckService? _updateCheckService;
     private readonly ICommitDataManager _commitDataManager;
+    private readonly IShellProvider _shellProvider = new ShellProvider();
     private readonly IAppTitleGenerator? _appTitleGenerator;
     private readonly CancellationTokenSequence _gpgInfoLoadSequence = new();
     private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
@@ -156,6 +158,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip);
 
         _hasRuntimeCommands = true;
+        _shellProvider = commands.GetService(typeof(IShellProvider)) as IShellProvider ?? _shellProvider;
         _isFileHistoryMode = args.IsFileHistoryMode;
         _appTitleGenerator = commands.GetRequiredService<IAppTitleGenerator>();
         _scriptsManager = UICommands.GetService(typeof(IScriptsManager)) as IScriptsManager;
@@ -1258,6 +1261,22 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void userShell_Click(object? sender, EventArgs e)
     {
+        if (OperatingSystem.IsWindows()
+            && (sender as Control)?.Tag is IShellDescriptor shell
+            && shell.ExecutablePath is { } executablePath)
+        {
+            try
+            {
+                UICommands.GetRequiredService<ITerminalLauncher>().LaunchShell(Module.WorkingDir, executablePath);
+            }
+            catch (Exception exception)
+            {
+                MessageBoxes.FailedToRunShell(this, shell.Name, exception);
+            }
+
+            return;
+        }
+
         try
         {
             UICommands.GetRequiredService<ITerminalLauncher>().Launch(Module.WorkingDir);
@@ -1623,10 +1642,13 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         if (CommitInfoTabControl.SelectedItem == TreeTabPage)
         {
+            // The hidden file pane defers hotkey loading until its tab is first selected.
+            fileTree.ReloadHotkeys();
             fileTree.SwitchFocus(alreadyContainedFocus: false);
         }
         else if (CommitInfoTabControl.SelectedItem == DiffTabPage)
         {
+            revisionDiff.ReloadHotkeys();
             revisionDiff.SwitchFocus(alreadyContainedFocus: false);
         }
         else if (selectingGpgInfo)

@@ -8,12 +8,9 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs.Menus;
 
-internal abstract class ToolStripMenuItemEx : MenuItem, ITranslate
+internal abstract class ToolStripMenuItemEx : GitUI.Compat.WinFormsControls.ToolStripMenuItem, ITranslate
 {
     private Func<IGitUICommands>? _getUICommands;
-
-    // Avalonia resolves control themes by concrete type; ported menu items retain the MenuItem theme.
-    protected override Type StyleKeyOverride => typeof(MenuItem);
 
     /// <summary>
     ///  Gets the current instance of the UI commands.

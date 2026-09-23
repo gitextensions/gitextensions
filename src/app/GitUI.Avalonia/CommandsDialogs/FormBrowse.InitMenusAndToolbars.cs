@@ -210,13 +210,55 @@ partial class FormBrowse
 
     private void FillUserShells(string defaultShell)
     {
-        userShell.IsVisible = !_hasRuntimeCommands
-            || UICommands.GetService(typeof(ITerminalLauncher)) is ITerminalLauncher;
-        ToolTip.SetTip(userShell, defaultShell);
+        MenuFlyout menu = (MenuFlyout)userShell.Flyout!;
+        menu.Items.Clear();
 
-        // a user may have a specific shell configured in settings, but the shell is no longer available
-        // set the first available shell as default
-        // The portable toolbar exposes the configured platform terminal through one native launcher button.
+        if (!OperatingSystem.IsWindows())
+        {
+            // A Unix desktop launches its configured graphical terminal through the platform
+            // launcher. Individual shell executables are not themselves terminal windows.
+            MenuItem terminal = new() { Header = "System terminal" };
+            terminal.Click += userShell_Click;
+            menu.Items.Add(terminal);
+            userShell.IsVisible = !_hasRuntimeCommands
+                || UICommands.GetService(typeof(ITerminalLauncher)) is ITerminalLauncher;
+            ToolTip.SetTip(userShell, "System terminal");
+            return;
+        }
+
+        MenuItem? selectedDefaultShell = null;
+        foreach (IShellDescriptor shell in _shellProvider.GetShells())
+        {
+            if (!shell.HasExecutable)
+            {
+                continue;
+            }
+
+            MenuItem item = new()
+            {
+                Header = shell.Name,
+                Tag = shell,
+                Icon = new Image { Source = shell.Icon, Width = 16, Height = 16 },
+            };
+            ToolTip.SetTip(item, shell.Name);
+            item.Click += userShell_Click;
+            menu.Items.Add(item);
+
+            if (selectedDefaultShell is null
+                || string.Equals(shell.Name, defaultShell, StringComparison.InvariantCultureIgnoreCase))
+            {
+                selectedDefaultShell = item;
+            }
+        }
+
+        if (selectedDefaultShell?.Tag is IShellDescriptor selectedShell)
+        {
+            userShell.Icon = selectedShell.Icon;
+            userShell.Tag = selectedShell;
+            ToolTip.SetTip(userShell, selectedShell.Name);
+        }
+
+        userShell.IsVisible = menu.Items.Count > 0;
     }
 
     private void RefreshDefaultPullAction()
