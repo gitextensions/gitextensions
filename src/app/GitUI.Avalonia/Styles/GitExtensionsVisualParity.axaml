@@ -1438,7 +1438,7 @@
       </ControlTemplate>
     </Setter>
   </Style>
-  <Style Selector="MenuFlyoutPresenter Separator">
+  <Style Selector="MenuFlyoutPresenter Separator, MenuItem Separator">
     <Setter Property="Height" Value="6" />
     <Setter Property="Margin" Value="0" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
@@ -1596,6 +1596,10 @@
   </Style>
   <Style Selector="MenuFlyoutPresenter /template/ ItemsPresenter#PART_ItemsPresenter">
     <Setter Property="Margin" Value="0" />
+  </Style>
+  <Style Selector="MenuItem ScrollViewer">
+    <!-- Native ToolStripDropDownMenu leaves one content pixel inside each border edge. -->
+    <Setter Property="Margin" Value="0,1" />
   </Style>
   <Style Selector="Menu">
     <Setter Property="Padding" Value="4,0" />

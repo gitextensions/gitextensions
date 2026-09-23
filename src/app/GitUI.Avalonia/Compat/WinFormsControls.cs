@@ -206,6 +206,46 @@ public class MenuStrip : Menu
 /// </summary>
 public class MenuStripEx : MenuStrip
 {
+    private readonly HashSet<MenuItem> _autoWidthItems = new(ReferenceEqualityComparer.Instance);
+
+    public MenuStripEx()
+    {
+        LayoutUpdated += (_, _) => RoundAutoItemWidths();
+    }
+
+    private void RoundAutoItemWidths()
+    {
+        foreach (MenuItem item in Items.OfType<MenuItem>())
+        {
+            if (!_autoWidthItems.Contains(item))
+            {
+                if (!double.IsNaN(item.Width))
+                {
+                    continue;
+                }
+
+                _autoWidthItems.Add(item);
+                item.PropertyChanged += (_, args) =>
+                {
+                    if (args.Property == MenuItem.HeaderProperty
+                        || args.Property == MenuItem.FontFamilyProperty
+                        || args.Property == MenuItem.FontSizeProperty
+                        || args.Property == MenuItem.FontStyleProperty
+                        || args.Property == MenuItem.FontWeightProperty)
+                    {
+                        item.Width = double.NaN;
+                    }
+                };
+            }
+
+            // WinForms TextRenderer rounds each top-level ToolStripItem to integral pixels
+            // at 96 DPI. Keep Avalonia's measured content width, then round the result up.
+            if (double.IsNaN(item.Width) && item.DesiredSize.Width > 0)
+            {
+                item.Width = Math.Ceiling(item.DesiredSize.Width);
+            }
+        }
+    }
 }
 
 /// <summary>
@@ -213,48 +253,20 @@ public class MenuStripEx : MenuStrip
 /// </summary>
 public class ToolStripContainer : Avalonia.Controls.Panel
 {
-    private const double LeadingInset = 7;
-    private const double FilterWidth = 50;
-    private const double FilterTrailingReserve = 104;
-    private const double ScriptsWidth = 50;
-    private const double TrailingInset = 4;
     private const double ContentTop = 27;
-    private const double ToolStripHeight = 25;
-    private const double FilterToolStripHeight = 27;
 
     protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
     {
-        if (double.IsInfinity(availableSize.Width))
+        foreach (Control child in Children)
         {
-            foreach (Control child in Children)
+            child.Measure(child.Name switch
             {
-                child.Measure(new Avalonia.Size(double.PositiveInfinity, ToolStripHeight));
-            }
-
-            return new Avalonia.Size(Children.Sum(child => child.DesiredSize.Width), ToolStripHeight);
-        }
-
-        double filterX = Math.Max(LeadingInset, availableSize.Width - FilterTrailingReserve);
-        if (Children.Count > 0)
-        {
-            Children[0].Measure(new Avalonia.Size(filterX - LeadingInset, ToolStripHeight));
-        }
-
-        if (Children.Count > 1)
-        {
-            Children[1].Measure(new Avalonia.Size(FilterWidth, FilterToolStripHeight));
-        }
-
-        if (Children.Count > 2)
-        {
-            Children[2].Measure(new Avalonia.Size(ScriptsWidth, ToolStripHeight));
-        }
-
-        if (Children.Count > 3)
-        {
-            Children[3].Measure(new Avalonia.Size(
-                availableSize.Width,
-                Math.Max(0, availableSize.Height - ContentTop)));
+                "_topPanel" => new Avalonia.Size(availableSize.Width, ContentTop),
+                "_contentPanel" => new Avalonia.Size(
+                    availableSize.Width,
+                    Math.Max(0, availableSize.Height - ContentTop)),
+                _ => new Avalonia.Size(0, 0),
+            });
         }
 
         return availableSize;
@@ -262,33 +274,75 @@ public class ToolStripContainer : Avalonia.Controls.Panel
 
     protected override Avalonia.Size ArrangeOverride(Avalonia.Size finalSize)
     {
-        if (Children.Count > 0)
+        foreach (Control child in Children)
         {
-            double filterX = Math.Max(LeadingInset, finalSize.Width - FilterTrailingReserve);
-            Children[0].Arrange(new Avalonia.Rect(LeadingInset, 0, filterX - LeadingInset, ToolStripHeight));
-
-            if (Children.Count > 1)
+            Avalonia.Rect bounds = child.Name switch
             {
-                Children[1].Arrange(new Avalonia.Rect(filterX, 0, FilterWidth, FilterToolStripHeight));
-            }
+                "_topPanel" => new Avalonia.Rect(0, 0, finalSize.Width, ContentTop),
+                "_contentPanel" => new Avalonia.Rect(
+                    0,
+                    ContentTop,
+                    finalSize.Width,
+                    Math.Max(0, finalSize.Height - ContentTop)),
+                "_leftPanel" => new Avalonia.Rect(0, 0, 0, 175),
+                "_rightPanel" => new Avalonia.Rect(150, 0, 0, 175),
+                "_bottomPanel" => new Avalonia.Rect(0, 175, 150, 0),
+                _ => default,
+            };
+            child.Arrange(bounds);
+        }
 
-            if (Children.Count > 2)
+        return finalSize;
+    }
+}
+
+/// <summary>
+/// Retains the source top ToolStripPanel as the actual parent of its three toolbars.
+/// </summary>
+public class ToolStripPanel : Avalonia.Controls.Panel
+{
+    private const double LeadingInset = 7;
+    private const double FilterWidth = 50;
+    private const double FilterTrailingReserve = 104;
+    private const double ScriptsWidth = 50;
+    private const double TrailingInset = 4;
+    private const double ToolStripHeight = 25;
+    private const double FilterToolStripHeight = 27;
+
+    protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
+    {
+        double filterX = Math.Max(LeadingInset, availableSize.Width - FilterTrailingReserve);
+        foreach (Control child in Children)
+        {
+            child.Measure(child.Name switch
             {
-                Children[2].Arrange(new Avalonia.Rect(
+                "toolStripMainHost" => new Avalonia.Size(filterX - LeadingInset, ToolStripHeight),
+                "toolStripFiltersHost" => new Avalonia.Size(FilterWidth, FilterToolStripHeight),
+                "ToolStripScripts" => new Avalonia.Size(ScriptsWidth, ToolStripHeight),
+                _ => default,
+            });
+        }
+
+        return new Avalonia.Size(availableSize.Width, FilterToolStripHeight);
+    }
+
+    protected override Avalonia.Size ArrangeOverride(Avalonia.Size finalSize)
+    {
+        double filterX = Math.Max(LeadingInset, finalSize.Width - FilterTrailingReserve);
+        foreach (Control child in Children)
+        {
+            Avalonia.Rect bounds = child.Name switch
+            {
+                "toolStripMainHost" => new Avalonia.Rect(LeadingInset, 0, filterX - LeadingInset, ToolStripHeight),
+                "toolStripFiltersHost" => new Avalonia.Rect(filterX, 0, FilterWidth, FilterToolStripHeight),
+                "ToolStripScripts" => new Avalonia.Rect(
                     Math.Max(0, finalSize.Width - ScriptsWidth - TrailingInset),
                     0,
                     ScriptsWidth,
-                    ToolStripHeight));
-            }
-        }
-
-        if (Children.Count > 3)
-        {
-            Children[3].Arrange(new Avalonia.Rect(
-                0,
-                ContentTop,
-                finalSize.Width,
-                Math.Max(0, finalSize.Height - ContentTop)));
+                    ToolStripHeight),
+                _ => default,
+            };
+            child.Arrange(bounds);
         }
 
         return finalSize;

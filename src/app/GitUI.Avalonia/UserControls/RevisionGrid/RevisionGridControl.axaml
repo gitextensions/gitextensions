@@ -21,7 +21,7 @@
                Focusable="True"
                FocusAdorner="{x:Null}"
                Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
-               Foreground="{DynamicResource GitExtensionsControlForegroundBrush}">
+               Foreground="{DynamicResource GitExtensionsWindowTextBrush}">
       <ListBox.ContextMenu>
         <!-- The 265-DIP ToolStrip item canvas plus its retained one-pixel native border. -->
         <wf:ContextMenuStrip x:Name="mainContextMenu"

@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
@@ -20,6 +21,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.ParityCapture;
 using GitExtUtils;
 using GitUI;
 using GitUI.Blame;
@@ -31,6 +33,7 @@ using GitUI.Compat;
 using GitUI.LeftPanel;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
+using GitUI.Shells;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
@@ -82,6 +85,111 @@ public sealed class FormBrowseTests
         AppSettings.RevisionGraphShowArtificialCommits = _revisionGraphShowArtificialCommits;
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_tree_should_report_source_toolbar_colors_and_logical_visibility()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        form.Show();
+        try
+        {
+            SourceControls.ToolStripContainer toolPanel = form.FindControl<SourceControls.ToolStripContainer>("toolPanel")!;
+            toolPanel.Children.Should().HaveCount(5);
+            SourceControls.ToolStripPanel topPanel = form.FindControl<SourceControls.ToolStripPanel>("_topPanel")!;
+            topPanel.Parent.Should().BeSameAs(toolPanel);
+            topPanel.Children.Select(child => child.Name).Should().Equal(
+                "toolStripMainHost", "toolStripFiltersHost", "ToolStripScripts");
+
+            Button overflow = form.FindControl<Button>("toolStripMainOverflow")!;
+            overflow.IsVisible.Should().BeTrue();
+            overflow.Bounds.Width.Should().Be(16);
+
+            foreach ((ThemeVariant theme, string background, string foreground, string windowText) in
+                     new[]
+                     {
+                         (ThemeVariant.Light, "#FFF0F0F0", "#FF000000", "#FF000000"),
+                         (ThemeVariant.Dark, "#FF202020", "#FFFFFFFF", "#FFF0F0F0"),
+                     })
+            {
+                form.RequestedThemeVariant = theme;
+                form.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+                CaptureNode root = new AvaloniaControlTreeReader(form, renderScale: 1)
+                    .ReadPrimary(form, new PixelSize((int)form.Bounds.Width, (int)form.Bounds.Height)).Root;
+                CaptureNode[] nodes = [.. Flatten(root)];
+                CaptureNode container = nodes.Single(node => node.FieldName == "toolPanel");
+                container.Children.Should().HaveCount(5);
+                container.Children.Should().OnlyContain(node => node.FieldName == null);
+                container.Children.Select(node => node.Type).Should().Equal(
+                    "System.Windows.Forms.ToolStripContentPanel",
+                    "System.Windows.Forms.ToolStripPanel",
+                    "System.Windows.Forms.ToolStripPanel",
+                    "System.Windows.Forms.ToolStripPanel",
+                    "System.Windows.Forms.ToolStripPanel");
+                container.Children[3].Children.Select(node => node.FieldName).Should().Equal(
+                    "ToolStripScripts", "ToolStripFilters", "ToolStripMain");
+                foreach (string name in new[]
+                         {
+                             "toolStripButtonCommit", "toolStripButtonPush", "toolStripSplitStash",
+                             "toolStripFileExplorer", "userShell",
+                         })
+                {
+                    CaptureNode item = nodes.Single(node => node.FieldName == name);
+                    item.Colors.Background.Should().Be(background, $"{name} inherits the source ToolStrip background");
+                    item.Colors.DisabledBackground.Should().Be(background);
+                    item.Colors.Foreground.Should().Be(foreground);
+                }
+
+                nodes.Single(node => node.FieldName == "toolStripSeparator2").Colors.Background.Should().Be(background);
+                nodes.Single(node => node.FieldName == "toolStripButtonPull").Visible.Should().BeTrue();
+                nodes.Single(node => node.FieldName == "_gridView").Colors.Foreground.Should().Be(windowText);
+            }
+        }
+        finally
+        {
+            form.Close();
+        }
+
+        static IEnumerable<CaptureNode> Flatten(CaptureNode node)
+        {
+            yield return node;
+            foreach (CaptureNode child in node.Children)
+            {
+                foreach (CaptureNode descendant in Flatten(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_shell_split_button_should_expose_only_launchable_platform_choices()
+    {
+        using FormBrowse form = new();
+        IconSplitButton userShell = form.FindControl<IconSplitButton>("userShell")!;
+        MenuFlyout menu = (MenuFlyout)userShell.Flyout!;
+        string[] actual = menu.Items.OfType<MenuItem>()
+            .Select(item => item.Header?.ToString() ?? string.Empty)
+            .ToArray();
+
+        if (OperatingSystem.IsWindows())
+        {
+            string[] expected = new ShellProvider().GetShells()
+                .Where(shell => shell.HasExecutable)
+                .Select(shell => shell.Name)
+                .ToArray();
+            actual.Should().Equal(expected);
+            userShell.Tag.Should().BeAssignableTo<IShellDescriptor>();
+        }
+        else
+        {
+            actual.Should().Equal("System terminal");
+        }
     }
 
     [AvaloniaTest]

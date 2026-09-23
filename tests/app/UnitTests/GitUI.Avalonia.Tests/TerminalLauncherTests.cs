@@ -168,15 +168,46 @@ public sealed class TerminalLauncherTests
         captured.ArgumentList.Should().Equal("-a", "Terminal", "/work/repository");
     }
 
+    [Test]
+    public void LaunchShell_should_start_the_selected_Windows_shell_in_the_repository()
+    {
+        ProcessStartInfo? captured = null;
+        TerminalLauncher launcher = new(
+            _ => null,
+            _ => null,
+            startInfo => captured = startInfo,
+            TerminalPlatform.Windows);
+
+        launcher.LaunchShell("C:\\work\\repository", "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe");
+
+        captured!.FileName.Should().EndWith("powershell.exe");
+        captured.WorkingDirectory.Should().Be("C:\\work\\repository");
+        captured.UseShellExecute.Should().BeFalse();
+    }
+
+    [Test]
+    public void LaunchShell_should_reject_a_non_graphical_Unix_shell()
+    {
+        TerminalLauncher launcher = new(
+            _ => null,
+            _ => null,
+            _ => throw new AssertionException("Should not start a process"),
+            TerminalPlatform.Linux);
+
+        Action action = () => launcher.LaunchShell("/work/repository", "/bin/bash");
+
+        action.Should().Throw<PlatformNotSupportedException>();
+    }
+
     [AvaloniaTest]
     public void FormBrowse_terminal_toolbar_button_should_launch_in_the_repository_working_directory()
     {
         RecordingTerminalLauncher launcher = new();
         FormBrowse form = CreateBrowseForm(launcher);
-        Button userShell = form.FindControl<Button>("userShell")
+        IconSplitButton userShell = form.FindControl<IconSplitButton>("userShell")
             ?? throw new InvalidOperationException("Terminal toolbar button was not created.");
 
-        userShell.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        userShell.RaiseEvent(new RoutedEventArgs(SplitButton.ClickEvent));
 
         launcher.WorkingDirectory.Should().Be("/work/repository");
     }
@@ -204,7 +235,7 @@ public sealed class TerminalLauncherTests
 
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "userShell", "ToolTipText", "Git bash");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitBashToolStripMenuItem", "Text", "Git &bash");
-        ToolTip.GetTip(form.FindControl<Button>("userShell")!).Should().Be("Translated terminal");
+        ToolTip.GetTip(form.FindControl<IconSplitButton>("userShell")!).Should().Be("Translated terminal");
         form.toolsToolStripMenuItem.GetTestAccessor().GitBashMenuItem.Header.Should().Be("Translated Git bash menu");
     }
 
@@ -239,6 +270,11 @@ public sealed class TerminalLauncherTests
         public string? WorkingDirectory { get; private set; }
 
         public void Launch(string workingDirectory)
+        {
+            WorkingDirectory = workingDirectory;
+        }
+
+        public void LaunchShell(string workingDirectory, string executablePath)
         {
             WorkingDirectory = workingDirectory;
         }

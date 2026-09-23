@@ -16,7 +16,7 @@ internal static class WinFormsToolStripMenuSizer
     private const double TextPaddingRight = 9;
     private const double ArrowWidth = 10;
     private const double ArrowPaddingRight = 8;
-    private const double ContextMenuLayoutBorder = 1;
+    private const double DropDownLayoutBorder = 1;
     private static readonly ConditionalWeakTable<MenuItem, ShortcutDisplay> ShortcutDisplays = new();
 
     public static void SetShortcutDisplayString(MenuItem item, string? displayString)
@@ -49,7 +49,7 @@ internal static class WinFormsToolStripMenuSizer
             + TextPaddingRight
             + ArrowWidth
             + ArrowPaddingRight)
-            - (owner is ContextMenu ? ContextMenuLayoutBorder : 0);
+            - (owner is ContextMenu or MenuItem ? DropDownLayoutBorder : 0);
 
         foreach (MenuItem item in menuItems)
         {

@@ -26,6 +26,9 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     private string _plainText = string.Empty;
     private IReadOnlyList<double> _tabStops = [];
 
+    /// <summary>Gets or sets the source RichEdit contents-width overhang for this instance.</summary>
+    public double NativeContentOverhang { get; set; }
+
     /// <summary>Occurs when an XHTML anchor is activated.</summary>
     public event EventHandler<LinkClickedEventArgs>? LinkClicked;
 
@@ -127,7 +130,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
         // TextRenderer and a borderless RichEdit contents rectangle retain renderer-owned
         // horizontal overhang outside the measured glyph advances.
-        MinWidth = Math.Ceiling(maximumLineWidth + TextRendererOverhang + RichTextContentOverhang);
+        MinWidth = Math.Ceiling(maximumLineWidth + TextRendererOverhang + RichTextContentOverhang + NativeContentOverhang);
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
