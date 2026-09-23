@@ -33,10 +33,14 @@ public partial class CommitInfoHeader : GitModuleControl
         _commitDataManager = new CommitDataManager(() => Module);
         _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);
 
-        // The source tab-stop calculation uses TextRenderer, whose preferred width includes
-        // renderer-owned overhang not returned by the portable glyph measurer.
+        // The source sets explicit RichEdit tabs, but its captured XHTML paragraph paints
+        // at the half-inch default intervals. The explicit stops still determine its
+        // ContentsResized width. Preserve both measured native results at 96 DPI.
+        const int richEditDefaultTabInterval = 48;
+        int[] sourceTabStops = [.. _commitDataHeaderRenderer.GetTabStops()];
         rtbRevisionHeader.SetTabStops(
-            _commitDataHeaderRenderer.GetTabStops().Select(tabStop => tabStop + TextRendererOverhang));
+            sourceTabStops.Select((_, index) => (index + 1) * richEditDefaultTabInterval),
+            sourceTabStops.Select(tabStop => tabStop + TextRendererOverhang));
     }
 
     // Avalonia constraint: ContextMenu is the native counterpart of ContextMenuStrip.

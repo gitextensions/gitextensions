@@ -6,7 +6,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 
 namespace GitUI.Compat;
 
@@ -23,8 +25,11 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     private const double RichTextContentOverhang = 12;
     private const double TextRendererOverhang = 7;
     private static readonly Regex _tokenRegex = TokenRegex();
+    private string _xhtml = string.Empty;
     private string _plainText = string.Empty;
     private IReadOnlyList<double> _tabStops = [];
+    private IReadOnlyList<double> _widthTabStops = [];
+    private bool _usesNativeWidthMeasurement;
 
     /// <summary>Gets or sets the source RichEdit contents-width overhang for this instance.</summary>
     public double NativeContentOverhang { get; set; }
@@ -44,16 +49,26 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     /// <summary>Clears the rendered content.</summary>
     public void Clear() => SetXHTMLText(string.Empty);
 
-    /// <summary>Applies the absolute tab stops used by the source RichTextBox.</summary>
-    public void SetTabStops(IEnumerable<int> tabStops)
+    /// <summary>Applies rendered tab stops and, where native RichEdit differs, its separate width-measurement stops.</summary>
+    public void SetTabStops(IEnumerable<int> tabStops, IEnumerable<int>? widthTabStops = null)
     {
         _tabStops = [.. tabStops.Select(value => (double)value)];
-        UpdateTabbedMinimumWidth();
+        _usesNativeWidthMeasurement = widthTabStops is not null;
+        if (!_usesNativeWidthMeasurement)
+        {
+            Width = double.NaN;
+        }
+
+        _widthTabStops = widthTabStops is null
+            ? _tabStops
+            : [.. widthTabStops.Select(value => (double)value)];
+        SetXHTMLText(_xhtml);
     }
 
     /// <summary>Renders the supported XHTML subset.</summary>
     public void SetXHTMLText(string? xhtml)
     {
+        _xhtml = xhtml ?? string.Empty;
         Inlines?.Clear();
         SelectedLinkUri = null;
 
@@ -66,11 +81,13 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
         Text = null;
         StringBuilder plainText = new();
+        LineLayout lineLayout = default;
         foreach (Match match in _tokenRegex.Matches(xhtml))
         {
             if (match.Groups["break"].Success)
             {
                 AddLineBreak();
+                lineLayout = default;
                 plainText.AppendLine();
                 continue;
             }
@@ -79,7 +96,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             {
                 string caption = DecodeAndStripMarkup(match.Groups["anchorText"].Value);
                 string uri = WebUtility.HtmlDecode(match.Groups["href"].Value);
-                AddLink(caption, uri);
+                AddLink(caption, uri, ref lineLayout);
                 plainText.Append(caption);
                 continue;
             }
@@ -87,13 +104,12 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             if (match.Groups["underline"].Success)
             {
                 string underlinedText = DecodeAndStripMarkup(match.Groups["underline"].Value);
-                Inlines?.Add(new Run(underlinedText) { TextDecorations = Avalonia.Media.TextDecorations.Underline });
-                plainText.Append(underlinedText);
+                AddText(underlinedText, plainText, ref lineLayout, Avalonia.Media.TextDecorations.Underline);
                 continue;
             }
 
             string text = WebUtility.HtmlDecode(match.Groups["text"].Value);
-            AddText(text, plainText);
+            AddText(text, plainText, ref lineLayout);
         }
 
         _plainText = plainText.ToString();
@@ -102,7 +118,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     private void UpdateTabbedMinimumWidth()
     {
-        if (_tabStops.Count == 0 || string.IsNullOrEmpty(_plainText))
+        if (_widthTabStops.Count == 0 || string.IsNullOrEmpty(_plainText))
         {
             return;
         }
@@ -117,8 +133,8 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             {
                 if (index > 0)
                 {
-                    lineWidth = tabIndex < _tabStops.Count
-                        ? Math.Max(lineWidth, _tabStops[tabIndex++])
+                    lineWidth = tabIndex < _widthTabStops.Count
+                        ? Math.Max(lineWidth, _widthTabStops[tabIndex++])
                         : lineWidth + WinFormsTextMeasurer.Measure(this, "    ");
                 }
 
@@ -131,6 +147,12 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         // TextRenderer and a borderless RichEdit contents rectangle retain renderer-owned
         // horizontal overhang outside the measured glyph advances.
         MinWidth = Math.Ceiling(maximumLineWidth + TextRendererOverhang + RichTextContentOverhang + NativeContentOverhang);
+        if (_usesNativeWidthMeasurement)
+        {
+            // The native ContentsResized width is based on its separate measured tab stops;
+            // Avalonia's inline spacers otherwise expand the control to their paint extent.
+            Width = MinWidth;
+        }
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
@@ -146,7 +168,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     private static string DecodeAndStripMarkup(string value)
         => WebUtility.HtmlDecode(Regex.Replace(value, "<[^>]+>", string.Empty));
 
-    private void AddText(string text, StringBuilder plainText)
+    private void AddText(string text, StringBuilder plainText, ref LineLayout lineLayout, TextDecorationCollection? decorations = null)
     {
         string normalized = text.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
         string[] lines = normalized.Split('\n');
@@ -155,21 +177,65 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             if (index > 0)
             {
                 AddLineBreak();
+                lineLayout = default;
                 plainText.AppendLine();
             }
 
-            if (lines[index].Length > 0)
+            string[] tabParts = _tabStops.Count > 0 ? lines[index].Split('\t') : [lines[index]];
+            for (int partIndex = 0; partIndex < tabParts.Length; partIndex++)
             {
-                Inlines?.Add(new Run(lines[index]));
-                plainText.Append(lines[index]);
+                if (partIndex > 0)
+                {
+                    AddTab(ref lineLayout);
+                    plainText.Append('\t');
+                }
+
+                if (tabParts[partIndex].Length > 0)
+                {
+                    Inlines?.Add(new Run(tabParts[partIndex]) { TextDecorations = decorations });
+                    plainText.Append(tabParts[partIndex]);
+                    lineLayout.Advance += MeasureInline(tabParts[partIndex]);
+                }
             }
         }
+    }
+
+    private void AddTab(ref LineLayout lineLayout)
+    {
+        while (lineLayout.TabIndex < _tabStops.Count && _tabStops[lineLayout.TabIndex] <= lineLayout.Advance)
+        {
+            lineLayout.TabIndex++;
+        }
+
+        double nextStop = lineLayout.TabIndex < _tabStops.Count
+            ? _tabStops[lineLayout.TabIndex++]
+            : lineLayout.Advance + MeasureInline("    ");
+        double spacerWidth = Math.Max(0, nextStop - lineLayout.Advance);
+        Inlines?.Add(new InlineUIContainer(new Border
+        {
+            Width = spacerWidth,
+            Height = 0,
+            IsHitTestVisible = false,
+            Tag = "\t",
+        }));
+        lineLayout.Advance += spacerWidth;
+    }
+
+    private double MeasureInline(string text)
+    {
+        TextLayout textLayout = new(
+            text,
+            new Typeface(FontFamily, FontStyle, FontWeight),
+            FontSize,
+            foreground: null,
+            letterSpacing: LetterSpacing);
+        return textLayout.WidthIncludingTrailingWhitespace;
     }
 
     private void AddLineBreak()
         => Inlines?.Add(new LineBreak());
 
-    private void AddLink(string caption, string uri)
+    private void AddLink(string caption, string uri, ref LineLayout lineLayout)
     {
         HyperlinkButton link = new()
         {
@@ -179,12 +245,14 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             MinWidth = 0,
             MinHeight = 0,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            LetterSpacing = LetterSpacing,
             Tag = uri,
         };
         ToolTip.SetTip(link, uri);
         link.Click += Link_Click;
         link.PointerPressed += Link_PointerPressed;
         Inlines?.Add(new InlineUIContainer(link));
+        lineLayout.Advance += MeasureInline(caption);
     }
 
     private void Link_Click(object? sender, RoutedEventArgs e)
@@ -201,6 +269,13 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         {
             SelectedLinkUri = uri;
         }
+    }
+
+    private struct LineLayout
+    {
+        public double Advance;
+
+        public int TabIndex;
     }
 
     [GeneratedRegex("(?is)(?<anchor><a\\s+href\\s*=\\s*['\"](?<href>.*?)['\"]\\s*>(?<anchorText>.*?)</a>)|<u>(?<underline>.*?)</u>|(?<break><br\\s*/?>)|(?<text>[^<]+)|<[^>]+>", RegexOptions.ExplicitCapture)]
