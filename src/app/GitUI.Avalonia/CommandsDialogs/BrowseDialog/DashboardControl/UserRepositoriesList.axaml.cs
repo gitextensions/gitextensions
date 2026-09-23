@@ -1,12 +1,15 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -19,7 +22,9 @@ using GitUI.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 using Color = Avalonia.Media.Color;
+using Font = GitExtensions.Shims.WinForms.Font;
 using WinFormsShims = GitExtensions.Shims.WinForms;
+using WinFormsControls = GitUI.Compat.WinFormsControls;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 
@@ -52,6 +57,7 @@ public partial class UserRepositoriesList : TranslatedControl
         }
     }
 
+    private readonly Font _secondaryFont;
     private static readonly Color DefaultFavouriteColor = Colors.DarkGoldenrod;
     private static readonly Color DefaultBranchNameColor = Color.Parse("#2D5FAF");
     private Color _favouriteColor = DefaultFavouriteColor;
@@ -62,15 +68,19 @@ public partial class UserRepositoriesList : TranslatedControl
     private Color _mainBackColor = Colors.White;
     private Color _searchBackColor = Color.FromRgb(248, 248, 255);
     private Color _foreColor = Color.FromRgb(30, 30, 30);
-    private Func<IGitUICommands>? _getUICommands;
+    private Brush _foreColorBrush;
+    private Brush _branchNameColorBrush = new SolidColorBrush(DefaultBranchNameColor);
+    private Brush _favouriteColorBrush = new SolidColorBrush(DefaultFavouriteColor);
+    private Brush _hoverColorBrush = new SolidColorBrush(Color.Parse("#ACCFEF"));
+    private ListBoxItem? _hoveredItem;
     private bool _hasInvalidRepos;
+    private ListBoxItem? _rightClickedItem;
+    private Func<IGitUICommands>? _getUICommands;
     private bool _isSubscribed;
     private IUserRepositoriesListController? _controller;
     private IRepositoryHistoryUIService? _repositoryHistoryUIService;
-    private RepositoryListItem? _rightClickedItem;
     private RepositoryGroupItem? _selectedCategory;
 
-    public event EventHandler? ConfigureRequested;
     public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
 
     private IUserRepositoriesListController Controller
@@ -81,12 +91,18 @@ public partial class UserRepositoriesList : TranslatedControl
         InitializeComponent();
         InitializeComplete();
 
+        mnuTop.Items.Clear();
+        _foreColorBrush = new SolidColorBrush(_foreColor);
+        _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.Size - 1F);
+        listView1.AddColumns(clmhdrPath, clmhdrBranch, clmhdrCategory);
         listView1.ItemTemplate = new FuncDataTemplate<object>(
             (item, _) => CreateRow(item),
             supportsRecycling: false);
         listView1.ContainerPrepared += ListView1_ContainerPrepared;
         listView1.AddHandler(PointerPressedEvent, listView1_PointerPressed, RoutingStrategies.Tunnel);
-        listView1.AddHandler(PointerReleasedEvent, listView1_PointerReleased, RoutingStrategies.Tunnel);
+        listView1.PointerReleased += listView1_MouseClick;
+        listView1.PointerMoved += listView1_MouseMove;
+        listView1.PointerExited += listView1_MouseLeave;
         listView1.KeyDown += listView1_KeyDown;
         listView1.GotFocus += listView1_GotFocus;
         textBoxSearch.TextChanged += TextBoxSearch_TextChanged;
@@ -105,13 +121,12 @@ public partial class UserRepositoriesList : TranslatedControl
         tsmiCategoryClear.Click += tsmiCategoryClear_Click;
         PropertyChanged += (_, e) =>
         {
-            if (e.Property == IsVisibleProperty && IsVisible)
+            if (e.Property == IsVisibleProperty)
             {
-                // Reset the search
-                textBoxSearch.Text = string.Empty;
-                textBoxSearch.Focus();
+                OnVisibleChanged(EventArgs.Empty);
             }
         };
+        AttachedToLogicalTree += RecentRepositoriesList_Load;
 
         DragDrop.SetAllowDrop(this, true);
         DragDrop.AddDragEnterHandler(this, OnDragEnter);
@@ -124,21 +139,21 @@ public partial class UserRepositoriesList : TranslatedControl
     public Color BranchNameColor
     {
         get => _branchNameColor;
-        set => SetAppearance(ref _branchNameColor, value);
+        set => SetAppearance(ref _branchNameColor, ref _branchNameColorBrush, value);
     }
 
     [Category("Appearance")]
     public Color FavouriteColor
     {
         get => _favouriteColor;
-        set => SetAppearance(ref _favouriteColor, value);
+        set => SetAppearance(ref _favouriteColor, ref _favouriteColorBrush, value);
     }
 
     [Category("Appearance")]
     public Color ForeColor
     {
         get => _foreColor;
-        set => SetAppearance(ref _foreColor, value);
+        set => SetAppearance(ref _foreColor, ref _foreColorBrush, value);
     }
 
     [Category("Appearance")]
@@ -193,7 +208,8 @@ public partial class UserRepositoriesList : TranslatedControl
             }
 
             _hoverColor = value;
-            Resources["DashboardRepositoryHoverBrush"] = new SolidColorBrush(value);
+            _hoverColorBrush = new SolidColorBrush(value);
+            Resources["DashboardRepositoryHoverBrush"] = _hoverColorBrush;
             InvalidateVisual();
         }
     }
@@ -229,6 +245,12 @@ public partial class UserRepositoriesList : TranslatedControl
             _searchBackColor = value;
             textBoxSearch.Background = new SolidColorBrush(value);
         }
+    }
+
+    private ListBoxItem? HoveredItem
+    {
+        get => _hoveredItem;
+        set => _hoveredItem = value;
     }
 
     private static StringComparer GroupHeaderComparer => StringComparer.CurrentCulture;
@@ -312,10 +334,28 @@ public partial class UserRepositoriesList : TranslatedControl
         }
     }
 
+    protected virtual void OnVisibleChanged(EventArgs e)
+    {
+        if (!IsVisible)
+        {
+            return;
+        }
+
+        // Reset the search
+        textBoxSearch.Text = string.Empty;
+        textBoxSearch.Focus();
+    }
+
     protected virtual void OnModuleChanged(GitModuleEventArgs args)
     {
         EventHandler<GitModuleEventArgs>? handler = GitModuleChanged;
         handler?.Invoke(this, args);
+    }
+
+    protected virtual bool ProcessDialogKey(WinFormsShims.Keys keyData)
+    {
+        return keyData == WinFormsShims.Keys.Enter
+            && TryOpenRepository(GetSelectedRepository());
     }
 
     private void BindRepositories(
@@ -406,15 +446,16 @@ public partial class UserRepositoriesList : TranslatedControl
                 new TextBlock
                 {
                     Text = repository.Text,
-                    Foreground = new SolidColorBrush(ForeColor),
+                    Foreground = repository.IsFavourite ? _favouriteColorBrush : _foreColorBrush,
                     FontWeight = repository.IsFavourite ? FontWeight.SemiBold : FontWeight.Normal,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 },
                 new TextBlock
                 {
                     Text = repository.BranchName,
-                    Foreground = new SolidColorBrush(BranchNameColor),
-                    FontSize = 11,
+                    Foreground = _branchNameColorBrush,
+                    FontFamily = new FontFamily(_secondaryFont.Name),
+                    FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(_secondaryFont.Size),
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 },
             },
@@ -423,13 +464,16 @@ public partial class UserRepositoriesList : TranslatedControl
         {
             Orientation = Orientation.Horizontal,
             Margin = new Avalonia.Thickness(4, 3),
+            MinWidth = AppSettings.RecentReposComboMinWidth > 0
+                ? AppSettings.RecentReposComboMinWidth + 50
+                : 0,
             Children = { image, text },
         };
         ToolTip.SetTip(row, repository.Repository.Repo.Path);
         return row;
     }
 
-    private void SetAppearance(ref Color field, Color value)
+    private void SetAppearance(ref Color field, ref Brush brush, Color value)
     {
         if (field == value)
         {
@@ -437,6 +481,7 @@ public partial class UserRepositoriesList : TranslatedControl
         }
 
         field = value;
+        brush = new SolidColorBrush(value);
         ShowRecentRepositories(reloadData: false);
     }
 
@@ -458,7 +503,8 @@ public partial class UserRepositoriesList : TranslatedControl
 
     private SelectedRepositoryItem? GetSelectedRepositoryItem()
     {
-        RepositoryListItem? selected = _rightClickedItem ?? listView1.SelectedItem as RepositoryListItem;
+        RepositoryListItem? selected = _rightClickedItem?.DataContext as RepositoryListItem
+            ?? listView1.SelectedItem as RepositoryListItem;
         if (string.IsNullOrWhiteSpace(selected?.Repository.Repo.Path))
         {
             return null;
@@ -533,7 +579,11 @@ public partial class UserRepositoriesList : TranslatedControl
         if (selected is null || _rightClickedItem is null)
         {
             e.Cancel = true;
+            return;
         }
+
+        // Avalonia menu items share their owning context menu instead of WinForms SourceControl.
+        // Keep the clicked container so nested category actions resolve the same repository.
     }
 
     private void ListView1_GroupTaskLinkClick(object? sender, RoutedEventArgs e)
@@ -561,11 +611,11 @@ public partial class UserRepositoriesList : TranslatedControl
         listView1.SelectedItem = item;
         if (e.GetCurrentPoint(container).Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
         {
-            _rightClickedItem = item;
+            _rightClickedItem = container;
         }
     }
 
-    private void listView1_PointerReleased(object? sender, PointerReleasedEventArgs e)
+    private void listView1_MouseClick(object? sender, PointerReleasedEventArgs e)
     {
         if (e.InitialPressMouseButton != MouseButton.Left
             || e.Source is not Control source
@@ -604,6 +654,16 @@ public partial class UserRepositoriesList : TranslatedControl
         }
     }
 
+    private void listView1_MouseMove(object? sender, PointerEventArgs e)
+    {
+        HoveredItem = (e.Source as Visual)?.FindAncestorOfType<ListBoxItem>(includeSelf: true);
+    }
+
+    private void listView1_MouseLeave(object? sender, PointerEventArgs e)
+    {
+        HoveredItem = null;
+    }
+
     private void listView1_GotFocus(object? sender, RoutedEventArgs e)
     {
         if (listView1.SelectedItem is null)
@@ -614,9 +674,8 @@ public partial class UserRepositoriesList : TranslatedControl
 
     private void listView1_KeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Enter)
+        if (ProcessDialogKey(KeysMapper.ToKeys(e)))
         {
-            TryOpenRepository(GetSelectedRepository());
             e.Handled = true;
         }
         else if (e.Key == Key.Up
@@ -632,7 +691,30 @@ public partial class UserRepositoriesList : TranslatedControl
 
     private void mnuConfigure_Click(object? sender, RoutedEventArgs e)
     {
-        ConfigureRequested?.Invoke(this, EventArgs.Empty);
+        using FormRecentReposSettings frm = new();
+        WinFormsShims.DialogResult result = frm.ShowDialog(GetOwner());
+        if (result == WinFormsShims.DialogResult.OK)
+        {
+            _repositoryHistoryUIService?.Invalidate();
+            ShowRecentRepositories();
+        }
+    }
+
+    private void RecentRepositoriesList_Load(object? sender, EventArgs e)
+    {
+        if (this.FindLogicalAncestorOfType<FormBrowse>() is not FormBrowse form)
+        {
+            return;
+        }
+
+        WinFormsControls.ToolStripMenuItem? dashboardMenu =
+            form.FindControl<WinFormsControls.ToolStripMenuItem>("dashboardToolStripMenuItem");
+        if (dashboardMenu is not null && !dashboardMenu.Items.Contains(mnuConfigure))
+        {
+            dashboardMenu.Items.Add(mnuConfigure);
+        }
+
+        Dispatcher.UIThread.Post(() => textBoxSearch.Focus(), DispatcherPriority.Loaded);
     }
 
     private void tsmiCategories_DropDownOpening(object? sender, EventArgs e)
@@ -867,7 +949,7 @@ public partial class UserRepositoriesList : TranslatedControl
     {
         internal TextBox Search => control.textBoxSearch;
         internal ListBox List => control.listView1;
-        internal Button Configure => control.mnuConfigure;
+        internal MenuItem Configure => control.mnuConfigure;
         internal MenuItem Categories => control.tsmiCategories;
         internal MenuItem CategoryNone => control.tsmiCategoryNone;
         internal MenuItem CategoryAdd => control.tsmiCategoryAdd;
@@ -877,7 +959,7 @@ public partial class UserRepositoriesList : TranslatedControl
         internal bool UpdateContextMenu()
         {
             CancelEventArgs eventArgs = new();
-            control._rightClickedItem = control.listView1.SelectedItem as RepositoryListItem;
+            control._rightClickedItem = new ListBoxItem { DataContext = control.listView1.SelectedItem };
             control.contextMenuStrip_Opening(control.contextMenuStripRepository, eventArgs);
             return !eventArgs.Cancel;
         }

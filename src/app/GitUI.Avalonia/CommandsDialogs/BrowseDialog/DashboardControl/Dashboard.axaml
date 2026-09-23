@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:GitUI.CommandsDialogs.BrowseDialog.DashboardControl"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard">
   <UserControl.Resources>
@@ -28,34 +29,39 @@
       <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
       <Setter Property="BorderThickness" Value="0" />
       <Setter Property="CornerRadius" Value="0" />
-      <Setter Property="Padding" Value="4,3" />
+      <Setter Property="Margin" Value="3,0,3,8" />
+      <Setter Property="Padding" Value="24,3,3,3" />
     </Style>
     <Style Selector="Button.dashboard-link:pointerover">
       <Setter Property="Background" Value="{DynamicResource DashboardLinkHoverBrush}" />
     </Style>
   </UserControl.Styles>
-  <Grid ColumnDefinitions="260,*"
-        Background="{DynamicResource ThemeBackgroundBrush}">
+  <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
+                       ColumnDefinitions="7.142857*,213,85.71428*,7.142857*"
+                       Background="{DynamicResource ThemeBackgroundBrush}">
     <Image x:Name="backgroundImage"
-           Grid.ColumnSpan="2"
+           Grid.ColumnSpan="4"
            Stretch="Fill"
            IsHitTestVisible="False" />
-    <Grid x:Name="pnlLeft" RowDefinitions="80,*,Auto">
-      <Border x:Name="pnlLogo"
-              Padding="24,12"
-              Background="{DynamicResource DashboardLogoBackgroundBrush}">
+    <wf:Panel x:Name="pnlLeft" Grid.Column="1">
+      <Grid RowDefinitions="68,*,Auto">
+      <wf:Panel x:Name="pnlLogo"
+                Padding="20,0,20,14"
+                Background="{DynamicResource DashboardLogoBackgroundBrush}">
         <Image x:Name="pbLogo"
-               Width="205"
-               Height="52"
+               Width="185"
+               Height="44"
+               Margin="-6,15,0,0"
                HorizontalAlignment="Left"
+               VerticalAlignment="Top"
                Source="{x:Static properties:Images.GitExtensionsLogoWide}"
                Stretch="Uniform" />
-      </Border>
+      </wf:Panel>
       <Border x:Name="pnlStart"
               Grid.Row="1"
-              Padding="24,22"
+              Padding="20"
               Background="{DynamicResource DashboardStartBackgroundBrush}">
-        <StackPanel x:Name="flpnlStart" Spacing="4">
+        <StackPanel x:Name="flpnlStart">
           <Button x:Name="createItem" Classes="dashboard-link" />
           <Button x:Name="openItem" Classes="dashboard-link" />
           <Button x:Name="cloneItem" Classes="dashboard-link" />
@@ -63,17 +69,18 @@
       </Border>
       <Border x:Name="pnlContribute"
               Grid.Row="2"
-              Padding="24,16,24,20"
+              Padding="20,20,20,30"
               Background="{DynamicResource DashboardContributeBackgroundBrush}">
-        <StackPanel x:Name="flpnlContribute" Spacing="4">
-          <TextBlock x:Name="lblContribute" FontSize="18" Text="Contribute" Margin="0,0,0,4" />
+        <StackPanel x:Name="flpnlContribute">
+          <wf:Label x:Name="lblContribute" Text="Contribute" Margin="2,0,2,8" />
           <Button x:Name="developItem" Classes="dashboard-link" />
           <Button x:Name="donateItem" Classes="dashboard-link" />
           <Button x:Name="translateItem" Classes="dashboard-link" />
           <Button x:Name="issuesItem" Classes="dashboard-link" />
         </StackPanel>
       </Border>
-    </Grid>
-    <local:UserRepositoriesList x:Name="userRepositoriesList" Grid.Column="1" />
-  </Grid>
+      </Grid>
+    </wf:Panel>
+    <local:UserRepositoriesList x:Name="userRepositoriesList" Grid.Column="2" />
+  </wf:TableLayoutPanel>
 </UserControl>

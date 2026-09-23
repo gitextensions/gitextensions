@@ -853,8 +853,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             }
 
             _dashboard.GitModuleChanged += (_, e) => ChangeWorkingDirectory(e.GitModule.WorkingDir);
-            _dashboard.ConfigureRepositoriesRequested += (_, _) => ConfigureRecentRepositories();
-            _dashboard.OpenRepositoryRequested += (_, _) => OpenRepositoryDialog();
             _contentPanel.Children.Add(_dashboard);
         }
 

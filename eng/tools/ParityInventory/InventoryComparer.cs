@@ -13,7 +13,7 @@ internal static class InventoryComparer
         CompareSet(comparableOriginal.Members, comparableTwin.Members, MemberKey, "members", "member", findings);
         CompareMemberDetails(comparableOriginal, comparableTwin, findings);
         CompareMemberOrder(comparableOriginal, comparableTwin, findings);
-        CompareSet(comparableOriginal.EventWiring, comparableTwin.EventWiring, EventKey, "events", "event.wiring", findings);
+        CompareEventWiring(comparableOriginal.EventWiring, comparableTwin.EventWiring, findings);
         CompareSet(comparableOriginal.EventHandlers, comparableTwin.EventHandlers, value => value, "events", "event.handler", findings);
         CompareMenuSequences(comparableOriginal.Menus, comparableTwin.Menus, findings);
         CompareSet(comparableOriginal.HotkeyCommandIds, comparableTwin.HotkeyCommandIds, value => value, "hotkeys", "hotkey.command", findings);
@@ -229,6 +229,61 @@ internal static class InventoryComparer
         }
     }
 
+    private static void CompareEventWiring(
+        IReadOnlyList<EventWireEntry> original,
+        IReadOnlyList<EventWireEntry> twin,
+        List<FunctionalFinding> findings)
+    {
+        EventWireEntry[] originalItems = original
+            .GroupBy(RawEventKey, StringComparer.Ordinal)
+            .Select(group => group.First())
+            .ToArray();
+        EventWireEntry[] twinItems = twin
+            .GroupBy(RawEventKey, StringComparer.Ordinal)
+            .Select(group => group.First())
+            .ToArray();
+        HashSet<int> matchedTwinIndexes = [];
+        foreach (EventWireEntry originalItem in originalItems)
+        {
+            int twinIndex = Enumerable.Range(0, twinItems.Length).FirstOrDefault(
+                index => !matchedTwinIndexes.Contains(index)
+                    && string.Equals(EventKey(originalItem), EventKey(twinItems[index]), StringComparison.Ordinal),
+                -1);
+            if (twinIndex >= 0)
+            {
+                matchedTwinIndexes.Add(twinIndex);
+                continue;
+            }
+
+            string key = RawEventKey(originalItem);
+            findings.Add(NewFinding(
+                "events",
+                "event.wiring.missing",
+                $"event.wiring/{key}",
+                $"Original event wiring '{key}' is missing from the twin.",
+                Format(originalItem),
+                null));
+        }
+
+        for (int index = 0; index < twinItems.Length; index++)
+        {
+            if (matchedTwinIndexes.Contains(index))
+            {
+                continue;
+            }
+
+            EventWireEntry twinItem = twinItems[index];
+            string key = RawEventKey(twinItem);
+            findings.Add(NewFinding(
+                "events",
+                "event.wiring.extra",
+                $"event.wiring/{key}",
+                $"Twin has extra event wiring '{key}'.",
+                null,
+                Format(twinItem)));
+        }
+    }
+
     private static void CompareMenuSequences(
         IReadOnlyList<MenuEntry> original,
         IReadOnlyList<MenuEntry> twin,
@@ -359,11 +414,27 @@ internal static class InventoryComparer
     private static string EventKey(EventWireEntry item) =>
         $"{item.Target}.{NormalizeEventName(item.Event)}->{item.Handler}";
 
+    private static string RawEventKey(EventWireEntry item) =>
+        $"{item.Target}.{NormalizeLegacyEventName(item.Event)}->{item.Handler}";
+
     private static string NormalizeEventName(string eventName) =>
         eventName switch
         {
             // Framework constraint: these Avalonia events are the direct lifecycle equivalents
             // of the WinForms events used by ported handlers.
+            "SelectedIndexChanged" or "SelectionChanged" => "selectionChanged",
+            "Resize" or "SizeChanged" => "sizeChanged",
+            "Enter" or "GotFocus" => "focusEntered",
+            "Leave" or "LostFocus" => "focusLeft",
+            "MouseMove" or "PointerMoved" => "pointerMoved",
+            "MouseLeave" or "PointerExited" => "pointerExited",
+            "MouseClick" or "PointerReleased" => "pointerReleased",
+            _ => eventName
+        };
+
+    private static string NormalizeLegacyEventName(string eventName) =>
+        eventName switch
+        {
             "SelectedIndexChanged" or "SelectionChanged" => "selectionChanged",
             "Resize" or "SizeChanged" => "sizeChanged",
             "Enter" or "GotFocus" => "focusEntered",

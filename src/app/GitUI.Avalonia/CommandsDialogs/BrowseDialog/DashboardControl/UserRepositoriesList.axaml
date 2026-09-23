@@ -1,6 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:compat="using:GitUI.Compat"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
+             xmlns:controls="using:GitUI.UserControls"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList">
   <UserControl.Resources>
@@ -25,71 +27,91 @@
       <Setter Property="BorderThickness" Value="0" />
     </Style>
   </UserControl.Styles>
-  <Grid x:Name="pnlBody"
-        RowDefinitions="Auto,Auto,*"
-        Margin="20">
-    <Border x:Name="pnlHeader"
-            Margin="-20,-20,-20,12"
-            Padding="20,0,20,11">
-      <Grid ColumnDefinitions="*,Auto">
-        <TextBlock x:Name="lblRecentRepositories"
-                   FontSize="22"
-                   Text="Recent repositories"
-                   VerticalAlignment="Center" />
-        <compat:IconButton x:Name="mnuConfigure"
-                           Grid.Column="1"
-                           Classes="gitextensions-icon-button"
-                           Content="Recent repositories _settings"
-                           Icon="{x:Static properties:Images.Settings}"
-                           Padding="7,3"
-                           VerticalAlignment="Center" />
-      </Grid>
-    </Border>
-    <TextBox x:Name="textBoxSearch"
-             compat:TranslationCompat.TranslateWatermark="False"
-             Grid.Row="1"
-             Margin="0,0,0,10" />
-    <ListBox x:Name="listView1"
-             Grid.Row="2"
-             Background="{DynamicResource ThemeBackgroundBrush}"
-             BorderThickness="0"
-             SelectionMode="Single">
-      <ListBox.ContextMenu>
-        <ContextMenu x:Name="contextMenuStripRepository">
-          <MenuItem x:Name="tsmiOpenFolder"
-                    Header="Show in folder"
-                    Icon="{x:Static properties:Images.BrowseFileExplorer}" />
-          <Separator x:Name="toolStripMenuItem1" />
-          <MenuItem x:Name="tsmiCategories"
-                    Header="Categories">
-            <MenuItem x:Name="tsmiCategoryNone"
-                      Header="(none)" />
-            <MenuItem x:Name="tsmiCategoryAdd"
-                      Header="Add new..."
-                      Icon="{x:Static properties:Images.BulletAdd}" />
-          </MenuItem>
-          <Separator x:Name="toolStripMenuItem2" />
-          <MenuItem x:Name="tsmiRemoveFromList"
-                    Header="Remove project from the list" />
-          <MenuItem x:Name="tsmiRemoveMissingReposFromList"
-                    Header="Remove missing projects from the list" />
-        </ContextMenu>
-      </ListBox.ContextMenu>
-    </ListBox>
+  <Grid RowDefinitions="Auto,*">
+    <wf:Panel x:Name="pnlHeader"
+              Height="73"
+              MinWidth="450"
+              Padding="20,0,20,11">
+      <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
+                           VerticalAlignment="Bottom">
+        <wf:Label x:Name="lblRecentRepositories"
+                  FontSize="22"
+                  Text="Recent repositories"
+                  VerticalAlignment="Center" />
+      </wf:TableLayoutPanel>
+    </wf:Panel>
+    <wf:Panel x:Name="pnlBody"
+              Grid.Row="1"
+              Margin="20,3,20,3">
+      <wf:TableLayoutPanel x:Name="tableLayoutPanel2"
+                           RowDefinitions="45,*">
+        <TextBox x:Name="textBoxSearch"
+                 compat:TranslationCompat.TranslateWatermark="False"
+                 Margin="3,0,3,10" />
+        <controls:NativeListView x:Name="listView1"
+                                 Grid.Row="1"
+                                 Margin="0,3"
+                                 Background="{DynamicResource ThemeBackgroundBrush}"
+                                 BorderThickness="0"
+                                 SelectionMode="Single">
+          <ListBox.ContextMenu>
+            <wf:ContextMenuStrip x:Name="contextMenuStripRepository">
+              <wf:ToolStripMenuItem x:Name="tsmiOpenFolder"
+                                    Header="Show in folder"
+                                    Icon="{x:Static properties:Images.BrowseFileExplorer}" />
+              <wf:ToolStripSeparator x:Name="toolStripMenuItem1" />
+              <wf:ToolStripMenuItem x:Name="tsmiCategories"
+                                    Header="Categories">
+                <wf:ToolStripMenuItem x:Name="tsmiCategoryNone"
+                                      Header="(none)" />
+                <wf:ToolStripMenuItem x:Name="tsmiCategoryAdd"
+                                      Header="Add new..."
+                                      Icon="{x:Static properties:Images.BulletAdd}" />
+              </wf:ToolStripMenuItem>
+              <wf:ToolStripSeparator x:Name="toolStripMenuItem2" />
+              <wf:ToolStripMenuItem x:Name="tsmiRemoveFromList"
+                                    Header="Remove project from the list" />
+              <wf:ToolStripMenuItem x:Name="tsmiRemoveMissingReposFromList"
+                                    Header="Remove missing projects from the list" />
+            </wf:ContextMenuStrip>
+          </ListBox.ContextMenu>
+        </controls:NativeListView>
+      </wf:TableLayoutPanel>
+    </wf:Panel>
     <Border IsVisible="False">
       <Border.ContextMenu>
-        <ContextMenu x:Name="contextMenuStripCategory">
-          <MenuItem x:Name="tsmiCategoryRename"
-                    Header="Rename category"
-                    Icon="{x:Static properties:Images.FileStatusModified}" />
-          <MenuItem x:Name="tsmiCategoryDelete"
-                    Header="Delete category"
-                    Icon="{x:Static properties:Images.StarRemove}" />
-          <MenuItem x:Name="tsmiCategoryClear"
-                    Header="Clear all recent repositories"
-                    Icon="{x:Static properties:Images.CleanupRepo}" />
-        </ContextMenu>
+        <wf:ContextMenuStrip x:Name="contextMenuStripCategory">
+          <wf:ToolStripMenuItem x:Name="tsmiCategoryRename"
+                                Header="Rename category"
+                                Icon="{x:Static properties:Images.FileStatusModified}" />
+          <wf:ToolStripMenuItem x:Name="tsmiCategoryDelete"
+                                Header="Delete category"
+                                Icon="{x:Static properties:Images.StarRemove}" />
+          <wf:ToolStripMenuItem x:Name="tsmiCategoryClear"
+                                Header="Clear all recent repositories"
+                                Icon="{x:Static properties:Images.CleanupRepo}" />
+        </wf:ContextMenuStrip>
       </Border.ContextMenu>
     </Border>
+    <wf:MenuStrip x:Name="menuStripRecentMenu"
+                  IsVisible="False">
+      <wf:ToolStripMenuItem x:Name="mnuTop">
+        <wf:ToolStripMenuItem x:Name="mnuConfigure"
+                              Header="Recent repositories _settings">
+          <MenuItem.Icon>
+            <Image Source="{x:Static properties:Images.Settings}" />
+          </MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+      </wf:ToolStripMenuItem>
+    </wf:MenuStrip>
+    <wf:ColumnHeader x:Name="clmhdrPath"
+                     IsVisible="False"
+                     Text="Path" />
+    <wf:ColumnHeader x:Name="clmhdrBranch"
+                     IsVisible="False"
+                     Text="Branch" />
+    <wf:ColumnHeader x:Name="clmhdrCategory"
+                     IsVisible="False"
+                     Text="Category" />
   </Grid>
 </UserControl>
