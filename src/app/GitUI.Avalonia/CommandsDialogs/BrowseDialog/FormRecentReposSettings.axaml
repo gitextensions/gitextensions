@@ -1,12 +1,12 @@
 <gitui:GitExtensionsForm xmlns="https://github.com/avaloniaui"
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:gitui="using:GitUI"
+                         xmlns:wf="using:GitUI.Compat.WinFormsControls"
                          x:Class="GitUI.CommandsDialogs.BrowseDialog.FormRecentReposSettings"
                          Width="684"
                          Height="361"
                          MinWidth="684"
                          MinHeight="361"
-                         CanResize="False"
                          WindowStartupLocation="CenterOwner"
                          Title="Recent repositories settings">
   <Grid RowDefinitions="*,Auto">
@@ -17,10 +17,10 @@
             ColumnDefinitions="*,Auto"
             RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
             RowSpacing="0">
-        <TextBlock x:Name="maxRecentRepositories"
-                   Classes="gitextensions-dialog-label"
-                   VerticalAlignment="Center"
-                   Text="Maximum number of top repositories" />
+        <wf:Label x:Name="maxRecentRepositories"
+                  Classes="gitextensions-dialog-label"
+                  VerticalAlignment="Center"
+                  Text="Maximum number of top repositories" />
         <NumericUpDown x:Name="_NO_TRANSLATE_maxRecentRepositories"
                        Grid.Column="1"
                        Width="61"
@@ -29,11 +29,11 @@
                        Margin="3"
                        Maximum="1000000" />
 
-        <TextBlock x:Name="lblRecentRepositoriesHistorySize"
-                   Grid.Row="1"
-                   Classes="gitextensions-dialog-label"
-                   VerticalAlignment="Center"
-                   Text="Maximum number of recent repositories" />
+        <wf:Label x:Name="lblRecentRepositoriesHistorySize"
+                  Grid.Row="1"
+                  Classes="gitextensions-dialog-label"
+                  VerticalAlignment="Center"
+                  Text="Maximum number of recent repositories" />
         <NumericUpDown x:Name="_NO_TRANSLATE_RecentRepositoriesHistorySize"
                        Grid.Row="1"
                        Grid.Column="1"
@@ -61,12 +61,12 @@
                   Margin="3"
                   Content="Sort recent repositories alphabetically" />
 
-        <HeaderedContentControl x:Name="shorteningGB"
-                                Grid.Row="5"
-                                Grid.ColumnSpan="2"
-                                Classes="gitextensions-group-box"
-                                Margin="3"
-                                Header="Shortening strategy">
+        <wf:GroupBox x:Name="shorteningGB"
+                     Grid.Row="5"
+                     Grid.ColumnSpan="2"
+                     Classes="gitextensions-group-box"
+                     Margin="3"
+                     Header="Shortening strategy">
           <StackPanel>
             <RadioButton x:Name="dontShortenRB"
                          GroupName="ShorteningStrategy"
@@ -81,13 +81,13 @@
                          Margin="3"
                          Content="The most significant directory " />
           </StackPanel>
-        </HeaderedContentControl>
+        </wf:GroupBox>
 
-        <TextBlock x:Name="comboMinWidthLabel"
-                   Grid.Row="6"
-                   Classes="gitextensions-dialog-label"
-                   VerticalAlignment="Center"
-                   Text="Combobox minimum width (0 = Autosize)" />
+        <wf:Label x:Name="comboMinWidthLabel"
+                  Grid.Row="6"
+                  Classes="gitextensions-dialog-label"
+                  VerticalAlignment="Center"
+                  Text="Combobox minimum width (0 = Autosize)" />
         <NumericUpDown x:Name="comboMinWidthEdit"
                        Grid.Row="6"
                        Grid.Column="1"
@@ -96,38 +96,58 @@
                        MinHeight="0"
                        Margin="3"
                        Maximum="800" />
-        <TextBlock x:Name="comboMinWidthNote"
-                   Grid.Row="7"
-                   Grid.ColumnSpan="2"
-                   Margin="15,3,3,3"
-                   TextWrapping="Wrap"
-                   Text="NB: The width of the columns helps to visualise how the repository name will be shown in the combobox." />
+        <wf:Label x:Name="comboMinWidthNote"
+                  Grid.Row="7"
+                  Grid.ColumnSpan="2"
+                  Margin="15,3,3,3"
+                  TextWrapping="Wrap"
+                  Text="NB: The width of the columns helps to visualise how the repository name will be shown in the combobox." />
       </Grid>
 
-      <Grid x:Name="comboPanel"
-            Grid.Column="1"
-            Margin="0,8,8,8"
-            RowDefinitions="Auto,*,Auto,*">
-        <Border x:Name="panel2"
-                Classes="gitextensions-section"
-                Padding="4,2">
-          <TextBlock x:Name="TopLabel"
-                     Text="Top repositories" />
-        </Border>
+      <wf:Panel x:Name="comboPanel"
+                Grid.Column="1"
+                Margin="0,8,8,8">
+      <Grid RowDefinitions="Auto,*,Auto,*">
+        <wf:Panel x:Name="panel2"
+                  Classes="gitextensions-section"
+                  Padding="4,2">
+          <wf:Label x:Name="TopLabel"
+                    Text="Top repositories" />
+        </wf:Panel>
         <ListBox x:Name="TopLB"
                  Grid.Row="1"
-                 SelectionMode="Multiple" />
-        <Border x:Name="panel3"
-                Grid.Row="2"
-                Classes="gitextensions-section"
-                Padding="4,2">
-          <TextBlock x:Name="label1"
-                     Text="Recent repositories" />
-        </Border>
+                 SelectionMode="Multiple">
+          <ListBox.ContextMenu>
+            <wf:ContextMenuStrip x:Name="contextMenuStrip1">
+              <wf:ToolStripMenuItem x:Name="anchorToTopReposToolStripMenuItem"
+                                    Header="Anchor to top repositories" />
+              <wf:ToolStripMenuItem x:Name="anchorToRecentReposToolStripMenuItem"
+                                    Header="Anchor to recent repositories" />
+              <wf:ToolStripMenuItem x:Name="removeAnchorToolStripMenuItem"
+                                    Header="Remove anchor" />
+              <wf:ToolStripMenuItem x:Name="removeRecentToolStripMenuItem"
+                                    Header="Remove from recent repositories" />
+            </wf:ContextMenuStrip>
+          </ListBox.ContextMenu>
+        </ListBox>
+        <wf:Panel x:Name="panel3"
+                  Grid.Row="2"
+                  Classes="gitextensions-section"
+                  Padding="4,2">
+          <wf:Label x:Name="label1"
+                    Text="Recent repositories" />
+        </wf:Panel>
         <ListBox x:Name="RecentLB"
                  Grid.Row="3"
                  SelectionMode="Multiple" />
+        <wf:ColumnHeader x:Name="chdrRepository"
+                         IsVisible="False"
+                         Text="Header" />
+        <wf:ColumnHeader x:Name="chdrRepository1"
+                         IsVisible="False"
+                         Text="Header" />
       </Grid>
+      </wf:Panel>
     </Grid>
 
     <StackPanel x:Name="flpnlControls"
@@ -139,6 +159,7 @@
               Content="OK"
               IsDefault="True" />
       <Button x:Name="Abort"
+              x:FieldModifier="protected"
               Classes="gitextensions-dialog-action"
               Content="Cancel"
               IsCancel="True" />
