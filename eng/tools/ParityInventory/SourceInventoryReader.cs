@@ -595,20 +595,24 @@ internal static class SourceInventoryReader
 
     private static void ExtractMenus(TypeDeclarationSyntax declaration, MutablePart part)
     {
-        HashSet<string> menuNames = declaration.DescendantNodes().OfType<FieldDeclarationSyntax>()
-            .Where(field =>
+        Dictionary<string, string> fieldTypes = declaration.Members.OfType<FieldDeclarationSyntax>()
+            .SelectMany(field => field.Declaration.Variables.Select(variable => new
             {
-                string type = field.Declaration.Type.ToString();
-                return type.EndsWith("ToolStripMenuItem", StringComparison.Ordinal)
-                    || type.EndsWith("ContextMenuStrip", StringComparison.Ordinal)
-                    || type.EndsWith("MenuItem", StringComparison.Ordinal)
-                    || type.EndsWith("ContextMenu", StringComparison.Ordinal);
-            })
-            .SelectMany(field => field.Declaration.Variables)
-            .Select(variable => variable.Identifier.ValueText)
+                Name = variable.Identifier.ValueText,
+                Type = field.Declaration.Type.ToString(),
+            }))
+            .ToDictionary(field => field.Name, field => field.Type, StringComparer.Ordinal);
+        HashSet<string> menuNames = fieldTypes
+            .Where(field => field.Value.EndsWith("ToolStripMenuItem", StringComparison.Ordinal)
+                || field.Value.EndsWith("ContextMenuStrip", StringComparison.Ordinal)
+                || field.Value.EndsWith("MenuItem", StringComparison.Ordinal)
+                || field.Value.EndsWith("ContextMenu", StringComparison.Ordinal))
+            .Select(field => field.Key)
             .ToHashSet(StringComparer.Ordinal);
 
-        foreach (InvocationExpressionSyntax invocation in declaration.DescendantNodes().OfType<InvocationExpressionSyntax>())
+        foreach (InvocationExpressionSyntax invocation in declaration
+                     .DescendantNodes(node => node == declaration || node is not TypeDeclarationSyntax)
+                     .OfType<InvocationExpressionSyntax>())
         {
             if (invocation.Expression is not MemberAccessExpressionSyntax call
                 || call.Expression is not MemberAccessExpressionSyntax collection
@@ -634,7 +638,11 @@ internal static class SourceInventoryReader
                     Parent = parent,
                     Order = index,
                     Name = child,
-                    Kind = child.Contains("separator", StringComparison.OrdinalIgnoreCase) ? "separator" : "item"
+                    Kind = fieldTypes.TryGetValue(child, out string? childType)
+                        && (childType.EndsWith("ToolStripSeparator", StringComparison.Ordinal)
+                            || childType.EndsWith("Separator", StringComparison.Ordinal))
+                            ? "separator"
+                            : "item"
                 });
             }
         }

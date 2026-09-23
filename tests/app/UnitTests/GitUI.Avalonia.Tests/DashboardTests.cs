@@ -14,6 +14,7 @@ using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.Compat;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using WinFormsControls = GitUI.Compat.WinFormsControls;
 
 namespace GitExtensionsTests;
 
@@ -246,22 +247,27 @@ public sealed class DashboardTests
             "mnuConfigure",
             "Text",
             "Recent repositories &settings");
+        repositoryTranslation.Received(1).AddTranslationItem(
+            nameof(UserRepositoriesList), "clmhdrPath", "Text", "Path");
+        repositoryTranslation.Received(1).AddTranslationItem(
+            nameof(UserRepositoriesList), "clmhdrBranch", "Text", "Branch");
+        repositoryTranslation.Received(1).AddTranslationItem(
+            nameof(UserRepositoriesList), "clmhdrCategory", "Text", "Category");
     }
 
     [AvaloniaTest]
     [Category("P4.5")]
-    public void Dashboard_repository_settings_button_should_raise_the_host_request()
+    public void Dashboard_repository_settings_should_remain_a_source_owned_menu_item()
     {
         Dashboard dashboard = new();
         RepositoryHistorySnapshot snapshot = new([], []);
         dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
-        bool requested = false;
-        dashboard.ConfigureRepositoriesRequested += (_, _) => requested = true;
 
-        dashboard.GetTestAccessor().Repositories.GetTestAccessor().Configure.RaiseEvent(
-            new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+        MenuItem configure = dashboard.GetTestAccessor().Repositories.GetTestAccessor().Configure;
 
-        requested.Should().BeTrue();
+        configure.Header.Should().Be("Recent repositories _settings");
+        dashboard.GetVisualDescendants().OfType<Button>()
+            .Should().NotContain(button => button.Name == "mnuConfigure");
     }
 
     [AvaloniaTest]
@@ -326,6 +332,23 @@ public sealed class DashboardTests
         DashboardTheme.Light.StartBackColor.Should().Be(Avalonia.Media.Color.FromRgb(219, 235, 248));
         DashboardTheme.Light.ContributeBackColor.Should().Be(Avalonia.Media.Color.FromRgb(230, 241, 250));
         DashboardTheme.Light.SearchBackColor.Should().Be(Avalonia.Media.Color.FromRgb(248, 248, 255));
+    }
+
+    [AvaloniaTest]
+    [Category("P4.5")]
+    public void Dashboard_layout_should_use_designer_authored_96_dpi_metrics()
+    {
+        Dashboard dashboard = new();
+        WinFormsControls.TableLayoutPanel layout = dashboard.FindControl<WinFormsControls.TableLayoutPanel>("tableLayoutPanel1")!;
+        WinFormsControls.Panel logo = dashboard.FindControl<WinFormsControls.Panel>("pnlLogo")!;
+
+        layout.ColumnDefinitions.Should().HaveCount(4);
+        layout.ColumnDefinitions[0].Width.Value.Should().BeApproximately(7.142857, 0.000001);
+        layout.ColumnDefinitions[1].Width.Should().Be(new GridLength(213));
+        layout.ColumnDefinitions[2].Width.Value.Should().BeApproximately(85.71428, 0.00001);
+        layout.ColumnDefinitions[3].Width.Value.Should().BeApproximately(7.142857, 0.000001);
+        logo.Padding.Should().Be(new Avalonia.Thickness(20, 0, 20, 14));
+        dashboard.GetTestAccessor().Repositories.HeaderHeight.Should().Be(68);
     }
 
     [Test]
