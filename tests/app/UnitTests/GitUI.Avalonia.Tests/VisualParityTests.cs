@@ -12,6 +12,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.ParityCapture;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -294,6 +295,7 @@ public sealed class VisualParityTests
                 Menu menu = form.FindControl<Menu>("mainMenuStrip")
                     ?? throw new InvalidOperationException("The main menu was not created.");
                 menu.Bounds.Height.Should().Be(27);
+                GetColor(menu.Background).Should().Be(GetColor(form.Background));
                 MenuItem[] visibleMenuItems = menu.Items.Cast<MenuItem>().Where(item => item.IsVisible).ToArray();
                 visibleMenuItems.Should().OnlyContain(item => item.Bounds.Height == 19);
                 Rect[] closedMenuItemBounds = visibleMenuItems.Select(item => item.Bounds).ToArray();
@@ -335,6 +337,56 @@ public sealed class VisualParityTests
         form.Height.Should().Be(573);
         form.MinWidth.Should().Be(0);
         form.MinHeight.Should().Be(0);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_tab_strip_should_paint_its_header_and_pages_like_the_native_tabs()
+    {
+        foreach ((ThemeVariant theme, Color header, Color selected, Color unselected) in new[]
+        {
+            (ThemeVariant.Light, Color.Parse("#FFFFFF"), Color.Parse("#F9F9F9"), Color.Parse("#F3F3F3")),
+            (ThemeVariant.Dark, Color.Parse("#323232"), Color.Parse("#323232"), Color.Parse("#3B3B3B")),
+        })
+        {
+            FormBrowse form = new()
+            {
+                Width = 923,
+                Height = 573,
+                RequestedThemeVariant = theme,
+            };
+            form.Show();
+            try
+            {
+                Dispatcher.UIThread.RunJobs();
+                ItemsPresenter headerItems = form.CommitInfoTabControl.GetVisualDescendants()
+                    .OfType<ItemsPresenter>()
+                    .Single(presenter => presenter.Name == "PART_ItemsPresenter");
+                GetColor(((Border)headerItems.Parent!).Background).Should().Be(header);
+                ContentPresenter contentHost = form.CommitInfoTabControl.GetVisualDescendants()
+                    .OfType<ContentPresenter>()
+                    .Single(presenter => presenter.Name == "PART_SelectedContentHost");
+                contentHost.TranslatePoint(default, form.CommitInfoTabControl)!.Value.Y.Should().Be(29);
+                if (OperatingSystem.IsWindows())
+                {
+                    // The reference screenshot uses Windows' Segoe UI glyph metrics.
+                    form.CommitInfoTabPage.Bounds.Width.Should().BeApproximately(88, 0.5);
+                }
+
+                Border selectedPage = form.CommitInfoTabPage.GetVisualDescendants()
+                    .OfType<Border>()
+                    .Single(border => border.Name == "PART_LayoutRoot");
+                Border unselectedPage = form.DiffTabPage.GetVisualDescendants()
+                    .OfType<Border>()
+                    .Single(border => border.Name == "PART_LayoutRoot");
+                GetColor(selectedPage.Background).Should().Be(selected);
+                GetColor(unselectedPage.Background).Should().Be(unselected);
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
     }
 
     [AvaloniaTest]
@@ -633,6 +685,16 @@ public sealed class VisualParityTests
             {
                 popupHost.Bounds.Width.Should().Be(199);
             }
+
+            CaptureSurface capturedPopup = new AvaloniaControlTreeReader(window, renderScale: 1)
+                .ReadSurface(
+                    (Control)popupHost,
+                    "popup:0",
+                    new PixelRect(5, 23, (int)popupHost.Bounds.Width, (int)popupHost.Bounds.Height));
+            capturedPopup.Root.BoundsDip.Width.Should().Be((decimal)popupHost.Bounds.Width);
+            capturedPopup.Root.BoundsDip.Height.Should().Be((decimal)popupHost.Bounds.Height);
+            capturedPopup.Root.ClientSizeDip.Width.Should().Be((decimal)popupHost.Bounds.Width);
+            capturedPopup.Root.ClientSizeDip.Height.Should().Be((decimal)popupHost.Bounds.Height);
 
             ScrollViewer popupScroller = popupHost.GetVisualDescendants().OfType<ScrollViewer>().Single();
             popupScroller.Margin.Should().Be(new Thickness(0, 1));

@@ -10,19 +10,11 @@
         xmlns:wf="using:GitUI.Compat.WinFormsControls"
         xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.FormBrowse"
+        Classes="gitextensions-browse-window"
         Width="923" Height="573"
         Title="Git Extensions"
         Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
   <Window.Styles>
-    <!-- ControlDpiExtensions sets native tab-header padding to (8, 6) at 96 DPI.
-         Avalonia TabItem.Padding belongs to the header, not the WinForms TabPage content.
-         Measure the header from its font and 16-DIP image instead of fixing its height. -->
-    <Style Selector="TabItem.gitextensions-workspace-tab">
-      <Setter Property="Height" Value="NaN" />
-      <Setter Property="MinHeight" Value="0" />
-      <Setter Property="Padding" Value="8,6" />
-      <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
-    </Style>
     <!-- The source ToolStrip lays out FormBrowse buttons at 22 DIPs high and reserves
          the native image-button widths inside its 25-DIP toolbar row. -->
     <Style Selector="Button.gitextensions-toolbar-button,
@@ -68,7 +60,10 @@
     </Style>
   </Window.Styles>
   <DockPanel>
-    <wf:MenuStripEx x:Name="mainMenuStrip" DockPanel.Dock="Top" Height="27">
+    <wf:MenuStripEx x:Name="mainMenuStrip"
+                    DockPanel.Dock="Top"
+                    Height="27"
+                    Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
       <menus:StartToolStripMenuItem x:Name="fileToolStripMenuItem" />
       <wf:ToolStripMenuItem x:Name="dashboardToolStripMenuItem" Header="_Dashboard">
         <wf:ToolStripMenuItem x:Name="refreshDashboardToolStripMenuItem" Header="_Refresh">

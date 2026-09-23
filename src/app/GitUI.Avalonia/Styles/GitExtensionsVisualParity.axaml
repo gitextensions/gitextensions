@@ -289,6 +289,8 @@
           <SolidColorBrush x:Key="GitExtensionsNativeTabBorderBrush" Color="#D9D9D9" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabSelectedBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabUnselectedBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsBrowseTabSelectedBackgroundBrush" Color="#F9F9F9" />
+          <SolidColorBrush x:Key="GitExtensionsBrowseTabUnselectedBackgroundBrush" Color="#F3F3F3" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabPageBackgroundBrush" Color="Transparent" />
           <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#FDFDFD" />
@@ -425,6 +427,8 @@
           <SolidColorBrush x:Key="GitExtensionsNativeTabBorderBrush" Color="#4A4A4A" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabSelectedBackgroundBrush" Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabUnselectedBackgroundBrush" Color="#202020" />
+          <SolidColorBrush x:Key="GitExtensionsBrowseTabSelectedBackgroundBrush" Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsBrowseTabUnselectedBackgroundBrush" Color="#3B3B3B" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabPageBackgroundBrush" Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#2F2F2F" />
@@ -910,6 +914,57 @@
         </StackPanel>
       </DataTemplate>
     </Setter>
+  </Style>
+  <!-- FormBrowse's native TabControl paints the unused header strip with Window despite
+       its Control BackColor. Its 96-DPI display rectangle begins 29 DIPs below the header.
+       Scope these template parts to FormBrowse: File History shares the tab class. -->
+  <Style Selector="Window.gitextensions-browse-window TabControl.gitextensions-workspace-tabs">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel>
+          <Border DockPanel.Dock="Top"
+                  Margin="0,0,0,-2"
+                  Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
+            <ItemsPresenter x:Name="PART_ItemsPresenter"
+                            ItemsPanel="{TemplateBinding ItemsPanel}" />
+          </Border>
+          <ContentPresenter x:Name="PART_SelectedContentHost"
+                            Content="{TemplateBinding SelectedContent}"
+                            ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <!-- Keep ControlDpiExtensions' source TabItem padding (8,6). The template consumes one
+       less vertical DIP per edge and overlaps the content by two DIPs to match native paint. -->
+  <Style Selector="Window.gitextensions-browse-window TabItem.gitextensions-workspace-tab">
+    <Setter Property="Height" Value="NaN" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="8,6" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border x:Name="PART_LayoutRoot"
+                Margin="0,2,0,0"
+                Padding="8,5"
+                BorderBrush="{DynamicResource GitExtensionsNativeTabBorderBrush}"
+                BorderThickness="1,1,1,0"
+                Background="{DynamicResource GitExtensionsBrowseTabUnselectedBackgroundBrush}">
+          <ContentPresenter x:Name="PART_ContentPresenter"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                            RecognizesAccessKey="True" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Window.gitextensions-browse-window TabItem.gitextensions-workspace-tab:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Margin" Value="0" />
+    <!-- Native selected headers reserve four more pixels on each side of their caption. -->
+    <Setter Property="Padding" Value="12,5" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsBrowseTabSelectedBackgroundBrush}" />
   </Style>
   <Style Selector="TabItem.gitextensions-dialog-tab">
     <Setter Property="Height" Value="27" />
