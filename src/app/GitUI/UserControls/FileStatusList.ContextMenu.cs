@@ -946,13 +946,47 @@ partial class FileStatusList
         ResetSelectedItemsWithConfirmation(resetToParent: sender == tsmiResetFileToParent);
     }
 
+    /// <summary>
+    ///  Checks whether resetting any of the items could delete a file from the working directory,
+    ///  i.e. whether offering the option to delete new files can have any effect.
+    /// </summary>
+    /// <param name="items">The items which are about to be reset.</param>
+    /// <param name="fullPathResolver">Resolves the working directory path of an item.</param>
+    /// <returns><see langword="true"/> if a file which may be deleted exists; otherwise <see langword="false"/>.</returns>
+    internal static bool HasFilesWhichMayBeDeleted(IReadOnlyList<FileStatusItem> items, IFullPathResolver fullPathResolver)
+    {
+        // A changed file is never deleted, and nothing can be deleted for a path which does not exist
+        // in the working directory, e.g. when restoring a file deleted in the selected revision.
+        // The name of a rename is inverted when resetting to the selected revision, so check both names.
+        foreach (FileStatusItem item in items)
+        {
+            if (item.Item.IsChanged)
+            {
+                continue;
+            }
+
+            if (PathExists(item.Item.Name) || (item.Item.OldName is string oldName && PathExists(oldName)))
+            {
+                return true;
+            }
+        }
+
+        return false;
+
+        bool PathExists(string name)
+        {
+            string? path = fullPathResolver.Resolve(name);
+            return File.Exists(path) || Directory.Exists(path);
+        }
+    }
+
     public void ResetSelectedItemsWithConfirmation(bool resetToParent)
     {
         FileStatusItem[] items = [.. SelectedItems];
 
         // The "new" state could change when resetting, allow user to tick the checkbox.
         // If there are only changed files, it is safe to disable the checkboc (also for restting to selected).
-        bool hasNewFiles = !items.All(item => item.Item.IsChanged);
+        bool hasNewFiles = HasFilesWhichMayBeDeleted(items, _fullPathResolver);
         bool hasExistingFiles = items.Any(item => !(item.Item.IsUncommittedAdded || IsRenamedIndexItem(item)));
 
         string revDescription = resetToParent
