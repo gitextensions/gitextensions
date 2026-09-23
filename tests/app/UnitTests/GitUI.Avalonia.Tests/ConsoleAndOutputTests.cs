@@ -267,6 +267,7 @@ public sealed class ConsoleAndOutputTests
         ServiceContainer serviceContainer = new();
         GitExtUtils.ServiceContainerRegistry.RegisterServices(serviceContainer);
         serviceContainer.AddService<IGitExecutorProvider>(Substitute.For<IGitExecutorProvider>());
+        serviceContainer.AddService<ILinkFactory>(Substitute.For<ILinkFactory>());
         GitUI.ServiceContainerRegistry.RegisterServices(serviceContainer);
         return serviceContainer;
     }

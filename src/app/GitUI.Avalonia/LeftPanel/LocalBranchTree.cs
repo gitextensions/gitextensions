@@ -13,6 +13,6 @@ internal sealed class LocalBranchTree : BaseRefTree
             (parent, path, gitRef, _) => gitRef is null
                 ? new BranchPathNode(this, parent, path)
                 : new LocalBranchNode(this, parent, gitRef, path == currentBranch));
-        Complete(TranslatedStrings.Branches, Images.BranchLocalRoot, branches.Count, expanded: true);
+        Complete(TranslatedStrings.Branches, Images.BranchLocalRoot, expanded: true);
     }
 }

@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Remotes;
 using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
@@ -62,8 +62,7 @@ internal sealed class RemoteBranchTree : BaseRefTree
             AddChild(inactive);
         }
 
-        int itemCount = branches.Count + emptyRemotes.Length + (disabledRemotes?.Count ?? 0);
-        Complete(TranslatedStrings.Remotes, Images.BranchRemoteRoot, itemCount, expanded: true);
+        Complete(TranslatedStrings.Remotes, Images.BranchRemoteRoot, expanded: true);
     }
 
     public void PopupManageRemotesForm(string? remoteName)

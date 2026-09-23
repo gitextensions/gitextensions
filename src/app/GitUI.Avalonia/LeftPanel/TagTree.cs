@@ -13,6 +13,6 @@ internal sealed class TagTree : BaseRefTree
             (parent, path, gitRef, _) => gitRef is null
                 ? new BasePathNode(this, parent, path)
                 : new TagNode(this, parent, gitRef));
-        Complete(TranslatedStrings.Tags, Images.TagHorizontal, tags.Count, expanded: false);
+        Complete(TranslatedStrings.Tags, Images.TagHorizontal, expanded: false);
     }
 }

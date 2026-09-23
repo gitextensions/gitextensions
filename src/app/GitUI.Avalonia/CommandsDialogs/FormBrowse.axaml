@@ -14,6 +14,15 @@
         Title="Git Extensions"
         Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
   <Window.Styles>
+    <!-- ControlDpiExtensions sets native tab-header padding to (8, 6) at 96 DPI.
+         Avalonia TabItem.Padding belongs to the header, not the WinForms TabPage content.
+         Measure the header from its font and 16-DIP image instead of fixing its height. -->
+    <Style Selector="TabItem.gitextensions-workspace-tab">
+      <Setter Property="Height" Value="NaN" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="Padding" Value="8,6" />
+      <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    </Style>
     <!-- The source ToolStrip lays out FormBrowse buttons at 22 DIPs high and reserves
          the native image-button widths inside its 25-DIP toolbar row. -->
     <Style Selector="Button.gitextensions-toolbar-button,
@@ -469,7 +478,6 @@
                                               Classes="gitextensions-workspace-tabs">
           <wf:TabPage x:Name="CommitInfoTabPage"
                    Classes="gitextensions-workspace-tab"
-                   Padding="0"
                    Header="Commit"
                    Icon="{x:Static properties:Images.CommitSummary}">
             <Border x:Name="commitInfoBelowHost" Classes="gitextensions-section">
@@ -479,21 +487,18 @@
           </wf:TabPage>
           <wf:TabPage x:Name="DiffTabPage"
                    Classes="gitextensions-workspace-tab"
-                   Padding="0"
                    Header="Diff"
                    Icon="{x:Static properties:Images.Diff}">
             <commandsDialogs:RevisionDiffControl x:Name="revisionDiff" />
           </wf:TabPage>
           <wf:TabPage x:Name="TreeTabPage"
                    Classes="gitextensions-workspace-tab"
-                   Padding="0"
                    Header="File tree"
                    Icon="{x:Static properties:Images.FileTree}">
             <commandsDialogs:RevisionDiffControl x:Name="fileTree" />
           </wf:TabPage>
           <wf:TabPage x:Name="GpgInfoTabPage"
                    Classes="gitextensions-workspace-tab"
-                   Padding="0"
                    Header="GPG"
                    Icon="{x:Static properties:Images.Key}"
                    IsVisible="False">

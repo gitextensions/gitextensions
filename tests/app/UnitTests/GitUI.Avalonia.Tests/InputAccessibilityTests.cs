@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -51,7 +51,7 @@ public sealed class InputAccessibilityTests
                 Path.Combine(repositoryRoot, "src", "plugins", "Gource")),
         ]));
         WinFormsInputMetadata.ByType.Should().HaveCount(142);
-        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1516);
+        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1526);
         WinFormsInputMetadata.SourceByType.Should().ContainKey("GitUI.CommandsDialogs.FormBrowse");
         WinFormsInputMetadata.SourceByType["GitUI.CommandsDialogs.FormBrowse"]
             .Single(item => item.FieldName == "toolStripButtonPull")
@@ -296,13 +296,21 @@ public sealed class InputAccessibilityTests
     }
 
     [AvaloniaTest]
-    [TestCase(Key.Apps, RawInputModifiers.None)]
-    [TestCase(Key.F10, RawInputModifiers.Shift)]
-    public void Context_menu_keys_should_open_the_focused_controls_menu(Key key, RawInputModifiers modifiers)
+    [TestCase(Key.Apps, RawInputModifiers.None, false)]
+    [TestCase(Key.F10, RawInputModifiers.Shift, false)]
+    [TestCase(Key.Apps, RawInputModifiers.None, true)]
+    [TestCase(Key.F10, RawInputModifiers.Shift, true)]
+    public void Context_menu_keys_should_open_the_focused_controls_menu(Key key, RawInputModifiers modifiers, bool cancel)
     {
         ListBox list = new() { Name = "lstItems", ItemsSource = new[] { "one", "two" }, SelectedIndex = 0 };
         ContextMenu menu = new() { ItemsSource = new[] { new MenuItem { Header = "Action" } } };
         list.ContextMenu = menu;
+        int openingCount = 0;
+        menu.Opening += (_, e) =>
+        {
+            openingCount++;
+            e.Cancel = cancel;
+        };
         Window window = new() { Width = 240, Height = 120, Content = list };
         InputAccessibility.Apply(window);
         window.Show();
@@ -312,9 +320,11 @@ public sealed class InputAccessibilityTests
             item.Focus(NavigationMethod.Tab).Should().BeTrue();
 
             window.KeyPress(key, modifiers, key == Key.Apps ? PhysicalKey.ContextMenu : PhysicalKey.F10, keySymbol: null);
+            window.KeyRelease(key, modifiers, key == Key.Apps ? PhysicalKey.ContextMenu : PhysicalKey.F10, keySymbol: null);
             Dispatcher.UIThread.RunJobs();
 
-            menu.IsOpen.Should().BeTrue();
+            openingCount.Should().Be(1);
+            menu.IsOpen.Should().Be(!cancel);
         }
         finally
         {

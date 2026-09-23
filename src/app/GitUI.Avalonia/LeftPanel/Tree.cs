@@ -42,9 +42,9 @@ internal abstract class Tree : NodeBase
         set => Owner.SetTreeVisibility(Kind, value);
     }
 
-    protected void Complete(string caption, Avalonia.Media.IImage icon, int count, bool expanded)
+    protected void Complete(string caption, Avalonia.Media.IImage icon, bool expanded)
     {
-        SetHeader($"{caption} ({count})", icon);
+        SetHeader(caption, icon);
         TreeViewNode.IsExpanded = expanded;
     }
 }

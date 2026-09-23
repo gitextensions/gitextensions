@@ -223,6 +223,7 @@ public sealed class TerminalLauncherTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         IUserRepositoriesListController repositoriesController = Substitute.For<IUserRepositoriesListController>();
         repositoriesController.PreRenderRepositories(Arg.Any<string>()).Returns((
             Array.Empty<RecentRepoInfo>(),

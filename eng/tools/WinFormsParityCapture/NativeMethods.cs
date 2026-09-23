@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 
 namespace WinFormsParityCapture;
 
@@ -56,6 +56,9 @@ internal static partial class NativeMethods
     }
 
     internal static Rectangle GetComboBoxListRectangle(IntPtr handle)
+        => GetWindowRectangle(GetComboBoxListHandle(handle));
+
+    internal static IntPtr GetComboBoxListHandle(IntPtr handle)
     {
         ComboBoxInfo info = new() { Size = Marshal.SizeOf<ComboBoxInfo>() };
         if (!GetComboBoxInfo(handle, ref info) || info.ListHandle == IntPtr.Zero)
@@ -63,7 +66,22 @@ internal static partial class NativeMethods
             throw new InvalidOperationException("GetComboBoxInfo did not expose the native list window.");
         }
 
-        return GetWindowRectangle(info.ListHandle);
+        return info.ListHandle;
+    }
+
+    internal static bool IsUnoccluded(IntPtr target, Rectangle bounds, IReadOnlySet<IntPtr> capturedWindows)
+    {
+        const uint gwHwndPrev = 3;
+        for (IntPtr above = GetWindow(target, gwHwndPrev); above != IntPtr.Zero; above = GetWindow(above, gwHwndPrev))
+        {
+            if (!capturedWindows.Contains(above) && IsWindowVisible(above) && !IsIconic(above)
+                && GetWindowRectangle(above).IntersectsWith(bounds))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     internal static bool PrintWindowContent(IntPtr handle, IntPtr deviceContext) =>
@@ -236,6 +254,14 @@ internal static partial class NativeMethods
 
     [LibraryImport("user32.dll")]
     private static partial IntPtr GetWindow(IntPtr window, uint command);
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool IsWindowVisible(IntPtr window);
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool IsIconic(IntPtr window);
 
     [LibraryImport("user32.dll")]
     private static partial IntPtr MonitorFromWindow(IntPtr window, int flags);

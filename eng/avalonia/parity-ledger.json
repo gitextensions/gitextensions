@@ -2611,7 +2611,7 @@
           ],
           "platforms": ["windows"],
           "findingCount": 81,
-          "note": "The complete cloned Navigate/View inventories preserve RevisionGrid-owned names, icons, separators, shortcuts, checks, enabled state, visibility, group headings, nested actions, and the measured shared-column/separator metrics. The fresh source inventory retains 81 findings, so this axis stays partial."
+          "note": "The complete cloned Navigate/View inventories preserve RevisionGrid-owned names, icons, separators, shortcuts, checks, enabled state, visibility, group headings, nested actions, and the measured shared-column/separator metrics. The fresh source inventory retains 81 findings, so this axis stays partial. Worktree update 2026-09-22 (uncommitted, based on 99b182cbd): Navigate/View now register shared MenuCommand instances rather than clone controls. Toolbar visibility persists original branch/text filter groups, updates separators, and keeps toggle menus open. Complete visual/state coverage remains open. Focused Windows and WSL regression evidence is under eng/avalonia/parity-evidence/P8.6i/application-shell-126/. Existing axis status is not promoted: full paired captures and platform/state verification have not been completed."
         },
         "visual": {
           "status": "notApplicable",
@@ -3407,7 +3407,7 @@
           ],
           "platforms": [],
           "findingCount": 152,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences. Worktree update 2026-09-22 (uncommitted, based on 99b182cbd): Disposal detaches repository/checkout notifications and ignores late refresh requests before touching disposed cancellation state. Focused Windows and WSL regression evidence is under eng/avalonia/parity-evidence/P8.6i/application-shell-126/. Existing axis status is not promoted: full paired captures and platform/state verification have not been completed."
         },
         "visual": {
           "status": "notApplicable",
@@ -4743,7 +4743,7 @@
           ],
           "platforms": [],
           "findingCount": 1517,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences. Worktree update 2026-09-22 (uncommitted, based on 99b182cbd): Uses the browse-owned app-title generator at the original service boundary. Focused Windows and WSL regression evidence is under eng/avalonia/parity-evidence/P8.6i/application-shell-126/. Existing axis status is not promoted: full paired captures and platform/state verification have not been completed."
         },
         "visual": {
           "status": "notApplicable",
@@ -4878,7 +4878,7 @@
           ],
           "platforms": ["windows", "linux"],
           "findingCount": 281,
-          "note": "The Windows/Linux affected gate covers the restored PuTTY command family, source-named dynamic pull defaults and exact ordering, fetch-default settings, input metadata, and capture fixtures. The 281 total source differences and exhaustive live command/error/persistence audit remain open."
+          "note": "The Windows/Linux affected gate covers the restored PuTTY command family, source-named dynamic pull defaults and exact ordering, fetch-default settings, input metadata, and capture fixtures. The 281 total source differences and exhaustive live command/error/persistence audit remain open. Worktree update 2026-09-22 (uncommitted, based on 99b182cbd): Restores browse command-owner transitions, activation refresh, quick-command/file-pane hotkey dispatch, two-selection rebase defaults, shared menu-command registration, and fresh branch/worktree menus. Runtime and complete paired state/capture parity remain open. Focused Windows and WSL regression evidence is under eng/avalonia/parity-evidence/P8.6i/application-shell-126/. Existing axis status is not promoted: full paired captures and platform/state verification have not been completed."
         },
         "visual": {
           "status": "gap",
@@ -10186,7 +10186,7 @@
           ],
           "platforms": [],
           "findingCount": 192,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences. Worktree update 2026-09-22 (uncommitted, based on 99b182cbd): Initializes and reloads the embedded file-list/viewer hotkeys and routes downstream browse keys. This is a dependency repair for the application shell, not completion of the editor tranche; range-diff path-filter consumption and other original differences remain open. Focused Windows and WSL regression evidence is under eng/avalonia/parity-evidence/P8.6i/application-shell-126/. Existing axis status is not promoted: full paired captures and platform/state verification have not been completed."
         },
         "visual": {
           "status": "unverified",
@@ -16893,10 +16893,13 @@
           "status": "unverified",
           "verifiedOn": "2026-08-05",
           "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/tests/windows-browse-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/tests/linux-browse-final.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "visual layout has not been captured for this mapped view Progress126 keeps the original non-overlay scrolling contract: overflowing commit details reserve scrollbar space instead of covering the content. Windows and WSL regression coverage passes; whole-component visual/state closure remains open."
         },
         "themingAndColor": {
           "status": "unverified",
@@ -20249,11 +20252,13 @@
           "verifiedOn": "2026-08-05",
           "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/tests/windows-browse-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/tests/linux-browse-final.trx"
           ],
           "platforms": [],
           "findingCount": 25,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences. Progress126 fixes cached physical restore bounds being saved with a different DPI after a monitor-scale transition; normal and maximized windows reopen at the original logical size. Six DPI restore cases pass on Windows and WSL. This is a required browse dependency, not closure of all base-window parity."
         },
         "visual": {
           "status": "notApplicable",
@@ -20319,7 +20324,7 @@
           ],
           "platforms": [],
           "findingCount": 39,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences. Worktree update 2026-09-22 (uncommitted, based on 99b182cbd): Lazy ancestor discovery now invokes the original command-source setter contract, firing initialization exactly once and preserving repository-change subscriptions. Focused Windows and WSL regression evidence is under eng/avalonia/parity-evidence/P8.6i/application-shell-126/. Existing axis status is not promoted: full paired captures and platform/state verification have not been completed."
         },
         "visual": {
           "status": "notApplicable",
@@ -23671,11 +23676,13 @@
           "verifiedOn": "2026-08-05",
           "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/tests/windows-browse-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/tests/linux-browse-final.trx"
           ],
           "platforms": [],
           "findingCount": 667,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences. Progress126 restores the original uncounted root captions and suppresses navigation callbacks while refs, worktrees, or submodules are rebuilt, preserving selection and expansion. Nested refresh failures restore notifications. Windows and WSL regression coverage passes; remaining source/state/visual findings remain open."
         },
         "visual": {
           "status": "unverified",
@@ -31007,7 +31014,7 @@
           ],
           "platforms": [],
           "findingCount": 337,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences. Worktree update 2026-09-22 (uncommitted, based on 99b182cbd): Restores the original Branch filter/Text filter group tags so toolbar visibility applies to each complete group. Focused Windows and WSL regression evidence is under eng/avalonia/parity-evidence/P8.6i/application-shell-126/. Existing axis status is not promoted: full paired captures and platform/state verification have not been completed."
         },
         "visual": {
           "status": "unverified",
@@ -35221,7 +35228,7 @@
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 921,
-          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture readers expose the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Recycled rows resolve the original selected, authored, alternating and panel-background precedence at the row boundary. Reload carries a pending focus request through the loading page and focuses the native ListBox once it is displayed; the owning FormBrowse focus command targets that inner list directly. Final-order replacement retains the primary and multi-selection by revision identity, scrolls the primary row into view, and restores focus only when the grid owned it before Avalonia reset the collection. Modifier-only or unsupported input no longer reaches its first unassigned command. The source-shape sweep maps the actual native popup tree to the original ContextMenuStrip, ToolStripMenuItem, and ToolStripSeparator identities and restores the source handler signatures. The menu closure restores the omitted original remote-branch delete group, separator and StartDeleteRemoteBranchDialog route. The fresh scoped inventory remains at 921 known source-shape findings, including deliberate Avalonia focus-lifecycle members, and the broader exhaustive behavior audit remains open."
+          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture readers expose the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Recycled rows resolve the original selected, authored, alternating and panel-background precedence at the row boundary. Reload carries a pending focus request through the loading page and focuses the native ListBox once it is displayed; the owning FormBrowse focus command targets that inner list directly. Final-order replacement retains the primary and multi-selection by revision identity, scrolls the primary row into view, and restores focus only when the grid owned it before Avalonia reset the collection. Modifier-only or unsupported input no longer reaches its first unassigned command. The source-shape sweep maps the actual native popup tree to the original ContextMenuStrip, ToolStripMenuItem, and ToolStripSeparator identities and restores the source handler signatures. The menu closure restores the omitted original remote-branch delete group, separator and StartDeleteRemoteBranchDialog route. The fresh scoped inventory remains at 921 known source-shape findings, including deliberate Avalonia focus-lifecycle members, and the broader exhaustive behavior audit remains open. Worktree update 2026-09-22 (uncommitted, based on 99b182cbd): Restores ref-focused context menus and advanced grouping, single-child menu actions, bounded untracked-stash rows, and WorkTree/Index/HEAD cycling with clean-row skipping. Keeps native popup anchors stable during asynchronous row refresh and repaints author highlighting without recycling pressed labels. The affected selection passes 166 tests on Windows and WSL; evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/tests/{windows,linux}-batch-2-final.trx. Full source, visual/state and platform closure remains open; no axis is promoted."
         },
         "visual": {
           "status": "partial",

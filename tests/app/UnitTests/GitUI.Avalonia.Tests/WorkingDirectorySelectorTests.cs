@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
@@ -36,7 +36,7 @@ public sealed class WorkingDirectorySelectorTests
 
         selector.Icon.Should().BeSameAs(GitUI.Properties.Images.RepoOpen);
         selector.Flyout.Should().BeOfType<MenuFlyout>();
-        selector.Height.Should().Be(23);
+        selector.Height.Should().Be(22, "the original 96-DPI Designer specifies a 22-pixel toolbar item");
     }
 
     [AvaloniaTest]
