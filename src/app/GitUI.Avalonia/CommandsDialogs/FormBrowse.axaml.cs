@@ -365,11 +365,43 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private void InitializeToolbarOverflow()
     {
         toolStripMainOverflow.Click += (_, _) => ToggleToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
-        toolStripFiltersOverflow.Click += (_, _) => ToggleToolbarOverflow(ToolStripFilters, toolStripFiltersViewport, toolStripFiltersOverflow);
         toolStripMainViewport.SizeChanged += (_, _) => UpdateToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
-        toolStripFiltersViewport.SizeChanged += (_, _) => UpdateToolbarOverflow(ToolStripFilters, toolStripFiltersViewport, toolStripFiltersOverflow);
         ToolStripMain.LayoutUpdated += (_, _) => UpdateToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
-        ToolStripFilters.LayoutUpdated += (_, _) => UpdateToolbarOverflow(ToolStripFilters, toolStripFiltersViewport, toolStripFiltersOverflow);
+
+        // The 50-pixel source FilterToolBar moves every item into ToolStrip's overflow
+        // dropdown. Keep the same control instances and handlers by moving the toolbar into
+        // an Avalonia flyout while it is open, then restore its closed, non-rendered layout.
+        StackPanel filterItems = (StackPanel)ToolStripFilters.Content!;
+        Flyout filterOverflow = new() { Placement = PlacementMode.BottomEdgeAlignedRight };
+        filterOverflow.FlyoutPresenterClasses.Add("gitextensions-toolstrip-flyout");
+        Border filterOverflowHost = new();
+        filterOverflowHost.Classes.Add("gitextensions-toolstrip-overflow-host");
+        toolStripFiltersOverflow.Tag = filterOverflow;
+        void RestoreFilterToolbar()
+        {
+            filterOverflow.Content = null;
+            filterOverflowHost.Child = null;
+            filterItems.Orientation = Avalonia.Layout.Orientation.Horizontal;
+            filterItems.Height = 25;
+            filterItems.Opacity = 0;
+            filterItems.IsHitTestVisible = false;
+            toolStripFiltersViewport.Content = ToolStripFilters;
+        }
+
+        toolStripFiltersOverflow.IsVisible = true;
+        toolStripFiltersOverflow.Click += (_, _) =>
+        {
+            toolStripFiltersViewport.Content = null;
+            filterItems.Orientation = Avalonia.Layout.Orientation.Vertical;
+            filterItems.Height = double.NaN;
+            filterItems.Opacity = 1;
+            filterItems.IsHitTestVisible = true;
+            filterOverflowHost.Child = ToolStripFilters;
+            filterOverflow.Content = filterOverflowHost;
+            filterOverflow.ShowAt(toolStripFiltersOverflow);
+        };
+        filterOverflow.Closed += (_, _) => RestoreFilterToolbar();
+        RestoreFilterToolbar();
     }
 
     private static void UpdateToolbarOverflow(Control content, ScrollViewer viewport, Button overflowButton)

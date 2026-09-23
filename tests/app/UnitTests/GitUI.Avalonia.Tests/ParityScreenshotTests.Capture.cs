@@ -588,6 +588,23 @@ public sealed partial class ParityScreenshotTests
 
     [AvaloniaTest]
     [Category(P02Category)]
+    public void Avalonia_tree_reader_should_treat_controls_under_a_transparent_overflow_host_as_not_visible()
+    {
+        Button overflowItem = new() { Name = "tsbtnAdvancedFilter", Content = "Advanced filter" };
+        StackPanel overflowHost = new() { Opacity = 0, Children = { overflowItem } };
+        Window window = new() { Width = 200, Height = 80, Content = overflowHost };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureSurface surface = new AvaloniaControlTreeReader(window, renderScale: 1)
+            .ReadPrimary(window, new PixelSize(200, 80));
+
+        Flatten(surface.Root).Single(node => node.FieldName == overflowItem.Name).Visible.Should().BeFalse();
+        window.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
     [Category("P8.6h.3b.2b.2b.2b.5")]
     public void Avalonia_tree_reader_should_emit_revision_grid_layout_and_effective_state_semantics()
     {
