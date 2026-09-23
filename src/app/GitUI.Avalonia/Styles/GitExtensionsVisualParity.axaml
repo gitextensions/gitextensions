@@ -268,6 +268,7 @@
                            Color="#A1A1A1" />
           <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
                            Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsXhtmlLinkForegroundBrush" Color="#0066CC" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorReadOnlyBackgroundBrush" Color="#F0F0F0" />
@@ -406,6 +407,7 @@
                            Color="#AAAA96" />
           <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
                            Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsXhtmlLinkForegroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#323232" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#2E2E2E" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorReadOnlyBackgroundBrush" Color="#2E2E2E" />
@@ -965,6 +967,10 @@
     <!-- Native selected headers reserve four more pixels on each side of their caption. -->
     <Setter Property="Padding" Value="12,5" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsBrowseTabSelectedBackgroundBrush}" />
+  </Style>
+  <!-- RichEdit's automatic link foreground follows the native theme, not Fluent's blue link palette. -->
+  <Style Selector="compat|XhtmlTextBlock HyperlinkButton">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsXhtmlLinkForegroundBrush}" />
   </Style>
   <Style Selector="TabItem.gitextensions-dialog-tab">
     <Setter Property="Height" Value="27" />
