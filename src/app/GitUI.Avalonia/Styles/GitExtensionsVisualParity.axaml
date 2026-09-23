@@ -1499,6 +1499,7 @@
       <ControlTemplate>
         <Border Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
           <Border Height="1"
+                  Margin="28,0,1,0"
                   VerticalAlignment="Center"
                   Background="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
         </Border>
@@ -1514,6 +1515,7 @@
       <ControlTemplate>
         <Border Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
           <Border Height="1"
+                  Margin="28,0,1,0"
                   VerticalAlignment="Center"
                   Background="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
         </Border>
@@ -1612,6 +1614,30 @@
   </Style>
   <Style Selector="MenuItem:pointerover">
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsHighlightForegroundBrush}" />
+  </Style>
+  <!-- ToolStripDropDownMenu reserves a wider image/check gutter than Fluent and keeps
+       shortcut and submenu glyphs against the right edge. These integer paint offsets are
+       measured from the native 96-DPI renderer; RenderTransform preserves the already exact
+       item and popup bounds. -->
+  <Style Selector="MenuItem /template/ ContentControl#PART_IconPresenter">
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="5" />
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="9" Y="-1" />
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem /template/ TextBlock#PART_InputGestureText">
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="-10" Y="-1" />
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem /template/ Path#PART_ChevronPath">
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="-7" />
+    </Setter>
   </Style>
   <Style Selector="MenuItem:disabled">
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
@@ -1712,6 +1738,12 @@
     <Setter Property="BorderThickness" Value="1,1,1,0" />
     <Setter Property="CornerRadius" Value="0" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+  </Style>
+  <Style Selector="Menu > MenuItem /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- Native MenuStrip text begins one pixel right and one pixel above Fluent's presenter. -->
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="1" Y="-1" />
+    </Setter>
   </Style>
   <Style Selector="Menu > MenuItem:selected /template/ Border#PART_LayoutRoot">
     <!-- WinForms joins an open top-level item visually to its dropdown. -->
