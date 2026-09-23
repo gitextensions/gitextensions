@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -50,14 +51,12 @@ internal sealed class AvaloniaControlTreeReader
     public CaptureSurface ReadSurface(Control root, string role, PixelRect screenBounds)
     {
         Control semanticRoot = GetSemanticSurfaceRoot(root);
-        bool isOverlayPopupHost = IsOverlayPopupHost(semanticRoot);
-        bool isComboBoxPopup = IsComboBoxPopup(semanticRoot);
         Rect? rootBoundsOverride = IsPopupSurface(semanticRoot)
             ? new Rect(
                 (screenBounds.X - _primaryScreenOrigin.X) / _renderScale,
                 (screenBounds.Y - _primaryScreenOrigin.Y) / _renderScale,
-                (screenBounds.Width / _renderScale) - (isOverlayPopupHost && !isComboBoxPopup ? 1 : 0),
-                (screenBounds.Height / _renderScale) + (isOverlayPopupHost && !isComboBoxPopup ? 2 : 0))
+                screenBounds.Width / _renderScale,
+                screenBounds.Height / _renderScale)
             : null;
         return new CaptureSurface
         {
@@ -4212,7 +4211,7 @@ internal sealed class AvaloniaControlTreeReader
             // parity-scaffolding: WinForms TabPage.Bounds is the native display rectangle,
             // while Avalonia's TabItem.Bounds describes only the clickable header.
             return owner.Classes.Contains("gitextensions-workspace-tabs")
-                ? new Rect(1, 29, Math.Max(0, owner.Bounds.Width - 2), Math.Max(0, owner.Bounds.Height - 30))
+                ? new Rect(1, GetWorkspaceTabContentTop(owner), Math.Max(0, owner.Bounds.Width - 2), Math.Max(0, owner.Bounds.Height - GetWorkspaceTabContentTop(owner) - 1))
                 : owner.Classes.Contains("gitextensions-full-bleed-tabs")
                     ? new Rect(1, 29, Math.Max(0, owner.Bounds.Width - 2), Math.Max(0, owner.Bounds.Height - 30))
                     : new Rect(4, 30, Math.Max(0, owner.Bounds.Width - 8), Math.Max(0, owner.Bounds.Height - 34));
@@ -4225,7 +4224,7 @@ internal sealed class AvaloniaControlTreeReader
             // parity-scaffolding: Product content is rendered through Avalonia's selected-content
             // presenter; report it relative to the emitted WinForms-shaped TabPage client.
             return tabOwner.Classes.Contains("gitextensions-workspace-tabs")
-                ? new Rect(pageChildOrigin.X - 1, pageChildOrigin.Y - 29, control.Bounds.Width, control.Bounds.Height)
+                ? new Rect(pageChildOrigin.X - 1, pageChildOrigin.Y - GetWorkspaceTabContentTop(tabOwner), control.Bounds.Width, control.Bounds.Height)
                 : tabOwner.Classes.Contains("gitextensions-full-bleed-tabs")
                     ? new Rect(pageChildOrigin.X - 1, pageChildOrigin.Y - 29, control.Bounds.Width, control.Bounds.Height)
                     : new Rect(pageChildOrigin.X - 4, pageChildOrigin.Y - 30, control.Bounds.Width, control.Bounds.Height);
@@ -4256,6 +4255,15 @@ internal sealed class AvaloniaControlTreeReader
         // parity-scaffolding: Logical menu children are rendered below Fluent presenter
         // wrappers. Report their position in the emitted semantic parent, like ToolStripItem.Bounds.
         return new Rect(origin, control.Bounds.Size);
+    }
+
+    private static double GetWorkspaceTabContentTop(TabControl owner)
+    {
+        ContentPresenter contentHost = owner.GetVisualDescendants()
+            .OfType<ContentPresenter>()
+            .Single(presenter => presenter.Name == "PART_SelectedContentHost");
+        return contentHost.TranslatePoint(default, owner)?.Y
+               ?? throw new InvalidOperationException("The workspace tab content host has no measured position.");
     }
 
     private bool IsDarkTheme()
