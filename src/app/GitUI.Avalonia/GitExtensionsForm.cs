@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using Avalonia;
 using Avalonia.Controls;
 using ResourceManager;
@@ -16,6 +16,7 @@ public class GitExtensionsForm : GitExtensionsFormBase
     private Func<bool> _supportsProgrammaticPositioning;
     private bool _needsPositionRestore;
     private Rectangle _restoreBounds;
+    private double _restoreBoundsScaling = 1;
     private bool _needsPositionSave;
 
     /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
@@ -42,7 +43,23 @@ public class GitExtensionsForm : GitExtensionsFormBase
     }
 
     internal Rectangle RestoreBounds
-        => _restoreBounds.IsEmpty ? WindowPositionManager.GetBounds(this) : _restoreBounds;
+    {
+        get
+        {
+            if (_restoreBounds.IsEmpty)
+            {
+                return WindowPositionManager.GetBounds(this);
+            }
+
+            // A monitor transition can leave the logical bounds unchanged, so BoundsProperty
+            // need not notify. Keep the cached physical size paired with the DPI being saved,
+            // including when the normal bounds are retained behind a maximized window.
+            double scaleChange = RenderScaling / _restoreBoundsScaling;
+            return new Rectangle(_restoreBounds.Location, new Size(
+                (int)Math.Round(_restoreBounds.Width * scaleChange),
+                (int)Math.Round(_restoreBounds.Height * scaleChange)));
+        }
+    }
 
     public virtual void CancelButtonClick(object? sender, EventArgs e)
     {
@@ -190,6 +207,7 @@ public class GitExtensionsForm : GitExtensionsFormBase
         if (WindowState == WindowState.Normal && Bounds.Width > 0 && Bounds.Height > 0)
         {
             _restoreBounds = WindowPositionManager.GetBounds(this);
+            _restoreBoundsScaling = RenderScaling;
         }
     }
 

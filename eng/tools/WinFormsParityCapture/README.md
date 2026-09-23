@@ -51,3 +51,10 @@ The shared `eng/tools/ParityCaptureSchema` project targets plain `net10.0` and h
 Windows dependency. P0.2 will deliberately reference that one schema project from the
 Avalonia test build graph so both capture implementations serialize the same contract. The
 Windows-only capture tool itself remains outside both solutions.
+
+Menu and combo-box captures render the primary window and each owned popup separately with
+`PrintWindow(PW_RENDERFULLCONTENT)`, then compose the unscaled images at their native screen
+offsets. The unused canvas is transparent; it never contains unrelated desktop windows.
+Native browser surfaces that require a screen grab are checked for occlusion before and after
+copying only the owned rectangles. An unrelated window covering any requested surface makes
+that state explicitly unsupported rather than silently contaminating the reference image.

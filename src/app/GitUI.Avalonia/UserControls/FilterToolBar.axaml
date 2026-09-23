@@ -40,17 +40,20 @@
       </compat:IconSplitButton.Flyout>
     </compat:IconSplitButton>
     <Label x:Name="toolStripLabel1"
+           Tag="ToolBar_group:Branch filter"
            compat:TranslationCompat.UseToolTipText="True"
            Classes="gitextensions-toolbar-label"
            Padding="0"
            Content="_Branches:"
            Target="{Binding #tscboBranchFilter}" />
     <compat:ToolbarComboBox x:Name="tscboBranchFilter"
+                            Tag="ToolBar_group:Branch filter"
                             Width="100"
                             Height="23"
                             Margin="1,0,1,0"
                             IsEditable="True" />
     <compat:IconDropDownButton x:Name="tsddbtnBranchFilter"
+                               Tag="ToolBar_group:Branch filter"
                                compat:TranslationCompat.UseToolTipText="True"
                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                Content="Branch type"
@@ -65,17 +68,20 @@
     </compat:IconDropDownButton>
     <Border x:Name="toolStripSeparator19" Classes="gitextensions-toolbar-separator" />
     <Label x:Name="tslblRevisionFilter"
+           Tag="ToolBar_group:Text filter"
            compat:TranslationCompat.UseToolTipText="True"
            Classes="gitextensions-toolbar-label"
            Padding="0"
            Content="_Filter:"
            Target="{Binding #tstxtRevisionFilter}" />
     <compat:ToolbarComboBox x:Name="tstxtRevisionFilter"
+                            Tag="ToolBar_group:Text filter"
                             Width="100"
                             Height="23"
                             Margin="1,0,1,0"
                             IsEditable="True" />
     <compat:IconDropDownButton x:Name="tsddbtnRevisionFilter"
+                               Tag="ToolBar_group:Text filter"
                                compat:TranslationCompat.UseToolTipText="True"
                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                Content="Filter type"

@@ -138,6 +138,57 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [TestCase(1)]
+    [TestCase(1.25)]
+    [TestCase(1.5)]
+    [TestCase(2)]
+    public void FormBrowse_should_measure_tab_headers_with_source_padding(double scale)
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            form.SetRenderScaling(scale);
+            // The headless scaling helper preserves its physical window size. Give every
+            // case the same client space after scaling instead of testing a clipped pane.
+            form.Width = 1400;
+            form.Height = 850;
+            Dispatcher.UIThread.RunJobs();
+            if (Environment.GetEnvironmentVariable("GITEXT_TAB_HEADER_EVIDENCE") is { Length: > 0 } evidenceDirectory)
+            {
+                Directory.CreateDirectory(evidenceDirectory);
+                using WriteableBitmap? frame = form.CaptureRenderedFrame();
+                frame?.Save(Path.Combine(evidenceDirectory, $"tab-headers-{scale}.png"), PngBitmapEncoderOptions.Default);
+            }
+
+            TabControl tabs = form.FindControl<TabControl>("CommitInfoTabControl")!;
+            TabItem[] pages = tabs.Items.OfType<TabItem>().Where(page => page.IsVisible).ToArray();
+            pages.Should().NotBeEmpty();
+            foreach (TabItem page in pages)
+            {
+                page.Padding.Should().Be(new Avalonia.Thickness(8, 6));
+                double.IsNaN(page.Height).Should().BeTrue();
+                page.Bounds.Height.Should().BeGreaterThanOrEqualTo(28, $"tab {page.Name}, window {form.Bounds}, tabs {tabs.Bounds}");
+                TextBlock caption = page.GetVisualDescendants().OfType<TextBlock>()
+                    .Single(text => text.Text == page.Header?.ToString());
+                Avalonia.Point origin = Avalonia.VisualExtensions.TranslatePoint(caption, default, page)!.Value;
+                origin.X.Should().BeGreaterThanOrEqualTo(page.Padding.Left + 16);
+                (origin.X + caption.Bounds.Width).Should().BeLessThanOrEqualTo(page.Bounds.Width - page.Padding.Right + 1);
+            }
+
+            double previousHeight = pages[0].Bounds.Height;
+            pages[0].FontSize = 20;
+            Dispatcher.UIThread.RunJobs();
+            pages[0].Bounds.Height.Should().BeGreaterThan(previousHeight);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormBrowse_should_focus_the_revision_list_after_loading_and_when_commanded()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
@@ -497,7 +548,7 @@ public sealed class FormBrowseTests
 
             TreeViewItem root = accessor.Tree.Items.Cast<TreeViewItem>()
                 .Single(item => HeaderText(item).StartsWith("Worktrees", StringComparison.Ordinal));
-            HeaderText(root).Should().Be("Worktrees (2)");
+            HeaderText(root).Should().Be("Worktrees");
             root.Items.Cast<TreeViewItem>().Should().HaveCount(2);
 
             MenuFlyout flyout = (MenuFlyout)worktreeButton.Flyout!;
@@ -2251,6 +2302,236 @@ public sealed class FormBrowseTests
         }
     }
 
+    [AvaloniaTest]
+    [TestCase(RawInputModifiers.None, false, true)]
+    [TestCase(RawInputModifiers.Shift, false, false)]
+    [TestCase(RawInputModifiers.None, true, false)]
+    [TestCase(RawInputModifiers.Control, true, true)]
+    [TestCase(RawInputModifiers.Control | RawInputModifiers.Shift, false, true)]
+    public async Task RevisionGrid_ref_context_menu_should_filter_actions_and_restore_the_full_menu(
+        RawInputModifiers modifiers,
+        bool alwaysShowAdvanced,
+        bool focused)
+    {
+        bool previousAlwaysShowAdvanced = AppSettings.AlwaysShowAdvOpt;
+        AppSettings.AlwaysShowAdvOpt = alwaysShowAdvanced;
+        GitModule module = CreateRepositoryWithInitialCommit();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "feature" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "other" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("tag") { "release" }).Should().BeTrue();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
+        commands.GetService(Arg.Any<Type>()).Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+        FormBrowse form = new(commands) { Width = 1400, Height = 850 };
+        try
+        {
+            form.Show();
+            RevisionGridControl grid = form.RevisionGrid;
+            await WaitUntilAsync(() => grid.SelectedRevision is not null
+                && grid.GetVisualDescendants().OfType<RevisionGridRefRenderer.RefLabelControl>()
+                    .Any(label => label.GitRef?.Name == "feature" && label.Bounds.Width > 0));
+            using WriteableBitmap? initialFrame = form.CaptureRenderedFrame();
+            RevisionGridRefRenderer.RefLabelControl label = grid.GetVisualDescendants()
+                .OfType<RevisionGridRefRenderer.RefLabelControl>()
+                .First(label => label.GitRef?.Name == "feature");
+            ContextMenu menu = grid.FindControl<ContextMenu>("mainContextMenu")
+                ?? throw new InvalidOperationException("Missing revision menu.");
+            MenuItem otherActions = grid.FindControl<MenuItem>("tsmiOtherActions")
+                ?? throw new InvalidOperationException("Missing other actions.");
+            MenuItem rename = grid.FindControl<MenuItem>("renameBranchToolStripMenuItem")
+                ?? throw new InvalidOperationException("Missing rename menu.");
+            MenuItem createTag = grid.FindControl<MenuItem>("createTagToolStripMenuItem")
+                ?? throw new InvalidOperationException("Missing create tag menu.");
+            MenuItem deleteTag = grid.FindControl<MenuItem>("deleteTagToolStripMenuItem")
+                ?? throw new InvalidOperationException("Missing delete tag menu.");
+            CopyContextMenuItem copy = grid.FindControl<CopyContextMenuItem>("copyToClipboardToolStripMenuItem")
+                ?? throw new InvalidOperationException("Missing copy menu.");
+            Avalonia.Point point = Avalonia.VisualExtensions.TranslatePoint(label, new Avalonia.Point(label.Bounds.Width / 2, label.Bounds.Height / 2), form)
+                ?? throw new InvalidOperationException("The ref label is not attached.");
+            if (Environment.GetEnvironmentVariable("GITEXT_REF_MENU_EVIDENCE") is { Length: > 0 } initialEvidenceDirectory)
+            {
+                Directory.CreateDirectory(initialEvidenceDirectory);
+                initialFrame?.Save(Path.Combine(initialEvidenceDirectory, $"ref-initial-{modifiers}-{alwaysShowAdvanced}.png"), PngBitmapEncoderOptions.Default);
+            }
+
+            Avalonia.Visual? hit = form.InputHitTest(point) as Avalonia.Visual;
+            ReferenceEquals(hit?.GetSelfAndVisualAncestors()
+                .OfType<RevisionGridRefRenderer.RefLabelControl>().FirstOrDefault(), label).Should().BeTrue(
+                    $"the pointer at {point} must hit the ref label at {label.Bounds}, not {hit?.GetType().Name}");
+            form.MouseMove(point);
+            form.MouseDown(point, MouseButton.Right, modifiers);
+            form.MouseUp(point, MouseButton.Right, modifiers);
+            Dispatcher.UIThread.RunJobs();
+
+            if (Environment.GetEnvironmentVariable("GITEXT_REF_MENU_EVIDENCE") is { Length: > 0 } evidenceDirectory)
+            {
+                Directory.CreateDirectory(evidenceDirectory);
+                using WriteableBitmap? frame = form.CaptureRenderedFrame();
+                frame?.Save(Path.Combine(evidenceDirectory, $"ref-menu-{modifiers}-{alwaysShowAdvanced}.png"), PngBitmapEncoderOptions.Default);
+                if (TopLevel.GetTopLevel(menu) is { } popup)
+                {
+                    using WriteableBitmap? popupFrame = popup.CaptureRenderedFrame();
+                    popupFrame?.Save(Path.Combine(evidenceDirectory, $"ref-popup-{modifiers}-{alwaysShowAdvanced}.png"), PngBitmapEncoderOptions.Default);
+                }
+            }
+
+            menu.IsOpen.Should().BeTrue();
+            otherActions.IsVisible.Should().Be(focused);
+            grid.RefreshRealizedRows();
+            Dispatcher.UIThread.RunJobs();
+            menu.IsOpen.Should().BeTrue("refreshing recycled ref labels must not detach the popup anchor");
+            otherActions.Items.Contains(createTag).Should().Be(focused);
+            menu.Items.Contains(createTag).Should().Be(!focused);
+            rename.Items.OfType<MenuItem>().Select(item => item.Header).Should().Equal("feature");
+            deleteTag.IsVisible.Should().BeFalse("the clicked branch is not a tag");
+            copy.RefreshItems();
+            copy.Items.OfType<MenuItem>().Select(item => item.Header?.ToString())
+                .Should().NotContain(header => header != null && (header.Contains("other") || header.Contains("release")));
+
+            // Child clicks bubble in Avalonia; a single-ref shortcut must not execute twice.
+            rename.Items.OfType<MenuItem>().Single().RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            commands.Received(1).StartRenameDialog(form, "feature");
+            commands.ClearReceivedCalls();
+            rename.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            commands.Received(1).StartRenameDialog(form, "feature");
+
+            menu.Close();
+            grid.GetTestAccessor().Revisions.Focus().Should().BeTrue();
+            form.KeyPress(Key.Apps, RawInputModifiers.None, PhysicalKey.ContextMenu, keySymbol: null);
+            form.KeyRelease(Key.Apps, RawInputModifiers.None, PhysicalKey.ContextMenu, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+            menu.IsOpen.Should().BeTrue();
+            otherActions.IsVisible.Should().BeFalse();
+            otherActions.Items.Should().BeEmpty();
+            menu.Items.Contains(createTag).Should().BeTrue();
+            deleteTag.IsVisible.Should().BeTrue();
+            rename.Items.OfType<MenuItem>().Select(item => item.Header).Should().Contain("other");
+            copy.RefreshItems();
+            copy.Items.OfType<MenuItem>().Select(item => item.Header?.ToString())
+                .Should().Contain(header => header != null && header.Contains("other"));
+            menu.Close();
+        }
+        finally
+        {
+            form.RevisionGrid.FindControl<ContextMenu>("mainContextMenu")?.Close();
+            form.Close();
+            AppSettings.AlwaysShowAdvOpt = previousAlwaysShowAdvanced;
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(10)]
+    public async Task RevisionGrid_should_include_stashed_untracked_commits_up_to_the_configured_limit(int limit)
+    {
+        bool previousShowStashes = AppSettings.ShowStashes;
+        bool previousShowReflog = AppSettings.ShowReflogReferences;
+        const string limitSetting = "maxStashesWithUntrackedFiles";
+        string? previousLimit = AppSettings.GetString(limitSetting, null);
+        FormBrowse? form = null;
+        try
+        {
+            AppSettings.ShowStashes = true;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.SetInt(limitSetting, limit);
+            GitModule module = CreateRepositoryWithInitialCommit();
+            for (int index = 0; index < 2; index++)
+            {
+                File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), $"change {index}");
+                module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" }).Should().BeTrue();
+                File.WriteAllText(Path.Combine(_workingDirectory, $"untracked-{index}.txt"), "untracked");
+                module.GitExecutable.RunCommand(new GitArgumentBuilder("stash") { "push", "--include-untracked" }).Should().BeTrue();
+            }
+
+            GitRevision[] stashes = [.. new RevisionReader(module).GetStashes(CancellationToken.None)];
+            stashes.Should().HaveCount(2);
+            ObjectId olderUntracked = stashes[1].ParentIds![2];
+            ObjectId olderIndex = stashes[1].ParentIds![1];
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form.Show();
+            RevisionGridControl grid = form.RevisionGrid;
+            await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.Items.OfType<GitRevision>()
+                .Any(revision => revision.ObjectId == stashes[1].ObjectId));
+            GitRevision[] revisions = [.. grid.GetTestAccessor().Revisions.Items.OfType<GitRevision>()];
+            revisions.Select(revision => revision.ObjectId).Should().OnlyHaveUniqueItems();
+            GitRevision olderStash = revisions.Single(revision => revision.ObjectId == stashes[1].ObjectId);
+            olderStash.ParentIds.Should().HaveCount(limit > 1 ? 2 : 1);
+            revisions.Any(revision => revision.ObjectId == olderUntracked).Should().Be(limit > 1);
+            revisions.Should().NotContain(revision => revision.ObjectId == olderIndex);
+        }
+        finally
+        {
+            form?.Close();
+            AppSettings.ShowStashes = previousShowStashes;
+            AppSettings.ShowReflogReferences.Value = previousShowReflog;
+            AppSettings.SettingsContainer.SetString(limitSetting, previousLimit);
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false, false, false, "WorkTree,Index,Head")]
+    [TestCase(true, true, true, "WorkTree,Index,Head")]
+    [TestCase(true, true, false, "WorkTree,Head,WorkTree")]
+    [TestCase(true, false, true, "Index,Head,Index")]
+    [TestCase(true, false, false, "Head,Head,Head")]
+    public async Task RevisionGrid_should_cycle_worktree_index_and_head_using_status_visibility(
+        bool showStatus,
+        bool worktreeChanged,
+        bool indexChanged,
+        string expectedSequence)
+    {
+        bool previousShowArtificial = AppSettings.RevisionGraphShowArtificialCommits;
+        bool previousShowStatus = AppSettings.ShowGitStatusForArtificialCommits;
+        FormBrowse? form = null;
+        try
+        {
+            AppSettings.RevisionGraphShowArtificialCommits = true;
+            AppSettings.ShowGitStatusForArtificialCommits = showStatus;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form.Show();
+            RevisionGridControl grid = form.RevisionGrid;
+            await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.Items.Count >= 3);
+            ObjectId head = module.GetCurrentCheckout();
+            grid.SetSelectedRevision(head);
+            List<GitItemStatus> status = [];
+            if (worktreeChanged)
+            {
+                status.Add(new GitItemStatus("tracked.txt") { Staged = StagedStatus.WorkTree, IsChanged = true });
+            }
+
+            if (indexChanged)
+            {
+                status.Add(new GitItemStatus("staged.txt") { Staged = StagedStatus.Index, IsNew = true });
+            }
+
+            int toggled = 0;
+            grid.ToggledBetweenArtificialAndHeadCommits += (_, _) => toggled++;
+            foreach (string expected in expectedSequence.Split(','))
+            {
+                grid.UpdateArtificialCommitCount(status);
+                grid.ToggleBetweenArtificialAndHeadCommits();
+                ObjectId expectedId = expected switch
+                {
+                    "WorkTree" => ObjectId.WorkTreeId,
+                    "Index" => ObjectId.IndexId,
+                    _ => head,
+                };
+                grid.SelectedRevision?.ObjectId.Should().Be(expectedId);
+            }
+
+            toggled.Should().Be(3);
+        }
+        finally
+        {
+            form?.Close();
+            AppSettings.RevisionGraphShowArtificialCommits = previousShowArtificial;
+            AppSettings.ShowGitStatusForArtificialCommits = previousShowStatus;
+        }
+    }
+
     private GitModule CreateRepositoryWithInitialCommit()
     {
         GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
@@ -2277,6 +2558,7 @@ public sealed class FormBrowseTests
 
     private static void Click(TopLevel topLevel, Control control, MouseButton button)
     {
+        using WriteableBitmap? frame = topLevel.CaptureRenderedFrame();
         Avalonia.Point clickPoint = Avalonia.VisualExtensions.TranslatePoint(
             control,
             new Avalonia.Point(control.Bounds.Width / 2, control.Bounds.Height / 2),

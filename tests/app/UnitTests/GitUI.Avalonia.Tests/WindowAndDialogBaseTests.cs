@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Text;
 using System.Xml.Serialization;
 using Avalonia.Controls;
@@ -162,6 +162,52 @@ public sealed class WindowAndDialogBaseTests
         form.Close();
 
         manager.SaveCount.Should().Be(1);
+    }
+
+    [AvaloniaTest]
+    [TestCase(1.25, false)]
+    [TestCase(1.5, false)]
+    [TestCase(2, false)]
+    [TestCase(1.25, true)]
+    [TestCase(1.5, true)]
+    [TestCase(2, true)]
+    public void Restore_bounds_should_keep_their_logical_size_when_only_the_monitor_DPI_changes(double scale, bool maximized)
+    {
+        MockForm form = new(enablePositionRestore: true) { Width = 500, Height = 300 };
+        form.GetGitExtensionsFormTestAccessor().WindowPositionManager = new RecordingPositionManager(position: null);
+        form.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Rectangle normalBounds = form.RestoreBounds;
+            if (maximized)
+            {
+                form.WindowState = WindowState.Maximized;
+            }
+
+            form.SetRenderScaling(scale);
+            Dispatcher.UIThread.RunJobs();
+
+            form.RestoreBounds.Width.Should().Be((int)Math.Round(normalBounds.Width * scale));
+            form.RestoreBounds.Height.Should().Be((int)Math.Round(normalBounds.Height * scale));
+            WindowPosition saved = new(form.RestoreBounds, WindowPositionManager.GetDeviceDpi(form), WindowState.Normal, "MockForm");
+            MockForm restored = new(enablePositionRestore: true);
+            restored.GetGitExtensionsFormTestAccessor().WindowPositionManager = new RecordingPositionManager(saved);
+            restored.Show();
+            try
+            {
+                restored.Width.Should().BeApproximately(normalBounds.Width, 1);
+                restored.Height.Should().BeApproximately(normalBounds.Height, 1);
+            }
+            finally
+            {
+                restored.Close();
+            }
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]

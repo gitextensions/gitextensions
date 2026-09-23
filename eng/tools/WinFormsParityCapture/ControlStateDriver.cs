@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 using GitExtensions.ParityCapture;
 using GitUI.AutoCompletion;
@@ -130,6 +130,20 @@ internal sealed class ControlStateDriver : IDisposable
         {
             foreach (Control control in EnumerateSelfAndDescendants(root))
             {
+                // Composite controls own private fields that are not themselves children
+                // (notably ContextMenuStrip). Resolve them just as fields on the root.
+                if (!ReferenceEquals(control, root))
+                {
+                    for (Type? type = control.GetType(); type is not null; type = type.BaseType)
+                    {
+                        FieldInfo? field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+                        if (field is not null)
+                        {
+                            return field.GetValue(control);
+                        }
+                    }
+                }
+
                 if (control.Name == fieldName)
                 {
                     return control;

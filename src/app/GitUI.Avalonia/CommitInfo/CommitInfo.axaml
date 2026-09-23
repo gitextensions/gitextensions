@@ -36,7 +36,8 @@
     </ContextMenu>
   </UserControl.Resources>
   <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                VerticalScrollBarVisibility="Auto">
+                VerticalScrollBarVisibility="Auto"
+                AllowAutoHide="False">
     <Grid x:Name="tableLayout"
           RowDefinitions="Auto,Auto,Auto"
           VerticalAlignment="Top"

@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using GitCommands;
@@ -115,10 +115,35 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
 
     internal IScriptOptionsProvider ScriptOptionsProvider => GetScriptOptionsProvider();
 
+    protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
+    {
+        base.OnUICommandsSourceSet(source);
+
+        // Avalonia has no WinForms OnRuntimeLoad; initialize the embedded controls when
+        // their containing browse form supplies its command source.
+        ReloadHotkeys();
+    }
+
+    public void ReloadHotkeys()
+    {
+        DiffFiles.ReloadHotkeys();
+        DiffText.ReloadHotkeys();
+    }
+
     public bool ExecuteCommand(Command command)
         => command is Command.GoToFirstParent or Command.GoToLastParent
             ? false
             : DiffFiles.ExecuteCommand(command);
+
+    public override bool ProcessHotkey(GitExtensions.Shims.WinForms.Keys keyData)
+    {
+        // The Avalonia file list owns the shared BrowseDiff hotkey table.
+        return DiffFiles.ProcessHotkey(keyData)
+            || base.ProcessHotkey(keyData)
+            || (!ResourceManager.GitExtensionsControl.IsTextEditKey(keyData)
+                && ((DiffText.IsEffectivelyVisible && DiffText.ProcessHotkey(keyData))
+                    || (BlameControl.IsEffectivelyVisible && BlameControl.ProcessHotkey(keyData))));
+    }
 
     protected override IScriptOptionsProvider GetScriptOptionsProvider()
     {
