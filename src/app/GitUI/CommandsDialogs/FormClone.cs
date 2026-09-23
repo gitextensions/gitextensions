@@ -5,6 +5,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using Microsoft;
@@ -38,8 +39,6 @@ public partial class FormClone : GitExtensionsDialog
         _gitModuleChanged = gitModuleChanged;
         InitializeComponent();
 
-        MinimumSize = new Size(Width, PreferredMinimumHeight);
-
         InitializeComplete();
         _openedFromProtocolHandler = openedFromProtocolHandler;
         _url = url;
@@ -52,6 +51,40 @@ public partial class FormClone : GitExtensionsDialog
         ThreadHelper.ThrowIfNotOnUIThread();
 
         base.OnRuntimeLoad(e);
+
+        // The banner always renders two lines of text. Its designer height fits two lines of the
+        // default font only - the Windows "Text size" accessibility setting enlarges the font
+        // without raising the DPI, so the designer values are never scaled and the second line is
+        // cut off. Take the height from the font that is actually in use.
+        Info.Height = (Info.Font.Height * 2) + DpiUtil.Scale(12);
+
+        // tableLayoutPanel1.PreferredSize can under-report its own last row's height by exactly
+        // that row's control margin (observed empirically: a WinForms AutoSize-row quirk that did
+        // not reproduce in an isolated repro built from the same row/column shape, so the
+        // row-height computation itself is not fixed here). Detect it by comparing each child's
+        // own bottom edge, plus its bottom margin, against the space the panel actually gave it,
+        // and grow the panel's floor by the shortfall - so nothing is clipped regardless of the
+        // exact WinForms internals in play. PreferredSize respects MinimumSize as a floor, so this
+        // also corrects PreferredMinimumHeight below, which is what actually sizes the dialog.
+        int tableOverflow = 0;
+        foreach (Control control in tableLayoutPanel1.Controls)
+        {
+            // control.Bottom is relative to tableLayoutPanel1's own client area, not its parent's.
+            int overflow = (control.Bottom + control.Margin.Bottom) - tableLayoutPanel1.ClientSize.Height;
+            tableOverflow = Math.Max(tableOverflow, overflow);
+        }
+
+        if (tableOverflow > 0)
+        {
+            tableLayoutPanel1.MinimumSize = new Size(0, tableLayoutPanel1.Height + tableOverflow);
+        }
+
+        // The dialog is resizable in width only; its height is the height the content needs.
+        // Both constraints have to be derived from the laid out content rather than from the
+        // designer values, which assume the default font size.
+        int preferredHeight = PreferredMinimumHeight;
+        MinimumSize = new Size(Width, preferredHeight);
+        MaximumSize = new Size(MaximumSize.Width, preferredHeight);
 
         IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync);
         _NO_TRANSLATE_From.DataSource = repositoryHistory;
@@ -515,5 +548,12 @@ public partial class FormClone : GitExtensionsDialog
         }
 
         public bool TryExtractUrl(string text, out string url) => FormClone.TryExtractUrl(text, out url);
+
+        public Button FromBrowse => _form.FromBrowse;
+        public Label Info => _form.Info;
+        public TableLayoutPanel RepositoryFields => _form.tableLayoutPanel1;
+        public GroupBox RepositoryType => _form.groupBox1;
+        public FlowLayoutPanel RepositoryTypeOptions => _form.flpnlRepositoryType;
+        public Button ToBrowse => _form.ToBrowse;
     }
 }

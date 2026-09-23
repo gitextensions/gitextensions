@@ -886,6 +886,8 @@ Inactive remote is completely invisible to git.");
         }
 
         public Button Delete => _form.Delete;
+        public TableLayoutPanel PullBehaviourDetails => _form.panelDetails;
+        public Button SaveDefaultPushPull => _form.SaveDefaultPushPull;
         public TextBox RemoteName => _form.RemoteName;
         public TextBox RemotePrefix => _form.txtRemotePrefix;
         public Button Save => _form.Save;
