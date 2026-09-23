@@ -538,6 +538,7 @@ public sealed class VisualParityTests
             contextMenu.Open(target);
             Dispatcher.UIThread.RunJobs();
             AssertSingleItemPopupFits(contextItem);
+            AssertDropDownMenuPaintOffsets(contextItem);
             contextItem.FontFamily.Should().Be(GetResource<FontFamily>(Application.Current!, "GitExtensionsUiFontFamily"));
             contextItem.FontSize.Should().Be(GetResource<double>(Application.Current!, "GitExtensionsUiFontSize"));
             contextItem.FontStyle.Should().Be(GetResource<FontStyle>(Application.Current!, "GitExtensionsUiFontStyle"));
@@ -595,6 +596,7 @@ public sealed class VisualParityTests
             flyout.ShowAt(target);
             Dispatcher.UIThread.RunJobs();
             AssertSingleItemPopupFits(flyoutItem);
+            AssertDropDownMenuPaintOffsets(flyoutItem);
             GetMenuLayoutRoot(flyoutItem).Background.Should().Be(
                 GetThemeResource<IBrush>(Application.Current!, "GitExtensionsMenuRenderedBackgroundBrush"));
             TopLevel flyoutRoot = TopLevel.GetTopLevel(flyoutItem)!;
@@ -747,6 +749,15 @@ public sealed class VisualParityTests
             {
                 popupHost.Bounds.Width.Should().Be(199);
             }
+
+            ContentPresenter topLevelHeader = form.fileToolStripMenuItem
+                .GetVisualDescendants()
+                .OfType<ContentPresenter>()
+                .Single(presenter => presenter.Name == "PART_HeaderPresenter");
+            TranslateTransform topLevelTextOffset = topLevelHeader.RenderTransform
+                .Should().BeOfType<TranslateTransform>().Subject;
+            topLevelTextOffset.X.Should().Be(1);
+            topLevelTextOffset.Y.Should().Be(-1);
         }
         finally
         {
@@ -1529,6 +1540,35 @@ public sealed class VisualParityTests
             .OfType<Border>()
             .Single(border => border.Name == "PART_LayoutRoot");
 
+    private static void AssertDropDownMenuPaintOffsets(MenuItem item)
+    {
+        Control iconPresenter = item.GetVisualDescendants().OfType<Control>()
+            .Single(control => control.Name == "PART_IconPresenter");
+        ContentPresenter headerPresenter = item.GetVisualDescendants().OfType<ContentPresenter>()
+            .Single(control => control.Name == "PART_HeaderPresenter");
+        TextBlock inputGestureText = item.GetVisualDescendants().OfType<TextBlock>()
+            .Single(control => control.Name == "PART_InputGestureText");
+        Control chevron = item.GetVisualDescendants().OfType<Control>()
+            .Single(control => control.Name == "PART_ChevronPath");
+
+        TranslateTransform iconOffset = iconPresenter.RenderTransform
+            .Should().BeOfType<TranslateTransform>().Subject;
+        iconOffset.X.Should().Be(5);
+        iconOffset.Y.Should().Be(0);
+        TranslateTransform headerOffset = headerPresenter.RenderTransform
+            .Should().BeOfType<TranslateTransform>().Subject;
+        headerOffset.X.Should().Be(9);
+        headerOffset.Y.Should().Be(-1);
+        TranslateTransform gestureOffset = inputGestureText.RenderTransform
+            .Should().BeOfType<TranslateTransform>().Subject;
+        gestureOffset.X.Should().Be(-10);
+        gestureOffset.Y.Should().Be(-1);
+        TranslateTransform chevronOffset = chevron.RenderTransform
+            .Should().BeOfType<TranslateTransform>().Subject;
+        chevronOffset.X.Should().Be(-7);
+        chevronOffset.Y.Should().Be(0);
+    }
+
     private static void AssertRenderedSeparatorPalette(Separator separator)
     {
         Border[] borders = [.. separator.GetVisualDescendants().OfType<Border>()];
@@ -1537,6 +1577,7 @@ public sealed class VisualParityTests
             GetThemeResource<IBrush>(Application.Current!, "GitExtensionsMenuRenderedBackgroundBrush"));
         borders[1].Background.Should().Be(
             GetThemeResource<IBrush>(Application.Current!, "GitExtensionsMenuRenderedBorderBrush"));
+        borders[1].Margin.Should().Be(new Thickness(28, 0, 1, 0));
     }
 
     private static void AssertRefLabelRendering(
