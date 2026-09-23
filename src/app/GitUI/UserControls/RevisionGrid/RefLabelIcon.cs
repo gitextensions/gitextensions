@@ -17,6 +17,11 @@ internal enum RefLabelIcon
     /// </summary>
     HeadMergeSource,
 
+    /// <summary>
+    ///  Icon for a remote whose name is replaced with this icon.
+    /// </summary>
+    RemoteForced,
+
     // The following icons are mapped to None for now.
     LocalBranch,
     Remote,
