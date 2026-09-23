@@ -1,4 +1,4 @@
-﻿using System.Drawing.Imaging;
+using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using GitExtensions.ParityCapture;
 
@@ -11,9 +11,14 @@ internal static class ImageCapture
         IReadOnlyList<ToolStripDropDown> popups,
         IReadOnlyList<ComboBoxPopup> comboBoxPopups)
     {
-        if (popups.Count > 0 || comboBoxPopups.Count > 0 || RequiresScreenGrab(root))
+        if (RequiresScreenGrab(root))
         {
             return CaptureScreen(root, popups, comboBoxPopups);
+        }
+
+        if (popups.Count > 0 || comboBoxPopups.Count > 0)
+        {
+            return CaptureWindows(root, popups, comboBoxPopups);
         }
 
         if (root is Form form)
@@ -93,6 +98,56 @@ internal static class ImageCapture
             "The owning window and DrawToBitmap both returned blank client content.");
     }
 
+    private static CaptureImageResult CaptureWindows(
+        Control root,
+        IReadOnlyList<ToolStripDropDown> popups,
+        IReadOnlyList<ComboBoxPopup> comboBoxPopups)
+    {
+        using CaptureImageResult primary = root is Form form ? CaptureWindow(form) : CaptureControl(root);
+        if (primary.Method != CaptureMethod.PrintWindow)
+        {
+            throw new CaptureStateUnsupportedException("The primary surface does not support PrintWindow popup composition.");
+        }
+
+        List<CaptureImageResult> popupImages = [];
+        try
+        {
+            foreach (ToolStripDropDown popup in popups)
+            {
+                popupImages.Add(CaptureWindow(popup.Handle));
+            }
+
+            foreach (ComboBoxPopup popup in comboBoxPopups)
+            {
+                popupImages.Add(CaptureWindow(NativeMethods.GetComboBoxListHandle(popup.Owner.Handle)));
+            }
+
+            Rectangle bounds = primary.ScreenBounds;
+            foreach (CaptureImageResult popup in popupImages)
+            {
+                bounds = Rectangle.Union(bounds, popup.ScreenBounds);
+            }
+
+            Bitmap bitmap = new(bounds.Width, bounds.Height, PixelFormat.Format32bppArgb);
+            using Graphics graphics = Graphics.FromImage(bitmap);
+            graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+            graphics.DrawImageUnscaled(primary.Bitmap, primary.ScreenBounds.X - bounds.X, primary.ScreenBounds.Y - bounds.Y);
+            foreach (CaptureImageResult popup in popupImages)
+            {
+                graphics.DrawImageUnscaled(popup.Bitmap, popup.ScreenBounds.X - bounds.X, popup.ScreenBounds.Y - bounds.Y);
+            }
+
+            return new CaptureImageResult(bitmap, CaptureMethod.PrintWindow, bounds, primary.PrimaryScreenBounds);
+        }
+        finally
+        {
+            foreach (CaptureImageResult popup in popupImages)
+            {
+                popup.Dispose();
+            }
+        }
+    }
+
     private static CaptureImageResult CaptureScreen(
         Control root,
         IReadOnlyList<ToolStripDropDown> popups,
@@ -127,16 +182,51 @@ internal static class ImageCapture
             throw new CaptureStateUnsupportedException("The visible surfaces have no screen area.");
         }
 
+        Form host = root.FindForm() ?? throw new CaptureStateUnsupportedException("A screen capture requires an owning window.");
+        HashSet<IntPtr> capturedWindows = [host.Handle, .. popups.Select(popup => popup.Handle),
+            .. comboBoxPopups.Select(popup => NativeMethods.GetComboBoxListHandle(popup.Owner.Handle))];
+        EnsureUnoccluded();
         Bitmap bitmap = new(bounds.Width, bounds.Height, PixelFormat.Format32bppArgb);
         using Graphics graphics = Graphics.FromImage(bitmap);
-        graphics.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size, CopyPixelOperation.SourceCopy);
+        try
+        {
+            // Only copy owned surface rectangles, never unrelated desktop pixels in the union's gaps.
+            foreach (Rectangle surfaceBounds in new[] { primaryBounds }
+                         .Concat(popups.Select(popup => popup.Bounds))
+                         .Concat(comboBoxPopups.Select(popup => popup.Bounds)))
+            {
+                graphics.CopyFromScreen(surfaceBounds.Location,
+                    new Point(surfaceBounds.X - bounds.X, surfaceBounds.Y - bounds.Y), surfaceBounds.Size, CopyPixelOperation.SourceCopy);
+            }
+
+            EnsureUnoccluded();
+        }
+        catch
+        {
+            bitmap.Dispose();
+            throw;
+        }
+
         EnsureRenderedContent(bitmap, "screen capture");
         return new CaptureImageResult(bitmap, CaptureMethod.ScreenGrab, bounds, primaryBounds);
+
+        void EnsureUnoccluded()
+        {
+            if (!NativeMethods.IsUnoccluded(host.Handle, primaryBounds, capturedWindows)
+                || capturedWindows.Where(handle => handle != host.Handle).Any(handle =>
+                    !NativeMethods.IsUnoccluded(handle, NativeMethods.GetWindowRectangle(handle), capturedWindows)))
+            {
+                throw new CaptureStateUnsupportedException("An unrelated window occludes a requested screen-capture surface.");
+            }
+        }
     }
 
     private static CaptureImageResult CaptureWindow(Form form)
+        => CaptureWindow(form.Handle);
+
+    private static CaptureImageResult CaptureWindow(IntPtr handle)
     {
-        Rectangle bounds = NativeMethods.GetWindowRectangle(form.Handle);
+        Rectangle bounds = NativeMethods.GetWindowRectangle(handle);
         if (bounds.Width <= 0 || bounds.Height <= 0)
         {
             throw new CaptureStateUnsupportedException("The window has no drawable area.");
@@ -148,7 +238,7 @@ internal static class ImageCapture
         bool rendered;
         try
         {
-            rendered = NativeMethods.PrintWindowContent(form.Handle, deviceContext);
+            rendered = NativeMethods.PrintWindowContent(handle, deviceContext);
         }
         finally
         {

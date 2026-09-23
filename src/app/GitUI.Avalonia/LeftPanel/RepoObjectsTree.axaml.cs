@@ -54,6 +54,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private readonly SubmoduleTree _submoduleTree;
     private readonly WorktreeTree _worktreeTree;
     private List<TreeViewItem>? _searchResult;
+    private int _selectionUpdateDepth;
 
     /// <summary>Occurs when the selected node changes.</summary>
     public event EventHandler? NodeSelectionChanged;
@@ -119,6 +120,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         IConfigFileRemoteSettingsManager? remotesManager,
         IReadOnlyList<GitWorktree>? worktrees = null,
         string currentWorkingDirectory = "")
+        => UpdateNodes(() =>
     {
         _currentStashes = stashes;
         _includeStashes = includeStashes;
@@ -179,6 +181,21 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 }
             }
         }
+    });
+
+    internal void UpdateNodes(Action update)
+    {
+        // WinForms suppresses node selection callbacks with Tree.IgnoreSelectionChangedEvent.
+        // Avalonia raises them on the owning TreeView, including removal during a nested reload.
+        _selectionUpdateDepth++;
+        try
+        {
+            update();
+        }
+        finally
+        {
+            _selectionUpdateDepth--;
+        }
     }
 
     public RepoObjectsTree()
@@ -193,7 +210,13 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         HotkeysEnabled = true;
         RegisterContextActions();
 
-        treeMain.SelectionChanged += (_, _) => NodeSelectionChanged?.Invoke(this, EventArgs.Empty);
+        treeMain.SelectionChanged += (_, _) =>
+        {
+            if (_selectionUpdateDepth == 0)
+            {
+                NodeSelectionChanged?.Invoke(this, EventArgs.Empty);
+            }
+        };
         menuMain.Opening += contextMenu_Opening;
         menuMain.Opened += contextMenu_Opened;
         tsbCollapseAll.Click += btnCollapseAll_Click;

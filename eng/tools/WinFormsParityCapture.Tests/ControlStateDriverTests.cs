@@ -8,6 +8,42 @@ namespace WinFormsParityCapture.Tests;
 [Category("P0_1")]
 public sealed class ControlStateDriverTests
 {
+    [TestCase(false)]
+    [TestCase(true)]
+    [Apartment(ApartmentState.STA)]
+    public void Apply_should_resolve_a_nested_controls_private_menu_and_honor_cancellation(bool cancel)
+    {
+        using ContextMenuStrip menu = new();
+        menu.Items.Add("Action");
+        int openingCount = 0;
+        menu.Opening += (_, e) =>
+        {
+            openingCount++;
+            e.Cancel = cancel;
+        };
+        using Form form = new() { ClientSize = new Size(300, 200) };
+        using Panel panel = new() { Dock = DockStyle.Fill };
+        using MenuOwner owner = new(menu) { Dock = DockStyle.Fill };
+        panel.Controls.Add(owner);
+        form.Controls.Add(panel);
+        form.Show();
+        CaptureStatePlan state = new() { Id = "nested-menu.open", Kind = CaptureStateKind.MenuOpen, TargetField = "_menu" };
+        if (cancel)
+        {
+            Action capture = () => ControlStateDriver.Apply(form, state);
+            capture.Should().Throw<CaptureStateUnsupportedException>().WithMessage("*declined to open*");
+            menu.Visible.Should().BeFalse();
+        }
+        else
+        {
+            using ControlStateDriver driver = ControlStateDriver.Apply(form, state);
+            driver.Popups.Should().ContainSingle().Which.Should().BeSameAs(menu);
+            menu.Visible.Should().BeTrue();
+        }
+
+        openingCount.Should().Be(1);
+    }
+
     [Test]
     public void Apply_should_resize_and_restore_the_client_surface()
     {
@@ -53,5 +89,16 @@ public sealed class ControlStateDriverTests
             });
 
         childMoved.Should().BeTrue();
+    }
+
+    private sealed class MenuOwner : UserControl
+    {
+        private readonly ContextMenuStrip _menu;
+
+        public MenuOwner(ContextMenuStrip menu)
+        {
+            _menu = menu;
+            ContextMenuStrip = _menu;
+        }
     }
 }

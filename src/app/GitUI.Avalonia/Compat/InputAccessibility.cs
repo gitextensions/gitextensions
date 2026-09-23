@@ -1,8 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Platform;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -117,7 +118,8 @@ internal static class InputAccessibility
             ApplyAutomationProperties(control);
         }
 
-        host.AddHandler(InputElement.KeyDownEvent, HandleContextMenuKey, RoutingStrategies.Bubble);
+        // Opening on KeyDown lets ContextMenu treat the matching KeyUp as a request to close.
+        host.AddHandler(InputElement.KeyUpEvent, HandleContextMenuKey, RoutingStrategies.Bubble);
     }
 
     private static void ApplyRadioButtonTabStop(RadioButton radioButton)
@@ -193,15 +195,24 @@ internal static class InputAccessibility
             return;
         }
 
+        // The native key route already raised Opening, even when the handler cancelled it.
+        // Supply only missing platform gestures; retrying a native one ignores cancellation.
+        if (host.GetPlatformSettings()?.HotkeyConfiguration.OpenContextMenu
+            .Any(gesture => gesture.Matches(e)) is true)
+        {
+            return;
+        }
+
         Control? focused = TopLevel.GetTopLevel(host)?.FocusManager?.GetFocusedElement() as Control;
         for (Control? control = focused; control is not null; control = control.GetLogicalParent() as Control)
         {
-            if (control.ContextMenu is not ContextMenu contextMenu)
+            if (control.ContextMenu is null)
             {
                 continue;
             }
 
-            contextMenu.Open(control);
+            // Direct Open bypasses Opening, including dynamic contents and cancellation.
+            control.RaiseEvent(new ContextRequestedEventArgs());
             e.Handled = true;
             return;
         }

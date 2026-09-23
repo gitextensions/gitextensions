@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
 using GitExtensions.Extensibility.Git;
@@ -26,14 +26,17 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32W
     {
         get
         {
-            // Double check locking
-            // Search ancestors for an implementation of IGitUICommandsSource
-            _uiCommandsSource ??= this.GetLogicalAncestors()
-                .OfType<IGitUICommandsSource>()
-                .FirstOrDefault()
-                ?? throw new InvalidOperationException("The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?");
+            if (_uiCommandsSource is null)
+            {
+                // Avalonia controls are accessed on their dispatcher thread. Use the setter,
+                // as the original does, so lazy discovery also initializes subscriptions.
+                UICommandsSource = this.GetLogicalAncestors()
+                    .OfType<IGitUICommandsSource>()
+                    .FirstOrDefault()
+                    ?? throw new InvalidOperationException("The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?");
+            }
 
-            return _uiCommandsSource;
+            return _uiCommandsSource!;
         }
         set
         {

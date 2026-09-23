@@ -1,8 +1,7 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.LogicalTree;
 using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -12,21 +11,24 @@ using ResourceManager;
 namespace GitUI.CommandsDialogs;
 
 /// <summary>
-/// Adds the revision-grid Navigate and View command sets to the Browse main menu.
+/// Add MenuCommands as menus to the FormBrowse main menu.
+/// This class is intended to have NO dependency to FormBrowse
+///   (if needed this kind of code should be done in FormBrowseMenuCommands).
 /// </summary>
-/// <remarks>
-/// The revision grid remains the sole command/state owner; this class only creates and
-/// synchronizes additional menu-item presentations.
-/// </remarks>
 internal sealed class FormBrowseMenus : ITranslate, IDisposable
 {
     /// <summary>
     /// The menu to which we will be adding RevisionGrid command menus.
     /// </summary>
     private readonly Menu _mainMenuStrip;
+
+    /// <summary>
+    /// The context menu that be shown to allow toggle visibility of toolbars in <see cref="FormBrowse"/>.
+    /// </summary>
     private readonly ContextMenu _toolStripContextMenu = new();
-    private readonly RevisionGridControl _revisionGrid;
-    private readonly Dictionary<MenuItem, MenuItem> _sourceItems = [];
+    private List<MenuCommand>? _navigateMenuCommands;
+    private List<MenuCommand>? _viewMenuCommands;
+
     private readonly MenuItem _navigateToolStripMenuItem = new()
     {
         Name = "navigateToolStripMenuItem",
@@ -45,24 +47,32 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
         Header = "_Toolbars",
     };
 
-    public FormBrowseMenus(Menu mainMenuStrip, RevisionGridControl revisionGrid, MenuItem insertAfterMenuItem)
+    // we have to remember which items we registered with the menucommands because other
+    // location (RevisionGrid) can register items too!
+    private readonly List<MenuItem> _itemsRegisteredWithMenuCommand = [];
+
+    public FormBrowseMenus(Menu menuStrip)
     {
-        _mainMenuStrip = mainMenuStrip;
-        _revisionGrid = revisionGrid;
-
-        CopyItems(revisionGrid.NavigateMenuItem, _navigateToolStripMenuItem);
-        CopyItems(revisionGrid.ViewMenuItem, _viewToolStripMenuItem);
-
-        int insertIndex = mainMenuStrip.Items.IndexOf(insertAfterMenuItem) + 1;
-        mainMenuStrip.Items.Insert(insertIndex, _navigateToolStripMenuItem);
-        mainMenuStrip.Items.Insert(insertIndex + 1, _viewToolStripMenuItem);
-
-        _viewToolStripMenuItem.Items.Add(new Separator());
-        _viewToolStripMenuItem.Items.Add(_toolbarsMenuItem);
+        _mainMenuStrip = menuStrip;
+        Translate();
 
         _navigateToolStripMenuItem.SubmenuOpened += MainMenuItem_SubmenuOpened;
         _viewToolStripMenuItem.SubmenuOpened += MainMenuItem_SubmenuOpened;
         _toolStripContextMenu.Opening += ToolStripContextMenu_Opening;
+    }
+
+    public void Dispose()
+    {
+        _navigateToolStripMenuItem.SubmenuOpened -= MainMenuItem_SubmenuOpened;
+        _viewToolStripMenuItem.SubmenuOpened -= MainMenuItem_SubmenuOpened;
+        _toolStripContextMenu.Opening -= ToolStripContextMenu_Opening;
+        RemoveRevisionGridMainMenuItems();
+        _toolStripContextMenu.Close();
+    }
+
+    public void Translate()
+    {
+        Translator.Translate(this, AppSettings.CurrentTranslation);
     }
 
     internal MenuItem NavigateMenuItem => _navigateToolStripMenuItem;
@@ -120,6 +130,7 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
                 IsChecked = toolStrip.IsVisible,
                 Tag = toolStrip,
                 ToggleType = MenuItemToggleType.CheckBox,
+                StaysOpenOnClick = true,
             };
             AutomationProperties.SetName(item, text);
             CreateToolStripSubMenus(toolStrip, item);
@@ -138,17 +149,32 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
     private static void CreateToolStripSubMenus(Control senderToolStrip, MenuItem toolStripItem)
     {
         const string toolbarSettingsPrefix = "formbrowse_toolbar_visibility_";
-        IEnumerable<Control> controls = senderToolStrip is Panel panel
-            ? panel.Children
-            : senderToolStrip.GetLogicalDescendants()
-                .OfType<Control>()
-                .Where(control => control.TemplatedParent is null && !string.IsNullOrEmpty(control.Name));
-        foreach (Control toolbarItem in controls.Where(IncludeToolbarItem))
+        string? currentGroup = null;
+        IReadOnlyList<Control> controls = GetToolbarItems(senderToolStrip);
+        foreach (Control toolbarItem in controls)
         {
             if (toolbarItem.Classes.Contains("gitextensions-toolbar-separator"))
             {
                 toolStripItem.Items.Add(new Separator());
                 continue;
+            }
+
+            bool belongToAGroup = BelongToAGroup(toolbarItem, out string groupName);
+            string key;
+            if (belongToAGroup)
+            {
+                if (currentGroup == groupName)
+                {
+                    toolbarItem.IsVisible = LoadVisibilitySetting(groupName);
+                    continue;
+                }
+
+                currentGroup = groupName;
+                key = groupName;
+            }
+            else
+            {
+                key = toolbarItem.Name ?? string.Empty;
             }
 
             string text = toolbarItem.Name switch
@@ -160,10 +186,7 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
                      ?? toolbarItem.Name
                      ?? string.Empty,
             };
-            string key = toolbarItem.Name ?? string.Empty;
-            bool visible = AppSettings.GetBool(
-                toolbarSettingsPrefix + key,
-                defaultValue: !key.Contains(FormBrowse.FetchPullToolbarShortcutsPrefix, StringComparison.Ordinal));
+            bool visible = LoadVisibilitySetting(key, IsVisibleByDefault(key));
 
             // Worktree availability is loaded asynchronously with the left-panel model. Keep
             // its configured menu state without exposing the button before that load finishes.
@@ -178,103 +201,236 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
                 IsChecked = visible,
                 Tag = toolbarItem,
                 ToggleType = MenuItemToggleType.CheckBox,
+                StaysOpenOnClick = true,
             };
             AutomationProperties.SetName(
                 menuToolbarItem,
                 AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(text));
             menuToolbarItem.Click += (_, _) =>
             {
-                bool selectedVisibility = menuToolbarItem.IsChecked;
+                bool selectedVisibility = !toolbarItem.IsVisible;
                 toolbarItem.IsVisible = selectedVisibility;
-                AppSettings.SetBool(
-                    toolbarSettingsPrefix + key,
-                    selectedVisibility == !key.Contains(FormBrowse.FetchPullToolbarShortcutsPrefix, StringComparison.Ordinal)
-                        ? null
-                        : selectedVisibility);
+                menuToolbarItem.IsChecked = selectedVisibility;
+                SaveVisibilitySetting(key, selectedVisibility, IsVisibleByDefault(key));
+                if (belongToAGroup)
+                {
+                    foreach (Control item in controls)
+                    {
+                        if (item.Tag is string group && group == groupName)
+                        {
+                            item.IsVisible = selectedVisibility;
+                        }
+                    }
+                }
+
+                AdaptSeparatorsVisibility(senderToolStrip);
             };
             toolStripItem.Items.Add(menuToolbarItem);
         }
 
+        AdaptSeparatorsVisibility(senderToolStrip);
         return;
 
-        bool IncludeToolbarItem(Control control)
+        static bool IsVisibleByDefault(string buttonKey) => !buttonKey.Contains(FormBrowse.FetchPullToolbarShortcutsPrefix, StringComparison.Ordinal);
+        static void SaveVisibilitySetting(string key, bool visible, bool defaultValue = true)
+            => AppSettings.SetBool(toolbarSettingsPrefix + key, visible == defaultValue ? null : visible);
+        static bool LoadVisibilitySetting(string key, bool defaultValue = true)
+            => AppSettings.GetBool(toolbarSettingsPrefix + key, defaultValue);
+
+        static bool BelongToAGroup(Control toolbarItem, out string groupName)
         {
-            if (senderToolStrip.Name != "ToolStripFilters")
+            const string groupPrefix = "ToolBar_group:";
+            if (toolbarItem.Tag is string group && group.StartsWith(groupPrefix, StringComparison.Ordinal))
             {
+                groupName = group;
                 return true;
             }
 
-            // The source groups each label/editor/drop-down cluster behind its first item.
-            return control.Name is not "tscboBranchFilter" and not "tsddbtnBranchFilter"
-                and not "tstxtRevisionFilter" and not "tsddbtnRevisionFilter";
+            groupName = string.Empty;
+            return false;
         }
     }
 
-    internal void RefreshItems()
-    {
-        _revisionGrid.RefreshMainMenuState();
-        SynchronizeItems(includeVisibility: true);
-    }
-
-    internal void OnMenuCommandsPropertyChanged()
-    {
-        // Visibility remains owned by the explicit menu-opening refresh, avoiding transient cloned-menu expansion.
-        SynchronizeItems(includeVisibility: false);
-    }
-
-    private void SynchronizeItems(bool includeVisibility)
-    {
-        Dictionary<string, MenuCommand> menuCommands = _revisionGrid.MenuCommands.NavigateMenuCommands
-            .Concat(_revisionGrid.MenuCommands.ViewMenuCommands)
-            .Where(command => !command.IsSeparator && command.Name is not null)
-            .ToDictionary(command => command.Name!, StringComparer.Ordinal);
-        foreach ((MenuItem source, MenuItem target) in _sourceItems)
+    private static IReadOnlyList<Control> GetToolbarItems(Control toolStrip)
+        => toolStrip switch
         {
-            if (source.Tag is string tag
-                && menuCommands.TryGetValue(tag, out MenuCommand? command)
-                && command?.Text is string commandText)
+            Panel panel => panel.Children,
+            ContentControl { Content: Panel panel } => panel.Children,
+            _ => [],
+        };
+
+    private static void AdaptSeparatorsVisibility(Control senderToolStrip)
+    {
+        IReadOnlyList<Control> items = GetToolbarItems(senderToolStrip);
+
+        // First pass: toolbar items from left to right
+        bool shouldHideNextSeparator = true;
+        foreach (Control item in items)
+        {
+            HandleCurrentItem(item);
+        }
+
+        // Second pass: toolbar items from right to left
+        shouldHideNextSeparator = true;
+        for (int i = items.Count - 1; i >= 0; i--)
+        {
+            Control item = items[i];
+            if (item.Classes.Contains("gitextensions-toolbar-separator") && !item.IsVisible)
             {
-                source.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(commandText);
+                continue;
             }
 
-            target.Header = source.Header;
-            string? automationName = AutomationProperties.GetName(source);
-            if (string.IsNullOrWhiteSpace(automationName) && source.Header is string header)
-            {
-                automationName = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(header);
-            }
+            HandleCurrentItem(item);
+        }
 
-            if (!string.IsNullOrWhiteSpace(automationName))
+        void HandleCurrentItem(Control toolStripItem)
+        {
+            if (toolStripItem.Classes.Contains("gitextensions-toolbar-separator"))
             {
-                AutomationProperties.SetName(target, automationName);
+                toolStripItem.IsVisible = !shouldHideNextSeparator;
+                shouldHideNextSeparator = true;
             }
-
-            target.InputGesture = source.InputGesture;
-            target.ToggleType = source.ToggleType;
-            target.IsChecked = source.IsChecked;
-            target.IsEnabled = source.IsEnabled;
-            if (includeVisibility)
+            else
             {
-                target.IsVisible = source.IsVisible;
+                shouldHideNextSeparator &= !toolStripItem.IsVisible;
             }
-
-            ToolTip.SetTip(target, ToolTip.GetTip(source));
         }
     }
 
-    public void Dispose()
+    public void ResetMenuCommandSets()
     {
-        _navigateToolStripMenuItem.SubmenuOpened -= MainMenuItem_SubmenuOpened;
-        _viewToolStripMenuItem.SubmenuOpened -= MainMenuItem_SubmenuOpened;
-        _toolStripContextMenu.Opening -= ToolStripContextMenu_Opening;
+        RemoveRevisionGridMainMenuItems();
+        _navigateMenuCommands = null;
+        _viewMenuCommands = null;
+    }
+
+    /// <summary>
+    /// Appends the provided <paramref name="menuCommands"/> list to the commands menus specified by <paramref name="mainMenuItem"/>.
+    /// </summary>
+    /// <remarks>
+    /// Each new command set will be automatically separated by a separator.
+    /// </remarks>
+    public void AddMenuCommandSet(MainMenuItem mainMenuItem, IEnumerable<MenuCommand> menuCommands)
+    {
+        // In the current implementation command menus are defined in the RevisionGrid control,
+        // and added to the main menu of the FormBrowse for the ease of use
+        List<MenuCommand> selectedMenuCommands;
+        switch (mainMenuItem)
+        {
+            case MainMenuItem.NavigateMenu:
+                if (_navigateMenuCommands is null)
+                {
+                    _navigateMenuCommands = [];
+                }
+                else
+                {
+                    _navigateMenuCommands.Add(MenuCommand.CreateSeparator());
+                }
+
+                selectedMenuCommands = _navigateMenuCommands;
+                break;
+            case MainMenuItem.ViewMenu:
+                if (_viewMenuCommands is null)
+                {
+                    _viewMenuCommands = [];
+                }
+                else
+                {
+                    _viewMenuCommands.Add(MenuCommand.CreateSeparator());
+                }
+
+                selectedMenuCommands = _viewMenuCommands;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(mainMenuItem));
+        }
+
+        selectedMenuCommands.AddRange(menuCommands);
+    }
+
+    /// <summary>
+    /// Inserts "Navigate" and "View" menus after the <paramref name="insertAfterMenuItem"/>.
+    /// </summary>
+    public void InsertRevisionGridMainMenuItems(MenuItem insertAfterMenuItem)
+    {
+        RemoveRevisionGridMainMenuItems();
+        SetDropDownItems(_navigateToolStripMenuItem, _navigateMenuCommands ?? []);
+        SetDropDownItems(_viewToolStripMenuItem, _viewMenuCommands ?? []);
+
+        int insertIndex = _mainMenuStrip.Items.IndexOf(insertAfterMenuItem) + 1;
+        _mainMenuStrip.Items.Insert(insertIndex, _navigateToolStripMenuItem);
+        _mainMenuStrip.Items.Insert(insertIndex + 1, _viewToolStripMenuItem);
+
+        // We're a bit lying here - "Toolbars" is not a RevisionGrid menu item,
+        // however it is the logical place to add it to the "View" menu
+        if (_toolbarsMenuItem.Items.Count > 0)
+        {
+            _viewToolStripMenuItem.Items.Add(new Separator());
+            _viewToolStripMenuItem.Items.Add(_toolbarsMenuItem);
+        }
+
+        // maybe set check marks on menu items
+        OnMenuCommandsPropertyChanged();
+    }
+
+    private void SetDropDownItems(MenuItem toolStripMenuItemTarget, IEnumerable<MenuCommand> menuCommands)
+    {
+        toolStripMenuItemTarget.Items.Clear();
+        foreach (MenuCommand menuCommand in menuCommands)
+        {
+            Control toolStripItem = MenuCommand.CreateToolStripItem(menuCommand);
+            if (toolStripItem is MenuItem toolStripMenuItem)
+            {
+                menuCommand.RegisterMenuItem(toolStripMenuItem);
+                _itemsRegisteredWithMenuCommand.Add(toolStripMenuItem);
+                toolStripMenuItem.Click += (_, _) => OnMenuCommandsPropertyChanged();
+            }
+
+            toolStripMenuItemTarget.Items.Add(toolStripItem);
+        }
+    }
+
+    public void RemoveRevisionGridMainMenuItems()
+    {
         _mainMenuStrip.Items.Remove(_navigateToolStripMenuItem);
         _mainMenuStrip.Items.Remove(_viewToolStripMenuItem);
-        _toolStripContextMenu.Close();
+
+        // don't forget to clear old associated menu items
+        _navigateMenuCommands?.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
+        _viewMenuCommands?.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
+        _itemsRegisteredWithMenuCommand.Clear();
+        _navigateToolStripMenuItem.Items.Clear();
+        _viewToolStripMenuItem.Items.Clear();
+    }
+
+    public void OnMenuCommandsPropertyChanged()
+    {
+        foreach (MenuCommand menuCommand in GetNavigateAndViewMenuCommands())
+        {
+            menuCommand.SetCheckForRegisteredMenuItems();
+            menuCommand.UpdateMenuItemsShortcutKeyDisplayString();
+            menuCommand.UpdateMenuItemsText();
+        }
+    }
+
+    private IEnumerable<MenuCommand> GetNavigateAndViewMenuCommands()
+    {
+        if (_navigateMenuCommands is null && _viewMenuCommands is null)
+        {
+            return [];
+        }
+
+        if (_navigateMenuCommands is not null && _viewMenuCommands is not null)
+        {
+            return _navigateMenuCommands.Concat(_viewMenuCommands);
+        }
+
+        throw new ApplicationException("this case is not allowed");
     }
 
     private void MainMenuItem_SubmenuOpened(object? sender, EventArgs e)
     {
-        RefreshItems();
+        OnMenuCommandsPropertyChanged();
         RefreshToolbarsMenuItemCheckedState(_toolbarsMenuItem.Items);
     }
 
@@ -288,83 +444,14 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
             if (item.Tag is Control toolStrip)
             {
                 item.IsChecked = toolStrip.IsVisible;
+                RefreshToolbarsMenuItemCheckedState(item.Items);
             }
         }
     }
+}
 
-    private void CopyItems(MenuItem sourceParent, MenuItem targetParent)
-    {
-        foreach (object? item in sourceParent.Items)
-        {
-            if (item is Separator sourceSeparator)
-            {
-                // Avalonia clones the reusable RevisionGrid menu, so its measured ToolStrip metrics must follow the clone.
-                targetParent.Items.Add(new Separator
-                {
-                    Width = sourceSeparator.Width,
-                    MinWidth = sourceSeparator.MinWidth,
-                    HorizontalAlignment = sourceSeparator.HorizontalAlignment,
-                });
-                continue;
-            }
-
-            if (item is not MenuItem source)
-            {
-                continue;
-            }
-
-            MenuItem target = new()
-            {
-                Name = source.Name,
-                Tag = source.Tag,
-                Header = source.Header,
-                Icon = CloneIcon(source.Icon),
-                InputGesture = source.InputGesture,
-                ToggleType = source.ToggleType,
-                IsChecked = source.IsChecked,
-                IsEnabled = source.IsEnabled,
-                IsVisible = source.IsVisible,
-                Focusable = source.Focusable,
-                IsHitTestVisible = source.IsHitTestVisible,
-                Width = source.Width,
-                MinWidth = source.MinWidth,
-                HorizontalAlignment = source.HorizontalAlignment,
-            };
-            foreach (string className in source.Classes.Where(className => !className.StartsWith(':')))
-            {
-                target.Classes.Add(className);
-            }
-
-            string? automationName = AutomationProperties.GetName(source);
-            if (string.IsNullOrWhiteSpace(automationName) && source.Header is string header)
-            {
-                automationName = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(header);
-            }
-
-            if (!string.IsNullOrWhiteSpace(automationName))
-            {
-                AutomationProperties.SetName(target, automationName);
-            }
-
-            CopyItems(source, target);
-            target.Click += (_, _) =>
-            {
-                source.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-                RefreshItems();
-            };
-            _sourceItems.Add(source, target);
-            targetParent.Items.Add(target);
-        }
-    }
-
-    private static Image? CloneIcon(object? icon)
-        => icon is Image image
-            ? new Image
-            {
-                Width = image.Width,
-                Height = image.Height,
-                Source = image.Source,
-                Stretch = image.Stretch,
-            }
-            : null;
+internal enum MainMenuItem
+{
+    NavigateMenu,
+    ViewMenu
 }

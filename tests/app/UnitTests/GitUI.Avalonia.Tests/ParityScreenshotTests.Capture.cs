@@ -656,6 +656,48 @@ public sealed partial class ParityScreenshotTests
 
     [AvaloniaTest]
     [Category(P02Category)]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Avalonia_state_driver_should_respect_context_menu_cancellation(bool cancel)
+    {
+        ContextMenu menu = new() { ItemsSource = new[] { new MenuItem { Header = "Action" } } };
+        Button owner = new() { Name = "btnMenu", Content = "Menu", ContextMenu = menu };
+        Window window = new() { Width = 300, Height = 200, Content = owner };
+        int openingCount = 0;
+        menu.Opening += (_, e) =>
+        {
+            openingCount++;
+            e.Cancel = cancel;
+        };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            CaptureStatePlan state = new() { Id = "menu.open", Kind = CaptureStateKind.MenuOpen, TargetField = "btnMenu" };
+            if (cancel)
+            {
+                Action capture = () => AvaloniaControlStateDriver.Apply(window, state);
+                capture.Should().Throw<AvaloniaCaptureStateUnsupportedException>().WithMessage("*declined to open*");
+                menu.IsOpen.Should().BeFalse();
+            }
+            else
+            {
+                using AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(window, state);
+                menu.IsOpen.Should().BeTrue();
+                driver.PopupSurfaceRoots.Should().ContainSingle();
+            }
+
+            openingCount.Should().Be(1);
+        }
+        finally
+        {
+            menu.Close();
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
     public void Avalonia_state_driver_should_apply_supported_states_and_reject_wrong_targets()
     {
         foreach (CaptureStateKind kind in new[]

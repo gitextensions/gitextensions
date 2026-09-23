@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
@@ -29,6 +29,33 @@ public sealed class CommitInfoTests
     [SetUp]
     public void SetUp()
         => ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+
+    [AvaloniaTest]
+    public void CommitInfo_should_reserve_scrollbar_space_when_content_overflows()
+    {
+        CommitInfo control = new();
+        Grid table = control.FindControl<Grid>("tableLayout")!;
+        table.IsVisible = true;
+        control.FindControl<XhtmlTextBlock>("rtbxCommitMessage")!
+            .SetXHTMLText(string.Join("\n", Enumerable.Repeat("Long commit message", 40)));
+        Window window = new() { Width = 500, Height = 200, Content = control };
+        window.Show();
+        try
+        {
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            ScrollViewer scroll = control.GetVisualDescendants().OfType<ScrollViewer>().First();
+            scroll.AllowAutoHide.Should().BeFalse();
+            scroll.Extent.Height.Should().BeGreaterThan(scroll.Viewport.Height);
+            double scrollbarWidth = control.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.ScrollBar>()
+                .Single(bar => bar.Orientation == Avalonia.Layout.Orientation.Vertical).Bounds.Width;
+            scrollbarWidth.Should().BeGreaterThan(0);
+            table.Bounds.Width.Should().BeApproximately(control.Bounds.Width - scrollbarWidth, 1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 
     [AvaloniaTest]
     public void XhtmlTextBlock_should_preserve_text_links_underlines_and_line_breaks()

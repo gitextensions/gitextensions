@@ -1,5 +1,7 @@
 param(
-    [string]$EvidenceDirectory
+    [string]$EvidenceDirectory,
+
+    [switch]$BrowseWindow
 )
 
 $ErrorActionPreference = "Stop"
@@ -26,7 +28,7 @@ if (-not [IO.File]::Exists($sourceApplication))
 $captureScript = Join-Path $repositoryRoot "eng/avalonia/Capture-SmokeWindow.ps1"
 $temporaryParent = [IO.Path]::GetTempPath().TrimEnd([IO.Path]::DirectorySeparatorChar)
 $smokeRoot = Join-Path $temporaryParent "gitextensions-p06-runtime-$([Guid]::NewGuid().ToString('N'))"
-$fixtureRepository = Join-Path $smokeRoot "repository"
+$fixtureRepository = Join-Path $smokeRoot "repository-$([Guid]::NewGuid().ToString('N'))"
 $settingsRoot = Join-Path $smokeRoot "settings"
 $runtimeRoot = Join-Path $smokeRoot "runtime"
 $application = Join-Path $runtimeRoot "GitExtensions.Avalonia.exe"
@@ -110,8 +112,9 @@ try
     $stderrLog = Join-Path $EvidenceDirectory "stderr.log"
     $captureLog = Join-Path $EvidenceDirectory "capture.log"
     $screenshot = Join-Path $EvidenceDirectory "window.png"
+    $prerequisiteScreenshot = Join-Path $EvidenceDirectory "prerequisite.png"
     $manifest = Join-Path $EvidenceDirectory "smoke.json"
-    foreach ($evidencePath in @($stdoutLog, $stderrLog, $captureLog, $screenshot, $manifest))
+    foreach ($evidencePath in @($stdoutLog, $stderrLog, $captureLog, $screenshot, $prerequisiteScreenshot, $manifest))
     {
         [IO.File]::Delete($evidencePath)
     }
@@ -136,7 +139,40 @@ try
 
     $stdoutTask = $process.StandardOutput.ReadToEndAsync()
     $stderrTask = $process.StandardError.ReadToEndAsync()
-    & $captureScript -TitlePattern "Settings - Checklist" -OutputPath $screenshot -TimeoutSeconds 45 |
+    if ($BrowseWindow)
+    {
+        $deadline = [DateTime]::UtcNow.AddSeconds(45)
+        do
+        {
+            if ($process.HasExited)
+            {
+                throw "The Avalonia application exited before opening its first window."
+            }
+
+            $process.Refresh()
+            $firstTitle = $process.MainWindowTitle
+            if ($firstTitle -like '*Settings - Checklist*' -or
+                $firstTitle -like "*$([IO.Path]::GetFileName($fixtureRepository))*")
+            {
+                break
+            }
+
+            Start-Sleep -Milliseconds 500
+        }
+        while ([DateTime]::UtcNow -lt $deadline)
+
+        if ($firstTitle -like '*Settings - Checklist*')
+        {
+            & $captureScript -TitlePattern 'Settings - Checklist' -ProcessId $process.Id -OutputPath $prerequisiteScreenshot -TimeoutSeconds 15 | Out-Null
+            if (-not $process.CloseMainWindow())
+            {
+                throw 'The startup checklist could not be closed to inspect the browse window.'
+            }
+        }
+    }
+
+    $titlePattern = if ($BrowseWindow) { [IO.Path]::GetFileName($fixtureRepository) } else { "Settings - Checklist" }
+    & $captureScript -TitlePattern $titlePattern -ProcessId $process.Id -OutputPath $screenshot -TimeoutSeconds 45 |
         Set-Content -LiteralPath $captureLog
 
     if ($process.HasExited)
@@ -175,7 +211,8 @@ try
         schemaVersion = 1
         platform = "windows"
         command = "browse <temporary-repository>"
-        observedSurface = "prerequisiteChecklist"
+        observedSurface = if ($BrowseWindow) { "browse" } else { "prerequisiteChecklist" }
+        prerequisiteScreenshot = if ([IO.File]::Exists($prerequisiteScreenshot)) { "prerequisite.png" } else { $null }
         settingsFileIsolation = "disposablePortableRuntime"
         registryAccess = "readOnly"
         repositoryLocation = "outsideWorkingTree"
@@ -214,6 +251,16 @@ finally
     if ($resolvedSmokeRoot.StartsWith($resolvedTemporaryParent, [StringComparison]::OrdinalIgnoreCase) -and
         [IO.Directory]::Exists($resolvedSmokeRoot))
     {
-        Remove-Item -LiteralPath $resolvedSmokeRoot -Recurse -Force
+        # Git creates hidden/read-only metadata in the disposable repository. Clear only
+        # that repository's attributes; the runtime uses hard links to build output.
+        Get-ChildItem -LiteralPath $fixtureRepository -Recurse -Force -ErrorAction SilentlyContinue |
+            Where-Object {
+                $_.Attributes -band ([IO.FileAttributes]::Hidden -bor [IO.FileAttributes]::ReadOnly)
+            } |
+            ForEach-Object {
+                $_.Attributes = $_.Attributes -band -bnot (
+                    [IO.FileAttributes]::Hidden -bor [IO.FileAttributes]::ReadOnly)
+            }
+        Remove-Item -LiteralPath $resolvedSmokeRoot -Recurse
     }
 }

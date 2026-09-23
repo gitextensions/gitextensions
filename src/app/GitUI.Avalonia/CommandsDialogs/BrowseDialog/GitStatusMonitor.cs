@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
@@ -39,7 +39,11 @@ public sealed class GitStatusMonitor : IDisposable
     /// https://github.com/microsoft/WSL/issues/4581
     /// </summary>
     private const int PeriodicUpdateIntervalWSL = 60 * 1000;
-    private const int MaxConsecutiveErrors = 3;
+
+    /// <summary>
+    /// The number how often an update must fail in a row until the monitoring is stopped.
+    /// </summary>
+    private const int _maxConsecutiveErrors = 3;
 
     /// <summary>
     /// git-status command is running and no cancellation has been requested
@@ -148,6 +152,18 @@ public sealed class GitStatusMonitor : IDisposable
         }
 
         _disposed = true;
+        if (UICommandsSource is not null)
+        {
+            UICommandsSource.UICommandsChanged -= commandsSource_GitUICommandsChanged;
+            IGitUICommands commands = UICommandsSource.UICommands;
+            commands.PreCheckoutBranch -= GitUICommands_PreCheckout;
+            commands.PreCheckoutRevision -= GitUICommands_PreCheckout;
+            commands.PostCheckoutBranch -= GitUICommands_PostCheckout;
+            commands.PostCheckoutRevision -= GitUICommands_PostCheckout;
+            commands.PostRepositoryChanged -= GitUICommands_PostRepositoryChanged;
+            UICommandsSource = null;
+        }
+
         _currentStatus = GitStatusMonitorState.Stopped;
         _timerRefresh.Stop();
         _timerRefresh.Tick -= TimerRefreshTick;
@@ -189,6 +205,10 @@ public sealed class GitStatusMonitor : IDisposable
         set
         {
             ThreadHelper.AssertOnUIThread();
+            if (_disposed)
+            {
+                return;
+            }
 
             GitStatusMonitorState previousStatus = _currentStatus;
             _currentStatus = value;
@@ -495,7 +515,7 @@ public sealed class GitStatusMonitor : IDisposable
                 Trace.WriteLine(exception.Message);
                 try
                 {
-                    if (++_consecutiveErrorCount < MaxConsecutiveErrors)
+                    if (++_consecutiveErrorCount < _maxConsecutiveErrors)
                     {
                         // Try again
                         ScheduleNextInteractiveTime();
@@ -574,13 +594,13 @@ public sealed class GitStatusMonitor : IDisposable
         // Start commands, also if running already
         lock (_statusSequenceLock)
         {
-            _statusSequence.CancelCurrent();
-            _commandIsRunningAndNotCancelled = false;
-
             if (_disposed)
             {
                 return;
             }
+
+            _statusSequence.CancelCurrent();
+            _commandIsRunningAndNotCancelled = false;
 
             int ticks = Environment.TickCount;
             _nextEarliestTime = ticks + MinUpdateInterval;

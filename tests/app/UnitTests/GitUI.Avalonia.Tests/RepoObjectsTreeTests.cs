@@ -45,12 +45,12 @@ public sealed class RepoObjectsTreeTests
 
             TreeViewItem[] roots = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>().ToArray();
             roots.Should().HaveCount(6);
-            HeaderText(roots[0]).Should().Be("Branches (2)");
-            HeaderText(roots[1]).Should().Be("Remotes (2)");
-            HeaderText(roots[2]).Should().Be("Worktrees (0)");
-            HeaderText(roots[3]).Should().Be("Tags (1)");
-            HeaderText(roots[4]).Should().Be("Submodules (0)");
-            HeaderText(roots[5]).Should().Be("Stashes (0)");
+            HeaderText(roots[0]).Should().Be("Branches");
+            HeaderText(roots[1]).Should().Be("Remotes");
+            HeaderText(roots[2]).Should().Be("Worktrees");
+            HeaderText(roots[3]).Should().Be("Tags");
+            HeaderText(roots[4]).Should().Be("Submodules");
+            HeaderText(roots[5]).Should().Be("Stashes");
 
             TreeViewItem main = roots[0].Items.Cast<TreeViewItem>().Single(item => HeaderText(item) == "main");
             HeaderLabel(main).FontWeight.Should().Be(FontWeight.Bold);
@@ -69,6 +69,60 @@ public sealed class RepoObjectsTreeTests
         {
             settings.Restore();
         }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void SetRefs_should_restore_selection_without_navigating_the_revision_grid(bool removeSelectedBranch)
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            IGitRef[] refs = [CreateRef("refs/heads/main"), CreateRef("refs/tags/v1")];
+            RepoObjectsTree control = new();
+            control.SetRefs(refs, [], "main");
+            TreeView tree = control.GetTestAccessor().Tree;
+            TreeViewItem[] roots = tree.Items.Cast<TreeViewItem>().ToArray();
+            tree.SelectedItems!.Add(roots[0].Items.Cast<TreeViewItem>().Single());
+            tree.SelectedItems.Add(roots[3].Items.Cast<TreeViewItem>().Single());
+            roots[0].IsExpanded = false;
+            roots[3].IsExpanded = true;
+            int selectionChanges = 0;
+            control.NodeSelectionChanged += (_, _) => selectionChanges++;
+
+            control.SetRefs(removeSelectedBranch ? [refs[1]] : refs, [], "main");
+
+            selectionChanges.Should().Be(0);
+            tree.SelectedItems.Cast<TreeViewItem>().Select(HeaderText).Should().BeEquivalentTo(
+                removeSelectedBranch ? new[] { "v1" } : ["main", "v1"]);
+            roots = tree.Items.Cast<TreeViewItem>().ToArray();
+            roots[0].IsExpanded.Should().BeFalse();
+            roots[3].IsExpanded.Should().BeTrue();
+            tree.SelectedItem = roots[0];
+            selectionChanges.Should().BeGreaterThan(0, "real selection must still navigate after refresh");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    public void UpdateNodes_should_restore_selection_notifications_after_a_nested_failure()
+    {
+        RepoObjectsTree control = new();
+        control.SetRefs([CreateRef("refs/heads/main")]);
+        int selectionChanges = 0;
+        control.NodeSelectionChanged += (_, _) => selectionChanges++;
+        Action update = () => control.UpdateNodes(() =>
+            control.UpdateNodes(() => throw new InvalidOperationException("Test refresh failure")));
+
+        update.Should().Throw<InvalidOperationException>();
+        TreeView tree = control.GetTestAccessor().Tree;
+        tree.SelectedItem = tree.Items.Cast<TreeViewItem>().First();
+        selectionChanges.Should().Be(1);
     }
 
     [AvaloniaTest]
@@ -280,7 +334,7 @@ public sealed class RepoObjectsTreeTests
             TreeViewItem branches = roots.Single(item => HeaderText(item).StartsWith("Branches", StringComparison.Ordinal));
             branches.Items.Cast<TreeViewItem>().Select(HeaderText).Should().Equal("main", "z-last", "a-first");
             HeaderLabel(branches.Items.Cast<TreeViewItem>().Single(item => HeaderText(item) == "main")).FontWeight.Should().Be(FontWeight.Bold);
-            HeaderText(roots.Single(item => HeaderText(item).StartsWith("Stashes", StringComparison.Ordinal))).Should().Be("Stashes (1)");
+            HeaderText(roots.Single(item => HeaderText(item).StartsWith("Stashes", StringComparison.Ordinal))).Should().Be("Stashes");
         }
         finally
         {
@@ -444,7 +498,7 @@ public sealed class RepoObjectsTreeTests
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
             TreeViewItem stashRoot = accessor.Tree.Items.Cast<TreeViewItem>().Last();
             TreeViewItem stashItem = stashRoot.Items.Cast<TreeViewItem>().Single();
-            ((TextBlock)((StackPanel)stashRoot.Header!).Children[1]).Text.Should().Be("Stashes (1)");
+            ((TextBlock)((StackPanel)stashRoot.Header!).Children[1]).Text.Should().Be("Stashes");
             ((TextBlock)((StackPanel)stashItem.Header!).Children[1]).Text.Should().Be("@{0}: On main: saved work");
 
             accessor.Tree.SelectedItem = stashItem;
@@ -568,7 +622,7 @@ public sealed class RepoObjectsTreeTests
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
             TreeViewItem root = accessor.Tree.Items.Cast<TreeViewItem>()
                 .Single(item => HeaderText(item).StartsWith("Worktrees", StringComparison.Ordinal));
-            HeaderText(root).Should().Be("Worktrees (3)");
+            HeaderText(root).Should().Be("Worktrees");
             root.IsExpanded.Should().BeTrue();
             TreeViewItem[] items = root.Items.Cast<TreeViewItem>().ToArray();
             HeaderText(items[0]).Should().Be("repo (main)");
@@ -582,6 +636,14 @@ public sealed class RepoObjectsTreeTests
 
             control.SelectedRevisionObjectId.Should().Be(ObjectId.Parse(feature.Sha1!));
             control.SelectedRef.Should().BeNull();
+
+            int selectionChanges = 0;
+            control.NodeSelectionChanged += (_, _) => selectionChanges++;
+            accessor.SetWorktrees([main, feature, deleted], mainPath);
+            selectionChanges.Should().Be(0);
+            control.SelectedRevisionObjectId.Should().Be(ObjectId.Parse(feature.Sha1!));
+            accessor.Tree.SelectedItem = root.Items.Cast<TreeViewItem>().First();
+            selectionChanges.Should().BeGreaterThan(0);
         }
         finally
         {
@@ -693,7 +755,7 @@ public sealed class RepoObjectsTreeTests
 
             TreeViewItem submodules = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>()
                 .Single(item => HeaderText(item).StartsWith("Submodules", StringComparison.Ordinal));
-            HeaderText(submodules).Should().Be("Submodules (3)");
+            HeaderText(submodules).Should().Be("Submodules");
             TreeViewItem top = submodules.Items.Cast<TreeViewItem>().Single();
             HeaderText(top).Should().Be("repo (main)");
             HeaderLabel(top).FontWeight.Should().Be(FontWeight.Bold);
@@ -766,8 +828,20 @@ public sealed class RepoObjectsTreeTests
 
             TreeViewItem submodules = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>()
                 .Single(item => HeaderText(item).StartsWith("Submodules", StringComparison.Ordinal));
-            HeaderText(submodules).Should().Be("Submodules (1)");
+            HeaderText(submodules).Should().Be("Submodules");
             HeaderText(submodules.Items.Cast<TreeViewItem>().Single().Items.Cast<TreeViewItem>().Single()).Should().Be("child");
+
+            TreeView tree = control.GetTestAccessor().Tree;
+            tree.SelectedItem = submodules.Items.Cast<TreeViewItem>().Single().Items.Cast<TreeViewItem>().Single();
+            int selectionChanges = 0;
+            control.NodeSelectionChanged += (_, _) => selectionChanges++;
+            provider.StatusUpdated += Raise.Event<EventHandler<SubmoduleStatusEventArgs>>(
+                provider,
+                new SubmoduleStatusEventArgs(result, structureUpdated: true, CancellationToken.None));
+            selectionChanges.Should().Be(0);
+            HeaderText((TreeViewItem)tree.SelectedItem!).Should().Be("child");
+            tree.SelectedItem = submodules;
+            selectionChanges.Should().BeGreaterThan(0);
         }
         finally
         {
