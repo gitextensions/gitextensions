@@ -7,6 +7,8 @@ param(
 
     [int]$TimeoutSeconds = 45,
 
+    [int]$ProcessId = 0,
+
     [ValidateSet("PrintWindow", "Screen")]
     [string]$CaptureMethod = "PrintWindow"
 )
@@ -15,6 +17,8 @@ $ErrorActionPreference = "Stop"
 
 # parity-scaffolding: captures WSLg runtime windows as evidence until the parity gate closes.
 Add-Type -AssemblyName System.Drawing
+if (-not ([System.Management.Automation.PSTypeName]'GitExtensionsSmokeWindows').Type)
+{
 Add-Type -TypeDefinition @"
 using System;
 using System.Collections.Generic;
@@ -47,6 +51,9 @@ public static class GitExtensionsSmokeWindows
     private static extern bool IsWindowVisible(IntPtr window);
 
     [DllImport("user32.dll")]
+    private static extern uint GetWindowThreadProcessId(IntPtr window, out uint processId);
+
+    [DllImport("user32.dll")]
     private static extern bool SetForegroundWindow(IntPtr window);
 
     [DllImport("user32.dll")]
@@ -68,13 +75,19 @@ public static class GitExtensionsSmokeWindows
     [DllImport("user32.dll", EntryPoint = "PrintWindow")]
     private static extern bool PrintWindowNative(IntPtr window, IntPtr deviceContext, uint flags);
 
-    public static IntPtr FindVisibleWindow(string titlePattern, out string title)
+    public static IntPtr FindVisibleWindow(string titlePattern, int processId, out string title)
     {
         IntPtr match = IntPtr.Zero;
         string matchedTitle = string.Empty;
         EnumWindows((window, parameter) =>
         {
             if (!IsWindowVisible(window))
+            {
+                return true;
+            }
+
+            GetWindowThreadProcessId(window, out uint windowProcessId);
+            if (processId != 0 && windowProcessId != processId)
             {
                 return true;
             }
@@ -166,13 +179,14 @@ public static class GitExtensionsSmokeWindows
     }
 }
 "@
+}
 
 $deadline = [DateTime]::UtcNow.AddSeconds($TimeoutSeconds)
 $window = [IntPtr]::Zero
 $title = ""
 while ($window -eq [IntPtr]::Zero -and [DateTime]::UtcNow -lt $deadline)
 {
-    $window = [GitExtensionsSmokeWindows]::FindVisibleWindow($TitlePattern, [ref]$title)
+    $window = [GitExtensionsSmokeWindows]::FindVisibleWindow($TitlePattern, $ProcessId, [ref]$title)
     if ($window -eq [IntPtr]::Zero)
     {
         Start-Sleep -Milliseconds 500

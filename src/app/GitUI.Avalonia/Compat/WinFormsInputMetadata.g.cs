@@ -209,8 +209,8 @@ internal static class WinFormsInputMetadata
                 new("label2", 0, null, null),
                 new("linkLabelIcons", 4, true, null),
                 new("logoPictureBox", 12, false, null),
+                new("panel1", 1, null, null),
                 new("pictureDonate", 25, false, null),
-                new("tableLayoutPanel1", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.FormAddFiles"] =
             [
@@ -245,6 +245,7 @@ internal static class WinFormsInputMetadata
                 new("BrowsePatch", 4, null, null),
                 new("ContinuePanel", 19, null, null),
                 new("IgnoreWhitespace", 11, null, null),
+                new("MainLayoutPanel", 0, null, null),
                 new("MergeToolPanel", 14, null, null),
                 new("Mergetool", 15, null, null),
                 new("PanelBR", 13, null, null),
@@ -259,6 +260,8 @@ internal static class WinFormsInputMetadata
                 new("SignOff", 12, null, null),
                 new("Skip", 21, null, null),
                 new("SolveMergeConflicts", 23, null, null),
+                new("panel2", 16, null, null),
+                new("panel3", 18, null, null),
             ],
             ["GitUI.CommandsDialogs.FormArchive"] =
             [
@@ -396,6 +399,7 @@ internal static class WinFormsInputMetadata
                 new("CentralRepository", 0, null, null),
                 new("FromBrowse", 2, null, null),
                 new("Info", 1, null, null),
+                new("LoadSSHKey", 1, null, null),
                 new("Ok", 0, null, null),
                 new("PersonalRepository", 1, true, null),
                 new("ToBrowse", 5, null, null),
@@ -412,6 +416,7 @@ internal static class WinFormsInputMetadata
                 new("repositoryLabel", 0, null, null),
                 new("subdirectoryLabel", 6, null, null),
                 new("tableLayoutPanel1", 0, null, null),
+                new("tpnlMain", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.FormCommandlineHelp"] =
             [
@@ -470,6 +475,7 @@ internal static class WinFormsInputMetadata
                 new("grpOrphan", 6, false, null),
                 new("label1", 0, null, null),
                 new("lblCreateBranch", 2, null, null),
+                new("tableLayout", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.FormCreateTag"] =
             [
@@ -492,6 +498,7 @@ internal static class WinFormsInputMetadata
                 new("Branches", 1, null, null),
                 new("Delete", 2, null, null),
                 new("labelSelectBranches", 0, null, null),
+                new("tlpnlMain", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.FormDeleteRemoteBranch"] =
             [
@@ -591,6 +598,8 @@ internal static class WinFormsInputMetadata
                 new("_NO_TRANSLATE_Directory", 1, null, null),
                 new("groupBox1", 3, false, null),
                 new("label1", 0, null, null),
+                new("tableLayoutPanel1", 0, null, null),
+                new("tpnlMain", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.FormLog"] =
             [
@@ -899,6 +908,7 @@ internal static class WinFormsInputMetadata
                 new("labelInstantSaveNotice", 4, null, null),
                 new("panelCurrentSettingsPage", 5, null, null),
                 new("settingsTreeView", 1, null, null),
+                new("tableLayoutPanel3", 2, null, null),
             ],
             ["GitUI.CommandsDialogs.FormStash"] =
             [
@@ -2233,8 +2243,8 @@ internal static class WinFormsInputMetadata
                 new("label2", "Label"),
                 new("linkLabelIcons", "LinkLabel"),
                 new("logoPictureBox", "PictureBox"),
+                new("panel1", "Panel"),
                 new("pictureDonate", "PictureBox"),
-                new("tableLayoutPanel1", "TableLayoutPanel"),
             ],
             ["GitUI.CommandsDialogs.FormAddFiles"] =
             [
@@ -2269,6 +2279,7 @@ internal static class WinFormsInputMetadata
                 new("BrowsePatch", "Button"),
                 new("ContinuePanel", "Panel"),
                 new("IgnoreWhitespace", "CheckBox"),
+                new("MainLayoutPanel", "TableLayoutPanel"),
                 new("MergeToolPanel", "Panel"),
                 new("Mergetool", "Button"),
                 new("PanelBR", "FlowLayoutPanel"),
@@ -2283,6 +2294,8 @@ internal static class WinFormsInputMetadata
                 new("SignOff", "CheckBox"),
                 new("Skip", "Button"),
                 new("SolveMergeConflicts", "Button"),
+                new("panel2", "Panel"),
+                new("panel3", "Panel"),
             ],
             ["GitUI.CommandsDialogs.FormArchive"] =
             [
@@ -2525,6 +2538,7 @@ internal static class WinFormsInputMetadata
                 new("CentralRepository", "RadioButton"),
                 new("FromBrowse", "Button"),
                 new("Info", "Label"),
+                new("LoadSSHKey", "Button"),
                 new("Ok", "Button"),
                 new("PersonalRepository", "RadioButton"),
                 new("ToBrowse", "Button"),
@@ -2541,6 +2555,7 @@ internal static class WinFormsInputMetadata
                 new("repositoryLabel", "Label"),
                 new("subdirectoryLabel", "Label"),
                 new("tableLayoutPanel1", "TableLayoutPanel"),
+                new("tpnlMain", "TableLayoutPanel"),
             ],
             ["GitUI.CommandsDialogs.FormCommandlineHelp"] =
             [
@@ -2638,6 +2653,7 @@ internal static class WinFormsInputMetadata
                 new("grpOrphan", "GroupBox"),
                 new("label1", "Label"),
                 new("lblCreateBranch", "Label"),
+                new("tableLayout", "TableLayoutPanel"),
             ],
             ["GitUI.CommandsDialogs.FormCreateTag"] =
             [
@@ -2660,6 +2676,7 @@ internal static class WinFormsInputMetadata
                 new("Branches", "GitUI.BranchComboBox"),
                 new("Delete", "Button"),
                 new("labelSelectBranches", "Label"),
+                new("tlpnlMain", "TableLayoutPanel"),
             ],
             ["GitUI.CommandsDialogs.FormDeleteRemoteBranch"] =
             [
@@ -2762,6 +2779,7 @@ internal static class WinFormsInputMetadata
                 new("toolStripSeparator1", "ToolStripSeparator"),
                 new("toolStripSeparator2", "ToolStripSeparator"),
                 new("toolStripSeparator4", "ToolStripSeparator"),
+                new("toolStripSeparator5", "ToolStripSeparator"),
                 new("toolStripSplitLoad", "ToolStripSplitButton"),
             ],
             ["GitUI.CommandsDialogs.FormFormatPatch"] =
@@ -2808,6 +2826,8 @@ internal static class WinFormsInputMetadata
                 new("_NO_TRANSLATE_Directory", "ComboBox"),
                 new("groupBox1", "GroupBox"),
                 new("label1", "Label"),
+                new("tableLayoutPanel1", "TableLayoutPanel"),
+                new("tpnlMain", "TableLayoutPanel"),
             ],
             ["GitUI.CommandsDialogs.FormLog"] =
             [
@@ -3161,6 +3181,7 @@ internal static class WinFormsInputMetadata
                 new("labelInstantSaveNotice", "Label"),
                 new("panelCurrentSettingsPage", "Panel"),
                 new("settingsTreeView", "GitUI.CommandsDialogs.SettingsDialog.SettingsTreeViewUserControl"),
+                new("tableLayoutPanel3", "TableLayoutPanel"),
             ],
             ["GitUI.CommandsDialogs.FormStash"] =
             [
@@ -3980,6 +4001,7 @@ internal static class WinFormsInputMetadata
                 new("linePanel", "Panel"),
                 new("settingsPagePanel", "Panel"),
                 new("tableLayoutPanel1", "TableLayoutPanel"),
+                new("tableLayoutPanel2", "TableLayoutPanel"),
             ],
             ["GitUI.CommandsDialogs.SettingsDialog.SettingsTreeViewUserControl"] =
             [
@@ -4888,8 +4910,8 @@ internal static class WinFormsInputMetadata
                 new("label2", ["Top", "Left", "Right"], null, true, new Avalonia.Thickness(12, 4, 12, 4), null, "MiddleCenter", null, null, false, false),
                 new("linkLabelIcons", null, null, true, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
                 new("logoPictureBox", null, null, null, new Avalonia.Thickness(12, 12, 12, 12), null, null, null, null, false, false),
+                new("panel1", null, "Fill", null, new Avalonia.Thickness(12, 12, 12, 12), null, null, null, null, false, false),
                 new("pictureDonate", null, null, null, new Avalonia.Thickness(6, 12, 6, 4), null, null, null, null, false, false),
-                new("tableLayoutPanel1", null, "Fill", true, new Avalonia.Thickness(2, 2, 2, 2), new Avalonia.Thickness(12, 24, 12, 12), null, null, null, false, false),
             ],
             ["GitUI.CommandsDialogs.FormAddFiles"] =
             [
@@ -4921,6 +4943,7 @@ internal static class WinFormsInputMetadata
                 new("AddFiles", null, "Top", null, null, null, null, null, null, false, false),
                 new("ContinuePanel", null, "Top", null, null, null, null, null, null, false, true),
                 new("IgnoreWhitespace", null, null, true, null, null, null, null, null, false, false),
+                new("MainLayoutPanel", null, "Fill", null, null, null, null, null, null, false, false),
                 new("MergeToolPanel", null, "Top", true, null, null, null, null, null, false, true),
                 new("Mergetool", null, null, null, null, null, null, null, null, false, true),
                 new("PanelBR", null, "Fill", true, null, null, null, null, null, false, false),
@@ -5065,6 +5088,8 @@ internal static class WinFormsInputMetadata
                 new("CentralRepository", null, null, true, null, null, null, null, null, false, false),
                 new("FromBrowse", ["Right"], null, null, null, null, null, null, null, false, false),
                 new("Info", ["Top", "Left", "Right"], null, null, new Avalonia.Thickness(3, 13, 3, 0), null, "MiddleLeft", "FixedSingle", null, false, true),
+                new("LoadSSHKey", null, null, true, null, new Avalonia.Thickness(8, 0, 8, 0), null, null, null, false, false),
+                new("MainPanel", null, null, true, null, null, null, null, null, false, false),
                 new("Ok", ["Right"], null, true, null, null, null, null, null, false, false),
                 new("PersonalRepository", null, null, true, null, null, null, null, null, false, false),
                 new("ToBrowse", ["Right"], null, null, null, null, null, null, null, false, false),
@@ -5081,6 +5106,7 @@ internal static class WinFormsInputMetadata
                 new("repositoryLabel", ["Left"], "Left", true, null, null, "MiddleLeft", null, null, false, false),
                 new("subdirectoryLabel", ["Left"], "Left", true, null, null, "MiddleLeft", null, null, false, false),
                 new("tableLayoutPanel1", null, "Top", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
+                new("tpnlMain", null, "Fill", true, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
             ],
             ["GitUI.CommandsDialogs.FormCommandlineHelp"] =
             [
@@ -5151,6 +5177,7 @@ internal static class WinFormsInputMetadata
                 new("grpOrphan", null, "Fill", true, null, new Avalonia.Thickness(8, 8, 8, 8), null, null, null, false, false),
                 new("label1", null, "Fill", true, new Avalonia.Thickness(3, 3, 3, 3), null, "MiddleLeft", null, null, false, false),
                 new("lblCreateBranch", null, "Fill", true, new Avalonia.Thickness(3, 3, 3, 3), null, "MiddleLeft", null, null, false, false),
+                new("tableLayout", null, "Fill", true, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
             ],
             ["GitUI.CommandsDialogs.FormCreateTag"] =
             [
@@ -5172,6 +5199,7 @@ internal static class WinFormsInputMetadata
                 new("Delete", ["Top", "Right"], null, true, null, null, null, null, null, true, false),
                 new("MainPanel", null, null, null, null, new Avalonia.Thickness(9, 9, 9, 9), null, null, null, false, false),
                 new("labelSelectBranches", null, "Fill", true, null, null, "MiddleLeft", null, null, true, false),
+                new("tlpnlMain", null, "Fill", true, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
             ],
             ["GitUI.CommandsDialogs.FormDeleteRemoteBranch"] =
             [
@@ -5280,10 +5308,13 @@ internal static class WinFormsInputMetadata
                 new("Browse", ["Right"], null, null, null, null, null, null, null, false, false),
                 new("Central", null, null, true, null, null, null, null, null, false, false),
                 new("Init", null, null, true, null, null, null, null, null, false, false),
+                new("MainPanel", null, null, true, null, null, null, null, null, false, false),
                 new("Personal", null, null, true, null, null, null, null, null, false, false),
                 new("_NO_TRANSLATE_Directory", ["Left", "Right"], null, null, null, null, null, null, null, false, false),
                 new("groupBox1", ["Top", "Left", "Right"], null, true, null, null, null, null, null, false, false),
                 new("label1", ["Left"], null, true, null, null, null, null, null, false, false),
+                new("tableLayoutPanel1", null, "Top", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
+                new("tpnlMain", null, "Fill", true, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
             ],
             ["GitUI.CommandsDialogs.FormLog"] =
             [
@@ -5584,6 +5615,7 @@ internal static class WinFormsInputMetadata
                 new("labelInstantSaveNotice", ["Bottom", "Left"], null, true, new Avalonia.Thickness(3, 2, 3, 0), null, "MiddleRight", null, null, false, false),
                 new("panelCurrentSettingsPage", null, "Fill", null, null, null, null, null, null, false, false),
                 new("settingsTreeView", null, "Fill", null, null, null, null, null, null, false, false),
+                new("tableLayoutPanel3", null, "Fill", null, null, new Avalonia.Thickness(8, 8, 8, 8), null, null, null, false, false),
             ],
             ["GitUI.CommandsDialogs.FormStash"] =
             [
@@ -6303,6 +6335,7 @@ internal static class WinFormsInputMetadata
                 new("linePanel", ["Bottom", "Left", "Right"], null, null, new Avalonia.Thickness(3, 4, 3, 4), null, null, null, null, false, true),
                 new("settingsPagePanel", null, "Fill", null, new Avalonia.Thickness(3, 4, 3, 4), null, null, null, null, false, false),
                 new("tableLayoutPanel1", ["None"], null, true, new Avalonia.Thickness(3, 4, 3, 4), null, null, null, null, false, false),
+                new("tableLayoutPanel2", null, "Fill", true, new Avalonia.Thickness(3, 4, 3, 4), null, null, null, null, false, false),
             ],
             ["GitUI.CommandsDialogs.SettingsDialog.SettingsTreeViewUserControl"] =
             [

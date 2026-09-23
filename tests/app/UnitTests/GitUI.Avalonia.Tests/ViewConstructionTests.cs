@@ -9,6 +9,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommitInfo;
 using GitUI.Editor;
 using GitUI.LeftPanel;
@@ -141,6 +142,9 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
+        IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
 
         FormBrowse form = new(commands);
         MenuItem refresh = form.FindControl<MenuItem>("refreshToolStripMenuItem")
@@ -303,6 +307,9 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
+        IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
 
         FormBrowse form = new(commands);
         MenuItem commit = form.FindControl<MenuItem>("commitToolStripMenuItem")
@@ -331,6 +338,9 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
+        IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
 
         FormBrowse form = new(commands);
         MenuItem stash = form.FindControl<MenuItem>("stashToolStripMenuItem")
@@ -359,6 +369,9 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
+        IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
 
         FormBrowse form = new(commands);
         MenuItem merge = form.FindControl<MenuItem>("mergeBranchToolStripMenuItem")
@@ -388,6 +401,9 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
+        IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
 
         FormBrowse form = new(commands);
         MenuItem rebase = form.FindControl<MenuItem>("rebaseToolStripMenuItem")
@@ -404,6 +420,16 @@ public sealed class ViewConstructionTests
         rebase.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
         commands.Received(1).StartRebaseDialog(form, revision.ObjectId.ToString());
+
+        GitRevision excluded = new(ObjectId.Random());
+        revisions.ItemsSource = new[] { revision, excluded };
+        revisions.Selection.Select(0);
+        revisions.Selection.Select(1);
+        rebase.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        commands.Received(1).StartRebaseDialog(
+            form, excluded.ObjectId.ToShortString(), revisionGrid.GetCurrentBranch(),
+            revision.ObjectId.ToString(), interactive: false, startRebaseImmediately: false);
     }
 
     [AvaloniaTest]
@@ -423,6 +449,9 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
+        IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
 
         FormBrowse form = new(commands);
         MenuItem pull = form.FindControl<MenuItem>("pullToolStripMenuItem")
@@ -453,6 +482,9 @@ public sealed class ViewConstructionTests
             commands.GetService(typeof(IAppTitleGenerator)).Returns(titleGenerator);
             commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
             commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+            commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
+            IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
+            commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
 
             FormBrowse form = new(commands);
             Button commit = form.FindControl<Button>("toolStripButtonCommit")!;
@@ -494,6 +526,9 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
+        IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
 
         FormBrowse form = new(commands);
         MenuItem checkout = form.FindControl<MenuItem>("checkoutBranchToolStripMenuItem")
@@ -522,6 +557,9 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
+        IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
 
         FormBrowse form = new(commands);
         MenuItem createBranch = form.FindControl<MenuItem>("branchToolStripMenuItem")
@@ -550,6 +588,9 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
+        IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
 
         FormBrowse form = new(commands);
         MenuItem deleteBranch = form.FindControl<MenuItem>("deleteBranchToolStripMenuItem")
@@ -578,6 +619,9 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
+        IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
 
         FormBrowse form = new(commands);
         MenuItem createTag = form.FindControl<MenuItem>("tagToolStripMenuItem")

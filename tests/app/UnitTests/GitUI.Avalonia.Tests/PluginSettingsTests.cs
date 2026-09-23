@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
@@ -299,6 +299,7 @@ public sealed class PluginSettingsTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(hotkeySettingsLoader);
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         IUserRepositoriesListController repositoriesController = Substitute.For<IUserRepositoriesListController>();
         repositoriesController.PreRenderRepositories(Arg.Any<string>()).Returns((
             Array.Empty<RecentRepoInfo>(),

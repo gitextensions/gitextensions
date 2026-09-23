@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Properties;
@@ -12,10 +12,11 @@ internal sealed class WorktreeTree : Tree
     public WorktreeTree(RepoObjectsTree owner)
         : base(owner, RepoTreeKind.Worktrees, TranslatedStrings.Worktrees, Images.WorkTree)
     {
-        Complete(TranslatedStrings.Worktrees, Images.WorkTree, count: 0, expanded: false);
+        Complete(TranslatedStrings.Worktrees, Images.WorkTree, expanded: false);
     }
 
     public void Load(IReadOnlyList<GitWorktree> worktrees, string currentWorkingDirectory)
+        => OwnerControl.UpdateNodes(() =>
     {
         HashSet<string> selected = OwnerControl.CaptureSelectedNodeIdentities(this);
         bool firstLoad = TreeViewNode.Items.Count == 0;
@@ -67,10 +68,9 @@ internal sealed class WorktreeTree : Tree
         Complete(
             TranslatedStrings.Worktrees,
             Images.WorkTree,
-            worktrees.Count,
             expanded: firstLoad ? worktrees.Count > 1 : wasExpanded);
         OwnerControl.RestoreSelectedNodes(this, selected);
-    }
+    });
 
     /// <summary>
     /// Finds the longest common prefix among the given relative paths, snapping to a word boundary.

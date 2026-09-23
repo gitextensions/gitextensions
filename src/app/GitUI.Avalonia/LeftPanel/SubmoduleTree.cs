@@ -20,7 +20,7 @@ internal sealed class SubmoduleTree : Tree
     public SubmoduleTree(RepoObjectsTree owner)
         : base(owner, RepoTreeKind.Submodules, TranslatedStrings.Submodules, Images.FolderSubmodule)
     {
-        Complete(TranslatedStrings.Submodules, Images.FolderSubmodule, count: 0, expanded: true);
+        Complete(TranslatedStrings.Submodules, Images.FolderSubmodule, expanded: true);
     }
 
     public void Attach(ISubmoduleStatusProvider? provider)
@@ -48,6 +48,7 @@ internal sealed class SubmoduleTree : Tree
     }
 
     public void Load(SubmoduleInfoResult result)
+        => OwnerControl.UpdateNodes(() =>
     {
         if (result.TopProject is null)
         {
@@ -87,7 +88,7 @@ internal sealed class SubmoduleTree : Tree
         }
 
         CompactSingleChildFolderChains(topNode.TreeViewNode.Items.Cast<TreeViewItem>());
-        Complete(TranslatedStrings.Submodules, Images.FolderSubmodule, result.AllSubmodules.Count, expanded: true);
+        Complete(TranslatedStrings.Submodules, Images.FolderSubmodule, expanded: true);
 
         foreach (NodeBase node in DescendantsAndSelf())
         {
@@ -96,7 +97,7 @@ internal sealed class SubmoduleTree : Tree
         }
 
         OwnerControl.RestoreSelectedNodes(this, selected);
-    }
+    });
 
     private void AddSubmodule(
         SubmoduleInfoResult result,

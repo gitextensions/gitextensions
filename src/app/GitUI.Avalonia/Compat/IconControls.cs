@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
@@ -72,6 +72,17 @@ public class IconSplitButton : SplitButton
     }
 
     public void ShowDropDown() => OpenFlyout();
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == FlyoutProperty && Flyout is MenuFlyout { Items.Count: 0, Items.IsReadOnly: false } menu)
+        {
+            // Avalonia 12.1's presenter unwraps ItemCollection to its current backing list.
+            // Initialize that list before Opening populates a dynamic, initially empty menu.
+            menu.Items.Clear();
+        }
+    }
 
     protected override Type StyleKeyOverride => typeof(SplitButton);
 }

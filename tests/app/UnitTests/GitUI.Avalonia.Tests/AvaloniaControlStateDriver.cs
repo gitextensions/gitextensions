@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -534,6 +534,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
             owner.RaiseEvent(new ContextRequestedEventArgs());
             Dispatcher.UIThread.RunJobs();
+            RequireOpenContextMenu(contextMenu);
             PrepareLongOverlayOwner(contextMenu);
             contextMenu.Open(owner);
             Dispatcher.UIThread.RunJobs();
@@ -546,6 +547,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         {
             ((Control)target).RaiseEvent(new ContextRequestedEventArgs());
             Dispatcher.UIThread.RunJobs();
+            RequireOpenContextMenu(attachedContextMenu);
             PrepareLongOverlayOwner(attachedContextMenu);
             attachedContextMenu.Open((Control)target);
             Dispatcher.UIThread.RunJobs();
@@ -610,6 +612,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
                 .First(control => ReferenceEquals(control.ContextMenu, owningContextMenu));
             owner.RaiseEvent(new ContextRequestedEventArgs());
             Dispatcher.UIThread.RunJobs();
+            RequireOpenContextMenu(owningContextMenu);
             owningContextMenu.Open(owner);
             Dispatcher.UIThread.RunJobs();
             _restoreActions.Add(owningContextMenu.Close);
@@ -702,6 +705,16 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
     // parity-scaffolding: The headless backend must use its real OverlayPopupHost, but unlike a
     // desktop screen it constrains that host to the standalone owner. Give long product menus a
     // screen-sized viewport while retaining the component's measured size for the paired crop.
+    private static void RequireOpenContextMenu(ContextMenu contextMenu)
+    {
+        // parity-scaffolding: Opening can cancel or close the product menu. Never override
+        // that decision with a direct Open and record a state users cannot actually reach.
+        if (!contextMenu.IsOpen)
+        {
+            throw new AvaloniaCaptureStateUnsupportedException("The requested context menu declined to open in the current control state.");
+        }
+    }
+
     private void PrepareLongOverlayOwner(ContextMenu contextMenu)
     {
         if (_topLevel is not Window captureWindow)

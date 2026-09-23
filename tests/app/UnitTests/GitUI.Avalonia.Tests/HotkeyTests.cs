@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using System.Xml.Serialization;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -868,6 +868,88 @@ public sealed class HotkeyTests
         {
             form.Close();
         }
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_quick_commands_should_dispatch_the_original_actions()
+    {
+        IScriptsManager scripts = Substitute.For<IScriptsManager>();
+        scripts.GetScripts().Returns(new System.ComponentModel.BindingList<ScriptInfo>());
+        (FormBrowse form, IGitUICommands commands, _) = CreateBrowseForm([], [], scriptsManager: scripts);
+        using (form)
+        {
+            form.ExecuteCommand(FormBrowse.Command.QuickPull).Should().BeTrue();
+            commands.Received(1).StartPullDialogAndPullImmediately(form, pullAction: GitPullAction.Merge);
+
+            form.ExecuteCommand(FormBrowse.Command.QuickPush).Should().BeTrue();
+            commands.Received(1).StartPushDialog(form, pushOnShow: true);
+
+            form.ExecuteCommand(FormBrowse.Command.Stash).Should().BeTrue();
+            commands.Received(1).StashSave(form, AppSettings.IncludeUntrackedFilesInManualStash);
+
+            form.ExecuteCommand(FormBrowse.Command.StashStaged).Should().BeTrue();
+            commands.Received(1).StashStaged(form);
+
+            form.ExecuteCommand(FormBrowse.Command.StashPop).Should().BeTrue();
+            commands.Received(1).StashPop(form);
+
+            scripts.DidNotReceive().GetScript(Arg.Any<int>());
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_default_quick_pull_should_use_the_persisted_action()
+    {
+        GitPullAction previous = AppSettings.DefaultPullAction;
+        try
+        {
+            AppSettings.DefaultPullAction = GitPullAction.Rebase;
+            (FormBrowse form, IGitUICommands commands, _) = CreateBrowseForm();
+            using (form)
+            {
+                form.ExecuteCommand(FormBrowse.Command.QuickPullOrFetch).Should().BeTrue();
+                commands.Received(1).StartPullDialogAndPullImmediately(form, pullAction: GitPullAction.Rebase);
+            }
+        }
+        finally
+        {
+            AppSettings.DefaultPullAction = previous;
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_should_route_visible_file_pane_hotkeys_when_the_grid_has_focus()
+    {
+        (FormBrowse form, _, _) = CreateBrowseForm(
+            [], [], fileStatusHotkeys:
+            [
+                new HotkeyCommand((int)RevisionDiffControl.Command.StageSelectedFile, "Stage")
+                {
+                    KeyData = WinFormsShims.Keys.F6,
+                },
+            ]);
+        using (form)
+        {
+            form.Show();
+            form.CommitInfoTabControl.SelectedItem = form.TreeTabPage;
+            int stageInvocations = 0;
+            form.fileTree.FileStatusList.GetTestAccessor().StageMenuItem.Click += (_, _) => stageInvocations++;
+
+            form.ProcessHotkey(WinFormsShims.Keys.F6).Should().BeTrue();
+
+            stageInvocations.Should().Be(1);
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_should_register_and_release_its_browse_command_owner()
+    {
+        (FormBrowse form, IGitUICommands commands, _) = CreateBrowseForm();
+        commands.BrowseRepo.Should().BeSameAs(form);
+        form.Show();
+        form.Close();
+        commands.BrowseRepo.Should().BeNull();
     }
 
     private static (FormBrowse Form, IGitUICommands Commands, ILockableNotifier Notifier) CreateBrowseForm(params HotkeyCommand[] hotkeys)
