@@ -88,6 +88,21 @@ public sealed class CommitInfoTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void XhtmlTextBlock_should_apply_the_source_RichEdit_content_overhang_per_instance()
+    {
+        XhtmlTextBlock block = new();
+        block.SetTabStops([80, 81]);
+        block.SetXHTMLText("Author:\tName");
+        double baseline = block.MinWidth;
+
+        block.NativeContentOverhang = 1;
+        block.SetXHTMLText("Author:\tName");
+
+        block.MinWidth.Should().Be(baseline + 1);
+    }
+
+    [AvaloniaTest]
     public void Capture_tree_should_preserve_XHTML_text_and_link_targets()
     {
         AvaloniaThemeResources.Apply(Application.Current!, ThemeModule.Settings);

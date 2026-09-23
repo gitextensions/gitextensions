@@ -239,6 +239,7 @@
     <wf:ToolStripContainer x:Name="toolPanel"
                            Background="Transparent"
                            ClipToBounds="True">
+      <wf:ToolStripPanel x:Name="_topPanel" Height="27" ClipToBounds="True">
       <Grid x:Name="toolStripMainHost" ColumnDefinitions="*,Auto" Height="25" ClipToBounds="True">
         <ScrollViewer x:Name="toolStripMainViewport"
                       Grid.Column="0"
@@ -347,16 +348,19 @@
         <commandsDialogs:ToolStripPushButton x:Name="toolStripButtonPush"
                                             compat:TranslationCompat.TranslateToolTip="False"
                                             Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                            Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
                                             Content="Push"
                                             Icon="{x:Static properties:Images.Push}" />
         <compat:IconButton x:Name="toolStripButtonCommit"
                            compat:TranslationCompat.TranslateToolTip="False"
                            Classes="gitextensions-toolbar-button"
+                           Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
                            Content="Commit"
                            Icon="{x:Static properties:Images.RepoStateClean}" />
         <SplitButton x:Name="toolStripSplitStash"
                      compat:TranslationCompat.TranslateToolTip="False"
-                     Classes="gitextensions-toolbar-button gitextensions-icon-only">
+                     Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                     Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}">
           <SplitButton.Content>
             <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stash}" />
           </SplitButton.Content>
@@ -372,12 +376,20 @@
           </SplitButton.Flyout>
         </SplitButton>
         <Border x:Name="toolStripSeparator2" Classes="gitextensions-toolbar-separator" />
-        <Button x:Name="toolStripFileExplorer" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only">
+        <Button x:Name="toolStripFileExplorer" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only" Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" />
         </Button>
-        <Button x:Name="userShell" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button" Width="32">
-          <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GitForWindows}" />
-        </Button>
+        <compat:IconSplitButton x:Name="userShell"
+                                compat:TranslationCompat.TranslateToolTip="False"
+                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
+                                Width="32"
+                                Content=""
+                                Icon="{x:Static properties:Images.GitForWindows}">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout />
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
         <compat:IconButton x:Name="EditSettings"
                            compat:TranslationCompat.TranslateText="False"
                            compat:TranslationCompat.UseToolTipText="True"
@@ -389,6 +401,7 @@
         <Button x:Name="toolStripMainOverflow"
                 Grid.Column="1"
                 Width="16"
+                MinWidth="0"
                 Height="23"
                 Padding="0"
                 Focusable="False"
@@ -407,6 +420,7 @@
         <Button x:Name="toolStripFiltersOverflow"
                 Grid.Column="1"
                 Width="16"
+                MinWidth="0"
                 Height="23"
                 Padding="0"
                 Focusable="False"
@@ -419,6 +433,7 @@
                   Height="25"
                   Orientation="Horizontal"
                   Spacing="1" />
+      </wf:ToolStripPanel>
     <Grid x:Name="_contentPanel"
           Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
       <TextBlock x:Name="lblRepoPath" IsVisible="False" />
@@ -519,7 +534,6 @@
               IsVisible="False" />
       </Grid>
     </Grid>
-    <wf:Panel Name="_topPanel" Height="0" VerticalAlignment="Top" IsHitTestVisible="False" />
     <wf:Panel Name="_bottomPanel" Height="0" VerticalAlignment="Bottom" IsHitTestVisible="False" />
     <wf:Panel Name="_leftPanel" Width="0" HorizontalAlignment="Left" IsHitTestVisible="False" />
     <wf:Panel Name="_rightPanel" Width="0" HorizontalAlignment="Right" IsHitTestVisible="False" />

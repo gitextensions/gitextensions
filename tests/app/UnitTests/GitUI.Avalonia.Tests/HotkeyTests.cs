@@ -445,6 +445,47 @@ public sealed class HotkeyTests
         ToolTip.GetTip(quickFetch).Should().Be("Fetch\u00A0(Ctrl+Shift+Down)");
     }
 
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_hidden_diff_editor_should_defer_tooltip_hotkeys_until_its_tab_is_shown()
+    {
+        (FormBrowse form, _, _) = CreateBrowseForm(
+            browseHotkeys: [],
+            revisionHotkeys: [],
+            fileViewerHotkeys:
+            [
+                new HotkeyCommand((int)FileViewer.Command.NextChange, nameof(FileViewer.Command.NextChange))
+                {
+                    KeyData = WinFormsShims.Keys.Alt | WinFormsShims.Keys.Down,
+                },
+            ]);
+        form.Show();
+        try
+        {
+            IconButton nextChangeButton = form.revisionDiff.FileViewer.FindControl<IconButton>("nextChangeButton")!;
+            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.CommitInfoTabPage);
+            GetTooltipText(nextChangeButton).Should().Be("Next change");
+
+            form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            GetTooltipText(nextChangeButton).Should().Be("Next change\u00A0(Alt+Down)");
+        }
+        finally
+        {
+            form.Close();
+        }
+
+        static string? GetTooltipText(Control control)
+            => ToolTip.GetTip(control) switch
+            {
+                string text => text,
+                TextBlock textBlock => textBlock.Text,
+                _ => null,
+            };
+    }
+
     [Test]
     [Category("P4.3")]
     public void HotkeySettingsManager_should_load_the_original_left_panel_hotkeys()
@@ -966,7 +1007,8 @@ public sealed class HotkeyTests
         IScriptsRunner? scriptsRunner = null,
         IReadOnlyList<HotkeyCommand>? scriptHotkeys = null,
         IReadOnlyList<HotkeyCommand>? leftPanelHotkeys = null,
-        IReadOnlyList<HotkeyCommand>? fileStatusHotkeys = null)
+        IReadOnlyList<HotkeyCommand>? fileStatusHotkeys = null,
+        IReadOnlyList<HotkeyCommand>? fileViewerHotkeys = null)
     {
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(Path.GetTempPath());
@@ -983,6 +1025,7 @@ public sealed class HotkeyTests
         loader.LoadHotkeys(FormSettings.HotkeySettingsName).Returns(scriptHotkeys ?? []);
         loader.LoadHotkeys(RepoObjectsTree.HotkeySettingsName).Returns(leftPanelHotkeys ?? []);
         loader.LoadHotkeys(RevisionDiffControl.HotkeySettingsName).Returns(fileStatusHotkeys ?? []);
+        loader.LoadHotkeys(FileViewer.HotkeySettingsName).Returns(fileViewerHotkeys ?? []);
 
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
