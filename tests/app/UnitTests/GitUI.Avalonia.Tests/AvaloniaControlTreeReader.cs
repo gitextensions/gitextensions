@@ -267,6 +267,11 @@ internal sealed class AvaloniaControlTreeReader
                     break;
 
                 case Avalonia.Controls.Documents.InlineUIContainer container
+                    when GetPropertyValue(container, "Child") is Border { Tag: "\t" }:
+                    text.Append('\t');
+                    break;
+
+                case Avalonia.Controls.Documents.InlineUIContainer container
                     when GetPropertyValue(container, "Child") is HyperlinkButton link:
                     string caption = link.Content?.ToString() ?? string.Empty;
                     text.Append(caption);
