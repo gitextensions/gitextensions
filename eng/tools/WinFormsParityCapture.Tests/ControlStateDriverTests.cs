@@ -68,6 +68,35 @@ public sealed class ControlStateDriverTests
     [Test]
     [Apartment(ApartmentState.STA)]
     [Category("P8_6i")]
+    public void Apply_should_activate_a_tab_page_when_the_page_is_the_focus_target()
+    {
+        using Form form = new() { ClientSize = new Size(240, 140) };
+        using TabControl tabs = new() { Dock = DockStyle.Fill };
+        TabPage first = new() { Name = "FirstTab", Text = "First" };
+        TabPage second = new() { Name = "SecondTab", Text = "Second" };
+        tabs.TabPages.AddRange([first, second]);
+        form.Controls.Add(tabs);
+        form.Show();
+        tabs.SelectedTab.Should().BeSameAs(first);
+
+        using (ControlStateDriver.Apply(
+                   form,
+                   new CaptureStatePlan
+                   {
+                       Id = "second.focused",
+                       Kind = CaptureStateKind.Focus,
+                       TargetField = second.Name
+                   }))
+        {
+            tabs.SelectedTab.Should().BeSameAs(second);
+        }
+
+        tabs.SelectedTab.Should().BeSameAs(first);
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    [Category("P8_6i")]
     public void Apply_should_deliver_hover_to_the_visible_child_under_a_composite_target()
     {
         using Form form = new() { ClientSize = new Size(240, 140) };

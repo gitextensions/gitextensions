@@ -6,6 +6,8 @@
              Foreground="{DynamicResource GitExtensionsWindowTextBrush}">
   <compat:ThemeAwareTextEditor x:Name="TextBox"
                                Margin="0"
+                               BorderThickness="2"
+                               BorderBrush="{DynamicResource GitExtensionsControlBorderBrush}"
                                IsReadOnly="True"
                                ShowLineNumbers="False"
                                WordWrap="False"

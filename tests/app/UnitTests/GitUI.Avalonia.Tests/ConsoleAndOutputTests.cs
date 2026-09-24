@@ -1,5 +1,6 @@
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
@@ -12,6 +13,7 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.ParityCapture;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -166,6 +168,7 @@ public sealed class ConsoleAndOutputTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void FormBrowse_should_host_console_and_output_tabs_and_refresh_output()
     {
         using ServiceContainer serviceContainer = CreateServiceContainer();
@@ -180,6 +183,8 @@ public sealed class ConsoleAndOutputTests
                 .OfType<TabItem>()
                 .Single(tab => tab.Name == "OutputHistoryTab");
             OutputHistoryControl outputControl = (OutputHistoryControl)outputTab.Content!;
+            outputControl.Margin.Should().Be(new Thickness(1, 0, 1, 1));
+            outputControl.TextBox.BorderThickness.Should().Be(new Thickness(2));
 
             consoleTab.Content.Should().BeNull("the shell is created only when its tab is selected");
             outputTab.Header.Should().Be("Output");
@@ -193,6 +198,13 @@ public sealed class ConsoleAndOutputTests
             Dispatcher.UIThread.RunJobs();
             form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(outputTab);
             outputControl.TextBox.TextArea.IsKeyboardFocusWithin.Should().BeTrue();
+            CaptureSurface surface = new AvaloniaControlTreeReader(form, renderScale: 1)
+                .ReadPrimary(form, new PixelSize((int)form.Bounds.Width, (int)form.Bounds.Height));
+            Descendants(surface.Root).Should().Contain(node => node.Name == "OutputHistoryControl");
+            CaptureNode editor = Descendants(surface.Root)
+                .Single(node => node.FieldName == "TextBox" && node.Type == "RichTextBox");
+            editor.ClientSizeDip.Width.Should().Be(editor.BoundsDip.Width - 4);
+            editor.ClientSizeDip.Height.Should().Be(editor.BoundsDip.Height - 4);
 
             outputControl.tsmiClear.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             Dispatcher.UIThread.RunJobs();
@@ -201,6 +213,18 @@ public sealed class ConsoleAndOutputTests
         finally
         {
             form.Close();
+        }
+
+        static IEnumerable<CaptureNode> Descendants(CaptureNode node)
+        {
+            yield return node;
+            foreach (CaptureNode child in node.Children)
+            {
+                foreach (CaptureNode descendant in Descendants(child))
+                {
+                    yield return descendant;
+                }
+            }
         }
     }
 
