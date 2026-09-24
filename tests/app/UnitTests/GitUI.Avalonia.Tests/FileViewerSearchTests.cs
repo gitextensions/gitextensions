@@ -398,6 +398,33 @@ public sealed class FileViewerSearchTests
     }
 
     [AvaloniaTest]
+    public void FileViewer_should_apply_visible_editor_font_without_a_commands_owner()
+    {
+        WinFormsShims.Font originalFont = AppSettings.FixedWidthFont;
+        Window owner = new();
+        try
+        {
+            AppSettings.FixedWidthFont = new WinFormsShims.Font("Consolas", 10);
+            FileViewer viewer = new() { IsVisible = false };
+            owner.Content = viewer;
+            owner.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            viewer.Font.Name.Should().Be("Courier New");
+            viewer.IsVisible = true;
+            Dispatcher.UIThread.RunJobs();
+
+            viewer.Font.Name.Should().Be("Consolas");
+            viewer.Font.Size.Should().Be(10);
+        }
+        finally
+        {
+            owner.Close();
+            AppSettings.FixedWidthFont = originalFont;
+        }
+    }
+
+    [AvaloniaTest]
     public void FindAndReplaceForm_should_preserve_original_layout_and_translation_keys()
     {
         FindAndReplaceForm form = new();
