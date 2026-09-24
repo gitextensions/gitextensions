@@ -407,6 +407,31 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public void FileViewer_should_scroll_to_a_first_change_below_the_measured_viewport()
+    {
+        FileViewer viewer = new();
+        Window owner = new() { Width = 337, Height = 260, Content = viewer };
+        try
+        {
+            owner.Show();
+            Dispatcher.UIThread.RunJobs();
+            string context = string.Concat(Enumerable.Range(1, 35).Select(line => $" context {line}\n"));
+            viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1,36 +1,36 @@\n"
+                + context + "-before\n+after\n");
+            Dispatcher.UIThread.RunJobs();
+
+            viewer.TextEditor.TextArea.TextView.ScrollOffset.Y.Should().BeGreaterThan(0,
+                "a first change below the viewport must still be brought into view");
+            viewer.TextEditor.Options.AllowScrollBelowDocument.Should().BeTrue(
+                "long files retain the source editor's below-document scroll travel");
+        }
+        finally
+        {
+            owner.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FileViewerInternal_should_restore_the_caret_for_the_same_content_identity()
     {
         FileViewerInternal viewer = new();

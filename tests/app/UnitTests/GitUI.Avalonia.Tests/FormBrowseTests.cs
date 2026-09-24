@@ -2084,6 +2084,11 @@ public sealed class FormBrowseTests
                 Dispatcher.UIThread.RunJobs();
                 form.fileStatusList.Bounds.Height.Should().BeGreaterThan(0);
                 form.fileViewer.TextEditor.Text.Should().Contain("+second");
+                await WaitUntilAsync(() => form.revisionDiff.FileViewer.TextEditor.Text.Contains("+second", StringComparison.Ordinal));
+                form.revisionDiff.FileViewer.TextEditor.TextArea.TextView.ScrollOffset.Y.Should().Be(0,
+                    "a newly opened Diff tab should show the patch header before its changed lines");
+                form.revisionDiff.FileViewer.TextEditor.Options.AllowScrollBelowDocument.Should().BeFalse(
+                    "the source editor hides its vertical scrollbar when the short patch fits");
             }
             finally
             {
@@ -2094,6 +2099,83 @@ public sealed class FormBrowseTests
         {
             AppSettings.CommitInfoPosition = originalPosition;
             AppSettings.ShowSplitViewLayout = originalShowSplitView;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_toolbar_should_hide_a_partially_clipped_stash_command()
+    {
+        using FormBrowse form = new() { Width = 923, Height = 573 };
+        form.Show();
+        try
+        {
+            WorkingDirectoryToolStripSplitButton selector = form.FindControl<WorkingDirectoryToolStripSplitButton>(
+                "_NO_TRANSLATE_WorkingDir")!;
+            string caption = "~\\AppData\\Local\\Temp\\GitExtensions.MainScreenParity.MenuFocus";
+            selector.Content = caption;
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            ScrollViewer viewport = form.toolStripMainViewport;
+            IconSplitButton stash = form.FindControl<IconSplitButton>("toolStripSplitStash")!;
+            Point position = stash.TranslatePoint(default, viewport)!.Value;
+            while (position.X >= viewport.Viewport.Width && caption.Length > 1)
+            {
+                // Platform font metrics can cap the repository selector at a slightly
+                // different width; find the first genuinely clipped Stash position.
+                caption = caption[..^1];
+                selector.Content = caption;
+                form.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+                position = stash.TranslatePoint(default, viewport)!.Value;
+            }
+
+            position.X.Should().BeLessThan(viewport.Viewport.Width);
+            (position.X + stash.Bounds.Width).Should().BeGreaterThan(viewport.Viewport.Width);
+            stash.Opacity.Should().Be(0, "ToolStrip sends the entire partly clipped Stash command to overflow");
+            stash.IsHitTestVisible.Should().BeFalse();
+
+            form.toolStripMainOverflow.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            stash.Opacity.Should().Be(1, "the complete command becomes available on the next overflow page");
+            stash.IsHitTestVisible.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void FormBrowse_start_menu_should_fit_its_repository_command_caption()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        form.Show();
+        try
+        {
+            form.fileToolStripMenuItem.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            MenuItem[] commands = [.. form.fileToolStripMenuItem.Items.OfType<MenuItem>()
+                .Where(item => item.Classes.Contains("gitextensions-menu-no-gesture"))];
+            commands.Should().HaveCount(4);
+            foreach (MenuItem command in commands)
+            {
+                Avalonia.Controls.Presenters.ContentPresenter presenter = command.GetVisualDescendants()
+                    .OfType<Avalonia.Controls.Presenters.ContentPresenter>()
+                    .Single(control => control.Name == "PART_HeaderPresenter");
+                Avalonia.Controls.Primitives.AccessText header = command.GetVisualDescendants()
+                    .OfType<Avalonia.Controls.Primitives.AccessText>().Single();
+                header.Measure(Size.Infinity);
+                presenter.Bounds.Width.Should().BeGreaterThanOrEqualTo(header.DesiredSize.Width,
+                    $"the {command.Name} caption must fit the source-width Start menu without clipping");
+            }
+        }
+        finally
+        {
+            form.Close();
         }
     }
 
