@@ -7,6 +7,7 @@ using GitExtensions.Extensibility.Translations;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Compat;
 using ResourceManager;
+using SourceControls = GitUI.Compat.WinFormsControls;
 
 namespace GitUI.CommandsDialogs;
 
@@ -29,13 +30,13 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
     private List<MenuCommand>? _navigateMenuCommands;
     private List<MenuCommand>? _viewMenuCommands;
 
-    private readonly MenuItem _navigateToolStripMenuItem = new()
+    private readonly SourceControls.ToolStripMenuItem _navigateToolStripMenuItem = new()
     {
         Name = "navigateToolStripMenuItem",
         Header = "_Navigate",
         IsVisible = false,
     };
-    private readonly MenuItem _viewToolStripMenuItem = new()
+    private readonly SourceControls.ToolStripMenuItem _viewToolStripMenuItem = new()
     {
         Name = "viewToolStripMenuItem",
         Header = "_View",

@@ -1129,8 +1129,14 @@ public sealed partial class ParityScreenshotTests
         Lazy<string?> originalApplicationDataPath = accessor.ApplicationDataPath;
         string userSettingsPath = AppSettings.SettingsFilePath;
         SettingsFileSnapshot userSettingsSnapshot = SettingsFileSnapshot.Take(userSettingsPath);
+        GitExtensions.Shims.WinForms.IIconExtractor? originalIconExtractor = GitExtensions.Shims.WinForms.ShimHost.IconExtractor;
+        FileAssociatedIconProvider iconProvider = new();
         try
         {
+            // The capture host, unlike the shipping App, does not install desktop shim services.
+            // Use the real platform icon source so file-tree screenshots exercise the same path.
+            GitExtensions.Shims.WinForms.ShimHost.IconExtractor = new AssociatedFileIconExtractor();
+            iconProvider.ResetCache();
             accessor.ApplicationDataPath = new Lazy<string?>(() => settingsDirectory);
             string settingsPath = AppSettings.SettingsFilePath;
             IsPathContained(settingsPath, settingsDirectory).Should().BeTrue(
@@ -1151,6 +1157,8 @@ public sealed partial class ParityScreenshotTests
         }
         finally
         {
+            GitExtensions.Shims.WinForms.ShimHost.IconExtractor = originalIconExtractor;
+            iconProvider.ResetCache();
             accessor.ApplicationDataPath = originalApplicationDataPath;
             userSettingsSnapshot.AssertUnchanged(userSettingsPath);
             TestDirectory.Delete(settingsDirectory);
@@ -1426,6 +1434,23 @@ public sealed partial class ParityScreenshotTests
 
                     capturedBrowse.revisionDiff.FileStatusList.AllItemsCount.Should().BeGreaterThan(0);
                     capturedBrowse.revisionDiff.FileViewer.TextEditor.Text.Should().NotBeNullOrEmpty();
+                }
+
+                if (capturedBrowse.CommitInfoTabControl.SelectedItem == capturedBrowse.TreeTabPage)
+                {
+                    // The file-tree selection starts a separate asynchronous blob preview.
+                    // Compare the populated source preview, not an intermediate empty editor.
+                    Stopwatch treeStopwatch = Stopwatch.StartNew();
+                    while ((capturedBrowse.fileTree.FileStatusList.AllItemsCount == 0
+                            || string.IsNullOrEmpty(capturedBrowse.fileTree.FileViewer.TextEditor.Text))
+                           && treeStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+                    {
+                        Dispatcher.UIThread.RunJobs();
+                        await Task.Delay(10);
+                    }
+
+                    capturedBrowse.fileTree.FileStatusList.AllItemsCount.Should().BeGreaterThan(0);
+                    capturedBrowse.fileTree.FileViewer.TextEditor.Text.Should().NotBeNullOrEmpty();
                 }
 
                 if ((state.Kind == CaptureStateKind.Focus && state.TargetField == "RevisionGrid")
