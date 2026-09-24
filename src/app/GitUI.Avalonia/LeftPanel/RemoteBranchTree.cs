@@ -1,28 +1,50 @@
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Remotes;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
+using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI.LeftPanel;
 
 internal sealed class RemoteBranchTree : BaseRefTree
 {
+    private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
+
     public RemoteBranchTree(
         RepoObjectsTree owner,
         IReadOnlyList<IGitRef> branches,
         IReadOnlyList<Remote>? enabledRemotes = null,
         IReadOnlyList<Remote>? disabledRemotes = null,
-        IConfigFileRemoteSettingsManager? remotesManager = null)
-        : base(owner, RepoTreeKind.Remotes, TranslatedStrings.Remotes, Images.BranchRemoteRoot)
+        IConfigFileRemoteSettingsManager? remotesManager = null,
+        IAheadBehindDataProvider? aheadBehindDataProvider = null,
+        ICheckRefs? refsSource = null)
+        : base(owner, RepoTreeKind.Remotes, TranslatedStrings.Remotes, Images.BranchRemoteRoot, refsSource, RefsFilter.Remotes)
     {
+        _aheadBehindDataProvider = aheadBehindDataProvider;
+        IDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData()?
+            .DistinctBy(pair => pair.Value.RemoteRef)
+            .ToDictionary(pair => pair.Value.RemoteRef, pair => pair.Value);
         Dictionary<string, Remote> enabledByName = enabledRemotes?.ToDictionary(remote => remote.Name, StringComparer.Ordinal) ?? [];
         FillNested(
-            branches,
+            PrioritizedBranches(branches),
             (parent, path, gitRef, level) =>
             {
                 if (gitRef is not null)
                 {
-                    return new RemoteBranchNode(this, parent, gitRef);
+                    if (gitRef.ObjectId.IsZero)
+                    {
+                        throw new InvalidOperationException($"Branch '{gitRef.Name}' has no ObjectId.");
+                    }
+
+                    RemoteBranchNode node = new(this, parent, gitRef);
+                    if (aheadBehindData?.TryGetValue(gitRef.CompleteName, out AheadBehindData aheadBehind) is true)
+                    {
+                        node.UpdateAheadBehind(aheadBehind.ToDisplay(reverse: true), $"{GitRefName.RefsHeadsPrefix}{aheadBehind.Branch}");
+                    }
+
+                    return node;
                 }
 
                 if (level == 0)
@@ -51,12 +73,25 @@ internal sealed class RemoteBranchTree : BaseRefTree
             AddChild(new RemoteRepoNode(this, this, remote.Name, remote, enabled: true, remotesManager));
         }
 
+        RemoteRepoNode[] enabledNodes = [.. Nodes.OfType<RemoteRepoNode>()];
+        if (enabledNodes.Length > 0)
+        {
+            Nodes.Clear();
+            Nodes.AddNodes(PrioritizedRemotes(enabledNodes));
+        }
+
         if (disabledRemotes?.Count > 0)
         {
             RemoteRepoFolderNode inactive = new(this, this, TranslatedStrings.Inactive);
-            foreach (Remote remote in disabledRemotes.OrderBy(remote => remote.Name, StringComparer.OrdinalIgnoreCase))
+            List<RemoteRepoNode> disabledNodes = [];
+            foreach (Remote remote in disabledRemotes)
             {
-                inactive.AddChild(new RemoteRepoNode(this, inactive, remote.Name, remote, enabled: false, remotesManager));
+                disabledNodes.Add(new RemoteRepoNode(this, inactive, remote.Name, remote, enabled: false, remotesManager));
+            }
+
+            foreach (RemoteRepoNode node in PrioritizedRemotes(disabledNodes))
+            {
+                inactive.AddChild(node);
             }
 
             AddChild(inactive);

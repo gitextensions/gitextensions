@@ -11,6 +11,17 @@ internal sealed class TagNode : BaseRevisionNode, IGitRefActions, ICanDelete
     {
     }
 
+    internal override void OnSelected()
+    {
+        if (Tree.IgnoreSelectionChangedEvent)
+        {
+            return;
+        }
+
+        base.OnSelected();
+        SelectRevision();
+    }
+
     internal override void OnDoubleClick()
         => CreateBranch();
 

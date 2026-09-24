@@ -22,6 +22,17 @@ internal sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICan
         }
     }
 
+    internal override void OnSelected()
+    {
+        if (Tree.IgnoreSelectionChangedEvent)
+        {
+            return;
+        }
+
+        base.OnSelected();
+        SelectRevision();
+    }
+
     internal override void OnRename()
         => Rename();
 

@@ -16,6 +16,8 @@ internal sealed class SubmoduleTree : Tree
         ? StringComparer.OrdinalIgnoreCase
         : StringComparer.Ordinal;
     private ISubmoduleStatusProvider? _submoduleStatusProvider;
+    private SubmoduleStatusEventArgs? _currentSubmoduleInfo;
+    private Nodes? _currentNodes;
 
     public SubmoduleTree(RepoObjectsTree owner)
         : base(owner, RepoTreeKind.Submodules, TranslatedStrings.Submodules, Images.FolderSubmodule)
@@ -34,6 +36,7 @@ internal sealed class SubmoduleTree : Tree
         _submoduleStatusProvider = provider;
         if (_submoduleStatusProvider is not null)
         {
+            _submoduleStatusProvider.StatusUpdating += Provider_StatusUpdating;
             _submoduleStatusProvider.StatusUpdated += Provider_StatusUpdated;
         }
     }
@@ -42,10 +45,20 @@ internal sealed class SubmoduleTree : Tree
     {
         if (_submoduleStatusProvider is not null)
         {
+            _submoduleStatusProvider.StatusUpdating -= Provider_StatusUpdating;
             _submoduleStatusProvider.StatusUpdated -= Provider_StatusUpdated;
             _submoduleStatusProvider = null;
         }
     }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+        Detach();
+    }
+
+    private void Provider_StatusUpdating(object? sender, EventArgs e)
+        => _currentNodes = null;
 
     public void Load(SubmoduleInfoResult result)
         => OwnerControl.UpdateNodes(() =>
@@ -88,6 +101,7 @@ internal sealed class SubmoduleTree : Tree
         }
 
         CompactSingleChildFolderChains(topNode.TreeViewNode.Items.Cast<TreeViewItem>());
+        _currentNodes = Nodes;
         Complete(TranslatedStrings.Submodules, Images.FolderSubmodule, expanded: true);
 
         foreach (NodeBase node in DescendantsAndSelf())
@@ -162,19 +176,100 @@ internal sealed class SubmoduleTree : Tree
             return;
         }
 
+        _currentSubmoduleInfo = e;
         if (Dispatcher.UIThread.CheckAccess())
         {
-            Load(e.Info);
+            OnStatusUpdated(e);
         }
         else
         {
-            Dispatcher.UIThread.Post(() =>
+            Dispatcher.UIThread.Post(() => OnStatusUpdated(e));
+        }
+    }
+
+    private void OnStatusUpdated(SubmoduleStatusEventArgs e)
+    {
+        if (e.Token.IsCancellationRequested || !ReferenceEquals(_currentSubmoduleInfo, e))
+        {
+            return;
+        }
+
+        if (e.StructureUpdated || _currentNodes is null || !TryUpdateExistingNodes(e.Info))
+        {
+            Load(e.Info);
+        }
+
+        if (_currentNodes is not null)
+        {
+            _ = LoadNodeDetailsAsync(_currentNodes, e.Token);
+            LoadNodeToolTips(_currentNodes, e.Token);
+        }
+
+        Interlocked.CompareExchange(ref _currentSubmoduleInfo, null, e);
+    }
+
+    private bool TryUpdateExistingNodes(SubmoduleInfoResult info)
+    {
+        if (info.TopProject is null || _currentNodes is null)
+        {
+            return false;
+        }
+
+        Dictionary<string, SubmoduleInfo> infos = info.AllSubmodules.ToDictionary(item => NormalizePath(item.Path), item => item, _pathComparer);
+        infos[NormalizePath(info.TopProject.Path)] = info.TopProject;
+        SubmoduleNode[] nodes = [.. _currentNodes.DepthEnumerator<SubmoduleNode>()];
+        foreach (SubmoduleNode node in nodes)
+        {
+            if (!infos.Remove(NormalizePath(node.Info.Path), out SubmoduleInfo? current))
             {
-                if (!e.Token.IsCancellationRequested)
+                return false;
+            }
+
+            node.Info = current;
+        }
+
+        return infos.Count == 0;
+    }
+
+    private async Task LoadNodeDetailsAsync(Nodes loadedNodes, CancellationToken token)
+    {
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            token.ThrowIfCancellationRequested();
+            loadedNodes.DepthEnumerator<SubmoduleNode>().ForEach(node => node.RefreshDetails());
+        });
+    }
+
+    private void LoadNodeToolTips(Nodes loadedNodes, CancellationToken token)
+    {
+        if (UICommands.GetService(typeof(IGitExecutorProvider)) is null)
+        {
+            return;
+        }
+
+        foreach (SubmoduleNode node in loadedNodes.DepthEnumerator<SubmoduleNode>())
+        {
+            ThreadHelper.FileAndForget(async () =>
+            {
+                try
                 {
-                    Load(e.Info);
+                    await node.SetStatusToolTipAsync(token);
+                }
+                catch (OperationCanceledException)
+                {
                 }
             });
+        }
+    }
+
+    protected override void PostFillTreeViewNode(bool firstTime)
+    {
+        if (firstTime)
+        {
+            foreach (NodeBase node in DescendantsAndSelf())
+            {
+                node.TreeViewNode.IsExpanded = true;
+            }
         }
     }
 

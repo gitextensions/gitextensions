@@ -1,17 +1,21 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Remotes;
 using GitCommands.Submodules;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
+using GitUI.CommandsDialogs;
 using GitUI.LeftPanel;
 using GitUI.LeftPanel.Interfaces;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using ResourceManager;
@@ -903,6 +907,125 @@ public sealed class RepoObjectsTreeTests
         {
             settings.Restore();
             Directory.Delete(topPath, recursive: true);
+        }
+    }
+
+    [AvaloniaTest]
+    public void Branch_selection_should_preserve_ahead_behind_related_ref_and_modifier_semantics()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            IGitRef branch = CreateRef("refs/heads/feature");
+            IBrowseRepo browseRepo = Substitute.For<IBrowseRepo>();
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.BrowseRepo.Returns(browseRepo);
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            IAheadBehindDataProvider aheadBehind = Substitute.For<IAheadBehindDataProvider>();
+            aheadBehind.GetData().Returns(new Dictionary<string, AheadBehindData>
+            {
+                ["feature"] = new("feature", "refs/remotes/origin/feature", "2", "1"),
+            });
+            ICheckRefs refsSource = Substitute.For<ICheckRefs>();
+            refsSource.Contains(branch.ObjectId).Returns(true);
+            IRevisionGridInfo revisionGridInfo = Substitute.For<IRevisionGridInfo>();
+            revisionGridInfo.GetCurrentBranch().Returns("main");
+            RepoObjectsTree control = new() { UICommandsSource = source };
+            control.Initialize(aheadBehind, _ => { }, refsSource, revisionGridInfo);
+            control.SetRefs([branch], [], "main");
+            RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
+            TreeViewItem branchItem = accessor.Tree.Items.Cast<TreeViewItem>()
+                .First()
+                .Items.Cast<TreeViewItem>()
+                .Single();
+
+            HeaderText(branchItem).Should().Be("feature (2↑ 1↓)");
+            branchItem.Classes.Should().Contain("leaf-node");
+            accessor.Tree.SelectedItem = branchItem;
+            browseRepo.Received(1).GoToRef("feature", showNoRevisionMsg: true, toggleSelection: false);
+
+            accessor.Tree.SelectedItem = null;
+            accessor.SetSelectionModifiers(KeyModifiers.Alt | KeyModifiers.Control);
+            accessor.Tree.SelectedItem = branchItem;
+            browseRepo.Received(1).GoToRef("refs/remotes/origin/feature", showNoRevisionMsg: true, toggleSelection: true);
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Loaded_visibility_should_block_hidden_ref_navigation_and_use_the_hidden_style()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            IGitRef visibleBranch = CreateRef("refs/heads/main");
+            IGitRef hiddenTag = CreateRef("refs/tags/v1");
+            IBrowseRepo browseRepo = Substitute.For<IBrowseRepo>();
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.BrowseRepo.Returns(browseRepo);
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            ICheckRefs refsSource = Substitute.For<ICheckRefs>();
+            refsSource.Contains(visibleBranch.ObjectId).Returns(true);
+            refsSource.Contains(hiddenTag.ObjectId).Returns(false);
+            IRevisionGridInfo revisionGridInfo = Substitute.For<IRevisionGridInfo>();
+            revisionGridInfo.GetCurrentBranch().Returns("main");
+            RepoObjectsTree control = new() { UICommandsSource = source };
+            control.Initialize(aheadBehindDataProvider: null, _ => { }, refsSource, revisionGridInfo);
+            control.SetRefs([visibleBranch, hiddenTag], [], "main");
+
+            control.RefreshRevisionsLoaded();
+
+            TreeViewItem tag = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>()
+                .Single(item => HeaderText(item).StartsWith("Tags", StringComparison.Ordinal))
+                .Items.Cast<TreeViewItem>()
+                .Single();
+            Image icon = (Image)((StackPanel)tag.Header!).Children[0];
+            icon.Source.Should().BeSameAs(GitUI.Properties.Images.EyeClosed);
+            ToolTip.GetTip(tag)!.ToString().Should().Contain("v1");
+
+            control.GetTestAccessor().Tree.SelectedItem = tag;
+            browseRepo.DidNotReceiveWithAnyArgs().GoToRef(default!, default, default);
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Remote_roots_should_use_remote_priorities_independently_of_branch_priorities()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        string prioritizedBranches = AppSettings.PrioritizedBranchNames;
+        string prioritizedRemotes = AppSettings.PrioritizedRemoteNames;
+        try
+        {
+            settings.EnableAllTrees();
+            AppSettings.PrioritizedBranchNames = "origin/.*";
+            AppSettings.PrioritizedRemoteNames = "upstream;origin";
+            RepoObjectsTree control = new();
+            control.SetRefs(
+            [
+                CreateRef("refs/remotes/origin/main", "origin"),
+                CreateRef("refs/remotes/upstream/main", "upstream"),
+            ]);
+
+            TreeViewItem remotes = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>()
+                .Single(item => HeaderText(item).StartsWith("Remotes", StringComparison.Ordinal));
+            remotes.Items.Cast<TreeViewItem>().Select(HeaderText).Should().Equal("upstream", "origin");
+        }
+        finally
+        {
+            AppSettings.PrioritizedBranchNames = prioritizedBranches;
+            AppSettings.PrioritizedRemoteNames = prioritizedRemotes;
+            settings.Restore();
         }
     }
 
