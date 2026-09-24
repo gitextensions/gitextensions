@@ -969,7 +969,7 @@ public sealed partial class ParityScreenshotTests
 
         Button secondTabButton = new() { Name = "btnSecondTab", Content = "Second" };
         TabItem firstTab = new() { Header = "First", Content = "First content" };
-        TabItem secondTab = new() { Header = "Second", Content = secondTabButton };
+        TabItem secondTab = new() { Name = "SecondTab", Header = "Second", Content = secondTabButton };
         TabControl tabs = new() { ItemsSource = new[] { firstTab, secondTab }, SelectedItem = firstTab };
         Window tabWindow = new() { Width = 240, Height = 100, Content = tabs };
         tabWindow.Show();
@@ -984,6 +984,19 @@ public sealed partial class ParityScreenshotTests
         {
             tabs.SelectedItem.Should().BeSameAs(secondTab);
             secondTabButton.IsFocused.Should().BeTrue();
+        }
+
+        tabs.SelectedItem.Should().BeSameAs(firstTab);
+
+        CaptureStatePlan tabHeaderFocusState = new()
+        {
+            Id = "second-tab.focused",
+            Kind = CaptureStateKind.Focus,
+            TargetField = secondTab.Name
+        };
+        using (AvaloniaControlStateDriver.Apply(tabWindow, tabHeaderFocusState))
+        {
+            tabs.SelectedItem.Should().BeSameAs(secondTab);
         }
 
         tabs.SelectedItem.Should().BeSameAs(firstTab);

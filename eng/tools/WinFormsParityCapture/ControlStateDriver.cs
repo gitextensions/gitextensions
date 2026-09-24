@@ -339,7 +339,7 @@ internal sealed class ControlStateDriver : IDisposable
 
     private void ActivateContainingTabs(Control control)
     {
-        TabPage[] tabPages = EnumerateParents(control)
+        TabPage[] tabPages = EnumerateSelfAndParents(control)
             .OfType<TabPage>()
             .Reverse()
             .ToArray();
@@ -357,9 +357,9 @@ internal sealed class ControlStateDriver : IDisposable
             _restoreActions.Add(() => tabControl.SelectedTab = previous);
         }
 
-        static IEnumerable<Control> EnumerateParents(Control child)
+        static IEnumerable<Control> EnumerateSelfAndParents(Control child)
         {
-            for (Control? parent = child.Parent; parent is not null; parent = parent.Parent)
+            for (Control? parent = child; parent is not null; parent = parent.Parent)
             {
                 yield return parent;
             }
@@ -372,6 +372,18 @@ internal sealed class ControlStateDriver : IDisposable
         Point originalCursorPosition = NativeMethods.GetCursorPosition();
         NativeMethods.SetCursorPosition(mouseTarget.PointToScreen(mousePoint));
         NativeMethods.SendMouseMessage(mouseTarget.Handle, NativeMethods.WmMouseMove, mousePoint.X, mousePoint.Y);
+        PumpEvents();
+        if (target is ToolStripItem item && !item.Selected)
+        {
+            // WinForms can clear its transient ToolStrip selection while the message pump
+            // processes other windows. Keep the item in the state reached by the pointer.
+            item.Select();
+            if (!item.Selected)
+            {
+                throw new CaptureStateUnsupportedException("WinForms did not retain the requested toolbar hover state.");
+            }
+        }
+
         _restoreActions.Add(() =>
         {
             NativeMethods.SendMouseMessage(mouseTarget.Handle, NativeMethods.WmMouseLeave, 0, 0);

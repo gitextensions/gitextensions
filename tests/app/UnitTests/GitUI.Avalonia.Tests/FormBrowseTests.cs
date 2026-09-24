@@ -2252,6 +2252,7 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
     public async Task FormBrowse_gpg_tab_should_load_lazily_and_ignore_stale_results()
     {
         bool originalShowGpgInformation = AppSettings.ShowGpgInformation.Value;
@@ -2286,7 +2287,9 @@ public sealed class FormBrowseTests
 
                 GitRevision headRevision = form.RevisionGrid.SelectedRevision!;
                 ObjectId parentId = headRevision.FirstParentId;
+                await WaitUntilAsync(() => form.GpgInfoTabPage.IsVisible);
                 form.GpgInfoTabPage.IsVisible.Should().BeTrue();
+                form.revisionGpgInfo1.Margin.Should().Be(new Thickness(1, 0, 1, 1));
                 _ = provider.DidNotReceive().LoadGpgInfoAsync(Arg.Any<GitRevision?>());
 
                 form.CommitInfoTabControl.SelectedItem = form.GpgInfoTabPage;
