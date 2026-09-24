@@ -107,11 +107,11 @@ public sealed class FormBrowseTests
             overflow.IsVisible.Should().BeTrue();
             overflow.Bounds.Width.Should().Be(16);
 
-            foreach ((ThemeVariant theme, string background, string foreground, string windowText) in
+            foreach ((ThemeVariant theme, string background, string foreground, string sourceForeground, string windowText) in
                      new[]
                      {
-                         (ThemeVariant.Light, "#FFF0F0F0", "#FF000000", "#FF000000"),
-                         (ThemeVariant.Dark, "#FF202020", "#FFFFFFFF", "#FFF0F0F0"),
+                         (ThemeVariant.Light, "#FFF0F0F0", "#FF000000", "#FF000000", "#FF000000"),
+                         (ThemeVariant.Dark, "#FF202020", "#FFFFFFFF", "#FFF0F0F0", "#FFF0F0F0"),
                      })
             {
                 form.RequestedThemeVariant = theme;
@@ -133,14 +133,21 @@ public sealed class FormBrowseTests
                     "ToolStripScripts", "ToolStripFilters", "ToolStripMain");
                 foreach (string name in new[]
                          {
-                             "toolStripButtonCommit", "toolStripButtonPush", "toolStripSplitStash",
-                             "toolStripFileExplorer", "userShell",
+                             "toolStripSplitStash", "toolStripFileExplorer", "userShell",
                          })
                 {
                     CaptureNode item = nodes.Single(node => node.FieldName == name);
                     item.Colors.Background.Should().Be(background, $"{name} inherits the source ToolStrip background");
                     item.Colors.DisabledBackground.Should().Be(background);
                     item.Colors.Foreground.Should().Be(foreground);
+                }
+
+                foreach (string name in new[] { "toolStripButtonCommit", "toolStripButtonPush" })
+                {
+                    CaptureNode item = nodes.Single(node => node.FieldName == name);
+                    item.Colors.Background.Should().Be("#00FFFFFF");
+                    item.Colors.DisabledBackground.Should().Be("#00FFFFFF");
+                    item.Colors.Foreground.Should().Be(sourceForeground);
                 }
 
                 nodes.Single(node => node.FieldName == "toolStripSeparator2").Colors.Background.Should().Be(background);
@@ -457,6 +464,13 @@ public sealed class FormBrowseTests
                 loadingStatus.Text == "4 revisions"
                 && commitButton.Content?.ToString() == "Commit (2)"
                 && pushButton.GetTestAccessor().GetButtonText() == "1↑");
+
+            commitButton.Bounds.Width.Should().Be(Math.Ceiling(commitButton.Bounds.Width));
+            commitButton.Bounds.Width.Should().BeGreaterThanOrEqualTo(88);
+            if (OperatingSystem.IsWindows())
+            {
+                commitButton.Bounds.Width.Should().Be(88);
+            }
 
             form.RevisionGrid.ShowUncommittedChangesIfPossible.Should().BeTrue();
             form.RevisionGrid.GetChangeCount(ObjectId.WorkTreeId)!.Changed.Should().ContainSingle();
