@@ -6,19 +6,15 @@
              xmlns:wf="using:GitUI.Compat.WinFormsControls"
              x:Class="GitUI.CommandsDialogs.RevisionDiffControl">
   <Grid x:Name="DiffSplitContainer"
-        ColumnDefinitions="380,0,*"
+        ColumnDefinitions="300,7,*"
         Background="{DynamicResource GitExtensionsKnownColorControlBrush}">
-    <Border Grid.Column="0" Classes="gitextensions-section">
-      <wf:SplitContainer x:Name="LeftSplitContainer" Background="Transparent">
-        <gitui:FileStatusList x:Name="DiffFiles" GroupByRevision="True" />
-      </wf:SplitContainer>
-    </Border>
+    <wf:SplitContainer x:Name="LeftSplitContainer" Grid.Column="0" Background="Transparent">
+      <gitui:FileStatusList x:Name="DiffFiles" GroupByRevision="True" />
+    </wf:SplitContainer>
     <GridSplitter x:Name="DiffSplitter" Grid.Column="1" ResizeDirection="Columns" />
-    <Border Grid.Column="2" Classes="gitextensions-section">
-      <Grid>
-        <editor:FileViewer x:Name="DiffText" />
-        <blame:BlameControl x:Name="BlameControl" IsVisible="False" />
-      </Grid>
-    </Border>
+    <Grid Grid.Column="2">
+      <editor:FileViewer x:Name="DiffText" />
+      <blame:BlameControl x:Name="BlameControl" IsVisible="False" />
+    </Grid>
   </Grid>
 </UserControl>

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -355,17 +356,19 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private static void ToggleToolbarOverflow(Control content, ScrollViewer viewport, Button overflowButton)
     {
-        double maximumOffset = Math.Max(0, content.Bounds.Width - viewport.Bounds.Width);
-        bool returnToStart = content.RenderTransform is TranslateTransform { X: < 0 };
-        content.RenderTransform = new TranslateTransform(returnToStart ? 0 : -maximumOffset, 0);
-        overflowButton.Content = returnToStart ? "»" : "«";
+        double maximumOffset = Math.Max(0, content.Bounds.Width - viewport.Viewport.Width);
+        double nextOffset = viewport.Offset.X >= maximumOffset
+            ? 0
+            : Math.Min(maximumOffset, viewport.Offset.X + viewport.Viewport.Width);
+        viewport.Offset = new Vector(nextOffset, viewport.Offset.Y);
+        overflowButton.Content = nextOffset >= maximumOffset ? "«" : "»";
     }
 
     private void InitializeToolbarOverflow()
     {
         toolStripMainOverflow.Click += (_, _) => ToggleToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
-        toolStripMainViewport.SizeChanged += (_, _) => UpdateToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
-        ToolStripMain.LayoutUpdated += (_, _) => UpdateToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
+        toolStripMainViewport.SizeChanged += (_, _) => UpdateMainToolbarOverflow();
+        ToolStripMain.LayoutUpdated += (_, _) => UpdateMainToolbarOverflow();
 
         // The 50-pixel source FilterToolBar moves every item into ToolStrip's overflow
         // dropdown. Keep the same control instances and handlers by moving the toolbar into
@@ -403,13 +406,35 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         RestoreFilterToolbar();
     }
 
+    private void UpdateMainToolbarOverflow()
+    {
+        if (toolStripMainViewport.Viewport.Width > 0
+            && toolStripButtonCommit.Bounds.Width > 0)
+        {
+            // ToolStrip reserves space for later commands when a long repository path would
+            // otherwise push Branch and Commit into overflow. Use their measured widths so
+            // translations and the configured repository-selector minimum still apply.
+            double followingCommandsWidth = toolStripButtonCommit.Bounds.Right - _NO_TRANSLATE_WorkingDir.Bounds.Right;
+            double availableWidth = toolStripMainViewport.Viewport.Width
+                - _NO_TRANSLATE_WorkingDir.Bounds.Left
+                - followingCommandsWidth;
+            double maximumWidth = Math.Max(_NO_TRANSLATE_WorkingDir.MinWidth, availableWidth);
+            if (_NO_TRANSLATE_WorkingDir.MaxWidth != maximumWidth)
+            {
+                _NO_TRANSLATE_WorkingDir.MaxWidth = maximumWidth;
+            }
+        }
+
+        UpdateToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
+    }
+
     private static void UpdateToolbarOverflow(Control content, ScrollViewer viewport, Button overflowButton)
     {
-        bool hasOverflow = content.Bounds.Width > viewport.Bounds.Width;
+        bool hasOverflow = content.Bounds.Width > viewport.Viewport.Width;
         overflowButton.IsVisible = hasOverflow;
-        if (!hasOverflow && content.RenderTransform is TranslateTransform { X: not 0 })
+        if (!hasOverflow && viewport.Offset.X > 0)
         {
-            content.RenderTransform = new TranslateTransform(0, 0);
+            viewport.Offset = new Vector(0, viewport.Offset.Y);
             overflowButton.Content = "»";
         }
     }

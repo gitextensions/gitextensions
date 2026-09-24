@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -1410,6 +1411,23 @@ public sealed partial class ParityScreenshotTests
                 // work is drained for the requested state. Reassert the paired HEAD boundary
                 // after that drain, just as the WinForms capture worker does before rendering.
                 await SelectAndWaitForFormBrowseRevisionAsync(capturedBrowse, context.HeadRevision);
+                if (capturedBrowse.CommitInfoTabControl.SelectedItem == capturedBrowse.DiffTabPage)
+                {
+                    // Selecting the lower Diff tab starts its file-list and patch loaders.
+                    // Capture the rendered patch only after both product surfaces settle.
+                    Stopwatch diffStopwatch = Stopwatch.StartNew();
+                    while ((capturedBrowse.revisionDiff.FileStatusList.AllItemsCount == 0
+                            || string.IsNullOrEmpty(capturedBrowse.revisionDiff.FileViewer.TextEditor.Text))
+                           && diffStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+                    {
+                        Dispatcher.UIThread.RunJobs();
+                        await Task.Delay(10);
+                    }
+
+                    capturedBrowse.revisionDiff.FileStatusList.AllItemsCount.Should().BeGreaterThan(0);
+                    capturedBrowse.revisionDiff.FileViewer.TextEditor.Text.Should().NotBeNullOrEmpty();
+                }
+
                 if ((state.Kind == CaptureStateKind.Focus && state.TargetField == "RevisionGrid")
                     || state.Kind == CaptureStateKind.MenuOpen)
                 {
