@@ -626,6 +626,10 @@ internal sealed class AvaloniaControlTreeReader
         bool isFormBrowseToolStripContainer = sourceOwnerType == "GitUI.CommandsDialogs.FormBrowse"
             && control.Name == "toolPanel";
         bool isFormBrowseSurface = _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse";
+        // WinForms ToolStripItem.Selected is the hovered item, and the source reader
+        // reports that same value for both Selected and Focused.
+        bool isBrowseHoveredToolStripItem = isFormBrowseSurface && isToolStripItem
+            && control.IsPointerOver && (control is not MenuItem menu || !menu.IsSubMenuOpen);
         // The selected commit's outer content viewport ends at its live vertical scrollbar;
         // the inner RichTextBox twin retains its own full client width.
         double browseRevisionInfoScrollBarWidth = isFormBrowseSurface
@@ -1155,6 +1159,8 @@ internal sealed class AvaloniaControlTreeReader
                             isItem: true,
                             transparentBackground: IsTransparentToolStripItem(control),
                             windowBackground: IsWindowBackgroundToolStripItem(control),
+                            useWindowText: _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+                                && control.Name == "toolStripSplitStash",
                             useControlText: IsSourceControlTextToolStripItem(control) || IsViewPullRequestsTree(control))
                         : isFileStatusListView
                             ? ReadFileStatusListViewColors(semanticStateControl)
@@ -1570,7 +1576,9 @@ internal sealed class AvaloniaControlTreeReader
                 : isFormCommitSurface && semanticName is "Ok" or "Cancel"
                     ? true
                 : semanticVisible,
-            Focused = isFormBrowseMenuStrip
+            Focused = isBrowseHoveredToolStripItem
+                ? true
+                : isFormBrowseMenuStrip
                 ? false
                 : isNativeTabPage
                     ? false
@@ -1626,13 +1634,13 @@ internal sealed class AvaloniaControlTreeReader
                 : isSourceList && control is ListBox sourceList
                     ? sourceList.SelectedIndex >= 0
                 : isFormBrowseMenuStrip && control is MenuItem
-                    ? false
+                    ? isBrowseHoveredToolStripItem
                 : isFormBrowseSurface && semanticName == "listBoxSearchResult"
                     ? false
                 : isSpellCheckAutoComplete && control is ListBox spellCheckAutoComplete
                 ? spellCheckAutoComplete.SelectedIndex >= 0
                 : (isSemanticToolStripItem && control is not Separator) || isWatermarkComboBox
-                ? false
+                ? isBrowseHoveredToolStripItem
                 : GetSelected(control),
             Expanded = IsSourceTreeControl(sourceType) && control is TreeView treeView
                 ? treeView.GetVisualDescendants().OfType<TreeViewItem>().Any(item => item.IsExpanded)
@@ -4351,6 +4359,13 @@ internal sealed class AvaloniaControlTreeReader
                 && tabItem.GetLogicalAncestors().OfType<TabControl>().FirstOrDefault() is { } owner
                 && GetPropertyValue(owner, "SelectedContent") is Control selectedContent)
             {
+                if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+                    && selectedContent.Name is "revisionDiff" or "fileTree")
+                {
+                    // These named UserControls are source fields, not tab-presenter wrappers.
+                    return [selectedContent];
+                }
+
                 if (GetPropertyValue(selectedContent, "Content") is Control productContent)
                 {
                     return [productContent];
@@ -5264,7 +5279,8 @@ internal sealed class AvaloniaControlTreeReader
                or "RefreshButton" or "toggleLeftPanel" or "toggleSplitViewLayout"
                or "toolStripButtonLevelUp" or "toolStripButtonPull" or "toolStripSeparator0"
                or "toolStripSeparator1" or "toolStripSeparator17"
-               or "toolStripWorktrees" or "tsddbtnRevisionFilter"
+               or "toolStripWorktrees" or "toolStripSplitStash" or "toolStripSeparator2"
+               or "tsddbtnRevisionFilter"
                || control.Name?.StartsWith("pull_shortcut_", StringComparison.Ordinal) == true))
            || (_root.GetType().FullName is "GitUI.CommandsDialogs.FormDiff" or "GitUI.CommandsDialogs.FormLog"
                && IsFileStatusToolbarItem(control)
@@ -5282,9 +5298,16 @@ internal sealed class AvaloniaControlTreeReader
             return false;
         }
 
-        if (control.Name is "sepRefresh"
-            || (control.Name is "btnCollapseGroups" or "btnRefresh"
-                && control.GetLogicalAncestors().OfType<TabItem>().Any(tab => tab.Name == "TreeTabPage")))
+        if (control.Name == "sepRefresh")
+        {
+            // The source's inactive Diff/Tree tab retains the Control ambient color;
+            // its selected page resolves the separator against the Window background.
+            return _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+                   && control.GetLogicalAncestors().OfType<TabItem>().Any(tab => tab.IsSelected);
+        }
+
+        if ((control.Name is "btnCollapseGroups" or "btnRefresh")
+            && control.GetLogicalAncestors().OfType<TabItem>().Any(tab => tab.Name == "TreeTabPage"))
         {
             return false;
         }
@@ -5322,7 +5345,7 @@ internal sealed class AvaloniaControlTreeReader
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
            && (control.Name is "toolStripLabel1" or "tsbShowReflog" or "tsbtnAdvancedFilter"
                 or "tsddbtnBranchFilter" or "tslblRevisionFilter" or "tsmiShowOnlyFirstParent"
-                or "tssbtnShowBranches" or "toolStripSplitStash" or "toolStripFileExplorer"
+                or "tssbtnShowBranches" or "toolStripFileExplorer"
                 or "toolStripButtonPush" or "toolStripButtonCommit" or "EditSettings" or "userShell"
                 || (control.Name is "btnRefresh" or "btnCollapseGroups"
                     && control.GetLogicalAncestors().OfType<TabItem>().Any(tab => tab.Name == "TreeTabPage"))));
@@ -6898,6 +6921,13 @@ internal sealed class AvaloniaControlTreeReader
 
     private bool IsFocused(Control control)
     {
+        if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+            && control.Name == "CommitInfoTabControl")
+        {
+            // WinForms TabControl.Focused excludes the focused control in its selected page.
+            return control.IsFocused;
+        }
+
         if (IsRevisionGridView(control))
         {
             // parity-scaffolding: Avalonia moves keyboard focus into an owned ContextMenu, while

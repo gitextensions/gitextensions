@@ -133,7 +133,7 @@ public sealed class FormBrowseTests
                     "ToolStripScripts", "ToolStripFilters", "ToolStripMain");
                 foreach (string name in new[]
                          {
-                             "toolStripSplitStash", "toolStripFileExplorer", "userShell",
+                             "toolStripFileExplorer", "userShell",
                          })
                 {
                     CaptureNode item = nodes.Single(node => node.FieldName == name);
@@ -150,9 +150,29 @@ public sealed class FormBrowseTests
                     item.Colors.Foreground.Should().Be(sourceForeground);
                 }
 
-                nodes.Single(node => node.FieldName == "toolStripSeparator2").Colors.Background.Should().Be(background);
+                CaptureNode stash = nodes.Single(node => node.FieldName == "toolStripSplitStash");
+                stash.Colors.Background.Should().Be("#00FFFFFF");
+                stash.Colors.DisabledBackground.Should().Be("#00FFFFFF");
+                stash.Colors.Foreground.Should().Be(sourceForeground);
+                CaptureNode stashSeparator = nodes.Single(node => node.FieldName == "toolStripSeparator2");
+                stashSeparator.Colors.Background.Should().Be("#00FFFFFF");
+                stashSeparator.Colors.DisabledBackground.Should().Be("#00FFFFFF");
                 nodes.Single(node => node.FieldName == "toolStripButtonPull").Visible.Should().BeTrue();
+                nodes.Single(node => node.FieldName == "toolStripButtonCommit").Visible.Should().BeTrue();
+                nodes.Single(node => node.FieldName == "toolStripFileExplorer").Visible.Should().BeFalse();
                 nodes.Single(node => node.FieldName == "_gridView").Colors.Foreground.Should().Be(windowText);
+                nodes.Where(node => node.FieldName == "sepRefresh")
+                    .Should().HaveCount(2).And.OnlyContain(node => node.Colors.Background == background);
+
+                form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+                Dispatcher.UIThread.RunJobs();
+                CaptureNode[] selectedDiffNodes = [.. Flatten(new AvaloniaControlTreeReader(form, renderScale: 1)
+                    .ReadPrimary(form, new PixelSize((int)form.Bounds.Width, (int)form.Bounds.Height)).Root)];
+                selectedDiffNodes.Where(node => node.FieldName == "sepRefresh")
+                    .Select(node => node.Colors.Background)
+                    .Should().Contain(theme == ThemeVariant.Light ? "#FFFFFFFF" : "#FF323232");
+                form.CommitInfoTabControl.SelectedItem = form.CommitInfoTabPage;
+                Dispatcher.UIThread.RunJobs();
             }
         }
         finally
@@ -257,8 +277,10 @@ public sealed class FormBrowseTests
             Dispatcher.UIThread.RunJobs();
 
             Grid split = form.revisionDiff.FindControl<Grid>("DiffSplitContainer")!;
+            split.Bounds.Width.Should().Be(643);
+            split.Bounds.Height.Should().Be(260);
             split.ColumnDefinitions[0].ActualWidth.Should().Be(300);
-            split.ColumnDefinitions[1].ActualWidth.Should().Be(7);
+            split.ColumnDefinitions[1].ActualWidth.Should().Be(6);
             split.ColumnDefinitions[2].ActualWidth.Should().BeGreaterThan(300);
             form.revisionDiff.FindControl<FileStatusList>("DiffFiles")!.Bounds.Width.Should().Be(300);
         }
