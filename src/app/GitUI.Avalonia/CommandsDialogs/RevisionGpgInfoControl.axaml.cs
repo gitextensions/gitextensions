@@ -1,6 +1,5 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Threading;
 using GitCommands.Git.Gpg;
 using GitCommands.Utils;
 using GitUI.Properties;
@@ -48,17 +47,6 @@ public partial class RevisionGpgInfoControl : GitModuleControl
         }
 
         ApplyLayout();
-    }
-
-    /// <summary>
-    ///  Focuses the commit verification text, matching the focusable WinForms control.
-    /// </summary>
-    public void FocusInfo()
-    {
-        if (!txtCommitGpgInfo.Focus())
-        {
-            Dispatcher.UIThread.Post(() => txtCommitGpgInfo.Focus());
-        }
     }
 
     private void DisplayCommitSignatureStatus(CommitStatus commitStatus)
