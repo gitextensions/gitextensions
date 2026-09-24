@@ -699,6 +699,15 @@ public sealed class ViewConstructionTests
             TextBox tagInfo = control.FindControl<TextBox>("txtTagGpgInfo")!;
             Grid layout = control.FindControl<Grid>("tableLayoutPanel1")!;
 
+            control.Focusable.Should().BeTrue();
+            control.FocusAdorner.Should().BeNull();
+            foreach (TextBox info in new[] { commitInfo, tagInfo })
+            {
+                info.VerticalContentAlignment.Should().Be(Avalonia.Layout.VerticalAlignment.Top);
+                ScrollViewer.GetVerticalScrollBarVisibility(info).ToString().Should().Be("Visible");
+                info.FocusAdorner.Should().BeNull();
+            }
+
             control.DisplayGpgInfo(new GpgInfo(
                 CommitStatus.GoodSignature,
                 "good commit signature\nsecond line",

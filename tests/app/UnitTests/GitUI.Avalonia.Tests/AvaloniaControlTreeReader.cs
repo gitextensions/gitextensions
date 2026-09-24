@@ -6673,9 +6673,11 @@ internal sealed class AvaloniaControlTreeReader
         bool isReadOnly = GetNullableBoolProperty(control, "IsReadOnly") == true;
         bool usesWindowBackground = _root.GetType().FullName == "GitUI.CommandsDialogs.FormMergeBranch"
             && control.Name is "nbMessages" or "mergeMessage";
+        bool isGpgInfoTextBox = control.Name is ("txtCommitGpgInfo" or "txtTagGpgInfo")
+            && control.GetLogicalAncestors().Any(ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.RevisionGpgInfoControl");
         string? background = usesWindowBackground
             ? ResolveResourceArgb("GitExtensionsKnownColorWindowBrush")
-            : control.Name is "searchTB" or "searchResultItemDescription"
+            : isGpgInfoTextBox || control.Name is ("searchTB" or "searchResultItemDescription")
             ? BrushToArgb(GetPropertyValue(control, "Background"))
             : isReadOnly
             ? ResolveResourceArgb("GitExtensionsReadOnlyTextInputBackgroundBrush")
