@@ -1,16 +1,33 @@
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI.LeftPanel;
 
 internal abstract class BaseRefTree : BaseRevisionTree
 {
-    private static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(1);
+    protected IReadOnlyList<IGitRef>? _loadedRefs;
 
-    protected BaseRefTree(RepoObjectsTree owner, RepoTreeKind kind, string caption, Avalonia.Media.IImage icon)
-        : base(owner, kind, caption, icon)
+    protected readonly RefsFilter _refsFilter;
+
+    protected BaseRefTree(
+        RepoObjectsTree owner,
+        RepoTreeKind kind,
+        string caption,
+        Avalonia.Media.IImage icon,
+        ICheckRefs? refsSource,
+        RefsFilter filter)
+        : base(owner, kind, caption, icon, refsSource)
     {
+        _refsFilter = filter;
+    }
+
+    protected override void OnAttached()
+    {
+        _loadedRefs = null;
+        base.OnAttached();
     }
 
     protected void FillNested(
@@ -19,7 +36,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
     {
         PathEntry root = new(string.Empty);
         int order = 0;
-        foreach (IGitRef gitRef in OrderRefs(refs))
+        foreach (IGitRef gitRef in refs)
         {
             PathEntry entry = root;
             string[] parts = gitRef.Name.Split('/', StringSplitOptions.RemoveEmptyEntries);
@@ -57,36 +74,50 @@ internal abstract class BaseRefTree : BaseRevisionTree
         }
     }
 
-    private static IEnumerable<IGitRef> OrderRefs(IEnumerable<IGitRef> refs)
+    protected virtual Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
+        => Nodes;
+
+    protected IEnumerable<IGitRef> PrioritizedBranches(IReadOnlyList<IGitRef> branches)
+        => OrderByPriority(branches, node => node.LocalName, AppSettings.PrioritizedBranchNames);
+
+    protected IEnumerable<RemoteRepoNode> PrioritizedRemotes(IReadOnlyList<RemoteRepoNode> remotes)
+        => OrderByPriority(remotes.OrderBy(node => node.FullPath).ToList(), node => node.FullPath, AppSettings.PrioritizedRemoteNames);
+
+    /// <summary>
+    /// Order the references by the priorities in the setting regex
+    /// </summary>
+    private static IEnumerable<T> OrderByPriority<T>(IReadOnlyList<T> references, Func<T, string> keySelector, string setting)
     {
-        string expression = AppSettings.PrioritizedBranchNames;
-        Regex? priority = null;
-        if (!string.IsNullOrWhiteSpace(expression))
+        string[] regexes = [.. setting.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(regex => $"^({regex})$")];
+        if (regexes.Length == 0)
         {
-            try
+            return references;
+        }
+
+        const int additionalRegexCacheEntries = 10;
+        if ((regexes.Length * 2) + additionalRegexCacheEntries > Regex.CacheSize)
+        {
+            Regex.CacheSize = (regexes.Length * 2) + additionalRegexCacheEntries;
+        }
+
+        Dictionary<string, int> orderByNodeKey = [];
+        foreach (T node in references)
+        {
+            int currentOrder = 0;
+            foreach (string regex in regexes)
             {
-                priority = new Regex($"^({expression})$", RegexOptions.ExplicitCapture, RegexTimeout);
-            }
-            catch (ArgumentException)
-            {
-                priority = null;
+                string key = keySelector(node);
+                if (Regex.IsMatch(key, regex, RegexOptions.ExplicitCapture))
+                {
+                    orderByNodeKey[key] = currentOrder;
+                    break;
+                }
+
+                currentOrder++;
             }
         }
 
-        return refs
-            .OrderBy(gitRef => IsPriorityMatch(priority, gitRef.LocalName) ? 0 : 1);
-
-        static bool IsPriorityMatch(Regex? pattern, string branchName)
-        {
-            try
-            {
-                return pattern?.IsMatch(branchName) == true;
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                return false;
-            }
-        }
+        return references.OrderBy(node => orderByNodeKey.GetValueOrDefault(keySelector(node), int.MaxValue));
     }
 
     private static void AddNode(NodeBase parent, NodeBase child)

@@ -27,7 +27,11 @@ internal sealed class RemoteRepoNode : BaseRevisionNode
         _remotesManager = remotesManager;
         if (remote is Remote value)
         {
-            ToolTip.SetTip(TreeViewNode, value.FetchUrl);
+            ToolTip.SetTip(
+                TreeViewNode,
+                value.PushUrls.Count != 1 || value.FetchUrl != value.PushUrls[0]
+                    ? $"Fetch: {value.FetchUrl}\nPush: {string.Join("\n", value.PushUrls.ToArray())}"
+                    : value.FetchUrl);
         }
     }
 

@@ -11,6 +11,17 @@ internal sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICa
     {
     }
 
+    internal override void OnSelected()
+    {
+        if (Tree.IgnoreSelectionChangedEvent)
+        {
+            return;
+        }
+
+        base.OnSelected();
+        SelectRevision();
+    }
+
     public bool Fetch()
     {
         (string remote, string branch) = GetRemoteBranchInfo();
