@@ -151,12 +151,12 @@ public sealed class FormBrowseTests
                 }
 
                 CaptureNode stash = nodes.Single(node => node.FieldName == "toolStripSplitStash");
-                stash.Colors.Background.Should().Be("#00FFFFFF");
-                stash.Colors.DisabledBackground.Should().Be("#00FFFFFF");
-                stash.Colors.Foreground.Should().Be(sourceForeground);
+                stash.Colors.Background.Should().Be(stash.Visible == true ? "#00FFFFFF" : background);
+                stash.Colors.DisabledBackground.Should().Be(stash.Visible == true ? "#00FFFFFF" : background);
+                stash.Colors.Foreground.Should().Be(stash.Visible == true ? sourceForeground : foreground);
                 CaptureNode stashSeparator = nodes.Single(node => node.FieldName == "toolStripSeparator2");
-                stashSeparator.Colors.Background.Should().Be("#00FFFFFF");
-                stashSeparator.Colors.DisabledBackground.Should().Be("#00FFFFFF");
+                stashSeparator.Colors.Background.Should().Be(stashSeparator.Visible == true ? "#00FFFFFF" : background);
+                stashSeparator.Colors.DisabledBackground.Should().Be(stashSeparator.Visible == true ? "#00FFFFFF" : background);
                 nodes.Single(node => node.FieldName == "toolStripButtonPull").Visible.Should().BeTrue();
                 nodes.Single(node => node.FieldName == "toolStripButtonCommit").Visible.Should().BeTrue();
                 nodes.Single(node => node.FieldName == "toolStripFileExplorer").Visible.Should().BeFalse();
@@ -171,8 +171,109 @@ public sealed class FormBrowseTests
                 selectedDiffNodes.Where(node => node.FieldName == "sepRefresh")
                     .Select(node => node.Colors.Background)
                     .Should().Contain(theme == ThemeVariant.Light ? "#FFFFFFFF" : "#FF323232");
+                form.CommitInfoTabControl.SelectedItem = form.TreeTabPage;
+                Dispatcher.UIThread.RunJobs();
+                CaptureNode[] selectedTreeNodes = [.. Flatten(new AvaloniaControlTreeReader(form, renderScale: 1)
+                    .ReadPrimary(form, new PixelSize((int)form.Bounds.Width, (int)form.Bounds.Height)).Root)];
+                foreach (string name in new[] { "btnCollapseGroups", "btnRefresh" })
+                {
+                    CaptureNode item = selectedTreeNodes.Where(node => node.FieldName == name).Last();
+                    item.Colors.Background.Should().Be(theme == ThemeVariant.Light ? "#FFFFFFFF" : "#FF323232");
+                    item.Colors.Foreground.Should().Be(windowText);
+                }
+
+                selectedTreeNodes.Where(node => node.FieldName == "sepRefresh").Last()
+                    .Colors.Background.Should().Be(background);
                 form.CommitInfoTabControl.SelectedItem = form.CommitInfoTabPage;
                 Dispatcher.UIThread.RunJobs();
+
+                form.Width = 760;
+                form.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+                CaptureNode[] narrowNodes = [.. Flatten(new AvaloniaControlTreeReader(form, renderScale: 1)
+                    .ReadPrimary(form, new PixelSize((int)form.Bounds.Width, (int)form.Bounds.Height)).Root)];
+                foreach (string name in new[] { "toolStripSplitStash", "toolStripSeparator2" })
+                {
+                    CaptureNode item = narrowNodes.Single(node => node.FieldName == name);
+                    item.Visible.Should().BeFalse();
+                    item.Colors.Background.Should().Be(background);
+                    item.Colors.DisabledBackground.Should().Be(background);
+                    if (name == "toolStripSplitStash")
+                    {
+                        item.Colors.Foreground.Should().Be(foreground);
+                    }
+                }
+
+                form.Width = 923;
+                Dispatcher.UIThread.RunJobs();
+            }
+        }
+        finally
+        {
+            form.Close();
+        }
+
+        static IEnumerable<CaptureNode> Flatten(CaptureNode node)
+        {
+            yield return node;
+            foreach (CaptureNode child in node.Children)
+            {
+                foreach (CaptureNode descendant in Flatten(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_capture_should_open_the_main_navigate_and_view_menus()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        form.Show();
+        try
+        {
+            foreach (string name in new[] { "navigateToolStripMenuItem", "viewToolStripMenuItem" })
+            {
+                MenuItem mainMenuItem = GetMainMenuItem(form, name);
+                mainMenuItem.Should().BeOfType<SourceControls.ToolStripMenuItem>();
+                MenuItem gridContextItem = name == "navigateToolStripMenuItem"
+                    ? form.RevisionGrid.NavigateMenuItem
+                    : form.RevisionGrid.ViewMenuItem;
+                using (AvaloniaControlStateDriver.Apply(form, new CaptureStatePlan
+                       {
+                           Id = name,
+                           Kind = CaptureStateKind.MenuOpen,
+                           TargetField = name,
+                       }))
+                {
+                    mainMenuItem.IsSubMenuOpen.Should().BeTrue();
+                    gridContextItem.IsSubMenuOpen.Should().BeFalse();
+                    CaptureNode primary = new AvaloniaControlTreeReader(form, renderScale: 1)
+                        .ReadPrimary(form, new PixelSize((int)form.Bounds.Width, (int)form.Bounds.Height)).Root;
+                    CaptureNode mainMenu = Flatten(primary).Single(node => node.FieldName == "mainMenuStrip");
+                    mainMenu.Children.Single(node => node.Name == name).Children
+                        .Should().OnlyContain(node => node.Visible == false,
+                            "submenu rows are captured separately on their popup surface");
+                }
+            }
+
+            const string staticMenuName = "repositoryToolStripMenuItem";
+            using (AvaloniaControlStateDriver.Apply(form, new CaptureStatePlan
+                   {
+                       Id = staticMenuName,
+                       Kind = CaptureStateKind.MenuOpen,
+                       TargetField = staticMenuName,
+                   }))
+            {
+                CaptureNode primary = new AvaloniaControlTreeReader(form, renderScale: 1)
+                    .ReadPrimary(form, new PixelSize((int)form.Bounds.Width, (int)form.Bounds.Height)).Root;
+                CaptureNode mainMenu = Flatten(primary).Single(node => node.FieldName == "mainMenuStrip");
+                mainMenu.Children.Single(node => node.Name == staticMenuName).Children
+                    .Should().Contain(node => node.Visible == true,
+                        "the source primary tree retains visible rows for static Browse menus");
             }
         }
         finally

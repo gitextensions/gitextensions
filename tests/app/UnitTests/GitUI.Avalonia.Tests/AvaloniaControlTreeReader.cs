@@ -74,7 +74,8 @@ internal sealed class AvaloniaControlTreeReader
                 ordinal: 0,
                 ancestorSemanticVisible: true,
                 semanticParent: null,
-                boundsOverride: rootBoundsOverride)
+                boundsOverride: rootBoundsOverride,
+                primarySurface: role == "primary")
         };
     }
 
@@ -463,7 +464,8 @@ internal sealed class AvaloniaControlTreeReader
         int ordinal,
         bool ancestorSemanticVisible,
         Control? semanticParent,
-        Rect? boundsOverride)
+        Rect? boundsOverride,
+        bool primarySurface)
     {
         IReadOnlyList<string> fieldNames = GetFieldNames(control);
         bool isSurfaceRoot = string.IsNullOrEmpty(parentId);
@@ -832,7 +834,11 @@ internal sealed class AvaloniaControlTreeReader
             && (!isSourceToolStripItem || IsInsideClippedAncestors(control))
             && ancestorSemanticVisible;
         bool childSemanticVisible = semanticVisible
-            && (control is not MenuItem menuItem || menuItem.IsSubMenuOpen)
+            // These two dynamic Browse menus are constructed without fields on the form;
+            // the source primary tree keeps their rows hidden while the popup tree is open.
+            && (control is not MenuItem menuItem
+                || (menuItem.IsSubMenuOpen
+                    && !(primarySurface && IsFormBrowseDynamicMainMenu(control))))
             && (control is not TabItem tabItem || tabItem.IsSelected);
         IReadOnlyList<CaptureNode> children = GetSemanticChildren(control)
             .Select((child, childOrdinal) => ReadControl(
@@ -841,7 +847,8 @@ internal sealed class AvaloniaControlTreeReader
                 childOrdinal,
                 childSemanticVisible,
                 childSemanticParent,
-                boundsOverride: null))
+                boundsOverride: null,
+                primarySurface: primarySurface))
             .ToArray();
 
         CaptureNode node = new()
@@ -1160,8 +1167,15 @@ internal sealed class AvaloniaControlTreeReader
                             transparentBackground: IsTransparentToolStripItem(control),
                             windowBackground: IsWindowBackgroundToolStripItem(control),
                             useWindowText: _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
-                                && control.Name == "toolStripSplitStash",
-                            useControlText: IsSourceControlTextToolStripItem(control) || IsViewPullRequestsTree(control))
+                                && ((control.Name == "toolStripSplitStash"
+                                     && IsInsideClippedAncestors(control))
+                                    || (control.Name is "btnCollapseGroups" or "btnRefresh"
+                                        && IsSelectedBrowseTreeToolbarItem(control))),
+                            useControlText: IsSourceControlTextToolStripItem(control)
+                                || IsViewPullRequestsTree(control)
+                                || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+                                    && control.Name == "toolStripSplitStash"
+                                    && !IsInsideClippedAncestors(control)))
                         : isFileStatusListView
                             ? ReadFileStatusListViewColors(semanticStateControl)
                         : isRevisionGridView
@@ -5279,8 +5293,10 @@ internal sealed class AvaloniaControlTreeReader
                or "RefreshButton" or "toggleLeftPanel" or "toggleSplitViewLayout"
                or "toolStripButtonLevelUp" or "toolStripButtonPull" or "toolStripSeparator0"
                or "toolStripSeparator1" or "toolStripSeparator17"
-               or "toolStripWorktrees" or "toolStripSplitStash" or "toolStripSeparator2"
+               or "toolStripWorktrees"
                or "tsddbtnRevisionFilter"
+               || (control.Name is "toolStripSplitStash" or "toolStripSeparator2"
+                   && IsInsideClippedAncestors(control))
                || control.Name?.StartsWith("pull_shortcut_", StringComparison.Ordinal) == true))
            || (_root.GetType().FullName is "GitUI.CommandsDialogs.FormDiff" or "GitUI.CommandsDialogs.FormLog"
                && IsFileStatusToolbarItem(control)
@@ -5301,20 +5317,26 @@ internal sealed class AvaloniaControlTreeReader
         if (control.Name == "sepRefresh")
         {
             // The source's inactive Diff/Tree tab retains the Control ambient color;
-            // its selected page resolves the separator against the Window background.
+            // only the selected Diff page resolves its separator against Window.
             return _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
-                   && control.GetLogicalAncestors().OfType<TabItem>().Any(tab => tab.IsSelected);
+                   && control.GetLogicalAncestors().OfType<TabItem>()
+                       .Any(tab => tab.IsSelected && tab.Name != "TreeTabPage");
         }
 
         if ((control.Name is "btnCollapseGroups" or "btnRefresh")
             && control.GetLogicalAncestors().OfType<TabItem>().Any(tab => tab.Name == "TreeTabPage"))
         {
-            return false;
+            return IsSelectedBrowseTreeToolbarItem(control);
         }
 
         return control.Name is "tscboBranchFilter" or "tstxtRevisionFilter"
                || IsFileStatusToolbarProductItem(control);
     }
+
+    private bool IsSelectedBrowseTreeToolbarItem(Control control)
+        => _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+           && control.GetLogicalAncestors().OfType<TabItem>()
+               .Any(tab => tab.Name == "TreeTabPage" && tab.IsSelected);
 
     private bool IsFileStatusToolbarProductItem(Control control)
         => IsFileStatusToolbarProductItemName(control.Name)
@@ -5665,6 +5687,11 @@ internal sealed class AvaloniaControlTreeReader
             .GetLogicalDescendants()
             .OfType<Control>()
             .FirstOrDefault(candidate => IsFileStatusAlternateView(candidate) && candidate.IsVisible);
+
+    private bool IsFormBrowseDynamicMainMenu(Control control)
+        => _root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
+           && control is MenuItem { Name: "navigateToolStripMenuItem" or "viewToolStripMenuItem" }
+           && control.GetLogicalAncestors().OfType<Menu>().Any(menu => menu.Name == "mainMenuStrip");
 
     private static bool IsSemanticallyVisible(Control control, Control semanticStateControl)
     {

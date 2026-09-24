@@ -200,6 +200,16 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
     // Avalonia twin uses separate list/tree visuals; drive whichever native visual owns that state.
     private static object ResolveFrameworkSplitTarget(Control root, object target)
     {
+        if (root is FormBrowse browse
+            && target is MenuItem { Name: "navigateToolStripMenuItem" or "viewToolStripMenuItem" } menuItem)
+        {
+            // The source FormBrowse field names identify its main-menu entries. The Avalonia
+            // main-menu entries are owned by FormBrowseMenus, while the first same-named
+            // fields found by reflection belong to the revision-grid context menu.
+            return browse.mainMenuStrip.Items.OfType<MenuItem>()
+                .Single(item => item.Name == menuItem.Name);
+        }
+
         if (target is Control { Name: "FileStatusListView", IsEffectivelyVisible: false }
             && EnumerateLogicalControls(root).FirstOrDefault(
                 control => control.Name == "tvDiffFiles" && control.IsEffectivelyVisible) is Control activeDiffTree)
