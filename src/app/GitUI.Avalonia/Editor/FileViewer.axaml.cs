@@ -2711,7 +2711,7 @@ public partial class FileViewer : GitModuleControl
             cacheResult: true,
             isTracked,
             useGitColoring,
-            GitCommandConfiguration.Default,
+            PatchHighlightService.GetGitCommandConfiguration(Module, useGitColoring),
             viewToken);
 
         await InvokeOnOwnerMainThreadAsync(() =>

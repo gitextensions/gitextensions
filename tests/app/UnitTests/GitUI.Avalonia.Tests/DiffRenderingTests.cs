@@ -46,6 +46,26 @@ public sealed class DiffRenderingTests
         }
     }
 
+    [Test]
+    [Category("P8.6i.126")]
+    public void Browse_patch_command_should_request_the_original_themed_reverse_line_colors()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetEffectiveSetting(Arg.Any<string>()).Returns(string.Empty);
+        bool previousReverseGitColoring = AppSettings.ReverseGitColoring.Value;
+        try
+        {
+            AppSettings.ReverseGitColoring.Value = true;
+            IGitCommandConfiguration configuration = PatchHighlightService.GetGitCommandConfiguration(module, useGitColoring: true);
+            configuration.Get("diff").Should().Contain(item => item.Key == "color.diff.old" && item.Value == "red reverse");
+            configuration.Get("diff").Should().Contain(item => item.Key == "color.diff.new" && item.Value == "green reverse");
+        }
+        finally
+        {
+            AppSettings.ReverseGitColoring.Value = previousReverseGitColoring;
+        }
+    }
+
     [AvaloniaTest]
     public void Original_diff_service_constructors_should_populate_the_supplied_margin()
     {
