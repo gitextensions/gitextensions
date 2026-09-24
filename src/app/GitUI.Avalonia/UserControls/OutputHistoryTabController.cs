@@ -30,6 +30,9 @@ internal sealed class OutputHistoryTabController : OutputHistoryControllerBase
             Content = outputHistoryControl,
             TabIndex = 4,
         };
+
+        // Native TabPage's display rectangle leaves a one-DIP side/bottom inset.
+        outputHistoryControl.Margin = new Avalonia.Thickness(1, 0, 1, 1);
         _tabPage.Classes.Add("gitextensions-workspace-tab");
         parent.Items.Add(_tabPage);
     }

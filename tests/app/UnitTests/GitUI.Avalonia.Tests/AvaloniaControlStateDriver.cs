@@ -472,7 +472,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
     private void ActivateContainingTabs(Control control)
     {
-        TabItem[] tabItems = control.GetLogicalAncestors()
+        TabItem[] tabItems = new[] { control }.Concat(control.GetLogicalAncestors().OfType<Control>())
             .OfType<TabItem>()
             .Reverse()
             .ToArray();
