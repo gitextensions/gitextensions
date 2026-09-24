@@ -392,6 +392,12 @@ public sealed class ParityInventoryTests
     [TestCase("MouseMove", "PointerMoved")]
     [TestCase("MouseLeave", "PointerExited")]
     [TestCase("MouseClick", "PointerReleased")]
+    [TestCase("MouseUp", "PointerReleased")]
+    [TestCase("MouseDown", "PointerPressed")]
+    [TestCase("DoubleClick", "DoubleTapped")]
+    [TestCase("CellMouseDoubleClick", "DoubleTapped")]
+    [TestCase("PreviewKeyDown", "KeyDown")]
+    [TestCase("KeyPress", "TextInput")]
     public void Run_should_match_framework_equivalent_event_names(string originalEvent, string twinEvent)
     {
         using InventoryFixture fixture = new();
@@ -409,6 +415,46 @@ public sealed class ParityInventoryTests
             {
                 private void Wire() => control.{{twinEvent}} += HandleChanged;
                 private void HandleChanged(object sender, EventArgs e) { }
+            }
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.Findings.Should().NotContain(item => item.Code.StartsWith("event.wiring", StringComparison.Ordinal));
+    }
+
+    [Test]
+    public void Run_should_read_routed_and_attached_event_registrations()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                private void Wire()
+                {
+                    control.MouseDown += HandleMouseDown;
+                    control.DragEnter += HandleDragEnter;
+                    control.DragDrop += HandleDragDrop;
+                }
+                private void HandleMouseDown(object sender, EventArgs e) { }
+                private void HandleDragEnter(object sender, EventArgs e) { }
+                private void HandleDragDrop(object sender, EventArgs e) { }
+            }
+            """);
+        fixture.WriteTwin("Widget.axaml.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                private void Wire()
+                {
+                    control.AddHandler(PointerPressedEvent, HandleMouseDown, RoutingStrategies.Tunnel);
+                    DragDrop.AddDragEnterHandler(control, HandleDragEnter);
+                    DragDrop.AddDropHandler(control, HandleDragDrop);
+                }
+                private void HandleMouseDown(object sender, EventArgs e) { }
+                private void HandleDragEnter(object sender, EventArgs e) { }
+                private void HandleDragDrop(object sender, EventArgs e) { }
             }
             """);
 
@@ -1101,10 +1147,11 @@ public sealed class ParityInventoryTests
             {
                 private ContextMenuStrip menu;
                 private ToolStripMenuItem open;
+                private CopyContextMenuItem copy;
                 private ToolStripSeparator toolStripMenuItem1;
                 private void InitializeComponent()
                 {
-                    menu.Items.AddRange(new ToolStripItem[] { open, toolStripMenuItem1 });
+                    menu.Items.AddRange(new ToolStripItem[] { open, copy, toolStripMenuItem1 });
                 }
             }
             """);
@@ -1113,10 +1160,12 @@ public sealed class ParityInventoryTests
         fixture.WriteTwin("Widget.axaml", """
             <UserControl xmlns="https://github.com/avaloniaui"
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                         xmlns:wf="using:Sample.Compat"
-                         x:Class="Sample.Widget">
+                          xmlns:wf="using:Sample.Compat"
+                          xmlns:controls="using:Sample.Controls"
+                          x:Class="Sample.Widget">
               <wf:ContextMenuStrip x:Name="menu">
                 <wf:ToolStripMenuItem x:Name="open" Header="Open" />
+                <controls:CopyContextMenuItem x:Name="copy" />
                 <wf:ToolStripSeparator x:Name="toolStripMenuItem1" />
               </wf:ContextMenuStrip>
             </UserControl>
@@ -1128,6 +1177,10 @@ public sealed class ParityInventoryTests
             item.Parent == "menu" && item.Name == "open");
         report.Twin.Menus.Should().Contain(item =>
             item.Parent == "menu" && item.Name == "open");
+        report.Twin.Menus.Should().Contain(item =>
+            item.Parent == "menu" && item.Name == "copy");
+        report.Original.Menus.Should().Contain(item =>
+            item.Parent == "menu" && item.Name == "copy");
         report.Twin.Menus.Should().Contain(item =>
             item.Parent == "menu" && item.Name == "toolStripMenuItem1" && item.Kind == "separator");
         report.Original.Menus.Should().Contain(item =>

@@ -1643,7 +1643,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             // Set defaults in rebase form to rebase commits defined by the range *from* first selected commit *to* HEAD
             // *onto* 2nd selected commit
             string from = revisions[1].ObjectId.ToShortString(); // 1st selected commit (excluded from rebase)
-            string to = RevisionGrid.GetCurrentBranch(); // current branch checked out (HEAD)
+            string to = RevisionGrid.CurrentBranch.Value; // current branch checked out (HEAD)
 
             UICommands.StartRebaseDialog(this, from, to, onto, interactive: false, startRebaseImmediately: false);
         }
