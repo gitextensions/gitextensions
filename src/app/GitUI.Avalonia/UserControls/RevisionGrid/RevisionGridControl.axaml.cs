@@ -111,11 +111,11 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     public event EventHandler? ToggledBetweenArtificialAndHeadCommits;
     public static readonly string HotkeySettingsName = "RevisionGrid";
+
     private readonly List<ColumnProvider> _columnProviders = [];
-    private readonly (Control item, bool advanced)[] _contextMenuItems;
-    private RevisionGridRefRenderer.RefLabelControl? _rightClickedHitInfo;
-    private KeyModifiers _contextMenuModifiers;
     private readonly Avalonia.Collections.AvaloniaList<GitRevision> _revisions = [];
+    private readonly RevisionGraph _revisionGraph = new();
+
     private readonly TranslationString _droppingFilesBlocked = new("For you own protection dropping more than 10 patch files at once is blocked!");
     private readonly TranslationString _noRevisionFoundError = new("No revision found.");
     private readonly TranslationString _baseForCompareNotSelectedError = new("Base commit for compare is not selected.");
@@ -126,21 +126,34 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private readonly TranslationString _areYouSureRebase = new("Are you sure you want to rebase? This action will rewrite commit history.");
     private readonly TranslationString _noMergeBaseCommit = new("There is no merge base for the selected revisions.");
     private readonly TranslationString _invalidDiffContainsFilter = new("The diff contains filter is invalid.");
-    private readonly RevisionGraph _revisionGraph = new();
+
+    private readonly IReadOnlyList<(Control Item, bool Advanced)> _contextMenuItems;
     private readonly FilterInfo _filterInfo = new();
     private readonly NavigationHistory _navigationHistory = new();
+    private readonly Control _loadingControlText;
+    private readonly Control _loadingControlSpinner;
     private readonly RevisionGridToolTipProvider _toolTipProvider;
     private readonly QuickSearchProvider _quickSearchProvider;
     private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
-    private readonly AuthorRevisionHighlighting _authorHighlighting = new();
+    private readonly AuthorRevisionHighlighting _authorHighlighting;
     private readonly Lazy<IndexWatcher> _indexWatcher;
     private readonly BuildServerWatcher _buildServerWatcher;
+    private readonly DispatcherTimer _selectionTimer;
     private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
     private readonly MessageColumnProvider _messageColumnProvider;
     private readonly RevisionGridColumn? _maximizedColumn;
     private RevisionGridColumn? _lastVisibleResizableColumn;
     private readonly ArtificialCommitChangeCount _workTreeChangeCount = new();
     private readonly ArtificialCommitChangeCount _indexChangeCount = new();
+    private readonly CancellationTokenSequence _customDiffToolsSequence = new();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _taskManager = GitUI.Compat.DesignTimeTaskManager.Create();
+    private readonly CancellationTokenSequence _refreshRevisionsSequence = new();
+
+    private Lazy<IReadOnlyCollection<string>>? _ambiguousRefs;
+    private ILookup<ObjectId, IGitRef>? _refsByObjectId;
+    private int _updatingFilters;
     private ObjectId? _headId;
     private ObjectId _pendingSelectedObjectId;
     private bool _headHighlighted;
@@ -149,24 +162,20 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private string _lastRevisionFilter = "--all";
     private IGitModule? _lastModule;
     private bool _parentsAreRewritten;
-    private readonly CancellationTokenSequence _customDiffToolsSequence = new();
-
-    // Avalonia's designer constructs views before the application initializes ThreadHelper.
-    private readonly TaskManager _taskManager = GitUI.Compat.DesignTimeTaskManager.Create();
-    private readonly CancellationTokenSequence _refreshRevisionsSequence = new();
-    private Lazy<IReadOnlyCollection<string>>? _ambiguousRefs;
-    private ILookup<ObjectId, IGitRef>? _refsByObjectId;
-    private int _updatingFilters;
     private GitRevision? _baseCommitToCompare;
     private string? _rebaseOnTopOf;
     private bool _isRefreshingRevisions;
     private SuperProjectInfo? _superprojectCurrentCheckout;
     private int _latestSelectedRowIndex;
+
+    private RevisionGridRefRenderer.RefLabelControl? _rightClickedHitInfo;
+    private KeyModifiers _contextMenuModifiers;
+
     private const string _objectIdPrefix = "????";
 
     #region IRevisionGridInfo
 
-    public ObjectId CurrentCheckout => _headId ?? default;
+    internal ObjectId CurrentCheckout => _headId ?? default;
 
     internal Lazy<string> CurrentBranch { get; private set; } = new(() => "");
 
@@ -181,7 +190,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     /// <summary>
     /// The last selected commit in the grid (with related CommitInfo in Browse).
     /// </summary>
-    public ObjectId SelectedId
+    internal ObjectId SelectedId
     {
         get => SelectedRevision?.ObjectId ?? _pendingSelectedObjectId;
         set => _pendingSelectedObjectId = value;
@@ -321,6 +330,20 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             (tsmiOtherActions, top)
         ];
 
+        _loadingControlText = lblLoadingStatus;
+        _loadingControlSpinner = new LoadingControl();
+
+        // Delay raising the SelectionChanged event for a barely noticeable period to throttle
+        // rapid changes, for example by holding the down arrow key in the revision grid.
+        // 75ms is longer than the default keyboard repeat rate of 15 keypresses per second.
+        _selectionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(75) };
+        _selectionTimer.Tick += (_, e) =>
+        {
+            _selectionTimer.Stop();
+            SelectionChanged?.Invoke(this, e);
+        };
+
+        _authorHighlighting = new AuthorRevisionHighlighting();
         _buildServerWatcher = new BuildServerWatcher(this, this, () => Module);
         commitDataManager ??= new CommitDataManager(() => Module);
         commitDataManager.RevisionDetailsLoaded += (_, _) => Dispatcher.UIThread.Post(RefreshRealizedRows);
@@ -357,7 +380,13 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         MenuCommands.TriggerMenuChanged();
 
         // Parent-child navigation can expect that SetSelectedRevision is always successful since it always uses first-parents
-        _parentChildNavigationHistory = new ParentChildNavigationHistory(commitId => SetSelectedRevision(commitId));
+        _parentChildNavigationHistory = new ParentChildNavigationHistory(commitId =>
+        {
+            if (!SetSelectedRevision(commitId))
+            {
+                MessageBoxes.RevisionFilteredInGrid(this, commitId);
+            }
+        });
         _indexWatcher = new Lazy<IndexWatcher>(() => new IndexWatcher(UICommandsSource));
 
         _gridView.ItemTemplate = new FuncDataTemplate<GitRevision>((_, _) => new RevisionRowControl(this), supportsRecycling: true);
@@ -367,18 +396,13 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         _gridView.AttachedToVisualTree += (_, _) =>
             Dispatcher.UIThread.Post(FocusRevisionGridWhenShown, DispatcherPriority.Loaded);
         _gridView.KeyDown += OnGridViewKeyDown;
+        _gridView.KeyDown += (_, e) => _quickSearchProvider.OnPreviewKeyDown(e);
         _gridView.TextInput += (_, e) => _quickSearchProvider.OnKeyPress(e);
-        _gridView.DoubleTapped += (_, _) =>
-        {
-            DoubleClickRevision?.Invoke(this, new DoubleClickRevisionEventArgs(GetSelectedRevisionOrDefault()));
-            if (!DoubleClickDoesNotOpenCommitInfo)
-            {
-                ViewSelectedRevisions();
-            }
-        };
+        _gridView.DoubleTapped += OnGridViewDoubleClick;
+        _gridView.PointerReleased += OnGridViewMouseClick;
 
         // Inspect the native input before ListBox selection consumes the pointer event.
-        _gridView.AddHandler(PointerPressedEvent, _gridView_PointerPressed, RoutingStrategies.Tunnel);
+        _gridView.AddHandler(PointerPressedEvent, OnGridViewMouseDown, RoutingStrategies.Tunnel);
 
         // ContextMenu uses the requesting child as its popup anchor. Ref cells are recycled
         // by async detail updates, so anchor to the persistent grid without changing the pointer position.
@@ -454,6 +478,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         UpdateContextMenuItems();
         DetachedFromVisualTree += (_, _) =>
         {
+            _selectionTimer.Stop();
             _revisionGraphColumnProvider.Dispose();
             _buildServerWatcher.Dispose();
             if (_indexWatcher.IsValueCreated)
@@ -893,8 +918,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     /// <param name="showSpinner">Show the spinner or the text controls.</param>
     private void ShowLoading(bool showSpinner = true)
     {
-        lblLoadingStatus.IsVisible = !showSpinner;
-        SetPage(showSpinner ? new LoadingControl() : _gridView);
+        _loadingControlText.IsVisible = !showSpinner;
+        SetPage(showSpinner ? _loadingControlSpinner : _gridView);
     }
 
     private bool CanRefresh => !_isRefreshingRevisions && _updatingFilters == 0;
@@ -1009,7 +1034,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         openCommitsWithDiffToolMenuItem.IsEnabled = !first.IsZero && selected is not null;
 
         IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
-        HighlightRevisionsByAuthor();
+        HighlightRevisionsByAuthor(selectedRevisions);
         RefreshSelection();
         UpdateContextMenuItems();
         if (selectedRevisions.Count == 1 && selected is not null)
@@ -1017,7 +1042,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             _navigationHistory.Push(selected.ObjectId);
         }
 
-        SelectionChanged?.Invoke(this, e);
+        _selectionTimer.Stop();
+        _selectionTimer.Start();
     }
 
     private void AddColumn(ColumnProvider columnProvider)
@@ -1050,12 +1076,12 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void HighlightRevisionsByAuthor()
+    private void HighlightRevisionsByAuthor(in IReadOnlyList<GitRevision> selectedRevisions)
     {
         if (TryGetUICommandsDirect(out IGitUICommands? commands)
             && _authorHighlighting.ProcessRevisionSelectionChange(
                 commands.Module,
-                GetSelectedRevisions()))
+                selectedRevisions))
         {
             RefreshSelection();
         }
@@ -1151,6 +1177,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         _headId = module.GetCurrentCheckout();
         _revisionGraph.HeadId = _headId.Value;
         _superprojectCurrentCheckout = null;
+        IndexWatcher.Reset();
 
         // A path filter makes git rewrite parents ("history simplification"), so revisions
         // may carry parent ids that are not their real parents.
@@ -1260,12 +1287,66 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
+    private void OnGridViewMouseDown(object? sender, PointerPressedEventArgs e)
+    {
+        PointerPointProperties properties = e.GetCurrentPoint(_gridView).Properties;
+        if (properties.PointerUpdateKind == PointerUpdateKind.XButton1Pressed)
+        {
+            NavigateBackward();
+            e.Handled = true;
+            return;
+        }
+
+        if (properties.PointerUpdateKind == PointerUpdateKind.XButton2Pressed)
+        {
+            NavigateForward();
+            e.Handled = true;
+            return;
+        }
+
+        _rightClickedHitInfo = null;
+        _contextMenuModifiers = e.KeyModifiers;
+        if (properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed
+            && e.Source is Visual source)
+        {
+            _rightClickedHitInfo = source.GetSelfAndVisualAncestors()
+                .OfType<RevisionGridRefRenderer.RefLabelControl>()
+                .FirstOrDefault(label => label.GitRef is not null);
+            GitRevision? revision = source.GetSelfAndVisualAncestors()
+                .OfType<Control>()
+                .Select(control => control.DataContext)
+                .OfType<GitRevision>()
+                .FirstOrDefault();
+            if (revision is not null && _gridView.SelectedItems?.Contains(revision) != true)
+            {
+                _gridView.SelectedItem = revision;
+            }
+        }
+    }
+
     internal bool TryGetSuperProjectInfo([System.Diagnostics.CodeAnalysis.NotNullWhen(returnValue: true)] out SuperProjectInfo? spi)
     {
         // If _superprojectCurrentCheckout is not yet calculated when the grid is shown,
         // a separate Refresh() will be invoked to update the row later.
         spi = _superprojectCurrentCheckout;
         return spi is not null;
+    }
+
+    private void OnGridViewDoubleClick(object? sender, TappedEventArgs e)
+    {
+        DoubleClickRevision?.Invoke(this, new DoubleClickRevisionEventArgs(GetSelectedRevisionOrDefault()));
+        if (!DoubleClickDoesNotOpenCommitInfo)
+        {
+            ViewSelectedRevisions();
+        }
+    }
+
+    private void OnGridViewMouseClick(object? sender, PointerReleasedEventArgs e)
+    {
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            HighlightSelectedBranch();
+        }
     }
 
     private void OnGridViewKeyDown(object? sender, KeyEventArgs e)
@@ -1294,8 +1375,6 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             e.Handled = true;
             return;
         }
-
-        _quickSearchProvider.OnPreviewKeyDown(e);
     }
 
     private void ClearRefHighlight()
@@ -1375,43 +1454,6 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     }
 
     #endregion
-
-    private void _gridView_PointerPressed(object? sender, PointerPressedEventArgs e)
-    {
-        PointerPointProperties properties = e.GetCurrentPoint(_gridView).Properties;
-        if (properties.PointerUpdateKind == PointerUpdateKind.XButton1Pressed)
-        {
-            NavigateBackward();
-            e.Handled = true;
-            return;
-        }
-
-        if (properties.PointerUpdateKind == PointerUpdateKind.XButton2Pressed)
-        {
-            NavigateForward();
-            e.Handled = true;
-            return;
-        }
-
-        _rightClickedHitInfo = null;
-        _contextMenuModifiers = e.KeyModifiers;
-        if (properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed
-            && e.Source is Visual source)
-        {
-            _rightClickedHitInfo = source.GetSelfAndVisualAncestors()
-                .OfType<RevisionGridRefRenderer.RefLabelControl>()
-                .FirstOrDefault(label => label.GitRef is not null);
-            GitRevision? revision = source.GetSelfAndVisualAncestors()
-                .OfType<Control>()
-                .Select(control => control.DataContext)
-                .OfType<GitRevision>()
-                .FirstOrDefault();
-            if (revision is not null && _gridView.SelectedItems?.Contains(revision) != true)
-            {
-                _gridView.SelectedItem = revision;
-            }
-        }
-    }
 
     private void ResetAnotherBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
     {
@@ -1780,7 +1822,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         parent.Items.Add(item);
     }
 
-    private void ContextMenuOpening(object? sender, CancelEventArgs e)
+    private void ContextMenuOpening(object sender, CancelEventArgs e)
     {
         // If a ref label was right-clicked, show a focused context menu for that ref
         //   If Shift is pressed or AppSettings.AlwaysShowAdvOpt, show the full context menu directly but filter the dropdowns to the clicked ref
@@ -2377,9 +2419,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         ApplySettingsAndRefreshRows();
     }
 
-    protected override bool ExecuteCommand(int command)
+    protected override bool ExecuteCommand(int cmd)
     {
-        switch ((Command)command)
+        switch ((Command)cmd)
         {
             case Command.ToggleRevisionGraph: ToggleRevisionGraphColumn(); break;
             case Command.RevisionFilter: ShowRevisionFilterDialog(); break;
@@ -2428,7 +2470,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             case Command.CompareSelectedCommits: compareSelectedCommitsMenuItem_Click(this, EventArgs.Empty); break;
             case Command.DeleteRef: DeleteRef(); break;
             case Command.RenameRef: RenameRef(); break;
-            default: return base.ExecuteCommand(command);
+            default: return base.ExecuteCommand(cmd);
         }
 
         return true;
@@ -2888,7 +2930,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         return path;
     }
 
-    private void openPullRequestPageStripMenuItem_Click(object? sender, EventArgs e)
+    private void openPullRequestPageStripMenuItem_Click(object sender, EventArgs e)
     {
         string? url = SelectedRevision?.BuildStatus?.PullRequestUrl;
         if (!string.IsNullOrWhiteSpace(url))
@@ -3345,7 +3387,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     public IReadOnlyList<GitRevision> GetSelectedRevisions(SortDirection direction)
         => GetSelectedRevisions((SortDirection?)direction);
 
-    public string GetCurrentBranch() => CurrentBranch.Value;
+    ObjectId IRevisionGridInfo.CurrentCheckout => CurrentCheckout;
+
+    string IRevisionGridInfo.GetCurrentBranch() => CurrentBranch.Value;
 
     bool ICheckRefs.Contains(ObjectId objectId)
         => _revisions.Any(revision => revision.ObjectId == objectId);
