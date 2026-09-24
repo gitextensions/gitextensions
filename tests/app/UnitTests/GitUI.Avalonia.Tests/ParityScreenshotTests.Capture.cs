@@ -1419,6 +1419,16 @@ public sealed partial class ParityScreenshotTests
                 // work is drained for the requested state. Reassert the paired HEAD boundary
                 // after that drain, just as the WinForms capture worker does before rendering.
                 await SelectAndWaitForFormBrowseRevisionAsync(capturedBrowse, context.HeadRevision);
+                // A plan that starts on a lower tab can reach HEAD before the initial
+                // selection event. Apply the same product GPG-tab update that event uses so
+                // capture order does not decide whether the tab exists.
+                bool shouldShowGpgInfo = AppSettings.ShowGpgInformation.Value && !context.HeadRevision.IsArtificial;
+                if (capturedBrowse.GpgInfoTabPage.IsVisible != shouldShowGpgInfo)
+                {
+                    capturedBrowse.RefreshGpgInfo(context.HeadRevision);
+                }
+
+                capturedBrowse.GpgInfoTabPage.IsVisible.Should().Be(shouldShowGpgInfo);
                 if (capturedBrowse.CommitInfoTabControl.SelectedItem == capturedBrowse.DiffTabPage)
                 {
                     // Selecting the lower Diff tab starts its file-list and patch loaders.
