@@ -15,6 +15,16 @@ internal sealed class WorktreeTree : Tree
         Complete(TranslatedStrings.Worktrees, Images.WorkTree, expanded: false);
     }
 
+    internal void Refresh()
+    {
+        if (!IsAttached)
+        {
+            return;
+        }
+
+        Load(Module.GetWorktrees(), Module.WorkingDir);
+    }
+
     public void Load(IReadOnlyList<GitWorktree> worktrees, string currentWorkingDirectory)
         => OwnerControl.UpdateNodes(() =>
     {
@@ -151,7 +161,10 @@ internal sealed class WorktreeTree : Tree
             .Select(item => item.Tag)
             .OfType<WorktreeNode>()
             .FirstOrDefault()?.Worktree.Path ?? UICommands.Module.WorkingDir;
-        UICommands.WorktreeCreate(owner, mainWorktreePath);
+        if (UICommands.WorktreeCreate(owner, mainWorktreePath))
+        {
+            Refresh();
+        }
     }
 
     public void PruneWorktrees(IWin32Window owner)
