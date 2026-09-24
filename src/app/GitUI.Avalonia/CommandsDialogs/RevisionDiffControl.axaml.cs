@@ -35,7 +35,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
 
         _diffCalculator = new FileStatusDiffCalculator(() => Module);
         DiffFiles.SelectionMode = SelectionMode.Multiple;
-        DiffFiles.Bind(RefreshArtificial);
+        DiffFiles.CanUseFindInCommitFilesGitGrep = true;
         DiffFiles.SelectedIndexChanged += DiffFiles_SelectedIndexChanged;
         DiffFiles.DoubleClick += (_, _) => ShowSelectedFile();
         DiffText.LinePatchingBlocksUntilReload = true;
@@ -272,6 +272,12 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         DiffFiles.tsmiBlame.IsChecked = _showBlame;
         _diffCalculator.DescribeRevision = objectId => DescribeRevision(objectId);
         _diffCalculator.GetActualRevision = revisionGridInfo.GetActualRevision;
+        DiffFiles.Bind(
+            RefreshArtificial,
+            canAutoRefresh: true,
+            objectId => DescribeRevision(objectId),
+            revisionGridInfo.GetActualRevision,
+            IsFileTreeMode);
         DiffFiles.BindContextMenu(
             blame: BlameFile,
             cherryPickChanges: DiffText.CherryPickAllChanges,
