@@ -445,7 +445,6 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
             if (item.Tag is Control toolStrip)
             {
                 item.IsChecked = toolStrip.IsVisible;
-                RefreshToolbarsMenuItemCheckedState(item.Items);
             }
         }
     }

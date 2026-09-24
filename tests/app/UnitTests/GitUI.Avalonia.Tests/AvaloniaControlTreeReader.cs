@@ -1666,6 +1666,8 @@ internal sealed class AvaloniaControlTreeReader
                     ? ReadFileStatusListViewExpanded(semanticStateControl)
                 : isPopupRoot
                     ? true
+                    : primarySurface && IsFormBrowseDynamicMainMenu(control)
+                        ? false
                     : GetSourceTypeName(sourceType) is "ToolStripDropDownButton" or "ToolStripSplitButton"
                         ? GetPropertyValue(control, "Flyout") is FlyoutBase sourceFlyout && sourceFlyout.IsOpen
                     : isSemanticToolStripItem && GetPropertyValue(control, "Flyout") is FlyoutBase flyout
