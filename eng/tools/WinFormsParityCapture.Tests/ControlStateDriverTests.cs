@@ -91,6 +91,33 @@ public sealed class ControlStateDriverTests
         childMoved.Should().BeTrue();
     }
 
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    [Category("P8_6i")]
+    public void Apply_should_drive_toolbar_item_hover_through_its_owner_window()
+    {
+        using Form form = new() { ClientSize = new Size(240, 140) };
+        using ToolStrip toolbar = new() { Dock = DockStyle.Top };
+        ToolStripButton button = new() { Name = "button", Text = "Commit" };
+        bool pointerReachedItem = false;
+        button.MouseEnter += (_, _) => pointerReachedItem = true;
+        toolbar.Items.Add(button);
+        form.Controls.Add(toolbar);
+        form.Show();
+
+        using ControlStateDriver driver = ControlStateDriver.Apply(
+            form,
+            new CaptureStatePlan
+            {
+                Id = "toolbar.hover",
+                Kind = CaptureStateKind.Hover,
+                TargetField = button.Name
+            });
+
+        pointerReachedItem.Should().BeTrue();
+        button.Selected.Should().BeTrue();
+    }
+
     private sealed class MenuOwner : UserControl
     {
         private readonly ContextMenuStrip _menu;
