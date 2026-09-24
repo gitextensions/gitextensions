@@ -343,13 +343,13 @@
         <commandsDialogs:ToolStripPushButton x:Name="toolStripButtonPush"
                                             compat:TranslationCompat.TranslateToolTip="False"
                                             Classes="gitextensions-toolbar-button gitextensions-icon-only"
-                                            Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
+                                            Foreground="{DynamicResource GitExtensionsSourceControlTextBrush}"
                                             Content="Push"
                                             Icon="{x:Static properties:Images.Push}" />
         <compat:IconButton x:Name="toolStripButtonCommit"
                            compat:TranslationCompat.TranslateToolTip="False"
                            Classes="gitextensions-toolbar-button"
-                           Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
+                           Foreground="{DynamicResource GitExtensionsSourceControlTextBrush}"
                            Content="Commit"
                            Icon="{x:Static properties:Images.RepoStateClean}" />
         <SplitButton x:Name="toolStripSplitStash"

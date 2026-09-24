@@ -5905,13 +5905,16 @@ internal sealed class AvaloniaControlTreeReader
             };
         }
 
-        if (name == "toolStripButtonPush")
+        if (name is "toolStripButtonPush" or "toolStripButtonCommit")
         {
-            return ReadToolStripColors(
+            CaptureColors colors = ReadToolStripColors(
                 control,
                 isItem: true,
-                transparentBackground: false,
-                useControlText: true);
+                transparentBackground: true);
+            return colors with
+            {
+                Foreground = ResolveSourceControlTextArgb()
+            };
         }
 
         if (name == "_topPanel")

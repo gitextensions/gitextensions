@@ -319,6 +319,7 @@ partial class FormBrowse
     {
         RepoStateVisualiser repoStateVisualiser = new();
         (Avalonia.Media.IImage image, Avalonia.Media.IBrush brush) = repoStateVisualiser.Invoke(status);
+        double currentWidth = toolStripButtonCommit.Bounds.Width;
 
         if (showCount)
         {
@@ -332,6 +333,14 @@ partial class FormBrowse
             toolStripButtonCommit.Icon = RepoStateVisualiser.Clean.Item1;
             toolStripButtonCommit.Content = _commitButtonText.Text;
         }
+
+        // WinForms ToolStrip autosizing resolves to whole 96-DPI pixels and retains the wider
+        // status allocation while a refresh temporarily has no status. Avalonia measures in
+        // fractional DIPs, so round the same content-driven result instead of scaling a capture.
+        toolStripButtonCommit.Width = double.NaN;
+        toolStripButtonCommit.Measure(new Avalonia.Size(double.PositiveInfinity, double.PositiveInfinity));
+        double minimumWidth = showCount && status is null ? currentWidth : 0;
+        toolStripButtonCommit.Width = Math.Max(minimumWidth, Math.Ceiling(toolStripButtonCommit.DesiredSize.Width));
 
         return brush;
     }
