@@ -1629,6 +1629,10 @@
       <TranslateTransform X="9" Y="-1" />
     </Setter>
   </Style>
+  <Style Selector="MenuItem.gitextensions-menu-no-gesture /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- WinForms lets caption-only commands use the otherwise empty shortcut column. -->
+    <Setter Property="Grid.ColumnSpan" Value="2" />
+  </Style>
   <Style Selector="MenuItem /template/ TextBlock#PART_InputGestureText">
     <Setter Property="RenderTransform">
       <TranslateTransform X="-10" Y="-1" />

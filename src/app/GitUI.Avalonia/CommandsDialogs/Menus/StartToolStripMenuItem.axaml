@@ -4,24 +4,24 @@
                               xmlns:properties="using:GitUI.Properties"
                               x:Class="GitUI.CommandsDialogs.Menus.StartToolStripMenuItem"
                               Header="_Start">
-  <MenuItem x:Name="initNewRepositoryToolStripMenuItem" Header="_Create new repository...">
+  <MenuItem x:Name="initNewRepositoryToolStripMenuItem" Classes="gitextensions-menu-no-gesture" Header="_Create new repository...">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RepoCreate}" /></MenuItem.Icon>
   </MenuItem>
   <MenuItem x:Name="openToolStripMenuItem" Header="_Open...">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RepoOpen}" /></MenuItem.Icon>
   </MenuItem>
-  <MenuItem x:Name="tsmiFavouriteRepositories" Header="_Favorite repositories">
+  <MenuItem x:Name="tsmiFavouriteRepositories" Classes="gitextensions-menu-no-gesture" Header="_Favorite repositories">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Star}" /></MenuItem.Icon>
     <MenuItem Header="..." />
   </MenuItem>
-  <MenuItem x:Name="tsmiRecentRepositories" Header="_Recent repositories">
+  <MenuItem x:Name="tsmiRecentRepositories" Classes="gitextensions-menu-no-gesture" Header="_Recent repositories">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RecentRepositories}" /></MenuItem.Icon>
     <MenuItem Header="..." />
     <Separator x:Name="clearRecentRepositoriesListToolStripMenuItem" />
     <MenuItem x:Name="tsmiRecentRepositoriesClear" Header="Clear list" />
   </MenuItem>
   <Separator x:Name="toolStripSeparator12" />
-  <MenuItem x:Name="cloneToolStripMenuItem" Header="C_lone repository...">
+  <MenuItem x:Name="cloneToolStripMenuItem" Classes="gitextensions-menu-no-gesture" Header="C_lone repository...">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CloneRepoGit}" /></MenuItem.Icon>
   </MenuItem>
   <Separator x:Name="toolStripMenuItem1" />

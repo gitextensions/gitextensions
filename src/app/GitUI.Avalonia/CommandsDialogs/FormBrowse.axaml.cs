@@ -97,6 +97,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private int _gpgInfoLoadVersion;
     private IReadOnlyList<GitWorktree> _worktrees = [];
     private readonly IRepositoryHistoryUIService? _repositoryHistoryUIService;
+    private readonly HashSet<Control> _partiallyHiddenMainToolbarItems = [];
     private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
     private List<MenuItem>? _currentSubmoduleMenuItems;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
@@ -368,6 +369,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         toolStripMainOverflow.Click += (_, _) => ToggleToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
         toolStripMainViewport.SizeChanged += (_, _) => UpdateMainToolbarOverflow();
+        toolStripMainViewport.ScrollChanged += (_, _) => UpdateMainToolbarItemVisibility();
         ToolStripMain.LayoutUpdated += (_, _) => UpdateMainToolbarOverflow();
 
         // The 50-pixel source FilterToolBar moves every item into ToolStrip's overflow
@@ -426,6 +428,39 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         UpdateToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
+        UpdateMainToolbarItemVisibility();
+    }
+
+    private void UpdateMainToolbarItemVisibility()
+    {
+        double width = toolStripMainViewport.Viewport.Width;
+        if (width <= 0)
+        {
+            return;
+        }
+
+        double left = toolStripMainViewport.Offset.X;
+        double right = left + width;
+        foreach (Control item in ToolStripMain.Children.OfType<Control>())
+        {
+            bool partiallyClipped = item.IsVisible
+                && item.Bounds.Width > 0
+                && item.Bounds.Right > left
+                && item.Bounds.Left < right
+                && (item.Bounds.Left < left || item.Bounds.Right > right);
+            if (partiallyClipped && _partiallyHiddenMainToolbarItems.Add(item))
+            {
+                // ToolStrip moves a whole item to overflow; a clipped half-button must
+                // neither paint nor accept clicks while the same item remains in layout.
+                item.Opacity = 0;
+                item.IsHitTestVisible = false;
+            }
+            else if (!partiallyClipped && _partiallyHiddenMainToolbarItems.Remove(item))
+            {
+                item.ClearValue(OpacityProperty);
+                item.ClearValue(IsHitTestVisibleProperty);
+            }
+        }
     }
 
     private static void UpdateToolbarOverflow(Control content, ScrollViewer viewport, Button overflowButton)
