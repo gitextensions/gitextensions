@@ -1,16 +1,22 @@
+using Avalonia.Controls;
 using Avalonia.Media;
 using GitExtensions.Extensibility.Git;
+using GitUI.Properties;
 
 namespace GitUI.LeftPanel;
 
 internal abstract class BaseRevisionNode : Node
 {
+    protected const char PathSeparator = '/';
+    private readonly IImage _visibleIcon;
+
     protected BaseRevisionNode(Tree tree, NodeBase parent, string fullPath, IGitRef? gitRef, IImage icon, bool isBold = false)
         : base(tree, parent, GetName(fullPath), icon, isBold)
     {
         FullPath = fullPath;
         GitRef = gitRef;
         ObjectId = gitRef?.ObjectId ?? default;
+        _visibleIcon = icon;
     }
 
     /// <summary>
@@ -41,11 +47,42 @@ internal abstract class BaseRevisionNode : Node
         /// </summary>
     public ObjectId ObjectId { get; protected init; }
 
+    public override void ApplyStyle()
+    {
+        SetHeader(DisplayText(), Visible ? GetVisibleIcon() : Images.EyeClosed);
+        base.ApplyStyle();
+        if (!Visible)
+        {
+            ToolTip.SetTip(TreeViewNode, string.Format(TranslatedStrings.InvisibleCommit, FullPath));
+        }
+    }
+
+    public override int GetHashCode()
+        => FullPath.GetHashCode();
+
+    public override bool Equals(object? obj)
+        => obj is BaseRevisionNode other
+            && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath, StringComparison.Ordinal));
+
     public bool Rebase()
         => UICommands.StartRebaseDialog(Owner, FullPath);
 
     public bool Reset()
         => UICommands.StartResetCurrentBranchDialog(Owner, FullPath);
+
+    protected override string DisplayText()
+        => Name;
+
+    protected virtual IImage GetVisibleIcon()
+        => _visibleIcon;
+
+    protected virtual void SelectRevision()
+    {
+        if (!ObjectId.IsZero)
+        {
+            GoToRevision(ObjectId.ToString());
+        }
+    }
 
     private static string GetName(string fullPath)
     {

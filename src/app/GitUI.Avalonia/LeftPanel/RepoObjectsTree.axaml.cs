@@ -55,6 +55,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private readonly WorktreeTree _worktreeTree;
     private List<TreeViewItem>? _searchResult;
     private int _selectionUpdateDepth;
+    private KeyModifiers _selectionModifiers;
 
     /// <summary>Occurs when the selected node changes.</summary>
     public event EventHandler? NodeSelectionChanged;
@@ -77,6 +78,8 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private StashNode? SelectedStashNode => SelectedNode as StashNode;
 
     private WorktreeNode? SelectedWorktreeNode => SelectedNode as WorktreeNode;
+
+    internal KeyModifiers SelectionModifiers => _selectionModifiers;
     private Action<string?> _filterRevisionGridBySpaceSeparatedRefs = null!;
     private IAheadBehindDataProvider? _aheadBehindDataProvider;
     private bool _searchCriteriaChanged;
@@ -142,14 +145,19 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         bool restoreState = _rootNodes.Count > 0;
 
         ClearSearchResults();
+        foreach (Tree tree in _rootNodes.Where(tree => !ReferenceEquals(tree, _submoduleTree) && !ReferenceEquals(tree, _worktreeTree)))
+        {
+            tree.Dispose();
+        }
+
         _rootNodes.Clear();
 
         IGitRef[] branches = [.. refs.Where(gitRef => gitRef.IsHead && !gitRef.IsTag)];
         IGitRef[] remotes = [.. refs.Where(gitRef => gitRef.IsRemote)];
         IGitRef[] tags = [.. refs.Where(gitRef => gitRef.IsTag && !gitRef.IsDereference)];
-        _branchesTree = new LocalBranchTree(this, branches, currentBranch);
-        _remotesTree = new RemoteBranchTree(this, remotes, enabledRemotes, disabledRemotes, remotesManager);
-        _tagTree = new TagTree(this, tags);
+        _branchesTree = new LocalBranchTree(this, branches, currentBranch, _aheadBehindDataProvider, _refsSource, _revisionGridInfo);
+        _remotesTree = new RemoteBranchTree(this, remotes, enabledRemotes, disabledRemotes, remotesManager, _aheadBehindDataProvider, _refsSource);
+        _tagTree = new TagTree(this, tags, _refsSource);
         _rootNodes.Add(_branchesTree);
         _rootNodes.Add(_remotesTree);
         _worktreeTree.Load(_currentWorktrees, currentWorkingDirectory);
@@ -157,7 +165,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _rootNodes.Add(_tagTree);
         _rootNodes.Add(_submoduleTree);
 
-        _stashTree = new StashTree(this, stashes);
+        _stashTree = new StashTree(this, stashes, _refsSource);
         if (includeStashes)
         {
             _rootNodes.Add(_stashTree);
@@ -180,6 +188,10 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                     treeMain.SelectedItems.Add(node.TreeViewNode);
                 }
             }
+        }
+        else if (_branchesTree.DepthEnumerator<LocalBranchNode>().FirstOrDefault(node => node.IsCurrent) is { } current)
+        {
+            SetNodeSelected(current.TreeViewNode, selected: true);
         }
     });
 
@@ -210,11 +222,20 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         HotkeysEnabled = true;
         RegisterContextActions();
 
+        treeMain.PointerPressed += (_, e) => _selectionModifiers = e.KeyModifiers;
+        treeMain.KeyDown += (_, e) => _selectionModifiers = e.KeyModifiers;
         treeMain.SelectionChanged += (_, _) =>
         {
             if (_selectionUpdateDepth == 0)
             {
+                if (SelectedNode is Node selectedNode
+                    && SelectedNode is not BaseRevisionNode { Visible: false })
+                {
+                    selectedNode.OnSelected();
+                }
+
                 NodeSelectionChanged?.Invoke(this, EventArgs.Empty);
+                Dispatcher.UIThread.Post(() => _selectionModifiers = KeyModifiers.None);
             }
         };
         menuMain.Opening += contextMenu_Opening;
@@ -394,6 +415,8 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 },
                 new TextBlock
                 {
+                    FontFamily = new FontFamily(AppSettings.Font.Name),
+                    FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
                     FontWeight = isBold ? FontWeight.Bold : FontWeight.Normal,
                     FontStyle = isItalic ? FontStyle.Italic : FontStyle.Normal,
                     VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
@@ -468,6 +491,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private void ApplyRoots()
     {
+        foreach (NodeBase node in _rootNodes.SelectMany(tree => tree.DescendantsAndSelf()))
+        {
+            node.TreeViewNode.Classes.Set("leaf-node", !node.HasChildren);
+        }
+
         TreeViewItem[] visibleRoots =
         [
             .. _rootNodes
@@ -491,7 +519,13 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     /// (Update the visibility for left panel objects.)
     /// </summary>
     public void RefreshRevisionsLoaded()
-        => ApplyRoots();
+    {
+        _branchesTree.UpdateVisibility();
+        _remotesTree.UpdateVisibility();
+        _tagTree.UpdateVisibility();
+        _stashTree.UpdateVisibility();
+        ApplyRoots();
+    }
 
     /// <summary>
     /// Refresh after resorting.
@@ -630,6 +664,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
+    internal void FocusTree()
+        => treeMain.Focus();
+
     private void RemoveTree(Tree tree)
     {
         _rootNodes.Remove(tree);
@@ -748,8 +785,8 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             case RepoAction.Copy:
                 ClipboardUtil.TrySetText(SelectedNode switch
                 {
-                    BaseRevisionNode revisionNode => revisionNode.FullPath,
                     StashNode stashNode => stashNode.ReflogSelector,
+                    BaseRevisionNode revisionNode => revisionNode.FullPath,
                     _ => string.Empty,
                 });
                 break;
@@ -993,6 +1030,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         internal void SetWorktrees(IReadOnlyList<GitWorktree> worktrees, string currentWorkingDirectory)
             => control._worktreeTree.Load(worktrees, currentWorkingDirectory);
+
+        internal void SetSelectionModifiers(KeyModifiers modifiers)
+            => control._selectionModifiers = modifiers;
     }
 }
 

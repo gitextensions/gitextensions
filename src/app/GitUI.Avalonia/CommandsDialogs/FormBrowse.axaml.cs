@@ -203,7 +203,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileHistoryMode);
         InitCommitDetails();
         CommitInfoTabControl.SelectionChanged += CommitInfoTabControl_SelectedIndexChanged;
-        repoObjectsTree.NodeSelectionChanged += RepoObjectsTree_SelectionChanged;
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
         refreshDashboardToolStripMenuItem.Click += RefreshDashboardToolStripMenuItemClick;
         fileExplorerToolStripMenuItem.Click += FileExplorerToolStripMenuItemClick;
@@ -1362,14 +1361,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private MenuFlyout BranchSelectFlyout => (MenuFlyout)branchSelect.Flyout!;
 
     private MenuFlyout WorktreeFlyout => (MenuFlyout)toolStripWorktrees.Flyout!;
-
-    private void RepoObjectsTree_SelectionChanged(object? sender, EventArgs e)
-    {
-        if (repoObjectsTree.SelectedRevisionObjectId is ObjectId objectId)
-        {
-            RevisionGrid.SelectRevision(objectId);
-        }
-    }
 
     private void CurrentBranchClick(object sender, EventArgs e)
     {

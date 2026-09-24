@@ -2,16 +2,17 @@ using System.Diagnostics;
 using Avalonia.Controls;
 using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.LeftPanel;
 
 [DebuggerDisplay("(Worktree) Path = {Worktree.Path}, Branch = {Worktree.Branch}")]
-internal sealed class WorktreeNode : NodeBase
+internal sealed class WorktreeNode : Node
 {
     private readonly WorktreeTree _tree;
 
     public WorktreeNode(WorktreeTree tree, GitWorktree worktree, bool isCurrent, string displayPath)
-        : base(tree.OwnerControl, tree, worktree.GetDisplayName(displayPath), Images.WorkTree, isBold: isCurrent)
+        : base(tree, tree, worktree.GetDisplayName(displayPath), Images.WorkTree, isBold: isCurrent)
     {
         _tree = tree;
         Worktree = worktree;
@@ -37,6 +38,19 @@ internal sealed class WorktreeNode : NodeBase
             ? objectId
             : null;
 
+    internal override void OnSelected()
+    {
+        if (Tree.IgnoreSelectionChangedEvent)
+        {
+            return;
+        }
+
+        if (Worktree.Sha1 is not null)
+        {
+            GoToRevision(Worktree.Sha1);
+        }
+    }
+
     internal override void OnDoubleClick()
     {
         if (!IsCurrent && !Worktree.IsDeleted)
@@ -54,7 +68,15 @@ internal sealed class WorktreeNode : NodeBase
     }
 
     public void DeleteWorktree()
-        => _tree.UICommands.WorktreeDelete(_tree.OwnerControl, Worktree.Path);
+    {
+        if (_tree.UICommands.WorktreeDelete(_tree.OwnerControl, Worktree.Path))
+        {
+            _tree.Refresh();
+        }
+    }
+
+    protected override WinFormsShims.FontStyle GetFontStyle()
+        => base.GetFontStyle() | (IsCurrent ? WinFormsShims.FontStyle.Bold : WinFormsShims.FontStyle.Regular);
 
     private string GetToolTipText()
     {
@@ -70,4 +92,10 @@ internal sealed class WorktreeNode : NodeBase
             ? $"{Worktree.Path}{status}\nBranch: {branchLine}\nHEAD: {shortSha}"
             : $"{Worktree.Path}{status}\nBranch: {branchLine}";
     }
+
+    protected override string DisplayText()
+        => Worktree.GetDisplayName(DisplayPath);
+
+    protected override string NodeName()
+        => Worktree.Path;
 }

@@ -1,9 +1,13 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Media;
 
+using GitCommands;
+using GitUI.Compat;
+using WinFormsShims = GitExtensions.Shims.WinForms;
+
 namespace GitUI.LeftPanel;
 
-/// <summary>Common repository-tree model shared by roots and their child nodes.</summary>
+/// <summary>A common base class for both <see cref="Node"/> and <see cref="Tree"/>.</summary>
 internal abstract class NodeBase
 {
     protected NodeBase(RepoObjectsTree owner, NodeBase? parent, string caption, IImage icon, bool isBold = false, bool isItalic = false)
@@ -25,7 +29,7 @@ internal abstract class NodeBase
     /// <summary>The child nodes.</summary>
     protected internal Nodes Nodes { get; protected set; }
 
-    internal bool HasChildren => TreeViewNode.Items.Count > 0;
+    internal bool HasChildren => Nodes.Count > 0;
 
     public NodeBase? Parent { get; private set; }
 
@@ -77,6 +81,7 @@ internal abstract class NodeBase
     protected internal void Select(bool select, bool includingDescendants = false)
     {
         IsSelected = select;
+        ApplyStyle(); // toggle multi-selected node style
 
         // recursively process descendants if required
         if (includingDescendants && HasChildren)
@@ -96,6 +101,37 @@ internal abstract class NodeBase
         Caption = caption;
         TreeViewNode.Header = RepoObjectsTree.CreateHeader(caption, icon, isBold, isItalic);
     }
+
+    #region style / appearance
+    public virtual void ApplyStyle()
+    {
+        SetFont(GetFontStyle());
+        ToolTip.SetTip(TreeViewNode, null);
+    }
+
+    protected virtual WinFormsShims.FontStyle GetFontStyle()
+        => IsSelected ? WinFormsShims.FontStyle.Underline : WinFormsShims.FontStyle.Regular;
+
+    private void SetFont(WinFormsShims.FontStyle style)
+    {
+        if (TreeViewNode.Header is not StackPanel panel
+            || panel.Children.OfType<TextBlock>().FirstOrDefault() is not TextBlock text)
+        {
+            return;
+        }
+
+        text.FontFamily = new FontFamily(AppSettings.Font.Name);
+        text.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size);
+        text.FontWeight = style.HasFlag(WinFormsShims.FontStyle.Bold) ? FontWeight.Bold : FontWeight.Normal;
+        text.FontStyle = style.HasFlag(WinFormsShims.FontStyle.Italic) ? Avalonia.Media.FontStyle.Italic : Avalonia.Media.FontStyle.Normal;
+        text.TextDecorations = style.HasFlag(WinFormsShims.FontStyle.Underline)
+            ? TextDecorations.Underline
+            : null;
+    }
+
+    private void ResetFont()
+        => SetFont(WinFormsShims.FontStyle.Regular);
+    #endregion
 
     internal virtual void OnDoubleClick()
     {
