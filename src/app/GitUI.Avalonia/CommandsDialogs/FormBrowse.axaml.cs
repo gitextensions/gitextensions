@@ -941,6 +941,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         if (!AppSettings.ShowStashCount || !Module.IsValidGitWorkingDir() || Module.IsBareRepository())
         {
             toolStripSplitStash.Content = string.Empty;
+            toolStripSplitStash.Classes.Set("gitextensions-icon-only", true);
             return;
         }
 
@@ -952,6 +953,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             int result = Module.GetStashes(noLocks: true).Count;
             await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             toolStripSplitStash.Content = $"({result})";
+            toolStripSplitStash.Classes.Set("gitextensions-icon-only", false);
         });
     }
 
@@ -1701,7 +1703,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             // Avalonia keeps the revision prepared by the selection event while the GPG tab receives focus.
             FillGpgInfo();
-            revisionGpgInfo1.FocusInfo();
+            revisionGpgInfo1.Focus();
         }
         else if (CommitInfoTabControl.SelectedItem == _consoleTabPage)
         {
@@ -2168,7 +2170,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 break;
             case Command.FocusGpgInfo when GpgInfoTabPage.IsVisible:
                 CommitInfoTabControl.SelectedItem = GpgInfoTabPage;
-                revisionGpgInfo1.FocusInfo();
+                revisionGpgInfo1.Focus();
                 break;
             case Command.FocusGitConsole:
                 FillTerminalTab();

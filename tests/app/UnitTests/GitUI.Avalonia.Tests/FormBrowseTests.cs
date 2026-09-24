@@ -380,6 +380,47 @@ public sealed class FormBrowseTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    public void Browse_toolbar_should_keep_the_stash_icon_visible_at_the_source_width()
+    {
+        using FormBrowse form = new() { Width = 923, Height = 573 };
+        form.Show();
+        try
+        {
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            IconSplitButton stash = form.FindControl<IconSplitButton>("toolStripSplitStash")!;
+            Point stashPosition = stash.TranslatePoint(default, form.toolStripMainViewport)!.Value;
+            stash.Icon.Should().NotBeNull();
+            stash.Content.Should().Be(string.Empty);
+            stash.Classes.Should().Contain("gitextensions-icon-only");
+            (stashPosition.X + stash.Bounds.Width)
+                .Should().BeLessThanOrEqualTo(form.toolStripMainViewport.Viewport.Width);
+            foreach (Control ancestor in stash.GetVisualAncestors().OfType<Control>().Where(control => control.ClipToBounds))
+            {
+                Point position = stash.TranslatePoint(default, ancestor)!.Value;
+                (position.X + stash.Bounds.Width).Should().BeLessThanOrEqualTo(
+                    ancestor.Bounds.Width,
+                    $"{ancestor.Name ?? ancestor.GetType().Name} must not clip the Stash button");
+            }
+
+            CaptureSurface surface = new AvaloniaControlTreeReader(form, renderScale: 1)
+                .ReadPrimary(form, new PixelSize(923, 573));
+            FindStashOrNull(surface.Root)!.Visible.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+
+        static CaptureNode? FindStashOrNull(CaptureNode node)
+            => node.FieldName == "toolStripSplitStash"
+                ? node
+                : node.Children.Select(FindStashOrNull).FirstOrDefault(child => child is not null);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void Browse_diff_tab_should_use_the_source_file_list_and_splitter_widths()
     {
         using FormBrowse form = new();
