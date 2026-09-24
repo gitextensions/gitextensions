@@ -69,8 +69,10 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         TextEditor.TextChanged += (sender, e) =>
         {
             UpdateValidationMarkers();
+            UpdateScrollBelowDocument();
             TextChanged?.Invoke(sender, e);
         };
+        TextEditor.LayoutUpdated += (_, _) => UpdateScrollBelowDocument();
         TextEditor.TextArea.SelectionChanged += SelectionManagerSelectionChanged;
         TextEditor.TextArea.Caret.PositionChanged += (_, _) =>
             SelectedLineChanged?.Invoke(this, new SelectedLineEventArgs(TextEditor.TextArea.Caret.Line - 1));
@@ -288,7 +290,6 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         ClearHighlighting();
         TextEditor.Document ??= new TextDocument();
         TextEditor.Document.Text = text;
-        TextEditor.ScrollToHome();
 
         // important to set after the text was changed
         // otherwise the may be rendering artifacts as noted in #5568
@@ -296,6 +297,15 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
         // Restore position if contentIdentification matches the capture
         bool positionSet = _currentViewPositionCache.Restore(contentIdentification) && LineAtCaret > FirstLineAfterHeader;
+
+        if (!positionSet && !_shouldScrollToBottom)
+        {
+            // Scintilla opens new content at its first line. AvaloniaEdit retains the old
+            // caret across Document.Text replacement and can scroll a newly shown diff
+            // down to that caret after layout, hiding the patch header.
+            TextEditor.TextArea.Caret.Position = new TextViewPosition(1, 1);
+            TextEditor.ScrollToHome();
+        }
 
         if (_shouldScrollToBottom)
         {
@@ -346,6 +356,25 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         ScrollBarVisibility visibility = enable ? ScrollBarVisibility.Auto : ScrollBarVisibility.Hidden;
         TextEditor.HorizontalScrollBarVisibility = visibility;
         TextEditor.VerticalScrollBarVisibility = visibility;
+    }
+
+    private void UpdateScrollBelowDocument()
+    {
+        TextView textView = TextEditor.TextArea.TextView;
+        if (textView.Bounds.Height <= 0 || textView.DefaultLineHeight <= 0)
+        {
+            return;
+        }
+
+        // The source editor hides its vertical bar when the complete document fits, but
+        // retains extra below-document travel for longer files. AvaloniaEdit's default
+        // extra travel would otherwise force a scrollbar even for a short patch.
+        int visibleLineCount = (int)Math.Ceiling(textView.Bounds.Height / textView.DefaultLineHeight);
+        bool allowScrollBelowDocument = (TextEditor.Document?.LineCount ?? 0) >= visibleLineCount;
+        if (TextEditor.Options.AllowScrollBelowDocument != allowScrollBelowDocument)
+        {
+            TextEditor.Options.AllowScrollBelowDocument = allowScrollBelowDocument;
+        }
     }
 
     /// <summary>
@@ -427,7 +456,13 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             {
                 if (emptyLineCheck)
                 {
-                    if (fromTop && IsLineVisible(line))
+                    if (fromTop && TextEditor.TextArea.TextView.Bounds.Height <= 0)
+                    {
+                        // The hidden tab has not been arranged yet. Scintilla still knows its
+                        // viewport here; AvaloniaEdit does not, so keep the new document at
+                        // the top until its caret can be brought into a measured viewport.
+                    }
+                    else if (fromTop && IsLineVisible(line))
                     {
                         // Keep FirstVisibleLine, but let it be clamped in order to avoid scrolling the text out of view
                         FirstVisibleLine = FirstVisibleLine;
@@ -452,10 +487,21 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
         bool IsLineVisible(int line)
         {
-            int firstVisibleLine = FirstVisibleLine;
-            int visibleLineCount = TextEditor.TextArea.TextView.VisualLinesValid
-                ? TextEditor.TextArea.TextView.VisualLines.Count
-                : 0;
+            TextView textView = TextEditor.TextArea.TextView;
+
+            // AvaloniaEdit invalidates VisualLines when the document changes, even though the
+            // arranged viewport already has a measured line height. WinForms VisibleLineCount
+            // remains available here, so use that viewport until visual lines are rebuilt.
+            int firstVisibleLine = textView.VisualLinesValid
+                ? FirstVisibleLine
+                : textView.DefaultLineHeight > 0
+                    ? Math.Max(0, (int)Math.Floor(textView.ScrollOffset.Y / textView.DefaultLineHeight))
+                    : 0;
+            int visibleLineCount = textView.VisualLinesValid
+                ? textView.VisualLines.Count
+                : textView.DefaultLineHeight > 0 && textView.Bounds.Height > 0
+                    ? Math.Max(1, (int)Math.Floor(textView.Bounds.Height / textView.DefaultLineHeight))
+                    : 0;
             return firstVisibleLine <= line && line < firstVisibleLine + visibleLineCount;
         }
     }
