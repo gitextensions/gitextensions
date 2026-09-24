@@ -120,6 +120,10 @@ public sealed class FormBrowseTests
                 CaptureNode root = new AvaloniaControlTreeReader(form, renderScale: 1)
                     .ReadPrimary(form, new PixelSize((int)form.Bounds.Width, (int)form.Bounds.Height)).Root;
                 CaptureNode[] nodes = [.. Flatten(root)];
+                nodes.Single(node => node.FieldName == "txtCommitGpgInfo")
+                    .Colors.Background.Should().Be(
+                        theme == ThemeVariant.Light ? "#FFF0F0F0" : "#FF5A5A5A",
+                        "the source read-only GPG textbox uses the themed read-only input background");
                 CaptureNode container = nodes.Single(node => node.FieldName == "toolPanel");
                 container.Children.Should().HaveCount(5);
                 container.Children.Should().OnlyContain(node => node.FieldName == null);
