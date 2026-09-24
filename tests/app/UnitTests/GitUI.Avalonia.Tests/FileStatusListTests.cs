@@ -11,6 +11,7 @@ using GitUI;
 using GitUI.LeftPanel;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 
 namespace GitExtensionsTests;
@@ -492,6 +493,7 @@ public sealed class FileStatusListTests
     [AvaloniaTest]
     public void FileStatusList_tree_modes_should_share_the_native_hierarchy_connectors()
     {
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
         FileStatusList control = new();
         GitRevision revision = new(ObjectId.Random());
         GitItemStatus first = new("src/folder/first.cs") { IsChanged = true, IsTracked = true };
@@ -519,6 +521,23 @@ public sealed class FileStatusListTests
             accessor.Tree.GetVisualDescendants()
                 .OfType<TreeConnectorControl>()
                 .Should().NotBeEmpty();
+
+            for (int depth = 0; depth < 3; depth++)
+            {
+                foreach (TreeViewItem item in accessor.Tree.GetVisualDescendants().OfType<TreeViewItem>().ToArray())
+                {
+                    item.IsExpanded = true;
+                }
+
+                Dispatcher.UIThread.RunJobs();
+            }
+
+            TreeViewItem file = accessor.Tree.GetVisualDescendants().OfType<TreeViewItem>()
+                .First(item => item.GetVisualDescendants().OfType<TextBlock>()
+                    .Any(text => text.Text == "first.cs"));
+            file.GetVisualDescendants().OfType<Image>().First().Source
+                .Should().NotBeSameAs(Images.FileStatusUnknown,
+                    "the source file-tree group uses a file-type icon even without grep/status flags");
         }
         finally
         {

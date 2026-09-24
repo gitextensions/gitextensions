@@ -2550,14 +2550,21 @@ public partial class FileStatusList : GitModuleControl
             Width = 16,
             Height = 16,
             Stretch = Stretch.Uniform,
-            Source = node.Item is null ? Images.FolderClosed : GetItemImageKey(node.Item.Item),
+            Source = node.Item is null
+                ? Images.FolderClosed
+                : _isFileTreeMode && !node.Item.Item.IsSubmodule
+                    ? Images.File
+                    : GetItemImageKey(node.Item.Item),
             Margin = new Avalonia.Thickness(1, 0, 3, 0),
         };
         if (node.Item is not null)
         {
             UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item, node.Name);
-            if (!node.Item.Item.IsSubmodule && !string.IsNullOrWhiteSpace(node.Item.Item.GrepString))
+            if (!node.Item.Item.IsSubmodule
+                && (_isFileTreeMode || !string.IsNullOrWhiteSpace(node.Item.Item.GrepString)))
             {
+                // The source file-tree group uses associated file icons even when its
+                // GetTreeFiles entries have no grep expression or diff-status flags.
                 LoadFileIcons([(image, node.Item.Item.Name)], CancellationToken.None);
             }
         }
