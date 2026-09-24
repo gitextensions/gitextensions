@@ -503,6 +503,26 @@ internal static class SourceInventoryReader
             }
         }
 
+        foreach (InvocationExpressionSyntax invocation in declaration.DescendantNodes().OfType<InvocationExpressionSyntax>())
+        {
+            if (!TryGetRoutedEventWire(invocation, methodNames, delegateNames, out string? target, out string? eventName, out string? handler))
+            {
+                continue;
+            }
+
+            part.EventWiring.Add(new EventWireEntry
+            {
+                Part = part.Path,
+                Target = target,
+                Event = eventName,
+                Handler = handler
+            });
+            if (handler != "<lambda>")
+            {
+                part.EventHandlers.Add(handler);
+            }
+        }
+
         foreach (MethodDeclarationSyntax method in declaration.Members.OfType<MethodDeclarationSyntax>())
         {
             if (method.ParameterList.Parameters.Count == 2
@@ -817,6 +837,53 @@ internal static class SourceInventoryReader
         }
     }
 
+    private static bool TryGetRoutedEventWire(
+        InvocationExpressionSyntax invocation,
+        IReadOnlySet<string> methodNames,
+        IReadOnlySet<string> delegateNames,
+        [System.Diagnostics.CodeAnalysis.NotNullWhen(returnValue: true)] out string? target,
+        [System.Diagnostics.CodeAnalysis.NotNullWhen(returnValue: true)] out string? eventName,
+        [System.Diagnostics.CodeAnalysis.NotNullWhen(returnValue: true)] out string? handler)
+    {
+        target = null;
+        eventName = null;
+        handler = null;
+        if (invocation.Expression is not MemberAccessExpressionSyntax access)
+        {
+            return false;
+        }
+
+        SeparatedSyntaxList<ArgumentSyntax> arguments = invocation.ArgumentList.Arguments;
+        string methodName = access.Name.Identifier.ValueText;
+        ExpressionSyntax? handlerExpression;
+        if (methodName == "AddHandler" && arguments.Count >= 2)
+        {
+            target = Normalize(access.Expression);
+            eventName = Normalize(arguments[0].Expression);
+            if (eventName.EndsWith("Event", StringComparison.Ordinal))
+            {
+                eventName = eventName[..^"Event".Length];
+            }
+
+            handlerExpression = arguments[1].Expression;
+        }
+        else if (methodName.StartsWith("Add", StringComparison.Ordinal)
+                 && methodName.EndsWith("Handler", StringComparison.Ordinal)
+                 && arguments.Count >= 2)
+        {
+            target = Normalize(arguments[0].Expression);
+            eventName = methodName["Add".Length..^"Handler".Length];
+            handlerExpression = arguments[1].Expression;
+        }
+        else
+        {
+            return false;
+        }
+
+        handler = GetEventHandler(handlerExpression, eventName, methodNames, delegateNames);
+        return handler is not null;
+    }
+
     private static void ExtractExplicitTranslationKeys(
         TypeDeclarationSyntax declaration,
         string className,
@@ -1023,7 +1090,7 @@ internal static class SourceInventoryReader
         localName is "ContextMenu" or "ContextMenuStrip" || IsMenuItemElement(localName);
 
     private static bool IsMenuItemElement(string localName) =>
-        localName is "MenuItem" or "ToolStripMenuItem";
+        localName is "MenuItem" or "ToolStripMenuItem" or "CopyContextMenuItem";
 
     private static bool IsMenuSeparatorElement(string localName) =>
         localName is "Separator" or "ToolStripSeparator";

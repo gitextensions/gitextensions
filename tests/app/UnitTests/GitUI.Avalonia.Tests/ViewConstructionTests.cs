@@ -428,7 +428,7 @@ public sealed class ViewConstructionTests
         rebase.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
         commands.Received(1).StartRebaseDialog(
-            form, excluded.ObjectId.ToShortString(), revisionGrid.GetCurrentBranch(),
+            form, excluded.ObjectId.ToShortString(), ((IRevisionGridInfo)revisionGrid).GetCurrentBranch(),
             revision.ObjectId.ToString(), interactive: false, startRebaseImmediately: false);
     }
 

@@ -165,6 +165,42 @@ public sealed class RevisionGridSupportTests
         }
     }
 
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Selection_changed_should_throttle_rapid_revision_navigation_like_the_original()
+    {
+        RevisionGridControl control = new() { UICommandsSource = CreateUICommandsSource() };
+        Window window = new() { Width = 500, Height = 240, Content = control };
+        window.Show();
+        try
+        {
+            control.GetTestAccessor().SetRevisions(
+            [
+                Revision('1', "first"),
+                Revision('2', "second"),
+                Revision('3', "third"),
+            ]);
+            Dispatcher.UIThread.RunJobs();
+
+            int selectionChangedCount = 0;
+            control.SelectionChanged += (_, _) => selectionChangedCount++;
+            ListBox revisions = control.GetTestAccessor().Revisions;
+
+            revisions.SelectedIndex = 0;
+            revisions.SelectedIndex = 1;
+            revisions.SelectedIndex = 2;
+
+            selectionChangedCount.Should().Be(0);
+            Thread.Sleep(100);
+            Dispatcher.UIThread.RunJobs();
+            selectionChangedCount.Should().Be(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [Test]
     public void Parent_child_navigation_history_should_reverse_the_last_direction()
     {
