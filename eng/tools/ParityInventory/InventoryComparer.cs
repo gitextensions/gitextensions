@@ -428,7 +428,12 @@ internal static class InventoryComparer
             "Leave" or "LostFocus" => "focusLeft",
             "MouseMove" or "PointerMoved" => "pointerMoved",
             "MouseLeave" or "PointerExited" => "pointerExited",
-            "MouseClick" or "PointerReleased" => "pointerReleased",
+            "MouseClick" or "MouseUp" or "PointerReleased" => "pointerReleased",
+            "MouseDown" or "PointerPressed" => "pointerPressed",
+            "DoubleClick" or "CellMouseDoubleClick" or "DoubleTapped" => "doubleTapped",
+            "PreviewKeyDown" or "KeyDown" => "keyDown",
+            "KeyPress" or "TextInput" => "textInput",
+            "DragDrop" or "Drop" => "dragDrop",
             _ => eventName
         };
 
