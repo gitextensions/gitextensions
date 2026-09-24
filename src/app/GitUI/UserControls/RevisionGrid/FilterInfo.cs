@@ -126,7 +126,7 @@ public record FilterInfo
 
     public bool ShowCurrentBranchOnly
     {
-        get => AppSettings.ShowCurrentBranchOnly;
+        get => AppSettings.ShowCurrentBranchOnly.Value;
         set => AppSettings.ShowCurrentBranchOnly.Value = value;
     }
 
@@ -202,7 +202,7 @@ public record FilterInfo
 
     /// <summary>
     /// Disables all active filters.
-    /// CurrentBranch and Reflog are not disabled.
+    /// CurrentBranch, ShowOnlyFirstParent and Reflog are intentionally preserved.
     /// FullHistory and SimplifyMerges are considered settings and not reset.
     /// </summary>
     public void ResetAllFilters()
@@ -215,7 +215,6 @@ public record FilterInfo
         ByDiffContent = false;
         ByPathFilter = false;
         ByBranchFilter = false;
-        ShowOnlyFirstParent = false;
         HideMergeCommits = false;
         ShowSimplifyByDecoration = false;
     }
