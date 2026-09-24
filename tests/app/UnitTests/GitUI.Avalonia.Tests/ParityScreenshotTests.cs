@@ -2072,6 +2072,13 @@ public sealed partial class ParityScreenshotTests
         formBrowse.RevisionGrid.GetSelectedRevisions().Should().ContainSingle()
             .Which.ObjectId.Should().Be(revision.ObjectId);
 
+        // Commit details are lazy when another lower tab is selected. The revision is
+        // still selected, but its hidden header is not a valid readiness signal.
+        if (formBrowse.CommitInfoTabControl.SelectedItem != formBrowse.CommitInfoTabPage)
+        {
+            return;
+        }
+
         // The revision list and primary commit-details loaders complete independently.
         // Wait for the selected revision's header and message before recording it.
         CommitInfo.TestAccessor commitInfo = formBrowse.RevisionInfo.GetTestAccessor();

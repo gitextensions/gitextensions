@@ -175,6 +175,127 @@ public sealed class FormBrowseTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    public void Browse_toolbar_overflow_should_reach_commands_between_the_first_and_last_page()
+    {
+        using FormBrowse form = new() { Width = 360, Height = 573 };
+        form.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            ScrollViewer viewport = form.toolStripMainViewport;
+            Button overflow = form.toolStripMainOverflow;
+            double maximumOffset = form.ToolStripMain.Bounds.Width - viewport.Viewport.Width;
+            maximumOffset.Should().BeGreaterThan(viewport.Viewport.Width);
+            overflow.IsVisible.Should().BeTrue();
+
+            overflow.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            viewport.Offset.X.Should().BeGreaterThan(0).And.BeLessThan(maximumOffset);
+            overflow.Content.Should().Be("»");
+
+            while (viewport.Offset.X < maximumOffset)
+            {
+                overflow.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                Dispatcher.UIThread.RunJobs();
+            }
+
+            overflow.Content.Should().Be("«");
+            Point settingsPosition = form.EditSettings.TranslatePoint(default, viewport)!.Value;
+            settingsPosition.X.Should().BeGreaterThanOrEqualTo(0);
+            settingsPosition.X.Should().BeLessThan(viewport.Viewport.Width);
+
+            overflow.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            viewport.Offset.X.Should().Be(0);
+            overflow.Content.Should().Be("»");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_toolbar_should_keep_branch_and_commit_visible_with_a_long_repository_caption()
+    {
+        using FormBrowse form = new() { Width = 760, Height = 573 };
+        form.Show();
+        try
+        {
+            WorkingDirectoryToolStripSplitButton selector = form.FindControl<WorkingDirectoryToolStripSplitButton>(
+                "_NO_TRANSLATE_WorkingDir")!;
+            selector.Content = new string('x', 200);
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            ScrollViewer viewport = form.toolStripMainViewport;
+            Point branchPosition = form.branchSelect.TranslatePoint(default, viewport)!.Value;
+            Point commitPosition = form.toolStripButtonCommit.TranslatePoint(default, viewport)!.Value;
+            branchPosition.X.Should().BeGreaterThanOrEqualTo(0);
+            commitPosition.X.Should().BeGreaterThan(branchPosition.X);
+            (commitPosition.X + form.toolStripButtonCommit.Bounds.Width)
+                .Should().BeLessThanOrEqualTo(viewport.Viewport.Width);
+            selector.Bounds.Width.Should().BeGreaterThanOrEqualTo(83);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_diff_tab_should_use_the_source_file_list_and_splitter_widths()
+    {
+        using FormBrowse form = new();
+        form.Show();
+        try
+        {
+            form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            Grid split = form.revisionDiff.FindControl<Grid>("DiffSplitContainer")!;
+            split.ColumnDefinitions[0].ActualWidth.Should().Be(300);
+            split.ColumnDefinitions[1].ActualWidth.Should().Be(7);
+            split.ColumnDefinitions[2].ActualWidth.Should().BeGreaterThan(300);
+            form.revisionDiff.FindControl<FileStatusList>("DiffFiles")!.Bounds.Width.Should().Be(300);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_diff_tab_should_keep_the_original_refresh_and_find_toolbar_commands()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        form.Show();
+        try
+        {
+            form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            FileStatusList files = form.revisionDiff.FindControl<FileStatusList>("DiffFiles")!;
+            files.CanUseFindInCommitFilesGitGrep.Should().BeTrue();
+            files.FindControl<Button>("btnRefresh")!.IsVisible.Should().BeTrue();
+            files.FindControl<Separator>("sepRefresh")!.IsVisible.Should().BeTrue();
+            files.FindControl<IconSplitButton>("btnFindInFilesGitGrep")!.IsVisible.Should().BeTrue();
+            files.FindControl<Separator>("sepOptions")!.IsVisible.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void Browse_shell_split_button_should_expose_only_launchable_platform_choices()
     {
         using FormBrowse form = new();

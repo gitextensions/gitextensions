@@ -49,6 +49,18 @@
     <Style Selector="compat|IconSplitButton#branchSelect">
       <Setter Property="Padding" Value="2,1" />
     </Style>
+    <Style Selector="compat|IconSplitButton#_NO_TRANSLATE_WorkingDir">
+      <Setter Property="ContentTemplate">
+        <DataTemplate>
+          <Grid ColumnDefinitions="16,4,*">
+            <Image Grid.Column="0" Width="16" Height="16" Stretch="Uniform"
+                   Source="{Binding $parent[compat:IconSplitButton].Icon}" />
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding}"
+                       TextTrimming="CharacterEllipsis" />
+          </Grid>
+        </DataTemplate>
+      </Setter>
+    </Style>
     <Style Selector="MenuItem.worktree-deleted">
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
     </Style>
@@ -303,6 +315,7 @@
         </compat:IconSplitButton>
         <menus:WorkingDirectoryToolStripSplitButton x:Name="_NO_TRANSLATE_WorkingDir"
                                                     Classes="gitextensions-toolbar-button"
+                                                    MinWidth="83"
                                                     Height="22" />
         <compat:IconSplitButton x:Name="branchSelect"
                                 compat:TranslationCompat.TranslateToolTip="False"

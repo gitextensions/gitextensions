@@ -368,12 +368,7 @@ internal sealed class ControlStateDriver : IDisposable
 
     private void Hover(object target)
     {
-        if (target is not Control control || !control.IsHandleCreated)
-        {
-            throw new CaptureStateUnsupportedException("The hover state requires a created Control handle.");
-        }
-
-        (Control mouseTarget, Point mousePoint) = FindMouseTarget(control);
+        (Control mouseTarget, Point mousePoint) = FindPointerTarget(target, "hover");
         Point originalCursorPosition = NativeMethods.GetCursorPosition();
         NativeMethods.SetCursorPosition(mouseTarget.PointToScreen(mousePoint));
         NativeMethods.SendMouseMessage(mouseTarget.Handle, NativeMethods.WmMouseMove, mousePoint.X, mousePoint.Y);
@@ -382,6 +377,24 @@ internal sealed class ControlStateDriver : IDisposable
             NativeMethods.SendMouseMessage(mouseTarget.Handle, NativeMethods.WmMouseLeave, 0, 0);
             NativeMethods.SetCursorPosition(originalCursorPosition);
         });
+    }
+
+    private static (Control Control, Point Point) FindPointerTarget(object target, string state)
+    {
+        if (target is ToolStripItem { Owner.IsHandleCreated: true, Available: true } item
+            && item.Bounds.Width > 0 && item.Bounds.Height > 0)
+        {
+            return (item.Owner, new Point(
+                item.Bounds.Left + (item.Bounds.Width / 2),
+                item.Bounds.Top + (item.Bounds.Height / 2)));
+        }
+
+        if (target is Control { IsHandleCreated: true } control)
+        {
+            return FindMouseTarget(control);
+        }
+
+        throw new CaptureStateUnsupportedException($"The {state} state requires a visible item in a created Control handle.");
     }
 
     private static (Control Control, Point Point) FindMouseTarget(Control control)
@@ -592,17 +605,18 @@ internal sealed class ControlStateDriver : IDisposable
 
     private void Press(object target)
     {
-        if (target is not ButtonBase button || !button.IsHandleCreated)
+        if (target is not ButtonBase && target is not ToolStripItem)
         {
-            throw new CaptureStateUnsupportedException("The pressed state requires a created ButtonBase handle.");
+            throw new CaptureStateUnsupportedException("The pressed state requires a ButtonBase or ToolStripItem.");
         }
 
-        NativeMethods.SendMouseMessage(button.Handle, NativeMethods.WmMouseMove, Math.Max(1, button.ClientSize.Width / 2), Math.Max(1, button.ClientSize.Height / 2));
-        NativeMethods.SendMouseMessage(button.Handle, NativeMethods.WmLButtonDown, Math.Max(1, button.ClientSize.Width / 2), Math.Max(1, button.ClientSize.Height / 2));
+        (Control mouseTarget, Point mousePoint) = FindPointerTarget(target, "pressed");
+        NativeMethods.SendMouseMessage(mouseTarget.Handle, NativeMethods.WmMouseMove, mousePoint.X, mousePoint.Y);
+        NativeMethods.SendMouseMessage(mouseTarget.Handle, NativeMethods.WmLButtonDown, mousePoint.X, mousePoint.Y);
         _restoreActions.Add(() =>
         {
-            NativeMethods.SendMouseMessage(button.Handle, NativeMethods.WmCancelMode, 0, 0);
-            button.Capture = false;
+            NativeMethods.SendMouseMessage(mouseTarget.Handle, NativeMethods.WmCancelMode, 0, 0);
+            mouseTarget.Capture = false;
         });
     }
 }
