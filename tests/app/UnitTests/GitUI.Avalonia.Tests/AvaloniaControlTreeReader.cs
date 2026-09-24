@@ -594,6 +594,13 @@ internal sealed class AvaloniaControlTreeReader
             && !isSpellCheckTextBox
             && !IsSourceRichTextControl(control)
             && GetSourceTypeName(sourceType) is not "RichTextBox";
+        // The source OutputHistory RichTextBox has Fixed3D chrome: its client excludes
+        // two pixels on every edge, matching the editor's actual border thickness.
+        Thickness outputHistoryRichTextBorder = control is ThemeAwareTextEditor editor
+            && sourceOwnerType == "GitUI.UserControls.OutputHistoryControl"
+            && control.Name == "TextBox"
+                ? editor.BorderThickness
+                : default;
         bool hasSourceVerticalTextScrollBar = control is TextBox
             && ((_root.GetType().FullName == "GitUI.CommandsDialogs.FormAddToGitIgnore"
                     && control.Name == "FilePattern")
@@ -913,6 +920,8 @@ internal sealed class AvaloniaControlTreeReader
                         ? Math.Max(0, bounds.Width - 2)
                     : isFormBrowseSearchTextBox
                         ? bounds.Width
+                    : outputHistoryRichTextBorder != default
+                        ? Math.Max(0, bounds.Width - outputHistoryRichTextBorder.Left - outputHistoryRichTextBorder.Right)
                     : hasWinFormsTextBoxClientInset
                         ? GetSourceTextBoxClientWidth(bounds, designerLayout?.BorderStyle, hasSourceVerticalTextScrollBar)
                     : isNativeListView ? Math.Max(0, bounds.Width - 4) : bounds.Width),
@@ -930,6 +939,8 @@ internal sealed class AvaloniaControlTreeReader
                         ? Math.Max(0, bounds.Height - 2)
                         : isFormBrowseSearchTextBox
                             ? bounds.Height
+                        : outputHistoryRichTextBorder != default
+                            ? Math.Max(0, bounds.Height - outputHistoryRichTextBorder.Top - outputHistoryRichTextBorder.Bottom)
                         : hasWinFormsTextBoxClientInset
                             ? GetSourceTextBoxClientHeight(bounds, designerLayout?.BorderStyle)
                         : isNativeListView ? Math.Max(0, bounds.Height - 4) : bounds.Height)
@@ -950,6 +961,8 @@ internal sealed class AvaloniaControlTreeReader
                         ? Math.Max(0, bounds.Width - 2)
                     : isFormBrowseSearchTextBox
                         ? bounds.Width
+                    : outputHistoryRichTextBorder != default
+                        ? Math.Max(0, bounds.Width - outputHistoryRichTextBorder.Left - outputHistoryRichTextBorder.Right)
                     : hasWinFormsTextBoxClientInset
                         ? GetSourceTextBoxClientWidth(bounds, designerLayout?.BorderStyle, hasSourceVerticalTextScrollBar)
                     : isNativeListView ? Math.Max(0, bounds.Width - 4) : bounds.Width),
@@ -967,6 +980,8 @@ internal sealed class AvaloniaControlTreeReader
                         ? Math.Max(0, bounds.Height - 2)
                         : isFormBrowseSearchTextBox
                             ? bounds.Height
+                        : outputHistoryRichTextBorder != default
+                            ? Math.Max(0, bounds.Height - outputHistoryRichTextBorder.Top - outputHistoryRichTextBorder.Bottom)
                         : hasWinFormsTextBoxClientInset
                             ? GetSourceTextBoxClientHeight(bounds, designerLayout?.BorderStyle)
                         : isNativeListView ? Math.Max(0, bounds.Height - 4) : bounds.Height)
@@ -4376,9 +4391,9 @@ internal sealed class AvaloniaControlTreeReader
                 && GetPropertyValue(owner, "SelectedContent") is Control selectedContent)
             {
                 if (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
-                    && selectedContent.Name is "revisionDiff" or "fileTree")
+                    && selectedContent.Name is "revisionDiff" or "fileTree" or "revisionGpgInfo1" or "OutputHistoryControl")
                 {
-                    // These named UserControls are source fields, not tab-presenter wrappers.
+                    // These named UserControls are source controls, not tab-presenter wrappers.
                     return [selectedContent];
                 }
 

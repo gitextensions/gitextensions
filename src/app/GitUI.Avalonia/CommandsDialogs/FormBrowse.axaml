@@ -528,7 +528,8 @@
                    Header="GPG"
                    Icon="{x:Static properties:Images.Key}"
                    IsVisible="False">
-            <commandsDialogs:RevisionGpgInfoControl x:Name="revisionGpgInfo1" Padding="6" />
+            <!-- Native TabPage's display rectangle leaves a one-DIP side/bottom inset. -->
+            <commandsDialogs:RevisionGpgInfoControl x:Name="revisionGpgInfo1" Margin="1,0,1,1" Padding="6" />
           </wf:TabPage>
         </commandsDialogs:FullBleedTabControl>
       </wf:SplitContainer>
