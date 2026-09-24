@@ -247,7 +247,9 @@
                            Background="Transparent"
                            ClipToBounds="True">
       <wf:ToolStripPanel x:Name="_topPanel" Height="27" ClipToBounds="True">
-      <Grid x:Name="toolStripMainHost" ColumnDefinitions="*,Auto" Height="25" ClipToBounds="True">
+      <!-- Reserve one source ToolStrip-item width before the overflow glyph. At the
+           normal Browse width this clips File Explorer into overflow after Stash. -->
+      <Grid x:Name="toolStripMainHost" ColumnDefinitions="*,23,Auto" Height="25" ClipToBounds="True">
         <ScrollViewer x:Name="toolStripMainViewport"
                       Grid.Column="0"
                       Height="25"
@@ -368,7 +370,8 @@
         <SplitButton x:Name="toolStripSplitStash"
                      compat:TranslationCompat.TranslateToolTip="False"
                      Classes="gitextensions-toolbar-button gitextensions-icon-only"
-                     Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}">
+                     Foreground="{DynamicResource GitExtensionsSourceControlTextBrush}"
+                     Background="#00FFFFFF">
           <SplitButton.Content>
             <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stash}" />
           </SplitButton.Content>
@@ -383,7 +386,7 @@
             </MenuFlyout>
           </SplitButton.Flyout>
         </SplitButton>
-        <Border x:Name="toolStripSeparator2" Classes="gitextensions-toolbar-separator" />
+        <Border x:Name="toolStripSeparator2" Classes="gitextensions-toolbar-separator" Background="#00FFFFFF" />
         <Button x:Name="toolStripFileExplorer" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only" Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" />
         </Button>
@@ -407,7 +410,7 @@
           </StackPanel>
         </ScrollViewer>
         <Button x:Name="toolStripMainOverflow"
-                Grid.Column="1"
+                Grid.Column="2"
                 Width="16"
                 MinWidth="0"
                 Height="23"
@@ -512,13 +515,14 @@
                    Classes="gitextensions-workspace-tab"
                    Header="Diff"
                    Icon="{x:Static properties:Images.Diff}">
-            <commandsDialogs:RevisionDiffControl x:Name="revisionDiff" />
+            <!-- Native TabPage's display rectangle leaves a one-DIP side/bottom inset. -->
+            <commandsDialogs:RevisionDiffControl x:Name="revisionDiff" Margin="1,0,1,1" />
           </wf:TabPage>
           <wf:TabPage x:Name="TreeTabPage"
                    Classes="gitextensions-workspace-tab"
                    Header="File tree"
                    Icon="{x:Static properties:Images.FileTree}">
-            <commandsDialogs:RevisionDiffControl x:Name="fileTree" />
+            <commandsDialogs:RevisionDiffControl x:Name="fileTree" Margin="1,0,1,1" />
           </wf:TabPage>
           <wf:TabPage x:Name="GpgInfoTabPage"
                    Classes="gitextensions-workspace-tab"
