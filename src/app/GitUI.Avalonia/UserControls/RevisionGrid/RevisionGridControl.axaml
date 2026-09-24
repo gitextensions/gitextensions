@@ -161,18 +161,18 @@
           <Setter Property="MinHeight" Value="0" />
         </Style>
         <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
-          <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+          <Setter Property="Background" Value="{DynamicResource GitExtensionsDataGridViewSelectionBackgroundBrush}" />
           <Setter Property="Foreground" Value="{DynamicResource GitExtensionsRevisionSelectedSubjectBrush}" />
         </Style>
         <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-          <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+          <Setter Property="Background" Value="{DynamicResource GitExtensionsDataGridViewSelectionBackgroundBrush}" />
         </Style>
         <Style Selector="ListBox:not(:focus-within) ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
           <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
           <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
         </Style>
         <Style Selector="ListBox.context-menu-open ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
-          <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+          <Setter Property="Background" Value="{DynamicResource GitExtensionsDataGridViewSelectionBackgroundBrush}" />
           <Setter Property="Foreground" Value="{DynamicResource GitExtensionsRevisionSelectedSubjectBrush}" />
         </Style>
         <Style Selector="TextBlock.revision-body">
