@@ -251,10 +251,23 @@ public sealed class FormBrowseTests
                 {
                     mainMenuItem.IsSubMenuOpen.Should().BeTrue();
                     gridContextItem.IsSubMenuOpen.Should().BeFalse();
+                    if (name == "viewToolStripMenuItem")
+                    {
+                        MenuItem toolbars = mainMenuItem.Items.OfType<MenuItem>()
+                            .Single(item => item.Name == "toolbarsMenuItem");
+                        MenuItem standard = toolbars.Items.OfType<MenuItem>().First();
+                        MenuItem worktrees = standard.Items.OfType<MenuItem>()
+                            .Single(item => item.Header?.ToString() == "Worktrees");
+                        worktrees.IsChecked.Should().Be(
+                            AppSettings.GetBool("formbrowse_toolbar_visibility_toolStripWorktrees", true));
+                    }
+
                     CaptureNode primary = new AvaloniaControlTreeReader(form, renderScale: 1)
                         .ReadPrimary(form, new PixelSize((int)form.Bounds.Width, (int)form.Bounds.Height)).Root;
                     CaptureNode mainMenu = Flatten(primary).Single(node => node.FieldName == "mainMenuStrip");
-                    mainMenu.Children.Single(node => node.Name == name).Children
+                    CaptureNode openedMenu = mainMenu.Children.Single(node => node.Name == name);
+                    openedMenu.Expanded.Should().BeFalse("the source primary tree tracks the popup on a separate surface");
+                    openedMenu.Children
                         .Should().OnlyContain(node => node.Visible == false,
                             "submenu rows are captured separately on their popup surface");
                 }

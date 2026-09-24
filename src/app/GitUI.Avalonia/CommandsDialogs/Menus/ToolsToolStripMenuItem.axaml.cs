@@ -53,6 +53,13 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
         kGitToolStripMenuItem.InputGesture = GetGesture(FormBrowse.Command.GitGitK);
         settingsToolStripMenuItem.InputGesture = GetGesture(FormBrowse.Command.OpenSettings);
 
+        // Keep the WinForms shortcut labels as well as the executable gestures. Avalonia
+        // formats Ctrl+OemComma differently and that string also sizes the parent popup.
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(gitBashToolStripMenuItem, hotkeys.GetShortcutDisplay(FormBrowse.Command.GitBash));
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(gitGUIToolStripMenuItem, hotkeys.GetShortcutDisplay(FormBrowse.Command.GitGui));
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(kGitToolStripMenuItem, hotkeys.GetShortcutDisplay(FormBrowse.Command.GitGitK));
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(settingsToolStripMenuItem, hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenSettings));
+
         base.RefreshShortcutKeys(hotkeys);
 
         return;

@@ -26,6 +26,7 @@ using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -1567,6 +1568,51 @@ public sealed class VisualParityTests
             .Should().BeOfType<TranslateTransform>().Subject;
         chevronOffset.X.Should().Be(-7);
         chevronOffset.Y.Should().Be(0);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_tools_menu_should_match_the_native_popup_width_with_configured_shortcuts()
+    {
+        ToolsToolStripMenuItem owner = new();
+        MenuItem firstItem = owner.Items.OfType<MenuItem>().First();
+        owner.RefreshShortcutKeys(
+        [
+            new HotkeyCommand((int)FormBrowse.Command.GitBash, nameof(FormBrowse.Command.GitBash))
+            {
+                KeyData = WinFormsShims.Keys.Control | WinFormsShims.Keys.G,
+            },
+            new HotkeyCommand((int)FormBrowse.Command.OpenSettings, nameof(FormBrowse.Command.OpenSettings))
+            {
+                KeyData = WinFormsShims.Keys.Control | WinFormsShims.Keys.Oemcomma,
+            },
+        ]);
+        Window window = new()
+        {
+            Width = 640,
+            Height = 240,
+            RequestedThemeVariant = ThemeVariant.Light,
+            Content = new Menu { Items = { owner } },
+        };
+        window.Show();
+        try
+        {
+            owner.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+
+            Visual popupHost = firstItem.GetVisualAncestors()
+                .Single(ancestor => ancestor.GetType().Name == "OverlayPopupHost");
+            if (OperatingSystem.IsWindows())
+            {
+                popupHost.Bounds.Width.Should().Be(193);
+            }
+        }
+        finally
+        {
+            owner.IsSubMenuOpen = false;
+            Dispatcher.UIThread.RunJobs();
+            window.Close();
+        }
     }
 
     private static void AssertRenderedSeparatorPalette(Separator separator)
