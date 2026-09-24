@@ -912,6 +912,27 @@ internal static class ComponentFactory
     // replaced HEAD after preparation or if the real opening handlers did not finish.
     public static void VerifyCaptureState(Control control, IGitUICommands commands, CaptureStatePlan state)
     {
+        if (control is FormBrowse
+            && state.Id is "file-tree.focused" or "diff-files.focused" or "diff-text.focused")
+        {
+            string paneField = state.Id == "file-tree.focused" ? "fileTree" : "revisionDiff";
+            RevisionDiffControl pane = (RevisionDiffControl?)FindFieldValue(control, paneField)
+                ?? throw new CaptureStateUnsupportedException($"The original Browse form did not expose '{paneField}'.");
+            GitUI.Editor.FileViewer viewer = (GitUI.Editor.FileViewer?)FindFieldValue(pane, "DiffText")
+                ?? throw new CaptureStateUnsupportedException($"The original Browse {paneField} pane did not expose its file viewer.");
+            DateTime deadline = DateTime.UtcNow.AddSeconds(15);
+            while (string.IsNullOrEmpty(viewer.GetText()) && DateTime.UtcNow < deadline)
+            {
+                Application.DoEvents();
+                Thread.Sleep(25);
+            }
+
+            if (string.IsNullOrEmpty(viewer.GetText()))
+            {
+                throw new CaptureStateNotReadyException($"The original Browse {paneField} pane did not publish selected-file content before capture.");
+            }
+        }
+
         if (control is ViewPullRequestsForm && state.Id == "discussion.focused")
         {
             WebBrowser discussion = (WebBrowser?)FindFieldValue(control, "_discussionWB")
