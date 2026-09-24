@@ -1944,17 +1944,20 @@ public sealed partial class ParityScreenshotTests
             await formBrowse.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(15));
             await SelectAndWaitForFormBrowseRevisionAsync(formBrowse, context.HeadRevision);
 
-            // Wait for the seeded repository's status count so captures cannot race the monitor.
+            // Wait for this fixture's status count so captures cannot race the monitor.
+            // An externally supplied paired repository may be clean; the internally seeded
+            // repository has three changes, but that count is not a universal capture fact.
             Button commitButton = GetRequiredControl<Button>(formBrowse, "toolStripButtonCommit");
+            string expectedStatusSuffix = $"({context.ChangedFiles.Count})";
             Stopwatch statusStopwatch = Stopwatch.StartNew();
-            while (!(commitButton.Content?.ToString()?.EndsWith("(3)", StringComparison.Ordinal) ?? false)
+            while (!(commitButton.Content?.ToString()?.EndsWith(expectedStatusSuffix, StringComparison.Ordinal) ?? false)
                    && statusStopwatch.Elapsed < TimeSpan.FromSeconds(15))
             {
                 Dispatcher.UIThread.RunJobs();
                 await Task.Delay(10);
             }
 
-            commitButton.Content?.ToString().Should().EndWith("(3)");
+            commitButton.Content?.ToString().Should().EndWith(expectedStatusSuffix);
         }
 
         if (Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"

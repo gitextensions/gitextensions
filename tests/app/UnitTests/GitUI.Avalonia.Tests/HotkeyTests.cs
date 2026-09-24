@@ -43,6 +43,16 @@ public sealed class HotkeyTests
         KeysMapper.ToKeys(key, modifiers).Should().Be(expected);
     }
 
+    [Test]
+    [Category("P8.6i.126")]
+    public void Browse_navigate_shortcut_should_keep_the_WinForms_OemBackslash_label()
+    {
+        WinFormsShims.Keys shortcut = WinFormsShims.Keys.Control | WinFormsShims.Keys.OemBackslash;
+
+        new WinFormsShims.KeysConverter().ConvertToString(null, null, shortcut)
+            .Should().Be("Ctrl+OemBackslash");
+    }
+
     [TestCase(WinFormsShims.Keys.F5, Key.F5, KeyModifiers.None)]
     [TestCase(WinFormsShims.Keys.B | WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift, Key.B, KeyModifiers.Control | KeyModifiers.Shift)]
     [TestCase(WinFormsShims.Keys.Oemcomma | WinFormsShims.Keys.Alt, Key.OemComma, KeyModifiers.Alt)]

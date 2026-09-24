@@ -44,7 +44,11 @@ public class KeysConverter
             text.Append("Alt+");
         }
 
-        text.Append(key & Keys.KeyCode);
+        Keys keyCode = key & Keys.KeyCode;
+
+        // WinForms names the 0xE2 key OemBackslash in menu shortcuts. Enum.ToString()
+        // picks the Oem102 alias in the portable shim and narrows Browse's Navigate menu.
+        text.Append(keyCode == Keys.OemBackslash ? nameof(Keys.OemBackslash) : keyCode.ToString());
         return text.ToString();
     }
 }
