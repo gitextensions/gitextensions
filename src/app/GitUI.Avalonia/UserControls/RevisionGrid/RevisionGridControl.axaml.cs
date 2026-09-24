@@ -779,9 +779,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             .Concat(gitRefListsForRevision.AllTags)
             .FirstOrDefault();
 
-        // The WinForms grid disambiguates ref names against ambiguous refs; not ported.
         description += descriptiveRef is not null
-            ? descriptiveRef.Name
+            ? GetRefUnambiguousName(descriptiveRef)
             : revision.Subject;
 
         if (maxLength > 0)

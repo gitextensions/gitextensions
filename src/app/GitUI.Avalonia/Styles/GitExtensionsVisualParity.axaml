@@ -287,7 +287,7 @@
           <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBackgroundBrush" Color="#F9F9F9" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBorderBrush" Color="#E9E9E9" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledForegroundBrush" Color="#A0A0A0" />
-          <SolidColorBrush x:Key="GitExtensionsNativeTabBorderBrush" Color="#D9D9D9" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabBorderBrush" Color="#E5E5E5" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabSelectedBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabUnselectedBackgroundBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsBrowseTabSelectedBackgroundBrush" Color="#F9F9F9" />
@@ -426,7 +426,7 @@
           <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBackgroundBrush" Color="#333333" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBorderBrush" Color="#373737" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledForegroundBrush" Color="#CCCCCC" />
-          <SolidColorBrush x:Key="GitExtensionsNativeTabBorderBrush" Color="#4A4A4A" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabBorderBrush" Color="#3B3B3B" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabSelectedBackgroundBrush" Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabUnselectedBackgroundBrush" Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsBrowseTabSelectedBackgroundBrush" Color="#323232" />
@@ -1751,7 +1751,7 @@
     <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}" />
   </Style>
   <Style Selector="Menu > MenuItem:not(:selected):not(:pointerover) /template/ Border#PART_LayoutRoot">
-    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="Background" Value="Transparent" />
   </Style>
 
   <Style Selector="GridSplitter">

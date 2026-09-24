@@ -133,6 +133,38 @@ public sealed class RevisionGridSupportTests
         history.NavigateBackward().Should().Be(second);
     }
 
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void DescribeRevision_should_use_the_complete_name_for_ambiguous_refs()
+    {
+        ObjectId objectId = Id('1');
+        IGitRef branch = new GitRef(null!, objectId, "refs/heads/main");
+        IGitRef tag = new GitRef(null!, objectId, "refs/tags/main");
+        GitRevision revision = new(objectId)
+        {
+            Refs = [branch],
+            Subject = "ambiguous ref",
+        };
+        IGitUICommandsSource source = CreateUICommandsSource();
+        IGitModule module = source.UICommands.Module;
+        module.GetCurrentCheckout().Returns(objectId);
+        RevisionGridControl control = new() { UICommandsSource = source };
+
+        try
+        {
+            control.ReloadRevisions(
+                module,
+                revisionFilter: "HEAD",
+                getRefs: _ => [branch, tag]);
+
+            control.DescribeRevision(revision).Should().Be("refs/heads/main");
+        }
+        finally
+        {
+            control.CancelBackgroundTasks();
+        }
+    }
+
     [Test]
     public void Parent_child_navigation_history_should_reverse_the_last_direction()
     {
