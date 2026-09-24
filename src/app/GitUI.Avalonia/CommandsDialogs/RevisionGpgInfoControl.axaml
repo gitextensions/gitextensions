@@ -21,7 +21,7 @@
              Grid.Column="1"
              Margin="3"
              Padding="0"
-             Background="{DynamicResource GitExtensionsCommitEditorReadOnlyBackgroundBrush}"
+             Background="{DynamicResource GitExtensionsReadOnlyTextInputBackgroundBrush}"
              FocusAdorner="{x:Null}"
              AcceptsReturn="True"
              IsReadOnly="True"

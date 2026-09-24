@@ -45,6 +45,7 @@ public partial class FileViewer : GitModuleControl
     private IGitUICommandsSource? _commandsSource;
     private bool _hotkeysLoaded;
     private bool _runtimeStateApplied;
+    private bool _runtimeFontApplied;
     private Bitmap? _image;
     private Action? _openWithDifftool;
     private string? _fileName;
@@ -243,7 +244,20 @@ public partial class FileViewer : GitModuleControl
     // visibility instead of replacing the editor's native pre-load font prematurely.
     private void ApplyRuntimeStateIfVisible()
     {
-        if (_runtimeStateApplied || !IsEffectivelyVisible)
+        if (!IsEffectivelyVisible)
+        {
+            return;
+        }
+
+        if (!_runtimeFontApplied)
+        {
+            // WinForms applies the configured editor font when this hidden tab becomes visible;
+            // its appearance must not depend on a commands owner becoming available first.
+            Font = AppSettings.FixedWidthFont;
+            _runtimeFontApplied = true;
+        }
+
+        if (_runtimeStateApplied)
         {
             return;
         }
@@ -257,7 +271,6 @@ public partial class FileViewer : GitModuleControl
 
         BindSettingsCommands(commands);
         ReloadHotkeys();
-        Font = AppSettings.FixedWidthFont;
         _runtimeStateApplied = true;
     }
 
