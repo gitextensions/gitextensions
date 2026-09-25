@@ -7187,6 +7187,10 @@ The file has been deleted locally ({1}) but modified remotely ({2}).
 Choose to delete the file or keep the modified version.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_fileDeletedLocallyAndRemotely.Text">
+        <source>The file has been deleted both locally ({0}) and remotely ({1}).</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_fileIsBinary.Text">
         <source>The selected file appears to be a binary file.
 Are you sure you want to open this file in {0}?</source>
@@ -7817,6 +7821,10 @@ reflog to be reachable.</source>
         <source>Print out objects that exist but that aren't readable from any of the reference 
 nodes.
 </source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_lostObjectUnreadable.Text">
+        <source>Object could not be read. It may be corrupted or no longer available.</source>
         <target />
       </trans-unit>
       <trans-unit id="_removeDanglingObjectsCaption.Text">
@@ -9234,7 +9242,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="txtCommitGpgInfo.Text">
-        <source>Commit is not signed</source>
+        <source>Loading data...</source>
         <target />
       </trans-unit>
     </body>
@@ -10300,6 +10308,12 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_deleteFile.Text">
         <source>{0:Delete file|Delete files}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteMainWorktreeRefused.Text">
+        <source>{0} is the main worktree of the repository.
+
+Deleting it would delete the repository itself, with all of its branches and stashes, so git refuses to remove it as well.</source>
         <target />
       </trans-unit>
       <trans-unit id="_deleteWorktreeCaption.Text">

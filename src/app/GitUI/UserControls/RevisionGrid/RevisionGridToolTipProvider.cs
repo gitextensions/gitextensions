@@ -7,7 +7,12 @@ namespace GitUI;
 
 internal sealed class RevisionGridToolTipProvider
 {
-    private readonly ToolTip _toolTip = new();
+    /// <summary>
+    ///  Lane info and commit bodies are long, so they must stay readable much longer than the default 5 seconds.
+    /// </summary>
+    private const int _autoPopDelayMilliseconds = short.MaxValue;
+
+    private readonly ToolTip _toolTip = new() { AutoPopDelay = _autoPopDelayMilliseconds };
     private readonly Dictionary<Point, bool> _isTruncatedByCellPos = [];
     private readonly RevisionDataGridView _gridView;
     private int _previousRowIndex = -1;
@@ -29,7 +34,6 @@ internal sealed class RevisionGridToolTipProvider
     {
         bool wasActive = _toolTip.Active;
         _toolTip.Active = false;
-        _toolTip.AutoPopDelay = 32767;
         return wasActive;
     }
 
@@ -80,6 +84,10 @@ internal sealed class RevisionGridToolTipProvider
             string newText = GetToolTipText(revision, highlightRef);
             if (_toolTip.GetToolTip(_gridView) != newText)
             {
+                // Do not deactivate the tooltip to force it to be shown again: deactivating resets its
+                // state, so the new text would only appear once the initial delay elapsed - and as the
+                // graph column builds its text for every hovered pixel, that delay would restart with
+                // nearly every mouse move. Windows updates the text of a displayed tooltip in place.
                 _toolTip.SetToolTip(_gridView, newText);
             }
 
@@ -120,10 +128,25 @@ internal sealed class RevisionGridToolTipProvider
     public void Clear()
     {
         _isTruncatedByCellPos.Clear();
+
+        // A row index no longer identifies the same revision, so the memorized cell must not
+        // suppress the update of the tooltip for the cell the pointer is resting on.
+        _previousRowIndex = -1;
+        _previousColumnIndex = -1;
+        _previousHighlight = null;
     }
 
     public void SetTruncation(int columnIndex, int rowIndex, bool truncated)
     {
         _isTruncatedByCellPos[new Point(columnIndex, rowIndex)] = truncated;
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(RevisionGridToolTipProvider provider)
+    {
+        public ToolTip ToolTip => provider._toolTip;
+        public int PreviousRowIndex => provider._previousRowIndex;
+        public string? GetToolTipText() => provider._toolTip.GetToolTip(provider._gridView);
     }
 }

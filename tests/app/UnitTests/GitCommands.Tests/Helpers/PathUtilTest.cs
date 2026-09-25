@@ -512,6 +512,36 @@ public class PathUtilTest
     }
 
     [Test]
+    public void TryFindShellInGitDir_should_prefer_usr_bin_over_bin_for_the_same_shell_name()
+    {
+        // "bin\bash.exe" is a thin compatibility wrapper around the real MSYS2 bash shipped in
+        // "usr\bin\bash.exe"; running mintty against the wrapper breaks its detection of when an
+        // interactive git command has finished. Regression test for #13312.
+        string gitDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        string binDir = Path.Combine(gitDir, "bin");
+        string usrBinDir = Path.Combine(gitDir, "usr", "bin");
+
+        try
+        {
+            Directory.CreateDirectory(binDir);
+            Directory.CreateDirectory(usrBinDir);
+            File.WriteAllText(Path.Combine(binDir, "bash.exe"), "");
+            string expected = Path.Combine(usrBinDir, "bash.exe");
+            File.WriteAllText(expected, "");
+
+            PathUtil.TryFindShellInGitDir(gitDir, "bash.exe", out string? shellPath).Should().BeTrue();
+            shellPath.Should().Be(expected);
+        }
+        finally
+        {
+            if (Directory.Exists(gitDir))
+            {
+                Directory.Delete(gitDir, recursive: true);
+            }
+        }
+    }
+
+    [Test]
     public void TryFindShellInGitDir_should_not_find_a_shell_which_is_not_there()
     {
         string gitDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
