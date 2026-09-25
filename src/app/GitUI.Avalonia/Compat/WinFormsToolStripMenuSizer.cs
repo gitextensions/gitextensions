@@ -30,7 +30,16 @@ internal static class WinFormsToolStripMenuSizer
 
     public static void Apply(ItemsControl owner)
     {
-        MenuItem[] menuItems = [.. owner.Items.OfType<MenuItem>()];
+        Apply(owner, [.. owner.Items.OfType<MenuItem>()], owner is ContextMenu or MenuItem);
+    }
+
+    public static void Apply(MenuFlyout flyout, TemplatedControl owner)
+    {
+        Apply(owner, [.. flyout.Items.OfType<MenuItem>()], false);
+    }
+
+    private static void Apply(TemplatedControl owner, MenuItem[] menuItems, bool hasLayoutBorder)
+    {
         if (menuItems.Length == 0)
         {
             return;
@@ -49,7 +58,7 @@ internal static class WinFormsToolStripMenuSizer
             + TextPaddingRight
             + ArrowWidth
             + ArrowPaddingRight)
-            - (owner is ContextMenu or MenuItem ? DropDownLayoutBorder : 0);
+            - (hasLayoutBorder ? DropDownLayoutBorder : 0);
 
         foreach (MenuItem item in menuItems)
         {

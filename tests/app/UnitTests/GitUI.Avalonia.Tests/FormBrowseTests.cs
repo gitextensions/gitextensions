@@ -325,10 +325,13 @@ public sealed class FormBrowseTests
 
             FilterToolBar filters = form.FindControl<FilterToolBar>("ToolStripFilters")!;
             Control advancedFilter = filters.FindControl<Control>("tsbtnAdvancedFilter")!;
+            Control showReflog = filters.FindControl<Control>("tsbShowReflog")!;
             Control showBranches = filters.FindControl<Control>("tssbtnShowBranches")!;
             form.toolStripFiltersHost.Bounds.Width.Should().BeGreaterThan(200);
             advancedFilter.Opacity.Should().Be(1);
             showBranches.Opacity.Should().Be(1);
+            showReflog.Margin.Should().Be(default(Thickness));
+            showBranches.Margin.Should().Be(default(Thickness));
             form.toolStripFiltersOverflow.IsVisible.Should().BeTrue();
         }
         finally
@@ -738,6 +741,17 @@ public sealed class FormBrowseTests
             MenuItem[] branchItems = flyout.Items.OfType<MenuItem>().Skip(1).ToArray();
             branchItems.Select(item => item.Header as string).Should().Contain("feature");
             branchItems.Should().OnlyContain(item => item.Icon is Image);
+            MenuItem checkoutItem = flyout.Items.OfType<MenuItem>().First();
+            checkoutItem.Width.Should().BeGreaterThan(200,
+                "the branch menu must reserve the complete checkout shortcut column");
+            if (OperatingSystem.IsWindows())
+            {
+                checkoutItem.Width.Should().Be(268,
+                    "the Windows capture measured the native branch menu at 96 DPI");
+            }
+
+            flyout.Placement.Should().Be(PlacementMode.BottomEdgeAlignedLeft,
+                "WinForms aligns the branch menu with the selector's leading edge");
 
             flyout.Hide();
             Dispatcher.UIThread.RunJobs();
