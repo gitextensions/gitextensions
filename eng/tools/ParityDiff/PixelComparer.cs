@@ -1,3 +1,5 @@
+using GitExtensions.ParityCapture;
+
 namespace GitExtensions.ParityDiff;
 
 // parity-scaffolding: Computes temporary pixel-level parity measurements.
@@ -6,11 +8,15 @@ internal static class PixelComparer
     private const double SsimC1 = 6.5025;
     private const double SsimC2 = 58.5225;
 
-    public static PixelMetrics Compare(PngImage reference, PngImage candidate, byte channelTolerance)
+    public static PixelMetrics Compare(
+        PngImage reference,
+        PngImage candidate,
+        byte channelTolerance,
+        IReadOnlyList<CaptureRectangle>? excluded = null)
     {
         int width = Math.Max(reference.Width, candidate.Width);
         int height = Math.Max(reference.Height, candidate.Height);
-        int pixelCount = checked(width * height);
+        int pixelCount = 0;
         double referenceMean = 0;
         double candidateMean = 0;
         long absoluteChannelDelta = 0;
@@ -23,6 +29,12 @@ internal static class PixelComparer
         {
             for (int x = 0; x < width; x++)
             {
+                if (IsExcluded(x, y, excluded))
+                {
+                    continue;
+                }
+
+                pixelCount++;
                 ReadPixel(reference, x, y, referencePixel);
                 ReadPixel(candidate, x, y, candidatePixel);
                 bool different = false;
@@ -40,6 +52,22 @@ internal static class PixelComparer
             }
         }
 
+        if (pixelCount == 0)
+        {
+            return new PixelMetrics
+            {
+                ReferenceWidth = reference.Width,
+                ReferenceHeight = reference.Height,
+                CandidateWidth = candidate.Width,
+                CandidateHeight = candidate.Height,
+                ComparedPixelCount = 0,
+                Ssim = 1,
+                DifferentPixelFraction = 0,
+                MaximumChannelDelta = 0,
+                MeanAbsoluteChannelDelta = 0
+            };
+        }
+
         referenceMean /= pixelCount;
         candidateMean /= pixelCount;
         double referenceVariance = 0;
@@ -49,6 +77,11 @@ internal static class PixelComparer
         {
             for (int x = 0; x < width; x++)
             {
+                if (IsExcluded(x, y, excluded))
+                {
+                    continue;
+                }
+
                 ReadPixel(reference, x, y, referencePixel);
                 ReadPixel(candidate, x, y, candidatePixel);
                 double referenceDifference = Luminance(referencePixel) - referenceMean;
@@ -75,12 +108,18 @@ internal static class PixelComparer
             ReferenceHeight = reference.Height,
             CandidateWidth = candidate.Width,
             CandidateHeight = candidate.Height,
+            ComparedPixelCount = pixelCount,
             Ssim = Math.Round(ssim, 6),
             DifferentPixelFraction = Math.Round((double)differentPixels / pixelCount, 6),
             MaximumChannelDelta = maximumChannelDelta,
             MeanAbsoluteChannelDelta = Math.Round((double)absoluteChannelDelta / (pixelCount * 4), 6)
         };
     }
+
+    private static bool IsExcluded(int x, int y, IReadOnlyList<CaptureRectangle>? excluded) =>
+        excluded is not null && excluded.Any(rectangle =>
+            x >= rectangle.X && x < rectangle.X + rectangle.Width
+            && y >= rectangle.Y && y < rectangle.Y + rectangle.Height);
 
     private static double Luminance(ReadOnlySpan<byte> pixel)
     {

@@ -10,7 +10,9 @@ param(
     [int]$ProcessId = 0,
 
     [ValidateSet("PrintWindow", "Screen")]
-    [string]$CaptureMethod = "PrintWindow"
+    [string]$CaptureMethod = "PrintWindow",
+
+    [switch]$OpenViewMenu
 )
 
 $ErrorActionPreference = "Stop"
@@ -210,9 +212,34 @@ if ($CaptureMethod -eq "Screen" -and
 [GitExtensionsSmokeWindows]::Activate($window)
 Start-Sleep -Milliseconds 750
 
+if ($OpenViewMenu)
+{
+    if ($CaptureMethod -ne "Screen")
+    {
+        throw "A popup outside the owner window must be captured from the screen."
+    }
+
+    Add-Type -AssemblyName System.Windows.Forms
+    [System.Windows.Forms.SendKeys]::SendWait("%v")
+    Start-Sleep -Milliseconds 400
+}
+
 $rectangle = [GitExtensionsSmokeWindows]::GetRectangle($window)
-$width = $rectangle.Right - $rectangle.Left
-$height = $rectangle.Bottom - $rectangle.Top
+$captureLeft = $rectangle.Left
+$captureTop = $rectangle.Top
+$captureRight = $rectangle.Right
+$captureBottom = $rectangle.Bottom
+if ($OpenViewMenu)
+{
+    # A popup extending beyond its owner need not appear as a separate top-level HWND.
+    # Retain the owner's horizontal strip through the work area for visual inspection.
+    $workArea = [System.Windows.Forms.Screen]::FromHandle($window).WorkingArea
+    $captureTop = [Math]::Min($captureTop, $workArea.Top)
+    $captureBottom = [Math]::Max($captureBottom, $workArea.Bottom)
+}
+
+$width = $captureRight - $captureLeft
+$height = $captureBottom - $captureTop
 if ($width -le 0 -or $height -le 0)
 {
     throw "Window '$title' has invalid bounds ${width}x${height}."
@@ -243,13 +270,14 @@ try
         if (-not $printed)
         {
             $graphics.CopyFromScreen(
-                $rectangle.Left,
-                $rectangle.Top,
+                $captureLeft,
+                $captureTop,
                 0,
                 0,
                 [Drawing.Size]::new($width, $height),
                 [Drawing.CopyPixelOperation]::SourceCopy)
         }
+        $actualCaptureMethod = if ($printed) { "PrintWindow" } else { "Screen" }
     }
     finally
     {
@@ -268,5 +296,6 @@ finally
 }
 
 Write-Output "title=$title"
-Write-Output "bounds=$($rectangle.Left),$($rectangle.Top),${width}x${height}"
-Write-Output "captureMethod=$CaptureMethod"
+Write-Output "bounds=$captureLeft,$captureTop,${width}x${height}"
+Write-Output "captureMethod=$actualCaptureMethod"
+Write-Output "viewMenuRequested=$([bool]$OpenViewMenu)"
