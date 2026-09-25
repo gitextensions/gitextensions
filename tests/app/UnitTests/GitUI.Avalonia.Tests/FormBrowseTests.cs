@@ -7,6 +7,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Avalonia.Styling;
@@ -228,6 +229,40 @@ public sealed class FormBrowseTests
                     yield return descendant;
                 }
             }
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public async Task Browse_custom_panel_color_should_not_replace_the_grid_window_color()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module))
+        {
+            RequestedThemeVariant = ThemeVariant.Dark,
+        };
+        Color panelColor = Color.Parse("#2B2D3A");
+        form.Resources["GitExtensionsPanelBackgroundBrush"] = new SolidColorBrush(panelColor);
+        form.Show();
+        try
+        {
+            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision is not null
+                && form.RevisionGrid.FindControl<ListBox>("_gridView")?.Background is ISolidColorBrush
+                && form.RevisionInfo.Background is ISolidColorBrush);
+            ListBox grid = form.RevisionGrid.FindControl<ListBox>("_gridView")
+                ?? throw new AssertionException("The revision grid was not materialized.");
+            grid.Background.Should().BeAssignableTo<ISolidColorBrush>().Which.Color.Should().Be(panelColor,
+                "the original DataGridView BackColor follows AppColor.PanelBackground");
+            ScrollViewer viewport = grid.GetVisualDescendants().OfType<ScrollViewer>()
+                .Single(control => control.Name == "PART_ScrollViewer");
+            viewport.Background.Should().BeAssignableTo<ISolidColorBrush>().Which.Color.Should().Be(Color.Parse("#323232"),
+                "the original DataGridView BackgroundColor paints its empty viewport with SystemColors.Window");
+            form.RevisionInfo.Background.Should().BeAssignableTo<ISolidColorBrush>().Which.Color.Should().Be(panelColor,
+                "FormBrowse explicitly overrides the original CommitInfo control's background");
+        }
+        finally
+        {
+            form.Close();
         }
     }
 

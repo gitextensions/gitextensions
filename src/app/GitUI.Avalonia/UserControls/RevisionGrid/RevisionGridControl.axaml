@@ -154,6 +154,11 @@
         </wf:ContextMenuStrip>
       </ListBox.ContextMenu>
       <ListBox.Styles>
+        <!-- WinForms keeps the grid BackColor at PanelBackground but paints its empty
+             DataGridView viewport with BackgroundColor = SystemColors.Window. -->
+        <Style Selector="ListBox#_gridView /template/ ScrollViewer#PART_ScrollViewer">
+          <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+        </Style>
         <!-- Rows use the original font- and DPI-derived height: the graph renderer draws each
              row's lane segment assuming adjacent rows abut, so container padding stays zero. -->
         <Style Selector="ListBoxItem">
