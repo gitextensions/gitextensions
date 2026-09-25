@@ -8,6 +8,7 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -2266,6 +2267,66 @@ public sealed class FormBrowseTests
         finally
         {
             AppSettings.ShowSplitViewLayout = originalShowSplitView;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public async Task Browse_drop_should_select_an_existing_repository_path_and_reject_siblings()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        string trackedFile = Path.Combine(_workingDirectory, "tracked.txt");
+        string siblingDirectory = _workingDirectory + "-sibling";
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        Directory.CreateDirectory(siblingDirectory);
+        try
+        {
+            File.WriteAllText(Path.Combine(siblingDirectory, "tracked.txt"), "not in the repository");
+            FormBrowse.GetRelativePathExistingInRepo(trackedFile, module.WorkingDir)
+                .Should().Be(RelativePath.From("tracked.txt"));
+            FormBrowse.GetRelativePathExistingInRepo(Path.Combine(siblingDirectory, "tracked.txt"), module.WorkingDir)
+                .Should().BeNull();
+            FormBrowse.GetRelativePathExistingInRepo(module.WorkingDir, module.WorkingDir)
+                .Should().BeNull();
+
+            form.Show();
+            Control leftPanel = form.FindControl<Control>("leftPanel")!;
+            DragDrop.GetAllowDrop(leftPanel).Should().BeTrue();
+            using DataTransfer data = new();
+            data.Add(DataTransferItem.CreateText(trackedFile));
+            DragEventArgs over = new(DragDrop.DragOverEvent, data, leftPanel, new Avalonia.Point(10, 10), KeyModifiers.None);
+            leftPanel.RaiseEvent(over);
+            over.DragEffects.Should().Be(DragDropEffects.Move);
+            DragEventArgs drop = new(DragDrop.DropEvent, data, leftPanel, new Avalonia.Point(10, 10), KeyModifiers.None);
+            leftPanel.RaiseEvent(drop);
+            form.FindControl<TabControl>("CommitInfoTabControl")!.SelectedItem
+                .Should().BeSameAs(form.FindControl<TabItem>("TreeTabPage"));
+            await form.JoinLoadOperationsForTestAsync();
+            await WaitUntilAsync(() => form.fileTree.FileStatusList.SelectedRelativePath == RelativePath.From("tracked.txt"));
+
+            TabControl tabs = form.FindControl<TabControl>("CommitInfoTabControl")!;
+            tabs.SelectedItem = form.FindControl<TabItem>("CommitInfoTabPage");
+            IStorageFile storageFile = Substitute.For<IStorageFile>();
+            storageFile.Path.Returns(new Uri(trackedFile));
+            using DataTransfer files = new();
+            files.Add(DataTransferItem.CreateFile(storageFile));
+            form.RaiseEvent(new DragEventArgs(DragDrop.DropEvent, files, form, new Avalonia.Point(10, 10), KeyModifiers.None));
+            tabs.SelectedItem.Should().BeSameAs(form.FindControl<TabItem>("TreeTabPage"));
+
+            IStorageFile patchFile = Substitute.For<IStorageFile>();
+            patchFile.Path.Returns(new Uri(Path.Combine(_workingDirectory, "sample.patch")));
+            using DataTransfer patch = new();
+            patch.Add(DataTransferItem.CreateFile(patchFile));
+            ListBox revisions = form.RevisionGrid.FindControl<ListBox>("_gridView")!;
+            DragEventArgs patchOver = new(DragDrop.DragOverEvent, patch, revisions, new Avalonia.Point(10, 10), KeyModifiers.None);
+            revisions.RaiseEvent(patchOver);
+            patchOver.DragEffects.Should().Be(DragDropEffects.Copy,
+                "the revision grid retains its original patch-drop behavior");
+        }
+        finally
+        {
+            form.Close();
+            TestDirectory.Delete(siblingDirectory);
         }
     }
 

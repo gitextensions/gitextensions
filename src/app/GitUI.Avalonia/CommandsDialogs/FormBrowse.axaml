@@ -15,6 +15,10 @@
         Title="Git Extensions"
         Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
   <Window.Styles>
+    <!-- WinForms enables AllowDrop on every Browse descendant, including lazy child controls. -->
+    <Style Selector="Control">
+      <Setter Property="DragDrop.AllowDrop" Value="True" />
+    </Style>
     <!-- The source ToolStrip lays out FormBrowse buttons at 22 DIPs high and reserves
          the native image-button widths inside its 25-DIP toolbar row. -->
     <Style Selector="Button.gitextensions-toolbar-button,
