@@ -3550,6 +3550,21 @@ internal sealed class AvaloniaControlTreeReader
         {
             node = ApplyStashSemanticOverrides(node, control, semanticName, sourceOwnerType, isSurfaceRoot);
         }
+        else if (rootMetadataType == "GitUI.CommandsDialogs.FormBrowse"
+                 && semanticName is "tsbtnAdvancedFilter" or "tsbShowReflog" or "tssbtnShowBranches" or "toolStripLabel1"
+                     or "tsddbtnBranchFilter" or "toolStripSeparator19" or "tslblRevisionFilter" or "tsddbtnRevisionFilter"
+                     or "tsmiShowOnlyFirstParent"
+                 && GetSourceTypeName(GetSourceType(control, semanticName)) is "ToolStripButton" or "ToolStripSplitButton"
+                     or "ToolStripDropDownButton" or "ToolStripLabel" or "ToolStripSeparator")
+        {
+            // Browse's filter strip inherits WindowText, while its item backgrounds
+            // remain transparent; retain the bounds measured from the real controls.
+            node = WithSemanticColors(
+                node,
+                null,
+                ResolveResourceArgb("GitExtensionsWindowTextBrush"),
+                transparent: true);
+        }
 
         return node;
     }

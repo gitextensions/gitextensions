@@ -2,11 +2,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:compat="using:GitUI.Compat"
              xmlns:properties="using:GitUI.Properties"
-             x:Class="GitUI.UserControls.FilterToolBar">
+             x:Class="GitUI.UserControls.FilterToolBar"
+             Foreground="{DynamicResource GitExtensionsWindowTextBrush}">
   <StackPanel Height="25"
               Orientation="Horizontal"
               Spacing="0">
     <compat:IconSplitButton x:Name="tsbtnAdvancedFilter"
+                            Margin="5,0,0,0"
+                            Height="24"
+                            Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
                             compat:TranslationCompat.TranslateText="False"
                             Classes="gitextensions-toolbar-button gitextensions-icon-only"
                             Content="Advanced filter"
@@ -21,12 +25,20 @@
       </compat:IconSplitButton.Flyout>
     </compat:IconSplitButton>
     <ToggleButton x:Name="tsbShowReflog"
+                  Width="23"
+                  Height="24"
+                  Margin="0,1,0,0"
+                  Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
                   compat:TranslationCompat.TranslateToolTip="False"
                   Classes="gitextensions-toolbar-button"
                   Padding="3">
       <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Book}" />
     </ToggleButton>
     <compat:IconSplitButton x:Name="tssbtnShowBranches"
+                            Width="104"
+                            Height="24"
+                            Margin="0,1,0,0"
+                            Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
                             compat:TranslationCompat.UseToolTipText="True"
                             Classes="gitextensions-toolbar-button"
                             Content="_All branches"
@@ -40,6 +52,9 @@
       </compat:IconSplitButton.Flyout>
     </compat:IconSplitButton>
     <Label x:Name="toolStripLabel1"
+           Width="58"
+           Height="24"
+           Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
            Tag="ToolBar_group:Branch filter"
            compat:TranslationCompat.UseToolTipText="True"
            Classes="gitextensions-toolbar-label"
