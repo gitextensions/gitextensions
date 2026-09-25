@@ -302,6 +302,26 @@ public class FileStatusListTests
         CheckStoreFilter(accessor.InvalidInputColor, validRegex, accessor);
     }
 
+    [Test]
+    public void SetDiffs_should_keep_the_expanded_state_of_the_folders()
+    {
+        MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;
+        GitRevision firstRev = new(ObjectId.Random());
+        GitRevision secondRev = new(ObjectId.Random());
+
+        _fileStatusList.SetDiffs(firstRev, secondRev, [new("a/1"), new("a/2"), new("b/3"), new("b/4")]);
+        GetFolder("b").Collapse();
+
+        // refresh with one more file in the collapsed folder and a new folder
+        _fileStatusList.SetDiffs(firstRev, secondRev, [new("a/1"), new("a/2"), new("b/3"), new("b/4"), new("b/5"), new("c/6"), new("c/7")]);
+
+        GetFolder("a").IsExpanded.Should().BeTrue();
+        GetFolder("b").IsExpanded.Should().BeFalse();
+        GetFolder("c").IsExpanded.Should().BeTrue();
+
+        TreeNode GetFolder(string path) => treeView.Nodes.Cast<TreeNode>().Single(node => node.Tag is RelativePath folder && folder.Value == path);
+    }
+
     private static void CheckStoreFilter(Color expectedColor, string expectedRegex, FileStatusList.TestAccessor accessor)
     {
         accessor.FilterComboBox.BackColor.Should().Be(expectedColor);
