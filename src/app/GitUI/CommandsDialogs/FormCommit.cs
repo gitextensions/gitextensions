@@ -1239,7 +1239,8 @@ public sealed partial class FormCommit : GitModuleForm
                     ThreadHelper.JoinableTaskFactory.Run(
                         () => _commitMessageManager.WriteCommitMessageToFileAsync(Message.Text, CommitMessageType.Normal,
                                                                                   usingCommitTemplate: !string.IsNullOrEmpty(_commitTemplate),
-                                                                                  ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty));
+                                                                                  ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty,
+                                                                                  commentString: CommitMessageManager.GetConfiguredCommentString(Module)));
                 }
 
                 bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCommit, this);
