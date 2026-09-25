@@ -47,7 +47,7 @@ public sealed partial class RevisionDataGridView : DataGridView
     private Lazy<IList<int>> _toBeSelectedGraphIndexesCache;
     private int _loadedToBeSelectedRevisionsCount = 0;
 
-    // Identifies the current data load, incremented by MarkAsDataLoading().
+    // Identifies the current data load, incremented by MarkAsDataLoading() and MarkAsDataLoadingCancelled().
     // A load can be cancelled and superseded by a newer one (e.g. when the repository is switched
     // while the grid is still loading), so the completion of a load must be ignored unless it is
     // still the current one - otherwise the grid would be reported as loaded while it is not.
@@ -545,7 +545,7 @@ public sealed partial class RevisionDataGridView : DataGridView
         _revisionGraph.LoadingCompleted();
         if (_revisionGraph.Count == 0)
         {
-            MarkAsDataLoadingComplete();
+            MarkAsDataLoadingComplete(dataLoadId);
             return;
         }
 
@@ -614,7 +614,7 @@ public sealed partial class RevisionDataGridView : DataGridView
                 EnsureRowVisible(index);
             }
 
-            MarkAsDataLoadingComplete();
+            MarkAsDataLoadingComplete(dataLoadId);
         }
 
         int GetFallbackRowIndexToSelect()
@@ -632,15 +632,34 @@ public sealed partial class RevisionDataGridView : DataGridView
     }
 
     /// <summary>
-    ///  Marks the grid as no longer loading data.
+    ///  Marks the data load identified by <paramref name="dataLoadId"/> as complete.
+    /// </summary>
+    /// <param name="dataLoadId">
+    ///  The id returned by the <see cref="MarkAsDataLoading"/> call which started the load.
+    ///  The call is ignored if the load has meanwhile been cancelled or superseded by a newer one.
+    /// </param>
+    public void MarkAsDataLoadingComplete(int dataLoadId)
+    {
+        if (dataLoadId != _dataLoadId)
+        {
+            // A completion which was still in flight when its load was cancelled must not mark the newer load as complete.
+            return;
+        }
+
+        DebugHelpers.Assert(!IsDataLoadComplete, "The grid is already marked as 'data load complete'.");
+        IsDataLoadComplete = true;
+    }
+
+    /// <summary>
+    ///  Marks the grid as no longer loading data because the current load, if any, has been cancelled.
     /// </summary>
     /// <remarks>
-    ///  This method is idempotent. A load can be cancelled and superseded by a newer one before it
-    ///  signalled its completion, so the caller superseding it has to mark the load as complete on its
-    ///  behalf - and a completion which is still in flight may arrive afterwards.
+    ///  A cancelled load never signals its completion, so this has to be done on its behalf.
+    ///  Its id is invalidated, so that a completion which is still in flight is ignored.
     /// </remarks>
-    public void MarkAsDataLoadingComplete()
+    public void MarkAsDataLoadingCancelled()
     {
+        ++_dataLoadId;
         IsDataLoadComplete = true;
     }
 

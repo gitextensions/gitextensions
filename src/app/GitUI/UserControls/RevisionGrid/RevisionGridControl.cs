@@ -989,7 +989,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         _revisionSubscription = null;
 
         _isRefreshingRevisions = false;
-        _gridView.MarkAsDataLoadingComplete();
+        _gridView.MarkAsDataLoadingCancelled();
     }
 
     /// <summary>
@@ -1518,7 +1518,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
             _refreshRevisionsSequence.CancelCurrent();
 
-            _gridView.MarkAsDataLoadingComplete();
+            _gridView.MarkAsDataLoadingComplete(dataLoadId);
             this.InvokeAndForget(() => SetPage(new ErrorControl()));
             _isRefreshingRevisions = false;
 
