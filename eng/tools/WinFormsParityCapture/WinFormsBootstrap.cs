@@ -89,6 +89,17 @@ internal sealed class WinFormsBootstrap : IDisposable
 
         ServiceContainer serviceContainer = new();
         RegisterOriginalServices(serviceContainer);
+
+        // Captures must not update the operator's taskbar jump list or recent repositories.
+        // The original registration runs first so every other service remains unchanged;
+        // replace this shell-only boundary before constructing a Browse form.
+        if (serviceContainer.GetService(typeof(IWindowsJumpListManager)) is IWindowsJumpListManager jumpListManager)
+        {
+            serviceContainer.RemoveService(typeof(IWindowsJumpListManager));
+            jumpListManager.Dispose();
+        }
+
+        serviceContainer.AddService<IWindowsJumpListManager>(new CaptureWindowsJumpListManager());
         GitModule module = new(
             serviceContainer.GetRequiredService<IGitExecutorProvider>(),
             repositoryPath);
@@ -173,5 +184,34 @@ internal sealed class WinFormsBootstrap : IDisposable
             BindingFlags.Public | BindingFlags.Static)
             ?? throw new MissingMemberException(typeof(GitUI.ThreadHelper).FullName, "JoinableTaskContext");
         property.SetValue(obj: null, new JoinableTaskContext());
+    }
+}
+
+/// <summary>
+///  Suppresses process-external taskbar writes during reference capture; it does not replace
+///  any WinForms control or behavior inside the captured window.
+/// </summary>
+internal sealed class CaptureWindowsJumpListManager : IWindowsJumpListManager
+{
+    public bool NeedsJumpListCreation => false;
+
+    public void AddToRecent(string workingDir)
+    {
+    }
+
+    public void CreateJumpList(IntPtr windowHandle, WindowsThumbnailToolbarButtons buttons)
+    {
+    }
+
+    public void EnableThumbnailToolbar(bool enable)
+    {
+    }
+
+    public void UpdateCommitIcon(Image image)
+    {
+    }
+
+    public void Dispose()
+    {
     }
 }

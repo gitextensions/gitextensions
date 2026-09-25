@@ -11,6 +11,16 @@ namespace WinFormsParityCapture.Tests;
 public sealed class EndToEndCaptureTests
 {
     [Test]
+    public void Capture_jump_list_service_should_disable_taskbar_updates()
+    {
+        using CaptureWindowsJumpListManager manager = new();
+
+        manager.NeedsJumpListCreation.Should().BeFalse();
+        Action addToRecent = () => manager.AddToRecent("isolated-reference-repository");
+        addToRecent.Should().NotThrow();
+    }
+
+    [Test]
     public void StageCapturePlan_should_replace_the_packaged_default()
     {
         string directory = Path.Combine(Path.GetTempPath(), $"GitExtensions.ParityPlan-{Guid.NewGuid():N}");
