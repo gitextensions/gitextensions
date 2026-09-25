@@ -573,9 +573,13 @@ public class FormCommitTests
         {
             SplitContainer splitter = form.GetTestAccessor().MainSplitter;
 
+            // FormCommit uses AutoScaleMode.Dpi, so the design time width is scaled by the form's
+            // actual DPI, not just its own 96-DPI pixels.
+            int scaledDesignTimeWidth = (int)(designTimeWidth * form.DeviceDpi / 96f);
+
             form.WindowState = FormWindowState.Maximized;
             Application.DoEvents();
-            splitter.Width.Should().BeGreaterThan(designTimeWidth, "the screen must offer more than the design time size");
+            splitter.Width.Should().BeGreaterThan(scaledDesignTimeWidth, "the screen must offer more than the design time size");
 
             // Leave the left side wide, as reported: only such a distance is out of the range which
             // is valid while the form still has its design time size.
