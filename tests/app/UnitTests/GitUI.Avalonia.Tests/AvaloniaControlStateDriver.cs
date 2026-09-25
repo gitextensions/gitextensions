@@ -12,6 +12,7 @@ using Avalonia.VisualTree;
 using GitExtensions.ParityCapture;
 using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs;
+using GitUI.Editor;
 using GitUI.SpellChecker;
 
 namespace GitExtensionsTests;
@@ -383,6 +384,18 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         }
 
         ActivateContainingTabs(control);
+
+        // WinForms Control.Focus does not move the pointer. Use the editor's own keyboard
+        // focus path so a focused FileViewer does not also expose its hover-only toolbar.
+        if (control is FileViewer fileViewer && fileViewer.IsEffectivelyVisible)
+        {
+            fileViewer.FocusViewer();
+            Dispatcher.UIThread.RunJobs();
+            if (IsFocusWithin(control))
+            {
+                return;
+            }
+        }
 
         if (control is GitUI.UserControls.Settings.SettingsCheckBox settingsCheckBox)
         {
