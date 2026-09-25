@@ -1767,9 +1767,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 RevisionGrid.ResumeRefreshRevisions();
 
                 RefreshRevisions();
-            }
 
-            SetShortcutKeyDisplayStringsFromHotkeySettings();
+                SetShortcutKeyDisplayStringsFromHotkeySettings();
+            }
         }
         else
         {
