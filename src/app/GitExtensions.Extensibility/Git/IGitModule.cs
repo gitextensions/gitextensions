@@ -453,7 +453,7 @@ public interface IGitModule
     void RunMergeTool(string? fileName = "", string? customTool = null);
 
     /// <summary>
-    /// Resolves a merge conflict for <paramref name="fileName"/> by checking out and staging the given <paramref name="side"/>.
+    ///  Resolves a merge conflict for <paramref name="fileName"/> by checking out and staging the given <paramref name="side"/>.
     /// </summary>
     /// <param name="fileName">The conflicted file, relative to the working directory.</param>
     /// <param name="side">The side to keep, e.g. "BASE", "LOCAL" or "REMOTE".</param>
