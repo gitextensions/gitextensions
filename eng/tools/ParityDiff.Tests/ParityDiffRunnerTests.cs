@@ -373,7 +373,7 @@ public sealed class ParityDiffRunnerTests
 
     [Test]
     [Category("P8_6i")]
-    public void Run_should_not_score_popup_pixels_twice_as_primary_pixels()
+    public void Run_should_retain_unobscured_primary_pixels_when_popup_is_composed()
     {
         using ParityDiffFixture fixture = new();
         CaptureDocument reference = AddPopupSurface(
@@ -394,8 +394,8 @@ public sealed class ParityDiffRunnerTests
         CaptureComparison comparison = fixture.Run().Captures.Should().ContainSingle().Subject;
 
         comparison.Findings.Should().Contain(finding => finding.Path == "$image/surface[popup:0]");
-        comparison.Findings.Should().NotContain(finding => finding.Path == "$image/surface[primary]");
-        comparison.Pixels!.ComparedPixelCount.Should().Be(2);
+        comparison.Findings.Should().Contain(finding => finding.Path == "$image/surface[primary]");
+        comparison.Pixels!.ComparedPixelCount.Should().Be(6);
     }
 
     [Test]

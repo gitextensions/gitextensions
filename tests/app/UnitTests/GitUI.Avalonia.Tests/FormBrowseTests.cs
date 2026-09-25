@@ -2193,6 +2193,61 @@ public sealed class FormBrowseTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    [NonParallelizable]
+    public async Task Browse_layout_toolbar_buttons_should_reflect_the_visible_panels()
+    {
+        bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module))
+            {
+                Width = 923,
+                Height = 573,
+            };
+            form.Show();
+            Button leftToggle = form.FindControl<Button>("toggleLeftPanel")!;
+            Button splitToggle = form.FindControl<Button>("toggleSplitViewLayout")!;
+            Control leftPanel = form.FindControl<Control>("leftPanel")!;
+
+            leftPanel.IsVisible.Should().BeTrue();
+            leftToggle.IsVisible.Should().BeTrue();
+            leftToggle.Bounds.Width.Should().BeGreaterThan(0);
+            leftToggle.Classes.Should().Contain("checked");
+            splitToggle.Classes.Should().Contain("checked");
+
+            Click(form, leftToggle, MouseButton.Left);
+            leftPanel.IsVisible.Should().BeFalse();
+            leftToggle.Classes.Should().NotContain("checked");
+
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "feature" });
+            Click(form, leftToggle, MouseButton.Left);
+            leftPanel.IsVisible.Should().BeTrue();
+            leftToggle.Classes.Should().Contain("checked");
+            RepoObjectsTree tree = form.FindControl<RepoObjectsTree>("repoObjectsTree")!;
+            await WaitUntilAsync(() => tree.GetTestAccessor().Tree.Items
+                .Cast<TreeViewItem>()
+                .Where(item => HeaderText(item).StartsWith("Branches", StringComparison.Ordinal))
+                .SelectMany(item => item.Items.Cast<TreeViewItem>())
+                .Any(item => HeaderText(item).Contains("feature", StringComparison.Ordinal)));
+
+            Click(form, splitToggle, MouseButton.Left);
+            AppSettings.ShowSplitViewLayout.Should().BeFalse();
+            splitToggle.Classes.Should().NotContain("checked");
+
+            Click(form, splitToggle, MouseButton.Left);
+            AppSettings.ShowSplitViewLayout.Should().BeTrue();
+            splitToggle.Classes.Should().Contain("checked");
+        }
+        finally
+        {
+            AppSettings.ShowSplitViewLayout = originalShowSplitView;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void Browse_toolbar_should_hide_a_partially_clipped_stash_command()
     {
         using FormBrowse form = new() { Width = 923, Height = 573 };
