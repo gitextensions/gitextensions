@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Gpg;
@@ -258,6 +259,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         toggleLeftPanel.Click += toggleLeftPanel_Click;
         InitializeWorkspaceLayout();
         InitializeOutputHistory();
+        DragDrop.SetAllowDrop(this, true);
+        DragDrop.AddDragEnterHandler(this, FormBrowse_DragEnter);
+        DragDrop.AddDragOverHandler(this, FormBrowse_DragEnter);
+        DragDrop.AddDropHandler(this, FormBrowse_DragDrop);
         branchSelect.Click += CurrentBranchClick;
         BranchSelectFlyout.Opening += CurrentBranchDropDownOpening;
         BranchSelectFlyout.Opened += (_, _) =>
@@ -3091,7 +3096,97 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _outputHistoryController = null;
         _formBrowseMenus?.Dispose();
         _formBrowseMenus = null;
+        DragDrop.RemoveDragEnterHandler(this, FormBrowse_DragEnter);
+        DragDrop.RemoveDragOverHandler(this, FormBrowse_DragEnter);
+        DragDrop.RemoveDropHandler(this, FormBrowse_DragDrop);
         base.OnClosed(e);
+    }
+
+    private void FormBrowse_DragDrop(object? sender, DragEventArgs e)
+    {
+        if (IsRevisionGridPatchDrop(e))
+        {
+            return;
+        }
+
+        HandleDrop(e.DataTransfer);
+    }
+
+    private void HandleDrop(IDataTransfer dataTransfer)
+    {
+        if (TreeTabPage.Parent is null)
+        {
+            return;
+        }
+
+        if (GetRelativePathExistingInRepo(dataTransfer.TryGetText(), Module.WorkingDir) is RelativePath textPath)
+        {
+            fileTree.SelectFileOrFolder(FocusView, textPath);
+            return;
+        }
+
+        foreach (string path in (dataTransfer.TryGetFiles() ?? [])
+                     .Select(file => file.TryGetLocalPath()).OfType<string>())
+        {
+            if (GetRelativePathExistingInRepo(path, Module.WorkingDir) is not RelativePath relativePath)
+            {
+                continue;
+            }
+
+            fileTree.SelectFileOrFolder(FocusView, relativePath);
+            return;
+        }
+
+        void FocusView() => CommitInfoTabControl.SelectedItem = TreeTabPage;
+    }
+
+    private void FormBrowse_DragEnter(object? sender, DragEventArgs e)
+    {
+        if (IsRevisionGridPatchDrop(e))
+        {
+            return;
+        }
+
+        e.DragEffects = e.DataTransfer.Formats.Contains(DataFormat.File)
+            || e.DataTransfer.Formats.Contains(DataFormat.Text)
+                ? DragDropEffects.Move
+                : DragDropEffects.None;
+    }
+
+    private bool IsRevisionGridPatchDrop(DragEventArgs e)
+        => e.Source is Visual source
+            && (ReferenceEquals(source, RevisionGrid) || source.GetVisualAncestors().Contains(RevisionGrid))
+            && RevisionGridControl.CanDropPatchFiles([.. (e.DataTransfer.TryGetFiles() ?? [])
+                .Select(file => file.TryGetLocalPath()).OfType<string>()]);
+
+    // The original compares a path prefix without a directory boundary. Use the same
+    // repository-relative selection contract without accepting a sibling path on any OS.
+    internal static RelativePath? GetRelativePathExistingInRepo(string? path, string workingDir)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !(File.Exists(path) || Directory.Exists(path)))
+        {
+            return null;
+        }
+
+        string relativePath;
+        try
+        {
+            relativePath = Path.GetRelativePath(Path.GetFullPath(workingDir), Path.GetFullPath(path));
+        }
+        catch (ArgumentException)
+        {
+            return null;
+        }
+
+        if (relativePath == "."
+            || relativePath == ".."
+            || relativePath.StartsWith($"..{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
+            || Path.IsPathRooted(relativePath))
+        {
+            return null;
+        }
+
+        return RelativePath.From(relativePath.ToPosixPath());
     }
 
     internal void PopulatePluginMenuForTest() => PopulatePluginMenu();
