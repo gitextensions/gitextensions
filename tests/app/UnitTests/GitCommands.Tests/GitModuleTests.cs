@@ -620,6 +620,23 @@ public sealed partial class GitModuleTests
         }
     }
 
+    [TestCase(0)]
+    [TestCase(5)] // git exits with 5 when the setting does not exist at the given level
+    public void SetGitSetting_unsetting_globally_invalidates_the_cached_effective_settings(int exitCode)
+    {
+        using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
+        GitVersion.ResetVersion();
+
+        using IDisposable configListBeforeUnset = _executable.StageOutput("config list --includes --null", "http.proxy\nhttp://proxy:8080\0");
+        _gitModule.GetEffectiveSetting("http.proxy").Should().Be("http://proxy:8080");
+
+        using IDisposable unset = _executable.StageOutput("config unset --global -- \"http.proxy\"", "", exitCode);
+        using IDisposable configListAfterUnset = _executable.StageOutput("config list --includes --null", "");
+        _gitModule.SetGitSetting(GitSettingLevel.Global, "http.proxy", value: null);
+
+        _gitModule.GetEffectiveSetting("http.proxy").Should().BeEmpty();
+    }
+
     /// <summary>
     /// Create a GitModule with mockable GitExecutable
     /// </summary>
