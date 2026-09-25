@@ -112,6 +112,8 @@ internal sealed record ParityFinding
 // parity-scaffolding: Records temporary image-comparison metrics.
 internal sealed record PixelMetrics
 {
+    public required int ComparedPixelCount { get; init; }
+
     public required int ReferenceWidth { get; init; }
 
     public required int ReferenceHeight { get; init; }
