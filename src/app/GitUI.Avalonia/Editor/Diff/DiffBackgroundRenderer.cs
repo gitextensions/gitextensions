@@ -79,7 +79,9 @@ internal sealed class DiffBackgroundRenderer : IBackgroundRenderer
     {
         if (info.LineType == DiffLineType.Header)
         {
-            return GetBrush("GitExtensionsDiffSectionBrush", GetAppColor(AppColor.DiffSection));
+            // The original marks the header text and paints the line-number gutter,
+            // but leaves the remaining editor row at its normal background color.
+            return null;
         }
 
         if (!useBackgroundColoring)
