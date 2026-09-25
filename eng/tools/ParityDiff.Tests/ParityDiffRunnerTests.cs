@@ -373,6 +373,33 @@ public sealed class ParityDiffRunnerTests
 
     [Test]
     [Category("P8_6i")]
+    public void Run_should_not_score_popup_pixels_twice_as_primary_pixels()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument reference = AddPopupSurface(
+            fixture.CreateDocument("light"),
+            imageWidth: 2,
+            imageHeight: 2,
+            primaryScreenBounds: new CaptureRectangle { X = 0, Y = 0, Width = 2, Height = 2 },
+            popupScreenBounds: new CaptureRectangle { X = 0, Y = 0, Width = 1, Height = 2 });
+        CaptureDocument candidate = AddPopupSurface(
+            fixture.CreateDocument("light"),
+            imageWidth: 2,
+            imageHeight: 2,
+            primaryScreenBounds: new CaptureRectangle { X = 0, Y = 0, Width = 2, Height = 2 },
+            popupScreenBounds: new CaptureRectangle { X = 1, Y = 0, Width = 1, Height = 2 });
+        fixture.WriteCaptureSet("reference", [reference], red: 32);
+        fixture.WriteCaptureSet("candidate", [candidate], red: 64);
+
+        CaptureComparison comparison = fixture.Run().Captures.Should().ContainSingle().Subject;
+
+        comparison.Findings.Should().Contain(finding => finding.Path == "$image/surface[popup:0]");
+        comparison.Findings.Should().NotContain(finding => finding.Path == "$image/surface[primary]");
+        comparison.Pixels!.ComparedPixelCount.Should().Be(2);
+    }
+
+    [Test]
+    [Category("P8_6i")]
     public void Run_should_compare_full_primary_surface_when_legacy_client_bounds_are_invalid()
     {
         using ParityDiffFixture fixture = new();

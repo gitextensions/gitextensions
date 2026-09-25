@@ -1,10 +1,16 @@
 param(
     [string]$EvidenceDirectory,
 
-    [switch]$BrowseWindow
+    [switch]$BrowseWindow,
+
+    [switch]$OpenViewMenu
 )
 
 $ErrorActionPreference = "Stop"
+if ($OpenViewMenu -and -not $BrowseWindow)
+{
+    throw "The View menu can only be inspected on a Browse window."
+}
 
 # parity-scaffolding: records a real Windows runtime window until the parity gate closes.
 $repositoryRoot = (& git rev-parse --show-toplevel).Trim()
@@ -172,8 +178,26 @@ try
     }
 
     $titlePattern = if ($BrowseWindow) { [IO.Path]::GetFileName($fixtureRepository) } else { "Settings - Checklist" }
-    & $captureScript -TitlePattern $titlePattern -ProcessId $process.Id -OutputPath $screenshot -TimeoutSeconds 45 |
-        Set-Content -LiteralPath $captureLog
+    $captureArguments = @{
+        TitlePattern = $titlePattern
+        ProcessId = $process.Id
+        OutputPath = $screenshot
+        TimeoutSeconds = 45
+    }
+    if ($OpenViewMenu)
+    {
+        $captureArguments.CaptureMethod = "Screen"
+        $captureArguments.OpenViewMenu = $true
+    }
+
+    $captureOutput = & $captureScript @captureArguments
+    $captureOutput | Set-Content -LiteralPath $captureLog
+    $captureMethod = ($captureOutput | Where-Object { $_ -like 'captureMethod=*' } |
+        Select-Object -First 1) -replace '^captureMethod=', ''
+    if ($captureMethod -notin @('PrintWindow', 'Screen'))
+    {
+        throw "The capture did not report a supported image method."
+    }
 
     if ($process.HasExited)
     {
@@ -212,6 +236,8 @@ try
         platform = "windows"
         command = "browse <temporary-repository>"
         observedSurface = if ($BrowseWindow) { "browse" } else { "prerequisiteChecklist" }
+        requestedInteraction = if ($OpenViewMenu) { "openViewMenu" } else { $null }
+        captureMethod = $captureMethod
         prerequisiteScreenshot = if ([IO.File]::Exists($prerequisiteScreenshot)) { "prerequisite.png" } else { $null }
         settingsFileIsolation = "disposablePortableRuntime"
         registryAccess = "readOnly"
