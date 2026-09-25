@@ -58,6 +58,26 @@ internal sealed class AvaloniaControlTreeReader
                 screenBounds.Width / _renderScale,
                 screenBounds.Height / _renderScale)
             : null;
+        CaptureNode rootNode = ReadControl(
+            semanticRoot,
+            parentId: string.Empty,
+            ordinal: 0,
+            ancestorSemanticVisible: true,
+            semanticParent: null,
+            boundsOverride: rootBoundsOverride,
+            primarySurface: role == "primary");
+        if (role.StartsWith("popup:", StringComparison.Ordinal)
+            && rootNode.Type == "Avalonia.Controls.Primitives.OverlayPopupHost")
+        {
+            // The overlay retains logical menu items below its rendered viewport. A
+            // popup-surface tree describes the visible frame, not those clipped rows.
+            rootNode = rootNode with
+            {
+                Children = rootNode.Children.Where(child => child.ControlKind != "menuItem"
+                    || child.BoundsDip.Y + child.BoundsDip.Height <= rootNode.BoundsDip.Height).ToArray()
+            };
+        }
+
         return new CaptureSurface
         {
             Role = role,
@@ -68,14 +88,7 @@ internal sealed class AvaloniaControlTreeReader
                 Width = screenBounds.Width,
                 Height = screenBounds.Height
             },
-            Root = ReadControl(
-                semanticRoot,
-                parentId: string.Empty,
-                ordinal: 0,
-                ancestorSemanticVisible: true,
-                semanticParent: null,
-                boundsOverride: rootBoundsOverride,
-                primarySurface: role == "primary")
+            Root = rootNode
         };
     }
 
