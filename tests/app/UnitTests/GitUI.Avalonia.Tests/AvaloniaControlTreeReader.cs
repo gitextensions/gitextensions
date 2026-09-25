@@ -3552,13 +3552,12 @@ internal sealed class AvaloniaControlTreeReader
         }
         else if (rootMetadataType == "GitUI.CommandsDialogs.FormBrowse"
                  && semanticName is "tsbtnAdvancedFilter" or "tsbShowReflog" or "tssbtnShowBranches" or "toolStripLabel1"
-                     or "tsddbtnBranchFilter" or "toolStripSeparator19" or "tslblRevisionFilter" or "tsddbtnRevisionFilter"
-                     or "tsmiShowOnlyFirstParent"
+                     or "tsddbtnRevisionFilter"
                  && GetSourceTypeName(GetSourceType(control, semanticName)) is "ToolStripButton" or "ToolStripSplitButton"
                      or "ToolStripDropDownButton" or "ToolStripLabel" or "ToolStripSeparator")
         {
-            // Browse's filter strip inherits WindowText, while its item backgrounds
-            // remain transparent; retain the bounds measured from the real controls.
+            // Only these source filter items resolve to transparent WindowText. The branch
+            // filter, separator, text label and first-parent button resolve to Control.
             node = WithSemanticColors(
                 node,
                 null,
@@ -5326,6 +5325,7 @@ internal sealed class AvaloniaControlTreeReader
                or "toolStripButtonLevelUp" or "toolStripButtonPull" or "toolStripSeparator0"
                or "toolStripSeparator1" or "toolStripSeparator17"
                or "toolStripWorktrees"
+               or "toolStripFileExplorer" or "userShell" or "EditSettings"
                or "tsddbtnRevisionFilter"
                || (control.Name is "toolStripSplitStash" or "toolStripSeparator2"
                    && IsInsideClippedAncestors(control))
@@ -5399,8 +5399,8 @@ internal sealed class AvaloniaControlTreeReader
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
            && (control.Name is "toolStripLabel1" or "tsbShowReflog" or "tsbtnAdvancedFilter"
                 or "tsddbtnBranchFilter" or "tslblRevisionFilter" or "tsmiShowOnlyFirstParent"
-                or "tssbtnShowBranches" or "toolStripFileExplorer"
-                or "toolStripButtonPush" or "toolStripButtonCommit" or "EditSettings" or "userShell"
+                or "tssbtnShowBranches"
+                or "toolStripButtonPush" or "toolStripButtonCommit"
                 || (control.Name is "btnRefresh" or "btnCollapseGroups"
                     && control.GetLogicalAncestors().OfType<TabItem>().Any(tab => tab.Name == "TreeTabPage"))));
 
