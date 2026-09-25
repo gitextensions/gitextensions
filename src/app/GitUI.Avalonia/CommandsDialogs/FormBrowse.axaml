@@ -325,7 +325,8 @@
                                 Content="Branch"
                                 Icon="{x:Static properties:Images.Branch}">
           <compat:IconSplitButton.Flyout>
-            <MenuFlyout />
+            <MenuFlyout Placement="BottomEdgeAlignedLeft"
+                        FlyoutPresenterClasses="gitextensions-branch-menu" />
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
         <Border x:Name="toolStripSeparator1" Classes="gitextensions-toolbar-separator" />

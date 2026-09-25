@@ -1694,6 +1694,17 @@
   <Style Selector="MenuFlyoutPresenter /template/ ItemsPresenter#PART_ItemsPresenter">
     <Setter Property="Margin" Value="0" />
   </Style>
+  <Style Selector="MenuFlyoutPresenter.gitextensions-branch-menu">
+    <!-- The native branch ToolStripDropDownMenu has one horizontal border pixel. -->
+    <Setter Property="BorderThickness" Value="1,1,0,1" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter.gitextensions-branch-menu /template/ Border#LayoutRoot">
+    <!-- WinForms reserves one content pixel above and below its menu items. -->
+    <Setter Property="Padding" Value="0,1" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-branch-entry">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
+  </Style>
   <Style Selector="MenuItem ScrollViewer">
     <!-- Native ToolStripDropDownMenu leaves one content pixel inside each border edge. -->
     <Setter Property="Margin" Value="0,1" />
