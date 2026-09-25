@@ -302,6 +302,7 @@
           <SolidColorBrush x:Key="GitExtensionsSourceControlTextBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#A0A0A0" />
           <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#E3E3E3" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripPointerOverBackgroundBrush" Color="#E5F3FF" />
           <SolidColorBrush x:Key="GitExtensionsControlPressedBackgroundBrush" Color="#A0A0A0" />
           <SolidColorBrush x:Key="GitExtensionsDisabledForegroundBrush" Color="#6D6D6D" />
           <SolidColorBrush x:Key="GitExtensionsHighlightBackgroundBrush" Color="#0078D7" />
@@ -441,6 +442,7 @@
           <SolidColorBrush x:Key="GitExtensionsSourceControlTextBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#4A4A4A" />
           <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#2E2E2E" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripPointerOverBackgroundBrush" Color="#2F4159" />
           <SolidColorBrush x:Key="GitExtensionsControlPressedBackgroundBrush" Color="#4A4A4A" />
           <SolidColorBrush x:Key="GitExtensionsDisabledForegroundBrush" Color="#969696" />
           <SolidColorBrush x:Key="GitExtensionsHighlightBackgroundBrush" Color="#2864B4" />
@@ -1604,6 +1606,24 @@
   </Style>
   <Style Selector="ToggleButton:disabled">
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+  </Style>
+  <!-- The native ToolStrip renderer paints a distinct blue outlined hover, not the
+       Fluent gray button hover. Keep this after the general button states so it wins. -->
+  <Style Selector="Button.gitextensions-toolbar-button:pointerover,
+                   ToggleButton.gitextensions-toolbar-button:pointerover,
+                   SplitButton.gitextensions-toolbar-button:pointerover,
+                   DropDownButton.gitextensions-toolbar-button:pointerover">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Button.gitextensions-toolbar-button:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                   ToggleButton.gitextensions-toolbar-button:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                   DropDownButton.gitextensions-toolbar-button:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                   SplitButton.gitextensions-toolbar-button:pointerover /template/ Button#PART_PrimaryButton /template/ ContentPresenter#PART_ContentPresenter,
+                   SplitButton.gitextensions-toolbar-button:pointerover /template/ Button#PART_SecondaryButton /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
   </Style>
   <Style Selector="Button.gitextensions-command-link">
     <Setter Property="Padding" Value="8,5" />

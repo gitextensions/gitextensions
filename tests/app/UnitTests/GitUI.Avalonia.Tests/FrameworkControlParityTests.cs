@@ -123,6 +123,52 @@ public sealed class FrameworkControlParityTests
     }
 
     [AvaloniaTest]
+    public void Toolbar_buttons_should_resolve_native_ToolStrip_hover_colors_in_both_themes()
+    {
+        foreach (ThemeVariant themeVariant in new[] { ThemeVariant.Light, ThemeVariant.Dark })
+        {
+            Button button = new()
+            {
+                Name = "btnToolbar",
+                Classes = { "gitextensions-toolbar-button" },
+                Content = "Commit",
+            };
+            SplitButton splitButton = new()
+            {
+                Name = "btnBranch",
+                Classes = { "gitextensions-toolbar-button" },
+                Content = "main",
+            };
+            Window window = Show(themeVariant, new StackPanel { Children = { button, splitButton } });
+            try
+            {
+                using (AvaloniaControlStateDriver.Apply(
+                           window,
+                           new CaptureStatePlan { Id = "hover", Kind = CaptureStateKind.Hover, TargetField = "btnToolbar" }))
+                {
+                    GetColor(button.Background).Should().Be(GetResourceColor("GitExtensionsToolStripPointerOverBackgroundBrush", themeVariant));
+                    GetColor(button.BorderBrush).Should().Be(GetResourceColor("GitExtensionsHighlightBackgroundBrush", themeVariant));
+                    button.BorderThickness.Should().Be(new Thickness(1));
+                    ContentPresenter presenter = Find<ContentPresenter>(button, "PART_ContentPresenter");
+                    GetColor(presenter.Background).Should().Be(GetResourceColor("GitExtensionsToolStripPointerOverBackgroundBrush", themeVariant));
+                }
+
+                using (AvaloniaControlStateDriver.Apply(
+                           window,
+                           new CaptureStatePlan { Id = "hover", Kind = CaptureStateKind.Hover, TargetField = "btnBranch" }))
+                {
+                    GetColor(splitButton.BorderBrush).Should().Be(GetResourceColor("GitExtensionsHighlightBackgroundBrush", themeVariant));
+                    splitButton.BorderThickness.Should().Be(new Thickness(1));
+                }
+            }
+            finally
+            {
+                window.Close();
+            }
+        }
+    }
+
+    [AvaloniaTest]
     public void Pressed_state_cleanup_should_release_outside_without_invoking_the_button()
     {
         int clickCount = 0;
