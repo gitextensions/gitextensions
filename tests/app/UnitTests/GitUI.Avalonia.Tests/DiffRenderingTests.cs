@@ -1,14 +1,20 @@
 ﻿using System.Globalization;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using AvaloniaEdit;
+using AvaloniaEdit.Rendering;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.Editor;
 using GitUI.Editor.Diff;
 using NSubstitute;
+using SkiaSharp;
 
 namespace GitExtensionsTests;
 
@@ -193,6 +199,57 @@ public sealed class DiffRenderingTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Diff_hunk_header_should_not_fill_the_whole_text_viewport()
+    {
+        bool reverseGitColoring = AppSettings.ReverseGitColoring.Value;
+        try
+        {
+            AppSettings.ReverseGitColoring.Value = false;
+            foreach (ThemeVariant theme in new[] { ThemeVariant.Light, ThemeVariant.Dark })
+            {
+                FileViewer viewer = new();
+                viewer.ViewPatch("@@ -1 +1 @@\n-old\n+new\n", useGitColoring: true);
+                Window window = new()
+                {
+                    Width = 480,
+                    Height = 240,
+                    Content = viewer,
+                    RequestedThemeVariant = theme,
+                };
+                window.Show();
+                try
+                {
+                    Dispatcher.UIThread.RunJobs();
+                    using WriteableBitmap frame = window.CaptureRenderedFrame()
+                        ?? throw new AssertionException("The diff editor did not render.");
+                    TextView textView = viewer.TextEditor.TextArea.TextView;
+                    VisualLine header = textView.VisualLines.Single(line => line.FirstDocumentLine.LineNumber == 1);
+                    Point sample = textView.TranslatePoint(
+                        new Point(textView.Bounds.Width - 20, header.VisualTop - textView.ScrollOffset.Y + (header.Height / 2)),
+                        window) ?? throw new AssertionException("The hunk header is not visible.");
+                    using MemoryStream stream = new();
+                    frame.Save(stream, PngBitmapEncoderOptions.Default);
+                    stream.Position = 0;
+                    using SKBitmap bitmap = SKBitmap.Decode(stream);
+                    SKColor expected = theme == ThemeVariant.Light
+                        ? new SKColor(255, 255, 255)
+                        : new SKColor(50, 50, 50);
+                    bitmap.GetPixel((int)sample.X, (int)sample.Y).Should().Be(expected);
+                }
+                finally
+                {
+                    window.Close();
+                }
+            }
+        }
+        finally
+        {
+            AppSettings.ReverseGitColoring.Value = reverseGitColoring;
+        }
+    }
+
+    [AvaloniaTest]
     public void Diff_margin_should_match_WinForms_two_column_geometry_and_monospace_markers()
     {
         FileViewer viewer = new();
@@ -206,6 +263,13 @@ public sealed class DiffRenderingTests
         window.Show();
         try
         {
+            // The isolated test window does not run the app startup hook that maps
+            // the WinForms Consolas default to the platform monospace family.
+            if (!OperatingSystem.IsWindows())
+            {
+                viewer.TextEditor.FontFamily = new FontFamily(OperatingSystem.IsMacOS() ? "Menlo" : "DejaVu Sans Mono");
+            }
+
             Dispatcher.UIThread.RunJobs();
 
             TextEditor editor = viewer.TextEditor;
@@ -213,12 +277,18 @@ public sealed class DiffRenderingTests
                 .OfType<DiffViewerLineNumberControl>()
                 .Single();
             FormattedText digit = CreateFormattedText(editor, "0");
+            FormattedText space = CreateFormattedText(editor, " ");
+            FormattedText x = CreateFormattedText(editor, "x");
             FormattedText plus = CreateFormattedText(editor, "+");
             FormattedText minus = CreateFormattedText(editor, "-");
             (double backgroundSplit, double rightNumberX) =
                 DiffViewerLineNumberControl.GetTwoColumnGeometry(margin.Bounds.Width);
 
-            margin.Bounds.Width.Should().Be(Math.Ceiling(4 + (2 * digit.Width * 4)));
+            int wideSpaceWidth = Math.Max(1, Math.Max(
+                (int)Math.Round(space.Width, MidpointRounding.AwayFromZero),
+                (int)Math.Round(x.Width, MidpointRounding.AwayFromZero)));
+            margin.Bounds.Width.Should().Be(4 + (2 * wideSpaceWidth * 4),
+                "the source multiplies an integer per-glyph WideSpaceWidth");
             backgroundSplit.Should().Be(margin.Bounds.Width / 2);
             rightNumberX.Should().Be(backgroundSplit + 2);
             plus.Width.Should().BeApproximately(minus.Width, 0.01);
