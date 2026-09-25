@@ -401,7 +401,14 @@ Diff selection:
         }
 
         SelectedScript = script;
-        propertyGrid1.SelectedObject = script;
+
+        // Reassigning the same object would make the grid commit any pending edit (e.g. an open Icon drop-down list).
+        // This handler runs synchronously within ListViewItem.Selected in BindScripts, so the commit would re-enter
+        // BindScripts, which clears the items while the outer call is still selecting one of them.
+        if (propertyGrid1.SelectedObject != script)
+        {
+            propertyGrid1.SelectedObject = script;
+        }
 
         int index = _scripts.IndexOf(script);
         btnMoveUp.Enabled = index > 0;
@@ -423,5 +430,13 @@ Diff selection:
             propertyGrid1.SetLabelColumnWidth(DpiUtil.Scale(240));
             propertyGrid1.SetTag(widthSetTag);
         }
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(ScriptsSettingsPage page)
+    {
+        public ListView lvScripts => page.lvScripts;
+        public PropertyGrid propertyGrid1 => page.propertyGrid1;
     }
 }
