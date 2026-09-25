@@ -3584,6 +3584,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         public bool IsDataLoadComplete =>
             _revisionGridControl._gridView.IsDataLoadComplete;
 
+        public RevisionGridToolTipProvider ToolTipProvider => _revisionGridControl._toolTipProvider;
+
         public void ClearSelection()
         {
             _revisionGridControl._gridView.ClearSelection();

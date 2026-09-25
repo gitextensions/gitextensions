@@ -1317,6 +1317,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
+        // Verifying spawns git and gpg, which can take seconds while the agent is cold. Until it is
+        // done, neither the result for the previously selected revision nor the default "not signed"
+        // may be presented as if it was verified.
+        revisionGpgInfo1.DisplayVerificationPending();
+
         GpgInfo? info = await _controller.LoadGpgInfoAsync(revision, cancellationToken);
 
         // A newer selection may have started (and cancelled this token) while awaiting above;

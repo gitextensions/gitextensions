@@ -432,7 +432,12 @@ public static partial class PathUtil
         // shipped below it - so looking in the installation directory alone never finds them, and
         // an unrelated shell which happens to be in the PATH would be preferred over the one which
         // belongs to the configured Git.
-        foreach (string dir in new[] { gitDir, Path.Join(gitDir, "bin"), Path.Join(gitDir, "usr", "bin") })
+        //
+        // "usr/bin" is searched before "bin": "bin/bash.exe" is a thin compatibility wrapper around
+        // the real MSYS2 bash in "usr/bin", and running mintty against the wrapper instead of the
+        // real shell breaks its detection of when an interactive git command has finished (#13312 -
+        // a regression from when this method started looking below gitDir at all).
+        foreach (string dir in new[] { gitDir, Path.Join(gitDir, "usr", "bin"), Path.Join(gitDir, "bin") })
         {
             shellPath = Path.Join(dir, shell);
             if (File.Exists(shellPath))
@@ -449,6 +454,20 @@ public static partial class PathUtil
     {
         try
         {
+            // A configured LinuxToolsDir is explicit user intent (its own doc comment gives
+            // "C:\Program Files\Git\usr\bin" as the example), so it must win over guessing at a
+            // Git installation below ProgramW6432/ProgramFilesX86 - otherwise the guess can find a
+            // shell first and silently override what the user configured (#13312).
+            string linuxToolsDir = AppSettings.LinuxToolsDir;
+            if (!string.IsNullOrEmpty(linuxToolsDir))
+            {
+                shellPath = Path.Join(linuxToolsDir, shell);
+                if (File.Exists(shellPath))
+                {
+                    return true;
+                }
+            }
+
             string? programW6432 = EnvironmentAbstraction.GetEnvironmentVariable("ProgramW6432");
             if (!string.IsNullOrEmpty(programW6432) && TryFindShellInGitDir(Path.Join(programW6432, "Git"), shell, out shellPath))
             {
@@ -459,16 +478,6 @@ public static partial class PathUtil
             if (!string.IsNullOrEmpty(programFilesX86) && TryFindShellInGitDir(Path.Join(programFilesX86, "Git"), shell, out shellPath))
             {
                 return true;
-            }
-
-            string linuxToolsDir = AppSettings.LinuxToolsDir;
-            if (!string.IsNullOrEmpty(linuxToolsDir))
-            {
-                shellPath = Path.Join(linuxToolsDir, shell);
-                if (File.Exists(shellPath))
-                {
-                    return true;
-                }
             }
 
             if (TryFindFullPath(shell, out shellPath))
