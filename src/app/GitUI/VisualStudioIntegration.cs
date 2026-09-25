@@ -61,8 +61,19 @@ internal static class VisualStudioIntegration
                 catch (COMException exception) when ((uint)exception.HResult == RPC_E_CALL_REJECTED)
                 {
                     Trace.WriteLine(exception);
+
+                    // Visual Studio typically rejects the call while the user is interacting with it,
+                    // i.e. while Git Extensions has no active form to tie the thread switch to.
                     Form? activeForm = Form.ActiveForm;
-                    await activeForm!.SwitchToMainThreadAsync();
+                    if (activeForm is null)
+                    {
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    }
+                    else
+                    {
+                        await activeForm.SwitchToMainThreadAsync();
+                    }
+
                     if (!MessageBoxes.ConfirmRetryOpenVisualStudio(activeForm))
                     {
                         return;
