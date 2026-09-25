@@ -1776,6 +1776,10 @@ public partial class FileStatusList : GitModuleControl
         _diffCalculator.GetActualRevision = getActualRevision;
         SetFileTreeMode(isFileTreeMode);
         lblSplitter.Height = isFileTreeMode ? 1 : 0;
+        if (!isFileTreeMode)
+        {
+            UpdateToolbar();
+        }
     }
 
     private IEnumerable<FileStatusItem> GetVisibleFileStatusItems()

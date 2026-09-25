@@ -239,20 +239,23 @@ public partial class FileViewer : GitModuleControl
         InitializeComplete();
     }
 
-    // Framework constraint: WinForms raises OnRuntimeLoad only once a hidden tab page becomes
-    // visible. Avalonia realizes those pages eagerly, so apply the same setting at effective
-    // visibility instead of replacing the editor's native pre-load font prematurely.
+    // WinForms initializes viewers when their owning tab loads. Avalonia can attach a
+    // hidden tab's editor early, so visual attachment alone is not a runtime-load signal.
     private void ApplyRuntimeStateIfVisible()
     {
-        if (!IsEffectivelyVisible)
+        if (!IsEffectivelyVisible || TopLevel.GetTopLevel(this) is null)
         {
             return;
         }
 
+        InitializeRuntimeState();
+    }
+
+    internal void InitializeRuntimeState()
+    {
         if (!_runtimeFontApplied)
         {
-            // WinForms applies the configured editor font when this hidden tab becomes visible;
-            // its appearance must not depend on a commands owner becoming available first.
+            // The font setting does not depend on a commands owner becoming available first.
             Font = AppSettings.FixedWidthFont;
             _runtimeFontApplied = true;
         }
@@ -1326,6 +1329,7 @@ public partial class FileViewer : GitModuleControl
         _commandsSource = e.GitUICommandsSource;
         _commandsSource.UICommandsChanged += OnUICommandsChanged;
         OnUICommandsChanged(_commandsSource, null);
+        ApplyRuntimeStateIfVisible();
     }
 
     private void TreatAllFilesAsTextToolStripMenuItemClick(object? sender, EventArgs e)

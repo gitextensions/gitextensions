@@ -3553,6 +3553,7 @@ internal sealed class AvaloniaControlTreeReader
         else if (rootMetadataType == "GitUI.CommandsDialogs.FormBrowse"
                  && semanticName is "tsbtnAdvancedFilter" or "tsbShowReflog" or "tssbtnShowBranches" or "toolStripLabel1"
                      or "tsddbtnRevisionFilter"
+                 && (semanticName == "tsddbtnRevisionFilter" || node.Visible == true)
                  && GetSourceTypeName(GetSourceType(control, semanticName)) is "ToolStripButton" or "ToolStripSplitButton"
                      or "ToolStripDropDownButton" or "ToolStripLabel" or "ToolStripSeparator")
         {
@@ -5325,8 +5326,9 @@ internal sealed class AvaloniaControlTreeReader
                or "toolStripButtonLevelUp" or "toolStripButtonPull" or "toolStripSeparator0"
                or "toolStripSeparator1" or "toolStripSeparator17"
                or "toolStripWorktrees"
-               or "toolStripFileExplorer" or "userShell" or "EditSettings"
                or "tsddbtnRevisionFilter"
+               || (control.Name is "toolStripFileExplorer" or "userShell" or "EditSettings"
+                   && IsInsideClippedAncestors(control))
                || (control.Name is "toolStripSplitStash" or "toolStripSeparator2"
                    && IsInsideClippedAncestors(control))
                || control.Name?.StartsWith("pull_shortcut_", StringComparison.Ordinal) == true))
@@ -5401,6 +5403,8 @@ internal sealed class AvaloniaControlTreeReader
                 or "tsddbtnBranchFilter" or "tslblRevisionFilter" or "tsmiShowOnlyFirstParent"
                 or "tssbtnShowBranches"
                 or "toolStripButtonPush" or "toolStripButtonCommit"
+                || (control.Name is "toolStripFileExplorer" or "userShell" or "EditSettings"
+                    && !IsInsideClippedAncestors(control))
                 || (control.Name is "btnRefresh" or "btnCollapseGroups"
                     && control.GetLogicalAncestors().OfType<TabItem>().Any(tab => tab.Name == "TreeTabPage"))));
 

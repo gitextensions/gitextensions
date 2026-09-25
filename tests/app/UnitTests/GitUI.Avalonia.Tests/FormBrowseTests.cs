@@ -825,6 +825,8 @@ public sealed class FormBrowseTests
                 loadingStatus.Text == "4 revisions"
                 && commitButton.Content?.ToString() == "Commit (2)"
                 && pushButton.GetTestAccessor().GetButtonText() == "1↑");
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
 
             commitButton.Bounds.Width.Should().Be(Math.Ceiling(commitButton.Bounds.Width));
             commitButton.Bounds.Width.Should().BeGreaterThanOrEqualTo(88);
@@ -2132,18 +2134,22 @@ public sealed class FormBrowseTests
                 TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
                 await WaitUntilAsync(() =>
                     loadingStatus.Text == "2 revisions"
-                    && form.RevisionInfo.Revision?.Subject == "second"
-                    && form.fileStatusList.GitItemStatuses.Count == 1
-                    && form.fileViewer.TextEditor.Text.Contains("+second", StringComparison.Ordinal));
+                    && form.RevisionInfo.Revision?.Subject == "second");
 
                 form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.CommitInfoTabPage);
-                form.fileStatusList.SelectedItem!.Item.Name.Should().Be("tracked.txt");
+                form.fileStatusList.GitItemStatuses.Should().BeEmpty();
+                form.fileStatusList.FindControl<MenuItem>("tsmiToolbar")!.Items.Count.Should().Be(18,
+                    "WinForms builds the hidden Diff toolbar menu when FileStatusList binds");
+                form.revisionDiff.FileViewer.TextEditor.Text.Should().BeEmpty(
+                    "the source does not load the hidden Diff tab while Commit is selected");
 
                 form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
                 Dispatcher.UIThread.RunJobs();
+                await WaitUntilAsync(() => form.fileStatusList.GitItemStatuses.Count == 1
+                    && form.fileViewer.TextEditor.Text.Contains("+second", StringComparison.Ordinal));
                 form.fileStatusList.Bounds.Height.Should().BeGreaterThan(0);
+                form.fileStatusList.SelectedItem!.Item.Name.Should().Be("tracked.txt");
                 form.fileViewer.TextEditor.Text.Should().Contain("+second");
-                await WaitUntilAsync(() => form.revisionDiff.FileViewer.TextEditor.Text.Contains("+second", StringComparison.Ordinal));
                 form.revisionDiff.FileViewer.TextEditor.TextArea.TextView.ScrollOffset.Y.Should().Be(0,
                     "a newly opened Diff tab should show the patch header before its changed lines");
                 form.revisionDiff.FileViewer.TextEditor.Options.AllowScrollBelowDocument.Should().BeFalse(
@@ -2313,12 +2319,13 @@ public sealed class FormBrowseTests
                 form.Show();
                 TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
                 await WaitUntilAsync(() =>
-                    loadingStatus.Text == "2 revisions"
-                    && form.fileStatusList.SelectedItem?.Item.Name == "tracked.txt"
-                    && form.fileViewer.TextEditor.Text.Contains("+second", StringComparison.Ordinal));
+                    loadingStatus.Text == "2 revisions");
 
                 form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
                 Dispatcher.UIThread.RunJobs();
+                await WaitUntilAsync(() =>
+                    form.fileStatusList.SelectedItem?.Item.Name == "tracked.txt"
+                    && form.fileViewer.TextEditor.Text.Contains("+second", StringComparison.Ordinal));
                 MenuItem blameMenu = form.fileStatusList.FindControl<MenuItem>("tsmiBlame")!;
                 BlameControl blame = form.revisionDiff.FindControl<BlameControl>("BlameControl")!;
 
@@ -2368,11 +2375,12 @@ public sealed class FormBrowseTests
                 form.Show();
                 TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
                 await WaitUntilAsync(() =>
-                    loadingStatus.Text == "2 revisions"
-                    && form.fileStatusList.SelectedItem?.Item.Name == "tracked.txt");
+                    loadingStatus.Text == "2 revisions");
 
                 form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
                 Dispatcher.UIThread.RunJobs();
+                await WaitUntilAsync(() =>
+                    form.fileStatusList.SelectedItem?.Item.Name == "tracked.txt");
                 form.fileStatusList.FindControl<MenuItem>("tsmiBlame")!
                     .RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
