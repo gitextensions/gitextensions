@@ -512,6 +512,7 @@
                    Icon="{x:Static properties:Images.CommitSummary}">
             <Border x:Name="commitInfoBelowHost" Classes="gitextensions-section">
               <commitinfo:CommitInfo x:Name="RevisionInfo"
+                                     Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
                                      CommandClicked="RevisionInfo_CommandClicked" />
             </Border>
           </wf:TabPage>
