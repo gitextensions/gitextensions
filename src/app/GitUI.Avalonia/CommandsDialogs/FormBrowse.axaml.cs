@@ -1123,9 +1123,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void FillDiff(IReadOnlyList<GitRevision> revisions)
     {
-        // Avalonia keeps the shared diff pane live while split view hosts it outside the selected tab.
-        bool splitViewShowsDiff = AppSettings.ShowSplitViewLayout;
-        if (!splitViewShowsDiff && CommitInfoTabControl.SelectedItem != DiffTabPage)
+        if (CommitInfoTabControl.SelectedItem != DiffTabPage)
         {
             return;
         }
