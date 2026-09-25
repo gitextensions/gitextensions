@@ -251,6 +251,8 @@ public sealed class FormBrowseTests
                            Id = name,
                            Kind = CaptureStateKind.MenuOpen,
                            TargetField = name,
+                           WidthDip = name == "viewToolStripMenuItem" ? 923 : null,
+                           HeightDip = name == "viewToolStripMenuItem" ? 866 : null,
                        }))
                 {
                     mainMenuItem.IsSubMenuOpen.Should().BeTrue();
@@ -284,6 +286,13 @@ public sealed class FormBrowseTests
                     popup.Children.Where(node => node.Type == typeof(Separator).FullName)
                         .Should().NotBeEmpty()
                         .And.OnlyContain(node => node.BoundsDip.Width == popup.BoundsDip.Width - 4);
+                    if (name == "viewToolStripMenuItem")
+                    {
+                        popup.BoundsDip.Height.Should().Be(866);
+                        popup.Children.Should().HaveCount(45,
+                            "the two logical Toolbars rows lie below the rendered native viewport");
+                        popup.Children.Last().Name.Should().Be("SaveAsDefault");
+                    }
                 }
             }
 
@@ -2217,6 +2226,13 @@ public sealed class FormBrowseTests
             leftToggle.Classes.Should().Contain("checked");
             splitToggle.Classes.Should().Contain("checked");
 
+            Grid rightSplit = form.FindControl<Grid>("RightSplitContainer")!;
+            rightSplit.RowDefinitions[0].ActualHeight.Should().Be(211);
+            form.Height = 866;
+            Dispatcher.UIThread.RunJobs();
+            rightSplit.RowDefinitions[0].ActualHeight.Should().Be(333,
+                "the unfixed WinForms pane scales its Designer splitter distance with the window");
+
             Click(form, leftToggle, MouseButton.Left);
             leftPanel.IsVisible.Should().BeFalse();
             leftToggle.Classes.Should().NotContain("checked");
@@ -2235,10 +2251,17 @@ public sealed class FormBrowseTests
             Click(form, splitToggle, MouseButton.Left);
             AppSettings.ShowSplitViewLayout.Should().BeFalse();
             splitToggle.Classes.Should().NotContain("checked");
+            form.Height = 946;
+            Dispatcher.UIThread.RunJobs();
+            rightSplit.RowDefinitions[0].ActualHeight.Should().Be(rightSplit.Bounds.Height,
+                "hiding the lower pane must let the revision graph fill the available height");
 
             Click(form, splitToggle, MouseButton.Left);
             AppSettings.ShowSplitViewLayout.Should().BeTrue();
             splitToggle.Classes.Should().Contain("checked");
+            rightSplit.RowDefinitions[0].ActualHeight.Should().Be(
+                Math.Floor(209 * rightSplit.Bounds.Height / 502),
+                "reopening the split view restores the source's proportional sizing after a resize");
         }
         finally
         {

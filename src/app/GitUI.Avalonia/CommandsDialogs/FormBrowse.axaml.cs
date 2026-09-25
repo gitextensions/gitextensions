@@ -92,6 +92,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private GridLength _leftPanelWidth = new(260);
     private GridLength _splitViewBottomHeight = new(1, GridUnitType.Star);
     private GridLength _splitViewTopHeight = new(211);
+    private Action? _refreshRightSplitSize;
     private bool _gpgInfoLoaded;
     private bool _hasRuntimeCommands;
     private int _gpgInfoLoadVersion;
@@ -1184,6 +1185,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void InitializeWorkspaceLayout()
     {
+        // The WinForms Designer sets RightSplitContainer to 502 high with a
+        // 209-pixel splitter distance; its unfixed panes resize proportionally.
+        _refreshRightSplitSize = WinFormsSplitContainerSizer.Attach(
+            RightSplitContainer, sourceHeight: 502, sourceSplitterDistance: 209,
+            isExpanded: () => AppSettings.ShowSplitViewLayout);
         toggleSplitViewLayout.Click += toggleSplitViewLayout_Click;
         menuCommitInfoPosition.Click += CommitInfoPositionClick;
         commitInfoBelowMenuItem.Click += (_, _) => SetCommitInfoPosition(CommitInfoPosition.BelowList);
@@ -1369,6 +1375,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         rows[2].Height = showSplitView ? _splitViewBottomHeight : new GridLength(0);
         splitViewSplitter.IsVisible = showSplitView;
         CommitInfoTabControl.IsVisible = showSplitView;
+        _refreshRightSplitSize?.Invoke();
 
         RefreshLayoutToggleButtonStates();
         if (refreshCommitInfoPositionToolTip)
