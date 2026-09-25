@@ -537,10 +537,6 @@ internal static class CaptureComparer
             surface => surface.Role.Equals("primary", StringComparison.Ordinal));
         bool hasMatchedPopup = referencePopups.Any(
             referencePopup => candidatePopups.Any(candidatePopup => candidatePopup.Role == referencePopup.Role));
-        string[] matchedPopupRoles = referencePopups
-            .Select(surface => surface.Role)
-            .Intersect(candidatePopups.Select(surface => surface.Role), StringComparer.Ordinal)
-            .ToArray();
         if (TryCropPrimaryClient(reference, referencePrimary, referenceCanvas, out PngImage referenceClient)
             && TryCropPrimaryClient(candidate, candidatePrimary, candidateCanvas, out PngImage candidateClient))
         {
@@ -549,14 +545,7 @@ internal static class CaptureComparer
                 candidateClient,
                 tolerance,
                 "$image/surface[primary-client]",
-                findings,
-                GetPopupOcclusion(
-                    referencePrimary,
-                    candidatePrimary,
-                    referencePopups,
-                    candidatePopups,
-                    matchedPopupRoles,
-                    clientOnly: true)));
+                findings));
         }
         else if (!hasMatchedPopup)
         {
@@ -569,14 +558,7 @@ internal static class CaptureComparer
                 CropSurface(candidate, candidatePrimary, candidateCanvas),
                 tolerance,
                 "$image/surface[primary]",
-                findings,
-                GetPopupOcclusion(
-                    referencePrimary,
-                    candidatePrimary,
-                    referencePopups,
-                    candidatePopups,
-                    matchedPopupRoles,
-                    clientOnly: false)));
+                findings));
         }
 
         if (referencePopups.Length > 0 && candidatePopups.Length > 0)
@@ -685,10 +667,9 @@ internal static class CaptureComparer
         PngImage candidate,
         PixelTolerance tolerance,
         string path,
-        ICollection<ParityFinding> findings,
-        IReadOnlyList<CaptureRectangle>? excluded = null)
+        ICollection<ParityFinding> findings)
     {
-        PixelMetrics metrics = PixelComparer.Compare(reference, candidate, tolerance.MaximumChannelDelta, excluded);
+        PixelMetrics metrics = PixelComparer.Compare(reference, candidate, tolerance.MaximumChannelDelta);
         if (reference.Width != candidate.Width || reference.Height != candidate.Height)
         {
             findings.Add(CreateFinding(
@@ -750,36 +731,6 @@ internal static class CaptureComparer
             surface.ScreenBoundsPx.Y - canvas.Y,
             surface.ScreenBoundsPx.Width,
             surface.ScreenBoundsPx.Height);
-
-    private static CaptureRectangle[] GetPopupOcclusion(
-        CaptureSurface referencePrimary,
-        CaptureSurface candidatePrimary,
-        IReadOnlyList<CaptureSurface> referencePopups,
-        IReadOnlyList<CaptureSurface> candidatePopups,
-        IReadOnlyCollection<string> matchedPopupRoles,
-        bool clientOnly)
-    {
-        // The composite contains each popup over the owner. Compare popup pixels in their
-        // dedicated surface, and only unobscured owner pixels in the primary surface.
-        // Both placements are excluded: a pixel hidden in either capture is not a valid pair.
-        IEnumerable<CaptureRectangle> Occlusion(CaptureSurface primary, IReadOnlyList<CaptureSurface> popups)
-        {
-            int originX = primary.ScreenBoundsPx.X + (clientOnly ? primary.Root.BoundsPx.X : 0);
-            int originY = primary.ScreenBoundsPx.Y + (clientOnly ? primary.Root.BoundsPx.Y : 0);
-            return popups.Where(popup => matchedPopupRoles.Contains(popup.Role))
-                .Select(popup => new CaptureRectangle
-                {
-                    X = popup.ScreenBoundsPx.X - originX,
-                    Y = popup.ScreenBoundsPx.Y - originY,
-                    Width = popup.ScreenBoundsPx.Width,
-                    Height = popup.ScreenBoundsPx.Height
-                });
-        }
-
-        return Occlusion(referencePrimary, referencePopups)
-            .Concat(Occlusion(candidatePrimary, candidatePopups))
-            .ToArray();
-    }
 
     private static bool TryCropPrimaryClient(
         PngImage image,
