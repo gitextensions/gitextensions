@@ -229,6 +229,13 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
             {
                 DiffFiles.SelectFirstVisibleItem();
             }
+
+            // Avalonia can coalesce the clear and first-row selection into a single
+            // notification for the cleared row. Start the selected preview explicitly.
+            if (DiffFiles.SelectedItem is not null)
+            {
+                ShowSelectedFile();
+            }
         });
     }
 

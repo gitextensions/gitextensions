@@ -1370,14 +1370,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         splitViewSplitter.IsVisible = showSplitView;
         CommitInfoTabControl.IsVisible = showSplitView;
 
-        toggleSplitViewLayout.Classes.Set("checked", showSplitView);
-        menuCommitInfoPositionImage.Source = position switch
-        {
-            CommitInfoPosition.BelowList => Properties.Images.LayoutFooterTab,
-            CommitInfoPosition.LeftwardFromList => Properties.Images.LayoutSidebarTopLeft,
-            CommitInfoPosition.RightwardFromList => Properties.Images.LayoutSidebarTopRight,
-            _ => throw new NotSupportedException(),
-        };
+        RefreshLayoutToggleButtonStates();
         if (refreshCommitInfoPositionToolTip)
         {
             RefreshCommitInfoPositionToolTip();
@@ -2935,6 +2928,21 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             leftPanel.IsVisible = true;
             leftPanelSplitter.IsVisible = true;
         }
+
+        RefreshLayoutToggleButtonStates();
+
+        if (leftPanel.IsVisible && _hasRuntimeCommands)
+        {
+            // Refresh the left panel, update visibility of objects separately
+            // Get the "main" stash commit, including the reflog selector
+            Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
+                !AppSettings.ShowStashes
+                ? []
+                : new RevisionReader(new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), UICommands.Module.WorkingDir)).GetStashes(CancellationToken.None));
+
+            RefreshLeftPanel(new FilteredGitRefsProvider(UICommands.Module).GetRefs, getStashRevs, forceRefresh: true);
+            repoObjectsTree.RefreshRevisionsLoaded();
+        }
     }
 
     private void CommitInfoPositionClick(object sender, EventArgs e)
@@ -2979,6 +2987,20 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         RememberWorkspaceDimensions();
         AppSettings.CommitInfoPosition = position;
         RefreshWorkspaceLayout(refreshCommitInfoPositionToolTip: true);
+    }
+
+    private void RefreshLayoutToggleButtonStates()
+    {
+        toggleLeftPanel.Classes.Set("checked", leftPanel.IsVisible);
+        toggleSplitViewLayout.Classes.Set("checked", AppSettings.ShowSplitViewLayout);
+        CommitInfoPosition position = AppSettings.CommitInfoPosition;
+        menuCommitInfoPositionImage.Source = position switch
+        {
+            CommitInfoPosition.BelowList => Properties.Images.LayoutFooterTab,
+            CommitInfoPosition.LeftwardFromList => Properties.Images.LayoutSidebarTopLeft,
+            CommitInfoPosition.RightwardFromList => Properties.Images.LayoutSidebarTopRight,
+            _ => throw new NotSupportedException(),
+        };
     }
 
     private void FocusNextWorkspaceTab(bool forward)
