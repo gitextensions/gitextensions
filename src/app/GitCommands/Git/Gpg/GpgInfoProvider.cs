@@ -15,14 +15,14 @@ public interface IGpgInfoProvider
     /// <param name="revision">The Git revision to load GPG information for.</param>
     /// <param name="cancellationToken">A token used to cancel a stale, no-longer-relevant request.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the GPG information, or <c>null</c> if no information is available.</returns>
-    Task<GpgInfo?> LoadGpgInfoAsync(GitRevision? revision, CancellationToken cancellationToken = default);
+    Task<GpgInfo?> LoadGpgInfoAsync(GitRevision? revision, CancellationToken cancellationToken);
 }
 
 public class GpgInfoProvider(IGitGpgController gitGpgController) : IGpgInfoProvider
 {
     private readonly IGitGpgController _gitGpgController = gitGpgController;
 
-    public async Task<GpgInfo?> LoadGpgInfoAsync(GitRevision? revision, CancellationToken cancellationToken = default)
+    public async Task<GpgInfo?> LoadGpgInfoAsync(GitRevision? revision, CancellationToken cancellationToken)
     {
         if (!AppSettings.ShowGpgInformation.Value || revision?.ObjectId is null)
         {
