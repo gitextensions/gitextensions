@@ -259,6 +259,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         InitializeOutputHistory();
         branchSelect.Click += CurrentBranchClick;
         BranchSelectFlyout.Opening += CurrentBranchDropDownOpening;
+        BranchSelectFlyout.Opened += (_, _) =>
+            Dispatcher.UIThread.Post(() => WinFormsToolStripMenuSizer.Apply(BranchSelectFlyout, branchSelect), DispatcherPriority.Loaded);
         branchSelect.AddHandler(
             PointerReleasedEvent,
             branchSelect_MouseUp,
@@ -1997,9 +1999,14 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 },
                 Opacity = isBranchVisible ? 1 : 0.55,
             };
+            item.Classes.Add("gitextensions-branch-entry");
             item.Click += (_, _) => QueueBranchCheckout(branch.Name);
             BranchSelectFlyout.Items.Add(item);
         }
+
+        // WinForms measures the whole ToolStripDropDownMenu after dynamic items are added.
+        // Measure before Avalonia places the flyout so the shortcut column is never clipped.
+        WinFormsToolStripMenuSizer.Apply(BranchSelectFlyout, branchSelect);
     }
 
     private void _forkCloneMenuItem_Click(object? sender, EventArgs e)
