@@ -70,7 +70,11 @@ public sealed class IndexWatcher : IDisposable
     }
 
     private bool _indexChanged;
-    private bool IndexChanged
+
+    /// <summary>
+    ///  Gets whether the index or any ref has changed since the last <see cref="Reset"/>.
+    /// </summary>
+    public bool IndexChanged
     {
         get
         {
@@ -86,7 +90,7 @@ public sealed class IndexWatcher : IDisposable
 
             return _indexChanged;
         }
-        set
+        private set
         {
             _indexChanged = value;
             try
@@ -105,11 +109,20 @@ public sealed class IndexWatcher : IDisposable
 
     private bool _enabled;
     private string? _gitDirPath;
+    private DateTime _lastResetUtc;
     private FileSystemWatcher GitIndexWatcher { get; }
     private FileSystemWatcher RefsWatcher { get; }
 
     private void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
     {
+        // The notifications are raised asynchronously on the thread pool and can arrive after Reset()
+        // for changes made before it, e.g. by the fetch that triggered the refresh.
+        // (The time of a no longer existing file, e.g. a renamed *.lock file, is 1601-01-01.)
+        if (File.GetLastWriteTimeUtc(e.FullPath) < _lastResetUtc)
+        {
+            return;
+        }
+
         IndexChanged = true;
     }
 
@@ -118,6 +131,7 @@ public sealed class IndexWatcher : IDisposable
     /// </summary>
     public void Reset()
     {
+        _lastResetUtc = DateTime.UtcNow;
         RefreshWatcher();
         IndexChanged = false;
     }
@@ -149,5 +163,13 @@ public sealed class IndexWatcher : IDisposable
         RefsWatcher.Changed -= fileSystemWatcher_Changed;
         GitIndexWatcher.Dispose();
         RefsWatcher.Dispose();
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(IndexWatcher indexWatcher)
+    {
+        public void RaiseChanged(string fullPath)
+            => indexWatcher.fileSystemWatcher_Changed(indexWatcher, new FileSystemEventArgs(WatcherChangeTypes.Changed, Path.GetDirectoryName(fullPath)!, Path.GetFileName(fullPath)));
     }
 }
