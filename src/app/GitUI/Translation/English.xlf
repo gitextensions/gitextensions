@@ -7092,11 +7092,8 @@ Is the merge conflict solved?</source>
         <source>Choose base file failed.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_chooseFileFailedDetailText.Text">
-        <source>{0}
-
-File: {1}
-{2}</source>
+      <trans-unit id="_chooseFileFailedDetailFormat.Text">
+        <source>File: {0}</source>
         <target />
       </trans-unit>
       <trans-unit id="_chooseLocalButtonText.Text">
