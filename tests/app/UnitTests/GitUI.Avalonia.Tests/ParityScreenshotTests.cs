@@ -1926,11 +1926,13 @@ public sealed partial class ParityScreenshotTests
             searchResults.ItemCount.Should().BeGreaterThan(0);
         }
 
-        if (Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
+        if ((Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
+             || !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(CaptureRepositoryEnvironmentVariable)))
             && root is FormBrowse formBrowse)
         {
-            // parity-scaffolding: WinForms settles HEAD selection before opening FormBrowse menus.
-            // Drive the same product selection boundary so menu enabled-state evidence cannot race loading.
+            // Both internally seeded and caller-supplied paired repositories must settle HEAD
+            // in the Commit tab before a lower tab is opened; WinForms retains that hidden
+            // commit content, and opening menus must not race selection-dependent state.
             TextBlock loadingStatus = GetRequiredControl<TextBlock>(formBrowse.RevisionGrid, "lblLoadingStatus");
             Stopwatch revisionStopwatch = Stopwatch.StartNew();
             while (!IsLoadingComplete(loadingStatus.Text)

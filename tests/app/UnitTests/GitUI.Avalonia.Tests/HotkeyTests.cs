@@ -457,7 +457,7 @@ public sealed class HotkeyTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void Browse_hidden_diff_editor_should_defer_tooltip_hotkeys_until_its_tab_is_shown()
+    public void Browse_diff_and_blame_editors_should_load_runtime_settings_with_their_tab()
     {
         (FormBrowse form, _, _) = CreateBrowseForm(
             browseHotkeys: [],
@@ -472,15 +472,52 @@ public sealed class HotkeyTests
         form.Show();
         try
         {
-            IconButton nextChangeButton = form.revisionDiff.FileViewer.FindControl<IconButton>("nextChangeButton")!;
             form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.CommitInfoTabPage);
-            GetTooltipText(nextChangeButton).Should().Be("Next change");
+            foreach (FileViewer viewer in new[]
+            {
+                form.revisionDiff.FileViewer,
+                form.revisionDiff.BlameControl.BlameAuthor,
+                form.revisionDiff.BlameControl.BlameFile,
+            })
+            {
+                IconButton nextChangeButton = viewer.FindControl<IconButton>("nextChangeButton")!;
+                GetTooltipText(nextChangeButton).Should().Be("Next change");
+                viewer.Font.Name.Should().Be("Courier New");
+            }
+
+            form.CommitInfoTabControl.SelectedItem = form.TreeTabPage;
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            foreach (FileViewer viewer in new[]
+            {
+                form.fileTree.BlameControl.BlameAuthor,
+                form.fileTree.BlameControl.BlameFile,
+            })
+            {
+                IconButton nextChangeButton = viewer.FindControl<IconButton>("nextChangeButton")!;
+                GetTooltipText(nextChangeButton).Should().Be("Next change\u00A0(Alt+Down)");
+                viewer.Font.Name.Should().Be(AppSettings.FixedWidthFont.Name);
+            }
 
             form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
             form.UpdateLayout();
             Dispatcher.UIThread.RunJobs();
 
-            GetTooltipText(nextChangeButton).Should().Be("Next change\u00A0(Alt+Down)");
+            IconButton activeNextChangeButton = form.revisionDiff.FileViewer.FindControl<IconButton>("nextChangeButton")!;
+            GetTooltipText(activeNextChangeButton).Should().Be("Next change\u00A0(Alt+Down)");
+            form.revisionDiff.FileViewer.Font.Name.Should().Be(AppSettings.FixedWidthFont.Name);
+
+            foreach (FileViewer viewer in new[]
+            {
+                form.revisionDiff.BlameControl.BlameAuthor,
+                form.revisionDiff.BlameControl.BlameFile,
+            })
+            {
+                IconButton nextChangeButton = viewer.FindControl<IconButton>("nextChangeButton")!;
+                GetTooltipText(nextChangeButton).Should().Be("Next change");
+                viewer.Font.Name.Should().Be("Courier New");
+            }
         }
         finally
         {
@@ -527,6 +564,19 @@ public sealed class HotkeyTests
     [Category("P4.3")]
     public void FormBrowse_should_route_left_panel_hotkeys_when_the_repository_tree_has_focus()
     {
+        bool showAheadBehindData = AppSettings.ShowAheadBehindData;
+        WinFormsShims.IMessageBoxHost? messageBoxHost;
+        try
+        {
+            messageBoxHost = WinFormsShims.ShimHost.MessageBoxHost;
+        }
+        catch (InvalidOperationException)
+        {
+            messageBoxHost = null;
+        }
+
+        AppSettings.ShowAheadBehindData = false;
+        WinFormsShims.ShimHost.MessageBoxHost = Substitute.For<WinFormsShims.IMessageBoxHost>();
         (FormBrowse form, IGitUICommands commands, _) = CreateBrowseForm(
             browseHotkeys: [],
             revisionHotkeys: [],
@@ -560,6 +610,8 @@ public sealed class HotkeyTests
         finally
         {
             form.Close();
+            AppSettings.ShowAheadBehindData = showAheadBehindData;
+            WinFormsShims.ShimHost.MessageBoxHost = messageBoxHost!;
         }
     }
 
