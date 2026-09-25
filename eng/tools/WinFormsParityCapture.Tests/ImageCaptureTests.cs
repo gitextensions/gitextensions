@@ -15,6 +15,8 @@ public sealed class ImageCaptureTests
         using ContextMenuStrip menu = new() { AutoClose = false };
         menu.Items.Add("Captured action");
         form.Show();
+        Application.DoEvents();
+        form.Refresh();
         menu.Show(form, new Point(180, 120));
         using Form occluder = CreateOccluder(form);
         occluder.Show();
