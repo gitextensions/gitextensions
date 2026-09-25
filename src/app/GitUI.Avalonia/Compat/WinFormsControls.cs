@@ -302,22 +302,30 @@ public class ToolStripContainer : Avalonia.Controls.Panel
 public class ToolStripPanel : Avalonia.Controls.Panel
 {
     private const double LeadingInset = 7;
-    private const double FilterWidth = 50;
-    private const double FilterTrailingReserve = 104;
+    private const double MinimumFilterWidth = 50;
     private const double ScriptsWidth = 50;
     private const double TrailingInset = 4;
     private const double ToolStripHeight = 25;
     private const double FilterToolStripHeight = 27;
 
+    public double MainPreferredWidth { get; set; } = double.PositiveInfinity;
+
+    private static (double MainWidth, double FilterWidth) GetToolbarWidths(double totalWidth, double mainPreferredWidth)
+    {
+        double availableWidth = Math.Max(0, totalWidth - LeadingInset - ScriptsWidth - TrailingInset);
+        double filterWidth = Math.Min(availableWidth, Math.Max(MinimumFilterWidth, availableWidth - mainPreferredWidth));
+        return (availableWidth - filterWidth, filterWidth);
+    }
+
     protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
     {
-        double filterX = Math.Max(LeadingInset, availableSize.Width - FilterTrailingReserve);
+        (double mainWidth, double filterWidth) = GetToolbarWidths(availableSize.Width, MainPreferredWidth);
         foreach (Control child in Children)
         {
             child.Measure(child.Name switch
             {
-                "toolStripMainHost" => new Avalonia.Size(filterX - LeadingInset, ToolStripHeight),
-                "toolStripFiltersHost" => new Avalonia.Size(FilterWidth, FilterToolStripHeight),
+                "toolStripMainHost" => new Avalonia.Size(mainWidth, ToolStripHeight),
+                "toolStripFiltersHost" => new Avalonia.Size(filterWidth, FilterToolStripHeight),
                 "ToolStripScripts" => new Avalonia.Size(ScriptsWidth, ToolStripHeight),
                 _ => default,
             });
@@ -328,13 +336,14 @@ public class ToolStripPanel : Avalonia.Controls.Panel
 
     protected override Avalonia.Size ArrangeOverride(Avalonia.Size finalSize)
     {
-        double filterX = Math.Max(LeadingInset, finalSize.Width - FilterTrailingReserve);
+        (double mainWidth, double filterWidth) = GetToolbarWidths(finalSize.Width, MainPreferredWidth);
+        double filterX = LeadingInset + mainWidth;
         foreach (Control child in Children)
         {
             Avalonia.Rect bounds = child.Name switch
             {
-                "toolStripMainHost" => new Avalonia.Rect(LeadingInset, 0, filterX - LeadingInset, ToolStripHeight),
-                "toolStripFiltersHost" => new Avalonia.Rect(filterX, 0, FilterWidth, FilterToolStripHeight),
+                "toolStripMainHost" => new Avalonia.Rect(LeadingInset, 0, mainWidth, ToolStripHeight),
+                "toolStripFiltersHost" => new Avalonia.Rect(filterX, 0, filterWidth, FilterToolStripHeight),
                 "ToolStripScripts" => new Avalonia.Rect(
                     Math.Max(0, finalSize.Width - ScriptsWidth - TrailingInset),
                     0,
