@@ -10,11 +10,10 @@ unavailable or unsupported captures and their manifest notes explicitly; it neve
 as successful comparisons. The WinForms capture keeps its complete `PrintWindow` bitmap,
 including native non-client chrome, and its primary surface root records the client-area inset.
 Image comparison aligns and crops each primary surface to that declared client rectangle without
-scaling either bitmap. A popup is compared as its own full surface; where it overlays the owner,
-both popup footprints are excluded from the owner comparison because those pixels are not an
-unobscured pair. The result records the number of primary pixels actually compared, including
-zero if a popup completely covers the owner. Popup surfaces are cropped from the union canvas
-and compared separately.
+scaling either bitmap. Both capture workers first render an unobscured primary surface, then
+compose any popup over that image. ParityDiff compares the complete primary client and each
+popup separately; it must not mask popup footprints in the already-unobscured primary. The
+result records the number of pixels compared. Popup surfaces are cropped from the union canvas.
 It then uses global luminance SSIM plus declared per-pixel and maximum-channel-delta budgets.
 Tolerance values live in `parity-diff.json`, with deliberate per-component overrides. Resolved
 colors always have zero tolerance.

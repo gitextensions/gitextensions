@@ -1456,7 +1456,15 @@ public sealed partial class ParityScreenshotTests
                     }
 
                     capturedBrowse.revisionDiff.FileStatusList.AllItemsCount.Should().BeGreaterThan(0);
-                    capturedBrowse.revisionDiff.FileViewer.TextEditor.Text.Should().NotBeNullOrEmpty();
+                    capturedBrowse.revisionDiff.FileViewer.TextEditor.Text.Should().NotBeNullOrEmpty(
+                        $"Diff selected file={capturedBrowse.revisionDiff.FileStatusList.SelectedItem?.Item.Name}, "
+                        + $"displayed revision={capturedBrowse.revisionDiff.DisplayedRevision?.ObjectId}, "
+                        + $"selected revision={capturedBrowse.RevisionGrid.SelectedRevision?.ObjectId}, "
+                        + $"items={capturedBrowse.revisionDiff.FileStatusList.AllItemsCount}, "
+                        + $"viewer mode={capturedBrowse.revisionDiff.FileViewer.GetTestAccessor().ViewMode}, "
+                        + $"preview link={capturedBrowse.revisionDiff.FileViewer.GetTestAccessor().ShowPreviewLink.IsVisible}, "
+                        + $"first id={capturedBrowse.revisionDiff.FileStatusList.SelectedFileStatusItem?.FirstRevision?.ObjectId}, "
+                        + $"second id={capturedBrowse.revisionDiff.FileStatusList.SelectedFileStatusItem?.SecondRevision.ObjectId}");
                 }
 
                 if (capturedBrowse.CommitInfoTabControl.SelectedItem == capturedBrowse.TreeTabPage)
@@ -1473,7 +1481,11 @@ public sealed partial class ParityScreenshotTests
                     }
 
                     capturedBrowse.fileTree.FileStatusList.AllItemsCount.Should().BeGreaterThan(0);
-                    capturedBrowse.fileTree.FileViewer.TextEditor.Text.Should().NotBeNullOrEmpty();
+                    capturedBrowse.fileTree.FileViewer.TextEditor.Text.Should().NotBeNullOrEmpty(
+                        $"Tree selected file={capturedBrowse.fileTree.FileStatusList.SelectedItem?.Item.Name}, "
+                        + $"displayed revision={capturedBrowse.fileTree.DisplayedRevision?.ObjectId}, "
+                        + $"selected revision={capturedBrowse.RevisionGrid.SelectedRevision?.ObjectId}, "
+                        + $"items={capturedBrowse.fileTree.FileStatusList.AllItemsCount}");
                 }
 
                 if ((state.Kind == CaptureStateKind.Focus && state.TargetField == "RevisionGrid")
