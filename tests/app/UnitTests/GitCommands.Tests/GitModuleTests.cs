@@ -620,6 +620,70 @@ public sealed partial class GitModuleTests
         }
     }
 
+    [TestCase("BASE", "1")]
+    [TestCase("LOCAL", "2")]
+    [TestCase("REMOTE", "3")]
+    public void HandleConflictSelectSide_should_return_true_and_empty_error_on_success(string side, string stage)
+    {
+        // HandleConflictSelectSide's first line is Directory.SetCurrentDirectory(WorkingDir), which
+        // throws for the fixture's default empty WorkingDir - a real directory is needed here.
+        GitModule gitModule = GetGitModuleWithExecutable(_executable, path: Path.GetTempPath());
+
+        using IDisposable checkoutIndex = _executable.StageOutput($"checkout-index -f --stage={stage} -- \"file.txt\"", "");
+        using IDisposable add = _executable.StageOutput("add -- \"file.txt\"", "");
+
+        gitModule.HandleConflictSelectSide("file.txt", side, out string errorMessage).Should().BeTrue();
+        errorMessage.Should().BeEmpty();
+    }
+
+    [Test]
+    public void HandleConflictSelectSide_should_return_false_and_the_git_error_when_checkout_index_fails()
+    {
+        GitModule gitModule = GetGitModuleWithExecutable(_executable, path: Path.GetTempPath());
+
+        using IDisposable checkoutIndex = _executable.StageOutput(
+            "checkout-index -f --stage=2 -- \"file.txt\"", "", exitCode: 1, error: "file.txt: is not in the cache");
+
+        gitModule.HandleConflictSelectSide("file.txt", "LOCAL", out string errorMessage).Should().BeFalse();
+        errorMessage.Should().Contain("file.txt: is not in the cache");
+    }
+
+    [Test]
+    public void HandleConflictSelectSide_should_return_false_and_the_git_error_when_add_fails()
+    {
+        GitModule gitModule = GetGitModuleWithExecutable(_executable, path: Path.GetTempPath());
+
+        using IDisposable checkoutIndex = _executable.StageOutput("checkout-index -f --stage=3 -- \"file.txt\"", "");
+        using IDisposable add = _executable.StageOutput(
+            "add -- \"file.txt\"", "", exitCode: 128, error: "fatal: pathspec 'file.txt' did not match any files");
+
+        gitModule.HandleConflictSelectSide("file.txt", "REMOTE", out string errorMessage).Should().BeFalse();
+        errorMessage.Should().Contain("fatal: pathspec 'file.txt' did not match any files");
+    }
+
+    [Test]
+    public void HandleConflictSelectSide_should_return_false_and_the_output_when_checkout_index_writes_to_stdout()
+    {
+        GitModule gitModule = GetGitModuleWithExecutable(_executable, path: Path.GetTempPath());
+
+        using IDisposable checkoutIndex = _executable.StageOutput("checkout-index -f --stage=1 -- \"file.txt\"", "unexpected checkout-index output");
+
+        gitModule.HandleConflictSelectSide("file.txt", "BASE", out string errorMessage).Should().BeFalse();
+        errorMessage.Should().Contain("unexpected checkout-index output");
+    }
+
+    [Test]
+    public void HandleConflictSelectSide_should_return_false_and_the_output_when_add_writes_to_stdout()
+    {
+        GitModule gitModule = GetGitModuleWithExecutable(_executable, path: Path.GetTempPath());
+
+        using IDisposable checkoutIndex = _executable.StageOutput("checkout-index -f --stage=2 -- \"file.txt\"", "");
+        using IDisposable add = _executable.StageOutput("add -- \"file.txt\"", "unexpected add output");
+
+        gitModule.HandleConflictSelectSide("file.txt", "LOCAL", out string errorMessage).Should().BeFalse();
+        errorMessage.Should().Contain("unexpected add output");
+    }
+
     /// <summary>
     /// Create a GitModule with mockable GitExecutable
     /// </summary>
