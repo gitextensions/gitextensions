@@ -45,6 +45,7 @@ public partial class FormClone : GitExtensionsDialog
         _url = url;
         _defaultBranchItems = new[] { _branchDefaultRemoteHead.Text, _branchNone.Text };
         _NO_TRANSLATE_Branches.DataSource = _defaultBranchItems;
+        cbIntializeAllSubmodules.Checked = AppSettings.CloneInitializeAllSubmodules;
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -316,8 +317,6 @@ public partial class FormClone : GitExtensionsDialog
         {
             LoadSSHKey.Visible = false;
         }
-
-        cbIntializeAllSubmodules.Checked = AppSettings.CloneInitializeAllSubmodules;
     }
 
     private void FromSelectedIndexChanged(object sender, EventArgs e)
@@ -518,7 +517,6 @@ public partial class FormClone : GitExtensionsDialog
             _form = form;
         }
 
-        public CheckBox InitializeAllSubmodules => _form.cbIntializeAllSubmodules;
         public bool TryExtractUrl(string text, out string url) => FormClone.TryExtractUrl(text, out url);
     }
 }
