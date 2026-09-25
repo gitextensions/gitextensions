@@ -313,6 +313,51 @@ public sealed class FormBrowseTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    public void Browse_filter_toolbar_should_use_remaining_width_without_clipping_commands()
+    {
+        using FormBrowse form = new() { Width = 1200, Height = 573 };
+        form.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            FilterToolBar filters = form.FindControl<FilterToolBar>("ToolStripFilters")!;
+            Control advancedFilter = filters.FindControl<Control>("tsbtnAdvancedFilter")!;
+            Control showBranches = filters.FindControl<Control>("tssbtnShowBranches")!;
+            form.toolStripFiltersHost.Bounds.Width.Should().BeGreaterThan(200);
+            advancedFilter.Opacity.Should().Be(1);
+            showBranches.Opacity.Should().Be(1);
+            form.toolStripFiltersOverflow.IsVisible.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+
+        using FormBrowse narrow = new() { Width = 600, Height = 573 };
+        narrow.Show();
+        try
+        {
+            narrow.SizeToContent = SizeToContent.Manual;
+            narrow.Width = 600;
+            Dispatcher.UIThread.RunJobs();
+            narrow.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            narrow.toolStripFiltersHost.Bounds.Width.Should().Be(50);
+            narrow.FindControl<FilterToolBar>("ToolStripFilters")!
+                .FindControl<Control>("tsbtnAdvancedFilter")!.Opacity.Should().Be(0,
+                    "even the first item cannot fit beside the overflow button");
+        }
+        finally
+        {
+            narrow.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void Browse_toolbar_overflow_should_reach_commands_between_the_first_and_last_page()
     {
         using FormBrowse form = new() { Width = 360, Height = 573 };
