@@ -86,20 +86,6 @@ public sealed class CommonLogic : Translate, IDisposable
         }
     }
 
-    internal TestAccessor GetTestAccessor() => new(this);
-
-    internal readonly struct TestAccessor
-    {
-        private readonly CommonLogic _commonLogic;
-
-        public TestAccessor(CommonLogic commonLogic)
-        {
-            _commonLogic = commonLogic;
-        }
-
-        public IReadOnlyList<SettingsCache> OwnedSettingsCaches => _commonLogic._ownedSettingsCaches;
-    }
-
     /// <summary>
     /// Reads the registry key.
     /// </summary>

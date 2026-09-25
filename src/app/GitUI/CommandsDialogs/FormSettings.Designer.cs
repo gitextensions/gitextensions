@@ -18,9 +18,9 @@ partial class FormSettings
     {
         if (disposing)
         {
+            components.Dispose();
             // null when the form was constructed for translation only
             _commonLogic?.Dispose();
-            components?.Dispose();
         }
         base.Dispose(disposing);
     }
