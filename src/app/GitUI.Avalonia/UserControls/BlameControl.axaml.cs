@@ -101,6 +101,29 @@ public sealed partial class BlameControl : GitModuleControl
         _gitBlameParser = new GitBlameParser(() => UICommands.Module);
     }
 
+    protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
+    {
+        base.OnUICommandsSourceSet(source);
+
+        // Avalonia can keep a hidden blame pane outside the visual tree; its two editors
+        // still need the runtime settings and shortcuts WinForms initializes at load.
+        if (!BlameAuthor.TryGetUICommandsDirect(out _))
+        {
+            BlameAuthor.UICommandsSource = source;
+        }
+
+        if (!BlameFile.TryGetUICommandsDirect(out _))
+        {
+            BlameFile.UICommandsSource = source;
+        }
+    }
+
+    internal void InitializeNestedViewerRuntimeState()
+    {
+        BlameAuthor.InitializeRuntimeState();
+        BlameFile.InitializeRuntimeState();
+    }
+
     public void InitSplitterManager(NestedSplitterManager splitterManager)
     {
         NestedSplitterManager nested = new(splitterManager, Name ?? nameof(BlameControl));

@@ -28,6 +28,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
     private GitItemStatus? _selectedBlameItem;
     private RelativePath? _fallbackFollowedFile;
     private RelativePath? _lastExplicitlySelectedItem;
+    private bool _nestedViewerRuntimeStateApplied;
 
     public RevisionDiffControl()
     {
@@ -52,8 +53,42 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
             DiffText.ScrollToTop();
         };
         BlameControl.HideCommitInfo();
+        AttachedToVisualTree += (_, _) => InitializeNestedViewerRuntimeState();
+        LayoutUpdated += (_, _) => InitializeNestedViewerRuntimeState();
 
         InitializeComplete();
+    }
+
+    private void InitializeNestedViewerRuntimeState()
+    {
+        if (_nestedViewerRuntimeStateApplied || !IsEffectivelyVisible || !TryGetUICommandsDirect(out _))
+        {
+            return;
+        }
+
+        // WinForms loads the nested editors when this tab page loads, including its hidden
+        // blame pane. Avalonia can keep the tab detached until selected, so pass the owning
+        // commands source at that boundary rather than when the Browse form is constructed.
+        IGitUICommandsSource source = UICommandsSource;
+        if (!DiffText.TryGetUICommandsDirect(out _))
+        {
+            DiffText.UICommandsSource = source;
+        }
+
+        if (!BlameControl.TryGetUICommandsDirect(out _))
+        {
+            BlameControl.UICommandsSource = source;
+        }
+
+        DiffText.InitializeRuntimeState();
+        if (IsFileTreeMode)
+        {
+            // The file-tree page loads both hidden blame editors with its diff viewer;
+            // the ordinary Diff page leaves its blame pane in the pre-load state.
+            BlameControl.InitializeNestedViewerRuntimeState();
+        }
+
+        _nestedViewerRuntimeStateApplied = true;
     }
 
     private RelativePath? _previousItem;
