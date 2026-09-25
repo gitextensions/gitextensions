@@ -5645,6 +5645,9 @@ internal sealed class AvaloniaControlTreeReader
                && control is GridSplitter)
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
                && (control is GridSplitter
+                   || (control is Border
+                       && control.Parent?.Name == "RevisionsSplitContainer"
+                       && control.Classes.Contains("gitextensions-revision-split-frame"))
                    || control.Name is "lblRepoPath" or "lblStatus"
                    || control.Parent is TreeView))
            || (control.GetType().Namespace == "GitUI.Compat.WinFormsControls"
