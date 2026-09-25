@@ -4248,7 +4248,7 @@ internal sealed class AvaloniaControlTreeReader
                 Math.Max(
                     0,
                     popupOwner.Bounds.Width - (control is Separator
-                        ? isPrimaryContextMenu ? 4 : 5
+                        ? 4
                         : isPrimaryContextMenu ? 1 : 2)),
                 control is Separator ? 6 : 22);
         }
