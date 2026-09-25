@@ -409,16 +409,21 @@ public sealed partial class GitModuleTests
     }
 
     [Test]
-    public void GetSubmodulesInfo_should_not_throw_if_gitmodules_entry_lacks_path()
+    public void GetSubmodulesInfo_should_not_throw_nor_return_partial_output_if_gitmodules_entry_lacks_path()
     {
         using GitModuleTestHelper parentHelper = new("parent");
-        using GitModuleTestHelper submoduleHelper = new("submodule");
-        parentHelper.AddSubmodule(submoduleHelper, "sub");
+        using GitModuleTestHelper validSubmoduleHelper = new("valid");
+        using GitModuleTestHelper brokenSubmoduleHelper = new("broken");
 
-        // Drop the "path" key, so .gitmodules no longer maps the gitlink recorded in the index.
-        // `git submodule status` then fails with "no submodule mapping found in .gitmodules for path".
-        parentHelper.CreateFile(parentHelper.Module.WorkingDir, ".gitmodules", @"[submodule ""sub""]
-    url = ../submodule");
+        // "a" sorts before "sub", so `git submodule status` lists it before failing.
+        parentHelper.AddSubmodule(validSubmoduleHelper, "a");
+        parentHelper.AddSubmodule(brokenSubmoduleHelper, "sub");
+
+        // Drop the "path" key of "sub", so .gitmodules no longer maps the gitlink recorded in the index.
+        // `git submodule status` then fails with "no submodule mapping found in .gitmodules for path 'sub'".
+        string gitmodulesPath = Path.Combine(parentHelper.Module.WorkingDir, ".gitmodules");
+        File.WriteAllLines(gitmodulesPath, File.ReadAllLines(gitmodulesPath).Where(line => line.Trim() != "path = sub"));
+        File.ReadAllText(gitmodulesPath).Should().Contain("path = a").And.NotContain("path = sub");
 
         parentHelper.Module.GetSubmodulesInfo().Should().BeEmpty();
     }
