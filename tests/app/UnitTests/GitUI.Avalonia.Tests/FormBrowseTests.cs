@@ -246,7 +246,7 @@ public sealed class FormBrowseTests
                 MenuItem gridContextItem = name == "navigateToolStripMenuItem"
                     ? form.RevisionGrid.NavigateMenuItem
                     : form.RevisionGrid.ViewMenuItem;
-                using (AvaloniaControlStateDriver.Apply(form, new CaptureStatePlan
+                using (AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(form, new CaptureStatePlan
                        {
                            Id = name,
                            Kind = CaptureStateKind.MenuOpen,
@@ -274,6 +274,16 @@ public sealed class FormBrowseTests
                     openedMenu.Children
                         .Should().OnlyContain(node => node.Visible == false,
                             "submenu rows are captured separately on their popup surface");
+                    Control popupRoot = driver.PopupSurfaceRoots.Should().ContainSingle().Subject;
+                    CaptureNode popup = new AvaloniaControlTreeReader(form, renderScale: 1)
+                        .ReadSurface(
+                            popupRoot,
+                            "popup:0",
+                            new PixelRect(0, 0, (int)popupRoot.Bounds.Width, (int)popupRoot.Bounds.Height))
+                        .Root;
+                    popup.Children.Where(node => node.Type == typeof(Separator).FullName)
+                        .Should().NotBeEmpty()
+                        .And.OnlyContain(node => node.BoundsDip.Width == popup.BoundsDip.Width - 4);
                 }
             }
 
