@@ -207,6 +207,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly GitStatusMonitor _gitStatusMonitor;
     private readonly FormBrowseMenus _formBrowseMenus;
     private readonly IGpgInfoProvider _controller;
+    private readonly CancellationTokenSequence _gpgInfoSequence = new();
     private readonly ICommitDataManager _commitDataManager;
     private readonly IAppTitleGenerator _appTitleGenerator;
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
@@ -461,6 +462,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             components?.Dispose();
             _gitStatusMonitor?.Dispose();
             _windowsJumpListManager?.Dispose();
+            _gpgInfoSequence.Dispose();
         }
 
         base.Dispose(disposing);
@@ -757,7 +759,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             RevisionGrid.Refresh();
         }
 
-        revisionGpgInfo1.InvokeAndForget(() => FillGpgInfoAsync(selectedRevision));
+        CancellationToken gpgInfoCancellationToken = _gpgInfoSequence.Next();
+        revisionGpgInfo1.InvokeAndForget(() => FillGpgInfoAsync(selectedRevision, gpgInfoCancellationToken), cancellationToken: gpgInfoCancellationToken);
         FillBuildReport(selectedRevision);
         repoObjectsTree.SelectionChanged(selectedRevisions);
     }
@@ -1286,7 +1289,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         RevisionInfo.SetRevisionWithChildren(revision, children);
     }
 
-    private async Task FillGpgInfoAsync(GitRevision? revision)
+    private async Task FillGpgInfoAsync(GitRevision? revision, CancellationToken cancellationToken)
     {
         // Don't show the "GPG" tab for artificial commits
         bool showGpgInfoTab = revision?.IsArtificial is false && AppSettings.ShowGpgInformation.Value;
@@ -1319,7 +1322,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         // may be presented as if it was verified.
         revisionGpgInfo1.DisplayVerificationPending();
 
-        GpgInfo? info = await _controller.LoadGpgInfoAsync(revision);
+        GpgInfo? info = await _controller.LoadGpgInfoAsync(revision, cancellationToken);
+
+        // A newer selection may have started (and cancelled this token) while awaiting above;
+        // avoid overwriting its result with this now-stale verdict.
+        cancellationToken.ThrowIfCancellationRequested();
         revisionGpgInfo1.DisplayGpgInfo(info);
     }
 
