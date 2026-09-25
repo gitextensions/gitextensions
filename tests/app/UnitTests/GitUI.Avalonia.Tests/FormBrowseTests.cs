@@ -2164,6 +2164,20 @@ public sealed class FormBrowseTests
                     "a newly opened Diff tab should show the patch header before its changed lines");
                 form.revisionDiff.FileViewer.TextEditor.Options.AllowScrollBelowDocument.Should().BeFalse(
                     "the source editor hides its vertical scrollbar when the short patch fits");
+                Border toolbar = form.revisionDiff.FileViewer.FindControl<Border>("fileviewerToolbar")!;
+                ComboBox encoding = form.revisionDiff.FileViewer.FindControl<ComboBox>("encodingToolStripComboBox")!;
+                toolbar.IsVisible.Should().BeFalse();
+                using (AvaloniaControlStateDriver.Apply(form, new CaptureStatePlan
+                       {
+                           Id = "diff-text.focused",
+                           Kind = CaptureStateKind.Focus,
+                           TargetField = "DiffText",
+                       }))
+                {
+                    form.revisionDiff.FileViewer.TextEditor.TextArea.IsFocused.Should().BeTrue();
+                    toolbar.IsVisible.Should().BeFalse("keyboard focus does not reveal a pointer-hover toolbar");
+                    encoding.SelectedItem.Should().BeNull("the hidden source encoding selector remains unselected");
+                }
             }
             finally
             {
