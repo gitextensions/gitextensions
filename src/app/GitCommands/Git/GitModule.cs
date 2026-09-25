@@ -532,10 +532,8 @@ public sealed partial class GitModule : IGitModule
             fileName.ToPosixPath().QuoteNE()
         };
 
-        // Use Execute (not GetOutput) so a failure is detected from the exit code rather than from
-        // stdout alone - GetOutput discards stderr, so a real git error would otherwise go unnoticed.
         ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
-        if (!result.ExitedSuccessfully)
+        if (IsConflictSelectSideFailure(result))
         {
             errorMessage = FormatConflictSelectSideError(result);
             return false;
@@ -547,7 +545,7 @@ public sealed partial class GitModule : IGitModule
             fileName.ToPosixPath().QuoteNE()
         };
         result = GitExecutable.Execute(args, throwOnErrorExit: false);
-        if (!result.ExitedSuccessfully)
+        if (IsConflictSelectSideFailure(result))
         {
             errorMessage = FormatConflictSelectSideError(result);
             return false;
@@ -558,6 +556,10 @@ public sealed partial class GitModule : IGitModule
 
         static string FormatConflictSelectSideError(ExecutionResult result)
             => $"{result.ExitCodeDisplay}: {result.AllOutput.Trim()}";
+
+        // Both commands are silent on success, so any stdout is treated as a failure, too.
+        static bool IsConflictSelectSideFailure(ExecutionResult result)
+            => !result.ExitedSuccessfully || !string.IsNullOrEmpty(result.StandardOutput);
     }
 
     public bool HandleConflictsSaveSide(string fileName, string saveAsFileName, string side)

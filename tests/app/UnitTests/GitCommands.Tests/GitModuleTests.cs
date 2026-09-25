@@ -661,6 +661,29 @@ public sealed partial class GitModuleTests
         errorMessage.Should().Contain("fatal: pathspec 'file.txt' did not match any files");
     }
 
+    [Test]
+    public void HandleConflictSelectSide_should_return_false_and_the_output_when_checkout_index_writes_to_stdout()
+    {
+        GitModule gitModule = GetGitModuleWithExecutable(_executable, path: Path.GetTempPath());
+
+        using IDisposable checkoutIndex = _executable.StageOutput("checkout-index -f --stage=1 -- \"file.txt\"", "unexpected checkout-index output");
+
+        gitModule.HandleConflictSelectSide("file.txt", "BASE", out string errorMessage).Should().BeFalse();
+        errorMessage.Should().Contain("unexpected checkout-index output");
+    }
+
+    [Test]
+    public void HandleConflictSelectSide_should_return_false_and_the_output_when_add_writes_to_stdout()
+    {
+        GitModule gitModule = GetGitModuleWithExecutable(_executable, path: Path.GetTempPath());
+
+        using IDisposable checkoutIndex = _executable.StageOutput("checkout-index -f --stage=2 -- \"file.txt\"", "");
+        using IDisposable add = _executable.StageOutput("add -- \"file.txt\"", "unexpected add output");
+
+        gitModule.HandleConflictSelectSide("file.txt", "LOCAL", out string errorMessage).Should().BeFalse();
+        errorMessage.Should().Contain("unexpected add output");
+    }
+
     /// <summary>
     /// Create a GitModule with mockable GitExecutable
     /// </summary>
