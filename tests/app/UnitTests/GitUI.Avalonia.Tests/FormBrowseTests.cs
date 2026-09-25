@@ -43,6 +43,7 @@ using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
+using SkiaSharp;
 using SourceControls = GitUI.Compat.WinFormsControls;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -2233,6 +2234,68 @@ public sealed class FormBrowseTests
         {
             AppSettings.CommitInfoPosition = originalPosition;
             AppSettings.ShowSplitViewLayout = originalShowSplitView;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_revision_pane_should_paint_the_native_split_container_border()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module))
+        {
+            Width = 923,
+            Height = 573,
+            RequestedThemeVariant = ThemeVariant.Light,
+        };
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        Grid revisions = form.FindControl<Grid>("RevisionsSplitContainer")!;
+        Point origin = revisions.TranslatePoint(default, form)!.Value;
+        using WriteableBitmap frame = form.CaptureRenderedFrame()
+            ?? throw new AssertionException("Browse revision pane did not render.");
+        using MemoryStream stream = new();
+        frame.Save(stream, PngBitmapEncoderOptions.Default);
+        stream.Position = 0;
+        using SKBitmap bitmap = SKBitmap.Decode(stream);
+        SKColor border = new(224, 224, 224);
+        int left = (int)origin.X;
+        int top = (int)origin.Y;
+        int right = left + (int)revisions.Bounds.Width - 1;
+        int bottom = top + (int)revisions.Bounds.Height - 1;
+        int middleX = (left + right) / 2;
+        int middleY = (top + bottom) / 2;
+        bitmap.GetPixel(middleX, top).Should().Be(border, "the native splitter paints its top border");
+        bitmap.GetPixel(middleX, bottom).Should().Be(border, "the native splitter paints its bottom border");
+        bitmap.GetPixel(left, middleY).Should().Be(border, "the native splitter paints its left border");
+        bitmap.GetPixel(right, middleY).Should().Be(border, "the native splitter paints its right border");
+
+        Border pageHost = form.FindControl<Border>("commitInfoBelowHost")!;
+        Point pageOrigin = pageHost.TranslatePoint(default, form)!.Value;
+        pageHost.Child!.Bounds.Width.Should().Be(643,
+            "the native TabPage retains a one-pixel side inset without an extra painted border");
+        bitmap.GetPixel((int)pageOrigin.X + 10, (int)pageOrigin.Y).Should().Be(new SKColor(255, 255, 255),
+            "WinForms places CommitInfo directly inside the TabPage display rectangle");
+
+        CaptureNode root = new AvaloniaControlTreeReader(form, renderScale: 1)
+            .ReadPrimary(form, new PixelSize(bitmap.Width, bitmap.Height)).Root;
+        CaptureNode splitNode = Flatten(root).Single(node => node.FieldName == "RevisionsSplitContainer");
+        splitNode.Colors.Background.Should().Be("#00FFFFFF",
+            "the native frame does not change the split container's transparent BackColor");
+        splitNode.Children.Should().NotContain(node => node.ControlKind == "control" && node.FieldName == null,
+            "the frame is renderer-only, not an extra source control");
+
+        static IEnumerable<CaptureNode> Flatten(CaptureNode node)
+        {
+            yield return node;
+            foreach (CaptureNode child in node.Children)
+            {
+                foreach (CaptureNode descendant in Flatten(child))
+                {
+                    yield return descendant;
+                }
+            }
         }
     }
 
