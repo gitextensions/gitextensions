@@ -476,6 +476,13 @@
                              Grid.Row="0"
                              ColumnDefinitions="0,0,*,0,0"
                              Background="Transparent">
+          <!-- WinForms paints a one-pixel native split frame while the control's
+               semantic BackColor remains transparent. Keep paint separate. -->
+          <Border Classes="gitextensions-revision-split-frame"
+                  Grid.ColumnSpan="5"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="1"
+                  IsHitTestVisible="False" />
           <Border x:Name="commitInfoLeftHost" Grid.Column="0" Classes="gitextensions-section" />
           <GridSplitter x:Name="commitInfoLeftSplitter" Grid.Column="1" ResizeDirection="Columns" IsVisible="False" />
           <wf:Panel x:Name="RevisionGridContainer"
@@ -510,7 +517,9 @@
                    Classes="gitextensions-workspace-tab"
                    Header="Commit"
                    Icon="{x:Static properties:Images.CommitSummary}">
-            <Border x:Name="commitInfoBelowHost" Classes="gitextensions-section">
+            <!-- The native TabPage owns the page frame; its child CommitInfo starts
+                 directly at the display rectangle, without a second section border. -->
+            <Border x:Name="commitInfoBelowHost" BorderThickness="0" Padding="1,0">
               <commitinfo:CommitInfo x:Name="RevisionInfo"
                                      Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
                                      CommandClicked="RevisionInfo_CommandClicked" />
