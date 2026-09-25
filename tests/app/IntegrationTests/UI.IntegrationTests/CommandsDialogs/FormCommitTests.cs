@@ -559,30 +559,47 @@ public class FormCommitTests
             });
     }
 
-    [TestCase(true, false)]
-    [TestCase(false, true)]
-    public void Lists_must_not_select_an_item_when_a_click_gives_the_focus_back(bool byMouse, bool expectedSelection)
+    [Test]
+    public void Lists_must_not_select_an_item_when_a_click_gives_the_focus_back([Values] bool byMouse, [Values] bool staged)
     {
+        bool expectedHasSelection = !byMouse;
+
         // Modify tracked files rather than adding new ones, so that the list is filled no matter
         // how the settings of the dialog are left behind by another test.
         _referenceRepository.CreateCommit("Add the files to modify", "Test", "file1.txt", "Test", "file2.txt");
         _referenceRepository.CreateRepoFile("file1.txt", "Changed");
         _referenceRepository.CreateRepoFile("file2.txt", "Changed");
 
-        RunFormTest(form =>
+        RunFormTest(async form =>
         {
             FormCommit.TestAccessor ta = form.GetTestAccessor();
-            ta.UnstagedList.AllItemsCount.Should().BeGreaterThan(1, "the list must be able to scroll away from its first item");
+
+            if (staged)
+            {
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                ta.StageAllToolItem.PerformClick();
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+            }
+
+            FileStatusList list = staged ? ta.StagedList : ta.UnstagedList;
+            list.AllItemsCount.Should().BeGreaterThan(1, "the list must be able to scroll away from its first item");
 
             // The state a list is left in as soon as the other one has taken the selection over.
             // Note that this keeps the focused item, which is the one that would be scrolled to.
-            ta.UnstagedList.ClearSelected();
-            ta.UnstagedList.HasSelection.Should().BeFalse();
-            ta.UnstagedList.FocusedItem.Should().NotBeNull();
+            list.ClearSelected();
+            list.HasSelection.Should().BeFalse();
+            list.FocusedItem.Should().NotBeNull();
 
-            ta.RaiseUnstagedEnter(byMouse);
+            if (staged)
+            {
+                ta.RaiseStagedEnter(byMouse);
+            }
+            else
+            {
+                ta.RaiseUnstagedEnter(byMouse);
+            }
 
-            ta.UnstagedList.HasSelection.Should().Be(expectedSelection,
+            list.HasSelection.Should().Be(expectedHasSelection,
                 "the click which gives the focus back selects the item it hits by itself");
         });
     }
