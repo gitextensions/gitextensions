@@ -186,6 +186,7 @@ public class GitExtensionsFormBase : Form, ITranslate
 
         this.AdjustForDpiScaling();
         this.EnableRemoveWordHotkey();
+        this.EnableProperWordBoundaries();
     }
 
     #region Translation

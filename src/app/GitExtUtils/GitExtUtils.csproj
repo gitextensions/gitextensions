@@ -6,7 +6,10 @@
 
   <ItemGroup>
     <Compile Include="..\GitUI\Interops\BOOL.cs" Link="GitUI\Interops\BOOL.cs" />
+    <Compile Include="..\GitUI\Interops\Libraries.cs" Link="GitUI\Interops\Libraries.cs" />
+    <Compile Include="..\GitUI\Interops\Messages.cs" Link="GitUI\Interops\Messages.cs" />
     <Compile Include="..\GitUI\Interops\RECT.cs" Link="GitUI\Interops\RECT.cs" />
+    <Compile Include="..\GitUI\Interops\User32\SendMessageW.cs" Link="GitUI\Interops\User32\SendMessageW.cs" />
   </ItemGroup>
 
   <ItemGroup>
