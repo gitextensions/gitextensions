@@ -98,6 +98,11 @@ public static class BugReportInvoker
             return;
         }
 
+        if (exception is TypeLoadException typeLoadException && _bugReporter.ReportIncompatiblePlugin(typeLoadException))
+        {
+            return;
+        }
+
         // Ignore accessibility-specific exception (refer to https://github.com/gitextensions/gitextensions/issues/11385)
         if (exception is InvalidOperationException && exception.StackTrace?.Contains("ListViewGroup.get_AccessibilityObject") is true)
         {
