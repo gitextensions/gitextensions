@@ -987,9 +987,10 @@
     </Setter>
   </Style>
   <Style Selector="Window.gitextensions-browse-window TabItem.gitextensions-workspace-tab:selected /template/ Border#PART_LayoutRoot">
-    <!-- WinForms raises only the selected header; sibling headers retain their lower baseline. -->
-    <Setter Property="Margin" Value="0" />
-    <Setter Property="Padding" Value="12,5" />
+    <!-- Native tabs overpaint two DIPs beyond their fixed allocation. Compensating padding
+         keeps the icon/caption fixed horizontally while the complete selected tab rises. -->
+    <Setter Property="Margin" Value="-2,0,-2,0" />
+    <Setter Property="Padding" Value="10,5" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsBrowseTabSelectedBackgroundBrush}" />
   </Style>
   <!-- RichEdit's automatic link foreground follows the native theme, not Fluent's blue link palette. -->
@@ -1134,16 +1135,6 @@
   <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_SecondaryButton > PathIcon">
     <Setter Property="Width" Value="7" />
     <Setter Property="Height" Value="5" />
-  </Style>
-  <Style Selector="Button.gitextensions-toolbar-button.checked">
-    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripCheckedBackgroundBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
-    <Setter Property="BorderThickness" Value="1" />
-  </Style>
-  <Style Selector="ToggleButton.gitextensions-toolbar-button:checked">
-    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripCheckedBackgroundBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
-    <Setter Property="BorderThickness" Value="1" />
   </Style>
   <Style Selector="Border.gitextensions-toolbar-separator">
     <Setter Property="Width" Value="1" />
@@ -1627,8 +1618,17 @@
   <Style Selector="ToggleButton:pointerover">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPointerOverBackgroundBrush}" />
   </Style>
+  <Style Selector="ToggleButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+  </Style>
   <Style Selector="ToggleButton:pressed, ToggleButton:checked">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPressedBackgroundBrush}" />
+  </Style>
+  <Style Selector="ToggleButton:pressed /template/ ContentPresenter#PART_ContentPresenter,
+                   ToggleButton:checked /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPressedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
   </Style>
   <Style Selector="ToggleButton:disabled">
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
@@ -1650,6 +1650,20 @@
                    SplitButton.gitextensions-toolbar-button:pointerover /template/ Button#PART_SecondaryButton /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripPointerOverBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <!-- Fluent paints ToggleButton's checked surface on its inner presenter. Override both
+       layers so ToolStrip buttons never inherit the host platform accent. -->
+  <Style Selector="Button.gitextensions-toolbar-button.checked,
+                   ToggleButton.gitextensions-toolbar-button:checked">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripCheckedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Button.gitextensions-toolbar-button.checked /template/ ContentPresenter#PART_ContentPresenter,
+                   ToggleButton.gitextensions-toolbar-button:checked /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripCheckedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
   </Style>
   <Style Selector="Button.gitextensions-command-link">
     <Setter Property="Padding" Value="8,5" />
