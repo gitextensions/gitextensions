@@ -63,6 +63,14 @@
       <Setter Property="Width" Value="6" />
       <Setter Property="Height" Value="25" />
       <Setter Property="Margin" Value="0" />
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="Border.gitextensions-toolbar-separator-line">
+      <Setter Property="Width" Value="1" />
+      <Setter Property="Height" Value="17" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
     </Style>
     <Style Selector="compat|IconSplitButton#branchSelect">
       <Setter Property="Padding" Value="2,1" />
@@ -281,7 +289,9 @@
         <Button x:Name="RefreshButton" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only gitextensions-toolbar-first">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ReloadRevisions}" />
         </Button>
-        <Border x:Name="toolStripSeparator0" Classes="gitextensions-toolbar-separator" />
+        <Border x:Name="toolStripSeparator0" Classes="gitextensions-toolbar-separator">
+          <Border Classes="gitextensions-toolbar-separator-line" />
+        </Border>
         <Button x:Name="toggleLeftPanel" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutSidebarLeft}" />
         </Button>
@@ -309,7 +319,9 @@
             </MenuFlyout>
           </SplitButton.Flyout>
         </SplitButton>
-        <Border x:Name="toolStripSeparator17" Classes="gitextensions-toolbar-separator" />
+        <Border x:Name="toolStripSeparator17" Classes="gitextensions-toolbar-separator">
+          <Border Classes="gitextensions-toolbar-separator-line" />
+        </Border>
         <compat:IconSplitButton x:Name="toolStripButtonLevelUp"
                                 compat:TranslationCompat.TranslateText="False"
                                 compat:TranslationCompat.TranslateToolTip="False"
@@ -347,7 +359,9 @@
                         FlyoutPresenterClasses="gitextensions-branch-menu" />
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
-        <Border x:Name="toolStripSeparator1" Classes="gitextensions-toolbar-separator" />
+        <Border x:Name="toolStripSeparator1" Classes="gitextensions-toolbar-separator">
+          <Border Classes="gitextensions-toolbar-separator-line" />
+        </Border>
         <compat:IconSplitButton x:Name="toolStripButtonPull"
                                 compat:TranslationCompat.TranslateToolTip="False"
                                 Classes="gitextensions-toolbar-button gitextensions-icon-only"
@@ -404,7 +418,9 @@
             </MenuFlyout>
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
-        <Border x:Name="toolStripSeparator2" Classes="gitextensions-toolbar-separator" Background="#00FFFFFF" />
+        <Border x:Name="toolStripSeparator2" Classes="gitextensions-toolbar-separator">
+          <Border Classes="gitextensions-toolbar-separator-line" />
+        </Border>
         <Button x:Name="toolStripFileExplorer" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only" Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" />
         </Button>

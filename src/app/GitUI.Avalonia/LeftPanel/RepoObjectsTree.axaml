@@ -22,13 +22,22 @@
       <Setter Property="Foreground" Value="Transparent" />
     </Style>
     <Style Selector="TreeView.gitextensions-native-tree ScrollBar:horizontal /template/ Thumb">
-      <Setter Property="Height" Value="2" />
-      <Setter Property="Margin" Value="2,0" />
-      <Setter Property="VerticalAlignment" Value="Center" />
-      <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeScrollBarThumbBrush}" />
-    </Style>
-    <Style Selector="TreeView.gitextensions-native-tree ScrollBar:horizontal /template/ Thumb:pointerover">
-      <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeScrollBarThumbBrush}" />
+      <!-- Keep WinForms' two-pixel paint while retaining the complete 17-DIP mouse target. -->
+      <Setter Property="Height" Value="17" />
+      <Setter Property="MinHeight" Value="17" />
+      <Setter Property="Margin" Value="0" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border Background="Transparent">
+            <Border x:Name="PART_NativeIndicator"
+                    Height="2"
+                    Margin="2,0"
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource GitExtensionsNativeScrollBarThumbBrush}" />
+          </Border>
+        </ControlTemplate>
+      </Setter>
     </Style>
   </UserControl.Styles>
   <Grid x:Name="repoTreePanel" RowDefinitions="25,26,*">

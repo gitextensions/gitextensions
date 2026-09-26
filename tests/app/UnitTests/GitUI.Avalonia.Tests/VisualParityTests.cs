@@ -209,10 +209,20 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
-    public void List_and_tree_selection_should_use_shared_dense_metrics_in_both_theme_variants()
+    public void Native_selection_should_not_reuse_the_configurable_editor_selection_palette()
     {
-        AssertListAndTreeStyles(ThemeVariant.Light, Color.Parse("#C3C3FF"), Colors.Black);
-        AssertListAndTreeStyles(ThemeVariant.Dark, Color.Parse("#00009B"), Color.Parse("#F0F0F0"));
+        AssertListAndTreeStyles(
+            ThemeVariant.Light,
+            Color.Parse("#0078D7"),
+            Colors.White,
+            Color.Parse("#C3C3FF"),
+            Colors.Black);
+        AssertListAndTreeStyles(
+            ThemeVariant.Dark,
+            Color.Parse("#2864B4"),
+            Colors.Black,
+            Color.Parse("#00009B"),
+            Color.Parse("#F0F0F0"));
     }
 
     [AvaloniaTest]
@@ -386,12 +396,6 @@ public sealed class VisualParityTests
                     .OfType<ContentPresenter>()
                     .Single(presenter => presenter.Name == "PART_SelectedContentHost");
                 contentHost.TranslatePoint(default, form.CommitInfoTabControl)!.Value.Y.Should().Be(29);
-                if (OperatingSystem.IsWindows())
-                {
-                    // The reference screenshot uses Windows' Segoe UI glyph metrics.
-                    form.CommitInfoTabPage.Bounds.Width.Should().BeApproximately(88, 0.5);
-                }
-
                 Border selectedPage = form.CommitInfoTabPage.GetVisualDescendants()
                     .OfType<Border>()
                     .Single(border => border.Name == "PART_LayoutRoot");
@@ -400,6 +404,27 @@ public sealed class VisualParityTests
                     .Single(border => border.Name == "PART_LayoutRoot");
                 GetColor(selectedPage.Background).Should().Be(selected);
                 GetColor(unselectedPage.Background).Should().Be(unselected);
+                if (OperatingSystem.IsWindows())
+                {
+                    // The reference screenshot uses Windows' Segoe UI glyph metrics.
+                    form.CommitInfoTabPage.Bounds.Width.Should().BeApproximately(88, 0.5);
+                }
+
+                TabItem[] pages = [form.CommitInfoTabPage, form.DiffTabPage, form.TreeTabPage];
+                foreach (TabItem page in pages)
+                {
+                    form.CommitInfoTabControl.SelectedItem = page;
+                    Dispatcher.UIThread.RunJobs();
+                    foreach (TabItem sibling in pages)
+                    {
+                        Border layoutRoot = sibling.GetVisualDescendants()
+                            .OfType<Border>()
+                            .Single(border => border.Name == "PART_LayoutRoot");
+                        layoutRoot.Margin.Top.Should().Be(
+                            ReferenceEquals(sibling, page) ? 0 : 2,
+                            "raising one native tab must not raise or lower the sibling headers");
+                    }
+                }
             }
             finally
             {
@@ -1434,8 +1459,10 @@ public sealed class VisualParityTests
 
     private static void AssertListAndTreeStyles(
         ThemeVariant themeVariant,
-        Color selectionColor,
-        Color selectionForegroundColor)
+        Color nativeSelectionColor,
+        Color nativeSelectionForegroundColor,
+        Color editorSelectionColor,
+        Color editorSelectionForegroundColor)
     {
         ListBox list = new()
         {
@@ -1454,23 +1481,31 @@ public sealed class VisualParityTests
             SelectionLength = 8,
             Classes = { "gitextensions-diff-editor" },
         };
+        TextBox textBox = new()
+        {
+            Text = "selected text",
+            SelectionStart = 0,
+            SelectionEnd = 8,
+        };
         Grid content = new()
         {
-            RowDefinitions = new RowDefinitions("*,*,*"),
+            RowDefinitions = new RowDefinitions("*,*,*,*"),
             Children =
             {
                 list,
                 treeItem,
                 editor,
+                textBox,
             },
         };
         Grid.SetRow(treeItem, 1);
         Grid.SetRow(editor, 2);
+        Grid.SetRow(textBox, 3);
 
         Window window = new()
         {
             Width = 400,
-            Height = 240,
+            Height = 320,
             RequestedThemeVariant = themeVariant,
             Content = content,
         };
@@ -1493,12 +1528,14 @@ public sealed class VisualParityTests
 
             listItem.MinHeight.Should().Be(24);
             listItem.Padding.Should().Be(new Thickness(6, 2));
-            GetColor(listPresenter.Background).Should().Be(selectionColor);
+            GetColor(listPresenter.Background).Should().Be(nativeSelectionColor);
             treeItem.MinHeight.Should().Be(24);
-            GetColor(treeLayoutRoot.Background).Should().Be(selectionColor);
+            GetColor(treeLayoutRoot.Background).Should().Be(nativeSelectionColor);
             editor.FontSize.Should().Be(GetResource<double>(Application.Current!, "GitExtensionsFixedWidthFontSize"));
-            GetColor(editor.TextArea.SelectionBrush).Should().Be(selectionColor);
-            GetColor(editor.TextArea.SelectionForeground).Should().Be(selectionForegroundColor);
+            GetColor(editor.TextArea.SelectionBrush).Should().Be(editorSelectionColor);
+            GetColor(editor.TextArea.SelectionForeground).Should().Be(editorSelectionForegroundColor);
+            GetColor(textBox.SelectionBrush).Should().Be(nativeSelectionColor);
+            GetColor(textBox.SelectionForegroundBrush).Should().Be(nativeSelectionForegroundColor);
 
             treeItem.Focus();
             Dispatcher.UIThread.RunJobs();
@@ -1798,6 +1835,16 @@ public sealed class VisualParityTests
             .Should().Be(ToMediaColor(AvaloniaThemeResources.ResolveSystemColor(
                 settings,
                 System.Drawing.KnownColor.Highlight)));
+        GetResourceBrushColor(application, "GitExtensionsNativeSelectionBackgroundBrush", themeVariant)
+            .Should().Be(ToMediaColor(AvaloniaThemeResources.ResolveSystemColor(
+                settings,
+                System.Drawing.KnownColor.Highlight)));
+        GetResourceBrushColor(application, "GitExtensionsNativeSelectionForegroundBrush", themeVariant)
+            .Should().Be(ToMediaColor(AvaloniaThemeResources.ResolveSystemColor(
+                settings,
+                System.Drawing.KnownColor.HighlightText)));
+        GetResourceBrushColor(application, "GitExtensionsToolStripCheckedBackgroundBrush", themeVariant)
+            .Should().Be(Color.Parse(isDark ? "#28445B" : "#CCE8FF"));
         GetResourceBrushColor(application, "GitExtensionsNativeTabBorderBrush", themeVariant)
             .Should().Be(Color.Parse(isDark ? "#3B3B3B" : "#E5E5E5"));
         GetResourceBrushColor(application, "GitExtensionsBrowseTabUnselectedBackgroundBrush", themeVariant)
