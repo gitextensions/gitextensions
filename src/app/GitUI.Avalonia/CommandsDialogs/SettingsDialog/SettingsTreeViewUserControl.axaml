@@ -8,10 +8,10 @@
              d:DesignHeight="220">
   <UserControl.Styles>
     <Style Selector="TreeViewItem.settings-search-match /template/ Border#PART_LayoutRoot">
-      <Setter Property="Background" Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeSelectionBackgroundBrush}" />
     </Style>
     <Style Selector="TreeViewItem.settings-search-match TextBlock">
-      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsSelectionForegroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsNativeSelectionForegroundBrush}" />
     </Style>
   </UserControl.Styles>
   <Grid RowDefinitions="8,Auto,8,*">
