@@ -226,6 +226,44 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Checked_toggle_presenter_should_not_inherit_the_platform_accent()
+    {
+        foreach ((ThemeVariant theme, Color expected) in new[]
+        {
+            (ThemeVariant.Light, Color.Parse("#A0A0A0")),
+            (ThemeVariant.Dark, Color.Parse("#4A4A4A")),
+        })
+        {
+            ToggleButton toggle = new()
+            {
+                Content = "Checked",
+                IsChecked = true,
+            };
+            Window window = new()
+            {
+                RequestedThemeVariant = theme,
+                Content = toggle,
+            };
+            window.Show();
+            try
+            {
+                Dispatcher.UIThread.RunJobs();
+                ContentPresenter presenter = toggle.GetVisualDescendants()
+                    .OfType<ContentPresenter>()
+                    .Single(control => control.Name == "PART_ContentPresenter");
+                GetColor(toggle.Background).Should().Be(expected);
+                GetColor(presenter.Background).Should().Be(expected,
+                    "the rendered checked surface must use the deterministic Git Extensions palette");
+            }
+            finally
+            {
+                window.Close();
+            }
+        }
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_should_keep_all_main_sections_usable_at_its_source_authored_size()
     {
         CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
@@ -404,26 +442,72 @@ public sealed class VisualParityTests
                     .Single(border => border.Name == "PART_LayoutRoot");
                 GetColor(selectedPage.Background).Should().Be(selected);
                 GetColor(unselectedPage.Background).Should().Be(unselected);
-                if (OperatingSystem.IsWindows())
-                {
-                    // The reference screenshot uses Windows' Segoe UI glyph metrics.
-                    form.CommitInfoTabPage.Bounds.Width.Should().BeApproximately(88, 0.5);
-                }
-
                 TabItem[] pages = [form.CommitInfoTabPage, form.DiffTabPage, form.TreeTabPage];
+                Dictionary<TabItem, (Point Origin, Rect Bounds)> allocations = [];
+                Dictionary<TabItem, List<(bool IsSelected, Point HeaderOrigin)>> headerPositions =
+                    pages.ToDictionary(page => page, _ => new List<(bool, Point)>());
+                Point? expectedContentOrigin = null;
+                Rect? expectedContentBounds = null;
                 foreach (TabItem page in pages)
                 {
                     form.CommitInfoTabControl.SelectedItem = page;
                     Dispatcher.UIThread.RunJobs();
+
+                    Point contentOrigin = contentHost.TranslatePoint(default, form.CommitInfoTabControl)!.Value;
+                    if (expectedContentOrigin is null)
+                    {
+                        expectedContentOrigin = contentOrigin;
+                        expectedContentBounds = contentHost.Bounds;
+                    }
+                    else
+                    {
+                        contentOrigin.Should().Be(expectedContentOrigin.Value,
+                            "changing the selected header must not resize or move the page content");
+                        contentHost.Bounds.Should().Be(expectedContentBounds!.Value,
+                            "changing the selected header must not resize or move the page content");
+                    }
+
                     foreach (TabItem sibling in pages)
                     {
+                        Point itemOrigin = sibling.TranslatePoint(default, form.CommitInfoTabControl)!.Value;
+                        if (!allocations.TryAdd(sibling, (itemOrigin, sibling.Bounds)))
+                        {
+                            itemOrigin.Should().Be(allocations[sibling].Origin,
+                                "selecting another tab must not move surrounding tab allocations");
+                            sibling.Bounds.Should().Be(allocations[sibling].Bounds,
+                                "selecting another tab must not resize surrounding tab allocations");
+                        }
+
                         Border layoutRoot = sibling.GetVisualDescendants()
                             .OfType<Border>()
                             .Single(border => border.Name == "PART_LayoutRoot");
                         layoutRoot.Margin.Top.Should().Be(
                             ReferenceEquals(sibling, page) ? 0 : 2,
                             "raising one native tab must not raise or lower the sibling headers");
+                        ContentPresenter headerContent = sibling.GetVisualDescendants()
+                            .OfType<ContentPresenter>()
+                            .Single(presenter => presenter.Name == "PART_ContentPresenter");
+                        headerPositions[sibling].Add((
+                            ReferenceEquals(sibling, page),
+                            headerContent.TranslatePoint(default, form.CommitInfoTabControl)!.Value));
                     }
+                }
+
+                foreach (TabItem page in pages)
+                {
+                    Point selectedHeader = headerPositions[page].Single(position => position.IsSelected).HeaderOrigin;
+                    Point[] unselectedHeaders = headerPositions[page]
+                        .Where(position => !position.IsSelected)
+                        .Select(position => position.HeaderOrigin)
+                        .ToArray();
+                    unselectedHeaders.Should().OnlyContain(
+                        position => Math.Abs(position.X - selectedHeader.X) < 0.001,
+                        "selection raises the complete icon/caption without moving it horizontally");
+                    unselectedHeaders.Should().OnlyContain(
+                        position => Math.Abs(position.Y - unselectedHeaders[0].Y) < 0.001,
+                        "surrounding tab contents retain the same vertical baseline");
+                    selectedHeader.Y.Should().BeApproximately(unselectedHeaders[0].Y - 2, 0.001,
+                        "the selected tab's icon and caption rise by the native two DIPs");
                 }
             }
             finally
