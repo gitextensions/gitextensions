@@ -675,6 +675,14 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         Title = _appTitleGenerator!.Generate(module.WorkingDir, isValidWorkingDir, branchName);
 
         refreshToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        refreshToolStripMenuItem.InputGesture = isValidWorkingDir ? new KeyGesture(Key.F5) : null;
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(
+            refreshToolStripMenuItem,
+            isValidWorkingDir ? "F5" : string.Empty);
+        refreshDashboardToolStripMenuItem.InputGesture = isValidWorkingDir ? null : new KeyGesture(Key.F5);
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(
+            refreshDashboardToolStripMenuItem,
+            isValidWorkingDir ? string.Empty : "F5");
         repositoryToolStripMenuItem.IsVisible = isValidWorkingDir;
         dashboardToolStripMenuItem.IsVisible = !isValidWorkingDir;
         _formBrowseMenus?.SetVisible(isValidWorkingDir);

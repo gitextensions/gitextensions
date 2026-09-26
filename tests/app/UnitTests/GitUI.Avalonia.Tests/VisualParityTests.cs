@@ -365,7 +365,7 @@ public sealed class VisualParityTests
         foreach ((ThemeVariant theme, Color header, Color selected, Color unselected) in new[]
         {
             (ThemeVariant.Light, Color.Parse("#FFFFFF"), Color.Parse("#F9F9F9"), Color.Parse("#F3F3F3")),
-            (ThemeVariant.Dark, Color.Parse("#323232"), Color.Parse("#323232"), Color.Parse("#3B3B3B")),
+            (ThemeVariant.Dark, Color.Parse("#323232"), Color.Parse("#323232"), Color.Parse("#202020")),
         })
         {
             FormBrowse form = new()
@@ -1794,6 +1794,18 @@ public sealed class VisualParityTests
 
         GetResourceBrushColor(application, "GitExtensionsRevisionAlternatingRowBrush", themeVariant)
             .Should().Be(ToMediaColor(panel.MakeDarkerBy(isDark ? -0.018 : 0.025)));
+        GetResourceBrushColor(application, "GitExtensionsDataGridViewSelectionBackgroundBrush", themeVariant)
+            .Should().Be(ToMediaColor(AvaloniaThemeResources.ResolveSystemColor(
+                settings,
+                System.Drawing.KnownColor.Highlight)));
+        GetResourceBrushColor(application, "GitExtensionsNativeTabBorderBrush", themeVariant)
+            .Should().Be(Color.Parse(isDark ? "#3B3B3B" : "#E5E5E5"));
+        GetResourceBrushColor(application, "GitExtensionsBrowseTabUnselectedBackgroundBrush", themeVariant)
+            .Should().Be(Color.Parse(isDark ? "#202020" : "#F3F3F3"));
+        GetResourceBrushColor(application, "GitExtensionsNativeScrollBarBackgroundBrush", themeVariant)
+            .Should().Be(Color.Parse(isDark ? "#171717" : "#F0F0F0"));
+        GetResourceBrushColor(application, "GitExtensionsNativeScrollBarThumbBrush", themeVariant)
+            .Should().Be(Color.Parse(isDark ? "#959595" : "#858585"));
         GetResourceBrushColor(application, "GitExtensionsRevisionAuthoredBrush", themeVariant)
             .Should().Be(ToMediaColor(AvaloniaThemeResources.ResolveAppColor(settings, AppColor.AuthoredHighlight)));
         GetResourceBrushColor(application, "GitExtensionsRevisionSelectedSubjectBrush", themeVariant)

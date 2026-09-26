@@ -276,7 +276,7 @@
           <SolidColorBrush x:Key="GitExtensionsDialogControlsBackgroundBrush" Color="#EEEEEE" />
           <SolidColorBrush x:Key="GitExtensionsReadOnlyTextInputBackgroundBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsDataGridViewGridLineBrush" Color="#646464" />
-          <SolidColorBrush x:Key="GitExtensionsDataGridViewSelectionBackgroundBrush" Color="#0078D4" />
+          <SolidColorBrush x:Key="GitExtensionsDataGridViewSelectionBackgroundBrush" Color="#0078D7" />
           <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#FDFDFD" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBorderBrush" Color="#D0D0D0" />
@@ -292,6 +292,9 @@
           <SolidColorBrush x:Key="GitExtensionsNativeTabUnselectedBackgroundBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsBrowseTabSelectedBackgroundBrush" Color="#F9F9F9" />
           <SolidColorBrush x:Key="GitExtensionsBrowseTabUnselectedBackgroundBrush" Color="#F3F3F3" />
+          <SolidColorBrush x:Key="GitExtensionsNativeScrollBarBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeScrollBarThumbBrush" Color="#858585" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripOverflowBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabPageBackgroundBrush" Color="Transparent" />
           <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#FDFDFD" />
@@ -431,7 +434,10 @@
           <SolidColorBrush x:Key="GitExtensionsNativeTabSelectedBackgroundBrush" Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabUnselectedBackgroundBrush" Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsBrowseTabSelectedBackgroundBrush" Color="#323232" />
-          <SolidColorBrush x:Key="GitExtensionsBrowseTabUnselectedBackgroundBrush" Color="#3B3B3B" />
+          <SolidColorBrush x:Key="GitExtensionsBrowseTabUnselectedBackgroundBrush" Color="#202020" />
+          <SolidColorBrush x:Key="GitExtensionsNativeScrollBarBackgroundBrush" Color="#171717" />
+          <SolidColorBrush x:Key="GitExtensionsNativeScrollBarThumbBrush" Color="#959595" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripOverflowBackgroundBrush" Color="#232323" />
           <SolidColorBrush x:Key="GitExtensionsNativeTabPageBackgroundBrush" Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#2F2F2F" />
