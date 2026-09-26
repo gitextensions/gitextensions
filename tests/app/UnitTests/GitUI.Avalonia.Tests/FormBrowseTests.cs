@@ -721,7 +721,7 @@ public sealed class FormBrowseTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void FormBrowse_should_paint_source_tab_overflow_and_tree_scrollbar_surfaces()
+    public void FormBrowse_should_paint_source_tab_overflow_and_toolbar_surfaces_with_the_shared_scrollbar()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
         using FormBrowse form = new(new GitUICommands(_serviceContainer, module))
@@ -736,11 +736,11 @@ public sealed class FormBrowseTests
             new TreeViewItem { Header = new string('W', 80) },
         };
 
-        foreach ((ThemeVariant theme, string tab, string overflow, string track, string thumb) in
+        foreach ((ThemeVariant theme, string tab, string overflow, string scrollThumb, string toolStripChecked) in
                  new[]
                  {
-                     (ThemeVariant.Light, "#FFF3F3F3", "#FFFFFFFF", "#FFF0F0F0", "#FF858585"),
-                     (ThemeVariant.Dark, "#FF202020", "#FF232323", "#FF171717", "#FF959595"),
+                     (ThemeVariant.Light, "#FFF3F3F3", "#FFFFFFFF", "#33000000", "#FFCCE8FF"),
+                     (ThemeVariant.Dark, "#FF202020", "#FF232323", "#33FFFFFF", "#FF28445B"),
                  })
         {
             form.RequestedThemeVariant = theme;
@@ -758,20 +758,11 @@ public sealed class FormBrowseTests
             Avalonia.Controls.Primitives.Thumb position = horizontal.GetVisualDescendants()
                 .OfType<Avalonia.Controls.Primitives.Thumb>()
                 .Single();
-            Border indicator = position.GetVisualDescendants()
-                .OfType<Border>()
-                .Single(border => border.Name == "PART_NativeIndicator");
             horizontal.Bounds.Height.Should().Be(17);
-            GetColor(horizontal.Background).Should().Be(Color.Parse(track));
-            position.Bounds.Height.Should().Be(17);
-            position.IsHitTestVisible.Should().BeTrue();
-            indicator.Bounds.Height.Should().Be(2);
-            GetColor(indicator.Background).Should().Be(Color.Parse(thumb));
-
-            Point thumbHitPoint = position.TranslatePoint(new Point(position.Bounds.Width / 2, 1), form)!.Value;
-            Avalonia.Visual? hit = form.InputHitTest(thumbHitPoint) as Avalonia.Visual;
-            hit?.GetSelfAndVisualAncestors().Should().Contain(position,
-                "the full native scrollbar row, not only its two-pixel indicator, must accept mouse input");
+            GetColor(position.Background).Should().Be(Color.Parse(scrollThumb));
+            position.GetVisualDescendants().Should().NotContain(
+                visual => visual.Name == "PART_NativeIndicator",
+                "the repository tree uses the same unmodified scrollbar template as other views");
 
             foreach (string name in new[]
                      {
@@ -793,9 +784,22 @@ public sealed class FormBrowseTests
 
             Button toggleLeftPanel = form.FindControl<Button>("toggleLeftPanel")!;
             toggleLeftPanel.Classes.Should().Contain("checked");
-            GetColor(toggleLeftPanel.Background).Should().Be(
-                Color.Parse(theme == ThemeVariant.Dark ? "#28445B" : "#CCE8FF"));
+            GetColor(toggleLeftPanel.Background).Should().Be(Color.Parse(toolStripChecked));
+            GetColor(GetPresenter(toggleLeftPanel).Background).Should().Be(Color.Parse(toolStripChecked));
+
+            Avalonia.Controls.Primitives.ToggleButton showSubmodules =
+                form.repoObjectsTree.FindControl<Avalonia.Controls.Primitives.ToggleButton>("tsbShowSubmodules")!;
+            showSubmodules.IsChecked = true;
+            Dispatcher.UIThread.RunJobs();
+            GetColor(showSubmodules.Background).Should().Be(Color.Parse(toolStripChecked));
+            GetColor(GetPresenter(showSubmodules).Background).Should().Be(Color.Parse(toolStripChecked),
+                "the rendered toggle surface must not inherit Fluent's purple platform accent");
         }
+
+        static Avalonia.Controls.Presenters.ContentPresenter GetPresenter(Control control)
+            => control.GetVisualDescendants()
+                .OfType<Avalonia.Controls.Presenters.ContentPresenter>()
+                .Single(presenter => presenter.Name == "PART_ContentPresenter");
 
         static Color GetColor(IBrush? brush)
             => brush.Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
