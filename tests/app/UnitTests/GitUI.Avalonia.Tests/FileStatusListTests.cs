@@ -1,4 +1,6 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Selection;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
@@ -491,6 +493,7 @@ public sealed class FileStatusListTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void FileStatusList_tree_modes_should_share_the_native_hierarchy_connectors()
     {
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
@@ -532,12 +535,49 @@ public sealed class FileStatusListTests
                 Dispatcher.UIThread.RunJobs();
             }
 
-            TreeViewItem file = accessor.Tree.GetVisualDescendants().OfType<TreeViewItem>()
-                .First(item => item.GetVisualDescendants().OfType<TextBlock>()
-                    .Any(text => text.Text == "first.cs"));
+            TreeViewItem file = FindItem("first.cs");
             file.GetVisualDescendants().OfType<Image>().First().Source
                 .Should().NotBeSameAs(Images.FileStatusUnknown,
                     "the source file-tree group uses a file-type icon even without grep/status flags");
+
+            TreeViewItem sourceFolder = FindItem("src");
+            TreeViewItem nestedFolder = FindItem("folder");
+            TreeViewItem secondFile = FindItem("second.cs");
+            double sourceHeaderX = HeaderX(sourceFolder);
+            HeaderX(nestedFolder).Should().Be(sourceHeaderX + 14,
+                "FileStatusList explicitly sets the native TreeView indent to 14 at 96 DPI");
+            HeaderX(file).Should().Be(sourceHeaderX + 28);
+            HeaderX(secondFile).Should().Be(sourceHeaderX + 28);
+
+            Panel leafChevronHost = file.GetVisualDescendants()
+                .OfType<Panel>()
+                .Single(panel => panel.Name == "PART_ExpandCollapseChevronContainer");
+            leafChevronHost.Bounds.Width.Should().Be(12,
+                "native leaf rows retain the empty expander slot before their icon");
+
+            TreeConnectorControl firstConnector = file.GetVisualDescendants()
+                .OfType<TreeConnectorControl>()
+                .Single();
+            TreeConnectorControl secondConnector = secondFile.GetVisualDescendants()
+                .OfType<TreeConnectorControl>()
+                .Single();
+            firstConnector.IsLastSibling.Should().BeFalse();
+            secondConnector.IsLastSibling.Should().BeTrue(
+                "data-bound containers must use their model's sibling index");
+
+            TreeViewItem FindItem(string text)
+                => accessor.Tree.GetVisualDescendants().OfType<TreeViewItem>()
+                    .Single(item => item.GetVisualDescendants().OfType<ContentPresenter>()
+                        .Where(presenter => presenter.Name == "PART_HeaderPresenter"
+                            && presenter.FindAncestorOfType<TreeViewItem>() == item)
+                        .SelectMany(presenter => presenter.GetVisualDescendants().OfType<TextBlock>())
+                        .Any(block => block.Text == text));
+
+            double HeaderX(TreeViewItem item)
+                => item.GetVisualDescendants().OfType<ContentPresenter>()
+                    .Single(presenter => presenter.Name == "PART_HeaderPresenter"
+                        && presenter.FindAncestorOfType<TreeViewItem>() == item)
+                    .TranslatePoint(default, accessor.Tree)!.Value.X;
         }
         finally
         {

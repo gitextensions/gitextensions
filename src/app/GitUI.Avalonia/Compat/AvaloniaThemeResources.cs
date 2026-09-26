@@ -192,7 +192,10 @@ internal static class AvaloniaThemeResources
         DrawingColor mergeConflicts = isDark
             ? DrawingColor.FromArgb(112, 18, 18)
             : DrawingColor.FromArgb(230, 99, 99);
-        DrawingColor treeConnector = ColorHelper.Lerp(panel, windowText, isDark ? 0.38f : 0.46f);
+
+        // Native TreeView resolves its dotted hierarchy renderer to the same #6D6D6D
+        // pixels in the paired light, dark, and custom WinForms captures.
+        DrawingColor treeConnector = DrawingColor.FromArgb(109, 109, 109);
         DrawingColor refLabelBackground = isDark ? ColorHelper.Lerp(panel, DrawingColor.Black, 0.36f) : panel;
         DrawingColor removedBackground = ResolveAppColor(settings, AppColor.AnsiTerminalRedBackNormal);
         DrawingColor addedBackground = ResolveAppColor(settings, AppColor.AnsiTerminalGreenBackNormal);

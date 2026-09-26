@@ -25,7 +25,9 @@
       <FontStyle x:Key="GitExtensionsMonospaceFontStyle">Normal</FontStyle>
       <FontWeight x:Key="GitExtensionsMonospaceFontWeight">Normal</FontWeight>
       <FontFamily x:Key="GitExtensionsGenericMonospaceFontFamily">Courier New</FontFamily>
-      <x:Double x:Key="GitExtensionsTreeViewItemIndent">18</x:Double>
+      <!-- System.Windows.Forms.TreeView.Indent defaults to 19 at 96 DPI. FileStatusList
+           overrides this resource with its source-authored 14-DIP indent. -->
+      <x:Double x:Key="GitExtensionsTreeViewItemIndent">19</x:Double>
       <Thickness x:Key="GitExtensionsTreeViewChevronMargin">4,0</Thickness>
       <SolidColorBrush x:Key="GitExtensionsTransparentBrush" Color="Transparent" />
       <SolidColorBrush x:Key="GitExtensionsErrorForegroundBrush" Color="Red" />
@@ -340,7 +342,7 @@
           <SolidColorBrush x:Key="GitExtensionsOtherRefBrush"
                            Color="#808080" />
           <SolidColorBrush x:Key="GitExtensionsTreeConnectorBrush"
-                           Color="#8A8A8A" />
+                           Color="#6D6D6D" />
           <SolidColorBrush x:Key="GitExtensionsValidFilterBackgroundBrush"
                            Color="#C8FFC8" />
           <SolidColorBrush x:Key="GitExtensionsInvalidFilterBackgroundBrush"
@@ -488,7 +490,7 @@
           <SolidColorBrush x:Key="GitExtensionsOtherRefBrush"
                            Color="#CFB3B3" />
           <SolidColorBrush x:Key="GitExtensionsTreeConnectorBrush"
-                           Color="#7A7A7A" />
+                           Color="#6D6D6D" />
           <SolidColorBrush x:Key="GitExtensionsValidFilterBackgroundBrush"
                            Color="#274439" />
           <SolidColorBrush x:Key="GitExtensionsInvalidFilterBackgroundBrush"
@@ -1430,7 +1432,8 @@
                   MinHeight="{TemplateBinding MinHeight}"
                   TemplatedControl.IsTemplateFocusTarget="True">
             <Grid x:Name="PART_Header">
-              <leftpanel:TreeConnectorControl IsHitTestVisible="False" />
+              <leftpanel:TreeConnectorControl Indent="{DynamicResource GitExtensionsTreeViewItemIndent}"
+                                              IsHitTestVisible="False" />
               <Grid x:Name="PART_NativeHeaderContent" ColumnDefinitions="Auto,Auto" HorizontalAlignment="Left">
                 <Grid.Margin>
                   <MultiBinding Converter="{x:Static converters:TreeViewItemIndentConverter.Instance}">
@@ -1439,6 +1442,7 @@
                   </MultiBinding>
                 </Grid.Margin>
                 <Panel x:Name="PART_ExpandCollapseChevronContainer"
+                       Width="12"
                        Margin="{StaticResource GitExtensionsTreeViewChevronMargin}">
                   <ToggleButton x:Name="PART_ExpandCollapseChevron"
                                 Theme="{StaticResource FluentTreeViewExpandCollapseChevron}"
@@ -1464,10 +1468,10 @@
       </ControlTemplate>
     </Setter>
   </Style>
-  <Style Selector="TreeView.gitextensions-native-tree TreeViewItem.leaf-node /template/ Panel#PART_ExpandCollapseChevronContainer,
-                   TreeView.gitextensions-native-tree TreeViewItem.diff-group-header /template/ Panel#PART_ExpandCollapseChevronContainer">
-    <Setter Property="Width" Value="0" />
-    <Setter Property="Margin" Value="0" />
+  <!-- Native TreeView reserves the complete expander slot for every item. Hide only the
+       glyph for leaves/group headers; collapsing its host shifts their icon and line left. -->
+  <Style Selector="TreeView.gitextensions-native-tree TreeViewItem.leaf-node /template/ ToggleButton#PART_ExpandCollapseChevron,
+                   TreeView.gitextensions-native-tree TreeViewItem.diff-group-header /template/ ToggleButton#PART_ExpandCollapseChevron">
     <Setter Property="IsVisible" Value="False" />
   </Style>
   <Style Selector="TreeView.gitextensions-native-tree TreeViewItem:selected /template/ Border#PART_LayoutRoot">
