@@ -12,6 +12,24 @@
     <Style Selector="TreeViewItem.worktree-deleted TextBlock">
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
     </Style>
+    <!-- WinForms' permanent horizontal tree scrollbar uses a flat track and a two-pixel
+         position indicator; it does not paint Fluent's full-height thumb or arrow glyphs. -->
+    <Style Selector="TreeView.gitextensions-native-tree ScrollBar:horizontal">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeScrollBarBackgroundBrush}" />
+    </Style>
+    <Style Selector="TreeView.gitextensions-native-tree ScrollBar:horizontal /template/ RepeatButton">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeScrollBarBackgroundBrush}" />
+      <Setter Property="Foreground" Value="Transparent" />
+    </Style>
+    <Style Selector="TreeView.gitextensions-native-tree ScrollBar:horizontal /template/ Thumb">
+      <Setter Property="Height" Value="2" />
+      <Setter Property="Margin" Value="2,0" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeScrollBarThumbBrush}" />
+    </Style>
+    <Style Selector="TreeView.gitextensions-native-tree ScrollBar:horizontal /template/ Thumb:pointerover">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeScrollBarThumbBrush}" />
+    </Style>
   </UserControl.Styles>
   <Grid x:Name="repoTreePanel" RowDefinitions="25,26,*">
     <StackPanel x:Name="leftPanelToolStrip"

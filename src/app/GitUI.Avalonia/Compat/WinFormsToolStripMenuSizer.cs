@@ -28,6 +28,9 @@ internal static class WinFormsToolStripMenuSizer
         }
     }
 
+    internal static string? GetShortcutDisplayString(MenuItem item)
+        => ShortcutDisplays.TryGetValue(item, out ShortcutDisplay? display) ? display.Value : null;
+
     public static void Apply(ItemsControl owner)
     {
         Apply(owner, [.. owner.Items.OfType<MenuItem>()], owner is ContextMenu or MenuItem);

@@ -164,15 +164,13 @@ internal static class AvaloniaThemeResources
             ? DrawingColor.FromArgb(204, 204, 204)
             : DrawingColor.FromArgb(160, 160, 160);
         DrawingColor nativeTabBorder = isDark
-            ? DrawingColor.FromArgb(74, 74, 74)
-            : DrawingColor.FromArgb(217, 217, 217);
+            ? DrawingColor.FromArgb(59, 59, 59)
+            : DrawingColor.FromArgb(229, 229, 229);
         DrawingColor nativeTabSelectedBackground = isDark ? control : window;
         DrawingColor nativeTabPageBackground = isDark ? control : DrawingColor.Transparent;
         DrawingColor highlight = ResolveSystemColor(settings, KnownColor.Highlight);
         DrawingColor highlightText = ResolveSystemColor(settings, KnownColor.HighlightText);
-        DrawingColor dataGridViewSelectionBackground = isDark
-            ? highlight
-            : DrawingColor.FromArgb(0, 120, 212);
+        DrawingColor dataGridViewSelectionBackground = highlight;
         DrawingColor inactiveSelection = ResolveSystemColor(settings, KnownColor.InactiveCaption);
         DrawingColor inactiveSelectionText = ResolveSystemColor(settings, KnownColor.InactiveCaptionText);
         DrawingColor info = ResolveSystemColor(settings, KnownColor.Info);
