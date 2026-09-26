@@ -45,6 +45,20 @@
     <Style Selector="Button.gitextensions-toolbar-button.gitextensions-toolbar-first">
       <Setter Property="Margin" Value="5,1,0,2" />
     </Style>
+    <Style Selector="Button.gitextensions-toolbar-overflow">
+      <Setter Property="Width" Value="11" />
+      <Setter Property="MinWidth" Value="11" />
+      <Setter Property="Height" Value="25" />
+      <Setter Property="MinHeight" Value="25" />
+      <Setter Property="Margin" Value="0" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripOverflowBackgroundBrush}" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="CornerRadius" Value="0" />
+    </Style>
+    <Style Selector="Button.gitextensions-toolbar-overflow:pointerover">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripOverflowBackgroundBrush}" />
+    </Style>
     <Style Selector="Border.gitextensions-toolbar-separator">
       <Setter Property="Width" Value="6" />
       <Setter Property="Height" Value="25" />
@@ -253,7 +267,7 @@
       <wf:ToolStripPanel x:Name="_topPanel" Height="27" ClipToBounds="True">
       <!-- Keep Stash visible at the normal Browse width while the following separator
            and File Explorer remain in overflow, as on the source ToolStrip. -->
-      <Grid x:Name="toolStripMainHost" ColumnDefinitions="*,10,Auto" Height="25" ClipToBounds="True">
+      <Grid x:Name="toolStripMainHost" ColumnDefinitions="*,10,16" Height="25" ClipToBounds="True">
         <ScrollViewer x:Name="toolStripMainViewport"
                       Grid.Column="0"
                       Height="25"
@@ -415,16 +429,13 @@
         </ScrollViewer>
         <Button x:Name="toolStripMainOverflow"
                 Grid.Column="2"
-                Width="16"
-                MinWidth="0"
-                Height="23"
-                Padding="0"
+                HorizontalAlignment="Right"
                 Focusable="False"
-                Classes="gitextensions-toolbar-button"
+                Classes="gitextensions-toolbar-button gitextensions-toolbar-overflow"
                 Content="»"
                 ToolTip.Tip="More toolbar commands" />
       </Grid>
-      <Grid x:Name="toolStripFiltersHost" ColumnDefinitions="*,Auto" Height="27" ClipToBounds="True">
+      <Grid x:Name="toolStripFiltersHost" ColumnDefinitions="*,16" Height="27" ClipToBounds="True">
         <ScrollViewer x:Name="toolStripFiltersViewport"
                       Grid.Column="0"
                       Height="27"
@@ -434,12 +445,9 @@
         </ScrollViewer>
         <Button x:Name="toolStripFiltersOverflow"
                 Grid.Column="1"
-                Width="16"
-                MinWidth="0"
-                Height="23"
-                Padding="0"
+                HorizontalAlignment="Right"
                 Focusable="False"
-                Classes="gitextensions-toolbar-button"
+                Classes="gitextensions-toolbar-button gitextensions-toolbar-overflow"
                 Content="»"
                 ToolTip.Tip="More filter commands" />
       </Grid>

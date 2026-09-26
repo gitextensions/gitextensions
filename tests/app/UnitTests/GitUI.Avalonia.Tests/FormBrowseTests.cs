@@ -108,7 +108,7 @@ public sealed class FormBrowseTests
 
             Button overflow = form.FindControl<Button>("toolStripMainOverflow")!;
             overflow.IsVisible.Should().BeTrue();
-            overflow.Bounds.Width.Should().Be(16);
+            overflow.Bounds.Width.Should().Be(11);
 
             foreach ((ThemeVariant theme, string background, string foreground, string sourceForeground, string windowText) in
                      new[]
@@ -717,6 +717,55 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void FormBrowse_should_paint_source_tab_overflow_and_tree_scrollbar_surfaces()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module))
+        {
+            Width = 923,
+            Height = 573,
+        };
+        form.Show();
+        TreeView tree = form.repoObjectsTree.FindControl<TreeView>("treeMain")!;
+        tree.ItemsSource = new object[]
+        {
+            new TreeViewItem { Header = new string('W', 80) },
+        };
+
+        foreach ((ThemeVariant theme, string tab, string overflow, string track, string thumb) in
+                 new[]
+                 {
+                     (ThemeVariant.Light, "#FFF3F3F3", "#FFFFFFFF", "#FFF0F0F0", "#FF858585"),
+                     (ThemeVariant.Dark, "#FF202020", "#FF232323", "#FF171717", "#FF959595"),
+                 })
+        {
+            form.RequestedThemeVariant = theme;
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            Border unselectedTabSurface = form.DiffTabPage.GetVisualDescendants()
+                .OfType<Border>()
+                .Single(border => border.Name == "PART_LayoutRoot");
+            GetColor(unselectedTabSurface.Background).Should().Be(Color.Parse(tab));
+            GetColor(form.FindControl<Button>("toolStripMainOverflow")!.Background).Should().Be(Color.Parse(overflow));
+            Avalonia.Controls.Primitives.ScrollBar horizontal = tree.GetVisualDescendants()
+                .OfType<Avalonia.Controls.Primitives.ScrollBar>()
+                .Single(scrollBar => scrollBar.Orientation == Avalonia.Layout.Orientation.Horizontal);
+            Avalonia.Controls.Primitives.Thumb position = horizontal.GetVisualDescendants()
+                .OfType<Avalonia.Controls.Primitives.Thumb>()
+                .Single();
+            horizontal.Bounds.Height.Should().Be(17);
+            GetColor(horizontal.Background).Should().Be(Color.Parse(track));
+            position.Bounds.Height.Should().Be(2);
+            GetColor(position.Background).Should().Be(Color.Parse(thumb));
+        }
+
+        static Color GetColor(IBrush? brush)
+            => brush.Should().BeOfType<SolidColorBrush>().Which.Color;
+    }
+
+    [AvaloniaTest]
     public async Task FormBrowse_should_focus_the_revision_list_after_loading_and_when_commanded()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
@@ -1272,6 +1321,36 @@ public sealed class FormBrowseTests
             "recoverLostObjectsToolStripMenuItem",
             "deleteIndexLockToolStripMenuItem",
             "editLocalGitConfigToolStripMenuItem");
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void FormBrowse_refresh_shortcut_should_follow_the_visible_repository_or_dashboard_menu()
+    {
+        GitModule repository = CreateRepositoryWithInitialCommit();
+        using FormBrowse repositoryForm = new(new GitUICommands(_serviceContainer, repository));
+
+        repositoryForm.refreshToolStripMenuItem.InputGesture.Should().Be(new KeyGesture(Key.F5));
+        WinFormsToolStripMenuSizer.GetShortcutDisplayString(repositoryForm.refreshToolStripMenuItem).Should().Be("F5");
+        repositoryForm.refreshDashboardToolStripMenuItem.InputGesture.Should().BeNull();
+        WinFormsToolStripMenuSizer.GetShortcutDisplayString(repositoryForm.refreshDashboardToolStripMenuItem).Should().BeNull();
+
+        string nonRepositoryPath = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.Dashboard-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(nonRepositoryPath);
+        try
+        {
+            GitModule dashboard = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), nonRepositoryPath);
+            using FormBrowse dashboardForm = new(new GitUICommands(_serviceContainer, dashboard));
+
+            dashboardForm.refreshToolStripMenuItem.InputGesture.Should().BeNull();
+            WinFormsToolStripMenuSizer.GetShortcutDisplayString(dashboardForm.refreshToolStripMenuItem).Should().BeNull();
+            dashboardForm.refreshDashboardToolStripMenuItem.InputGesture.Should().Be(new KeyGesture(Key.F5));
+            WinFormsToolStripMenuSizer.GetShortcutDisplayString(dashboardForm.refreshDashboardToolStripMenuItem).Should().Be("F5");
+        }
+        finally
+        {
+            TestDirectory.Delete(nonRepositoryPath);
+        }
     }
 
     [AvaloniaTest]
