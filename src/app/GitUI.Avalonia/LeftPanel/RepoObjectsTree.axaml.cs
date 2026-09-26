@@ -1045,8 +1045,21 @@ internal sealed class TreeConnectorControl : Control
     private const double ChevronCenter = 10;
     private const double ChevronGapHalfHeight = 6;
     private const double ChevronGapHalfWidth = 6;
-    private const double Indent = 18;
     private static readonly DashStyle DottedLine = new([1, 1], 0);
+
+    public static readonly StyledProperty<double> IndentProperty =
+        AvaloniaProperty.Register<TreeConnectorControl, double>(nameof(Indent), 19);
+
+    public TreeConnectorControl()
+    {
+        RenderOptions.SetEdgeMode(this, EdgeMode.Aliased);
+    }
+
+    public double Indent
+    {
+        get => GetValue(IndentProperty);
+        set => SetValue(IndentProperty, value);
+    }
 
     internal TreeViewItem? Item => this.FindAncestorOfType<TreeViewItem>();
 
@@ -1144,7 +1157,15 @@ internal sealed class TreeConnectorControl : Control
         ItemCollection siblings = parentItem is not null
             ? parentItem.Items
             : item.GetVisualAncestors().OfType<TreeView>().First().Items;
-        return (Math.Max(siblings.IndexOf(item), 0), siblings.Count);
+        int index = siblings.IndexOf(item);
+        if (index < 0 && item.DataContext is not null)
+        {
+            // Data-bound TreeViews store the model in Items and generate TreeViewItem
+            // containers. Native sibling lines follow the model order, not realization order.
+            index = siblings.IndexOf(item.DataContext);
+        }
+
+        return (Math.Max(index, 0), siblings.Count);
     }
 
     private IBrush GetConnectorBrush()

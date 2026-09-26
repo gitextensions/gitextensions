@@ -1053,6 +1053,7 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void RepoObjectsTree_should_render_parent_child_connectors()
     {
         RepoObjectsTree control = new();
@@ -1060,7 +1061,7 @@ public sealed class VisualParityTests
         [
             CreateRef("first", isHead: true),
             CreateRef("second", isHead: true),
-        ]);
+        ], []);
 
         Window window = new()
         {
@@ -1087,7 +1088,7 @@ public sealed class VisualParityTests
                 .ToArray();
 
             children.Should().HaveCount(2);
-            connectors.Should().HaveCount(7);
+            connectors.Should().HaveCount(8);
             TreeConnectorControl[] childConnectors = connectors
                 .Where(connector => children.Contains(connector.Item))
                 .ToArray();
@@ -1112,10 +1113,18 @@ public sealed class VisualParityTests
             TextBlock parentText = parentHeader.GetVisualDescendants().OfType<TextBlock>().Single();
             Image childIcon = childHeader.GetVisualDescendants().OfType<Image>().Single();
             TextBlock childText = childHeader.GetVisualDescendants().OfType<TextBlock>().Single();
+            TreeViewItem stashes = tree.Items.Cast<TreeViewItem>()
+                .Single(item => item.GetVisualDescendants().OfType<TextBlock>().Any(text => text.Text == "Stashes"));
+            ContentPresenter stashesHeader = stashes.GetVisualDescendants()
+                .OfType<ContentPresenter>()
+                .Single(presenter => presenter.Name == "PART_HeaderPresenter"
+                    && presenter.FindAncestorOfType<TreeViewItem>() == stashes);
+            Image stashesIcon = stashesHeader.GetVisualDescendants().OfType<Image>().Single();
             double parentIconX = parentIcon.TranslatePoint(default, branches)!.Value.X;
             double parentTextX = parentText.TranslatePoint(default, branches)!.Value.X;
             double childIconX = childIcon.TranslatePoint(default, children[0])!.Value.X;
             double childTextX = childText.TranslatePoint(default, children[0])!.Value.X;
+            double stashesIconX = stashesIcon.TranslatePoint(default, stashes)!.Value.X;
 
             ToggleButton parentChevron = branches.GetVisualDescendants()
                 .OfType<ToggleButton>()
@@ -1126,8 +1135,16 @@ public sealed class VisualParityTests
             parentChevron.Bounds.Size.Should().Be(new Size(12, 12));
             parentIconX.Should().BeApproximately(20, 0.1);
             (parentIconX - parentChevronPosition.X - parentChevron.Bounds.Width).Should().Be(4);
-            childIconX.Should().Be(parentTextX);
-            childTextX.Should().Be(parentTextX + 18);
+            childIconX.Should().Be(parentIconX + 19,
+                "the child icon follows the native TreeView's 19-DIP default indent");
+            childTextX.Should().Be(parentTextX + 19,
+                "the repository tree inherits the native TreeView's 19-DIP default indent");
+            stashesIconX.Should().Be(parentIconX,
+                "native leaf roots reserve the same expander/connector slot as expandable roots");
+            Panel stashesChevronHost = stashes.GetVisualDescendants()
+                .OfType<Panel>()
+                .Single(panel => panel.Name == "PART_ExpandCollapseChevronContainer");
+            stashesChevronHost.Bounds.Width.Should().Be(12);
             window.CaptureRenderedFrame().Should().NotBeNull();
         }
         finally
@@ -1457,6 +1474,7 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void Application_theme_should_follow_built_in_Git_Extensions_settings()
     {
         Application application = Application.Current
@@ -1818,6 +1836,7 @@ public sealed class VisualParityTests
         gitRef.IsTag.Returns(isTag);
         gitRef.IsSelected.Returns(isSelected);
         gitRef.IsSelectedHeadMergeSource.Returns(isSelectedHeadMergeSource);
+        gitRef.ObjectId.Returns(ObjectId.Random());
         gitRef.LocalName.Returns(localName ?? name);
         gitRef.MergeWith.Returns(mergeWith);
         gitRef.Remote.Returns(remote);
@@ -1937,6 +1956,8 @@ public sealed class VisualParityTests
             .Should().Be(Color.Parse(isDark ? "#171717" : "#F0F0F0"));
         GetResourceBrushColor(application, "GitExtensionsNativeScrollBarThumbBrush", themeVariant)
             .Should().Be(Color.Parse(isDark ? "#959595" : "#858585"));
+        GetResourceBrushColor(application, "GitExtensionsTreeConnectorBrush", themeVariant)
+            .Should().Be(Color.Parse("#6D6D6D"));
         GetResourceBrushColor(application, "GitExtensionsRevisionAuthoredBrush", themeVariant)
             .Should().Be(ToMediaColor(AvaloniaThemeResources.ResolveAppColor(settings, AppColor.AuthoredHighlight)));
         GetResourceBrushColor(application, "GitExtensionsRevisionSelectedSubjectBrush", themeVariant)
