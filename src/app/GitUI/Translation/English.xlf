@@ -1345,6 +1345,18 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>&amp;Revision graph</source>
         <target />
       </trans-unit>
+      <trans-unit id="gbxAiDiffPrompt.Text">
+        <source>AI prompt for diff</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiDiffPromptPrefix.Text">
+        <source>Prompt prefix:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiDiffPromptSuffix.Text">
+        <source>Prompt suffix:</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
         <source>&amp;Merge window</source>
         <target />
@@ -1541,6 +1553,18 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>No changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="_aiCaption.Text">
+        <source>AI prompt</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiNoChanges.Text">
+        <source>No changes found for the selected files.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiPromptCopied.Text">
+        <source>AI prompt with {0} chars copied to clipboard.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_assumeUnchangedToolTip.Text">
         <source>Tell git to not check the status of this file for performance benefits.
 Use this feature when a file is big and never change.
@@ -1710,6 +1734,10 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="tsmiCommitSubmoduleChanges.Text">
         <source>&amp;Commit submodule changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCopyAiPromptToClipboard.Text">
+        <source>Copy AI prompt with selected diffs to clipboard (&amp;Q)</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCopyPaths.Text">
