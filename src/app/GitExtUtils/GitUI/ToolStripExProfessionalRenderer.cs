@@ -23,4 +23,9 @@ internal sealed class ToolStripExProfessionalRenderer : ToolStripProfessionalRen
             base.OnRenderToolStripBorder(e);
         }
     }
+
+    protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
+    {
+        ToolStripArrowScaler.RenderScaledArrow(e, base.OnRenderArrow);
+    }
 }

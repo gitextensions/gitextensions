@@ -49,6 +49,11 @@ public static class ThemeFix
         // * FormBrowse menubar background is not overridden.
         // * LinkColor override (in SetupToolStripStatusLabel()).
         strip.RenderMode = ToolStripRenderMode.Professional;
+
+        // RenderMode = Professional swaps in the manager's stock renderer, discarding any extended
+        // renderer (e.g. ToolStripEx's). Re-install the extended renderer so customizations such as
+        // drop-down arrow scaling apply in themed mode too, not just under the system visual style.
+        strip.UseExtendedRenderer();
         foreach (ToolStripLabel item in strip.Items.OfType<ToolStripLabel>())
         {
             SetupToolStripStatusLabel(item);

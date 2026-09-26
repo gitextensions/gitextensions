@@ -20,7 +20,10 @@ public static class ToolStripExtensions
         }
     }
 
-    private static void UseExtendedRenderer(this ToolStrip toolStrip)
+    // Replaces a stock <see cref="ToolStripSystemRenderer"/> or <see cref="ToolStripProfessionalRenderer"/>
+    // with the GitExtensions extended counterpart, so customizations (border control, menu item background
+    // filtering, drop-down arrow scaling) apply. No-op when an extended renderer is already in use.
+    internal static void UseExtendedRenderer(this ToolStrip toolStrip)
     {
         if (toolStrip.Renderer is ToolStripSystemRenderer and not ToolStripExSystemRenderer)
         {
