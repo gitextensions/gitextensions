@@ -25,11 +25,12 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
 {
     private static readonly Lane _noLane = new(Index: -1, LaneSharing.ExclusiveOrPrimary);
 
-    public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments, bool mergeGraphLanesHavingCommonParent)
+    public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments, bool mergeGraphLanesHavingCommonParent, bool revisionLaneIsFixed = false)
     {
         Revision = revision;
         Segments = segments;
         _mergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
+        _revisionLaneIsFixed = revisionLaneIsFixed;
     }
 
     public RevisionGraphRevision Revision { get; }
@@ -37,6 +38,8 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
     public IReadOnlyList<RevisionGraphSegment> Segments { get; }
 
     private readonly bool _mergeGraphLanesHavingCommonParent;
+
+    private readonly bool _revisionLaneIsFixed;
 
     /// <summary>
     /// This dictionary contains a cached list of all segments and the lane index the segment is in for this row.
@@ -248,6 +251,29 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
         return _noLane;
     }
 
+    /// <summary>
+    ///  Returns true if the lane may be moved to the right.
+    ///  Return false if moving the lane is not allowed because this would move the revision node,
+    ///  which is fixed in a reserved lane.
+    /// </summary>
+    public bool LaneMayBeMoved(int lane)
+    {
+        BuildSegmentLanes();
+        if (!_revisionLaneIsFixed || _revisionLane < lane)
+        {
+            // ok, no fixed revision lane to the right of the moved lane
+            return true;
+        }
+
+        if (_gaps is not null && _gaps.Any(gap => gap > lane && gap < _revisionLane))
+        {
+            // ok, lane shift is absorbed by a gap before the revision lane
+            return true;
+        }
+
+        return false;
+    }
+
     public void MoveLanesRight(int fromLane, int by)
     {
         for (; by > 0; --by, ++fromLane)
@@ -267,7 +293,7 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
 
         Validates.NotNull(_segmentLanes);
         RevisionGraphSegment[] segmentsToBeMoved = [.. _segmentLanes.Where(keyValue => keyValue.Value.Index >= fromLane && keyValue.Value.Index < nextGap).Select(keyValue => keyValue.Key)];
-        if (segmentsToBeMoved.Length == 0)
+        if (segmentsToBeMoved.Length == 0 && _revisionLane < fromLane)
         {
             return;
         }
