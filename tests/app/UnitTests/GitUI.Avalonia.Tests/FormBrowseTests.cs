@@ -698,11 +698,14 @@ public sealed class FormBrowseTests
                 page.Padding.Should().Be(new Avalonia.Thickness(8, 6));
                 double.IsNaN(page.Height).Should().BeTrue();
                 page.Bounds.Height.Should().BeGreaterThanOrEqualTo(28, $"tab {page.Name}, window {form.Bounds}, tabs {tabs.Bounds}");
+                Border layoutRoot = page.GetVisualDescendants().OfType<Border>()
+                    .Single(border => border.Name == "PART_LayoutRoot");
                 TextBlock caption = page.GetVisualDescendants().OfType<TextBlock>()
                     .Single(text => text.Text == page.Header?.ToString());
-                Avalonia.Point origin = Avalonia.VisualExtensions.TranslatePoint(caption, default, page)!.Value;
-                origin.X.Should().BeGreaterThanOrEqualTo(page.Padding.Left + 16);
-                (origin.X + caption.Bounds.Width).Should().BeLessThanOrEqualTo(page.Bounds.Width - page.Padding.Right + 1);
+                Avalonia.Point origin = Avalonia.VisualExtensions.TranslatePoint(caption, default, layoutRoot)!.Value;
+                origin.X.Should().BeGreaterThanOrEqualTo(layoutRoot.Padding.Left + 16);
+                (origin.X + caption.Bounds.Width).Should().BeLessThanOrEqualTo(
+                    layoutRoot.Bounds.Width - layoutRoot.Padding.Right + 1);
             }
 
             double previousHeight = pages[0].Bounds.Height;
@@ -755,14 +758,47 @@ public sealed class FormBrowseTests
             Avalonia.Controls.Primitives.Thumb position = horizontal.GetVisualDescendants()
                 .OfType<Avalonia.Controls.Primitives.Thumb>()
                 .Single();
+            Border indicator = position.GetVisualDescendants()
+                .OfType<Border>()
+                .Single(border => border.Name == "PART_NativeIndicator");
             horizontal.Bounds.Height.Should().Be(17);
             GetColor(horizontal.Background).Should().Be(Color.Parse(track));
-            position.Bounds.Height.Should().Be(2);
-            GetColor(position.Background).Should().Be(Color.Parse(thumb));
+            position.Bounds.Height.Should().Be(17);
+            position.IsHitTestVisible.Should().BeTrue();
+            indicator.Bounds.Height.Should().Be(2);
+            GetColor(indicator.Background).Should().Be(Color.Parse(thumb));
+
+            Point thumbHitPoint = position.TranslatePoint(new Point(position.Bounds.Width / 2, 1), form)!.Value;
+            Avalonia.Visual? hit = form.InputHitTest(thumbHitPoint) as Avalonia.Visual;
+            hit?.GetSelfAndVisualAncestors().Should().Contain(position,
+                "the full native scrollbar row, not only its two-pixel indicator, must accept mouse input");
+
+            foreach (string name in new[]
+                     {
+                         "toolStripSeparator0",
+                         "toolStripSeparator17",
+                         "toolStripSeparator1",
+                         "toolStripSeparator2",
+                     })
+            {
+                Border separator = form.FindControl<Border>(name)!;
+                Border line = separator.GetVisualDescendants()
+                    .OfType<Border>()
+                    .Single(border => border.Classes.Contains("gitextensions-toolbar-separator-line"));
+                separator.Bounds.Width.Should().Be(6);
+                GetColor(separator.Background).Should().Be(Colors.Transparent);
+                line.Bounds.Width.Should().Be(1);
+                line.Bounds.Height.Should().Be(17);
+            }
+
+            Button toggleLeftPanel = form.FindControl<Button>("toggleLeftPanel")!;
+            toggleLeftPanel.Classes.Should().Contain("checked");
+            GetColor(toggleLeftPanel.Background).Should().Be(
+                Color.Parse(theme == ThemeVariant.Dark ? "#28445B" : "#CCE8FF"));
         }
 
         static Color GetColor(IBrush? brush)
-            => brush.Should().BeOfType<SolidColorBrush>().Which.Color;
+            => brush.Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
     }
 
     [AvaloniaTest]
@@ -2352,6 +2388,11 @@ public sealed class FormBrowseTests
 
         Border pageHost = form.FindControl<Border>("commitInfoBelowHost")!;
         Point pageOrigin = pageHost.TranslatePoint(default, form)!.Value;
+        Border pageFrame = form.CommitInfoTabControl.GetVisualDescendants()
+            .OfType<Border>()
+            .Single(border => border.Classes.Contains("gitextensions-workspace-page-frame"));
+        GetColor(pageFrame.BorderBrush).Should().Be(Color.Parse("#FFE5E5E5"));
+        pageFrame.BorderThickness.Should().Be(new Thickness(1, 0, 0, 0));
         pageHost.Child!.Bounds.Width.Should().Be(643,
             "the native TabPage retains a one-pixel side inset without an extra painted border");
         bitmap.GetPixel((int)pageOrigin.X + 10, (int)pageOrigin.Y).Should().Be(new SKColor(255, 255, 255),
@@ -2364,6 +2405,10 @@ public sealed class FormBrowseTests
             "the native frame does not change the split container's transparent BackColor");
         splitNode.Children.Should().NotContain(node => node.ControlKind == "control" && node.FieldName == null,
             "the frame is renderer-only, not an extra source control");
+        Flatten(root).Should().NotContain(node => node.Name == "PART_NativeIndicator"
+            || node.Name == "gitextensions-workspace-page-frame"
+            || node.Name == "gitextensions-toolbar-separator-line",
+            "native paint helpers are not independent controls in the source tree");
 
         static IEnumerable<CaptureNode> Flatten(CaptureNode node)
         {
@@ -2376,6 +2421,9 @@ public sealed class FormBrowseTests
                 }
             }
         }
+
+        static Color GetColor(IBrush? brush)
+            => brush.Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
     }
 
     [AvaloniaTest]

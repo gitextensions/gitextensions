@@ -246,6 +246,10 @@
                            Color="#B3B3EB" />
           <SolidColorBrush x:Key="GitExtensionsSelectionForegroundBrush"
                            Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsNativeSelectionBackgroundBrush"
+                           Color="#0078D7" />
+          <SolidColorBrush x:Key="GitExtensionsNativeSelectionForegroundBrush"
+                           Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsInactiveSelectionBackgroundBrush"
                            Color="#E6E6E6" />
           <SolidColorBrush x:Key="GitExtensionsPanelBackgroundBrush"
@@ -306,6 +310,7 @@
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#A0A0A0" />
           <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#E3E3E3" />
           <SolidColorBrush x:Key="GitExtensionsToolStripPointerOverBackgroundBrush" Color="#E5F3FF" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripCheckedBackgroundBrush" Color="#CCE8FF" />
           <SolidColorBrush x:Key="GitExtensionsControlPressedBackgroundBrush" Color="#A0A0A0" />
           <SolidColorBrush x:Key="GitExtensionsDisabledForegroundBrush" Color="#6D6D6D" />
           <SolidColorBrush x:Key="GitExtensionsHighlightBackgroundBrush" Color="#0078D7" />
@@ -389,6 +394,10 @@
                            Color="#1313A2" />
           <SolidColorBrush x:Key="GitExtensionsSelectionForegroundBrush"
                            Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeSelectionBackgroundBrush"
+                           Color="#2864B4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeSelectionForegroundBrush"
+                           Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsInactiveSelectionBackgroundBrush"
                            Color="#3A3A3A" />
           <SolidColorBrush x:Key="GitExtensionsPanelBackgroundBrush"
@@ -449,6 +458,7 @@
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#4A4A4A" />
           <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#2E2E2E" />
           <SolidColorBrush x:Key="GitExtensionsToolStripPointerOverBackgroundBrush" Color="#2F4159" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripCheckedBackgroundBrush" Color="#28445B" />
           <SolidColorBrush x:Key="GitExtensionsControlPressedBackgroundBrush" Color="#4A4A4A" />
           <SolidColorBrush x:Key="GitExtensionsDisabledForegroundBrush" Color="#969696" />
           <SolidColorBrush x:Key="GitExtensionsHighlightBackgroundBrush" Color="#2864B4" />
@@ -555,8 +565,8 @@
     <Setter Property="Background" Value="{DynamicResource GitExtensionsTextInputBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
     <Setter Property="CornerRadius" Value="0" />
-    <Setter Property="SelectionBrush" Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
-    <Setter Property="SelectionForegroundBrush" Value="{DynamicResource GitExtensionsSelectionForegroundBrush}" />
+    <Setter Property="SelectionBrush" Value="{DynamicResource GitExtensionsNativeSelectionBackgroundBrush}" />
+    <Setter Property="SelectionForegroundBrush" Value="{DynamicResource GitExtensionsNativeSelectionForegroundBrush}" />
   </Style>
   <Style Selector="TextBox:pointerover">
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
@@ -938,9 +948,15 @@
             <ItemsPresenter x:Name="PART_ItemsPresenter"
                             ItemsPanel="{TemplateBinding ItemsPanel}" />
           </Border>
-          <ContentPresenter x:Name="PART_SelectedContentHost"
-                            Content="{TemplateBinding SelectedContent}"
-                            ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+          <Grid>
+            <Border Classes="gitextensions-workspace-page-frame"
+                    BorderBrush="{DynamicResource GitExtensionsNativeTabBorderBrush}"
+                    BorderThickness="1,0,0,0"
+                    IsHitTestVisible="False" />
+            <ContentPresenter x:Name="PART_SelectedContentHost"
+                              Content="{TemplateBinding SelectedContent}"
+                              ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+          </Grid>
         </DockPanel>
       </ControlTemplate>
     </Setter>
@@ -971,8 +987,8 @@
     </Setter>
   </Style>
   <Style Selector="Window.gitextensions-browse-window TabItem.gitextensions-workspace-tab:selected /template/ Border#PART_LayoutRoot">
+    <!-- WinForms raises only the selected header; sibling headers retain their lower baseline. -->
     <Setter Property="Margin" Value="0" />
-    <!-- Native selected headers reserve four more pixels on each side of their caption. -->
     <Setter Property="Padding" Value="12,5" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsBrowseTabSelectedBackgroundBrush}" />
   </Style>
@@ -1120,10 +1136,14 @@
     <Setter Property="Height" Value="5" />
   </Style>
   <Style Selector="Button.gitextensions-toolbar-button.checked">
-    <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripCheckedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
   </Style>
   <Style Selector="ToggleButton.gitextensions-toolbar-button:checked">
-    <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripCheckedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
   </Style>
   <Style Selector="Border.gitextensions-toolbar-separator">
     <Setter Property="Width" Value="1" />
@@ -1337,13 +1357,13 @@
   </Style>
   <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background"
-            Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
+            Value="{DynamicResource GitExtensionsNativeSelectionBackgroundBrush}" />
     <Setter Property="Foreground"
-            Value="{DynamicResource GitExtensionsSelectionForegroundBrush}" />
+            Value="{DynamicResource GitExtensionsNativeSelectionForegroundBrush}" />
   </Style>
   <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background"
-            Value="{DynamicResource GitExtensionsSelectionPointerOverBackgroundBrush}" />
+            Value="{DynamicResource GitExtensionsNativeSelectionBackgroundBrush}" />
   </Style>
   <Style Selector="ListBox:not(:focus-within) ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background"
@@ -1383,15 +1403,15 @@
   </Style>
   <Style Selector="TreeViewItem:selected /template/ Border#PART_LayoutRoot">
     <Setter Property="Background"
-            Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
+            Value="{DynamicResource GitExtensionsNativeSelectionBackgroundBrush}" />
   </Style>
   <Style Selector="TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
     <Setter Property="Foreground"
-            Value="{DynamicResource GitExtensionsSelectionForegroundBrush}" />
+            Value="{DynamicResource GitExtensionsNativeSelectionForegroundBrush}" />
   </Style>
   <Style Selector="TreeViewItem:selected:pointerover /template/ Border#PART_LayoutRoot">
     <Setter Property="Background"
-            Value="{DynamicResource GitExtensionsSelectionPointerOverBackgroundBrush}" />
+            Value="{DynamicResource GitExtensionsNativeSelectionBackgroundBrush}" />
   </Style>
   <Style Selector="TreeView:not(:focus-within) TreeViewItem:selected /template/ Border#PART_LayoutRoot">
     <Setter Property="Background"

@@ -168,6 +168,9 @@ internal static class AvaloniaThemeResources
             : DrawingColor.FromArgb(229, 229, 229);
         DrawingColor nativeTabSelectedBackground = isDark ? control : window;
         DrawingColor nativeTabPageBackground = isDark ? control : DrawingColor.Transparent;
+        DrawingColor nativeListSelectionBackground = isDark
+            ? DrawingColor.FromArgb(40, 68, 91)
+            : DrawingColor.FromArgb(204, 232, 255);
         DrawingColor highlight = ResolveSystemColor(settings, KnownColor.Highlight);
         DrawingColor highlightText = ResolveSystemColor(settings, KnownColor.HighlightText);
         DrawingColor dataGridViewSelectionBackground = highlight;
@@ -311,6 +314,9 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsSelectionBackgroundBrush", selection);
         SetBrush(resources, "GitExtensionsSelectionPointerOverBackgroundBrush", ColorHelper.Lerp(selection, windowText, 0.08f));
         SetBrush(resources, "GitExtensionsSelectionForegroundBrush", windowText);
+        SetBrush(resources, "GitExtensionsNativeSelectionBackgroundBrush", highlight);
+        SetBrush(resources, "GitExtensionsNativeSelectionForegroundBrush", highlightText);
+        SetBrush(resources, "GitExtensionsToolStripCheckedBackgroundBrush", nativeListSelectionBackground);
         SetBrush(resources, "GitExtensionsRevisionAlternatingRowBrush", alternatingRow);
         SetBrush(resources, "GitExtensionsRevisionAuthoredBrush", ResolveAppColor(settings, AppColor.AuthoredHighlight));
         SetBrush(resources, "GitExtensionsRevisionSelectedSubjectBrush", isDark ? controlText : highlightText);
