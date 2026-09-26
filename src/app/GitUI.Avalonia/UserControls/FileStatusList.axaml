@@ -194,9 +194,11 @@
       <ListBox x:Name="FileStatusListView" SelectionMode="Single" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" IsVisible="False" />
       <ListBox x:Name="lstFiles" SelectionMode="Single" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" />
       <TreeView x:Name="tvDiffFiles" Classes="gitextensions-native-tree" IsVisible="False" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" x:CompileBindings="False">
+        <TreeView.Resources><x:Double x:Key="GitExtensionsTreeViewItemIndent">14</x:Double></TreeView.Resources>
         <TreeView.Styles><Style Selector="TreeViewItem"><Setter Property="IsExpanded" Value="{Binding IsExpanded}" /></Style></TreeView.Styles>
       </TreeView>
       <TreeView x:Name="tvFiles" Classes="gitextensions-native-tree" IsVisible="False" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" x:CompileBindings="False">
+        <TreeView.Resources><x:Double x:Key="GitExtensionsTreeViewItemIndent">14</x:Double></TreeView.Resources>
         <TreeView.Styles><Style Selector="TreeViewItem"><Setter Property="IsExpanded" Value="{Binding IsExpanded}" /></Style></TreeView.Styles>
       </TreeView>
     </Grid>
