@@ -629,6 +629,18 @@ public sealed class FormBrowseTests
                 .Should().NotContain(button => button.Name == "mnuConfigure");
             dashboard.GetTestAccessor().Repositories.GetTestAccessor().Search.IsFocused.Should().BeTrue();
             dashboardForm.FindControl<MenuItem>("repositoryToolStripMenuItem")!.IsVisible.Should().BeFalse();
+
+            invalidModule.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
+            dashboardForm.SetWorkingDir(_workingDirectory);
+            Dispatcher.UIThread.RunJobs();
+
+            dashboard.IsVisible.Should().BeFalse();
+            dashboardForm.FindControl<Grid>("mainContentGrid")!.IsVisible.Should().BeTrue();
+            dashboardForm.FindControl<MenuItem>("repositoryToolStripMenuItem")!.IsVisible.Should().BeTrue();
+            dashboardForm.FindControl<Menu>("mainMenuStrip")!.Items
+                .OfType<MenuItem>()
+                .Select(item => item.Name)
+                .Should().Contain(["navigateToolStripMenuItem", "viewToolStripMenuItem"]);
         }
 
         invalidModule.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
