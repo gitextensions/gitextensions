@@ -171,7 +171,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             _rootNodes.Add(_stashTree);
         }
 
-        ApplyRoots();
+        RefreshRevisionsLoaded();
         if (restoreState)
         {
             NodeBase[] nodes = [.. _rootNodes.SelectMany(tree => tree.DescendantsAndSelf())];
@@ -189,7 +189,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 }
             }
         }
-        else if (_branchesTree.DepthEnumerator<LocalBranchNode>().FirstOrDefault(node => node.IsCurrent) is { } current)
+
+        if (!GetSelectedNodes().Any()
+            && _branchesTree.DepthEnumerator<LocalBranchNode>().FirstOrDefault(node => node.IsCurrent) is { } current)
         {
             SetNodeSelected(current.TreeViewNode, selected: true);
         }
@@ -520,6 +522,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     /// </summary>
     public void RefreshRevisionsLoaded()
     {
+        if (_rootNodes.Count == 0)
+        {
+            return;
+        }
+
         _branchesTree.UpdateVisibility();
         _remotesTree.UpdateVisibility();
         _tagTree.UpdateVisibility();

@@ -14,9 +14,32 @@ internal sealed class StashTree : BaseRevisionTree
     public StashTree(RepoObjectsTree owner, IReadOnlyCollection<GitRevision> stashes, ICheckRefs? refsSource = null)
         : base(owner, RepoTreeKind.Stashes, TranslatedStrings.Stashes, Images.Stash, refsSource)
     {
-        Nodes.AddNodes(FillStashTree(stashes, CancellationToken.None));
+        Refresh(new Lazy<IReadOnlyCollection<GitRevision>>(() => stashes));
+    }
 
-        Complete(TranslatedStrings.Stashes, Images.Stash, expanded: false);
+    internal void Refresh(Lazy<IReadOnlyCollection<GitRevision>> getStashRevs)
+    {
+        if (!IsAttached)
+        {
+            return;
+        }
+
+        OwnerControl.UpdateNodes(() =>
+        {
+            HashSet<string> selected = OwnerControl.CaptureSelectedNodeIdentities(this);
+            bool wasExpanded = TreeViewNode.IsExpanded;
+            TreeViewNode.Items.Clear();
+            Nodes.Clear();
+            Nodes.AddNodes(FillStashTree(getStashRevs.Value, CancellationToken.None));
+            Complete(TranslatedStrings.Stashes, Images.Stash, expanded: wasExpanded);
+            OwnerControl.RestoreSelectedNodes(this, selected);
+        });
+    }
+
+    private Task<Nodes> LoadNodesAsync(Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, CancellationToken token)
+    {
+        token.ThrowIfCancellationRequested();
+        return Task.FromResult(FillStashTree(getStashRevs.Value, token));
     }
 
     private Nodes FillStashTree(IReadOnlyCollection<GitRevision> stashes, CancellationToken token)
@@ -25,7 +48,9 @@ internal sealed class StashTree : BaseRevisionTree
         foreach (GitRevision stash in stashes.Where(stash => !string.IsNullOrEmpty(stash.ReflogSelector)))
         {
             token.ThrowIfCancellationRequested();
-            nodes.AddNode(new StashNode(this, this, stash.ObjectId, stash.ReflogSelector!, stash.Subject));
+
+            // Visibility is set after the grid is loaded
+            nodes.AddNode(new StashNode(this, this, stash.ObjectId, stash.ReflogSelector!, stash.Subject, visible: false));
         }
 
         return nodes;

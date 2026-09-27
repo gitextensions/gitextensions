@@ -34,6 +34,48 @@ internal sealed class WorktreeTree : Tree
         TreeViewNode.Items.Clear();
         Nodes.Clear();
 
+        Nodes loadedNodes = FillWorktreeTree(worktrees, currentWorkingDirectory, CancellationToken.None);
+        Nodes.AddNodes(loadedNodes);
+        Complete(TranslatedStrings.Worktrees, Images.WorkTree, expanded: wasExpanded);
+        PostFillTreeViewNode(firstLoad);
+        OwnerControl.RestoreSelectedNodes(this, selected);
+    });
+
+    private async Task<Nodes> LoadNodesAsync(CancellationToken token)
+    {
+        await Task.CompletedTask;
+        token.ThrowIfCancellationRequested();
+
+        return FillWorktreeTree(token);
+    }
+
+    private Nodes FillWorktreeTree(CancellationToken token)
+    {
+        // Use the main worktree's parent as the reference for relative paths.
+        // Git always lists the main worktree first. Using the main worktree's parent
+        // ensures linked worktrees in a sibling directory produce paths like
+        // "repo.worktrees/feature-a" rather than flat names with no directory component.
+        // Strip the common directory prefix from non-main worktrees to reduce visual noise.
+        // The first worktree is always the main worktree and is excluded from prefix calculation.
+        return FillWorktreeTree(Module.GetWorktrees(), Module.WorkingDir, token);
+    }
+
+    private Task<Nodes> LoadNodesAsync(
+        IReadOnlyList<GitWorktree> worktrees,
+        string currentWorkingDirectory,
+        CancellationToken token)
+    {
+        token.ThrowIfCancellationRequested();
+        return Task.FromResult(FillWorktreeTree(worktrees, currentWorkingDirectory, token));
+    }
+
+    private Nodes FillWorktreeTree(
+        IReadOnlyList<GitWorktree> worktrees,
+        string currentWorkingDirectory,
+        CancellationToken token)
+    {
+        Nodes nodes = new(this);
+
         string currentWorkingDir = currentWorkingDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         string mainWorktreePath = worktrees.Count > 0
             ? worktrees[0].Path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
@@ -46,6 +88,8 @@ internal sealed class WorktreeTree : Tree
 
         foreach (GitWorktree worktree in worktrees)
         {
+            token.ThrowIfCancellationRequested();
+
             bool isCurrent = string.Equals(
                 worktree.Path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
                 currentWorkingDir,
@@ -66,28 +110,30 @@ internal sealed class WorktreeTree : Tree
         string commonPrefix = GetCommonPrefix(worktreeInfos.Skip(1).Select(worktree => worktree.RelativePath));
         for (int i = 0; i < worktreeInfos.Count; i++)
         {
+            token.ThrowIfCancellationRequested();
+
             (GitWorktree worktree, bool isCurrent, string relativePath) = worktreeInfos[i];
             string displayPath = i > 0
                 && commonPrefix.Length > 0
                 && relativePath.StartsWith(commonPrefix, StringComparison.OrdinalIgnoreCase)
                     ? relativePath[commonPrefix.Length..]
                     : relativePath;
-            AddChild(new WorktreeNode(this, worktree, isCurrent, displayPath));
+            nodes.AddNode(new WorktreeNode(this, worktree, isCurrent, displayPath));
         }
 
-        Complete(
-            TranslatedStrings.Worktrees,
-            Images.WorkTree,
-            expanded: firstLoad ? worktrees.Count > 1 : wasExpanded);
-        OwnerControl.RestoreSelectedNodes(this, selected);
-    });
+        return nodes;
+    }
 
     /// <summary>
-    /// Finds the longest common prefix among the given relative paths, snapping to a word boundary.
+    ///  Finds the longest common prefix among the given relative paths, snapping to a word boundary.
     /// </summary>
     /// <remarks>
-    /// Word boundaries are directory separators and the characters <c>_</c>, <c>-</c>, <c>.</c>, and space.
+    ///  Word boundaries are directory separators and the characters <c>_</c>, <c>-</c>, <c>.</c>, and space.
+    ///  This ensures names like "apricot" and "apple" are not truncated to "pricot" and "pple".
     /// </remarks>
+    /// <returns>
+    ///  The common prefix including its trailing delimiter, or an empty string if there is no common prefix.
+    /// </returns>
     internal static string GetCommonPrefix(IEnumerable<string> paths)
     {
         ReadOnlySpan<char> prefix = default;
@@ -154,13 +200,17 @@ internal sealed class WorktreeTree : Tree
     private static readonly SearchValues<char> WordBoundaryChars = SearchValues.Create(
         ['_', '-', '.', ' ']);
 
+    protected override void PostFillTreeViewNode(bool firstTime)
+    {
+        if (firstTime && Nodes.Count > 1)
+        {
+            TreeViewNode.IsExpanded = true;
+        }
+    }
+
     public void CreateWorktree(IWin32Window owner)
     {
-        string mainWorktreePath = TreeViewNode.Items
-            .Cast<Avalonia.Controls.TreeViewItem>()
-            .Select(item => item.Tag)
-            .OfType<WorktreeNode>()
-            .FirstOrDefault()?.Worktree.Path ?? UICommands.Module.WorkingDir;
+        string mainWorktreePath = GetMainWorktreePath();
         if (UICommands.WorktreeCreate(owner, mainWorktreePath))
         {
             Refresh();
@@ -183,5 +233,18 @@ internal sealed class WorktreeTree : Tree
         {
             UICommands.RepoChangedNotifier.Notify();
         }
+    }
+
+    private string GetMainWorktreePath()
+    {
+        foreach (Node node in Nodes)
+        {
+            if (node is WorktreeNode worktree)
+            {
+                return worktree.Worktree.Path;
+            }
+        }
+
+        return Module.WorkingDir;
     }
 }

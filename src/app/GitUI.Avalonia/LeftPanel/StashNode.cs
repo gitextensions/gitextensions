@@ -10,12 +10,13 @@ namespace GitUI.LeftPanel;
 [DebuggerDisplay("(Stash) ReflogSelector = {ReflogSelector}, Hash = {ObjectId}")]
 internal sealed class StashNode : BaseRevisionNode
 {
-    public StashNode(StashTree tree, NodeBase parent, in ObjectId objectId, string reflogSelector, string subject)
+    public StashNode(StashTree tree, NodeBase parent, in ObjectId objectId, string reflogSelector, string subject, bool visible)
         : base(tree, parent, reflogSelector.RemovePrefix("refs/"), gitRef: null, GitUI.Properties.Images.Stash)
     {
         ObjectId = objectId;
         DisplayName = $"{reflogSelector.RemovePrefix(GitRefName.RefsStashPrefix)}: {subject}";
         ReflogSelector = reflogSelector;
+        Visible = visible;
         ApplyStyle();
     }
 
