@@ -205,6 +205,8 @@ partial class RepoObjectsTree : IMenuItemFactory
     private void RegisterContextActions()
     {
         RegisterAction(RepoAction.Copy, copyContextMenuItem);
+
+        // Filter for selected
         RegisterAction(RepoAction.Filter, filterForSelectedRefsMenuItem);
 
         // git refs (tag, local & remote branch) menu items (rename, delete, merge, etc)
@@ -222,11 +224,17 @@ partial class RepoObjectsTree : IMenuItemFactory
         RegisterAction(RepoAction.FetchCheckout, mnubtnRemoteBranchFetchAndCheckout);
         RegisterAction(RepoAction.FetchRebase, mnubtnFetchRebase);
         RegisterAction(RepoAction.FetchCreate, mnubtnFetchCreateBranch);
+
+        // BranchPathNode (folder)
         RegisterAction(RepoAction.CreateInFolder, mnubtnCreateBranch);
         RegisterAction(RepoAction.DeleteFolderBranches, mnubtnDeleteAllBranches);
+
+        // Remotes Tree
         RegisterAction(RepoAction.ManageRemotes, mnuBtnManageRemotesFromRootNode);
         RegisterAction(RepoAction.FetchAllRemotes, mnuBtnFetchAllRemotes);
         RegisterAction(RepoAction.PruneAllRemotes, mnuBtnPruneAllRemotes);
+
+        // RemoteRepoNode
         RegisterAction(RepoAction.ManageRemote, mnubtnManageRemotes);
         RegisterAction(RepoAction.EnableRemote, mnubtnEnableRemote);
         RegisterAction(RepoAction.EnableRemoteAndFetch, mnubtnEnableRemoteAndFetch);
@@ -234,6 +242,8 @@ partial class RepoObjectsTree : IMenuItemFactory
         RegisterAction(RepoAction.FetchRemote, mnubtnFetchAllBranchesFromARemote);
         RegisterAction(RepoAction.PruneRemote, mnuBtnPruneAllBranchesFromARemote);
         RegisterAction(RepoAction.OpenRemoteUrl, mnuBtnOpenRemoteUrlInBrowser);
+
+        // SubmoduleNode
         RegisterAction(RepoAction.OpenSubmodule, mnubtnOpenSubmodule);
         RegisterAction(RepoAction.OpenSubmoduleInGitExtensions, mnubtnOpenGESubmodule);
         RegisterAction(RepoAction.ManageSubmodules, mnubtnManageSubmodules);
@@ -242,8 +252,12 @@ partial class RepoObjectsTree : IMenuItemFactory
         RegisterAction(RepoAction.ResetSubmodule, mnubtnResetSubmodule);
         RegisterAction(RepoAction.StashSubmodule, mnubtnStashSubmodule);
         RegisterAction(RepoAction.CommitSubmodule, mnubtnCommitSubmodule);
+
+        // Expand / Collapse
         RegisterAction(RepoAction.Collapse, mnubtnCollapse);
         RegisterAction(RepoAction.Expand, mnubtnExpand);
+
+        // Move up / down (for top level Trees)
         RegisterAction(RepoAction.MoveUp, mnubtnMoveUp);
         RegisterAction(RepoAction.MoveDown, mnubtnMoveDown);
 
@@ -304,7 +318,8 @@ partial class RepoObjectsTree : IMenuItemFactory
             item.Item.IsVisible = visible; // only display for single-selected branch
 
             /* Enabled items must also be visible; cancellation of menu opening below relies on it.
-             * Avalonia exposes IsVisible before the popup is opened, so no visual-parent workaround is needed. */
+             * Read from local variable because ToolStripItem.Visible will always returns false
+             * because the ContextMenuStrip as the visual parent is not Visible on Opening. */
             item.Item.IsEnabled = visible
 
                 // enable all items for non-current branches or only those applying to the current branch
