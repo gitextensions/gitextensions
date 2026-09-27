@@ -31,6 +31,36 @@ internal sealed class LocalBranchTree : BaseRefTree
 
     protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
     {
+        #region example
+
+        // (input)
+        // a-branch
+        // develop/crazy-branch
+        // develop/features/feat-next
+        // develop/features/feat-next2
+        // develop/issues/iss444
+        // develop/wild-branch
+        // issues/iss111
+        // master
+        //
+        // ->
+        // (output)
+        // 0 a-branch
+        // 0 develop/
+        // 1   features/
+        // 2      feat-next
+        // 2      feat-next2
+        // 1   issues/
+        // 2      iss444
+        // 1   wild-branch
+        // 1   wilds/
+        // 2      card
+        // 0 issues/
+        // 1     iss111
+        // 0 master
+
+        #endregion
+
         IReadOnlyDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData();
         string currentBranch = _revisionGridInfo?.GetCurrentBranch() ?? _currentBranch;
         FillNested(
@@ -65,5 +95,9 @@ internal sealed class LocalBranchTree : BaseRefTree
         {
             TreeViewNode.IsExpanded = true;
         }
+
+        // Skip hidden node
+        // Selection is restored after every root has been attached by RepoObjectsTree.
+        // If there's a selected treenode, don't stomp over it
     }
 }
