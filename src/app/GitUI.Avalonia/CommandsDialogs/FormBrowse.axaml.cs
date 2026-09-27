@@ -107,6 +107,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private IConsoleShellRunner? _terminal;
     private Dashboard? _dashboard;
     private bool _isFileHistoryMode;
+    private bool _fileBlameHistoryLeftPanelStartupState;
     private TabItem? _consoleTabPage;
     private OutputHistoryControllerBase? _outputHistoryController;
 
@@ -311,6 +312,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         if (_isFileHistoryMode && leftPanel.IsVisible)
         {
+            _fileBlameHistoryLeftPanelStartupState = true;
             toggleLeftPanel_Click(this, EventArgs.Empty);
         }
 
@@ -729,10 +731,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UpdateRepositoryHostsMenu();
         UpdatePluginMenu(isValidWorkingDir);
         RefreshDefaultPullAction();
+        toolsToolStripMenuItem.RefreshState(module.IsBareRepository());
 
         if (isValidWorkingDir)
         {
             ShowRepository();
+            _formBrowseMenus?.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
             _NO_TRANSLATE_WorkingDir.RefreshContent();
             _aheadBehindDataProvider?.ResetCache();
             lblRepoPath.Text = $"{module.WorkingDir}  —  {branchName}";
@@ -754,6 +758,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         _gitStatusMonitor?.Active = isValidWorkingDir && NeedsGitStatusMonitor();
         UpdateStashCount();
+        OnActivate();
+        LoadUserMenu();
+        UICommands.RaisePostBrowseInitialize(this);
     }
 
     private static bool NeedsGitStatusMonitor()
@@ -779,7 +786,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);
-
         if (_updateCheckService is not null
             && AppSettings.CheckForUpdates
             && AppSettings.LastUpdateCheck.AddDays(7) < DateTime.Now)
@@ -823,28 +829,39 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
-        string currentPath = string.IsNullOrWhiteSpace(Module.WorkingDir)
-            ? string.Empty
-            : Path.GetFullPath(Module.WorkingDir);
+        IGitModule module = new GitModule(
+            UICommands.GetRequiredService<IGitExecutorProvider>(),
+            normalizedPath);
+        string originalWorkingDir = Module.WorkingDir;
+        dashboardToolStripMenuItem.IsVisible = false;
+        repositoryToolStripMenuItem.IsVisible = false;
+        commandsToolStripMenuItem.IsVisible = false;
+        pluginsToolStripMenuItem.IsVisible = false;
+        refreshToolStripMenuItem.InputGesture = null;
+        refreshDashboardToolStripMenuItem.InputGesture = null;
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(refreshToolStripMenuItem, string.Empty);
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(refreshDashboardToolStripMenuItem, string.Empty);
+        _formBrowseMenus?.RemoveRevisionGridMainMenuItems();
+        PluginRegistry.Unregister(UICommands);
+        _gitStatusMonitor?.InvalidateGitWorkingDirectoryStatus();
+        _submoduleStatusProvider?.Init();
+        repoObjectsTree.ClearTrees();
+        module.ResetRemoteColors();
+
+        UICommands = UICommands.WithGitModule(module);
         StringComparison pathComparison = OperatingSystem.IsWindows()
             ? StringComparison.OrdinalIgnoreCase
             : StringComparison.Ordinal;
-        if (string.Equals(normalizedPath, currentPath, pathComparison))
+        if (!string.Equals(originalWorkingDir, Module.WorkingDir, pathComparison))
         {
-            return;
-        }
-
-        _submoduleStatusProvider?.Init();
-        PluginRegistry.Unregister(UICommands);
-        UICommands = UICommands.WithWorkingDirectory(normalizedPath);
-        RegisterPlugins();
-        ChangeTerminalActiveFolder(normalizedPath);
-        if (Module.IsValidGitWorkingDir())
-        {
-            AppSettings.RecentWorkingDir = normalizedPath;
+            ChangeTerminalActiveFolder(Module.WorkingDir);
+            RevisionGrid.ResetAllFilters();
+            ToolStripFilters.ClearQuickFilters();
+            revisionDiff.RepositoryChanged();
         }
 
         ReloadRepository();
+        RegisterPlugins();
     }
 
     private void OpenRepositoryDialog()
@@ -1131,8 +1148,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         // The Avalonia grid currently retains one pending revision across repository changes.
         // Keep the original first diff endpoint in this boundary until multi-selection accepts it.
-        RevisionGrid.SelectedId = selectedId;
-        ChangeWorkingDirectory(path);
+        SetWorkingDir(path, selectedId, firstId);
     }
 
     private void FillDiff(IReadOnlyList<GitRevision> revisions)
@@ -1616,6 +1632,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         UICommands.StartCreateTagDialog(this, RevisionGrid.SelectedRevision);
     }
+
+    private static void SaveApplicationSettings()
+        => AppSettings.SaveSettings();
 
     private void EditGitignoreToolStripMenuItem1Click(object sender, EventArgs e)
     {
@@ -2424,6 +2443,32 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     internal bool ExecuteCommand(Command command)
         => ExecuteCommand((int)command);
 
+    public static void OpenContainingFolder(FileStatusList diffFiles, IGitModule module)
+    {
+        string workingDir = module.WorkingDir;
+        if (diffFiles.SelectedFolder is RelativePath relativePath)
+        {
+            OpenInContainingFolder(workingDir, relativePath.Length == 0 ? string.Empty : $"{relativePath.Value}/");
+            return;
+        }
+
+        foreach (FileStatusItem item in diffFiles.SelectedItems)
+        {
+            OpenInContainingFolder(workingDir, item.Item.Name);
+        }
+
+        return;
+
+        static void OpenInContainingFolder(string workingDir, string relativePath)
+        {
+            string filePath = Path.Combine(workingDir, relativePath.ToNativePath());
+            if (!string.IsNullOrWhiteSpace(filePath))
+            {
+                FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
+            }
+        }
+    }
+
     private void CommandsToolStripMenuItem_DropDownOpening(object? sender, EventArgs e)
     {
         // Most options do not make sense for artificial commits or no revision selected at all
@@ -3073,6 +3118,23 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         base.OnKeyDown(e);
     }
 
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        // File-history mode temporarily hides the left panel without persisting that forced state.
+        if (_isFileHistoryMode && _fileBlameHistoryLeftPanelStartupState && !leftPanel.IsVisible)
+        {
+            MainSplitContainer.ColumnDefinitions[0].Width = _leftPanelWidth.Value > 0
+                ? _leftPanelWidth
+                : new GridLength(260);
+            leftPanel.IsVisible = true;
+            leftPanelSplitter.IsVisible = true;
+        }
+
+        _splitterManager?.SaveSplitters();
+        SaveApplicationSettings();
+        base.OnClosing(e);
+    }
+
     protected override void OnClosed(EventArgs e)
     {
         if (_hasRuntimeCommands)
@@ -3090,7 +3152,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         _submoduleStatusProvider?.Init();
-        _splitterManager?.SaveSplitters();
         _gpgInfoLoadSequence.Dispose();
         _gitStatusMonitor?.Dispose();
         RevisionGrid.CancelBackgroundTasks();
