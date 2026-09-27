@@ -781,12 +781,21 @@ public sealed partial class FileStatusList : GitModuleControl
 
     public void SelectAll()
     {
-        foreach (TreeNode node in FileStatusListView.Nodes)
+        // Avoid scrolling and repainting between folders while expanding the whole selection.
+        try
         {
-            ExpandAll(node);
-        }
+            FileStatusListView.BeginUpdate();
+            foreach (TreeNode node in FileStatusListView.Nodes)
+            {
+                ExpandAll(node);
+            }
 
-        SelectItems(_ => true);
+            SelectItems(_ => true);
+        }
+        finally
+        {
+            FileStatusListView.EndUpdate();
+        }
     }
 
     public void SelectFirstVisibleItem()
