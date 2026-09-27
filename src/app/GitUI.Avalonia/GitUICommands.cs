@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Text;
 using Avalonia.Controls.ApplicationLifetimes;
 using GitCommands;
@@ -18,6 +19,7 @@ using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using AvaloniaApplication = Avalonia.Application;
 using ShutdownMode = Avalonia.Controls.ShutdownMode;
@@ -25,7 +27,7 @@ using Window = Avalonia.Controls.Window;
 
 namespace GitUI;
 
-/// <summary>Contains methods to invoke Git Extensions forms, dialogs, etc.</summary>
+/// <summary>Contains methods to invoke GitEx forms, dialogs, etc.</summary>
 public sealed class GitUICommands : IGitUICommands
 {
     private const string BlameHistoryCommand = "blamehistory";
@@ -354,7 +356,7 @@ public sealed class GitUICommands : IGitUICommands
     /// <returns>true if action was successfully done, false otherwise.</returns>
     private bool DoActionOnRepo(
         IWin32Window? owner,
-        Func<bool> action,
+        [InstantHandle] Func<bool> action,
         bool requiresValidWorkingDir = true,
         bool changesRepo = true,
         EventHandler<GitUIEventArgs>? preEvent = null,
@@ -429,6 +431,12 @@ public sealed class GitUICommands : IGitUICommands
 
     private static FormBrowse? FindFormBrowse(IWin32Window? window)
     {
+        // The owner may be a child control (e.g. the repository objects tree), so resolve its containing form first.
+        if (window is Avalonia.Controls.Control control and not Window)
+        {
+            window = Avalonia.Controls.TopLevel.GetTopLevel(control) as IWin32Window;
+        }
+
         if (window is FormBrowse browse)
         {
             return browse;
@@ -498,7 +506,12 @@ public sealed class GitUICommands : IGitUICommands
         }
     }
 
-    /// <summary>Launches a new Git Extensions Avalonia process.</summary>
+    /// <summary>
+    /// Launches a new GE instance.
+    /// </summary>
+    /// <param name="arguments">The command line arguments.</param>
+    /// <param name="workingDir">The working directory for the new process.</param>
+    /// <returns>The <see cref="IProcess"/> object for controlling the launched instance.</returns>
     public static IProcess Launch(string arguments, string workingDir = "")
         => new Executable(Application.ExecutablePath, workingDir).Start(arguments);
     public bool DoActionOnRepo(Func<bool> action)
@@ -619,17 +632,64 @@ public sealed class GitUICommands : IGitUICommands
             return false;
         }
 
-        return DoActionOnRepo(owner, action: () =>
+        // Commit dialog can be opened on its own without the main form
+        // If it is opened by itself, we need to ensure plugins are loaded because some of them
+        // may have hooks into the commit flow
+        bool werePluginsRegistered = PluginRegistry.PluginsRegistered;
+
+        try
         {
-            if (showOnlyWhenChanges && Module.GetAllChangedFilesWithSubmodulesStatus(CancellationToken.None).Count == 0)
+            // Load plugins synchronously
+            // if the commit dialog is opened from the main form, all plugins are already loaded and we return instantly,
+            // if the dialog is loaded on its own, plugins need to be loaded before we load the form
+            if (!werePluginsRegistered)
             {
-                return true;
+                PluginRegistry.InitializeForCommitForm();
+                PluginRegistry.Register(this);
             }
+        }
+        catch (Exception exception)
+        {
+            // Nothing: we don't want plugin loading to crash the application here
+            Trace.WriteLine(exception);
+        }
+
+        bool Action()
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             using CommandsDialogs.FormCommit form = new(this, commitMessage: commitMessage);
-            form.ShowDialog(owner);
+            if (showOnlyWhenChanges)
+            {
+                form.ShowDialogWhenChanges(owner);
+            }
+            else
+            {
+                form.ShowDialog(owner);
+            }
+
             return true;
-        }, changesRepo: false, preEvent: PreCommit, postEvent: PostCommit);
+        }
+
+        try
+        {
+            return DoActionOnRepo(owner, Action, changesRepo: false, preEvent: PreCommit, postEvent: PostCommit);
+        }
+        finally
+        {
+            try
+            {
+                if (!werePluginsRegistered)
+                {
+                    PluginRegistry.Unregister(this);
+                }
+            }
+            catch (Exception exception)
+            {
+                // Nothing: we don't want plugin loading to crash the application here
+                Trace.WriteLine(exception);
+            }
+        }
     }
 
     public bool StartInitializeDialog(IWin32Window? owner = null, string? dir = null, EventHandler<GitModuleEventArgs>? gitModuleChanged = null)
@@ -696,7 +756,7 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action, changesRepo: false);
     }
 
-    public void AddCommitTemplate(string key, Func<string> addingText, Image? icon, bool isRegex = false)
+    public void AddCommitTemplate(string key, Func<string> addingText, Image? icon, bool isRegex)
     {
         _commitTemplateManager.Register(key, addingText, icon, isRegex);
     }
@@ -1215,11 +1275,23 @@ public sealed class GitUICommands : IGitUICommands
 
     public void StartFileHistoryDialog(IWin32Window? owner, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
     {
-        // The WinForms client launches a separate process (or reuses Browse) for file
-        // history; Avalonia opens the window in-process and non-modal.
         DoActionOnRepo(owner, action: () =>
         {
-            CommandsDialogs.FormFileHistory form = new(this, fileName, revision, filterByRevision, showBlame);
+            if (AppSettings.UseBrowseForFileHistory.Value)
+            {
+                return StartBrowseDialog(owner, new BrowseArguments
+                {
+                    RevFilter = filterByRevision ? revision?.ObjectId.ToString() : null,
+                    PathFilter = fileName,
+                    SelectedId = revision?.ObjectId ?? default,
+                    IsFileHistoryMode = true
+                });
+            }
+
+            // Avoid a race condition in FormFileHistory selecting an artificial commit.
+            // Without a hash passed, it automatically selects the first real revision.
+            GitRevision? selectedRevision = revision?.IsArtificial == true ? null : revision;
+            CommandsDialogs.FormFileHistory form = new(this, fileName, selectedRevision, filterByRevision, showBlame);
             ShowModelessWindow(form, owner);
             return true;
         }, changesRepo: false);
@@ -1466,10 +1538,10 @@ public sealed class GitUICommands : IGitUICommands
             startRebaseImmediately: false);
     }
 
-    // Please update FormCommandlineHelp if you add or change commands.
+    // Please update FormCommandlineHelp if you add or change commands
     private bool RunCommandBasedOnArgument(IReadOnlyList<string> args, IReadOnlyDictionary<string, string?> arguments)
     {
-        // Code should not contain multiple whitespace in a row
+#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
         string command = args[1];
         switch (command)
         {
@@ -1485,14 +1557,14 @@ public sealed class GitUICommands : IGitUICommands
                 // If filenames have been specified, quote them and pass them to the dialog, else pass '.' for current dir.
                 // If names of files or folders have been specified, pass them
                 return StartAddFilesDialog(owner: null, addFiles: args.Count < 3 ? "." : string.Join(' ', args.Skip(2).Select(file => file.Quote())));
-            case "apply":
+            case "apply":       // [filename]
             case "applypatch":
                 return StartApplyPatchDialog(null, args.Count == 3 ? args[2] : string.Empty);
-            case "blame": // filename
+            case "blame":       // filename
                 return RunBlameCommand(args);
             case "branch":
                 return StartCreateBranchDialog();
-            case "browse":
+            case "browse":      // [path] [--pathFilter=filname] [-filter] [-commit=selected[,first]]
                 return RunBrowseCommand(args);
             case "checkout":
             case "checkoutbranch":
@@ -1503,11 +1575,11 @@ public sealed class GitUICommands : IGitUICommands
                 return StartCherryPickDialog();
             case "cleanup":
                 return StartCleanupRepositoryDialog();
-            case "clone":
+            case "clone":       // [path]
                 return RunCloneCommand(args);
-            case "commit":
+            case "commit":      // [--quiet]
                 return Commit(arguments);
-            case "difftool":
+            case "difftool":    // filename
                 if (args.Count <= 2)
                 {
                     return false;
@@ -1525,32 +1597,44 @@ public sealed class GitUICommands : IGitUICommands
 
             case BlameHistoryCommand:
             case FileHistoryCommand:
+                // filename [revision [--filter-by-revision]]
+                string modulePath = Path.TrimEndingDirectorySeparator(Path.GetFullPath(Module.WorkingDir));
+                string requestedPath = Path.TrimEndingDirectorySeparator(Path.GetFullPath(args[2]));
+                StringComparison pathComparison = OperatingSystem.IsWindows()
+                    ? StringComparison.OrdinalIgnoreCase
+                    : StringComparison.Ordinal;
+                if (string.Equals(modulePath, requestedPath, pathComparison) && Module.SuperprojectModule is not null)
+                {
+                    Module = Module.SuperprojectModule;
+                }
+
                 return RunFileHistoryCommand(args, showBlame: command == BlameHistoryCommand);
-            case "fileeditor":
+            case "fileeditor":  // filename
                 return StartFileEditorDialog(args[2]);
             case "formatpatch":
                 return StartFormatPatchDialog();
             case "gitignore":
                 return StartEditGitIgnoreDialog(null, localExcludes: false);
-            case "init":
+            case "init":        // [path]
                 return RunInitCommand(args);
-            case "merge":
+            case "merge":       // [--branch name]
                 return RunMergeCommand(arguments);
             case "mergeconflicts":
-            case "mergetool":
+            case "mergetool":   // [--quiet]
                 return RunMergeToolOrConflictCommand(arguments);
-            case "openrepo":
+            case "openrepo":    // [path]
                 return RunOpenRepoCommand(args);
-            case "pull":
+            case "pull":        // [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
                 return Pull(arguments);
-            case "push":
+            case "push":        // [--quiet]
                 return Push(arguments);
-            case "rebase":
+            case "rebase":      // [--branch name]
                 return RunRebaseCommand(arguments);
             case "remotes":
                 return StartRemotesDialog(owner: null);
             case "revert":
             case "reset":
+                // If names of files or folders have been specified, pass them
                 return StartResetChangesDialog(names: [.. args.Skip(2)]);
             case "settings":
                 return StartSettingsDialog(owner: null);
@@ -1558,19 +1642,16 @@ public sealed class GitUICommands : IGitUICommands
                 return RunSearchFileCommand();
             case "stash":
                 return StartStashDialog();
-            case "synchronize":
+            case "synchronize": // [--rebase] [--merge] [--fetch] [--quiet]
                 return RunSynchronizeCommand(arguments);
             case "tag":
                 return StartCreateTagDialog();
             case "viewdiff":
                 return StartCompareRevisionsDialog();
-            case "viewpatch":
+            case "viewpatch":   // [filename]
                 return StartViewPatchDialog(args.Count == 3 ? args[2] : string.Empty);
             case "uninstall":
                 return UninstallEditor();
-            case "usage":
-            case "help":
-                return ShowCommandlineHelp();
             default:
                 if (command.StartsWith("git://") || command.StartsWith("http://") || command.StartsWith("https://"))
                 {
@@ -1596,11 +1677,11 @@ public sealed class GitUICommands : IGitUICommands
                     return WithWorkingDirectory(dir).StartBrowseDialog(owner: null);
                 }
 
-                string message = $"The command \"{command}\" is not available in the Avalonia port yet.";
-                Console.Error.WriteLine(message);
-                MessageBoxes.ShowError(owner: null, message, "Unsupported command");
-                return false;
+                break;
         }
+
+#pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
+        return ShowCommandlineHelp();
     }
 
     private static bool UninstallEditor()
@@ -1746,6 +1827,7 @@ public sealed class GitUICommands : IGitUICommands
         GitItemStatus[] selectedItems = [.. Module.GetAllChangedFilesWithSubmodulesStatus(cancellationToken: default)
             .Where(item => allItems || relativeFilePaths.Contains(item.Name) || relativeFolderPaths.Any(folder => item.Path.Value.StartsWith(folder)))];
 
+        // Show a form asking the user if they want to reset the changes.
         FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(
             owner: null,
             hasExistingFiles: selectedItems.Any(item => item.IsTracked),
@@ -1758,6 +1840,7 @@ public sealed class GitUICommands : IGitUICommands
 
         using (WaitCursorScope.Enter())
         {
+            // Reset all changes.
             if (names.Length == 0)
             {
                 return Module.ResetAllChanges(
@@ -1842,7 +1925,10 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     public bool StartSettingsDialog(IGitPlugin gitPlugin)
-        => StartSettingsDialog(owner: null, new SettingsPageReferenceByPlugin(gitPlugin));
+    {
+        // TODO: how to pass the main dialog as owner of the SettingsDialog (first parameter):
+        return StartSettingsDialog(null, new SettingsPageReferenceByPlugin(gitPlugin));
+    }
 
     public bool StartSettingsDialog(IWin32Window? owner, SettingsPageReference? initialPage = null)
     {
