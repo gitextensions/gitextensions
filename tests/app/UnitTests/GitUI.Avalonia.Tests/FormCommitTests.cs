@@ -804,6 +804,43 @@ public sealed class FormCommitTests
         result.Should().BeFalse();
     }
 
+    [Test]
+    public void StartCommitDialog_should_register_standalone_commit_plugins_for_the_dialog_lifetime()
+    {
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        GitUICommands commands = new(_serviceContainer, module);
+        IGitPluginForCommit plugin = Substitute.For<IGitPluginForCommit>();
+        commands.PreCommit += (_, e) => e.Cancel = true;
+
+        PluginRegistry.PluginsRegistered.Should().BeFalse();
+        lock (PluginRegistry.Plugins)
+        {
+            PluginRegistry.Plugins.Add(plugin);
+        }
+
+        try
+        {
+            bool result = commands.StartCommitDialog(owner: null);
+
+            result.Should().BeFalse();
+            plugin.Received(1).Register(commands);
+            plugin.Received(1).Unregister(commands);
+            PluginRegistry.PluginsRegistered.Should().BeFalse();
+        }
+        finally
+        {
+            if (PluginRegistry.PluginsRegistered)
+            {
+                PluginRegistry.Unregister(commands);
+            }
+
+            lock (PluginRegistry.Plugins)
+            {
+                PluginRegistry.Plugins.Remove(plugin);
+            }
+        }
+    }
+
     [AvaloniaTest]
     public async Task FormCommit_should_stage_and_unstage_selected_and_all_files()
     {

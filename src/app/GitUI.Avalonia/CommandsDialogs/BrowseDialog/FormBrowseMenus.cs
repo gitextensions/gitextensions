@@ -1,12 +1,15 @@
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Compat;
+using Microsoft;
 using ResourceManager;
+using Point = Avalonia.Point;
 using SourceControls = GitUI.Compat.WinFormsControls;
 
 namespace GitUI.CommandsDialogs;
@@ -30,23 +33,9 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
     private List<MenuCommand>? _navigateMenuCommands;
     private List<MenuCommand>? _viewMenuCommands;
 
-    private readonly SourceControls.ToolStripMenuItem _navigateToolStripMenuItem = new()
-    {
-        Name = "navigateToolStripMenuItem",
-        Header = "_Navigate",
-        IsVisible = false,
-    };
-    private readonly SourceControls.ToolStripMenuItem _viewToolStripMenuItem = new()
-    {
-        Name = "viewToolStripMenuItem",
-        Header = "_View",
-        IsVisible = false,
-    };
-    private readonly MenuItem _toolbarsMenuItem = new()
-    {
-        Name = "toolbarsMenuItem",
-        Header = "_Toolbars",
-    };
+    private SourceControls.ToolStripMenuItem? _navigateToolStripMenuItem;
+    private SourceControls.ToolStripMenuItem? _viewToolStripMenuItem;
+    private MenuItem? _toolbarsMenuItem;
 
     // we have to remember which items we registered with the menucommands because other
     // location (RevisionGrid) can register items too!
@@ -55,18 +44,20 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
     public FormBrowseMenus(Menu menuStrip)
     {
         _mainMenuStrip = menuStrip;
+
+        CreateMenuItems();
         Translate();
 
-        _navigateToolStripMenuItem.SubmenuOpened += MainMenuItem_SubmenuOpened;
-        _viewToolStripMenuItem.SubmenuOpened += MainMenuItem_SubmenuOpened;
-        _toolStripContextMenu.Opening += ToolStripContextMenu_Opening;
+        _navigateToolStripMenuItem!.SubmenuOpened += MainMenuItem_SubmenuOpened;
+        _viewToolStripMenuItem!.SubmenuOpened += MainMenuItem_SubmenuOpened;
+        _toolbarsMenuItem!.SubmenuOpened += (_, _) => RefreshToolbarsMenuItemCheckedState(_toolbarsMenuItem.Items);
+        _toolStripContextMenu.Opening += (_, _) => RefreshToolbarsMenuItemCheckedState(_toolStripContextMenu.Items);
     }
 
     public void Dispose()
     {
-        _navigateToolStripMenuItem.SubmenuOpened -= MainMenuItem_SubmenuOpened;
-        _viewToolStripMenuItem.SubmenuOpened -= MainMenuItem_SubmenuOpened;
-        _toolStripContextMenu.Opening -= ToolStripContextMenu_Opening;
+        _navigateToolStripMenuItem?.SubmenuOpened -= MainMenuItem_SubmenuOpened;
+        _viewToolStripMenuItem?.SubmenuOpened -= MainMenuItem_SubmenuOpened;
         RemoveRevisionGridMainMenuItems();
         _toolStripContextMenu.Close();
     }
@@ -76,24 +67,27 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
         Translator.Translate(this, AppSettings.CurrentTranslation);
     }
 
-    internal MenuItem NavigateMenuItem => _navigateToolStripMenuItem;
+    internal MenuItem NavigateMenuItem => _navigateToolStripMenuItem!;
 
-    internal MenuItem ViewMenuItem => _viewToolStripMenuItem;
+    internal MenuItem ViewMenuItem => _viewToolStripMenuItem!;
 
     internal ContextMenu ToolStripContextMenu => _toolStripContextMenu;
 
     public void AddTranslationItems(ITranslation translation)
     {
-        translation.AddTranslationItem(nameof(FormBrowse), "navigateToolStripMenuItem", "Text", "&Navigate");
-        translation.AddTranslationItem(nameof(FormBrowse), "viewToolStripMenuItem", "Text", "&View");
-        translation.AddTranslationItem(nameof(FormBrowse), "toolbarsMenuItem", "Text", "Toolbars");
+        foreach ((string name, object _) in GetAdditionalMainMenuItemsForTranslation())
+        {
+            translation.AddTranslationItem(nameof(FormBrowse), name, "Text", GetSourceText(name));
+        }
     }
 
     public void TranslateItems(ITranslation translation)
     {
-        _navigateToolStripMenuItem.Header = Translate("navigateToolStripMenuItem", "&Navigate");
-        _viewToolStripMenuItem.Header = Translate("viewToolStripMenuItem", "&View");
-        _toolbarsMenuItem.Header = Translate("toolbarsMenuItem", "Toolbars");
+        foreach ((string name, object item) in GetAdditionalMainMenuItemsForTranslation())
+        {
+            ((MenuItem)item).Header = Translate(name, GetSourceText(name));
+        }
+
         OnMenuCommandsPropertyChanged();
 
         return;
@@ -109,14 +103,31 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
         }
     }
 
+    private static string GetSourceText(string name)
+        => name switch
+        {
+            "navigateToolStripMenuItem" => "&Navigate",
+            "viewToolStripMenuItem" => "&View",
+            "toolbarsMenuItem" => "Toolbars",
+            _ => string.Empty,
+        };
+
     internal void SetVisible(bool visible)
     {
-        _navigateToolStripMenuItem.IsVisible = visible;
-        _viewToolStripMenuItem.IsVisible = visible;
+        _navigateToolStripMenuItem!.IsVisible = visible;
+        _viewToolStripMenuItem!.IsVisible = visible;
     }
 
+    /// <summary>
+    /// Creates menu items for each toolbar supplied in <paramref name="toolStrips"/>. These menus will
+    /// be surfaced in <see cref="_mainMenuStrip"/>, and <see cref="_toolStripContextMenu"/>,
+    /// and will allow to toggle visibility of the toolbars.
+    /// </summary>
+    /// <param name="toolStrips">The list of toobars to toggle visibility for.</param>
     public void CreateToolbarsMenus(params (Control ToolStrip, string Text)[] toolStrips)
     {
+        Validates.NotNull(_toolbarsMenuItem);
+
         foreach ((Control toolStrip, string text) in toolStrips)
         {
             _toolStripContextMenu.Items.Add(CreateItem(toolStrip, text));
@@ -125,25 +136,27 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
 
         static MenuItem CreateItem(Control toolStrip, string text)
         {
-            MenuItem item = new()
+            MenuItem toolStripItem = new()
             {
                 Header = text,
                 IsChecked = toolStrip.IsVisible,
                 Tag = toolStrip,
                 ToggleType = MenuItemToggleType.CheckBox,
+
+                // Cancel closing menu to allow selecting/unselecting multiple items.
                 StaysOpenOnClick = true,
             };
-            AutomationProperties.SetName(item, text);
-            CreateToolStripSubMenus(toolStrip, item);
+            AutomationProperties.SetName(toolStripItem, text);
+            CreateToolStripSubMenus(toolStrip, toolStripItem);
             toolStrip.PropertyChanged += (_, e) =>
             {
                 if (e.Property == Visual.IsVisibleProperty)
                 {
-                    item.IsChecked = toolStrip.IsVisible;
+                    toolStripItem.IsChecked = toolStrip.IsVisible;
                 }
             };
-            item.Click += (_, _) => toolStrip.IsVisible = !toolStrip.IsVisible;
-            return item;
+            toolStripItem.Click += (_, _) => toolStrip.IsVisible = !toolStrip.IsVisible;
+            return toolStripItem;
         }
     }
 
@@ -298,6 +311,13 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
         }
     }
 
+    public void ShowToolStripContextMenu(Point point)
+    {
+        _toolStripContextMenu.Placement = PlacementMode.AnchorAndGravity;
+        _toolStripContextMenu.PlacementRect = new Rect(point.X, point.Y, 1, 1);
+        _toolStripContextMenu.Open(_mainMenuStrip);
+    }
+
     public void ResetMenuCommandSets()
     {
         RemoveRevisionGridMainMenuItems();
@@ -315,7 +335,7 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
     {
         // In the current implementation command menus are defined in the RevisionGrid control,
         // and added to the main menu of the FormBrowse for the ease of use
-        List<MenuCommand> selectedMenuCommands;
+        List<MenuCommand> selectedMenuCommands; // make that more clear
         switch (mainMenuItem)
         {
             case MainMenuItem.NavigateMenu:
@@ -355,8 +375,15 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
     public void InsertRevisionGridMainMenuItems(MenuItem insertAfterMenuItem)
     {
         RemoveRevisionGridMainMenuItems();
-        SetDropDownItems(_navigateToolStripMenuItem, _navigateMenuCommands ?? []);
-        SetDropDownItems(_viewToolStripMenuItem, _viewMenuCommands ?? []);
+
+        Validates.NotNull(_navigateToolStripMenuItem);
+        Validates.NotNull(_navigateMenuCommands);
+        Validates.NotNull(_viewToolStripMenuItem);
+        Validates.NotNull(_viewMenuCommands);
+        Validates.NotNull(_toolbarsMenuItem);
+
+        SetDropDownItems(_navigateToolStripMenuItem, _navigateMenuCommands);
+        SetDropDownItems(_viewToolStripMenuItem, _viewMenuCommands);
 
         int insertIndex = _mainMenuStrip.Items.IndexOf(insertAfterMenuItem) + 1;
         _mainMenuStrip.Items.Insert(insertIndex, _navigateToolStripMenuItem);
@@ -372,6 +399,45 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
 
         // maybe set check marks on menu items
         OnMenuCommandsPropertyChanged();
+    }
+
+    /// <summary>
+    /// Creates menu items to be added to the main menu of the <see cref="FormBrowse"/>
+    /// (represented by <see cref="_mainMenuStrip"/>).
+    /// </summary>
+    /// <remarks>
+    /// Call in ctor before translation.
+    /// </remarks>
+    private void CreateMenuItems()
+    {
+        _navigateToolStripMenuItem ??= new SourceControls.ToolStripMenuItem
+        {
+            Name = "navigateToolStripMenuItem",
+            Header = "_Navigate",
+            IsVisible = false,
+        };
+
+        _viewToolStripMenuItem ??= new SourceControls.ToolStripMenuItem
+        {
+            Name = "viewToolStripMenuItem",
+            Header = "_View",
+            IsVisible = false,
+        };
+
+        _toolbarsMenuItem ??= new MenuItem
+        {
+            Name = "toolbarsMenuItem",
+            Header = "_Toolbars",
+        };
+    }
+
+    private IEnumerable<(string name, object item)> GetAdditionalMainMenuItemsForTranslation()
+    {
+        foreach (MenuItem? menuItem in new[] { _navigateToolStripMenuItem, _viewToolStripMenuItem, _toolbarsMenuItem })
+        {
+            Validates.NotNull(menuItem);
+            yield return (menuItem.Name!, menuItem);
+        }
     }
 
     private void SetDropDownItems(MenuItem toolStripMenuItemTarget, IEnumerable<MenuCommand> menuCommands)
@@ -391,6 +457,10 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
         }
     }
 
+    // clear is important to avoid mem leaks of event handlers
+    // TODO: is everything cleared correct or are there leftover references?
+    //       is this relevant here at all?
+    //         see also ResetMenuCommandSets()?
     public void RemoveRevisionGridMainMenuItems()
     {
         _mainMenuStrip.Items.Remove(_navigateToolStripMenuItem);
@@ -400,8 +470,8 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
         _navigateMenuCommands?.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
         _viewMenuCommands?.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
         _itemsRegisteredWithMenuCommand.Clear();
-        _navigateToolStripMenuItem.Items.Clear();
-        _viewToolStripMenuItem.Items.Clear();
+        _navigateToolStripMenuItem?.Items.Clear();
+        _viewToolStripMenuItem?.Items.Clear();
     }
 
     public void OnMenuCommandsPropertyChanged()
@@ -432,11 +502,8 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
     private void MainMenuItem_SubmenuOpened(object? sender, EventArgs e)
     {
         OnMenuCommandsPropertyChanged();
-        RefreshToolbarsMenuItemCheckedState(_toolbarsMenuItem.Items);
+        RefreshToolbarsMenuItemCheckedState(_toolbarsMenuItem!.Items);
     }
-
-    private void ToolStripContextMenu_Opening(object? sender, System.ComponentModel.CancelEventArgs e)
-        => RefreshToolbarsMenuItemCheckedState(_toolStripContextMenu.Items);
 
     private static void RefreshToolbarsMenuItemCheckedState(IEnumerable<object?> items)
     {
