@@ -181,18 +181,6 @@ partial class FileStatusList
         DiffListSortService.Instance.DiffListSorting = (DiffListSortType)((ToolStripMenuItem)sender).Tag!;
     }
 
-    private bool IsDiffStatusMatch(DiffBranchStatus diffStatus)
-    {
-        return diffStatus switch
-        {
-            DiffBranchStatus.UnequalChange => btnUnequalChange.Checked,
-            DiffBranchStatus.OnlyBChange => btnOnlyB.Checked,
-            DiffBranchStatus.OnlyAChange => btnOnlyA.Checked,
-            DiffBranchStatus.SameChange => btnSameChange.Checked,
-            _ => true
-        };
-    }
-
     private void RefreshOnFormFocus_Click(object sender, EventArgs e)
     {
         AppSettings.RefreshArtificialCommitOnApplicationActivated = tsmiRefreshOnFormFocus.Checked;
