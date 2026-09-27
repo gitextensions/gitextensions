@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitUI.NBugReports;
 
 namespace GitUI.CommandsDialogs.BrowseDialog;
 
@@ -291,6 +292,7 @@ public sealed class GitStatusMonitor : IDisposable
             return;
         }
 
+        // git directory changed
         if (string.Equals(Path.GetFileName(e.FullPath), "index.lock", PathComparison))
         {
             return;
@@ -300,6 +302,8 @@ public sealed class GitStatusMonitor : IDisposable
             && IsSameOrDescendantPath(e.FullPath, _submodulesPath)
             && Directory.Exists(e.FullPath))
         {
+            // submodules directory's subdir changed
+            // cut/paste/rename/delete operations are not expected on directories inside nested .git dirs
             return;
         }
 
@@ -353,6 +357,7 @@ public sealed class GitStatusMonitor : IDisposable
     {
         lock (_statusSequenceLock)
         {
+            // First time after open a repo, trigger an update with locked buffers (to speed up subsequent updates)
             _isFirstPostRepoChanged = true;
         }
     }
@@ -407,6 +412,7 @@ public sealed class GitStatusMonitor : IDisposable
         }
         catch
         {
+            // no-op
             CurrentStatus = GitStatusMonitorState.Stopped;
         }
     }
@@ -470,6 +476,8 @@ public sealed class GitStatusMonitor : IDisposable
             }
 
             EnableRaisingEvents();
+
+            // capture a consistent state in the main thread
             module = activeModule;
             noLocks = !_isFirstPostRepoChanged;
             cancellationToken = _statusSequence.Next();
@@ -509,10 +517,19 @@ public sealed class GitStatusMonitor : IDisposable
             }
             catch (OperationCanceledException)
             {
+                // No action
             }
             catch (Exception exception)
             {
-                Trace.WriteLine(exception.Message);
+                if (exception.Message?.Contains(BugReportInvoker.DubiousOwnershipSecurityConfigString) is true)
+                {
+                    BugReportInvoker.Report(exception, isTerminating: false);
+                }
+                else
+                {
+                    Trace.WriteLine(exception.Message);
+                }
+
                 try
                 {
                     if (++_consecutiveErrorCount < _maxConsecutiveErrors)
@@ -529,6 +546,7 @@ public sealed class GitStatusMonitor : IDisposable
                 }
                 catch
                 {
+                    // No action
                 }
             }
             finally
@@ -622,12 +640,14 @@ public sealed class GitStatusMonitor : IDisposable
 
         if (string.Equals(Path.GetFileName(e.FullPath), ".git", PathComparison))
         {
+            // new submodule .git file
             return;
         }
 
         if (string.Equals(Path.GetFileName(e.FullPath), "index.lock", PathComparison)
             && string.Equals(Path.GetFileName(Path.GetDirectoryName(e.FullPath)), ".git", PathComparison))
         {
+            // old submodule .git\index.lock file
             return;
         }
 
@@ -637,6 +657,7 @@ public sealed class GitStatusMonitor : IDisposable
 
     private void WorkTreeWatcherError(object? sender, ErrorEventArgs e)
     {
+        // Called for instance at buffer overflow
         ScheduleNextUpdateTime(FileChangedUpdateDelay);
     }
 }

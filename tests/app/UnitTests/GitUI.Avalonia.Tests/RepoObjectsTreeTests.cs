@@ -130,6 +130,35 @@ public sealed class RepoObjectsTreeTests
     }
 
     [AvaloniaTest]
+    public void SetRefs_should_select_the_current_branch_when_the_previous_selection_disappears()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            RepoObjectsTree control = new();
+            control.SetRefs(
+            [
+                CreateRef("refs/heads/main"),
+                CreateRef("refs/heads/feature"),
+            ], [], "main");
+            TreeView tree = control.GetTestAccessor().Tree;
+            TreeViewItem branches = tree.Items.Cast<TreeViewItem>().First();
+            tree.SelectedItems!.Clear();
+            tree.SelectedItem = branches.Items.Cast<TreeViewItem>().Single(item => HeaderText(item) == "feature");
+
+            control.SetRefs([CreateRef("refs/heads/main")], [], "main");
+
+            tree.SelectedItems.Cast<TreeViewItem>().Should().ContainSingle();
+            HeaderText(tree.SelectedItems.Cast<TreeViewItem>().Single()).Should().Be("main");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
     public void Search_should_cycle_matching_nodes_and_expand_their_paths()
     {
         SettingsSnapshot settings = SettingsSnapshot.Capture();
@@ -513,6 +542,41 @@ public sealed class RepoObjectsTreeTests
             AppSettings.RepoObjectsTreeShowStashes = false;
             control.SetRefs([], [stash]);
             accessor.Tree.Items.Cast<TreeViewItem>().Should().HaveCount(5);
+        }
+        finally
+        {
+            AppSettings.RepoObjectsTreeShowStashes = originalShowStashes;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Stashes_should_start_hidden_and_apply_grid_visibility_after_loading()
+    {
+        bool originalShowStashes = AppSettings.RepoObjectsTreeShowStashes;
+        try
+        {
+            AppSettings.RepoObjectsTreeShowStashes = true;
+            ICheckRefs refsSource = Substitute.For<ICheckRefs>();
+            refsSource.Contains(StashId).Returns(false);
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(Substitute.For<IGitModule>());
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            RepoObjectsTree control = new() { UICommandsSource = source };
+            control.Initialize(
+                aheadBehindDataProvider: null,
+                filterRevisionGridBySpaceSeparatedRefs: _ => { },
+                refsSource,
+                Substitute.For<IRevisionGridInfo>());
+            control.SetRefs([], [CreateStash()]);
+            TreeViewItem stash = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>().Last().Items.Cast<TreeViewItem>().Single();
+
+            ((Image)((StackPanel)stash.Header!).Children[0]).Source.Should().BeSameAs(GitUI.Properties.Images.EyeClosed);
+
+            refsSource.Contains(StashId).Returns(true);
+            control.RefreshRevisionsLoaded();
+
+            ((Image)((StackPanel)stash.Header!).Children[0]).Source.Should().BeSameAs(GitUI.Properties.Images.Stash);
         }
         finally
         {
@@ -1031,8 +1095,13 @@ public sealed class RepoObjectsTreeTests
 
     private static SubmoduleInfoResult CreateSubmoduleResult(string topPath, params SubmoduleInfo[] submodules)
     {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(topPath);
+        module.GetTopModule().Returns(module);
+        module.SuperprojectModule.Returns((IGitModule?)null);
         SubmoduleInfoResult result = new()
         {
+            Module = module,
             TopProject = new SubmoduleInfo($"{Path.GetFileName(topPath)} (main)", topPath, bold: true),
         };
         foreach (SubmoduleInfo submodule in submodules)

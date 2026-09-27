@@ -78,7 +78,7 @@ partial class FormBrowse
                 return;
             }
 
-            // The Avalonia tree receives the completed ref set atomically from RefreshLeftPanel.
+            repoObjectsTree.RefreshRevisionsLoaded();
         };
 
         RevisionGrid.SelectionChanged += (sender, e) =>

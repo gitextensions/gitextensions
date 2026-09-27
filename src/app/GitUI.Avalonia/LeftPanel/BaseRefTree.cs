@@ -8,6 +8,8 @@ namespace GitUI.LeftPanel;
 
 internal abstract class BaseRefTree : BaseRevisionTree
 {
+    // Retains the list of currently loaded refs (branches/tags).
+    // This is needed to apply filtering without reloading the data.
     protected IReadOnlyList<IGitRef>? _loadedRefs;
 
     protected readonly RefsFilter _refsFilter;
@@ -84,10 +86,16 @@ internal abstract class BaseRefTree : BaseRevisionTree
         => OrderByPriority(remotes.OrderBy(node => node.FullPath).ToList(), node => node.FullPath, AppSettings.PrioritizedRemoteNames);
 
     /// <summary>
-    /// Order the references by the priorities in the setting regex
+    ///  Order the references by the priorities in the setting regex
     /// </summary>
+    /// <typeparam name="T">The type to prioritize, e.g. IGitRef.</typeparam>
+    /// <param name="references">The branches or remotes to prioritize.</param>
+    /// <param name="keySelector">Function in T to get the sorter.</param>
+    /// <param name="setting">String with regexes with priorities separated by semicolon.</param>
+    /// <returns>The resorted references.</returns>
     private static IEnumerable<T> OrderByPriority<T>(IReadOnlyList<T> references, Func<T, string> keySelector, string setting)
     {
+        // Sort prio branches first (if set) with the compile cache (no need to instantiate)
         string[] regexes = [.. setting.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(regex => $"^({regex})$")];
         if (regexes.Length == 0)
         {
@@ -95,6 +103,15 @@ internal abstract class BaseRefTree : BaseRevisionTree
         }
 
         const int additionalRegexCacheEntries = 10;
+
+        // A lot of regexes will push out entries from the static regex cache, increasing the time a lot (several hundred ms).
+        // (Switching the regex to the outer loop will decrease the effect but the code structure is simpler this way).
+        // The static .NET regex cache must be able to include at least all regexes in the loop,
+        // ideally also all common use in a "refresh" loop, so increase the size.
+        // A few usages in branches vs remote in this method, CommitInfo adds usage for
+        // split length of PrioritizedBranchNames (for remotes) and PrioritizedRemoteNames,
+        // a few usages in submodule status processing etc.
+        // This check should probably be done in a central location only at startup.
         if ((regexes.Length * 2) + additionalRegexCacheEntries > Regex.CacheSize)
         {
             Regex.CacheSize = (regexes.Length * 2) + additionalRegexCacheEntries;
@@ -117,6 +134,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
             }
         }
 
+        // Order by the sort match, with no match last as int.Max
         return references.OrderBy(node => orderByNodeKey.GetValueOrDefault(keySelector(node), int.MaxValue));
     }
 

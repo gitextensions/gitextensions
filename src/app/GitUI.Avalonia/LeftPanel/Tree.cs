@@ -107,7 +107,7 @@ internal abstract class Tree : NodeBase, IDisposable
     }
 
     // Called after the TreeView has been populated from Nodes. A good place to update properties
-    // of the TreeViewNode, such as its name (TreeViewNode.Text), Expand/Collapse state, and
+    // of the TreeViewNode, such as it's name (TreeViewNode.Text), Expand/Collapse state, and
     // to set selected node (TreeViewNode.TreeView.SelectedNode).
     protected virtual void PostFillTreeViewNode(bool firstTime)
     {
