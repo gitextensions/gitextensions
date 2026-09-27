@@ -1038,12 +1038,7 @@ partial class FileStatusList
 
     private void ShowInFolder_Click(object sender, EventArgs e)
     {
-        if (GetSelectedAbsolutePath() is not string path)
-        {
-            return;
-        }
-
-        FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(path);
+        FormBrowse.OpenContainingFolder(this, Module);
     }
 
     private void SkipWorktree_Click(object sender, EventArgs e)

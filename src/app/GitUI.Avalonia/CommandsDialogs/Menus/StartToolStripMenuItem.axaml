@@ -1,5 +1,6 @@
 <menus:ToolStripMenuItemEx xmlns="https://github.com/avaloniaui"
                               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                              xmlns:compatControls="using:GitUI.Compat.WinFormsControls"
                               xmlns:menus="using:GitUI.CommandsDialogs.Menus"
                               xmlns:properties="using:GitUI.Properties"
                               x:Class="GitUI.CommandsDialogs.Menus.StartToolStripMenuItem"
@@ -10,16 +11,16 @@
   <MenuItem x:Name="openToolStripMenuItem" Header="_Open...">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RepoOpen}" /></MenuItem.Icon>
   </MenuItem>
-  <MenuItem x:Name="tsmiFavouriteRepositories" Classes="gitextensions-menu-no-gesture" Header="_Favorite repositories">
-    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Star}" /></MenuItem.Icon>
+  <compatControls:ToolStripMenuItem x:Name="tsmiFavouriteRepositories" Classes="gitextensions-menu-no-gesture" Header="_Favorite repositories">
+    <compatControls:ToolStripMenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Star}" /></compatControls:ToolStripMenuItem.Icon>
     <MenuItem Header="..." />
-  </MenuItem>
-  <MenuItem x:Name="tsmiRecentRepositories" Classes="gitextensions-menu-no-gesture" Header="_Recent repositories">
-    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RecentRepositories}" /></MenuItem.Icon>
+  </compatControls:ToolStripMenuItem>
+  <compatControls:ToolStripMenuItem x:Name="tsmiRecentRepositories" Classes="gitextensions-menu-no-gesture" Header="_Recent repositories">
+    <compatControls:ToolStripMenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RecentRepositories}" /></compatControls:ToolStripMenuItem.Icon>
     <MenuItem Header="..." />
     <Separator x:Name="clearRecentRepositoriesListToolStripMenuItem" />
     <MenuItem x:Name="tsmiRecentRepositoriesClear" Header="Clear list" />
-  </MenuItem>
+  </compatControls:ToolStripMenuItem>
   <Separator x:Name="toolStripSeparator12" />
   <MenuItem x:Name="cloneToolStripMenuItem" Classes="gitextensions-menu-no-gesture" Header="C_lone repository...">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CloneRepoGit}" /></MenuItem.Icon>
