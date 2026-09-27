@@ -56,7 +56,10 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IUserRepositoriesListController>(
             new UserRepositoriesListController(RepositoryHistoryManager.Locals, invalidRepositoryRemover, branchNameCache));
         serviceContainer.AddService<IRepositoryHistoryUIService>(
-            new RepositoryHistoryUIService(branchNameCache, invalidRepositoryRemover));
+            new RepositoryHistoryUIService(
+                serviceContainer.GetRequiredService<IGitExecutorProvider>(),
+                branchNameCache,
+                invalidRepositoryRemover));
 
         serviceContainer.AddService<IShellProvider>(new ShellProvider());
     }

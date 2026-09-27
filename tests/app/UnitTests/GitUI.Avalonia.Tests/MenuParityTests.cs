@@ -19,19 +19,10 @@ namespace GitExtensionsTests;
 public sealed class MenuParityTests
 {
     [AvaloniaTest]
-    public void Start_menu_should_populate_shared_recent_and_favourite_history_and_route_selection()
+    public void Start_menu_should_delegate_repository_history_and_forward_module_changes()
     {
         Repository recent = new(@"C:\repos\recent");
-        Repository regular = new(@"C:\repos\regular");
-        Repository favourite = new(@"C:\repos\favourite") { Category = "Team" };
         IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
-        history.LoadSnapshot().Returns(new RepositoryHistorySnapshot(
-            [
-                new RepositoryHistoryEntry(recent, "Recent caption", "main", IsFavourite: false, IsAnchored: true),
-                new RepositoryHistoryEntry(regular, "Regular caption", null, IsFavourite: false, IsAnchored: false),
-            ],
-            [new RepositoryHistoryEntry(favourite, "Favourite caption", "feature", IsFavourite: true, IsAnchored: false)]));
-        history.CanOpenRepository(recent.Path).Returns(true);
         IGitExecutorProvider executorProvider = Substitute.For<IGitExecutorProvider>();
         IGitExecutor executor = Substitute.For<IGitExecutor>();
         executor.WorkingDir.Returns(recent.Path);
@@ -49,24 +40,16 @@ public sealed class MenuParityTests
         accessor.FavouriteRepositoriesMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
         accessor.RecentRepositoriesMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
 
-        MenuItem category = accessor.FavouriteRepositoriesMenuItem.Items.OfType<MenuItem>().Single();
-        category.Header.Should().Be("Team");
-        GetHeaderText(category.Items.OfType<MenuItem>().Single()).Should().Equal("_1: Favourite caption", "feature");
-        MenuItem recentItem = accessor.RecentRepositoriesMenuItem.Items.OfType<MenuItem>().First();
-        GetHeaderText(recentItem).Should().Equal("_1: Recent caption", "main");
-        recentItem.Icon.Should().BeOfType<Image>();
-        accessor.RecentRepositoriesMenuItem.Items.Should().HaveCount(5);
-        accessor.RecentRepositoriesMenuItem.Items.ElementAt(1).Should().BeOfType<Separator>();
+        history.Received(1).PopulateFavouriteRepositoriesMenu(
+            Arg.Is<GitUI.Compat.WinFormsControls.ToolStripDropDownItem>(item => ReferenceEquals(item, accessor.FavouriteRepositoriesMenuItem)));
+        history.Received(1).PopulateRecentRepositoriesMenu(
+            Arg.Is<GitUI.Compat.WinFormsControls.ToolStripDropDownItem>(item => ReferenceEquals(item, accessor.RecentRepositoriesMenuItem)));
 
-        recentItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        GitModule module = new(executorProvider, recent.Path);
+        history.GitModuleChanged += Raise.Event<EventHandler<GitModuleEventArgs>>(history, new GitModuleEventArgs(module));
 
         transition.Should().NotBeNull();
         transition!.GitModule.WorkingDir.Should().Be(recent.Path);
-
-        return;
-
-        static string?[] GetHeaderText(MenuItem item)
-            => ((Grid)item.Header!).Children.OfType<TextBlock>().Select(text => text.Text).ToArray();
     }
 
     [AvaloniaTest]
