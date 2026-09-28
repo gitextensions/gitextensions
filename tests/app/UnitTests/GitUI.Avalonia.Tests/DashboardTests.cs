@@ -128,6 +128,52 @@ public sealed class DashboardTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [NonParallelizable]
+    public void Repository_tile_should_measure_its_source_width_when_no_minimum_is_configured()
+    {
+        int originalMinimum = AppSettings.RecentReposComboMinWidth;
+        try
+        {
+            AppSettings.RecentReposComboMinWidth = 0;
+            const string caption = "a deliberately long repository caption used for source-sized dashboard tiles";
+            Repository repository = new(@"C:\repos\long");
+            RepositoryHistorySnapshot snapshot = new(
+                [new RepositoryHistoryEntry(repository, caption, "main", IsFavourite: false, IsAnchored: false)],
+                []);
+            UserRepositoriesList list = new();
+            list.Initialize(CreateController(snapshot), CreateHistory(snapshot), () => Substitute.For<IGitUICommands>());
+            list.ShowRecentRepositories(reloadData: false);
+            Window window = new() { Width = 900, Height = 260, Content = list };
+
+            try
+            {
+                window.Show();
+                Dispatcher.UIThread.RunJobs();
+                Grid row = list.GetVisualDescendants()
+                    .OfType<ListBoxItem>()
+                    .Single(item => item.Content is UserRepositoriesList.RepositoryListItem)
+                    .GetVisualDescendants()
+                    .OfType<Grid>()
+                    .Single(grid => grid.Children.OfType<StackPanel>().Any());
+                TextBlock captionProbe = row.GetVisualDescendants().OfType<TextBlock>().Single(text => text.Text == caption);
+                double measuredCaption = WinFormsTextMeasurer.Measure(captionProbe, caption);
+
+                row.MinWidth.Should().Be(Math.Ceiling(measuredCaption + 16 + 50));
+                row.MinHeight.Should().BeGreaterThanOrEqualTo(50);
+            }
+            finally
+            {
+                window.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.RecentReposComboMinWidth = originalMinimum;
+        }
+    }
+
+    [AvaloniaTest]
     [Category("P4.5")]
     public void Selecting_a_valid_dashboard_repository_should_raise_the_module_transition()
     {
