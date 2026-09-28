@@ -130,6 +130,40 @@ public sealed class RepoObjectsTreeTests
     }
 
     [AvaloniaTest]
+    public void SelectNode_should_match_single_control_and_shift_selection_semantics()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            RepoObjectsTree control = new();
+            control.SetRefs(
+            [
+                CreateRef("refs/heads/main"),
+                CreateRef("refs/heads/feature/one"),
+                CreateRef("refs/heads/feature/two"),
+            ], [], "main");
+            RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
+
+            accessor.SelectNode<LocalBranchNode>(["Branches", "main"]);
+            accessor.SelectNode<BranchPathNode>(["Branches", "feature"], multiple: true, includingDescendants: true);
+
+            accessor.Tree.SelectedItems!.Cast<TreeViewItem>().Select(HeaderText)
+                .Should().BeEquivalentTo("main", "feature", "one", "two");
+
+            accessor.SelectNode<BranchPathNode>(["Branches", "feature"], multiple: true, includingDescendants: true);
+            accessor.Tree.SelectedItems.Cast<TreeViewItem>().Select(HeaderText).Should().Equal("main");
+
+            accessor.SelectNode<LocalBranchNode>(["Branches", "feature", "one"]);
+            accessor.Tree.SelectedItems.Cast<TreeViewItem>().Select(HeaderText).Should().Equal("one");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
     public void SetRefs_should_select_the_current_branch_when_the_previous_selection_disappears()
     {
         SettingsSnapshot settings = SettingsSnapshot.Capture();
@@ -256,6 +290,7 @@ public sealed class RepoObjectsTreeTests
 
             accessor.Tree.SelectedItem = branch;
             accessor.UpdateContextMenu().Should().BeTrue();
+            accessor.GetActionMenuItem("Copy").Should().BeOfType<CopyContextMenuItem>();
             MenuItem reset = accessor.GetActionMenuItem("Reset");
             MenuItem rename = accessor.GetActionMenuItem("RenameBranch");
             MenuItem delete = accessor.GetActionMenuItem("DeleteBranch");

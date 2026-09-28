@@ -18,11 +18,7 @@ internal sealed class WorktreeNode : Node
         Worktree = worktree;
         IsCurrent = isCurrent;
         DisplayPath = displayPath;
-        ToolTip.SetTip(TreeViewNode, GetToolTipText());
-        if (worktree.IsDeleted)
-        {
-            TreeViewNode.Classes.Add("worktree-deleted");
-        }
+        ApplyStyle();
     }
 
     public GitWorktree Worktree { get; }
@@ -77,6 +73,13 @@ internal sealed class WorktreeNode : Node
 
     protected override WinFormsShims.FontStyle GetFontStyle()
         => base.GetFontStyle() | (IsCurrent ? WinFormsShims.FontStyle.Bold : WinFormsShims.FontStyle.Regular);
+
+    public override void ApplyStyle()
+    {
+        base.ApplyStyle();
+        TreeViewNode.Classes.Set("worktree-deleted", Worktree.IsDeleted);
+        ToolTip.SetTip(TreeViewNode, GetToolTipText());
+    }
 
     private string GetToolTipText()
     {
