@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using GitUI.Properties;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.LeftPanel;
 
@@ -16,11 +17,22 @@ internal sealed class SubmoduleFolderNode : Node
 
     internal string Name => _name;
 
+    protected override string DisplayText()
+    {
+        return _name;
+    }
+
+    public override void ApplyStyle()
+    {
+        SetHeader(DisplayText(), Images.FolderClosed, isItalic: true);
+        base.ApplyStyle();
+    }
+
     /// <summary>
-        ///  Compacts chains of single-child folder nodes by merging their names with "/" separators.
-        ///  For example, a chain "extension" → "src" → "test" → "assets" becomes
-        ///  a single folder node named "extension/src/test/assets".
-        /// </summary>
+    ///  Compacts chains of single-child folder nodes by merging their names with "/" separators.
+    ///  For example, a chain "extension" → "src" → "test" → "assets" becomes
+    ///  a single folder node named "extension/src/test/assets".
+    /// </summary>
     public void CompactSingleChildFolders()
     {
         while (TreeViewNode.Items is [TreeViewItem { Tag: SubmoduleFolderNode childFolder }])
@@ -37,14 +49,19 @@ internal sealed class SubmoduleFolderNode : Node
                 TreeViewNode.Items.Add(child);
             }
 
-            SetHeader(_name, Images.FolderClosed, isItalic: true);
+            ApplyStyle();
         }
+    }
+
+    protected override WinFormsShims.FontStyle GetFontStyle()
+    {
+        return base.GetFontStyle() | WinFormsShims.FontStyle.Italic;
     }
 
     internal TestAccessor GetTestAccessor() => new(this);
 
     internal readonly struct TestAccessor(SubmoduleFolderNode node)
     {
-        public string DisplayText() => node._name;
+        public string DisplayText() => node.DisplayText();
     }
 }

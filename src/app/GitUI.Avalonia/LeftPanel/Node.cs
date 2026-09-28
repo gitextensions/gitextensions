@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using Avalonia.Media;
 using GitExtensions.Extensibility.Git;
 using GitUI.LeftPanel.Interfaces;
@@ -16,7 +17,19 @@ internal abstract class Node : NodeBase, INode
         Tree = tree;
     }
 
-    protected IWin32Window ParentWindow()
+    private TreeViewItem? _treeViewNode;
+
+    /// <summary>
+    /// The tree node representing this node.
+    /// Avalonia retains one native item per model node rather than recycling it for another node.
+    /// </summary>
+    protected internal override TreeViewItem TreeViewNode
+    {
+        get => _treeViewNode!;
+        protected set => _treeViewNode = value;
+    }
+
+    protected IWin32Window? ParentWindow()
         => Owner;
 
     protected virtual string DisplayText()
@@ -31,6 +44,12 @@ internal abstract class Node : NodeBase, INode
         if (TreeViewNode.Header is Avalonia.Controls.StackPanel panel
             && panel.Children.OfType<Avalonia.Controls.Image>().FirstOrDefault()?.Source is IImage icon)
         {
+            // Check before if value has changed because that's a costly operation
+            if (DisplayText() == ((Avalonia.Controls.TextBlock)panel.Children[1]).Text)
+            {
+                return;
+            }
+
             SetHeader(DisplayText(), icon);
         }
     }
