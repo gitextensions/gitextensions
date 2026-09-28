@@ -163,6 +163,8 @@
              row's lane segment assuming adjacent rows abut, so container padding stays zero. -->
         <Style Selector="ListBoxItem">
           <Setter Property="Padding" Value="0" />
+          <!-- DataGridView reserves its 17-DIP system-scrollbar column from every row. -->
+          <Setter Property="Margin" Value="0,0,17,0" />
           <Setter Property="MinHeight" Value="0" />
         </Style>
         <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">

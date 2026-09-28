@@ -327,8 +327,8 @@
                                 compat:TranslationCompat.TranslateToolTip="False"
                                 compat:TranslationCompat.UseToolTipText="True"
                                 Classes="gitextensions-toolbar-button gitextensions-icon-only"
-                                Content="Submodules"
-                                Icon="{x:Static properties:Images.SubmodulesManage}">
+                                Icon="{x:Static properties:Images.SubmodulesManage}"
+                                ToolTip.Tip="Submodules">
           <compat:IconSplitButton.Flyout>
             <MenuFlyout />
           </compat:IconSplitButton.Flyout>
@@ -338,9 +338,9 @@
                                 compat:TranslationCompat.TranslateToolTip="False"
                                 compat:TranslationCompat.UseToolTipText="True"
                                 Classes="gitextensions-toolbar-button gitextensions-icon-only"
-                                Content="Worktrees"
                                 Icon="{x:Static properties:Images.WorkTree}"
-                                IsVisible="False">
+                                IsVisible="False"
+                                ToolTip.Tip="Worktrees">
           <compat:IconSplitButton.Flyout>
             <MenuFlyout />
           </compat:IconSplitButton.Flyout>
@@ -401,12 +401,15 @@
                            Content="Commit"
                            Icon="{x:Static properties:Images.RepoStateClean}" />
         <compat:IconSplitButton x:Name="toolStripSplitStash"
-                     compat:TranslationCompat.TranslateToolTip="False"
-                     Classes="gitextensions-toolbar-button gitextensions-icon-only"
-                     Foreground="{DynamicResource GitExtensionsSourceControlTextBrush}"
-                     Background="#00FFFFFF"
-                     Content=""
-                     Icon="{x:Static properties:Images.Stash}">
+                                compat:TranslationCompat.TranslateText="False"
+                                compat:TranslationCompat.TranslateToolTip="False"
+                                compat:TranslationCompat.UseToolTipText="True"
+                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                Foreground="{DynamicResource GitExtensionsSourceControlTextBrush}"
+                                Background="#00FFFFFF"
+                                Content=""
+                                Icon="{x:Static properties:Images.Stash}"
+                                ToolTip.Tip="Manage stashes">
           <compat:IconSplitButton.Flyout>
             <MenuFlyout>
               <wf:ToolStripMenuItem x:Name="stashChangesToolStripMenuItem" Header="_Stash" ToolTip.Tip="Stash changes" />
@@ -425,12 +428,14 @@
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" />
         </Button>
         <compat:IconSplitButton x:Name="userShell"
+                                compat:TranslationCompat.TranslateText="False"
                                 compat:TranslationCompat.TranslateToolTip="False"
+                                compat:TranslationCompat.UseToolTipText="True"
                                 Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                 Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
                                 Width="32"
-                                Content=""
-                                Icon="{x:Static properties:Images.GitForWindows}">
+                                Icon="{x:Static properties:Images.GitForWindows}"
+                                ToolTip.Tip="Git bash">
           <compat:IconSplitButton.Flyout>
             <MenuFlyout />
           </compat:IconSplitButton.Flyout>
@@ -439,12 +444,13 @@
                            compat:TranslationCompat.TranslateText="False"
                            compat:TranslationCompat.UseToolTipText="True"
                            Classes="gitextensions-toolbar-button gitextensions-icon-only"
-                           Content="Settings"
-                           Icon="{x:Static properties:Images.Settings}" />
+                           Icon="{x:Static properties:Images.Settings}"
+                           ToolTip.Tip="Settings" />
           </StackPanel>
         </ScrollViewer>
         <Button x:Name="toolStripMainOverflow"
                 Grid.Column="2"
+                compat:TranslationCompat.TranslateToolTip="False"
                 HorizontalAlignment="Right"
                 Focusable="False"
                 Classes="gitextensions-toolbar-button gitextensions-toolbar-overflow"
@@ -461,6 +467,7 @@
         </ScrollViewer>
         <Button x:Name="toolStripFiltersOverflow"
                 Grid.Column="1"
+                compat:TranslationCompat.TranslateToolTip="False"
                 HorizontalAlignment="Right"
                 Focusable="False"
                 Classes="gitextensions-toolbar-button gitextensions-toolbar-overflow"
@@ -482,6 +489,7 @@
             RowDefinitions="*,0,0"
             Margin="6">
       <wf:SplitContainer x:Name="MainSplitContainer"
+                         x:FieldModifier="internal"
                          Background="Transparent"
                          Grid.ColumnSpan="3"
                          ColumnDefinitions="260,6,*">

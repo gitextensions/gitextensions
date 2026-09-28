@@ -92,6 +92,42 @@ public sealed class DashboardTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Categorized_repository_should_use_the_source_tile_geometry_and_star_overlay()
+    {
+        Repository favourite = new(@"C:\repos\favourite") { Category = "Team" };
+        RepositoryHistorySnapshot snapshot = new(
+            [],
+            [new RepositoryHistoryEntry(favourite, "favourite", "main", IsFavourite: true, IsAnchored: false)]);
+        UserRepositoriesList list = new();
+        list.Initialize(CreateController(snapshot), CreateHistory(snapshot), () => Substitute.For<IGitUICommands>());
+        list.ShowRecentRepositories(reloadData: false);
+        Window window = new() { Content = list };
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            ListBoxItem container = list.GetVisualDescendants()
+                .OfType<ListBoxItem>()
+                .Single(item => item.Content is UserRepositoriesList.RepositoryListItem);
+            Grid row = container.GetVisualDescendants().OfType<Grid>().Single(grid => grid.MinHeight == 50);
+            Image[] images = [.. row.Children.OfType<Image>()];
+
+            images.Should().HaveCount(2);
+            images.Should().OnlyContain(image => image.Width == 16 && image.Height == 16);
+            images.Should().ContainSingle(image => ReferenceEquals(image.Source, GitUI.Properties.Images.Star));
+            row.GetVisualDescendants().OfType<TextBlock>().Single(text => text.Text == "favourite").FontWeight
+                .Should().Be(Avalonia.Media.FontWeight.Normal);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [Category("P4.5")]
     public void Selecting_a_valid_dashboard_repository_should_raise_the_module_transition()
     {

@@ -128,7 +128,6 @@
     <Compile Include="..\GitUI\UserControls\RevisionGrid\RevisionFilter.cs" Link="UserControls\RevisionGrid\RevisionFilter.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\FilterChangedEventArgs.cs" Link="UserControls\RevisionGrid\FilterChangedEventArgs.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\RevisionLoadEventArgs.cs" Link="UserControls\RevisionGrid\RevisionLoadEventArgs.cs" />
-    <Compile Include="..\GitUI\UserControls\RevisionGrid\RevisionGridControl.Command.cs" Link="UserControls\RevisionGrid\RevisionGridControl.Command.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\VisibleRowRange.cs" Link="UserControls\RevisionGrid\VisibleRowRange.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\Columns\HoverHighlightCalculator.cs" Link="UserControls\RevisionGrid\Columns\HoverHighlightCalculator.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\Columns\NestledVirtualRef.cs" Link="UserControls\RevisionGrid\Columns\NestledVirtualRef.cs" />

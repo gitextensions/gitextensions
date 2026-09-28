@@ -835,6 +835,10 @@ public sealed class BuildServerIntegrationTests
             AppSettings.ShowBuildStatusIconColumn = true;
             AppSettings.ShowBuildStatusTextColumn = true;
             AppSettings.ShowRevisionGridTooltips.Value = true;
+            SettingsSource settings = Substitute.For<SettingsSource>();
+            settings.GetValue(BuildServerSettings.IntegrationEnabled.Name).Returns("true");
+            IGitModule module = Substitute.For<IGitModule>();
+            module.GetEffectiveSettings().Returns(settings);
             GitRevision revision = new(ObjectId.Parse("1234567890abcdef1234567890abcdef12345678"))
             {
                 BuildStatus = new BuildInfo
@@ -845,8 +849,7 @@ public sealed class BuildServerIntegrationTests
                     Url = "https://example.test/build/1",
                 },
             };
-            BuildStatusColumnProvider provider = new(_ => { });
-            provider.Column.IsAvailable = true;
+            BuildStatusColumnProvider provider = new(_ => { }, () => module);
 
             provider.ApplySettings();
             TextBlock cell = (TextBlock)provider.CreateCell();
@@ -876,7 +879,8 @@ public sealed class BuildServerIntegrationTests
     [AvaloniaTest]
     public void Build_status_column_should_use_the_original_selected_and_unselected_status_palette()
     {
-        BuildStatusColumnProvider provider = new(_ => { });
+        IGitModule module = Substitute.For<IGitModule>();
+        BuildStatusColumnProvider provider = new(_ => { }, () => module);
         BuildStatusColumnProvider.BuildStatusTextBlock cell =
             provider.CreateCell().Should().BeOfType<BuildStatusColumnProvider.BuildStatusTextBlock>().Subject;
         (BuildStatus Status, Color Normal, Color Selected)[] cases =

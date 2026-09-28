@@ -48,6 +48,7 @@ namespace GitUI.CommandsDialogs;
 
 public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 {
+    private readonly TranslationString _closeAll = new("Close all windows");
     private readonly TranslationString _noSubmodulesPresent = new("No submodules");
     private readonly TranslationString _topProjectModuleFormat = new("Top project: {0}");
     private readonly TranslationString _superprojectModuleFormat = new("Superproject: {0}");
@@ -178,7 +179,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _updateCheckService = UICommands.GetService(typeof(IUpdateCheckService)) as IUpdateCheckService;
         _repositoryHistoryUIService = UICommands.GetService(typeof(IRepositoryHistoryUIService)) as IRepositoryHistoryUIService;
         fileToolStripMenuItem.Initialize(() => UICommands);
-        fileToolStripMenuItem.GitModuleChanged += (_, e) => ChangeWorkingDirectory(e.GitModule.WorkingDir);
+        fileToolStripMenuItem.GitModuleChanged += SetGitModule;
         fileToolStripMenuItem.RecentRepositoriesCleared += fileToolStripMenuItem_RecentRepositoriesCleared;
         helpToolStripMenuItem.Initialize(() => UICommands);
         toolsToolStripMenuItem.Initialize(() => UICommands);
@@ -319,7 +320,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         InitializeComplete();
         HotkeysEnabled = true;
         LoadHotkeys(HotkeySettingsName);
-        RefreshMenuShortcutKeys();
+        SetShortcutKeyDisplayStringsFromHotkeySettings();
         _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
         ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys ?? []);
         IReadOnlyList<HotkeyCommand> revisionGridHotkeys = UICommands
@@ -602,6 +603,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     public override void AddTranslationItems(ITranslation translation)
     {
         base.AddTranslationItems(translation);
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(ToolStripMain), "Text", "");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(ToolStripFilters), "Text", "");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(ToolStripScripts), "Text", "");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(_NO_TRANSLATE_WorkingDir), "Text", "");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(toolsToolStripMenuItem), "Text", "");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(RefreshButton), "ToolTipText", "Refresh");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toggleLeftPanel), "ToolTipText", "Toggle left panel");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toggleSplitViewLayout), "ToolTipText", "Toggle split view layout");
@@ -735,7 +741,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         if (isValidWorkingDir)
         {
-            ShowRepository();
+            HideDashboard();
             _formBrowseMenus?.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
             _NO_TRANSLATE_WorkingDir.RefreshContent();
             _aheadBehindDataProvider?.ResetCache();
@@ -768,7 +774,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             || (AppSettings.ShowGitStatusForArtificialCommits
                 && AppSettings.RevisionGraphShowArtificialCommits);
 
-    private void ShowRepository()
+    private void HideDashboard()
     {
         if (_dashboard is not null)
         {
@@ -832,36 +838,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         IGitModule module = new GitModule(
             UICommands.GetRequiredService<IGitExecutorProvider>(),
             normalizedPath);
-        string originalWorkingDir = Module.WorkingDir;
-        dashboardToolStripMenuItem.IsVisible = false;
-        repositoryToolStripMenuItem.IsVisible = false;
-        commandsToolStripMenuItem.IsVisible = false;
-        pluginsToolStripMenuItem.IsVisible = false;
-        refreshToolStripMenuItem.InputGesture = null;
-        refreshDashboardToolStripMenuItem.InputGesture = null;
-        WinFormsToolStripMenuSizer.SetShortcutDisplayString(refreshToolStripMenuItem, string.Empty);
-        WinFormsToolStripMenuSizer.SetShortcutDisplayString(refreshDashboardToolStripMenuItem, string.Empty);
-        _formBrowseMenus?.RemoveRevisionGridMainMenuItems();
-        PluginRegistry.Unregister(UICommands);
-        _gitStatusMonitor?.InvalidateGitWorkingDirectoryStatus();
-        _submoduleStatusProvider?.Init();
-        repoObjectsTree.ClearTrees();
-        module.ResetRemoteColors();
-
-        UICommands = UICommands.WithGitModule(module);
-        StringComparison pathComparison = OperatingSystem.IsWindows()
-            ? StringComparison.OrdinalIgnoreCase
-            : StringComparison.Ordinal;
-        if (!string.Equals(originalWorkingDir, Module.WorkingDir, pathComparison))
-        {
-            ChangeTerminalActiveFolder(Module.WorkingDir);
-            RevisionGrid.ResetAllFilters();
-            ToolStripFilters.ClearQuickFilters();
-            revisionDiff.RepositoryChanged();
-        }
-
-        ReloadRepository();
-        RegisterPlugins();
+        SetGitModule(this, new GitModuleEventArgs(module));
     }
 
     private void OpenRepositoryDialog()
@@ -1020,7 +997,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 _dashboard.Initialize(_repositoryHistoryUIService);
             }
 
-            _dashboard.GitModuleChanged += (_, e) => ChangeWorkingDirectory(e.GitModule.WorkingDir);
+            _dashboard.GitModuleChanged += SetGitModule;
             _contentPanel.Children.Add(_dashboard);
         }
 
@@ -1068,6 +1045,65 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UpdatePluginMenu(Module.IsValidGitWorkingDir());
         revisionDiff.RegisterGitHostingPluginInBlameControl();
         fileTree.RegisterGitHostingPluginInBlameControl();
+    }
+
+    /// <summary>
+    /// to avoid showing menu items that should not be there during
+    /// the transition from dashboard to repo browser and vice versa
+    ///
+    /// and reset hotkeys that are shared between mutual exclusive menu items.
+    /// </summary>
+    private void HideVariableMainMenuItems()
+    {
+        dashboardToolStripMenuItem.IsVisible = false;
+        repositoryToolStripMenuItem.IsVisible = false;
+        commandsToolStripMenuItem.IsVisible = false;
+        pluginsToolStripMenuItem.IsVisible = false;
+        refreshToolStripMenuItem.InputGesture = null;
+        refreshDashboardToolStripMenuItem.InputGesture = null;
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(refreshToolStripMenuItem, string.Empty);
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(refreshDashboardToolStripMenuItem, string.Empty);
+        _formBrowseMenus?.RemoveRevisionGridMainMenuItems();
+        mainMenuStrip.InvalidateVisual();
+    }
+
+    private void SetShortcutKeyDisplayStringsFromHotkeySettings()
+    {
+        // Avalonia keeps display gestures separately from routed hotkeys. Preserve the
+        // original ToolStrip menu text column as well as the form-level command route.
+        SetShortcutKeyDisplayString(commitToolStripMenuItem, Command.Commit);
+        SetShortcutKeyDisplayString(stashChangesToolStripMenuItem, Command.Stash);
+        SetShortcutKeyDisplayString(stashStagedToolStripMenuItem, Command.StashStaged);
+        SetShortcutKeyDisplayString(stashPopToolStripMenuItem, Command.StashPop);
+        SetShortcutKeyDisplayString(closeToolStripMenuItem, Command.CloseRepository);
+        SetShortcutKeyDisplayString(checkoutBranchToolStripMenuItem, Command.CheckoutBranch);
+        SetShortcutKeyDisplayString(branchToolStripMenuItem, Command.CreateBranch);
+        SetShortcutKeyDisplayString(tagToolStripMenuItem, Command.CreateTag);
+        SetShortcutKeyDisplayString(mergeBranchToolStripMenuItem, Command.MergeBranches);
+        SetShortcutKeyDisplayString(pullToolStripMenuItem, Command.PullOrFetch);
+        SetShortcutKeyDisplayString(pullToolStripMenuItem1, Command.PullOrFetch);
+        SetShortcutKeyDisplayString(pushToolStripMenuItem, Command.Push);
+        SetShortcutKeyDisplayString(rebaseToolStripMenuItem, Command.Rebase);
+        SetShortcutKeyDisplayString(manageWorktreeToolStripMenuItem, Command.ManageWorkTrees);
+
+        fileToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
+        helpToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
+        toolsToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
+
+        // Set shortcuts on the Browse toolbar with commands in RevGrid.
+        UpdateTooltipWithShortcut(toggleLeftPanel, Command.ToggleLeftPanel);
+        UpdateTooltipWithShortcut(toolStripButtonCommit, Command.Commit);
+        UpdateTooltipWithShortcut(EditSettings, Command.OpenSettings);
+        UpdateTooltipWithShortcut(branchSelect, Command.CheckoutBranch);
+        UpdateTooltipWithShortcut(toolStripFileExplorer, fileExplorerToolStripMenuItem.InputGesture);
+        UpdateTooltipWithShortcut(RefreshButton, new KeyGesture(Key.F5));
+        UpdateTooltipWithShortcut(userShell, Command.GitBash);
+
+        void SetShortcutKeyDisplayString(MenuItem item, Command command)
+        {
+            item.InputGesture = KeysMapper.ToKeyGesture(GetShortcutKeys(command));
+            WinFormsToolStripMenuSizer.SetShortcutDisplayString(item, GetShortcutKeyDisplayString(command));
+        }
     }
 
     private void OnActivate()
@@ -1221,9 +1257,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             isExpanded: () => AppSettings.ShowSplitViewLayout);
         toggleSplitViewLayout.Click += toggleSplitViewLayout_Click;
         menuCommitInfoPosition.Click += CommitInfoPositionClick;
-        commitInfoBelowMenuItem.Click += (_, _) => SetCommitInfoPosition(CommitInfoPosition.BelowList);
-        commitInfoLeftwardMenuItem.Click += (_, _) => SetCommitInfoPosition(CommitInfoPosition.LeftwardFromList);
-        commitInfoRightwardMenuItem.Click += (_, _) => SetCommitInfoPosition(CommitInfoPosition.RightwardFromList);
+        commitInfoBelowMenuItem.Click += CommitInfoBelowClick;
+        commitInfoLeftwardMenuItem.Click += CommitInfoLeftwardClick;
+        commitInfoRightwardMenuItem.Click += CommitInfoRightwardClick;
         RefreshWorkspaceLayout();
     }
 
@@ -1607,7 +1643,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         LoadHotkeys(HotkeySettingsName);
-        RefreshMenuShortcutKeys();
+        SetShortcutKeyDisplayStringsFromHotkeySettings();
         _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
         ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys ?? []);
         IReadOnlyList<HotkeyCommand> revisionGridHotkeys = UICommands
@@ -1949,8 +1985,41 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     public void SetWorkingDir(string? path, ObjectId selectedId = default, ObjectId firstId = default)
     {
-        RevisionGrid.SelectedId = selectedId.IsZero ? firstId : selectedId;
+        RevisionGrid.SelectedId = selectedId;
+        RevisionGrid.FirstId = firstId;
         ChangeWorkingDirectory(path ?? string.Empty);
+    }
+
+    private void SetGitModule(object? sender, GitModuleEventArgs e)
+    {
+        IGitModule module = e.GitModule;
+        string originalWorkingDir = Module.WorkingDir;
+        HideVariableMainMenuItems();
+        PluginRegistry.Unregister(UICommands);
+        _gitStatusMonitor?.InvalidateGitWorkingDirectoryStatus();
+        _submoduleStatusProvider?.Init();
+        repoObjectsTree.ClearTrees();
+        module.ResetRemoteColors();
+
+        UICommands = UICommands.WithGitModule(module);
+        if (Module.IsValidGitWorkingDir())
+        {
+            AppSettings.RecentWorkingDir = Module.WorkingDir;
+        }
+
+        StringComparison pathComparison = OperatingSystem.IsWindows()
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+        if (!string.Equals(originalWorkingDir, Module.WorkingDir, pathComparison))
+        {
+            ChangeTerminalActiveFolder(Module.WorkingDir);
+            RevisionGrid.ResetAllFilters();
+            ToolStripFilters.ClearQuickFilters();
+            revisionDiff.RepositoryChanged();
+        }
+
+        ReloadRepository();
+        RegisterPlugins();
     }
 
     private void FileExplorerToolStripMenuItemClick(object sender, EventArgs e)
@@ -2051,7 +2120,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UICommands.StartCloneForkFromHoster(
             this,
             repoHost,
-            (_, args) => SetWorkingDir(args.GitModule.WorkingDir));
+            SetGitModule);
     }
 
     private void _viewPullRequestsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2866,7 +2935,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         if (Module.SuperprojectModule is not null)
         {
-            SetWorkingDir(Module.SuperprojectModule.WorkingDir);
+            SetGitModule(sender, new GitModuleEventArgs(Module.SuperprojectModule));
         }
         else
         {
@@ -3017,35 +3086,14 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         SetCommitInfoPosition((CommitInfoPosition)next);
     }
 
-    private void RefreshMenuShortcutKeys()
-    {
-        // Avalonia keeps display gestures separately from routed hotkeys. Preserve the
-        // original ToolStrip menu text column as well as the form-level command route.
-        SetShortcutKeyDisplayString(commitToolStripMenuItem, Command.Commit);
-        SetShortcutKeyDisplayString(stashChangesToolStripMenuItem, Command.Stash);
-        SetShortcutKeyDisplayString(stashStagedToolStripMenuItem, Command.StashStaged);
-        SetShortcutKeyDisplayString(stashPopToolStripMenuItem, Command.StashPop);
-        SetShortcutKeyDisplayString(closeToolStripMenuItem, Command.CloseRepository);
-        SetShortcutKeyDisplayString(checkoutBranchToolStripMenuItem, Command.CheckoutBranch);
-        SetShortcutKeyDisplayString(branchToolStripMenuItem, Command.CreateBranch);
-        SetShortcutKeyDisplayString(tagToolStripMenuItem, Command.CreateTag);
-        SetShortcutKeyDisplayString(mergeBranchToolStripMenuItem, Command.MergeBranches);
-        SetShortcutKeyDisplayString(pullToolStripMenuItem, Command.PullOrFetch);
-        SetShortcutKeyDisplayString(pullToolStripMenuItem1, Command.PullOrFetch);
-        SetShortcutKeyDisplayString(pushToolStripMenuItem, Command.Push);
-        SetShortcutKeyDisplayString(rebaseToolStripMenuItem, Command.Rebase);
-        SetShortcutKeyDisplayString(manageWorktreeToolStripMenuItem, Command.ManageWorkTrees);
+    private void CommitInfoBelowClick(object sender, EventArgs e)
+        => SetCommitInfoPosition(CommitInfoPosition.BelowList);
 
-        fileToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
-        helpToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
-        toolsToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
+    private void CommitInfoLeftwardClick(object sender, EventArgs e)
+        => SetCommitInfoPosition(CommitInfoPosition.LeftwardFromList);
 
-        void SetShortcutKeyDisplayString(MenuItem item, Command command)
-        {
-            item.InputGesture = KeysMapper.ToKeyGesture(GetShortcutKeys(command));
-            WinFormsToolStripMenuSizer.SetShortcutDisplayString(item, GetShortcutKeyDisplayString(command));
-        }
-    }
+    private void CommitInfoRightwardClick(object sender, EventArgs e)
+        => SetCommitInfoPosition(CommitInfoPosition.RightwardFromList);
 
     private void SetCommitInfoPosition(CommitInfoPosition position)
     {
