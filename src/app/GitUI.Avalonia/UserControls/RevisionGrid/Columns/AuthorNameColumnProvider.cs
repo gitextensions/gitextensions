@@ -24,7 +24,7 @@ internal sealed class AuthorNameColumnProvider : ColumnProvider
 
     public override Control CreateCell()
     {
-        TextBlock textBlock = CreateTextBlock(ColumnLeftMargin, opacity: 0.85);
+        TextBlock textBlock = CreateTextBlock(ColumnLeftMargin);
         textBlock.Classes.Add("revision-author-cell");
         return textBlock;
     }

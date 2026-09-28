@@ -1960,6 +1960,27 @@ public sealed partial class ParityScreenshotTests
             }
 
             commitButton.Content?.ToString().Should().EndWith(expectedStatusSuffix);
+
+            IReadOnlyList<string> submodulePaths = context.Module.GetSubmodulesLocalPaths(recursive: false);
+            if (submodulePaths.Count > 0)
+            {
+                RepoObjectsTree.TestAccessor repoTree = formBrowse.repoObjectsTree.GetTestAccessor();
+                SubmoduleTree submoduleTree = repoTree.Tree.Items.Cast<TreeViewItem>()
+                    .Select(item => item.Tag)
+                    .OfType<SubmoduleTree>()
+                    .Single();
+                int expectedSubmoduleNodeCount = submodulePaths.Count + 1;
+                Stopwatch submoduleStopwatch = Stopwatch.StartNew();
+                while (submoduleTree.DescendantsAndSelf().OfType<SubmoduleNode>().Count() < expectedSubmoduleNodeCount
+                       && submoduleStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+                {
+                    Dispatcher.UIThread.RunJobs();
+                    await Task.Delay(10);
+                }
+
+                submoduleTree.DescendantsAndSelf().OfType<SubmoduleNode>().Should().HaveCount(expectedSubmoduleNodeCount,
+                    "the paired Browse capture must wait for the repository's real submodule provider");
+            }
         }
 
         if (Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
@@ -2072,8 +2093,25 @@ public sealed partial class ParityScreenshotTests
 
     private static async Task SelectAndWaitForFormBrowseRevisionAsync(FormBrowse formBrowse, GitRevision revision)
     {
-        formBrowse.RevisionGrid.SetSelectedRevision(revision.ObjectId).Should().BeTrue();
-        Dispatcher.UIThread.RunJobs();
+        Stopwatch selectionStopwatch = Stopwatch.StartNew();
+        int stableObservationCount = 0;
+        while (stableObservationCount < 10 && selectionStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+        {
+            if (formBrowse.RevisionGrid.SelectedRevision?.ObjectId != revision.ObjectId)
+            {
+                formBrowse.RevisionGrid.SetSelectedRevision(revision.ObjectId).Should().BeTrue();
+            }
+
+            Dispatcher.UIThread.RunJobs();
+            stableObservationCount = formBrowse.RevisionGrid.GetSelectedRevisions() is [{ ObjectId: var selectedId }]
+                                     && selectedId == revision.ObjectId
+                ? stableObservationCount + 1
+                : 0;
+            await Task.Delay(25);
+        }
+
+        stableObservationCount.Should().Be(10,
+            "the paired Browse capture must retain repository HEAD after queued selection work settles");
         formBrowse.RevisionGrid.GetSelectedRevisions().Should().ContainSingle()
             .Which.ObjectId.Should().Be(revision.ObjectId);
 

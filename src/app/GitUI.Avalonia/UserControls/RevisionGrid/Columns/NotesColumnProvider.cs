@@ -7,9 +7,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class NotesColumnProvider : ColumnProvider
 {
-    public NotesColumnProvider()
+    private readonly ICommitDataManager? _commitDataManager;
+
+    public NotesColumnProvider(ICommitDataManager? commitDataManager)
         : base("Notes", new GridLength(50), minimumWidth: 25, resizable: true)
     {
+        _commitDataManager = commitDataManager;
     }
 
     public override void ApplySettings()
@@ -26,7 +29,17 @@ internal sealed class NotesColumnProvider : ColumnProvider
 
     public override void UpdateCell(Control control, GitRevision revision)
     {
-        ((TextBlock)control).Text = FirstLine(revision.Notes) ?? string.Empty;
+        TextBlock textBlock = (TextBlock)control;
+        if (FirstLine(revision.Notes) is string firstLine)
+        {
+            textBlock.Text = firstLine;
+        }
+        else
+        {
+            textBlock.Text = string.Empty;
+            _commitDataManager?.InitiateDelayedLoadingOfDetails(revision);
+        }
+
         UpdateToolTip(control, revision);
     }
 

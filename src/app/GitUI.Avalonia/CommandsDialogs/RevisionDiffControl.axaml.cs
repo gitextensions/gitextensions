@@ -621,29 +621,33 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
 
     private Task ShowSelectedFolderAsync(RelativePath relativePath)
     {
-        string path = relativePath.Value;
-        int nameStartIndex = path.Length;
-        if (!path.EndsWith(PathUtil.PosixDirectorySeparatorChar))
-        {
-            path += PathUtil.PosixDirectorySeparatorChar;
-            if (path.Length > 1)
-            {
-                ++nameStartIndex;
-            }
-        }
-
-        FileStatusItem[] items = [.. DiffFiles.AllItems
-            .Where(item => item.Item.Name.StartsWith(path, StringComparison.Ordinal))];
-        StringBuilder description = new();
-        description.Append('(').Append(items.Length).Append(") ").AppendLine(path);
-        foreach (FileStatusItem item in items)
-        {
-            description.AppendLine().Append(item.Item.Name[nameStartIndex..]);
-        }
-
+        (string path, string description) = GetDescription(relativePath, [.. DiffFiles.SelectedItems]);
         BlameControl.IsVisible = false;
         DiffText.IsVisible = true;
-        return DiffText.ViewTextAsync(path, description.ToString(), _viewChangesSequence.Next());
+        return DiffText.ViewTextAsync(path, description, _viewChangesSequence.Next());
+
+        static (string Path, string Text) GetDescription(RelativePath relativePath, FileStatusItem[] items)
+        {
+            string path = relativePath.Value;
+            int nameStartIndex = path.Length;
+            if (!path.EndsWith(PathUtil.PosixDirectorySeparatorChar))
+            {
+                path += PathUtil.PosixDirectorySeparatorChar;
+                if (path.Length > 1)
+                {
+                    ++nameStartIndex;
+                }
+            }
+
+            StringBuilder description = new();
+            description.Append('(').Append(items.Length).Append(") ").AppendLine(path);
+            foreach (FileStatusItem item in items)
+            {
+                description.AppendLine().Append(item.Item.Name[nameStartIndex..]);
+            }
+
+            return (path, description.ToString());
+        }
     }
 
     private void DiffFiles_SelectedIndexChanged(object? sender, EventArgs e)
