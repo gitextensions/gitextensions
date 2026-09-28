@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
+using Avalonia.Media;
 using GitCommands;
+using GitUI.Compat;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -8,9 +10,28 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class DateColumnProvider : ColumnProvider
 {
+    private const double TextRendererOverhang = 7;
+
     public DateColumnProvider()
-        : base("Date", new GridLength(130), minimumWidth: 25, resizable: true)
+        : base("Date", new GridLength(GetInitialWidth()), minimumWidth: 25, resizable: true)
     {
+    }
+
+    private static double GetInitialWidth()
+    {
+        if (AppSettings.RelativeDate)
+        {
+            return 130;
+        }
+
+        TextBlock text = new()
+        {
+            FontFamily = new FontFamily(AppSettings.Font.Name),
+            FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
+            FontStyle = AppSettings.Font.Italic ? FontStyle.Italic : FontStyle.Normal,
+            FontWeight = AppSettings.Font.Bold ? FontWeight.Bold : FontWeight.Normal,
+        };
+        return Math.Ceiling(WinFormsTextMeasurer.Measure(text, DateTime.Now.ToString("G")) + TextRendererOverhang);
     }
 
     public override void ApplySettings()
@@ -20,7 +41,7 @@ internal sealed class DateColumnProvider : ColumnProvider
 
     public override Control CreateCell()
     {
-        TextBlock textBlock = CreateTextBlock(ColumnLeftMargin, opacity: 0.7);
+        TextBlock textBlock = CreateTextBlock(ColumnLeftMargin);
         textBlock.Classes.Add("revision-date-cell");
         return textBlock;
     }

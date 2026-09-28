@@ -784,6 +784,12 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         public GitRevision? Revision { get; set; }
 
+        protected override Avalonia.Size ArrangeOverride(Avalonia.Size finalSize)
+        {
+            Indicator.UpdateAvailableWidth(finalSize.Width);
+            return base.ArrangeOverride(finalSize);
+        }
+
         public void ClearHighlight()
         {
             if (_highlightedLabel is not null)

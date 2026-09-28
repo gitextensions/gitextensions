@@ -64,6 +64,7 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
+        textBlock.Classes.Add("gitextensions-commit-header");
         textBlock.Classes.Add("revision-build-status-cell");
         textBlock.Tapped += (_, _) =>
         {

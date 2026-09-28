@@ -20,6 +20,7 @@ using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Avatars;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
@@ -32,6 +33,7 @@ using GitUI.Models;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using GitUI.Shells;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -42,6 +44,8 @@ using ResourceManager;
 using ResourceManager.CommitDataRenders;
 using ResourceManager.Hotkey;
 using Keys = GitExtensions.Shims.WinForms.Keys;
+using DrawingColor = System.Drawing.Color;
+using KnownColor = System.Drawing.KnownColor;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
@@ -457,11 +461,18 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             }
         }
 
-        bool mainFits = toolStripMainHost.Bounds.Width >= _topPanel.MainPreferredWidth;
+        const double layoutTolerance = 0.5;
+        bool mainFits = toolStripMainHost.Bounds.Width + layoutTolerance >= _topPanel.MainPreferredWidth;
         GridLength overflowGap = new(mainFits ? 0 : 10);
+        GridLength overflowWidth = new(mainFits ? 0 : 16);
         if (toolStripMainHost.ColumnDefinitions[1].Width != overflowGap)
         {
             toolStripMainHost.ColumnDefinitions[1].Width = overflowGap;
+        }
+
+        if (toolStripMainHost.ColumnDefinitions[2].Width != overflowWidth)
+        {
+            toolStripMainHost.ColumnDefinitions[2].Width = overflowWidth;
         }
 
         if (mainFits)
@@ -482,6 +493,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void UpdateMainToolbarItemVisibility()
     {
+        const double layoutTolerance = 0.5;
         double width = toolStripMainViewport.Viewport.Width;
         if (width <= 0)
         {
@@ -496,7 +508,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 && item.Bounds.Width > 0
                 && item.Bounds.Right > left
                 && item.Bounds.Left < right
-                && (item.Bounds.Left < left || item.Bounds.Right > right);
+                && (item.Bounds.Left < left - layoutTolerance
+                    || item.Bounds.Right > right + layoutTolerance);
             if (partiallyClipped && _partiallyHiddenMainToolbarItems.Add(item))
             {
                 // ToolStrip moves a whole item to overflow; a clipped half-button must
@@ -536,6 +549,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void UpdateFilterToolbarItemVisibility(StackPanel filterItems)
     {
+        const double layoutTolerance = 0.5;
         if (toolStripFiltersViewport.Content is null || toolStripFiltersViewport.Viewport.Width <= 0)
         {
             return;
@@ -547,7 +561,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             bool clipped = item.IsVisible
                 && item.Bounds.Width > 0
-                && (item.Bounds.Left < left || item.Bounds.Right > right);
+                && (item.Bounds.Left < left - layoutTolerance
+                    || item.Bounds.Right > right + layoutTolerance);
             if (clipped && _partiallyHiddenFilterToolbarItems.Add(item))
             {
                 item.Opacity = 0;
@@ -2087,6 +2102,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             }
 
             bool isBranchVisible = ((ICheckRefs)RevisionGrid).Contains(branch.ObjectId);
+            DrawingColor menuBackColor = AvaloniaThemeResources.ResolveSystemColor(
+                ThemeModule.Settings,
+                KnownColor.Menu);
             MenuItem item = new()
             {
                 Header = branch.Name,
@@ -2096,7 +2114,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                     Height = 16,
                     Source = (isBranchVisible ? Images.Branch : Images.EyeClosed).AdaptLightness(),
                 },
-                Opacity = isBranchVisible ? 1 : 0.55,
+                Foreground = isBranchVisible
+                    ? null
+                    : new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(
+                        DrawingColor.Silver.AdaptForeColor(menuBackColor))),
             };
             item.Classes.Add("gitextensions-branch-entry");
             item.Click += (_, _) => QueueBranchCheckout(branch.Name);

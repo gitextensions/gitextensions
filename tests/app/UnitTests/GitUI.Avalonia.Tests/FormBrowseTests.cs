@@ -144,9 +144,9 @@ public sealed class FormBrowseTests
                          })
                 {
                     CaptureNode item = nodes.Single(node => node.FieldName == name);
-                    item.Colors.Background.Should().Be(background, $"{name} inherits the source ToolStrip background");
-                    item.Colors.DisabledBackground.Should().Be(background);
-                    item.Colors.Foreground.Should().Be(foreground);
+                    item.Colors.Background.Should().Be("#00FFFFFF", $"{name} retains the source transparent toolbar background");
+                    item.Colors.DisabledBackground.Should().Be("#00FFFFFF");
+                    item.Colors.Foreground.Should().Be(sourceForeground);
                 }
 
                 foreach (string name in new[] { "toolStripButtonCommit", "toolStripButtonPush" })
@@ -498,12 +498,19 @@ public sealed class FormBrowseTests
             Dispatcher.UIThread.RunJobs();
 
             IconSplitButton stash = form.FindControl<IconSplitButton>("toolStripSplitStash")!;
+            IconButton settings = form.FindControl<IconButton>("EditSettings")!;
             Point stashPosition = stash.TranslatePoint(default, form.toolStripMainViewport)!.Value;
+            Point settingsPosition = settings.TranslatePoint(default, form.toolStripMainViewport)!.Value;
             stash.Icon.Should().NotBeNull();
             stash.Content.Should().Be(string.Empty);
             stash.Classes.Should().Contain("gitextensions-icon-only");
             (stashPosition.X + stash.Bounds.Width)
                 .Should().BeLessThanOrEqualTo(form.toolStripMainViewport.Viewport.Width);
+            settings.Opacity.Should().Be(1);
+            settings.IsHitTestVisible.Should().BeTrue();
+            settingsPosition.X.Should().BeGreaterThanOrEqualTo(0);
+            (settingsPosition.X + settings.Bounds.Width)
+                .Should().BeLessThanOrEqualTo(form.toolStripMainViewport.Viewport.Width + 0.5);
             foreach (Control ancestor in stash.GetVisualAncestors().OfType<Control>().Where(control => control.ClipToBounds))
             {
                 Point position = stash.TranslatePoint(default, ancestor)!.Value;
@@ -1224,6 +1231,7 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
     [NonParallelizable]
     public void FormBrowse_should_publish_submodule_provider_updates_in_the_source_toolbar_menu()
     {
@@ -1250,10 +1258,11 @@ public sealed class FormBrowseTests
         flyout.Items.OfType<MenuItem>().Should().ContainSingle()
             .Which.Should().Match<MenuItem>(item => item.Header!.ToString() == "Loading..." && item.IsEnabled);
 
-        SubmoduleInfo top = new("top", _workingDirectory, bold: true);
-        SubmoduleInfo child = new("child", childPath, bold: false);
+        SubmoduleInfo top = new("top", module.WorkingDir, bold: true);
+        SubmoduleInfo child = new("child", childPath.EnsureTrailingPathSeparator(), bold: false);
         SubmoduleInfoResult result = new()
         {
+            Module = module,
             TopProject = top,
         };
         result.OurSubmodules.Add(child);
@@ -1263,9 +1272,21 @@ public sealed class FormBrowseTests
             new SubmoduleStatusEventArgs(result, structureUpdated: true, CancellationToken.None));
         Dispatcher.UIThread.RunJobs();
 
+        SubmoduleTree submoduleTree = form.repoObjectsTree.GetTestAccessor().Tree.Items
+            .Cast<TreeViewItem>()
+            .Select(item => item.Tag)
+            .OfType<SubmoduleTree>()
+            .Single();
+        SubmoduleNode childNode = submoduleTree.DescendantsAndSelf().OfType<SubmoduleNode>()
+            .Should().ContainSingle(node => !node.IsCurrent)
+            .Which;
+        childNode.Info.Should().BeSameAs(child);
+        childNode.Parent.Should().BeOfType<SubmoduleNode>(
+            "a direct submodule must not be nested beneath a duplicate same-named folder");
+
         MenuItem[] menuItems = flyout.Items.OfType<MenuItem>().ToArray();
         menuItems.Select(item => item.Header!.ToString()).Should().Equal("child", "_Update all submodules");
-        menuItems[0].Tag.Should().Be(childPath);
+        menuItems[0].Tag.Should().Be(child.Path);
         menuItems[0].Icon.Should().BeOfType<Image>();
         flyout.Items.OfType<Separator>().Should().ContainSingle();
         ToolTip.GetTip(levelUp).Should().Be(string.Empty);

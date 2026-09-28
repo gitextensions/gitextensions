@@ -189,14 +189,14 @@ internal sealed class SubmoduleTree : Tree
     {
         // result.OurSubmodules/AllSubmodules contain a recursive list of submodules, but don't provide info about the super
         // project path. So we deduce these by substring matching paths against an ordered list of all paths.
-        List<string> modulePaths = [.. result.AllSubmodules.Select(info => info.Path)];
+        List<string> modulePaths = [.. result.AllSubmodules.Select(info => NormalizePath(info.Path))];
 
         // Add current and parent module paths
         IGitModule? parentModule = threadModule;
 
         while (parentModule is not null)
         {
-            modulePaths.Add(parentModule.WorkingDir);
+            modulePaths.Add(NormalizePath(parentModule.WorkingDir));
             parentModule = parentModule.SuperprojectModule;
         }
 
@@ -205,14 +205,15 @@ internal sealed class SubmoduleTree : Tree
 
         foreach (SubmoduleInfo submoduleInfo in result.AllSubmodules)
         {
-            string? superPath = GetSubmoduleSuperPath(submoduleInfo.Path);
+            string submodulePath = NormalizePath(submoduleInfo.Path);
+            string? superPath = GetSubmoduleSuperPath(submodulePath);
 
             if (superPath is null)
             {
                 continue;
             }
 
-            string localPath = Path.GetRelativePath(superPath, submoduleInfo.Path).ToPosixPath();
+            string localPath = Path.GetRelativePath(superPath, submodulePath).ToPosixPath();
 
             bool isCurrent = submoduleInfo.Bold;
 
@@ -233,7 +234,9 @@ internal sealed class SubmoduleTree : Tree
 
     private static string GetNodeRelativePath(IGitModule topModule, SubmoduleNode node)
     {
-        return Path.GetRelativePath(topModule.WorkingDir, node.Info.Path).ToPosixPath();
+        return Path.GetRelativePath(
+            NormalizePath(topModule.WorkingDir),
+            NormalizePath(node.Info.Path)).ToPosixPath();
     }
 
     private Nodes AddTopAndNodesToTree(
@@ -420,7 +423,7 @@ internal sealed class SubmoduleTree : Tree
     public void CommitSubmodule(IWin32Window owner, SubmoduleNode node)
         => UICommands.WithWorkingDirectory(node.Info.Path.EnsureTrailingPathSeparator()).StartCommitDialog(owner);
 
-    private string NormalizePath(string path)
+    private static string NormalizePath(string path)
     {
         string normalized = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
         return Path.TrimEndingDirectorySeparator(normalized);
