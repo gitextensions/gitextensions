@@ -101,6 +101,11 @@ internal abstract class Tree : NodeBase, IDisposable
     {
         SetHeader(caption, icon);
         TreeViewNode.IsExpanded = expanded;
+        foreach (NodeBase node in DescendantsAndSelf().Skip(1))
+        {
+            node.ApplyStyle();
+        }
+
         Nodes.FillTreeViewNode(TreeViewNode);
         PostFillTreeViewNode(_firstReloadNodesSinceModuleChanged);
         _firstReloadNodesSinceModuleChanged = false;

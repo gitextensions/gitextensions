@@ -20,8 +20,8 @@ internal abstract class BaseRevisionNode : Node
     }
 
     /// <summary>
-        /// Short name of the branch/branch path. <example>"issue1344"</example>.
-        /// </summary>
+    /// Short name of the branch/branch path. <example>"issue1344"</example>.
+    /// </summary>
     public string Name => GetName(FullPath);
 
     protected string ParentPath
@@ -36,20 +36,21 @@ internal abstract class BaseRevisionNode : Node
     public IGitRef? GitRef { get; }
 
     /// <summary>
-        /// Full path of the branch. <example>"issues/issue1344"</example>.
-        /// </summary>
+    /// Full path of the branch. <example>"issues/issue1344"</example>.
+    /// </summary>
     public string FullPath { get; }
 
     public override string SearchText => FullPath;
 
     /// <summary>
-        /// ObjectId for nodes with a revision.
-        /// </summary>
+    /// ObjectId for nodes with a revision.
+    /// </summary>
     public ObjectId ObjectId { get; protected init; }
 
     public override void ApplyStyle()
     {
         SetHeader(DisplayText(), Visible ? GetVisibleIcon() : Images.EyeClosed);
+        TreeViewNode.Classes.Set("repo-node-invisible", !Visible);
         base.ApplyStyle();
         if (!Visible)
         {

@@ -343,6 +343,12 @@ public sealed class RepoObjectsTreeTests
             settings.EnableAllTrees();
             RepoObjectsTree control = new();
             control.SetRefs([CreateRef("refs/heads/main")], [CreateStash()], "main");
+            RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
+            TreeViewItem[] originalRoots = [.. accessor.Tree.Items.Cast<TreeViewItem>()];
+            TreeViewItem originalBranches = originalRoots.Single(item => HeaderText(item).StartsWith("Branches", StringComparison.Ordinal));
+            TreeViewItem originalCurrentBranch = originalBranches.Items.Cast<TreeViewItem>().Single();
+            originalBranches.IsExpanded = true;
+            accessor.Tree.SelectedItem = originalCurrentBranch;
             List<RefsFilter> requestedFilters = [];
 
             control.ResortRefs(filter =>
@@ -363,10 +369,15 @@ public sealed class RepoObjectsTreeTests
             });
 
             requestedFilters.Should().Equal(RefsFilter.Heads, RefsFilter.Remotes, RefsFilter.Tags);
-            TreeViewItem[] roots = [.. control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>()];
+            TreeViewItem[] roots = [.. accessor.Tree.Items.Cast<TreeViewItem>()];
+            roots.Should().Equal(originalRoots);
             TreeViewItem branches = roots.Single(item => HeaderText(item).StartsWith("Branches", StringComparison.Ordinal));
+            branches.Should().BeSameAs(originalBranches);
+            branches.IsExpanded.Should().BeTrue();
             branches.Items.Cast<TreeViewItem>().Select(HeaderText).Should().Equal("main", "z-last", "a-first");
-            HeaderLabel(branches.Items.Cast<TreeViewItem>().Single(item => HeaderText(item) == "main")).FontWeight.Should().Be(FontWeight.Bold);
+            TreeViewItem currentBranch = branches.Items.Cast<TreeViewItem>().Single(item => HeaderText(item) == "main");
+            HeaderLabel(currentBranch).FontWeight.Should().Be(FontWeight.Bold);
+            accessor.Tree.SelectedItems!.Cast<TreeViewItem>().Should().Contain(currentBranch);
             HeaderText(roots.Single(item => HeaderText(item).StartsWith("Stashes", StringComparison.Ordinal))).Should().Be("Stashes");
         }
         finally
@@ -581,6 +592,60 @@ public sealed class RepoObjectsTreeTests
         finally
         {
             AppSettings.RepoObjectsTreeShowStashes = originalShowStashes;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P4.3")]
+    public void Current_branch_double_click_should_use_the_original_checkout_route()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        WinFormsShims.IMessageBoxHost? originalMessageBoxHost = null;
+        try
+        {
+            settings.EnableAllTrees();
+            try
+            {
+                originalMessageBoxHost = WinFormsShims.ShimHost.MessageBoxHost;
+            }
+            catch (InvalidOperationException)
+            {
+            }
+
+            WinFormsShims.IMessageBoxHost messageBoxHost = Substitute.For<WinFormsShims.IMessageBoxHost>();
+            messageBoxHost.Show(
+                    Arg.Any<WinFormsShims.IWin32Window?>(),
+                    Arg.Any<string?>(),
+                    Arg.Any<string?>(),
+                    Arg.Any<WinFormsShims.MessageBoxButtons>(),
+                    Arg.Any<WinFormsShims.MessageBoxIcon>(),
+                    Arg.Any<WinFormsShims.MessageBoxDefaultButton>())
+                .Returns(WinFormsShims.DialogResult.Yes);
+            WinFormsShims.ShimHost.MessageBoxHost = messageBoxHost;
+
+            IGitModule module = Substitute.For<IGitModule>();
+            module.IsBareRepository().Returns(false);
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            RepoObjectsTree control = new() { UICommandsSource = source };
+            control.SetRefs([CreateRef("refs/heads/main")], [], "main");
+            LocalBranchNode currentBranch = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>()
+                .First()
+                .Items.Cast<TreeViewItem>()
+                .Select(item => item.Tag)
+                .OfType<LocalBranchNode>()
+                .Single();
+
+            currentBranch.OnDoubleClick();
+
+            commands.Received(1).StartCheckoutBranch(control, "main", remote: false);
+        }
+        finally
+        {
+            settings.Restore();
+            WinFormsShims.ShimHost.MessageBoxHost = originalMessageBoxHost ?? Substitute.For<WinFormsShims.IMessageBoxHost>();
         }
     }
 
@@ -1052,6 +1117,7 @@ public sealed class RepoObjectsTreeTests
                 .Single();
             Image icon = (Image)((StackPanel)tag.Header!).Children[0];
             icon.Source.Should().BeSameAs(GitUI.Properties.Images.EyeClosed);
+            tag.Classes.Should().Contain("repo-node-invisible");
             ToolTip.GetTip(tag)!.ToString().Should().Contain("v1");
 
             control.GetTestAccessor().Tree.SelectedItem = tag;
