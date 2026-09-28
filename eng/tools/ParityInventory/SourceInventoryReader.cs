@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -1036,10 +1036,15 @@ internal static class SourceInventoryReader
                 && contentChildren.Length == 1
                 && contentChildren[0].Name.LocalName == "TextBlock"
                 && contentChildren[0].Attribute("Text") is not null;
-            string? translatedProperty = element.Attribute("Header") is not null
-                || element.Attribute("Content") is not null
-                || element.Attribute("Text") is not null
-                || hasNestedTextContent
+            bool translateText = !element.Attributes().Any(attribute =>
+                (attribute.Name.LocalName == "TranslateText"
+                    || attribute.Name.LocalName.EndsWith(".TranslateText", StringComparison.Ordinal))
+                && string.Equals(attribute.Value, "False", StringComparison.OrdinalIgnoreCase));
+            string? translatedProperty = translateText
+                && (element.Attribute("Header") is not null
+                    || element.Attribute("Content") is not null
+                    || element.Attribute("Text") is not null
+                    || hasNestedTextContent)
                     ? "Text"
                     : element.Attribute("Watermark") is not null ? "Watermark" : null;
             if (translatedProperty is not null)

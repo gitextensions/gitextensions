@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
@@ -12,6 +13,7 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.Menus;
+using GitUI.Compat;
 using GitUI.Hotkey;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -40,6 +42,7 @@ public sealed class WorkingDirectorySelectorTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
     [NonParallelizable]
     public void WorkingDirectoryToolStripSplitButton_should_build_and_filter_favourites_and_recent_repositories()
     {
@@ -71,6 +74,13 @@ public sealed class WorkingDirectorySelectorTests
                 .Should().BeEquivalentTo(favourite.Path, alpha.Path, beta.Path);
             accessor.Menu.Items.OfType<MenuItem>()
                 .Should().Contain(item => item.Header as string == "_Favorite repositories");
+            MenuItem[] sizedItems = accessor.Menu.Items.OfType<MenuItem>()
+                .Where(item => item.Header != accessor.Filter)
+                .ToArray();
+            sizedItems.Select(item => item.Width).Distinct().Should().ContainSingle(
+                "WinForms gives every ordinary ToolStrip row the width of the widest item");
+            accessor.Filter.Width.Should().Be(sizedItems[0].Width - 60,
+                "the source reserves sixty pixels after the popup's trailing layout border is excluded");
 
             accessor.Filter.Text = "beta";
             accessor.ApplyFilterForTesting();
@@ -94,6 +104,28 @@ public sealed class WorkingDirectorySelectorTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Working_directory_popup_should_use_source_alignment_insets_and_shortcut_spelling()
+    {
+        HotkeySettings browse = HotkeySettingsManager.CreateDefaultSettingsCore(scriptsManager: null)
+            .Single(settings => settings.Name == FormBrowse.HotkeySettingsName);
+        WorkingDirectoryToolStripSplitButton selector = new();
+        selector.RefreshShortcutKeys(browse.Commands);
+        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        accessor.FillDropDown([], []);
+
+        accessor.Menu.Placement.Should().Be(PlacementMode.BottomEdgeAlignedLeft);
+        accessor.Menu.FlyoutPresenterClasses.Should().Contain("gitextensions-branch-menu");
+        accessor.FilterHost.Height.Should().Be(25);
+        MenuItem open = accessor.Menu.Items.OfType<MenuItem>()
+            .Single(item => item.Header as string == "Open repository");
+        MenuItem close = accessor.Menu.Items.OfType<MenuItem>()
+            .Single(item => item.Header as string == "Close (go to Dashboard)");
+        WinFormsToolStripMenuSizer.GetShortcutDisplayString(open).Should().Be("Ctrl+O");
+        WinFormsToolStripMenuSizer.GetShortcutDisplayString(close).Should().Be("Ctrl+W");
+    }
+
+    [AvaloniaTest]
     public void Working_directory_selector_should_show_and_search_shared_branch_hints()
     {
         Repository alpha = new(@"C:\repos\alpha");
@@ -111,10 +143,10 @@ public sealed class WorkingDirectorySelectorTests
             .Where(item => item.Tag is RepositoryHistoryEntry)
             .ToArray();
         repositoryItems.Should().HaveCount(2);
-        repositoryItems.Single(item => ((RepositoryHistoryEntry)item.Tag!).Repository.Path == beta.Path)
-            .Header.Should().BeOfType<Grid>()
-            .Which.Children.OfType<TextBlock>()
-            .Should().Contain(text => text.Text == "feature");
+        MenuItem betaItem = repositoryItems.Single(
+            item => ((RepositoryHistoryEntry)item.Tag!).Repository.Path == beta.Path);
+        betaItem.Header.Should().Be("_2: beta");
+        WinFormsToolStripMenuSizer.GetShortcutDisplayString(betaItem).Should().Be("feature");
 
         accessor.Filter.Text = "feature";
         accessor.ApplyFilterForTesting();
