@@ -12,6 +12,9 @@
     <Style Selector="TreeViewItem.worktree-deleted TextBlock">
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
     </Style>
+    <Style Selector="TreeViewItem.repo-node-invisible TextBlock">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
+    </Style>
   </UserControl.Styles>
   <Grid x:Name="repoTreePanel" RowDefinitions="25,26,*">
     <StackPanel x:Name="leftPanelToolStrip"

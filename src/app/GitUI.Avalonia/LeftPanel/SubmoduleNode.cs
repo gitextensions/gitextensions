@@ -62,51 +62,6 @@ internal sealed class SubmoduleNode : Node
     protected override string NodeName()
         => SubmoduleName;
 
-    public override void ApplyStyle()
-    {
-        base.ApplyStyle();
-        ApplyStatus(); // Note that status is applied also after the tree is created, when status is applied
-    }
-
-    protected override WinFormsShims.FontStyle GetFontStyle()
-        => base.GetFontStyle() | (IsCurrent ? WinFormsShims.FontStyle.Bold : WinFormsShims.FontStyle.Regular);
-
-    private void ApplyStatus()
-    {
-        SetHeader(DisplayText(), GetSubmoduleItemImage(Info.Detailed), IsCurrent);
-        ToolTip.SetTip(TreeViewNode, DisplayText());
-    }
-
-    internal async Task SetStatusToolTipAsync(CancellationToken token)
-    {
-        string toolTip = await Task.Run(() =>
-        {
-            token.ThrowIfCancellationRequested();
-            if (Info.Detailed?.RawStatus is not null)
-            {
-                return SubmoduleResources.GetSubmoduleStatusText(
-                    new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), Info.Path),
-                    Info.Detailed.RawStatus,
-                    moduleIsParent: false,
-                    limitOutput: true);
-            }
-
-            if (GitStatus is not null)
-            {
-                ArtificialCommitChangeCount changeCount = new();
-                changeCount.Update(GitStatus);
-                return changeCount.GetSummary();
-            }
-
-            return SubmoduleResources.GetSubmoduleText(
-                new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), "."),
-                Info.Path,
-                hash: string.Empty);
-        }, token);
-
-        await Dispatcher.UIThread.InvokeAsync(() => ToolTip.SetTip(TreeViewNode, toolTip));
-    }
-
     public void Open()
     {
         if (!Directory.Exists(Info.Path))
@@ -172,6 +127,53 @@ internal sealed class SubmoduleNode : Node
         {
             Open();
         }
+    }
+
+    public override void ApplyStyle()
+    {
+        base.ApplyStyle();
+        ApplyStatus(); // Note that status is applied also after the tree is created, when status is applied
+    }
+
+    protected override WinFormsShims.FontStyle GetFontStyle()
+        => base.GetFontStyle() | (IsCurrent ? WinFormsShims.FontStyle.Bold : WinFormsShims.FontStyle.Regular);
+
+    private void ApplyStatus()
+    {
+        // NOTE: Copied and adapted from FormBrowse.GetSubmoduleItemImage
+        SetHeader(DisplayText(), GetSubmoduleItemImage(Info.Detailed), IsCurrent);
+        ToolTip.SetTip(TreeViewNode, DisplayText());
+    }
+
+    internal async Task SetStatusToolTipAsync(CancellationToken token)
+    {
+        string toolTip = await Task.Run(() =>
+        {
+            token.ThrowIfCancellationRequested();
+            if (Info.Detailed?.RawStatus is not null)
+            {
+                // Prefer submodule status, shows ahead/behind
+                return SubmoduleResources.GetSubmoduleStatusText(
+                    new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), Info.Path),
+                    Info.Detailed.RawStatus,
+                    moduleIsParent: false,
+                    limitOutput: true);
+            }
+
+            if (GitStatus is not null)
+            {
+                ArtificialCommitChangeCount changeCount = new();
+                changeCount.Update(GitStatus);
+                return changeCount.GetSummary();
+            }
+
+            return SubmoduleResources.GetSubmoduleText(
+                new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), "."),
+                Info.Path,
+                hash: string.Empty);
+        }, token);
+
+        await Dispatcher.UIThread.InvokeAsync(() => ToolTip.SetTip(TreeViewNode, toolTip));
     }
 
     private static string GetSubmoduleName(SubmoduleInfo info)
