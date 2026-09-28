@@ -534,6 +534,22 @@ internal sealed class AvaloniaControlTreeReader
         Control semanticStateControl = IsFileStatusListView(control)
             ? GetActiveFileStatusListView(control) ?? control
             : control;
+        double fileStatusVerticalScrollBarWidth = isFileStatusListView
+            ? semanticStateControl.GetVisualDescendants().OfType<ScrollBar>()
+                .Where(scrollBar => scrollBar.Orientation == Orientation.Vertical
+                                    && scrollBar.IsEffectivelyVisible
+                                    && scrollBar.Bounds.Width > 0)
+                .Select(scrollBar => scrollBar.Bounds.Width)
+                .FirstOrDefault()
+            : 0;
+        double fileStatusHorizontalScrollBarHeight = isFileStatusListView
+            ? semanticStateControl.GetVisualDescendants().OfType<ScrollBar>()
+                .Where(scrollBar => scrollBar.Orientation == Orientation.Horizontal
+                                    && scrollBar.IsEffectivelyVisible
+                                    && scrollBar.Bounds.Height > 0)
+                .Select(scrollBar => scrollBar.Bounds.Height)
+                .FirstOrDefault()
+            : 0;
         bool isPopupRoot = isSurfaceRoot && IsPopupSurface(control);
         bool isComboBoxPopup = isPopupRoot && IsComboBoxPopup(control);
         bool isComboBoxPopupItem = IsComboBoxPopupItem(control);
@@ -937,11 +953,11 @@ internal sealed class AvaloniaControlTreeReader
                         ? Math.Max(0, bounds.Width - outputHistoryRichTextBorder.Left - outputHistoryRichTextBorder.Right)
                     : hasWinFormsTextBoxClientInset
                         ? GetSourceTextBoxClientWidth(bounds, designerLayout?.BorderStyle, hasSourceVerticalTextScrollBar)
+                    : isFileStatusListView
+                        ? Math.Max(0, bounds.Width - fileStatusVerticalScrollBarWidth)
                     : isNativeListView ? Math.Max(0, bounds.Width - 4) : bounds.Width),
                 Height = ToPixel(isEnvironmentInfoSeparator
                     ? Math.Max(0, bounds.Height - 2)
-                    : control.Name == "treeMain"
-                    ? Math.Max(0, bounds.Height - 17)
                     : isSourceList
                         ? designerLayout?.BorderStyle == "None" ? bounds.Height : Math.Max(0, bounds.Height - (hasSourceFixedSingleClientInset ? 2 : 4))
                     : isFormCommitOptionsInput
@@ -956,6 +972,8 @@ internal sealed class AvaloniaControlTreeReader
                             ? Math.Max(0, bounds.Height - outputHistoryRichTextBorder.Top - outputHistoryRichTextBorder.Bottom)
                         : hasWinFormsTextBoxClientInset
                             ? GetSourceTextBoxClientHeight(bounds, designerLayout?.BorderStyle)
+                        : isFileStatusListView
+                            ? Math.Max(0, bounds.Height - fileStatusHorizontalScrollBarHeight)
                         : isNativeListView ? Math.Max(0, bounds.Height - 4) : bounds.Height)
             },
             ClientSizeDip = new CaptureSizeF
@@ -978,11 +996,11 @@ internal sealed class AvaloniaControlTreeReader
                         ? Math.Max(0, bounds.Width - outputHistoryRichTextBorder.Left - outputHistoryRichTextBorder.Right)
                     : hasWinFormsTextBoxClientInset
                         ? GetSourceTextBoxClientWidth(bounds, designerLayout?.BorderStyle, hasSourceVerticalTextScrollBar)
+                    : isFileStatusListView
+                        ? Math.Max(0, bounds.Width - fileStatusVerticalScrollBarWidth)
                     : isNativeListView ? Math.Max(0, bounds.Width - 4) : bounds.Width),
                 Height = ToDecimal(isEnvironmentInfoSeparator
                     ? Math.Max(0, bounds.Height - 2)
-                    : control.Name == "treeMain"
-                    ? Math.Max(0, bounds.Height - 17)
                     : isSourceList
                         ? designerLayout?.BorderStyle == "None" ? bounds.Height : Math.Max(0, bounds.Height - (hasSourceFixedSingleClientInset ? 2 : 4))
                     : isFormCommitOptionsInput
@@ -997,6 +1015,8 @@ internal sealed class AvaloniaControlTreeReader
                             ? Math.Max(0, bounds.Height - outputHistoryRichTextBorder.Top - outputHistoryRichTextBorder.Bottom)
                         : hasWinFormsTextBoxClientInset
                             ? GetSourceTextBoxClientHeight(bounds, designerLayout?.BorderStyle)
+                        : isFileStatusListView
+                            ? Math.Max(0, bounds.Height - fileStatusHorizontalScrollBarHeight)
                         : isNativeListView ? Math.Max(0, bounds.Height - 4) : bounds.Height)
             },
             ItemHeightDip = isPatchGridDataGrid
@@ -5340,8 +5360,7 @@ internal sealed class AvaloniaControlTreeReader
                or "toolStripSeparator1" or "toolStripSeparator17"
                or "toolStripWorktrees"
                or "tsddbtnRevisionFilter"
-               || (control.Name is "toolStripFileExplorer" or "userShell" or "EditSettings"
-                   && IsInsideClippedAncestors(control))
+               || control.Name is "toolStripFileExplorer" or "userShell" or "EditSettings"
                || (control.Name is "toolStripSplitStash" or "toolStripSeparator2"
                    && IsInsideClippedAncestors(control))
                || control.Name?.StartsWith("pull_shortcut_", StringComparison.Ordinal) == true))
@@ -5416,8 +5435,7 @@ internal sealed class AvaloniaControlTreeReader
                 or "tsddbtnBranchFilter" or "tslblRevisionFilter" or "tsmiShowOnlyFirstParent"
                 or "tssbtnShowBranches"
                 or "toolStripButtonPush" or "toolStripButtonCommit"
-                || (control.Name is "toolStripFileExplorer" or "userShell" or "EditSettings"
-                    && !IsInsideClippedAncestors(control))
+                || control.Name is "toolStripFileExplorer" or "userShell" or "EditSettings"
                 || (control.Name is "btnRefresh" or "btnCollapseGroups"
                     && control.GetLogicalAncestors().OfType<TabItem>().Any(tab => tab.Name == "TreeTabPage"))));
 
@@ -5775,6 +5793,7 @@ internal sealed class AvaloniaControlTreeReader
 
     private static bool IsInsideClippedAncestors(Control control)
     {
+        const double layoutTolerance = 0.5;
         foreach (Control ancestor in control.GetVisualAncestors().OfType<Control>().Where(ancestor => ancestor.ClipToBounds))
         {
             if (control.TranslatePoint(default, ancestor) is not Point origin)
@@ -5782,7 +5801,11 @@ internal sealed class AvaloniaControlTreeReader
                 return false;
             }
 
-            Rect clippedBounds = new(ancestor.Bounds.Size);
+            Rect clippedBounds = new(
+                -layoutTolerance,
+                -layoutTolerance,
+                ancestor.Bounds.Width + (layoutTolerance * 2),
+                ancestor.Bounds.Height + (layoutTolerance * 2));
             Rect controlBounds = new(origin, control.Bounds.Size);
             if (!clippedBounds.Contains(controlBounds.TopLeft)
                 || !clippedBounds.Contains(new Point(
@@ -6010,7 +6033,8 @@ internal sealed class AvaloniaControlTreeReader
             };
         }
 
-        if (name is "toolStripButtonPush" or "toolStripButtonCommit")
+        if (name is "toolStripButtonPush" or "toolStripButtonCommit"
+            or "toolStripFileExplorer" or "userShell" or "EditSettings")
         {
             CaptureColors colors = ReadToolStripColors(
                 control,

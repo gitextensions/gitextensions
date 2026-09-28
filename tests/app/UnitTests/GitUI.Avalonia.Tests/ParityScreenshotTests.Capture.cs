@@ -1488,6 +1488,33 @@ public sealed partial class ParityScreenshotTests
                         + $"items={capturedBrowse.fileTree.FileStatusList.AllItemsCount}");
                 }
 
+                // A lower-pane loader can drain selection work after publishing its first
+                // content. Require the same stable HEAD boundary immediately before focus
+                // and rendering so a later branch-tip selection cannot leak into one theme.
+                await SelectAndWaitForFormBrowseRevisionAsync(capturedBrowse, context.HeadRevision);
+
+                // Selecting and awaiting HEAD above can publish a final revision-selection event
+                // that restores focus to the grid. WinForms receives the requested capture focus
+                // after its equivalent load settles, so reassert the same product focus route at
+                // this boundary rather than recording an intermediate grid-focused state.
+                if (state.Kind == CaptureStateKind.Focus)
+                {
+                    switch (state.Id)
+                    {
+                        case "diff-files.focused":
+                            capturedBrowse.revisionDiff.FileStatusList.Focus();
+                            break;
+                        case "file-tree.focused":
+                            capturedBrowse.fileTree.FileStatusList.Focus();
+                            break;
+                        case "diff-text.focused":
+                            capturedBrowse.revisionDiff.FileViewer.FocusViewer();
+                            break;
+                    }
+
+                    Dispatcher.UIThread.RunJobs();
+                }
+
                 if ((state.Kind == CaptureStateKind.Focus && state.TargetField == "RevisionGrid")
                     || state.Kind == CaptureStateKind.MenuOpen)
                 {

@@ -55,6 +55,7 @@ public partial class FileStatusList : GitModuleControl
     private readonly FileAssociatedIconProvider _iconProvider = new();
     private readonly IRevisionDiffController _revisionDiffController;
     private readonly SortDiffListContextMenuItem _sortByContextMenu;
+    private static readonly StatusSorter _sorter = new();
     private readonly MenuItem _NO_TRANSLATE_openSubmoduleMenuItem;
     private readonly CancellationTokenSequence _reloadSequence = new();
     private readonly Separator _sortBySeparator = new();
@@ -489,11 +490,7 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public IReadOnlyList<GitItemStatus> SelectedGitItems
     {
-        get => _isFileTreeMode
-            ? [.. tvFiles.SelectedItems?.OfType<FileTreeNode>().Select(node => node.Item?.Item).OfType<GitItemStatus>() ?? []]
-            : ShowDiffTree
-                ? [.. tvDiffFiles.SelectedItems?.OfType<DiffTreeNode>().Select(node => node.Item?.Item).OfType<GitItemStatus>() ?? []]
-                : [.. lstFiles.SelectedItems?.Cast<object>().Select(GetGitItemStatus).OfType<GitItemStatus>() ?? []];
+        get => [.. SelectedItems.Select(item => item.Item)];
         set
         {
             if (value is null)
@@ -542,11 +539,29 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public IEnumerable<FileStatusItem> SelectedItems
     {
-        get => _isFileTreeMode
-            ? tvFiles.SelectedItems?.OfType<FileTreeNode>().Select(node => node.Item).OfType<FileStatusItem>() ?? []
-            : ShowDiffTree
-                ? tvDiffFiles.SelectedItems?.OfType<DiffTreeNode>().Select(node => node.Item).OfType<FileStatusItem>() ?? []
-                : lstFiles.SelectedItems?.Cast<object>().Select(item => GetFileStatusItem(item)).OfType<FileStatusItem>() ?? [];
+        get
+        {
+            if (_isFileTreeMode)
+            {
+                FileTreeNode[] selected = [.. tvFiles.SelectedItems?.OfType<FileTreeNode>() ?? []];
+                return selected.Length == 1
+                    ? Flatten(selected[0]).Select(node => node.Item).OfType<FileStatusItem>()
+                    : selected.Select(node => node.Item).OfType<FileStatusItem>();
+            }
+
+            if (ShowDiffTree)
+            {
+                DiffTreeNode[] selected = [.. tvDiffFiles.SelectedItems?.OfType<DiffTreeNode>() ?? []];
+                return selected.Length == 1
+                    ? Flatten(selected[0]).Select(node => node.Item).OfType<FileStatusItem>()
+                    : selected.Select(node => node.Item).OfType<FileStatusItem>();
+            }
+
+            return lstFiles.SelectedItems?.Cast<object>()
+                       .Select(GetFileStatusItem)
+                       .OfType<FileStatusItem>()
+                   ?? [];
+        }
         set
         {
             if (value is null)
@@ -2326,66 +2341,44 @@ public partial class FileStatusList : GitModuleControl
         bool expanded,
         bool flat)
     {
-        if (flat)
-        {
-            return
-            [
-                .. items.OrderBy(item => item.Item.Name, StringComparer.Ordinal)
-                    .Select(item => CreateDiffFileNode(item, parent, showFullPath: true)),
-            ];
-        }
-
-        List<DiffTreeNode> roots = [];
+        Dictionary<GitItemStatus, FileStatusItem> itemsByStatus = new(ReferenceEqualityComparer.Instance);
         foreach (FileStatusItem item in items)
         {
-            string[] segments = item.Item.Name.Split(PathUtil.PosixDirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
-            List<DiffTreeNode> siblings = roots;
-            DiffTreeNode? currentParent = parent;
-            string path = string.Empty;
-            for (int index = 0; index < segments.Length; index++)
-            {
-                path = path.Length == 0 ? segments[index] : $"{path}/{segments[index]}";
-                bool isFile = index == segments.Length - 1;
-                DiffTreeNode? node = siblings.FirstOrDefault(
-                    candidate => candidate.Text == segments[index] && candidate.Item is null);
-                if (isFile || node is null)
-                {
-                    node = isFile
-                        ? CreateDiffFileNode(item, currentParent, showFullPath: false)
-                        : new DiffTreeNode(
-                            segments[index],
-                            Images.FolderClosed,
-                            item: null,
-                            RelativePath.From(path),
-                            currentParent,
-                            isGroupHeader: false,
-                            groupIndex: null)
-                        {
-                            IsExpanded = expanded,
-                        };
-                    siblings.Add(node);
-                }
-
-                currentParent = node;
-                siblings = node.Children;
-            }
+            itemsByStatus[item.Item] = item;
         }
 
-        Sort(roots);
-        return roots;
-
-        static void Sort(List<DiffTreeNode> nodes)
-        {
-            nodes.Sort((left, right) => (left.IsFolder, right.IsFolder) switch
+        StatusNode statusRoot = _sorter.CreateTreeSortedByPath(
+            items.Select(item => item.Item),
+            flat,
+            AppSettings.FileStatusMergeSingleItemWithFolder.Value,
+            status =>
             {
-                (true, false) => -1,
-                (false, true) => 1,
-                _ => string.Compare(left.Text, right.Text, StringComparison.Ordinal),
+                FileStatusItem item = itemsByStatus[status];
+                string oldName = status.OldName is null ? string.Empty : $" ({status.OldName})";
+                return new StatusNode($"{status.Name}{oldName}") { Tag = item };
             });
-            foreach (DiffTreeNode node in nodes)
+        return [.. statusRoot.Nodes.Select(node => Convert(node, parent))];
+
+        DiffTreeNode Convert(StatusNode statusNode, DiffTreeNode? currentParent)
+        {
+            FileStatusItem? item = statusNode.Tag as FileStatusItem;
+            DiffTreeNode node = new(
+                statusNode.Text,
+                item is null ? Images.FolderClosed : GetItemImageKey(item.Item),
+                item,
+                statusNode.Tag is RelativePath folderPath ? folderPath : null,
+                currentParent,
+                isGroupHeader: false,
+                groupIndex: null)
             {
-                Sort(node.Children);
+                IsExpanded = expanded,
+            };
+            foreach (StatusNode child in statusNode.Nodes)
+            {
+                node.Children.Add(Convert(child, node));
             }
+
+            return node;
         }
     }
 
@@ -2417,44 +2410,39 @@ public partial class FileStatusList : GitModuleControl
 
     private static IReadOnlyList<FileTreeNode> BuildFileTree(IReadOnlyList<FileStatusItem> items)
     {
-        List<FileTreeNode> roots = [];
+        Dictionary<GitItemStatus, FileStatusItem> itemsByStatus = new(ReferenceEqualityComparer.Instance);
         foreach (FileStatusItem item in items)
         {
-            string[] segments = item.Item.Name.Split(PathUtil.PosixDirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
-            List<FileTreeNode> siblings = roots;
-            FileTreeNode? parent = null;
-            string path = string.Empty;
-            for (int index = 0; index < segments.Length; index++)
-            {
-                path = path.Length == 0 ? segments[index] : $"{path}/{segments[index]}";
-                bool isFile = index == segments.Length - 1;
-                FileTreeNode? node = siblings.FirstOrDefault(candidate => candidate.Name == segments[index]);
-                if (node is null)
-                {
-                    node = new FileTreeNode(segments[index], path, isFile ? item : null, parent);
-                    siblings.Add(node);
-                }
-
-                parent = node;
-                siblings = node.Children;
-            }
+            itemsByStatus[item.Item] = item;
         }
 
-        Sort(roots);
-        return roots;
-
-        static void Sort(List<FileTreeNode> nodes)
-        {
-            nodes.Sort((left, right) => (left.IsFolder, right.IsFolder) switch
+        StatusNode statusRoot = _sorter.CreateTreeSortedByPath(
+            items.Select(item => item.Item),
+            flat: false,
+            AppSettings.FileStatusMergeSingleItemWithFolder.Value,
+            status =>
             {
-                (true, false) => -1,
-                (false, true) => 1,
-                _ => string.Compare(left.Name, right.Name, StringComparison.Ordinal),
+                string oldName = status.OldName is null ? string.Empty : $" ({status.OldName})";
+                return new StatusNode($"{status.Name}{oldName}") { Tag = itemsByStatus[status] };
             });
-            foreach (FileTreeNode node in nodes)
+        return [.. statusRoot.Nodes.Select(node => Convert(node, parent: null))];
+
+        static FileTreeNode Convert(StatusNode statusNode, FileTreeNode? parent)
+        {
+            FileStatusItem? item = statusNode.Tag as FileStatusItem;
+            string fullPath = statusNode.Tag switch
             {
-                Sort(node.Children);
+                RelativePath folderPath => folderPath.Value,
+                FileStatusItem file => file.Item.Name,
+                _ => statusNode.Text,
+            };
+            FileTreeNode node = new(statusNode.Text, fullPath, item, parent);
+            foreach (StatusNode child in statusNode.Nodes)
+            {
+                node.Children.Add(Convert(child, node));
             }
+
+            return node;
         }
     }
 

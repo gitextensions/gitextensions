@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -9,6 +10,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.Avatars;
+using GitUI.Compat;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
@@ -16,6 +18,7 @@ using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -213,6 +216,93 @@ public sealed class RevisionGridColumnProviderTests
         CommitIdColumnProvider idProvider = new();
         idProvider.TryGetToolTip(revision, out string? idToolTip).Should().BeTrue();
         idToolTip.Should().Be(revision.Guid);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Revision_grid_columns_should_preserve_source_text_and_deferred_detail_behavior()
+    {
+        bool originalRelativeDate = AppSettings.RelativeDate;
+        WinFormsShims.Font originalFont = AppSettings.Font;
+        ICommitDataManager commitDataManager = Substitute.For<ICommitDataManager>();
+        try
+        {
+            AppSettings.RelativeDate = false;
+            AppSettings.Font = new WinFormsShims.Font("Segoe UI", 9);
+            GitRevision revision = CreateRevision();
+            revision.Notes = null;
+
+            NotesColumnProvider notesProvider = new(commitDataManager);
+            Control notesCell = notesProvider.CreateCell();
+            notesProvider.UpdateCell(notesCell, revision);
+
+            ((TextBlock)notesCell).Text.Should().BeEmpty();
+            commitDataManager.Received(1).InitiateDelayedLoadingOfDetails(revision);
+
+            AuthorNameColumnProvider authorProvider = new(new AuthorRevisionHighlighting());
+            DateTime widthWindowStart = DateTime.Now;
+            DateColumnProvider dateProvider = new();
+            DateTime widthWindowEnd = DateTime.Now;
+            BuildStatusColumnProvider buildProvider = new(_ => { }, () => Substitute.For<IGitModule>());
+            authorProvider.CreateCell().Opacity.Should().Be(1,
+                "the source author column uses the row's unmodified foreground");
+            dateProvider.CreateCell().Opacity.Should().Be(1,
+                "the source date column uses the row's unmodified foreground");
+            TextBlock widthProbe = new()
+            {
+                FontFamily = new FontFamily(AppSettings.Font.Name),
+                FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
+            };
+            List<double> sourceMeasuredWidths = [];
+            for (DateTime sample = widthWindowStart.AddSeconds(-1);
+                 sample <= widthWindowEnd.AddSeconds(1);
+                 sample = sample.AddSeconds(1))
+            {
+                sourceMeasuredWidths.Add(Math.Ceiling(
+                    WinFormsTextMeasurer.Measure(widthProbe, sample.ToString("G")) + 7));
+            }
+
+            sourceMeasuredWidths.Should().Contain(dateProvider.Column.Width.Value,
+                "the source measures the current absolute-date text instead of using a fixed column width");
+            buildProvider.CreateCell().Classes.Should().Contain("gitextensions-commit-header",
+                "the source paints build status with its configured monospace font");
+        }
+        finally
+        {
+            AppSettings.RelativeDate = originalRelativeDate;
+            AppSettings.Font = originalFont;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Multiline_indicator_should_only_reserve_space_when_the_source_cell_can_fit_it()
+    {
+        RevisionGridControl control = new();
+        MessageColumnProvider provider = (MessageColumnProvider)control.ColumnProviders
+            .Single(column => column.Name == "Message");
+        GitRevision revision = CreateRevision();
+        revision.HasMultiLineMessage = true;
+        Control cell = provider.CreateCell();
+        provider.UpdateCell(cell, revision);
+        Window window = new() { Width = 40, Height = 40, Content = cell };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            MultilineIndicator indicator = cell.GetVisualDescendants().OfType<MultilineIndicator>().Single();
+            indicator.IsVisible.Should().BeFalse(
+                "WinForms suppresses the 26-DIP indicator unless twice that width is available");
+
+            window.Width = 100;
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            indicator.IsVisible.Should().BeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]
