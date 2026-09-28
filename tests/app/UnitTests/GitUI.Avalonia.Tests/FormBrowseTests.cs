@@ -369,6 +369,68 @@ public sealed class FormBrowseTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    public void Browse_working_directory_capture_should_emit_the_hosted_filter_before_its_separator()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 923, Height = 573 };
+        form.Show();
+        try
+        {
+            using AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(form, new CaptureStatePlan
+            {
+                Id = "working-directory.open",
+                Kind = CaptureStateKind.MenuOpen,
+                TargetField = "_NO_TRANSLATE_WorkingDir",
+            });
+
+            CaptureNode primary = new AvaloniaControlTreeReader(form, renderScale: 1)
+                .ReadPrimary(form, new PixelSize(923, 573)).Root;
+            CaptureNode workingDirectory = Flatten(primary)
+                .Single(node => node.FieldName == "_NO_TRANSLATE_WorkingDir");
+            AssertHostedFilterOrder(workingDirectory.Children);
+
+            Control popupRoot = driver.PopupSurfaceRoots.Should().ContainSingle().Subject;
+            CaptureNode popup = new AvaloniaControlTreeReader(form, renderScale: 1)
+                .ReadSurface(
+                    popupRoot,
+                    "popup:0",
+                    new PixelRect(0, 0, (int)popupRoot.Bounds.Width, (int)popupRoot.Bounds.Height))
+                .Root;
+            AssertHostedFilterOrder(popup.Children);
+        }
+        finally
+        {
+            form.Close();
+        }
+
+        static void AssertHostedFilterOrder(IReadOnlyList<CaptureNode> nodes)
+        {
+            nodes.Should().HaveCountGreaterThan(1);
+            nodes[0].Type.Should().Be("System.Windows.Forms.ToolStripTextBox");
+            nodes[0].ControlKind.Should().Be("menuItem");
+            nodes[0].Text.Should().BeEmpty();
+            nodes[0].BoundsDip.X.Should().Be(34);
+            nodes[0].BoundsDip.Y.Should().Be(3);
+            nodes[0].BoundsDip.Width.Should().BeGreaterThan(0);
+            nodes[0].BoundsDip.Height.Should().Be(23);
+            nodes[1].Type.Should().Be(typeof(Separator).FullName);
+        }
+
+        static IEnumerable<CaptureNode> Flatten(CaptureNode node)
+        {
+            yield return node;
+            foreach (CaptureNode child in node.Children)
+            {
+                foreach (CaptureNode descendant in Flatten(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void Browse_filter_toolbar_should_use_remaining_width_without_clipping_commands()
     {
         using FormBrowse form = new() { Width = 1200, Height = 573 };
@@ -2075,6 +2137,7 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void FormBrowse_commands_menu_should_follow_invalid_and_bare_repository_state()
     {
         GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
@@ -2089,12 +2152,35 @@ public sealed class FormBrowseTests
         {
             invalidForm.repositoryToolStripMenuItem.IsVisible.Should().BeFalse();
             invalidForm.commandsToolStripMenuItem.IsVisible.Should().BeFalse();
+            invalidForm.FindControl<IconSplitButton>("toolStripButtonLevelUp")!.IsEnabled.Should().BeTrue(
+                "WinForms enables navigation whenever a non-empty working directory exists");
+            invalidForm.checkoutBranchToolStripMenuItem.IsEnabled.Should().BeFalse();
+            invalidForm.cleanupToolStripMenuItem.IsEnabled.Should().BeFalse();
+            invalidForm.applyPatchToolStripMenuItem.IsEnabled.Should().BeFalse();
+            invalidForm.FindControl<Button>("toolStripFileExplorer")!.IsEnabled.Should().BeFalse();
+            invalidForm.FindControl<MenuItem>("_viewPullRequestsToolStripMenuItem")!.IsEnabled.Should().BeFalse();
+            invalidForm.FindControl<MenuItem>("_createPullRequestsToolStripMenuItem")!.IsEnabled.Should().BeFalse();
+            invalidForm.FindControl<MenuItem>("_addUpstreamRemoteToolStripMenuItem")!.IsEnabled.Should().BeFalse();
         }
 
         module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet", "--bare" });
         using FormBrowse bareForm = new(commands);
         bareForm.repositoryToolStripMenuItem.IsVisible.Should().BeTrue();
         bareForm.commandsToolStripMenuItem.IsVisible.Should().BeTrue();
+        bareForm.FindControl<IconSplitButton>("toolStripButtonLevelUp")!.IsEnabled.Should().BeFalse();
+        bareForm.FindControl<MenuItem>("_viewPullRequestsToolStripMenuItem")!.IsEnabled.Should().BeTrue();
+        bareForm.FindControl<MenuItem>("_createPullRequestsToolStripMenuItem")!.IsEnabled.Should().BeTrue();
+        bareForm.FindControl<MenuItem>("_addUpstreamRemoteToolStripMenuItem")!.IsEnabled.Should().BeTrue();
+        bareForm.FindControl<MenuItem>("pullToolStripMenuItem1")!.IsEnabled.Should().BeFalse();
+        bareForm.FindControl<MenuItem>("mergeToolStripMenuItem")!.IsEnabled.Should().BeFalse();
+        bareForm.FindControl<MenuItem>("rebaseToolStripMenuItem1")!.IsEnabled.Should().BeFalse();
+        bareForm.FindControl<MenuItem>("stashChangesToolStripMenuItem")!.IsEnabled.Should().BeFalse();
+        bareForm.FindControl<MenuItem>("cleanupToolStripMenuItem")!.IsEnabled.Should().BeFalse();
+        bareForm.FindControl<MenuItem>("applyPatchToolStripMenuItem")!.IsEnabled.Should().BeFalse();
+        bareForm.FindControl<MenuItem>("stashPopToolStripMenuItem")!.IsEnabled.Should().BeTrue(
+            "WinForms disables the owning stash split button but leaves this child state unchanged");
+        bareForm.FindControl<MenuItem>("manageStashesToolStripMenuItem")!.IsEnabled.Should().BeTrue(
+            "WinForms disables the owning stash split button but leaves this child state unchanged");
         bareForm.commandsToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
 
         new[]

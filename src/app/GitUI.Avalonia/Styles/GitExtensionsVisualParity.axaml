@@ -1702,6 +1702,28 @@
       <TranslateTransform X="-10" Y="-1" />
     </Setter>
   </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="7" Y="-1" />
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-repository /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- ToolStrip reserves its empty image gutter for numbered recent-repository rows. -->
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="14" Y="-1" />
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-filter /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- ToolStripTextBox starts after the same image gutter even though the row has no icon. -->
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="26" Y="-1" />
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry /template/ TextBlock#PART_InputGestureText">
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="-34" Y="-1" />
+    </Setter>
+  </Style>
   <Style Selector="MenuItem /template/ Path#PART_ChevronPath">
     <Setter Property="RenderTransform">
       <TranslateTransform X="-7" />

@@ -1,5 +1,6 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using GitCommands;
@@ -33,10 +34,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private readonly HashSet<MenuItem> _fixedItems = [];
     private readonly MenuItem _filterHost;
     private readonly MenuFlyout _menu = new();
-    private readonly TextBox _txtFilter = new()
-    {
-        MinWidth = 260,
-    };
+    private readonly TextBox _txtFilter = new();
 
     private bool _dropDownPreparedForTest;
     private Action? _closeRepository;
@@ -48,6 +46,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private Action<string>? _setWorkingDirectory;
     private KeyGesture? _closeRepositoryGesture;
     private KeyGesture? _openRepositoryGesture;
+    private string? _closeRepositoryShortcutDisplay;
+    private string? _openRepositoryShortcutDisplay;
     private string _closeRepositoryText = "Close (go to Dashboard)";
     private string _favouriteRepositoriesText = "&Favorite repositories";
     private string _openRepositoryText = "Open repository";
@@ -58,6 +58,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         Content = "WorkingDir";
         Icon = Images.RepoOpen;
         Flyout = _menu;
+        _menu.Placement = PlacementMode.BottomEdgeAlignedLeft;
+        _menu.FlyoutPresenterClasses.Add("gitextensions-branch-menu");
         ToolTip.SetTip(this, _toolTip.Text);
         TranslationCompat.SetUseToolTipText(this, true);
 
@@ -66,11 +68,15 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         {
             Focusable = false,
             Header = _txtFilter,
+            Height = 25,
             StaysOpenOnClick = true,
         };
+        _filterHost.Classes.Add("gitextensions-working-directory-filter");
+        _txtFilter.Margin = new Thickness(2, 0, 0, 0);
         _menu.Items.Add(_filterHost);
         Click += (_, _) => OpenFlyout();
         _menu.Opening += Menu_Opening;
+        _menu.Opened += (_, _) => ApplySourceShortcutText();
         _txtFilter.TextChanged += (_, _) => ApplyFilter();
         _txtFilter.KeyDown += TxtFilter_KeyDown;
         AddHandler(PointerReleasedEvent, MouseUpHandler, RoutingStrategies.Tunnel);
@@ -151,6 +157,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     public void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
     {
+        _openRepositoryShortcutDisplay = hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenRepo);
+        _closeRepositoryShortcutDisplay = hotkeys.GetShortcutDisplay(FormBrowse.Command.CloseRepository);
         _openRepositoryGesture = KeysMapper.ToKeyGesture(
             hotkeys?.FirstOrDefault(command => command.CommandCode == (int)FormBrowse.Command.OpenRepo)?.KeyData);
         _closeRepositoryGesture = KeysMapper.ToKeyGesture(
@@ -179,6 +187,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         AddFavouriteRepositories(snapshot.Favourites);
         AddRecentRepositories(snapshot.Recent);
         AddFixedItems();
+        ApplySourceDropDownWidth();
     }
 
     private void Menu_Opening(object? sender, EventArgs e)
@@ -199,6 +208,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         AddFavouriteRepositories(favourites);
         AddRecentRepositories(recent);
         AddFixedItems();
+        ApplySourceDropDownWidth();
     }
 
     private void ResetDropDown()
@@ -217,14 +227,62 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private void AddFixedItems()
     {
         _menu.Items.Add(new Separator());
-        AddFixedItem(_openRepositoryText, Images.RepoOpen, _openRepositoryGesture, _openRepository);
-        AddFixedItem(_closeRepositoryText, icon: null, _closeRepositoryGesture, _closeRepository);
+        AddFixedItem(
+            _openRepositoryText,
+            Images.RepoOpen,
+            _openRepositoryGesture,
+            _openRepositoryShortcutDisplay,
+            _openRepository);
+        AddFixedItem(
+            _closeRepositoryText,
+            icon: null,
+            _closeRepositoryGesture,
+            _closeRepositoryShortcutDisplay,
+            _closeRepository);
         _menu.Items.Add(new Separator());
         AddFixedItem(
             AvaloniaTranslationUtils.ToAvaloniaMnemonics(_configureWorkingDirMenu.Text),
-            Images.RecentRepositories,
+            icon: null,
             gesture: null,
+            shortcutDisplay: null,
             _configure);
+    }
+
+    private void ApplySourceDropDownWidth()
+    {
+        double maximumItemWidth = WinFormsToolStripMenuSizer.Apply(_menu, this, _filterHost);
+
+        // This mixed ToolStripTextBox menu's native item measurement consumes one seven-pixel
+        // TextRenderer overhang and adds its one-pixel layout border, making it six pixels
+        // narrower than the ordinary ToolStripDropDownMenu calculation used above.
+        const int retainedMenuOverhang = 6;
+        double sourceItemWidth = Math.Max(0, maximumItemWidth - retainedMenuOverhang);
+
+        // The retained popup reserves its trailing border outside each row, while ToolStrip
+        // includes that pixel in the row width returned by its populated-item maximum.
+        double retainedItemWidth = Math.Max(0, sourceItemWidth - 1);
+        foreach (MenuItem item in _menu.Items.OfType<MenuItem>().Where(item => item != _filterHost))
+        {
+            item.Width = retainedItemWidth;
+        }
+
+        const int paddingToAvoidGrowth = 61;
+        _txtFilter.Width = Math.Max(0, sourceItemWidth - paddingToAvoidGrowth);
+        _filterHost.Width = retainedItemWidth;
+    }
+
+    private void ApplySourceShortcutText()
+    {
+        Dictionary<MenuItem, double> widths = _menu.Items.OfType<MenuItem>()
+            .ToDictionary(item => item, item => item.Width);
+        double filterWidth = _txtFilter.Width;
+        WinFormsToolStripMenuSizer.Apply(_menu, this, _filterHost);
+        foreach ((MenuItem item, double width) in widths)
+        {
+            item.Width = width;
+        }
+
+        _txtFilter.Width = filterWidth;
     }
 
     private void AddFavouriteRepositories(IReadOnlyList<RepositoryHistoryEntry> repositories)
@@ -239,11 +297,13 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_favouriteRepositoriesText),
             Icon = CreateIcon(Images.Pin),
         };
+        favourites.Classes.Add("gitextensions-working-directory-entry");
         foreach (IGrouping<string?, RepositoryHistoryEntry> category in repositories
                      .GroupBy(item => item.Repository.Category)
                      .OrderBy(item => item.Key))
         {
             MenuItem categoryItem = new() { Header = category.Key ?? string.Empty };
+            categoryItem.Classes.Add("gitextensions-working-directory-entry");
             int number = 0;
             foreach (RepositoryHistoryEntry repository in category)
             {
@@ -285,6 +345,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_favouriteRepositoriesText),
             Icon = CreateIcon(Images.Pin),
         };
+        favourites.Classes.Add("gitextensions-working-directory-entry");
         foreach (IGrouping<string?, RecentRepoInfo> category in top
                      .Union(recent)
                      .GroupBy(item => item.Repo.Category)
@@ -294,6 +355,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             {
                 Header = category.Key ?? string.Empty,
             };
+            categoryItem.Classes.Add("gitextensions-working-directory-entry");
             int number = 0;
             foreach (RecentRepoInfo repository in category)
             {
@@ -347,6 +409,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             Tag = repository,
             Icon = repository.Anchored ? CreateIcon(Images.Pin) : null,
         };
+        item.Classes.Add("gitextensions-working-directory-entry");
+        item.Classes.Add("gitextensions-working-directory-repository");
         ToolTip.SetTip(item, repository.Repo.Path == repository.Caption ? null : repository.Repo.Path);
         item.PointerPressed += RepositoryItem_PointerPressed;
         item.KeyDown += RepositoryItem_KeyDown;
@@ -364,48 +428,20 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         };
         MenuItem item = new()
         {
-            Header = CreateRepositoryHeader(
-                $"{numberString}: {repository.Caption}",
-                repository.BranchName),
+            Header = $"{numberString}: {repository.Caption}",
             Tag = repository,
             Icon = repository.IsAnchored ? CreateIcon(Images.Pin) : null,
         };
+        item.Classes.Add("gitextensions-working-directory-entry");
+        item.Classes.Add("gitextensions-working-directory-repository");
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(item, repository.BranchName);
         ToolTip.SetTip(
             item,
-            string.IsNullOrWhiteSpace(repository.BranchName)
-                ? repository.Repository.Path
-                : $"{repository.Repository.Path}{Environment.NewLine}{repository.BranchName}");
+            repository.Repository.Path == repository.Caption ? null : repository.Repository.Path);
         item.PointerPressed += RepositoryItem_PointerPressed;
         item.KeyDown += RepositoryItem_KeyDown;
         item.Click += RepositoryItem_Click;
         return item;
-    }
-
-    private static Control CreateRepositoryHeader(string caption, string? branchName)
-    {
-        Grid header = new()
-        {
-            ColumnDefinitions = new ColumnDefinitions("Auto,18,Auto"),
-            MinWidth = 260,
-        };
-        header.Children.Add(new TextBlock
-        {
-            Text = caption,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-        });
-        if (!string.IsNullOrWhiteSpace(branchName))
-        {
-            TextBlock branch = new()
-            {
-                Text = branchName,
-                Opacity = 0.7,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-            };
-            Grid.SetColumn(branch, 2);
-            header.Children.Add(branch);
-        }
-
-        return header;
     }
 
     private void RepositoryItem_PointerPressed(object? sender, PointerPressedEventArgs e)
@@ -463,7 +499,12 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         }
     }
 
-    private void AddFixedItem(string header, Avalonia.Media.IImage? icon, KeyGesture? gesture, Action? action)
+    private void AddFixedItem(
+        string header,
+        Avalonia.Media.IImage? icon,
+        KeyGesture? gesture,
+        string? shortcutDisplay,
+        Action? action)
     {
         MenuItem item = new()
         {
@@ -471,6 +512,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             Icon = CreateIcon(icon),
             InputGesture = gesture,
         };
+        item.Classes.Add("gitextensions-working-directory-entry");
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(item, shortcutDisplay);
         item.Click += (_, _) => action?.Invoke();
         _fixedItems.Add(item);
         _menu.Items.Add(item);
@@ -591,6 +634,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         public MenuFlyout Menu => control._menu;
 
         public TextBox Filter => control._txtFilter;
+
+        public MenuItem FilterHost => control._filterHost;
 
         public void FillDropDown(IList<Repository> favourites, IList<Repository> recent)
             => control.FillDropDown(favourites, recent);

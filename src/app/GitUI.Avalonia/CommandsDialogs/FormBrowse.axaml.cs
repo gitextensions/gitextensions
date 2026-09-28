@@ -129,6 +129,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         commitInfoLeftHost.SizeChanged += CommitInfoHost_SizeChanged;
         commitInfoRightHost.SizeChanged += CommitInfoHost_SizeChanged;
         ApplySourceToolbarAutoSize();
+        toolStripSplitStash.Content = string.Empty;
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip);
         InitializeWorkspaceLayout();
         InitializeToolbarOverflow();
@@ -166,6 +167,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _commitDataManager.RevisionDetailsLoaded += (_, _) => RevisionGrid.InvalidateVisual();
         InitializeComponent();
         ApplySourceToolbarAutoSize();
+        toolStripSplitStash.Content = string.Empty;
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip);
 
         _hasRuntimeCommands = true;
@@ -335,7 +337,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         InitMenusAndToolbars(args.RevFilter, args.PathFilter.ToPosixPath());
         InitializeToolbarsMenus();
         LoadUserMenu();
-        ReloadRepository();
+        InternalInitialize();
     }
 
     private void LoadUserMenu()
@@ -687,12 +689,15 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
     }
 
-    private void ReloadRepository()
+    private void InternalInitialize()
     {
         IGitModule module = Module;
         RevisionGrid.OnRepositoryChanged();
 
+        bool hasWorkingDir = !string.IsNullOrEmpty(module.WorkingDir);
         bool isValidWorkingDir = module.IsValidGitWorkingDir();
+        bool isBareRepository = isValidWorkingDir && module.IsBareRepository();
+        bool enableWorkingTreeCommands = isValidWorkingDir && !isBareRepository;
         string branchName = isValidWorkingDir ? module.GetSelectedBranch() : string.Empty;
 
         Title = _appTitleGenerator!.Generate(module.WorkingDir, isValidWorkingDir, branchName);
@@ -712,45 +717,59 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         commandsToolStripMenuItem.IsVisible = isValidWorkingDir;
         fileExplorerToolStripMenuItem.IsEnabled = isValidWorkingDir;
         manageRemoteRepositoriesToolStripMenuItem1.IsEnabled = isValidWorkingDir;
-        commitToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
-        checkoutBranchToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        commitToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
+        checkoutBranchToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
         branchToolStripMenuItem.IsEnabled = isValidWorkingDir;
         deleteBranchToolStripMenuItem.IsEnabled = isValidWorkingDir;
         pullToolStripMenuItem.IsEnabled = isValidWorkingDir;
         fetchAllToolStripMenuItem.IsEnabled = isValidWorkingDir;
-        mergeBranchToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
+        mergeBranchToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
         rebaseToolStripMenuItem.IsEnabled = false;
         tagToolStripMenuItem.IsEnabled = isValidWorkingDir;
         deleteTagToolStripMenuItem.IsEnabled = isValidWorkingDir;
         archiveToolStripMenuItem.IsEnabled = false;
-        stashToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
-        toolStripMenuItemReflog.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
+        stashToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
+        toolStripMenuItemReflog.IsEnabled = enableWorkingTreeCommands;
+        cleanupToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
+        applyPatchToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
         manageWorktreeToolStripMenuItem.IsEnabled = isValidWorkingDir;
         gitMaintenanceToolStripMenuItem.IsEnabled = isValidWorkingDir;
         repoSettingsToolStripMenuItem.IsEnabled = isValidWorkingDir;
-        editgitignoreToolStripMenuItem1.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
+        editgitignoreToolStripMenuItem1.IsEnabled = enableWorkingTreeCommands;
         editgitinfoexcludeToolStripMenuItem.IsEnabled = isValidWorkingDir;
-        editGitAttributesToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
-        editmailmapToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
-        menuitemSparse.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
-        bool enableWorkingTreeCommands = isValidWorkingDir && !module.IsBareRepository();
+        editGitAttributesToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
+        editmailmapToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
+        menuitemSparse.IsEnabled = enableWorkingTreeCommands;
         manageSubmodulesToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
         updateAllSubmodulesToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
         synchronizeAllSubmodulesToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
+        _createPullRequestsToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        _viewPullRequestsToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        _addUpstreamRemoteToolStripMenuItem.IsEnabled = isValidWorkingDir;
         RefreshButton.IsEnabled = isValidWorkingDir;
         branchSelect.IsEnabled = isValidWorkingDir;
+        toolStripButtonLevelUp.IsEnabled = hasWorkingDir && !isBareRepository;
+        toolStripButtonLevelUp.Icon = isValidWorkingDir && module.SuperprojectModule is not null
+            ? Images.NavigateUp
+            : Images.SubmodulesManage;
         toolStripButtonPull.IsEnabled = isValidWorkingDir;
         toolStripButtonPush.IsEnabled = isValidWorkingDir;
         toolStripButtonPush.ResetBeforeUpdate();
-        toolStripButtonCommit.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
-        toolStripSplitStash.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
-        toolStripFileExplorer.IsEnabled = Directory.Exists(module.WorkingDir);
+        toolStripButtonCommit.IsEnabled = enableWorkingTreeCommands;
+        toolStripSplitStash.IsEnabled = enableWorkingTreeCommands;
+        pullToolStripMenuItem1.IsEnabled = enableWorkingTreeCommands;
+        mergeToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
+        rebaseToolStripMenuItem1.IsEnabled = enableWorkingTreeCommands;
+        stashChangesToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
+        stashStagedToolStripMenuItem.IsVisible = module.GitVersion.SupportStashStaged;
+        toolStripFileExplorer.IsEnabled = isValidWorkingDir;
         userShell.IsEnabled = Directory.Exists(module.WorkingDir);
         ToolStripFilters.IsEnabled = isValidWorkingDir;
         branchSelect.Content = string.IsNullOrEmpty(branchName) ? "Branch" : branchName;
         pluginsToolStripMenuItem.IsVisible = isValidWorkingDir;
         UpdateRepositoryHostsMenu();
         UpdatePluginMenu(isValidWorkingDir);
+        UpdateFetchAllVisibility();
         RefreshDefaultPullAction();
         toolsToolStripMenuItem.RefreshState(module.IsBareRepository());
 
@@ -887,7 +906,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _loadOperations.FileAndForget(async () =>
         {
             await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            ReloadRepository();
+            InternalInitialize();
         });
     }
 
@@ -2033,7 +2052,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             revisionDiff.RepositoryChanged();
         }
 
-        ReloadRepository();
+        InternalInitialize();
         RegisterPlugins();
     }
 

@@ -407,7 +407,6 @@
                                 Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                 Foreground="{DynamicResource GitExtensionsSourceControlTextBrush}"
                                 Background="#00FFFFFF"
-                                Content=""
                                 Icon="{x:Static properties:Images.Stash}"
                                 ToolTip.Tip="Manage stashes">
           <compat:IconSplitButton.Flyout>
@@ -450,6 +449,7 @@
         </ScrollViewer>
         <Button x:Name="toolStripMainOverflow"
                 Grid.Column="2"
+                compat:TranslationCompat.TranslateText="False"
                 compat:TranslationCompat.TranslateToolTip="False"
                 HorizontalAlignment="Right"
                 Focusable="False"
@@ -467,6 +467,7 @@
         </ScrollViewer>
         <Button x:Name="toolStripFiltersOverflow"
                 Grid.Column="1"
+                compat:TranslationCompat.TranslateText="False"
                 compat:TranslationCompat.TranslateToolTip="False"
                 HorizontalAlignment="Right"
                 Focusable="False"

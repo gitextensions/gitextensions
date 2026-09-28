@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
@@ -23,6 +23,7 @@ using GitUIPluginInterfaces;
 using ResourceManager;
 using Color = Avalonia.Media.Color;
 using Font = GitExtensions.Shims.WinForms.Font;
+using Size = Avalonia.Size;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 using WinFormsControls = GitUI.Compat.WinFormsControls;
 
@@ -299,14 +300,17 @@ public partial class UserRepositoriesList : TranslatedControl
         IReadOnlyList<RecentRepoInfo> favouriteRepositories;
         (recentRepositories, favouriteRepositories) = Controller.PreRenderRepositories(textBoxSearch.Text ?? string.Empty);
 
+        Size tileSize = recentRepositories.Count > 0 || favouriteRepositories.Count > 0
+            ? GetTileSize(recentRepositories, favouriteRepositories)
+            : new Size(0, 50);
         List<object> rows = [];
         _hasInvalidRepos = false;
-        BindRepositories(rows, _groupRecentRepositories.Text, recentRepositories, isFavourite: false, isRecentGroup: true);
+        BindRepositories(rows, _groupRecentRepositories.Text, recentRepositories, tileSize, isFavourite: false, isRecentGroup: true);
         foreach (IGrouping<string?, RecentRepoInfo> category in favouriteRepositories
                      .GroupBy(repo => repo.Repo.Category, GroupHeaderComparer)
                      .OrderBy(group => group.Key, GroupHeaderComparer))
         {
-            BindRepositories(rows, category.Key ?? string.Empty, category, isFavourite: true, isRecentGroup: false);
+            BindRepositories(rows, category.Key ?? string.Empty, category, tileSize, isFavourite: true, isRecentGroup: false);
         }
 
         listView1.ItemsSource = rows;
@@ -362,6 +366,7 @@ public partial class UserRepositoriesList : TranslatedControl
         ICollection<object> rows,
         string groupName,
         IEnumerable<RecentRepoInfo> repositories,
+        Size tileSize,
         bool isFavourite,
         bool isRecentGroup)
     {
@@ -386,7 +391,8 @@ public partial class UserRepositoriesList : TranslatedControl
                 recent,
                 branchName,
                 isFavourite,
-                isValidGitDir));
+                isValidGitDir,
+                tileSize));
         }
     }
 
@@ -437,10 +443,8 @@ public partial class UserRepositoriesList : TranslatedControl
         };
         Grid row = new()
         {
-            MinHeight = 50,
-            MinWidth = AppSettings.RecentReposComboMinWidth > 0
-                ? AppSettings.RecentReposComboMinWidth + 50
-                : 0,
+            MinHeight = repository.TileSize.Height,
+            MinWidth = repository.TileSize.Width,
         };
         row.Children.Add(image);
         if (!string.IsNullOrWhiteSpace(repository.Repository.Repo.Category))
@@ -526,6 +530,40 @@ public partial class UserRepositoriesList : TranslatedControl
 
     private Repository? GetSelectedRepository()
         => (listView1.SelectedItem as RepositoryListItem)?.Repository.Repo;
+
+    private Size GetTileSize(
+        IEnumerable<RecentRepoInfo> recentRepositories,
+        IEnumerable<RecentRepoInfo> favouriteRepositories)
+    {
+        TextBlock primaryText = new()
+        {
+            FontFamily = new FontFamily(AppSettings.Font.Name),
+            FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
+            FontStyle = AppSettings.Font.Italic ? FontStyle.Italic : FontStyle.Normal,
+            FontWeight = AppSettings.Font.Bold ? FontWeight.Bold : FontWeight.Normal,
+        };
+        TextBlock secondaryText = new()
+        {
+            FontFamily = new FontFamily(_secondaryFont.Name),
+            FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(_secondaryFont.Size),
+        };
+        Size longestPath = recentRepositories.Union(favouriteRepositories)
+            .Select(repository => WinFormsTextMeasurer.MeasureSize(primaryText, repository.Caption ?? repository.Repo.Path))
+            .OrderByDescending(size => size.Width)
+            .First();
+        Size branchTextSize = WinFormsTextMeasurer.MeasureSize(secondaryText, "A");
+
+        double width = AppSettings.RecentReposComboMinWidth;
+        if (width < 1)
+        {
+            width = longestPath.Width + 16;
+        }
+
+        double height = longestPath.Height + (2 * branchTextSize.Height)
+            + /* offset from top and bottom */ (2 * 2)
+            + /* twice space between text */ (2 * 1);
+        return new Size(Math.Ceiling(width + 50), Math.Ceiling(Math.Max(height, 50)));
+    }
 
     private void RepositoryContextAction(Action<SelectedRepositoryItem> action)
     {
@@ -981,7 +1019,8 @@ public partial class UserRepositoriesList : TranslatedControl
         RecentRepoInfo Repository,
         string BranchName,
         bool IsFavourite,
-        bool IsValid);
+        bool IsValid,
+        Size TileSize);
 
     internal sealed record RepositoryGroupItem(
         string Name,

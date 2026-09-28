@@ -41,11 +41,14 @@ internal static class WinFormsToolStripMenuSizer
         Apply(owner, [.. flyout.Items.OfType<MenuItem>()], false);
     }
 
-    private static void Apply(TemplatedControl owner, MenuItem[] menuItems, bool hasLayoutBorder)
+    public static double Apply(MenuFlyout flyout, TemplatedControl owner, MenuItem excludedItem)
+        => Apply(owner, [.. flyout.Items.OfType<MenuItem>().Where(item => item != excludedItem)], false);
+
+    private static double Apply(TemplatedControl owner, MenuItem[] menuItems, bool hasLayoutBorder)
     {
         if (menuItems.Length == 0)
         {
-            return;
+            return 0;
         }
 
         // ToolStripDropDownMenu.ShowImageMargin defaults to true. Its layout always reserves
@@ -74,6 +77,8 @@ internal static class WinFormsToolStripMenuSizer
                     ?.SetCurrentValue(TextBlock.TextProperty, display.Value);
             }
         }
+
+        return itemWidth;
     }
 
     private static double MeasureText(TemplatedControl owner, string text)
