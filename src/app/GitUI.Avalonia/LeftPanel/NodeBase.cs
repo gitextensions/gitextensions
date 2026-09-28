@@ -34,12 +34,12 @@ internal abstract class NodeBase
     public NodeBase? Parent { get; private set; }
 
     /// <summary>The corresponding tree node.</summary>
-    public TreeViewItem TreeViewNode { get; }
+    protected internal virtual TreeViewItem TreeViewNode { get; protected set; }
 
     /// <summary>
     /// Marks this node to be included in multi-selection. See <see cref="Select(bool, bool)"/>.
-    /// Avalonia owns the selected-item collection, so this property projects the native selection
-    /// state instead of retaining a second selection flag.
+    /// This is remembered by Avalonia's native selected-item collection instead of a second flag
+    /// because each model node retains its own <see cref="TreeViewNode"/>.
     /// </summary>
     protected internal bool IsSelected
     {
@@ -122,6 +122,7 @@ internal abstract class NodeBase
 
         text.FontFamily = new FontFamily(AppSettings.Font.Name);
         text.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size);
+
         text.FontWeight = style.HasFlag(WinFormsShims.FontStyle.Bold) ? FontWeight.Bold : FontWeight.Normal;
         text.FontStyle = style.HasFlag(WinFormsShims.FontStyle.Italic) ? Avalonia.Media.FontStyle.Italic : Avalonia.Media.FontStyle.Normal;
         text.TextDecorations = style.HasFlag(WinFormsShims.FontStyle.Underline)

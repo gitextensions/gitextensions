@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Avalonia.Controls;
 using GitCommands;
 using GitCommands.Remotes;
@@ -25,14 +26,7 @@ internal sealed class RemoteRepoNode : BaseRevisionNode
         _remote = remote;
         Enabled = enabled;
         _remotesManager = remotesManager;
-        if (remote is Remote value)
-        {
-            ToolTip.SetTip(
-                TreeViewNode,
-                value.PushUrls.Count != 1 || value.FetchUrl != value.PushUrls[0]
-                    ? $"Fetch: {value.FetchUrl}\nPush: {string.Join("\n", value.PushUrls.ToArray())}"
-                    : value.FetchUrl);
-        }
+        ApplyStyle();
     }
 
     public bool Enabled { get; }
@@ -41,42 +35,36 @@ internal sealed class RemoteRepoNode : BaseRevisionNode
 
     public bool Fetch()
     {
-        UICommands.StartPullDialogAndPullImmediately(
-            out bool pullCompleted,
-            Owner,
-            remote: FullPath,
-            pullAction: GitPullAction.Fetch);
-        return pullCompleted;
+        Trace.Assert(Enabled);
+        return DoFetch();
     }
-
-    private RemoteBranchTree RemoteTree => (RemoteBranchTree)Tree;
 
     public bool Prune()
     {
-        UICommands.StartPullDialogAndPullImmediately(
-            out bool pullCompleted,
-            Owner,
-            remote: FullPath,
-            pullAction: GitPullAction.FetchPruneAll);
-        return pullCompleted;
+        Trace.Assert(Enabled);
+        return DoPrune();
     }
 
     public void OpenRemoteUrlInBrowser()
     {
-        if (IsRemoteUrlUsingHttp)
+        if (!IsRemoteUrlUsingHttp)
         {
-            OsShellUtil.OpenUrlInDefaultBrowser(_remote!.Value.FetchUrl);
+            return;
         }
+
+        OsShellUtil.OpenUrlInDefaultBrowser(_remote!.Value.FetchUrl);
     }
 
     public bool IsRemoteUrlUsingHttp => _remote?.FetchUrl.IsUrlUsingHttp() == true;
 
     public void Enable(bool fetch)
     {
-        _remotesManager?.ToggleRemoteState(FullPath, disabled: false);
+        Trace.Assert(!Enabled);
+        _remotesManager?.ToggleRemoteState(Name, disabled: false);
         if (fetch)
         {
-            Fetch();
+            // DoFetch invokes UICommands.RepoChangedNotifier.Notify
+            DoFetch();
         }
         else
         {
@@ -86,15 +74,50 @@ internal sealed class RemoteRepoNode : BaseRevisionNode
 
     public void Disable()
     {
-        _remotesManager?.ToggleRemoteState(FullPath, disabled: true);
+        Trace.Assert(Enabled);
+        _remotesManager?.ToggleRemoteState(Name, disabled: true);
         UICommands.RepoChangedNotifier.Notify();
+    }
+
+    public override void ApplyStyle()
+    {
+        base.ApplyStyle();
+
+        if (_remote is Remote remote)
+        {
+            ToolTip.SetTip(
+                TreeViewNode,
+                remote.PushUrls.Count != 1 && remote.FetchUrl != remote.PushUrls[0]
+                    ? $"Fetch: {remote.FetchUrl}\nPush: {string.Join("\n", remote.PushUrls.ToArray())}"
+                    : remote.FetchUrl);
+        }
     }
 
     internal override void OnDoubleClick()
         => PopupManageRemotesForm();
 
-    public void PopupManageRemotesForm()
-        => RemoteTree.PopupManageRemotesForm(FullPath);
+    internal void PopupManageRemotesForm()
+        => ((RemoteBranchTree)Tree).PopupManageRemotesForm(FullPath);
+
+    private bool DoFetch()
+    {
+        UICommands.StartPullDialogAndPullImmediately(
+            out bool pullCompleted,
+            Owner,
+            remote: FullPath,
+            pullAction: GitPullAction.Fetch);
+        return pullCompleted;
+    }
+
+    private bool DoPrune()
+    {
+        UICommands.StartPullDialogAndPullImmediately(
+            out bool pullCompleted,
+            Owner,
+            remote: FullPath,
+            pullAction: GitPullAction.FetchPruneAll);
+        return pullCompleted;
+    }
 
     private static Avalonia.Media.IImage GetIcon(Remote? remote)
     {

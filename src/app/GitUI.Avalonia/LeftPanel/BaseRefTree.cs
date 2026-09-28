@@ -3,6 +3,7 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.LeftPanel;
 
@@ -30,6 +31,20 @@ internal abstract class BaseRefTree : BaseRevisionTree
     {
         _loadedRefs = null;
         base.OnAttached();
+    }
+
+    private async Task<Nodes> LoadNodesAsync(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, CancellationToken token)
+    {
+        await TaskScheduler.Default;
+        token.ThrowIfCancellationRequested();
+
+        if (_loadedRefs is null)
+        {
+            _loadedRefs = getRefs(_refsFilter);
+            token.ThrowIfCancellationRequested();
+        }
+
+        return FillTree(_loadedRefs, token);
     }
 
     protected void FillNested(
@@ -78,6 +93,70 @@ internal abstract class BaseRefTree : BaseRevisionTree
 
     protected virtual Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
         => Nodes;
+
+    /// <summary>
+    /// Requests (from FormBrowse) to refresh the data tree and to apply filtering, if necessary.
+    /// </summary>
+    /// <param name="getRefs">Function to get refs.</param>
+    internal void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+    {
+        if (!IsAttached)
+        {
+            return;
+        }
+
+        // Since the commits of some branches or tags could have been filtered or not been loaded,
+        // we need to iterate over the list and rebind the tree.
+        RefreshInternal(getRefs);
+    }
+
+    /// <summary>
+    /// Requests to refresh the data tree and to apply filtering, if necessary.
+    /// </summary>
+    protected internal void RefreshInternal(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+    {
+        // Break the local cache to ensure the data is requeried to reflect the required sort order.
+        _loadedRefs = null;
+
+        HashSet<string> expandedNodes =
+        [
+            .. DescendantsAndSelf()
+                .Where(node => node.TreeViewNode.IsExpanded)
+                .Select(RepoObjectsTree.GetNodeIdentity),
+        ];
+        HashSet<string> selectedNodes = Owner.CaptureSelectedNodeIdentities(this);
+
+        Owner.UpdateNodes(() =>
+        {
+            Nodes.Clear();
+            TreeViewNode.Items.Clear();
+            _loadedRefs = getRefs(_refsFilter);
+            FillTree(_loadedRefs, CancellationToken.None);
+            foreach (NodeBase node in DescendantsAndSelf().Skip(1))
+            {
+                node.ApplyStyle();
+            }
+
+            Nodes.FillTreeViewNode(TreeViewNode);
+
+            foreach (NodeBase node in DescendantsAndSelf())
+            {
+                node.TreeViewNode.IsExpanded = expandedNodes.Contains(RepoObjectsTree.GetNodeIdentity(node));
+            }
+
+            Owner.RestoreSelectedNodes(this, selectedNodes);
+        });
+    }
+
+    internal override void UpdateVisibility()
+    {
+        if (!IsAttached)
+        {
+            return;
+        }
+
+        base.UpdateVisibility();
+    }
 
     protected IEnumerable<IGitRef> PrioritizedBranches(IReadOnlyList<IGitRef> branches)
         => OrderByPriority(branches, node => node.LocalName, AppSettings.PrioritizedBranchNames);

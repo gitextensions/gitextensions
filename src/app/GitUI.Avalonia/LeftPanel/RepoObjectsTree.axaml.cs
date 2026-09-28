@@ -540,23 +540,10 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     /// <param name="getRefs">Git references</param>
     public void ResortRefs(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
-        IReadOnlyList<IGitRef> refs =
-        [
-            .. getRefs(RefsFilter.Heads),
-            .. getRefs(RefsFilter.Remotes),
-            .. getRefs(RefsFilter.Tags),
-        ];
-
-        SetRefs(
-            refs,
-            _currentStashes,
-            _includeStashes,
-            _currentBranch,
-            _enabledRemotes,
-            _disabledRemotes,
-            _remotesManager,
-            _currentWorktrees,
-            _currentWorkingDirectory);
+        _branchesTree.RefreshInternal(getRefs);
+        _remotesTree.RefreshInternal(getRefs);
+        _tagTree.RefreshInternal(getRefs);
+        RefreshRevisionsLoaded();
     }
 
     public void ReloadHotkeys()
