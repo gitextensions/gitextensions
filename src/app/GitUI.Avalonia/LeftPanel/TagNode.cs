@@ -37,6 +37,11 @@ internal sealed class TagNode : BaseRevisionNode, IGitRefActions, ICanDelete
     public bool Merge()
         => UICommands.StartMergeBranchDialog(Owner, FullPath);
 
+    public override void ApplyStyle()
+    {
+        base.ApplyStyle();
+    }
+
     public bool Checkout()
         => UICommands.StartCheckoutRevisionDialog(Owner, FullPath);
 }

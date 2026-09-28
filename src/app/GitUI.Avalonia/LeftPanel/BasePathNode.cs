@@ -8,4 +8,12 @@ internal class BasePathNode : BaseRevisionNode
         : base(tree, parent, fullPath, gitRef: null, Images.BranchFolder)
     {
     }
+
+    public override void ApplyStyle()
+    {
+        base.ApplyStyle();
+    }
+
+    protected override Avalonia.Media.IImage GetVisibleIcon()
+        => FullPath == TranslatedStrings.Inactive ? Images.EyeClosed : Images.BranchFolder;
 }

@@ -40,10 +40,42 @@ partial class RepoObjectsTree
 
     private void ReorderTreeNode(TreeViewItem node, bool up)
     {
-        if (node.Tag is Tree tree)
+        if (node.Tag is not Tree tree)
         {
-            ReorderTree(tree, up);
+            return;
         }
+
+        Dictionary<Tree, int> treeToIndex = GetTreeToPositionIndex();
+        Dictionary<int, Tree> indexToTree = treeToIndex.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+
+        int currIndex = treeToIndex[tree];
+
+        // Find next visible tree to swap with, if any
+        int swapIndex = currIndex;
+        do
+        {
+            swapIndex = up ? swapIndex - 1 : swapIndex + 1;
+
+            // If there are no visible nodes to swap with, we're done
+            if (swapIndex < 0 || swapIndex >= treeToIndex.Count)
+            {
+                return;
+            }
+        }
+        while (!indexToTree[swapIndex].IsEnabled);
+
+        Tree swapWithTree = indexToTree[swapIndex];
+
+        // Swap indices
+        treeToIndex[tree] = treeToIndex[swapWithTree];
+        treeToIndex[swapWithTree] = currIndex;
+
+        // Save new indices
+        SaveTreeToPositionIndex(treeToIndex);
+
+        // Remove all trees, then show enabled ones at new indices
+        ShowEnabledTrees();
+        SelectTreeViewItem(tree.TreeViewNode);
     }
 
     public void ClearTrees()

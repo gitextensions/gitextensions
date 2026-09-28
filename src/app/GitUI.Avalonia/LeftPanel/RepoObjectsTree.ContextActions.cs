@@ -177,6 +177,7 @@ partial class RepoObjectsTree : IMenuItemFactory
 
         return action switch
         {
+            "Copy" => copyContextMenuItem,
             "CheckoutLocal" => GetMenuItem(_localBranchMenuItems, MenuItemKey.GitRefCheckout),
             "CheckoutRemote" => GetMenuItem(_remoteBranchMenuItems, MenuItemKey.GitRefCheckout),
             "Merge" => GetMenuItem(_localBranchMenuItems, MenuItemKey.GitRefMerge),
@@ -204,7 +205,7 @@ partial class RepoObjectsTree : IMenuItemFactory
     [System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(_sortByContextMenuItem), nameof(_sortOrderContextMenuItem), nameof(_localBranchMenuItems), nameof(_remoteBranchMenuItems), nameof(_tagNodeMenuItems))]
     private void RegisterContextActions()
     {
-        RegisterAction(RepoAction.Copy, copyContextMenuItem);
+        copyContextMenuItem.SetRevisionFunc(() => _revisionGridInfo.GetSelectedRevisions());
 
         // Filter for selected
         RegisterAction(RepoAction.Filter, filterForSelectedRefsMenuItem);
@@ -305,9 +306,11 @@ partial class RepoObjectsTree : IMenuItemFactory
         bool canChangeWorkingTree = canRunCommands && !commands!.Module.IsBareRepository();
 
         bool canCopy = selectedNode is BaseBranchLeafNode or StashNode;
+        copyContextMenuItem.Enable(canCopy);
+
+        // enable if selection contains refs
         bool canFilter = GetSelectedNodes().OfType<IGitRefActions>().Any()
             && _filterRevisionGridBySpaceSeparatedRefs is not null;
-        SetAction(RepoAction.Copy, canCopy, canCopy);
         SetAction(RepoAction.Filter, canFilter, canFilter);
 
         LocalBranchNode? selectedLocalBranch = selectedNode as LocalBranchNode;
@@ -370,6 +373,10 @@ partial class RepoObjectsTree : IMenuItemFactory
         // Waiting for the ContextMenuStrip (as the visual parent of its menu items) to be visible to
         // toggle (depending on ToolStripItem.Visible) existing separators in between item groups as required.
         menuMain.ToggleSeparators();
+
+        // Working around the context menu strip being positioned incorrectly on first open - which may be a Windows Forms bug,
+        // see https://stackoverflow.com/q/15841863/2338036.
+        // Avalonia's popup placement is owned by the platform popup implementation and needs no cursor correction.
     }
 
     /// <inheritdoc />

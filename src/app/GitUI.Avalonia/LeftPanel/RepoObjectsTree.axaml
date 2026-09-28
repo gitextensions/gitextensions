@@ -3,6 +3,7 @@
              xmlns:compat="using:GitUI.Compat"
              xmlns:wf="using:GitUI.Compat.WinFormsControls"
              xmlns:properties="using:GitUI.Properties"
+             xmlns:revisiongrid="using:GitUI.UserControls.RevisionGrid"
              x:Class="GitUI.LeftPanel.RepoObjectsTree"
              MinWidth="190">
   <UserControl.Styles>
@@ -26,7 +27,6 @@
       <compat:IconButton x:Name="tsbCollapseAll"
                          compat:TranslationCompat.UseToolTipText="True"
                          Classes="gitextensions-toolbar-button gitextensions-icon-only"
-                         Content=""
                          Icon="{x:Static properties:Images.CollapseAll}" />
       <compat:IconToggleButton x:Name="tsbShowBranches"
                                compat:TranslationCompat.UseToolTipText="True"
@@ -70,7 +70,6 @@
                          Height="26"
                          Margin="0"
                          Padding="2"
-                         Content=""
                          Icon="{x:Static properties:Images.Preview}" />
     </Grid>
     <TreeView x:Name="treeMain"
@@ -84,9 +83,7 @@
               ScrollViewer.AllowAutoHide="False">
       <TreeView.ContextMenu>
         <wf:ContextMenuStrip x:Name="menuMain">
-          <wf:ToolStripMenuItem x:Name="copyContextMenuItem" Header="_Copy to clipboard">
-            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
-          </wf:ToolStripMenuItem>
+          <revisiongrid:CopyContextMenuItem x:Name="copyContextMenuItem" Header="&amp;Copy to clipboard" />
           <wf:ToolStripMenuItem x:Name="filterForSelectedRefsMenuItem" Header="_Filter for selected">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ShowThisBranchOnly}" /></MenuItem.Icon>
           </wf:ToolStripMenuItem>

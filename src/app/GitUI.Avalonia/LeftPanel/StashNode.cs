@@ -93,6 +93,11 @@ internal sealed class StashNode : BaseRevisionNode
         }
     }
 
+    public override void ApplyStyle()
+    {
+        base.ApplyStyle();
+    }
+
     protected override string DisplayText()
         => DisplayName;
 }
