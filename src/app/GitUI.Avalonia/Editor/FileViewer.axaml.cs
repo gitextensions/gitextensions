@@ -2641,109 +2641,17 @@ public partial class FileViewer : GitModuleControl
     ///  Loads and displays the diff represented by a file-status entry.
     /// </summary>
     public Task ViewChangesAsync(FileStatusItem? item, CancellationToken cancellationToken)
-        => ViewChangesAsync(item, openWithDiffTool: null, cancellationToken);
+        => GitUIExtensions.ViewChangesAsync(this, item, cancellationToken);
 
     /// <summary>
     ///  Loads and displays the diff represented by a file-status entry and retains the
     ///  consumer's external-difftool action for the shared FileViewer hotkey.
     /// </summary>
-    public async Task ViewChangesAsync(
+    public Task ViewChangesAsync(
         FileStatusItem? item,
         Action? openWithDiffTool = null,
         CancellationToken cancellationToken = default)
-    {
-        CancellationToken viewToken = BeginView(cancellationToken);
-        if (item?.Item is null)
-        {
-            await InvokeOnOwnerMainThreadAsync(
-                () => ViewPatchCore(null, useGitColoring: false, isCombinedDiff: false, isGitWordDiff: false),
-                viewToken);
-            return;
-        }
-
-        if (item.Item.IsStatusOnly)
-        {
-            await ShowTextAsync(item.Item.Name, item.Item.ErrorMessage ?? string.Empty, item, line: null, openWithDiffTool, checkGitAttributes: false, viewToken);
-            return;
-        }
-
-        ObjectId firstId = item.FirstRevision?.ObjectId ?? item.SecondRevision.FirstParentId;
-        ObjectId secondId = item.SecondRevision.ObjectId;
-        if (!item.Item.IsSubmodule
-            && (item.Item.IsNew || firstId.IsZero || (!item.Item.IsDeleted && FileHelper.IsImage(item.Item.Name))))
-        {
-            await ViewGitItemCoreAsync(item.Item, secondId, item, line: null, openWithDiffTool, viewToken);
-            return;
-        }
-
-        bool isTracked = item.Item.IsTracked || (!item.Item.TreeId.IsZero && !secondId.IsZero);
-        if (AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.Difftastic && IsDifftasticEnabled.Value)
-        {
-            (ArgumentString diffArgs, string extraCacheKey) = GetDifftasticArguments();
-            ExecutionResult result = await Module.GetSingleDifftoolAsync(
-                firstId,
-                secondId,
-                item.Item.Name,
-                item.Item.OldName,
-                diffArgs,
-                cacheResult: true,
-                extraCacheKey,
-                isTracked,
-                useGitColoring: true,
-                viewToken);
-
-            if (!result.ExitedSuccessfully)
-            {
-                string output = $"Git command exit code: {result.ExitCodeDisplay}{Environment.NewLine}{result.StandardError}";
-                await ShowTextAsync(item.Item.Name, output, item, line: null, openWithDiffTool, checkGitAttributes: false, viewToken);
-                return;
-            }
-
-            await InvokeOnOwnerMainThreadAsync(() =>
-            {
-                ResetView(ViewMode.Difftastic, item.Item.Name, item, openWithDiffTool);
-                string parsedText = result.StandardOutput;
-                DifftasticHighlightService highlightService = new(
-                    ref parsedText,
-                    internalFileViewer.LineNumbersControl,
-                    out int rightColumnStart);
-                VRulerPosition = rightColumnStart;
-                SetDiffText(parsedText, highlightService, showLeftColumn: true);
-                internalFileViewer.GoToFirstChange(NumberOfContextLines);
-                TextLoaded?.Invoke(this, EventArgs.Empty);
-            }, viewToken);
-            return;
-        }
-
-        bool isGitWordDiff = AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.GitWordDiff;
-        bool useGitColoring = isGitWordDiff || AppSettings.UseGitColoring.Value;
-
-        (Patch? patch, string? errorMessage) = await Module.GetSingleDiffAsync(
-            firstId,
-            secondId,
-            item.Item.Name,
-            item.Item.OldName,
-            extraDiffArguments: GetExtraDiffArguments().ToString(),
-            Encoding,
-            cacheResult: true,
-            isTracked,
-            useGitColoring,
-            PatchHighlightService.GetGitCommandConfiguration(Module, useGitColoring),
-            viewToken);
-
-        await InvokeOnOwnerMainThreadAsync(() =>
-        {
-            viewToken.ThrowIfCancellationRequested();
-            ViewPatchCore(
-                patch?.Text ?? errorMessage,
-                useGitColoring,
-                isCombinedDiff: false,
-                isGitWordDiff,
-                item.Item.Name,
-                item,
-                openWithDiffTool);
-        }, viewToken);
-    }
+        => GitUIExtensions.ViewChangesAsync(this, item, cancellationToken, openWithDiffTool: openWithDiffTool);
 
     private async Task InvokeOnOwnerMainThreadAsync(Action action, CancellationToken cancellationToken = default)
     {
@@ -2756,6 +2664,17 @@ public partial class FileViewer : GitModuleControl
         {
             await Dispatcher.InvokeAsync(action, DispatcherPriority.Normal, cancellationToken);
         }
+    }
+
+    internal async Task<T> GetOnOwnerMainThreadAsync<T>(Func<T> action, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (Dispatcher.CheckAccess())
+        {
+            return action();
+        }
+
+        return await Dispatcher.InvokeAsync(action, DispatcherPriority.Normal, cancellationToken);
     }
 
     /// <summary>Gets the retained external-difftool action.</summary>

@@ -72,6 +72,11 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         _hoverHighlight.Clear();
     }
 
+    public void HighlightBranch(ObjectId id)
+    {
+        _revisionGraph.HighlightBranch(id);
+    }
+
     internal void UpdateVisibleRange(IEnumerable<GitRevision> revisions)
     {
         int[] rowIndexes =

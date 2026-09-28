@@ -25,6 +25,9 @@ public partial class CommitInfoHeader : GitModuleControl
     public CommitInfoHeader()
     {
         InitializeComponent();
+        rtbRevisionHeader.KeyDown += rtbRevisionHeader_KeyDown;
+        rtbRevisionHeader.LinkClicked += rtbRevisionHeader_LinkClicked;
+        rtbRevisionHeader.PointerPressed += rtbRevisionHeader_MouseDown;
         InitializeComplete();
 
         TabbedHeaderLabelFormatter labelFormatter = new();

@@ -11,6 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 internal sealed class AvatarColumnProvider : ColumnProvider
 {
     private readonly IAvatarProvider _avatarProvider;
+    private int _avatarSize = 20;
     private int _cacheVersion;
 
     public AvatarColumnProvider(
@@ -35,6 +36,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
     {
         // Framework constraint: Avalonia rows measure separately, so mirror the original per-paint width assignment here.
         Column.Width = new GridLength(rowHeight);
+        _avatarSize = Math.Max(1, (int)Math.Round(rowHeight - 4, MidpointRounding.AwayFromZero));
     }
 
     public override Control CreateCell()
@@ -56,7 +58,8 @@ internal sealed class AvatarColumnProvider : ColumnProvider
             image.Load(
                 revision.AuthorEmail ?? string.Empty,
                 revision.Author,
-                Volatile.Read(ref _cacheVersion));
+                Volatile.Read(ref _cacheVersion),
+                _avatarSize);
         }
 
         UpdateToolTip(control, revision);
@@ -79,6 +82,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         private readonly IAvatarProvider _avatarProvider;
         private int _cacheVersion = -1;
         private string? _email;
+        private int _imageSize = -1;
         private string? _name;
         private int _requestVersion;
 
@@ -97,14 +101,15 @@ internal sealed class AvatarColumnProvider : ColumnProvider
 
             _email = null;
             _name = null;
+            _imageSize = -1;
             _cacheVersion = -1;
             _requestVersion++;
             ReplaceSource(null);
         }
 
-        public void Load(string email, string? name, int cacheVersion)
+        public void Load(string email, string? name, int cacheVersion, int imageSize = 20)
         {
-            bool identityChanged = _email != email || _name != name;
+            bool identityChanged = _email != email || _name != name || _imageSize != imageSize;
             if (!identityChanged && _cacheVersion == cacheVersion)
             {
                 return;
@@ -112,6 +117,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
 
             _email = email;
             _name = name;
+            _imageSize = imageSize;
             _cacheVersion = cacheVersion;
             int requestVersion = ++_requestVersion;
             if (identityChanged)
@@ -119,13 +125,12 @@ internal sealed class AvatarColumnProvider : ColumnProvider
                 ReplaceSource(null);
             }
 
-            ThreadHelper.FileAndForget(() => LoadAsync(email, name, requestVersion));
+            ThreadHelper.FileAndForget(() => LoadAsync(email, name, imageSize, requestVersion));
         }
 
-        private async Task LoadAsync(string email, string? name, int requestVersion)
+        private async Task LoadAsync(string email, string? name, int imageSize, int requestVersion)
         {
-            const int AvatarSize = 20;
-            byte[]? imageData = await _avatarProvider.GetAvatarAsync(email, name, AvatarSize);
+            byte[]? imageData = await _avatarProvider.GetAvatarAsync(email, name, imageSize);
             Bitmap? bitmap = AvatarImage.Decode(imageData);
 
             await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>

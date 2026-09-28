@@ -321,6 +321,35 @@ public sealed class FileStatusListTests
     }
 
     [AvaloniaTest]
+    public void FileStatusList_file_tree_should_initially_select_the_first_root_folder()
+    {
+        FileStatusList control = new();
+        GitRevision revision = new(ObjectId.Random());
+        control.SetDiffs(
+            [
+                new FileStatusWithDescription(
+                    null,
+                    revision,
+                    "File tree",
+                    [
+                        new GitItemStatus(".github/workflows/build.yml") { IsTracked = true },
+                        new GitItemStatus("src/App.cs") { IsTracked = true },
+                    ]),
+            ],
+            isFileTreeMode: true);
+
+        control.SelectFirstVisibleItem();
+        control.SelectedFolder.Should().Be(RelativePath.From(".github"));
+        control.SelectedGitItem.Should().BeNull();
+
+        control.ClearSelected();
+        control.SelectStoredNextItem(orSelectFirst: true);
+
+        control.SelectedFolder.Should().Be(RelativePath.From(".github"));
+        control.SelectedGitItem.Should().BeNull();
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_should_preserve_empty_and_range_groups_and_filtered_counts()
     {
         FileStatusList control = new() { GroupByRevision = true };

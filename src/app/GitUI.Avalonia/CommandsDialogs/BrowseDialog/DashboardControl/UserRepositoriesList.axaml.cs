@@ -428,26 +428,45 @@ public partial class UserRepositoriesList : TranslatedControl
         RepositoryListItem repository = (RepositoryListItem)item;
         Image image = new()
         {
-            Width = 20,
-            Height = 20,
+            Width = 16,
+            Height = 16,
             Source = repository.IsValid ? Images.DashboardFolderGit : Images.DashboardFolderError,
-            Margin = new Avalonia.Thickness(0, 1, 8, 0),
+            Margin = new Avalonia.Thickness(4, 8, 0, 0),
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
         };
+        Grid row = new()
+        {
+            MinHeight = 50,
+            MinWidth = AppSettings.RecentReposComboMinWidth > 0
+                ? AppSettings.RecentReposComboMinWidth + 50
+                : 0,
+        };
+        row.Children.Add(image);
         if (!string.IsNullOrWhiteSpace(repository.Repository.Repo.Category))
         {
-            image.Opacity = 0.9;
+            row.Children.Add(new Image
+            {
+                Width = 16,
+                Height = 16,
+                Source = Images.Star,
+                Margin = new Avalonia.Thickness(8, 2, 0, 0),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                IsHitTestVisible = false,
+            });
         }
 
         StackPanel text = new()
         {
             Spacing = 1,
+            Margin = new Avalonia.Thickness(24, 6, 4, 0),
             Children =
             {
                 new TextBlock
                 {
                     Text = repository.Text,
-                    Foreground = repository.IsFavourite ? _favouriteColorBrush : _foreColorBrush,
-                    FontWeight = repository.IsFavourite ? FontWeight.SemiBold : FontWeight.Normal,
+                    Foreground = _foreColorBrush,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 },
                 new TextBlock
@@ -460,15 +479,7 @@ public partial class UserRepositoriesList : TranslatedControl
                 },
             },
         };
-        StackPanel row = new()
-        {
-            Orientation = Orientation.Horizontal,
-            Margin = new Avalonia.Thickness(4, 3),
-            MinWidth = AppSettings.RecentReposComboMinWidth > 0
-                ? AppSettings.RecentReposComboMinWidth + 50
-                : 0,
-            Children = { image, text },
-        };
+        row.Children.Add(text);
         ToolTip.SetTip(row, repository.Repository.Repo.Path);
         return row;
     }

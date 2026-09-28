@@ -107,6 +107,29 @@ public sealed class AvatarTests
     }
 
     [AvaloniaTest]
+    public async Task AvatarColumnProvider_should_request_the_runtime_cell_image_size()
+    {
+        byte[] imageData = (await new InitialsAvatarProvider().GetAvatarAsync(
+            "author@example.com",
+            "Author",
+            22))!;
+        IAvatarProvider provider = Substitute.For<IAvatarProvider>();
+        provider.GetAvatarAsync("author@example.com", "Author", 22)
+            .Returns(Task.FromResult<byte[]?>(imageData));
+        AvatarColumnProvider column = new(
+            new RevisionGridControl(),
+            provider,
+            Substitute.For<IAvatarCacheCleaner>());
+        Image cell = (Image)column.CreateCell();
+
+        column.ApplyRowHeight(26);
+        column.UpdateCell(cell, CreateRevision());
+        await WaitUntilAsync(() => cell.Source is Bitmap);
+
+        _ = provider.Received(1).GetAvatarAsync("author@example.com", "Author", 22);
+    }
+
+    [AvaloniaTest]
     public async Task Avatar_cell_should_retain_a_resolved_image_when_reattached_for_the_same_author()
     {
         byte[] imageData = (await new InitialsAvatarProvider().GetAvatarAsync(

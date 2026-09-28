@@ -1280,6 +1280,7 @@ partial class FileStatusList
         tsmiResetFileToSelected.Click += ResetFile_Click;
         tsmiResetFileToParent.Click += ResetFile_Click;
         tsmiOpenWithDifftool.SubmenuOpened += OpenWithDifftool_DropDownOpening;
+        tsmiOpenWithDifftool.Click += DiffFirstToSelected_Click;
         tsmiDiffFirstToSelected.Click += DiffFirstToSelected_Click;
         tsmiDiffSelectedToLocal.Click += DiffSelectedToLocal_Click;
         tsmiDiffFirstToLocal.Click += DiffFirstToLocal_Click;

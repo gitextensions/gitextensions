@@ -97,10 +97,5 @@ internal sealed class RevisionGridColumn
 
     public bool IsVisible { get; set; } = true;
 
-    /// <summary>
-    /// Gets or sets whether the column's owning integration can currently provide real content.
-    /// </summary>
-    public bool IsAvailable { get; set; } = true;
-
-    public GridLength EffectiveWidth => IsVisible && IsAvailable ? Width : new GridLength(0);
+    public GridLength EffectiveWidth => IsVisible ? Width : new GridLength(0);
 }
