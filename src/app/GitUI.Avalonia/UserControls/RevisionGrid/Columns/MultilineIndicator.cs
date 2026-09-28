@@ -21,6 +21,7 @@ internal sealed class MultilineIndicator : Control
     private readonly int _indicatorRectHeight;
     private readonly int _indicatorRectWidth;
     private bool _isMultiline;
+    private bool _hasAvailableWidth;
 
     public MultilineIndicator()
     {
@@ -38,14 +39,32 @@ internal sealed class MultilineIndicator : Control
 
     public void Update(GitRevision revision)
     {
+        if (_isMultiline == revision.HasMultiLineMessage)
+        {
+            return;
+        }
+
         _isMultiline = revision.HasMultiLineMessage;
-        IsVisible = _isMultiline;
+        UpdateVisibility();
+        InvalidateVisual();
+    }
+
+    public void UpdateAvailableWidth(double availableWidth)
+    {
+        bool hasAvailableWidth = availableWidth >= 2 * _indicatorReservedWidth;
+        if (_hasAvailableWidth == hasAvailableWidth)
+        {
+            return;
+        }
+
+        _hasAvailableWidth = hasAvailableWidth;
+        UpdateVisibility();
         InvalidateVisual();
     }
 
     public override void Render(DrawingContext context)
     {
-        if (!_isMultiline)
+        if (!IsVisible)
         {
             return;
         }
@@ -73,4 +92,7 @@ internal sealed class MultilineIndicator : Control
             x += dotSize + dotSpacing;
         }
     }
+
+    private void UpdateVisibility()
+        => IsVisible = _isMultiline && _hasAvailableWidth;
 }

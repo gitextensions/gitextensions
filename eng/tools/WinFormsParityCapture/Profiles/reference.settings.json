@@ -13,6 +13,7 @@
     "commitinfoshowcontainedinbranchesremoteifnolocal": "false",
     "commitinfoshowcontainedintags": "true",
     "commitinfoshowtagthiscommitderivesfrom": "true",
+    "relativedate": "false",
     "translation": "English"
   }
 }

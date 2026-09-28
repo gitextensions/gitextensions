@@ -369,7 +369,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         AddColumn(_revisionGraphColumnProvider);
         _messageColumnProvider = new MessageColumnProvider(this, gitRevisionSummaryBuilder, commitDataManager);
         AddColumn(_messageColumnProvider);
-        AddColumn(new NotesColumnProvider());
+        AddColumn(new NotesColumnProvider(commitDataManager));
         AddColumn(new AvatarColumnProvider(this, AvatarService.DefaultProvider, AvatarService.CacheCleaner));
         AddColumn(new AuthorNameColumnProvider(_authorHighlighting));
         AddColumn(new DateColumnProvider());

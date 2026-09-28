@@ -287,6 +287,104 @@ public sealed class FileStatusListTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void FileStatusList_diff_tree_should_compact_common_paths_like_the_source_sorter()
+    {
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        bool originalMerge = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+            AppSettings.FileStatusMergeSingleItemWithFolder.Value = false;
+            FileStatusList control = new();
+            GitRevision revision = new(ObjectId.Random());
+            GitItemStatus first = new("src/app/GitUI.Avalonia/LeftPanel/first.cs") { IsChanged = true, IsTracked = true };
+            GitItemStatus second = new("src/app/GitUI.Avalonia/LeftPanel/second.cs") { IsChanged = true, IsTracked = true };
+            GitItemStatus separate = new("eng/avalonia/framework-adaptations.json") { IsChanged = true, IsTracked = true };
+
+            control.SetDiffs(
+                [new FileStatusWithDescription(null, revision, "Diff with parent", [first, second, separate])],
+                isFileTreeMode: false);
+
+            FileStatusList.DiffTreeNode[] roots =
+            [
+                .. control.GetTestAccessor().DiffTree.Items.Cast<FileStatusList.DiffTreeNode>(),
+            ];
+            roots.Select(node => node.Text).Should().Equal("eng/avalonia", "src/app/GitUI.Avalonia/LeftPanel");
+            roots[0].Children.Should().ContainSingle().Which.Text.Should().Be("framework-adaptations.json");
+            roots[1].Children.Select(node => node.Text).Should().Equal("first.cs", "second.cs");
+            roots.SelectMany(Flatten).Count(node => node.Item is not null).Should().Be(3);
+        }
+        finally
+        {
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+            AppSettings.FileStatusMergeSingleItemWithFolder.Value = originalMerge;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void FileStatusList_diff_tree_should_honor_the_source_single_file_folder_merge_setting()
+    {
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        bool originalMerge = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+            AppSettings.FileStatusMergeSingleItemWithFolder.Value = true;
+            FileStatusList control = new();
+            GitRevision revision = new(ObjectId.Random());
+            GitItemStatus item = new("src/only.cs") { IsChanged = true, IsTracked = true };
+
+            control.SetDiffs(
+                [new FileStatusWithDescription(null, revision, "Diff with parent", [item])],
+                isFileTreeMode: false);
+
+            FileStatusList.DiffTreeNode root = control.GetTestAccessor().DiffTree.Items
+                .Cast<FileStatusList.DiffTreeNode>()
+                .Single();
+            root.Text.Should().Be("src/only.cs");
+            root.Item?.Item.Should().BeSameAs(item);
+            root.Children.Should().BeEmpty();
+        }
+        finally
+        {
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+            AppSettings.FileStatusMergeSingleItemWithFolder.Value = originalMerge;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void FileStatusList_selected_folder_should_return_descendant_items_in_source_tree_order()
+    {
+        bool originalMerge = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
+        try
+        {
+            AppSettings.FileStatusMergeSingleItemWithFolder.Value = false;
+            FileStatusList control = new();
+            GitItemStatus rootFile = new(".github/FUNDING.yml") { IsChanged = true, IsTracked = true };
+            GitItemStatus agentFile = new(".github/agents/README.md") { IsChanged = true, IsTracked = true };
+            GitItemStatus workflowFile = new(".github/workflows/build.yml") { IsChanged = true, IsTracked = true };
+
+            GitRevision revision = new(ObjectId.Random());
+            control.SetDiffs(
+                [new FileStatusWithDescription(null, revision, "Files", [rootFile, agentFile, workflowFile])],
+                isFileTreeMode: true);
+            control.SelectFirstVisibleItem();
+
+            control.SelectedFolder.Should().Be(RelativePath.From(".github"));
+            control.SelectedItems.Select(item => item.Item).Should().Equal([agentFile, workflowFile, rootFile],
+                "the source tree enumerates descendant folders before files directly in the selected folder");
+            control.SelectedGitItems.Should().Equal(agentFile, workflowFile, rootFile);
+        }
+        finally
+        {
+            AppSettings.FileStatusMergeSingleItemWithFolder.Value = originalMerge;
+        }
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_revision_overload_should_preserve_source_summary_and_path_grouping_pipeline()
     {
         DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
@@ -339,13 +437,13 @@ public sealed class FileStatusListTests
             isFileTreeMode: true);
 
         control.SelectFirstVisibleItem();
-        control.SelectedFolder.Should().Be(RelativePath.From(".github"));
+        control.SelectedFolder.Should().Be(RelativePath.From(".github/workflows"));
         control.SelectedGitItem.Should().BeNull();
 
         control.ClearSelected();
         control.SelectStoredNextItem(orSelectFirst: true);
 
-        control.SelectedFolder.Should().Be(RelativePath.From(".github"));
+        control.SelectedFolder.Should().Be(RelativePath.From(".github/workflows"));
         control.SelectedGitItem.Should().BeNull();
     }
 
@@ -569,14 +667,12 @@ public sealed class FileStatusListTests
                 .Should().NotBeSameAs(Images.FileStatusUnknown,
                     "the source file-tree group uses a file-type icon even without grep/status flags");
 
-            TreeViewItem sourceFolder = FindItem("src");
-            TreeViewItem nestedFolder = FindItem("folder");
+            TreeViewItem sourceFolder = FindItem("src/folder");
             TreeViewItem secondFile = FindItem("second.cs");
             double sourceHeaderX = HeaderX(sourceFolder);
-            HeaderX(nestedFolder).Should().Be(sourceHeaderX + 14,
-                "FileStatusList explicitly sets the native TreeView indent to 14 at 96 DPI");
-            HeaderX(file).Should().Be(sourceHeaderX + 28);
-            HeaderX(secondFile).Should().Be(sourceHeaderX + 28);
+            HeaderX(file).Should().Be(sourceHeaderX + 14,
+                "the source sorter retains a single compact common-path folder and the 14-DIP child indent");
+            HeaderX(secondFile).Should().Be(sourceHeaderX + 14);
 
             Panel leafChevronHost = file.GetVisualDescendants()
                 .OfType<Panel>()
