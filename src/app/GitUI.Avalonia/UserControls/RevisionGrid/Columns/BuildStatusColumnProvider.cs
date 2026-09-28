@@ -7,6 +7,7 @@ using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.BuildServerIntegration;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Compat;
 using GitUI.Theming;
@@ -21,20 +22,25 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
     private const int IconColumnWidth = 16;
     private const int TextColumnWidth = 150;
     private readonly Action<GitRevision> _openBuildReport;
+    private readonly Func<IGitModule> _module;
 
-    public BuildStatusColumnProvider(Action<GitRevision> openBuildReport)
+    public BuildStatusColumnProvider(Action<GitRevision> openBuildReport, Func<IGitModule> module)
         : base("Build Status", new GridLength(150), minimumWidth: 16, resizable: true)
     {
         _openBuildReport = openBuildReport;
-        Column.IsAvailable = false;
+        _module = module;
     }
 
     public override void ApplySettings()
     {
         bool showIcon = AppSettings.ShowBuildStatusIconColumn;
         bool showText = AppSettings.ShowBuildStatusTextColumn;
-        Column.IsVisible = showIcon || showText;
-        if (!Column.IsAvailable || !Column.IsVisible)
+        bool columnVisible = _module().GetEffectiveSettings() is { } effectiveSettings
+                             && BuildServerSettings.IntegrationEnabled.ValueOrDefault(effectiveSettings)
+                             && (showIcon || showText);
+
+        Column.IsVisible = columnVisible;
+        if (!columnVisible)
         {
             return;
         }

@@ -49,7 +49,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
         _credentialStore = new BuildServerCredentialStore(() => _module().WorkingDir);
         _repoNameExtractor = new RepoNameExtractor(_module);
-        ColumnProvider = new BuildStatusColumnProvider(OpenBuildReport);
+        ColumnProvider = new BuildStatusColumnProvider(OpenBuildReport, module);
     }
 
     public async Task LaunchBuildServerInfoFetchOperationAsync()
@@ -64,11 +64,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
         _buildServerAdapter?.Dispose();
 
-        // When a build server adapter is available (including auto-detected),
-        // ensure the column visibility and width reflect the user's display preferences
         _buildServerAdapter = buildServerAdapter;
-        ColumnProvider.Column.IsAvailable = buildServerAdapter is not null;
-        _revisionGrid.ApplyColumnSettings();
 
         await TaskScheduler.Default;
 

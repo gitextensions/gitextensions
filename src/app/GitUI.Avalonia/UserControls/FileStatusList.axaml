@@ -85,11 +85,6 @@
       <MenuItem x:Name="tsmiSkipWorktree" Header="S_kip worktree" ToggleType="CheckBox" />
       <MenuItem x:Name="tsmiAssumeUnchanged" Header="Assu_me unchanged" ToggleType="CheckBox" />
       <MenuItem x:Name="tsmiStopTracking" Header="Stop tracking this file" />
-      <Separator x:Name="_treeContextMenuSeparator" />
-      <MenuItem x:Name="_selectAll" Header="S_elect all" />
-      <MenuItem x:Name="_collapseAll" Header="C_ollapse all" />
-      <MenuItem x:Name="_expandAll" Header="E_xpand all" />
-      <MenuItem x:Name="_collapseRootFolders" Header="Collap_se root folders" />
       <Separator x:Name="sepScripts" />
       <MenuItem x:Name="tsmiRunScript" Header="Run script">
         <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Console}" /></MenuItem.Icon>

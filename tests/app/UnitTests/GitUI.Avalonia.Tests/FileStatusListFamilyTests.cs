@@ -344,6 +344,13 @@ public sealed class FileStatusListFamilyTests
         accessor.ExpandAllMenuItem.IsVisible.Should().BeTrue();
         accessor.CollapseAllMenuItem.IsVisible.Should().BeTrue();
         accessor.SelectAllMenuItem.IsVisible.Should().BeTrue();
+        int selectAllIndex = accessor.ContextMenu.Items.IndexOf(accessor.SelectAllMenuItem);
+        accessor.ContextMenu.Items.IndexOf(accessor.CollapseAllMenuItem).Should().Be(selectAllIndex + 1);
+        accessor.ContextMenu.Items.IndexOf(accessor.ExpandAllMenuItem).Should().Be(selectAllIndex + 2);
+        accessor.SelectAllMenuItem.Icon.Should().BeOfType<Image>();
+        accessor.CollapseAllMenuItem.Icon.Should().BeOfType<Image>();
+        accessor.ExpandAllMenuItem.Icon.Should().BeOfType<Image>();
+        accessor.CollapseRootFoldersMenuItem.Icon.Should().BeOfType<Image>();
 
         accessor.ExpandAllMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
         accessor.FirstTreeRootExpanded.Should().BeTrue();

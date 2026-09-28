@@ -60,7 +60,8 @@ internal static class RevisionGridRefRenderer
         bool showRemoteBranches,
         bool fill,
         Func<IGitRef, (IGitRef GitRef, string Name)?>? getVirtualRef,
-        IReadOnlySet<string>? superprojectRefs)
+        IReadOnlySet<string>? superprojectRefs,
+        Func<IGitRef, (string Label, string? HighlightedLabel)>? getLabel = null)
     {
         IReadOnlyList<IGitRef> sortedRefs = SortRefs(
             refs.Where(gitRef => (!gitRef.IsTag || showTags)
@@ -85,7 +86,7 @@ internal static class RevisionGridRefRenderer
                     dashed: superprojectRefs?.Contains(gitRef.CompleteName) == true);
                 RefLabelControl remoteLabel = CreateLabel(
                     remote,
-                    remote.LocalName == gitRef.Name ? remote.Remote : remote.Name,
+                    remote.Remote,
                     RefLabelShape.NotchLeft,
                     fill,
                     showHeadIndicator: false,
@@ -120,12 +121,14 @@ internal static class RevisionGridRefRenderer
                 continue;
             }
 
+            (string label, string? highlightedLabel) = getLabel?.Invoke(gitRef) ?? (gitRef.Name, null);
             labels.Add(CreateLabel(
                 gitRef,
-                gitRef.Name,
+                label,
                 gitRef.IsTag ? RefLabelShape.PointLeft : RefLabelShape.Rect,
                 fill,
-                dashed: superprojectRefs?.Contains(gitRef.CompleteName) == true));
+                dashed: superprojectRefs?.Contains(gitRef.CompleteName) == true,
+                highlightedLabel: highlightedLabel));
         }
 
         return labels;
@@ -204,7 +207,8 @@ internal static class RevisionGridRefRenderer
         bool fill,
         bool showHeadIndicator = true,
         bool dashed = false,
-        FontWeight? fontWeight = null)
+        FontWeight? fontWeight = null,
+        string? highlightedLabel = null)
         => new(
             gitRef,
             label,
@@ -217,7 +221,8 @@ internal static class RevisionGridRefRenderer
             shape,
             fill,
             dashed,
-            GetRemoteRefBrush(gitRef))
+            GetRemoteRefBrush(gitRef),
+            highlightedLabel)
         {
             FontWeight = fontWeight ?? (gitRef.IsSelected ? FontWeight.Bold : FontWeight.Normal),
             VerticalAlignment = VerticalAlignment.Center,
@@ -499,7 +504,9 @@ internal static class RevisionGridRefRenderer
     internal sealed class RefLabelControl : TemplatedControl
     {
         private readonly string _brushResourceKey;
+        private readonly string? _highlightedLabel;
         private readonly IBrush? _refBrush;
+        private string _normalLabel;
         private double _backgroundHeight;
         private bool _isHighlighted;
         private double _labelWidth;
@@ -513,10 +520,13 @@ internal static class RevisionGridRefRenderer
             RefLabelShape shape,
             bool fill,
             bool dashed,
-            IBrush? refBrush = null)
+            IBrush? refBrush = null,
+            string? highlightedLabel = null)
         {
             GitRef = gitRef;
-            Label = label;
+            _normalLabel = label;
+            _highlightedLabel = highlightedLabel;
+            Label = _normalLabel;
             _brushResourceKey = brushResourceKey;
             _refBrush = refBrush;
             Icon = icon;
@@ -532,7 +542,10 @@ internal static class RevisionGridRefRenderer
 
         public void AppendLabel(string suffix)
         {
-            Label += suffix;
+            _normalLabel += suffix;
+            Label = _isHighlighted && _highlightedLabel is not null
+                ? _highlightedLabel + suffix
+                : _normalLabel;
             InvalidateMeasure();
             InvalidateVisual();
         }
@@ -558,6 +571,10 @@ internal static class RevisionGridRefRenderer
                 }
 
                 _isHighlighted = value;
+                Label = value && _highlightedLabel is not null
+                    ? _highlightedLabel
+                    : _normalLabel;
+                InvalidateMeasure();
                 InvalidateVisual();
             }
         }

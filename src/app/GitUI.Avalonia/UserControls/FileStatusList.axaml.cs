@@ -692,6 +692,12 @@ public partial class FileStatusList : GitModuleControl
 
         if (_isFileTreeMode)
         {
+            if (_filter is null && !FindInCommitFilesGitGrepActive)
+            {
+                tvFiles.SelectedItem = tvFiles.Items.Cast<FileTreeNode>().FirstOrDefault();
+                return;
+            }
+
             // Descend
             FileTreeNode? first = tvFiles.Items.Cast<FileTreeNode>()
                 .SelectMany(Flatten)
@@ -717,11 +723,7 @@ public partial class FileStatusList : GitModuleControl
         _nextItemToSelect = null;
         if (orSelectFirst && SelectedItem is null)
         {
-            GitItemStatus? firstItem = _gitItemFilteredStatuses.FirstOrDefault();
-            if (firstItem is not null)
-            {
-                SelectFileOrFolder(RelativePath.From(firstItem.Name));
-            }
+            SelectFirstVisibleItem();
         }
     }
 

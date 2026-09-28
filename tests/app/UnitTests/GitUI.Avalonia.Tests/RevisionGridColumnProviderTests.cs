@@ -52,8 +52,6 @@ public sealed class RevisionGridColumnProviderTests
             "Commit ID",
             "Build Status");
         control.ColumnProviders.Select(provider => provider.Index).Should().Equal(Enumerable.Range(0, 8));
-        control.ColumnProviders[3].Column.IsAvailable.Should().BeTrue();
-        control.ColumnProviders[7].Column.IsAvailable.Should().BeFalse();
         control.ColumnProviders[3].Column.Width.Should().Be(new GridLength(32));
         control.ColumnProviders[6].Column.Resizable.Should().BeFalse();
         control.ColumnProviders[7].Column.Width.Should().Be(new GridLength(150));
@@ -340,6 +338,71 @@ public sealed class RevisionGridColumnProviderTests
             .Should().ContainSingle()
             .Which.Should().BeOfType<RevisionGridRefRenderer.RefLabelControl>().Subject;
         existingLabel.IsDashed.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    public void Message_provider_should_render_bisect_markers_like_the_original()
+    {
+        RevisionGridControl control = new();
+        MessageColumnProvider provider = (MessageColumnProvider)control.ColumnProviders
+            .Single(column => column.Name == "Message");
+        GitRevision revision = CreateRevision();
+        IGitRef good = CreateRef(Substitute.For<IGitModule>(), revision.ObjectId, "good", "refs/bisect/good-1");
+        IGitRef bad = CreateRef(Substitute.For<IGitModule>(), revision.ObjectId, "bad", "refs/bisect/bad");
+        good.IsBisectGood.Returns(true);
+        bad.IsBisectBad.Returns(true);
+        revision.Refs = [good, bad];
+        Control cell = provider.CreateCell();
+
+        provider.UpdateCell(cell, revision);
+
+        cell.GetVisualDescendants().OfType<Image>()
+            .Count(image => image.Classes.Contains("revision-bisect-marker"))
+            .Should().Be(2);
+        cell.GetVisualDescendants().OfType<RevisionGridRefRenderer.RefLabelControl>()
+            .Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    public void Message_provider_should_compact_matching_remote_branch_until_hovered()
+    {
+        bool originalShowRemoteBranches = AppSettings.ShowRemoteBranches;
+        try
+        {
+            AppSettings.ShowRemoteBranches = true;
+            RevisionGridControl control = new();
+            MessageColumnProvider provider = (MessageColumnProvider)control.ColumnProviders
+                .Single(column => column.Name == "Message");
+            provider.ApplySettings();
+            GitRevision revision = CreateRevision();
+            IGitModule module = Substitute.For<IGitModule>();
+            module.GetEffectiveSetting("remote.upstream.prefix", string.Empty).Returns("prefix/");
+            IGitRef local = CreateRef(module, revision.ObjectId, "main", "refs/heads/main", isHead: true);
+            IGitRef tracked = CreateRef(module, revision.ObjectId, "origin/main", "refs/remotes/origin/main", isRemote: true);
+            tracked.Remote.Returns("origin");
+            tracked.LocalName.Returns("main");
+            local.IsTrackingRemote(tracked).Returns(true);
+            IGitRef matchingRemote = CreateRef(module, revision.ObjectId, "upstream/prefix/main", "refs/remotes/upstream/prefix/main", isRemote: true);
+            matchingRemote.Remote.Returns("upstream");
+            matchingRemote.LocalName.Returns("prefix/main");
+            revision.Refs = [local, tracked, matchingRemote];
+            Control cell = provider.CreateCell();
+
+            provider.UpdateCell(cell, revision);
+
+            RevisionGridRefRenderer.RefLabelControl label = cell.GetVisualDescendants()
+                .OfType<RevisionGridRefRenderer.RefLabelControl>()
+                .Single(item => ReferenceEquals(item.GitRef, matchingRemote));
+            label.Label.Should().Be("upstream");
+
+            label.IsHighlighted = true;
+
+            label.Label.Should().Be("upstream/prefix/main");
+        }
+        finally
+        {
+            AppSettings.ShowRemoteBranches = originalShowRemoteBranches;
+        }
     }
 
     private static GitRevision CreateRevision()

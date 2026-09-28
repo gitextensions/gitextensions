@@ -1298,7 +1298,7 @@
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="Padding" Value="1" />
   </Style>
-  <Style Selector="SelectableTextBlock.gitextensions-commit-header">
+  <Style Selector="TextBlock.gitextensions-commit-header">
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsMonospaceFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsMonospaceFontSize}" />
     <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsMonospaceFontStyle}" />

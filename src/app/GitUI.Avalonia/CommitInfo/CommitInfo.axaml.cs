@@ -118,6 +118,8 @@ public partial class CommitInfo : GitModuleControl
         showTagThisCommitDerivesFromMenuItem.Click += showTagThisCommitDerivesFromMenuItem_Click;
         addNoteToolStripMenuItem.Click += addNoteToolStripMenuItem_Click;
         commitInfoContextMenuStrip.Opening += commitInfoContextMenuStrip_Opening;
+        rtbxCommitMessage.KeyDown += RichTextBox_KeyDown;
+        RevisionInfo.KeyDown += RichTextBox_KeyDown;
         commitInfoHeader.SetContextMenuStrip(commitInfoContextMenuStrip);
 
         // Avalonia constraint: controls have no DisposeCustomResources lifecycle hook.

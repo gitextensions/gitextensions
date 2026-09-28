@@ -58,9 +58,9 @@
                                FontStyle="{DynamicResource GitExtensionsCommitFontStyle}"
                                FontWeight="{DynamicResource GitExtensionsCommitFontWeight}"
                                LineHeight="15"
+                               Text=""
                                TextWrapping="Wrap"
                                LinkClicked="LinkClicked"
-                               KeyDown="RichTextBox_KeyDown"
                                PointerPressed="_RevisionHeader_MouseDown" />
       </Border>
       <compat:XhtmlTextBlock x:Name="RevisionInfo"
@@ -73,9 +73,9 @@
                              FontStyle="{DynamicResource GitExtensionsUiFontStyle}"
                              FontWeight="{DynamicResource GitExtensionsUiFontWeight}"
                              LineHeight="15"
+                             Text=""
                              TextWrapping="Wrap"
                              LinkClicked="LinkClicked"
-                             KeyDown="RichTextBox_KeyDown"
                              PointerPressed="_RevisionHeader_MouseDown" />
     </Grid>
   </ScrollViewer>

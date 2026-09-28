@@ -1,10 +1,17 @@
 using Avalonia.Controls;
+using GitUI.Properties;
 using ToolStripItemCollection = System.Collections.IList;
 
 namespace GitUI;
 
 partial class FileStatusList
 {
+    private MenuItem _collapseAll = CreateMenuItem("C_ollapse all", Images.CollapseAll);
+    private MenuItem _collapseRootFolders = CreateMenuItem("Collap_se root folders", Images.TreeCollapseAll);
+    private MenuItem _expandAll = CreateMenuItem("E_xpand all", Images.ExpandAll);
+    private MenuItem _selectAll = CreateMenuItem("S_elect all", Images.FileTree);
+    private Separator _treeContextMenuSeparator = new() { Name = nameof(_treeContextMenuSeparator) };
+
     private void CreateTreeContextMenuItems()
     {
         _selectAll.Click += SelectAll_Click;
@@ -23,9 +30,21 @@ partial class FileStatusList
         items.Insert(index++, _selectAll);
         items.Insert(index++, _collapseAll);
         items.Insert(index++, _expandAll);
-        items.Insert(index, _treeContextMenuSeparator);
+        items.Insert(index++, _treeContextMenuSeparator);
         items.Add(_collapseRootFolders);
     }
+
+    private static MenuItem CreateMenuItem(string header, Avalonia.Media.IImage image)
+        => new()
+        {
+            Header = header,
+            Icon = new Image
+            {
+                Width = 16,
+                Height = 16,
+                Source = image,
+            },
+        };
 
     private void UpdateStatusOfTreeContextMenuItems()
     {
