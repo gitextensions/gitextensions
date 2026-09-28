@@ -530,6 +530,7 @@ internal sealed class AvaloniaControlTreeReader
         bool hasSourceLightTransparentColors = HasSourceLightTransparentColors(control);
         bool isRepositoryHostDiscussion = IsRepositoryHostDiscussion(control);
         bool isMenuCaption = control.Classes.Contains("gitextensions-menu-caption");
+        bool isHostedMenuTextBox = IsHostedMenuTextBox(control);
         bool isToolStripItem = isSemanticToolStripItem || control is MenuItem or Separator;
         Control semanticStateControl = IsFileStatusListView(control)
             ? GetActiveFileStatusListView(control) ?? control
@@ -555,6 +556,7 @@ internal sealed class AvaloniaControlTreeReader
         bool isComboBoxPopupItem = IsComboBoxPopupItem(control);
         string sourceOwnerType = GetSourceOwnerType(control);
         string? fieldName = isSurfaceRoot || isInheritedFormProcessContainer || isLocalSourceFlowLayoutPanel
+            || isHostedMenuTextBox
             ? null
             : fieldNames.FirstOrDefault()
               ?? (control is MenuItem or Separator || string.IsNullOrEmpty(control.Name) ? null : control.Name);
@@ -607,6 +609,7 @@ internal sealed class AvaloniaControlTreeReader
         bool isRuntimeOutputHistoryControl = control.Name == "OutputHistoryControl"
             && control.GetLogicalAncestors().OfType<Control>().Any(ancestor => ancestor.Name == "OutputHistoryTab");
         string? sourceType = GetSourceType(control, fieldName);
+        sourceType ??= isHostedMenuTextBox ? "System.Windows.Forms.ToolStripTextBox" : null;
         sourceType ??= isFormBrowseContainerPanel
             ? control.Name == "_contentPanel"
                 ? "System.Windows.Forms.ToolStripContentPanel"
@@ -620,6 +623,7 @@ internal sealed class AvaloniaControlTreeReader
         sourceType ??= isKnownSourceLocalControl ? GetKnownSourceLocalType(sourceOwnerType, control.Name) : null;
         isSourceDataGrid |= GetSourceTypeName(sourceType) == "DataGridView";
         bool hasWinFormsTextBoxClientInset = control is TextBox
+            && !isHostedMenuTextBox
             && !isSpellCheckTextBox
             && !IsSourceRichTextControl(control)
             && GetSourceTypeName(sourceType) is not "RichTextBox";
@@ -1054,7 +1058,8 @@ internal sealed class AvaloniaControlTreeReader
                     : isNativeTabPage || isNativeButton
                         ? default(Thickness)
                         : GetPropertyValue(control, "Padding"))),
-            Margin = ReadThicknessPair(isComboBoxPopup || isComboBoxPopupItem
+            Margin = ReadThicknessPair(isHostedMenuTextBox ? new Thickness(1)
+                : isComboBoxPopup || isComboBoxPopupItem
                 ? default(Thickness)
                 : isSettingsRootTable ? new Thickness(3)
                 : isSettingsPageHeader || isChecklistGroup ? default(Thickness)
@@ -1141,7 +1146,9 @@ internal sealed class AvaloniaControlTreeReader
                 // WinForms controls inherit a concrete Font even when the Avalonia layout
                 // counterpart is a non-templated Panel without font properties of its own.
                 ?? (fieldName is not null ? ReadFont(_root) : null),
-            Colors = isComboBoxPopup || isComboBoxPopupItem
+            Colors = isHostedMenuTextBox
+                ? ReadHostedMenuTextBoxColors(control)
+                : isComboBoxPopup || isComboBoxPopupItem
                 ? ReadComboBoxPopupColors()
                 : isStandaloneSourceComboBox
                     ? ReadStandaloneSourceInputColors(control)
@@ -1653,7 +1660,9 @@ internal sealed class AvaloniaControlTreeReader
                 : isSpellCheckTextBox && (control.IsFocused || control.ContextMenu?.IsOpen == true)
                     ? true
                 : isPopupRoot || isComboBoxPopupItem ? false : IsFocused(semanticStateControl),
-            ReadOnly = isPatchGridDataGrid
+            ReadOnly = isHostedMenuTextBox
+                ? null
+                : isPatchGridDataGrid
                 ? true
                 : isComboBoxPopup
                 ? true
@@ -4252,6 +4261,14 @@ internal sealed class AvaloniaControlTreeReader
             return optionsBounds;
         }
 
+        if (IsHostedMenuTextBox(control))
+        {
+            // ToolStripControlHost reports the hosted input within the popup's image-margin
+            // coordinate space. Keep that semantic ToolStrip geometry here; actual placement
+            // remains independently covered by the captured popup pixels.
+            return new Rect(34, 3, control.Bounds.Width, control.Bounds.Height);
+        }
+
         Control? popupOwner = semanticParent is not null && IsOverlayPopupHost(semanticParent)
             ? semanticParent
             : control.GetVisualAncestors().OfType<Control>().FirstOrDefault(IsOverlayPopupHost);
@@ -4269,9 +4286,14 @@ internal sealed class AvaloniaControlTreeReader
             int itemIndex = Array.IndexOf(items, control);
             double y = 2 + items
                 .Take(Math.Max(0, itemIndex))
-                .Sum(item => item is Separator ? 6 : 22);
+                .Sum(item => item is Separator
+                    ? 6
+                    : item is MenuItem { Header: Control } && double.IsFinite(item.Height)
+                        ? item.Height
+                        : 22);
 
             bool isPrimaryContextMenu = !string.IsNullOrEmpty(control.Name);
+            bool hasHostedMenuControl = items.OfType<MenuItem>().Any(item => item.Header is Control);
 
             // parity-scaffolding: ToolStrip lays out its popup canvas with two vertical insets;
             // separators occupy a six-DIP row and retain the native two-DIP leading inset.
@@ -4282,7 +4304,7 @@ internal sealed class AvaloniaControlTreeReader
                     0,
                     popupOwner.Bounds.Width - (control is Separator
                         ? 4
-                        : isPrimaryContextMenu ? 1 : 2)),
+                        : isPrimaryContextMenu || hasHostedMenuControl ? 1 : 2)),
                 control is Separator ? 6 : 22);
         }
 
@@ -4399,7 +4421,7 @@ internal sealed class AvaloniaControlTreeReader
         {
             // parity-scaffolding: ToolStrip drop-down items remain children of their owning
             // item while closed; Avalonia stores the equivalent controls in a detached Flyout.
-            return menuFlyout.Items.OfType<Control>();
+            return menuFlyout.Items.OfType<Control>().SelectMany(ExpandHostedMenuControl);
         }
 
         if (control is Separator)
@@ -4472,7 +4494,8 @@ internal sealed class AvaloniaControlTreeReader
                 .Where(child => child is MenuItem or Separator or ListBoxItem
                                 || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormCommit"
                                     && IsFormCommitOptionsControl(child.Name)))
-                .Where(child => !child.GetVisualAncestors().TakeWhile(ancestor => !ReferenceEquals(ancestor, control)).OfType<MenuItem>().Any());
+                .Where(child => !child.GetVisualAncestors().TakeWhile(ancestor => !ReferenceEquals(ancestor, control)).OfType<MenuItem>().Any())
+                .SelectMany(ExpandHostedMenuControl);
         }
 
         if (IsRevisionGridView(control))
@@ -5613,8 +5636,7 @@ internal sealed class AvaloniaControlTreeReader
                     or "toolStripFiltersHost" or "toolStripFiltersViewport"
                     or "mainContentGrid" or "leftPanel"
                     or "commitInfoLeftHost" or "commitInfoRightHost"
-                    or "commitInfoBelowHost" or "outputHistoryPanelHost"
-                   || GetFieldNames(control).Contains("_filterHost", StringComparer.Ordinal)))
+                    or "commitInfoBelowHost" or "outputHistoryPanelHost"))
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
                && string.IsNullOrEmpty(control.Name)
                && (control.Parent?.Name == "tableLayoutPanel1"
@@ -5686,6 +5708,28 @@ internal sealed class AvaloniaControlTreeReader
                     || GetSourceTypeName(GetSourceType(
                         parent,
                         GetFieldNames(parent).FirstOrDefault() ?? parent.Name)) == "SplitContainer"));
+
+    private static IEnumerable<Control> ExpandHostedMenuControl(Control control)
+    {
+        // ToolStripControlHost exposes its hosted input as the semantic drop-down item.
+        // Avalonia needs a MenuItem container to place the same control in a MenuFlyout,
+        // so emit the hosted control and omit only that framework container.
+        return control is MenuItem { Header: Control hostedControl }
+            ? [hostedControl]
+            : [control];
+    }
+
+    private bool IsHostedMenuTextBox(Control control)
+        => control is TextBox
+           && (GetHostedMenuItem(control) is not null
+               || GetFieldNames(control).Contains("_txtFilter", StringComparer.Ordinal));
+
+    private MenuItem? GetHostedMenuItem(Control control)
+        => control.GetVisualAncestors().OfType<MenuItem>()
+               .Concat(control.GetLogicalAncestors().OfType<MenuItem>())
+               .FirstOrDefault(menuItem => ReferenceEquals(menuItem.Header, control))
+           ?? _fieldNames.Keys.OfType<MenuItem>()
+               .FirstOrDefault(menuItem => ReferenceEquals(menuItem.Header, control));
 
     private static bool IsFormCommitToolStripPanel(string? name)
         => name is "_topPanel" or "_bottomPanel" or "_leftPanel" or "_rightPanel" or "_contentPanel";
@@ -6774,6 +6818,22 @@ internal sealed class AvaloniaControlTreeReader
             InactiveSelectionForeground = null,
             InactiveSelectionBackground = null,
             Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+        };
+    }
+
+    private CaptureColors ReadHostedMenuTextBoxColors(Control control)
+    {
+        CaptureColors input = ReadSourceInputColors(control);
+        CaptureColors menu = ReadToolStripColors(
+            control,
+            isItem: true,
+            transparentBackground: false);
+        return input with
+        {
+            SelectionForeground = menu.SelectionForeground,
+            SelectionBackground = menu.SelectionBackground,
+            InactiveSelectionForeground = menu.InactiveSelectionForeground,
+            InactiveSelectionBackground = menu.InactiveSelectionBackground
         };
     }
 

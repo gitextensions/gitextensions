@@ -1,4 +1,4 @@
-﻿using AwesomeAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 
 namespace GitExtensions.ParityInventory.Tests;
@@ -1370,6 +1370,31 @@ public sealed class ParityInventoryTests
             item.Key == "helpTextLbl.Text" && item.InEnglishCatalog);
         report.Findings.Should().NotContain(item =>
             item.Code == "translation.key.missing" && item.Path == "translation.key/helpTextLbl.Text");
+    }
+
+    [Test]
+    public void Run_should_not_emit_a_text_key_when_axaml_explicitly_disables_text_translation()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml", """
+            <UserControl xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:compat="clr-namespace:GitUI.Compat"
+                         x:Class="Sample.Widget">
+              <Button x:Name="overflow"
+                      compat:TranslationCompat.TranslateText="False"
+                      Content="»" />
+            </UserControl>
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.Twin.TranslationKeys.Should().NotContain(item => item.Key == "overflow.Text");
+        report.Findings.Should().NotContain(item =>
+            item.Code.StartsWith("translation.", StringComparison.Ordinal)
+            && item.Path.Contains("overflow.Text", StringComparison.Ordinal));
     }
 
     [Test]
