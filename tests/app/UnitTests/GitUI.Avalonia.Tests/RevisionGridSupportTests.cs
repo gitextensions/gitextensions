@@ -240,6 +240,43 @@ public sealed class RevisionGridSupportTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.1")]
+    public void SetSelectedRevision_should_focus_the_grid_and_replace_an_existing_selection()
+    {
+        RevisionGridControl control = new() { UICommandsSource = CreateUICommandsSource() };
+        RevisionGridControl.TestAccessor accessor = control.GetTestAccessor();
+        GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
+        accessor.SetRevisions(revisions);
+        TextBox otherControl = new();
+        Grid host = new()
+        {
+            RowDefinitions = new RowDefinitions("*,Auto"),
+            Children = { control, otherControl },
+        };
+        Grid.SetRow(otherControl, 1);
+        Window window = new() { Width = 900, Height = 160, Content = host };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            control.MultiSelect = true;
+            accessor.Revisions.SelectedItems!.Add(revisions[0]);
+            accessor.Revisions.SelectedItems!.Add(revisions[1]);
+            otherControl.Focus(NavigationMethod.Pointer).Should().BeTrue();
+
+            control.SetSelectedRevision(revisions[2].ObjectId).Should().BeTrue();
+            Dispatcher.UIThread.RunJobs();
+
+            accessor.Revisions.SelectedItems!.Cast<object>().Should().ContainSingle().Which.Should().BeSameAs(revisions[2]);
+            accessor.Revisions.IsKeyboardFocusWithin.Should().BeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [NonParallelizable]
     [Category("P8.6h.3a")]
     public void Quick_search_should_preserve_text_key_clipboard_wrap_error_and_timeout_routes()
@@ -720,6 +757,7 @@ public sealed class RevisionGridSupportTests
             RevisionGridControl control = new();
             MessageColumnProvider provider = (MessageColumnProvider)control.ColumnProviders
                 .Single(column => column.Name == "Message");
+            provider.ApplySettings();
             GitRevision revision = Revision('a', "subject");
             revision.Refs = [new GitRef(null!, revision.ObjectId, "refs/tags/v1.0^{}")];
             Control cell = provider.CreateCell();
@@ -750,6 +788,7 @@ public sealed class RevisionGridSupportTests
             RevisionGridControl control = new();
             MessageColumnProvider provider = (MessageColumnProvider)control.ColumnProviders
                 .Single(column => column.Name == "Message");
+            provider.ApplySettings();
             GitRevision revision = Revision('a', "subject", multiline: true);
             revision.Body = "subject\n\nbody line one\nbody line two";
             revision.Notes = "review note";

@@ -5241,7 +5241,7 @@ internal sealed class AvaloniaControlTreeReader
             .Select(provider =>
             {
                 RevisionGridColumn column = provider.Column;
-                bool visible = column.IsVisible && column.IsAvailable;
+                bool visible = column.IsVisible;
                 double widthDip = column.Width.IsStar && realizedRow is not null
                     ? realizedRow.ColumnDefinitions[provider.Index].ActualWidth
                     : column.Width.Value;

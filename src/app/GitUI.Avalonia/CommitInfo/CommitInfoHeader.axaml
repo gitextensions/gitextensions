@@ -21,10 +21,8 @@
                            FontStyle="{DynamicResource GitExtensionsUiFontStyle}"
                            FontWeight="{DynamicResource GitExtensionsUiFontWeight}"
                            LineHeight="15"
+                           Text=""
                            TextWrapping="NoWrap"
-                           VerticalAlignment="Top"
-                           LinkClicked="rtbRevisionHeader_LinkClicked"
-                           KeyDown="rtbRevisionHeader_KeyDown"
-                           PointerPressed="rtbRevisionHeader_MouseDown" />
+                           VerticalAlignment="Top" />
   </wf:TableLayoutPanel>
 </UserControl>

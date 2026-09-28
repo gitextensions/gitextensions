@@ -10,6 +10,7 @@ using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Extensions;
@@ -39,9 +40,15 @@ internal sealed class MessageColumnProvider : ColumnProvider
     private static readonly Cursor HandCursor = new(StandardCursorType.Hand);
 
     private readonly StringBuilder _toolTipBuilder = new(200);
+    private readonly IImage _bisectGoodImage = Images.BisectGood;
+    private readonly IImage _bisectBadImage = Images.BisectBad;
+    private readonly IImage _fixupAndSquashImage = Images.FixupAndSquashMessageMarker;
     private readonly ICommitDataManager? _commitDataManager;
     private readonly RevisionGridControl _grid;
     private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
+
+    // Caches the configured push prefix per remote name to avoid repeated git-config reads during painting.
+    private readonly Dictionary<string, string> _remotePrefixCache = [];
     private IReadOnlyDictionary<string, AheadBehindData>? _aheadBehindDataByLocalBranch;
     private IReadOnlyDictionary<string, AheadBehindData>? _aheadBehindDataByRemoteBranch;
     private IAheadBehindDataProvider? _aheadBehindDataProvider;
@@ -200,13 +207,38 @@ internal sealed class MessageColumnProvider : ColumnProvider
             panel.ContentPanel.Children.Insert(panel.ContentPanel.Children.Count - 1, label);
         }
 
+        IReadOnlyList<IGitRef> gitRefs = SortRefs(revision.Refs.Where(FilterRef));
+        foreach (IGitRef gitRef in gitRefs)
+        {
+            IImage? bisectImage = gitRef.IsBisectGood
+                ? _bisectGoodImage
+                : gitRef.IsBisectBad
+                    ? _bisectBadImage
+                    : null;
+            if (bisectImage is not null)
+            {
+                panel.ContentPanel.Children.Insert(
+                    panel.ContentPanel.Children.Count - 1,
+                    CreateBisectMarker(bisectImage));
+            }
+        }
+
+        IReadOnlyList<IGitRef> labelRefs = [.. gitRefs.Where(gitRef => !gitRef.IsBisectGood && !gitRef.IsBisectBad)];
+        IGitRef? singleLocalBranch = labelRefs.Count(gitRef => gitRef.IsHead) == 1
+            ? labelRefs.Single(gitRef => gitRef.IsHead)
+            : null;
+        string? singleTrackedLocalBranchName = singleLocalBranch is not null
+            && labelRefs.Any(singleLocalBranch.IsTrackingRemote)
+                ? singleLocalBranch.LocalName
+                : null;
         foreach (Control label in RevisionGridRefRenderer.CreateLabels(
-                     revision.Refs,
+                     labelRefs,
                      _settings.ShowTags,
                      _settings.ShowRemoteBranches,
                      _settings.FillRefLabels,
                      GetVirtualRef,
-                     superprojectRefs?.Select(gitRef => gitRef.CompleteName).ToHashSet(StringComparer.Ordinal)))
+                     superprojectRefs?.Select(gitRef => gitRef.CompleteName).ToHashSet(StringComparer.Ordinal),
+                     GetLabel))
         {
             // see note on using IsDereference in CommitInfo class
             if (_settings.ShowAnnotatedTagsMessages
@@ -216,6 +248,18 @@ internal sealed class MessageColumnProvider : ColumnProvider
             }
 
             panel.ContentPanel.Children.Insert(panel.ContentPanel.Children.Count - 1, label);
+        }
+
+        (string Label, string? HighlightedLabel) GetLabel(IGitRef gitRef)
+        {
+            if (singleTrackedLocalBranchName is not null
+                && gitRef.IsRemote
+                && gitRef.LocalName == GetRemotePrefix(gitRef.Module, gitRef.Remote) + singleTrackedLocalBranchName)
+            {
+                return (gitRef.Remote, gitRef.Name);
+            }
+
+            return (gitRef.Name, null);
         }
 
         if (revision.IsStash || revision.IsAutostash)
@@ -250,6 +294,21 @@ internal sealed class MessageColumnProvider : ColumnProvider
         panel.Indicator.Update(revision);
         panel.ClearHighlight();
         UpdateToolTip(panel, revision);
+    }
+
+    private bool FilterRef(IGitRef gitRef)
+    {
+        if (gitRef.IsTag)
+        {
+            return _settings.ShowTags;
+        }
+
+        if (gitRef.IsRemote)
+        {
+            return _settings.ShowRemoteBranches;
+        }
+
+        return true;
     }
 
     private static IReadOnlyList<IGitRef> SortRefs(IEnumerable<IGitRef> refs)
@@ -396,6 +455,20 @@ internal sealed class MessageColumnProvider : ColumnProvider
         return panel;
     }
 
+    private static Image CreateBisectMarker(IImage image)
+    {
+        Image marker = new()
+        {
+            Source = image,
+            Width = 16,
+            Height = 16,
+            Margin = new Thickness(0, 0, 5, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        marker.Classes.Add("revision-bisect-marker");
+        return marker;
+    }
+
     internal static IReadOnlyList<Control> CreateSuperprojectLabels(
         GitRevision revision,
         SuperProjectInfo? superProjectInfo)
@@ -477,10 +550,22 @@ internal sealed class MessageColumnProvider : ColumnProvider
             : UIExtensions.FormatBodyAndNotes(revision.Body, revision.Notes);
     }
 
+    private string GetRemotePrefix(IGitModule module, string remoteName)
+    {
+        if (!_remotePrefixCache.TryGetValue(remoteName, out string? prefix))
+        {
+            prefix = module.GetEffectiveSetting(string.Format(SettingKeyString.RemotePrefix, remoteName));
+            _remotePrefixCache[remoteName] = prefix;
+        }
+
+        return prefix;
+    }
+
     public override void Clear()
     {
         _aheadBehindDataByLocalBranch = null;
         _aheadBehindDataByRemoteBranch = null;
+        _remotePrefixCache.Clear();
     }
 
     /// <summary>
@@ -522,7 +607,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         return (string.Empty, string.Empty, false);
     }
 
-    internal AheadBehindData? GetAheadBehindData(bool isRemote, string completeName)
+    public AheadBehindData? GetAheadBehindData(bool isRemote, string completeName)
     {
         _aheadBehindDataByLocalBranch ??= _aheadBehindDataProvider?.GetData()
             ?? FrozenDictionary<string, AheadBehindData>.Empty;
@@ -657,6 +742,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         public MessageCell(MessageColumnProvider provider)
         {
             _provider = provider;
+            FixupAndSquashMarker.Source = provider._fixupAndSquashImage;
             FixupAndSquashMarker.Classes.Add("revision-message-marker");
             Subject.Classes.Add("revision-subject");
             Subject.Margin = default;
@@ -683,7 +769,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         public Image FixupAndSquashMarker { get; } = new()
         {
-            Source = Images.FixupAndSquashMessageMarker,
             Width = 16,
             Height = 16,
             Margin = new Thickness(0, 0, 4, 0),
@@ -705,7 +790,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             {
                 _highlightedLabel.IsHighlighted = false;
                 _highlightedLabel = null;
-                _provider._grid.UpdateLaneHighlight(gitRef: null, revision: Revision);
+                _provider._grid.UpdateLaneHighlightForRevision(gitRef: null, revision: Revision);
             }
 
             Cursor = null;
@@ -727,7 +812,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 {
                     label.IsHighlighted = true;
                     Cursor = HandCursor;
-                    _provider._grid.UpdateLaneHighlight(label.GitRef, Revision);
+                    _provider._grid.UpdateLaneHighlightForRevision(label.GitRef, Revision);
                 }
             }
 

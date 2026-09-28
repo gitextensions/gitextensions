@@ -121,6 +121,24 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public async Task ViewChangesAsync_should_render_status_only_failures_without_running_a_diff()
+    {
+        GitItemStatus status = new("parse-error")
+        {
+            IsStatusOnly = true,
+            ErrorMessage = "Unable to parse the diff output.",
+        };
+        FileStatusItem item = new(null, new GitRevision(ObjectId.WorkTreeId), status);
+        FileViewer viewer = CreateViewer();
+
+        await viewer.ViewChangesAsync(item, CancellationToken.None);
+
+        viewer.GetTestAccessor().ViewMode.Should().Be(ViewMode.Text);
+        viewer.TextEditor.Text.Should().Be("Unable to parse the diff output.");
+    }
+
+    [AvaloniaTest]
     public void FileViewer_should_preserve_blob_control_and_translation_identities()
     {
         FileViewer viewer = CreateViewer();

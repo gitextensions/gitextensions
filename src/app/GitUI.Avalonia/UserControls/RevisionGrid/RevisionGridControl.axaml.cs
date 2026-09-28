@@ -109,6 +109,10 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     private const int RowSpacing = 9;
 
+    /// <summary>
+    ///  Occurs whenever a user toggles between the artificial and the HEAD commits
+    ///  via the navigation menu item or the shortcut command.
+    /// </summary>
     public event EventHandler? ToggledBetweenArtificialAndHeadCommits;
     public static readonly string HotkeySettingsName = "RevisionGrid";
 
@@ -151,6 +155,10 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private readonly TaskManager _taskManager = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly CancellationTokenSequence _refreshRevisionsSequence = new();
 
+    /// <summary>
+    /// The set of ref names that are ambiguous.
+    /// Any refs present in this collection should be displayed using their full name.
+    /// </summary>
     private Lazy<IReadOnlyCollection<string>>? _ambiguousRefs;
     private ILookup<ObjectId, IGitRef>? _refsByObjectId;
     private int _updatingFilters;
@@ -168,10 +176,16 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private SuperProjectInfo? _superprojectCurrentCheckout;
     private int _latestSelectedRowIndex;
 
+    // Tracks the ref label that was right-clicked so the context menu can offer ref-specific actions.
     private RevisionGridRefRenderer.RefLabelControl? _rightClickedHitInfo;
     private KeyModifiers _contextMenuModifiers;
 
+    /// <summary>
+    /// A prefix to use in git log output for parsing file names for individual revisions
+    /// </summary>
     private const string _objectIdPrefix = "????";
+
+    // NOTE internal properties aren't serialised by the WinForms designer
 
     #region IRevisionGridInfo
 
@@ -196,6 +210,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         set => _pendingSelectedObjectId = value;
     }
 
+    /// <summary>
+    /// The first selected, the first commit in a diff.
+    /// </summary>
     internal ObjectId FirstId { private get; set; }
 
     internal RevisionGridMenuCommands MenuCommands { get; }
@@ -361,7 +378,6 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         _maximizedColumn = _columnProviders
             .Select(provider => provider.Column)
             .FirstOrDefault(column => column.Resizable && column.Width.IsStar);
-        ApplyColumnSettings();
 
         _toolTipProvider = new RevisionGridToolTipProvider(this);
         _toolTipProvider.ShowRevisionGridTooltips = AppSettings.ShowRevisionGridTooltips.Value;
@@ -680,7 +696,11 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private void RefreshFilteredRevisions()
         => PerformRefreshRevisions();
 
-    /// <inheritdoc />
+    /// <summary>
+    ///  Applies a revision filter.
+    /// </summary>
+    /// <param name="filter">The filter to apply.</param>
+    /// <exception cref="InvalidOperationException">Invalid 'diff contains' filter.</exception>
     public void SetAndApplyRevisionFilter(RevisionFilter filter)
     {
         if (_filterInfo.Apply(filter))
@@ -699,6 +719,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     private void OnRuntimeLoad()
     {
+        ApplyColumnSettings();
         ReloadHotkeys();
         LoadCustomDifftools();
     }
@@ -732,22 +753,32 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         => SetSelectedRevision(commitId, toggleSelection, updateNavigationHistory);
 
     /// <summary>Selects and scrolls to the given revision if it is loaded.</summary>
-    public bool SetSelectedRevision(ObjectId objectId, bool toggleSelection = false, bool updateNavigationHistory = true)
+    /// <summary>
+    /// Selects row containing revision matching <paramref name="commitId"/>.
+    /// Returns whether the required revision was found and selected.
+    /// </summary>
+    /// <param name="commitId">Id of the revision to select.</param>
+    /// <param name="toggleSelection">Toggle if the selected state for the revision.</param>
+    /// <returns><c>true</c> if the required revision was found and selected, otherwise <c>false</c>.</returns>
+    public bool SetSelectedRevision(ObjectId commitId, bool toggleSelection = false, bool updateNavigationHistory = true)
     {
-        GitRevision? revision = _revisions.FirstOrDefault(r => r.ObjectId == objectId);
+        GitRevision? revision = _revisions.FirstOrDefault(r => r.ObjectId == commitId);
         if (revision is null)
         {
             return false;
         }
 
-        if (objectId.IsZero)
+        if (commitId.IsZero)
         {
-            throw new ArgumentException("Value cannot be a zero ObjectId.", nameof(objectId));
+            throw new ArgumentException("Value cannot be a zero ObjectId.", nameof(commitId));
         }
 
+        _gridView.Focus();
         if (toggleSelection && _gridView.SelectedItems is { } selectedItems)
         {
             bool wasSelected = selectedItems.Contains(revision);
+
+            // Toggle the selection, but do not deselect if it is the last one.
             if (wasSelected && selectedItems.Count > 1)
             {
                 selectedItems.Remove(revision);
@@ -761,19 +792,19 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         {
             if (currentSelection.Count != 1 || !currentSelection.Contains(revision))
             {
-                if (currentSelection.Count > 1)
-                {
-                    currentSelection.Clear();
-                }
-
+                // Single select this line.
+                currentSelection.Clear();
                 _gridView.SelectedItem = revision;
             }
         }
 
+        // Set the first selected row as current.
+        // Assigning _gridView.SelectedItem results in a single selection of that row.
+        // So do not reset it when the requested revision was already the sole selection, but make it visible at least.
         _gridView.ScrollIntoView(revision);
         if (updateNavigationHistory)
         {
-            _navigationHistory.Push(objectId);
+            _navigationHistory.Push(commitId);
         }
 
         return true;
@@ -788,7 +819,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private void HighlightBranch(ObjectId id)
     {
         _revisionGraphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyle.HighlightSelected;
-        _revisionGraph.HighlightBranch(id);
+        _revisionGraphColumnProvider.HighlightBranch(id);
         RefreshRealizedRows();
     }
 
@@ -866,7 +897,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     /// Get the GitRevision with the actual parents as they may be rewritten in filtered grids.
     /// </summary>
     /// <param name="revision">The revision, likely from the grid.</param>
-    /// <returns>The revision with parents.</returns>
+    /// <returns>The input GitRevision if no changes and a clone with actual parents if parents are rewritten.</returns>
     public GitRevision GetActualRevision(GitRevision revision)
     {
         // Index commits must have HEAD as parent already
@@ -922,8 +953,18 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         SetPage(showSpinner ? _loadingControlSpinner : _gridView);
     }
 
+    /// <summary>
+    ///  Indicates whether the revision grid can be refreshed, i.e. it is not currently being refreshed
+    ///  or it is not in a middle of reconfiguration process guarded by <see cref="SuspendRefreshRevisions"/>
+    ///  and <see cref="ResumeRefreshRevisions"/>.
+    /// </summary>
     private bool CanRefresh => !_isRefreshingRevisions && _updatingFilters == 0;
 
+    /// <summary>
+    ///  Queries git for the new set of revisions and refreshes the grid.
+    /// </summary>
+    /// <exception cref="Exception"></exception>
+    /// <param name="forceRefresh">Refresh may be required as references may be changed.</param>
     public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null!, bool forceRefresh = false)
     {
         if (!CanRefresh)
@@ -947,8 +988,11 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     }
 
     /// <summary>
-    /// Returns the historical name of a file in a revision, following renames and merge commits.
+    /// Returns the name of a file in a specific revision (following renames and merge commits).
     /// </summary>
+    /// <param name="path">The path to the file to get the name of</param>
+    /// <param name="objectId">The revision to get the file name in</param>
+    /// <returns>The name of the file at <paramref name="path"/> in revision identified by <paramref name="objectId"/>; <see langword="null"/> if not available.</returns>
     public string? GetRevisionFileName(string path, ObjectId objectId)
     {
         if (objectId.IsZero)
@@ -1017,6 +1061,10 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
+    /// <summary>
+    /// The parents for commits are replaced with the parent in the graph (as all commits may not be included)
+    /// See https://git-scm.com/docs/git-log#Documentation/git-log.txt---parents
+    /// </summary>
     private bool ParentsAreRewritten => _parentsAreRewritten;
 
     internal bool FilterIsApplied()
@@ -1067,7 +1115,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         //// LINQ because the original DataGridView GetLastColumn API has no Avalonia equivalent.
         _lastVisibleResizableColumn = _columnProviders
             .Select(provider => provider.Column)
-            .Last(column => column.IsVisible && column.IsAvailable && column.Resizable);
+            .Last(column => column.IsVisible && column.Resizable);
         _lastVisibleResizableColumn.Resizable = false;
 
         foreach (RevisionRowControl row in _gridView.GetVisualDescendants().OfType<RevisionRowControl>())
@@ -1380,12 +1428,17 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private void ClearRefHighlight()
         => _messageColumnProvider.ClearRefHighlight();
 
-    internal void UpdateLaneHighlight(IGitRef? gitRef, GitRevision? revision)
+    internal void UpdateLaneHighlightForRevision(IGitRef? gitRef, GitRevision? revision)
     {
         int rowIndex = revision is not null
             && _revisionGraph.TryGetRowIndex(revision.ObjectId, out int revisionRowIndex)
                 ? revisionRowIndex
                 : -1;
+        UpdateLaneHighlight(gitRef, rowIndex);
+    }
+
+    private void UpdateLaneHighlight(IGitRef? gitRef, int rowIndex)
+    {
         this.InvokeAndForget(() => _revisionGraphColumnProvider.SetHoverHighlightAsync(gitRef, rowIndex));
     }
 
@@ -2175,8 +2228,10 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     }
 
     /// <summary>
-    ///  Gets the tracked change count for an artificial revision.
+    /// Gets the counter for artificial changes.
     /// </summary>
+    /// <param name="objectId">The commit for which to get the count.</param>
+    /// <returns>The count object if the commit is official and count is enabled.</returns>
     public ArtificialCommitChangeCount? GetChangeCount(ObjectId objectId)
         => objectId == ObjectId.WorkTreeId
             ? _workTreeChangeCount
@@ -2997,7 +3052,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         // without this every lane renders in the non-relative gray.
         if (!_headHighlighted && _headId is ObjectId headId && _revisionGraph.TryGetNode(headId, out _))
         {
-            _revisionGraph.HighlightBranch(headId);
+            _revisionGraphColumnProvider.HighlightBranch(headId);
             _headHighlighted = true;
         }
 
@@ -3365,6 +3420,12 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         return ExecuteCommand((int)cmd);
     }
 
+    /// <summary>
+    /// Get the selected revisions in the grid.
+    /// Note that the parents may be rewritten if a filter is applied.
+    /// </summary>
+    /// <param name="direction">Sort direction if set.</param>
+    /// <returns>The selected revisions.</returns>
     private IReadOnlyList<GitRevision> GetSelectedRevisions(SortDirection? direction)
     {
         if (_gridView.SelectedItems is not { } selectedItems)
@@ -3607,7 +3668,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
                 ColumnDefinitions.Add(new ColumnDefinition
                 {
                     Width = provider.Column.EffectiveWidth,
-                    MinWidth = provider.Column.IsVisible && provider.Column.IsAvailable
+                    MinWidth = provider.Column.IsVisible
                         ? provider.Column.MinimumWidth
                         : 0,
                 });
@@ -3684,7 +3745,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             foreach ((ColumnProvider provider, Control cell) in _cells)
             {
                 ColumnDefinitions[provider.Index].Width = provider.Column.EffectiveWidth;
-                bool isVisible = provider.Column.IsVisible && provider.Column.IsAvailable;
+                bool isVisible = provider.Column.IsVisible;
                 ColumnDefinitions[provider.Index].MinWidth = isVisible ? provider.Column.MinimumWidth : 0;
                 cell.IsVisible = isVisible;
             }

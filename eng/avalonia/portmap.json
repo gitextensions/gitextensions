@@ -1728,7 +1728,7 @@
     "notes": "Framework-free refs/stash reload payload linked unchanged."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs": {
-    "twin": "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs",
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.Command.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Framework-free command enum linked unchanged so persisted hotkey IDs remain identical to WinForms. P8.6i progress 65 restores original comments only where the owning declaration and following statement already match, and records exact unavoidable WinForms/Avalonia native-control field signature substitutions as visible reviewed deviations; all retained gaps remain measured. P8.6i progress 66 moves exact WinForms Designer-generated comments, nullable event-handler annotations, and paired framework event-wiring facts into drift-checked visible reviewed deviations; handwritten comments and unmatched behavior remain measured gaps. P8.6i progress 69 records comments, handler identities, and event subscriptions blocked by an already-missing method as dependent findings under that exact actionable root; every difference remains serialized and the total gap count is unchanged."
