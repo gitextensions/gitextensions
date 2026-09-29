@@ -29,6 +29,7 @@ using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Compat;
 using GitUI.ConsoleEmulation;
 using GitUI.HelperDialogs;
+using GitUI.LeftPanel;
 using GitUI.Models;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
@@ -47,11 +48,14 @@ using Keys = GitExtensions.Shims.WinForms.Keys;
 using DrawingColor = System.Drawing.Color;
 using KnownColor = System.Drawing.KnownColor;
 using WinFormsShims = GitExtensions.Shims.WinForms;
+using SourceControls = GitUI.Compat.WinFormsControls;
 
 namespace GitUI.CommandsDialogs;
 
 public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 {
+    private const int VerticalScrollBarWidthAt96Dpi = 17;
+
     private readonly TranslationString _closeAll = new("Close all windows");
     private readonly TranslationString _noSubmodulesPresent = new("No submodules");
     private readonly TranslationString _topProjectModuleFormat = new("Top project: {0}");
@@ -83,7 +87,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly IGpgInfoProvider? _controller;
     private readonly IUpdateCheckService? _updateCheckService;
     private readonly ICommitDataManager _commitDataManager;
-    private readonly IShellProvider _shellProvider = new ShellProvider();
     private readonly IAppTitleGenerator? _appTitleGenerator;
     private readonly CancellationTokenSequence _gpgInfoLoadSequence = new();
     private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
@@ -91,7 +94,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
     private readonly ISubmoduleStatusProvider? _submoduleStatusProvider;
     private readonly IScriptsManager? _scriptsManager;
-    private GridLength _commitInfoWidth = new(490);
+
+    // The source adds SystemInformation.VerticalScrollBarWidth (17 pixels at 96 DPI) to its
+    // 490-pixel content width. Avalonia DIPs are the same 96-DPI design units.
+    private GridLength _commitInfoWidth = new(490 + VerticalScrollBarWidthAt96Dpi);
     private GpgInfo? _gpgInfo;
     private GitRevision? _gpgInfoLoadingRevision;
     private GitRevision? _gpgInfoRevision;
@@ -109,6 +115,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
     private List<MenuItem>? _currentSubmoduleMenuItems;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
+    private readonly IShellProvider _shellProvider = new ShellProvider();
     private IConsoleShellRunner? _terminal;
     private Dashboard? _dashboard;
     private bool _isFileHistoryMode;
@@ -198,7 +205,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         repoObjectsTree.UICommandsSource = this;
         notificationBarBisectInProgress.UICommandsSource = this;
         notificationBarGitActionInProgress.UICommandsSource = this;
-        Activated += (_, _) => Dispatcher.UIThread.Post(OnActivate);
+        Activated += (_, e) => OnActivated(e);
 
         _consoleEmulatorsRegistry = UICommands.GetService(typeof(IConsoleEmulatorsRegistry)) as IConsoleEmulatorsRegistry;
         _controller = gpgInfoProvider ?? new GpgInfoProvider(new GitGpgController(() => Module));
@@ -599,6 +606,88 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         base.OnApplicationActivated();
     }
 
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+
+        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
+        _loadOperations.FileAndForget(async () =>
+        {
+            try
+            {
+                await TaskScheduler.Default;
+                PluginRegistry.InitializeAll();
+                await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+                RegisterPlugins();
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception exception)
+            {
+                Trace.WriteLine(exception);
+            }
+        });
+    }
+
+    private void OnActivated(EventArgs e)
+    {
+        // WinForms posts this work after activation so the native window is fully displayed.
+        // Avalonia's dispatcher provides the equivalent application-independent boundary.
+        Dispatcher.UIThread.Post(OnActivate);
+    }
+
+    private void OnFormClosing(WindowClosingEventArgs e)
+    {
+        // File-history mode temporarily hides the left panel without persisting that forced state.
+        if (_isFileHistoryMode && _fileBlameHistoryLeftPanelStartupState && !leftPanel.IsVisible)
+        {
+            MainSplitContainer.ColumnDefinitions[0].Width = _leftPanelWidth.Value > 0
+                ? _leftPanelWidth
+                : new GridLength(260);
+            leftPanel.IsVisible = true;
+            leftPanelSplitter.IsVisible = true;
+        }
+
+        _splitterManager?.SaveSplitters();
+        SaveApplicationSettings();
+    }
+
+    private void OnFormClosed(EventArgs e)
+    {
+        if (_hasRuntimeCommands)
+        {
+            PluginRegistry.Unregister(UICommands);
+            UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
+            UICommands.BrowseRepo = null;
+        }
+
+        _loadOperationsCancellationTokenSource.Cancel();
+        if (_submoduleStatusProvider is not null)
+        {
+            _submoduleStatusProvider.StatusUpdating -= SubmoduleStatusProvider_StatusUpdating;
+            _submoduleStatusProvider.StatusUpdated -= SubmoduleStatusProvider_StatusUpdated;
+        }
+
+        _submoduleStatusProvider?.Init();
+        _gpgInfoLoadSequence.Dispose();
+        _gitStatusMonitor?.Dispose();
+        RevisionGrid.CancelBackgroundTasks();
+        revisionDiff.CancelBackgroundTasks();
+        fileTree.CancelBackgroundTasks();
+        _loadOperations.JoinPendingOperations();
+        _loadOperationsCancellationTokenSource.Dispose();
+        (_terminal as IDisposable)?.Dispose();
+        _terminal = null;
+        _outputHistoryController?.Dispose();
+        _outputHistoryController = null;
+        _formBrowseMenus?.Dispose();
+        _formBrowseMenus = null;
+        DragDrop.RemoveDragEnterHandler(this, FormBrowse_DragEnter);
+        DragDrop.RemoveDragOverHandler(this, FormBrowse_DragEnter);
+        DragDrop.RemoveDropHandler(this, FormBrowse_DragDrop);
+    }
+
     protected override void OnUICommandsChanged(GitUICommandsChangedEventArgs e)
     {
         IGitUICommands? oldCommands = e.OldCommands;
@@ -692,6 +781,15 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         IGitModule module = Module;
         RevisionGrid.OnRepositoryChanged();
+
+        // check for updates
+        if (_updateCheckService is not null
+            && AppSettings.CheckForUpdates
+            && AppSettings.LastUpdateCheck.AddDays(7) < DateTime.Now)
+        {
+            AppSettings.LastUpdateCheck = DateTime.Now;
+            _updateCheckService.SearchForUpdatesAndShow(this, AppSettings.AppVersion, alwaysShow: false);
+        }
 
         bool hasWorkingDir = !string.IsNullOrEmpty(module.WorkingDir);
         bool isValidWorkingDir = module.IsValidGitWorkingDir();
@@ -820,37 +918,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         toolStripFiltersHost.IsVisible = true;
         ToolStripScripts.IsVisible = true;
         _repositoryHistoryUIService?.TriggerBranchNameCacheUpdate(onlyIfEmpty: true);
-    }
-
-    protected override void OnRuntimeLoad(EventArgs e)
-    {
-        base.OnRuntimeLoad(e);
-        if (_updateCheckService is not null
-            && AppSettings.CheckForUpdates
-            && AppSettings.LastUpdateCheck.AddDays(7) < DateTime.Now)
-        {
-            AppSettings.LastUpdateCheck = DateTime.Now;
-            _updateCheckService.SearchForUpdatesAndShow(this, alwaysShow: false);
-        }
-
-        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
-        _loadOperations.FileAndForget(async () =>
-        {
-            try
-            {
-                await TaskScheduler.Default;
-                PluginRegistry.InitializeAll();
-                await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-                RegisterPlugins();
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception exception)
-            {
-                Trace.WriteLine(exception);
-            }
-        });
     }
 
     private void ChangeWorkingDirectory(string path)
@@ -1293,7 +1360,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         commitInfoBelowMenuItem.Click += CommitInfoBelowClick;
         commitInfoLeftwardMenuItem.Click += CommitInfoLeftwardClick;
         commitInfoRightwardMenuItem.Click += CommitInfoRightwardClick;
-        RefreshWorkspaceLayout();
+        RefreshSplitViewLayout();
+        LayoutRevisionInfo();
     }
 
     private void CommitInfoHost_SizeChanged(object? sender, SizeChangedEventArgs e)
@@ -1408,7 +1476,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
     }
 
-    private void RefreshWorkspaceLayout(
+    private void ApplyRevisionInfoLayout(
         bool selectCommitInfoTab = true,
         bool refreshCommitInfoPositionToolTip = false)
     {
@@ -1466,34 +1534,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             }
         }
 
-        bool showSplitView = AppSettings.ShowSplitViewLayout;
-        RowDefinitions rows = RightSplitContainer.RowDefinitions;
-        rows[0].Height = showSplitView ? _splitViewTopHeight : new GridLength(1, GridUnitType.Star);
-        rows[1].Height = showSplitView ? new GridLength(6) : new GridLength(0);
-        rows[2].Height = showSplitView ? _splitViewBottomHeight : new GridLength(0);
-        splitViewSplitter.IsVisible = showSplitView;
-        CommitInfoTabControl.IsVisible = showSplitView;
-        _refreshRightSplitSize?.Invoke();
-
         RefreshLayoutToggleButtonStates();
         if (refreshCommitInfoPositionToolTip)
         {
             RefreshCommitInfoPositionToolTip();
-        }
-    }
-
-    private void RefreshCommitInfoPositionToolTip()
-    {
-        MenuItem selectedItem = AppSettings.CommitInfoPosition switch
-        {
-            CommitInfoPosition.BelowList => commitInfoBelowMenuItem,
-            CommitInfoPosition.LeftwardFromList => commitInfoLeftwardMenuItem,
-            CommitInfoPosition.RightwardFromList => commitInfoRightwardMenuItem,
-            _ => throw new NotSupportedException(),
-        };
-        if (selectedItem.Header is string header)
-        {
-            ToolTip.SetTip(menuCommitInfoPosition, header.Replace("_", string.Empty));
         }
     }
 
@@ -1672,7 +1716,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         if (oldCommitInfoPosition != AppSettings.CommitInfoPosition)
         {
-            RefreshWorkspaceLayout(refreshCommitInfoPositionToolTip: true);
+            ApplyRevisionInfoLayout(refreshCommitInfoPositionToolTip: true);
         }
 
         LoadHotkeys(HotkeySettingsName);
@@ -2313,7 +2357,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         CommitInfoTabControl.SelectedItem = TreeTabPage;
 
         AppSettings.ShowSplitViewLayout = true;
-        RefreshWorkspaceLayout(selectCommitInfoTab: false);
+        RefreshSplitViewLayout();
 
         fileTree.ExecuteCommand(RevisionDiffControl.Command.FindFile);
     }
@@ -2391,9 +2435,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             || (CommitInfoTabControl.SelectedItem == TreeTabPage && fileTree.ProcessHotkey(keyData));
     }
 
-    protected override bool ExecuteCommand(int command)
+    protected override bool ExecuteCommand(int cmd)
     {
-        switch ((Command)command)
+        switch ((Command)cmd)
         {
             case Command.GitBash: userShell_Click(this, EventArgs.Empty); break;
             case Command.GitGui: Module.RunGui(); break;
@@ -2490,7 +2534,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             case Command.ManageWorkTrees: manageWorktreeToolStripMenuItem_Click(this, EventArgs.Empty); break;
             case Command.OpenRepo: OpenRepositoryDialog(); break;
             case Command.CloseRepository: ChangeWorkingDirectory(string.Empty); break;
-            default: return base.ExecuteCommand(command);
+            default: return base.ExecuteCommand(cmd);
         }
 
         return true;
@@ -2548,8 +2592,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
     }
 
-    internal bool ExecuteCommand(Command command)
-        => ExecuteCommand((int)command);
+    internal bool ExecuteCommand(Command cmd)
+    {
+        return ExecuteCommand((int)cmd);
+    }
 
     public static void OpenContainingFolder(FileStatusList diffFiles, IGitModule module)
     {
@@ -3141,7 +3187,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 outputHistoryControl,
                 mainContentGrid,
                 outputHistorySplitter,
-                outputHistoryPanelHost);
+                outputHistoryPanelHost,
+                AppSettings.OutputHistoryPanelVisible.Value);
     }
 
     public void ChangeTerminalActiveFolder(string path)
@@ -3167,7 +3214,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         RememberWorkspaceDimensions();
         AppSettings.ShowSplitViewLayout = !AppSettings.ShowSplitViewLayout;
-        RefreshWorkspaceLayout(selectCommitInfoTab: false);
+        RefreshSplitViewLayout();
     }
 
     private void toggleLeftPanel_Click(object? sender, EventArgs e)
@@ -3224,7 +3271,20 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         RememberWorkspaceDimensions();
         AppSettings.CommitInfoPosition = position;
-        RefreshWorkspaceLayout(refreshCommitInfoPositionToolTip: true);
+        ApplyRevisionInfoLayout(refreshCommitInfoPositionToolTip: true);
+    }
+
+    private void RefreshSplitViewLayout()
+    {
+        bool showSplitView = AppSettings.ShowSplitViewLayout;
+        RowDefinitions rows = RightSplitContainer.RowDefinitions;
+        rows[0].Height = showSplitView ? _splitViewTopHeight : new GridLength(1, GridUnitType.Star);
+        rows[1].Height = showSplitView ? new GridLength(6) : new GridLength(0);
+        rows[2].Height = showSplitView ? _splitViewBottomHeight : new GridLength(0);
+        splitViewSplitter.IsVisible = showSplitView;
+        CommitInfoTabControl.IsVisible = showSplitView;
+        _refreshRightSplitSize?.Invoke();
+        RefreshLayoutToggleButtonStates();
     }
 
     private void RefreshLayoutToggleButtonStates()
@@ -3239,6 +3299,24 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             CommitInfoPosition.RightwardFromList => Properties.Images.LayoutSidebarTopRight,
             _ => throw new NotSupportedException(),
         };
+    }
+
+    private void LayoutRevisionInfo()
+        => ApplyRevisionInfoLayout();
+
+    private void RefreshCommitInfoPositionToolTip()
+    {
+        MenuItem selectedItem = AppSettings.CommitInfoPosition switch
+        {
+            CommitInfoPosition.BelowList => commitInfoBelowMenuItem,
+            CommitInfoPosition.LeftwardFromList => commitInfoLeftwardMenuItem,
+            CommitInfoPosition.RightwardFromList => commitInfoRightwardMenuItem,
+            _ => throw new NotSupportedException(),
+        };
+        if (selectedItem.Header is string header)
+        {
+            ToolTip.SetTip(menuCommitInfoPosition, header.Replace("_", string.Empty));
+        }
     }
 
     private void FocusNextWorkspaceTab(bool forward)
@@ -3293,55 +3371,43 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
-        // File-history mode temporarily hides the left panel without persisting that forced state.
-        if (_isFileHistoryMode && _fileBlameHistoryLeftPanelStartupState && !leftPanel.IsVisible)
-        {
-            MainSplitContainer.ColumnDefinitions[0].Width = _leftPanelWidth.Value > 0
-                ? _leftPanelWidth
-                : new GridLength(260);
-            leftPanel.IsVisible = true;
-            leftPanelSplitter.IsVisible = true;
-        }
-
-        _splitterManager?.SaveSplitters();
-        SaveApplicationSettings();
+        OnFormClosing(e);
         base.OnClosing(e);
     }
 
     protected override void OnClosed(EventArgs e)
     {
-        if (_hasRuntimeCommands)
-        {
-            PluginRegistry.Unregister(UICommands);
-            UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
-            UICommands.BrowseRepo = null;
-        }
-
-        _loadOperationsCancellationTokenSource.Cancel();
-        if (_submoduleStatusProvider is not null)
-        {
-            _submoduleStatusProvider.StatusUpdating -= SubmoduleStatusProvider_StatusUpdating;
-            _submoduleStatusProvider.StatusUpdated -= SubmoduleStatusProvider_StatusUpdated;
-        }
-
-        _submoduleStatusProvider?.Init();
-        _gpgInfoLoadSequence.Dispose();
-        _gitStatusMonitor?.Dispose();
-        RevisionGrid.CancelBackgroundTasks();
-        revisionDiff.CancelBackgroundTasks();
-        fileTree.CancelBackgroundTasks();
-        _loadOperations.JoinPendingOperations();
-        _loadOperationsCancellationTokenSource.Dispose();
-        (_terminal as IDisposable)?.Dispose();
-        _terminal = null;
-        _outputHistoryController?.Dispose();
-        _outputHistoryController = null;
-        _formBrowseMenus?.Dispose();
-        _formBrowseMenus = null;
-        DragDrop.RemoveDragEnterHandler(this, FormBrowse_DragEnter);
-        DragDrop.RemoveDragOverHandler(this, FormBrowse_DragEnter);
-        DragDrop.RemoveDropHandler(this, FormBrowse_DragDrop);
+        OnFormClosed(e);
         base.OnClosed(e);
+    }
+
+    internal TestAccessor GetTestAccessor()
+        => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly FormBrowse _form;
+
+        public TestAccessor(FormBrowse form)
+        {
+            _form = form;
+        }
+
+        public FullBleedTabControl CommitInfoTabControl => _form.CommitInfoTabControl;
+        public SourceControls.TabPage DiffTabPage => _form.DiffTabPage;
+        public RepoObjectsTree RepoObjectsTree => _form.repoObjectsTree;
+        public RevisionDiffControl RevisionDiffControl => _form.revisionDiff;
+        public RevisionDiffControl RevisionFileTreeControl => _form.fileTree;
+        public RevisionGridControl RevisionGrid => _form.RevisionGridControl;
+        public SourceControls.SplitContainer RevisionsSplitContainer => _form.RevisionsSplitContainer;
+        public SourceControls.SplitContainer RightSplitContainer => _form.RightSplitContainer;
+        public SplitterManager SplitterManager => _form._splitterManager
+            ?? throw new InvalidOperationException("The splitter manager is not initialized.");
+        public SourceControls.TabPage TreeTabPage => _form.TreeTabPage;
+        public FilterToolBar ToolStripFilters => _form.ToolStripFilters;
+        public GridLength CommitInfoWidth => _form._commitInfoWidth;
+
+        public void RefreshRevisions() => _form.RefreshRevisions();
     }
 
     private void FormBrowse_DragDrop(object? sender, DragEventArgs e)
