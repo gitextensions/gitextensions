@@ -52,6 +52,11 @@ internal sealed class MessageColumnProvider : ColumnProvider
     private IReadOnlyDictionary<string, AheadBehindData>? _aheadBehindDataByLocalBranch;
     private IReadOnlyDictionary<string, AheadBehindData>? _aheadBehindDataByRemoteBranch;
     private IAheadBehindDataProvider? _aheadBehindDataProvider;
+    private MessageCell? _highlightedCell;
+    private RevisionGridRefRenderer.RefLabelControl? _highlightedLabel;
+    private IGitRef? _highlightedRef;
+    private ObjectId? _highlightedRevisionId;
+    private string? _highlightedSpecialLabel;
     private Settings _settings;
 
     public MessageColumnProvider(
@@ -69,14 +74,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
     {
         _aheadBehindDataProvider = provider;
         Clear();
-    }
-
-    public void ClearRefHighlight()
-    {
-        foreach (MessageCell cell in _grid.GetVisualDescendants().OfType<MessageCell>())
-        {
-            cell.ClearHighlight();
-        }
     }
 
     public override void ApplySettings()
@@ -165,6 +162,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
     public override void UpdateCell(Control control, GitRevision revision)
     {
         MessageCell panel = (MessageCell)control;
+        bool restoreHighlight = DetachHighlightForUpdate(panel, revision);
         panel.ContentPanel.Children.RemoveRange(0, panel.ContentPanel.Children.Count - 1);
         panel.FixupAndSquashMarker.IsVisible = false;
         panel.Body.Text = string.Empty;
@@ -190,8 +188,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
             panel.Subject.FontWeight = FontWeight.Normal;
             panel.Revision = revision;
             panel.Indicator.Update(revision);
-            panel.ClearHighlight();
             ToolTip.SetTip(panel, GetArtificialToolTip(revision));
+            RestoreHighlightAfterUpdate(panel, restoreHighlight);
             return;
         }
 
@@ -292,8 +290,54 @@ internal sealed class MessageColumnProvider : ColumnProvider
         panel.Body.FontWeight = panel.Subject.FontWeight;
         panel.Revision = revision;
         panel.Indicator.Update(revision);
-        panel.ClearHighlight();
         UpdateToolTip(panel, revision);
+        RestoreHighlightAfterUpdate(panel, restoreHighlight);
+
+        bool DetachHighlightForUpdate(MessageCell messageCell, GitRevision updatedRevision)
+        {
+            if (!ReferenceEquals(_highlightedCell, messageCell))
+            {
+                return false;
+            }
+
+            if (_highlightedRevisionId != updatedRevision.ObjectId)
+            {
+                SetHighlight(cell: null, label: null);
+                return false;
+            }
+
+            if (_highlightedLabel is not null)
+            {
+                _highlightedLabel.IsHighlighted = false;
+                _highlightedLabel = null;
+            }
+
+            messageCell.Cursor = null;
+            return true;
+        }
+
+        void RestoreHighlightAfterUpdate(MessageCell messageCell, bool restore)
+        {
+            if (!restore)
+            {
+                return;
+            }
+
+            RevisionGridRefRenderer.RefLabelControl? label = messageCell.GetVisualDescendants()
+                .OfType<RevisionGridRefRenderer.RefLabelControl>()
+                .FirstOrDefault(candidate => _highlightedRef is not null
+                    ? Equals(candidate.GitRef, _highlightedRef)
+                    : candidate.GitRef is null && candidate.Label == _highlightedSpecialLabel);
+            if (label is null)
+            {
+                SetHighlight(cell: null, label: null);
+                return;
+            }
+
+            _highlightedLabel = label;
+            _highlightedLabel.IsHighlighted = true;
+            messageCell.Cursor = HandCursor;
+        }
     }
 
     private bool FilterRef(IGitRef gitRef)
@@ -561,8 +605,51 @@ internal sealed class MessageColumnProvider : ColumnProvider
         return prefix;
     }
 
+    /// <summary>
+    ///  Sets the ref or stash label to be drawn with a highlight border, triggering a repaint if the highlight changed.
+    /// </summary>
+    /// <returns><see langword="true"/> if the highlight state changed and a repaint is needed.</returns>
+    public bool SetHighlight(Control? cell, RevisionGridRefRenderer.RefLabelControl? label)
+    {
+        MessageCell? messageCell = cell as MessageCell;
+        if (ReferenceEquals(_highlightedCell, messageCell) && ReferenceEquals(_highlightedLabel, label))
+        {
+            return false;
+        }
+
+        if (_highlightedLabel is not null)
+        {
+            _highlightedLabel.IsHighlighted = false;
+        }
+
+        if (_highlightedCell is not null)
+        {
+            _highlightedCell.Cursor = null;
+        }
+
+        _highlightedCell = messageCell;
+        _highlightedLabel = label;
+        _highlightedRef = label?.GitRef;
+        _highlightedRevisionId = label is null ? null : messageCell?.Revision?.ObjectId;
+        _highlightedSpecialLabel = label is { GitRef: null } ? label.Label : null;
+
+        if (_highlightedLabel is not null)
+        {
+            _highlightedLabel.IsHighlighted = true;
+        }
+
+        if (_highlightedCell is not null)
+        {
+            _highlightedCell.Cursor = label is null ? null : HandCursor;
+        }
+
+        _grid.UpdateLaneHighlightForRevision(label?.GitRef, messageCell?.Revision);
+        return true;
+    }
+
     public override void Clear()
     {
+        SetHighlight(cell: null, label: null);
         _aheadBehindDataByLocalBranch = null;
         _aheadBehindDataByRemoteBranch = null;
         _remotePrefixCache.Clear();
@@ -737,7 +824,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
     private sealed class MessageCell : DockPanel
     {
         private readonly MessageColumnProvider _provider;
-        private RevisionGridRefRenderer.RefLabelControl? _highlightedLabel;
 
         public MessageCell(MessageColumnProvider provider)
         {
@@ -755,9 +841,9 @@ internal sealed class MessageColumnProvider : ColumnProvider
             Children.Add(Indicator);
             Children.Add(ContentPanel);
             PointerMoved += OnPointerMoved;
+            PointerExited += provider._grid.OnGridViewCellMouseLeave;
             PointerExited += (_, _) =>
             {
-                ClearHighlight();
                 ToolTip.SetTip(this, _provider._settings.ShowRevisionGridTooltips ? Revision?.Subject : null);
             };
             DoubleTapped += OnDoubleTapped;
@@ -792,35 +878,26 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         public void ClearHighlight()
         {
-            if (_highlightedLabel is not null)
+            if (ReferenceEquals(_provider._highlightedCell, this))
             {
-                _highlightedLabel.IsHighlighted = false;
-                _highlightedLabel = null;
-                _provider._grid.UpdateLaneHighlightForRevision(gitRef: null, revision: Revision);
+                _provider.SetHighlight(cell: null, label: null);
             }
-
-            Cursor = null;
+            else
+            {
+                Cursor = null;
+            }
         }
 
         private RevisionGridRefRenderer.RefLabelControl? HitTest(Func<Visual, Avalonia.Point> getPosition)
             => this.GetVisualDescendants()
                 .OfType<RevisionGridRefRenderer.RefLabelControl>()
-                .FirstOrDefault(label => label.Contains(getPosition(label)));
+                .FirstOrDefault(label => (label.GitRef is not null || label.Icon == RefLabelIcon.Stash)
+                    && label.Contains(getPosition(label)));
 
         private void OnPointerMoved(object? sender, PointerEventArgs e)
         {
             RevisionGridRefRenderer.RefLabelControl? label = HitTest(e.GetPosition);
-            if (!ReferenceEquals(label, _highlightedLabel))
-            {
-                ClearHighlight();
-                _highlightedLabel = label;
-                if (label is not null)
-                {
-                    label.IsHighlighted = true;
-                    Cursor = HandCursor;
-                    _provider._grid.UpdateLaneHighlightForRevision(label.GitRef, Revision);
-                }
-            }
+            _provider.SetHighlight(this, label);
 
             ToolTip.SetTip(this, label is null
                 ? _provider._settings.ShowRevisionGridTooltips ? Revision?.Subject : null

@@ -1,5 +1,8 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -491,6 +494,108 @@ public sealed class RevisionGridColumnProviderTests
         finally
         {
             AppSettings.ShowRemoteBranches = originalShowRemoteBranches;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Message_provider_should_keep_exactly_one_ref_highlight_and_restore_it_after_refresh()
+    {
+        RevisionGridControl control = new();
+        MessageColumnProvider provider = (MessageColumnProvider)control.ColumnProviders
+            .Single(column => column.Name == "Message");
+        provider.ApplySettings();
+        IGitModule module = Substitute.For<IGitModule>();
+        GitRevision firstRevision = CreateRevision();
+        IGitRef firstRef = CreateRef(module, firstRevision.ObjectId, "main", "refs/heads/main", isHead: true);
+        firstRevision.Refs = [firstRef];
+        GitRevision secondRevision = new(ObjectId.Parse("abcdef1234567890abcdef1234567890abcdef12"))
+        {
+            Subject = "Second revision",
+        };
+        IGitRef secondRef = CreateRef(module, secondRevision.ObjectId, "feature", "refs/heads/feature", isHead: true);
+        secondRevision.Refs = [secondRef];
+        Control firstCell = provider.CreateCell();
+        Control secondCell = provider.CreateCell();
+        provider.UpdateCell(firstCell, firstRevision);
+        provider.UpdateCell(secondCell, secondRevision);
+        RevisionGridRefRenderer.RefLabelControl firstLabel = GetLabel(firstCell, firstRef);
+        RevisionGridRefRenderer.RefLabelControl secondLabel = GetLabel(secondCell, secondRef);
+
+        provider.SetHighlight(firstCell, firstLabel).Should().BeTrue();
+        provider.SetHighlight(firstCell, firstLabel).Should().BeFalse();
+        firstLabel.IsHighlighted.Should().BeTrue();
+        firstCell.Cursor.Should().NotBeNull();
+
+        provider.SetHighlight(secondCell, secondLabel).Should().BeTrue();
+        firstLabel.IsHighlighted.Should().BeFalse();
+        firstCell.Cursor.Should().BeNull();
+        secondLabel.IsHighlighted.Should().BeTrue();
+
+        provider.UpdateCell(secondCell, secondRevision);
+        RevisionGridRefRenderer.RefLabelControl refreshedLabel = GetLabel(secondCell, secondRef);
+        refreshedLabel.Should().NotBeSameAs(secondLabel);
+        secondLabel.IsHighlighted.Should().BeFalse();
+        refreshedLabel.IsHighlighted.Should().BeTrue();
+        secondCell.Cursor.Should().NotBeNull();
+
+        provider.UpdateCell(secondCell, firstRevision);
+        refreshedLabel.IsHighlighted.Should().BeFalse();
+        secondCell.Cursor.Should().BeNull();
+
+        provider.SetHighlight(firstCell, firstLabel).Should().BeTrue();
+        provider.Clear();
+        firstLabel.IsHighlighted.Should().BeFalse();
+        firstCell.Cursor.Should().BeNull();
+
+        static RevisionGridRefRenderer.RefLabelControl GetLabel(Control cell, IGitRef gitRef)
+            => cell.GetVisualDescendants()
+                .OfType<RevisionGridRefRenderer.RefLabelControl>()
+                .Single(label => ReferenceEquals(label.GitRef, gitRef));
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Revision_grid_should_hide_its_active_tooltip_when_the_owner_window_deactivates()
+    {
+        bool originalTooltips = AppSettings.ShowRevisionGridTooltips.Value;
+        Window owner = new() { Width = 900, Height = 180 };
+        try
+        {
+            AppSettings.ShowRevisionGridTooltips.Value = true;
+            RevisionGridControl control = new();
+            GitRevision revision = CreateRevision();
+            revision.HasMultiLineMessage = true;
+            revision.Body = revision.Subject + "\n\nTooltip body";
+            control.GetTestAccessor().SetRevisions([revision]);
+            owner.Content = control;
+            owner.Show();
+            owner.Activate();
+            Dispatcher.UIThread.RunJobs();
+            control.GetTestAccessor().OwnerWindow.Should().BeSameAs(owner);
+            Control messageCell = control.GetVisualDescendants()
+                .OfType<Control>()
+                .Single(item => item.Classes.Contains("revision-message-cell"));
+            Point point = messageCell.TranslatePoint(
+                    new Point(messageCell.Bounds.Width / 2, messageCell.Bounds.Height / 2),
+                    owner)
+                ?? throw new InvalidOperationException("The revision message cell is not attached.");
+
+            owner.MouseMove(point, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            ToolTip.GetTip(messageCell).Should().NotBeNull();
+            ToolTip.SetIsOpen(messageCell, true);
+            ToolTip.GetIsOpen(messageCell).Should().BeTrue();
+
+            control.GetTestAccessor().RaiseOwnerWindowDeactivated();
+            Dispatcher.UIThread.RunJobs();
+
+            ToolTip.GetIsOpen(messageCell).Should().BeFalse();
+        }
+        finally
+        {
+            owner.Close();
+            AppSettings.ShowRevisionGridTooltips.Value = originalTooltips;
         }
     }
 
