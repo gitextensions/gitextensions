@@ -31,10 +31,26 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         Right click starts the "Open repository" dialog.
         """);
 
+    /// <summary>
+    ///  Keeps the source control's implementation boundary while adapting its ToolStrip
+    ///  operations to the retained Avalonia menu owned by the outer control.
+    /// </summary>
+    private sealed class Implementation(WorkingDirectoryToolStripSplitButton button)
+    {
+        internal void FillDropDown() => button.FillDropDownCore();
+
+        internal void RefreshContent() => button.RefreshContentCore();
+
+        internal void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
+            => button.RefreshShortcutKeysCore(hotkeys);
+    }
+
     private readonly HashSet<MenuItem> _fixedItems = [];
     private readonly MenuItem _filterHost;
     private readonly MenuFlyout _menu = new();
     private readonly TextBox _txtFilter = new();
+
+    private Implementation? _implementation;
 
     private bool _dropDownPreparedForTest;
     private Action? _closeRepository;
@@ -80,6 +96,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         _txtFilter.TextChanged += (_, _) => ApplyFilter();
         _txtFilter.KeyDown += TxtFilter_KeyDown;
         AddHandler(PointerReleasedEvent, MouseUpHandler, RoutingStrategies.Tunnel);
+        _implementation = new Implementation(this);
     }
 
     /// <summary>
@@ -121,6 +138,9 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     /// <summary>Updates the text shown on the combo button itself.</summary>
     public void RefreshContent()
+        => _implementation?.RefreshContent();
+
+    private void RefreshContentCore()
     {
         if (_getUICommands is null)
         {
@@ -156,6 +176,9 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     }
 
     public void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
+        => _implementation?.RefreshShortcutKeys(hotkeys);
+
+    private void RefreshShortcutKeysCore(IEnumerable<HotkeyCommand>? hotkeys)
     {
         _openRepositoryShortcutDisplay = hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenRepo);
         _closeRepositoryShortcutDisplay = hotkeys.GetShortcutDisplay(FormBrowse.Command.CloseRepository);
@@ -166,6 +189,9 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     }
 
     private void FillDropDown()
+        => _implementation?.FillDropDown();
+
+    private void FillDropDownCore()
     {
         if (_repositoryHistoryUIService is not null)
         {

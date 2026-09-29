@@ -125,7 +125,7 @@ public sealed class ReflogTests
         accessor.Reset.IsEnabled.Should().BeTrue();
         accessor.ResetType.Should().Be(FormResetCurrentBranch.ResetType.Soft);
         messageBoxes.Messages.Should().ContainSingle().Which.Should().Be(
-            "You have changes in your working directory that could be lost.\n\nDo you want to continue?");
+            "You have changes in your working directory that could be lost.\r\n\r\nDo you want to continue?");
         commands.DidNotReceive().DoActionOnRepo(Arg.Any<Func<bool>>());
     }
 
@@ -186,7 +186,7 @@ public sealed class ReflogTests
             nameof(FormReflog),
             "_continueResetCurrentBranchEvenWithChangesText",
             "Text",
-            "You have changes in your working directory that could be lost.\n\nDo you want to continue?");
+            "You have changes in your working directory that could be lost.\r\n\r\nDo you want to continue?");
         translation.Received(1).AddTranslationItem(nameof(FormReflog), "copySha1ToolStripMenuItem", "Text", "Copy SHA-1");
         translation.Received(1).AddTranslationItem(nameof(FormReflog), "createABranchOnThisCommitToolStripMenuItem", "Text", "Create a branch on this commit...");
         translation.Received(1).AddTranslationItem(nameof(FormReflog), "label1", "Text", "Display reflog for:");

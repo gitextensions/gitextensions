@@ -535,6 +535,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     internal bool IsCurrentCheckout(GitRevision revision)
         => _headId is ObjectId headId && revision.ObjectId == headId;
 
+    internal int GetRevisionIndex(GitRevision revision)
+        => _revisions.IndexOf(revision);
+
     internal void CancelBackgroundTasks()
     {
         _refreshRevisionsSequence.CancelCurrent();
