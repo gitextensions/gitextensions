@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -18,9 +19,8 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     private readonly RevisionGridControl _grid;
     private readonly LaneInfoProvider _laneInfoProvider;
     private readonly RevisionGraph _revisionGraph;
-    private readonly HoverHighlightCalculator _hoverHighlight;
-
     private VisibleRowRange _cachedVisibleRange;
+    private readonly HoverHighlightCalculator _hoverHighlight;
 
     public RevisionGraphColumnProvider(
         RevisionGraph revisionGraph,
@@ -41,14 +41,6 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
     public RevisionGraphDrawStyle RevisionGraphDrawStyle { get; set; } = RevisionGraphDrawStyle.DrawNonRelativesGray;
 
-    public override void ApplySettings()
-    {
-        Column.IsVisible = AppSettings.ShowRevisionGridGraphColumn;
-        RevisionGraphDrawStyle = AppSettings.RevisionGraphDrawNonRelativesGray
-            ? RevisionGraphDrawStyle.DrawNonRelativesGray
-            : RevisionGraphDrawStyle.Normal;
-    }
-
     public override Control CreateCell()
     {
         GraphCellControl graph = new(this)
@@ -60,11 +52,19 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         return graph;
     }
 
-    public override void UpdateCell(Control control, GitRevision revision)
+    public override void OnCellPainting(Control control, GitRevision revision)
     {
         GraphCellControl graph = (GraphCellControl)control;
         graph.Revision = revision;
         ToolTip.SetTip(graph, null);
+    }
+
+    public override void ApplySettings()
+    {
+        Column.IsVisible = AppSettings.ShowRevisionGridGraphColumn;
+        RevisionGraphDrawStyle = AppSettings.RevisionGraphDrawNonRelativesGray
+            ? RevisionGraphDrawStyle.DrawNonRelativesGray
+            : RevisionGraphDrawStyle.Normal;
     }
 
     public override void Clear()
@@ -132,18 +132,19 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     internal bool DrawGraph(DrawingContext context, GitRevision revision, double rowHeight)
         => _grid.DrawGraphCell(context, revision, RevisionGraphDrawStyle, rowHeight, _hoverHighlight.HighlightedIds);
 
-    internal string? GetLaneToolTip(GitRevision revision, double x)
+    public bool TryGetToolTip(GitRevision revision, double x, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
         if (!AppSettings.ShowRevisionGridTooltips.Value
             || x < 0
             || !_revisionGraph.TryGetRowIndex(revision.ObjectId, out int rowIndex))
         {
-            return null;
+            toolTip = null;
+            return false;
         }
 
         int lane = (int)(x / GraphRenderer.LaneWidth);
-        string toolTip = _laneInfoProvider.GetLaneInfo(rowIndex, lane);
-        return string.IsNullOrEmpty(toolTip) ? null : toolTip;
+        toolTip = _laneInfoProvider.GetLaneInfo(rowIndex, lane);
+        return !string.IsNullOrEmpty(toolTip);
     }
 
     public void Dispose() => _hoverHighlight.Dispose();
@@ -184,9 +185,12 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
         private void OnPointerMoved(object? sender, PointerEventArgs e)
         {
-            string? toolTip = _revision is null
-                ? null
-                : _provider.GetLaneToolTip(_revision, e.GetPosition(this).X);
+            string? toolTip = null;
+            if (_revision is not null)
+            {
+                _provider.TryGetToolTip(_revision, e.GetPosition(this).X, out toolTip);
+            }
+
             ToolTip.SetTip(this, toolTip);
             Cursor = toolTip is null
                 ? null

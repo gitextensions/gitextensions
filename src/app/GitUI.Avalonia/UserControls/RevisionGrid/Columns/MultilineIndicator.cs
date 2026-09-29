@@ -21,7 +21,7 @@ internal sealed class MultilineIndicator : Control
     private readonly int _indicatorRectHeight;
     private readonly int _indicatorRectWidth;
     private bool _isMultiline;
-    private bool _hasAvailableWidth;
+    private bool _hasAvailableWidth = true;
 
     public MultilineIndicator()
     {

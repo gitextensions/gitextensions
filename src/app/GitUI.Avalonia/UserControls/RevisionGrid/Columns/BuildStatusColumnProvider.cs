@@ -22,9 +22,9 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
     private const int IconColumnWidth = 16;
     private const int TextColumnWidth = 150;
     private readonly Action<GitRevision> _openBuildReport;
-    private readonly Func<IGitModule> _module;
+    private readonly Func<IGitModule?> _module;
 
-    public BuildStatusColumnProvider(Action<GitRevision> openBuildReport, Func<IGitModule> module)
+    public BuildStatusColumnProvider(Action<GitRevision> openBuildReport, Func<IGitModule?> module)
         : base("Build Status", new GridLength(150), minimumWidth: 16, resizable: true)
     {
         _openBuildReport = openBuildReport;
@@ -35,7 +35,7 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
     {
         bool showIcon = AppSettings.ShowBuildStatusIconColumn;
         bool showText = AppSettings.ShowBuildStatusTextColumn;
-        bool columnVisible = _module().GetEffectiveSettings() is { } effectiveSettings
+        bool columnVisible = _module()?.GetEffectiveSettings() is { } effectiveSettings
                              && BuildServerSettings.IntegrationEnabled.ValueOrDefault(effectiveSettings)
                              && (showIcon || showText);
 
@@ -76,17 +76,26 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
         return textBlock;
     }
 
-    public override void UpdateCell(Control control, GitRevision revision)
+    public override void OnCellPainting(Control control, GitRevision revision)
     {
         BuildStatusTextBlock textBlock = (BuildStatusTextBlock)control;
         BuildInfo? buildStatus = revision.BuildStatus;
+        string description = textBlock.Text ?? string.Empty;
         textBlock.Text = buildStatus is null
             ? string.Empty
             : (AppSettings.ShowBuildStatusIconColumn ? buildStatus.StatusSymbol : string.Empty)
-                + (AppSettings.ShowBuildStatusTextColumn ? buildStatus.Description : string.Empty);
-        textBlock.Cursor = string.IsNullOrWhiteSpace(buildStatus?.Url) ? Cursor.Default : new Cursor(StandardCursorType.Hand);
+                + (AppSettings.ShowBuildStatusTextColumn ? description : string.Empty);
         textBlock.Status = buildStatus?.Status;
-        UpdateToolTip(control, revision);
+    }
+
+    public override void OnCellFormatting(Control control, GitRevision revision)
+    {
+        BuildStatusTextBlock textBlock = (BuildStatusTextBlock)control;
+        BuildInfo? buildStatus = revision.BuildStatus;
+        textBlock.Text = !string.IsNullOrEmpty(buildStatus?.Description)
+            ? buildStatus.Description
+            : string.Empty;
+        textBlock.Cursor = string.IsNullOrWhiteSpace(buildStatus?.Url) ? Cursor.Default : new Cursor(StandardCursorType.Hand);
     }
 
     public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
