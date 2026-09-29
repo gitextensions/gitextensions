@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using GitCommands;
@@ -50,8 +50,10 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
         base.Init(pageHost);
     }
 
-    protected void OnRuntimeLoad()
+    protected override void OnRuntimeLoad()
     {
+        base.OnRuntimeLoad();
+
         // Avalonia Grid shares the first-column definition across every row in each table.
         // The two grids use the same Auto-sized label/control vocabulary and need no imperative width adjustment.
     }
