@@ -133,6 +133,9 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     public override void OnPageShown() => CheckSettings();
 
+    private string? GetGlobalSetting(string settingName)
+        => CommonLogic.GitConfigSettingsSet.GlobalSettings.GetValue(settingName);
+
     private void translationConfig_Click(object? sender, EventArgs e)
     {
         using FormChooseTranslation frm = new();
@@ -578,45 +581,309 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
     {
         _diffMergeToolConfigurationManager = new DiffMergeToolConfigurationManager(
             () => CheckSettingsLogic.CommonLogic.GitConfigSettingsSet.EffectiveSettings);
-        ChecklistResult result = Evaluate(CommonLogic);
-        Render(GitFound, GitFound_Fix, isVisible: true, result.GitStatus, result.GitMessage);
-        Render(UserNameSet, UserNameSet_Fix, isVisible: true, result.Identity, result.IdentityMessage);
-        Render(MergeTool, MergeTool_Fix, isVisible: true, result.MergeTool, result.MergeToolMessage);
-        Render(DiffTool, DiffTool_Fix, isVisible: true, result.DiffTool, result.DiffToolMessage);
-        Render(
-            ShellExtensionsRegistered,
-            ShellExtensionsRegistered_Fix,
-            result.WindowsChecksVisible,
-            result.ShellExtensions,
-            result.ShellExtensionsMessage);
-        Render(GitBinFound, GitBinFound_Fix, result.WindowsChecksVisible, result.GitBin, result.GitBinMessage);
-        Render(
-            GitExtensionsInstall,
-            GitExtensionsInstall_Fix,
-            result.WindowsChecksVisible,
-            result.InstallRegistration,
-            result.InstallRegistrationMessage);
-        Render(SshConfig, SshConfig_Fix, result.WindowsChecksVisible, result.Ssh, result.SshMessage);
-        Render(
-            translationConfig,
-            translationConfig_Fix,
-            isVisible: true,
-            result.Translation,
-            result.TranslationMessage);
-        Render(
-            GcmDetected,
-            GcmDetectedFix,
-            result.ObsoleteCredentialHelperVisible,
-            result.ObsoleteCredentialHelper,
-            result.ObsoleteCredentialHelperMessage);
-
-        if (result.IsValid && AppSettings.CheckSettings)
+        bool isValid = true;
+        foreach (Func<bool> check in CheckFuncs())
         {
-            AppSettings.CheckSettings = false;
+            try
+            {
+                isValid &= check();
+            }
+            catch (Exception exception)
+            {
+                MessageBoxes.Show(
+                    TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
+                    exception.Message,
+                    TranslatedStrings.Error,
+                    WinFormsShims.MessageBoxButtons.OK,
+                    WinFormsShims.MessageBoxIcon.Error);
+                isValid = false;
+            }
         }
 
-        CheckAtStartup.IsChecked = AppSettings.CheckSettings;
-        return result.IsValid;
+        CheckAtStartup.IsChecked = IsCheckAtStartupChecked(isValid);
+        return isValid;
+
+        static IEnumerable<Func<bool>> WindowsChecks(ChecklistSettingsPage page)
+        {
+            yield return page.CheckGitExtensionsInstall;
+            yield return page.CheckGitExtensionRegistrySettings;
+            yield return page.CheckGitExe;
+            yield return page.CheckSSHSettings;
+            yield return page.CheckGitCredentialWinStore;
+        }
+
+        IEnumerable<Func<bool>> CheckFuncs()
+        {
+            yield return CheckGitCmdValid;
+            yield return CheckGlobalUserSettingsValid;
+            yield return CheckEditorTool;
+            yield return CheckMergeTool;
+            yield return CheckDiffToolConfiguration;
+            yield return CheckTranslationConfigSettings;
+
+            if (OperatingSystem.IsWindows())
+            {
+                foreach (Func<bool> check in WindowsChecks(this))
+                {
+                    yield return check;
+                }
+            }
+            else
+            {
+                ShellExtensionsRegistered.IsVisible = false;
+                GitBinFound.IsVisible = false;
+                GitExtensionsInstall.IsVisible = false;
+                SshConfig.IsVisible = false;
+                GcmDetected.IsVisible = false;
+                GcmDetectedFix.IsVisible = false;
+            }
+        }
+    }
+
+    private static bool IsCheckAtStartupChecked(bool isValid)
+    {
+        bool checkAtStartup = AppSettings.CheckSettings;
+        if (isValid && checkAtStartup)
+        {
+            AppSettings.CheckSettings = false;
+            checkAtStartup = false;
+        }
+
+        return checkAtStartup;
+    }
+
+    private bool CheckGitCredentialWinStore()
+    {
+        string setting = GetGlobalSetting(SettingKeyString.CredentialHelper) ?? string.Empty;
+        bool obsolete = setting.Contains("git-credential-winstore.exe", StringComparison.OrdinalIgnoreCase);
+        GcmDetected.IsVisible = obsolete;
+        GcmDetectedFix.IsVisible = obsolete;
+        if (!obsolete)
+        {
+            return true;
+        }
+
+        RenderSettingUnset(GcmDetected, GcmDetectedFix, _gcmDetectedCaption.Text);
+        return false;
+    }
+
+    private bool CheckTranslationConfigSettings()
+        => RenderSettingSetUnset(
+            () => string.IsNullOrEmpty(AppSettings.Translation),
+            translationConfig,
+            translationConfig_Fix,
+            _noLanguageConfigured.Text,
+            string.Format(_languageConfigured.Text, AppSettings.Translation));
+
+    private bool CheckSSHSettings()
+    {
+        SshConfig.IsVisible = true;
+        if (GitSshHelpers.IsPlink)
+        {
+            return RenderSettingSetUnset(
+                () => !File.Exists(AppSettings.Plink)
+                    || !File.Exists(AppSettings.Puttygen)
+                    || !File.Exists(AppSettings.Pageant),
+                SshConfig,
+                SshConfig_Fix,
+                _plinkputtyGenpageantNotFound.Text,
+                _puttyConfigured.Text);
+        }
+
+        string ssh = AppSettings.SshPath;
+        if (!string.IsNullOrEmpty(ssh) && !File.Exists(ssh))
+        {
+            RenderSettingUnset(SshConfig, SshConfig_Fix, string.Format(_sshClientNotFound.Text, ssh));
+            return false;
+        }
+
+        RenderSettingSet(
+            SshConfig,
+            SshConfig_Fix,
+            string.IsNullOrEmpty(ssh) ? _opensshUsed.Text : string.Format(_otherSshClient.Text, ssh));
+        return true;
+    }
+
+    private bool CheckGitExe()
+        => RenderSettingSetUnset(
+            () => !File.Exists(Path.Join(AppSettings.LinuxToolsDir, "sh.exe"))
+                && !File.Exists(Path.Join(AppSettings.LinuxToolsDir, "sh"))
+                && !CheckSettingsLogic.CheckIfFileIsInPath("sh.exe")
+                && !CheckSettingsLogic.CheckIfFileIsInPath("sh"),
+            GitBinFound,
+            GitBinFound_Fix,
+            _linuxToolsSshNotFound.Text,
+            _linuxToolsSshFound.Text);
+
+    private bool CheckGitCmdValid()
+    {
+        GitFound.IsVisible = true;
+        if (!CheckSettingsLogic.CanFindGitCmd())
+        {
+            RenderSettingUnset(GitFound, GitFound_Fix, _gitNotFound.Text);
+            return false;
+        }
+
+        IGitVersion nativeGitVersion = GitVersion.Current;
+        IGitVersion usedGitVersion = ServiceProvider is IGitUICommands uiCommands
+            && uiCommands.Module.IsValidGitWorkingDir()
+                ? GitVersion.CurrentVersion(uiCommands.Module.GitExecutable)
+                : nativeGitVersion;
+        string displayedVersion = nativeGitVersion == usedGitVersion
+            ? $"{nativeGitVersion}"
+            : $"{nativeGitVersion} / WSL {usedGitVersion}";
+
+        if (usedGitVersion < GitVersion.LastSupportedVersion)
+        {
+            RenderSettingUnset(
+                GitFound,
+                GitFound_Fix,
+                string.Format(_wrongGitVersion.Text, displayedVersion, GitVersion.LastRecommendedVersion));
+            return false;
+        }
+
+        if (usedGitVersion < GitVersion.LastRecommendedVersion)
+        {
+            RenderSettingNotRecommended(
+                GitFound,
+                GitFound_Fix,
+                string.Format(_notRecommendedGitVersion.Text, displayedVersion, GitVersion.LastRecommendedVersion));
+            return false;
+        }
+
+        RenderSettingSet(GitFound, GitFound_Fix, string.Format(_gitVersionFound.Text, displayedVersion));
+        return true;
+    }
+
+    private bool CheckDiffToolConfiguration()
+    {
+        DiffMergeToolConfigurationManager tools = _diffMergeToolConfigurationManager
+            ?? throw new InvalidOperationException("The checklist is not initialized.");
+        DiffTool.IsVisible = true;
+        string? diffTool = tools.ConfiguredDiffTool;
+        if (string.IsNullOrEmpty(diffTool)
+            || string.IsNullOrWhiteSpace(tools.GetToolCommand(diffTool, DiffMergeToolType.Diff)))
+        {
+            RenderSettingUnset(DiffTool, DiffTool_Fix, _adviceDiffToolConfiguration.Text);
+            return false;
+        }
+
+        RenderSettingSet(DiffTool, DiffTool_Fix, string.Format(_diffToolXConfigured.Text, diffTool));
+        return true;
+    }
+
+    private bool CheckMergeTool()
+    {
+        DiffMergeToolConfigurationManager tools = _diffMergeToolConfigurationManager
+            ?? throw new InvalidOperationException("The checklist is not initialized.");
+        MergeTool.IsVisible = true;
+        string? mergeTool = tools.ConfiguredMergeTool;
+        if (string.IsNullOrEmpty(mergeTool))
+        {
+            RenderSettingUnset(MergeTool, MergeTool_Fix, _configureMergeTool.Text);
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(tools.GetToolCommand(mergeTool, DiffMergeToolType.Merge)))
+        {
+            RenderSettingUnset(
+                MergeTool,
+                MergeTool_Fix,
+                string.Format(_mergeToolXConfiguredNeedsCmd.Text, mergeTool));
+            return false;
+        }
+
+        RenderSettingSet(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfigured.Text, mergeTool));
+        return true;
+    }
+
+    private bool CheckGlobalUserSettingsValid()
+        => RenderSettingSetUnset(
+            () => string.IsNullOrEmpty(GetGlobalSetting(SettingKeyString.UserName))
+                || string.IsNullOrEmpty(GetGlobalSetting(SettingKeyString.UserEmail)),
+            UserNameSet,
+            UserNameSet_Fix,
+            _noEmailSet.Text,
+            _emailSet.Text);
+
+    private bool CheckEditorTool()
+        => !string.IsNullOrEmpty(CommonLogic.GetGlobalEditor());
+
+    private bool CheckGitExtensionRegistrySettings()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return true;
+        }
+
+        ShellExtensionsRegistered.IsVisible = true;
+        if (!ShellExtensionManager.IsRegistered())
+        {
+            if (!ShellExtensionManager.FilesExist())
+            {
+                RenderSettingSet(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix, _shellExtNoInstalled.Text);
+                return true;
+            }
+
+            RenderSettingUnset(
+                ShellExtensionsRegistered,
+                ShellExtensionsRegistered_Fix,
+                string.Format(_shellExtNeedsToBeRegistered.Text, ShellExtensionManager.GitExtensionsShellEx32Name));
+            return false;
+        }
+
+        RenderSettingSet(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix, _shellExtRegistered.Text);
+        return true;
+    }
+
+    private bool CheckGitExtensionsInstall()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return true;
+        }
+
+        GitExtensionsInstall.IsVisible = true;
+        string? installDirectory = AppSettings.GetInstallDir();
+        if (string.IsNullOrEmpty(installDirectory))
+        {
+            RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsMissing.Text);
+            return false;
+        }
+
+        bool invalid = installDirectory.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
+            || !Directory.Exists(installDirectory)
+            || (!Debugger.IsAttached
+                && !string.Equals(
+                    Path.TrimEndingDirectorySeparator(installDirectory),
+                    Path.TrimEndingDirectorySeparator(AppSettings.GetGitExtensionsDirectory()!),
+                    StringComparison.OrdinalIgnoreCase));
+        if (invalid)
+        {
+            RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsFaulty.Text);
+            return false;
+        }
+
+        RenderSettingSet(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsCorrect.Text);
+        return true;
+    }
+
+    private static bool RenderSettingSetUnset(
+        Func<bool> condition,
+        Button settingButton,
+        Button settingFixButton,
+        string textSettingUnset,
+        string textSettingGood)
+    {
+        settingButton.IsVisible = true;
+        if (condition())
+        {
+            RenderSettingUnset(settingButton, settingFixButton, textSettingUnset);
+            return false;
+        }
+
+        RenderSettingSet(settingButton, settingFixButton, textSettingGood);
+        return true;
     }
 
     /// <summary>

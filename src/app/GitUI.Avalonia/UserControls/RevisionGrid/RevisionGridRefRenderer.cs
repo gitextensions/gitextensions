@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -8,6 +8,7 @@ using Avalonia.VisualTree;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Compat;
+using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using DrawingColor = System.Drawing.Color;
 using MediaColor = Avalonia.Media.Color;
@@ -227,6 +228,79 @@ internal static class RevisionGridRefRenderer
             FontWeight = fontWeight ?? (gitRef.IsSelected ? FontWeight.Bold : FontWeight.Normal),
             VerticalAlignment = VerticalAlignment.Center,
         };
+
+    public static RefLabelControl DrawRef(
+        bool isRowSelected,
+        IGitRef gitRef,
+        string name,
+        RefLabelIcon icon,
+        RefLabelShape shape = RefLabelShape.Rect,
+        bool dashedLine = false,
+        bool fill = false,
+        bool highlight = false)
+    {
+        (RefLabelControl label, Action? drawHighlight) = DrawRefEx(
+            isRowSelected,
+            gitRef,
+            name,
+            icon,
+            shape,
+            dashedLine,
+            fill,
+            highlight);
+        drawHighlight?.Invoke();
+        return label;
+    }
+
+    public static (RefLabelControl Label, Action? DrawHighlight) DrawRefEx(
+        bool isRowSelected,
+        IGitRef gitRef,
+        string name,
+        RefLabelIcon icon,
+        RefLabelShape shape = RefLabelShape.Rect,
+        bool dashedLine = false,
+        bool fill = false,
+        bool highlight = false)
+    {
+        RefLabelControl label = CreateLabel(
+            gitRef,
+            name,
+            shape,
+            fill,
+            showHeadIndicator: icon != RefLabelIcon.None,
+            dashed: dashedLine);
+        DrawRefBackground(label, isRowSelected, highlight);
+        return (label, highlight ? () => label.IsHighlighted = true : null);
+    }
+
+    private static void DrawRefBackground(RefLabelControl label, bool isRowSelected, bool highlight)
+    {
+        label.IsRowSelected = isRowSelected;
+        label.IsHighlighted = highlight;
+    }
+
+    public static DrawingColor GetHeadColor(IGitRef gitRef)
+    {
+        if (gitRef.IsTag)
+        {
+            return AppColor.Tag.GetThemeColor();
+        }
+
+        if (gitRef.IsHead)
+        {
+            return AppColor.Branch.GetThemeColor();
+        }
+
+        if (gitRef.IsRemote)
+        {
+            return AppColor.RemoteBranch.GetThemeColor();
+        }
+
+        return AppColor.OtherTag.GetThemeColor();
+    }
+
+    public static double GetPointWidth(double rowHeight)
+        => PointWidth(Math.Max(0, rowHeight - 1));
 
     internal static RefLabelControl CreateSpecialLabel(
         string label,

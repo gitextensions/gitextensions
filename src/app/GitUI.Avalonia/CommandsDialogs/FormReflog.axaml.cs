@@ -22,6 +22,14 @@ namespace GitUI.CommandsDialogs;
 // The read-only sortable DataGridView is represented by a header and typed ListBox.
 public sealed partial class FormReflog : GitModuleForm
 {
+    private sealed class SortableRefLineList : List<RefLine>
+    {
+        public SortableRefLineList(IEnumerable<RefLine> refLines)
+            : base(refLines)
+        {
+        }
+    }
+
     private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new("You have changes in your working directory that could be lost.\n\nDo you want to continue?");
     private readonly TranslationString _continueResetCurrentBranchCaptionText = new("Changes not committed...");
     private readonly CancellationTokenSequence _loadSequence = new();
@@ -38,6 +46,7 @@ public sealed partial class FormReflog : GitModuleForm
     private string? _sortColumn;
     private bool _sortAscending = true;
     private bool _isDirtyDir;
+    private int _lastHitRowIndex = -1;
 
     public FormReflog()
     {
@@ -58,7 +67,8 @@ public sealed partial class FormReflog : GitModuleForm
     {
         gridReflog.ItemTemplate = new FuncDataTemplate<RefLine>(CreateRefLineRow, supportsRecycling: false);
         gridReflog.SelectionChanged += (_, _) => UpdateActionState();
-        gridReflog.AddHandler(PointerPressedEvent, gridReflog_PointerPressed, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+        gridReflog.AddHandler(PointerPressedEvent, gridReflog_MouseClick, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+        gridReflog.PointerMoved += gridReflog_MouseMove;
         Branches.SelectionChanged += Branches_SelectedIndexChanged;
         linkCurrentBranch.Click += linkCurrentBranch_LinkClicked;
         linkHead.Click += linkHead_Click;
@@ -80,7 +90,13 @@ public sealed partial class FormReflog : GitModuleForm
             return;
         }
 
+        FormReflog_Load(this, EventArgs.Empty);
+    }
+
+    private void FormReflog_Load(object? sender, EventArgs e)
+    {
         SetRepositoryState(Module.IsDirtyDir(), Module.GetSelectedBranch());
+        _lastHitRowIndex = 0;
 
         List<string> branches =
         [
@@ -185,7 +201,7 @@ public sealed partial class FormReflog : GitModuleForm
                 Branches.IsEnabled = true;
                 _sortColumn = null;
                 _sortAscending = true;
-                SetRefLines(refLines, selectedRefLine: null);
+                SetRefLines(new SortableRefLineList(refLines), selectedRefLine: null);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -254,9 +270,10 @@ public sealed partial class FormReflog : GitModuleForm
 
     private void createABranchOnThisCommitToolStripMenuItem_Click(object? sender, EventArgs e)
     {
-        if (GetSelectedRefLine() is RefLine refLine)
+        ObjectId objectId = GetShaOfRefLine();
+        if (!objectId.IsZero)
         {
-            UICommands.StartCreateBranchDialog(this, refLine.Sha);
+            UICommands.StartCreateBranchDialog(this, objectId);
         }
     }
 
@@ -293,9 +310,10 @@ public sealed partial class FormReflog : GitModuleForm
 
     private void copySha1ToolStripMenuItem_Click(object? sender, EventArgs e)
     {
-        if (GetSelectedRefLine() is RefLine refLine)
+        ObjectId objectId = GetShaOfRefLine();
+        if (!objectId.IsZero)
         {
-            ClipboardUtil.TrySetText(refLine.Sha.ToString());
+            ClipboardUtil.TrySetText(objectId.ToString());
         }
     }
 
@@ -309,7 +327,32 @@ public sealed partial class FormReflog : GitModuleForm
         Branches.SelectedIndex = 0;
     }
 
-    private void gridReflog_PointerPressed(object? sender, PointerPressedEventArgs e)
+    private void gridReflog_MouseMove(object? sender, PointerEventArgs e)
+    {
+        ListBoxItem? item = (e.Source as Avalonia.Visual)?.FindAncestorOfType<ListBoxItem>(includeSelf: true);
+        if (item?.DataContext is not RefLine refLine)
+        {
+            return;
+        }
+
+        int rowIndex = -1;
+        for (int index = 0; index < _refLines.Count; index++)
+        {
+            if (ReferenceEquals(_refLines[index], refLine))
+            {
+                rowIndex = index;
+                break;
+            }
+        }
+
+        if (rowIndex >= 0 && rowIndex != _lastHitRowIndex)
+        {
+            _lastHitRowIndex = rowIndex;
+            gridReflog.SelectedItem = refLine;
+        }
+    }
+
+    private void gridReflog_MouseClick(object? sender, PointerPressedEventArgs e)
     {
         PointerPoint point = e.GetCurrentPoint(gridReflog);
         if (!point.Properties.IsRightButtonPressed)
@@ -325,6 +368,9 @@ public sealed partial class FormReflog : GitModuleForm
     }
 
     private RefLine? GetSelectedRefLine() => gridReflog.SelectedItem as RefLine;
+
+    private ObjectId GetShaOfRefLine()
+        => GetSelectedRefLine()?.Sha ?? default;
 
     private void UpdateActionState()
     {
