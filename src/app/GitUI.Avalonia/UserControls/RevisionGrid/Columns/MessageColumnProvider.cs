@@ -48,6 +48,14 @@ internal sealed class MessageColumnProvider : ColumnProvider
     private readonly RevisionGridControl _grid;
     private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
 
+    /// <summary>
+    ///  Caches retained ref-label hosts per row index for pointer hit-testing.
+    /// </summary>
+    private readonly Dictionary<int, WeakReference<MessageCell>> _refLabelHitInfoByRow = [];
+
+    // Pool of reusable lists to reduce allocations during pointer movement.
+    private readonly Stack<List<RevisionGridRefRenderer.RefLabelControl>> _hitInfoListPool = new();
+
     // Caches the configured push prefix per remote name to avoid repeated git-config reads during painting.
     private readonly Dictionary<string, string> _remotePrefixCache = [];
     private IReadOnlyDictionary<string, AheadBehindData>? _aheadBehindDataByLocalBranch;
@@ -55,9 +63,15 @@ internal sealed class MessageColumnProvider : ColumnProvider
     private IAheadBehindDataProvider? _aheadBehindDataProvider;
     private MessageCell? _highlightedCell;
     private RevisionGridRefRenderer.RefLabelControl? _highlightedLabel;
+
+    // The ref currently under the mouse cursor, used to draw a highlight border.
     private IGitRef? _highlightedRef;
-    private ObjectId? _highlightedRevisionId;
-    private string? _highlightedSpecialLabel;
+
+    // The row index of the currently highlighted ref label.
+    private int _highlightedRowIndex = -1;
+
+    // The row index of the currently highlighted stash label (which has no IGitRef).
+    private int _highlightedStashRow = -1;
     private Settings _settings;
 
     public MessageColumnProvider(
@@ -106,6 +120,12 @@ internal sealed class MessageColumnProvider : ColumnProvider
     public override void OnCellPainting(Control control, GitRevision revision)
     {
         MessageCell panel = (MessageCell)control;
+        int rowIndex = _grid.GetRevisionIndex(revision);
+        if (rowIndex >= 0)
+        {
+            _refLabelHitInfoByRow[rowIndex] = new WeakReference<MessageCell>(panel);
+        }
+
         bool restoreHighlight = DetachHighlightForUpdate(panel, revision);
         panel.ContentPanel.Children.RemoveRange(0, panel.ContentPanel.Children.Count - 1);
         panel.FixupAndSquashMarker.IsVisible = false;
@@ -113,15 +133,9 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         if (revision.IsArtificial)
         {
-            RevisionGridRefRenderer.RefLabelControl artificialLabel =
-                RevisionGridRefRenderer.CreateSpecialLabel(
-                    revision.Subject,
-                    revision.ObjectId == ObjectId.IndexId
-                        ? RefLabelIcon.CommitIndex
-                        : RefLabelIcon.WorkingDirectory,
-                    dashed: false);
+            RevisionGridRefRenderer.RefLabelControl artificialLabel = DrawArtificialRevision(revision);
             artificialLabel.MinWidth = GetArtificialLabelWidth(panel);
-            panel.ContentPanel.Children.Insert(panel.ContentPanel.Children.Count - 1, artificialLabel);
+            DrawRef(panel, artificialLabel);
 
             foreach (Control statusControl in CreateArtificialStatusControls(revision.ObjectId))
             {
@@ -144,9 +158,10 @@ internal sealed class MessageColumnProvider : ColumnProvider
             && superProjectInfo.Refs.TryGetValue(revision.ObjectId, out IReadOnlyList<IGitRef>? refs)
                 ? refs
                 : null;
-        foreach (Control label in CreateSuperprojectLabels(revision, superProjectInfo))
+        foreach (Control label in DrawSuperprojectInfo(revision, superProjectInfo)
+                     .Concat(DrawSuperprojectRefs(revision, superProjectInfo)))
         {
-            panel.ContentPanel.Children.Insert(panel.ContentPanel.Children.Count - 1, label);
+            DrawRef(panel, label);
         }
 
         IReadOnlyList<IGitRef> gitRefs = SortRefs(revision.Refs.Where(FilterRef));
@@ -161,7 +176,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             {
                 panel.ContentPanel.Children.Insert(
                     panel.ContentPanel.Children.Count - 1,
-                    CreateBisectMarker(bisectImage));
+                    DrawImage(bisectImage));
             }
         }
 
@@ -189,7 +204,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 tagLabel.AppendLabel(" [...]");
             }
 
-            panel.ContentPanel.Children.Insert(panel.ContentPanel.Children.Count - 1, label);
+            DrawRef(panel, label);
         }
 
         (string Label, string? HighlightedLabel) GetLabel(IGitRef gitRef)
@@ -210,28 +225,11 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 ? revision.Subject
                 : (revision.ReflogSelector
                     ?? throw new InvalidOperationException($"{nameof(revision.ReflogSelector)} must not be null"))[5..];
-            panel.ContentPanel.Children.Insert(
-                panel.ContentPanel.Children.Count - 1,
-                RevisionGridRefRenderer.CreateSpecialLabel(stashLabel, RefLabelIcon.Stash, dashed: false));
+            DrawRef(panel, RevisionGridRefRenderer.CreateSpecialLabel(stashLabel, RefLabelIcon.Stash, dashed: false));
         }
 
         string[] lines = revision.IsAutostash ? [] : GetCommitMessageLines(revision);
-        string commitTitle = lines.FirstOrDefault() ?? string.Empty;
-
-        // Draw markers for fixup! and squash! commits
-        panel.FixupAndSquashMarker.IsVisible = !revision.IsAutostash
-            && (commitTitle.StartsWith(CommitKind.Fixup.GetPrefix(), StringComparison.Ordinal)
-                || commitTitle.StartsWith(CommitKind.Squash.GetPrefix(), StringComparison.Ordinal)
-                || commitTitle.StartsWith(CommitKind.Amend.GetPrefix(), StringComparison.Ordinal));
-        panel.Subject.Text = revision.IsAutostash ? string.Empty : commitTitle;
-
-        panel.Body.Text = !revision.IsAutostash && lines.Length > 1 && _settings.ShowCommitBodyInRevisionGrid
-            ? string.Concat(lines.Skip(1).Select(line => " " + line))
-            : string.Empty;
-        panel.Subject.FontWeight = _grid.IsCurrentCheckout(revision)
-            ? FontWeight.Bold
-            : FontWeight.Normal;
-        panel.Body.FontWeight = panel.Subject.FontWeight;
+        DrawCommitMessage(panel, revision, lines);
         panel.Revision = revision;
         panel.Indicator.Update(revision);
         RestoreHighlightAfterUpdate(panel, restoreHighlight);
@@ -243,7 +241,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 return false;
             }
 
-            if (_highlightedRevisionId != updatedRevision.ObjectId)
+            if (_highlightedRowIndex != _grid.GetRevisionIndex(updatedRevision))
             {
                 SetHighlight(cell: null, label: null);
                 return false;
@@ -269,8 +267,10 @@ internal sealed class MessageColumnProvider : ColumnProvider
             RevisionGridRefRenderer.RefLabelControl? label = messageCell.GetVisualDescendants()
                 .OfType<RevisionGridRefRenderer.RefLabelControl>()
                 .FirstOrDefault(candidate => _highlightedRef is not null
-                    ? Equals(candidate.GitRef, _highlightedRef)
-                    : candidate.GitRef is null && candidate.Label == _highlightedSpecialLabel);
+                        ? Equals(candidate.GitRef, _highlightedRef)
+                        : candidate.GitRef is null
+                            && candidate.Icon == RefLabelIcon.Stash
+                            && _highlightedStashRow == _grid.GetRevisionIndex(revision));
             if (label is null)
             {
                 SetHighlight(cell: null, label: null);
@@ -519,7 +519,15 @@ internal sealed class MessageColumnProvider : ColumnProvider
         return panel;
     }
 
-    private static Image CreateBisectMarker(IImage image)
+    private static RevisionGridRefRenderer.RefLabelControl DrawArtificialRevision(GitRevision revision)
+        => RevisionGridRefRenderer.CreateSpecialLabel(
+            revision.Subject,
+            revision.ObjectId == ObjectId.IndexId
+                ? RefLabelIcon.CommitIndex
+                : RefLabelIcon.WorkingDirectory,
+            dashed: false);
+
+    private static Image DrawImage(IImage image)
     {
         Image marker = new()
         {
@@ -533,7 +541,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         return marker;
     }
 
-    internal static IReadOnlyList<Control> CreateSuperprojectLabels(
+    internal static IReadOnlyList<Control> DrawSuperprojectInfo(
         GitRevision revision,
         SuperProjectInfo? superProjectInfo)
     {
@@ -563,7 +571,15 @@ internal sealed class MessageColumnProvider : ColumnProvider
             labels.Add(RevisionGridRefRenderer.CreateSpecialLabel("Remote", RefLabelIcon.HeadMergeSource));
         }
 
-        if (superProjectInfo.Refs?.TryGetValue(revision.ObjectId, out IReadOnlyList<IGitRef>? refs) == true)
+        return labels;
+    }
+
+    private static IReadOnlyList<Control> DrawSuperprojectRefs(
+        GitRevision revision,
+        SuperProjectInfo? superProjectInfo)
+    {
+        List<Control> labels = [];
+        if (superProjectInfo?.Refs?.TryGetValue(revision.ObjectId, out IReadOnlyList<IGitRef>? refs) == true)
         {
             IEnumerable<IGitRef> additionalRefs = refs
                 .Where(superProjectRef => revision.Refs.All(gitRef => gitRef.CompleteName != superProjectRef.CompleteName))
@@ -580,6 +596,33 @@ internal sealed class MessageColumnProvider : ColumnProvider
         }
 
         return labels;
+    }
+
+    internal static IReadOnlyList<Control> CreateSuperprojectLabels(
+        GitRevision revision,
+        SuperProjectInfo? superProjectInfo)
+        => [.. DrawSuperprojectInfo(revision, superProjectInfo), .. DrawSuperprojectRefs(revision, superProjectInfo)];
+
+    private static void DrawRef(MessageCell panel, Control label)
+        => panel.ContentPanel.Children.Insert(panel.ContentPanel.Children.Count - 1, label);
+
+    private void DrawCommitMessage(MessageCell panel, GitRevision revision, string[] lines)
+    {
+        string commitTitle = lines.FirstOrDefault() ?? string.Empty;
+
+        // Draw markers for fixup! and squash! commits
+        panel.FixupAndSquashMarker.IsVisible = !revision.IsAutostash
+            && (commitTitle.StartsWith(CommitKind.Fixup.GetPrefix(), StringComparison.Ordinal)
+                || commitTitle.StartsWith(CommitKind.Squash.GetPrefix(), StringComparison.Ordinal)
+                || commitTitle.StartsWith(CommitKind.Amend.GetPrefix(), StringComparison.Ordinal));
+        panel.Subject.Text = revision.IsAutostash ? string.Empty : commitTitle;
+        panel.Body.Text = !revision.IsAutostash && lines.Length > 1 && _settings.ShowCommitBodyInRevisionGrid
+            ? string.Concat(lines.Skip(1).Select(line => " " + line))
+            : string.Empty;
+        panel.Subject.FontWeight = _grid.IsCurrentCheckout(revision)
+            ? FontWeight.Bold
+            : FontWeight.Normal;
+        panel.Body.FontWeight = panel.Subject.FontWeight;
     }
 
     private (IGitRef GitRef, string Name)? GetVirtualRef(IGitRef gitRef)
@@ -650,8 +693,12 @@ internal sealed class MessageColumnProvider : ColumnProvider
         _highlightedCell = messageCell;
         _highlightedLabel = label;
         _highlightedRef = label?.GitRef;
-        _highlightedRevisionId = label is null ? null : messageCell?.Revision?.ObjectId;
-        _highlightedSpecialLabel = label is { GitRef: null } ? label.Label : null;
+        _highlightedRowIndex = label is null || messageCell?.Revision is null
+            ? -1
+            : _grid.GetRevisionIndex(messageCell.Revision);
+        _highlightedStashRow = label is { GitRef: null, Icon: RefLabelIcon.Stash }
+            ? _highlightedRowIndex
+            : -1;
 
         if (_highlightedLabel is not null)
         {
@@ -673,6 +720,39 @@ internal sealed class MessageColumnProvider : ColumnProvider
         _aheadBehindDataByLocalBranch = null;
         _aheadBehindDataByRemoteBranch = null;
         _remotePrefixCache.Clear();
+        _refLabelHitInfoByRow.Clear();
+    }
+
+    public RevisionGridRefRenderer.RefLabelControl? HitTest(int rowIndex, Avalonia.Point gridClientPoint)
+    {
+        if (!_refLabelHitInfoByRow.TryGetValue(rowIndex, out WeakReference<MessageCell>? reference)
+            || !reference.TryGetTarget(out MessageCell? cell))
+        {
+            _refLabelHitInfoByRow.Remove(rowIndex);
+            return null;
+        }
+
+        List<RevisionGridRefRenderer.RefLabelControl> hitInfos = RentHitInfoList();
+        try
+        {
+            hitInfos.AddRange(cell.GetVisualDescendants().OfType<RevisionGridRefRenderer.RefLabelControl>());
+            return hitInfos.FirstOrDefault(label =>
+                (label.GitRef is not null || label.Icon == RefLabelIcon.Stash)
+                && label.Contains(_grid.TranslatePoint(gridClientPoint, label) ?? default));
+        }
+        finally
+        {
+            ReturnHitInfoList(hitInfos);
+        }
+    }
+
+    private List<RevisionGridRefRenderer.RefLabelControl> RentHitInfoList()
+        => _hitInfoListPool.TryPop(out List<RevisionGridRefRenderer.RefLabelControl>? list) ? list : [];
+
+    private void ReturnHitInfoList(List<RevisionGridRefRenderer.RefLabelControl> list)
+    {
+        list.Clear();
+        _hitInfoListPool.Push(list);
     }
 
     /// <summary>

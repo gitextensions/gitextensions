@@ -1,13 +1,15 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
 using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
+using GitUI.Compat;
 using GitUI.UserControls.Settings;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
@@ -79,6 +81,44 @@ public sealed partial class FormUpdates : GitExtensionsDialog
             _ownerWindow.Closed += OwnerWindow_Closed;
         }
 
+        SearchForUpdates();
+
+        if (alwaysShow)
+        {
+            ShowDialog(ownerWindow);
+        }
+    }
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        if (ProcessCmdKey(KeysMapper.ToKeys(e)))
+        {
+            e.Handled = true;
+        }
+
+        base.OnKeyDown(e);
+    }
+
+    private bool ProcessCmdKey(WinFormsShims.Keys keyData)
+    {
+        // We need to override ProcessCmdKey as mnemonics on labels do not behave the same as buttons.
+        if (keyData == (WinFormsShims.Keys.Alt | WinFormsShims.Keys.L))
+        {
+            LaunchUrl(LaunchType.ChangeLog);
+            return true;
+        }
+
+        if (keyData == (WinFormsShims.Keys.Alt | WinFormsShims.Keys.D))
+        {
+            LaunchUrl(LaunchType.DirectDownload);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void SearchForUpdates()
+    {
         CancellationToken cancellationToken = _cancellationTokenSource.Token;
         _operations.FileAndForget(async () =>
         {
@@ -86,9 +126,9 @@ public sealed partial class FormUpdates : GitExtensionsDialog
             {
                 await TaskScheduler.Default;
                 string releases = await _loadReleases(cancellationToken);
-                ReleaseVersion? update = GetNewestUpdate(releases);
+                CheckForNewerVersion(releases);
                 await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-                DisplayResult(update);
+                Done();
             }
             catch (OperationCanceledException)
             {
@@ -100,14 +140,9 @@ public sealed partial class FormUpdates : GitExtensionsDialog
             }
             catch (Exception exception)
             {
-                await DisplayFailureAsync(exception, suppressMessage: !alwaysShow, cancellationToken);
+                await DisplayFailureAsync(exception, suppressMessage: !_alwaysShow, cancellationToken);
             }
         });
-
-        if (alwaysShow)
-        {
-            ShowDialog(ownerWindow);
-        }
     }
 
     public override void AddTranslationItems(ITranslation translation)
@@ -156,23 +191,33 @@ public sealed partial class FormUpdates : GitExtensionsDialog
         linkRequiredDotNetRuntime.IsVisible = false;
     }
 
-    private ReleaseVersion? GetNewestUpdate(string releases)
+    private void CheckForNewerVersion(string releases)
     {
         IEnumerable<ReleaseVersion> versions = ReleaseVersion.Parse(releases);
-        return ReleaseVersion
+        ReleaseVersion? update = ReleaseVersion
             .GetNewerVersions(_currentVersion, AppSettings.CheckForReleaseCandidates, versions)
             .OrderBy(version => version.ApplicationVersion)
             .LastOrDefault();
-    }
 
-    private void DisplayResult(ReleaseVersion? update)
-    {
-        progressBar1.IsVisible = false;
         _updateFound = update is not null;
         if (update is null)
         {
             _updateUrl = string.Empty;
             _requiredNetRuntimeVersion = null;
+            _newVersion = string.Empty;
+            return;
+        }
+
+        _updateUrl = AdaptFromX64ToCurrentProcessArchitecture(update.DownloadPage);
+        _requiredNetRuntimeVersion = update.RequiredNetRuntimeVersion;
+        _newVersion = update.ApplicationVersion.ToString();
+    }
+
+    private void Done()
+    {
+        progressBar1.IsVisible = false;
+        if (!_updateFound)
+        {
             UpdateLabel.Text = _noUpdatesFound.Text;
             if (!_alwaysShow)
             {
@@ -182,9 +227,6 @@ public sealed partial class FormUpdates : GitExtensionsDialog
             return;
         }
 
-        _updateUrl = AdaptFromX64ToCurrentProcessArchitecture(update.DownloadPage);
-        _requiredNetRuntimeVersion = update.RequiredNetRuntimeVersion;
-        _newVersion = update.ApplicationVersion.ToString();
         UpdateLabel.Text = string.Format(_newVersionAvailable.Text, _newVersion);
         linkChangeLog.IsVisible = true;
         linkDirectDownload.IsVisible = true;
@@ -560,7 +602,10 @@ public sealed partial class FormUpdates : GitExtensionsDialog
             => _form.DisplayNetRuntimeLink(format, requiredNetRuntimeVersion);
 
         public void DisplayReleases(string releases)
-            => _form.DisplayResult(_form.GetNewestUpdate(releases));
+        {
+            _form.CheckForNewerVersion(releases);
+            _form.Done();
+        }
 
         public Task JoinOperationsAsync(CancellationToken cancellationToken = default)
             => _form._operations.JoinPendingOperationsAsync(cancellationToken);

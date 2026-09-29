@@ -20,6 +20,10 @@ public partial class FormRevertCommit : GitExtensionsDialog
     private readonly TranslationString _noneParentSelectedText = new("None parent is selected!");
 
     private bool _isMerge;
+    private int _parentsLabelControlHeight = 15;
+    private int _lvParentsListControlHeight = 54;
+
+    private const int _parentsListItemHeight = 18;
 
     public GitRevision Revision { get; } = null!;
 
@@ -43,9 +47,17 @@ public partial class FormRevertCommit : GitExtensionsDialog
     private void WireControls()
     {
         lvParentsList.ItemTemplate = new FuncDataTemplate<RevertParentRow>(CreateParentRow, supportsRecycling: false);
+        lvParentsList.SizeChanged += lvParentsList_Resize;
         Revert.Click += Revert_Click;
         btnAbort.Click += btnAbort_Click;
         AcceptButton = Revert;
+        EventHandler? shown = null;
+        shown = (_, _) =>
+        {
+            Activated -= shown;
+            Form_Shown(this, EventArgs.Empty);
+        };
+        Activated += shown;
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -57,7 +69,18 @@ public partial class FormRevertCommit : GitExtensionsDialog
             return;
         }
 
+        Form_Load(this, EventArgs.Empty);
+    }
+
+    private void Form_Load(object? sender, EventArgs e)
+    {
+        _parentsLabelControlHeight = Math.Max(_parentsLabelControlHeight, (int)Math.Round(ParentsLabel.Bounds.Height));
+        _lvParentsListControlHeight = Math.Max(_lvParentsListControlHeight, (int)Math.Round(lvParentsList.Bounds.Height));
         LoadRevisionInfo();
+    }
+
+    private void Form_Shown(object? sender, EventArgs e)
+    {
         if (lvParentsList.IsVisible)
         {
             lvParentsList.Focus();
@@ -72,6 +95,8 @@ public partial class FormRevertCommit : GitExtensionsDialog
     {
         commitSummaryUserControl1.Revision = Revision;
         _isMerge = Module.IsMerge(Revision.ObjectId);
+
+        // We need to hide these optional components first to get a correct base value of PreferredMinimumHeight
         parentsPanel.IsVisible = _isMerge;
         lvParentsList.ItemsSource = null;
 
@@ -84,7 +109,7 @@ public partial class FormRevertCommit : GitExtensionsDialog
         RevertParentRow[] rows = parents
             .Select((parent, index) => new RevertParentRow(index + 1, parent))
             .ToArray();
-        lvParentsList.Height = 54 + (24 * rows.Length);
+        lvParentsList.Height = _lvParentsListControlHeight + (_parentsListItemHeight * rows.Length);
         lvParentsList.ItemsSource = rows;
         lvParentsList.SelectedIndex = rows.Length == 0 ? -1 : 0;
     }
@@ -200,6 +225,9 @@ public partial class FormRevertCommit : GitExtensionsDialog
     {
         DialogResult = WinFormsShims.DialogResult.Cancel;
     }
+
+    private void lvParentsList_Resize(object? sender, EventArgs e)
+        => lvParentsList.InvalidateMeasure();
 
     internal TestAccessor GetTestAccessor() => new(this);
 

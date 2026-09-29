@@ -1,16 +1,23 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using GitCommands;
 using GitUI.Avatars;
+using GitUI.Properties;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class AvatarColumnProvider : ColumnProvider
 {
+    private readonly RevisionGridControl _revisionGridView;
     private readonly IAvatarProvider _avatarProvider;
+    private readonly IAvatarCacheCleaner _avatarCacheCleaner;
+    private static readonly int _padding = 2;
+    private static readonly IImage _placeholderImage = Images.User80;
+
     private int _avatarSize = 20;
     private int _cacheVersion;
 
@@ -20,10 +27,12 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         IAvatarCacheCleaner avatarCacheCleaner)
         : base("Avatar", new GridLength(32), minimumWidth: 5, resizable: false)
     {
+        _revisionGridView = revisionGridView;
         _avatarProvider = avatarProvider;
+        _avatarCacheCleaner = avatarCacheCleaner;
         _ = new CacheRefreshSubscription(
-            revisionGridView,
-            avatarCacheCleaner,
+            _revisionGridView,
+            _avatarCacheCleaner,
             () => Interlocked.Increment(ref _cacheVersion));
     }
 
@@ -36,12 +45,16 @@ internal sealed class AvatarColumnProvider : ColumnProvider
     {
         // Framework constraint: Avalonia rows measure separately, so mirror the original per-paint width assignment here.
         Column.Width = new GridLength(rowHeight);
-        _avatarSize = Math.Max(1, (int)Math.Round(rowHeight - 4, MidpointRounding.AwayFromZero));
+        _avatarSize = Math.Max(1, (int)Math.Round(rowHeight - (_padding * 2), MidpointRounding.AwayFromZero));
     }
+
+    private string? _email = null;
+    private string? _author = null;
+    private Task<byte[]?>? _getLastAvatarTask = null;
 
     public override Control CreateCell()
     {
-        AvatarCell image = new(_avatarProvider) { Margin = new Thickness(2) };
+        AvatarCell image = new(_avatarProvider, _placeholderImage) { Margin = new Thickness(_padding) };
         image.Classes.Add("revision-avatar-cell");
         return image;
     }
@@ -55,11 +68,14 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         }
         else
         {
+            _email = revision.AuthorEmail;
+            _author = revision.Author;
             image.Load(
                 revision.AuthorEmail ?? string.Empty,
                 revision.Author,
                 Volatile.Read(ref _cacheVersion),
                 _avatarSize);
+            _getLastAvatarTask = image.LastLoadTask;
         }
     }
 
@@ -78,16 +94,25 @@ internal sealed class AvatarColumnProvider : ColumnProvider
     internal sealed class AvatarCell : Image
     {
         private readonly IAvatarProvider _avatarProvider;
+        private readonly IImage _placeholderImage;
         private int _cacheVersion = -1;
         private string? _email;
         private int _imageSize = -1;
         private string? _name;
         private int _requestVersion;
 
-        public AvatarCell(IAvatarProvider avatarProvider)
+        internal Task<byte[]?>? LastLoadTask { get; private set; }
+
+        public AvatarCell(IAvatarProvider avatarProvider, IImage placeholderImage)
         {
             _avatarProvider = avatarProvider;
+            _placeholderImage = placeholderImage;
             Stretch = Avalonia.Media.Stretch.Uniform;
+        }
+
+        public AvatarCell(IAvatarProvider avatarProvider)
+            : this(avatarProvider, Images.User80)
+        {
         }
 
         public void Clear()
@@ -110,6 +135,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
             bool identityChanged = _email != email || _name != name || _imageSize != imageSize;
             if (!identityChanged && _cacheVersion == cacheVersion)
             {
+                LastLoadTask = null;
                 return;
             }
 
@@ -120,13 +146,13 @@ internal sealed class AvatarColumnProvider : ColumnProvider
             int requestVersion = ++_requestVersion;
             if (identityChanged)
             {
-                ReplaceSource(null);
+                ReplaceSource(_placeholderImage);
             }
 
-            ThreadHelper.FileAndForget(() => LoadAsync(email, name, imageSize, requestVersion));
+            LastLoadTask = LoadCoreAsync(email, name, imageSize, requestVersion);
         }
 
-        private async Task LoadAsync(string email, string? name, int imageSize, int requestVersion)
+        private async Task<byte[]?> LoadCoreAsync(string email, string? name, int imageSize, int requestVersion)
         {
             byte[]? imageData = await _avatarProvider.GetAvatarAsync(email, name, imageSize);
             Bitmap? bitmap = AvatarImage.Decode(imageData);
@@ -141,13 +167,18 @@ internal sealed class AvatarColumnProvider : ColumnProvider
 
                 ReplaceSource(bitmap);
             });
+            return imageData;
         }
 
-        private void ReplaceSource(Bitmap? bitmap)
+        private void ReplaceSource(IImage? image)
         {
             Bitmap? previous = Source as Bitmap;
-            Source = bitmap;
-            previous?.Dispose();
+            Source = image;
+            if (!ReferenceEquals(previous, image)
+                && !ReferenceEquals(previous, _placeholderImage))
+            {
+                previous?.Dispose();
+            }
         }
     }
 
