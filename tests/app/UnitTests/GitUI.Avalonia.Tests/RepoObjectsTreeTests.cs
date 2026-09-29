@@ -193,6 +193,103 @@ public sealed class RepoObjectsTreeTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Module_change_should_clear_selection_and_restore_first_load_expansion_rules()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            string parentPath = Path.Combine(Path.GetTempPath(), $"GitExtensions-module-change-{Guid.NewGuid():N}");
+            string oldPath = Path.Combine(parentPath, "old");
+            string newPath = Path.Combine(parentPath, "new");
+            GitWorktree oldMain = new(oldPath, GitWorktreeHeadType.Branch, "1111111111111111111111111111111111111111", "main", IsDeleted: false);
+            GitWorktree newMain = new(newPath, GitWorktreeHeadType.Branch, "2222222222222222222222222222222222222222", "main", IsDeleted: false);
+            GitWorktree linked = new(Path.Combine(parentPath, "new-feature"), GitWorktreeHeadType.Branch, "3333333333333333333333333333333333333333", "feature", IsDeleted: false);
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(Substitute.For<IGitModule>());
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            RepoObjectsTree control = new() { UICommandsSource = source };
+            control.SetRefs(
+                [CreateRef("refs/heads/main")],
+                [],
+                "main",
+                [],
+                [],
+                Substitute.For<IConfigFileRemoteSettingsManager>(),
+                [oldMain],
+                oldPath);
+            RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
+            TreeViewItem worktrees = accessor.Tree.Items.Cast<TreeViewItem>()
+                .Single(item => HeaderText(item).StartsWith("Worktrees", StringComparison.Ordinal));
+            worktrees.IsExpanded = false;
+            accessor.Tree.SelectedItem = accessor.Tree.Items.Cast<TreeViewItem>().First().Items.Cast<TreeViewItem>().Single();
+
+            source.UICommandsChanged += Raise.Event<EventHandler<GitUICommandsChangedEventArgs>>(
+                source,
+                new GitUICommandsChangedEventArgs(commands));
+
+            accessor.Tree.SelectedItems!.Cast<TreeViewItem>().Should().BeEmpty();
+            accessor.SetWorktrees([newMain, linked], newPath);
+            worktrees.IsExpanded.Should().BeTrue(
+                "the source reapplies first-load expansion after changing repositories");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void SetRefs_should_not_carry_selection_or_expansion_between_repositories()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            string parentPath = Path.Combine(Path.GetTempPath(), $"GitExtensions-repository-state-{Guid.NewGuid():N}");
+            string oldPath = Path.Combine(parentPath, "old");
+            string newPath = Path.Combine(parentPath, "new");
+            RepoObjectsTree control = new();
+            control.SetRefs(
+                [CreateRef("refs/heads/main"), CreateRef("refs/heads/old-feature")],
+                [],
+                "main",
+                [],
+                [],
+                Substitute.For<IConfigFileRemoteSettingsManager>(),
+                [],
+                oldPath);
+            RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
+            TreeViewItem branches = accessor.Tree.Items.Cast<TreeViewItem>().First();
+            branches.IsExpanded = false;
+            accessor.Tree.SelectedItem = branches.Items.Cast<TreeViewItem>()
+                .Single(item => HeaderText(item) == "old-feature");
+
+            control.SetRefs(
+                [CreateRef("refs/heads/new-main")],
+                [],
+                "new-main",
+                [],
+                [],
+                Substitute.For<IConfigFileRemoteSettingsManager>(),
+                [],
+                newPath);
+
+            branches = accessor.Tree.Items.Cast<TreeViewItem>().First();
+            branches.IsExpanded.Should().BeTrue();
+            accessor.Tree.SelectedItems!.Cast<TreeViewItem>().Should().ContainSingle();
+            HeaderText(accessor.Tree.SelectedItems!.Cast<TreeViewItem>().Single()).Should().Be("new-main");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
     public void Search_should_cycle_matching_nodes_and_expand_their_paths()
     {
         SettingsSnapshot settings = SettingsSnapshot.Capture();

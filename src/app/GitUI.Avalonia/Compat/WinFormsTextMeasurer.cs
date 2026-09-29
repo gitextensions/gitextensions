@@ -13,6 +13,7 @@ namespace GitUI.Compat;
 internal static class WinFormsTextMeasurer
 {
     private const uint DrawTextCalculateRectangle = 0x400;
+    private const uint DrawTextBottom = 0x8;
     private const uint DrawTextSingleLine = 0x20;
     private const uint DrawTextNoPrefix = 0x800;
 
@@ -25,6 +26,16 @@ internal static class WinFormsTextMeasurer
     public static AvaloniaSize MeasureSize(TextBlock owner, string value, bool singleLine = true)
         => MeasureSize(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize, value, singleLine);
 
+    public static AvaloniaSize MeasureTextRenderer(TextBlock owner, string value)
+        => MeasureSize(
+            owner.FontFamily,
+            owner.FontStyle,
+            owner.FontWeight,
+            owner.FontSize,
+            value,
+            singleLine: true,
+            useTextRendererPadding: true);
+
     public static AvaloniaSize MeasureSize(TemplatedControl owner, string value)
         => MeasureSize(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize, value, singleLine: true);
 
@@ -34,11 +45,25 @@ internal static class WinFormsTextMeasurer
         FontWeight fontWeight,
         double fontSize,
         string value,
-        bool singleLine = true)
+        bool singleLine = true,
+        bool useTextRendererPadding = false)
     {
         string measuredValue = singleLine ? value : value.TrimEnd('\r', '\n');
+        if (measuredValue.Length == 0)
+        {
+            return default;
+        }
+
         if (OperatingSystem.IsWindows()
-            && TryMeasureWithGdi(fontFamily, fontStyle, fontWeight, fontSize, measuredValue, singleLine, out AvaloniaSize size))
+            && TryMeasureWithGdi(
+                fontFamily,
+                fontStyle,
+                fontWeight,
+                fontSize,
+                measuredValue,
+                singleLine,
+                useTextRendererPadding,
+                out AvaloniaSize size))
         {
             return size;
         }
@@ -51,7 +76,14 @@ internal static class WinFormsTextMeasurer
             typeface,
             fontSize,
             foreground: null);
-        return new AvaloniaSize(formattedText.WidthIncludingTrailingWhitespace, formattedText.Height);
+        double width = formattedText.WidthIncludingTrailingWhitespace;
+        if (useTextRendererPadding)
+        {
+            double overhangPadding = formattedText.Height / 6;
+            width += Math.Ceiling(overhangPadding) + Math.Ceiling(overhangPadding * 1.5);
+        }
+
+        return new AvaloniaSize(width, formattedText.Height);
     }
 
     private static bool TryMeasureWithGdi(
@@ -61,6 +93,7 @@ internal static class WinFormsTextMeasurer
         double fontSize,
         string value,
         bool singleLine,
+        bool useTextRendererPadding,
         out AvaloniaSize size)
     {
         const int defaultCharset = 1;
@@ -77,7 +110,7 @@ internal static class WinFormsTextMeasurer
         }
 
         nint font = CreateFont(
-            -(int)Math.Round(fontSize, MidpointRounding.AwayFromZero),
+            -(int)Math.Ceiling(fontSize),
             0,
             0,
             0,
@@ -100,12 +133,36 @@ internal static class WinFormsTextMeasurer
 
         nint previousFont = SelectObject(deviceContext, font);
         NativeRectangle rectangle = default;
-        int measuredHeight = DrawText(
-            deviceContext,
-            value,
-            value.Length,
-            ref rectangle,
-            DrawTextCalculateRectangle | DrawTextNoPrefix | (singleLine ? DrawTextSingleLine : 0));
+        int measuredHeight;
+        if (useTextRendererPadding && GetTextMetrics(deviceContext, out TextMetric metric))
+        {
+            rectangle.Right = int.MaxValue;
+            rectangle.Bottom = int.MaxValue;
+            float overhangPadding = metric.Height / 6f;
+            DrawTextParameters parameters = new()
+            {
+                Size = (uint)Marshal.SizeOf<DrawTextParameters>(),
+                LeftMargin = (int)Math.Ceiling(overhangPadding),
+                RightMargin = (int)Math.Ceiling(overhangPadding * 1.5f),
+            };
+            measuredHeight = DrawTextEx(
+                deviceContext,
+                value,
+                value.Length,
+                ref rectangle,
+                DrawTextCalculateRectangle | DrawTextBottom,
+                ref parameters);
+        }
+        else
+        {
+            measuredHeight = DrawText(
+                deviceContext,
+                value,
+                value.Length,
+                ref rectangle,
+                DrawTextCalculateRectangle | DrawTextNoPrefix | (singleLine ? DrawTextSingleLine : 0));
+        }
+
         SelectObject(deviceContext, previousFont);
         DeleteObject(font);
         ReleaseDC(0, deviceContext);
@@ -151,6 +208,19 @@ internal static class WinFormsTextMeasurer
         ref NativeRectangle rectangle,
         uint format);
 
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    private static extern int DrawTextEx(
+        nint deviceContext,
+        string text,
+        int textLength,
+        ref NativeRectangle rectangle,
+        uint format,
+        ref DrawTextParameters parameters);
+
+    [DllImport("gdi32.dll", CharSet = CharSet.Unicode)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetTextMetrics(nint deviceContext, out TextMetric metric);
+
     [StructLayout(LayoutKind.Sequential)]
     private struct NativeRectangle
     {
@@ -158,5 +228,40 @@ internal static class WinFormsTextMeasurer
         public int Top;
         public int Right;
         public int Bottom;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct DrawTextParameters
+    {
+        public uint Size;
+        public int TabLength;
+        public int LeftMargin;
+        public int RightMargin;
+        public uint LengthDrawn;
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    private struct TextMetric
+    {
+        public int Height;
+        public int Ascent;
+        public int Descent;
+        public int InternalLeading;
+        public int ExternalLeading;
+        public int AverageCharacterWidth;
+        public int MaximumCharacterWidth;
+        public int Weight;
+        public int Overhang;
+        public int DigitizedAspectX;
+        public int DigitizedAspectY;
+        public char FirstCharacter;
+        public char LastCharacter;
+        public char DefaultCharacter;
+        public char BreakCharacter;
+        public byte Italic;
+        public byte Underlined;
+        public byte StruckOut;
+        public byte PitchAndFamily;
+        public byte CharacterSet;
     }
 }

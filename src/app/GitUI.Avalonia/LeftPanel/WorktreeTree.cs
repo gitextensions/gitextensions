@@ -29,7 +29,6 @@ internal sealed class WorktreeTree : Tree
         => OwnerControl.UpdateNodes(() =>
     {
         HashSet<string> selected = OwnerControl.CaptureSelectedNodeIdentities(this);
-        bool firstLoad = TreeViewNode.Items.Count == 0;
         bool wasExpanded = TreeViewNode.IsExpanded;
         TreeViewNode.Items.Clear();
         Nodes.Clear();
@@ -37,7 +36,6 @@ internal sealed class WorktreeTree : Tree
         Nodes loadedNodes = FillWorktreeTree(worktrees, currentWorkingDirectory, CancellationToken.None);
         Nodes.AddNodes(loadedNodes);
         Complete(TranslatedStrings.Worktrees, Images.WorkTree, expanded: wasExpanded);
-        PostFillTreeViewNode(firstLoad);
         OwnerControl.RestoreSelectedNodes(this, selected);
     });
 

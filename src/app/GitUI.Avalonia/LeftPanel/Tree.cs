@@ -97,6 +97,13 @@ internal abstract class Tree : NodeBase, IDisposable
     internal IEnumerable<NodeBase> GetSelectedNodes()
         => GetNodesAndSelf().Where(node => node.IsSelected);
 
+    internal void OnModuleChanged()
+    {
+        // The source receives UICommandsChanged in each Tree. Avalonia owns that subscription
+        // once in RepoObjectsTree because the two persistent roots exist before UICommandsSource.
+        _firstReloadNodesSinceModuleChanged = true;
+    }
+
     protected void Complete(string caption, Avalonia.Media.IImage icon, bool expanded)
     {
         SetHeader(caption, icon);

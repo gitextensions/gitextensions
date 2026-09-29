@@ -4421,7 +4421,11 @@ internal sealed class AvaloniaControlTreeReader
         {
             // parity-scaffolding: ToolStrip drop-down items remain children of their owning
             // item while closed; Avalonia stores the equivalent controls in a detached Flyout.
-            return menuFlyout.Items.OfType<Control>().SelectMany(ExpandHostedMenuControl);
+            return menuFlyout.Items
+                .OfType<Control>()
+                .Where(item => item is not MenuItem { Header: Control hostedControl }
+                               || TopLevel.GetTopLevel(hostedControl) is not null)
+                .SelectMany(ExpandHostedMenuControl);
         }
 
         if (control is Separator)
