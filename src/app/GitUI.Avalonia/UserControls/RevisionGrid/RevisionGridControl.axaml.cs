@@ -175,6 +175,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private bool _isRefreshingRevisions;
     private SuperProjectInfo? _superprojectCurrentCheckout;
     private int _latestSelectedRowIndex;
+    private Window? _ownerWindow;
 
     // Tracks the ref label that was right-clicked so the context menu can offer ref-specific actions.
     private RevisionGridRefRenderer.RefLabelControl? _rightClickedHitInfo;
@@ -419,6 +420,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         // Inspect the native input before ListBox selection consumes the pointer event.
         _gridView.AddHandler(PointerPressedEvent, OnGridViewMouseDown, RoutingStrategies.Tunnel);
+        _gridView.AddHandler(PointerPressedEvent, OnGridViewCellMouseDown, RoutingStrategies.Tunnel);
 
         // ContextMenu uses the requesting child as its popup anchor. Ref cells are recycled
         // by async detail updates, so anchor to the persistent grid without changing the pointer position.
@@ -433,11 +435,13 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         mainContextMenu.Opening += ContextMenuOpening;
         mainContextMenu.Opened += (_, _) =>
         {
+            _rightClickedHitInfo = null;
             _gridView.Classes.Set("context-menu-open", true);
             RefreshSelection();
         };
         mainContextMenu.Closed += (_, _) =>
         {
+            _rightClickedHitInfo = null;
             _gridView.Classes.Set("context-menu-open", false);
             ClearRefHighlight();
             RefreshSelection();
@@ -491,9 +495,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         {
             OnRuntimeLoad();
         };
+        AttachedToVisualTree += (_, _) => AttachOwnerWindow();
         UpdateContextMenuItems();
         DetachedFromVisualTree += (_, _) =>
         {
+            DetachOwnerWindow();
             _selectionTimer.Stop();
             _revisionGraphColumnProvider.Dispose();
             _buildServerWatcher.Dispose();
@@ -723,6 +729,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         ApplyColumnSettings();
         ReloadHotkeys();
         LoadCustomDifftools();
+        AttachOwnerWindow();
     }
 
     public void Load()
@@ -1343,33 +1350,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         {
             NavigateBackward();
             e.Handled = true;
-            return;
         }
-
-        if (properties.PointerUpdateKind == PointerUpdateKind.XButton2Pressed)
+        else if (properties.PointerUpdateKind == PointerUpdateKind.XButton2Pressed)
         {
             NavigateForward();
             e.Handled = true;
-            return;
-        }
-
-        _rightClickedHitInfo = null;
-        _contextMenuModifiers = e.KeyModifiers;
-        if (properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed
-            && e.Source is Visual source)
-        {
-            _rightClickedHitInfo = source.GetSelfAndVisualAncestors()
-                .OfType<RevisionGridRefRenderer.RefLabelControl>()
-                .FirstOrDefault(label => label.GitRef is not null);
-            GitRevision? revision = source.GetSelfAndVisualAncestors()
-                .OfType<Control>()
-                .Select(control => control.DataContext)
-                .OfType<GitRevision>()
-                .FirstOrDefault();
-            if (revision is not null && _gridView.SelectedItems?.Contains(revision) != true)
-            {
-                _gridView.SelectedItem = revision;
-            }
         }
     }
 
@@ -1427,7 +1412,43 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     }
 
     private void ClearRefHighlight()
-        => _messageColumnProvider.ClearRefHighlight();
+        => _messageColumnProvider.SetHighlight(cell: null, label: null);
+
+    internal void OnGridViewCellMouseLeave(object? sender, PointerEventArgs e)
+    {
+        if (!mainContextMenu.IsOpen && _rightClickedHitInfo is null)
+        {
+            ClearRefHighlight();
+        }
+    }
+
+    private void AttachOwnerWindow()
+    {
+        Window? ownerWindow = TopLevel.GetTopLevel(this) as Window;
+        if (ReferenceEquals(_ownerWindow, ownerWindow))
+        {
+            return;
+        }
+
+        DetachOwnerWindow();
+        _ownerWindow = ownerWindow;
+        if (_ownerWindow is not null)
+        {
+            _ownerWindow.Deactivated += OnOwnerWindowDeactivated;
+        }
+    }
+
+    private void DetachOwnerWindow()
+    {
+        if (_ownerWindow is not null)
+        {
+            _ownerWindow.Deactivated -= OnOwnerWindowDeactivated;
+            _ownerWindow = null;
+        }
+    }
+
+    private void OnOwnerWindowDeactivated(object? sender, EventArgs e)
+        => _toolTipProvider.Hide();
 
     internal void UpdateLaneHighlightForRevision(IGitRef? gitRef, GitRevision? revision)
     {
@@ -1441,6 +1462,107 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private void UpdateLaneHighlight(IGitRef? gitRef, int rowIndex)
     {
         this.InvokeAndForget(() => _revisionGraphColumnProvider.SetHoverHighlightAsync(gitRef, rowIndex));
+    }
+
+    private void OnGridViewCellMouseDown(object? sender, PointerPressedEventArgs e)
+    {
+        try
+        {
+            PointerPointProperties properties = e.GetCurrentPoint(_gridView).Properties;
+            _rightClickedHitInfo = null;
+            _contextMenuModifiers = e.KeyModifiers;
+            if (e.Source is not Visual source)
+            {
+                return;
+            }
+
+            GitRevision? revision = source.GetSelfAndVisualAncestors()
+                .OfType<Control>()
+                .Select(control => control.DataContext)
+                .OfType<GitRevision>()
+                .FirstOrDefault();
+
+            // Check if a ref label was clicked in the message column
+            RevisionGridRefRenderer.RefLabelControl? label = source.GetSelfAndVisualAncestors()
+                .OfType<RevisionGridRefRenderer.RefLabelControl>()
+                .FirstOrDefault(label => label.GitRef is not null);
+
+            bool leftButton = properties.PointerUpdateKind == PointerUpdateKind.LeftButtonPressed;
+            if (leftButton
+                && source.GetSelfAndVisualAncestors().OfType<BuildStatusColumnProvider.BuildStatusTextBlock>().Any())
+            {
+                return;
+            }
+
+            bool addRelatedRefToSelection = leftButton
+                && e.KeyModifiers.HasFlag(KeyModifiers.Control)
+                && revision is not null
+                && _gridView.SelectedItems is { Count: 1 } selectedItems
+                && selectedItems.Contains(revision);
+            if (addRelatedRefToSelection)
+            {
+                ScrollViewer? scrollViewer = _gridView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+                Vector scrollOffset = scrollViewer?.Offset ?? default;
+                if (label?.GitRef is { } gitRef)
+                {
+                    if (gitRef is NestledVirtualRef)
+                    {
+                        // Let the related ref be added to the selection afterwards in order to simulate standard Ctrl+click behavior.
+                        _gridView.SelectedItems?.Clear();
+                        Dispatcher.UIThread.Post(
+                            () =>
+                            {
+                                GoToRelatedRef(gitRef, toggleSelection: true);
+                                RestoreScrollOffset();
+                            },
+                            DispatcherPriority.Input);
+                        return;
+                    }
+
+                    // Select the related ref.
+                    GoToRelatedRef(gitRef);
+                }
+                else if (revision!.IsArtificial)
+                {
+                    // Diff with the previous revision as amend preview.
+                    GoToRef("HEAD~1", showNoRevisionMsg: false);
+                }
+                else
+                {
+                    return;
+                }
+
+                // The related or the previous revision is now selected. Return early so that the native
+                // Ctrl+click processing adds the clicked row to the selection instead of toggling it off again.
+                Dispatcher.UIThread.Post(RestoreScrollOffset, DispatcherPriority.Loaded);
+                return;
+
+                void RestoreScrollOffset()
+                {
+                    if (scrollViewer is not null)
+                    {
+                        scrollViewer.Offset = scrollOffset;
+                    }
+                }
+            }
+
+            if (properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
+            {
+                _rightClickedHitInfo = label;
+                Control? messageCell = label?.GetSelfAndVisualAncestors()
+                    .OfType<Control>()
+                    .FirstOrDefault(control => control.Classes.Contains("revision-message-cell"));
+                _messageColumnProvider.SetHighlight(messageCell, label);
+                if (revision is not null && _gridView.SelectedItems?.Contains(revision) != true)
+                {
+                    _gridView.SelectedItem = revision;
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // Checks for bounds seems not enough. See https://github.com/gitextensions/gitextensions/issues/8475
+        }
     }
 
     public void ViewSelectedRevisions()
@@ -1677,8 +1799,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         editCommitToolStripMenuItem.IsEnabled = regularRevision;
         rewordCommitToolStripMenuItem.IsEnabled = regularRevision;
         SetVisible(compareToolStripMenuItem, revision is not null);
-        openCommitsWithDiffToolMenuItem.IsEnabled = selectedRevisions.Count > 0;
         (ObjectId first, GitRevision? selected) = GetFirstAndSelected();
+        openCommitsWithDiffToolMenuItem.IsEnabled = !first.IsZero && selected is not null;
         compareToBranchToolStripMenuItem.IsEnabled = selected is not null;
         compareWithCurrentBranchToolStripMenuItem.IsEnabled = selected is not null
             && hasCommands
@@ -1706,7 +1828,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         sepNavigate.IsVisible = revision is not null;
 
         navigateToolStripMenuItem.IsVisible = revision is not null;
-        UpdateNavigationMenu(revision);
         viewToolStripMenuItem.IsVisible = hasCommands;
         MenuCommands.TriggerMenuChanged();
         if (hasCommands)
@@ -1888,7 +2009,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         string? relatedBranch = clickedRef is NestledVirtualRef
             ? (clickedRef.IsRemote ? clickedRef.Remote + "/" : "") + clickedRef.MergeWith
             : null;
-        _rightClickedHitInfo = null;
         Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefs = clickedRef is null
             ? refs => refs
             : refs => refs.Where(r => r == clickedRef || r.Name == relatedBranch);
@@ -2633,24 +2753,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void goToChildToolStripMenuItem_Click()
         => GoToChild();
-
-    private void UpdateNavigationMenu(GitRevision? revision)
-    {
-        bool hasCurrentRevision = _headId is ObjectId headId
-            && _revisions.Any(candidate => candidate.ObjectId == headId);
-        GotoCurrentRevisionMenuItem.IsEnabled = hasCurrentRevision;
-        ToggleBetweenArtificialAndHeadCommitsMenuItem.IsEnabled = revision is not null
-            && hasCurrentRevision
-            && _revisions.Any(candidate => candidate.ObjectId == ObjectId.WorkTreeId
-                || candidate.ObjectId == ObjectId.IndexId);
-        GitRevision? actualRevision = revision is null ? null : GetActualRevision(revision);
-        bool hasParent = actualRevision?.ParentIds is { Count: > 0 };
-        GotoParentCommitMenuItem.IsEnabled = hasParent;
-        GotoFirstParentCommitMenuItem.IsEnabled = hasParent;
-        GotoLastParentCommitMenuItem.IsEnabled = hasParent;
-        GotoChildCommitMenuItem.IsEnabled = revision is not null
-            && _revisions.Any(candidate => candidate.ParentIds?.Contains(revision.ObjectId) == true);
-    }
 
     private void UpdateViewMenuChecks()
     {
@@ -3822,7 +3924,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     {
         public Control? CurrentPage => control.revisionPage.Content as Control;
 
+        public Window? OwnerWindow => control._ownerWindow;
+
         public ListBox Revisions => control._gridView;
+
+        public void RaiseOwnerWindowDeactivated()
+            => control.OnOwnerWindowDeactivated(control._ownerWindow, EventArgs.Empty);
 
         public void SetRevisions(IEnumerable<GitRevision> revisions)
         {
