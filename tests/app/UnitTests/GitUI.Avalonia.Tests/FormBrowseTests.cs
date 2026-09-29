@@ -376,6 +376,13 @@ public sealed class FormBrowseTests
         form.Show();
         try
         {
+            CaptureNode closedPrimary = new AvaloniaControlTreeReader(form, renderScale: 1)
+                .ReadPrimary(form, new PixelSize(923, 573)).Root;
+            CaptureNode closedWorkingDirectory = Flatten(closedPrimary)
+                .Single(node => node.FieldName == "_NO_TRANSLATE_WorkingDir");
+            closedWorkingDirectory.Children.Should().BeEmpty(
+                "the source does not add its hosted filter until the working-directory drop-down opens");
+
             using AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(form, new CaptureStatePlan
             {
                 Id = "working-directory.open",

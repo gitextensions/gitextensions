@@ -258,8 +258,7 @@ public sealed class RevisionGridColumnProviderTests
                  sample <= widthWindowEnd.AddSeconds(1);
                  sample = sample.AddSeconds(1))
             {
-                sourceMeasuredWidths.Add(Math.Ceiling(
-                    WinFormsTextMeasurer.Measure(widthProbe, sample.ToString("G")) + 7));
+                sourceMeasuredWidths.Add(WinFormsTextMeasurer.MeasureTextRenderer(widthProbe, sample.ToString("G")).Width);
             }
 
             sourceMeasuredWidths.Should().Contain(dateProvider.Column.Width.Value,

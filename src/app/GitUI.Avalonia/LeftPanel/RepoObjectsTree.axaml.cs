@@ -130,6 +130,14 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         string currentWorkingDirectory = "")
         => UpdateNodes(() =>
     {
+        bool moduleChanged = !string.IsNullOrEmpty(_currentWorkingDirectory)
+            && !string.IsNullOrEmpty(currentWorkingDirectory)
+            && !IsSameWorkingDirectory(_currentWorkingDirectory, currentWorkingDirectory);
+        if (moduleChanged)
+        {
+            PrepareForModuleChange();
+        }
+
         _currentStashes = stashes;
         _currentRefs = refs;
         _includeStashes = includeStashes;
@@ -148,7 +156,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 .Select(GetNodeIdentity),
         ];
         HashSet<string> selectedNodes = [.. GetSelectedNodes().Select(GetNodeIdentity)];
-        bool restoreState = _rootNodes.Count > 0;
+        bool restoreState = _rootNodes.Count > 0 && !moduleChanged;
 
         ClearSearchResults();
         foreach (Tree tree in _rootNodes.Where(tree => !ReferenceEquals(tree, _submoduleTree) && !ReferenceEquals(tree, _worktreeTree)))
@@ -308,6 +316,35 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         static bool IsOverride(MethodInfo? method)
             => method is not null && method.GetBaseDefinition().DeclaringType != method.DeclaringType;
+    }
+
+    private void PrepareForModuleChange()
+    {
+        _selectionCancellationTokenSequence.CancelCurrent();
+        ClearSearchResults();
+        if (treeMain.SelectedItems is not null)
+        {
+            treeMain.SelectedItems.Clear();
+        }
+        else
+        {
+            treeMain.SelectedItem = null;
+        }
+
+        foreach (Tree tree in _rootNodes)
+        {
+            tree.OnModuleChanged();
+        }
+    }
+
+    private static bool IsSameWorkingDirectory(string first, string second)
+    {
+        string firstNormalized = first.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        string secondNormalized = second.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        StringComparison comparison = OperatingSystem.IsWindows()
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+        return string.Equals(firstNormalized, secondNormalized, comparison);
     }
 
     public void Initialize(
@@ -614,6 +651,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _selectionCancellationTokenSequence.CancelCurrent();
 
         base.OnUICommandsSourceSet(source);
+        source.UICommandsChanged += (_, _) => UpdateNodes(PrepareForModuleChange);
         _submoduleStatusProvider = source.UICommands.GetService(typeof(ISubmoduleStatusProvider)) as ISubmoduleStatusProvider;
         _submoduleTree.Attach(_submoduleStatusProvider);
         if (source.UICommands.GetService(typeof(IHotkeySettingsLoader)) is not null)
