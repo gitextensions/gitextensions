@@ -7,7 +7,12 @@ namespace GitUI.UserControls;
 
 internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
 {
-    private readonly Grid _parent;
+    private readonly Grid _horizontalSplitContainer;
+    private readonly OutputHistoryControl _outputHistoryControl;
+    private readonly Action _showVerticalSplitContainer1;
+    private readonly Grid _verticalSplitContainer1;
+    private readonly Grid _verticalSplitContainer2;
+    private readonly DispatcherTimer _timer = new() { Interval = TimeSpan.FromMilliseconds(25) };
     private readonly GridSplitter _splitter;
     private readonly Border _host;
     private GridLength _visibleHeight = new(150);
@@ -21,10 +26,24 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
         bool visible)
         : base(outputHistoryProvider, outputHistoryControl)
     {
-        _parent = parent;
+        // Avalonia represents the source's synchronized split containers as one shared row grid.
+        _horizontalSplitContainer = parent;
+        _verticalSplitContainer1 = parent;
+        _verticalSplitContainer2 = parent;
+        _outputHistoryControl = outputHistoryControl;
+        _showVerticalSplitContainer1 = () => SetVisible(visible: true);
         _splitter = splitter;
         _host = host;
-        _host.Child = outputHistoryControl;
+        _host.Child = _outputHistoryControl;
+
+        _timer.Tick += SetSizeByVerticalSplitContainer1;
+        _verticalSplitContainer1.SizeChanged += SetSizeByVerticalSplitContainer1Deferred;
+        _outputHistoryControl.DetachedFromVisualTree += (_, _) =>
+        {
+            _timer.Stop();
+            _timer.Tick -= SetSizeByVerticalSplitContainer1;
+            _verticalSplitContainer1.SizeChanged -= SetSizeByVerticalSplitContainer1Deferred;
+        };
 
         SetVisible(outputHistoryProvider.Enabled && visible);
     }
@@ -41,6 +60,7 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
         SetVisible(show);
         if (show)
         {
+            _showVerticalSplitContainer1();
             Dispatcher.UIThread.Post(() => _textBox.TextArea.Focus(), DispatcherPriority.Input);
         }
 
@@ -49,24 +69,64 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
 
     internal double SplitterDistance
     {
-        get => _host.IsVisible && _parent.RowDefinitions[2].ActualHeight > 0
-            ? _parent.RowDefinitions[2].ActualHeight
+        get => _host.IsVisible && _verticalSplitContainer1.RowDefinitions[2].ActualHeight > 0
+            ? _verticalSplitContainer1.RowDefinitions[2].ActualHeight
             : _visibleHeight.Value;
         set
         {
             _visibleHeight = new GridLength(value);
             if (_host.IsVisible)
             {
-                _parent.RowDefinitions[2].Height = _visibleHeight;
+                _verticalSplitContainer1.RowDefinitions[2].Height = _visibleHeight;
             }
         }
     }
 
     internal double SplitterSize => _splitter.Bounds.Height;
 
+    private void SetSizeByVerticalSplitContainer1Deferred(object? sender, EventArgs eventArgs)
+    {
+        _timer.Stop();
+        _timer.Start();
+    }
+
+    private void SetSizeByVerticalSplitContainer1(object? sender, EventArgs eventArgs)
+    {
+        _timer.Stop();
+        SetSizeIgnoringEvents((int)Math.Round(SplitterDistance));
+    }
+
+    private void SetSizeByVerticalSplitContainer2(object? sender, EventArgs eventArgs)
+        => SetSizeIgnoringEvents((int)Math.Round(_verticalSplitContainer2.RowDefinitions[2].ActualHeight));
+
+    private void SetSizeIgnoringEvents(int height)
+    {
+        _verticalSplitContainer1.SizeChanged -= SetSizeByVerticalSplitContainer1Deferred;
+        try
+        {
+            SetSize(height);
+        }
+        finally
+        {
+            _verticalSplitContainer1.SizeChanged += SetSizeByVerticalSplitContainer1Deferred;
+        }
+    }
+
+    private void SetSize(int height)
+    {
+        bool visible = _host.IsVisible && _verticalSplitContainer1.IsVisible;
+        if (visible)
+        {
+            double maximumHeight = Math.Max(0, _horizontalSplitContainer.Bounds.Height - SplitterSize);
+            SplitterDistance = Math.Clamp(height, 0, maximumHeight);
+        }
+
+        SetVisible(visible);
+    }
+
     private void SetVisible(bool visible)
     {
-        RowDefinitions rows = _parent.RowDefinitions;
+        RowDefinitions rows = _verticalSplitContainer1.RowDefinitions;
         if (!visible && rows[2].Height.Value > 0)
         {
             _visibleHeight = rows[2].Height;

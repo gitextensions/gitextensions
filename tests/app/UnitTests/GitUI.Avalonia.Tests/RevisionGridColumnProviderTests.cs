@@ -16,6 +16,7 @@ using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.Avatars;
 using GitUI.Compat;
+using GitUI.Properties;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
@@ -439,6 +440,41 @@ public sealed class RevisionGridColumnProviderTests
             .Should().ContainSingle()
             .Which.Should().BeOfType<RevisionGridRefRenderer.RefLabelControl>().Subject;
         existingLabel.IsDashed.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Revision_graph_provider_should_preserve_the_source_cache_lifecycle_for_retained_rows()
+    {
+        RevisionGridControl control = new();
+        RevisionGraphColumnProvider provider = (RevisionGraphColumnProvider)control.ColumnProviders[0];
+        RevisionGraphColumnProvider.TestAccessor accessor = provider.GetTestAccessor();
+        VisibleRowRange range = new(fromIndex: 2, count: 4);
+
+        accessor.RenderGraphToCache(range, toRowIndex: 5, rowHeight: 22);
+
+        accessor.CachedVisibleRange.Equals(range).Should().BeTrue();
+        accessor.LastRenderedRow.Should().Be(5);
+        provider.Clear();
+        accessor.LastRenderedRow.Should().Be(-1);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Avatar_provider_should_show_the_source_placeholder_while_loading()
+    {
+        TaskCompletionSource<byte[]?> avatarCompletion = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        IAvatarProvider avatarProvider = Substitute.For<IAvatarProvider>();
+        avatarProvider.GetAvatarAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<int>())
+            .Returns(avatarCompletion.Task);
+        RevisionGridControl grid = new();
+        AvatarColumnProvider provider = new(grid, avatarProvider, Substitute.For<IAvatarCacheCleaner>());
+        Image cell = (Image)provider.CreateCell();
+
+        provider.OnCellPainting(cell, CreateRevision());
+
+        cell.Source.Should().BeSameAs(Images.User80);
+        avatarCompletion.SetResult(null);
     }
 
     [AvaloniaTest]

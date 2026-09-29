@@ -31,6 +31,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 
 public partial class UserRepositoriesList : TranslatedControl
 {
+#pragma warning disable SX1309 // Retain the WinForms twin's source field name for structural parity.
+    private readonly IReadOnlyList<IImage> imageList1 = [Images.DashboardFolderGit, Images.DashboardFolderError];
+#pragma warning restore SX1309
     private readonly TranslationString _groupRecentRepositories = new("Recent repositories");
     private readonly TranslationString _repositorySearchPlaceholder = new("Search repositories...");
     private readonly TranslationString _groupActions = new("Actions");
@@ -74,6 +77,7 @@ public partial class UserRepositoriesList : TranslatedControl
     private Brush _favouriteColorBrush = new SolidColorBrush(DefaultFavouriteColor);
     private Brush _hoverColorBrush = new SolidColorBrush(Color.Parse("#ACCFEF"));
     private ListBoxItem? _hoveredItem;
+    private readonly RepositoryGroupItem _lvgRecentRepositories;
     private bool _hasInvalidRepos;
     private ListBoxItem? _rightClickedItem;
     private Func<IGitUICommands>? _getUICommands;
@@ -93,6 +97,7 @@ public partial class UserRepositoriesList : TranslatedControl
         InitializeComplete();
 
         mnuTop.Items.Clear();
+        _lvgRecentRepositories = new RepositoryGroupItem(_groupRecentRepositories.Text, isRecentGroup: true, repositoryCount: 0);
         _foreColorBrush = new SolidColorBrush(_foreColor);
         _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.Size - 1F);
         listView1.AddColumns(clmhdrPath, clmhdrBranch, clmhdrCategory);
@@ -106,6 +111,7 @@ public partial class UserRepositoriesList : TranslatedControl
         listView1.PointerExited += listView1_MouseLeave;
         listView1.KeyDown += listView1_KeyDown;
         listView1.GotFocus += listView1_GotFocus;
+        listView1.GroupTaskLinkClick += ListView1_GroupTaskLinkClick;
         textBoxSearch.TextChanged += TextBoxSearch_TextChanged;
         textBoxSearch.KeyDown += TextBoxSearch_KeyDown;
         mnuConfigure.Click += mnuConfigure_Click;
@@ -305,12 +311,16 @@ public partial class UserRepositoriesList : TranslatedControl
             : new Size(0, 50);
         List<object> rows = [];
         _hasInvalidRepos = false;
-        BindRepositories(rows, _groupRecentRepositories.Text, recentRepositories, tileSize, isFavourite: false, isRecentGroup: true);
+        _lvgRecentRepositories.RepositoryCount = recentRepositories.Count;
+        BindRepositories(rows, _lvgRecentRepositories, recentRepositories, tileSize, isFavourite: false);
         foreach (IGrouping<string?, RecentRepoInfo> category in favouriteRepositories
                      .GroupBy(repo => repo.Repo.Category, GroupHeaderComparer)
                      .OrderBy(group => group.Key, GroupHeaderComparer))
         {
-            BindRepositories(rows, category.Key ?? string.Empty, category, tileSize, isFavourite: true, isRecentGroup: false);
+            RecentRepoInfo[] repositories = [.. category];
+            RepositoryGroupItem group = GetTileGroup(repositories[0].Repo);
+            group.RepositoryCount = repositories.Length;
+            BindRepositories(rows, group, repositories, tileSize, isFavourite: true);
         }
 
         listView1.ItemsSource = rows;
@@ -364,11 +374,10 @@ public partial class UserRepositoriesList : TranslatedControl
 
     private void BindRepositories(
         ICollection<object> rows,
-        string groupName,
+        RepositoryGroupItem group,
         IEnumerable<RecentRepoInfo> repositories,
         Size tileSize,
-        bool isFavourite,
-        bool isRecentGroup)
+        bool isFavourite)
     {
         RecentRepoInfo[] items = [.. repositories];
         if (items.Length == 0)
@@ -376,9 +385,9 @@ public partial class UserRepositoriesList : TranslatedControl
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(groupName))
+        if (!string.IsNullOrWhiteSpace(group.Name))
         {
-            rows.Add(new RepositoryGroupItem(groupName, isRecentGroup, items.Length));
+            rows.Add(group);
         }
 
         foreach (RecentRepoInfo recent in items)
@@ -397,6 +406,9 @@ public partial class UserRepositoriesList : TranslatedControl
     }
 
     private Control CreateRow(object? item)
+        => CreateRowCore(item);
+
+    private Control CreateRowCore(object? item)
     {
         // Avalonia templates the original owner-drawn ListView rows as native controls.
         // Avalonia clears a recycled ContentPresenter by invoking the typed template with
@@ -415,7 +427,7 @@ public partial class UserRepositoriesList : TranslatedControl
                 HorizontalAlignment = HorizontalAlignment.Right,
                 Tag = group,
             };
-            actions.Click += ListView1_GroupTaskLinkClick;
+            actions.Click += listView1.RaiseGroupTaskLinkClick;
             Grid header = new() { ColumnDefinitions = new ColumnDefinitions("*,Auto"), Margin = new Avalonia.Thickness(2, 10, 2, 4) };
             header.Children.Add(new TextBlock
             {
@@ -436,7 +448,7 @@ public partial class UserRepositoriesList : TranslatedControl
         {
             Width = 16,
             Height = 16,
-            Source = repository.IsValid ? Images.DashboardFolderGit : Images.DashboardFolderError,
+            Source = imageList1[repository.IsValid ? 0 : 1],
             Margin = new Avalonia.Thickness(4, 8, 0, 0),
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
@@ -469,7 +481,10 @@ public partial class UserRepositoriesList : TranslatedControl
             {
                 new TextBlock
                 {
-                    Text = repository.Text,
+                    Text = ShortenText(
+                        repository.Text,
+                        AppSettings.Font,
+                        (float)Math.Max(1, repository.TileSize.Width - 32)),
                     Foreground = _foreColorBrush,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 },
@@ -531,6 +546,9 @@ public partial class UserRepositoriesList : TranslatedControl
     private Repository? GetSelectedRepository()
         => (listView1.SelectedItem as RepositoryListItem)?.Repository.Repo;
 
+    private static RepositoryGroupItem GetTileGroup(Repository repository)
+        => new(repository.Category ?? string.Empty, isRecentGroup: false, repositoryCount: 0);
+
     private Size GetTileSize(
         IEnumerable<RecentRepoInfo> recentRepositories,
         IEnumerable<RecentRepoInfo> favouriteRepositories)
@@ -563,6 +581,30 @@ public partial class UserRepositoriesList : TranslatedControl
             + /* offset from top and bottom */ (2 * 2)
             + /* twice space between text */ (2 * 1);
         return new Size(Math.Ceiling(width + 50), Math.Ceiling(Math.Max(height, 50)));
+    }
+
+    private static string ShortenText(string text, Font font, float maxWidth)
+    {
+        const char ellipsis = '…';
+        TextBlock measurement = new()
+        {
+            FontFamily = new FontFamily(font.Name),
+            FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(font.Size),
+            FontStyle = font.Italic ? FontStyle.Italic : FontStyle.Normal,
+            FontWeight = font.Bold ? FontWeight.Bold : FontWeight.Normal,
+        };
+        if (WinFormsTextMeasurer.MeasureSize(measurement, text).Width < maxWidth)
+        {
+            return text;
+        }
+
+        while (text.Length > 1
+               && WinFormsTextMeasurer.MeasureSize(measurement, text + ellipsis).Width >= maxWidth)
+        {
+            text = text[..^1];
+        }
+
+        return text + ellipsis;
     }
 
     private void RepositoryContextAction(Action<SelectedRepositoryItem> action)
@@ -633,6 +675,16 @@ public partial class UserRepositoriesList : TranslatedControl
 
         // Avalonia menu items share their owning context menu instead of WinForms SourceControl.
         // Keep the clicked container so nested category actions resolve the same repository.
+    }
+
+    private Control listView1_DrawItem(object? item)
+    {
+        // render anchor icon
+        // render icon
+        // render path
+        // render branch
+        // render category
+        return CreateRowCore(item);
     }
 
     private void ListView1_GroupTaskLinkClick(object? sender, RoutedEventArgs e)
@@ -1022,8 +1074,12 @@ public partial class UserRepositoriesList : TranslatedControl
         bool IsValid,
         Size TileSize);
 
-    internal sealed record RepositoryGroupItem(
-        string Name,
-        bool IsRecentGroup,
-        int RepositoryCount);
+    internal sealed class RepositoryGroupItem(string name, bool isRecentGroup, int repositoryCount)
+    {
+        public string Name { get; } = name;
+
+        public bool IsRecentGroup { get; } = isRecentGroup;
+
+        public int RepositoryCount { get; set; } = repositoryCount;
+    }
 }

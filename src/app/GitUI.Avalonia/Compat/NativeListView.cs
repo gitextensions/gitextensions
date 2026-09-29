@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
 using GitUI.Compat.WinFormsControls;
 
 namespace GitUI.UserControls;
@@ -14,6 +15,11 @@ public class NativeListView : ListBox
 {
     public IList<ColumnHeader> Columns { get; } = [];
 
+    /// <summary>
+    /// Raised when a retained group-header task link is activated.
+    /// </summary>
+    public event EventHandler<RoutedEventArgs>? GroupTaskLinkClick;
+
     protected override Type StyleKeyOverride => typeof(ListBox);
 
     public void AddColumns(params ColumnHeader[] columns)
@@ -24,4 +30,7 @@ public class NativeListView : ListBox
             Columns.Add(columns[index]);
         }
     }
+
+    public void RaiseGroupTaskLinkClick(object? sender, RoutedEventArgs e)
+        => GroupTaskLinkClick?.Invoke(sender ?? this, e);
 }

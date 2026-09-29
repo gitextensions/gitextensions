@@ -40,6 +40,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private readonly List<Tree> _rootNodes = [];
     private readonly SearchControl<string> _txtBranchCriterion;
+    private IGitUICommandsSource? _commandsSource;
     private LocalBranchTree _branchesTree = null!;
     private RemoteBranchTree _remotesTree = null!;
     private IReadOnlyList<IGitRef> _currentRefs = [];
@@ -61,6 +62,8 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private List<TreeViewItem>? _searchResult;
     private int _selectionUpdateDepth;
     private KeyModifiers _selectionModifiers;
+
+    internal IGitUICommandsSource? CommandsSource => _commandsSource;
 
     /// <summary>Occurs when the selected node changes.</summary>
     public event EventHandler? NodeSelectionChanged;
@@ -652,6 +655,14 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _selectionCancellationTokenSequence.CancelCurrent();
 
         base.OnUICommandsSourceSet(source);
+        _commandsSource = source;
+        _submoduleTree.SetUICommandsSource(source);
+        _worktreeTree.SetUICommandsSource(source);
+        foreach (Tree tree in _rootNodes)
+        {
+            tree.SetUICommandsSource(source);
+        }
+
         source.UICommandsChanged += (_, _) => UpdateNodes(PrepareForModuleChange);
         _submoduleStatusProvider = source.UICommands.GetService(typeof(ISubmoduleStatusProvider)) as ISubmoduleStatusProvider;
         _submoduleTree.Attach(_submoduleStatusProvider);

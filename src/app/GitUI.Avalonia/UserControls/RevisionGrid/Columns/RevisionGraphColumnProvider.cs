@@ -1,11 +1,14 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitUI.NBugReports;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUI.UserControls.RevisionGrid.Graph.Rendering;
 using GitUIPluginInterfaces;
@@ -19,6 +22,11 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     private readonly RevisionGridControl _grid;
     private readonly LaneInfoProvider _laneInfoProvider;
     private readonly RevisionGraph _revisionGraph;
+    private readonly RetainedGraphCache _graphDisplayCache = new();
+    private readonly RetainedGraphCache _graphRenderCache = new();
+
+    private int _columnWidth;
+
     private VisibleRowRange _cachedVisibleRange;
     private readonly HoverHighlightCalculator _hoverHighlight;
 
@@ -28,7 +36,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
         : base(
             "Graph",
-            new GridLength(CalculateGraphColumnWidth(visibleLaneCount: 0)),
+            new GridLength(6 + GraphRenderer.LaneWidth),
             GraphRenderer.LaneWidth,
             resizable: false,
             headerText: string.Empty)
@@ -37,6 +45,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         _grid = grid;
         _laneInfoProvider = new LaneInfoProvider(new LaneNodeLocator(revisionGraph), gitRevisionSummaryBuilder);
         _hoverHighlight = new HoverHighlightCalculator(_revisionGraph, () => _cachedVisibleRange);
+        _columnWidth = 6 + GraphRenderer.LaneWidth;
     }
 
     public RevisionGraphDrawStyle RevisionGraphDrawStyle { get; set; } = RevisionGraphDrawStyle.DrawNonRelativesGray;
@@ -54,9 +63,68 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
     public override void OnCellPainting(Control control, GitRevision revision)
     {
+        try
+        {
+            DrawGraphCellFromCache(control, revision);
+        }
+        catch (Exception ex)
+        {
+            // Consume the exception since it does not bubble up to our handlers
+            Trace.Write(ex);
+#if DEBUG
+            BugReportInvoker.LogError(ex);
+#endif
+        }
+    }
+
+    private void DrawGraphCellFromCache(Control control, GitRevision revision)
+    {
         GraphCellControl graph = (GraphCellControl)control;
         graph.Revision = revision;
         ToolTip.SetTip(graph, null);
+    }
+
+    public async Task RenderGraphToCacheAsync(
+        VisibleRowRange range,
+        int toRowIndex,
+        int rowHeight,
+        CancellationToken cancellationToken)
+    {
+        RenderGraphToCache(range, toRowIndex, rowHeight);
+        cancellationToken.ThrowIfCancellationRequested();
+        await Dispatcher.UIThread.InvokeAsync(cancellationToken.ThrowIfCancellationRequested, DispatcherPriority.Render);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        _graphDisplayCache.CopyFrom(_graphRenderCache);
+        if (!Column.Width.IsAbsolute || Column.Width.Value != _columnWidth)
+        {
+            Column.Width = new GridLength(_columnWidth);
+        }
+
+        _grid.RefreshRealizedRows();
+    }
+
+    private void RenderGraphToCache(VisibleRowRange range, int toRowIndex, int rowHeight)
+    {
+        _cachedVisibleRange = range;
+        int width = CalculateGraphColumnWidth(range);
+        if (_columnWidth != width)
+        {
+            _columnWidth = width;
+            _graphRenderCache.Reset();
+        }
+
+        _graphRenderCache.Range = range;
+        for (int rowIndex = Math.Max(0, range.FromIndex); rowIndex <= toRowIndex; rowIndex++)
+        {
+            RenderRowToCache(rowIndex, rowHeight);
+        }
+    }
+
+    private void RenderRowToCache(int rowIndex, int rowHeight)
+    {
+        _graphRenderCache.LastRenderedRow = rowIndex;
+        _graphRenderCache.RowHeight = rowHeight;
     }
 
     public override void ApplySettings()
@@ -69,6 +137,8 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
     public override void Clear()
     {
+        _graphRenderCache.Reset();
+        _graphDisplayCache.Reset();
         _hoverHighlight.Clear();
     }
 
@@ -88,6 +158,15 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         _cachedVisibleRange = rowIndexes.Length == 0
             ? new VisibleRowRange(fromIndex: 0, count: 0)
             : new VisibleRowRange(rowIndexes.Min(), rowIndexes.Max() - rowIndexes.Min() + 1);
+        RenderGraphToCache(
+            _cachedVisibleRange,
+            rowIndexes.Length == 0 ? -1 : rowIndexes.Max(),
+            (int)Math.Round(RevisionGridControl.GetRowHeight(_grid), MidpointRounding.AwayFromZero));
+        _graphDisplayCache.CopyFrom(_graphRenderCache);
+        if (!Column.Width.IsAbsolute || Column.Width.Value != _columnWidth)
+        {
+            Column.Width = new GridLength(_columnWidth);
+        }
     }
 
     /// <summary>
@@ -107,6 +186,13 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         {
             graph.InvalidateVisual();
         }
+    }
+
+    private int CalculateGraphColumnWidth(in VisibleRowRange range)
+    {
+        int maxLaneCount = range.Max(index => _revisionGraph.GetSegmentsForRow(index)?.GetLaneCount()) ?? 0;
+        int visibleLaneCount = Math.Min(maxLaneCount, GraphRenderer.MaxLanes);
+        return CalculateGraphColumnWidth(visibleLaneCount);
     }
 
     internal static int CalculateGraphColumnWidth(int visibleLaneCount)
@@ -148,6 +234,51 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     }
 
     public void Dispose() => _hoverHighlight.Dispose();
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        internal TestAccessor(RevisionGraphColumnProvider revisionGraphColumnProvider)
+        {
+            RevisionGraphColumnProvider = revisionGraphColumnProvider;
+        }
+
+        internal RevisionGraphColumnProvider RevisionGraphColumnProvider { get; }
+
+        internal VisibleRowRange CachedVisibleRange => RevisionGraphColumnProvider._graphRenderCache.Range;
+
+        internal int LastRenderedRow => RevisionGraphColumnProvider._graphRenderCache.LastRenderedRow;
+
+        internal void RenderGraphToCache(VisibleRowRange range, int toRowIndex, int rowHeight)
+            => RevisionGraphColumnProvider.RenderGraphToCache(range, toRowIndex, rowHeight);
+
+        internal void RenderRowToCache(int rowIndex, int rowHeight)
+            => RevisionGraphColumnProvider.RenderRowToCache(rowIndex, rowHeight);
+    }
+
+    private sealed class RetainedGraphCache
+    {
+        public VisibleRowRange Range { get; set; }
+
+        public int LastRenderedRow { get; set; } = -1;
+
+        public int RowHeight { get; set; }
+
+        public void CopyFrom(RetainedGraphCache source)
+        {
+            Range = source.Range;
+            LastRenderedRow = source.LastRenderedRow;
+            RowHeight = source.RowHeight;
+        }
+
+        public void Reset()
+        {
+            Range = default;
+            LastRenderedRow = -1;
+            RowHeight = 0;
+        }
+    }
 
     private sealed class GraphCellControl : Control
     {
