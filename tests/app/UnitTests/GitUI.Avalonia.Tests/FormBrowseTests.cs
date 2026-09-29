@@ -3349,6 +3349,10 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Reword-commit menu item was not created.");
             MenuItem view = revisionGrid.FindControl<MenuItem>("viewToolStripMenuItem")
                 ?? throw new InvalidOperationException("View menu item was not created.");
+            MenuItem navigate = revisionGrid.FindControl<MenuItem>("navigateToolStripMenuItem")
+                ?? throw new InvalidOperationException("Navigate menu item was not created.");
+            MenuItem openCommitsWithDiffTool = revisionGrid.FindControl<MenuItem>("openCommitsWithDiffToolMenuItem")
+                ?? throw new InvalidOperationException("Open-commits-with-difftool item was not created.");
             ListBox revisions = revisionGrid.FindControl<ListBox>("_gridView")
                 ?? throw new InvalidOperationException("Revision list was not created.");
 
@@ -3371,6 +3375,11 @@ public sealed class FormBrowseTests
                 deleteBranch.IsVisible.Should().BeTrue();
                 deleteBranch.IsEnabled.Should().BeTrue();
                 deleteBranch.Bounds.Height.Should().BeGreaterThan(0);
+                navigate.Items.OfType<MenuItem>().Should().OnlyContain(
+                    item => item.IsEnabled,
+                    "WinForms leaves revision navigation entries enabled and lets unavailable commands no-op");
+                openCommitsWithDiffTool.IsEnabled.Should().BeFalse(
+                    "WinForms requires both comparison revisions before enabling the difftool command");
                 view.IsSubMenuOpen = true;
                 Dispatcher.UIThread.RunJobs();
                 WriteableBitmap? viewMenuFrame = contextMenuRoot.CaptureRenderedFrame();
@@ -3530,7 +3539,10 @@ public sealed class FormBrowseTests
             ReferenceEquals(hit?.GetSelfAndVisualAncestors()
                 .OfType<RevisionGridRefRenderer.RefLabelControl>().FirstOrDefault(), label).Should().BeTrue(
                     $"the pointer at {point} must hit the ref label at {label.Bounds}, not {hit?.GetType().Name}");
+            form.MouseMove(new Avalonia.Point(form.Bounds.Width - 1, form.Bounds.Height - 1));
+            Dispatcher.UIThread.RunJobs();
             form.MouseMove(point);
+            Dispatcher.UIThread.RunJobs();
             form.MouseDown(point, MouseButton.Right, modifiers);
             form.MouseUp(point, MouseButton.Right, modifiers);
             Dispatcher.UIThread.RunJobs();
@@ -3548,10 +3560,17 @@ public sealed class FormBrowseTests
             }
 
             menu.IsOpen.Should().BeTrue();
+            GetFeatureLabel().IsHighlighted.Should().BeTrue(
+                "the original keeps a hovered ref highlighted while its context menu is open");
             otherActions.IsVisible.Should().Be(focused);
             grid.RefreshRealizedRows();
             Dispatcher.UIThread.RunJobs();
             menu.IsOpen.Should().BeTrue("refreshing recycled ref labels must not detach the popup anchor");
+            RevisionGridRefRenderer.RefLabelControl refreshedLabel = grid.GetVisualDescendants()
+                .OfType<RevisionGridRefRenderer.RefLabelControl>()
+                .First(item => item.GitRef?.Name == "feature");
+            refreshedLabel.IsHighlighted.Should().BeTrue(
+                "recycling the row must preserve the logical ref highlight until the context menu closes");
             otherActions.Items.Contains(createTag).Should().Be(focused);
             menu.Items.Contains(createTag).Should().Be(!focused);
             rename.Items.OfType<MenuItem>().Select(item => item.Header).Should().Equal("feature");
@@ -3568,6 +3587,7 @@ public sealed class FormBrowseTests
             commands.Received(1).StartRenameDialog(form, "feature");
 
             menu.Close();
+            refreshedLabel.IsHighlighted.Should().BeFalse();
             grid.GetTestAccessor().Revisions.Focus().Should().BeTrue();
             form.KeyPress(Key.Apps, RawInputModifiers.None, PhysicalKey.ContextMenu, keySymbol: null);
             form.KeyRelease(Key.Apps, RawInputModifiers.None, PhysicalKey.ContextMenu, keySymbol: null);
@@ -3582,6 +3602,11 @@ public sealed class FormBrowseTests
             copy.Items.OfType<MenuItem>().Select(item => item.Header?.ToString())
                 .Should().Contain(header => header != null && header.Contains("other"));
             menu.Close();
+
+            RevisionGridRefRenderer.RefLabelControl GetFeatureLabel()
+                => grid.GetVisualDescendants()
+                    .OfType<RevisionGridRefRenderer.RefLabelControl>()
+                    .First(item => item.GitRef?.Name == "feature");
         }
         finally
         {
@@ -3700,6 +3725,55 @@ public sealed class FormBrowseTests
             form?.Close();
             AppSettings.RevisionGraphShowArtificialCommits = previousShowArtificial;
             AppSettings.ShowGitStatusForArtificialCommits = previousShowStatus;
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    [Category("P8.6i.126")]
+    public async Task RevisionGrid_control_click_on_selected_artificial_row_should_add_previous_revision()
+    {
+        bool previousShowArtificial = AppSettings.RevisionGraphShowArtificialCommits;
+        FormBrowse? form = null;
+        try
+        {
+            AppSettings.RevisionGraphShowArtificialCommits = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" })
+                .Should().BeTrue();
+            ObjectId previousRevision = module.RevParse("HEAD~1");
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            form.Show();
+            RevisionGridControl grid = form.RevisionGrid;
+            await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.Items.Count >= 4);
+            grid.SetSelectedRevision(ObjectId.WorkTreeId).Should().BeTrue();
+            Dispatcher.UIThread.RunJobs();
+            ListBoxItem row = grid.GetVisualDescendants()
+                .OfType<ListBoxItem>()
+                .Single(item => item.DataContext is GitRevision revision && revision.ObjectId == ObjectId.WorkTreeId);
+            Control messageCell = row.GetVisualDescendants()
+                .OfType<Control>()
+                .Single(control => control.Classes.Contains("revision-message-cell"));
+            Avalonia.Point point = messageCell.TranslatePoint(
+                    new Avalonia.Point(messageCell.Bounds.Width / 2, messageCell.Bounds.Height / 2),
+                    form)
+                ?? throw new InvalidOperationException("The artificial revision cell is not attached.");
+
+            form.MouseMove(point, RawInputModifiers.Control);
+            form.MouseDown(point, MouseButton.Left, RawInputModifiers.Control);
+            form.MouseUp(point, MouseButton.Left, RawInputModifiers.Control);
+            await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.SelectedItems?.Count == 2);
+
+            grid.GetTestAccessor().Revisions.SelectedItems!
+                .Cast<GitRevision>()
+                .Select(revision => revision.ObjectId)
+                .Should().BeEquivalentTo([ObjectId.WorkTreeId, previousRevision]);
+        }
+        finally
+        {
+            form?.Close();
+            AppSettings.RevisionGraphShowArtificialCommits = previousShowArtificial;
         }
     }
 

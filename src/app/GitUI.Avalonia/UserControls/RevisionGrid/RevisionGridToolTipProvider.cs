@@ -34,8 +34,18 @@ internal sealed class RevisionGridToolTipProvider
         if (_toolTip is not null)
         {
             ToolTip.SetIsOpen(_toolTip, false);
-            _toolTip = null;
         }
+
+        foreach (Control cell in _cellStates.Keys)
+        {
+            if (ToolTip.GetIsOpen(cell))
+            {
+                wasActive = true;
+                ToolTip.SetIsOpen(cell, false);
+            }
+        }
+
+        _toolTip = null;
 
         return wasActive;
     }
@@ -132,8 +142,11 @@ internal sealed class RevisionGridToolTipProvider
 
     public void Clear()
     {
+        Hide();
         _isTruncatedByCellPos.Clear();
-        _toolTip = null;
+        _previousRowIndex = -1;
+        _previousColumnIndex = -1;
+        _previousHighlight = null;
     }
 
     public void SetTruncation(int columnIndex, int rowIndex, bool truncated)
