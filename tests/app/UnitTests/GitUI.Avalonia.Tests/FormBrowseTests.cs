@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -88,6 +89,29 @@ public sealed class FormBrowseTests
         AppSettings.RevisionGraphShowArtificialCommits = _revisionGraphShowArtificialCommits;
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_should_register_all_source_splitter_boundaries()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+
+        FieldInfo splitterManagerField = typeof(FormBrowse).GetField(
+            "_splitterManager",
+            BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("FormBrowse splitter manager field was not found.");
+        SplitterManager manager = (SplitterManager?)splitterManagerField.GetValue(form)
+            ?? throw new InvalidOperationException("FormBrowse splitter manager was not initialized.");
+
+        manager.GetTestAccessor().Splitters
+            .Select(splitter => splitter.DistanceSettingsKey)
+            .Should().Contain(
+                "MainSplitContainer_Distance",
+                "RevisionsSplitContainer_Distance",
+                "RightSplitContainer_Distance",
+                "LeftSplitContainer_Distance");
     }
 
     [AvaloniaTest]

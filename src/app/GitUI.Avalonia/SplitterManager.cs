@@ -17,6 +17,17 @@ public sealed class SplitterManager
     public void AddSplitter(Grid splitter, string settingName, int? defaultDistance = null)
         => AddSplitter(new GridSplitterTarget(splitter), settingName, defaultDistance);
 
+    internal void AddSplitter(
+        string settingName,
+        Func<double> getDistance,
+        Action<double> setDistance,
+        Func<double> getSize,
+        int? defaultDistance = null)
+        => AddSplitter(
+            new DelegatingSplitterTarget(getDistance, setDistance, getSize),
+            settingName,
+            defaultDistance);
+
     internal void AddSplitter(IPersistedSplitter splitter, string settingName, int? defaultDistance = null)
         => _splitters.Add(new SplitterData(splitter, settingName, defaultDistance));
 
@@ -149,6 +160,20 @@ public sealed class SplitterManager
                     ((RowDefinition)_leadingDefinition).Height = new GridLength(value);
                 }
             }
+        }
+    }
+
+    private sealed class DelegatingSplitterTarget(
+        Func<double> getDistance,
+        Action<double> setDistance,
+        Func<double> getSize) : IPersistedSplitter
+    {
+        public double SplitterSize => getSize();
+
+        public double SplitterDistance
+        {
+            get => getDistance();
+            set => setDistance(value);
         }
     }
 }

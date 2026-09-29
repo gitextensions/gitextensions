@@ -55,7 +55,7 @@ public enum SortDirection
     Descending
 }
 
-public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisionGridInfo, IRevisionGridFilter, IRevisionGridUpdate
+public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisionGridInfo, IRevisionGridFilter, IRevisionGridUpdate
 {
     /// <summary>Occurs when the selected revision is double-clicked.</summary>
     // Mnemonics:
@@ -717,8 +717,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         UpdateViewMenuChecks();
     }
 
-    private void OnRuntimeLoad()
+    protected override void OnRuntimeLoad()
     {
+        base.OnRuntimeLoad();
         ApplyColumnSettings();
         ReloadHotkeys();
         LoadCustomDifftools();

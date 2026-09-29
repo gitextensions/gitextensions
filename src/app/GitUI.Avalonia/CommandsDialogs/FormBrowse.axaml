@@ -554,8 +554,7 @@
                  directly at the display rectangle, without a second section border. -->
             <Border x:Name="commitInfoBelowHost" BorderThickness="0" Padding="1,0">
               <commitinfo:CommitInfo x:Name="RevisionInfo"
-                                     Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
-                                     CommandClicked="RevisionInfo_CommandClicked" />
+                                     Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" />
             </Border>
           </wf:TabPage>
           <wf:TabPage x:Name="DiffTabPage"
