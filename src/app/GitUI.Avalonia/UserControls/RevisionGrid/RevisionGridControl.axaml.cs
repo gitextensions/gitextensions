@@ -370,11 +370,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         AddColumn(_revisionGraphColumnProvider);
         _messageColumnProvider = new MessageColumnProvider(this, gitRevisionSummaryBuilder, commitDataManager);
         AddColumn(_messageColumnProvider);
-        AddColumn(new NotesColumnProvider(commitDataManager));
+        AddColumn(new NotesColumnProvider(this, commitDataManager));
         AddColumn(new AvatarColumnProvider(this, AvatarService.DefaultProvider, AvatarService.CacheCleaner));
-        AddColumn(new AuthorNameColumnProvider(_authorHighlighting));
-        AddColumn(new DateColumnProvider());
-        AddColumn(new CommitIdColumnProvider());
+        AddColumn(new AuthorNameColumnProvider(this, _authorHighlighting));
+        AddColumn(new DateColumnProvider(this));
+        AddColumn(new CommitIdColumnProvider(this));
         AddColumn(_buildServerWatcher.ColumnProvider);
         _maximizedColumn = _columnProviders
             .Select(provider => provider.Column)
@@ -384,6 +384,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         _toolTipProvider.ShowRevisionGridTooltips = AppSettings.ShowRevisionGridTooltips.Value;
         _quickSearchProvider = new QuickSearchProvider(_gridView, pnlRevisionGrid, () => Module.WorkingDir);
         _gridView.ItemsSource = _revisions;
+        ApplyColumnSettings();
 
         MenuCommands = new RevisionGridMenuCommands(this);
 
@@ -541,6 +542,15 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         _customDiffToolsSequence.CancelCurrent();
         _buildServerWatcher.CancelBuildStatusFetchOperation();
         _taskManager.JoinPendingOperations();
+    }
+
+    internal int DrawColumnText(TextBlock textBlock, string? text, bool useEllipsis = true)
+    {
+        textBlock.Text = text ?? string.Empty;
+        textBlock.TextTrimming = useEllipsis
+            ? TextTrimming.CharacterEllipsis
+            : TextTrimming.None;
+        return (int)Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(textBlock, textBlock.Text).Width);
     }
 
     /// <summary>
@@ -1117,6 +1127,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         foreach (ColumnProvider columnProvider in _columnProviders)
         {
             columnProvider.ApplySettings();
+            columnProvider.OnColumnWidthChanged();
         }
 
         // suppress the manual resizing of the last visible column because it will be resized when the maximized column is resized

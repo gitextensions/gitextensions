@@ -49,7 +49,9 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
         _credentialStore = new BuildServerCredentialStore(() => _module().WorkingDir);
         _repoNameExtractor = new RepoNameExtractor(_module);
-        ColumnProvider = new BuildStatusColumnProvider(OpenBuildReport, module);
+        ColumnProvider = new BuildStatusColumnProvider(
+            OpenBuildReport,
+            () => revisionGrid.TryGetUICommandsDirect(out IGitUICommands? commands) ? commands.Module : null);
     }
 
     public async Task LaunchBuildServerInfoFetchOperationAsync()

@@ -10,9 +10,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class DateColumnProvider : ColumnProvider
 {
-    public DateColumnProvider()
+    private readonly RevisionGridControl _grid;
+
+    public DateColumnProvider(RevisionGridControl grid)
         : base("Date", new GridLength(GetInitialWidth()), minimumWidth: 25, resizable: true)
     {
+        _grid = grid;
     }
 
     private static double GetInitialWidth()
@@ -44,13 +47,18 @@ internal sealed class DateColumnProvider : ColumnProvider
         return textBlock;
     }
 
-    public override void UpdateCell(Control control, GitRevision revision)
+    public override void OnCellPainting(Control control, GitRevision revision)
+    {
+        TextBlock textBlock = (TextBlock)control;
+        _grid.DrawColumnText(textBlock, textBlock.Text);
+    }
+
+    public override void OnCellFormatting(Control control, GitRevision revision)
     {
         DateTime dateTime = GetDate(revision, AppSettings.ShowAuthorDate);
         ((TextBlock)control).Text = revision.IsArtificial
             ? string.Empty
             : FormatDate(dateTime, DateTime.Now, AppSettings.RelativeDate);
-        UpdateToolTip(control, revision);
     }
 
     public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)

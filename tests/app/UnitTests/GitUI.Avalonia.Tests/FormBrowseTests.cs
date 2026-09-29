@@ -3221,8 +3221,9 @@ public sealed class FormBrowseTests
 
                 RevisionGraphColumnProvider graphProvider =
                     (RevisionGraphColumnProvider)revisionGrid.ColumnProviders[0];
-                graphProvider.GetLaneToolTip(revisionGrid.SelectedRevision!, x: 1)
-                    .Should().Contain(revisionGrid.SelectedRevision!.Guid);
+                graphProvider.TryGetToolTip(revisionGrid.SelectedRevision!, x: 1, out string? graphToolTip)
+                    .Should().BeTrue();
+                graphToolTip.Should().Contain(revisionGrid.SelectedRevision!.Guid);
 
                 revisionGrid.SetSelectedRevision(initialCommit).Should().BeTrue();
                 Dispatcher.UIThread.RunJobs();

@@ -711,6 +711,9 @@ public sealed class RevisionGridSupportTests
             toolTip.Should().Contain("Notes:");
             toolTip.Should().Contain("review note");
             toolTip.Should().Contain("[branch1]");
+
+            provider.TryGetToolTip(revision, revision.Refs[0], out string? refToolTip).Should().BeTrue();
+            refToolTip.Should().Contain("[branch1]");
         }
         finally
         {
