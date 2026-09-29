@@ -481,8 +481,9 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
 
     public Grid HorizontalSplitter => DiffSplitContainer;
 
-    protected void OnRuntimeLoad()
+    protected override void OnRuntimeLoad()
     {
+        base.OnRuntimeLoad();
         DiffText.SetFileLoader(GetNextPatchFile);
         DiffText.Font = AppSettings.FixedWidthFont;
 
