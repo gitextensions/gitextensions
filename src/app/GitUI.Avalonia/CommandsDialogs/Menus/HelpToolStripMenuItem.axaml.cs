@@ -46,7 +46,7 @@ internal partial class HelpToolStripMenuItem : ToolStripMenuItemEx
     private void checkForUpdatesToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         (UICommands.GetService(typeof(IUpdateCheckService)) as IUpdateCheckService)
-            ?.SearchForUpdatesAndShow(OwnerForm!, alwaysShow: true);
+            ?.SearchForUpdatesAndShow(OwnerForm!, AppSettings.AppVersion, alwaysShow: true);
     }
 
     private void DonateToolStripMenuItemClick(object? sender, EventArgs e)
