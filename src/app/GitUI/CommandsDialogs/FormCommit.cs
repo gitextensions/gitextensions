@@ -471,6 +471,9 @@ public sealed partial class FormCommit : GitModuleForm
         MinimizeBox = Owner is null;
 
         base.OnLoad(e);
+
+        // Keep the progress bar within the height of the other status items.
+        toolStripProgressBar1.Height = commitStagedCount.Height - toolStripProgressBar1.Margin.Vertical;
     }
 
     private void RestoreSplitters()
