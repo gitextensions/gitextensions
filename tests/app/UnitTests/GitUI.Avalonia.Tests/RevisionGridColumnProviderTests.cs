@@ -1,4 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
@@ -197,7 +199,7 @@ public sealed class RevisionGridColumnProviderTests
         }
     }
 
-    [Test]
+    [AvaloniaTest]
     public void Revision_grid_column_providers_should_format_dates_notes_ids_and_tooltips()
     {
         GitRevision revision = CreateRevision();
@@ -209,16 +211,21 @@ public sealed class RevisionGridColumnProviderTests
             LocalizationHelpers.GetRelativeDateString(now, revision.CommitDate, displayWeeks: false));
         DateColumnProvider.FormatDate(revision.CommitDate, now, relative: false).Should().Be(revision.CommitDate.ToString("G"));
         NotesColumnProvider.FirstLine(revision.Notes).Should().Be("First note");
-        CommitIdColumnProvider.GetCharLengthForColumnWidth(width: 55, characterWidth: 7).Should().Be(7);
-
-        AuthorNameColumnProvider authorProvider = new(new AuthorRevisionHighlighting());
+        RevisionGridControl grid = new();
+        AuthorNameColumnProvider authorProvider = new(grid, new AuthorRevisionHighlighting());
         authorProvider.TryGetToolTip(revision, out string? authorToolTip).Should().BeTrue();
         authorToolTip.Should().Contain("Author <author@example.com>");
         authorToolTip.Should().Contain("Committer <committer@example.com>");
 
-        CommitIdColumnProvider idProvider = new();
+        CommitIdColumnProvider idProvider = new(grid);
         idProvider.TryGetToolTip(revision, out string? idToolTip).Should().BeTrue();
         idToolTip.Should().Be(revision.Guid);
+        TextBlock idCell = (TextBlock)idProvider.CreateCell();
+        idProvider.Column.Width = new GridLength(55);
+        idProvider.OnColumnWidthChanged();
+        idProvider.UpdateCell(idCell, revision);
+        idCell.Text.Should().NotBeNullOrEmpty();
+        idCell.Text!.Length.Should().BeLessThan(ObjectId.Sha1CharCount);
     }
 
     [AvaloniaTest]
@@ -235,16 +242,17 @@ public sealed class RevisionGridColumnProviderTests
             GitRevision revision = CreateRevision();
             revision.Notes = null;
 
-            NotesColumnProvider notesProvider = new(commitDataManager);
+            RevisionGridControl grid = new();
+            NotesColumnProvider notesProvider = new(grid, commitDataManager);
             Control notesCell = notesProvider.CreateCell();
             notesProvider.UpdateCell(notesCell, revision);
 
             ((TextBlock)notesCell).Text.Should().BeEmpty();
             commitDataManager.Received(1).InitiateDelayedLoadingOfDetails(revision);
 
-            AuthorNameColumnProvider authorProvider = new(new AuthorRevisionHighlighting());
+            AuthorNameColumnProvider authorProvider = new(grid, new AuthorRevisionHighlighting());
             DateTime widthWindowStart = DateTime.Now;
-            DateColumnProvider dateProvider = new();
+            DateColumnProvider dateProvider = new(grid);
             DateTime widthWindowEnd = DateTime.Now;
             BuildStatusColumnProvider buildProvider = new(_ => { }, () => Substitute.For<IGitModule>());
             authorProvider.CreateCell().Opacity.Should().Be(1,
@@ -287,6 +295,7 @@ public sealed class RevisionGridColumnProviderTests
         revision.HasMultiLineMessage = true;
         Control cell = provider.CreateCell();
         provider.UpdateCell(cell, revision);
+        AutomationProperties.GetName(cell).Should().Be(revision.Subject.Trim());
         Window window = new() { Width = 40, Height = 40, Content = cell };
         window.Show();
         try
@@ -599,6 +608,28 @@ public sealed class RevisionGridColumnProviderTests
         }
     }
 
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Column_provider_should_preserve_the_source_format_paint_and_tooltip_order()
+    {
+        bool originalTooltips = AppSettings.ShowRevisionGridTooltips.Value;
+        try
+        {
+            AppSettings.ShowRevisionGridTooltips.Value = true;
+            RecordingColumnProvider provider = new();
+            Control cell = provider.CreateCell();
+
+            provider.UpdateCell(cell, CreateRevision());
+
+            provider.Stages.Should().Equal("format", "paint", "tooltip");
+            ToolTip.GetTip(cell).Should().Be("provider tooltip");
+        }
+        finally
+        {
+            AppSettings.ShowRevisionGridTooltips.Value = originalTooltips;
+        }
+    }
+
     private static GitRevision CreateRevision()
         => new(ObjectId.Parse("1234567890abcdef1234567890abcdef12345678"))
         {
@@ -644,6 +675,33 @@ public sealed class RevisionGridColumnProviderTests
         gitRef.IsRemote.Returns(isRemote);
         gitRef.IsTag.Returns(isTag);
         return gitRef;
+    }
+
+    private sealed class RecordingColumnProvider : ColumnProvider
+    {
+        public RecordingColumnProvider()
+            : base("Recording", new GridLength(10), minimumWidth: 1, resizable: false)
+        {
+        }
+
+        public List<string> Stages { get; } = [];
+
+        public override Control CreateCell() => new TextBlock();
+
+        public override void OnCellFormatting(Control control, GitRevision revision)
+            => Stages.Add("format");
+
+        public override void OnCellPainting(Control control, GitRevision revision)
+            => Stages.Add("paint");
+
+        public override bool TryGetToolTip(
+            GitRevision revision,
+            [NotNullWhen(returnValue: true)] out string? toolTip)
+        {
+            Stages.Add("tooltip");
+            toolTip = "provider tooltip";
+            return true;
+        }
     }
 
     private readonly record struct ColumnSettings(

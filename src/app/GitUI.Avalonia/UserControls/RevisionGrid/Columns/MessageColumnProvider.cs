@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -91,63 +92,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
             AppSettings.ShowTags);
     }
 
-    public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
-    {
-        _toolTipBuilder.Clear();
-
-        if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
-        {
-            // The body is not stored for older commits (to save memory)
-            string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(GetBody(revision))
-                ?? revision.Subject + (revision.HasMultiLineMessage ? TranslatedStrings.BodyNotLoaded : "");
-            _toolTipBuilder.EnsureCapacity(bodySummary.Length + 10);
-            _toolTipBuilder.Append(bodySummary);
-
-            if (revision.Refs.Count != 0)
-            {
-                if (_toolTipBuilder.Length != 0)
-                {
-                    _toolTipBuilder.AppendLine();
-                    _toolTipBuilder.AppendLine();
-                }
-
-                foreach (IGitRef gitRef in SortRefs(revision.Refs))
-                {
-                    if (gitRef.IsBisectGood)
-                    {
-                        _toolTipBuilder.AppendLine(TranslatedStrings.MarkBisectAsGood);
-                    }
-                    else if (gitRef.IsBisectBad)
-                    {
-                        _toolTipBuilder.AppendLine(TranslatedStrings.MarkBisectAsBad);
-                    }
-                    else
-                    {
-                        _toolTipBuilder.Append('[').Append(gitRef.Name).Append(']');
-                        if (GetAheadBehindData(gitRef.IsRemote, gitRef.CompleteName) is { } data)
-                        {
-                            _toolTipBuilder.Append("   ").Append(data.ToDisplay(reverse: gitRef.IsRemote));
-                        }
-
-                        _toolTipBuilder.AppendLine();
-                    }
-                }
-            }
-
-            toolTip = _toolTipBuilder.ToString();
-            return true;
-        }
-
-        if (_settings.ShowGitStatusForArtificialCommits
-            && _grid.GetChangeCount(revision.ObjectId) is ArtificialCommitChangeCount changeCount)
-        {
-            toolTip = _toolTipBuilder.Append(changeCount.GetSummary()).ToString();
-            return true;
-        }
-
-        return base.TryGetToolTip(revision, out toolTip);
-    }
-
     public override Control CreateCell()
     {
         MessageCell panel = new(this)
@@ -159,7 +103,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         return panel;
     }
 
-    public override void UpdateCell(Control control, GitRevision revision)
+    public override void OnCellPainting(Control control, GitRevision revision)
     {
         MessageCell panel = (MessageCell)control;
         bool restoreHighlight = DetachHighlightForUpdate(panel, revision);
@@ -290,7 +234,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
         panel.Body.FontWeight = panel.Subject.FontWeight;
         panel.Revision = revision;
         panel.Indicator.Update(revision);
-        UpdateToolTip(panel, revision);
         RestoreHighlightAfterUpdate(panel, restoreHighlight);
 
         bool DetachHighlightForUpdate(MessageCell messageCell, GitRevision updatedRevision)
@@ -338,6 +281,83 @@ internal sealed class MessageColumnProvider : ColumnProvider
             _highlightedLabel.IsHighlighted = true;
             messageCell.Cursor = HandCursor;
         }
+    }
+
+    public override void OnCellFormatting(Control control, GitRevision revision)
+    {
+        // Set the grid cell's accessibility text.
+        AutomationProperties.SetName(control, revision.Subject.Trim());
+    }
+
+    public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
+    {
+        _toolTipBuilder.Clear();
+
+        if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
+        {
+            // The body is not stored for older commits (to save memory)
+            string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(GetBody(revision))
+                ?? revision.Subject + (revision.HasMultiLineMessage ? TranslatedStrings.BodyNotLoaded : "");
+            _toolTipBuilder.EnsureCapacity(bodySummary.Length + 10);
+            _toolTipBuilder.Append(bodySummary);
+
+            if (revision.Refs.Count != 0)
+            {
+                if (_toolTipBuilder.Length != 0)
+                {
+                    _toolTipBuilder.AppendLine();
+                    _toolTipBuilder.AppendLine();
+                }
+
+                foreach (IGitRef gitRef in SortRefs(revision.Refs))
+                {
+                    if (gitRef.IsBisectGood)
+                    {
+                        _toolTipBuilder.AppendLine(TranslatedStrings.MarkBisectAsGood);
+                    }
+                    else if (gitRef.IsBisectBad)
+                    {
+                        _toolTipBuilder.AppendLine(TranslatedStrings.MarkBisectAsBad);
+                    }
+                    else
+                    {
+                        _toolTipBuilder.Append('[').Append(gitRef.Name).Append(']');
+                        if (GetAheadBehindData(gitRef.IsRemote, gitRef.CompleteName) is { } data)
+                        {
+                            _toolTipBuilder.Append("   ").Append(data.ToDisplay(reverse: gitRef.IsRemote));
+                        }
+
+                        _toolTipBuilder.AppendLine();
+                    }
+                }
+            }
+
+            toolTip = _toolTipBuilder.ToString();
+            return true;
+        }
+
+        if (_settings.ShowGitStatusForArtificialCommits
+            && _grid.GetChangeCount(revision.ObjectId) is ArtificialCommitChangeCount changeCount)
+        {
+            toolTip = _toolTipBuilder.Append(changeCount.GetSummary()).ToString();
+            return true;
+        }
+
+        return base.TryGetToolTip(revision, out toolTip);
+    }
+
+    public override bool TryGetToolTip(
+        GitRevision revision,
+        IGitRef? highlightRef,
+        [NotNullWhen(returnValue: true)] out string? toolTip)
+    {
+        if (highlightRef is not null)
+        {
+            toolTip = GetRefToolTip(highlightRef);
+            return toolTip is not null;
+        }
+
+        return base.TryGetToolTip(revision, highlightRef, out toolTip);
     }
 
     private bool FilterRef(IGitRef gitRef)
@@ -899,9 +919,13 @@ internal sealed class MessageColumnProvider : ColumnProvider
             RevisionGridRefRenderer.RefLabelControl? label = HitTest(e.GetPosition);
             _provider.SetHighlight(this, label);
 
-            ToolTip.SetTip(this, label is null
-                ? _provider._settings.ShowRevisionGridTooltips ? Revision?.Subject : null
-                : _provider.GetRefToolTip(label.GitRef));
+            string? toolTip = null;
+            if (Revision is not null)
+            {
+                _provider.TryGetToolTip(Revision, label?.GitRef, out toolTip);
+            }
+
+            ToolTip.SetTip(this, toolTip);
         }
 
         private void OnDoubleTapped(object? sender, TappedEventArgs e)
