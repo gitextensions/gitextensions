@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using System.ComponentModel.Design;
 using System.Diagnostics;
-using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -98,12 +97,7 @@ public sealed class FormBrowseTests
         GitModule module = CreateRepositoryWithInitialCommit();
         using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
 
-        FieldInfo splitterManagerField = typeof(FormBrowse).GetField(
-            "_splitterManager",
-            BindingFlags.Instance | BindingFlags.NonPublic)
-            ?? throw new InvalidOperationException("FormBrowse splitter manager field was not found.");
-        SplitterManager manager = (SplitterManager?)splitterManagerField.GetValue(form)
-            ?? throw new InvalidOperationException("FormBrowse splitter manager was not initialized.");
+        SplitterManager manager = form.GetTestAccessor().SplitterManager;
 
         manager.GetTestAccessor().Splitters
             .Select(splitter => splitter.DistanceSettingsKey)
@@ -112,6 +106,58 @@ public sealed class FormBrowseTests
                 "RevisionsSplitContainer_Distance",
                 "RightSplitContainer_Distance",
                 "LeftSplitContainer_Distance");
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_commit_info_side_width_should_include_the_source_scrollbar_allowance()
+    {
+        using FormBrowse form = new();
+
+        GridLength commitInfoWidth = form.GetTestAccessor().CommitInfoWidth;
+
+        commitInfoWidth.Value.Should().Be(507,
+            "the source uses 490 content pixels plus the 17-pixel 96-DPI system scrollbar width");
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public async Task Browse_revision_fill_column_should_use_the_full_viewport_without_vertical_overflow()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module))
+        {
+            Width = 923,
+            Height = 573,
+        };
+        form.Show();
+        try
+        {
+            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision is not null);
+            CaptureNode root = new AvaloniaControlTreeReader(form, renderScale: 1)
+                .ReadPrimary(form, new PixelSize((int)form.Bounds.Width, (int)form.Bounds.Height)).Root;
+            CaptureNode grid = Descendants(root).Single(node => node.FieldName == "_gridView");
+
+            grid.Columns.Where(column => column.Visible).Sum(column => column.WidthDip)
+                .Should().Be(grid.ClientSizeDip.Width,
+                    "the source fill column uses the scrollbar-free viewport when one row does not overflow");
+        }
+        finally
+        {
+            form.Close();
+        }
+
+        static IEnumerable<CaptureNode> Descendants(CaptureNode node)
+        {
+            yield return node;
+            foreach (CaptureNode child in node.Children)
+            {
+                foreach (CaptureNode descendant in Descendants(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
     }
 
     [AvaloniaTest]

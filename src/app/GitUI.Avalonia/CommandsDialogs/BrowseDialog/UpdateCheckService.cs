@@ -1,12 +1,10 @@
-using GitCommands;
-
 namespace GitUI.CommandsDialogs.BrowseDialog;
 
 public sealed class UpdateCheckService : IUpdateCheckService
 {
-    public void SearchForUpdatesAndShow(IWin32Window ownerWindow, bool alwaysShow)
+    public void SearchForUpdatesAndShow(IWin32Window ownerWindow, Version currentVersion, bool alwaysShow)
     {
-        FormUpdates updateForm = new(AppSettings.AppVersion);
+        FormUpdates updateForm = new(currentVersion);
         updateForm.SearchForUpdatesAndShow(ownerWindow, alwaysShow);
     }
 }

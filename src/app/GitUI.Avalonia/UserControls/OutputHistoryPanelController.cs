@@ -17,7 +17,8 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
         OutputHistoryControl outputHistoryControl,
         Grid parent,
         GridSplitter splitter,
-        Border host)
+        Border host,
+        bool visible)
         : base(outputHistoryProvider, outputHistoryControl)
     {
         _parent = parent;
@@ -25,7 +26,7 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
         _host = host;
         _host.Child = outputHistoryControl;
 
-        SetVisible(outputHistoryProvider.Enabled && AppSettings.OutputHistoryPanelVisible.Value);
+        SetVisible(outputHistoryProvider.Enabled && visible);
     }
 
     internal override bool FocusAndToggleIfPanel()

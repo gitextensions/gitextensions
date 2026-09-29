@@ -110,14 +110,14 @@ public sealed class FormUpdatesTests
             try
             {
                 Dispatcher.UIThread.RunJobs();
-                updateService.Received(1).SearchForUpdatesAndShow(form, alwaysShow: false);
+                updateService.Received(1).SearchForUpdatesAndShow(form, AppSettings.AppVersion, alwaysShow: false);
                 AppSettings.LastUpdateCheck.Should().BeAfter(DateTime.Now.AddDays(-1));
 
                 HelpToolStripMenuItem helpMenu = form.FindControl<HelpToolStripMenuItem>("helpToolStripMenuItem")
                     ?? throw new InvalidOperationException("The Help menu was not created.");
                 MenuItem manualCheck = helpMenu.GetTestAccessor().CheckUpdatesMenuItem;
                 manualCheck.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-                updateService.Received(1).SearchForUpdatesAndShow(form, alwaysShow: true);
+                updateService.Received(1).SearchForUpdatesAndShow(form, AppSettings.AppVersion, alwaysShow: true);
             }
             finally
             {

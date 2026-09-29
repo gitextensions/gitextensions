@@ -126,12 +126,17 @@ public partial class CommitInfo : GitModuleControl
         DetachedFromVisualTree += (_, _) => _asyncLoadCancellation.CancelCurrent();
     }
 
+    protected override void OnRuntimeLoad()
+    {
+        base.OnRuntimeLoad();
+        ReloadHotkeys();
+    }
+
     protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
     {
         base.OnUICommandsSourceSet(source);
 
-        // Avalonia constraint: controls receive their runtime services here rather than in OnRuntimeLoad.
-        ReloadHotkeys();
+        OnRuntimeLoad();
 
         if (source is null)
         {
