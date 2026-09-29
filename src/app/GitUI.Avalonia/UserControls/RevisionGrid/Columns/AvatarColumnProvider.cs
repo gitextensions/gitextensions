@@ -46,7 +46,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         return image;
     }
 
-    public override void UpdateCell(Control control, GitRevision revision)
+    public override void OnCellPainting(Control control, GitRevision revision)
     {
         AvatarCell image = (AvatarCell)control;
         if (revision.IsArtificial)
@@ -61,8 +61,6 @@ internal sealed class AvatarColumnProvider : ColumnProvider
                 Volatile.Read(ref _cacheVersion),
                 _avatarSize);
         }
-
-        UpdateToolTip(control, revision);
     }
 
     public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
