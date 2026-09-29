@@ -185,7 +185,8 @@ public sealed class ConsoleAndOutputTests
             new OutputHistoryControl(),
             parent,
             splitter,
-            host);
+            host,
+            visible: false);
 
         controller.SplitterDistance = 225;
 
