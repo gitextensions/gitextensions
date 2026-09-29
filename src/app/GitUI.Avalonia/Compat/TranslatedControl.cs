@@ -9,6 +9,10 @@ namespace ResourceManager;
 // the WinForms type and field names, so the existing language files apply unchanged.
 public class TranslatedControl : UserControl, ITranslate
 {
+    protected virtual void OnRuntimeLoad()
+    {
+    }
+
     /// <summary>Performs post-initialisation tasks such as translation.</summary>
     /// <remarks>Subclasses must ensure this method is called in their constructor, ideally as the final statement.</remarks>
     protected void InitializeComplete()

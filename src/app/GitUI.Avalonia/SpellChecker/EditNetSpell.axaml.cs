@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
@@ -290,8 +290,9 @@ public partial class EditNetSpell : GitModuleControl, IDisposable
 
     // Avalonia controls have no WinForms RuntimeLoad event, so the first visual-tree attachment
     // invokes the original source-named runtime boundary.
-    protected virtual void OnRuntimeLoad()
+    protected override void OnRuntimeLoad()
     {
+        base.OnRuntimeLoad();
         TextBox.PropertyChanged += TextBox_SelectionChanged;
         TextBox.TextChanged += TextBoxTextChanged;
         TextBox.DoubleTapped += TextBox_DoubleClick;

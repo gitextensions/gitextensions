@@ -641,8 +641,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         node.TreeViewNode.BringIntoView();
     }
 
-    private void OnRuntimeLoad()
+    protected override void OnRuntimeLoad()
     {
+        base.OnRuntimeLoad();
         ReloadHotkeys();
     }
 

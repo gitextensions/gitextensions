@@ -169,6 +169,35 @@ public sealed class ConsoleAndOutputTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    public void Output_history_panel_should_restore_its_visible_height_without_revealing_a_hidden_panel()
+    {
+        IOutputHistoryProvider provider = Substitute.For<IOutputHistoryProvider>();
+        provider.Enabled.Returns(true);
+        provider.History.Returns(string.Empty);
+        Grid parent = new()
+        {
+            RowDefinitions = new RowDefinitions("*,0,0"),
+        };
+        GridSplitter splitter = new();
+        Border host = new();
+        using OutputHistoryPanelController controller = new(
+            provider,
+            new OutputHistoryControl(),
+            parent,
+            splitter,
+            host);
+
+        controller.SplitterDistance = 225;
+
+        host.IsVisible.Should().BeFalse();
+        parent.RowDefinitions[2].Height.Value.Should().Be(0);
+        controller.FocusAndToggleIfPanel().Should().BeTrue();
+        host.IsVisible.Should().BeTrue();
+        parent.RowDefinitions[2].Height.Value.Should().Be(225);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void FormBrowse_should_host_console_and_output_tabs_and_refresh_output()
     {
         using ServiceContainer serviceContainer = CreateServiceContainer();

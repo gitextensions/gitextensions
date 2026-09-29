@@ -46,6 +46,23 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
         return true;
     }
 
+    internal double SplitterDistance
+    {
+        get => _host.IsVisible && _parent.RowDefinitions[2].ActualHeight > 0
+            ? _parent.RowDefinitions[2].ActualHeight
+            : _visibleHeight.Value;
+        set
+        {
+            _visibleHeight = new GridLength(value);
+            if (_host.IsVisible)
+            {
+                _parent.RowDefinitions[2].Height = _visibleHeight;
+            }
+        }
+    }
+
+    internal double SplitterSize => _splitter.Bounds.Height;
+
     private void SetVisible(bool visible)
     {
         RowDefinitions rows = _parent.RowDefinitions;

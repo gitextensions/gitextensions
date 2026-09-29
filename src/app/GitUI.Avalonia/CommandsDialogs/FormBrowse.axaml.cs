@@ -210,11 +210,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         revisionDiff.Bind(RevisionGrid, RevisionGrid, fileTree, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor);
         fileTree.Bind(RevisionGrid, RevisionGrid, revisionFileTree: null, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor, requestBlame: _isFileHistoryMode);
         _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse.Avalonia"));
-        revisionDiff.InitSplitterManager(_splitterManager);
-        fileTree.InitSplitterManager(_splitterManager);
-        _splitterManager.RestoreSplitters();
         InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileHistoryMode);
         InitCommitDetails();
+        RevisionInfo.CommandClicked += RevisionInfo_CommandClicked;
         CommitInfoTabControl.SelectionChanged += CommitInfoTabControl_SelectedIndexChanged;
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
         refreshDashboardToolStripMenuItem.Click += RefreshDashboardToolStripMenuItemClick;
@@ -267,6 +265,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         toggleLeftPanel.Click += toggleLeftPanel_Click;
         InitializeWorkspaceLayout();
         InitializeOutputHistory();
+        SetSplitterPositions();
         DragDrop.SetAllowDrop(this, true);
         DragDrop.AddDragEnterHandler(this, FormBrowse_DragEnter);
         DragDrop.AddDragOverHandler(this, FormBrowse_DragEnter);
@@ -2575,6 +2574,92 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             {
                 FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
             }
+        }
+    }
+
+    private void SetSplitterPositions()
+    {
+        if (_splitterManager is null)
+        {
+            return;
+        }
+
+        _splitterManager.AddSplitter(
+            nameof(MainSplitContainer),
+            getDistance: () => leftPanel.IsVisible && MainSplitContainer.ColumnDefinitions[0].ActualWidth > 0
+                ? MainSplitContainer.ColumnDefinitions[0].ActualWidth
+                : _leftPanelWidth.Value,
+            setDistance: value =>
+            {
+                _leftPanelWidth = new GridLength(value);
+                if (leftPanel.IsVisible)
+                {
+                    MainSplitContainer.ColumnDefinitions[0].Width = _leftPanelWidth;
+                }
+            },
+            getSize: () => leftPanelSplitter.Bounds.Width);
+        _splitterManager.AddSplitter(
+            nameof(RevisionsSplitContainer),
+            getDistance: GetCommitInfoWidth,
+            setDistance: value =>
+            {
+                _commitInfoWidth = new GridLength(value);
+                CommitInfoPosition position = AppSettings.CommitInfoPosition;
+                if (position == CommitInfoPosition.LeftwardFromList)
+                {
+                    RevisionsSplitContainer.ColumnDefinitions[0].Width = _commitInfoWidth;
+                }
+                else if (position == CommitInfoPosition.RightwardFromList)
+                {
+                    RevisionsSplitContainer.ColumnDefinitions[4].Width = _commitInfoWidth;
+                }
+            },
+            getSize: () => commitInfoLeftSplitter.IsVisible
+                ? commitInfoLeftSplitter.Bounds.Width
+                : commitInfoRightSplitter.Bounds.Width);
+        _splitterManager.AddSplitter(
+            nameof(RightSplitContainer),
+            getDistance: () => splitViewSplitter.IsVisible && RightSplitContainer.RowDefinitions[0].ActualHeight > 0
+                ? RightSplitContainer.RowDefinitions[0].ActualHeight
+                : _splitViewTopHeight.Value,
+            setDistance: value =>
+            {
+                _splitViewTopHeight = new GridLength(value);
+                if (AppSettings.ShowSplitViewLayout)
+                {
+                    RightSplitContainer.RowDefinitions[0].Height = _splitViewTopHeight;
+                }
+            },
+            getSize: () => splitViewSplitter.Bounds.Height);
+        if (_outputHistoryController is OutputHistoryPanelController outputHistoryPanelController)
+        {
+            _splitterManager.AddSplitter(
+                nameof(LeftSplitContainer),
+                getDistance: () => outputHistoryPanelController.SplitterDistance,
+                setDistance: value => outputHistoryPanelController.SplitterDistance = value,
+                getSize: () => outputHistoryPanelController.SplitterSize);
+        }
+
+        revisionDiff.InitSplitterManager(_splitterManager);
+        fileTree.InitSplitterManager(_splitterManager);
+        _splitterManager.RestoreSplitters();
+
+        double GetCommitInfoWidth()
+        {
+            CommitInfoPosition position = AppSettings.CommitInfoPosition;
+            if (position == CommitInfoPosition.LeftwardFromList
+                && RevisionsSplitContainer.ColumnDefinitions[0].ActualWidth > 0)
+            {
+                return RevisionsSplitContainer.ColumnDefinitions[0].ActualWidth;
+            }
+
+            if (position == CommitInfoPosition.RightwardFromList
+                && RevisionsSplitContainer.ColumnDefinitions[4].ActualWidth > 0)
+            {
+                return RevisionsSplitContainer.ColumnDefinitions[4].ActualWidth;
+            }
+
+            return _commitInfoWidth.Value;
         }
     }
 
