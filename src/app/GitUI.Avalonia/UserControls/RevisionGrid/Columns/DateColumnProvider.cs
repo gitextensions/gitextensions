@@ -10,8 +10,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class DateColumnProvider : ColumnProvider
 {
-    private const double TextRendererOverhang = 7;
-
     public DateColumnProvider()
         : base("Date", new GridLength(GetInitialWidth()), minimumWidth: 25, resizable: true)
     {
@@ -31,7 +29,7 @@ internal sealed class DateColumnProvider : ColumnProvider
             FontStyle = AppSettings.Font.Italic ? FontStyle.Italic : FontStyle.Normal,
             FontWeight = AppSettings.Font.Bold ? FontWeight.Bold : FontWeight.Normal,
         };
-        return Math.Ceiling(WinFormsTextMeasurer.Measure(text, DateTime.Now.ToString("G")) + TextRendererOverhang);
+        return WinFormsTextMeasurer.MeasureTextRenderer(text, DateTime.Now.ToString("G")).Width;
     }
 
     public override void ApplySettings()
