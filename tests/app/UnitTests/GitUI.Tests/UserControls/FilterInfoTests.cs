@@ -1147,6 +1147,7 @@ public class FilterInfoTests
 
             string[] sessionRefExclusions =
             {
+                @"(^|\s)--exclude=refs/agents/\*\*($|\s)",
                 @"(^|\s)--exclude=refs/sessions/\*\*($|\s)",
                 @"(^|\s)--exclude=refs/copilot/checkpoints/\*\*($|\s)"
             };
