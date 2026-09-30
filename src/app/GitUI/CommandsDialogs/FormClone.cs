@@ -45,6 +45,7 @@ public partial class FormClone : GitExtensionsDialog
         _url = url;
         _defaultBranchItems = new[] { _branchDefaultRemoteHead.Text, _branchNone.Text };
         _NO_TRANSLATE_Branches.DataSource = _defaultBranchItems;
+        cbIntializeAllSubmodules.Checked = AppSettings.CloneInitializeAllSubmodules;
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -220,6 +221,8 @@ public partial class FormClone : GitExtensionsDialog
             // git-executable selection (Windows vs WSL) match the destination directory, not the
             // currently open module which may live on a different subsystem.
             IGitUICommands destUICommands = UICommands.WithWorkingDirectory(dirTo);
+
+            AppSettings.CloneInitializeAllSubmodules = cbIntializeAllSubmodules.Checked;
 
             ArgumentString cloneCmd = Commands.Clone(_NO_TRANSLATE_From.Text,
                 dirTo,
