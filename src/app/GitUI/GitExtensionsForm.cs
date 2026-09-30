@@ -16,6 +16,7 @@ public class GitExtensionsForm : GitExtensionsFormBase
     private IWindowPositionManager _windowPositionManager = new WindowPositionManager();
     private Func<IReadOnlyList<Rectangle>> _getScreensWorkingArea = () => Screen.AllScreens.Select(screen => screen.WorkingArea).ToArray();
     private bool _needsPositionRestore;
+    private bool _isCloaked;
 
     /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
     public GitExtensionsForm()
@@ -68,14 +69,22 @@ public class GitExtensionsForm : GitExtensionsFormBase
         {
             OnRuntimeLoad(e);
         }
+
+        // Restoring the maximized state has shown the window already: display it now that the theme is applied,
+        // rather than after the remaining loading of the derived forms
+        if (_isCloaked && PInvoke.IsWindowVisible((HWND)Handle))
+        {
+            ShowPainted();
+        }
     }
 
     /// <summary>
-    ///  Keeps the window out of sight until the end of the loading and until all its controls have been painted.
+    ///  Keeps the window out of sight until all its controls have been painted.
     /// </summary>
     /// <remarks>
     ///  Restoring the maximized state in <see cref="RestorePosition"/> shows the window immediately, i.e. before the end of
-    ///  <see cref="OnLoad"/>. Controls, which paint only on WM_PAINT (e.g. toolstrips), would remain blank (white) until then.
+    ///  <see cref="OnLoad"/>. Controls, which paint only on WM_PAINT (e.g. toolstrips), would remain blank (white) until
+    ///  the message loop runs again.
     /// </remarks>
     private void HideUntilPainted()
     {
@@ -84,20 +93,28 @@ public class GitExtensionsForm : GitExtensionsFormBase
             return;
         }
 
-        // Processed by the message loop once OnLoad has returned, before WM_PAINT which has the lowest priority
-        BeginInvoke(() =>
-        {
-            PInvoke.RedrawWindow((HWND)Handle, lprcUpdate: null, HRGN.Null, REDRAW_WINDOW_FLAGS.RDW_UPDATENOW | REDRAW_WINDOW_FLAGS.RDW_ALLCHILDREN);
-            TrySetCloaked(cloaked: false);
-        });
+        _isCloaked = true;
 
-        return;
+        // Processed by the message loop once OnLoad has returned, before the Shown event and before WM_PAINT which has the lowest priority
+        BeginInvoke(ShowPainted);
+    }
 
-        unsafe bool TrySetCloaked(bool cloaked)
+    private void ShowPainted()
+    {
+        if (!_isCloaked)
         {
-            BOOL value = cloaked;
-            return PInvoke.DwmSetWindowAttribute((HWND)Handle, DWMWINDOWATTRIBUTE.DWMWA_CLOAK, &value, (uint)sizeof(BOOL)).Succeeded;
+            return;
         }
+
+        _isCloaked = false;
+        PInvoke.RedrawWindow((HWND)Handle, lprcUpdate: null, HRGN.Null, REDRAW_WINDOW_FLAGS.RDW_UPDATENOW | REDRAW_WINDOW_FLAGS.RDW_ALLCHILDREN);
+        TrySetCloaked(cloaked: false);
+    }
+
+    private unsafe bool TrySetCloaked(bool cloaked)
+    {
+        BOOL value = cloaked;
+        return PInvoke.DwmSetWindowAttribute((HWND)Handle, DWMWINDOWATTRIBUTE.DWMWA_CLOAK, &value, (uint)sizeof(BOOL)).Succeeded;
     }
 
     /// <summary>Invoked at runtime during the <see cref="OnLoad"/> method.</summary>
