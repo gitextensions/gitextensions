@@ -1,5 +1,9 @@
 using GitExtUtils.GitUI;
 using ResourceManager;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Dwm;
+using Windows.Win32.Graphics.Gdi;
 
 namespace GitUI;
 
@@ -53,6 +57,8 @@ public class GitExtensionsForm : GitExtensionsFormBase
 
     protected override void OnLoad(EventArgs e)
     {
+        HideUntilPainted();
+
         RestorePosition();
 
         // Should be called after restoring position
@@ -61,6 +67,36 @@ public class GitExtensionsForm : GitExtensionsFormBase
         if (!IsDesignMode)
         {
             OnRuntimeLoad(e);
+        }
+    }
+
+    /// <summary>
+    ///  Keeps the window out of sight until the end of the loading and until all its controls have been painted.
+    /// </summary>
+    /// <remarks>
+    ///  Restoring the maximized state in <see cref="RestorePosition"/> shows the window immediately, i.e. before the end of
+    ///  <see cref="OnLoad"/>. Controls, which paint only on WM_PAINT (e.g. toolstrips), would remain blank (white) until then.
+    /// </remarks>
+    private void HideUntilPainted()
+    {
+        if (IsDesignMode || PInvoke.IsWindowVisible((HWND)Handle) || !TrySetCloaked(cloaked: true))
+        {
+            return;
+        }
+
+        // Processed by the message loop once OnLoad has returned, before WM_PAINT which has the lowest priority
+        BeginInvoke(() =>
+        {
+            PInvoke.RedrawWindow((HWND)Handle, lprcUpdate: null, HRGN.Null, REDRAW_WINDOW_FLAGS.RDW_UPDATENOW | REDRAW_WINDOW_FLAGS.RDW_ALLCHILDREN);
+            TrySetCloaked(cloaked: false);
+        });
+
+        return;
+
+        unsafe bool TrySetCloaked(bool cloaked)
+        {
+            BOOL value = cloaked;
+            return PInvoke.DwmSetWindowAttribute((HWND)Handle, DWMWINDOWATTRIBUTE.DWMWA_CLOAK, &value, (uint)sizeof(BOOL)).Succeeded;
         }
     }
 
