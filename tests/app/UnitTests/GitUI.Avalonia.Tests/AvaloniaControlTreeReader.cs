@@ -626,7 +626,10 @@ internal sealed class AvaloniaControlTreeReader
         bool hasWinFormsTextBoxClientInset = control is TextBox
             && !isHostedMenuTextBox
             && !isSpellCheckTextBox
-            && !(control.Name == "txtSearchBox" && control.GetLogicalAncestors().OfType<SearchControl>().Any())
+            && !(control is TextBox { BorderThickness: var searchInputBorder }
+                && searchInputBorder == default
+                && control.Name == "txtSearchBox"
+                && control.GetLogicalAncestors().OfType<SearchControl>().Any())
             && !IsSourceRichTextControl(control)
             && GetSourceTypeName(sourceType) is not "RichTextBox";
         // The source OutputHistory RichTextBox has Fixed3D chrome: its client excludes
@@ -774,7 +777,7 @@ internal sealed class AvaloniaControlTreeReader
             fieldName);
         bool hasDashboardRuntimeColors = sourceOwnerType.StartsWith(
                 "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.", StringComparison.Ordinal)
-            && control is Grid or Border or TextBlock or Image or ListBox
+            && control is Grid or Border or TextBlock or Image or ListBox or Menu or MenuItem
                 or GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard
                 or GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList;
         bool isDashboardRepositoryList = hasDashboardRuntimeColors && semanticName == "listView1";
@@ -1203,7 +1206,10 @@ internal sealed class AvaloniaControlTreeReader
                     // colors at runtime. Read the actual brushes, never substitute old defaults.
                     ? ReadColors(control) with
                     {
-                        Foreground = BrushToArgb(Avalonia.Controls.Documents.TextElement.GetForeground(control))
+                        Foreground = BrushToArgb(GetPropertyValue(control, "Foreground"))
+                            ?? BrushToArgb(Avalonia.Controls.Documents.TextElement.GetForeground(control)),
+                        Background = BrushToArgb(GetPropertyValue(control, "Background")) ?? ReadColors(control).Background,
+                        DisabledBackground = BrushToArgb(GetPropertyValue(control, "Background")) ?? ReadColors(control).DisabledBackground
                     }
                 : isFileStatusSplitter && IsViewPullRequestsTree(control)
                     ? ReadTransparentContainerColors(control)
@@ -1315,7 +1321,9 @@ internal sealed class AvaloniaControlTreeReader
             BorderStyle = control.Name == "txtSearchBox"
                 && control.GetLogicalAncestors().OfType<SearchControl>().Any()
                 && control.Parent is Border searchBorder
-                    ? searchBorder.BorderThickness == default ? "None" : "FixedSingle"
+                    ? control is TextBox { BorderThickness: var searchBorderThickness } && searchBorderThickness == new Thickness(2)
+                        ? "Fixed3D"
+                        : searchBorder.BorderThickness == default ? "None" : "FixedSingle"
                 : isFormBrowseToolStripContainer
                 ? null
                 : isFormBrowseContainerPanel && semanticName == "_contentPanel"

@@ -70,7 +70,7 @@ public sealed class BrowseStatusTests
     }
 
     [AvaloniaTest]
-    [TestCase("0", "0")]
+    [TestCase("0", "")]
     [TestCase("3", "2")]
     public void Push_counter_should_use_native_integral_text_autosizing(string ahead, string behind)
     {
@@ -87,11 +87,18 @@ public sealed class BrowseStatusTests
                 "main",
                 string.Empty);
             button.Measure(new Avalonia.Size(double.PositiveInfinity, double.PositiveInfinity));
-            double expectedWidth = Math.Ceiling(WinFormsTextMeasurer.Measure(button, button.Content!.ToString()!)
-                + 16 + 4 + button.Padding.Left + button.Padding.Right
-                + button.BorderThickness.Left + button.BorderThickness.Right);
+            double expectedWidth = Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(button, button.Content!.ToString()!).Width
+                + 16 + (2 * 2));
             button.DesiredSize.Width.Should().Be(expectedWidth);
             button.DesiredSize.Width.Should().Be(Math.Ceiling(button.DesiredSize.Width));
+            button.FontFamily = new Avalonia.Media.FontFamily("Segoe UI");
+            button.FontSize = 12;
+            button.Measure(new Avalonia.Size(double.PositiveInfinity, double.PositiveInfinity));
+            if (OperatingSystem.IsWindows() && ahead == "0" && behind.Length == 0)
+            {
+                // Native ToolStripButton with Segoe UI 9pt: 25 text + 16 image + 4 border.
+                button.DesiredSize.Width.Should().Be(45);
+            }
         }
         finally
         {

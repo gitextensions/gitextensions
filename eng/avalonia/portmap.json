@@ -178,25 +178,25 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "0e25814d0eeff397076e1788457d5b47997e66a7",
-    "notes": "2026-10-01 verified working batch based on 78a15b9b86eee1bb804c70860203e08129e30d1c: Header duplicate overhang is removed. Push-counter text is retained in capture reporting, and repository loads settle before capture. Tracking-enabled versus icon-only fixtures are different contexts; exhaustive main-screen parity remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/. Full six-axis parity remains incomplete."
+    "notes": "2026-10-01 verified working batch based on 342f2c97f7d42924189ee9ea4b4bae0c4181b8c8: The tracked-counter preferred-size formula removes the duplicated extra gap. All 12 current native-100 Browse pairs have zero structured geometry/color/control/state/text/font findings, with 63 image records still open. The recreated fixture changed commit/status captions, so the prior total is not a directly comparable product delta. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.axaml.cs",
     "status": "functional",
     "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "2026-10-01 verified working batch based on 78a15b9b86eee1bb804c70860203e08129e30d1c: Integral percentage columns follow native TableLayoutPanel truncation; unused docked margins do not inset the client. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/. Full six-axis parity remains incomplete."
+    "notes": "2026-10-01 verified working batch based on 342f2c97f7d42924189ee9ea4b4bae0c4181b8c8: The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.axaml",
     "status": "functional",
     "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "2026-10-01 verified working batch based on 78a15b9b86eee1bb804c70860203e08129e30d1c: Integral percentage columns follow native TableLayoutPanel truncation; unused docked margins do not inset the client. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/. Full six-axis parity remains incomplete."
+    "notes": "2026-10-01 verified working batch based on 342f2c97f7d42924189ee9ea4b4bae0c4181b8c8: The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml.cs",
     "status": "functional",
     "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "2026-10-01 verified working batch based on 78a15b9b86eee1bb804c70860203e08129e30d1c: Repository heading height follows TextRenderer preferred size; source ListView column defaults are 60 DIPs. Exact group painting, wrapping and all repository actions remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/. Full six-axis parity remains incomplete."
+    "notes": "2026-10-01 verified working batch based on 342f2c97f7d42924189ee9ea4b4bae0c4181b8c8: MenuStrip and its top item receive the owning repository list's foreground/background, rather than Avalonia's local Menu palette. Capture reporting reads their actual live brushes. Group painting, wrapping, layout and all repository actions remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml",
@@ -256,7 +256,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/ToolStripPushButton.cs",
     "status": "functional",
     "basedOn": "a2154c42fdf6ec4567e773547d2acc1961739f7a",
-    "notes": "2026-10-01 verified working batch based on 78a15b9b86eee1bb804c70860203e08129e30d1c: Image-and-text autosizing uses integral native text metrics plus template image, spacing, padding and borders. Tracked zero-count captures still differ by one pixel from native sizing. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/. Full six-axis parity remains incomplete."
+    "notes": "2026-10-01 verified working batch based on 342f2c97f7d42924189ee9ea4b4bae0c4181b8c8: Preferred width follows padded TextRenderer text plus the 16-DIP image and two native border pixels per side, without an extra template gap. Native and portable counter tests cover zero, short and long captions; the native zero caption is 45 pixels. Embedded Browse geometry agrees in the current sample; independent paint and complete interaction parity remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/UserControls/RepoStateVisualiser.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RepoStateVisualiser.cs",
@@ -2291,7 +2291,7 @@
     "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.axaml.cs",
     "status": "functional",
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "2026-10-01 verified working batch based on 78a15b9b86eee1bb804c70860203e08129e30d1c: Tree keyboard focus follows the original tab index 3, instead of leaving search focused; the source 23-DIP search input is centered in its 26-DIP toolbar row. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/. Full six-axis parity remains incomplete."
+    "notes": "2026-10-01 verified working batch based on 342f2c97f7d42924189ee9ea4b4bae0c4181b8c8: Standalone capture now uses real paired refs, an empty stash snapshot, Branches selection, native initial Remotes expansion and tree keyboard focus. Synthetic worktree/submodule states remain separate. This is fixture correction, not product closure; 44 color, six layout and 18 image records remain in the sample. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/LeftPanel/SubmoduleFolderNode.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/SubmoduleFolderNode.cs",
@@ -3154,13 +3154,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchControl.axaml.cs",
     "status": "functional",
     "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "2026-10-01 verified working batch based on 78a15b9b86eee1bb804c70860203e08129e30d1c: The tree-owned search input has one owned border and resolves KnownColor borders through the active theme. Standalone Fixed3D/default-border and complete popup-state parity remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/. Full six-axis parity remains incomplete."
+    "notes": "2026-10-01 verified working batch based on 342f2c97f7d42924189ee9ea4b4bae0c4181b8c8: The source default Fixed3D, FixedSingle and None border modes are preserved, including the four-pixel Fixed3D client inset, one custom tree border and HotTrack focus-color identity. Current standalone normal/focus comparisons retain image findings; complete hover/disabled/popup auditing remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/SearchControl.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchControl.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "2026-10-01 verified working batch based on 78a15b9b86eee1bb804c70860203e08129e30d1c: The tree-owned search input has one owned border and resolves KnownColor borders through the active theme. Standalone Fixed3D/default-border and complete popup-state parity remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/. Full six-axis parity remains incomplete."
+    "notes": "2026-10-01 verified working batch based on 342f2c97f7d42924189ee9ea4b4bae0c4181b8c8: The source default Fixed3D, FixedSingle and None border modes are preserved, including the four-pixel Fixed3D client inset, one custom tree border and HotTrack focus-color identity. Current standalone normal/focus comparisons retain image findings; complete hover/disabled/popup auditing remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/SearchWindow.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchWindow.axaml.cs",
