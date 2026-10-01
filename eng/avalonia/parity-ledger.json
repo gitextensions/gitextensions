@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "007e1dcb6333612e9786d6b92a95c1fd4ebb1409",
+  "analyzedCommit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
   "axisOrder": [
     "structural",
     "functional",
@@ -2237,83 +2237,115 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
           "findingCount": 6,
-          "note": "Whole-type reviewed source report: 6 member/structure diagnostics. The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 6 diagnostics. Dashboard preserves the original ControlText role and a 185x44 PictureBox frame with native Zoom semantics. Its capture crops the live client viewport, not the managed scrollbar. Coupled layout, runtime link identity and native group/text painting remain open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-capture-driver-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-capture-driver-accepted.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
           "findingCount": 10,
-          "note": "Whole-type reviewed source report: 10 total source diagnostics. The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 10 diagnostics. Dashboard preserves the original ControlText role and a 185x44 PictureBox frame with native Zoom semantics. Its capture crops the live client viewport, not the managed scrollbar. Coupled layout, runtime link identity and native group/text painting remain open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 639,
-          "note": "The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Scope: standalone matrix; 639 recorded visual diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
+          "findingCount": 429,
+          "note": "Dashboard preserves the original ControlText role and a 185x44 PictureBox frame with native Zoom semantics. Its capture crops the live client viewport, not the managed scrollbar. Coupled layout, runtime link identity and native group/text painting remain open. Standalone native-100 matrix. 429 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "themingAndColor": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 162,
-          "note": "The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Scope: standalone matrix; 162 recorded themingAndColor diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
+          "findingCount": 18,
+          "note": "Dashboard preserves the original ControlText role and a 185x44 PictureBox frame with native Zoom semantics. Its capture crops the live client viewport, not the managed scrollbar. Coupled layout, runtime link identity and native group/text painting remain open. Standalone native-100 matrix. 18 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 6,
-          "note": "The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Scope: standalone matrix; 6 recorded behavioralState diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
+          "findingCount": 0,
+          "note": "Dashboard preserves the original ControlText role and a 185x44 PictureBox frame with native Zoom semantics. Its capture crops the live client viewport, not the managed scrollbar. Coupled layout, runtime link identity and native group/text painting remain open. Standalone native-100 matrix. 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/windows-runtime/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-wayland/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-x11/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows",
@@ -2321,7 +2353,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, native Wayland in nested Weston on WSLg and X11 in nested Xephyr. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview and higher-DPI sweep deferred."
         }
       }
     },
@@ -2332,83 +2364,115 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
           "findingCount": 6,
-          "note": "Whole-type reviewed source report: 6 member/structure diagnostics. The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 6 diagnostics. Dashboard preserves the original ControlText role and a 185x44 PictureBox frame with native Zoom semantics. Its capture crops the live client viewport, not the managed scrollbar. Coupled layout, runtime link identity and native group/text painting remain open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-capture-driver-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-capture-driver-accepted.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
           "findingCount": 10,
-          "note": "Whole-type reviewed source report: 10 total source diagnostics. The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 10 diagnostics. Dashboard preserves the original ControlText role and a 185x44 PictureBox frame with native Zoom semantics. Its capture crops the live client viewport, not the managed scrollbar. Coupled layout, runtime link identity and native group/text painting remain open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 639,
-          "note": "The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Scope: standalone matrix; 639 recorded visual diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
+          "findingCount": 429,
+          "note": "Dashboard preserves the original ControlText role and a 185x44 PictureBox frame with native Zoom semantics. Its capture crops the live client viewport, not the managed scrollbar. Coupled layout, runtime link identity and native group/text painting remain open. Standalone native-100 matrix. 429 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "themingAndColor": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 162,
-          "note": "The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Scope: standalone matrix; 162 recorded themingAndColor diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
+          "findingCount": 18,
+          "note": "Dashboard preserves the original ControlText role and a 185x44 PictureBox frame with native Zoom semantics. Its capture crops the live client viewport, not the managed scrollbar. Coupled layout, runtime link identity and native group/text painting remain open. Standalone native-100 matrix. 18 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 6,
-          "note": "The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Scope: standalone matrix; 6 recorded behavioralState diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
+          "findingCount": 0,
+          "note": "Dashboard preserves the original ControlText role and a 185x44 PictureBox frame with native Zoom semantics. Its capture crops the live client viewport, not the managed scrollbar. Coupled layout, runtime link identity and native group/text painting remain open. Standalone native-100 matrix. 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/windows-runtime/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-wayland/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-x11/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows",
@@ -2416,7 +2480,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, native Wayland in nested Weston on WSLg and X11 in nested Xephyr. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview and higher-DPI sweep deferred."
         }
       }
     },
@@ -2652,85 +2716,126 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
           "findingCount": 19,
-          "note": "Whole-type reviewed source report: 19 member/structure diagnostics. Repository heading height follows TextRenderer preferred size; source ListView column defaults are 60 DIPs. Exact group painting, wrapping and all repository actions remain open. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 19 diagnostics. The AutoSize column preserves the authored 445-pixel preferred list width, receives surplus width, and clips children to the native table client boundary. Actual tile presenters use the live hover brush for hover and focused/unfocused selection; group headers and focus adorners are excluded. Native list/column color roles and null container selection are reported separately from owner-drawn paint. Full group/text/context-menu parity remains open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
           "findingCount": 44,
-          "note": "Whole-type reviewed source report: 44 total source diagnostics. Repository heading height follows TextRenderer preferred size; source ListView column defaults are 60 DIPs. Exact group painting, wrapping and all repository actions remain open. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 44 diagnostics. The AutoSize column preserves the authored 445-pixel preferred list width, receives surplus width, and clips children to the native table client boundary. Actual tile presenters use the live hover brush for hover and focused/unfocused selection; group headers and focus adorners are excluded. Native list/column color roles and null container selection are reported separately from owner-drawn paint. Full group/text/context-menu parity remains open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 210,
-          "note": "Repository heading height follows TextRenderer preferred size; source ListView column defaults are 60 DIPs. Exact group painting, wrapping and all repository actions remain open. Scope: embedded Dashboard named-control diagnostics; parent imagery is not an independent component paint audit; 210 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 108,
+          "note": "The AutoSize column preserves the authored 445-pixel preferred list width, receives surplus width, and clips children to the native table client boundary. Actual tile presenters use the live hover brush for hover and focused/unfocused selection; group headers and focus adorners are excluded. Native list/column color roles and null container selection are reported separately from owner-drawn paint. Full group/text/context-menu parity remains open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 108 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "themingAndColor": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 156,
-          "note": "Repository heading height follows TextRenderer preferred size; source ListView column defaults are 60 DIPs. Exact group painting, wrapping and all repository actions remain open. Scope: embedded Dashboard named-control diagnostics; parent imagery is not an independent component paint audit; 156 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 18,
+          "note": "The AutoSize column preserves the authored 445-pixel preferred list width, receives surplus width, and clips children to the native table client boundary. Actual tile presenters use the live hover brush for hover and focused/unfocused selection; group headers and focus adorners are excluded. Native list/column color roles and null container selection are reported separately from owner-drawn paint. Full group/text/context-menu parity remains open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 18 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 6,
-          "note": "Repository heading height follows TextRenderer preferred size; source ListView column defaults are 60 DIPs. Exact group painting, wrapping and all repository actions remain open. Scope: embedded Dashboard named-control diagnostics; parent imagery is not an independent component paint audit; 6 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 0,
+          "note": "The AutoSize column preserves the authored 445-pixel preferred list width, receives surplus width, and clips children to the native table client boundary. Actual tile presenters use the live hover brush for hover and focused/unfocused selection; group headers and focus adorners are excluded. Native list/column color roles and null container selection are reported separately from owner-drawn paint. Full group/text/context-menu parity remains open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
@@ -2739,7 +2844,16 @@
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/windows-runtime-final-retry/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-x11-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/windows-runtime/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-wayland/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-x11/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows",
@@ -2747,7 +2861,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, nested-Weston native Wayland and nested-Xephyr X11 after final product changes. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview and higher-DPI sweep deferred."
         }
       }
     },
@@ -2758,83 +2872,115 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
           "findingCount": 19,
-          "note": "Whole-type reviewed source report: 19 member/structure diagnostics. MenuStrip and its top item receive the owning repository list's foreground/background, rather than Avalonia's local Menu palette. Capture reporting reads their actual live brushes. Group painting, wrapping, layout and all repository actions remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 19 diagnostics. The AutoSize column preserves the authored 445-pixel preferred list width, receives surplus width, and clips children to the native table client boundary. Actual tile presenters use the live hover brush for hover and focused/unfocused selection; group headers and focus adorners are excluded. Native list/column color roles and null container selection are reported separately from owner-drawn paint. Full group/text/context-menu parity remains open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-capture-driver-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-capture-driver-accepted.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
           "findingCount": 44,
-          "note": "Whole-type reviewed source report: 44 total source diagnostics. MenuStrip and its top item receive the owning repository list's foreground/background, rather than Avalonia's local Menu palette. Capture reporting reads their actual live brushes. Group painting, wrapping, layout and all repository actions remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 44 diagnostics. The AutoSize column preserves the authored 445-pixel preferred list width, receives surplus width, and clips children to the native table client boundary. Actual tile presenters use the live hover brush for hover and focused/unfocused selection; group headers and focus adorners are excluded. Native list/column color roles and null container selection are reported separately from owner-drawn paint. Full group/text/context-menu parity remains open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 234,
-          "note": "MenuStrip and its top item receive the owning repository list's foreground/background, rather than Avalonia's local Menu palette. Capture reporting reads their actual live brushes. Group painting, wrapping, layout and all repository actions remain open. Scope: eight named repository-list controls embedded in Dashboard; 234 recorded visual diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
+          "findingCount": 108,
+          "note": "The AutoSize column preserves the authored 445-pixel preferred list width, receives surplus width, and clips children to the native table client boundary. Actual tile presenters use the live hover brush for hover and focused/unfocused selection; group headers and focus adorners are excluded. Native list/column color roles and null container selection are reported separately from owner-drawn paint. Full group/text/context-menu parity remains open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 108 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "themingAndColor": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 162,
-          "note": "MenuStrip and its top item receive the owning repository list's foreground/background, rather than Avalonia's local Menu palette. Capture reporting reads their actual live brushes. Group painting, wrapping, layout and all repository actions remain open. Scope: eight named repository-list controls embedded in Dashboard; 162 recorded themingAndColor diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
+          "findingCount": 18,
+          "note": "The AutoSize column preserves the authored 445-pixel preferred list width, receives surplus width, and clips children to the native table client boundary. Actual tile presenters use the live hover brush for hover and focused/unfocused selection; group headers and focus adorners are excluded. Native list/column color roles and null container selection are reported separately from owner-drawn paint. Full group/text/context-menu parity remains open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 18 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 6,
-          "note": "MenuStrip and its top item receive the owning repository list's foreground/background, rather than Avalonia's local Menu palette. Capture reporting reads their actual live brushes. Group painting, wrapping, layout and all repository actions remain open. Scope: eight named repository-list controls embedded in Dashboard; 6 recorded behavioralState diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
+          "findingCount": 0,
+          "note": "The AutoSize column preserves the authored 445-pixel preferred list width, receives surplus width, and clips children to the native table client boundary. Actual tile presenters use the live hover brush for hover and focused/unfocused selection; group headers and focus adorners are excluded. Native list/column color roles and null container selection are reported separately from owner-drawn paint. Full group/text/context-menu parity remains open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/windows-runtime/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-wayland/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-x11/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows",
@@ -2842,7 +2988,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, native Wayland in nested Weston on WSLg and X11 in nested Xephyr. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview and higher-DPI sweep deferred."
         }
       }
     },
@@ -23890,62 +24036,116 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
-          "findingCount": 304,
-          "note": "P8.6i progress 69 groups 29 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 304 actionable and 333 total differences for this mapping; every structural difference stays open."
+          "findingCount": 4,
+          "note": "Whole-type reviewed source report: 4 diagnostics. The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
-          "findingCount": 667,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 15,
+          "note": "Whole-type reviewed source report: 15 diagnostics. The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "findingCount": 24,
+          "note": "The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Standalone native-100 matrix. 24 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "themingAndColor": {
           "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Standalone native-100 matrix. 0 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "behavioralState": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Standalone native-100 matrix. 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "platform": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/windows-runtime/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-wayland/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-x11/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview and higher-DPI sweep deferred."
         }
       }
     },
@@ -23956,62 +24156,116 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
-          "findingCount": 304,
-          "note": "P8.6i progress 69 groups 29 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 304 actionable and 333 total differences for this mapping; every structural difference stays open."
+          "findingCount": 4,
+          "note": "Whole-type reviewed source report: 4 diagnostics. The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
-          "findingCount": 667,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 15,
+          "note": "Whole-type reviewed source report: 15 diagnostics. The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "findingCount": 24,
+          "note": "The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Standalone native-100 matrix. 24 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "themingAndColor": {
           "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Standalone native-100 matrix. 0 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "behavioralState": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Standalone native-100 matrix. 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "platform": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/windows-runtime/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-wayland/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-x11/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview and higher-DPI sweep deferred."
         }
       }
     },
@@ -24022,62 +24276,116 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
-          "findingCount": 304,
-          "note": "P8.6i progress 69 groups 29 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 304 actionable and 333 total differences for this mapping; every structural difference stays open."
+          "findingCount": 4,
+          "note": "Whole-type reviewed source report: 4 diagnostics. The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
-          "findingCount": 667,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 15,
+          "note": "Whole-type reviewed source report: 15 diagnostics. The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "findingCount": 24,
+          "note": "The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Standalone native-100 matrix. 24 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "themingAndColor": {
           "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Standalone native-100 matrix. 0 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "behavioralState": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Standalone native-100 matrix. 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "platform": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/windows-runtime/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-wayland/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-x11/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview and higher-DPI sweep deferred."
         }
       }
     },
@@ -24088,83 +24396,115 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
           "findingCount": 4,
-          "note": "Whole-type reviewed source report: 4 member/structure diagnostics. Standalone capture now uses real paired refs, an empty stash snapshot, Branches selection, native initial Remotes expansion and tree keyboard focus. Synthetic worktree/submodule states remain separate. This is fixture correction, not product closure; 44 color, six layout and 18 image records remain in the sample. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 4 diagnostics. The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-capture-driver-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-capture-driver-accepted.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [],
           "findingCount": 15,
-          "note": "Whole-type reviewed source report: 15 total source diagnostics. Standalone capture now uses real paired refs, an empty stash snapshot, Branches selection, native initial Remotes expansion and tree keyboard focus. Synthetic worktree/submodule states remain separate. This is fixture correction, not product closure; 44 color, six layout and 18 image records remain in the sample. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 15 diagnostics. The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Affected-surface regression: 179 passed each on Windows and Linux; final 37-test Dashboard/tree/capture-driver checks passed each. Native consumer sizing: 6 passed. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 68,
-          "note": "Standalone capture now uses real paired refs, an empty stash snapshot, Branches selection, native initial Remotes expansion and tree keyboard focus. Synthetic worktree/submodule states remain separate. This is fixture correction, not product closure; 44 color, six layout and 18 image records remain in the sample. Scope: standalone matrix; 68 recorded visual diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
+          "findingCount": 24,
+          "note": "The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Standalone native-100 matrix. 24 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "themingAndColor": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
-          ],
-          "platforms": [
-            "windows"
-          ],
-          "findingCount": 44,
-          "note": "Standalone capture now uses real paired refs, an empty stash snapshot, Branches selection, native initial Remotes expansion and tree keyboard focus. Synthetic worktree/submodule states remain separate. This is fixture correction, not product closure; 44 color, six layout and 18 image records remain in the sample. Scope: standalone matrix; 44 recorded themingAndColor diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
-        },
-        "behavioralState": {
-          "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "Standalone capture now uses real paired refs, an empty stash snapshot, Branches selection, native initial Remotes expansion and tree keyboard focus. Synthetic worktree/submodule states remain separate. This is fixture correction, not product closure; 44 color, six layout and 18 image records remain in the sample. Scope: standalone matrix; 0 recorded behavioralState diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
+          "note": "The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Standalone native-100 matrix. 0 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 0,
+          "note": "The root and toolbar use native ControlText, including runtime palette updates. Standalone capture uses the panel background and native selection roles consistently with the embedded tree. Tree connector, text/layout and exhaustive interaction parity remain open. Standalone native-100 matrix. 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-10-01",
-          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
+          "verifiedOn": "2026-10-02",
+          "commit": "fefa0cb764893d50e79c3427c1852a06be181d8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/windows-runtime/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-wayland/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/runtime-x11/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-product.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/windows-clipping.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/tests/linux-clipping.trx"
           ],
           "platforms": [
             "windows",
@@ -24172,7 +24512,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, native Wayland in nested Weston on WSLg and X11 in nested Xephyr. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview and higher-DPI sweep deferred."
         }
       }
     },

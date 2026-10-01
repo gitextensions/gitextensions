@@ -67,6 +67,14 @@ internal sealed class AvaloniaControlTreeReader
             semanticParent: null,
             boundsOverride: rootBoundsOverride,
             primarySurface: role == "primary");
+        if (semanticRoot.GetType().FullName == "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard")
+        {
+            // Native AutoScroll bars are non-client chrome. Avalonia manages them inside
+            // the control, so both consumers must measure the live content viewport.
+            Size clientSize = GetSourceClientSize(semanticRoot);
+            rootNode = WithBoundsAndClientSize(rootNode, new Rect(clientSize), clientSize);
+        }
+
         if (role.StartsWith("popup:", StringComparison.Ordinal)
             && rootNode.Type == "Avalonia.Controls.Primitives.OverlayPopupHost")
         {
@@ -92,6 +100,12 @@ internal sealed class AvaloniaControlTreeReader
             Root = rootNode
         };
     }
+
+    internal static Size GetSourceClientSize(Control control)
+        => control.GetType().FullName == "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard"
+            && control is UserControl { Content: ScrollViewer { Viewport.Width: > 0, Viewport.Height: > 0 } scroll }
+                ? scroll.Viewport
+                : control.Bounds.Size;
 
     private Control GetSemanticSurfaceRoot(Control root)
     {
@@ -1204,12 +1218,16 @@ internal sealed class AvaloniaControlTreeReader
                 : hasDashboardRuntimeColors
                     // parity-scaffolding: Dashboard appearance setters override inherited/Designer
                     // colors at runtime. Read the actual brushes, never substitute old defaults.
-                    ? ReadColors(control) with
+                    ? (isDashboardRepositoryList
+                        ? ReadNativeSelectionColors(control, "GitExtensionsWindowBackgroundBrush")
+                        : ReadColors(control)) with
                     {
                         Foreground = BrushToArgb(GetPropertyValue(control, "Foreground"))
                             ?? BrushToArgb(Avalonia.Controls.Documents.TextElement.GetForeground(control)),
                         Background = BrushToArgb(GetPropertyValue(control, "Background")) ?? ReadColors(control).Background,
-                        DisabledBackground = BrushToArgb(GetPropertyValue(control, "Background")) ?? ReadColors(control).DisabledBackground
+                        DisabledBackground = BrushToArgb(GetPropertyValue(control, "Background")) ?? ReadColors(control).DisabledBackground,
+                        Border = control is TemplatedControl { BorderThickness: var border } && border == default
+                            ? null : ReadColors(control).Border
                     }
                 : isFileStatusSplitter && IsViewPullRequestsTree(control)
                     ? ReadTransparentContainerColors(control)
@@ -1730,7 +1748,7 @@ internal sealed class AvaloniaControlTreeReader
             },
             Selected = control is Separator || GetSourceTypeName(sourceType) == "ToolStripSeparator"
                 ? null
-                : isNativeListView
+                : isNativeListView || isDashboardRepositoryList
                     ? null
                 : isSourceCheckedList
                     ? false
@@ -5309,7 +5327,17 @@ internal sealed class AvaloniaControlTreeReader
                         : isSourceColumn ? "NotSet"
                         : GetPropertyValue(column, "HorizontalHeaderContentAlignment")?.ToString(),
                     Colors = isListColumn
-                        ? ReadColors(owner)
+                        ? GetMetadataTypeName(_root.GetType()) is
+                            "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard" or
+                            "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList"
+                            ? ReadNativeSelectionColors(owner, "GitExtensionsWindowBackgroundBrush") with
+                            {
+                                Foreground = ReadColors(owner).Foreground,
+                                Background = ReadColors(owner).Background,
+                                DisabledBackground = ReadColors(owner).DisabledBackground,
+                                Border = null
+                            }
+                            : ReadColors(owner)
                         : isSourceColumn ? ReadSourceDataGridColumnColors() : EmptyColors()
                 };
             })
@@ -5396,6 +5424,7 @@ internal sealed class AvaloniaControlTreeReader
             "GitUI.CommandsDialogs.EnvironmentInfo" or
             "GitUI.CommandsDialogs.AboutBoxDialog.FormContributors"
             or "GitUI.CommandsDialogs.SearchControl"
+            or "GitUI.LeftPanel.RepoObjectsTree"
             or "GitUI.CommandsDialogs.SearchWindow"
             or "GitUI.CommandsDialogs.RepoHosting.CreatePullRequestForm"
             or "GitUI.CommandsDialogs.RepoHosting.ForkAndCloneForm"
@@ -6018,6 +6047,24 @@ internal sealed class AvaloniaControlTreeReader
     {
         string rootType = GetMetadataTypeName(_root.GetType());
         string? name = fieldName ?? control.Name;
+        if (rootType == "GitUI.LeftPanel.RepoObjectsTree")
+        {
+            if (name == "treeMain")
+            {
+                return ReadNativeSelectionColors(control, "GitExtensionsPanelBackgroundBrush");
+            }
+
+            if (name == "leftPanelToolStrip" || name?.StartsWith("tsb", StringComparison.Ordinal) == true)
+            {
+                return ReadToolStripColors(control, isItem: name != "leftPanelToolStrip", transparentBackground: false, useControlText: true);
+            }
+
+            if (name is "_txtBranchCriterion" or "tableLayoutPanel1")
+            {
+                return ReadColors(control) with { Foreground = ResolveSourceControlTextArgb() };
+            }
+        }
+
         if (sourceOwnerType == "GitUI.UserControls.CommitPickerSmallControl" && name == "lbCommits")
         {
             return ReadColors(control) with

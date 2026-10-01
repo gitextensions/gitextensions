@@ -32,6 +32,39 @@ public sealed class RepoObjectsTreeTests
 {
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    public void Tree_toolbar_should_inherit_the_native_ControlText_role_and_update_when_it_changes()
+    {
+        RepoObjectsTree tree = new();
+        tree.Resources["GitExtensionsControlForegroundBrush"] = new SolidColorBrush(Colors.Magenta);
+        tree.Resources["GitExtensionsKnownColorControlTextBrush"] = new SolidColorBrush(Colors.White);
+        Window window = new() { Width = 300, Height = 350, Content = tree };
+        try
+        {
+            window.Show();
+            window.UpdateLayout();
+            StackPanel toolbar = tree.FindControl<StackPanel>("leftPanelToolStrip")!;
+            tree.Foreground.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Colors.White);
+            foreach (Button button in toolbar.Children.OfType<Button>())
+            {
+                button.Foreground.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Colors.White);
+            }
+
+            tree.Resources["GitExtensionsKnownColorControlTextBrush"] = new SolidColorBrush(Colors.Cyan);
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            tree.Foreground.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Colors.Cyan);
+            foreach (Button button in toolbar.Children.OfType<Button>())
+            {
+                button.Foreground.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Colors.Cyan);
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void Tree_should_accept_keyboard_focus_without_focusing_the_search_button()
     {
         RepoObjectsTree control = new();
