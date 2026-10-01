@@ -2,6 +2,7 @@
 using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Config;
@@ -42,7 +43,7 @@ public sealed partial class GitModule : IGitModule
     private readonly IGitExecutor _executor;
     private readonly Lock _lock = new();
     private readonly IIndexLockManager _indexLockManager;
-    private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
+    private static readonly GitTreeParser _gitTreeParser = new();
     private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
     private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
     private FrozenDictionary<string, Color>? _remoteColors;
@@ -735,27 +736,27 @@ public sealed partial class GitModule : IGitModule
         ExecutionResult result = await GitExecutable.ExecuteAsync(args, throwOnErrorExit: false).ConfigureAwait(false);
         string[] unmerged = result.StandardOutput.Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries);
 
-        ConflictedFileData[] item = new ConflictedFileData[3];
+        InlineArray3<ConflictedFileData> item = new();
 
         string? prevItemName = null;
 
         foreach (string line in unmerged)
         {
             int findSecondWhitespace = line.IndexOfAny(_spaceAndTabSearchValues);
-            string fileStage = findSecondWhitespace >= 0 ? line[findSecondWhitespace..].Trim() : "";
+            ReadOnlySpan<char> fileStage = findSecondWhitespace >= 0 ? line.AsSpan(findSecondWhitespace).Trim() : "";
 
             findSecondWhitespace = fileStage.IndexOfAny(_spaceAndTabSearchValues);
 
-            string hash = findSecondWhitespace >= 0 ? fileStage[..findSecondWhitespace].Trim() : "";
+            ReadOnlySpan<char> hash = findSecondWhitespace >= 0 ? fileStage[..findSecondWhitespace].Trim() : "";
             fileStage = findSecondWhitespace >= 0 ? fileStage[findSecondWhitespace..].Trim() : "";
 
-            if (fileStage.Length > 2 && int.TryParse(fileStage[0].ToString(), out int stage) && stage is (>= 1 and <= 3))
+            if (fileStage.Length > 2 && int.TryParse(fileStage[..1], out int stage) && stage is (>= 1 and <= 3))
             {
-                string itemName = fileStage[2..];
+                string itemName = new(fileStage[2..]);
                 if (prevItemName != itemName && prevItemName is not null)
                 {
                     list.Add(new ConflictData(item[0], item[1], item[2]));
-                    item = new ConflictedFileData[3];
+                    item = new InlineArray3<ConflictedFileData>();
                 }
 
                 item[stage - 1] = new ConflictedFileData(ObjectId.Parse(hash), itemName);
@@ -995,11 +996,10 @@ public sealed partial class GitModule : IGitModule
         {
             $"{objectId}^@".Quote()
         };
-        return GitExecutable.Execute(args, cache: GitCommandCache)
+        return Array.ConvertAll(GitExecutable.Execute(args, cache: GitCommandCache)
             .StandardOutput
-            .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries)
-            .Select(line => ObjectId.Parse(line))
-            .ToList();
+            .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries),
+            id => ObjectId.Parse(id));
     }
 
     public IReadOnlyList<GitRevision> GetParentRevisions(ObjectId objectId)
@@ -1076,7 +1076,7 @@ public sealed partial class GitModule : IGitModule
             $"{objectIdPrefix}^{{commit}}".Quote()
         };
         ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
-        string output = result.StandardOutput.Trim();
+        ReadOnlySpan<char> output = result.StandardOutput.AsSpan().Trim();
 
         if (output.StartsWith(objectIdPrefix) && ObjectId.TryParse(output, out objectId))
         {
@@ -1249,7 +1249,7 @@ public sealed partial class GitModule : IGitModule
             string localPath = match.Groups["path"].Value;
             string branch = match.Groups["branch"].Value;
 
-            if (!ObjectId.TryParse(match.Groups["sha"].Value, out ObjectId currentCommitId))
+            if (!ObjectId.TryParse(match.Groups["sha"].ValueSpan, out ObjectId currentCommitId))
             {
                 info = default;
                 return false;
@@ -2235,7 +2235,7 @@ public sealed partial class GitModule : IGitModule
             }
 
             int spaceIndex = field.IndexOf(' ');
-            string key = spaceIndex >= 0 ? field[..spaceIndex] : field;
+            ReadOnlySpan<char> key = spaceIndex >= 0 ? field.AsSpan(0, spaceIndex) : field;
             string value = spaceIndex >= 0 ? field[(spaceIndex + 1)..] : "";
             switch (key)
             {
@@ -3475,7 +3475,7 @@ public sealed partial class GitModule : IGitModule
             }
             else if (line.StartsWith("author-time "))
             {
-                authorTime = DateTimeUtils.ParseUnixTime(line["author-time ".Length..]);
+                authorTime = DateTimeUtils.ParseUnixTime(line.AsSpan("author-time ".Length));
                 hasCommitHeader = true;
             }
             else if (line.StartsWith("author-tz "))
@@ -3495,7 +3495,7 @@ public sealed partial class GitModule : IGitModule
             }
             else if (line.StartsWith("committer-time "))
             {
-                committerTime = DateTimeUtils.ParseUnixTime(line["committer-time ".Length..]);
+                committerTime = DateTimeUtils.ParseUnixTime(line.AsSpan("committer-time ".Length..));
                 hasCommitHeader = true;
             }
             else if (line.StartsWith("committer-tz "))

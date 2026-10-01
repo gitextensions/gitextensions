@@ -3,5 +3,9 @@
 internal static class SpellCheckerHelper
 {
     public static bool IsSeparator(this char c)
-        => !"_+-".Contains(c) && !char.IsLetterOrDigit(c);
+        => c switch
+        {
+            '_' or '+' or '-' => false,
+            _ => !char.IsLetterOrDigit(c)
+        };
 }
