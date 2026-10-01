@@ -18,14 +18,17 @@ using Avalonia.VisualTree;
 using AvaloniaEdit;
 using GitCommands;
 using GitCommands.Settings;
+using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.ParityCapture;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Compat;
@@ -46,6 +49,32 @@ public sealed partial class ParityScreenshotTests
     private const string CaptureScaleEnvironmentVariable = "GITEXT_CAPTURE_PARITY_SCALE";
     private const string CaptureThemeEnvironmentVariable = "GITEXT_CAPTURE_PARITY_THEME";
     private const string P02Category = "P0_2";
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public async Task Dashboard_capture_should_seed_the_same_normalized_history_as_the_reference_worker()
+    {
+        using CaptureContext context = new();
+        Dashboard dashboard = new();
+        await PrepareViewAsync(dashboard, context);
+        IUserRepositoriesListController controller = context.Commands.GetRequiredService<IUserRepositoriesListController>();
+        (IReadOnlyList<RecentRepoInfo> recent, IReadOnlyList<RecentRepoInfo> favourites) = controller.PreRenderRepositories(string.Empty);
+        recent.Should().ContainSingle(item => item.Repo.Path == context.Module.WorkingDir);
+        favourites.Should().ContainSingle(item => item.Repo.Path == context.Module.WorkingDir && item.Repo.Category == "Development");
+
+        FormBrowse browse = new(context.Commands);
+        try
+        {
+            await PrepareViewAsync(browse, context);
+            RepositoryHistorySnapshot snapshot = context.Commands.GetRequiredService<IRepositoryHistoryUIService>().LoadSnapshot();
+            snapshot.Favourites.Should().NotContain(item => item.Repository.Path == context.Module.WorkingDir,
+                "a Dashboard capture must not leak categorized history into a later Browse/theme cell");
+        }
+        finally
+        {
+            browse.Close();
+        }
+    }
 
     [Test]
     [Category(P02Category)]
@@ -1341,7 +1370,7 @@ public sealed partial class ParityScreenshotTests
 
         try
         {
-            PrepareView(captureHost, context);
+            await PrepareViewAsync(captureHost, context);
             window.Show();
             // parity-scaffolding: The real application activates FormBrowse before its async
             // revision load settles. Activate the isolated window at the same lifecycle point;

@@ -58,6 +58,10 @@ public sealed class ParityBaselineTests
             .Should().OnlyHaveUniqueItems();
         foreach (JsonElement component in components)
         {
+            string source = component.GetProperty("source").GetString()!;
+            component.GetProperty("twin").GetString().Should().Be(
+                portMap.RootElement.GetProperty(source).GetProperty("twin").GetString(),
+                $"{source} must identify the same twin in both registers");
             JsonElement axes = component.GetProperty("axes");
             axes.EnumerateObject().Select(property => property.Name).Should().Equal(
                 "structural",

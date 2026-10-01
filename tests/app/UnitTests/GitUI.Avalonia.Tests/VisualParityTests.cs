@@ -1707,6 +1707,12 @@ public sealed class VisualParityTests
             .Should().BeOfType<TranslateTransform>().Subject;
         chevronOffset.X.Should().Be(-7);
         chevronOffset.Y.Should().Be(0);
+        Avalonia.Controls.Shapes.Path arrow = chevron.Should().BeOfType<Avalonia.Controls.Shapes.Path>().Subject;
+        arrow.Width.Should().Be(4);
+        arrow.Height.Should().Be(8);
+        arrow.StrokeThickness.Should().Be(0);
+        arrow.Fill.Should().Be(item.Foreground);
+        arrow.Data!.Bounds.Should().Be(new Rect(0, 0, 4, 8));
     }
 
     [AvaloniaTest]

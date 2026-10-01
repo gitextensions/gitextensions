@@ -99,7 +99,18 @@ public partial class UserRepositoriesList : TranslatedControl
         mnuTop.Items.Clear();
         _lvgRecentRepositories = new RepositoryGroupItem(_groupRecentRepositories.Text, isRecentGroup: true, repositoryCount: 0);
         _foreColorBrush = new SolidColorBrush(_foreColor);
+        Resources["DashboardRepositoryHoverBrush"] = _hoverColorBrush;
         _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.Size - 1F);
+        lblRecentRepositories.FontFamily = new FontFamily(AppSettings.Font.Name);
+        lblRecentRepositories.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size + 5.5F);
+
+        // Apply owned defaults even when the first theme assignment equals a backing field;
+        // the source Designer has already painted these properties before its setters run.
+        lblRecentRepositories.Foreground = new SolidColorBrush(_headerColor);
+        pnlHeader.Background = new SolidColorBrush(_headerBackColor);
+        Background = new SolidColorBrush(_mainBackColor);
+        listView1.Background = new SolidColorBrush(_mainBackColor);
+        textBoxSearch.Background = new SolidColorBrush(_searchBackColor);
         listView1.AddColumns(clmhdrPath, clmhdrBranch, clmhdrCategory);
         listView1.ItemTemplate = new FuncDataTemplate<object>(
             (item, _) => listView1_DrawItem(item),
@@ -215,7 +226,7 @@ public partial class UserRepositoriesList : TranslatedControl
             }
 
             _hoverColor = value;
-            _hoverColorBrush = new SolidColorBrush(value);
+            ((SolidColorBrush)_hoverColorBrush).Color = value;
             Resources["DashboardRepositoryHoverBrush"] = _hoverColorBrush;
             InvalidateVisual();
         }
@@ -323,6 +334,7 @@ public partial class UserRepositoriesList : TranslatedControl
             BindRepositories(rows, group, repositories, tileSize, isFavourite: true);
         }
 
+        HoveredItem = null;
         listView1.ItemsSource = rows;
         listView1.SelectedItem = null;
     }
@@ -431,7 +443,7 @@ public partial class UserRepositoriesList : TranslatedControl
                 Text = group.Name,
                 FontSize = 16,
                 FontWeight = FontWeight.SemiBold,
-                Foreground = new SolidColorBrush(HeaderColor),
+                Foreground = _foreColorBrush,
                 VerticalAlignment = VerticalAlignment.Center,
                 IsHitTestVisible = false,
             });
@@ -455,7 +467,6 @@ public partial class UserRepositoriesList : TranslatedControl
             MinHeight = repository.TileSize.Height,
             MinWidth = repository.TileSize.Width,
         };
-        row.Children.Add(image);
         if (!string.IsNullOrWhiteSpace(repository.Repository.Repo.Category))
         {
             row.Children.Add(new Image
@@ -469,6 +480,10 @@ public partial class UserRepositoriesList : TranslatedControl
                 IsHitTestVisible = false,
             });
         }
+
+        // WinForms paints the category star before the folder so their overlapping pixels
+        // retain the original layer order.
+        row.Children.Add(image);
 
         StackPanel text = new()
         {
@@ -488,6 +503,7 @@ public partial class UserRepositoriesList : TranslatedControl
                 new TextBlock
                 {
                     Text = repository.BranchName,
+                    IsVisible = !string.IsNullOrWhiteSpace(repository.BranchName),
                     Foreground = _branchNameColorBrush,
                     FontFamily = new FontFamily(_secondaryFont.Name),
                     FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(_secondaryFont.Size),
@@ -508,8 +524,11 @@ public partial class UserRepositoriesList : TranslatedControl
         }
 
         field = value;
-        brush = new SolidColorBrush(value);
-        ShowRecentRepositories(reloadData: false);
+
+        // WinForms repaints existing tiles without changing selection or repository data.
+        // Mutate the retained brush so every realized tile reacts through the same boundary.
+        ((SolidColorBrush)brush).Color = value;
+        InvalidateVisual();
     }
 
     private List<string> GetCategories()
