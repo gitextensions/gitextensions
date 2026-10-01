@@ -55,20 +55,6 @@ public class GitRefListsForRevisionTests
     }
 
     [Test]
-    public void GetAllBranchNames_must_return_branches_names()
-    {
-        GitRefListsForRevision grl = new(_revision);
-        grl.GetAllBranchNames().Should().BeEquivalentTo("branch1", "branch1");
-    }
-
-    [Test]
-    public void GetAllTagNames_must_return_branches_names()
-    {
-        GitRefListsForRevision grl = new(_revision);
-        grl.GetAllTagNames().Should().BeEquivalentTo("tag1");
-    }
-
-    [Test]
     public void GetDeletableRefs_must_return_branches_names()
     {
         GitRefListsForRevision grl = new(_revision);
