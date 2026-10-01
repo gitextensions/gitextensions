@@ -1325,6 +1325,7 @@ public sealed partial class ParityScreenshotTests
         Control view = CreateView(context, descriptor.ViewType, state);
         Control captureHost = view;
         bool cropToComponent = false;
+        bool captureSourceClient = view is Dashboard;
         (double width, double height) = GetPlannedCaptureHostSize(captureHost.GetType(), scalePercent);
         if (descriptor.ViewType == typeof(WatermarkComboBox)
             || descriptor.ViewType == typeof(CaseSensitiveComboBox))
@@ -1641,7 +1642,7 @@ public sealed partial class ParityScreenshotTests
 
                 PixelRect imageBounds = popupSurfaceBounds.Length > 0 && !separateOverlaySurfaces
                     ? UnionBounds([primarySurfaceBounds, .. popupSurfaceBounds])
-                    : cropToComponent && capturedFrames.Count == 1
+                    : (cropToComponent || captureSourceClient) && capturedFrames.Count == 1
                         ? primarySurfaceBounds
                         : UnionBounds(compositingFrames.Select(frame => frame.ScreenBounds));
                 CaptureMethod captureMethod = compositingFrames.Count == 1
@@ -1650,7 +1651,9 @@ public sealed partial class ParityScreenshotTests
                 using RenderTargetBitmap? composite = compositingFrames.Count == 1
                     ? null
                     : ComposeTopLevels(compositingFrames, imageBounds, renderScale);
-                using WriteableBitmap? componentCrop = cropToComponent
+                using WriteableBitmap? componentCrop = captureSourceClient
+                    ? CropToScreenBounds(primaryFrame, window, primarySurfaceBounds)
+                    : cropToComponent
                                                          && capturedFrames.Count == 1
                                                          && popupSurfaceBounds.Length == 0
                     ? CropToComponent(primaryFrame, view, window, imageBounds.Size, renderScale)
@@ -1885,8 +1888,8 @@ public sealed partial class ParityScreenshotTests
         return new PixelRect(
             checked(topLevelOrigin.X + ToPixel(relativeOrigin.X, renderScale)),
             checked(topLevelOrigin.Y + ToPixel(relativeOrigin.Y, renderScale)),
-            Math.Max(1, ToPixel(control.Bounds.Width, renderScale)),
-            Math.Max(1, ToPixel(control.Bounds.Height, renderScale)));
+            Math.Max(1, ToPixel(AvaloniaControlTreeReader.GetSourceClientSize(control).Width, renderScale)),
+            Math.Max(1, ToPixel(AvaloniaControlTreeReader.GetSourceClientSize(control).Height, renderScale)));
 
         static int ToPixel(double value, double scale) =>
             checked((int)Math.Round(value * scale, MidpointRounding.AwayFromZero));

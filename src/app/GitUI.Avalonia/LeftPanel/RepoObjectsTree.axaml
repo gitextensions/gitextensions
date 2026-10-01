@@ -5,8 +5,12 @@
              xmlns:properties="using:GitUI.Properties"
              xmlns:revisiongrid="using:GitUI.UserControls.RevisionGrid"
              x:Class="GitUI.LeftPanel.RepoObjectsTree"
-             MinWidth="190">
+             MinWidth="190"
+             Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}">
   <UserControl.Styles>
+    <Style Selector="Button.gitextensions-toolbar-button, ToggleButton.gitextensions-toolbar-button">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
+    </Style>
     <Style Selector="TreeViewItem.repo-search-result /template/ Border#PART_LayoutRoot">
       <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
     </Style>

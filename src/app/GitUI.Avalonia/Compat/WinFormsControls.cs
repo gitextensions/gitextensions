@@ -109,6 +109,7 @@ public enum PictureBoxSizeMode
 {
     Normal,
     CenterImage,
+    Zoom,
 }
 
 /// <summary>
@@ -136,12 +137,15 @@ public class PictureBox : Border
 
     public PictureBoxSizeMode SizeMode
     {
-        get => _image.HorizontalAlignment == Avalonia.Layout.HorizontalAlignment.Center
-            ? PictureBoxSizeMode.CenterImage
-            : PictureBoxSizeMode.Normal;
+        get => _image.Stretch == Stretch.Uniform
+            ? PictureBoxSizeMode.Zoom
+            : _image.HorizontalAlignment == Avalonia.Layout.HorizontalAlignment.Center
+                ? PictureBoxSizeMode.CenterImage
+                : PictureBoxSizeMode.Normal;
         set
         {
-            bool center = value == PictureBoxSizeMode.CenterImage;
+            bool center = value is PictureBoxSizeMode.CenterImage or PictureBoxSizeMode.Zoom;
+            _image.Stretch = value == PictureBoxSizeMode.Zoom ? Stretch.Uniform : Stretch.None;
             _image.HorizontalAlignment = center
                 ? Avalonia.Layout.HorizontalAlignment.Center
                 : Avalonia.Layout.HorizontalAlignment.Left;
