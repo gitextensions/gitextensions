@@ -153,6 +153,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             "GitUI.CommandsDialogs.FormRebase" => FindFieldValue(_root, "cboBranches"),
             "GitUI.CommandsDialogs.FormRemotes" => FindFieldValue(_root, "Remotes"),
             "GitUI.CommandsDialogs.FormSettings" => FindFieldValue(_root, "textBoxFind"),
+            "GitUI.LeftPanel.RepoObjectsTree" => FindFieldValue(_root, "treeMain"),
             "GitUI.CommandsDialogs.FormSparseWorkingCopy" =>
                 ((FormSparseWorkingCopy)_root).GetTestAccessor().SeparatorAfterHeader,
             "GitUI.UserControls.BranchSelector" => FindFieldValue(_root, "LocalBranch"),

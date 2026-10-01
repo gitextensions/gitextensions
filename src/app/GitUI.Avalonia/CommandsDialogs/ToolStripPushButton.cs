@@ -71,10 +71,12 @@ public sealed class ToolStripPushButton : IconButton
         Avalonia.Size desired = base.MeasureOverride(availableSize);
         if (!Classes.Contains("gitextensions-icon-only") && Content is string { Length: > 0 } text)
         {
-            // ToolStrip autosizing uses integral TextRenderer metrics, not the fractional
-            // AccessText width. Retain the template's 16px image and 4px image/text spacing.
-            double width = WinFormsTextMeasurer.Measure(this, text) + 16 + 4
-                + Padding.Left + Padding.Right + BorderThickness.Left + BorderThickness.Right;
+            // ToolStripItemInternalLayout composes the image and padded TextRenderer text,
+            // then adds its two-pixel border on each side; it has no extra image/text gap.
+            const int imageWidth = 16;
+            const int nativeBorderWidth = 2;
+            double width = WinFormsTextMeasurer.MeasureTextRenderer(this, text).Width
+                + imageWidth + (2 * nativeBorderWidth);
             desired = new Avalonia.Size(Math.Ceiling(width), desired.Height);
         }
 

@@ -2238,93 +2238,82 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 6,
-          "note": "Whole-type reviewed source report: 6 member/structure diagnostics. Integral percentage columns follow native TableLayoutPanel truncation; unused docked margins do not inset the client. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 6 member/structure diagnostics. The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-capture-driver-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-capture-driver-accepted.trx"
           ],
           "platforms": [],
           "findingCount": 10,
-          "note": "Whole-type reviewed source report: 10 total source diagnostics. Integral percentage columns follow native TableLayoutPanel truncation; unused docked margins do not inset the client. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 10 total source diagnostics. The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 699,
-          "note": "Integral percentage columns follow native TableLayoutPanel truncation; unused docked margins do not inset the client. Scope: standalone native-100 matrix; 699 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 639,
+          "note": "The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Scope: standalone matrix; 639 recorded visual diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 222,
-          "note": "Integral percentage columns follow native TableLayoutPanel truncation; unused docked margins do not inset the client. Scope: standalone native-100 matrix; 222 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 162,
+          "note": "The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Scope: standalone matrix; 162 recorded themingAndColor diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 6,
-          "note": "Integral percentage columns follow native TableLayoutPanel truncation; unused docked margins do not inset the client. Scope: standalone native-100 matrix; 6 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "note": "The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Scope: standalone matrix; 6 recorded behavioralState diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/windows-runtime-final-retry/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-x11-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -2332,7 +2321,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, nested-Weston native Wayland and nested-Xephyr X11 after final product changes. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Inspected application startup smokes pass on Windows, native Wayland in nested Weston on WSLg and X11 in nested Xephyr. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
         }
       }
     },
@@ -2344,93 +2333,82 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 6,
-          "note": "Whole-type reviewed source report: 6 member/structure diagnostics. Integral percentage columns follow native TableLayoutPanel truncation; unused docked margins do not inset the client. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 6 member/structure diagnostics. The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-capture-driver-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-capture-driver-accepted.trx"
           ],
           "platforms": [],
           "findingCount": 10,
-          "note": "Whole-type reviewed source report: 10 total source diagnostics. Integral percentage columns follow native TableLayoutPanel truncation; unused docked margins do not inset the client. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 10 total source diagnostics. The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 699,
-          "note": "Integral percentage columns follow native TableLayoutPanel truncation; unused docked margins do not inset the client. Scope: standalone native-100 matrix; 699 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 639,
+          "note": "The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Scope: standalone matrix; 639 recorded visual diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 222,
-          "note": "Integral percentage columns follow native TableLayoutPanel truncation; unused docked margins do not inset the client. Scope: standalone native-100 matrix; 222 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 162,
+          "note": "The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Scope: standalone matrix; 162 recorded themingAndColor diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 6,
-          "note": "Integral percentage columns follow native TableLayoutPanel truncation; unused docked margins do not inset the client. Scope: standalone native-100 matrix; 6 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "note": "The root inherits source ControlText instead of WindowText, and repository-menu brushes follow their owning palette. Current paired native-100 dashboard geometry, control, color, state and image differences remain open. Scope: standalone matrix; 6 recorded behavioralState diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/windows-runtime-final-retry/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-x11-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -2438,7 +2416,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, nested-Weston native Wayland and nested-Xephyr X11 after final product changes. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Inspected application startup smokes pass on Windows, native Wayland in nested Weston on WSLg and X11 in nested Xephyr. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
         }
       }
     },
@@ -2781,93 +2759,82 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 19,
-          "note": "Whole-type reviewed source report: 19 member/structure diagnostics. Repository heading height follows TextRenderer preferred size; source ListView column defaults are 60 DIPs. Exact group painting, wrapping and all repository actions remain open. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 19 member/structure diagnostics. MenuStrip and its top item receive the owning repository list's foreground/background, rather than Avalonia's local Menu palette. Capture reporting reads their actual live brushes. Group painting, wrapping, layout and all repository actions remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-capture-driver-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-capture-driver-accepted.trx"
           ],
           "platforms": [],
           "findingCount": 44,
-          "note": "Whole-type reviewed source report: 44 total source diagnostics. Repository heading height follows TextRenderer preferred size; source ListView column defaults are 60 DIPs. Exact group painting, wrapping and all repository actions remain open. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 44 total source diagnostics. MenuStrip and its top item receive the owning repository list's foreground/background, rather than Avalonia's local Menu palette. Capture reporting reads their actual live brushes. Group painting, wrapping, layout and all repository actions remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 210,
-          "note": "Repository heading height follows TextRenderer preferred size; source ListView column defaults are 60 DIPs. Exact group painting, wrapping and all repository actions remain open. Scope: embedded Dashboard named-control diagnostics; parent imagery is not an independent component paint audit; 210 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 234,
+          "note": "MenuStrip and its top item receive the owning repository list's foreground/background, rather than Avalonia's local Menu palette. Capture reporting reads their actual live brushes. Group painting, wrapping, layout and all repository actions remain open. Scope: eight named repository-list controls embedded in Dashboard; 234 recorded visual diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 156,
-          "note": "Repository heading height follows TextRenderer preferred size; source ListView column defaults are 60 DIPs. Exact group painting, wrapping and all repository actions remain open. Scope: embedded Dashboard named-control diagnostics; parent imagery is not an independent component paint audit; 156 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 162,
+          "note": "MenuStrip and its top item receive the owning repository list's foreground/background, rather than Avalonia's local Menu palette. Capture reporting reads their actual live brushes. Group painting, wrapping, layout and all repository actions remain open. Scope: eight named repository-list controls embedded in Dashboard; 162 recorded themingAndColor diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 6,
-          "note": "Repository heading height follows TextRenderer preferred size; source ListView column defaults are 60 DIPs. Exact group painting, wrapping and all repository actions remain open. Scope: embedded Dashboard named-control diagnostics; parent imagery is not an independent component paint audit; 6 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "note": "MenuStrip and its top item receive the owning repository list's foreground/background, rather than Avalonia's local Menu palette. Capture reporting reads their actual live brushes. Group painting, wrapping, layout and all repository actions remain open. Scope: eight named repository-list controls embedded in Dashboard; 6 recorded behavioralState diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/windows-runtime-final-retry/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-x11-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -2875,7 +2842,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, nested-Weston native Wayland and nested-Xephyr X11 after final product changes. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Inspected application startup smokes pass on Windows, native Wayland in nested Weston on WSLg and X11 in nested Xephyr. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
         }
       }
     },
@@ -5218,93 +5185,82 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 38,
-          "note": "Whole-type reviewed source report: 38 member/structure diagnostics. Header duplicate overhang is removed. Push-counter text is retained in capture reporting, and repository loads settle before capture. Tracking-enabled versus icon-only fixtures are different contexts; exhaustive main-screen parity remains open. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 38 member/structure diagnostics. The tracked-counter preferred-size formula removes the duplicated extra gap. All 12 current native-100 Browse pairs have zero structured geometry/color/control/state/text/font findings, with 63 image records still open. The recreated fixture changed commit/status captions, so the prior total is not a directly comparable product delta. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-capture-driver-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-capture-driver-accepted.trx"
           ],
           "platforms": [],
           "findingCount": 120,
-          "note": "Whole-type reviewed source report: 120 total source diagnostics. Header duplicate overhang is removed. Push-counter text is retained in capture reporting, and repository loads settle before capture. Tracking-enabled versus icon-only fixtures are different contexts; exhaustive main-screen parity remains open. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 120 total source diagnostics. The tracked-counter preferred-size formula removes the duplicated extra gap. All 12 current native-100 Browse pairs have zero structured geometry/color/control/state/text/font findings, with 63 image records still open. The recreated fixture changed commit/status captions, so the prior total is not a directly comparable product delta. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 219,
-          "note": "Header duplicate overhang is removed. Push-counter text is retained in capture reporting, and repository loads settle before capture. Tracking-enabled versus icon-only fixtures are different contexts; exhaustive main-screen parity remains open. Scope: standalone native-100 matrix; 219 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 63,
+          "note": "The tracked-counter preferred-size formula removes the duplicated extra gap. All 12 current native-100 Browse pairs have zero structured geometry/color/control/state/text/font findings, with 63 image records still open. The recreated fixture changed commit/status captions, so the prior total is not a directly comparable product delta. Scope: standalone matrix; 63 recorded visual diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "Header duplicate overhang is removed. Push-counter text is retained in capture reporting, and repository loads settle before capture. Tracking-enabled versus icon-only fixtures are different contexts; exhaustive main-screen parity remains open. Scope: standalone native-100 matrix; 0 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "note": "The tracked-counter preferred-size formula removes the duplicated extra gap. All 12 current native-100 Browse pairs have zero structured geometry/color/control/state/text/font findings, with 63 image records still open. The recreated fixture changed commit/status captions, so the prior total is not a directly comparable product delta. Scope: standalone matrix; 0 recorded themingAndColor diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "Header duplicate overhang is removed. Push-counter text is retained in capture reporting, and repository loads settle before capture. Tracking-enabled versus icon-only fixtures are different contexts; exhaustive main-screen parity remains open. Scope: standalone native-100 matrix; 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "note": "The tracked-counter preferred-size formula removes the duplicated extra gap. All 12 current native-100 Browse pairs have zero structured geometry/color/control/state/text/font findings, with 63 image records still open. The recreated fixture changed commit/status captions, so the prior total is not a directly comparable product delta. Scope: standalone matrix; 0 recorded behavioralState diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/windows-runtime-final-retry/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-x11-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -5312,7 +5268,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, nested-Weston native Wayland and nested-Xephyr X11 after final product changes. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Inspected application startup smokes pass on Windows, native Wayland in nested Weston on WSLg and X11 in nested Xephyr. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
         }
       }
     },
@@ -10879,93 +10835,82 @@
         "structural": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.SearchControl.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.SearchControl.functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "Whole-type reviewed source report: 0 member/structure diagnostics. The tree-owned search input has one owned border and resolves KnownColor borders through the active theme. Standalone Fixed3D/default-border and complete popup-state parity remain open. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 0 member/structure diagnostics. The source default Fixed3D, FixedSingle and None border modes are preserved, including the four-pixel Fixed3D client inset, one custom tree border and HotTrack focus-color identity. Current standalone normal/focus comparisons retain image findings; complete hover/disabled/popup auditing remains open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.SearchControl.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.SearchControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-capture-driver-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-capture-driver-accepted.trx"
           ],
           "platforms": [],
           "findingCount": 6,
-          "note": "Whole-type reviewed source report: 6 total source diagnostics. The tree-owned search input has one owned border and resolves KnownColor borders through the active theme. Standalone Fixed3D/default-border and complete popup-state parity remain open. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 6 total source diagnostics. The source default Fixed3D, FixedSingle and None border modes are preserved, including the four-pixel Fixed3D client inset, one custom tree border and HotTrack focus-color identity. Current standalone normal/focus comparisons retain image findings; complete hover/disabled/popup auditing remains open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 36,
-          "note": "The tree-owned search input has one owned border and resolves KnownColor borders through the active theme. Standalone Fixed3D/default-border and complete popup-state parity remain open. Scope: standalone native-100 matrix; 36 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 18,
+          "note": "The source default Fixed3D, FixedSingle and None border modes are preserved, including the four-pixel Fixed3D client inset, one custom tree border and HotTrack focus-color identity. Current standalone normal/focus comparisons retain image findings; complete hover/disabled/popup auditing remains open. Scope: standalone matrix; 18 recorded visual diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "The tree-owned search input has one owned border and resolves KnownColor borders through the active theme. Standalone Fixed3D/default-border and complete popup-state parity remain open. Scope: standalone native-100 matrix; 0 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "note": "The source default Fixed3D, FixedSingle and None border modes are preserved, including the four-pixel Fixed3D client inset, one custom tree border and HotTrack focus-color identity. Current standalone normal/focus comparisons retain image findings; complete hover/disabled/popup auditing remains open. Scope: standalone matrix; 0 recorded themingAndColor diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "The tree-owned search input has one owned border and resolves KnownColor borders through the active theme. Standalone Fixed3D/default-border and complete popup-state parity remain open. Scope: standalone native-100 matrix; 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "note": "The source default Fixed3D, FixedSingle and None border modes are preserved, including the four-pixel Fixed3D client inset, one custom tree border and HotTrack focus-color identity. Current standalone normal/focus comparisons retain image findings; complete hover/disabled/popup auditing remains open. Scope: standalone matrix; 0 recorded behavioralState diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/windows-runtime-final-retry/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-x11-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -10973,7 +10918,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, nested-Weston native Wayland and nested-Xephyr X11 after final product changes. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Inspected application startup smokes pass on Windows, native Wayland in nested Weston on WSLg and X11 in nested Xephyr. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
         }
       }
     },
@@ -10985,93 +10930,82 @@
         "structural": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.SearchControl.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.SearchControl.functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "Whole-type reviewed source report: 0 member/structure diagnostics. The tree-owned search input has one owned border and resolves KnownColor borders through the active theme. Standalone Fixed3D/default-border and complete popup-state parity remain open. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 0 member/structure diagnostics. The source default Fixed3D, FixedSingle and None border modes are preserved, including the four-pixel Fixed3D client inset, one custom tree border and HotTrack focus-color identity. Current standalone normal/focus comparisons retain image findings; complete hover/disabled/popup auditing remains open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.SearchControl.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.SearchControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-capture-driver-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-capture-driver-accepted.trx"
           ],
           "platforms": [],
           "findingCount": 6,
-          "note": "Whole-type reviewed source report: 6 total source diagnostics. The tree-owned search input has one owned border and resolves KnownColor borders through the active theme. Standalone Fixed3D/default-border and complete popup-state parity remain open. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 6 total source diagnostics. The source default Fixed3D, FixedSingle and None border modes are preserved, including the four-pixel Fixed3D client inset, one custom tree border and HotTrack focus-color identity. Current standalone normal/focus comparisons retain image findings; complete hover/disabled/popup auditing remains open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 36,
-          "note": "The tree-owned search input has one owned border and resolves KnownColor borders through the active theme. Standalone Fixed3D/default-border and complete popup-state parity remain open. Scope: standalone native-100 matrix; 36 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 18,
+          "note": "The source default Fixed3D, FixedSingle and None border modes are preserved, including the four-pixel Fixed3D client inset, one custom tree border and HotTrack focus-color identity. Current standalone normal/focus comparisons retain image findings; complete hover/disabled/popup auditing remains open. Scope: standalone matrix; 18 recorded visual diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "The tree-owned search input has one owned border and resolves KnownColor borders through the active theme. Standalone Fixed3D/default-border and complete popup-state parity remain open. Scope: standalone native-100 matrix; 0 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "note": "The source default Fixed3D, FixedSingle and None border modes are preserved, including the four-pixel Fixed3D client inset, one custom tree border and HotTrack focus-color identity. Current standalone normal/focus comparisons retain image findings; complete hover/disabled/popup auditing remains open. Scope: standalone matrix; 0 recorded themingAndColor diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "The tree-owned search input has one owned border and resolves KnownColor borders through the active theme. Standalone Fixed3D/default-border and complete popup-state parity remain open. Scope: standalone native-100 matrix; 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "note": "The source default Fixed3D, FixedSingle and None border modes are preserved, including the four-pixel Fixed3D client inset, one custom tree border and HotTrack focus-color identity. Current standalone normal/focus comparisons retain image findings; complete hover/disabled/popup auditing remains open. Scope: standalone matrix; 0 recorded behavioralState diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/windows-runtime-final-retry/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-x11-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -11079,7 +11013,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, nested-Weston native Wayland and nested-Xephyr X11 after final product changes. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Inspected application startup smokes pass on Windows, native Wayland in nested Weston on WSLg and X11 in nested Xephyr. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
         }
       }
     },
@@ -16985,93 +16919,83 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.ToolStripPushButton.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.ToolStripPushButton.functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 1,
-          "note": "Whole-type reviewed source report: 1 member/structure diagnostics. Image-and-text autosizing uses integral native text metrics plus template image, spacing, padding and borders. Tracked zero-count captures still differ by one pixel from native sizing. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 1 member/structure diagnostics. Preferred width follows padded TextRenderer text plus the 16-DIP image and two native border pixels per side, without an extra template gap. Native and portable counter tests cover zero, short and long captions; the native zero caption is 45 pixels. Embedded Browse geometry agrees in the current sample; independent paint and complete interaction parity remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.ToolStripPushButton.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.ToolStripPushButton.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-capture-driver-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-capture-driver-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-native-sizing.trx"
           ],
           "platforms": [],
           "findingCount": 2,
-          "note": "Whole-type reviewed source report: 2 total source diagnostics. Image-and-text autosizing uses integral native text metrics plus template image, spacing, padding and borders. Tracked zero-count captures still differ by one pixel from native sizing. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 2 total source diagnostics. Preferred width follows padded TextRenderer text plus the 16-DIP image and two native border pixels per side, without an extra template gap. Native and portable counter tests cover zero, short and long captions; the native zero caption is 45 pixels. Embedded Browse geometry agrees in the current sample; independent paint and complete interaction parity remain open. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 24,
-          "note": "Image-and-text autosizing uses integral native text metrics plus template image, spacing, padding and borders. Tracked zero-count captures still differ by one pixel from native sizing. Scope: embedded FormBrowse named-control diagnostics; parent imagery is not an independent component paint audit; 24 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 0,
+          "note": "Preferred width follows padded TextRenderer text plus the 16-DIP image and two native border pixels per side, without an extra template gap. Native and portable counter tests cover zero, short and long captions; the native zero caption is 45 pixels. Embedded Browse geometry agrees in the current sample; independent paint and complete interaction parity remain open. Scope: embedded Browse counter; 0 recorded visual diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "Image-and-text autosizing uses integral native text metrics plus template image, spacing, padding and borders. Tracked zero-count captures still differ by one pixel from native sizing. Scope: embedded FormBrowse named-control diagnostics; parent imagery is not an independent component paint audit; 0 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "note": "Preferred width follows padded TextRenderer text plus the 16-DIP image and two native border pixels per side, without an extra template gap. Native and portable counter tests cover zero, short and long captions; the native zero caption is 45 pixels. Embedded Browse geometry agrees in the current sample; independent paint and complete interaction parity remain open. Scope: embedded Browse counter; 0 recorded themingAndColor diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "Image-and-text autosizing uses integral native text metrics plus template image, spacing, padding and borders. Tracked zero-count captures still differ by one pixel from native sizing. Scope: embedded FormBrowse named-control diagnostics; parent imagery is not an independent component paint audit; 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "note": "Preferred width follows padded TextRenderer text plus the 16-DIP image and two native border pixels per side, without an extra template gap. Native and portable counter tests cover zero, short and long captions; the native zero caption is 45 pixels. Embedded Browse geometry agrees in the current sample; independent paint and complete interaction parity remain open. Scope: embedded Browse counter; 0 recorded behavioralState diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/windows-runtime-final-retry/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-x11-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -17079,7 +17003,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, nested-Weston native Wayland and nested-Xephyr X11 after final product changes. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Inspected application startup smokes pass on Windows, native Wayland in nested Weston on WSLg and X11 in nested Xephyr. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
         }
       }
     },
@@ -24165,93 +24089,82 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 4,
-          "note": "Whole-type reviewed source report: 4 member/structure diagnostics. Tree keyboard focus follows the original tab index 3, instead of leaving search focused; the source 23-DIP search input is centered in its 26-DIP toolbar row. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 4 member/structure diagnostics. Standalone capture now uses real paired refs, an empty stash snapshot, Branches selection, native initial Remotes expansion and tree keyboard focus. Synthetic worktree/submodule states remain separate. This is fixture correction, not product closure; 44 color, six layout and 18 image records remain in the sample. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-capture-driver-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-capture-driver-accepted.trx"
           ],
           "platforms": [],
           "findingCount": 15,
-          "note": "Whole-type reviewed source report: 15 total source diagnostics. Tree keyboard focus follows the original tab index 3, instead of leaving search focused; the source 23-DIP search input is centered in its 26-DIP toolbar row. Exact framework allowances do not establish complete parity; exhaustive source-order/behavior review remains open."
+          "note": "Whole-type reviewed source report: 15 total source diagnostics. Standalone capture now uses real paired refs, an empty stash snapshot, Branches selection, native initial Remotes expansion and tree keyboard focus. Synthetic worktree/submodule states remain separate. This is fixture correction, not product closure; 44 color, six layout and 18 image records remain in the sample. Affected-surface regression: 175/175 each on Windows and Linux; final capture-state correction 8/8 each. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 74,
-          "note": "Tree keyboard focus follows the original tab index 3, instead of leaving search focused; the source 23-DIP search input is centered in its 26-DIP toolbar row. Scope: standalone native-100 matrix; 74 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 68,
+          "note": "Standalone capture now uses real paired refs, an empty stash snapshot, Branches selection, native initial Remotes expansion and tree keyboard focus. Synthetic worktree/submodule states remain separate. This is fixture correction, not product closure; 44 color, six layout and 18 image records remain in the sample. Scope: standalone matrix; 68 recorded visual diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 44,
-          "note": "Tree keyboard focus follows the original tab index 3, instead of leaving search focused; the source 23-DIP search input is centered in its 26-DIP toolbar row. Scope: standalone native-100 matrix; 44 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "note": "Standalone capture now uses real paired refs, an empty stash snapshot, Branches selection, native initial Remotes expansion and tree keyboard focus. Synthetic worktree/submodule states remain separate. This is fixture correction, not product closure; 44 color, six layout and 18 image records remain in the sample. Scope: standalone matrix; 44 recorded themingAndColor diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 6,
-          "note": "Tree keyboard focus follows the original tab index 3, instead of leaving search focused; the source 23-DIP search input is centered in its 26-DIP toolbar row. Scope: standalone native-100 matrix; 6 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. Complete paint/action/hover/pressed/disabled/popup coverage is not verified."
+          "findingCount": 0,
+          "note": "Standalone capture now uses real paired refs, an empty stash snapshot, Branches selection, native initial Remotes expansion and tree keyboard focus. Synthetic worktree/submodule states remain separate. This is fixture correction, not product closure; 44 color, six layout and 18 image records remain in the sample. Scope: standalone matrix; 0 recorded behavioralState diagnostics, not exhaustive debt. Parent image records are not assigned to embedded components. Native 100% light/dark/custom only; higher scales deferred. All images and unmeasured interaction states remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-01",
-          "commit": "78a15b9b86eee1bb804c70860203e08129e30d1c",
+          "commit": "342f2c97f7d42924189ee9ea4b4bae0c4181b8c8",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/windows-runtime-final-retry/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-x11-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -24259,7 +24172,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Inspected application startup smokes pass on Windows, nested-Weston native Wayland and nested-Xephyr X11 after final product changes. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
+          "note": "Inspected application startup smokes pass on Windows, native Wayland in nested Weston on WSLg and X11 in nested Xephyr. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement/capture changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview sweep deferred."
         }
       }
     },
