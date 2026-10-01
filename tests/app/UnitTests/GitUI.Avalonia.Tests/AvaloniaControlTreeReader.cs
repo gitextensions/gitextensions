@@ -17,6 +17,7 @@ using GitUI;
 using GitUI.AutoCompletion;
 using GitUI.Compat;
 using GitUI.UserControls.RevisionGrid.Columns;
+using SearchControl = GitUI.CommandsDialogs.SearchControl;
 
 namespace GitExtensionsTests;
 
@@ -625,6 +626,7 @@ internal sealed class AvaloniaControlTreeReader
         bool hasWinFormsTextBoxClientInset = control is TextBox
             && !isHostedMenuTextBox
             && !isSpellCheckTextBox
+            && !(control.Name == "txtSearchBox" && control.GetLogicalAncestors().OfType<SearchControl>().Any())
             && !IsSourceRichTextControl(control)
             && GetSourceTypeName(sourceType) is not "RichTextBox";
         // The source OutputHistory RichTextBox has Fixed3D chrome: its client excludes
@@ -735,7 +737,9 @@ internal sealed class AvaloniaControlTreeReader
                 "ToolStripMain" => "Standard",
                 "ToolStripFilters" => rootMetadataType == "GitUI.CommandsDialogs.FormFileHistory" ? string.Empty : "Filters",
                 "ToolStripScripts" => "Scripts",
-                "EditSettings" or "toolStripButtonLevelUp" or "toolStripButtonPush"
+                "toolStripButtonPush" => control.Classes.Contains("gitextensions-icon-only")
+                    ? string.Empty : GetText(control),
+                "EditSettings" or "toolStripButtonLevelUp"
                     or "toolStripWorktrees" or "tsbtnAdvancedFilter" => string.Empty,
                 "tssbtnShowBranches" => "&All branches",
                 _ => null,
@@ -1067,6 +1071,8 @@ internal sealed class AvaloniaControlTreeReader
                         ? default(Thickness)
                         : GetPropertyValue(control, "Padding"))),
             Margin = ReadThicknessPair(isHostedMenuTextBox ? new Thickness(1)
+                : hasDashboardRuntimeColors || control is SearchControl
+                    ? control.Margin
                 : isComboBoxPopup || isComboBoxPopupItem
                 ? default(Thickness)
                 : isSettingsRootTable ? new Thickness(3)
@@ -1154,7 +1160,9 @@ internal sealed class AvaloniaControlTreeReader
                 // WinForms controls inherit a concrete Font even when the Avalonia layout
                 // counterpart is a non-templated Panel without font properties of its own.
                 ?? (fieldName is not null ? ReadFont(_root) : null),
-            Colors = isHostedMenuTextBox
+            Colors = control is SearchControl
+                ? ReadTransparentContainerColors(control)
+                : isHostedMenuTextBox
                 ? ReadHostedMenuTextBoxColors(control)
                 : isComboBoxPopup || isComboBoxPopupItem
                 ? ReadComboBoxPopupColors()
@@ -1304,7 +1312,11 @@ internal sealed class AvaloniaControlTreeReader
                                                     : isDesignerMetadataControl && control.Name == "lblHeaderLine2"
                                                                 ? ReadSourceDesignerColors(control) with { Border = null }
                                                             : ReadColors(semanticStateControl),
-            BorderStyle = isFormBrowseToolStripContainer
+            BorderStyle = control.Name == "txtSearchBox"
+                && control.GetLogicalAncestors().OfType<SearchControl>().Any()
+                && control.Parent is Border searchBorder
+                    ? searchBorder.BorderThickness == default ? "None" : "FixedSingle"
+                : isFormBrowseToolStripContainer
                 ? null
                 : isFormBrowseContainerPanel && semanticName == "_contentPanel"
                     ? "None"
@@ -1752,6 +1764,7 @@ internal sealed class AvaloniaControlTreeReader
         if (isSurfaceRoot
             && !isPopupRoot
             && rootMetadataType is not ("GitUI.UserControls.Settings.SettingsCheckBox"
+                or "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard"
                 or "GitUI.CommandsDialogs.SearchControl"
                 or "GitUI.CommandsDialogs.FormCommit"))
         {
@@ -4536,7 +4549,9 @@ internal sealed class AvaloniaControlTreeReader
             .OfType<Control>()
             .Where(child => child.TemplatedParent is null
                             && child.GetType().Name != "TopLevelHost")
-            .Where(child => !IsSearchResultOverlay(child))
+            // Only window captures reparent the result list to their semantic window root.
+            // Standalone composites must retain their hidden list instead of losing it.
+            .Where(child => _root is not Window || !IsSearchResultOverlay(child))
             .Where(child => !IsFileStatusAlternateView(child))
             .Where(child => !IsLoadingControl(child));
 

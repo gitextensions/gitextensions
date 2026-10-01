@@ -113,6 +113,8 @@ public partial class UserRepositoriesList : TranslatedControl
         _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.Size - 1F);
         lblRecentRepositories.FontFamily = new FontFamily(AppSettings.Font.Name);
         lblRecentRepositories.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size + 5.5F);
+        lblRecentRepositories.Height = Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(
+            lblRecentRepositories, lblRecentRepositories.Text ?? string.Empty).Height);
 
         // Apply owned defaults even when the first theme assignment equals a backing field;
         // the source Designer has already painted these properties before its setters run.

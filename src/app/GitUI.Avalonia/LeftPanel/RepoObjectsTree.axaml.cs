@@ -286,7 +286,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             {
                 Name = "txtBranchCritierion",
                 Height = 23,
-                Margin = new Thickness(0, 1, 0, 2)
+                Margin = default,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                Background = Brushes.Transparent
             };
             KeyboardNavigation.SetTabIndex(search, 1);
             search.OnTextEntered += () =>

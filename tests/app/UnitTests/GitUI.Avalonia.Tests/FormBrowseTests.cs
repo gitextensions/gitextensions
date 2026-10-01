@@ -1131,6 +1131,26 @@ public sealed class FormBrowseTests
             form.UpdateLayout();
             Dispatcher.UIThread.RunJobs();
 
+            CaptureNode captureRoot = new AvaloniaControlTreeReader(form, 1)
+                .ReadPrimary(form, new PixelSize(900, 600)).Root;
+            Stack<CaptureNode> captureNodes = new([captureRoot]);
+            CaptureNode? capturedPush = null;
+            while (captureNodes.TryPop(out CaptureNode? node))
+            {
+                if (node.FieldName == "toolStripButtonPush")
+                {
+                    capturedPush = node;
+                }
+
+                foreach (CaptureNode child in node.Children)
+                {
+                    captureNodes.Push(child);
+                }
+            }
+
+            capturedPush.Should().NotBeNull();
+            capturedPush!.Text.Should().Be("1↑");
+
             commitButton.Bounds.Width.Should().Be(Math.Ceiling(commitButton.Bounds.Width));
             commitButton.Bounds.Width.Should().BeGreaterThanOrEqualTo(88);
             if (OperatingSystem.IsWindows())
