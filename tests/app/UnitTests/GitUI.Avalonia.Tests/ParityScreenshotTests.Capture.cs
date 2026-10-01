@@ -54,6 +54,8 @@ public sealed partial class ParityScreenshotTests
     [Category("P8.6i.126")]
     public async Task Dashboard_capture_should_seed_the_same_normalized_history_as_the_reference_worker()
     {
+        AvaloniaSynchronizationContext.InstallIfNeeded();
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
         using CaptureContext context = new();
         Dashboard dashboard = new();
         await PrepareViewAsync(dashboard, context);

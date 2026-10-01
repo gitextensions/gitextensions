@@ -1128,6 +1128,14 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />
   </Style>
+  <!-- The native repository-tree ToolStrip has 16px images in 23×22 item allocations. -->
+  <Style Selector="StackPanel.gitextensions-tree-toolbar > Button.gitextensions-toolbar-button,
+                   StackPanel.gitextensions-tree-toolbar > ToggleButton.gitextensions-toolbar-button">
+    <Setter Property="Width" Value="23" />
+    <Setter Property="MinWidth" Value="23" />
+    <Setter Property="Height" Value="22" />
+    <Setter Property="MinHeight" Value="22" />
+  </Style>
   <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_PrimaryButton">
     <Setter Property="MinWidth" Value="23" />
   </Style>

@@ -28,6 +28,26 @@ namespace GitExtensionsTests;
 [NonParallelizable]
 public sealed class RepoObjectsTreeTests
 {
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Tree_toolbar_should_keep_native_image_item_allocations()
+    {
+        RepoObjectsTree tree = new();
+        Window window = new() { Width = 300, Height = 350, Content = tree };
+        try
+        {
+            window.Show();
+            window.UpdateLayout();
+            StackPanel toolbar = tree.FindControl<StackPanel>("leftPanelToolStrip")!;
+            toolbar.Children.Should().HaveCount(7);
+            toolbar.Children.Should().OnlyContain(control => control.Bounds.Width == 23 && control.Bounds.Height == 22);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private static readonly ObjectId StashId = ObjectId.Parse("3333333333333333333333333333333333333333");
 
     [AvaloniaTest]

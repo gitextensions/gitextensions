@@ -24,21 +24,27 @@
   </UserControl.Resources>
   <UserControl.Styles>
     <Style Selector="Button.dashboard-link">
-      <Setter Property="HorizontalAlignment" Value="Stretch" />
       <Setter Property="HorizontalContentAlignment" Value="Left" />
       <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
       <Setter Property="BorderThickness" Value="0" />
       <Setter Property="CornerRadius" Value="0" />
       <Setter Property="Margin" Value="3,0,3,8" />
       <Setter Property="Padding" Value="24,3,3,3" />
+      <Setter Property="MinWidth" Value="0" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="HorizontalAlignment" Value="Left" />
+      <Setter Property="Foreground" Value="{DynamicResource DashboardLinkForegroundBrush}" />
     </Style>
     <Style Selector="Button.dashboard-link:pointerover">
-      <Setter Property="Background" Value="{DynamicResource DashboardLinkHoverBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource DashboardLinkHoverForegroundBrush}" />
     </Style>
   </UserControl.Styles>
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto"
+                AllowAutoHide="False">
   <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
                        ColumnDefinitions="7.142857*,213,85.71428*,7.142857*"
-                       Background="{DynamicResource ThemeBackgroundBrush}">
+                       Background="{StaticResource GitExtensionsTransparentBrush}">
     <Image x:Name="backgroundImage"
            Grid.ColumnSpan="4"
            Stretch="Fill"
@@ -46,33 +52,35 @@
     <wf:Panel x:Name="pnlLeft" Grid.Column="1">
       <Grid RowDefinitions="68,*,Auto">
       <wf:Panel x:Name="pnlLogo"
+                Height="68"
                 Padding="20,0,20,14"
                 Background="{DynamicResource DashboardLogoBackgroundBrush}">
+        <Canvas>
         <Image x:Name="pbLogo"
                Width="185"
                Height="44"
-               Margin="-6,15,0,0"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Top"
+               Canvas.Left="-6"
+               Canvas.Top="15"
                Source="{x:Static properties:Images.GitExtensionsLogoWide}"
                Stretch="Uniform" />
+        </Canvas>
       </wf:Panel>
-      <Border x:Name="pnlStart"
+      <Border x:Name="flpnlStart"
               Grid.Row="1"
               Padding="20"
               Background="{DynamicResource DashboardStartBackgroundBrush}">
-        <StackPanel x:Name="flpnlStart">
+        <StackPanel>
           <Button x:Name="createItem" Classes="dashboard-link" />
           <Button x:Name="openItem" Classes="dashboard-link" />
           <Button x:Name="cloneItem" Classes="dashboard-link" />
         </StackPanel>
       </Border>
-      <Border x:Name="pnlContribute"
+      <Border x:Name="flpnlContribute"
               Grid.Row="2"
               Padding="20,20,20,30"
               Background="{DynamicResource DashboardContributeBackgroundBrush}">
-        <StackPanel x:Name="flpnlContribute">
-          <wf:Label x:Name="lblContribute" Text="Contribute" Margin="2,0,2,8" />
+        <StackPanel>
+          <wf:Label x:Name="lblContribute" Text="Contribute" Margin="2,0,2,8" HorizontalAlignment="Left" />
           <Button x:Name="developItem" Classes="dashboard-link" />
           <Button x:Name="donateItem" Classes="dashboard-link" />
           <Button x:Name="translateItem" Classes="dashboard-link" />
@@ -83,4 +91,5 @@
     </wf:Panel>
     <local:UserRepositoriesList x:Name="userRepositoriesList" Grid.Column="2" />
   </wf:TableLayoutPanel>
+  </ScrollViewer>
 </UserControl>

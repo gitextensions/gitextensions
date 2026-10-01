@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Styling;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
@@ -42,6 +41,16 @@ public partial class Dashboard : GitModuleControl
         ConfigureLink(issuesItem, IssuesItem_Click);
         AttachedToLogicalTree += dashboard_ParentChanged;
         DetachedFromLogicalTree += dashboard_ParentChanged;
+        SizeChanged += (_, _) => tableLayoutPanel1.Height = Math.Max(Bounds.Height, tableLayoutPanel1.MinHeight);
+
+        // Native UserControl.Focus selects its first input once the window is shown.
+        Loaded += (_, _) =>
+        {
+            if (IsEffectivelyVisible)
+            {
+                OnVisibleChanged(EventArgs.Empty);
+            }
+        };
         IsVisible = false;
         InitializeComplete();
 
@@ -76,7 +85,8 @@ public partial class Dashboard : GitModuleControl
 
     public void RefreshContent()
     {
-        DashboardTheme selectedTheme = ActualThemeVariant == ThemeVariant.Dark ? DashboardTheme.Dark : DashboardTheme.Light;
+        DashboardTheme selectedTheme = ThemeModule.Settings.Theme.SystemColorMode == GitExtensions.Shims.WinForms.SystemColorMode.Dark
+            ? DashboardTheme.Dark : DashboardTheme.Light;
 
         createItem.Content = CreateLinkContent(Images.RepoCreate, _createRepository.Text);
         openItem.Content = CreateLinkContent(Images.RepoOpen, _openRepository.Text);
@@ -86,10 +96,11 @@ public partial class Dashboard : GitModuleControl
         translateItem.Content = CreateLinkContent(Images.Translate.AdaptLightness(), _translate.Text);
         issuesItem.Content = CreateLinkContent(Images.Bug, _issues.Text);
 
-        Button[] dynamicLinks = [.. flpnlStart.Children.OfType<Button>().Where(button => button.Tag is IRepositoryHostPlugin)];
+        StackPanel startLinks = (StackPanel)flpnlStart.Child!;
+        Button[] dynamicLinks = [.. startLinks.Children.OfType<Button>().Where(button => button.Tag is IRepositoryHostPlugin)];
         foreach (Button button in dynamicLinks)
         {
-            flpnlStart.Children.Remove(button);
+            startLinks.Children.Remove(button);
         }
 
         foreach (IRepositoryHostPlugin gitHoster in PluginRegistry.GitHosters)
@@ -102,16 +113,35 @@ public partial class Dashboard : GitModuleControl
                 Tag = gitHoster,
             };
             linkLabel.Click += (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged);
-            flpnlStart.Children.Add(linkLabel);
+            startLinks.Children.Add(linkLabel);
         }
 
         backgroundImage.Source = selectedTheme.BackgroundImage;
         pnlLogo.Background = new SolidColorBrush(selectedTheme.LogoBackColor);
-        pnlStart.Background = new SolidColorBrush(selectedTheme.StartBackColor);
-        pnlContribute.Background = new SolidColorBrush(selectedTheme.ContributeBackColor);
+        flpnlStart.Background = new SolidColorBrush(selectedTheme.StartBackColor);
+        flpnlContribute.Background = new SolidColorBrush(selectedTheme.ContributeBackColor);
+        Resources["DashboardLinkForegroundBrush"] = new SolidColorBrush(selectedTheme.PrimaryText);
+        Resources["DashboardLinkHoverForegroundBrush"] = new SolidColorBrush(selectedTheme.AccentedText);
         lblContribute.Foreground = new SolidColorBrush(selectedTheme.SecondaryHeadingText);
         lblContribute.FontFamily = new FontFamily(AppSettings.Font.Name);
         lblContribute.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size + 5.5F);
+
+        // Native LinkLabel AutoSize measures its text plus padding, not an extra image column.
+        // Keep the source runtime minimum-height calculation so smaller hosts scroll instead
+        // of silently clipping the last start or contribution command.
+        Avalonia.Size heading = WinFormsTextMeasurer.MeasureTextRenderer(lblContribute, lblContribute.Text ?? string.Empty);
+        lblContribute.Width = Math.Ceiling(heading.Width);
+        lblContribute.Height = Math.Ceiling(heading.Height);
+        double startHeight = SizeLinks(startLinks) + flpnlStart.Padding.Top + flpnlStart.Padding.Bottom;
+        double contributionHeight = SizeLinks((StackPanel)flpnlContribute.Child!)
+            + lblContribute.Height + lblContribute.Margin.Top + lblContribute.Margin.Bottom
+            + flpnlContribute.Padding.Top + flpnlContribute.Padding.Bottom;
+        flpnlStart.MinHeight = startHeight;
+        flpnlContribute.Height = contributionHeight;
+        tableLayoutPanel1.MinHeight = pnlLogo.Height + startHeight + contributionHeight;
+
+        // Dock.Fill inside native AutoScroll uses the host/minimum height, not the background's preferred size.
+        tableLayoutPanel1.Height = Math.Max(Bounds.Height, tableLayoutPanel1.MinHeight);
         userRepositoriesList.MainBackColor = AvaloniaThemeResources.ToMediaColor(
             AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.Window));
         userRepositoriesList.BranchNameColor = selectedTheme.SecondaryText;
@@ -121,14 +151,31 @@ public partial class Dashboard : GitModuleControl
         userRepositoriesList.HeaderBackColor = selectedTheme.HeaderBackColor;
         userRepositoriesList.HoverColor = selectedTheme.StartBackColor;
         userRepositoriesList.SearchBackColor = selectedTheme.SearchBackColor;
+        Background = new SolidColorBrush(userRepositoriesList.MainBackColor);
         userRepositoriesList.ShowRecentRepositories(reloadData: false);
+
+        return;
+
+        static double SizeLinks(StackPanel panel)
+        {
+            double height = 0;
+            Button[] links = [.. panel.Children.OfType<Button>()];
+            foreach (Button link in links)
+            {
+                TextBlock text = ((Grid)link.Content!).Children.OfType<TextBlock>().Single();
+                Avalonia.Size measured = WinFormsTextMeasurer.MeasureTextRenderer(text, text.Text ?? string.Empty);
+                link.Width = Math.Ceiling(measured.Width) + link.Padding.Left + link.Padding.Right;
+                link.Height = Math.Ceiling(measured.Height) + link.Padding.Top + link.Padding.Bottom;
+                height += link.Height + link.Margin.Top + link.Margin.Bottom;
+            }
+
+            return height - (links.LastOrDefault()?.Margin.Bottom ?? 0);
+        }
     }
 
     private static Control CreateLinkContent(IImage icon, string text)
-        => new StackPanel
+        => new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 7,
             Children =
             {
                 new Image
@@ -136,10 +183,15 @@ public partial class Dashboard : GitModuleControl
                     Width = 16,
                     Height = 16,
                     Source = icon,
+                    Margin = new Thickness(-24, 0, 0, 0),
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Center,
                 },
                 new TextBlock
                 {
                     Text = text,
+                    FontFamily = new FontFamily(AppSettings.Font.Name),
+                    FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
                     VerticalAlignment = VerticalAlignment.Center,
                 },
             },
