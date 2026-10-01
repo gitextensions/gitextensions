@@ -42,6 +42,12 @@ partial class DetailedSettingsPage
         flowLayoutPanel1 = new FlowLayoutPanel();
         addLogMessages = new CheckBox();
         nbMessages = new TextBox();
+        gbxAiDiffPrompt = new GroupBox();
+        tlpnlAiDiffPrompt = new TableLayoutPanel();
+        lblAiDiffPromptPrefix = new Label();
+        txtAiDiffPromptPrefix = new TextBox();
+        lblAiDiffPromptSuffix = new Label();
+        txtAiDiffPromptSuffix = new TextBox();
         PushWindowGB.SuspendLayout();
         tableLayoutPanel1.SuspendLayout();
         tableLayoutPanel2.SuspendLayout();
@@ -50,6 +56,8 @@ partial class DetailedSettingsPage
         mergeWindowGroup.SuspendLayout();
         tableLayoutPanel4.SuspendLayout();
         flowLayoutPanel1.SuspendLayout();
+        gbxAiDiffPrompt.SuspendLayout();
+        tlpnlAiDiffPrompt.SuspendLayout();
         SuspendLayout();
         // 
         // PushWindowGB
@@ -106,6 +114,7 @@ partial class DetailedSettingsPage
         tableLayoutPanel2.Controls.Add(gbRevisionGraph, 0, 0);
         tableLayoutPanel2.Controls.Add(mergeWindowGroup, 0, 2);
         tableLayoutPanel2.Controls.Add(PushWindowGB, 0, 1);
+        tableLayoutPanel2.Controls.Add(gbxAiDiffPrompt, 0, 3);
         tableLayoutPanel2.Dock = DockStyle.Fill;
         tableLayoutPanel2.Location = new Point(8, 8);
         tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -248,6 +257,77 @@ partial class DetailedSettingsPage
         nbMessages.Size = new Size(100, 23);
         nbMessages.TabIndex = 1;
         // 
+        // gbxAiDiffPrompt
+        // 
+        gbxAiDiffPrompt.AutoSize = true;
+        gbxAiDiffPrompt.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        gbxAiDiffPrompt.Controls.Add(tlpnlAiDiffPrompt);
+        gbxAiDiffPrompt.Dock = DockStyle.Fill;
+        gbxAiDiffPrompt.Location = new Point(3, 253);
+        gbxAiDiffPrompt.Name = "gbxAiDiffPrompt";
+        gbxAiDiffPrompt.Padding = new Padding(8);
+        gbxAiDiffPrompt.TabIndex = 3;
+        gbxAiDiffPrompt.TabStop = false;
+        gbxAiDiffPrompt.Text = "AI prompt for diff";
+        // 
+        // tlpnlAiDiffPrompt
+        // 
+        tlpnlAiDiffPrompt.AutoSize = true;
+        tlpnlAiDiffPrompt.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        tlpnlAiDiffPrompt.ColumnCount = 1;
+        tlpnlAiDiffPrompt.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        tlpnlAiDiffPrompt.Controls.Add(lblAiDiffPromptPrefix, 0, 0);
+        tlpnlAiDiffPrompt.Controls.Add(txtAiDiffPromptPrefix, 0, 1);
+        tlpnlAiDiffPrompt.Controls.Add(lblAiDiffPromptSuffix, 0, 2);
+        tlpnlAiDiffPrompt.Controls.Add(txtAiDiffPromptSuffix, 0, 3);
+        tlpnlAiDiffPrompt.Dock = DockStyle.Fill;
+        tlpnlAiDiffPrompt.Location = new Point(8, 24);
+        tlpnlAiDiffPrompt.Name = "tlpnlAiDiffPrompt";
+        tlpnlAiDiffPrompt.RowCount = 4;
+        tlpnlAiDiffPrompt.RowStyles.Add(new RowStyle());
+        tlpnlAiDiffPrompt.RowStyles.Add(new RowStyle());
+        tlpnlAiDiffPrompt.RowStyles.Add(new RowStyle());
+        tlpnlAiDiffPrompt.RowStyles.Add(new RowStyle());
+        tlpnlAiDiffPrompt.TabIndex = 0;
+        // 
+        // lblAiDiffPromptPrefix
+        // 
+        lblAiDiffPromptPrefix.AutoSize = true;
+        lblAiDiffPromptPrefix.Dock = DockStyle.Fill;
+        lblAiDiffPromptPrefix.Location = new Point(3, 0);
+        lblAiDiffPromptPrefix.Name = "lblAiDiffPromptPrefix";
+        lblAiDiffPromptPrefix.TabIndex = 0;
+        lblAiDiffPromptPrefix.Text = "Prompt prefix:";
+        // 
+        // txtAiDiffPromptPrefix
+        // 
+        txtAiDiffPromptPrefix.Dock = DockStyle.Fill;
+        txtAiDiffPromptPrefix.Location = new Point(3, 18);
+        txtAiDiffPromptPrefix.Multiline = true;
+        txtAiDiffPromptPrefix.Name = "txtAiDiffPromptPrefix";
+        txtAiDiffPromptPrefix.ScrollBars = ScrollBars.Vertical;
+        txtAiDiffPromptPrefix.Size = new Size(1000, 80);
+        txtAiDiffPromptPrefix.TabIndex = 1;
+        // 
+        // lblAiDiffPromptSuffix
+        // 
+        lblAiDiffPromptSuffix.AutoSize = true;
+        lblAiDiffPromptSuffix.Dock = DockStyle.Fill;
+        lblAiDiffPromptSuffix.Location = new Point(3, 121);
+        lblAiDiffPromptSuffix.Name = "lblAiDiffPromptSuffix";
+        lblAiDiffPromptSuffix.TabIndex = 2;
+        lblAiDiffPromptSuffix.Text = "Prompt suffix:";
+        // 
+        // txtAiDiffPromptSuffix
+        // 
+        txtAiDiffPromptSuffix.Dock = DockStyle.Fill;
+        txtAiDiffPromptSuffix.Location = new Point(3, 139);
+        txtAiDiffPromptSuffix.Multiline = true;
+        txtAiDiffPromptSuffix.Name = "txtAiDiffPromptSuffix";
+        txtAiDiffPromptSuffix.ScrollBars = ScrollBars.Vertical;
+        txtAiDiffPromptSuffix.Size = new Size(1000, 120);
+        txtAiDiffPromptSuffix.TabIndex = 3;
+        // 
         // DetailedSettingsPage
         // 
         AutoScaleMode = AutoScaleMode.Inherit;
@@ -272,6 +352,10 @@ partial class DetailedSettingsPage
         tableLayoutPanel4.PerformLayout();
         flowLayoutPanel1.ResumeLayout(false);
         flowLayoutPanel1.PerformLayout();
+        gbxAiDiffPrompt.ResumeLayout(false);
+        gbxAiDiffPrompt.PerformLayout();
+        tlpnlAiDiffPrompt.ResumeLayout(false);
+        tlpnlAiDiffPrompt.PerformLayout();
         ResumeLayout(false);
         PerformLayout();
     }
@@ -292,4 +376,10 @@ partial class DetailedSettingsPage
     private CheckBox chkMergeGraphLanesHavingCommonParent;
     private CheckBox chkRenderGraphWithDiagonals;
     private CheckBox chkStraightenGraphDiagonals;
+    private GroupBox gbxAiDiffPrompt;
+    private TableLayoutPanel tlpnlAiDiffPrompt;
+    private Label lblAiDiffPromptPrefix;
+    private TextBox txtAiDiffPromptPrefix;
+    private Label lblAiDiffPromptSuffix;
+    private TextBox txtAiDiffPromptSuffix;
 }
