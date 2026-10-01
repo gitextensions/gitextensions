@@ -102,6 +102,28 @@ public class ExternalLinkRevisionParserTests
         actualLinks.Should().Equal(expectedLinks);
     }
 
+    [TestCase(null)]
+    [TestCase("")]
+    public void ParseLinkWithMissingSearchPattern(string? searchPattern)
+    {
+        ExternalLinkDefinition definition = new()
+        {
+            SearchPattern = searchPattern,
+            LinkFormats =
+            {
+                new ExternalLinkFormat
+                {
+                    Caption = "Test link",
+                    Format = "link"
+                }
+            }
+        };
+
+        _parser.Parse(_revision, definition)
+            .Should()
+            .Equal(new ExternalLink("Test link", "link"));
+    }
+
     private static BindingList<ConfigFileRemote> GetDefaultRemotes()
     {
         BindingList<ConfigFileRemote> remotes =
