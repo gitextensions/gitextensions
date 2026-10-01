@@ -36,6 +36,16 @@ internal static class WinFormsTextMeasurer
             singleLine: true,
             useTextRendererPadding: true);
 
+    public static AvaloniaSize MeasureTextRenderer(TemplatedControl owner, string value)
+        => MeasureSize(
+            owner.FontFamily,
+            owner.FontStyle,
+            owner.FontWeight,
+            owner.FontSize,
+            value,
+            singleLine: true,
+            useTextRendererPadding: true);
+
     public static AvaloniaSize MeasureSize(TemplatedControl owner, string value)
         => MeasureSize(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize, value, singleLine: true);
 

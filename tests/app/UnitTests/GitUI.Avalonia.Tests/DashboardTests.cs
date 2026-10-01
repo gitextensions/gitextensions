@@ -102,6 +102,7 @@ public sealed class DashboardTests
             list.HeaderColor = Avalonia.Media.Color.FromRgb(12, 34, 56);
             list.HeaderBackColor = Avalonia.Media.Color.FromRgb(78, 90, 12);
             list.ForeColor = Avalonia.Media.Color.FromRgb(34, 56, 78);
+            list.MainBackColor = Avalonia.Media.Color.FromRgb(90, 12, 34);
             window.UpdateLayout();
             CaptureNode root = new AvaloniaControlTreeReader(list, 1)
                 .ReadPrimary(list, PixelSize.FromSize(list.Bounds.Size, 1)).Root;
@@ -113,6 +114,12 @@ public sealed class DashboardTests
             CaptureNode repositoryList = Nodes(root).Single(node => node.FieldName == "listView1");
             repositoryList.ControlKind.Should().Be("list");
             repositoryList.Text.Should().BeEmpty();
+            foreach (string field in new[] { "menuStripRecentMenu", "mnuTop" })
+            {
+                CaptureNode menu = Nodes(root).Single(node => node.FieldName == field);
+                menu.Colors.Foreground.Should().Be("#FF22384E");
+                menu.Colors.Background.Should().Be("#FF5A0C22");
+            }
         }
         finally
         {
@@ -737,6 +744,7 @@ public sealed class DashboardTests
         {
             SearchControl<string> search = new(_ => [], _ => { })
             {
+                SearchBoxBorderStyle = GitExtensions.Shims.WinForms.BorderStyle.FixedSingle,
                 SearchBoxBorderDefaultColor = System.Drawing.Color.FromKnownColor(System.Drawing.KnownColor.Control)
             };
             TextBox input = search.FindControl<TextBox>("txtSearchBox")!;

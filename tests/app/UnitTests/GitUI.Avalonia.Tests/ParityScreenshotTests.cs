@@ -117,6 +117,40 @@ public sealed partial class ParityScreenshotTests
         await CaptureParityPlanAsync();
     }
 
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public async Task Standalone_tree_capture_should_match_reference_repository_and_root_selection()
+    {
+        ThreadHelper.JoinableTaskContext = new Microsoft.VisualStudio.Threading.JoinableTaskContext();
+        using CaptureContext context = new();
+        using RepoObjectsTree tree = new() { UICommandsSource = context };
+        await SeedStandaloneControlAsync(tree, context);
+        TreeView nativeTree = tree.GetTestAccessor().Tree;
+        TreeViewItem branches = nativeTree.Items.Cast<TreeViewItem>().First();
+        branches.Tag.Should().BeOfType<LocalBranchTree>();
+        branches.IsExpanded.Should().BeTrue();
+        nativeTree.SelectedItem.Should().BeSameAs(branches);
+        nativeTree.SelectedItems!.Cast<object>().Should().ContainSingle().Which.Should().BeSameAs(branches);
+        foreach (TreeViewItem root in nativeTree.Items.Cast<TreeViewItem>().Skip(1))
+        {
+            root.IsExpanded.Should().Be(root.Tag is RemoteBranchTree);
+            if (root.Tag is WorktreeTree or SubmoduleTree or StashTree)
+            {
+                root.ItemCount.Should().Be(0);
+            }
+        }
+
+        Window window = new() { Width = 360, Height = 560, Content = tree };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        using (AvaloniaControlStateDriver.Apply(tree, new CaptureStatePlan { Id = "normal", Kind = CaptureStateKind.Normal }))
+        {
+            nativeTree.IsFocused.Should().BeTrue();
+        }
+
+        window.Close();
+    }
+
     private static async Task<ManifestEntry> CaptureViewAsync(
         CaptureContext context,
         ViewDescriptor descriptor,
@@ -1348,6 +1382,33 @@ public sealed partial class ParityScreenshotTests
                 context.Commands.GetRequiredService<IUserRepositoriesListController>(),
                 context.Commands.GetRequiredService<IRepositoryHistoryUIService>());
             dashboard.RefreshContent();
+            return;
+        }
+
+        if (root is RepoObjectsTree repositoryTree
+            && Environment.GetEnvironmentVariable(CaptureRepoTreeContextEnvironmentVariable) is not ("worktree" or "submodule"))
+        {
+            // parity-scaffolding: Match the reference consumer's actual refs, empty stash
+            // snapshot, root selection and expansion. Synthetic worktree/submodule states
+            // remain separate opt-in cases below, never inputs to the normal paired matrix.
+            ICheckRefs refsSource = Substitute.For<ICheckRefs>();
+            refsSource.Contains(Arg.Any<ObjectId>()).Returns(call => context.Refs.Any(gitRef => gitRef.ObjectId == call.Arg<ObjectId>()));
+            IRevisionGridInfo revisionGridInfo = Substitute.For<IRevisionGridInfo>();
+            revisionGridInfo.CurrentCheckout.Returns(context.HeadRevision.ObjectId);
+            revisionGridInfo.GetCurrentBranch().Returns(context.Module.GetSelectedBranch(emptyIfDetached: true));
+            repositoryTree.Initialize(aheadBehindDataProvider: null, _ => { }, refsSource, revisionGridInfo);
+            repositoryTree.RefreshRevisionsLoading(context.Module.GetRefs, new Lazy<IReadOnlyCollection<GitRevision>>(() => []), forceRefresh: true);
+            repositoryTree.RefreshRevisionsLoaded();
+            TreeView tree = repositoryTree.GetTestAccessor().Tree;
+            foreach (TreeViewItem rootNode in tree.Items.Cast<TreeViewItem>())
+            {
+                rootNode.IsExpanded = rootNode.Tag is RemoteBranchTree;
+            }
+
+            TreeViewItem branches = tree.Items.Cast<TreeViewItem>().First();
+            branches.IsExpanded = true;
+            tree.SelectedItems?.Clear();
+            tree.SelectedItem = branches;
             return;
         }
 

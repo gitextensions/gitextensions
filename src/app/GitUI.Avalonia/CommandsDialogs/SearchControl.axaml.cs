@@ -39,7 +39,7 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
     private bool _isUpdatingTextFromCode;
     private DrawingColor _searchBoxBorderDefaultColor = System.Drawing.SystemColors.WindowFrame;
     private DrawingColor _searchBoxBorderHoveredColor = System.Drawing.SystemColors.Highlight;
-    private DrawingColor _searchBoxBorderFocusedColor = System.Drawing.SystemColors.Highlight;
+    private DrawingColor _searchBoxBorderFocusedColor = System.Drawing.SystemColors.HotTrack;
 
     public event Action? OnTextEntered;
 
@@ -107,8 +107,23 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
 
     public WinFormsBorderStyle SearchBoxBorderStyle
     {
-        get => SearchTextBoxBorder.BorderThickness == default ? WinFormsBorderStyle.None : WinFormsBorderStyle.FixedSingle;
-        set => SearchTextBoxBorder.BorderThickness = value == WinFormsBorderStyle.None ? default : new Thickness(1);
+        get => SearchTextBox.BorderThickness == new Thickness(2)
+            ? WinFormsBorderStyle.Fixed3D
+            : SearchTextBoxBorder.BorderThickness == default ? WinFormsBorderStyle.None : WinFormsBorderStyle.FixedSingle;
+        set
+        {
+            if (!Enum.IsDefined(value))
+            {
+                throw new ArgumentOutOfRangeException(nameof(value));
+            }
+
+            // Native TextBoxEx paints a custom border only in FixedSingle mode. Fixed3D
+            // retains TextBox chrome and its two-pixel non-client inset; None has neither.
+            SearchTextBox.BorderThickness = value == WinFormsBorderStyle.Fixed3D ? new Thickness(2) : default;
+            SearchTextBoxBorder.BorderThickness = value == WinFormsBorderStyle.FixedSingle ? new Thickness(1) : default;
+            SearchTextBox.Margin = value == WinFormsBorderStyle.FixedSingle ? new Thickness(-1) : default;
+            ApplySearchBoxBorderColor();
+        }
     }
 
     public DrawingColor SearchBoxBorderDefaultColor
@@ -307,6 +322,11 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
 
     private void ApplySearchBoxBorderColor()
     {
+        if (SearchBoxBorderStyle != WinFormsBorderStyle.FixedSingle)
+        {
+            return;
+        }
+
         DrawingColor color = SearchTextBox.IsKeyboardFocusWithin
             ? _searchBoxBorderFocusedColor
             : SearchTextBoxBorder.IsPointerOver

@@ -13,6 +13,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -59,7 +60,10 @@ public sealed class NavigationDialogTests
     [Category("P8.6i.126")]
     public void SearchControl_should_paint_one_owned_border_without_a_nested_platform_focus_border()
     {
-        SearchControl<string> control = new(_ => [], _ => { });
+        SearchControl<string> control = new(_ => [], _ => { })
+        {
+            SearchBoxBorderStyle = WinFormsShims.BorderStyle.FixedSingle,
+        };
         Window window = new() { Width = 300, Height = 23, Content = control };
         try
         {
@@ -79,6 +83,59 @@ public sealed class NavigationDialogTests
         finally
         {
             window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void SearchControl_should_preserve_native_default_and_border_mode_transitions()
+    {
+        SearchControl<string> search = new(_ => [], _ => { });
+        Window window = new() { Width = 300, Height = 23, Content = search };
+        try
+        {
+            window.Show();
+            window.UpdateLayout();
+            TextBox input = search.FindControl<TextBox>("txtSearchBox")!;
+            search.SearchBoxBorderStyle.Should().Be(WinFormsShims.BorderStyle.Fixed3D);
+            search.SearchBoxBorderFocusedColor.Should().Be(System.Drawing.SystemColors.HotTrack);
+            foreach (WinFormsShims.BorderStyle style in new[]
+            {
+                WinFormsShims.BorderStyle.None,
+                WinFormsShims.BorderStyle.FixedSingle,
+                WinFormsShims.BorderStyle.Fixed3D,
+            })
+            {
+                search.SearchBoxBorderStyle = style;
+                window.UpdateLayout();
+                search.SearchBoxBorderStyle.Should().Be(style);
+                input.BorderThickness.Should().Be(style == WinFormsShims.BorderStyle.Fixed3D ? new Thickness(2) : default);
+                input.Bounds.Height.Should().Be(23);
+                CaptureNode node = Descendants(new AvaloniaControlTreeReader(search, 1)
+                    .ReadPrimary(search, PixelSize.FromSize(search.Bounds.Size, 1)).Root)
+                    .Single(node => node.FieldName == "txtSearchBox");
+                node.BorderStyle.Should().Be(style.ToString());
+                node.ClientSizeDip.Width.Should().Be(node.BoundsDip.Width - (style == WinFormsShims.BorderStyle.Fixed3D ? 4 : 0));
+                node.ClientSizeDip.Height.Should().Be(style == WinFormsShims.BorderStyle.Fixed3D ? 19 : 23);
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+
+        return;
+
+        static IEnumerable<GitExtensions.ParityCapture.CaptureNode> Descendants(GitExtensions.ParityCapture.CaptureNode node)
+        {
+            yield return node;
+            foreach (GitExtensions.ParityCapture.CaptureNode child in node.Children)
+            {
+                foreach (GitExtensions.ParityCapture.CaptureNode descendant in Descendants(child))
+                {
+                    yield return descendant;
+                }
+            }
         }
     }
 

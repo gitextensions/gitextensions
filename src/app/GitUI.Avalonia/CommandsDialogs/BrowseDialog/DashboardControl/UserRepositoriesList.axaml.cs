@@ -101,6 +101,8 @@ public partial class UserRepositoriesList : TranslatedControl
         _foreColorBrush = new SolidColorBrush(_foreColor);
         Foreground = _foreColorBrush;
         listView1.Foreground = _foreColorBrush;
+        menuStripRecentMenu.Foreground = _foreColorBrush;
+        mnuTop.Foreground = _foreColorBrush;
         Focusable = true;
         GotFocus += (_, e) =>
         {
@@ -122,6 +124,8 @@ public partial class UserRepositoriesList : TranslatedControl
         pnlHeader.Background = new SolidColorBrush(_headerBackColor);
         Background = new SolidColorBrush(_mainBackColor);
         listView1.Background = new SolidColorBrush(_mainBackColor);
+        menuStripRecentMenu.Background = new SolidColorBrush(_mainBackColor);
+        mnuTop.Background = menuStripRecentMenu.Background;
         textBoxSearch.Background = new SolidColorBrush(_searchBackColor);
         listView1.AddColumns(clmhdrPath, clmhdrBranch, clmhdrCategory);
         listView1.ItemTemplate = new FuncDataTemplate<object>(
@@ -187,7 +191,15 @@ public partial class UserRepositoriesList : TranslatedControl
     public Color ForeColor
     {
         get => _foreColor;
-        set => SetAppearance(ref _foreColor, ref _foreColorBrush, value);
+        set
+        {
+            SetAppearance(ref _foreColor, ref _foreColorBrush, value);
+
+            // Avalonia's Menu style supplies a local palette instead of inheriting its
+            // owning control's foreground as the source MenuStrip does.
+            menuStripRecentMenu.Foreground = _foreColorBrush;
+            mnuTop.Foreground = _foreColorBrush;
+        }
     }
 
     [Category("Appearance")]
@@ -262,6 +274,8 @@ public partial class UserRepositoriesList : TranslatedControl
             _mainBackColor = value;
             Background = new SolidColorBrush(value);
             listView1.Background = new SolidColorBrush(value);
+            menuStripRecentMenu.Background = listView1.Background;
+            mnuTop.Background = listView1.Background;
         }
     }
 

@@ -18,12 +18,12 @@
   <Grid x:Name="tableLayoutPanel1"
         RowDefinitions="Auto,Auto">
     <Border Height="23"
-            BorderThickness="1">
+            BorderThickness="0">
       <TextBox x:Name="txtSearchBox"
                AutomationProperties.Name="Enter File Name"
-               Margin="-1"
+               Margin="0"
                Height="23"
-               BorderThickness="0"
+               BorderThickness="2"
                VerticalContentAlignment="Center" />
     </Border>
     <ListBox x:Name="listBoxSearchResult"

@@ -4,7 +4,7 @@
              xmlns:wf="using:GitUI.Compat.WinFormsControls"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard"
-             Foreground="{DynamicResource GitExtensionsWindowTextBrush}">
+             Foreground="{DynamicResource GitExtensionsControlForegroundBrush}">
   <!-- Native Dock.Fill ignores the stored outer Margin; Avalonia Margin would inset the client. -->
   <UserControl.Resources>
     <ResourceDictionary>
