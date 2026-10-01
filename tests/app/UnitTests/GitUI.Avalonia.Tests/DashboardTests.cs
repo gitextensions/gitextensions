@@ -93,12 +93,14 @@ public sealed class DashboardTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void Categorized_repository_should_use_the_source_tile_geometry_and_star_overlay()
+    [TestCase("main")]
+    [TestCase("")]
+    public void Categorized_repository_should_use_the_source_tile_geometry_and_star_overlay(string branchName)
     {
         Repository favourite = new(@"C:\repos\favourite") { Category = "Team" };
         RepositoryHistorySnapshot snapshot = new(
             [],
-            [new RepositoryHistoryEntry(favourite, "favourite", "main", IsFavourite: true, IsAnchored: false)]);
+            [new RepositoryHistoryEntry(favourite, "favourite", branchName, IsFavourite: true, IsAnchored: false)]);
         UserRepositoriesList list = new();
         list.Initialize(CreateController(snapshot), CreateHistory(snapshot), () => Substitute.For<IGitUICommands>());
         list.ShowRecentRepositories(reloadData: false);
@@ -118,13 +120,76 @@ public sealed class DashboardTests
             images.Should().HaveCount(2);
             images.Should().OnlyContain(image => image.Width == 16 && image.Height == 16);
             images.Should().ContainSingle(image => ReferenceEquals(image.Source, GitUI.Properties.Images.Star));
+            images[0].Source.Should().BeSameAs(GitUI.Properties.Images.Star);
             row.GetVisualDescendants().OfType<TextBlock>().Single(text => text.Text == "favourite").FontWeight
                 .Should().Be(Avalonia.Media.FontWeight.Normal);
+            // The source binder adds only path and branch subitems, not a category text row.
+            row.GetVisualDescendants().OfType<TextBlock>().Should().HaveCount(2);
+            row.GetVisualDescendants().OfType<TextBlock>().Should().NotContain(text => text.Text == "Team");
+            row.GetVisualDescendants().OfType<TextBlock>().Single(text => text.Text == branchName)
+                .IsVisible.Should().Be(!string.IsNullOrWhiteSpace(branchName));
         }
         finally
         {
             window.Close();
         }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Appearance_changes_should_repaint_existing_tiles_without_reloading_or_clearing_selection()
+    {
+        Repository repository = new(@"C:\repos\recent");
+        RepositoryHistorySnapshot snapshot = new(
+            [new RepositoryHistoryEntry(repository, "recent", "main", IsFavourite: false, IsAnchored: false)], []);
+        IUserRepositoriesListController controller = CreateController(snapshot);
+        UserRepositoriesList list = new();
+        list.Initialize(controller, CreateHistory(snapshot), () => Substitute.For<IGitUICommands>());
+        list.ShowRecentRepositories(reloadData: false);
+        Window window = new() { Content = list };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            UserRepositoriesList.TestAccessor accessor = list.GetTestAccessor();
+            accessor.List.SelectedItem = accessor.List.Items.OfType<UserRepositoriesList.RepositoryListItem>().Single();
+            object selected = accessor.List.SelectedItem;
+            TextBlock caption = list.GetVisualDescendants().OfType<TextBlock>().Single(text => text.Text == "recent");
+            TextBlock branch = list.GetVisualDescendants().OfType<TextBlock>().Single(text => text.Text == "main");
+            controller.ClearReceivedCalls();
+
+            list.ForeColor = Avalonia.Media.Colors.Red;
+            list.BranchNameColor = Avalonia.Media.Colors.Green;
+            list.FavouriteColor = Avalonia.Media.Colors.Gold;
+            list.HoverColor = Avalonia.Media.Colors.Cyan;
+
+            accessor.List.SelectedItem.Should().BeSameAs(selected);
+            ((Avalonia.Media.SolidColorBrush)caption.Foreground!).Color.Should().Be(Avalonia.Media.Colors.Red);
+            ((Avalonia.Media.SolidColorBrush)branch.Foreground!).Color.Should().Be(Avalonia.Media.Colors.Green);
+            controller.DidNotReceive().PreRenderRepositories(Arg.Any<string>());
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Initial_palette_assignments_should_paint_their_declared_defaults()
+    {
+        UserRepositoriesList list = new();
+        list.MainBackColor = list.MainBackColor;
+        list.SearchBackColor = list.SearchBackColor;
+        list.HeaderColor = list.HeaderColor;
+        TextBlock heading = list.FindControl<TextBlock>("lblRecentRepositories")!;
+
+        ((Avalonia.Media.SolidColorBrush)list.Background!).Color.Should().Be(list.MainBackColor);
+        ((Avalonia.Media.SolidColorBrush)list.GetTestAccessor().List.Background!).Color.Should().Be(list.MainBackColor);
+        ((Avalonia.Media.SolidColorBrush)list.GetTestAccessor().Search.Background!).Color.Should().Be(list.SearchBackColor);
+        ((Avalonia.Media.SolidColorBrush)heading.Foreground!).Color.Should().Be(list.HeaderColor);
+        heading.FontFamily.Name.Should().Be(AppSettings.Font.Name);
+        heading.FontSize.Should().Be(AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size + 5.5F));
     }
 
     [AvaloniaTest]

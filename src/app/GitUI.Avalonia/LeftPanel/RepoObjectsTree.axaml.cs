@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
@@ -21,6 +22,7 @@ using GitUI.Compat;
 using GitUI.LeftPanel.ContextMenu;
 using GitUI.LeftPanel.Interfaces;
 using GitUI.Properties;
+using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
@@ -37,6 +39,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private readonly Dictionary<RepoAction, MenuItem> _actionItems = [];
     private readonly CancellationTokenSequence _selectionCancellationTokenSequence = new();
     private readonly TranslationString _searchTooltip = new("Search");
+
+    private readonly NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
+    private readonly NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
 
     private readonly List<Tree> _rootNodes = [];
     private readonly SearchControl<string> _txtBranchCriterion;
@@ -228,12 +233,15 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _worktreeTree = new WorktreeTree(this);
         HotkeysEnabled = true;
         RegisterContextActions();
+        treeMain.AddHandler(InputElement.KeyDownEvent, OnTreeKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
+
+        _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
+        _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
+        _explorerNavigationDecorator = new NativeTreeViewExplorerNavigationDecorator(treeMain);
+        _explorerNavigationDecorator.AfterSelect += OnNodeSelected;
 
         treeMain.PointerPressed += OnNodeClick;
-        treeMain.KeyDown += OnTreeKeyDown;
-        treeMain.SelectionChanged += OnNodeSelected;
-        treeMain.AddHandler(InputElement.DoubleTappedEvent, BeforeDoubleClickExpandCollapse, RoutingStrategies.Tunnel);
-        treeMain.DoubleTapped += OnNodeDoubleClick;
+        treeMain.AddHandler(InputElement.DoubleTappedEvent, OnNodeDoubleClick, RoutingStrategies.Bubble, handledEventsToo: true);
         menuMain.Opening += contextMenu_Opening;
         menuMain.Opened += contextMenu_Opened;
         tsbCollapseAll.Click += btnCollapseAll_Click;
@@ -304,15 +312,14 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
-    private void BeforeDoubleClickExpandCollapse(object? sender, TappedEventArgs e)
+    private void BeforeDoubleClickExpandCollapse(object? sender, CancelEventArgs e)
     {
         // If node is an inner node, and overrides OnDoubleClick, then disable expand/collapse
-        TreeViewItem? item = GetTreeViewItem(e.Source);
+        TreeViewItem? item = treeMain.SelectedItem as TreeViewItem;
         if (item?.Tag is Node { HasChildren: true } node
             && IsOverride(node.GetType().GetMethod(nameof(Node.OnDoubleClick), BindingFlags.Instance | BindingFlags.NonPublic)))
         {
-            node.OnDoubleClick();
-            e.Handled = true;
+            e.Cancel = true;
         }
 
         return;
@@ -1056,7 +1063,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         // Don't consider-double clicking on the PlusMinus as a double-click event
         // for nodes in tree. This prevents opening inner submodules, for example,
         // when quickly collapsing/expanding them.
-        if (e.Handled || IsExpansionToggle(e.Source))
+        if (IsExpansionToggle(e.Source))
         {
             return;
         }

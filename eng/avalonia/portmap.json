@@ -1730,8 +1730,8 @@
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.Command.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Framework-free command enum linked unchanged so persisted hotkey IDs remain identical to WinForms. P8.6i progress 65 restores original comments only where the owning declaration and following statement already match, and records exact unavoidable WinForms/Avalonia native-control field signature substitutions as visible reviewed deviations; all retained gaps remain measured. P8.6i progress 66 moves exact WinForms Designer-generated comments, nullable event-handler annotations, and paired framework event-wiring facts into drift-checked visible reviewed deviations; handwritten comments and unmatched behavior remain measured gaps. P8.6i progress 69 records comments, handler identities, and event subscriptions blocked by an already-missing method as dependent findings under that exact actionable root; every difference remains serialized and the total gap count is unchanged."
+    "basedOn": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+    "notes": "Same-named copied command enum, not a linked source. Source text matches the original after UTF-8 decoding and line-ending normalization, preserving persisted hotkey IDs. Its owning RevisionGridControl partial type still has measured structural and functional gaps; enum equivalence does not establish consumer parity."
   },
   "src/app/GitUI/UserControls/RevisionGrid/CopyContextMenuItem.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/CopyContextMenuItem.cs",
@@ -4088,14 +4088,16 @@
     "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
   },
   "src/app/GitUI/UserControls/NativeTreeViewDoubleClickDecorator.cs": {
-    "status": "windowsOnly",
-    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
-    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+    "twin": "src/app/GitUI.Avalonia/UserControls/NativeTreeViewDoubleClickDecorator.cs",
+    "status": "functional",
+    "basedOn": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+    "notes": "Routed double taps preserve the source cancellation boundary for inner nodes and exclude expansion-toggle clicks. Native message/timing fields are framework-forced substitutions. Full structural/state/platform closure remains open."
   },
   "src/app/GitUI/UserControls/NativeTreeViewExplorerNavigationDecorator.cs": {
-    "status": "windowsOnly",
-    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
-    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+    "twin": "src/app/GitUI.Avalonia/UserControls/NativeTreeViewExplorerNavigationDecorator.cs",
+    "status": "functional",
+    "basedOn": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+    "notes": "Preserves arrow-key highlight-only navigation, explicit Space/Enter activation and same-node mouse activation through Avalonia preview/selection/pointer events. Keeps the source clock-injection seam and 500 ms navigation guard. Full structural/state/platform closure remains open."
   },
   "src/app/GitUI/UserControls/PathFormatter.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/PathFormatter.cs",

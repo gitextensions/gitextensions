@@ -45,6 +45,12 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
         internal void FillDropDown()
         {
+            // Do not rebuild while the dropdown is open — Clear() would close it.
+            if (button._menu.IsOpen)
+            {
+                return;
+            }
+
             if (RepositoryHistoryUIService is not null)
             {
                 RepositoryHistorySnapshot snapshot = RepositoryHistoryUIService.LoadSnapshot();
@@ -61,6 +67,12 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
         internal void RefreshContent()
         {
+            if (TopLevel.GetTopLevel(button) is not Window)
+            {
+                // The component is unparented, no point doing anything.
+                return;
+            }
+
             if (Module is not IGitModule module)
             {
                 return;
@@ -145,6 +157,15 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         _txtFilter.KeyDown += TxtFilter_KeyDown;
         AddHandler(PointerReleasedEvent, MouseUpHandler, RoutingStrategies.Tunnel);
         _implementation = new Implementation(this);
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+
+        // The source waits for an open graphics-owning form. Avalonia attachment supplies
+        // that boundary after the constructor's deliberately unparented refresh was skipped.
+        RefreshContent();
     }
 
     /// <summary>
@@ -342,6 +363,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         }
 
         _menu.Items.Add(favourites);
+        _fixedItems.Add(favourites);
     }
 
     private void AddRecentRepositories(IReadOnlyList<RepositoryHistoryEntry> repositories)
@@ -394,6 +416,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         }
 
         _menu.Items.Add(favourites);
+        _fixedItems.Add(favourites);
     }
 
     private void AddRecentRepositories(IList<Repository> repositories)
@@ -549,40 +572,17 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     private void ApplyFilter()
     {
-        string filter = _txtFilter.Text?.Trim() ?? string.Empty;
+        string filter = _txtFilter.Text ?? string.Empty;
         foreach (object? entry in _menu.Items)
         {
             if (entry is MenuItem item && !_fixedItems.Contains(item) && item.Header != _txtFilter)
             {
-                ApplyFilter(item, filter);
+                // WinForms filters only the displayed recent-repository captions. Favourite
+                // categories and fixed actions are explicitly excluded, including their children.
+                item.IsVisible = string.IsNullOrWhiteSpace(filter)
+                    || (item.Header as string)?.Contains(filter, StringComparison.CurrentCultureIgnoreCase) is true;
             }
         }
-    }
-
-    private static bool ApplyFilter(MenuItem item, string filter)
-    {
-        bool childMatch = false;
-        foreach (object? child in item.Items)
-        {
-            if (child is MenuItem childItem)
-            {
-                childMatch |= ApplyFilter(childItem, filter);
-            }
-        }
-
-        string text = item.Tag switch
-        {
-            RepositoryHistoryEntry repository
-                => $"{repository.Caption} {repository.Repository.Path} {repository.BranchName}",
-            RecentRepoInfo repository
-                => $"{repository.Caption} {repository.Repo.Path}",
-            _ => item.Header as string ?? string.Empty,
-        };
-        bool match = string.IsNullOrWhiteSpace(filter)
-            || text.Contains(filter, StringComparison.CurrentCultureIgnoreCase)
-            || childMatch;
-        item.IsVisible = match;
-        return match;
     }
 
     private void TxtFilter_KeyDown(object? sender, KeyEventArgs e)

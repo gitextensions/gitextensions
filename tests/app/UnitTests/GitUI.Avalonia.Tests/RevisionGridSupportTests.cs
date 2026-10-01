@@ -762,6 +762,46 @@ public sealed class RevisionGridSupportTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Revision_grid_tooltip_reload_should_release_retired_cells_and_allow_reregistration()
+    {
+        RevisionGridControl control = new();
+        RevisionGridToolTipProvider provider = new(control);
+        TextBlock cell = new() { Text = "commit subject" };
+        GitRevision revision = new(ObjectId.Parse("1111111111111111111111111111111111111111"));
+        System.Reflection.FieldInfo statesField = typeof(RevisionGridToolTipProvider).GetField(
+            "_cellStates", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        System.Collections.IDictionary states = (System.Collections.IDictionary)statesField.GetValue(provider)!;
+
+        for (int iteration = 0; iteration < 3; iteration++)
+        {
+            provider.UpdateCell(cell, 1, 0, revision);
+            states.Count.Should().Be(1);
+            ToolTip.SetTip(cell, "old tooltip");
+            provider.Clear();
+
+            states.Count.Should().Be(0);
+            ToolTip.GetTip(cell).Should().BeNull();
+            provider.Hide().Should().BeFalse();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Revision_grid_tooltip_recycling_should_clear_the_previous_commit_text()
+    {
+        RevisionGridToolTipProvider provider = new(new RevisionGridControl());
+        TextBlock cell = new() { Text = "old subject" };
+        provider.UpdateCell(cell, 1, 0, new GitRevision(ObjectId.Parse("1111111111111111111111111111111111111111")));
+        ToolTip.SetTip(cell, "old tooltip");
+
+        provider.UpdateCell(cell, 1, 0, new GitRevision(ObjectId.Parse("2222222222222222222222222222222222222222")));
+
+        ToolTip.GetTip(cell).Should().BeNull();
+        ToolTip.GetIsOpen(cell).Should().BeFalse();
+    }
+
+    [AvaloniaTest]
     [Category("P8.6h.3b.1")]
     public void Revision_grid_message_tooltip_should_include_body_notes_and_refs_like_the_original()
     {
