@@ -26,6 +26,63 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class DashboardTests
 {
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(669)]
+    [TestCase(1000)]
+    public void Dashboard_should_allocate_source_percentage_columns_in_whole_client_pixels(int width)
+    {
+        Dashboard dashboard = new();
+        Window window = new() { Width = width, Height = 600, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Grid layout = dashboard.FindControl<Grid>("tableLayoutPanel1")!;
+            double remaining = layout.Bounds.Width - 213;
+            layout.ColumnDefinitions[0].ActualWidth.Should().Be(Math.Floor(remaining * 7.142857 / 100));
+            layout.ColumnDefinitions[1].ActualWidth.Should().Be(213);
+            layout.ColumnDefinitions[2].ActualWidth.Should().Be(Math.Floor(remaining * 85.71428 / 100));
+            dashboard.Margin.Should().Be(default(Thickness));
+            CaptureNode tree = new AvaloniaControlTreeReader(dashboard, 1)
+                .ReadPrimary(dashboard, new PixelSize(width, 600)).Root;
+            tree.Margin!.Dip.Left.Should().Be(0);
+            tree.Margin.Dip.Top.Should().Be(0);
+            layout.Margin.Should().Be(default(Thickness));
+            dashboard.FindControl<Control>("pnlLeft")!.Margin.Should().Be(default(Thickness));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Repository_heading_should_use_native_text_height_and_original_column_defaults()
+    {
+        UserRepositoriesList control = new();
+        Window window = new() { Width = 451, Height = 350, Content = control };
+        try
+        {
+            window.Show();
+            window.UpdateLayout();
+            TextBlock heading = control.FindControl<TextBlock>("lblRecentRepositories")!;
+            heading.Height.Should().Be(Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(heading, heading.Text!).Height));
+            control.FindControl<Grid>("tableLayoutPanel1")!.Margin.Should().Be(default(Thickness));
+            foreach (string field in new[] { "clmhdrPath", "clmhdrBranch", "clmhdrCategory" })
+            {
+                control.FindControl<Control>(field)!.Width.Should().Be(60);
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [SetUp]
     public void SetUp()
     {
@@ -678,6 +735,13 @@ public sealed class DashboardTests
 
         static void AssertSystemColors(DashboardTheme dark)
         {
+            SearchControl<string> search = new(_ => [], _ => { })
+            {
+                SearchBoxBorderDefaultColor = System.Drawing.Color.FromKnownColor(System.Drawing.KnownColor.Control)
+            };
+            TextBox input = search.FindControl<TextBox>("txtSearchBox")!;
+            ((Avalonia.Media.SolidColorBrush)((Border)input.Parent!).BorderBrush!).Color
+                .Should().Be(dark.StartBackColor);
             (System.Drawing.KnownColor Name, Avalonia.Media.Color Actual)[] colors =
             [
                 (System.Drawing.KnownColor.Control, dark.SearchBackColor),

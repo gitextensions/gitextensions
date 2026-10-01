@@ -215,6 +215,8 @@ public sealed class CommitInfoTests
     {
         CommitInfoHeader header = new();
         CommitInfoHeader.TestAccessor accessor = header.GetTestAccessor();
+        accessor.RevisionHeader.NativeContentOverhang.Should().Be(0,
+            "the original uses the renderer's ContentsResized rectangle without an additional pixel");
         ContextMenu contextMenu = new();
 
         header.SetContextMenuStrip(contextMenu);
