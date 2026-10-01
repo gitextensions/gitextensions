@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -162,6 +162,80 @@ public sealed class RevisionGridSupportTests
         finally
         {
             control.CancelBackgroundTasks();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void ReloadRevisions_should_supersede_an_active_load_and_preserve_explicit_selection()
+    {
+        IGitUICommandsSource source = CreateUICommandsSource();
+        RevisionGridControl control = new() { UICommandsSource = source };
+        GitRevision previousSelection = Revision('1', "previous selection");
+        control.GetTestAccessor().SetRevisions([previousSelection]);
+        control.GetTestAccessor().Revisions.SelectedItem = previousSelection;
+        int loadingCount = 0;
+        control.RevisionsLoading += (_, _) => loadingCount++;
+        ObjectId requestedSelection = Id('2');
+
+        try
+        {
+            control.ReloadRevisions(source.UICommands.Module, revisionFilter: "HEAD", getRefs: _ => []);
+            control.ReloadRevisions(
+                source.UICommands.Module,
+                revisionFilter: "HEAD~1",
+                selectedObjectId: requestedSelection,
+                getRefs: _ => []);
+
+            loadingCount.Should().Be(2);
+            control.GetTestAccessor().PendingSelectedObjectId.Should().Be(requestedSelection);
+        }
+        finally
+        {
+            control.CancelBackgroundTasks();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Revision_grid_should_show_its_source_loading_page_when_first_attached()
+    {
+        RevisionGridControl control = new();
+        Window window = new() { Width = 500, Height = 240, Content = control };
+
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+
+            control.GetTestAccessor().CurrentPage.Should().BeSameAs(control.GetTestAccessor().Revisions);
+            control.GetVisualDescendants().OfType<LoadingControl>().Should().ContainSingle();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Revision_grid_should_preserve_rows_populated_before_first_attachment()
+    {
+        RevisionGridControl control = new() { UICommandsSource = CreateUICommandsSource() };
+        control.GetTestAccessor().SetRevisions([Revision('1', "already loaded")]);
+        Window window = new() { Width = 500, Height = 240, Content = control };
+
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+
+            control.GetTestAccessor().CurrentPage.Should().BeSameAs(control.GetTestAccessor().Revisions);
+            control.GetTestAccessor().Revisions.ItemCount.Should().Be(1);
+        }
+        finally
+        {
+            window.Close();
         }
     }
 

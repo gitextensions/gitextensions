@@ -3416,7 +3416,11 @@ public sealed class FormBrowseTests
             rewordCommit.IsEnabled.Should().BeTrue();
             copy.Items.Should().NotBeEmpty();
 
-            MenuItem checkoutFeature = checkoutBranch.Items.Cast<MenuItem>()
+            checkoutBranch.Items.Should().HaveCount(3);
+            checkoutBranch.Items[1].Should().BeOfType<GitUI.Compat.WinFormsControls.ToolStripSeparator>();
+            MenuItem checkoutRemoteMain = checkoutBranch.Items.OfType<MenuItem>()
+                .Single(item => item.Header?.ToString() == "origin/main");
+            MenuItem checkoutFeature = checkoutBranch.Items.OfType<MenuItem>()
                 .Single(item => item.Header?.ToString() == "feature");
             MenuItem pushFeature = pushBranch.Items.Cast<MenuItem>()
                 .Single(item => item.Header?.ToString() == "feature");
@@ -3430,6 +3434,7 @@ public sealed class FormBrowseTests
                 .Single(item => item.Header?.ToString() == "origin/main");
 
             checkoutFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            checkoutRemoteMain.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             pushFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             mergeFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             renameFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
@@ -3443,6 +3448,7 @@ public sealed class FormBrowseTests
             archive.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
             commands.Received(1).StartCheckoutBranch(form, "feature");
+            commands.Received(1).StartCheckoutRemoteBranch(form, "origin/main");
             bool pushCompleted;
             commands.Received(1).StartPushDialog(form, false, false, out pushCompleted, "feature");
             commands.Received(1).StartMergeBranchDialog(form, "feature");

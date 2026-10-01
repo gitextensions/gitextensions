@@ -206,7 +206,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         notificationBarBisectInProgress.UICommandsSource = this;
         notificationBarGitActionInProgress.UICommandsSource = this;
         Activated += (_, e) => OnActivated(e);
-
+        Deactivated += (_, e) => OnDeactivate(e);
         _consoleEmulatorsRegistry = UICommands.GetService(typeof(IConsoleEmulatorsRegistry)) as IConsoleEmulatorsRegistry;
         _controller = gpgInfoProvider ?? new GpgInfoProvider(new GitGpgController(() => Module));
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
@@ -635,6 +635,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         // WinForms posts this work after activation so the native window is fully displayed.
         // Avalonia's dispatcher provides the equivalent application-independent boundary.
         Dispatcher.UIThread.Post(OnActivate);
+    }
+
+    private void OnDeactivate(EventArgs e)
+    {
+        // The original method only updates Windows taskbar thumbnail buttons. Avalonia has no
+        // cross-platform thumbnail-toolbar contract, so deactivation has no retained UI state.
     }
 
     private void OnFormClosing(WindowClosingEventArgs e)

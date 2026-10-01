@@ -31,18 +31,66 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         Right click starts the "Open repository" dialog.
         """);
 
-    /// <summary>
-    ///  Keeps the source control's implementation boundary while adapting its ToolStrip
-    ///  operations to the retained Avalonia menu owned by the outer control.
-    /// </summary>
     private sealed class Implementation(WorkingDirectoryToolStripSplitButton button)
     {
-        internal void FillDropDown() => button.FillDropDownCore();
+        /// <summary>
+        ///  Gets the current instance of the git module.
+        /// </summary>
+        private IGitModule? Module => button._getUICommands?.Invoke().Module;
 
-        internal void RefreshContent() => button.RefreshContentCore();
+        /// <summary>
+        ///  The current instance of the <see cref="RepositoryHistoryUIService"/>.
+        /// </summary>
+        private IRepositoryHistoryUIService? RepositoryHistoryUIService => button._repositoryHistoryUIService;
+
+        internal void FillDropDown()
+        {
+            if (RepositoryHistoryUIService is not null)
+            {
+                RepositoryHistorySnapshot snapshot = RepositoryHistoryUIService.LoadSnapshot();
+                button.FillDropDown(snapshot);
+                return;
+            }
+
+            IList<Repository> favourites = ThreadHelper.JoinableTaskFactory.Run(
+                RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
+            IList<Repository> recent = ThreadHelper.JoinableTaskFactory.Run(
+                RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
+            button.FillDropDown(favourites, recent);
+        }
+
+        internal void RefreshContent()
+        {
+            if (Module is not IGitModule module)
+            {
+                return;
+            }
+
+            string path = module.WorkingDir;
+
+            // It appears at times Module.WorkingDir path is an empty string,
+            // this caused issues like https://github.com/gitextensions/gitextensions/issues/4874.
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                button.Content = _noWorkingFolderText.Text;
+                button.MinWidth = AppSettings.RecentReposComboMinWidth;
+                return;
+            }
+
+            IList<Repository> recentRepositoryHistory = RepositoryHistoryUIService?.AddAsMostRecent(path)
+                ?? ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
+            button.RefreshContent(path, recentRepositoryHistory);
+        }
 
         internal void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
-            => button.RefreshShortcutKeysCore(hotkeys);
+        {
+            button._openRepositoryShortcutDisplay = hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenRepo);
+            button._closeRepositoryShortcutDisplay = hotkeys.GetShortcutDisplay(FormBrowse.Command.CloseRepository);
+            button._openRepositoryGesture = KeysMapper.ToKeyGesture(
+                hotkeys?.FirstOrDefault(command => command.CommandCode == (int)FormBrowse.Command.OpenRepo)?.KeyData);
+            button._closeRepositoryGesture = KeysMapper.ToKeyGesture(
+                hotkeys?.FirstOrDefault(command => command.CommandCode == (int)FormBrowse.Command.CloseRepository)?.KeyData);
+        }
     }
 
     private readonly HashSet<MenuItem> _fixedItems = [];
@@ -140,26 +188,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     public void RefreshContent()
         => _implementation?.RefreshContent();
 
-    private void RefreshContentCore()
-    {
-        if (_getUICommands is null)
-        {
-            return;
-        }
-
-        string path = _getUICommands().Module.WorkingDir;
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            Content = _noWorkingFolderText.Text;
-            MinWidth = AppSettings.RecentReposComboMinWidth;
-            return;
-        }
-
-        IList<Repository> recentRepositoryHistory = _repositoryHistoryUIService?.AddAsMostRecent(path)
-            ?? ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
-        RefreshContent(path, recentRepositoryHistory);
-    }
-
     private void RefreshContent(string path, IList<Repository> recentRepositoryHistory)
     {
         List<RecentRepoInfo> pinnedRepos = [];
@@ -178,34 +206,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     public void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
         => _implementation?.RefreshShortcutKeys(hotkeys);
 
-    private void RefreshShortcutKeysCore(IEnumerable<HotkeyCommand>? hotkeys)
-    {
-        _openRepositoryShortcutDisplay = hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenRepo);
-        _closeRepositoryShortcutDisplay = hotkeys.GetShortcutDisplay(FormBrowse.Command.CloseRepository);
-        _openRepositoryGesture = KeysMapper.ToKeyGesture(
-            hotkeys?.FirstOrDefault(command => command.CommandCode == (int)FormBrowse.Command.OpenRepo)?.KeyData);
-        _closeRepositoryGesture = KeysMapper.ToKeyGesture(
-            hotkeys?.FirstOrDefault(command => command.CommandCode == (int)FormBrowse.Command.CloseRepository)?.KeyData);
-    }
-
     private void FillDropDown()
         => _implementation?.FillDropDown();
-
-    private void FillDropDownCore()
-    {
-        if (_repositoryHistoryUIService is not null)
-        {
-            RepositoryHistorySnapshot snapshot = _repositoryHistoryUIService.LoadSnapshot();
-            FillDropDown(snapshot);
-            return;
-        }
-
-        IList<Repository> favourites = ThreadHelper.JoinableTaskFactory.Run(
-            RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
-        IList<Repository> recent = ThreadHelper.JoinableTaskFactory.Run(
-            RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
-        FillDropDown(favourites, recent);
-    }
 
     private void FillDropDown(RepositoryHistorySnapshot snapshot)
     {

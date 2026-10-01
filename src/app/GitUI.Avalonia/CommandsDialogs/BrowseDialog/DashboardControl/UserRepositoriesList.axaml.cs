@@ -102,7 +102,7 @@ public partial class UserRepositoriesList : TranslatedControl
         _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.Size - 1F);
         listView1.AddColumns(clmhdrPath, clmhdrBranch, clmhdrCategory);
         listView1.ItemTemplate = new FuncDataTemplate<object>(
-            (item, _) => CreateRow(item),
+            (item, _) => listView1_DrawItem(item),
             supportsRecycling: false);
         listView1.ContainerPrepared += ListView1_ContainerPrepared;
         listView1.AddHandler(PointerPressedEvent, listView1_PointerPressed, RoutingStrategies.Tunnel);
@@ -404,9 +404,6 @@ public partial class UserRepositoriesList : TranslatedControl
                 tileSize));
         }
     }
-
-    private Control CreateRow(object? item)
-        => CreateRowCore(item);
 
     private Control CreateRowCore(object? item)
     {
