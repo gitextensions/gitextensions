@@ -87,8 +87,10 @@ public sealed class WorkingDirectorySelectorTests
 
             repositoryItems.Single(item => ((RecentRepoInfo)item.Tag!).Repo.Path == beta.Path)
                 .IsVisible.Should().BeTrue();
-            repositoryItems.Where(item => ((RecentRepoInfo)item.Tag!).Repo.Path != beta.Path)
+            repositoryItems.Where(item => ((RecentRepoInfo)item.Tag!).Repo.Path == alpha.Path)
                 .Should().OnlyContain(item => !item.IsVisible);
+            repositoryItems.Single(item => ((RecentRepoInfo)item.Tag!).Repo.Path == favourite.Path)
+                .IsVisible.Should().BeTrue("the source excludes the favourite submenu and its children from filtering");
             accessor.Menu.Items.OfType<MenuItem>()
                 .Where(item => item.Tag is not RecentRepoInfo)
                 .Should().Contain(item => item.IsVisible && item.Header as string == "Open repository");
@@ -137,7 +139,7 @@ public sealed class WorkingDirectorySelectorTests
     }
 
     [AvaloniaTest]
-    public void Working_directory_selector_should_show_and_search_shared_branch_hints()
+    public void Working_directory_selector_should_show_branch_hints_but_filter_only_source_captions()
     {
         Repository alpha = new(@"C:\repos\alpha");
         Repository beta = new(@"C:\repos\beta");
@@ -165,7 +167,17 @@ public sealed class WorkingDirectorySelectorTests
         repositoryItems.Single(item => ((RepositoryHistoryEntry)item.Tag!).Repository.Path == alpha.Path)
             .IsVisible.Should().BeFalse();
         repositoryItems.Single(item => ((RepositoryHistoryEntry)item.Tag!).Repository.Path == beta.Path)
-            .IsVisible.Should().BeTrue();
+            .IsVisible.Should().BeFalse("branch hints are shortcut text, not the native item caption");
+
+        accessor.Filter.Text = "beta";
+        accessor.ApplyFilterForTesting();
+        betaItem.IsVisible.Should().BeTrue();
+        accessor.Filter.Text = " beta ";
+        accessor.ApplyFilterForTesting();
+        betaItem.IsVisible.Should().BeFalse("the source does not trim a nonempty search expression");
+        accessor.Filter.Text = " ";
+        accessor.ApplyFilterForTesting();
+        repositoryItems.Should().OnlyContain(item => item.IsVisible);
     }
 
     [AvaloniaTest]

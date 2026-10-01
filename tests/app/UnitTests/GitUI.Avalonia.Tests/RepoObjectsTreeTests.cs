@@ -31,6 +31,34 @@ public sealed class RepoObjectsTreeTests
     private static readonly ObjectId StashId = ObjectId.Parse("3333333333333333333333333333333333333333");
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(Key.Space)]
+    [TestCase(Key.Enter)]
+    public void Tree_keyboard_navigation_should_wait_for_explicit_activation(Key activationKey)
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            RepoObjectsTree control = new();
+            control.SetRefs([CreateRef("refs/heads/main")], [], "main");
+            TreeView tree = control.GetTestAccessor().Tree;
+            int navigations = 0;
+            control.NodeSelectionChanged += (_, _) => navigations++;
+            tree.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = Key.Down });
+            tree.SelectedItem = tree.Items[1];
+
+            navigations.Should().Be(0);
+            tree.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = activationKey });
+            navigations.Should().Be(1);
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
     public void Refs_should_keep_the_WinForms_tree_boundaries_and_nested_paths()
     {
         SettingsSnapshot settings = SettingsSnapshot.Capture();

@@ -1725,6 +1725,14 @@
     </Setter>
   </Style>
   <Style Selector="MenuItem /template/ Path#PART_ChevronPath">
+    <!-- ToolStripRenderer.DrawArrow uses a filled right-facing triangle, not Fluent's
+         open chevron. Preserve the template's reserved arrow slot and popup dimensions. -->
+    <Setter Property="Data" Value="M 0,0 L 4,4 L 0,8 Z" />
+    <Setter Property="Width" Value="4" />
+    <Setter Property="Height" Value="8" />
+    <Setter Property="Stretch" Value="Fill" />
+    <Setter Property="Fill" Value="{TemplateBinding Foreground}" />
+    <Setter Property="StrokeThickness" Value="0" />
     <Setter Property="RenderTransform">
       <TranslateTransform X="-7" />
     </Setter>
