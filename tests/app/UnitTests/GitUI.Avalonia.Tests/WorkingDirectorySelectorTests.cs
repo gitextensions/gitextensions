@@ -126,6 +126,17 @@ public sealed class WorkingDirectorySelectorTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Working_directory_selector_should_ignore_refresh_until_initialized()
+    {
+        WorkingDirectoryToolStripSplitButton selector = new() { Content = "WorkingDir" };
+
+        selector.RefreshContent();
+
+        selector.Content.Should().Be("WorkingDir");
+    }
+
+    [AvaloniaTest]
     public void Working_directory_selector_should_show_and_search_shared_branch_hints()
     {
         Repository alpha = new(@"C:\repos\alpha");

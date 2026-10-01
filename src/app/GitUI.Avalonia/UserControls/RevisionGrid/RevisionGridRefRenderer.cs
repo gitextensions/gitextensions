@@ -43,6 +43,109 @@ internal static class RevisionGridRefRenderer
     private static double PaddingLeftRight(string name) => string.IsNullOrEmpty(name) ? 1 : 4;
 
     /// <summary>
+    ///  Creates a closed path for a capsule whose left edge is a concave '>' notch
+    ///  that exactly fits the convex point tip of a preceding capsule.
+    /// </summary>
+    private static StreamGeometry CreateNotchLeftRoundRectPath(Rect bounds, double radius, double pointWidth)
+    {
+        double left = bounds.Left;
+        double top = bounds.Top;
+        double right = bounds.Right;
+        double bottom = bounds.Bottom;
+        double midY = bounds.Center.Y;
+
+        // The notch corners are at the leftmost pixels; the notch tip is indented by pointWidth.
+        return CreatePath(path =>
+        {
+            path.BeginFigure(new Point(left, top), isFilled: true);
+            path.LineTo(new Point(left + pointWidth, midY)); // top notch corner → indented tip
+            path.LineTo(new Point(left, bottom)); // indented tip → bottom notch corner
+            path.LineTo(new Point(right - radius, bottom));
+            path.QuadraticBezierTo(new Point(right, bottom), new Point(right, bottom - radius)); // bottom-right arc
+            path.LineTo(new Point(right, top + radius));
+            path.QuadraticBezierTo(new Point(right, top), new Point(right - radius, top)); // top-right arc
+        });
+    }
+
+    /// <summary>
+    ///  Creates a closed path for a capsule whose right edge is a concave '&lt;' notch
+    ///  that exactly fits the convex point tip of a following capsule.
+    /// </summary>
+    private static StreamGeometry CreateNotchRightRoundRectPath(Rect bounds, double radius, double pointWidth)
+    {
+        double left = bounds.Left;
+        double top = bounds.Top;
+        double right = bounds.Right;
+        double bottom = bounds.Bottom;
+        double midY = bounds.Center.Y;
+
+        // The notch corners are at the rightmost pixels; the notch tip is indented by pointWidth.
+        return CreatePath(path =>
+        {
+            path.BeginFigure(new Point(left + radius, top), isFilled: true); // top-left arc
+            path.LineTo(new Point(right, top));
+            path.LineTo(new Point(right - pointWidth, midY)); // top notch corner → indented tip
+            path.LineTo(new Point(right, bottom)); // indented tip → bottom notch corner
+            AddBottomAndLeft(path, left, bottom, top, radius); // bottom-left arc
+        });
+    }
+
+    /// <summary>
+    ///  Creates a closed path for a capsule whose left edge is a convex '&lt;' point
+    ///  that protrudes leftward, so it visually connects to a nestled preceding label.
+    /// </summary>
+    private static StreamGeometry CreatePointLeftRoundRectPath(Rect bounds, double radius, double pointWidth)
+    {
+        double left = bounds.Left;
+        double top = bounds.Top;
+        double right = bounds.Right;
+        double bottom = bounds.Bottom;
+        double midY = bounds.Center.Y;
+
+        // The point tip is at the leftmost pixel; the top/bottom corners step back by pointWidth.
+        return CreatePath(path =>
+        {
+            path.BeginFigure(new Point(left, midY), isFilled: true); // tip → top-left corner
+            path.LineTo(new Point(left + pointWidth, top));
+            path.LineTo(new Point(right - radius, top));
+            AddRight(path, right, top, bottom, radius); // top-right arc, bottom-right arc
+            path.LineTo(new Point(left + pointWidth, bottom)); // bottom-left corner → tip
+        });
+    }
+
+    /// <summary>
+    ///  Creates a closed path for a capsule whose right edge is a convex '&gt;' point
+    ///  instead of a rounded cap, so it visually connects to a nestled following label.
+    /// </summary>
+    private static StreamGeometry CreatePointRightRoundRectPath(Rect bounds, double radius, double pointWidth)
+    {
+        double left = bounds.Left;
+        double top = bounds.Top;
+        double right = bounds.Right;
+        double bottom = bounds.Bottom;
+        double midY = bounds.Center.Y;
+
+        // The point tip is at the rightmost pixel; the top/bottom corners step back by pointWidth.
+        return CreatePath(path =>
+        {
+            path.BeginFigure(new Point(left + radius, top), isFilled: true); // top-left arc
+            path.LineTo(new Point(right - pointWidth, top));
+            path.LineTo(new Point(right, midY)); // top-right corner → tip
+            path.LineTo(new Point(right - pointWidth, bottom)); // tip → bottom-right corner
+            AddBottomAndLeft(path, left, bottom, top, radius); // bottom-left arc
+        });
+    }
+
+    private static StreamGeometry CreateRoundRectPath(Rect bounds, double radius)
+        => CreatePath(path =>
+        {
+            path.BeginFigure(new Point(bounds.Left + radius, bounds.Top), isFilled: true);
+            path.LineTo(new Point(bounds.Right - radius, bounds.Top));
+            AddRight(path, bounds.Right, bounds.Top, bounds.Bottom, radius);
+            AddBottomAndLeft(path, bounds.Left, bounds.Bottom, bounds.Top, radius);
+        });
+
+    /// <summary>
     ///  Creates the ordered controls for a revision's refs, nesting a local branch with its
     ///  tracked remote when both point at the same commit.
     /// </summary>
@@ -229,6 +332,9 @@ internal static class RevisionGridRefRenderer
             VerticalAlignment = VerticalAlignment.Center,
         };
 
+    /// <summary>
+    ///  Draws a ref label and returns the retained label in the same coordinate space as its row.
+    /// </summary>
     public static RefLabelControl DrawRef(
         bool isRowSelected,
         IGitRef gitRef,
@@ -252,6 +358,13 @@ internal static class RevisionGridRefRenderer
         return label;
     }
 
+    /// <summary>
+    ///  Draws a ref label with the specified edge shape and returns the label and an optional deferred highlight action.
+    /// </summary>
+    /// <returns>
+    ///  The retained label and a deferred action that paints the highlight frame — or <see langword="null"/>
+    ///  when <paramref name="highlight"/> is <see langword="false"/>.
+    /// </returns>
     public static (RefLabelControl Label, Action? DrawHighlight) DrawRefEx(
         bool isRowSelected,
         IGitRef gitRef,
@@ -298,9 +411,6 @@ internal static class RevisionGridRefRenderer
 
         return AppColor.OtherTag.GetThemeColor();
     }
-
-    public static double GetPointWidth(double rowHeight)
-        => PointWidth(Math.Max(0, rowHeight - 1));
 
     internal static RefLabelControl CreateSpecialLabel(
         string label,
@@ -394,109 +504,6 @@ internal static class RevisionGridRefRenderer
         }
     }
 
-    /// <summary>
-    ///  Creates a closed path for a capsule whose left edge is a concave '>' notch
-    ///  that exactly fits the convex point tip of a preceding capsule.
-    /// </summary>
-    private static StreamGeometry CreateNotchLeftRoundRectPath(Rect bounds, double radius, double pointWidth)
-    {
-        double left = bounds.Left;
-        double top = bounds.Top;
-        double right = bounds.Right;
-        double bottom = bounds.Bottom;
-        double midY = bounds.Center.Y;
-
-        // The notch corners are at the leftmost pixels; the notch tip is indented by pointWidth.
-        return CreatePath(path =>
-        {
-            path.BeginFigure(new Point(left, top), isFilled: true);
-            path.LineTo(new Point(left + pointWidth, midY)); // top notch corner → indented tip
-            path.LineTo(new Point(left, bottom)); // indented tip → bottom notch corner
-            path.LineTo(new Point(right - radius, bottom));
-            path.QuadraticBezierTo(new Point(right, bottom), new Point(right, bottom - radius)); // bottom-right arc
-            path.LineTo(new Point(right, top + radius));
-            path.QuadraticBezierTo(new Point(right, top), new Point(right - radius, top)); // top-right arc
-        });
-    }
-
-    /// <summary>
-    ///  Creates a closed path for a capsule whose right edge is a concave '&lt;' notch
-    ///  that exactly fits the convex point tip of a following capsule.
-    /// </summary>
-    private static StreamGeometry CreateNotchRightRoundRectPath(Rect bounds, double radius, double pointWidth)
-    {
-        double left = bounds.Left;
-        double top = bounds.Top;
-        double right = bounds.Right;
-        double bottom = bounds.Bottom;
-        double midY = bounds.Center.Y;
-
-        // The notch corners are at the rightmost pixels; the notch tip is indented by pointWidth.
-        return CreatePath(path =>
-        {
-            path.BeginFigure(new Point(left + radius, top), isFilled: true); // top-left arc
-            path.LineTo(new Point(right, top));
-            path.LineTo(new Point(right - pointWidth, midY)); // top notch corner → indented tip
-            path.LineTo(new Point(right, bottom)); // indented tip → bottom notch corner
-            AddBottomAndLeft(path, left, bottom, top, radius); // bottom-left arc
-        });
-    }
-
-    /// <summary>
-    ///  Creates a closed path for a capsule whose left edge is a convex '&lt;' point
-    ///  that protrudes leftward, so it visually connects to a nestled preceding label.
-    /// </summary>
-    private static StreamGeometry CreatePointLeftRoundRectPath(Rect bounds, double radius, double pointWidth)
-    {
-        double left = bounds.Left;
-        double top = bounds.Top;
-        double right = bounds.Right;
-        double bottom = bounds.Bottom;
-        double midY = bounds.Center.Y;
-
-        // The point tip is at the leftmost pixel; the top/bottom corners step back by pointWidth.
-        return CreatePath(path =>
-        {
-            path.BeginFigure(new Point(left, midY), isFilled: true); // tip → top-left corner
-            path.LineTo(new Point(left + pointWidth, top));
-            path.LineTo(new Point(right - radius, top));
-            AddRight(path, right, top, bottom, radius); // top-right arc, bottom-right arc
-            path.LineTo(new Point(left + pointWidth, bottom)); // bottom-left corner → tip
-        });
-    }
-
-    /// <summary>
-    ///  Creates a closed path for a capsule whose right edge is a convex '&gt;' point
-    ///  instead of a rounded cap, so it visually connects to a nestled following label.
-    /// </summary>
-    private static StreamGeometry CreatePointRightRoundRectPath(Rect bounds, double radius, double pointWidth)
-    {
-        double left = bounds.Left;
-        double top = bounds.Top;
-        double right = bounds.Right;
-        double bottom = bounds.Bottom;
-        double midY = bounds.Center.Y;
-
-        // The point tip is at the rightmost pixel; the top/bottom corners step back by pointWidth.
-        return CreatePath(path =>
-        {
-            path.BeginFigure(new Point(left + radius, top), isFilled: true); // top-left arc
-            path.LineTo(new Point(right - pointWidth, top));
-            path.LineTo(new Point(right, midY)); // top-right corner → tip
-            path.LineTo(new Point(right - pointWidth, bottom)); // tip → bottom-right corner
-            AddBottomAndLeft(path, left, bottom, top, radius); // bottom-left arc
-        });
-    }
-
-    private static StreamGeometry CreateRoundRectPath(Rect bounds, double radius)
-        => CreatePath(path =>
-        {
-            path.BeginFigure(new Point(bounds.Left + radius, bounds.Top), isFilled: true);
-            path.LineTo(new Point(bounds.Right - radius, bounds.Top));
-            AddRight(path, bounds.Right, bounds.Top, bounds.Bottom, radius);
-            AddBottomAndLeft(path, bounds.Left, bounds.Bottom, bounds.Top, radius);
-        });
-
     private static StreamGeometry CreatePath(Action<StreamGeometryContext> draw)
     {
         StreamGeometry geometry = new();
@@ -570,6 +577,13 @@ internal static class RevisionGridRefRenderer
         => icon is RefLabelIcon.Head or RefLabelIcon.HeadMergeSource
             ? icon
             : RefLabelIcon.None;
+
+    /// <summary>
+    ///  Computes the point width for the given row height, which is needed to calculate the ideal
+    ///  capsule size for Notch and Point shapes.
+    /// </summary>
+    public static double GetPointWidth(double rowHeight)
+        => PointWidth(Math.Max(0, rowHeight - 1));
 
     /// <summary>
     ///  One custom-drawn ref label. Keeping the WinForms shape vocabulary here avoids

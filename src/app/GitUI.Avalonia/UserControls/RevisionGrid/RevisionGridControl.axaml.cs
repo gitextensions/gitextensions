@@ -165,6 +165,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private ObjectId? _headId;
     private ObjectId _pendingSelectedObjectId;
     private bool _headHighlighted;
+    private bool _isControlCreated;
     private bool _focusGridWhenShown;
     private string _lastPathFilter = string.Empty;
     private string _lastRevisionFilter = "--all";
@@ -496,7 +497,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         {
             OnRuntimeLoad();
         };
-        AttachedToVisualTree += (_, _) => AttachOwnerWindow();
+        AttachedToVisualTree += (_, _) =>
+        {
+            OnCreateControl();
+            AttachOwnerWindow();
+        };
         UpdateContextMenuItems();
         DetachedFromVisualTree += (_, _) =>
         {
@@ -547,6 +552,17 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         _taskManager.JoinPendingOperations();
     }
 
+    /// <summary>
+    /// Reset the controls to the supplied content.
+    /// This is used to remove spinners added when loading and to replace the gridview at errors.
+    /// </summary>
+    /// <param name="content">The content to show.</param>
+    private void SetPage(Control content)
+    {
+        pnlRevisionGrid.Children.Remove(_loadingControlSpinner);
+        revisionPage.Content = content;
+    }
+
     internal int DrawColumnText(TextBlock textBlock, string? text, bool useEllipsis = true)
     {
         textBlock.Text = text ?? string.Empty;
@@ -555,14 +571,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             : TextTrimming.None;
         return (int)Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(textBlock, textBlock.Text).Width);
     }
-
-    /// <summary>
-    /// Reset the controls to the supplied content.
-    /// This is used to remove spinners added when loading and to replace the gridview at errors.
-    /// </summary>
-    /// <param name="content">The content to show.</param>
-    private void SetPage(Control content)
-        => revisionPage.Content = content;
 
     internal IndexWatcher IndexWatcher => _indexWatcher.Value;
 
@@ -736,6 +744,22 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         UpdateViewMenuChecks();
     }
 
+    private void OnCreateControl()
+    {
+        if (_isControlCreated)
+        {
+            return;
+        }
+
+        _isControlCreated = true;
+
+        // Avalonia attaches after callers can seed rows; preserve an already populated page.
+        if (_gridView.ItemCount == 0 && ReferenceEquals(revisionPage.Content, _gridView))
+        {
+            ShowLoading();
+        }
+    }
+
     protected override void OnRuntimeLoad()
     {
         base.OnRuntimeLoad();
@@ -773,7 +797,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     bool IRevisionGridUpdate.SetSelectedRevision(ObjectId commitId, bool toggleSelection, bool updateNavigationHistory)
         => SetSelectedRevision(commitId, toggleSelection, updateNavigationHistory);
 
-    /// <summary>Selects and scrolls to the given revision if it is loaded.</summary>
     /// <summary>
     /// Selects row containing revision matching <paramref name="commitId"/>.
     /// Returns whether the required revision was found and selected.
@@ -971,7 +994,14 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private void ShowLoading(bool showSpinner = true)
     {
         _loadingControlText.IsVisible = !showSpinner;
-        SetPage(showSpinner ? _loadingControlSpinner : _gridView);
+        SetPage(_gridView);
+
+        // The source adds the spinner over the grid; retain Avalonia's columns and row host too.
+        if (showSpinner)
+        {
+            _loadingControlSpinner.IsHitTestVisible = false;
+            pnlRevisionGrid.Children.Add(_loadingControlSpinner);
+        }
     }
 
     /// <summary>
@@ -994,18 +1024,225 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return;
         }
 
-        IGitModule module = _lastModule ?? Module;
-        CurrentBranch = new(() => module.IsValidGitWorkingDir()
-            ? module.GetSelectedBranch(emptyIfDetached: true)
+        IGitModule capturedModule = _lastModule ?? Module;
+
+        // Reset the "cache" for current branch
+        CurrentBranch = new(() => capturedModule.IsValidGitWorkingDir()
+            ? capturedModule.GetSelectedBranch(emptyIfDetached: true)
             : string.Empty);
 
-        ReloadRevisions(
-            module,
-            _lastRevisionFilter,
-            SelectedId,
-            _lastPathFilter,
-            getRefs,
-            forceRefresh);
+        string revisionFilter = _lastRevisionFilter;
+        string pathFilter = _lastPathFilter;
+        ObjectId selectedObjectId = _pendingSelectedObjectId.IsZero ? SelectedId : _pendingSelectedObjectId;
+        if (revisionFilter == "--all")
+        {
+            revisionFilter = _filterInfo.GetRevisionFilter(new Lazy<ObjectId>(capturedModule.GetCurrentCheckout)).ToString();
+            pathFilter = _filterInfo.PathFilter;
+        }
+
+        // Revision info is read in three parallel steps:
+        // 1. Read current commit, refs, prepare grid etc.
+        // 2. Read stashes (if enabled).
+        // 3. Read all revisions with git-log.
+        //    Git will provide log information when available (so slower to first revision if sorting).
+        // These operations can take a long time and is done async in parallel.
+        // Step 3. requires that the information in 1 and 2 is available when adding revisions.
+        // The retained observer coordinates those inputs without blocking Avalonia's dispatcher.
+        CancellationToken cancellationToken = _refreshRevisionsSequence.Next();
+        _isRefreshingRevisions = true;
+
+        // Apply checkboxes changes also to FormBrowse main menu
+        MenuCommands.TriggerMenuChanged();
+        FilterChanged?.Invoke(this, new FilterChangedEventArgs(_filterInfo));
+
+        _revisions.Clear();
+        _toolTipProvider.Clear();
+        ResetNavigationHistory();
+        _parentChildNavigationHistory.Clear();
+        _buildServerWatcher.CancelBuildStatusFetchOperation();
+        foreach (ColumnProvider columnProvider in _columnProviders)
+        {
+            columnProvider.Clear();
+        }
+
+        _revisionGraph.Clear();
+        ObjectId previousCheckout = _headId ?? default;
+        _headId = capturedModule.GetCurrentCheckout();
+        _revisionGraph.HeadId = _headId.Value;
+        _superprojectCurrentCheckout = null;
+        IndexWatcher.Reset();
+
+        // If the current checkout (HEAD) is changed, don't get the currently selected rows,
+        // select the new current checkout instead.
+        if (!previousCheckout.IsZero && _headId.Value != previousCheckout && selectedObjectId.IsZero)
+        {
+            selectedObjectId = _headId.Value;
+        }
+
+        // A path filter makes git rewrite parents ("history simplification"), so revisions
+        // may carry parent ids that are not their real parents.
+        _parentsAreRewritten = !string.IsNullOrEmpty(pathFilter);
+        _pendingSelectedObjectId = selectedObjectId;
+        _headHighlighted = false;
+        lblLoadingStatus.Text = _strLoading.Text;
+        _focusGridWhenShown = true;
+
+        // Add the spinner controls, removed by SetPage()
+        ShowLoading();
+
+        // getRefs (refreshing from Browse) is Lazy already, but not from RevGrid (updating filters etc)
+        Lazy<IReadOnlyList<IGitRef>> refs = new(() => (getRefs ?? capturedModule.GetRefs)(RefsFilter.NoFilter));
+        _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs.Value));
+
+        // Get the "main" stash commit, including the reflog selector
+        Lazy<IReadOnlyCollection<GitRevision>> stashes = new(() =>
+            !AppSettings.ShowStashes || capturedModule.IsBareRepository()
+                ? []
+                : new RevisionReader(capturedModule).GetStashes(cancellationToken));
+        RevisionLoadEventArgs loadEventArgs = new(this, UICommands, refs, stashes, forceRefresh);
+        RevisionObserver observer = new(this, cancellationToken, loadEventArgs);
+
+        // Initiate update left panel
+        RevisionsLoading?.Invoke(this, loadEventArgs);
+        _taskManager.FileAndForget(async () =>
+        {
+            SuperProjectInfo? superProjectInfo = await GetSuperprojectCheckoutAsync(capturedModule).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            _superprojectCurrentCheckout = superProjectInfo;
+            if (superProjectInfo is not null)
+            {
+                // Revision may be displayed already, explicit refresh needed
+                await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+                RefreshRealizedRows();
+            }
+        });
+
+        // Get info about all Git commits, update the grid
+        // Evaluate GitRefs and current commit
+        _taskManager.FileAndForget(() =>
+        {
+            // Like the WinForms grid: fetch the refs first so they can be attached to the
+            // revisions as they stream in (ref labels; square graph nodes).
+            IReadOnlyList<IGitRef> loadedRefs = refs.Value;
+            cancellationToken.ThrowIfCancellationRequested();
+            string selectedBranch = capturedModule.GetSelectedBranch(emptyIfDetached: true);
+            IGitRef? selectedRef = loadedRefs.FirstOrDefault(
+                gitRef => gitRef.IsHead && gitRef.Name == selectedBranch);
+            UpdateSelectedRef(capturedModule, loadedRefs, selectedRef);
+
+            // Exclude the 'stash' ref, it is specially handled when stashes are shown
+            _refsByObjectId = (AppSettings.ShowStashes
+                    ? loadedRefs.Where(gitRef => gitRef.CompleteName != GitRefName.RefsStashPrefix)
+                    : loadedRefs)
+                .Where(gitRef => !gitRef.ObjectId.IsZero)
+                .ToLookup(gitRef => gitRef.ObjectId);
+            observer.InitializeStashes(capturedModule, stashes.Value);
+
+            RevisionReader reader = new(capturedModule);
+            bool hasNotes = AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes;
+            string effectivePathFilter = BuildPathFilter(pathFilter);
+            reader.GetLog(observer, revisionFilter, effectivePathFilter, hasNotes, autostashLabel: "autostash", cancellationToken);
+        });
+
+        return;
+
+        string BuildPathFilter(string? path)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            FilePathByObjectId?.Clear();
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return string.Empty;
+            }
+
+            // Manual arguments must be quoted if needed (internal paths are quoted)
+            // except for simple arguments without any quotes or spaces
+            path = path.Trim();
+            bool multipleArgs = false;
+            if (!path.Any(c => c == '"') && !path.Any(c => c == '\''))
+            {
+                if (!path.Any(c => c == ' '))
+                {
+                    path = path.Quote();
+                }
+                else
+                {
+                    multipleArgs = true;
+                }
+            }
+            else if (path.Count(c => c == '"') + path.Count(c => c == '\'') > 2)
+            {
+                // Basic detection of multiple quoted strings (let the Git command fail for more advanced usage)
+                multipleArgs = true;
+            }
+
+            if (!AppSettings.FollowRenamesInFileHistory
+
+                // The command line can be very long for folders, just ignore.
+                || path.EndsWith('/')
+                || path.EndsWith("/\"")
+
+                // --follow only accepts exactly one argument, error for all other
+                || multipleArgs)
+            {
+                return path;
+            }
+
+            // git log --follow is not working as expected (see https://stackoverflow.com/questions/46487476/git-log-follow-graph-skips-commits)
+            //
+            // But we can take a more complicated path to get reasonable results:
+            //  1. use git log --follow to get all previous filenames of the file we are interested in
+            //  2. use git log "list of files names" to get the history graph
+            GitArgumentBuilder args = new("log")
+            {
+                // --name-only will list each filename on a separate line, ending with an empty line
+                $"--format=\"{_objectIdPrefix}%H\"",
+                "--name-only",
+                "--follow",
+                FindRenamesAndCopiesOpts(),
+                "--",
+                path.QuoteIfNotQuotedAndNE(),
+            };
+
+            HashSet<string> fileNames = [];
+            foreach (string fileName in ParseFileNames(capturedModule, args, cancellationToken))
+            {
+                fileNames.Add(fileName);
+            }
+
+            // Add path in case of no matches so result is never empty
+            // This also occurs if Git detects more than one path argument
+            string effectivePathFilter = fileNames.Count == 0
+                ? path
+                : string.Join(string.Empty, fileNames.Select(fileName => @$" ""{fileName}"""));
+
+            // Windows commands have a max length of 32267 characters,
+            // git-log command is normally around 200 characters.
+            if (effectivePathFilter.Length <= 31000)
+            {
+                return effectivePathFilter;
+            }
+
+            this.InvokeAndForget(() => MessageBoxes.ShowError(
+                GetOwner(),
+                $"Ignoring too long pathfilter ({effectivePathFilter.Length}). (Are you trying to filter a folder?)",
+                "Cannot follow file renames"));
+            return path;
+        }
+
+        static void UpdateSelectedRef(IGitModule module, IReadOnlyList<IGitRef> gitRefs, IGitRef? selectedRef)
+        {
+            if (selectedRef is null)
+            {
+                return;
+            }
+
+            selectedRef.IsSelected = true;
+            IGitRef? selectedHeadMergeSource = gitRefs.FirstOrDefault(
+                gitRef => selectedRef.IsTrackingRemote(gitRef));
+            selectedHeadMergeSource?.IsSelectedHeadMergeSource = true;
+        }
     }
 
     /// <summary>
@@ -1216,98 +1453,14 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         Func<RefsFilter, IReadOnlyList<IGitRef>>? getRefs = null,
         bool forceRefresh = true)
     {
-        CancellationToken cancellationToken = _refreshRevisionsSequence.Next();
-        _isRefreshingRevisions = true;
+        // An explicit repository/filter reload supersedes the reader still streaming old rows.
+        _refreshRevisionsSequence.CancelCurrent();
+        _isRefreshingRevisions = false;
         _lastModule = module;
-        CurrentBranch = new(() => module.IsValidGitWorkingDir()
-            ? module.GetSelectedBranch(emptyIfDetached: true)
-            : string.Empty);
         _lastRevisionFilter = revisionFilter;
         _lastPathFilter = pathFilter;
-
-        if (revisionFilter == "--all")
-        {
-            revisionFilter = _filterInfo.GetRevisionFilter(new Lazy<ObjectId>(module.GetCurrentCheckout)).ToString();
-            pathFilter = _filterInfo.PathFilter;
-        }
-
-        FilterChanged?.Invoke(this, new FilterChangedEventArgs(_filterInfo));
-
-        _revisions.Clear();
-        _toolTipProvider.Clear();
-        ResetNavigationHistory();
-        _parentChildNavigationHistory.Clear();
-        _buildServerWatcher.CancelBuildStatusFetchOperation();
-        foreach (ColumnProvider columnProvider in _columnProviders)
-        {
-            columnProvider.Clear();
-        }
-
-        _revisionGraph.Clear();
-        _headId = module.GetCurrentCheckout();
-        _revisionGraph.HeadId = _headId.Value;
-        _superprojectCurrentCheckout = null;
-        IndexWatcher.Reset();
-
-        // A path filter makes git rewrite parents ("history simplification"), so revisions
-        // may carry parent ids that are not their real parents.
-        _parentsAreRewritten = !string.IsNullOrEmpty(pathFilter);
         _pendingSelectedObjectId = selectedObjectId;
-        _headHighlighted = false;
-        lblLoadingStatus.Text = _strLoading.Text;
-        _focusGridWhenShown = true;
-        ShowLoading();
-
-        Lazy<IReadOnlyList<IGitRef>> refs = new(() => (getRefs ?? module.GetRefs)(RefsFilter.NoFilter));
-        _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs.Value));
-        Lazy<IReadOnlyCollection<GitRevision>> stashes = new(() =>
-            !AppSettings.ShowStashes || module.IsBareRepository()
-                ? []
-                : new RevisionReader(module).GetStashes(cancellationToken));
-        RevisionLoadEventArgs loadEventArgs = new(this, UICommands, refs, stashes, forceRefresh);
-        RevisionObserver observer = new(this, cancellationToken, loadEventArgs);
-        RevisionsLoading?.Invoke(this, loadEventArgs);
-        _taskManager.FileAndForget(async () =>
-        {
-            SuperProjectInfo? superProjectInfo = await GetSuperprojectCheckoutAsync(module).ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
-            _superprojectCurrentCheckout = superProjectInfo;
-            if (superProjectInfo is not null)
-            {
-                await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-                RefreshRealizedRows();
-            }
-        });
-
-        _taskManager.FileAndForget(() =>
-        {
-            // Like the WinForms grid: fetch the refs first so they can be attached to the
-            // revisions as they stream in (ref labels; square graph nodes).
-            IReadOnlyList<IGitRef> loadedRefs = refs.Value;
-            string selectedBranch = module.GetSelectedBranch(emptyIfDetached: true);
-            IGitRef? selectedRef = loadedRefs.FirstOrDefault(
-                gitRef => gitRef.IsHead && gitRef.Name == selectedBranch);
-            if (selectedRef is not null)
-            {
-                selectedRef.IsSelected = true;
-                loadedRefs.FirstOrDefault(
-                    gitRef => selectedRef.IsTrackingRemote(gitRef))
-                    ?.IsSelectedHeadMergeSource = true;
-            }
-
-            // Exclude the 'stash' ref, it is specially handled when stashes are shown
-            _refsByObjectId = (AppSettings.ShowStashes
-                    ? loadedRefs.Where(gitRef => gitRef.CompleteName != GitRefName.RefsStashPrefix)
-                    : loadedRefs)
-                .Where(gitRef => !gitRef.ObjectId.IsZero)
-                .ToLookup(gitRef => gitRef.ObjectId);
-            observer.InitializeStashes(module, stashes.Value);
-
-            RevisionReader reader = new(module);
-            bool hasNotes = AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes;
-            string effectivePathFilter = BuildPathFilter(module, pathFilter, cancellationToken);
-            reader.GetLog(observer, revisionFilter, effectivePathFilter, hasNotes, autostashLabel: "autostash", cancellationToken);
-        });
+        PerformRefreshRevisions(getRefs!, forceRefresh);
     }
 
     private void DeleteRef()
@@ -1425,9 +1578,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    private void ClearRefHighlight()
-        => _messageColumnProvider.SetHighlight(cell: null, label: null);
-
     internal void OnGridViewCellMouseLeave(object? sender, PointerEventArgs e)
     {
         if (!mainContextMenu.IsOpen && _rightClickedHitInfo is null)
@@ -1435,6 +1585,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             ClearRefHighlight();
         }
     }
+
+    private void ClearRefHighlight()
+        => _messageColumnProvider.SetHighlight(cell: null, label: null);
 
     private void AttachOwnerWindow()
     {
@@ -1886,10 +2039,21 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             }
         }
 
+        bool firstRemoteBranchForCheckout = false;
         foreach (IGitRef branch in allBranches)
         {
             if (branch.CompleteName != currentBranchRef)
             {
+                if (!branch.IsRemote)
+                {
+                    firstRemoteBranchForCheckout = true;
+                }
+                else if (firstRemoteBranchForCheckout)
+                {
+                    checkoutBranchToolStripMenuItem.Items.Add(new ToolStripSeparator());
+                    firstRemoteBranchForCheckout = false;
+                }
+
                 AddRefMenuItem(
                     checkoutBranchToolStripMenuItem,
                     branch,
@@ -3035,73 +3199,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private static void OpenBuildReport(GitRevision? revision)
         => OsShellUtil.OpenUrlInDefaultBrowser(revision?.BuildStatus?.Url);
 
-    private string BuildPathFilter(IGitModule module, string? path, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        FilePathByObjectId?.Clear();
-
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            return string.Empty;
-        }
-
-        path = path.Trim();
-        bool multipleArgs = false;
-        if (!path.Any(c => c == '"') && !path.Any(c => c == '\''))
-        {
-            if (!path.Any(c => c == ' '))
-            {
-                path = path.Quote();
-            }
-            else
-            {
-                multipleArgs = true;
-            }
-        }
-        else if (path.Count(c => c == '"') + path.Count(c => c == '\'') > 2)
-        {
-            multipleArgs = true;
-        }
-
-        if (!AppSettings.FollowRenamesInFileHistory
-            || path.EndsWith('/')
-            || path.EndsWith("/\"")
-            || multipleArgs)
-        {
-            return path;
-        }
-
-        GitArgumentBuilder args = new("log")
-        {
-            $"--format=\"{_objectIdPrefix}%H\"",
-            "--name-only",
-            "--follow",
-            FindRenamesAndCopiesOpts(),
-            "--",
-            path.QuoteIfNotQuotedAndNE(),
-        };
-
-        HashSet<string> fileNames = [];
-        foreach (string fileName in ParseFileNames(module, args, cancellationToken))
-        {
-            fileNames.Add(fileName);
-        }
-
-        string pathFilter = fileNames.Count == 0
-            ? path
-            : string.Join(string.Empty, fileNames.Select(fileName => @$" ""{fileName}"""));
-        if (pathFilter.Length <= 31000)
-        {
-            return pathFilter;
-        }
-
-        this.InvokeAndForget(() => MessageBoxes.ShowError(
-            GetOwner(),
-            $"Ignoring too long pathfilter ({pathFilter.Length}). (Are you trying to filter a folder?)",
-            "Cannot follow file renames"));
-        return path;
-    }
-
     private void openPullRequestPageStripMenuItem_Click(object sender, EventArgs e)
     {
         string? url = SelectedRevision?.BuildStatus?.PullRequestUrl;
@@ -3196,11 +3293,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void OnLoadingCompleted(CancellationToken cancellationToken)
     {
-        _isRefreshingRevisions = false;
         if (cancellationToken.IsCancellationRequested)
         {
             return;
         }
+
+        _isRefreshingRevisions = false;
 
         // Avalonia's observable stream preserves arrival order, while the original grid exposes
         // RevisionGraph's final scored order after artificial revisions have been inserted.
@@ -3344,9 +3442,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void OnLoadingError(Exception exception, CancellationToken cancellationToken)
     {
-        _isRefreshingRevisions = false;
         if (!cancellationToken.IsCancellationRequested)
         {
+            _isRefreshingRevisions = false;
             lblLoadingStatus.Text = $"Failed to load revisions: {exception.Message}";
             SetPage(new ErrorControl());
         }
@@ -3941,6 +4039,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         public Window? OwnerWindow => control._ownerWindow;
 
         public ListBox Revisions => control._gridView;
+
+        public ObjectId PendingSelectedObjectId => control._pendingSelectedObjectId;
 
         public void RaiseOwnerWindowDeactivated()
             => control.OnOwnerWindowDeactivated(control._ownerWindow, EventArgs.Empty);
