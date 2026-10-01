@@ -18,7 +18,9 @@
     </ResourceDictionary>
   </UserControl.Resources>
   <UserControl.Styles>
-    <Style Selector="ListBoxItem:pointerover /template/ Border#PART_LayoutRoot">
+    <Style Selector="ListBoxItem:pointerover /template/ Border#PART_LayoutRoot,
+                     ListBoxItem:selected /template/ Border#PART_LayoutRoot,
+                     ListBoxItem:selected:pointerover /template/ Border#PART_LayoutRoot">
       <Setter Property="Background" Value="{DynamicResource DashboardRepositoryHoverBrush}" />
     </Style>
     <Style Selector="Button.dashboard-group-action">

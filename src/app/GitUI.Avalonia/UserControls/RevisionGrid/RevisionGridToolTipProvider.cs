@@ -143,6 +143,15 @@ internal sealed class RevisionGridToolTipProvider
     public void Clear()
     {
         Hide();
+
+        // Retained controls must not outlive their recycled rows after a repository reload.
+        foreach (Control cell in _cellStates.Keys)
+        {
+            cell.PointerMoved -= OnCellPointerMoved;
+            ToolTip.SetTip(cell, null);
+        }
+
+        _cellStates.Clear();
         _isTruncatedByCellPos.Clear();
         _previousRowIndex = -1;
         _previousColumnIndex = -1;
@@ -161,11 +170,26 @@ internal sealed class RevisionGridToolTipProvider
             cell.PointerMoved += OnCellPointerMoved;
         }
 
+        if (_cellStates.TryGetValue(cell, out CellState? previous)
+            && (previous.ColumnIndex != columnIndex || previous.RowIndex != rowIndex || !ReferenceEquals(previous.Revision, revision)))
+        {
+            // Virtualization can replace a commit while retaining both control and position.
+            // Its next hover must not reuse the previous commit's cached tooltip/highlight.
+            ToolTip.SetIsOpen(cell, false);
+            ToolTip.SetTip(cell, null);
+            _previousRowIndex = -1;
+            _previousColumnIndex = -1;
+            _previousHighlight = null;
+        }
+
         _cellStates[cell] = new CellState(columnIndex, rowIndex, revision);
         TextBlock? textBlock = cell as TextBlock ?? cell.GetVisualDescendants().OfType<TextBlock>().FirstOrDefault();
         SetTruncation(columnIndex, rowIndex, IsTruncated(textBlock));
+    }
 
-        void OnCellPointerMoved(object? sender, PointerEventArgs e)
+    private void OnCellPointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (sender is Control cell)
         {
             OnCellMouseMove(cell, e);
         }

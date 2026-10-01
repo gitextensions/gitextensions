@@ -12,6 +12,180 @@
   ],
   "components": [
     {
+      "source": "src/app/GitUI/UserControls/NativeTreeViewDoubleClickDecorator.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/NativeTreeViewDoubleClickDecorator.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/types/GitUI.UserControls.NativeTreeViewDoubleClickDecorator.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 14,
+          "note": "Same-named Avalonia twin added in the verified working batch based on this parent commit. Original-specific members and native framework event/signature differences remain measured; this mapping is not structurally complete."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/windows-focused-final-2.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/linux-focused-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/windows-final-dashboard-2.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/linux-final-dashboard-2.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Source interaction boundaries are covered by 239/239 affected-surface tests on Windows and native-ext4 Linux, plus a final 28/28 dashboard/decorator/capture-seeding subset on each after a source-binder correction. Exhaustive consuming-tree functional audit remains open."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This event-only decorator renders no owned chrome or colors. Consuming RepoObjectsTree visual and color evidence remains separate and incomplete."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This event-only decorator renders no owned chrome or colors. Consuming RepoObjectsTree visual and color evidence remains separate and incomplete."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/windows-focused-final-2.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/linux-focused-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/windows-final-dashboard-2.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/linux-final-dashboard-2.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Regression cases cover all four arrow keys, the 500ms guard, Space/Enter, a real same-node pointer click, double-tap expansion/cancellation and expansion-toggle exclusion. Full consuming-tree state/action coverage remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/windows-focused-final-2.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/linux-focused-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/windows-final-dashboard-2.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/linux-final-dashboard-2.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Affected-surface tests passed on Windows and native-ext4 Linux. Browse shipping-app smoke passed on Windows, native Wayland under nested Weston, and nested X11; these smokes do not constitute every decorator-state walk. Apple-Silicon macOS is unavailable; ordinary in-window changes do not affect confinement."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/NativeTreeViewExplorerNavigationDecorator.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/NativeTreeViewExplorerNavigationDecorator.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/types/GitUI.UserControls.NativeTreeViewExplorerNavigationDecorator.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 16,
+          "note": "Same-named Avalonia twin added in the verified working batch based on this parent commit. Original-specific members and native framework event/signature differences remain measured; this mapping is not structurally complete."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/windows-focused-final-2.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/linux-focused-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/windows-final-dashboard-2.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/linux-final-dashboard-2.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Source interaction boundaries are covered by 239/239 affected-surface tests on Windows and native-ext4 Linux, plus a final 28/28 dashboard/decorator/capture-seeding subset on each after a source-binder correction. Exhaustive consuming-tree functional audit remains open."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This event-only decorator renders no owned chrome or colors. Consuming RepoObjectsTree visual and color evidence remains separate and incomplete."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This event-only decorator renders no owned chrome or colors. Consuming RepoObjectsTree visual and color evidence remains separate and incomplete."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/windows-focused-final-2.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/linux-focused-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/windows-final-dashboard-2.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/linux-final-dashboard-2.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Regression cases cover all four arrow keys, the 500ms guard, Space/Enter, a real same-node pointer click, double-tap expansion/cancellation and expansion-toggle exclusion. Full consuming-tree state/action coverage remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/windows-focused-final-2.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/linux-focused-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/windows-final-dashboard-2.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/tests/linux-final-dashboard-2.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Affected-surface tests passed on Windows and native-ext4 Linux. Browse shipping-app smoke passed on Windows, native Wayland under nested Weston, and nested X11; these smokes do not constitute every decorator-state walk. Apple-Silicon macOS is unavailable; ordinary in-window changes do not affect confinement."
+        }
+      }
+    },
+    {
       "source": "src/app/GitCommands/Git/Extensions/ProcessExtensions.cs",
       "twin": "src/app/GitCommands/Git/Extensions/ProcessExtensions.cs",
       "complete": false,
@@ -8364,7 +8538,7 @@
     },
     {
       "source": "src/app/GitUI/CommandsDialogs/FormVerify.LostObject.cs",
-      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormVerify.LostObject.cs",
+      "twin": "src/app/GitUI/CommandsDialogs/FormVerify.LostObject.cs",
       "complete": false,
       "axes": {
         "structural": {
@@ -35128,31 +35302,30 @@
     },
     {
       "source": "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs",
-      "twin": "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.Command.cs",
       "complete": false,
       "axes": {
         "structural": {
           "status": "verified",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.RevisionGridControl.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.RevisionGridControl.functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 393,
-          "note": "P8.6i progress 69 groups 181 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 393 actionable and 574 total differences for this mapping; every structural difference stays open."
-        },
-        "functional": {
-          "status": "verified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/command-enum-source-equivalence.log"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "The exact original implementation is compiled into the twin."
+          "note": "The enum partial is copied to the same relative Avalonia path, not linked. Source text matches after UTF-8 decoding and line-ending normalization, including declarations, order, comments and persisted IDs. The owning RevisionGridControl aggregate retains 108 actionable and 22 dependent records in the current inventory; those gaps belong to its other partials and are not waived by this partial's equivalence."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-10-01",
+          "commit": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-61/command-enum-source-equivalence.log"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The copied command enum retains the exact original names and values. This evidence covers only the enum, not its consumers or the complete revision-grid behavior."
         },
         "visual": {
           "status": "notApplicable",

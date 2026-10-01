@@ -163,7 +163,7 @@ public sealed partial class ParityScreenshotTests
 
         try
         {
-            PrepareView(view, context);
+            await PrepareViewAsync(view, context);
             window.Show();
             window.SetRenderScaling(scaleFactor);
             if (!isWindow)
@@ -1039,6 +1039,22 @@ public sealed partial class ParityScreenshotTests
         throw new InvalidOperationException($"Field '{fieldName}' was not found on {owner.GetType().FullName}.");
     }
 
+    private static async Task PrepareViewAsync(Control root, CaptureContext context)
+    {
+        if (root is Dashboard or FormBrowse)
+        {
+            // parity-scaffolding: Match the independently isolated reference workers. Dashboard
+            // owns categorized history; its seed must not leak into a later Browse/theme cell.
+            Repository repository = new(context.Module.WorkingDir);
+            await RepositoryHistoryManager.Locals.AddAsMostRecentAsync(repository.Path);
+            await RepositoryHistoryManager.Locals.AssignCategoryAsync(repository, root is Dashboard ? "Development" : null);
+            context.Commands.GetRequiredService<IUserRepositoriesListController>().ClearCache();
+            context.Commands.GetRequiredService<IRepositoryHistoryUIService>().Invalidate();
+        }
+
+        PrepareView(root, context);
+    }
+
     private static void PrepareView(Control root, CaptureContext context)
     {
         if (root is FormSettings formSettings)
@@ -1326,20 +1342,11 @@ public sealed partial class ParityScreenshotTests
 
         if (root is Dashboard dashboard)
         {
-            IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
-            IUserRepositoriesListController controller = Substitute.For<IUserRepositoriesListController>();
-            Repository recent = new(context.WorkingDirectory);
-            Repository favourite = new(Path.GetDirectoryName(context.WorkingDirectory)!)
-            {
-                Category = "Development",
-            };
-            controller.PreRenderRepositories(Arg.Any<string>()).Returns((
-                new[] { new RecentRepoInfo(recent, topRepo: true, anchored: true) { Caption = "gitextensions" } },
-                new[] { new RecentRepoInfo(favourite, topRepo: false, anchored: false) { Caption = "avalonia-port" } }));
-            controller.IsValidGitWorkingDir(Arg.Any<string>()).Returns(true);
-            controller.GetCurrentBranchName(recent.Path).Returns(MainBranchName);
-            controller.GetCurrentBranchName(favourite.Path).Returns(FeatureBranchName);
-            dashboard.Initialize(controller, history);
+            // parity-scaffolding: Use the same isolated repository-history seed and product
+            // controller as the reference worker, not differently named synthetic repositories.
+            dashboard.Initialize(
+                context.Commands.GetRequiredService<IUserRepositoriesListController>(),
+                context.Commands.GetRequiredService<IRepositoryHistoryUIService>());
             dashboard.RefreshContent();
             return;
         }
