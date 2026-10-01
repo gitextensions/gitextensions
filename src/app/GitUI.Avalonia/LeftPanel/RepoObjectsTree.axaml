@@ -23,7 +23,8 @@
                 Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
                 Orientation="Horizontal"
                 Height="25"
-                Spacing="0">
+                Spacing="0"
+                Classes="gitextensions-tree-toolbar">
       <compat:IconButton x:Name="tsbCollapseAll"
                          compat:TranslationCompat.UseToolTipText="True"
                          Classes="gitextensions-toolbar-button gitextensions-icon-only"

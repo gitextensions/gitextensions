@@ -1,17 +1,22 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.ParityCapture;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.Compat;
+using GitUI.Theming;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using WinFormsControls = GitUI.Compat.WinFormsControls;
@@ -26,6 +31,122 @@ public sealed class DashboardTests
     {
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Dashboard_capture_should_read_live_colors_instead_of_overwriting_them_with_Designer_defaults()
+    {
+        UserRepositoriesList list = new();
+        Window window = new() { Width = 451, Height = 283, Content = list };
+        try
+        {
+            window.Show();
+            list.HeaderColor = Avalonia.Media.Color.FromRgb(12, 34, 56);
+            list.HeaderBackColor = Avalonia.Media.Color.FromRgb(78, 90, 12);
+            list.ForeColor = Avalonia.Media.Color.FromRgb(34, 56, 78);
+            window.UpdateLayout();
+            CaptureNode root = new AvaloniaControlTreeReader(list, 1)
+                .ReadPrimary(list, PixelSize.FromSize(list.Bounds.Size, 1)).Root;
+            CaptureNode heading = Nodes(root).Single(node => node.FieldName == "lblRecentRepositories");
+            CaptureNode header = Nodes(root).Single(node => node.FieldName == "pnlHeader");
+            heading.Colors.Foreground.Should().Be("#FF0C2238");
+            header.Colors.Background.Should().Be("#FF4E5A0C");
+            Nodes(root).Single(node => node.FieldName == "listView1").Colors.Foreground.Should().Be("#FF22384E");
+            CaptureNode repositoryList = Nodes(root).Single(node => node.FieldName == "listView1");
+            repositoryList.ControlKind.Should().Be("list");
+            repositoryList.Text.Should().BeEmpty();
+        }
+        finally
+        {
+            window.Close();
+        }
+
+        return;
+
+        static IEnumerable<CaptureNode> Nodes(CaptureNode node)
+        {
+            yield return node;
+            foreach (CaptureNode child in node.Children)
+            {
+                foreach (CaptureNode descendant in Nodes(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Dashboard_should_scroll_the_source_minimum_layout_instead_of_clipping_commands()
+    {
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        Window window = new() { Width = 686, Height = 358, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            Border start = dashboard.FindControl<Border>("flpnlStart")!;
+            Border contribute = dashboard.FindControl<Border>("flpnlContribute")!;
+            Grid layout = dashboard.FindControl<Grid>("tableLayoutPanel1")!;
+            Button clone = dashboard.FindControl<Button>("cloneItem")!;
+            ScrollViewer scroll = dashboard.GetVisualDescendants().OfType<ScrollViewer>().First();
+            start.MinHeight.Should().BeGreaterThan(0);
+            contribute.Height.Should().BeGreaterThan(0);
+            layout.MinHeight.Should().Be(68 + start.MinHeight + contribute.Height);
+            scroll.Extent.Height.Should().BeGreaterThan(scroll.Viewport.Height);
+            clone.Bounds.Height.Should().BeGreaterThan(0);
+            clone.TranslatePoint(default, start)!.Value.Y.Should().BeGreaterThan(0);
+            Grid content = (Grid)clone.Content!;
+            content.Children.OfType<Image>().Single().Margin.Left.Should().Be(-24);
+            content.Children.OfType<TextBlock>().Single().Text.Should().Be("Clone repository");
+
+            // Rehost at a larger client size; the headless window does not resize like a desktop window.
+            window.Content = null;
+            window.Close();
+            window = new Window { Width = 686, Height = layout.MinHeight + 100, Content = dashboard };
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            scroll.Extent.Height.Should().BeLessThanOrEqualTo(scroll.Viewport.Height);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Repository_list_should_focus_its_first_input_and_publish_its_runtime_foreground()
+    {
+        UserRepositoriesList list = new();
+        Button otherInput = new() { Content = "Other input" };
+        Window window = new() { Content = new StackPanel { Children = { list, otherInput } } };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            // Focus is forwarded to the first child, so the container itself loses focus.
+            list.Focus();
+            list.GetTestAccessor().Search.IsFocused.Should().BeTrue();
+            list.GetTestAccessor().Search.PlaceholderText.Should().BeNull();
+            otherInput.Focus();
+            list.GetTestAccessor().Search.PlaceholderText.Should().Be("Search repositories...");
+            Avalonia.Media.Color foreground = Avalonia.Media.Color.FromRgb(12, 34, 56);
+            list.ForeColor = foreground;
+            ((Avalonia.Media.SolidColorBrush)list.Foreground!).Color.Should().Be(foreground);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]
@@ -79,6 +200,16 @@ public sealed class DashboardTests
                 .OfType<Button>()
                 .Single(button => button.Classes.Contains("dashboard-group-action"));
             categoryAction.IsEffectivelyEnabled.Should().BeTrue();
+            categoryAction.IsVisible.Should().BeFalse();
+            Grid groupHeader = (Grid)categoryAction.Parent!;
+            groupHeader.Children.OfType<Border>().Single().Bounds.Width.Should().BeGreaterThan(0);
+            Avalonia.Input.Pointer pointer = new(1, PointerType.Mouse, true);
+            groupHeader.RaiseEvent(new PointerEventArgs(
+                InputElement.PointerEnteredEvent, groupHeader, pointer, groupHeader, default, 0, default, KeyModifiers.None));
+            categoryAction.IsVisible.Should().BeTrue();
+            groupHeader.RaiseEvent(new PointerEventArgs(
+                InputElement.PointerExitedEvent, groupHeader, pointer, groupHeader, default, 0, default, KeyModifiers.None));
+            categoryAction.IsVisible.Should().BeFalse();
 
             Avalonia.Media.Color hoverColor = Avalonia.Media.Color.FromRgb(1, 2, 3);
             list.HoverColor = hoverColor;
@@ -118,7 +249,10 @@ public sealed class DashboardTests
             Image[] images = [.. row.Children.OfType<Image>()];
 
             images.Should().HaveCount(2);
-            images.Should().OnlyContain(image => image.Width == 16 && image.Height == 16);
+            images.Single(image => ReferenceEquals(image.Source, GitUI.Properties.Images.DashboardFolderGit))
+                .Width.Should().Be(GitUI.Properties.Images.DashboardFolderGit.Size.Width);
+            images.Single(image => ReferenceEquals(image.Source, GitUI.Properties.Images.Star))
+                .Width.Should().Be(16);
             images.Should().ContainSingle(image => ReferenceEquals(image.Source, GitUI.Properties.Images.Star));
             images[0].Source.Should().BeSameAs(GitUI.Properties.Images.Star);
             row.GetVisualDescendants().OfType<TextBlock>().Single(text => text.Text == "favourite").FontWeight
@@ -222,9 +356,9 @@ public sealed class DashboardTests
                     .OfType<Grid>()
                     .Single(grid => grid.Children.OfType<StackPanel>().Any());
                 TextBlock captionProbe = row.GetVisualDescendants().OfType<TextBlock>().Single(text => text.Text == caption);
-                double measuredCaption = WinFormsTextMeasurer.Measure(captionProbe, caption);
+                double measuredCaption = WinFormsTextMeasurer.MeasureTextRenderer(captionProbe, caption).Width;
 
-                row.MinWidth.Should().Be(Math.Ceiling(measuredCaption + 16 + 50));
+                row.Width.Should().Be(Math.Ceiling(measuredCaption + GitUI.Properties.Images.DashboardFolderGit.Size.Width + 50));
                 row.MinHeight.Should().BeGreaterThanOrEqualTo(50);
             }
             finally
@@ -479,6 +613,87 @@ public sealed class DashboardTests
         DashboardTheme.Light.StartBackColor.Should().Be(Avalonia.Media.Color.FromRgb(219, 235, 248));
         DashboardTheme.Light.ContributeBackColor.Should().Be(Avalonia.Media.Color.FromRgb(230, 241, 250));
         DashboardTheme.Light.SearchBackColor.Should().Be(Avalonia.Media.Color.FromRgb(248, 248, 255));
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [NonParallelizable]
+    public void Dashboard_dark_palette_should_resolve_current_system_colors_before_attachment_and_after_theme_change()
+    {
+        ThemeSettings originalSettings = ThemeModule.Settings;
+        ThemeId originalId = AppSettings.ThemeId;
+        string[] originalVariations = AppSettings.ThemeVariations;
+        bool originalVisualStyle = AppSettings.UseSystemVisualStyle;
+        ThemeId themeId = new("dashboard-runtime");
+        IThemeRepository repository = Substitute.For<IThemeRepository>();
+        repository.GetInvariantTheme().Returns(Theme.CreateDefaultTheme());
+        repository.GetTheme(themeId, Arg.Any<IReadOnlyList<string>>()).Returns(
+            CreateTheme(System.Drawing.Color.FromArgb(12, 34, 56)),
+            CreateTheme(System.Drawing.Color.FromArgb(65, 43, 21)));
+        try
+        {
+            AppSettings.ThemeId = themeId;
+            AppSettings.ThemeVariations = [];
+            AppSettings.UseSystemVisualStyle = false;
+            ThemeModule.TestAccessor.ReloadThemeSettings(repository);
+            DashboardTheme dark = DashboardTheme.Dark;
+            dark.StartBackColor.Should().Be(Avalonia.Media.Color.FromRgb(12, 34, 56));
+            AssertSystemColors(dark);
+            Dashboard dashboard = new();
+            dashboard.RefreshContent();
+            ((Avalonia.Media.SolidColorBrush)dashboard.FindControl<Border>("flpnlStart")!.Background!).Color
+                .Should().Be(dark.StartBackColor);
+
+            ThemeModule.TestAccessor.ReloadThemeSettings(repository);
+            dark.StartBackColor.Should().Be(Avalonia.Media.Color.FromRgb(65, 43, 21));
+            AssertSystemColors(dark);
+            dashboard.RefreshContent();
+            ((Avalonia.Media.SolidColorBrush)dashboard.FindControl<Border>("flpnlStart")!.Background!).Color
+                .Should().Be(dark.StartBackColor);
+        }
+        finally
+        {
+            AppSettings.ThemeId = originalId;
+            AppSettings.ThemeVariations = originalVariations;
+            AppSettings.UseSystemVisualStyle = originalVisualStyle;
+            IThemeRepository originalRepository = Substitute.For<IThemeRepository>();
+            originalRepository.GetInvariantTheme().Returns(originalSettings.InvariantTheme);
+            originalRepository.GetTheme(Arg.Any<ThemeId>(), Arg.Any<IReadOnlyList<string>>()).Returns(originalSettings.Theme);
+            ThemeModule.TestAccessor.ReloadThemeSettings(originalRepository);
+        }
+
+        return;
+
+        Theme CreateTheme(System.Drawing.Color control)
+            => new(
+                new Dictionary<AppColor, System.Drawing.Color> { [AppColor.PanelBackground] = System.Drawing.Color.Black },
+                new[]
+                {
+                    System.Drawing.KnownColor.Control, System.Drawing.KnownColor.ControlLight,
+                    System.Drawing.KnownColor.ControlDark, System.Drawing.KnownColor.ControlDarkDark,
+                    System.Drawing.KnownColor.WindowText, System.Drawing.KnownColor.ControlText, System.Drawing.KnownColor.GrayText,
+                }.Select((color, index) => (color, value: System.Drawing.Color.FromArgb(control.R + index, control.G, control.B)))
+                    .ToDictionary(pair => pair.color, pair => pair.value),
+                themeId);
+
+        static void AssertSystemColors(DashboardTheme dark)
+        {
+            (System.Drawing.KnownColor Name, Avalonia.Media.Color Actual)[] colors =
+            [
+                (System.Drawing.KnownColor.Control, dark.SearchBackColor),
+                (System.Drawing.KnownColor.Control, dark.StartBackColor),
+                (System.Drawing.KnownColor.ControlLight, dark.ContributeBackColor),
+                (System.Drawing.KnownColor.ControlDark, dark.HeaderBackColor),
+                (System.Drawing.KnownColor.ControlDarkDark, dark.LogoBackColor),
+                (System.Drawing.KnownColor.WindowText, dark.PrimaryText),
+                (System.Drawing.KnownColor.ControlText, dark.PrimaryHeadingText),
+                (System.Drawing.KnownColor.GrayText, dark.SecondaryHeadingText),
+            ];
+            foreach ((System.Drawing.KnownColor name, Avalonia.Media.Color actual) in colors)
+            {
+                actual.Should().Be(AvaloniaThemeResources.ToMediaColor(ThemeModule.Settings.Theme.GetColor(name)));
+            }
+        }
     }
 
     [AvaloniaTest]
