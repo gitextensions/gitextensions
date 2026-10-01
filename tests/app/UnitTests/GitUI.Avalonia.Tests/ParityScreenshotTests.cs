@@ -1953,6 +1953,10 @@ public sealed partial class ParityScreenshotTests
             await formBrowse.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(15));
             await SelectAndWaitForFormBrowseRevisionAsync(formBrowse, context.HeadRevision);
 
+            // Selection can refresh repository state again; retain the completed push counter,
+            // not ResetBeforeUpdate's transient empty text and preserved old button width.
+            await formBrowse.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(15));
+
             // Wait for this fixture's status count so captures cannot race the monitor.
             // An externally supplied paired repository may be clean; the internally seeded
             // repository has three changes, but that count is not a universal capture fact.

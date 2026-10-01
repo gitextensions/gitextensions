@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
@@ -11,6 +12,7 @@ using GitCommands.Submodules;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.LeftPanel;
@@ -28,6 +30,52 @@ namespace GitExtensionsTests;
 [NonParallelizable]
 public sealed class RepoObjectsTreeTests
 {
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Tree_should_accept_keyboard_focus_without_focusing_the_search_button()
+    {
+        RepoObjectsTree control = new();
+        Window window = new() { Width = 360, Height = 560, Content = control };
+        try
+        {
+            window.Show();
+            window.UpdateLayout();
+            RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
+            accessor.Tree.Focus(NavigationMethod.Tab).Should().BeTrue();
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            accessor.Tree.IsKeyboardFocusWithin.Should().BeTrue();
+            accessor.SearchButton.IsFocused.Should().BeFalse();
+            accessor.SearchBox.Margin.Should().Be(default(Avalonia.Thickness));
+            accessor.SearchBox.Bounds.Height.Should().Be(23);
+            accessor.SearchBox.Bounds.Y.Should().BeApproximately(1, 0.5);
+            CaptureNode root = new AvaloniaControlTreeReader(control, 1)
+                .ReadPrimary(control, PixelSize.FromSize(control.Bounds.Size, 1)).Root;
+            CaptureNode input = Descendants(root).Single(node => node.FieldName == "txtSearchBox");
+            input.ClientSizeDip.Width.Should().Be(input.BoundsDip.Width);
+            input.ClientSizeDip.Height.Should().Be(input.BoundsDip.Height);
+            input.BorderStyle.Should().Be("FixedSingle");
+            Descendants(root).Should().Contain(node => node.FieldName == "listBoxSearchResult" && node.Visible == false);
+        }
+        finally
+        {
+            window.Close();
+        }
+
+        return;
+
+        static IEnumerable<CaptureNode> Descendants(CaptureNode node)
+        {
+            yield return node;
+            foreach (CaptureNode child in node.Children)
+            {
+                foreach (CaptureNode descendant in Descendants(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
+    }
+
     [AvaloniaTest]
     [Category("P8.6i.126")]
     public void Tree_toolbar_should_keep_native_image_item_allocations()

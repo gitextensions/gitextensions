@@ -120,12 +120,15 @@
       </wf:ToolStripMenuItem>
     </wf:MenuStrip>
     <wf:ColumnHeader x:Name="clmhdrPath"
+                     Width="60"
                      IsVisible="False"
                      Text="Path" />
     <wf:ColumnHeader x:Name="clmhdrBranch"
+                     Width="60"
                      IsVisible="False"
                      Text="Branch" />
     <wf:ColumnHeader x:Name="clmhdrCategory"
+                     Width="60"
                      IsVisible="False"
                      Text="Category" />
   </Grid>
