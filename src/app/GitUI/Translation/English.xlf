@@ -7144,6 +7144,14 @@ Is the merge conflict solved?</source>
         <source>deleted</source>
         <target />
       </trans-unit>
+      <trans-unit id="_diffBaseWithModifiedButtonDescription.Text">
+        <source>Opens the difftool. This dialog stays open, so choose afterwards.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffBaseWithModifiedButtonText.Text">
+        <source>Diff base with modified</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_errorStartingMergetool.Text">
         <source>Error starting mergetool: {0}</source>
         <target />
