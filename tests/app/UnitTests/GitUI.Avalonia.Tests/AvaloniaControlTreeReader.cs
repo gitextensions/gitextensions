@@ -768,6 +768,12 @@ internal sealed class AvaloniaControlTreeReader
             control,
             sourceOwnerType,
             fieldName);
+        bool hasDashboardRuntimeColors = sourceOwnerType.StartsWith(
+                "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.", StringComparison.Ordinal)
+            && control is Grid or Border or TextBlock or Image or ListBox
+                or GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard
+                or GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList;
+        bool isDashboardRepositoryList = hasDashboardRuntimeColors && semanticName == "listView1";
         CaptureColors? formCommitSemanticColors = ReadFormCommitSemanticColors(
             control,
             fieldName);
@@ -916,6 +922,8 @@ internal sealed class AvaloniaControlTreeReader
                 : sourceType ?? control.GetType().FullName ?? control.GetType().Name,
             ControlKind = isRemoteColorButton
                 ? "button"
+                : isDashboardRepositoryList
+                    ? "list"
                 : isFormCommitStatusItem
                     ? "menuItem"
                 : isRepositoryHostDiscussion || isDesignerLinkLabel
@@ -1182,6 +1190,13 @@ internal sealed class AvaloniaControlTreeReader
                     ? formCommitSemanticColors
                 : formBrowseSemanticColors is not null
                     ? formBrowseSemanticColors
+                : hasDashboardRuntimeColors
+                    // parity-scaffolding: Dashboard appearance setters override inherited/Designer
+                    // colors at runtime. Read the actual brushes, never substitute old defaults.
+                    ? ReadColors(control) with
+                    {
+                        Foreground = BrushToArgb(Avalonia.Controls.Documents.TextElement.GetForeground(control))
+                    }
                 : isFileStatusSplitter && IsViewPullRequestsTree(control)
                     ? ReadTransparentContainerColors(control)
                 : isFileStatusSplitter
@@ -1528,7 +1543,7 @@ internal sealed class AvaloniaControlTreeReader
                 : control is MenuItem or Separator ? "MiddleCenter" : GetAlignment(control)),
             Text = isSpellCheckTextBox && IsSpellCheckWatermarkVisible(control)
                 ? GetSpellCheckWatermark(control)
-                : isNativeListView ? string.Empty
+                : isNativeListView || isDashboardRepositoryList ? string.Empty
                 : isSourceList && control is ListBox sourceListWithSelection
                     ? GetSourceListText(sourceListWithSelection)
                 : isSourcePictureBoxControl && control.Name == "menuHelp"

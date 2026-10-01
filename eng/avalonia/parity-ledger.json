@@ -2237,62 +2237,92 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 40,
-          "note": "P8.6i progress 69 groups 9 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 40 actionable and 49 total differences for this mapping; every structural difference stays open."
+          "findingCount": 6,
+          "note": "Whole-type reviewed inventory regenerated for this working batch based on the recorded parent. 6 structural records remain; exact framework allowances are separate from parity evidence."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 101,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 9,
+          "note": "Whole-type reviewed inventory regenerated for this working batch based on the recorded parent. 9 functional records remain; exact framework allowances are separate from parity evidence."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "findingCount": 681,
+          "note": "2026-10-01 Progress 126 batch 62: Source text-plus-padding link sizing, flow minimum height and scrolling, logo placement, text-only hover color and initial search focus are restored. Full layout/paint/action coverage remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Native 100-percent light/dark/custom captures are partial. UserRepositoriesList is measured embedded in Dashboard, not claimed as a full standalone state audit. Higher scales remain deferred."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "findingCount": 222,
+          "note": "2026-10-01 Progress 126 batch 62: Source text-plus-padding link sizing, flow minimum height and scrolling, logo placement, text-only hover color and initial search focus are restored. Full layout/paint/action coverage remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Native 100-percent light/dark/custom captures are partial. UserRepositoriesList is measured embedded in Dashboard, not claimed as a full standalone state audit. Higher scales remain deferred. The source palette's KnownColor identities now resolve against current theme settings, including before attachment and after a theme switch; the capture retains 222 Dashboard color diagnostics."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "2026-10-01 Progress 126 batch 62: Source text-plus-padding link sizing, flow minimum height and scrolling, logo placement, text-only hover color and initial search focus are restored. Full layout/paint/action coverage remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Focus, rehosting, tile geometry and task-action hover regressions tested; only normal and explicit list/tree-focus captures remeasured. Exhaustive same-settings action/state walk was not run."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/windows-runtime-final-theme/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/runtime-wayland-final-theme/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/runtime-x11-final-theme/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "2026-10-01 Progress 126 batch 62: Source text-plus-padding link sizing, flow minimum height and scrolling, logo placement, text-only hover color and initial search focus are restored. Full layout/paint/action coverage remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Final shipping-app startup smokes pass on Windows, native nested-Weston Wayland and nested-Xephyr X11 after the palette and list-foreground fixes. Flatpak N/A for ordinary UI/capture changes; macOS unavailable. Complete platform/state coverage remains unverified."
         }
       }
     },
@@ -2303,62 +2333,92 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 40,
-          "note": "P8.6i progress 69 groups 9 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 40 actionable and 49 total differences for this mapping; every structural difference stays open."
+          "findingCount": 6,
+          "note": "Whole-type reviewed inventory regenerated for this working batch based on the recorded parent. 6 structural records remain; exact framework allowances are separate from parity evidence."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 101,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 9,
+          "note": "Whole-type reviewed inventory regenerated for this working batch based on the recorded parent. 9 functional records remain; exact framework allowances are separate from parity evidence."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "findingCount": 681,
+          "note": "2026-10-01 Progress 126 batch 62: Source text-plus-padding link sizing, flow minimum height and scrolling, logo placement, text-only hover color and initial search focus are restored. Full layout/paint/action coverage remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Native 100-percent light/dark/custom captures are partial. UserRepositoriesList is measured embedded in Dashboard, not claimed as a full standalone state audit. Higher scales remain deferred."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "findingCount": 222,
+          "note": "2026-10-01 Progress 126 batch 62: Source text-plus-padding link sizing, flow minimum height and scrolling, logo placement, text-only hover color and initial search focus are restored. Full layout/paint/action coverage remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Native 100-percent light/dark/custom captures are partial. UserRepositoriesList is measured embedded in Dashboard, not claimed as a full standalone state audit. Higher scales remain deferred. The source palette's KnownColor identities now resolve against current theme settings, including before attachment and after a theme switch; the capture retains 222 Dashboard color diagnostics."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "2026-10-01 Progress 126 batch 62: Source text-plus-padding link sizing, flow minimum height and scrolling, logo placement, text-only hover color and initial search focus are restored. Full layout/paint/action coverage remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Focus, rehosting, tile geometry and task-action hover regressions tested; only normal and explicit list/tree-focus captures remeasured. Exhaustive same-settings action/state walk was not run."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/windows-runtime-final-theme/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/runtime-wayland-final-theme/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/runtime-x11-final-theme/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "2026-10-01 Progress 126 batch 62: Source text-plus-padding link sizing, flow minimum height and scrolling, logo placement, text-only hover color and initial search focus are restored. Full layout/paint/action coverage remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Final shipping-app startup smokes pass on Windows, native nested-Weston Wayland and nested-Xephyr X11 after the palette and list-foreground fixes. Flatpak N/A for ordinary UI/capture changes; macOS unavailable. Complete platform/state coverage remains unverified."
         }
       }
     },
@@ -2369,26 +2429,31 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-27",
-          "commit": "1c1fe80f6436123fc2403d2cafc85cf0ea955d31",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/windows-final/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.DashboardTheme.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/linux/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.DashboardTheme.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.DashboardTheme.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json"
           ],
           "platforms": [],
-          "findingCount": 1,
-          "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 1 ordinary findings for this mapping; every remaining structural difference stays open."
+          "findingCount": 11,
+          "note": "The source palette retains KnownColor identities in framework-neutral System.Drawing.Color values, resolving current-theme ARGB when consumed as Avalonia colors. Regression checks seven system-color roles before attachment and after changing theme in one process; paired light/dark/custom Dashboard captures are partial. Ten backing fields and the resolver remain ordinary measured source differences, not dummy members or blanket allowances. macOS and full state/platform audit remain unverified. Theming applies to this palette class, correcting its former N/A classification."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.DashboardTheme.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json"
           ],
           "platforms": [],
-          "findingCount": 15,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 11,
+          "note": "The source palette retains KnownColor identities in framework-neutral System.Drawing.Color values, resolving current-theme ARGB when consumed as Avalonia colors. Regression checks seven system-color roles before attachment and after changing theme in one process; paired light/dark/custom Dashboard captures are partial. Ten backing fields and the resolver remain ordinary measured source differences, not dummy members or blanket allowances. macOS and full state/platform audit remain unverified. Theming applies to this palette class, correcting its former N/A classification."
         },
         "visual": {
           "status": "notApplicable",
@@ -2400,31 +2465,53 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.DashboardTheme.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "The source palette retains KnownColor identities in framework-neutral System.Drawing.Color values, resolving current-theme ARGB when consumed as Avalonia colors. Regression checks seven system-color roles before attachment and after changing theme in one process; paired light/dark/custom Dashboard captures are partial. Ten backing fields and the resolver remain ordinary measured source differences, not dummy members or blanket allowances. macOS and full state/platform audit remain unverified. Theming applies to this palette class, correcting its former N/A classification."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.DashboardTheme.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "The source palette retains KnownColor identities in framework-neutral System.Drawing.Color values, resolving current-theme ARGB when consumed as Avalonia colors. Regression checks seven system-color roles before attachment and after changing theme in one process; paired light/dark/custom Dashboard captures are partial. Ten backing fields and the resolver remain ordinary measured source differences, not dummy members or blanket allowances. macOS and full state/platform audit remain unverified. Theming applies to this palette class, correcting its former N/A classification."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.DashboardTheme.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/windows-runtime-final-theme/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/runtime-wayland-final-theme/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/runtime-x11-final-theme/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "The source palette retains KnownColor identities in framework-neutral System.Drawing.Color values, resolving current-theme ARGB when consumed as Avalonia colors. Regression checks seven system-color roles before attachment and after changing theme in one process; paired light/dark/custom Dashboard captures are partial. Ten backing fields and the resolver remain ordinary measured source differences, not dummy members or blanket allowances. macOS and full state/platform audit remain unverified. Theming applies to this palette class, correcting its former N/A classification. Final Windows, native nested-Weston Wayland and nested-Xephyr X11 shipping-app startup smokes pass; these are startup regressions, not exhaustive palette platform evidence. Flatpak N/A for ordinary UI-only changes."
         }
       }
     },
@@ -2567,62 +2654,92 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 74,
-          "note": "P8.6i progress 69 groups 22 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 74 actionable and 96 total differences for this mapping; every structural difference stays open."
+          "findingCount": 19,
+          "note": "Whole-type reviewed inventory regenerated for this working batch based on the recorded parent. 19 structural records remain; exact framework allowances are separate from parity evidence."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 290,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 44,
+          "note": "Whole-type reviewed inventory regenerated for this working batch based on the recorded parent. 44 functional records remain; exact framework allowances are separate from parity evidence."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "findingCount": 681,
+          "note": "2026-10-01 Progress 126 batch 62: Authored 32-pixel folder resources, source tile text offsets and auto-width measurement, stretched group rules, hover-only task actions, search cue focus behavior and owned list foreground are restored. Native group paint, multiple-tile wrapping and exhaustive interactions remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Native 100-percent light/dark/custom captures are partial. UserRepositoriesList is measured embedded in Dashboard, not claimed as a full standalone state audit. Higher scales remain deferred."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "findingCount": 222,
+          "note": "2026-10-01 Progress 126 batch 62: Authored 32-pixel folder resources, source tile text offsets and auto-width measurement, stretched group rules, hover-only task actions, search cue focus behavior and owned list foreground are restored. Native group paint, multiple-tile wrapping and exhaustive interactions remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Native 100-percent light/dark/custom captures are partial. UserRepositoriesList is measured embedded in Dashboard, not claimed as a full standalone state audit. Higher scales remain deferred. The source palette's KnownColor identities now resolve against current theme settings, including before attachment and after a theme switch; the capture retains 222 Dashboard color diagnostics."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "2026-10-01 Progress 126 batch 62: Authored 32-pixel folder resources, source tile text offsets and auto-width measurement, stretched group rules, hover-only task actions, search cue focus behavior and owned list foreground are restored. Native group paint, multiple-tile wrapping and exhaustive interactions remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Focus, rehosting, tile geometry and task-action hover regressions tested; only normal and explicit list/tree-focus captures remeasured. Exhaustive same-settings action/state walk was not run."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/windows-runtime-final-theme/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/runtime-wayland-final-theme/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/runtime-x11-final-theme/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "2026-10-01 Progress 126 batch 62: Authored 32-pixel folder resources, source tile text offsets and auto-width measurement, stretched group rules, hover-only task actions, search cue focus behavior and owned list foreground are restored. Native group paint, multiple-tile wrapping and exhaustive interactions remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Final shipping-app startup smokes pass on Windows, native nested-Weston Wayland and nested-Xephyr X11 after the palette and list-foreground fixes. Flatpak N/A for ordinary UI/capture changes; macOS unavailable. Complete platform/state coverage remains unverified."
         }
       }
     },
@@ -2633,62 +2750,92 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 74,
-          "note": "P8.6i progress 69 groups 22 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 74 actionable and 96 total differences for this mapping; every structural difference stays open."
+          "findingCount": 19,
+          "note": "Whole-type reviewed inventory regenerated for this working batch based on the recorded parent. 19 structural records remain; exact framework allowances are separate from parity evidence."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 290,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 44,
+          "note": "Whole-type reviewed inventory regenerated for this working batch based on the recorded parent. 44 functional records remain; exact framework allowances are separate from parity evidence."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "findingCount": 681,
+          "note": "2026-10-01 Progress 126 batch 62: Authored 32-pixel folder resources, source tile text offsets and auto-width measurement, stretched group rules, hover-only task actions, search cue focus behavior and owned list foreground are restored. Native group paint, multiple-tile wrapping and exhaustive interactions remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Native 100-percent light/dark/custom captures are partial. UserRepositoriesList is measured embedded in Dashboard, not claimed as a full standalone state audit. Higher scales remain deferred."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "findingCount": 222,
+          "note": "2026-10-01 Progress 126 batch 62: Authored 32-pixel folder resources, source tile text offsets and auto-width measurement, stretched group rules, hover-only task actions, search cue focus behavior and owned list foreground are restored. Native group paint, multiple-tile wrapping and exhaustive interactions remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Native 100-percent light/dark/custom captures are partial. UserRepositoriesList is measured embedded in Dashboard, not claimed as a full standalone state audit. Higher scales remain deferred. The source palette's KnownColor identities now resolve against current theme settings, including before attachment and after a theme switch; the capture retains 222 Dashboard color diagnostics."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "2026-10-01 Progress 126 batch 62: Authored 32-pixel folder resources, source tile text offsets and auto-width measurement, stretched group rules, hover-only task actions, search cue focus behavior and owned list foreground are restored. Native group paint, multiple-tile wrapping and exhaustive interactions remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Focus, rehosting, tile geometry and task-action hover regressions tested; only normal and explicit list/tree-focus captures remeasured. Exhaustive same-settings action/state walk was not run."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/windows-runtime-final-theme/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/runtime-wayland-final-theme/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/runtime-x11-final-theme/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "2026-10-01 Progress 126 batch 62: Authored 32-pixel folder resources, source tile text offsets and auto-width measurement, stretched group rules, hover-only task actions, search cue focus behavior and owned list foreground are restored. Native group paint, multiple-tile wrapping and exhaustive interactions remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Final shipping-app startup smokes pass on Windows, native nested-Weston Wayland and nested-Xephyr X11 after the palette and list-foreground fixes. Flatpak N/A for ordinary UI/capture changes; macOS unavailable. Complete platform/state coverage remains unverified."
         }
       }
     },
@@ -23835,64 +23982,92 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 304,
-          "note": "P8.6i progress 69 groups 29 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 304 actionable and 333 total differences for this mapping; every structural difference stays open."
+          "findingCount": 4,
+          "note": "Whole-type reviewed inventory regenerated for this working batch based on the recorded parent. 4 structural records remain; exact framework allowances are separate from parity evidence."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/tests/windows-browse-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/tests/linux-browse-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 667,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences. Progress126 restores the original uncounted root captions and suppresses navigation callbacks while refs, worktrees, or submodules are rebuilt, preserving selection and expansion. Nested refresh failures restore notifications. Windows and WSL regression coverage passes; remaining source/state/visual findings remain open."
+          "findingCount": 15,
+          "note": "Whole-type reviewed inventory regenerated for this working batch based on the recorded parent. 15 functional records remain; exact framework allowances are separate from parity evidence."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "findingCount": 134,
+          "note": "2026-10-01 Progress 126 batch 62: Source ToolStrip default allocations (23 by 22 for all seven image buttons) are restored. Search/tree/state/paint differences remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Native 100-percent light/dark/custom captures are partial. UserRepositoriesList is measured embedded in Dashboard, not claimed as a full standalone state audit. Higher scales remain deferred."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "findingCount": 56,
+          "note": "2026-10-01 Progress 126 batch 62: Source ToolStrip default allocations (23 by 22 for all seven image buttons) are restored. Search/tree/state/paint differences remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Native 100-percent light/dark/custom captures are partial. UserRepositoriesList is measured embedded in Dashboard, not claimed as a full standalone state audit. Higher scales remain deferred."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "2026-10-01 Progress 126 batch 62: Source ToolStrip default allocations (23 by 22 for all seven image buttons) are restored. Search/tree/state/paint differences remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Focus, rehosting, tile geometry and task-action hover regressions tested; only normal and explicit list/tree-focus captures remeasured. Exhaustive same-settings action/state walk was not run."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-10-01",
+          "commit": "081fee8639675b3c6989f2bb02c9635fcce8b860",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/diff-native100-final-theme/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-focused-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/windows-capture-final-theme.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/tests/linux-dashboard-theme-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/windows-runtime-final-theme/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/runtime-wayland-final-theme/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/runtime-x11-final-theme/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "2026-10-01 Progress 126 batch 62: Source ToolStrip default allocations (23 by 22 for all seven image buttons) are restored. Search/tree/state/paint differences remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/; full six-axis parity remains unverified. Final shipping-app startup smokes pass on Windows, native nested-Weston Wayland and nested-Xephyr X11 after the palette and list-foreground fixes. Flatpak N/A for ordinary UI/capture changes; macOS unavailable. Complete platform/state coverage remains unverified."
         }
       }
     },

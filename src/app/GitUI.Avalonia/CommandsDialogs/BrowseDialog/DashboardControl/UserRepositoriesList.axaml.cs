@@ -99,6 +99,16 @@ public partial class UserRepositoriesList : TranslatedControl
         mnuTop.Items.Clear();
         _lvgRecentRepositories = new RepositoryGroupItem(_groupRecentRepositories.Text, isRecentGroup: true, repositoryCount: 0);
         _foreColorBrush = new SolidColorBrush(_foreColor);
+        Foreground = _foreColorBrush;
+        listView1.Foreground = _foreColorBrush;
+        Focusable = true;
+        GotFocus += (_, e) =>
+        {
+            if (ReferenceEquals(e.Source, this))
+            {
+                textBoxSearch.Focus();
+            }
+        };
         Resources["DashboardRepositoryHoverBrush"] = _hoverColorBrush;
         _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.Size - 1F);
         lblRecentRepositories.FontFamily = new FontFamily(AppSettings.Font.Name);
@@ -125,6 +135,10 @@ public partial class UserRepositoriesList : TranslatedControl
         listView1.GroupTaskLinkClick += ListView1_GroupTaskLinkClick;
         textBoxSearch.TextChanged += TextBoxSearch_TextChanged;
         textBoxSearch.KeyDown += TextBoxSearch_KeyDown;
+
+        // Native TextBox cue banners are hidden while the search input has focus.
+        textBoxSearch.GotFocus += (_, _) => textBoxSearch.PlaceholderText = null;
+        textBoxSearch.LostFocus += (_, _) => textBoxSearch.PlaceholderText = _repositorySearchPlaceholder.Text;
         mnuConfigure.Click += mnuConfigure_Click;
         contextMenuStripRepository.Opening += contextMenuStrip_Opening;
         contextMenuStripRepository.Closed += contextMenuStrip_Closed;
@@ -150,7 +164,7 @@ public partial class UserRepositoriesList : TranslatedControl
         DragDrop.AddDragEnterHandler(this, OnDragEnter);
         DragDrop.AddDragOverHandler(this, OnDragEnter);
         DragDrop.AddDropHandler(this, OnDragDrop);
-        textBoxSearch.PlaceholderText = _repositorySearchPlaceholder.Text;
+        textBoxSearch.PlaceholderText = textBoxSearch.IsFocused ? null : _repositorySearchPlaceholder.Text;
     }
 
     [Category("Appearance")]
@@ -276,7 +290,7 @@ public partial class UserRepositoriesList : TranslatedControl
     public override void TranslateItems(ITranslation translation)
     {
         base.TranslateItems(translation);
-        textBoxSearch.PlaceholderText = _repositorySearchPlaceholder.Text;
+        textBoxSearch.PlaceholderText = textBoxSearch.IsFocused ? null : _repositorySearchPlaceholder.Text;
         ShowRecentRepositories(reloadData: false);
     }
 
@@ -437,17 +451,31 @@ public partial class UserRepositoriesList : TranslatedControl
                 Tag = group,
             };
             actions.Click += listView1.RaiseGroupTaskLinkClick;
-            Grid header = new() { ColumnDefinitions = new ColumnDefinitions("*,Auto"), Margin = new Avalonia.Thickness(2, 10, 2, 4) };
+            Grid header = new() { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"), Margin = new Avalonia.Thickness(9, 10, 4, 4) };
             header.Children.Add(new TextBlock
             {
                 Text = group.Name,
-                FontSize = 16,
-                FontWeight = FontWeight.SemiBold,
-                Foreground = _foreColorBrush,
+                Foreground = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(
+                    AvaloniaThemeResources.ResolveSystemColor(GitUI.Theming.ThemeModule.Settings, System.Drawing.KnownColor.HotTrack))),
                 VerticalAlignment = VerticalAlignment.Center,
                 IsHitTestVisible = false,
             });
-            Grid.SetColumn(actions, 1);
+            Border rule = new()
+            {
+                Height = 1,
+                Background = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(
+                    AvaloniaThemeResources.ResolveSystemColor(GitUI.Theming.ThemeModule.Settings, System.Drawing.KnownColor.InactiveCaption))),
+                Margin = new Thickness(4, 0, 0, 0),
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            Grid.SetColumn(rule, 1);
+            header.Children.Add(rule);
+
+            // The native group task link is revealed by the header hover, not always painted.
+            actions.IsVisible = false;
+            header.PointerEntered += (_, _) => actions.IsVisible = true;
+            header.PointerExited += (_, _) => actions.IsVisible = false;
+            Grid.SetColumn(actions, 2);
             header.Children.Add(actions);
             return header;
         }
@@ -455,8 +483,9 @@ public partial class UserRepositoriesList : TranslatedControl
         RepositoryListItem repository = (RepositoryListItem)item;
         Image image = new()
         {
-            Width = 16,
-            Height = 16,
+            // The source ImageList stream retains the authored 32px dashboard resource size.
+            Width = imageList1[0].Size.Width,
+            Height = imageList1[0].Size.Height,
             Source = imageList1[repository.IsValid ? 0 : 1],
             Margin = new Avalonia.Thickness(4, 8, 0, 0),
             HorizontalAlignment = HorizontalAlignment.Left,
@@ -465,7 +494,8 @@ public partial class UserRepositoriesList : TranslatedControl
         Grid row = new()
         {
             MinHeight = repository.TileSize.Height,
-            MinWidth = repository.TileSize.Width,
+            Width = repository.TileSize.Width,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
         if (!string.IsNullOrWhiteSpace(repository.Repository.Repo.Category))
         {
@@ -474,7 +504,7 @@ public partial class UserRepositoriesList : TranslatedControl
                 Width = 16,
                 Height = 16,
                 Source = Images.Star,
-                Margin = new Avalonia.Thickness(8, 2, 0, 0),
+                Margin = new Avalonia.Thickness(4 + image.Width - 12, 2, 0, 0),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 IsHitTestVisible = false,
@@ -488,7 +518,7 @@ public partial class UserRepositoriesList : TranslatedControl
         StackPanel text = new()
         {
             Spacing = 1,
-            Margin = new Avalonia.Thickness(24, 6, 4, 0),
+            Margin = new Avalonia.Thickness(4 + 2 + image.Width + 2, 6, 4, 0),
             Children =
             {
                 new TextBlock
@@ -496,7 +526,7 @@ public partial class UserRepositoriesList : TranslatedControl
                     Text = ShortenText(
                         repository.Text,
                         AppSettings.Font,
-                        (float)Math.Max(1, repository.TileSize.Width - 32)),
+                        (float)Math.Max(1, repository.TileSize.Width - 2 - image.Width - 2)),
                     Foreground = _foreColorBrush,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 },
@@ -582,15 +612,15 @@ public partial class UserRepositoriesList : TranslatedControl
             FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(_secondaryFont.Size),
         };
         Size longestPath = recentRepositories.Union(favouriteRepositories)
-            .Select(repository => WinFormsTextMeasurer.MeasureSize(primaryText, repository.Caption ?? repository.Repo.Path))
+            .Select(repository => WinFormsTextMeasurer.MeasureTextRenderer(primaryText, repository.Caption ?? repository.Repo.Path))
             .OrderByDescending(size => size.Width)
             .First();
-        Size branchTextSize = WinFormsTextMeasurer.MeasureSize(secondaryText, "A");
+        Size branchTextSize = WinFormsTextMeasurer.MeasureTextRenderer(secondaryText, "A");
 
         double width = AppSettings.RecentReposComboMinWidth;
         if (width < 1)
         {
-            width = longestPath.Width + 16;
+            width = longestPath.Width + imageList1[0].Size.Width;
         }
 
         double height = longestPath.Height + (2 * branchTextSize.Height)
@@ -609,13 +639,13 @@ public partial class UserRepositoriesList : TranslatedControl
             FontStyle = font.Italic ? FontStyle.Italic : FontStyle.Normal,
             FontWeight = font.Bold ? FontWeight.Bold : FontWeight.Normal,
         };
-        if (WinFormsTextMeasurer.MeasureSize(measurement, text).Width < maxWidth)
+        if (WinFormsTextMeasurer.MeasureTextRenderer(measurement, text).Width < maxWidth)
         {
             return text;
         }
 
         while (text.Length > 1
-               && WinFormsTextMeasurer.MeasureSize(measurement, text + ellipsis).Width >= maxWidth)
+               && WinFormsTextMeasurer.MeasureTextRenderer(measurement, text + ellipsis).Width >= maxWidth)
         {
             text = text[..^1];
         }
