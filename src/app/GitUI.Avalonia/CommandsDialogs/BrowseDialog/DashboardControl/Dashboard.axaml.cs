@@ -42,6 +42,17 @@ public partial class Dashboard : GitModuleControl
         AttachedToLogicalTree += dashboard_ParentChanged;
         DetachedFromLogicalTree += dashboard_ParentChanged;
         SizeChanged += (_, _) => tableLayoutPanel1.Height = Math.Max(Bounds.Height, tableLayoutPanel1.MinHeight);
+        tableLayoutPanel1.SizeChanged += (_, _) =>
+        {
+            // Native TableLayoutPanel truncates each percentage column independently.
+            // Avalonia Grid retains fractions; allocate from the current client width instead
+            // of rounding captured pixels or changing the authored percentages.
+            double remainingWidth = Math.Max(0, tableLayoutPanel1.Bounds.Width - 213);
+            double outsideWidth = Math.Floor(remainingWidth * 7.142857 / 100);
+            double repositoryWidth = Math.Floor(remainingWidth * 85.71428 / 100);
+            tableLayoutPanel1.ColumnDefinitions[0].Width = new GridLength(outsideWidth);
+            tableLayoutPanel1.ColumnDefinitions[2].Width = new GridLength(repositoryWidth);
+        };
 
         // Native UserControl.Focus selects its first input once the window is shown.
         Loaded += (_, _) =>

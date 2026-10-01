@@ -8,12 +8,11 @@
     <local:AvatarControl x:Name="avatarControl"
                          Margin="0,0,8,0"
                          VerticalAlignment="Top" />
-    <!-- RichEdit keeps one trailing contents pixel. Its GDI glyph advances fit the 40-character
-         hash after the 96-DIP tab inside the measured 330-DIP width; Skia's defaults clip the
-         final character, so the measured letter-spacing correction retains it. -->
+    <!-- The original assigns ContentsResized.NewRectangle directly as ClientSize.
+         The renderer already includes its contents overhang; adding another pixel here
+         expands the header beyond the source's auto-sized contents rectangle. -->
     <compat:XhtmlTextBlock x:Name="rtbRevisionHeader"
                            Grid.Column="1"
-                           NativeContentOverhang="1"
                            Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
                            FontFamily="{DynamicResource GitExtensionsUiFontFamily}"
                            FontSize="{DynamicResource GitExtensionsUiFontSize}"

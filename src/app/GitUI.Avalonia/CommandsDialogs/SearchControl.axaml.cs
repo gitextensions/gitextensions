@@ -8,6 +8,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitUI.Compat;
+using GitUI.Theming;
 using DrawingColor = System.Drawing.Color;
 using WinFormsBorderStyle = GitExtensions.Shims.WinForms.BorderStyle;
 using AvaloniaSize = Avalonia.Size;
@@ -311,6 +312,12 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
             : SearchTextBoxBorder.IsPointerOver
                 ? _searchBoxBorderHoveredColor
                 : _searchBoxBorderDefaultColor;
-        SearchTextBoxBorder.BorderBrush = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(color));
+
+        // System.Drawing.Color preserves the native system-role identity. Resolve it at
+        // the presentation boundary so Linux and macOS do not paint ambient Windows defaults.
+        SearchTextBoxBorder.BorderBrush = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(
+            color.IsSystemColor
+                ? AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, color.ToKnownColor())
+                : color));
     }
 }

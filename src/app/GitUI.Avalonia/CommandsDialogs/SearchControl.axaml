@@ -1,6 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GitUI.CommandsDialogs.SearchControl"
+             Margin="0"
+             Background="Transparent"
              MinWidth="64"
              MinHeight="23">
   <UserControl.Styles>
@@ -20,7 +22,8 @@
       <TextBox x:Name="txtSearchBox"
                AutomationProperties.Name="Enter File Name"
                Margin="-1"
-               Height="22"
+               Height="23"
+               BorderThickness="0"
                VerticalContentAlignment="Center" />
     </Border>
     <ListBox x:Name="listBoxSearchResult"

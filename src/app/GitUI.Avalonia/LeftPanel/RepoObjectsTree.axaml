@@ -75,6 +75,8 @@
     </Grid>
     <TreeView x:Name="treeMain"
               Classes="gitextensions-native-tree"
+              Focusable="True"
+              KeyboardNavigation.TabIndex="3"
               Grid.Row="2"
               Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
               Foreground="{DynamicResource GitExtensionsWindowTextBrush}"

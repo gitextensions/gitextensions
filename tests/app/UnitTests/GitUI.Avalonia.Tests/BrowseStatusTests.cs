@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
+using GitUI.Compat;
 using GitUI.Properties;
 using GitUI.UserControls;
 
@@ -66,6 +67,36 @@ public sealed class BrowseStatusTests
         button.GetTestAccessor().IsIconOnly().Should().BeTrue();
         button.Icon.Should().BeSameAs(Images.Push);
         ToolTip.GetTip(button)?.ToString().Should().Be("Push");
+    }
+
+    [AvaloniaTest]
+    [TestCase("0", "0")]
+    [TestCase("3", "2")]
+    public void Push_counter_should_use_native_integral_text_autosizing(string ahead, string behind)
+    {
+        ToolStripPushButton button = new() { Classes = { "gitextensions-toolbar-button" } };
+        Window window = new() { Width = 300, Height = 100, Content = button };
+        try
+        {
+            window.Show();
+            button.DisplayAheadBehindInformation(
+                new Dictionary<string, AheadBehindData>
+                {
+                    ["main"] = new("main", "refs/remotes/origin/main", ahead, behind),
+                },
+                "main",
+                string.Empty);
+            button.Measure(new Avalonia.Size(double.PositiveInfinity, double.PositiveInfinity));
+            double expectedWidth = Math.Ceiling(WinFormsTextMeasurer.Measure(button, button.Content!.ToString()!)
+                + 16 + 4 + button.Padding.Left + button.Padding.Right
+                + button.BorderThickness.Left + button.BorderThickness.Right);
+            button.DesiredSize.Width.Should().Be(expectedWidth);
+            button.DesiredSize.Width.Should().Be(Math.Ceiling(button.DesiredSize.Width));
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     private static GitItemStatus CreateStatus(
