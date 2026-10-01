@@ -1686,7 +1686,7 @@ public static partial class AppSettings
 
     public static ShorteningRecentRepoPathStrategy ShorteningRecentRepoPathStrategy
     {
-        get => GetEnum("ShorteningRecentRepoPathStrategy", ShorteningRecentRepoPathStrategy.None);
+        get => GetEnum("ShorteningRecentRepoPathStrategy", ShorteningRecentRepoPathStrategy.MostSignDir);
         set => SetEnum("ShorteningRecentRepoPathStrategy", value);
     }
 
