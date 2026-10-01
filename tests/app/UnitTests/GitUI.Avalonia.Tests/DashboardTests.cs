@@ -92,6 +92,117 @@ public sealed class DashboardTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    public void Dashboard_logo_should_keep_the_authored_PictureBox_frame_while_zooming_its_image()
+    {
+        Dashboard dashboard = new();
+        dashboard.Resources["GitExtensionsControlForegroundBrush"] = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.Magenta);
+        dashboard.Resources["GitExtensionsKnownColorControlTextBrush"] = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.White);
+        Window window = new() { Width = 686, Height = 600, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            window.UpdateLayout();
+            WinFormsControls.PictureBox logo = dashboard.FindControl<WinFormsControls.PictureBox>("pbLogo")!;
+            ((Avalonia.Media.SolidColorBrush)dashboard.Foreground!).Color.Should().Be(Avalonia.Media.Colors.White);
+            logo.Bounds.Size.Should().Be(new Size(185, 44));
+            Image image = (Image)logo.Child!;
+            logo.SizeMode.Should().Be(WinFormsControls.PictureBoxSizeMode.Zoom);
+            image.Stretch.Should().Be(Avalonia.Media.Stretch.Uniform);
+            image.Bounds.Width.Should().BeLessThan(logo.Bounds.Width);
+            image.Bounds.Height.Should().Be(logo.Bounds.Height);
+            logo.SizeMode = WinFormsControls.PictureBoxSizeMode.CenterImage;
+            logo.SizeMode.Should().Be(WinFormsControls.PictureBoxSizeMode.CenterImage);
+            image.Stretch.Should().Be(Avalonia.Media.Stretch.None);
+            logo.SizeMode = WinFormsControls.PictureBoxSizeMode.Normal;
+            logo.SizeMode.Should().Be(WinFormsControls.PictureBoxSizeMode.Normal);
+            image.HorizontalAlignment.Should().Be(Avalonia.Layout.HorizontalAlignment.Left);
+            logo.SizeMode = WinFormsControls.PictureBoxSizeMode.Zoom;
+            window.UpdateLayout();
+            logo.Bounds.Size.Should().Be(new Size(185, 44));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(390)]
+    [TestCase(540)]
+    [TestCase(840)]
+    public void Repository_auto_column_should_preserve_the_Designer_preferred_width_and_receive_surplus(int width)
+    {
+        UserRepositoriesList list = new();
+        Window window = new() { Width = width, Height = 350, Content = list };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Grid table = list.FindControl<Grid>("tableLayoutPanel2")!;
+            double columnWidth = Math.Max(445, width - 40);
+            table.Bounds.Width.Should().Be(width - 40);
+            table.ClipToBounds.Should().BeTrue("native child HWNDs cannot paint outside the table's client rectangle");
+            table.ColumnDefinitions[0].ActualWidth.Should().Be(columnWidth);
+            list.GetTestAccessor().List.Bounds.Width.Should().Be(columnWidth);
+            list.GetTestAccessor().Search.Bounds.Width.Should().Be(columnWidth - 6);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Repository_tile_should_paint_the_live_hover_brush_when_hovered_or_selected_without_focus()
+    {
+        Repository repository = new(@"C:\repos\recent");
+        RepositoryHistorySnapshot snapshot = new(
+            [new RepositoryHistoryEntry(repository, "recent", "main", IsFavourite: false, IsAnchored: false)], []);
+        UserRepositoriesList list = new();
+        list.Initialize(CreateController(snapshot), CreateHistory(snapshot), () => Substitute.For<IGitUICommands>());
+        list.ShowRecentRepositories(reloadData: false);
+        TextBox otherInput = new();
+        Window window = new() { Width = 700, Height = 400, Content = new StackPanel { Children = { list, otherInput } } };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            ListBoxItem tile = list.GetVisualDescendants().OfType<ListBoxItem>()
+                .Single(item => item.Content is UserRepositoriesList.RepositoryListItem);
+            Avalonia.Controls.Presenters.ContentPresenter presenter = tile.GetVisualDescendants()
+                .OfType<Avalonia.Controls.Presenters.ContentPresenter>()
+                .Single(item => item.Name == "PART_ContentPresenter");
+            list.HoverColor = Avalonia.Media.Colors.Cyan;
+            window.MouseMove(tile.TranslatePoint(new Point(10, 10), window)!.Value);
+            Dispatcher.UIThread.RunJobs();
+            tile.IsPointerOver.Should().BeTrue();
+            ((Avalonia.Media.SolidColorBrush)presenter.Background!).Color.Should().Be(Avalonia.Media.Colors.Cyan);
+            window.MouseMove(new Point(699, 399));
+            list.GetTestAccessor().List.SelectedItem = tile.Content;
+            tile.Focus();
+            Dispatcher.UIThread.RunJobs();
+            ((Avalonia.Media.SolidColorBrush)presenter.Background!).Color.Should().Be(Avalonia.Media.Colors.Cyan);
+            otherInput.Focus();
+            Dispatcher.UIThread.RunJobs();
+            ((Avalonia.Media.SolidColorBrush)presenter.Background!).Color.Should().Be(Avalonia.Media.Colors.Cyan);
+            list.HoverColor = Avalonia.Media.Colors.Gold;
+            Dispatcher.UIThread.RunJobs();
+            ((Avalonia.Media.SolidColorBrush)presenter.Background!).Color.Should().Be(Avalonia.Media.Colors.Gold);
+            tile.FocusAdorner.Should().BeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     public void Dashboard_capture_should_read_live_colors_instead_of_overwriting_them_with_Designer_defaults()
     {
         UserRepositoriesList list = new();
@@ -114,6 +225,15 @@ public sealed class DashboardTests
             CaptureNode repositoryList = Nodes(root).Single(node => node.FieldName == "listView1");
             repositoryList.ControlKind.Should().Be("list");
             repositoryList.Text.Should().BeEmpty();
+            repositoryList.Selected.Should().BeNull();
+            foreach (CaptureColumn column in repositoryList.Columns)
+            {
+                column.Colors.Foreground.Should().Be("#FF22384E");
+                column.Colors.Border.Should().BeNull();
+                column.Colors.SelectionBackground.Should().NotBeNull();
+                column.Colors.SelectionForeground.Should().NotBeNull();
+            }
+
             foreach (string field in new[] { "menuStripRecentMenu", "mnuTop" })
             {
                 CaptureNode menu = Nodes(root).Single(node => node.FieldName == field);
@@ -165,6 +285,11 @@ public sealed class DashboardTests
             contribute.Height.Should().BeGreaterThan(0);
             layout.MinHeight.Should().Be(68 + start.MinHeight + contribute.Height);
             scroll.Extent.Height.Should().BeGreaterThan(scroll.Viewport.Height);
+            AvaloniaControlTreeReader.GetSourceClientSize(dashboard).Should().Be(scroll.Viewport);
+            CaptureNode captureRoot = new AvaloniaControlTreeReader(dashboard, 1)
+                .ReadPrimary(dashboard, PixelSize.FromSize(scroll.Viewport, 1)).Root;
+            captureRoot.BoundsDip.Width.Should().Be((decimal)scroll.Viewport.Width);
+            captureRoot.ClientSizeDip.Width.Should().Be((decimal)scroll.Viewport.Width);
             clone.Bounds.Height.Should().BeGreaterThan(0);
             clone.TranslatePoint(default, start)!.Value.Y.Should().BeGreaterThan(0);
             Grid content = (Grid)clone.Content!;
@@ -179,6 +304,7 @@ public sealed class DashboardTests
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
             scroll.Extent.Height.Should().BeLessThanOrEqualTo(scroll.Viewport.Height);
+            AvaloniaControlTreeReader.GetSourceClientSize(dashboard).Should().Be(scroll.Viewport);
         }
         finally
         {

@@ -18,10 +18,15 @@
     </ResourceDictionary>
   </UserControl.Resources>
   <UserControl.Styles>
-    <Style Selector="ListBoxItem:pointerover /template/ Border#PART_LayoutRoot,
-                     ListBoxItem:selected /template/ Border#PART_LayoutRoot,
-                     ListBoxItem:selected:pointerover /template/ Border#PART_LayoutRoot">
+    <Style Selector="ListBoxItem.repository-tile:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                     ListBoxItem.repository-tile:selected /template/ ContentPresenter#PART_ContentPresenter,
+                     ListBoxItem.repository-tile:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                     ListBox:not(:focus-within) ListBoxItem.repository-tile:selected /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Background" Value="{DynamicResource DashboardRepositoryHoverBrush}" />
+    </Style>
+    <Style Selector="ListBoxItem.repository-group:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                     ListBoxItem.repository-group:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
     </Style>
     <Style Selector="Button.dashboard-group-action">
       <Setter Property="Padding" Value="4,1" />
@@ -32,6 +37,7 @@
       <Setter Property="Padding" Value="0" />
       <Setter Property="Margin" Value="0" />
       <Setter Property="MinHeight" Value="0" />
+      <Setter Property="FocusAdorner" Value="{x:Null}" />
       <Setter Property="HorizontalContentAlignment" Value="Stretch" />
     </Style>
   </UserControl.Styles>
@@ -56,6 +62,8 @@
               Margin="0"
               Padding="20,18,20,3">
       <wf:TableLayoutPanel x:Name="tableLayoutPanel2"
+                           ColumnDefinitions="445"
+                           ClipToBounds="True"
                            RowDefinitions="45,*"
                            Margin="0">
         <TextBox x:Name="textBoxSearch"

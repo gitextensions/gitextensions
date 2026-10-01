@@ -96,6 +96,11 @@ public partial class UserRepositoriesList : TranslatedControl
         InitializeComponent();
         InitializeComplete();
 
+        // Native's single AutoSize column retains the ListView's Designer preferred width,
+        // then receives any surplus width. Grid's star column would shrink both inputs.
+        tableLayoutPanel2.SizeChanged += (_, _) =>
+            tableLayoutPanel2.ColumnDefinitions[0].Width = new GridLength(Math.Max(445, tableLayoutPanel2.Bounds.Width));
+
         mnuTop.Items.Clear();
         _lvgRecentRepositories = new RepositoryGroupItem(_groupRecentRepositories.Text, isRecentGroup: true, repositoryCount: 0);
         _foreColorBrush = new SolidColorBrush(_foreColor);
@@ -1093,6 +1098,8 @@ public partial class UserRepositoriesList : TranslatedControl
             && listView1.Items[e.Index] is RepositoryGroupItem;
         e.Container.IsEnabled = true;
         e.Container.Focusable = !isHeader;
+        e.Container.Classes.Set("repository-group", isHeader);
+        e.Container.Classes.Set("repository-tile", !isHeader);
     }
 
     private void RepositoryHistoryUIService_HistoryChanged(object? sender, EventArgs e)

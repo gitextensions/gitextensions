@@ -4,7 +4,7 @@
              xmlns:wf="using:GitUI.Compat.WinFormsControls"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard"
-             Foreground="{DynamicResource GitExtensionsControlForegroundBrush}">
+             Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}">
   <!-- Native Dock.Fill ignores the stored outer Margin; Avalonia Margin would inset the client. -->
   <UserControl.Resources>
     <ResourceDictionary>
@@ -59,13 +59,13 @@
                 Padding="20,0,20,14"
                 Background="{DynamicResource DashboardLogoBackgroundBrush}">
         <Canvas>
-        <Image x:Name="pbLogo"
+        <wf:PictureBox x:Name="pbLogo"
                Width="185"
                Height="44"
                Canvas.Left="-6"
                Canvas.Top="15"
                Source="{x:Static properties:Images.GitExtensionsLogoWide}"
-               Stretch="Uniform" />
+               SizeMode="Zoom" />
         </Canvas>
       </wf:Panel>
       <Border x:Name="flpnlStart"
