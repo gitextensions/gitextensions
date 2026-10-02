@@ -10,7 +10,7 @@
   <Grid x:Name="DiffSplitContainer"
         ColumnDefinitions="300,6,*"
         Background="{DynamicResource GitExtensionsKnownColorControlBrush}">
-    <wf:SplitContainer x:Name="LeftSplitContainer" x:FieldModifier="public" Grid.Column="0" Background="Transparent">
+    <wf:SplitContainer x:Name="LeftSplitContainer" x:FieldModifier="public" Grid.Column="0" Background="{StaticResource GitExtensionsTransparentBrush}">
       <gitui:FileStatusList x:Name="DiffFiles" GroupByRevision="True" />
     </wf:SplitContainer>
     <GridSplitter x:Name="DiffSplitter" Grid.Column="1" ResizeDirection="Columns" />

@@ -53,7 +53,7 @@
     <StackPanel Height="25"
                 Orientation="Horizontal"
                 Spacing="1"
-                Background="Transparent">
+                Background="{StaticResource GitExtensionsTransparentBrush}">
       <usercontrols:FilterToolBar x:Name="ToolStripFilters"
                                   Foreground="{DynamicResource GitExtensionsWindowTextBrush}" />
       <Border Classes="gitextensions-toolbar-separator" />

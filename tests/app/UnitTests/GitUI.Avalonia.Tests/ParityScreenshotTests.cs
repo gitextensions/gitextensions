@@ -1314,11 +1314,20 @@ public sealed partial class ParityScreenshotTests
             return;
         }
 
+        SetCaptureUICommandsSource(root, context);
+    }
+
+    // parity-scaffolding: Preserve product-owned command propagation in standalone composites.
+    internal static void SetCaptureUICommandsSource(Control root, IGitUICommandsSource source)
+    {
         foreach (GitModuleControl moduleControl in new[] { root }
                      .Concat(root.GetLogicalDescendants().OfType<Control>())
                      .OfType<GitModuleControl>())
         {
-            moduleControl.UICommandsSource = context;
+            if (!moduleControl.TryGetUICommandsDirect(out _))
+            {
+                moduleControl.UICommandsSource = source;
+            }
         }
     }
 

@@ -21,7 +21,7 @@
         <ControlTemplate>
           <Grid>
             <Border Margin="0,8,0,0"
-                    BorderBrush="#FFDCDCDC"
+                    BorderBrush="{DynamicResource GitExtensionsNativeGroupBoxBorderBrush}"
                     BorderThickness="1" />
             <ContentPresenter Margin="7,0,0,0"
                               Padding="3,0"

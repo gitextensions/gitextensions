@@ -28,6 +28,132 @@ public sealed class DashboardTests
 {
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Repository_focus_should_select_the_first_tile_through_keyboard_and_capture_routes(bool captureRoute)
+    {
+        Repository recent = new(@"C:\repos\recent");
+        Repository favourite = new(@"C:\repos\favourite") { Category = "Team" };
+        RepositoryHistorySnapshot snapshot = new(
+            [new RepositoryHistoryEntry(recent, "recent", "main", IsFavourite: false, IsAnchored: false)],
+            [new RepositoryHistoryEntry(favourite, "favourite", "main", IsFavourite: true, IsAnchored: false)]);
+        UserRepositoriesList list = new();
+        list.Initialize(CreateController(snapshot), CreateHistory(snapshot), () => Substitute.For<IGitUICommands>());
+        list.ShowRecentRepositories(reloadData: false);
+        Window window = new() { Width = 700, Height = 400, Content = list };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            list.GetTestAccessor().Search.Focus();
+            using AvaloniaControlStateDriver? driver = captureRoute
+                ? AvaloniaControlStateDriver.Apply(list, new CaptureStatePlan
+                {
+                    Id = "repository-list.focused", Kind = CaptureStateKind.Focus, TargetField = "listView1",
+                })
+                : null;
+            if (!captureRoute)
+            {
+                window.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
+            }
+
+            Dispatcher.UIThread.RunJobs();
+            ListBox repositories = list.GetTestAccessor().List;
+            repositories.IsKeyboardFocusWithin.Should().BeTrue();
+            repositories.FocusAdorner.Should().BeNull("the source ListView has BorderStyle.None and owner-drawn selection only");
+            repositories.SelectedItem.Should().Be(repositories.Items.OfType<UserRepositoriesList.RepositoryListItem>().First());
+            window.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
+            Dispatcher.UIThread.RunJobs();
+            repositories.SelectedItem.Should().Be(repositories.Items.OfType<UserRepositoriesList.RepositoryListItem>().Last(),
+                "group headings are not repository selections");
+            window.KeyPress(Key.Up, RawInputModifiers.None, PhysicalKey.ArrowUp, null);
+            Dispatcher.UIThread.RunJobs();
+            repositories.SelectedItem.Should().Be(repositories.Items.OfType<UserRepositoriesList.RepositoryListItem>().First());
+            window.KeyPress(Key.Up, RawInputModifiers.None, PhysicalKey.ArrowUp, null);
+            Dispatcher.UIThread.RunJobs();
+            list.GetTestAccessor().Search.IsFocused.Should().BeTrue();
+            repositories.SelectedItem.Should().Be(repositories.Items.OfType<UserRepositoriesList.RepositoryListItem>().First());
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Dashboard_backdrop_should_tile_the_original_image_without_resizing_it()
+    {
+        Dashboard dashboard = new();
+        Window window = new() { Width = 1500, Height = 1000, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            window.UpdateLayout();
+            Grid layout = dashboard.FindControl<Grid>("tableLayoutPanel1")!;
+            layout.Background.Should().BeOfType<Avalonia.Media.ImageBrush>();
+            Avalonia.Media.ImageBrush backdrop = (Avalonia.Media.ImageBrush)layout.Background!;
+            backdrop.Source.Should().BeSameAs(DashboardTheme.Light.BackgroundImage);
+            backdrop.TileMode.Should().Be(Avalonia.Media.TileMode.Tile);
+            backdrop.Stretch.Should().Be(Avalonia.Media.Stretch.None);
+            backdrop.DestinationRect.Should().Be(new RelativeRect(new Rect(default, DashboardTheme.Light.BackgroundImage.Size), RelativeUnit.Absolute));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Repository_search_should_keep_native_rim_and_underline_while_typing_and_selecting()
+    {
+        UserRepositoriesList list = new();
+        RepositoryHistorySnapshot snapshot = new([], []);
+        list.Initialize(CreateController(snapshot), CreateHistory(snapshot), () => Substitute.For<IGitUICommands>());
+        TextBox other = new();
+        Window window = new() { Width = 700, Height = 400, Content = new StackPanel { Children = { list, other } } };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            TextBox search = list.GetTestAccessor().Search;
+            Border rim = search.GetVisualDescendants().OfType<Border>().Single(border => border.Name == "NativeFrame");
+            Border underline = search.GetVisualDescendants().OfType<Border>().Single(border => border.Name == "NativeUnderline");
+            TextBlock placeholder = search.GetVisualDescendants().OfType<TextBlock>().Single(text => text.Name == "PART_Placeholder");
+            other.Focus();
+            Dispatcher.UIThread.RunJobs();
+            placeholder.IsVisible.Should().BeTrue();
+            ((Avalonia.Media.ISolidColorBrush)rim.BorderBrush!).Color.Should().Be(Avalonia.Media.Color.FromRgb(236, 236, 236));
+            ((Avalonia.Media.ISolidColorBrush)underline.Background!).Color.Should().Be(Avalonia.Media.Color.FromRgb(131, 131, 131));
+            underline.Height.Should().Be(1);
+            search.Focus();
+            window.KeyTextInput("feature");
+            Dispatcher.UIThread.RunJobs();
+            search.Text.Should().Be("feature");
+            search.CaretIndex.Should().Be(7);
+            Control textPresenter = search.GetVisualDescendants().OfType<Control>().Single(control => control.Name == "PART_TextPresenter");
+            textPresenter.TranslatePoint(default, search)!.Value.X.Should().Be(2);
+            placeholder.IsVisible.Should().BeFalse();
+            ((Avalonia.Media.ISolidColorBrush)rim.BorderBrush!).Color.Should().Be(Avalonia.Media.Color.FromRgb(236, 236, 236));
+            ((Avalonia.Media.ISolidColorBrush)underline.Background!).Color.Should().Be(Avalonia.Media.Color.FromRgb(0, 103, 192));
+            underline.Height.Should().Be(2);
+            search.SelectAll();
+            (search.SelectionEnd - search.SelectionStart).Should().Be(7);
+            window.KeyTextInput("main");
+            Dispatcher.UIThread.RunJobs();
+            search.Text.Should().Be("main");
+            search.ContextFlyout.Should().NotBeNull("native editing operations must remain available through the framework text box");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     [TestCase(true)]
     [TestCase(false)]
     public void Dashboard_should_focus_search_after_the_initial_window_activation(bool refreshBeforeShowing)

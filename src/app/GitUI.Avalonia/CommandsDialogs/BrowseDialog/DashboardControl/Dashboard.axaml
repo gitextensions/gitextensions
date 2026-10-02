@@ -28,7 +28,7 @@
         <Setter Property="Template">
           <ControlTemplate>
             <ContentPresenter Name="PART_ContentPresenter"
-                              Background="Transparent"
+                              Background="{StaticResource GitExtensionsTransparentBrush}"
                               BorderThickness="0"
                               Content="{TemplateBinding Content}"
                               Padding="{TemplateBinding Padding}"
@@ -59,7 +59,7 @@
     </Style>
     <Style Selector="Button.dashboard-link:pressed">
       <!-- WinForms LinkLabel's default ActiveLinkColor is Red, independently of LinkColor. -->
-      <Setter Property="Foreground" Value="Red" />
+      <Setter Property="Foreground" Value="{StaticResource GitExtensionsNativeLinkActiveBrush}" />
     </Style>
     <Style Selector="Button.dashboard-link:disabled">
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
@@ -72,10 +72,6 @@
                        ColumnDefinitions="7.142857*,213,85.71428*,7.142857*"
                        Margin="0"
                        Background="{StaticResource GitExtensionsTransparentBrush}">
-    <Image x:Name="backgroundImage"
-           Grid.ColumnSpan="4"
-           Stretch="Fill"
-           IsHitTestVisible="False" />
     <wf:Panel x:Name="pnlLeft" Grid.Column="1" Margin="0">
       <Grid RowDefinitions="68,*,Auto">
       <wf:Panel x:Name="pnlLogo"
