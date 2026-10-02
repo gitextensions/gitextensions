@@ -63,7 +63,7 @@
       <Setter Property="Width" Value="6" />
       <Setter Property="Height" Value="25" />
       <Setter Property="Margin" Value="0" />
-      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
     </Style>
     <Style Selector="Border.gitextensions-toolbar-separator-line">
       <Setter Property="Width" Value="1" />
@@ -79,7 +79,7 @@
       <Setter Property="ContentTemplate">
         <DataTemplate>
           <Grid ColumnDefinitions="16,4,*">
-            <Image Grid.Column="0" Width="16" Height="16" Stretch="Uniform"
+            <Image Grid.Column="0" Classes="gitextensions-icon-16" Stretch="Uniform"
                    Source="{Binding $parent[compat:IconSplitButton].Icon}" />
             <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding}"
                        TextTrimming="CharacterEllipsis" />
@@ -270,7 +270,7 @@
       <menus:HelpToolStripMenuItem x:Name="helpToolStripMenuItem" Width="44" />
     </wf:MenuStripEx>
     <wf:ToolStripContainer x:Name="toolPanel"
-                           Background="Transparent"
+                           Background="{StaticResource GitExtensionsTransparentBrush}"
                            ClipToBounds="True">
       <wf:ToolStripPanel x:Name="_topPanel" Height="27" ClipToBounds="True">
       <!-- Keep Stash visible at the normal Browse width while the following separator
@@ -282,7 +282,7 @@
                       HorizontalScrollBarVisibility="Hidden"
                       VerticalScrollBarVisibility="Disabled">
           <StackPanel x:Name="ToolStripMain"
-                      Background="Transparent"
+                      Background="{StaticResource GitExtensionsTransparentBrush}"
                       Height="25"
                       Orientation="Horizontal"
                       Spacing="0">
@@ -406,7 +406,7 @@
                                 compat:TranslationCompat.UseToolTipText="True"
                                 Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                 Foreground="{DynamicResource GitExtensionsSourceControlTextBrush}"
-                                Background="#00FFFFFF"
+                                Background="{StaticResource GitExtensionsTransparentBrush}"
                                 Icon="{x:Static properties:Images.Stash}"
                                 ToolTip.Tip="Manage stashes">
           <compat:IconSplitButton.Flyout>
@@ -491,7 +491,7 @@
             Margin="6">
       <wf:SplitContainer x:Name="MainSplitContainer"
                          x:FieldModifier="internal"
-                         Background="Transparent"
+                         Background="{StaticResource GitExtensionsTransparentBrush}"
                          Grid.ColumnSpan="3"
                          ColumnDefinitions="260,6,*">
       <Border x:Name="leftPanel" Grid.Column="0" Classes="gitextensions-section">
@@ -504,11 +504,11 @@
       <GridSplitter x:Name="leftPanelSplitter" Grid.Column="1" ResizeDirection="Columns" />
       <!-- SplitterDistance=209 in the source yields a 211-DIP first panel after the native
            SplitContainer border; Avalonia has no equivalent implicit border. -->
-      <wf:SplitContainer x:Name="RightSplitContainer" Grid.Column="2" RowDefinitions="211,6,*" Background="Transparent">
+      <wf:SplitContainer x:Name="RightSplitContainer" Grid.Column="2" RowDefinitions="211,6,*" Background="{StaticResource GitExtensionsTransparentBrush}">
           <wf:SplitContainer x:Name="RevisionsSplitContainer"
                              Grid.Row="0"
                              ColumnDefinitions="0,0,*,0,0"
-                             Background="Transparent">
+                             Background="{StaticResource GitExtensionsTransparentBrush}">
           <!-- WinForms paints a one-pixel native split frame while the control's
                semantic BackColor remains transparent. Keep paint separate. -->
           <Border Classes="gitextensions-revision-split-frame"

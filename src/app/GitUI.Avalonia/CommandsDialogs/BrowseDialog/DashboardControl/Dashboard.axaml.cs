@@ -111,7 +111,16 @@ public partial class Dashboard : GitModuleControl
                 (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged));
         }
 
-        backgroundImage.Source = selectedTheme.BackgroundImage;
+        // WinForms BackgroundImageLayout defaults to Tile; an Image stretched to the
+        // table changes the original artwork at every client size.
+        tableLayoutPanel1.Background = new ImageBrush((IImageBrushSource)selectedTheme.BackgroundImage)
+        {
+            TileMode = TileMode.Tile,
+            Stretch = Stretch.None,
+            AlignmentX = AlignmentX.Left,
+            AlignmentY = AlignmentY.Top,
+            DestinationRect = new RelativeRect(new Rect(default, selectedTheme.BackgroundImage.Size), RelativeUnit.Absolute),
+        };
         pnlLogo.Background = new SolidColorBrush(selectedTheme.LogoBackColor);
         flpnlStart.Background = new SolidColorBrush(selectedTheme.StartBackColor);
         flpnlContribute.Background = new SolidColorBrush(selectedTheme.ContributeBackColor);

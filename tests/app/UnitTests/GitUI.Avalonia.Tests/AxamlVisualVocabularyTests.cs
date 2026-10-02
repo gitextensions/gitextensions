@@ -43,7 +43,9 @@ public sealed class AxamlVisualVocabularyTests
     private static readonly HashSet<string> LayoutElements =
     [
         "Border",
+        "Canvas",
         "ColumnDefinition",
+        "ContentPresenter",
         "DistributedSettingsPage",
         "DockPanel",
         "GitExtensionsControl",
@@ -120,7 +122,7 @@ public sealed class AxamlVisualVocabularyTests
                     continue;
                 }
 
-                XAttribute? nameAttribute = element.Attribute(xaml + "Name");
+                XAttribute? nameAttribute = element.Attribute(xaml + "Name") ?? element.Attribute("Name");
                 bool hasSemanticClass = !string.IsNullOrWhiteSpace(element.Attribute("Classes")?.Value);
                 bool isLayout = LayoutElements.Contains(element.Name.LocalName);
                 bool isRoot = ReferenceEquals(element, document.Root);
@@ -193,12 +195,7 @@ public sealed class AxamlVisualVocabularyTests
                 }
 
                 string? selector = element.Attribute("Selector")?.Value;
-                Dictionary<string, string> setters = element.Elements()
-                    .Where(child => child.Name.LocalName == "Setter")
-                    .ToDictionary(
-                        child => child.Attribute("Property")!.Value,
-                        child => child.Attribute("Value")!.Value,
-                        StringComparer.Ordinal);
+                Dictionary<string, string> setters = ReadLiteralSetters(element);
                 if (selector == "CheckBox" && setters.GetValueOrDefault("Margin") == "0,-4")
                 {
                     findings.Add(FormatFinding(relativePath, element, "compact settings checkboxes must use gitextensions-compact-checkboxes"));
@@ -212,6 +209,18 @@ public sealed class AxamlVisualVocabularyTests
         }
 
         findings.Should().BeEmpty();
+    }
+
+    [Test]
+    public void ReadLiteralSetters_should_preserve_literal_values_without_dereferencing_template_setters()
+    {
+        XElement style = XElement.Parse("""
+            <Style Selector="Button">
+              <Setter Property="Template"><ControlTemplate><ContentPresenter /></ControlTemplate></Setter>
+              <Setter Property="Padding" Value="0" />
+            </Style>
+            """);
+        ReadLiteralSetters(style).Should().ContainSingle().Which.Should().Be(new KeyValuePair<string, string>("Padding", "0"));
     }
 
     [Test]
@@ -273,6 +282,14 @@ public sealed class AxamlVisualVocabularyTests
         IXmlLineInfo lineInfo = element;
         return $"{relativePath}:{lineInfo.LineNumber}: {message}";
     }
+
+    private static Dictionary<string, string> ReadLiteralSetters(XElement style)
+        => style.Elements()
+            .Where(child => child.Name.LocalName == "Setter" && child.Attribute("Value") is not null)
+            .ToDictionary(
+                child => child.Attribute("Property")!.Value,
+                child => child.Attribute("Value")!.Value,
+                StringComparer.Ordinal);
 
     private static (string ViewRoot, string DesignerRoot) GetSourceRoots([CallerFilePath] string thisFilePath = "")
     {

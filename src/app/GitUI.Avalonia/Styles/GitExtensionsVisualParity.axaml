@@ -151,6 +151,75 @@
         </Setter>
       </ControlTheme>
 
+      <!-- ThemeFix deliberately leaves native EDIT chrome unchanged, even in a dark CSS
+           theme. Native Fixed3D search inputs retain a light rim and focus underline,
+           independently of KnownColor.Highlight or the user's desktop accent. -->
+      <SolidColorBrush x:Key="GitExtensionsNativeSearchRimBrush" Color="#ECECEC" />
+      <SolidColorBrush x:Key="GitExtensionsNativeSearchInnerRimBrush" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="GitExtensionsNativeSearchUnderlineBrush" Color="#838383" />
+      <SolidColorBrush x:Key="GitExtensionsNativeSearchFocusedUnderlineBrush" Color="#0067C0" />
+      <SolidColorBrush x:Key="GitExtensionsNativeLinkActiveBrush" Color="Red" />
+      <SolidColorBrush x:Key="GitExtensionsChecklistStatusHoverBrush" Color="#C0C0FF" />
+      <SolidColorBrush x:Key="GitExtensionsFileFilterRemovedBrush" Color="#FF0000" />
+      <SolidColorBrush x:Key="GitExtensionsFileFilterRenamedBrush" Color="#BD7CFF" />
+      <SolidColorBrush x:Key="GitExtensionsFileFilterModifiedBrush" Color="#A8A800" />
+      <SolidColorBrush x:Key="GitExtensionsFileFilterAddedBrush" Color="#00A800" />
+      <ControlTheme x:Key="GitExtensionsNativeSearchInputTheme"
+                    TargetType="TextBox"
+                    BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <DataValidationErrors>
+              <Panel>
+                <Border Name="NativeFrame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{StaticResource GitExtensionsNativeSearchRimBrush}"
+                        BorderThickness="1" />
+                <Border Margin="1"
+                        BorderBrush="{StaticResource GitExtensionsNativeSearchInnerRimBrush}"
+                        BorderThickness="1" />
+                <Border Name="NativeUnderline"
+                        Height="1"
+                        Background="{StaticResource GitExtensionsNativeSearchUnderlineBrush}"
+                        VerticalAlignment="Bottom" />
+                <ScrollViewer Name="PART_ScrollViewer" Margin="2"
+                              HorizontalScrollBarVisibility="Hidden"
+                              VerticalScrollBarVisibility="Disabled">
+                  <Panel>
+                    <TextBlock Name="PART_Placeholder"
+                               Text="{TemplateBinding PlaceholderText}"
+                               Foreground="{TemplateBinding PlaceholderForeground}"
+                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                      <TextBlock.IsVisible>
+                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text"
+                                 Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                      </TextBlock.IsVisible>
+                    </TextBlock>
+                    <TextPresenter Name="PART_TextPresenter"
+                                   Text="{TemplateBinding Text, Mode=TwoWay}"
+                                   CaretIndex="{TemplateBinding CaretIndex}"
+                                   CaretBrush="{TemplateBinding CaretBrush}"
+                                   CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                   SelectionStart="{TemplateBinding SelectionStart}"
+                                   SelectionEnd="{TemplateBinding SelectionEnd}"
+                                   SelectionBrush="{TemplateBinding SelectionBrush}"
+                                   SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                  </Panel>
+                </ScrollViewer>
+              </Panel>
+            </DataValidationErrors>
+          </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus /template/ Border#NativeUnderline">
+          <Setter Property="Height" Value="2" />
+          <Setter Property="Background" Value="{StaticResource GitExtensionsNativeSearchFocusedUnderlineBrush}" />
+        </Style>
+      </ControlTheme>
+
       <!-- WinForms MenuStrip is a compact desktop control: 24px bar, 20px top-level
            items, and 22px dropdown rows. Fluent's defaults are intentionally roomier. -->
       <x:Double x:Key="MenuBarHeight">24</x:Double>
@@ -1907,6 +1976,9 @@
         </Border>
       </ControlTemplate>
     </Setter>
+  </Style>
+  <Style Selector="TextBlock.gitextensions-summary-header-text">
+    <Setter Property="Height" Value="16" />
   </Style>
   <Style Selector="TextBlock.gitextensions-list-header-text">
     <Setter Property="Margin" Value="6,3" />
