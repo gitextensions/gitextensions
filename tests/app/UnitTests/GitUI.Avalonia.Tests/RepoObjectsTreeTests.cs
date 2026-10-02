@@ -1,10 +1,12 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Remotes;
@@ -30,6 +32,40 @@ namespace GitExtensionsTests;
 [NonParallelizable]
 public sealed class RepoObjectsTreeTests
 {
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Selected_tree_header_should_leave_the_expander_and_hierarchy_unpainted(bool focused)
+    {
+        TreeViewItem item = new() { Header = "Branches", Items = { new TreeViewItem { Header = "main" } }, IsExpanded = true };
+        TreeView tree = new() { Classes = { "gitextensions-native-tree" }, Items = { item }, SelectedItem = item, Focusable = true };
+        Button other = new() { Content = "Other" };
+        StackPanel content = new() { Children = { tree, other } };
+        Window window = new() { Width = 300, Height = 200, Content = content };
+        window.Resources["GitExtensionsHighlightBackgroundBrush"] = new SolidColorBrush(Color.Parse("#0078D7"));
+        window.Resources["GitExtensionsInactiveSelectionBackgroundBrush"] = new SolidColorBrush(Color.Parse("#BFCDDB"));
+        try
+        {
+            window.Show();
+            window.UpdateLayout();
+            (focused ? (Avalonia.Input.InputElement)tree : other).Focus().Should().BeTrue();
+            window.UpdateLayout();
+            Grid header = item.GetVisualDescendants().OfType<Grid>()
+                .Single(control => control.Name == "PART_NativeHeaderContent" && control.FindAncestorOfType<TreeViewItem>() == item);
+            ContentPresenter label = item.GetVisualDescendants().OfType<ContentPresenter>()
+                .Single(control => control.Name == "PART_HeaderPresenter" && control.FindAncestorOfType<TreeViewItem>() == item);
+            header.Background.Should().BeNull("the native expander is outside the selected label rectangle");
+            label.Background.Should().NotBeNull();
+            Color selection = focused ? Color.Parse("#0078D7") : Color.Parse("#BFCDDB");
+            ((SolidColorBrush)label.Background!).Color.Should().Be(selection);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaTest]
     [Category("P8.6i.126")]
     public void Tree_toolbar_should_inherit_the_native_ControlText_role_and_update_when_it_changes()

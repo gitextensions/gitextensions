@@ -522,13 +522,19 @@ internal static class ComponentFactory
                 SeedFileStatusList(fileStatusList, commands);
                 break;
 
-            // parity-scaffolding: Seeds the isolated Dashboard history before paired capture.
-            case Dashboard dashboard:
-                dashboard.UICommandsSource = source;
+            // parity-scaffolding: Each host owns the same explicit history seed, independently
+            // of any settings persisted by an earlier Dashboard/theme worker.
+            case FormBrowse:
+            case Dashboard:
                 Repository repository = new(commands.Module.WorkingDir);
                 ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(repository.Path));
                 ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AssignCategoryAsync(repository, "Development"));
-                dashboard.RefreshContent();
+                if (control is Dashboard dashboard)
+                {
+                    dashboard.UICommandsSource = source;
+                    dashboard.RefreshContent();
+                }
+
                 break;
         }
 

@@ -288,12 +288,18 @@ public sealed class VisualParityTests
                 StackPanel toolStripMain = form.FindControl<StackPanel>("ToolStripMain")!;
                 FilterToolBar toolStripFilters = form.FindControl<FilterToolBar>("ToolStripFilters")!;
                 toolPanel.Bounds.Should().Be(new Rect(0, 27, 923, 546));
-                form.toolStripMainHost.Bounds.Should().Be(new Rect(7, 0, 812, 25));
-                form.toolStripFiltersHost.Bounds.Should().Be(new Rect(819, 0, 50, 27));
+                // The native strip ends after Settings and gives its remaining row width
+                // to filters. Text/font metrics may differ by platform; 812 was a stale
+                // fixed-width assumption that forced every filter into overflow.
+                form.toolStripMainHost.Bounds.Position.Should().Be(new Point(7, 0));
+                form.toolStripMainHost.Bounds.Height.Should().Be(25);
+                form.toolStripMainHost.Bounds.Width.Should().BeApproximately(form.EditSettings.Bounds.Right + 2, 1);
+                form.toolStripFiltersHost.Bounds.X.Should().Be(form.toolStripMainHost.Bounds.Right);
+                form.toolStripFiltersHost.Bounds.Right.Should().Be(869);
+                form.toolStripFiltersHost.Bounds.Height.Should().Be(27);
                 form.toolStripFiltersOverflow.IsVisible.Should().BeTrue();
                 StackPanel filterItems = (StackPanel)toolStripFilters.Content!;
-                filterItems.Opacity.Should().Be(0);
-                filterItems.IsHitTestVisible.Should().BeFalse();
+                filterItems.Children.Should().Contain(item => item.IsVisible && item.Opacity == 0 && !item.IsHitTestVisible);
                 form.toolStripFiltersOverflow.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
                 Dispatcher.UIThread.RunJobs();
                 form.toolStripFiltersViewport.Content.Should().BeNull();
@@ -314,8 +320,7 @@ public sealed class VisualParityTests
                 Dispatcher.UIThread.RunJobs();
                 form.toolStripFiltersViewport.Content.Should().BeSameAs(toolStripFilters);
                 filterItems.Orientation.Should().Be(Avalonia.Layout.Orientation.Horizontal);
-                filterItems.Opacity.Should().Be(0);
-                filterItems.IsHitTestVisible.Should().BeFalse();
+                filterItems.Children.Should().Contain(item => item.IsVisible && item.Opacity == 0 && !item.IsHitTestVisible);
                 Point settingsPosition = form.EditSettings.TranslatePoint(default, form.toolStripMainViewport)!.Value;
                 settingsPosition.X.Should().BeLessThan(form.toolStripMainViewport.Viewport.Width);
                 Point repoTreePosition = form.repoObjectsTree.TranslatePoint(new Point(), form)
@@ -592,10 +597,13 @@ public sealed class VisualParityTests
                         .OfType<PathIcon>()
                         .Single();
 
-                    splitButton.Bounds.Height.Should().Be(22);
-                    primaryButton.Bounds.Height.Should().Be(22);
+                    // The live native filter strip grows to 27px around its editors;
+                    // its split items are 24px, unlike the main strip's 22px items.
+                    int itemHeight = splitButton.FindAncestorOfType<FilterToolBar>() is null ? 22 : 24;
+                    splitButton.Bounds.Height.Should().Be(itemHeight);
+                    primaryButton.Bounds.Height.Should().Be(itemHeight);
                     secondaryButton.Bounds.Width.Should().Be(13);
-                    secondaryButton.Bounds.Height.Should().Be(22);
+                    secondaryButton.Bounds.Height.Should().Be(itemHeight);
                     arrow.Bounds.Size.Should().Be(new Size(7, 5));
                 }
 
@@ -649,6 +657,11 @@ public sealed class VisualParityTests
             Dispatcher.UIThread.RunJobs();
             AssertSingleItemPopupFits(contextItem);
             AssertDropDownMenuPaintOffsets(contextItem);
+            contextItem.IsEnabled = false;
+            Dispatcher.UIThread.RunJobs();
+            AssertDropDownMenuPaintOffsets(contextItem);
+            contextItem.IsEnabled = true;
+            Dispatcher.UIThread.RunJobs();
             contextItem.FontFamily.Should().Be(GetResource<FontFamily>(Application.Current!, "GitExtensionsUiFontFamily"));
             contextItem.FontSize.Should().Be(GetResource<double>(Application.Current!, "GitExtensionsUiFontSize"));
             contextItem.FontStyle.Should().Be(GetResource<FontStyle>(Application.Current!, "GitExtensionsUiFontStyle"));
@@ -1647,6 +1660,28 @@ public sealed class VisualParityTests
                 GetResourceBrushColor(application, "GitExtensionsInactiveSelectionBackgroundBrush", themeVariant));
             GetColor(listPresenter.Foreground).Should().Be(
                 GetResourceBrushColor(application, "GitExtensionsInactiveSelectionForegroundBrush", themeVariant));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Filter_dropdown_buttons_should_keep_native_image_item_widths_without_a_Browse_parent_style()
+    {
+        FilterToolBar filter = new();
+        Window window = new() { Width = 800, Height = 120, Content = filter };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            foreach (string name in new[] { "tsddbtnBranchFilter", "tsddbtnRevisionFilter" })
+            {
+                filter.FindControl<Control>(name)!.Bounds.Width.Should().Be(29, name);
+            }
         }
         finally
         {

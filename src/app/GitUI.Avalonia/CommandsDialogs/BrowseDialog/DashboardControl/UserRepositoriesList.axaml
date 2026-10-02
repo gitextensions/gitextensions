@@ -10,11 +10,17 @@
       <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
           <SolidColorBrush x:Key="DashboardRepositoryHoverBrush" Color="#DBEBF8" />
+          <SolidColorBrush x:Key="DashboardGroupDividerBrush" Color="#B2C1E0" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
           <SolidColorBrush x:Key="DashboardRepositoryHoverBrush" Color="#202020" />
+          <SolidColorBrush x:Key="DashboardGroupDividerBrush" Color="#2D2D2D" />
         </ResourceDictionary>
       </ResourceDictionary.ThemeDictionaries>
+      <!-- Explorer's native grouped ListView uses TEXTSTYLE, not the configurable
+           HotTrack used by the owner-drawn repository branch names. -->
+      <SolidColorBrush x:Key="DashboardGroupHeadingBrush" Color="#003399" />
+      <SolidColorBrush x:Key="DashboardGroupTaskBrush" Color="#0066CC" />
       <!-- The native ListView task is a text link, not a Fluent button. -->
       <ControlTheme x:Key="DashboardGroupActionTheme" TargetType="Button">
         <Setter Property="Template">
@@ -46,7 +52,7 @@
     </Style>
     <Style Selector="Button.dashboard-group-action">
       <Setter Property="Theme" Value="{StaticResource DashboardGroupActionTheme}" />
-      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorHotTrackBrush}" />
+      <Setter Property="Foreground" Value="{StaticResource DashboardGroupTaskBrush}" />
       <Setter Property="MinHeight" Value="0" />
       <Setter Property="MinWidth" Value="0" />
       <Setter Property="Cursor" Value="Hand" />

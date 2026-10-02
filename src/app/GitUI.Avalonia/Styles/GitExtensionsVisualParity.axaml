@@ -1554,16 +1554,13 @@
   <Style Selector="TreeView.gitextensions-native-tree TreeViewItem:selected /template/ Border#PART_LayoutRoot">
     <Setter Property="Background" Value="Transparent" />
   </Style>
-  <Style Selector="TreeView.gitextensions-native-tree:focus-within TreeViewItem:selected /template/ Grid#PART_NativeHeaderContent">
-    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
-  </Style>
+  <!-- NativeTreeView highlights the icon/label, not the expander or hierarchy lines. -->
   <Style Selector="TreeView.gitextensions-native-tree:focus-within TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsFileStatusSelectionForegroundBrush}" />
   </Style>
-  <Style Selector="TreeView.gitextensions-native-tree:not(:focus-within) TreeViewItem:selected /template/ Grid#PART_NativeHeaderContent">
-    <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
-  </Style>
   <Style Selector="TreeView.gitextensions-native-tree:not(:focus-within) TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
   </Style>
 
@@ -1801,14 +1798,16 @@
       <TranslateTransform X="-34" Y="-1" />
     </Setter>
   </Style>
-  <Style Selector="MenuItem /template/ Path#PART_ChevronPath">
+  <Style Selector="MenuItem:not(:disabled) /template/ Path#PART_ChevronPath,
+                   MenuItem:disabled /template/ Path#PART_ChevronPath">
     <!-- ToolStripRenderer.DrawArrow uses a filled right-facing triangle, not Fluent's
-         open chevron. Preserve the template's reserved arrow slot and popup dimensions. -->
+         open chevron. An active state selector is needed to override Fluent's template
+         Width=8 allocation; an ordinary style changes the transform but not that width. -->
     <Setter Property="Data" Value="M 0,0 L 4,4 L 0,8 Z" />
     <Setter Property="Width" Value="4" />
     <Setter Property="Height" Value="8" />
     <Setter Property="Stretch" Value="Fill" />
-    <Setter Property="Fill" Value="{TemplateBinding Foreground}" />
+    <Setter Property="Fill" Value="{Binding $parent[MenuItem].Foreground}" />
     <Setter Property="StrokeThickness" Value="0" />
     <Setter Property="RenderTransform">
       <TranslateTransform X="-7" />

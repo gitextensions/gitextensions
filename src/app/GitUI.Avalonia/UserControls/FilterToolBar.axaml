@@ -4,6 +4,12 @@
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.UserControls.FilterToolBar"
              Foreground="{DynamicResource GitExtensionsWindowTextBrush}">
+  <UserControl.Styles>
+    <Style Selector="DropDownButton.gitextensions-toolbar-button.gitextensions-icon-only">
+      <Setter Property="Width" Value="29" />
+      <Setter Property="MinWidth" Value="29" />
+    </Style>
+  </UserControl.Styles>
   <StackPanel Height="25"
               Orientation="Horizontal"
               Spacing="0">
