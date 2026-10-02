@@ -38,7 +38,9 @@ public partial class CommitInfoHeader : GitModuleControl
         // The source XHTML loader inserts SelectedRtf for its first author link, clearing
         // explicit paragraph tabs. Both painting and ContentsResized use half-inch defaults.
         const int richEditDefaultTabInterval = 48;
-        rtbRevisionHeader.NativeContentOverhang = 2; // Borderless RichEdit retains one formatting pixel at each edge.
+        const int richEditFormattingInset = 1; // Borderless RichEdit's EM_GETRECT origin, not public Padding.
+        rtbRevisionHeader.NativeFormattingInset = richEditFormattingInset;
+        rtbRevisionHeader.NativeContentOverhang = richEditFormattingInset * 2;
         rtbRevisionHeader.SetTabStops([], [], richEditDefaultTabInterval);
     }
 
@@ -60,12 +62,8 @@ public partial class CommitInfoHeader : GitModuleControl
             rtbRevisionHeader.SelectionStart = 0; // scroll up
             rtbRevisionHeader.SelectionEnd = 0;   // scroll up
 
-            int lineCount = header.Count(character => character == '\n');
-            double avatarHeight = AppSettings.ShowAuthorAvatarInCommitInfo
-                ? AppSettings.AuthorImageSizeInCommitInfo
-                : 0;
-            Height = Math.Max(avatarHeight, lineCount * rtbRevisionHeader.LineHeight);
-
+            // The original header/table AutoSize around the RichEdit contents rectangle
+            // and visible avatar. Leave the parent unconstrained so its final row fits.
             LoadAuthorImage(revision);
         });
     }

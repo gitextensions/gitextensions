@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -5,6 +7,7 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
@@ -27,6 +30,113 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class DashboardTests
 {
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase("flpnlStart", "_createRepository")]
+    [TestCase("flpnlContribute", "_develop")]
+    public void Dashboard_flow_panels_should_clip_long_translated_link_pixels_to_their_native_client(string panelName, string translationField)
+    {
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        Window window = new() { Width = 900, Height = 600, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            dashboard.GetTestAccessor().Repositories.IsVisible = false;
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            window.Focus();
+            Border panel = dashboard.FindControl<Border>(panelName)!;
+            StackPanel links = (StackPanel)panel.Child!;
+            WinFormsControls.LinkLabel original = links.Children.OfType<WinFormsControls.LinkLabel>().First();
+            Point origin = original.TranslatePoint(default, window)!.Value;
+            Point rightEdge = panel.TranslatePoint(new Point(panel.Bounds.Width, 0), window)!.Value;
+            PixelRect inside = new((int)Math.Ceiling(origin.X), (int)Math.Ceiling(origin.Y),
+                (int)Math.Floor(rightEdge.X - origin.X), (int)Math.Ceiling(original.Bounds.Height));
+            PixelRect outside = new((int)Math.Ceiling(rightEdge.X), inside.Y, 64, inside.Height);
+            using WriteableBitmap before = window.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The Dashboard frame is unavailable.");
+            ResourceManager.TranslationString translation = (ResourceManager.TranslationString)typeof(Dashboard)
+                .GetField(translationField, BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(dashboard)!;
+            typeof(ResourceManager.TranslationString).GetProperty(nameof(ResourceManager.TranslationString.Text))!
+                .SetValue(translation, new string('W', 80));
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            window.Focus();
+            WinFormsControls.LinkLabel translated = links.Children.OfType<WinFormsControls.LinkLabel>().First();
+            translated.Bounds.Width.Should().BeGreaterThan(panel.Bounds.Width + outside.Width,
+                "the source AutoSize link retains its complete preferred width while the native panel clips it");
+            translated.TranslatePoint(default, window)!.Value.Y.Should().Be(origin.Y);
+            panel.ClipToBounds.Should().BeTrue();
+            dashboard.FindControl<Border>("pnlLeft")!.ClipToBounds.Should().BeTrue();
+            dashboard.FindControl<Border>("pnlLogo")!.ClipToBounds.Should().BeTrue();
+            using WriteableBitmap after = window.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The Dashboard frame is unavailable.");
+            ReadDashboardFrameRegion(after, inside).Should().NotEqual(ReadDashboardFrameRegion(before, inside),
+                "the changed translation must actually repaint the source link inside its client");
+            ReadDashboardFrameRegion(after, outside).Should().Equal(ReadDashboardFrameRegion(before, outside),
+                "a long translated native child must not paint into the adjacent Dashboard column");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    [Category("P8.6i.126")]
+    [TestCase(9)]
+    [TestCase(15)]
+    public void Dashboard_contribution_minimum_should_follow_the_last_link_and_survive_a_small_host(int fontSize)
+    {
+        GitExtensions.Shims.WinForms.Font originalFont = AppSettings.Font;
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        Window window = new() { Width = 686, Height = 250, Content = dashboard };
+        try
+        {
+            AppSettings.Font = new GitExtensions.Shims.WinForms.Font("Segoe UI", fontSize);
+            window.Show();
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Border start = dashboard.FindControl<Border>("flpnlStart")!;
+            Border contribute = dashboard.FindControl<Border>("flpnlContribute")!;
+            Grid layout = dashboard.FindControl<Grid>("tableLayoutPanel1")!;
+            WinFormsControls.LinkLabel last = ((StackPanel)contribute.Child!).Children
+                .OfType<WinFormsControls.LinkLabel>().Last();
+            double measuredHeight = last.TranslatePoint(default, contribute)!.Value.Y
+                + last.Bounds.Height + contribute.Padding.Bottom;
+            contribute.Height.Should().Be(measuredHeight,
+                "the source onLayout callback sizes the panel from the last laid-out control, excluding its trailing margin");
+            contribute.MinHeight.Should().Be(measuredHeight);
+            contribute.Bounds.Height.Should().Be(measuredHeight);
+            layout.MinHeight.Should().Be(68 + start.MinHeight + contribute.MinHeight);
+            last.FontSize.Should().Be(AvaloniaFontSettings.ToDeviceIndependentPixels(fontSize));
+            ScrollViewer scroll = (ScrollViewer)dashboard.Content!;
+            scroll.Extent.Height.Should().BeGreaterThan(scroll.Viewport.Height);
+            scroll.Offset = new Vector(0, scroll.Extent.Height - scroll.Viewport.Height);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Rect lastBounds = new(last.TranslatePoint(default, dashboard)!.Value, last.Bounds.Size);
+            lastBounds.Top.Should().BeGreaterThanOrEqualTo(0);
+            lastBounds.Bottom.Should().BeLessThanOrEqualTo(dashboard.Bounds.Height);
+            using WriteableBitmap rendered = window.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The scrolled Dashboard frame is unavailable.");
+            rendered.PixelSize.Height.Should().Be((int)dashboard.Bounds.Height);
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.Font = originalFont;
+        }
+    }
+
     [AvaloniaTest]
     [Category("P8.6i.126")]
     [TestCase(669, 358)]
@@ -1454,6 +1564,22 @@ public sealed class DashboardTests
 
     private static IEnumerable<CaptureNode> EnumerateDashboardCaptureNodes(CaptureNode node)
         => node.Children.SelectMany(child => new[] { child }.Concat(EnumerateDashboardCaptureNodes(child)));
+
+    private static byte[] ReadDashboardFrameRegion(WriteableBitmap frame, PixelRect region)
+    {
+        using ILockedFramebuffer framebuffer = frame.Lock();
+        framebuffer.Format.BitsPerPixel.Should().Be(32);
+        int rowBytes = region.Width * 4;
+        byte[] pixels = new byte[rowBytes * region.Height];
+        for (int row = 0; row < region.Height; row++)
+        {
+            Marshal.Copy(IntPtr.Add(framebuffer.Address,
+                ((region.Y + row) * framebuffer.RowBytes) + (region.X * 4)),
+                pixels, row * rowBytes, rowBytes);
+        }
+
+        return pixels;
+    }
 
     private static IRepositoryHistoryUIService CreateHistory(RepositoryHistorySnapshot snapshot)
     {

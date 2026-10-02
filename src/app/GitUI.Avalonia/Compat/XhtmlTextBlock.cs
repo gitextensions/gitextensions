@@ -9,6 +9,9 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
+using GitExtUtils;
+using Point = Avalonia.Point;
+using Size = Avalonia.Size;
 
 namespace GitUI.Compat;
 
@@ -30,10 +33,37 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     private IReadOnlyList<double> _tabStops = [];
     private IReadOnlyList<double> _widthTabStops = [];
     private int _defaultTabInterval;
+    private int _nativeFormattingInset;
     private bool _usesNativeWidthMeasurement;
+
+    /// <summary>Initializes the XHTML renderer with source-shaped clipboard semantics.</summary>
+    public XhtmlTextBlock()
+    {
+        // SelectableTextBlock's keyboard and context-flyout Copy routes share this event.
+        // Its raw selection contains one object-replacement character for each embedded control.
+        CopyingToClipboard += XhtmlTextBlock_CopyingToClipboard;
+    }
 
     /// <summary>Gets or sets the source RichEdit contents-width edge allowance for this instance.</summary>
     public double NativeContentOverhang { get; set; } = TextRendererOverhang + RichTextContentOverhang;
+
+    /// <summary>Gets or sets the native formatting origin inside the unchanged control frame.</summary>
+    internal int NativeFormattingInset
+    {
+        get => _nativeFormattingInset;
+        set
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
+            if (_nativeFormattingInset == value)
+            {
+                return;
+            }
+
+            _nativeFormattingInset = value;
+            InvalidateArrange();
+            InvalidateVisual();
+        }
+    }
 
     /// <summary>Occurs when an XHTML anchor is activated.</summary>
     public event EventHandler<LinkClickedEventArgs>? LinkClicked;
@@ -45,7 +75,54 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     public string GetPlainText() => _plainText;
 
     /// <summary>Gets the decoded selected text.</summary>
-    public string GetSelectionPlainText() => SelectedText ?? string.Empty;
+    public string GetSelectionPlainText()
+    {
+        int start = Math.Max(0, Math.Min(SelectionStart, SelectionEnd));
+        int end = Math.Max(SelectionStart, SelectionEnd);
+        if (start >= end)
+        {
+            return string.Empty;
+        }
+
+        if (Inlines is null || Inlines.Count == 0)
+        {
+            string text = Text ?? string.Empty;
+            return start >= text.Length ? string.Empty : text[start..Math.Min(end, text.Length)];
+        }
+
+        StringBuilder selectedText = new();
+        int position = 0;
+        foreach (Inline inline in Inlines)
+        {
+            string sourceText = inline switch
+            {
+                Run run => run.Text ?? string.Empty,
+                LineBreak => Environment.NewLine,
+                InlineUIContainer { Child: HyperlinkButton { Content: string caption } } => caption,
+                InlineUIContainer { Child: { Tag: string text } } => text,
+                _ => throw new InvalidOperationException("The XHTML renderer has an unsupported inline selection."),
+            };
+            int layoutLength = inline is InlineUIContainer ? 1 : sourceText.Length;
+            int overlapStart = Math.Max(start, position);
+            int overlapEnd = Math.Min(end, position + layoutLength);
+            if (overlapStart < overlapEnd)
+            {
+                // The caption occupies one selectable layout position. Its complete source
+                // text is copied; selecting individual caption characters is a separate gap.
+                selectedText.Append(inline is InlineUIContainer
+                    ? sourceText
+                    : sourceText[(overlapStart - position)..(overlapEnd - position)]);
+            }
+
+            position += layoutLength;
+            if (position >= end)
+            {
+                break;
+            }
+        }
+
+        return selectedText.ToString();
+    }
 
     /// <summary>Clears the rendered content.</summary>
     public void Clear() => SetXHTMLText(string.Empty);
@@ -78,6 +155,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         {
             Text = string.Empty;
             _plainText = string.Empty;
+            UpdateNativeContentsHeight();
             return;
         }
 
@@ -115,7 +193,29 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         }
 
         _plainText = plainText.ToString();
+        UpdateNativeContentsHeight();
         UpdateTabbedMinimumWidth();
+    }
+
+    private void UpdateNativeContentsHeight()
+    {
+        if (!_usesNativeWidthMeasurement)
+        {
+            return;
+        }
+
+        // The source assigns the whole ContentsResized rectangle to ClientSize. RichEdit
+        // includes the final paragraph and uses its current native font's line metrics.
+        // Do not constrain the parent to a newline count, which omits that final row.
+        double lineHeight = WinFormsRichEditTextMeasurer.GetLineHeight(this);
+        int paragraphCount = _plainText.Count(character => character == '\n') + 1;
+        LineHeight = lineHeight;
+        MinHeight = Height = lineHeight * paragraphCount;
+        if (_plainText.Length == 0)
+        {
+            // Native empty ContentsResized retains only the formatting rectangle's edges.
+            MinWidth = Width = NativeContentOverhang;
+        }
     }
 
     private void UpdateTabbedMinimumWidth()
@@ -163,19 +263,107 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             SelectedLinkUri = null;
         }
 
-        base.OnPointerPressed(e);
+        if (NativeFormattingInset == 0 || TopLevel.GetTopLevel(this) is not { } root)
+        {
+            base.OnPointerPressed(e);
+            return;
+        }
+
+        // SelectableTextBlock hit-tests its unshifted TextLayout. Adapt only the arguments
+        // passed to that base handler; the real routed event and embedded-link bounds stay intact.
+        PointerPressedEventArgs textEvent = new(e.Source, e.Pointer, root,
+            GetFormattingPointerPosition(e, root), e.Timestamp, e.Properties, e.KeyModifiers, e.ClickCount)
+        {
+            Handled = e.Handled,
+        };
+        base.OnPointerPressed(textEvent);
+        e.Handled = textEvent.Handled;
+    }
+
+    protected override void OnPointerMoved(PointerEventArgs e)
+    {
+        if (NativeFormattingInset == 0 || TopLevel.GetTopLevel(this) is not { } root)
+        {
+            base.OnPointerMoved(e);
+            return;
+        }
+
+        PointerEventArgs textEvent = new(e.RoutedEvent, e.Source, e.Pointer, root,
+            GetFormattingPointerPosition(e, root), e.Timestamp, e.Properties, e.KeyModifiers)
+        {
+            Handled = e.Handled,
+        };
+        base.OnPointerMoved(textEvent);
+        e.Handled = textEvent.Handled;
+    }
+
+    protected override void OnPointerReleased(PointerReleasedEventArgs e)
+    {
+        if (NativeFormattingInset == 0 || TopLevel.GetTopLevel(this) is not { } root)
+        {
+            base.OnPointerReleased(e);
+            return;
+        }
+
+        PointerReleasedEventArgs textEvent = new(e.Source, e.Pointer, root,
+            GetFormattingPointerPosition(e, root), e.Timestamp, e.Properties, e.KeyModifiers, e.InitialPressMouseButton)
+        {
+            Handled = e.Handled,
+        };
+        base.OnPointerReleased(textEvent);
+        e.Handled = textEvent.Handled;
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        Size arrangedSize = base.ArrangeOverride(finalSize);
+        if (NativeFormattingInset > 0)
+        {
+            // TextBlock arranges embedded controls separately from RenderTextLayout.
+            // Their actual bounds must use the same formatting origin as painted text.
+            foreach (Control child in VisualChildren.OfType<Control>())
+            {
+                child.Arrange(child.Bounds.Translate(new Vector(NativeFormattingInset, 0)));
+            }
+        }
+
+        return arrangedSize;
+    }
+
+    protected override void RenderTextLayout(DrawingContext context, Point origin)
+    {
+        // Borderless RichEdit's EM_GETRECT retains an internal formatting inset even with
+        // public Padding=0. Keep the background/frame fixed and move text and selection only.
+        if (NativeFormattingInset == 0)
+        {
+            base.RenderTextLayout(context, origin);
+            return;
+        }
+
+        // Native formatting clips ink to the text rectangle too, including negative glyph
+        // bearings. Moving the origin alone exposes that ink in the unchanged client edge.
+        using (context.PushClip(new Rect(NativeFormattingInset, 0,
+            Math.Max(0, Bounds.Width - (NativeFormattingInset * 2)), Bounds.Height)))
+        {
+            base.RenderTextLayout(context, origin + new Vector(NativeFormattingInset, 0));
+        }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (!string.IsNullOrEmpty(_xhtml)
-            && (change.Property == FontFamilyProperty
-                || change.Property == FontSizeProperty
-                || change.Property == FontStyleProperty
-                || change.Property == FontWeightProperty
-                || change.Property == LetterSpacingProperty))
+        if (change.Property == FontFamilyProperty
+            || change.Property == FontSizeProperty
+            || change.Property == FontStyleProperty
+            || change.Property == FontWeightProperty
+            || change.Property == LetterSpacingProperty)
         {
+            if (string.IsNullOrEmpty(_xhtml))
+            {
+                UpdateNativeContentsHeight();
+                return;
+            }
+
             // RichEdit invalidates its contents rectangle when font metrics change.
             // Avalonia inheritance can settle only after the seeded XHTML is attached.
             int selectionStart = SelectionStart;
@@ -190,6 +378,10 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     private static string DecodeAndStripMarkup(string value)
         => WebUtility.HtmlDecode(Regex.Replace(value, "<[^>]+>", string.Empty));
+
+    private Point GetFormattingPointerPosition(PointerEventArgs e, TopLevel root)
+        => this.TranslatePoint(e.GetPosition(this) - new Vector(NativeFormattingInset, 0), root)
+            ?? e.GetPosition(root);
 
     private void AddText(string text, StringBuilder plainText, ref LineLayout lineLayout, TextDecorationCollection? decorations = null)
     {
@@ -275,6 +467,9 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             Content = caption,
             Padding = new Thickness(0),
             Margin = new Thickness(0),
+
+            // RichEdit marks the text CFE_LINK; Fluent's button border is not part of that run.
+            BorderThickness = new Thickness(0),
             MinWidth = 0,
             MinHeight = 0,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
@@ -283,7 +478,10 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         };
         ToolTip.SetTip(link, uri);
         link.Click += Link_Click;
-        link.PointerPressed += Link_PointerPressed;
+
+        // Button handles the press before ordinary instance handlers; retain the link target
+        // for both activation and the source's right-click Copy link context-menu route.
+        link.AddHandler(PointerPressedEvent, Link_PointerPressed, RoutingStrategies.Bubble, handledEventsToo: true);
         Inlines?.Add(new InlineUIContainer(link));
         lineLayout.Advance += MeasureInline(caption);
     }
@@ -302,6 +500,12 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         {
             SelectedLinkUri = uri;
         }
+    }
+
+    private void XhtmlTextBlock_CopyingToClipboard(object? sender, RoutedEventArgs e)
+    {
+        ClipboardUtil.TrySetText(GetSelectionPlainText());
+        e.Handled = true;
     }
 
     private struct LineLayout
