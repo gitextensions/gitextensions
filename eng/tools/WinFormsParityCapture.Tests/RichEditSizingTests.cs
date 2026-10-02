@@ -18,6 +18,7 @@ public sealed class RichEditSizingTests
     [Test]
     [TestCase(9, "ceaece927abc97012d5cc36ea9dfba32321e9704")]
     [TestCase(9, "c932f21268731785cec9d37bfa3ff8f10485b46e")]
+    [TestCase(9, "54930791bbaca26f32883b799bbed65f81ec9150")]
     [TestCase(11, "ceaece927abc97012d5cc36ea9dfba32321e9704")]
     public void Header_contents_width_should_use_the_paragraph_tabs_remaining_after_XHTML_conversion(int sizeInPoints, string hash)
     {
@@ -55,6 +56,7 @@ public sealed class RichEditSizingTests
         NativeRectangle format = default;
         SendMessage(editor.Handle, GetFormatRectangle, 0, ref format);
         string[] values = [WebUtility.HtmlDecode(author), "9 months ago (1/2/2026 12:00:00 PM)", hash];
+        Point[] valueOrigins = values.Select(value => editor.GetPositionFromCharIndex(editor.Text.IndexOf(value, StringComparison.Ordinal))).ToArray();
         int[] nativeValueWidths = values.Select(value =>
         {
             int start = editor.Text.IndexOf(value, StringComparison.Ordinal);
@@ -84,7 +86,38 @@ public sealed class RichEditSizingTests
             Point begin = editor.GetPositionFromCharIndex(start);
             Point last = editor.GetPositionFromCharIndex(start + value.Length - 1);
             Point end = editor.GetPositionFromCharIndex(start + value.Length);
-            TestContext.Progress.WriteLine($"value={value} indices={start}..{start + value.Length}/{editor.TextLength} font={valueFont.Name}/{valueFont.SizeInPoints} begin={begin} last={last} end={end}");
+            int selectedFontWidth = TextRenderer.MeasureText(value, valueFont,
+                new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
+            nint nativeFont = valueFont.ToHfont();
+            nint deviceContext = GetDC(editor.Handle);
+            nint previousFont = SelectObject(deviceContext, nativeFont);
+            NativeSize nativeExtent = default;
+            int[] advances = new int[value.Length];
+            try
+            {
+                GetTextExtentPoint(deviceContext, value, value.Length, out nativeExtent).Should().BeTrue();
+                GetTextExtentExPoint(deviceContext, value, value.Length, int.MaxValue,
+                    out int fittedCharacters, advances, out _).Should().BeTrue();
+                fittedCharacters.Should().Be(value.Length);
+            }
+            finally
+            {
+                SelectObject(deviceContext, previousFont);
+                ReleaseDC(editor.Handle, deviceContext);
+                DeleteObject(nativeFont);
+            }
+
+            TestContext.Progress.WriteLine($"value={value} indices={start}..{start + value.Length}/{editor.TextLength} font={valueFont.Name}/{valueFont.SizeInPoints} selectedFontWidth={selectedFontWidth} selectedHfontWidth={nativeExtent.Width} begin={begin} last={last} end={end} rtf={editor.SelectedRtf.Replace('\r', ' ').Replace('\n', ' ')}");
+            nativeExtent.Width.Should().Be(end.X - begin.X);
+            if (sizeInPoints == 9)
+            {
+                selectedFontWidth.Should().Be(end.X - begin.X);
+                for (int index = 0; index < value.Length; index++)
+                {
+                    advances[index].Should().Be(editor.GetPositionFromCharIndex(start + index + 1).X - begin.X,
+                        "native GDI cumulative advances must match each RichEdit insertion position, not only the final width");
+                }
+            }
         }
 
         contents.Width.Should().BeGreaterThan(0);
@@ -99,18 +132,15 @@ public sealed class RichEditSizingTests
         nativeTwips.Should().BeGreaterThan(0);
         selectedFont.SizeInPoints.Should().Be(nativeTwips / 20f,
             "RichTextBox derives SelectionFont's point size from the native CHARFORMAT height in twips");
-        int characterExtent = 96 + nativeValueWidths.Max() + format.Left + editor.ClientSize.Width - format.Right;
-        contents.Width.Should().BeGreaterThanOrEqualTo(characterExtent,
-            "the native requested rectangle must enclose these visible non-whitespace value advances");
+        int characterExtent = valueOrigins.Select((origin, index) => origin.X + nativeValueWidths[index]).Max()
+            + editor.ClientSize.Width - format.Right;
+        contents.Width.Should().Be(characterExtent,
+            "each paragraph keeps its own tab origin: a longer author label can pass the first default stop before its second tab");
         if (sizeInPoints == 9)
         {
             selectedFont.SizeInPoints.Should().Be(sizeInPoints);
             nativeTwips.Should().Be(sizeInPoints * 20);
 
-            // Exact agreement is established for the original default font only. At 11pt,
-            // EM_POSFROMCHAR insertion advances and EN_REQUESTRESIZE's requested extent differ;
-            // retain both diagnostics until the native layout relationship is understood.
-            contents.Width.Should().Be(characterExtent);
             int longestValueWidth = gdiValueWidths.Max();
             contents.Width.Should().Be(96 + longestValueWidth + format.Left + editor.ClientSize.Width - format.Right);
         }
@@ -149,6 +179,32 @@ public sealed class RichEditSizingTests
 
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
     private static extern nint SendMessage(nint window, uint message, nint wordParameter, ref NativeRectangle rectangle);
+
+    [DllImport("user32.dll")]
+    private static extern nint GetDC(nint window);
+
+    [DllImport("user32.dll")]
+    private static extern int ReleaseDC(nint window, nint deviceContext);
+
+    [DllImport("gdi32.dll")]
+    private static extern nint SelectObject(nint deviceContext, nint value);
+
+    [DllImport("gdi32.dll")]
+    private static extern bool DeleteObject(nint value);
+
+    [DllImport("gdi32.dll", EntryPoint = "GetTextExtentPoint32W", CharSet = CharSet.Unicode)]
+    private static extern bool GetTextExtentPoint(nint deviceContext, string text, int length, out NativeSize extent);
+
+    [DllImport("gdi32.dll", EntryPoint = "GetTextExtentExPointW", CharSet = CharSet.Unicode)]
+    private static extern bool GetTextExtentExPoint(nint deviceContext, string text, int length,
+        int maximumExtent, out int fittedCharacters, [Out] int[] advances, out NativeSize extent);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct NativeSize
+    {
+        public int Width;
+        public int Height;
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     private struct NativeRectangle

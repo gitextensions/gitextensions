@@ -77,7 +77,7 @@
       <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
                            VerticalAlignment="Bottom"
                            Margin="0">
-        <wf:Label x:Name="lblRecentRepositories"
+        <compat:DashboardTextBlock x:Name="lblRecentRepositories"
                   FontSize="22"
                   Text="Recent repositories"
                   Margin="0"

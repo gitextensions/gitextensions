@@ -168,7 +168,7 @@ public partial class Dashboard : GitModuleControl
 
         static void CreateLink(StackPanel container, string text, IImage icon, EventHandler<RoutedEventArgs> handler)
         {
-            LinkLabel linkLabel = new()
+            LinkLabel linkLabel = new DashboardLinkLabel()
             {
                 Classes = { "dashboard-link" },
                 Content = CreateLinkContent(icon, text),
@@ -205,14 +205,14 @@ public partial class Dashboard : GitModuleControl
 
     private static Control CreateLinkContent(IImage icon, string text)
     {
-        TextBlock caption = new()
+        TextBlock caption = new DashboardTextBlock()
         {
             Text = text,
             FontFamily = new FontFamily(AppSettings.Font.Name),
             FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
             FontStyle = AppSettings.Font.Italic ? FontStyle.Italic : FontStyle.Normal,
             FontWeight = AppSettings.Font.Bold ? FontWeight.Bold : FontWeight.Normal,
-            VerticalAlignment = VerticalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Top,
         };
         caption.Padding = WinFormsTextMeasurer.GetTextRendererPadding(caption);
         return new Grid
@@ -226,9 +226,8 @@ public partial class Dashboard : GitModuleControl
                     Source = icon,
 
                     // Label.CalcImageRenderBounds insets a left-aligned image by two pixels.
-                    Margin = new Thickness(-24 + 2, 0, 0, 0),
                     HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Top,
                 },
                 caption,
             },

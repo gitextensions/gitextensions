@@ -16,7 +16,6 @@
                            Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
                            FontFamily="{DynamicResource GitExtensionsUiFontFamily}"
                            FontSize="{DynamicResource GitExtensionsUiFontSize}"
-                           LetterSpacing="-0.2"
                            FontStyle="{DynamicResource GitExtensionsUiFontStyle}"
                            FontWeight="{DynamicResource GitExtensionsUiFontWeight}"
                            LineHeight="15"

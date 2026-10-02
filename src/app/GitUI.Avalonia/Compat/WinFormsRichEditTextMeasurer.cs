@@ -11,7 +11,7 @@ internal static class WinFormsRichEditTextMeasurer
 {
     public static double GetLineHeight(TextBlock owner)
     {
-        if (OperatingSystem.IsWindows() && TryMeasureLineHeight(owner, out int height))
+        if (OperatingSystem.IsWindows() && TryMeasureNativeFont(owner, null, owner.FontSize, out int height, out _, out _))
         {
             return height;
         }
@@ -21,9 +21,52 @@ internal static class WinFormsRichEditTextMeasurer
         return Math.Ceiling(WinFormsTextMeasurer.MeasureSize(owner, "Mg").Height);
     }
 
-    private static bool TryMeasureLineHeight(TextBlock owner, out int height)
+    public static bool TryGetCharacterAdvances(TextBlock owner, string text, out int[] advances, double? fontSize = null)
+    {
+        advances = [];
+
+        // Keep the framework's font fallback and complex-script shaping. The native
+        // advance boundary below is for directly represented, left-to-right characters.
+        return OperatingSystem.IsWindows()
+            && text.All(character => character is >= ' ' and <= '~')
+            && TryMeasureNativeFont(owner, text, fontSize ?? owner.FontSize, out _, out advances, out _);
+    }
+
+    public static bool TryGetTextWidth(TextBlock owner, string text, out double width)
+    {
+        width = 0;
+        if (!OperatingSystem.IsWindows()
+            || !TryMeasureNativeFont(owner, text, owner.FontSize, out _, out int[] advances, out _))
+        {
+            return false;
+        }
+
+        width = advances.Length == 0 ? 0 : advances[^1];
+        return true;
+    }
+
+    public static double GetFontSize(TextBlock owner, bool rtfRoundTrip = false)
+    {
+        if (!OperatingSystem.IsWindows()
+            || !TryMeasureNativeFont(owner, null, owner.FontSize, out _, out _, out int nativeEmSize))
+        {
+            return owner.FontSize;
+        }
+
+        // RichEdit's default CHARFORMAT reflects the control HFONT in twips. SelectedRtf
+        // serializes \fs in integral half-points; reinserting an anchor reads that value
+        // back, while unmodified text retains the default font's original twip height.
+        const double pixelsPerPoint = 96d / 72;
+        return rtfRoundTrip
+            ? Math.Round(nativeEmSize / pixelsPerPoint * 2, MidpointRounding.AwayFromZero) / 2 * pixelsPerPoint
+            : nativeEmSize;
+    }
+
+    private static bool TryMeasureNativeFont(TextBlock owner, string? text, double fontSize, out int height, out int[] advances, out int nativeEmSize)
     {
         height = 0;
+        advances = [];
+        nativeEmSize = 0;
         nint deviceContext = GetDC(0);
         if (deviceContext == 0)
         {
@@ -46,14 +89,24 @@ internal static class WinFormsRichEditTextMeasurer
                 return false;
             }
 
+            // These native advances describe 96-DPI DIPs. An HDC at another system DPI
+            // would turn point-font pixels into larger logical widths a second time when
+            // Avalonia scales them. Use its normal scalable renderer in that context.
+            if (GdipGetDpiX(graphics, out float dpiX) != 0 || GdipGetDpiY(graphics, out float dpiY) != 0
+                || dpiX != 96 || dpiY != 96)
+            {
+                return false;
+            }
+
             int style = (owner.FontWeight >= FontWeight.Bold ? 1 : 0)
                 | (owner.FontStyle == FontStyle.Italic ? 2 : 0);
 
             // Control.FontHandleWrapper calls Font.ToHfont, whose GDI+ LOGFONT conversion
             // quantizes the native-control font differently from TextRenderer's cache.
-            // The owner size is already in DIPs, so UnitPixel preserves the 96-DPI size.
-            const int unitPixel = 2;
-            if (GdipCreateFont(family, (float)owner.FontSize, style, unitPixel, out font) != 0
+            // The source Font is in points. Convert the owner's 96-DPI DIPs back to that
+            // unit before the same GDI+ conversion; UnitPixel can choose different metrics.
+            const int unitPoint = 3;
+            if (GdipCreateFont(family, (float)(fontSize * 72 / 96), style, unitPoint, out font) != 0
                 || GdipGetLogFontW(font, graphics, out NativeLogFont logFont) != 0)
             {
                 return false;
@@ -77,6 +130,20 @@ internal static class WinFormsRichEditTextMeasurer
             }
 
             height = metrics.Height;
+            if (text is { Length: > 0 })
+            {
+                int[] nativeAdvances = new int[text.Length];
+                if (!GetTextExtentExPoint(deviceContext, text, text.Length, int.MaxValue,
+                    out int fittedCharacters, nativeAdvances, out _) || fittedCharacters != text.Length)
+                {
+                    return false;
+                }
+
+                advances = nativeAdvances;
+            }
+
+            nativeEmSize = Math.Abs(logFont.Height);
+
             return height > 0;
         }
         finally
@@ -124,6 +191,12 @@ internal static class WinFormsRichEditTextMeasurer
     [DllImport("gdiplus.dll")]
     private static extern int GdipCreateFromHDC(nint deviceContext, out nint graphics);
 
+    [DllImport("gdiplus.dll")]
+    private static extern int GdipGetDpiX(nint graphics, out float dpi);
+
+    [DllImport("gdiplus.dll")]
+    private static extern int GdipGetDpiY(nint graphics, out float dpi);
+
     [DllImport("gdiplus.dll", CharSet = CharSet.Unicode)]
     private static extern int GdipCreateFontFamilyFromName(string name, nint collection, out nint family);
 
@@ -159,6 +232,17 @@ internal static class WinFormsRichEditTextMeasurer
 
     [DllImport("gdi32.dll", CharSet = CharSet.Unicode)]
     private static extern bool GetTextMetrics(nint deviceContext, out TextMetric metric);
+
+    [DllImport("gdi32.dll", EntryPoint = "GetTextExtentExPointW", CharSet = CharSet.Unicode)]
+    private static extern bool GetTextExtentExPoint(nint deviceContext, string text, int length,
+        int maximumExtent, out int fittedCharacters, [Out] int[] advances, out NativeSize size);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct NativeSize
+    {
+        public int Width;
+        public int Height;
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     private struct StartupInput
