@@ -2019,9 +2019,13 @@ public sealed class FormBrowseTests
     public async Task FormBrowse_navigate_menu_should_route_through_the_revision_grid_selection()
     {
         bool originalShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
+        bool originalShowGitStatus = AppSettings.ShowGitStatusForArtificialCommits;
         try
         {
             AppSettings.RevisionGraphShowArtificialCommits = true;
+            // This fixture tests navigation, not the asynchronously populated change-count
+            // filter. A saved status setting must not skip its artificial destination.
+            AppSettings.ShowGitStatusForArtificialCommits = false;
             GitModule module = CreateRepositoryWithInitialCommit();
             File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "dirty");
             ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
@@ -2051,6 +2055,7 @@ public sealed class FormBrowseTests
         finally
         {
             AppSettings.RevisionGraphShowArtificialCommits = originalShowArtificialCommits;
+            AppSettings.ShowGitStatusForArtificialCommits = originalShowGitStatus;
         }
     }
 

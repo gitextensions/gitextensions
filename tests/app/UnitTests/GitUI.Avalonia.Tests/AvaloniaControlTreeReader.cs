@@ -522,7 +522,8 @@ internal sealed class AvaloniaControlTreeReader
         bool isSpellCheckAutoComplete = IsSpellCheckAutoComplete(control);
         bool isSpellCheckTextBox = IsSpellCheckTextBox(control);
         bool isSpellCheckEditor = control.GetType().FullName == "GitUI.SpellChecker.EditNetSpell";
-        bool isDesignerLinkLabel = control is HyperlinkButton && IsDesignerMetadataControl(control);
+        bool isRuntimeLinkLabel = control is GitUI.Compat.WinFormsControls.LinkLabel;
+        bool isDesignerLinkLabel = isRuntimeLinkLabel || (control is HyperlinkButton && IsDesignerMetadataControl(control));
         bool isSourceLabelSubstitute = IsSourceLabelSubstitute(control) || isDesignerLinkLabel;
         bool isWatermarkComboBox = IsFileStatusWatermarkComboBox(control);
         bool isSourceDataGrid = control.GetType().FullName == "GitUI.Compat.WinFormsControls.DataGridView";
@@ -1088,8 +1089,12 @@ internal sealed class AvaloniaControlTreeReader
                         ? default(Thickness)
                         : GetPropertyValue(control, "Padding"))),
             Margin = ReadThicknessPair(isHostedMenuTextBox ? new Thickness(1)
-                : hasDashboardRuntimeColors || control is SearchControl
-                    ? control.Margin
+                : hasDashboardRuntimeColors
+                    // Native Dock ignores the stored Margin. Report that source property
+                    // separately from the zero runtime inset required by Avalonia layout.
+                    ? designerLayout?.Margin ?? (isDesignerMetadataControl && !isSurfaceRoot
+                        ? GetDefaultDesignerMargin(control, sourceType) : control.Margin)
+                : control is SearchControl ? control.Margin
                 : isComboBoxPopup || isComboBoxPopupItem
                 ? default(Thickness)
                 : isSettingsRootTable ? new Thickness(3)
@@ -1215,6 +1220,8 @@ internal sealed class AvaloniaControlTreeReader
                     ? formCommitSemanticColors
                 : formBrowseSemanticColors is not null
                     ? formBrowseSemanticColors
+                : isRuntimeLinkLabel
+                    ? ReadRuntimeLinkColors(control)
                 : hasDashboardRuntimeColors
                     // parity-scaffolding: Dashboard appearance setters override inherited/Designer
                     // colors at runtime. Read the actual brushes, never substitute old defaults.
@@ -1786,6 +1793,22 @@ internal sealed class AvaloniaControlTreeReader
             Columns = ReadColumns(control),
             Children = children
         };
+
+        if (isRuntimeLinkLabel)
+        {
+            // Anonymous native LinkLabels have no Designer metadata. Report the actual
+            // runtime adapter's label semantics, not those of its routed-button renderer.
+            node = node with
+            {
+                AutoSize = true,
+                Alignment = "MiddleLeft",
+                Anchor = ["Top", "Left"],
+                Dock = "None",
+                FlatStyle = null,
+                TabIndex = ordinal,
+                TabStop = control.Focusable,
+            };
+        }
 
         if (isSurfaceRoot
             && !isPopupRoot
@@ -4048,6 +4071,11 @@ internal sealed class AvaloniaControlTreeReader
 
     private string? GetSourceType(Control control, string? fieldName)
     {
+        if (control is GitUI.Compat.WinFormsControls.LinkLabel)
+        {
+            return "System.Windows.Forms.LinkLabel";
+        }
+
         if (!_usesDesignerLayoutMetadata || fieldName is null)
         {
             return null;
@@ -4601,6 +4629,12 @@ internal sealed class AvaloniaControlTreeReader
 
     private IEnumerable<Control> GetSemanticChildren(Control control)
     {
+        if (control is GitUI.Compat.WinFormsControls.LinkLabel)
+        {
+            // Its image and glyph presenters paint the native link, which has no child HWNDs.
+            return [];
+        }
+
         if (IsSpellCheckAutoComplete(control))
         {
             return [];
@@ -4759,6 +4793,36 @@ internal sealed class AvaloniaControlTreeReader
            && control.GetLogicalAncestors()
                .OfType<Control>()
                .Any(ancestor => ancestor.GetType().Name.StartsWith("SearchControl", StringComparison.Ordinal));
+
+    private CaptureColors ReadRuntimeLinkColors(Control control)
+    {
+        string? background = null;
+        foreach (Control owner in control.GetLogicalAncestors().OfType<Control>())
+        {
+            if (GetPropertyValue(owner, "Background") is ISolidColorBrush { Color.A: > 0 } brush)
+            {
+                background = BrushToArgb(brush);
+                break;
+            }
+        }
+
+        CaptureColors colors = ReadColors(control);
+        SortedDictionary<string, string> additional = new(
+            colors.Additional.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal), StringComparer.Ordinal)
+        {
+            ["controlForeground"] = BrushToArgb(Avalonia.Controls.Documents.TextElement.GetForeground(
+                control.Parent as Control ?? throw new InvalidDataException("The runtime link has no ambient owner.")))
+                ?? throw new InvalidDataException("The runtime link's ambient foreground did not resolve."),
+        };
+        return colors with
+        {
+            Foreground = BrushToArgb(GetPropertyValue(control, "Foreground")),
+            Background = background,
+            DisabledBackground = background,
+            Border = null,
+            Additional = additional,
+        };
+    }
 
     private CaptureColors ReadColors(Control control)
     {

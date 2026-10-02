@@ -28,6 +28,126 @@ public sealed class DashboardTests
 {
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    [TestCase(12)]
+    [TestCase(19)]
+    [TestCase(27)]
+    public void Dashboard_glyph_padding_should_follow_the_current_font_metric_not_a_captured_offset(int fontSize)
+    {
+        TextBlock text = new() { FontFamily = new Avalonia.Media.FontFamily("Segoe UI"), FontSize = fontSize };
+        Thickness padding = WinFormsTextMeasurer.GetTextRendererPadding(text);
+        padding.Left.Should().BeGreaterThan(0);
+        padding.Right.Should().BeGreaterThanOrEqualTo(padding.Left);
+        padding.Left.Should().Be(Math.Ceiling(padding.Left));
+        padding.Right.Should().Be(Math.Ceiling(padding.Right));
+        padding.Top.Should().Be(0);
+        padding.Bottom.Should().Be(0);
+        Size padded = WinFormsTextMeasurer.MeasureTextRenderer(text, "Clone repository");
+        Size unpadded = WinFormsTextMeasurer.MeasureSize(text, "Clone repository");
+        padded.Width.Should().Be(unpadded.Width + padding.Left + padding.Right);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Dashboard_should_recreate_anonymous_source_links_in_order_and_inherit_the_selected_font()
+    {
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        Window window = new() { Width = 686, Height = 550, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Border start = dashboard.FindControl<Border>("flpnlStart")!;
+            Border contribute = dashboard.FindControl<Border>("flpnlContribute")!;
+            WinFormsControls.LinkLabel[] original = [.. ((StackPanel)start.Child!).Children.OfType<WinFormsControls.LinkLabel>()];
+            original.Select(link => link.Text).Take(3).Should().Equal("Create new repository", "Open repository", "Clone repository");
+            original.Should().OnlyContain(link => string.IsNullOrEmpty(link.Name));
+            original.Select(link => link.TabIndex).Should().Equal(Enumerable.Range(0, original.Length));
+            original.Should().OnlyContain(link => link.Padding == new Thickness(24, 3, 3, 3)
+                && link.Margin == new Thickness(3, 0, 3, 8)
+                && link.FontSize == AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size));
+            WinFormsControls.LinkLabel[] contributions = [.. ((StackPanel)contribute.Child!).Children.OfType<WinFormsControls.LinkLabel>()];
+            contributions.Select(link => link.Text).Should().Equal("Develop", "Donate", "Translate", "Issues");
+            contributions.Select(link => link.TabIndex).Should().Equal(1, 2, 3, 4);
+
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            ((StackPanel)start.Child!).Children.OfType<WinFormsControls.LinkLabel>()
+                .Should().NotContain(link => original.Contains(link));
+            ((StackPanel)contribute.Child!).Children.OfType<WinFormsControls.LinkLabel>().Should().HaveCount(4);
+
+            CaptureNode root = new AvaloniaControlTreeReader(dashboard, 1)
+                .ReadPrimary(dashboard, PixelSize.FromSize(AvaloniaControlTreeReader.GetSourceClientSize(dashboard), 1)).Root;
+            CaptureNode[] links = [.. Descendants(root).Where(node => node.Type == "System.Windows.Forms.LinkLabel")];
+            links.Should().HaveCount(original.Length + 4);
+            links.Where(node => node.FieldName != null || node.Name != null || node.Children.Count != 0
+                || node.AutoSize != true || node.Alignment != "MiddleLeft" || node.TabStop != true)
+                .Select(node => $"{node.Id}: field={node.FieldName}, name={node.Name}, children={node.Children.Count}, auto={node.AutoSize}, alignment={node.Alignment}, tab={node.TabStop}")
+                .Should().BeEmpty();
+            links.Select(node => node.Text).Should().Contain("Clone repository");
+            links.Select(node => node.FlatStyle).Should().OnlyContain(flatStyle => flatStyle == null,
+                "the native capture schema reports FlatStyle only for button controls, not LinkLabel");
+            CaptureNode capturedClone = links.Single(node => node.Text == "Clone repository");
+            capturedClone.Colors.Foreground.Should().Be("#FF1E1E1E");
+            capturedClone.Colors.Background.Should().Be("#FFDBEBF8");
+            capturedClone.Colors.DisabledBackground.Should().Be(capturedClone.Colors.Background);
+            capturedClone.Colors.Additional["controlForeground"].Should().Be("#FF000000");
+            start.Margin.Should().Be(default(Thickness), "native Dock ignores the stored flow-panel margin");
+            Descendants(root).Single(node => node.FieldName == "flpnlStart").Margin!.Dip.Left.Should().Be(2);
+            Descendants(root).Single(node => node.FieldName == "pbLogo").Margin!.Dip.Left.Should().Be(3);
+        }
+        finally
+        {
+            window.Close();
+        }
+
+        return;
+
+        static IEnumerable<CaptureNode> Descendants(CaptureNode node)
+            => node.Children.SelectMany(child => new[] { child }.Concat(Descendants(child)));
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Dashboard_links_should_keep_chrome_transparent_in_hover_and_pressed_states()
+    {
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        Window window = new() { Width = 686, Height = 550, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            WinFormsControls.LinkLabel link = (WinFormsControls.LinkLabel)dashboard.GetTestAccessor().Open;
+            Avalonia.Controls.Presenters.ContentPresenter presenter = link.GetVisualDescendants()
+                .OfType<Avalonia.Controls.Presenters.ContentPresenter>().Single();
+            Point point = link.TranslatePoint(new Point(8, 8), window)!.Value;
+            window.MouseMove(point);
+            Dispatcher.UIThread.RunJobs();
+            link.IsPointerOver.Should().BeTrue();
+            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(DashboardTheme.Light.AccentedText);
+            ((Avalonia.Media.ISolidColorBrush)presenter.Background!).Color.A.Should().Be(0);
+            window.MouseDown(point, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(Avalonia.Media.Colors.Red);
+            ((Avalonia.Media.ISolidColorBrush)presenter.Background!).Color.A.Should().Be(0);
+            window.MouseUp(new Point(1, 1), MouseButton.Left);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     [TestCase(669)]
     [TestCase(1000)]
     public void Dashboard_should_allocate_source_percentage_columns_in_whole_client_pixels(int width)
@@ -279,7 +399,7 @@ public sealed class DashboardTests
             Border start = dashboard.FindControl<Border>("flpnlStart")!;
             Border contribute = dashboard.FindControl<Border>("flpnlContribute")!;
             Grid layout = dashboard.FindControl<Grid>("tableLayoutPanel1")!;
-            Button clone = dashboard.FindControl<Button>("cloneItem")!;
+            Button clone = ((StackPanel)start.Child!).Children.OfType<Button>().ElementAt(2);
             ScrollViewer scroll = dashboard.GetVisualDescendants().OfType<ScrollViewer>().First();
             start.MinHeight.Should().BeGreaterThan(0);
             contribute.Height.Should().BeGreaterThan(0);
@@ -293,7 +413,7 @@ public sealed class DashboardTests
             clone.Bounds.Height.Should().BeGreaterThan(0);
             clone.TranslatePoint(default, start)!.Value.Y.Should().BeGreaterThan(0);
             Grid content = (Grid)clone.Content!;
-            content.Children.OfType<Image>().Single().Margin.Left.Should().Be(-24);
+            content.Children.OfType<Image>().Single().Margin.Left.Should().Be(-24 + 2);
             content.Children.OfType<TextBlock>().Single().Text.Should().Be("Clone repository");
 
             // Rehost at a larger client size; the headless window does not resize like a desktop window.

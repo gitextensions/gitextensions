@@ -22,6 +22,21 @@
           <SolidColorBrush x:Key="DashboardLinkHoverBrush" Color="#484848" />
         </ResourceDictionary>
       </ResourceDictionary.ThemeDictionaries>
+      <!-- Do not base links on Fluent's button theme: its nested state styles paint
+           button backgrounds even when the source link has no button chrome. -->
+      <ControlTheme x:Key="DashboardLinkTheme" TargetType="Button">
+        <Setter Property="Template">
+          <ControlTemplate>
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              Content="{TemplateBinding Content}"
+                              Padding="{TemplateBinding Padding}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="Center" />
+          </ControlTemplate>
+        </Setter>
+      </ControlTheme>
     </ResourceDictionary>
   </UserControl.Resources>
   <UserControl.Styles>
@@ -36,9 +51,18 @@
       <Setter Property="MinHeight" Value="0" />
       <Setter Property="HorizontalAlignment" Value="Left" />
       <Setter Property="Foreground" Value="{DynamicResource DashboardLinkForegroundBrush}" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Theme" Value="{StaticResource DashboardLinkTheme}" />
     </Style>
     <Style Selector="Button.dashboard-link:pointerover">
       <Setter Property="Foreground" Value="{DynamicResource DashboardLinkHoverForegroundBrush}" />
+    </Style>
+    <Style Selector="Button.dashboard-link:pressed">
+      <!-- WinForms LinkLabel's default ActiveLinkColor is Red, independently of LinkColor. -->
+      <Setter Property="Foreground" Value="Red" />
+    </Style>
+    <Style Selector="Button.dashboard-link:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
     </Style>
   </UserControl.Styles>
   <ScrollViewer HorizontalScrollBarVisibility="Disabled"
@@ -72,11 +96,7 @@
               Grid.Row="1"
               Padding="20"
               Background="{DynamicResource DashboardStartBackgroundBrush}">
-        <StackPanel>
-          <Button x:Name="createItem" Classes="dashboard-link" />
-          <Button x:Name="openItem" Classes="dashboard-link" />
-          <Button x:Name="cloneItem" Classes="dashboard-link" />
-        </StackPanel>
+        <StackPanel />
       </Border>
       <Border x:Name="flpnlContribute"
               Grid.Row="2"
@@ -84,10 +104,6 @@
               Background="{DynamicResource DashboardContributeBackgroundBrush}">
         <StackPanel>
           <wf:Label x:Name="lblContribute" Text="Contribute" Margin="2,0,2,8" HorizontalAlignment="Left" />
-          <Button x:Name="developItem" Classes="dashboard-link" />
-          <Button x:Name="donateItem" Classes="dashboard-link" />
-          <Button x:Name="translateItem" Classes="dashboard-link" />
-          <Button x:Name="issuesItem" Classes="dashboard-link" />
         </StackPanel>
       </Border>
       </Grid>
