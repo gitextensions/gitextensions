@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
@@ -485,23 +486,22 @@ public partial class UserRepositoriesList : TranslatedControl
                 Height = 21,
                 Margin = new Thickness(0, listView1.Items.IndexOf(group) == 0 ? 0 : 3, 0, 0),
             };
-            header.Children.Add(new TextBlock
+            TextBlock caption = new()
             {
                 Text = group.Name,
-                Foreground = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(
-                    AvaloniaThemeResources.ResolveSystemColor(GitUI.Theming.ThemeModule.Settings, System.Drawing.KnownColor.HotTrack))),
                 Margin = new Thickness(10, 2, 0, 0),
                 VerticalAlignment = VerticalAlignment.Top,
                 IsHitTestVisible = false,
-            });
+            };
+            caption[!TextBlock.ForegroundProperty] = new DynamicResourceExtension("DashboardGroupHeadingBrush");
+            header.Children.Add(caption);
             Border rule = new()
             {
                 Height = 1,
-                Background = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(
-                    AvaloniaThemeResources.ResolveSystemColor(GitUI.Theming.ThemeModule.Settings, System.Drawing.KnownColor.InactiveCaption))),
                 Margin = new Thickness(4, 0, 0, 0),
                 VerticalAlignment = VerticalAlignment.Center,
             };
+            rule[!Border.BackgroundProperty] = new DynamicResourceExtension("DashboardGroupDividerBrush");
             Grid.SetColumn(rule, 1);
             header.Children.Add(rule);
 

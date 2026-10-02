@@ -527,6 +527,13 @@ public sealed class FormBrowseTests
             showBranches.Opacity.Should().Be(1);
             showReflog.Margin.Should().Be(default(Thickness));
             showBranches.Margin.Should().Be(default(Thickness));
+            StackPanel items = (StackPanel)filters.Content!;
+            form.toolStripFiltersOverflow.IsVisible.Should().Be(items.Bounds.Width > form.toolStripFiltersViewport.Viewport.Width);
+
+            form.Width = 923;
+            Dispatcher.UIThread.RunJobs();
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
             form.toolStripFiltersOverflow.IsVisible.Should().BeTrue();
         }
         finally

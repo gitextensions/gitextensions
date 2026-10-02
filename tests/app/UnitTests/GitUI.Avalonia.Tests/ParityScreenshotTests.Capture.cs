@@ -51,30 +51,63 @@ public sealed partial class ParityScreenshotTests
     private const string P02Category = "P0_2";
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
     [Category("P8.6i.126")]
-    public async Task Dashboard_capture_should_seed_the_same_normalized_history_as_the_reference_worker()
+    public async Task Capture_history_should_seed_the_same_category_independently_of_prior_Dashboard_cells(bool dashboardFirst)
     {
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
         using CaptureContext context = new();
-        Dashboard dashboard = new();
-        await PrepareViewAsync(dashboard, context);
-        IUserRepositoriesListController controller = context.Commands.GetRequiredService<IUserRepositoriesListController>();
-        (IReadOnlyList<RecentRepoInfo> recent, IReadOnlyList<RecentRepoInfo> favourites) = controller.PreRenderRepositories(string.Empty);
-        recent.Should().ContainSingle(item => item.Repo.Path == context.Module.WorkingDir);
-        favourites.Should().ContainSingle(item => item.Repo.Path == context.Module.WorkingDir && item.Repo.Category == "Development");
+        if (dashboardFirst)
+        {
+            Dashboard dashboard = new();
+            await PrepareViewAsync(dashboard, context);
+            IUserRepositoriesListController controller = context.Commands.GetRequiredService<IUserRepositoriesListController>();
+            (IReadOnlyList<RecentRepoInfo> recent, IReadOnlyList<RecentRepoInfo> favourites) = controller.PreRenderRepositories(string.Empty);
+            recent.Should().ContainSingle(item => item.Repo.Path == context.Module.WorkingDir);
+            favourites.Should().ContainSingle(item => item.Repo.Path == context.Module.WorkingDir && item.Repo.Category == "Development");
+        }
 
         FormBrowse browse = new(context.Commands);
         try
         {
             await PrepareViewAsync(browse, context);
             RepositoryHistorySnapshot snapshot = context.Commands.GetRequiredService<IRepositoryHistoryUIService>().LoadSnapshot();
-            snapshot.Favourites.Should().NotContain(item => item.Repository.Path == context.Module.WorkingDir,
-                "a Dashboard capture must not leak categorized history into a later Browse/theme cell");
+            snapshot.Favourites.Should().ContainSingle(item => item.Repository.Path == context.Module.WorkingDir
+                && item.Repository.Category == "Development",
+                "Browse and Dashboard must receive the same explicit native-reference history input");
         }
         finally
         {
             browse.Close();
+        }
+    }
+
+    [Test]
+    [Category(P02Category)]
+    public void Filter_toolbar_capture_host_should_match_the_native_AutoSize_viewport()
+    {
+        GetCaptureSize(typeof(FilterToolBar)).Should().Be((551, 25));
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public async Task FormSettings_capture_should_preserve_product_compilation_visibility()
+    {
+        AvaloniaSynchronizationContext.InstallIfNeeded();
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        using CaptureContext context = new();
+        FormSettings form = new(context.Commands);
+        try
+        {
+            bool discardVisible = form.GetTestAccessor().DiscardButton.IsVisible;
+            await PrepareViewAsync(form, context);
+            form.GetTestAccessor().DiscardButton.IsVisible.Should().Be(discardVisible);
+        }
+        finally
+        {
+            form.Close();
         }
     }
 
