@@ -455,7 +455,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         => new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Horizontal,
-            Spacing = 2,
+
+            // The native image/text slots leave three DIPs before the text rectangle.
+            Spacing = 3,
             Children =
             {
                 new Image

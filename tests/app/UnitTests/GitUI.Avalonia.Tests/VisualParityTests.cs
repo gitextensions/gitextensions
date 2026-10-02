@@ -920,6 +920,39 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Browse_commands_and_plugins_should_remeasure_for_font_and_translation_changes()
+    {
+        using FormBrowse form = new();
+        form.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Menu menu = form.FindControl<Menu>("mainMenuStrip")!;
+            foreach (string name in new[] { "commandsToolStripMenuItem", "pluginsToolStripMenuItem" })
+            {
+                MenuItem item = menu.Items.OfType<MenuItem>().Single(control => control.Name == name);
+                item.IsVisible = true;
+                Dispatcher.UIThread.RunJobs();
+                double initialWidth = item.Bounds.Width;
+                item.Header = "_A considerably longer translated command";
+                Dispatcher.UIThread.RunJobs();
+                item.Bounds.Width.Should().BeGreaterThan(initialWidth);
+                item.Width.Should().Be(Math.Ceiling(item.Width));
+
+                double translatedWidth = item.Bounds.Width;
+                item.FontSize += 4;
+                Dispatcher.UIThread.RunJobs();
+                item.Bounds.Width.Should().BeGreaterThan(translatedWidth);
+            }
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void Top_menu_should_keep_its_size_and_join_its_popup()
     {
         MenuItem child = new() { Header = "Child command" };
@@ -1146,8 +1179,8 @@ public sealed class VisualParityTests
             Point parentChevronPosition = parentChevron.TranslatePoint(default, branches)!.Value;
             parentChevronPosition.X.Should().Be(4);
             parentChevron.Bounds.Size.Should().Be(new Size(12, 12));
-            parentIconX.Should().BeApproximately(20, 0.1);
-            (parentIconX - parentChevronPosition.X - parentChevron.Bounds.Width).Should().Be(4);
+            parentIconX.Should().BeApproximately(22, 0.1);
+            (parentIconX - parentChevronPosition.X - parentChevron.Bounds.Width).Should().Be(6);
             childIconX.Should().Be(parentIconX + 19,
                 "the child icon follows the native TreeView's 19-DIP default indent");
             childTextX.Should().Be(parentTextX + 19,

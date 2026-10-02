@@ -343,6 +343,12 @@
                            Color="#A1A1A1" />
           <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
                            Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionBackgroundBrush" Color="#CCE8FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionBorderBrush" Color="#0078D4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionBackgroundBrush" Color="#D9D9D9" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionBorderBrush" Color="#949494" />
           <SolidColorBrush x:Key="GitExtensionsXhtmlLinkForegroundBrush" Color="#0066CC" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#FFFFFF" />
@@ -491,6 +497,12 @@
                            Color="#AAAA96" />
           <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
                            Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionBackgroundBrush" Color="#626262" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionBorderBrush" Color="#60CDFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionBackgroundBrush" Color="#333333" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionBorderBrush" Color="#3D3D3D" />
           <SolidColorBrush x:Key="GitExtensionsXhtmlLinkForegroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#323232" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#2E2E2E" />
@@ -1526,8 +1538,8 @@
                                 Focusable="False"
                                 IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
                 </Panel>
-                <ContentPresenter x:Name="PART_HeaderPresenter"
-                                  Grid.Column="1"
+                <Border x:Name="PART_NativeSelectionBorder" Grid.Column="1">
+                  <ContentPresenter x:Name="PART_HeaderPresenter"
                                   Focusable="False"
                                   Background="Transparent"
                                   Content="{TemplateBinding Header}"
@@ -1535,6 +1547,7 @@
                                   HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                                   VerticalAlignment="{TemplateBinding VerticalAlignment}"
                                   Margin="{TemplateBinding Padding}" />
+                </Border>
               </Grid>
             </Grid>
           </Border>
@@ -1561,6 +1574,40 @@
   </Style>
   <Style Selector="TreeView.gitextensions-native-tree:not(:focus-within) TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+  </Style>
+  <!-- Explorer paints the entire icon/label row using an image-based native theme part.
+       Owner-drawn FileStatusList trees retain their separate Highlight/AppColor palette. -->
+  <Style Selector="TreeView.gitextensions-explorer-tree TreeViewItem /template/ Border#PART_NativeSelectionBorder">
+    <Setter Property="MinHeight" Value="18" />
+    <Setter Property="Padding" Value="1,0" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree:focus-within TreeViewItem:selected /template/ Border#PART_NativeSelectionBorder">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTreeSelectionBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeTreeSelectionBorderBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree:focus-within TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsNativeTreeSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree:not(:focus-within) TreeViewItem:selected /template/ Border#PART_NativeSelectionBorder">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionBorderBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree:not(:focus-within) TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree.gitextensions-hide-tree-selection:not(:focus-within) TreeViewItem:selected /template/ Border#PART_NativeSelectionBorder">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree.gitextensions-hide-tree-selection:not(:focus-within) TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
   </Style>
 

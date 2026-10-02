@@ -138,6 +138,7 @@ public class PictureBox : Border
         VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
         Stretch = Stretch.None,
     };
+    private PictureBoxSizeMode _sizeMode;
 
     public PictureBox()
     {
@@ -147,30 +148,60 @@ public class PictureBox : Border
     public IImage? Source
     {
         get => _image.Source;
-        set => _image.Source = value;
+        set
+        {
+            _image.Source = value;
+            InvalidateArrange();
+        }
     }
 
     public PictureBoxSizeMode SizeMode
     {
-        get => _image.Stretch == Stretch.Uniform
-            ? PictureBoxSizeMode.Zoom
-            : _image.HorizontalAlignment == Avalonia.Layout.HorizontalAlignment.Center
-                ? PictureBoxSizeMode.CenterImage
-                : PictureBoxSizeMode.Normal;
+        get => _sizeMode;
         set
         {
-            bool center = value is PictureBoxSizeMode.CenterImage or PictureBoxSizeMode.Zoom;
-            _image.Stretch = value == PictureBoxSizeMode.Zoom ? Stretch.Uniform : Stretch.None;
-            _image.HorizontalAlignment = center
+            _sizeMode = value;
+            bool center = value == PictureBoxSizeMode.CenterImage;
+
+            // The owner applies Zoom's integer rectangle. A second Uniform fit would
+            // discard its independently truncated width and height.
+            _image.Stretch = value == PictureBoxSizeMode.Zoom ? Stretch.Fill : Stretch.None;
+            _image.HorizontalAlignment = value == PictureBoxSizeMode.Zoom
+                ? Avalonia.Layout.HorizontalAlignment.Stretch
+                : center
                 ? Avalonia.Layout.HorizontalAlignment.Center
                 : Avalonia.Layout.HorizontalAlignment.Left;
-            _image.VerticalAlignment = center
+            _image.VerticalAlignment = value == PictureBoxSizeMode.Zoom
+                ? Avalonia.Layout.VerticalAlignment.Stretch
+                : center
                 ? Avalonia.Layout.VerticalAlignment.Center
                 : Avalonia.Layout.VerticalAlignment.Top;
+            InvalidateArrange();
         }
     }
 
     protected override Type StyleKeyOverride => typeof(Border);
+
+    protected override Avalonia.Size ArrangeOverride(Avalonia.Size finalSize)
+    {
+        if (SizeMode != PictureBoxSizeMode.Zoom || Source is not { Size.Width: > 0, Size.Height: > 0 } source)
+        {
+            return base.ArrangeOverride(finalSize);
+        }
+
+        // WinForms PictureBox.Zoom truncates the scaled image rectangle before integer
+        // centering; Uniform stretch leaves fractional image edges and a different crop.
+        int clientWidth = (int)Math.Round(Math.Max(0, finalSize.Width - BorderThickness.Left - BorderThickness.Right));
+        int clientHeight = (int)Math.Round(Math.Max(0, finalSize.Height - BorderThickness.Top - BorderThickness.Bottom));
+        float ratio = Math.Min(clientWidth / (float)source.Size.Width,
+            clientHeight / (float)source.Size.Height);
+        int width = (int)((float)source.Size.Width * ratio);
+        int height = (int)((float)source.Size.Height * ratio);
+        double left = BorderThickness.Left + ((clientWidth - width) / 2);
+        double top = BorderThickness.Top + ((clientHeight - height) / 2);
+        _image.Arrange(new Avalonia.Rect(left, top, width, height));
+        return finalSize;
+    }
 }
 
 /// <summary>
