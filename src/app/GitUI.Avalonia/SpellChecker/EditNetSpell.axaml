@@ -34,7 +34,7 @@
                      TextBox#TextBox:focus /template/ Border#PART_BorderElement,
                      TextBox#TextBox:disabled /template/ Border#PART_BorderElement">
       <Setter Property="Background" Value="{DynamicResource GitExtensionsCommitEditorBackgroundBrush}" />
-      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="{StaticResource GitExtensionsTransparentBrush}" />
       <Setter Property="BorderThickness" Value="0" />
     </Style>
     <Style Selector="TextBox#TextBox:disabled">
@@ -53,7 +53,7 @@
     <TextBox x:Name="TextBox"
              AcceptsReturn="True"
              AcceptsTab="True"
-             BorderBrush="Transparent"
+             BorderBrush="{StaticResource GitExtensionsTransparentBrush}"
              BorderThickness="0"
              FocusAdorner="{x:Null}"
              HorizontalContentAlignment="Left"

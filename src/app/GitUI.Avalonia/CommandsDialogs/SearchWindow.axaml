@@ -7,7 +7,7 @@
         ShowInTaskbar="False"
         WindowDecorations="None"
         TransparencyLevelHint="Transparent"
-        Background="Transparent"
+        Background="{StaticResource GitExtensionsTransparentBrush}"
         Title=""
         WindowStartupLocation="CenterOwner">
   <Grid x:Name="tableLayoutPanel1"

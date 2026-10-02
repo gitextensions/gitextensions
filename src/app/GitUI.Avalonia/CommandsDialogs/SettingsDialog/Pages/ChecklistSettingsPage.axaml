@@ -19,7 +19,7 @@
       <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
     <Style Selector="Button.checklist-status:pointerover">
-      <Setter Property="Background" Value="#FFC0C0FF" />
+      <Setter Property="Background" Value="{StaticResource GitExtensionsChecklistStatusHoverBrush}" />
     </Style>
   </UserControl.Styles>
   <ScrollViewer HorizontalScrollBarVisibility="Auto"

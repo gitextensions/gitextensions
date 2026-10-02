@@ -15,7 +15,7 @@
         Title="View Pull Requests">
   <Window.Styles>
     <Style Selector="TextBlock#lblSplitter">
-      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
     </Style>
     <Style Selector="ComboBox#_selectHostedRepoCB:disabled">
       <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
@@ -28,12 +28,12 @@
     <Style Selector="ListBox.repository-host-discussion ListBoxItem">
       <Setter Property="Padding" Value="0" />
       <Setter Property="Margin" Value="0,0,0,12" />
-      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
       <Setter Property="Focusable" Value="False" />
     </Style>
     <Style Selector="ListBox.repository-host-discussion ListBoxItem:pointerover,
                      ListBox.repository-host-discussion ListBoxItem:selected">
-      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
     </Style>
   </Window.Styles>

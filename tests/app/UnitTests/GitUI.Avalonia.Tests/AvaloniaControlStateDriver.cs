@@ -410,7 +410,6 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             }
         }
 
-        int? selectedIndex = control is ListBox listBox ? listBox.SelectedIndex : null;
         if (IsFocusWithin(control))
         {
             return;
@@ -462,12 +461,6 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
         focusTarget.Focus(NavigationMethod.Tab);
         Dispatcher.UIThread.RunJobs();
-        if (selectedIndex is int originalSelectedIndex && control is ListBox focusedListBox)
-        {
-            focusedListBox.SelectedIndex = originalSelectedIndex;
-            Dispatcher.UIThread.RunJobs();
-        }
-
         if (!IsFocusWithin(control))
         {
             throw new AvaloniaCaptureStateUnsupportedException(

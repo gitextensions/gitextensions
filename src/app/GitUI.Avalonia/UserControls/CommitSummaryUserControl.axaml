@@ -9,7 +9,7 @@
                           Header="...">
     <HeaderedContentControl.HeaderTemplate>
       <DataTemplate>
-        <TextBlock Height="16"
+        <TextBlock Classes="gitextensions-summary-header-text"
                    VerticalAlignment="Center"
                    Text="{Binding}" />
       </DataTemplate>
