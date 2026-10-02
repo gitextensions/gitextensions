@@ -266,8 +266,8 @@
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Settings}" /></MenuItem.Icon>
         </wf:ToolStripMenuItem>
       </wf:ToolStripMenuItem>
-      <menus:ToolsToolStripMenuItem x:Name="toolsToolStripMenuItem" Width="47" />
-      <menus:HelpToolStripMenuItem x:Name="helpToolStripMenuItem" Width="44" />
+      <menus:ToolsToolStripMenuItem x:Name="toolsToolStripMenuItem" />
+      <menus:HelpToolStripMenuItem x:Name="helpToolStripMenuItem" />
     </wf:MenuStripEx>
     <wf:ToolStripContainer x:Name="toolPanel"
                            Background="{StaticResource GitExtensionsTransparentBrush}"

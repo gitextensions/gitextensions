@@ -72,11 +72,13 @@
                        ColumnDefinitions="7.142857*,213,85.71428*,7.142857*"
                        Margin="0"
                        Background="{StaticResource GitExtensionsTransparentBrush}">
-    <wf:Panel x:Name="pnlLeft" Grid.Column="1" Margin="0">
+    <!-- Native child HWNDs clip their children to each panel's client rectangle. -->
+    <wf:Panel x:Name="pnlLeft" Grid.Column="1" Margin="0" ClipToBounds="True">
       <Grid RowDefinitions="68,*,Auto">
       <wf:Panel x:Name="pnlLogo"
                 Height="68"
                 Padding="20,0,20,14"
+                ClipToBounds="True"
                 Background="{DynamicResource DashboardLogoBackgroundBrush}">
         <Canvas>
         <wf:PictureBox x:Name="pbLogo"
@@ -91,12 +93,14 @@
       <Border x:Name="flpnlStart"
               Grid.Row="1"
               Padding="20"
+              ClipToBounds="True"
               Background="{DynamicResource DashboardStartBackgroundBrush}">
         <StackPanel />
       </Border>
       <Border x:Name="flpnlContribute"
               Grid.Row="2"
               Padding="20,20,20,30"
+              ClipToBounds="True"
               Background="{DynamicResource DashboardContributeBackgroundBrush}">
         <StackPanel>
           <wf:Label x:Name="lblContribute" Text="Contribute" Margin="2,0,2,8" HorizontalAlignment="Left" />
