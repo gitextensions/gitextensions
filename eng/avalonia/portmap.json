@@ -184,25 +184,25 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.axaml.cs",
     "status": "functional",
     "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "2026-10-02 verified working batch based on fefa0cb764893d50e79c3427c1852a06be181d8a: Dashboard preserves the original ControlText role and a 185x44 PictureBox frame with native Zoom semantics. Its capture crops the live client viewport, not the managed scrollbar. Coupled layout, runtime link identity and native group/text painting remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/ Full six-axis parity remains incomplete."
+    "notes": "2026-10-02 verified working batch based on 63860cbc7c95fdfafbc8421ac044529ca7ee2132: Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.axaml",
     "status": "functional",
     "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "2026-10-02 verified working batch based on fefa0cb764893d50e79c3427c1852a06be181d8a: Dashboard preserves the original ControlText role and a 185x44 PictureBox frame with native Zoom semantics. Its capture crops the live client viewport, not the managed scrollbar. Coupled layout, runtime link identity and native group/text painting remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/ Full six-axis parity remains incomplete."
+    "notes": "2026-10-02 verified working batch based on 63860cbc7c95fdfafbc8421ac044529ca7ee2132: Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml.cs",
     "status": "functional",
     "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "2026-10-02 verified working batch based on fefa0cb764893d50e79c3427c1852a06be181d8a: The AutoSize column preserves the authored 445-pixel preferred list width, receives surplus width, and clips children to the native table client boundary. Actual tile presenters use the live hover brush for hover and focused/unfocused selection; group headers and focus adorners are excluded. Native list/column color roles and null container selection are reported separately from owner-drawn paint. Full group/text/context-menu parity remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/ Full six-axis parity remains incomplete."
+    "notes": "2026-10-02 verified working batch based on 63860cbc7c95fdfafbc8421ac044529ca7ee2132: Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml",
     "status": "functional",
     "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "2026-10-02 verified working batch based on fefa0cb764893d50e79c3427c1852a06be181d8a: The AutoSize column preserves the authored 445-pixel preferred list width, receives surplus width, and clips children to the native table client boundary. Actual tile presenters use the live hover brush for hover and focused/unfocused selection; group headers and focus adorners are excluded. Native list/column color roles and null container selection are reported separately from owner-drawn paint. Full group/text/context-menu parity remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-65/ Full six-axis parity remains incomplete."
+    "notes": "2026-10-02 verified working batch based on 63860cbc7c95fdfafbc8421ac044529ca7ee2132: Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/InvalidRepositoryRemover.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/InvalidRepositoryRemover.cs",

@@ -219,9 +219,18 @@ internal sealed class ControlTreeReader
             AddSemanticColorRoles(additional);
         }
 
+        bool isDashboardLink = control is LinkLabel
+            && _root.GetType().FullName == "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard";
+        if (isDashboardLink)
+        {
+            // LinkLabel paints LinkColor, not its ambient Control.ForeColor. Keep both
+            // resolved roles so glyph agreement cannot conceal a lost inherited palette.
+            additional["controlForeground"] = ColorToArgb(control.ForeColor)!;
+        }
+
         return new CaptureColors
         {
-            Foreground = ColorToArgb(control.ForeColor),
+            Foreground = ColorToArgb(isDashboardLink ? ((LinkLabel)control).LinkColor : control.ForeColor),
             Background = ColorToArgb(resolvedBackground),
             Border = border,
             SelectionForeground = selectionForeground,

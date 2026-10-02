@@ -120,6 +120,9 @@ public partial class UserRepositoriesList : TranslatedControl
         _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.Size - 1F);
         lblRecentRepositories.FontFamily = new FontFamily(AppSettings.Font.Name);
         lblRecentRepositories.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size + 5.5F);
+        lblRecentRepositories.FontStyle = FontStyle.Normal;
+        lblRecentRepositories.FontWeight = FontWeight.Normal;
+        lblRecentRepositories.Padding = WinFormsTextMeasurer.GetTextRendererPadding(lblRecentRepositories);
         lblRecentRepositories.Height = Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(
             lblRecentRepositories, lblRecentRepositories.Text ?? string.Empty).Height);
 
