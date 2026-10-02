@@ -69,11 +69,13 @@ public class FormBrowseTests
 
         bool reflogEnabled = AppSettings.ShowReflogReferences;
         bool branchFilterEnabled = AppSettings.BranchFilterEnabled;
-        bool showCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool showCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly.Value;
+        bool showOnlyFirstParent = AppSettings.ShowOnlyFirstParent;
         bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.BranchFilterEnabled.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
+        AppSettings.ShowOnlyFirstParent = false;
         AppSettings.RevisionGraphShowArtificialCommits = false;
 
         RunFormTest(
@@ -139,12 +141,26 @@ public class FormBrowseTests
                     AppSettings.BranchFilterEnabled.Value.Should().BeFalse();
                     AppSettings.ShowCurrentBranchOnly.Value.Should().BeTrue();
                     form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tscboBranchFilter.Text.Should().BeEmpty();
+
+                    // 4. Switch repos with "Show only first parent" enabled
+                    // ------------------------------------------------------------------------------------------------
+
+                    Console.WriteLine("Scenario 4: enable 'Show only first parent' and switch repo");
+                    form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tsmiShowOnlyFirstParent.PerformClick();
+                    WaitForRevisionsToBeLoaded(form);
+
+                    using ReferenceRepository anotherRepository = new();
+                    form.SetWorkingDir(anotherRepository.Module.WorkingDir);
+                    WaitForRevisionsToBeLoaded(form);
+                    // Assert
+                    AppSettings.ShowOnlyFirstParent.Should().BeTrue();
                 }
                 finally
                 {
                     AppSettings.ShowReflogReferences.Value = reflogEnabled;
                     AppSettings.BranchFilterEnabled.Value = branchFilterEnabled;
                     AppSettings.ShowCurrentBranchOnly.Value = showCurrentBranchOnly;
+                    AppSettings.ShowOnlyFirstParent = showOnlyFirstParent;
                     AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;
                 }
             });
