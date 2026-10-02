@@ -128,6 +128,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         // state must retain that product focus rather than restart tab navigation.
         if (_root.GetType().FullName is
             "GitUI.CommandsDialogs.FormCommit" or
+            "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard" or
             "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm")
         {
             return;

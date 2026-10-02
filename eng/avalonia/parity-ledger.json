@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+  "analyzedCommit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
   "axisOrder": [
     "structural",
     "functional",
@@ -2238,102 +2238,126 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [],
           "findingCount": 5,
-          "note": "Whole-type reviewed source report: 5 diagnostics. Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Windows: separate Browse 84 and Dashboard/capture-driver 39 passed; Linux: 123 passed, with a focused 39 also passed. Native sizing/reader 34 passed. These overlap, not extra unique tests. Mixed Windows runner hung in NUnit unobserved-exception formatting; aborted results are retained, not passing evidence. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 5 diagnostics. Normal capture preserves the source visible-change search focus instead of retabbing to the first link. Embedded native group/tile geometry and branch-text baselines are repaired; actual search background/menu color roles are recorded. Images, source focus-border shape, exact text and exhaustive interaction parity remain open. Windows: Browse 84 and Dashboard/capture-driver/history 48 passed; Linux: the identical 132 unique tests passed. Native consumer/reader 37 and process-start failure 2 per platform passed. Failed, aborted and temporary-diagnostic attempts remain retained and are not acceptance evidence. A narrowly scoped shared private exit-task fault observation preserves public startup errors; missing executable/directory regressions cover it. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [],
           "findingCount": 8,
-          "note": "Whole-type reviewed source report: 8 diagnostics. Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Windows: separate Browse 84 and Dashboard/capture-driver 39 passed; Linux: 123 passed, with a focused 39 also passed. Native sizing/reader 34 passed. These overlap, not extra unique tests. Mixed Windows runner hung in NUnit unobserved-exception formatting; aborted results are retained, not passing evidence. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 8 diagnostics. Normal capture preserves the source visible-change search focus instead of retabbing to the first link. Embedded native group/tile geometry and branch-text baselines are repaired; actual search background/menu color roles are recorded. Images, source focus-border shape, exact text and exhaustive interaction parity remain open. Windows: Browse 84 and Dashboard/capture-driver/history 48 passed; Linux: the identical 132 unique tests passed. Native consumer/reader 37 and process-start failure 2 per platform passed. Failed, aborted and temporary-diagnostic attempts remain retained and are not acceptance evidence. A narrowly scoped shared private exit-task fault observation preserves public startup errors; missing executable/directory regressions cover it. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/winforms-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/avalonia-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 237,
-          "note": "Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Standalone native-100 matrix. 237 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+          "findingCount": 213,
+          "note": "Normal capture preserves the source visible-change search focus instead of retabbing to the first link. Embedded native group/tile geometry and branch-text baselines are repaired; actual search background/menu color roles are recorded. Images, source focus-border shape, exact text and exhaustive interaction parity remain open. Standalone native-100 matrix. 213 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/winforms-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/avalonia-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 18,
-          "note": "Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Standalone native-100 matrix. 18 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+          "findingCount": 0,
+          "note": "Normal capture preserves the source visible-change search focus instead of retabbing to the first link. Embedded native group/tile geometry and branch-text baselines are repaired; actual search background/menu color roles are recorded. Images, source focus-border shape, exact text and exhaustive interaction parity remain open. Standalone native-100 matrix. 0 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/winforms-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/avalonia-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 6,
-          "note": "Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Standalone native-100 matrix. 6 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+          "findingCount": 0,
+          "note": "Normal capture preserves the source visible-change search focus instead of retabbing to the first link. Embedded native group/tile geometry and branch-text baselines are repaired; actual search background/menu color roles are recorded. Images, source focus-border shape, exact text and exhaustive interaction parity remain open. Standalone native-100 matrix. 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/windows-runtime/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/runtime-wayland/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/runtime-x11/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/windows-runtime/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/runtime-wayland/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/runtime-x11/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows",
@@ -2341,7 +2365,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview and higher-DPI sweep deferred."
+          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: in-window UI/measurement and private unpublished-task fault observation only; command arguments, launch topology, confinement, portals and packaging are unchanged. macOS unavailable; IDE preview and higher-DPI sweep deferred."
         }
       }
     },
@@ -2353,102 +2377,126 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [],
           "findingCount": 5,
-          "note": "Whole-type reviewed source report: 5 diagnostics. Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Windows: separate Browse 84 and Dashboard/capture-driver 39 passed; Linux: 123 passed, with a focused 39 also passed. Native sizing/reader 34 passed. These overlap, not extra unique tests. Mixed Windows runner hung in NUnit unobserved-exception formatting; aborted results are retained, not passing evidence. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 5 diagnostics. Normal capture preserves the source visible-change search focus instead of retabbing to the first link. Embedded native group/tile geometry and branch-text baselines are repaired; actual search background/menu color roles are recorded. Images, source focus-border shape, exact text and exhaustive interaction parity remain open. Windows: Browse 84 and Dashboard/capture-driver/history 48 passed; Linux: the identical 132 unique tests passed. Native consumer/reader 37 and process-start failure 2 per platform passed. Failed, aborted and temporary-diagnostic attempts remain retained and are not acceptance evidence. A narrowly scoped shared private exit-task fault observation preserves public startup errors; missing executable/directory regressions cover it. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [],
           "findingCount": 8,
-          "note": "Whole-type reviewed source report: 8 diagnostics. Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Windows: separate Browse 84 and Dashboard/capture-driver 39 passed; Linux: 123 passed, with a focused 39 also passed. Native sizing/reader 34 passed. These overlap, not extra unique tests. Mixed Windows runner hung in NUnit unobserved-exception formatting; aborted results are retained, not passing evidence. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 8 diagnostics. Normal capture preserves the source visible-change search focus instead of retabbing to the first link. Embedded native group/tile geometry and branch-text baselines are repaired; actual search background/menu color roles are recorded. Images, source focus-border shape, exact text and exhaustive interaction parity remain open. Windows: Browse 84 and Dashboard/capture-driver/history 48 passed; Linux: the identical 132 unique tests passed. Native consumer/reader 37 and process-start failure 2 per platform passed. Failed, aborted and temporary-diagnostic attempts remain retained and are not acceptance evidence. A narrowly scoped shared private exit-task fault observation preserves public startup errors; missing executable/directory regressions cover it. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/winforms-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/avalonia-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 237,
-          "note": "Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Standalone native-100 matrix. 237 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+          "findingCount": 213,
+          "note": "Normal capture preserves the source visible-change search focus instead of retabbing to the first link. Embedded native group/tile geometry and branch-text baselines are repaired; actual search background/menu color roles are recorded. Images, source focus-border shape, exact text and exhaustive interaction parity remain open. Standalone native-100 matrix. 213 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/winforms-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/avalonia-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 18,
-          "note": "Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Standalone native-100 matrix. 18 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+          "findingCount": 0,
+          "note": "Normal capture preserves the source visible-change search focus instead of retabbing to the first link. Embedded native group/tile geometry and branch-text baselines are repaired; actual search background/menu color roles are recorded. Images, source focus-border shape, exact text and exhaustive interaction parity remain open. Standalone native-100 matrix. 0 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/winforms-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/avalonia-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 6,
-          "note": "Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Standalone native-100 matrix. 6 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+          "findingCount": 0,
+          "note": "Normal capture preserves the source visible-change search focus instead of retabbing to the first link. Embedded native group/tile geometry and branch-text baselines are repaired; actual search background/menu color roles are recorded. Images, source focus-border shape, exact text and exhaustive interaction parity remain open. Standalone native-100 matrix. 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/windows-runtime/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/runtime-wayland/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/runtime-x11/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/windows-runtime/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/runtime-wayland/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/runtime-x11/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows",
@@ -2456,7 +2504,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview and higher-DPI sweep deferred."
+          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: in-window UI/measurement and private unpublished-task fault observation only; command arguments, launch topology, confinement, portals and packaging are unchanged. macOS unavailable; IDE preview and higher-DPI sweep deferred."
         }
       }
     },
@@ -2693,115 +2741,135 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [],
           "findingCount": 19,
-          "note": "Whole-type reviewed source report: 19 diagnostics. Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Windows: separate Browse 84 and Dashboard/capture-driver 39 passed; Linux: 123 passed, with a focused 39 also passed. Native sizing/reader 34 passed. These overlap, not extra unique tests. Mixed Windows runner hung in NUnit unobserved-exception formatting; aborted results are retained, not passing evidence. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 19 diagnostics. Repository group headers use native 96-DPI LVM_GETGROUPRECT defaults, with source-inner tile Bounds and measured text height. Hover paints those bounds; a real pointer reveals Actions and opens its retained menu without a mismatched-owner exception. Capture reads the actual configured search background. Images, header-task popup pixels, search focus-border shape and exhaustive state coverage remain open. Windows: Browse 84 and Dashboard/capture-driver/history 48 passed; Linux: the identical 132 unique tests passed. Native consumer/reader 37 and process-start failure 2 per platform passed. Failed, aborted and temporary-diagnostic attempts remain retained and are not acceptance evidence. A narrowly scoped shared private exit-task fault observation preserves public startup errors; missing executable/directory regressions cover it. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [],
           "findingCount": 44,
-          "note": "Whole-type reviewed source report: 44 diagnostics. Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Windows: separate Browse 84 and Dashboard/capture-driver 39 passed; Linux: 123 passed, with a focused 39 also passed. Native sizing/reader 34 passed. These overlap, not extra unique tests. Mixed Windows runner hung in NUnit unobserved-exception formatting; aborted results are retained, not passing evidence. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 44 diagnostics. Repository group headers use native 96-DPI LVM_GETGROUPRECT defaults, with source-inner tile Bounds and measured text height. Hover paints those bounds; a real pointer reveals Actions and opens its retained menu without a mismatched-owner exception. Capture reads the actual configured search background. Images, header-task popup pixels, search focus-border shape and exhaustive state coverage remain open. Windows: Browse 84 and Dashboard/capture-driver/history 48 passed; Linux: the identical 132 unique tests passed. Native consumer/reader 37 and process-start failure 2 per platform passed. Failed, aborted and temporary-diagnostic attempts remain retained and are not acceptance evidence. A narrowly scoped shared private exit-task fault observation preserves public startup errors; missing executable/directory regressions cover it. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/winforms-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/avalonia-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 69,
-          "note": "Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 69 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+          "findingCount": 48,
+          "note": "Repository group headers use native 96-DPI LVM_GETGROUPRECT defaults, with source-inner tile Bounds and measured text height. Hover paints those bounds; a real pointer reveals Actions and opens its retained menu without a mismatched-owner exception. Capture reads the actual configured search background. Images, header-task popup pixels, search focus-border shape and exhaustive state coverage remain open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 48 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/winforms-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/avalonia-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 18,
-          "note": "Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 18 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+          "findingCount": 0,
+          "note": "Repository group headers use native 96-DPI LVM_GETGROUPRECT defaults, with source-inner tile Bounds and measured text height. Hover paints those bounds; a real pointer reveals Actions and opens its retained menu without a mismatched-owner exception. Capture reads the actual configured search background. Images, header-task popup pixels, search focus-border shape and exhaustive state coverage remain open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 0 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-product-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final-product.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/linux-last-layout.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/winforms-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/avalonia-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 3,
-          "note": "Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 3 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+          "findingCount": 0,
+          "note": "Repository group headers use native 96-DPI LVM_GETGROUPRECT defaults, with source-inner tile Bounds and measured text height. Hover paints those bounds; a real pointer reveals Actions and opens its retained menu without a mismatched-owner exception. Capture reads the actual configured search background. Images, header-task popup pixels, search focus-border shape and exhaustive state coverage remain open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/diff-native100-final-isolated/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/tests/windows-final.trx",
@@ -2811,13 +2879,17 @@
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/windows-runtime-final-retry/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-wayland-final/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-63/runtime-x11-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/windows-runtime/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/runtime-wayland/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/runtime-x11/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/windows-runtime/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/runtime-wayland/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/runtime-x11/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows",
@@ -2825,7 +2897,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview and higher-DPI sweep deferred."
+          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: in-window UI/measurement and private unpublished-task fault observation only; command arguments, launch topology, confinement, portals and packaging are unchanged. macOS unavailable; IDE preview and higher-DPI sweep deferred."
         }
       }
     },
@@ -2837,102 +2909,126 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [],
           "findingCount": 19,
-          "note": "Whole-type reviewed source report: 19 diagnostics. Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Windows: separate Browse 84 and Dashboard/capture-driver 39 passed; Linux: 123 passed, with a focused 39 also passed. Native sizing/reader 34 passed. These overlap, not extra unique tests. Mixed Windows runner hung in NUnit unobserved-exception formatting; aborted results are retained, not passing evidence. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 19 diagnostics. Repository group headers use native 96-DPI LVM_GETGROUPRECT defaults, with source-inner tile Bounds and measured text height. Hover paints those bounds; a real pointer reveals Actions and opens its retained menu without a mismatched-owner exception. Capture reads the actual configured search background. Images, header-task popup pixels, search focus-border shape and exhaustive state coverage remain open. Windows: Browse 84 and Dashboard/capture-driver/history 48 passed; Linux: the identical 132 unique tests passed. Native consumer/reader 37 and process-start failure 2 per platform passed. Failed, aborted and temporary-diagnostic attempts remain retained and are not acceptance evidence. A narrowly scoped shared private exit-task fault observation preserves public startup errors; missing executable/directory regressions cover it. This is not exhaustive six-axis coverage."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [],
           "findingCount": 44,
-          "note": "Whole-type reviewed source report: 44 diagnostics. Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Windows: separate Browse 84 and Dashboard/capture-driver 39 passed; Linux: 123 passed, with a focused 39 also passed. Native sizing/reader 34 passed. These overlap, not extra unique tests. Mixed Windows runner hung in NUnit unobserved-exception formatting; aborted results are retained, not passing evidence. This is not exhaustive six-axis coverage."
+          "note": "Whole-type reviewed source report: 44 diagnostics. Repository group headers use native 96-DPI LVM_GETGROUPRECT defaults, with source-inner tile Bounds and measured text height. Hover paints those bounds; a real pointer reveals Actions and opens its retained menu without a mismatched-owner exception. Capture reads the actual configured search background. Images, header-task popup pixels, search focus-border shape and exhaustive state coverage remain open. Windows: Browse 84 and Dashboard/capture-driver/history 48 passed; Linux: the identical 132 unique tests passed. Native consumer/reader 37 and process-start failure 2 per platform passed. Failed, aborted and temporary-diagnostic attempts remain retained and are not acceptance evidence. A narrowly scoped shared private exit-task fault observation preserves public startup errors; missing executable/directory regressions cover it. This is not exhaustive six-axis coverage."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/winforms-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/avalonia-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 69,
-          "note": "Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 69 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+          "findingCount": 48,
+          "note": "Repository group headers use native 96-DPI LVM_GETGROUPRECT defaults, with source-inner tile Bounds and measured text height. Hover paints those bounds; a real pointer reveals Actions and opens its retained menu without a mismatched-owner exception. Capture reads the actual configured search background. Images, header-task popup pixels, search focus-border shape and exhaustive state coverage remain open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 48 recorded visual diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/winforms-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/avalonia-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 18,
-          "note": "Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 18 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+          "findingCount": 0,
+          "note": "Repository group headers use native 96-DPI LVM_GETGROUPRECT defaults, with source-inner tile Bounds and measured text height. Hover paints those bounds; a real pointer reveals Actions and opens its retained menu without a mismatched-owner exception. Capture reads the actual configured search background. Images, header-task popup pixels, search focus-border shape and exhaustive state coverage remain open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 0 recorded themingAndColor diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/diff-native100-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/winforms-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/avalonia-native100-accepted/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/diff-native100-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/winforms-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/avalonia-native100-accepted/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 3,
-          "note": "Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 3 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
+          "findingCount": 0,
+          "note": "Repository group headers use native 96-DPI LVM_GETGROUPRECT defaults, with source-inner tile Bounds and measured text height. Hover paints those bounds; a real pointer reveals Actions and opens its retained menu without a mismatched-owner exception. Capture reads the actual configured search background. Images, header-task popup pixels, search focus-border shape and exhaustive state coverage remain open. Embedded diagnostic subset only; ambiguous duplicate field paths and parent images are not assigned to this component. 0 recorded behavioralState diagnostics, not exhaustive debt. Native 100% light/dark/custom only; higher scales deferred. All image and unmeasured interaction coverage remains open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-02",
-          "commit": "63860cbc7c95fdfafbc8421ac044529ca7ee2132",
+          "commit": "f5dfb3cb41f2d889eafe4946b877904a27a99f23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/windows-runtime/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/runtime-wayland/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/runtime-x11/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-browse-accepted.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-product-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/windows-dashboard-green.trx",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/tests/linux-dashboard-final.trx"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/windows-runtime/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/runtime-wayland/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/runtime-x11/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-dashboard-history-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-native-accepted.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-start-failure.trx",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-start-failure.trx"
           ],
           "platforms": [
             "windows",
@@ -2940,7 +3036,7 @@
             "linux-x11"
           ],
           "findingCount": 0,
-          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: ordinary in-window UI/measurement changes, no confinement/process/portal/package changes. macOS unavailable; IDE preview and higher-DPI sweep deferred."
+          "note": "Windows Browse, native Wayland in nested Weston on WSLg and X11 in nested Xephyr startup smokes were inspected. Not component-exhaustive walks. Flatpak N/A: in-window UI/measurement and private unpublished-task fault observation only; command arguments, launch topology, confinement, portals and packaging are unchanged. macOS unavailable; IDE preview and higher-DPI sweep deferred."
         }
       }
     },

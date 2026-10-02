@@ -153,6 +153,10 @@ public sealed class Executable : IExecutable
                     _process.Exited -= OnProcessExit;
                     _exitHandlerRemoved = true;
                     _exitTaskCompletionSource.TrySetException(ex);
+
+                    // Construction failed, so no caller receives this private exit task.
+                    // Observe its fault before rethrowing the same startup exception.
+                    _ = _exitTaskCompletionSource.Task.Exception;
                     throw;
                 }
 

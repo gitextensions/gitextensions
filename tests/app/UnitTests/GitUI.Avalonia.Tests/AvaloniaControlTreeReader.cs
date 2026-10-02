@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Reflection;
 using System.Text;
 using Avalonia;
@@ -792,7 +792,7 @@ internal sealed class AvaloniaControlTreeReader
             fieldName);
         bool hasDashboardRuntimeColors = sourceOwnerType.StartsWith(
                 "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.", StringComparison.Ordinal)
-            && control is Grid or Border or TextBlock or Image or ListBox or Menu or MenuItem
+            && control is Grid or Border or TextBlock or TextBox or Image or ListBox or Menu or MenuItem
                 or GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard
                 or GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList;
         bool isDashboardRepositoryList = hasDashboardRuntimeColors && semanticName == "listView1";
@@ -1225,7 +1225,9 @@ internal sealed class AvaloniaControlTreeReader
                 : hasDashboardRuntimeColors
                     // parity-scaffolding: Dashboard appearance setters override inherited/Designer
                     // colors at runtime. Read the actual brushes, never substitute old defaults.
-                    ? (isDashboardRepositoryList
+                    ? (control is TextBox
+                        ? ReadSourceInputColors(control)
+                        : isDashboardRepositoryList
                         ? ReadNativeSelectionColors(control, "GitExtensionsWindowBackgroundBrush")
                         : ReadColors(control)) with
                     {
@@ -1233,7 +1235,8 @@ internal sealed class AvaloniaControlTreeReader
                             ?? BrushToArgb(Avalonia.Controls.Documents.TextElement.GetForeground(control)),
                         Background = BrushToArgb(GetPropertyValue(control, "Background")) ?? ReadColors(control).Background,
                         DisabledBackground = BrushToArgb(GetPropertyValue(control, "Background")) ?? ReadColors(control).DisabledBackground,
-                        Border = control is TemplatedControl { BorderThickness: var border } && border == default
+                        Border = control is TextBox or Menu or MenuItem
+                            || (control is TemplatedControl { BorderThickness: var border } && border == default)
                             ? null : ReadColors(control).Border
                     }
                 : isFileStatusSplitter && IsViewPullRequestsTree(control)

@@ -28,6 +28,97 @@ public sealed class DashboardTests
 {
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    [TestCase(true)]
+    [TestCase(false)]
+    public void Dashboard_should_focus_search_after_the_initial_window_activation(bool refreshBeforeShowing)
+    {
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        if (refreshBeforeShowing)
+        {
+            dashboard.RefreshContent();
+        }
+
+        Window window = new() { Width = 686, Height = 400, Content = dashboard };
+        try
+        {
+            window.Show();
+            window.Activate();
+            Dispatcher.UIThread.RunJobs();
+            if (!refreshBeforeShowing)
+            {
+                dashboard.RefreshContent();
+                Dispatcher.UIThread.RunJobs();
+            }
+
+            window.UpdateLayout();
+            dashboard.GetTestAccessor().Repositories.GetTestAccessor().Search.IsFocused.Should().BeTrue();
+            using AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(dashboard,
+                new CaptureStatePlan { Id = "normal", Kind = CaptureStateKind.Normal });
+            dashboard.GetTestAccessor().Repositories.GetTestAccessor().Search.IsFocused.Should().BeTrue(
+                "normal capture must preserve the product's visible-change focus");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(12)]
+    [TestCase(16)]
+    [TestCase(24)]
+    public void Repository_groups_should_use_native_header_and_inner_tile_bounds(double fontSize)
+    {
+        Repository recent = new(@"C:\repos\recent");
+        Repository favourite = new(@"C:\repos\favourite") { Category = "Team" };
+        RepositoryHistorySnapshot snapshot = new(
+            [new RepositoryHistoryEntry(recent, "recent", "main", IsFavourite: false, IsAnchored: false)],
+            [new RepositoryHistoryEntry(favourite, "favourite", "main", IsFavourite: true, IsAnchored: false)]);
+        UserRepositoriesList list = new() { FontSize = fontSize };
+        list.Initialize(CreateController(snapshot), CreateHistory(snapshot), () => Substitute.For<IGitUICommands>());
+        list.ShowRecentRepositories(reloadData: false);
+        Window window = new() { Width = 700, Height = 500, Content = list };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            ListBoxItem[] containers = [.. list.GetVisualDescendants().OfType<ListBoxItem>()];
+            ListBoxItem[] headers = [.. containers.Where(item => item.Content is UserRepositoriesList.RepositoryGroupItem)];
+            headers.Should().HaveCount(2);
+            foreach (ListBoxItem container in headers)
+            {
+                Grid header = container.GetVisualDescendants().OfType<Grid>()
+                    .Single(grid => grid.Children.OfType<Button>().Any());
+                header.Bounds.Height.Should().Be(21);
+                TextBlock caption = header.Children.OfType<TextBlock>().Single();
+                caption.Bounds.X.Should().Be(10);
+                caption.Bounds.Y.Should().Be(2);
+            }
+
+            ListBoxItem firstTile = containers.Single(item => item.Content is UserRepositoriesList.RepositoryListItem { IsFavourite: false });
+            Grid paintedBounds = firstTile.GetVisualDescendants().OfType<Grid>()
+                .Single(grid => grid.Classes.Contains("repository-tile-content"));
+            paintedBounds.TranslatePoint(default, firstTile)!.Value.Should().Be(new Point(2, 1));
+            paintedBounds.Bounds.Width.Should().Be(firstTile.Bounds.Width - 4);
+            paintedBounds.Bounds.Height.Should().Be(firstTile.Bounds.Height - 2);
+            firstTile.Bounds.Y.Should().Be(headers[0].Bounds.Bottom);
+            headers[1].Bounds.Y.Should().Be(firstTile.Bounds.Bottom);
+            Grid secondHeader = headers[1].GetVisualDescendants().OfType<Grid>()
+                .Single(grid => grid.Children.OfType<Button>().Any());
+            secondHeader.Bounds.Y.Should().Be(3);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     [TestCase(12)]
     [TestCase(19)]
     [TestCase(27)]
@@ -294,25 +385,24 @@ public sealed class DashboardTests
             window.UpdateLayout();
             ListBoxItem tile = list.GetVisualDescendants().OfType<ListBoxItem>()
                 .Single(item => item.Content is UserRepositoriesList.RepositoryListItem);
-            Avalonia.Controls.Presenters.ContentPresenter presenter = tile.GetVisualDescendants()
-                .OfType<Avalonia.Controls.Presenters.ContentPresenter>()
-                .Single(item => item.Name == "PART_ContentPresenter");
+            Grid paintedBounds = tile.GetVisualDescendants().OfType<Grid>()
+                .Single(item => item.Classes.Contains("repository-tile-content"));
             list.HoverColor = Avalonia.Media.Colors.Cyan;
             window.MouseMove(tile.TranslatePoint(new Point(10, 10), window)!.Value);
             Dispatcher.UIThread.RunJobs();
             tile.IsPointerOver.Should().BeTrue();
-            ((Avalonia.Media.SolidColorBrush)presenter.Background!).Color.Should().Be(Avalonia.Media.Colors.Cyan);
+            ((Avalonia.Media.SolidColorBrush)paintedBounds.Background!).Color.Should().Be(Avalonia.Media.Colors.Cyan);
             window.MouseMove(new Point(699, 399));
             list.GetTestAccessor().List.SelectedItem = tile.Content;
             tile.Focus();
             Dispatcher.UIThread.RunJobs();
-            ((Avalonia.Media.SolidColorBrush)presenter.Background!).Color.Should().Be(Avalonia.Media.Colors.Cyan);
+            ((Avalonia.Media.SolidColorBrush)paintedBounds.Background!).Color.Should().Be(Avalonia.Media.Colors.Cyan);
             otherInput.Focus();
             Dispatcher.UIThread.RunJobs();
-            ((Avalonia.Media.SolidColorBrush)presenter.Background!).Color.Should().Be(Avalonia.Media.Colors.Cyan);
+            ((Avalonia.Media.SolidColorBrush)paintedBounds.Background!).Color.Should().Be(Avalonia.Media.Colors.Cyan);
             list.HoverColor = Avalonia.Media.Colors.Gold;
             Dispatcher.UIThread.RunJobs();
-            ((Avalonia.Media.SolidColorBrush)presenter.Background!).Color.Should().Be(Avalonia.Media.Colors.Gold);
+            ((Avalonia.Media.SolidColorBrush)paintedBounds.Background!).Color.Should().Be(Avalonia.Media.Colors.Gold);
             tile.FocusAdorner.Should().BeNull();
         }
         finally
@@ -334,6 +424,7 @@ public sealed class DashboardTests
             list.HeaderBackColor = Avalonia.Media.Color.FromRgb(78, 90, 12);
             list.ForeColor = Avalonia.Media.Color.FromRgb(34, 56, 78);
             list.MainBackColor = Avalonia.Media.Color.FromRgb(90, 12, 34);
+            list.SearchBackColor = Avalonia.Media.Color.FromRgb(23, 45, 67);
             window.UpdateLayout();
             CaptureNode root = new AvaloniaControlTreeReader(list, 1)
                 .ReadPrimary(list, PixelSize.FromSize(list.Bounds.Size, 1)).Root;
@@ -341,6 +432,9 @@ public sealed class DashboardTests
             CaptureNode header = Nodes(root).Single(node => node.FieldName == "pnlHeader");
             heading.Colors.Foreground.Should().Be("#FF0C2238");
             header.Colors.Background.Should().Be("#FF4E5A0C");
+            CaptureNode search = Nodes(root).Single(node => node.FieldName == "textBoxSearch");
+            search.Colors.Background.Should().Be("#FF172D43");
+            search.Colors.DisabledBackground.Should().Be("#FF172D43");
             Nodes(root).Single(node => node.FieldName == "listView1").Colors.Foreground.Should().Be("#FF22384E");
             CaptureNode repositoryList = Nodes(root).Single(node => node.FieldName == "listView1");
             repositoryList.ControlKind.Should().Be("list");
@@ -359,6 +453,7 @@ public sealed class DashboardTests
                 CaptureNode menu = Nodes(root).Single(node => node.FieldName == field);
                 menu.Colors.Foreground.Should().Be("#FF22384E");
                 menu.Colors.Background.Should().Be("#FF5A0C22");
+                menu.Colors.Border.Should().BeNull("native menu items expose no border-color property");
             }
         }
         finally
@@ -513,13 +608,28 @@ public sealed class DashboardTests
             categoryAction.IsVisible.Should().BeFalse();
             Grid groupHeader = (Grid)categoryAction.Parent!;
             groupHeader.Children.OfType<Border>().Single().Bounds.Width.Should().BeGreaterThan(0);
-            Avalonia.Input.Pointer pointer = new(1, PointerType.Mouse, true);
-            groupHeader.RaiseEvent(new PointerEventArgs(
-                InputElement.PointerEnteredEvent, groupHeader, pointer, groupHeader, default, 0, default, KeyModifiers.None));
+            window.MouseMove(groupHeader.TranslatePoint(new Point(20, 10), window)!.Value);
+            Dispatcher.UIThread.RunJobs();
             categoryAction.IsVisible.Should().BeTrue();
-            groupHeader.RaiseEvent(new PointerEventArgs(
-                InputElement.PointerExitedEvent, groupHeader, pointer, groupHeader, default, 0, default, KeyModifiers.None));
+            window.MouseMove(categoryAction.TranslatePoint(new Point(categoryAction.Bounds.Width / 2, 10), window)!.Value);
+            Dispatcher.UIThread.RunJobs();
+            categoryAction.IsVisible.Should().BeTrue("moving onto the task link must not dismiss it");
+            window.MouseMove(new Point(window.Bounds.Width - 1, window.Bounds.Height - 1));
+            Dispatcher.UIThread.RunJobs();
             categoryAction.IsVisible.Should().BeFalse();
+
+            window.MouseMove(groupHeader.TranslatePoint(new Point(20, 10), window)!.Value);
+            Dispatcher.UIThread.RunJobs();
+            Point actionPoint = categoryAction.TranslatePoint(new Point(categoryAction.Bounds.Width / 2, 10), window)!.Value;
+            window.MouseDown(actionPoint, MouseButton.Left);
+            window.MouseUp(actionPoint, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            ContextMenu categoryMenu = list.FindControl<ContextMenu>("contextMenuStripCategory")!;
+            categoryMenu.IsOpen.Should().BeTrue("the native group task opens its category menu");
+            list.FindControl<MenuItem>("tsmiCategoryRename")!.IsVisible.Should().BeTrue();
+            list.FindControl<MenuItem>("tsmiCategoryDelete")!.IsVisible.Should().BeTrue();
+            list.FindControl<MenuItem>("tsmiCategoryClear")!.IsVisible.Should().BeFalse();
+            categoryMenu.Close();
 
             Avalonia.Media.Color hoverColor = Avalonia.Media.Color.FromRgb(1, 2, 3);
             list.HoverColor = hoverColor;
@@ -555,7 +665,11 @@ public sealed class DashboardTests
             ListBoxItem container = list.GetVisualDescendants()
                 .OfType<ListBoxItem>()
                 .Single(item => item.Content is UserRepositoriesList.RepositoryListItem);
-            Grid row = container.GetVisualDescendants().OfType<Grid>().Single(grid => grid.MinHeight == 50);
+            Grid row = container.GetVisualDescendants().OfType<Grid>()
+                .Single(grid => grid.Classes.Contains("repository-tile-content"));
+            row.MinHeight.Should().Be(48);
+            row.Width.Should().Be(((UserRepositoriesList.RepositoryListItem)container.Content!).TileSize.Width - 4);
+            row.Margin.Should().Be(new Thickness(2, 1));
             Image[] images = [.. row.Children.OfType<Image>()];
 
             images.Should().HaveCount(2);
@@ -668,8 +782,8 @@ public sealed class DashboardTests
                 TextBlock captionProbe = row.GetVisualDescendants().OfType<TextBlock>().Single(text => text.Text == caption);
                 double measuredCaption = WinFormsTextMeasurer.MeasureTextRenderer(captionProbe, caption).Width;
 
-                row.Width.Should().Be(Math.Ceiling(measuredCaption + GitUI.Properties.Images.DashboardFolderGit.Size.Width + 50));
-                row.MinHeight.Should().BeGreaterThanOrEqualTo(50);
+                row.Width.Should().Be(Math.Ceiling(measuredCaption + GitUI.Properties.Images.DashboardFolderGit.Size.Width + 50) - 4);
+                row.MinHeight.Should().BeGreaterThanOrEqualTo(48);
             }
             finally
             {
