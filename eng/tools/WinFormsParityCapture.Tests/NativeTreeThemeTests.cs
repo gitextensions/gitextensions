@@ -17,6 +17,178 @@ public sealed class NativeTreeThemeTests
     private const uint GetItemRectangleMessage = 0x1104;
 
     [Test]
+    public void Native_tree_image_list_should_preserve_the_source_padding_alpha_pipeline()
+    {
+        using Bitmap source = (Bitmap)GitUI.Properties.Images.BranchLocalRoot.Clone();
+        using Bitmap padded = new(source.Width, source.Height + 2, PixelFormat.Format32bppArgb);
+        using (Graphics graphics = Graphics.FromImage(padded))
+        {
+            graphics.DrawImageUnscaled(source, 0, 1);
+        }
+
+        using ImageList images = new() { ImageSize = padded.Size, ColorDepth = ColorDepth.Depth32Bit };
+        images.Images.Add(padded);
+        using Bitmap retained = new(images.Images[0]);
+        using Bitmap drawn = new(padded.Width, padded.Height, PixelFormat.Format24bppRgb);
+        using (Graphics graphics = Graphics.FromImage(drawn))
+        {
+            nint deviceContext = graphics.GetHdc();
+            nint brush = CreateSolidBrush(0xFFFFFF);
+            try
+            {
+                NativeRectangle bounds = new() { Right = drawn.Width, Bottom = drawn.Height };
+                FillRect(deviceContext, ref bounds, brush).Should().NotBe(0);
+                ImageListDraw(images.Handle, 0, deviceContext, 0, 0, 1).Should().BeTrue();
+            }
+            finally
+            {
+                DeleteObject(brush);
+                graphics.ReleaseHdc(deviceContext);
+            }
+        }
+
+        foreach (Point point in new[] { new Point(0, 1), new Point(0, 9), new Point(2, 9) })
+        {
+            Color original = source.GetPixel(point.X, point.Y - 1);
+            Color intermediate = padded.GetPixel(point.X, point.Y);
+            Color retainedColor = retained.GetPixel(point.X, point.Y);
+            Color actual = drawn.GetPixel(point.X, point.Y);
+            TestContext.Progress.WriteLine($"point={point} source=#{original.ToArgb():X8} padded=#{intermediate.ToArgb():X8} retained=#{retainedColor.ToArgb():X8} drawn=#{actual.ToArgb():X8}");
+            intermediate.A.Should().Be(original.A);
+            actual.A.Should().Be(byte.MaxValue);
+        }
+    }
+
+    [Test]
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(true, true)]
+    public void Native_tree_message_driven_selection_should_separate_hit_testing_and_focus_cues(bool overLabel, bool showFocusCues)
+    {
+        using Font font = new("Segoe UI", 9);
+        using Bitmap image = new(16, 18);
+        using ImageList images = new() { ImageSize = image.Size, ColorDepth = ColorDepth.Depth32Bit };
+        images.Images.Add(image);
+        using Form window = new() { ClientSize = new Size(300, 180), ShowInTaskbar = false, AutoScaleMode = AutoScaleMode.None };
+        using NativeTreeView tree = new() { Font = font, ImageList = images, BorderStyle = BorderStyle.None, FullRowSelect = true, Bounds = new Rectangle(0, 0, 240, 140), BackColor = Color.White };
+        TreeNode node = tree.Nodes.Add("Branches");
+        window.Controls.Add(tree);
+        window.Show();
+        window.Activate();
+        tree.SelectedNode = node;
+        tree.Focus().Should().BeTrue();
+        Rectangle text = GetItemRectangle(tree, node, textOnly: true);
+        Point position = new(overLabel ? text.Left + 10 : tree.Width - 10, text.Top + (text.Height / 2));
+        TreeViewHitTestInfo hit = tree.HitTest(position);
+        hit.Location.Should().Be(overLabel ? TreeViewHitTestLocations.Label : TreeViewHitTestLocations.RightOfLabel);
+        hit.Node.Should().BeSameAs(node);
+
+        // Drive the real native WndProc without claiming physical desktop hover.
+        // Focus cues are a separate native UI state and can overpaint the theme edge.
+        SendMessage(window.Handle, 0x128, showFocusCues ? 0x10002 : 0x10001, 0);
+        SendMessage(tree.Handle, 0x200, 0, (position.Y << 16) | position.X);
+        Application.DoEvents();
+        nint uiState = SendMessage(tree.Handle, 0x129, 0, 0);
+        ((uiState & 1) == 0).Should().Be(showFocusCues);
+        tree.Focused.Should().BeTrue();
+        tree.SelectedNode.Should().BeSameAs(node);
+        tree.HotTracking.Should().BeFalse();
+        tree.Refresh();
+        using CaptureImageResult capture = ImageCapture.Capture(window, [], []);
+        Point origin = tree.PointToScreen(Point.Empty) - new Size(capture.ScreenBounds.Location);
+        Color fill = capture.Bitmap.GetPixel(origin.X + text.Left - 3, origin.Y + text.Top + 2);
+        NativeTreePalette palette = NativeTreePalette.Read(tree, 3);
+        Color[] adjacentEdge = Enumerable.Range(text.Left + 8, 4)
+            .Select(x => capture.Bitmap.GetPixel(origin.X + x, origin.Y + text.Top)).ToArray();
+        TestContext.Progress.WriteLine($"inputMode=windowMessage overLabel={overLabel} showFocusCues={showFocusCues} uiState={uiState} messagePosition={position} hit={hit.Location} hitNode={hit.Node?.Text} fill=#{fill.ToArgb():X8} adjacentEdge={string.Join(',', adjacentEdge.Select(color => $"#{color.ToArgb():X8}"))} hotTracking={tree.HotTracking}");
+        if (!showFocusCues)
+        {
+            adjacentEdge.Should().OnlyContain(color => color == palette.Border, "native selected part3 is not a keyboard focus rectangle");
+        }
+        else
+        {
+            adjacentEdge.Should().OnlyContain(color => color == palette.Border || color.ToArgb() == Color.Black.ToArgb(),
+                "visible keyboard focus cues may overpaint the selected theme edge, independently of HotTracking");
+        }
+
+        fill.Should().Be(palette.Background);
+    }
+
+    [Test]
+    [TestCase("Explorer::TREEVIEW", 3)]
+    [TestCase("Explorer::TREEVIEW", 5)]
+    [TestCase("Explorer::TREEVIEW", 6)]
+    [TestCase("DarkMode_Explorer::TREEVIEW", 3)]
+    [TestCase("DarkMode_Explorer::TREEVIEW", 5)]
+    [TestCase("DarkMode_Explorer::TREEVIEW", 6)]
+    public void Native_tree_image_parts_should_resolve_against_the_control_backdrop(string className, int state)
+    {
+        NativeTreePalette black = NativeTreePalette.Read(className, state, Color.Black);
+        NativeTreePalette white = NativeTreePalette.Read(className, state, Color.White);
+        foreach (Color backdrop in new[] { Color.FromArgb(43, 45, 58), Color.FromArgb(170, 210, 130), Color.FromArgb(100, 100, 100), Color.FromArgb(1, 2, 3), Color.FromArgb(127, 128, 129) })
+        {
+            NativeTreePalette actual = NativeTreePalette.Read(className, state, backdrop);
+            actual.Foreground.Should().Be(white.Foreground);
+            actual.Background.A.Should().Be(byte.MaxValue);
+            actual.Background.Should().Be(CompositeSamples(backdrop, black.Background, white.Background));
+            actual.Border.Should().Be(CompositeSamples(backdrop, black.Border, white.Border));
+            TestContext.Progress.WriteLine($"class={className} state={state} backdrop=#{backdrop.ToArgb():X8} black=#{black.Background.ToArgb():X8} white=#{white.Background.ToArgb():X8} actual=#{actual.Background.ToArgb():X8} blackEdge=#{black.Border.ToArgb():X8} whiteEdge=#{white.Border.ToArgb():X8} actualEdge=#{actual.Border.ToArgb():X8}");
+            if (state != 5)
+            {
+                actual.Border.Should().Be(white.Border, "the focused selected/hot-selected edge is opaque");
+                if (className.StartsWith("DarkMode", StringComparison.Ordinal))
+                {
+                    actual.Background.Should().Be(white.Background, "the dark focused selected/hot-selected image part is opaque");
+                }
+            }
+        }
+    }
+
+    [Test]
+    [TestCase(9, "Branches", FontStyle.Regular)]
+    [TestCase(9, "main", FontStyle.Bold)]
+    [TestCase(9, "Wörk & branches", FontStyle.Italic)]
+    [TestCase(11, "Branches", FontStyle.Regular)]
+    [TestCase(11, "main", FontStyle.Bold)]
+    [TestCase(11, "Wörk & branches", FontStyle.Italic)]
+    public void Native_tree_label_extents_should_follow_the_node_font(float points, string caption, FontStyle style)
+    {
+        using Font font = new("Segoe UI", points);
+        using Font nodeFont = new(font, style);
+        using Bitmap image = new(16, 18);
+        using ImageList images = new() { ImageSize = image.Size, ColorDepth = ColorDepth.Depth32Bit };
+        images.Images.Add(image);
+        using Form window = new() { ClientSize = new Size(320, 180), ShowInTaskbar = false, AutoScaleMode = AutoScaleMode.None };
+        using NativeTreeView tree = new() { Font = font, ImageList = images, BorderStyle = BorderStyle.None, Dock = DockStyle.Fill };
+        TreeNode node = tree.Nodes.Add(caption);
+        node.NodeFont = nodeFont;
+        window.Controls.Add(tree);
+        window.Show();
+        tree.Refresh();
+        Application.DoEvents();
+        Rectangle text = GetItemRectangle(tree, node, textOnly: true);
+        Size gdi = TextRenderer.MeasureText(caption, nodeFont, Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix);
+        Size ambient = TextRenderer.MeasureText(caption, font, Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix);
+        nint fontHandle = SendMessage(tree.Handle, 0x31, 0, 0);
+        nint deviceContext = GetDC(tree.Handle);
+        nint previousFont = SelectObject(deviceContext, fontHandle);
+        NativeSize advance;
+        try
+        {
+            GetTextExtentPoint32(deviceContext, caption, caption.Length, out advance).Should().BeTrue();
+        }
+        finally
+        {
+            SelectObject(deviceContext, previousFont);
+            ReleaseDC(tree.Handle, deviceContext);
+        }
+
+        text.Width.Should().Be(advance.Width + 4, "native item extents use the ambient control HFONT plus text-slot padding, not NodeFont");
+        TestContext.Progress.WriteLine($"points={points} caption={caption} style={style} text={text} gdi={gdi} ambient={ambient} nativeAdvance={advance.Width},{advance.Height} nativeExtra={text.Width - gdi.Width} advanceExtra={text.Width - advance.Width}");
+    }
+
+    [Test]
     [TestCase("Explorer::TREEVIEW", 3)]
     [TestCase("Explorer::TREEVIEW", 5)]
     [TestCase("Explorer::TREEVIEW", 6)]
@@ -177,6 +349,23 @@ public sealed class NativeTreeThemeTests
     [DllImport("gdi32.dll")]
     private static extern nint CreateSolidBrush(uint color);
 
+    [DllImport("user32.dll")]
+    private static extern nint GetDC(nint window);
+
+    [DllImport("user32.dll")]
+    private static extern int ReleaseDC(nint window, nint deviceContext);
+
+    [DllImport("gdi32.dll")]
+    private static extern nint SelectObject(nint deviceContext, nint handle);
+
+    [DllImport("gdi32.dll", EntryPoint = "GetTextExtentPoint32W", CharSet = CharSet.Unicode)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetTextExtentPoint32(nint deviceContext, string text, int count, out NativeSize size);
+
+    [DllImport("comctl32.dll", EntryPoint = "ImageList_Draw")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool ImageListDraw(nint imageList, int index, nint deviceContext, int x, int y, uint style);
+
     [DllImport("gdi32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool DeleteObject(nint handle);
@@ -195,4 +384,20 @@ public sealed class NativeTreeThemeTests
         public int Right;
         public int Bottom;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct NativeSize
+    {
+        public int Width;
+        public int Height;
+    }
+
+    private static Color CompositeSamples(Color backdrop, Color black, Color white)
+        => Color.FromArgb(
+            CompositeChannel(backdrop.R, black.R, white.R),
+            CompositeChannel(backdrop.G, black.G, white.G),
+            CompositeChannel(backdrop.B, black.B, white.B));
+
+    private static int CompositeChannel(byte backdrop, byte black, byte white)
+        => black + ((((white - black) * backdrop) + 127) / 255);
 }

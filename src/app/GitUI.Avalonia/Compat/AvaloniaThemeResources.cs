@@ -321,12 +321,14 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsNativeSelectionForegroundBrush", highlightText);
 
         // Native Explorer's image-based TREEVIEW selection is separate from CSS Highlight.
-        SetBrush(resources, "GitExtensionsNativeTreeSelectionBackgroundBrush", isDark ? DrawingColor.FromArgb(98, 98, 98) : DrawingColor.FromArgb(204, 232, 255));
-        SetBrush(resources, "GitExtensionsNativeTreeSelectionForegroundBrush", isDark ? DrawingColor.White : DrawingColor.Black);
-        SetBrush(resources, "GitExtensionsNativeTreeSelectionBorderBrush", isDark ? DrawingColor.FromArgb(96, 205, 255) : DrawingColor.FromArgb(0, 120, 212));
-        SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionBackgroundBrush", isDark ? DrawingColor.FromArgb(51, 51, 51) : DrawingColor.FromArgb(217, 217, 217));
-        SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionForegroundBrush", isDark ? DrawingColor.White : DrawingColor.Black);
-        SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionBorderBrush", isDark ? DrawingColor.FromArgb(61, 61, 61) : DrawingColor.FromArgb(148, 148, 148));
+        NativeTreePaintPalette treeSelection = NativeTreePaintPalette.Resolve(isDark, ToMediaColor(panel));
+        NativeTreePaintPalette treeInactiveSelection = NativeTreePaintPalette.Resolve(isDark, ToMediaColor(panel), inactive: true);
+        SetBrush(resources, "GitExtensionsNativeTreeSelectionBackgroundBrush", treeSelection.Background);
+        SetBrush(resources, "GitExtensionsNativeTreeSelectionForegroundBrush", treeSelection.Foreground);
+        SetBrush(resources, "GitExtensionsNativeTreeSelectionBorderBrush", treeSelection.Border);
+        SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionBackgroundBrush", treeInactiveSelection.Background);
+        SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionForegroundBrush", treeInactiveSelection.Foreground);
+        SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionBorderBrush", treeInactiveSelection.Border);
         SetBrush(resources, "GitExtensionsToolStripCheckedBackgroundBrush", nativeListSelectionBackground);
         SetBrush(resources, "GitExtensionsRevisionAlternatingRowBrush", alternatingRow);
         SetBrush(resources, "GitExtensionsRevisionAuthoredBrush", ResolveAppColor(settings, AppColor.AuthoredHighlight));

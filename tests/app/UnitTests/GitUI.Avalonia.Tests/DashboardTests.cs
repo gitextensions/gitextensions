@@ -6,6 +6,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
@@ -600,7 +601,7 @@ public sealed class DashboardTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void Dashboard_links_should_keep_chrome_transparent_in_hover_and_pressed_states()
+    public async Task Dashboard_links_should_keep_chrome_transparent_in_hover_and_pressed_states()
     {
         RepositoryHistorySnapshot snapshot = new([], []);
         Dashboard dashboard = new();
@@ -612,20 +613,374 @@ public sealed class DashboardTests
             dashboard.RefreshContent();
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
-            WinFormsControls.LinkLabel link = (WinFormsControls.LinkLabel)dashboard.GetTestAccessor().Open;
+            DashboardLinkLabel link = (DashboardLinkLabel)dashboard.GetTestAccessor().Open;
             Avalonia.Controls.Presenters.ContentPresenter presenter = link.GetVisualDescendants()
                 .OfType<Avalonia.Controls.Presenters.ContentPresenter>().Single();
             Point point = link.TranslatePoint(new Point(8, 8), window)!.Value;
             window.MouseMove(point);
             Dispatcher.UIThread.RunJobs();
             link.IsPointerOver.Should().BeTrue();
+            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(DashboardTheme.Light.PrimaryText,
+                "source MouseHover does not recolor a link immediately on entering its control");
+            await Task.Delay(link.HoverDelay + TimeSpan.FromMilliseconds(50));
+            Dispatcher.UIThread.RunJobs();
             ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(DashboardTheme.Light.AccentedText);
             ((Avalonia.Media.ISolidColorBrush)presenter.Background!).Color.A.Should().Be(0);
+            point = link.TranslatePoint(link.CaptionHitBounds.Center, window)!.Value;
+            window.MouseMove(point);
             window.MouseDown(point, MouseButton.Left);
             Dispatcher.UIThread.RunJobs();
             ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(Avalonia.Media.Colors.Red);
             ((Avalonia.Media.ISolidColorBrush)presenter.Background!).Color.A.Should().Be(0);
             window.MouseUp(new Point(1, 1), MouseButton.Left);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    [Category("P8.6i.126")]
+    [TestCase(9)]
+    [TestCase(14)]
+    [TestCase(20)]
+    public void Dashboard_link_caption_regions_and_images_should_use_native_integer_client_alignment(int fontPoints)
+    {
+        GitExtensions.Shims.WinForms.Font originalFont = AppSettings.Font;
+        AppSettings.Font = new GitExtensions.Shims.WinForms.Font("Segoe UI", fontPoints);
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        Window window = new() { Width = 900, Height = 900, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            DashboardLinkLabel link = (DashboardLinkLabel)dashboard.GetTestAccessor().Open;
+            Grid content = (Grid)link.Content!;
+            Image image = content.Children.OfType<Image>().Single();
+            TextBlock caption = content.Children.OfType<TextBlock>().Single();
+            Size measured = WinFormsTextMeasurer.MeasureTextRenderer(caption, caption.Text!);
+            Thickness overhang = WinFormsTextMeasurer.GetTextRendererPadding(caption);
+            link.CaptionHitBounds.Should().Be(new Rect(24, 0,
+                measured.Width - overhang.Left - overhang.Right, measured.Height));
+            link.CaptionFocusBounds.Should().Be(new Rect(24, 0, measured.Width, measured.Height));
+            image.TranslatePoint(default, link)!.Value.Should().Be(new Point(2, Math.Floor((link.Bounds.Height - 16) / 2)));
+            image.Bounds.Size.Should().Be(new Size(16, 16));
+            caption.TranslatePoint(default, link)!.Value.Y.Should().Be(3,
+                "caption painting has its own padding origin, unlike the native hit/focus region");
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.Font = originalFont;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Dashboard_link_should_limit_active_color_and_hand_cursor_to_its_caption()
+    {
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        Window window = new() { Width = 686, Height = 550, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            DashboardLinkLabel link = (DashboardLinkLabel)dashboard.GetTestAccessor().Open;
+            Point imagePoint = link.TranslatePoint(new Point(8, 8), window)!.Value;
+            window.MouseMove(imagePoint);
+            window.MouseDown(imagePoint, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            link.Cursor!.ToString().Should().Contain(nameof(StandardCursorType.Arrow));
+            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().NotBe(Avalonia.Media.Colors.Red,
+                "the source image is not an active hyperlink run");
+            window.MouseUp(new Point(1, 1), MouseButton.Left);
+            Point captionPoint = link.TranslatePoint(link.CaptionHitBounds.Center, window)!.Value;
+            window.MouseMove(captionPoint);
+            window.MouseDown(captionPoint, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            link.Cursor!.ToString().Should().Contain(nameof(StandardCursorType.Hand));
+            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(Avalonia.Media.Colors.Red);
+            window.MouseUp(new Point(1, 1), MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(DashboardTheme.Light.PrimaryText);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    [Category("P8.6i.126")]
+    [TestCase(9, 12, 6)]
+    [TestCase(14, 20, 9)]
+    [TestCase(20, 30, 13)]
+    public void Dashboard_link_caption_should_paint_at_the_native_cached_font_baseline(int fontPoints, int nativeAscent, int nativeInkTop)
+    {
+        GitExtensions.Shims.WinForms.Font originalFont = AppSettings.Font;
+        AppSettings.Font = new GitExtensions.Shims.WinForms.Font("Segoe UI", fontPoints);
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        Window window = new() { Width = 900, Height = 900, Content = dashboard, RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Light };
+        Window? expectedWindow = null;
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Border start = dashboard.FindControl<Border>("flpnlStart")!;
+            DashboardLinkLabel clone = ((StackPanel)start.Child!).Children.OfType<DashboardLinkLabel>().ElementAt(2);
+            Grid content = (Grid)clone.Content!;
+            DashboardTextBlock caption = content.Children.OfType<DashboardTextBlock>().Single();
+            caption.Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.Red);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            caption.FontSize.Should().Be(AvaloniaFontSettings.ToDeviceIndependentPixels(fontPoints));
+            caption.PaintEmSize.Should().Be(Math.Ceiling(caption.FontSize));
+            if (OperatingSystem.IsWindows())
+            {
+                caption.PaintBaseline.Should().Be(nativeAscent,
+                    "the native LinkLabel DrawToBitmap probe independently verifies this HFONT ascent");
+            }
+
+            Point origin = caption.TranslatePoint(default, window)!.Value;
+            double rightEdge = start.TranslatePoint(new Point(start.Bounds.Width, 0), window)!.Value.X;
+            PixelRect region = new((int)origin.X, (int)origin.Y,
+                (int)Math.Floor(Math.Min(caption.Bounds.Width, rightEdge - origin.X)),
+                (int)(clone.Bounds.Height - clone.Padding.Top - clone.Padding.Bottom));
+            using WriteableBitmap actualFrame = window.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The Dashboard caption frame is unavailable.");
+            PixelRect actualInk = FindDashboardInkBounds(ReadDashboardFrameRegion(actualFrame, region), region.Width, region.Height);
+            actualInk.Width.Should().BeGreaterThan(0);
+            if (OperatingSystem.IsWindows())
+            {
+                // Native probes verify real LinkLabel ink, independently of the baseline adapter.
+                actualInk.Y.Should().Be(nativeInkTop - (int)clone.Padding.Top);
+            }
+
+            using Avalonia.Media.TextFormatting.TextLayout expectedLayout = new(caption.Text!,
+                new Avalonia.Media.Typeface(caption.FontFamily, caption.FontStyle, caption.FontWeight),
+                Math.Ceiling(AvaloniaFontSettings.ToDeviceIndependentPixels(fontPoints)), caption.Foreground);
+            double expectedBaseline = OperatingSystem.IsWindows()
+                ? nativeAscent : expectedLayout.TextLines[0].Baseline;
+            caption.PaintBaseline.Should().Be(expectedBaseline);
+            DashboardCaptionInkProbe expectedCaption = new(expectedLayout, caption.Padding, expectedBaseline)
+            {
+                Width = caption.Bounds.Width,
+                Height = caption.Bounds.Height,
+                ClipToBounds = caption.ClipToBounds,
+            };
+            Canvas expectedCanvas = new() { Background = start.Background, Children = { expectedCaption } };
+            // Preserve the actual framework's subpixel placement when flooring the sampled region.
+            Canvas.SetLeft(expectedCaption, 20 + origin.X - Math.Floor(origin.X));
+            Canvas.SetTop(expectedCaption, 20 + origin.Y - Math.Floor(origin.Y));
+            expectedWindow = new Window { Width = caption.Bounds.Width + 40, Height = region.Height + 40, Content = expectedCanvas };
+            expectedWindow.Show();
+            Dispatcher.UIThread.RunJobs();
+            expectedWindow.UpdateLayout();
+            using WriteableBitmap expectedFrame = expectedWindow.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The independent caption baseline frame is unavailable.");
+            PixelRect expectedRegion = new(20, 20, region.Width, region.Height);
+            TestContext.Progress.WriteLine($"caption font={fontPoints} nativeAscent={nativeAscent} paintBaseline={caption.PaintBaseline} "
+                + $"nativeInkTop={nativeInkTop - (int)clone.Padding.Top} actualInk={actualInk} nativeClientHeight={region.Height} "
+                + $"bounds={caption.Bounds} origin={origin} clip={caption.ClipToBounds}");
+            FindDashboardInkBounds(ReadDashboardFrameRegion(expectedFrame, expectedRegion), region.Width, region.Height)
+                .Should().Be(actualInk,
+                    "the actual caption must paint at the metric-selected baseline, not just report that value");
+        }
+        finally
+        {
+            expectedWindow?.Close();
+            window.Close();
+            AppSettings.Font = originalFont;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Dashboard_link_keyboard_focus_should_paint_only_the_native_caption_rectangle()
+    {
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        // The headless App does not execute the desktop theme initialization.
+        dashboard.Resources["GitExtensionsKnownColorControlTextBrush"] =
+            new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.Black);
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        Window window = new() { Width = 686, Height = 550, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            window.Focus();
+            DashboardLinkLabel link = (DashboardLinkLabel)dashboard.GetTestAccessor().Open;
+            link.IsFocused.Should().BeFalse("the baseline must not already contain keyboard focus cues");
+            Point origin = link.TranslatePoint(default, window)!.Value;
+            Image image = ((Grid)link.Content!).Children.OfType<Image>().Single();
+            Point imageOrigin = image.TranslatePoint(default, window)!.Value;
+            PixelRect imagePixels = new((int)imageOrigin.X, (int)imageOrigin.Y, 16, 16);
+            Rect focus = link.CaptionFocusBounds;
+            PixelRect captionPixels = new((int)(origin.X + focus.X), (int)(origin.Y + focus.Y),
+                (int)focus.Width, (int)focus.Height);
+            using WriteableBitmap before = window.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The unfocused Dashboard frame is unavailable.");
+            link.Focus(NavigationMethod.Tab);
+            Dispatcher.UIThread.RunJobs();
+            link.IsFocused.Should().BeTrue();
+            link.Classes.Contains(":focus-visible").Should().BeTrue();
+            link.FocusAdorner.Should().BeNull("the full-button adorner is not native LinkLabel focus chrome");
+            using WriteableBitmap focused = window.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The keyboard-focused Dashboard frame is unavailable.");
+            ReadDashboardFrameRegion(focused, captionPixels).Should().NotEqual(ReadDashboardFrameRegion(before, captionPixels));
+            ReadDashboardFrameRegion(focused, imagePixels).Should().Equal(ReadDashboardFrameRegion(before, imagePixels),
+                "focusing the caption must not add a border around the image slot");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public async Task Dashboard_link_hover_should_reset_on_exit_disable_and_source_refresh()
+    {
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        Window window = new() { Width = 686, Height = 550, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            DashboardLinkLabel link = (DashboardLinkLabel)dashboard.GetTestAccessor().Open;
+            Point point = link.TranslatePoint(link.CaptionHitBounds.Center, window)!.Value;
+            window.MouseMove(point);
+            window.MouseMove(new Point(1, 1));
+            await Task.Delay(link.HoverDelay + TimeSpan.FromMilliseconds(50));
+            Dispatcher.UIThread.RunJobs();
+            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(DashboardTheme.Light.PrimaryText);
+            window.MouseMove(point);
+            link.IsEnabled = false;
+            await Task.Delay(link.HoverDelay + TimeSpan.FromMilliseconds(50));
+            Dispatcher.UIThread.RunJobs();
+            link.Classes.Contains(":native-mousehover").Should().BeFalse();
+            link.IsEnabled = true;
+            window.MouseMove(new Point(1, 1));
+            window.MouseMove(point);
+            dashboard.RefreshContent();
+            await Task.Delay(link.HoverDelay + TimeSpan.FromMilliseconds(50));
+            Dispatcher.UIThread.RunJobs();
+            link.Classes.Contains(":native-mousehover").Should().BeFalse("recreating the source link must cancel its old pending hover");
+            link.Parent.Should().BeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    [Category("P8.6i.126")]
+    [TestCase(9)]
+    [TestCase(14)]
+    [TestCase(20)]
+    public void Dashboard_headings_should_preserve_the_requested_font_and_paint_at_the_native_cached_em(int points)
+    {
+        GitExtensions.Shims.WinForms.Font originalFont = AppSettings.Font;
+        AppSettings.Font = new GitExtensions.Shims.WinForms.Font("Segoe UI", points);
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        Window window = new() { Width = 900, Height = 900, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            DashboardTextBlock contribute = dashboard.FindControl<DashboardTextBlock>("lblContribute")!;
+            DashboardTextBlock recent = dashboard.GetTestAccessor().Repositories
+                .FindControl<DashboardTextBlock>("lblRecentRepositories")!;
+            foreach (DashboardTextBlock heading in new[] { contribute, recent })
+            {
+                double requested = AvaloniaFontSettings.ToDeviceIndependentPixels(points + 5.5F);
+                heading.FontSize.Should().Be(requested,
+                    "the authored AppSettings font must not become a captured or quantized public dimension");
+                heading.PaintEmSize.Should().Be(Math.Ceiling(requested));
+                heading.PaintBaseline.Should().BeGreaterThan(0);
+                heading.PaintBaseline.Should().BeLessThanOrEqualTo(heading.Bounds.Height);
+            }
+
+            using WriteableBitmap rendered = window.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The native-metric heading frame is unavailable.");
+            contribute.Bounds.Width.Should().Be(Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(contribute, contribute.Text!).Width));
+            contribute.Bounds.Height.Should().Be(Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(contribute, contribute.Text!).Height));
+            Point origin = contribute.TranslatePoint(default, window)!.Value;
+            PixelRect region = new((int)origin.X, (int)origin.Y, (int)contribute.Bounds.Width, (int)contribute.Bounds.Height);
+            byte[] before = ReadDashboardFrameRegion(rendered, region);
+            contribute.Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.Red);
+            Dispatcher.UIThread.RunJobs();
+            using WriteableBitmap recolored = window.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The live-recolored heading frame is unavailable.");
+            ReadDashboardFrameRegion(recolored, region).Should().NotEqual(before,
+                "a cached native-metric Skia layout must retain live source foreground changes");
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.Font = originalFont;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Dashboard_link_should_keep_the_whole_label_Click_route_including_its_image()
+    {
+        DashboardLinkLabel link = new()
+        {
+            Width = 160,
+            Height = 21,
+            Padding = new Thickness(24, 3, 3, 3),
+            Content = new Grid
+            {
+                Children =
+                {
+                    new Image { Width = 16, Height = 16 },
+                    new TextBlock { Text = "Clone repository", FontSize = 12 },
+                },
+            },
+        };
+        int clicked = 0;
+        link.Click += (_, _) => clicked++;
+        Window window = new() { Width = 300, Height = 120, Content = new StackPanel { Children = { link } } };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Point image = link.TranslatePoint(new Point(8, 8), window)!.Value;
+            window.MouseMove(image);
+            window.MouseDown(image, MouseButton.Left);
+            window.MouseUp(image, MouseButton.Left);
+            clicked.Should().Be(1, "Dashboard subscribes Click, not LinkClicked, so the source image still invokes its command");
         }
         finally
         {
@@ -904,7 +1259,10 @@ public sealed class DashboardTests
             clone.Bounds.Height.Should().BeGreaterThan(0);
             clone.TranslatePoint(default, start)!.Value.Y.Should().BeGreaterThan(0);
             Grid content = (Grid)clone.Content!;
-            content.Children.OfType<Image>().Single().Margin.Left.Should().Be(-24 + 2);
+            Image image = content.Children.OfType<Image>().Single();
+            image.TranslatePoint(default, clone)!.Value.Should().Be(
+                new Point(2, Math.Floor((clone.Bounds.Height - image.Height) / 2)),
+                "native Label image placement is independent of the caption's padded client");
             content.Children.OfType<TextBlock>().Single().Text.Should().Be("Clone repository");
 
             // Rehost at a larger client size; the headless window does not resize like a desktop window.
@@ -1579,6 +1937,42 @@ public sealed class DashboardTests
         }
 
         return pixels;
+    }
+
+    private static PixelRect FindDashboardInkBounds(byte[] pixels, int width, int height)
+    {
+        int left = width;
+        int top = height;
+        int right = -1;
+        int bottom = -1;
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                int offset = ((y * width) + x) * 4;
+                if (pixels[offset] != pixels[0] || pixels[offset + 1] != pixels[1]
+                    || pixels[offset + 2] != pixels[2] || pixels[offset + 3] != pixels[3])
+                {
+                    left = Math.Min(left, x);
+                    top = Math.Min(top, y);
+                    right = Math.Max(right, x);
+                    bottom = Math.Max(bottom, y);
+                }
+            }
+        }
+
+        return right < left ? default : new PixelRect(left, top, right - left + 1, bottom - top + 1);
+    }
+
+    private sealed class DashboardCaptionInkProbe(Avalonia.Media.TextFormatting.TextLayout layout, Thickness padding, double baseline) : Control
+    {
+        public override void Render(Avalonia.Media.DrawingContext context)
+        {
+            base.Render(context);
+
+            // Shift the glyph draw origin, not the compositor transform of a rendered TextBlock.
+            layout.Draw(context, new Point(padding.Left, padding.Top + baseline - layout.TextLines[0].Baseline));
+        }
     }
 
     private static IRepositoryHistoryUIService CreateHistory(RepositoryHistorySnapshot snapshot)

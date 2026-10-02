@@ -329,7 +329,10 @@ public sealed class CommitInfoTests
             double nativeStop = (Math.Floor(nativeLabelWidth / 48) + 1) * 48;
             block.Width.Should().Be(Math.Ceiling(nativeStop + WinFormsTextMeasurer.Measure(block, "value") + 2));
             TextLayout labelLayout = new(label, new Typeface(block.FontFamily, block.FontStyle, block.FontWeight), block.FontSize, foreground: null);
-            double renderedStop = (Math.Floor(labelLayout.WidthIncludingTrailingWhitespace / 48) + 1) * 48;
+            double renderedLabelWidth = WinFormsRichEditTextMeasurer.TryGetCharacterAdvances(block, label, out int[] advances)
+                ? advances[^1]
+                : labelLayout.WidthIncludingTrailingWhitespace;
+            double renderedStop = (Math.Floor(renderedLabelWidth / 48) + 1) * 48;
             HyperlinkButton link = block.GetVisualDescendants().OfType<HyperlinkButton>().Single();
             link.TranslatePoint(new Point(0, 0), block)!.Value.X.Should().BeApproximately(renderedStop, 1);
             renderedStop.Should().BeGreaterThan(192);
@@ -682,9 +685,12 @@ public sealed class CommitInfoTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void CommitInfoHeader_should_show_the_complete_hash_within_its_native_content_width()
+    [TestCase("a37bf89fffa0b681b81ac532fc2188f0d54c7a90")]
+    [TestCase("54930791bbaca26f32883b799bbed65f81ec9150")]
+    [TestCase("ceaece927abc97012d5cc36ea9dfba32321e9704")]
+    [TestCase("c932f21268731785cec9d37bfa3ff8f10485b46e")]
+    public void CommitInfoHeader_should_show_the_complete_hash_within_its_native_content_width(string hash)
     {
-        const string hash = "a37bf89fffa0b681b81ac532fc2188f0d54c7a90";
         CommitInfoHeader header = new();
         XhtmlTextBlock block = header.GetTestAccessor().RevisionHeader;
         block.SetXHTMLText($"Author:\t\t<a href='mailto:parity@example.invalid'>Parity Capture &lt;parity@example.invalid&gt;</a>"
@@ -696,15 +702,187 @@ public sealed class CommitInfoTests
         try
         {
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-            TextLayout hashLayout = new(
-                hash,
-                new Typeface(block.FontFamily, block.FontStyle, block.FontWeight),
-                block.FontSize,
-                foreground: null,
-                letterSpacing: block.LetterSpacing);
-
-            (block.NativeFormattingInset + 96 + hashLayout.WidthIncludingTrailingWhitespace).Should().BeLessThanOrEqualTo(block.Bounds.Width);
+            string layoutText = block.Inlines?.Text
+                ?? throw new InvalidOperationException("The rendered header must have inline layout text.");
+            int hashStart = layoutText.IndexOf(hash, StringComparison.Ordinal);
+            Rect finalCharacter = block.TextLayout.HitTestTextPosition(hashStart + hash.Length - 1);
+            (block.NativeFormattingInset + finalCharacter.Right).Should().BeLessThanOrEqualTo(block.Bounds.Width - block.NativeFormattingInset,
+                "the actual final hash character, not a separately measured string, must fit the native formatting rectangle");
+            block.SelectionStart = hashStart + hash.Length - 4;
+            block.SelectionEnd = hashStart + hash.Length;
+            block.GetSelectionPlainText().Should().Be(hash[^4..]);
             block.Bounds.Width.Should().Be(block.MinWidth);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void CommitInfoHeader_should_keep_each_RTF_run_font_and_paragraph_tab_origin_at_eleven_points()
+    {
+        const string author = "Parity Capture <parity@example.invalid>";
+        const string hash = "ceaece927abc97012d5cc36ea9dfba32321e9704";
+        CommitInfoHeader header = new();
+        XhtmlTextBlock block = header.GetTestAccessor().RevisionHeader;
+        block.SetXHTMLText($"Author:\t\t<a href='mailto:parity@example.invalid'>{System.Net.WebUtility.HtmlEncode(author)}</a>"
+            + $"<br/>Date:\t\t9 months ago (1/2/2026 12:00:00 PM)<br/>Commit hash:\t{hash}");
+        Window window = new() { Width = 700, Height = 200, Content = header };
+        window.Show();
+        try
+        {
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            // Resolve the AXAML font resource before exercising a live font change.
+            // An unattached DynamicResource has not supplied its initial value yet.
+            block.FontSize = (11d * 96) / 72;
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            block.FontSize.Should().Be((11d * 96) / 72);
+            HyperlinkButton link = block.GetVisualDescendants().OfType<HyperlinkButton>().Single();
+            if (OperatingSystem.IsWindows())
+            {
+                // The native fixture has 225-twip plain text. SelectedRtf serializes its
+                // author as \fs23, producing 230 twips; the two author tabs reach 144px.
+                WinFormsRichEditTextMeasurer.GetFontSize(block).Should().Be(15);
+                link.FontSize.Should().Be(11.5d * (96d / 72));
+                link.TranslatePoint(new Point(0, 0), block)!.Value.X.Should().Be(145);
+                block.Bounds.Width.Should().Be(419);
+                block.Bounds.Height.Should().Be(60);
+            }
+            else
+            {
+                // A native RichEdit font is unavailable; verify the actual fallback only.
+                link.FontSize.Should().Be(block.FontSize);
+                block.Bounds.Width.Should().Be(block.MinWidth);
+            }
+
+            string layoutText = block.Inlines?.Text
+                ?? throw new InvalidOperationException("The rendered header must have inline layout text.");
+            int hashStart = layoutText.IndexOf(hash, StringComparison.Ordinal);
+            Rect lastCharacter = block.TextLayout.HitTestTextPosition(hashStart + hash.Length - 1);
+            (lastCharacter.Right + block.NativeFormattingInset).Should().BeLessThanOrEqualTo(block.Bounds.Width - block.NativeFormattingInset);
+            block.GetPlainText().Should().Contain(author).And.Contain(hash);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase("A\u0301uthor")]
+    [TestCase("مؤلف")]
+    [TestCase("作者")]
+    public void Native_header_advance_adapter_should_retain_framework_shaping_for_complex_text(string caption)
+    {
+        XhtmlTextBlock block = new() { NativeContentOverhang = 2 };
+        block.SetTabStops([], [], 48);
+        block.SetXHTMLText(caption);
+        Window window = new() { Width = 400, Height = 100, Content = block };
+        window.Show();
+        try
+        {
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            WinFormsRichEditTextMeasurer.TryGetCharacterAdvances(block, caption, out _).Should().BeFalse();
+            block.GetPlainText().Should().Be(caption);
+            block.TextLayout.WidthIncludingTrailingWhitespace.Should().BeGreaterThan(0);
+            SolidColorBrush selectionForeground = new(Colors.Yellow);
+            block.SelectionForegroundBrush = selectionForeground;
+            block.SelectAll();
+            block.GetSelectionPlainText().Should().Be(caption);
+
+            // Selection changes invalidate TextBlock's inline runs until its next layout.
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            block.TextLayout.WidthIncludingTrailingWhitespace.Should().BeGreaterThan(0);
+            block.TextLayout.TextLines.SelectMany(line => line.TextRuns).OfType<ShapedTextRun>()
+                .Should().NotBeEmpty().And.OnlyContain(run => ReferenceEquals(run.Properties.ForegroundBrush, selectionForeground));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(0, 4, false)]
+    [TestCase(2, 8, true)]
+    [TestCase(19, 27, false)]
+    [TestCase(36, 40, true)]
+    public void Native_header_selection_should_change_only_the_selected_foreground_without_reshaping(int first, int last, bool reversed)
+    {
+        const string hash = "54930791bbaca26f32883b799bbed65f81ec9150";
+        XhtmlTextBlock block = new() { NativeContentOverhang = 2, NativeFormattingInset = 1 };
+        block.SetTabStops([], [], 48);
+        block.SetXHTMLText($"Author:\t\t<a href='gitext://author'>author</a><br/>Commit hash:\t{hash}");
+        Window window = new() { Width = 500, Height = 100, Content = block };
+        window.Show();
+        try
+        {
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            SolidColorBrush normalForeground = new(Colors.Green);
+            SolidColorBrush selectionForeground = new(Colors.Yellow);
+            block.Foreground = normalForeground;
+            block.SelectionForegroundBrush = selectionForeground;
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            string layoutText = block.Inlines?.Text
+                ?? throw new InvalidOperationException("The rendered header must have inline layout text.");
+            int hashStart = layoutText.IndexOf(hash, StringComparison.Ordinal);
+            Rect[] characterBounds = Enumerable.Range(0, hash.Length)
+                .Select(index => block.TextLayout.HitTestTextPosition(hashStart + index)).ToArray();
+            HyperlinkButton link = block.GetVisualDescendants().OfType<HyperlinkButton>().Single();
+            Point linkOrigin = link.TranslatePoint(default, block)
+                ?? throw new InvalidOperationException("The author link must be arranged within the header.");
+            Rect bounds = block.Bounds;
+
+            block.SelectionStart = hashStart + (reversed ? last : first);
+            block.SelectionEnd = hashStart + (reversed ? first : last);
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            AssertHashForeground(selected: true);
+            block.GetSelectionPlainText().Should().Be(hash[first..last]);
+            Enumerable.Range(0, hash.Length).Select(index => block.TextLayout.HitTestTextPosition(hashStart + index))
+                .Should().Equal(characterBounds, "selection must reuse the exact native glyph advances and hit bounds");
+            block.Bounds.Should().Be(bounds);
+            link.TranslatePoint(default, block).Should().Be(linkOrigin);
+
+            block.ClearSelection();
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            AssertHashForeground(selected: false);
+            Enumerable.Range(0, hash.Length).Select(index => block.TextLayout.HitTestTextPosition(hashStart + index))
+                .Should().Equal(characterBounds);
+
+            void AssertHashForeground(bool selected)
+            {
+                int inspectedCharacters = 0;
+                foreach (TextLine line in block.TextLayout.TextLines)
+                {
+                    int position = line.FirstTextSourceIndex;
+                    foreach (TextRun run in line.TextRuns)
+                    {
+                        if (run is ShapedTextRun shaped)
+                        {
+                            for (int index = 0; index < shaped.Length; index++)
+                            {
+                                int hashIndex = position + index - hashStart;
+                                if (hashIndex >= 0 && hashIndex < hash.Length)
+                                {
+                                    IBrush expected = selected && hashIndex >= first && hashIndex < last
+                                        ? selectionForeground : normalForeground;
+                                    shaped.Properties.ForegroundBrush.Should().BeSameAs(expected,
+                                        $"hash character {hashIndex} must use its actual selected or normal foreground");
+                                    inspectedCharacters++;
+                                }
+                            }
+                        }
+
+                        position += run.Length;
+                    }
+                }
+
+                inspectedCharacters.Should().Be(hash.Length);
+            }
         }
         finally
         {

@@ -467,7 +467,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                     Stretch = Stretch.Uniform,
                     Source = icon,
                 },
-                new TextBlock
+                new NativeTreeTextBlock
                 {
                     FontFamily = new FontFamily(AppSettings.Font.Name),
                     FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
