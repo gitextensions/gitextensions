@@ -13,6 +13,7 @@ using GitUI.Properties;
 using GitUI.Theming;
 using GitUIPluginInterfaces;
 using ResourceManager;
+using LinkLabel = GitUI.Compat.WinFormsControls.LinkLabel;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 
@@ -32,13 +33,6 @@ public partial class Dashboard : GitModuleControl
     public Dashboard()
     {
         InitializeComponent();
-        ConfigureLink(createItem, createItem_Click);
-        ConfigureLink(cloneItem, cloneItem_Click);
-        ConfigureLink(openItem, openItem_Click);
-        ConfigureLink(developItem, GitHubItem_Click);
-        ConfigureLink(donateItem, DonateItem_Click);
-        ConfigureLink(translateItem, TranslateItem_Click);
-        ConfigureLink(issuesItem, IssuesItem_Click);
         AttachedToLogicalTree += dashboard_ParentChanged;
         DetachedFromLogicalTree += dashboard_ParentChanged;
         SizeChanged += (_, _) => tableLayoutPanel1.Height = Math.Max(Bounds.Height, tableLayoutPanel1.MinHeight);
@@ -67,9 +61,6 @@ public partial class Dashboard : GitModuleControl
 
         // apply scaling
         userRepositoriesList.HeaderHeight = 68;
-
-        static void ConfigureLink(Button linkLabel, EventHandler<RoutedEventArgs> handler)
-            => linkLabel.Click += handler;
     }
 
     public void Initialize(IRepositoryHistoryUIService repositoryHistoryUIService)
@@ -99,32 +90,25 @@ public partial class Dashboard : GitModuleControl
         DashboardTheme selectedTheme = ThemeModule.Settings.Theme.SystemColorMode == GitExtensions.Shims.WinForms.SystemColorMode.Dark
             ? DashboardTheme.Dark : DashboardTheme.Light;
 
-        createItem.Content = CreateLinkContent(Images.RepoCreate, _createRepository.Text);
-        openItem.Content = CreateLinkContent(Images.RepoOpen, _openRepository.Text);
-        cloneItem.Content = CreateLinkContent(Images.CloneRepoGit, _cloneRepository.Text);
-        developItem.Content = CreateLinkContent(Images.Develop.AdaptLightness(), _develop.Text);
-        donateItem.Content = CreateLinkContent(Images.DollarSign, _donate.Text);
-        translateItem.Content = CreateLinkContent(Images.Translate.AdaptLightness(), _translate.Text);
-        issuesItem.Content = CreateLinkContent(Images.Bug, _issues.Text);
-
+        // The source recreates anonymous LinkLabels on refresh. Keep their runtime ownership
+        // and order instead of adding permanent Designer fields and stale translated content.
         StackPanel startLinks = (StackPanel)flpnlStart.Child!;
-        Button[] dynamicLinks = [.. startLinks.Children.OfType<Button>().Where(button => button.Tag is IRepositoryHostPlugin)];
-        foreach (Button button in dynamicLinks)
-        {
-            startLinks.Children.Remove(button);
-        }
+        StackPanel contributionLinks = (StackPanel)flpnlContribute.Child!;
+        contributionLinks.Children.Clear();
+        contributionLinks.Children.Add(lblContribute);
+        CreateLink(contributionLinks, _develop.Text, Images.Develop.AdaptLightness(), GitHubItem_Click);
+        CreateLink(contributionLinks, _donate.Text, Images.DollarSign, DonateItem_Click);
+        CreateLink(contributionLinks, _translate.Text, Images.Translate.AdaptLightness(), TranslateItem_Click);
+        CreateLink(contributionLinks, _issues.Text, Images.Bug, IssuesItem_Click);
+        startLinks.Children.Clear();
+        CreateLink(startLinks, _createRepository.Text, Images.RepoCreate, createItem_Click);
+        CreateLink(startLinks, _openRepository.Text, Images.RepoOpen, openItem_Click);
+        CreateLink(startLinks, _cloneRepository.Text, Images.CloneRepoGit, cloneItem_Click);
 
         foreach (IRepositoryHostPlugin gitHoster in PluginRegistry.GitHosters)
         {
-            // Avalonia uses the native button/access-key path for the original clickable LinkLabel.
-            Button linkLabel = new()
-            {
-                Classes = { "dashboard-link" },
-                Content = CreateLinkContent(Images.CloneRepoGitHub, string.Format(_cloneFork.Text, gitHoster.Name)),
-                Tag = gitHoster,
-            };
-            linkLabel.Click += (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged);
-            startLinks.Children.Add(linkLabel);
+            CreateLink(startLinks, string.Format(_cloneFork.Text, gitHoster.Name), Images.CloneRepoGitHub,
+                (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged));
         }
 
         backgroundImage.Source = selectedTheme.BackgroundImage;
@@ -136,6 +120,9 @@ public partial class Dashboard : GitModuleControl
         lblContribute.Foreground = new SolidColorBrush(selectedTheme.SecondaryHeadingText);
         lblContribute.FontFamily = new FontFamily(AppSettings.Font.Name);
         lblContribute.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size + 5.5F);
+        lblContribute.FontStyle = FontStyle.Normal;
+        lblContribute.FontWeight = FontWeight.Normal;
+        lblContribute.Padding = WinFormsTextMeasurer.GetTextRendererPadding(lblContribute);
 
         // Native LinkLabel AutoSize measures its text plus padding, not an extra image column.
         // Keep the source runtime minimum-height calculation so smaller hosts scroll instead
@@ -167,11 +154,31 @@ public partial class Dashboard : GitModuleControl
 
         return;
 
+        static void CreateLink(StackPanel container, string text, IImage icon, EventHandler<RoutedEventArgs> handler)
+        {
+            LinkLabel linkLabel = new()
+            {
+                Classes = { "dashboard-link" },
+                Content = CreateLinkContent(icon, text),
+                FontFamily = new FontFamily(AppSettings.Font.Name),
+                FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
+                FontStyle = AppSettings.Font.Italic ? FontStyle.Italic : FontStyle.Normal,
+                FontWeight = AppSettings.Font.Bold ? FontWeight.Bold : FontWeight.Normal,
+                Margin = new Thickness(3, 0, 3, 8),
+                Padding = new Thickness(24, 3, 3, 3),
+                TabIndex = container.Children.Count,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+            };
+            linkLabel.Click += handler;
+            container.Children.Add(linkLabel);
+        }
+
         static double SizeLinks(StackPanel panel)
         {
             double height = 0;
-            Button[] links = [.. panel.Children.OfType<Button>()];
-            foreach (Button link in links)
+            LinkLabel[] links = [.. panel.Children.OfType<LinkLabel>()];
+            foreach (LinkLabel link in links)
             {
                 TextBlock text = ((Grid)link.Content!).Children.OfType<TextBlock>().Single();
                 Avalonia.Size measured = WinFormsTextMeasurer.MeasureTextRenderer(text, text.Text ?? string.Empty);
@@ -185,7 +192,18 @@ public partial class Dashboard : GitModuleControl
     }
 
     private static Control CreateLinkContent(IImage icon, string text)
-        => new Grid
+    {
+        TextBlock caption = new()
+        {
+            Text = text,
+            FontFamily = new FontFamily(AppSettings.Font.Name),
+            FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
+            FontStyle = AppSettings.Font.Italic ? FontStyle.Italic : FontStyle.Normal,
+            FontWeight = AppSettings.Font.Bold ? FontWeight.Bold : FontWeight.Normal,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        caption.Padding = WinFormsTextMeasurer.GetTextRendererPadding(caption);
+        return new Grid
         {
             Children =
             {
@@ -194,19 +212,16 @@ public partial class Dashboard : GitModuleControl
                     Width = 16,
                     Height = 16,
                     Source = icon,
-                    Margin = new Thickness(-24, 0, 0, 0),
+
+                    // Label.CalcImageRenderBounds insets a left-aligned image by two pixels.
+                    Margin = new Thickness(-24 + 2, 0, 0, 0),
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Center,
                 },
-                new TextBlock
-                {
-                    Text = text,
-                    FontFamily = new FontFamily(AppSettings.Font.Name),
-                    FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
-                    VerticalAlignment = VerticalAlignment.Center,
-                },
+                caption,
             },
         };
+    }
 
     protected virtual void OnModuleChanged(object? sender, GitModuleEventArgs e)
     {
@@ -273,6 +288,6 @@ public partial class Dashboard : GitModuleControl
     internal readonly struct TestAccessor(Dashboard dashboard)
     {
         internal UserRepositoriesList Repositories => dashboard.userRepositoriesList;
-        internal Button Open => dashboard.openItem;
+        internal Button Open => ((StackPanel)dashboard.flpnlStart.Child!).Children.OfType<LinkLabel>().ElementAt(1);
     }
 }

@@ -17,6 +17,24 @@ internal static class WinFormsTextMeasurer
     private const uint DrawTextSingleLine = 0x20;
     private const uint DrawTextNoPrefix = 0x800;
 
+    /// <summary>
+    ///  Gets the source text renderer's glyph-overhang insets from the current font metrics.
+    /// </summary>
+    public static Avalonia.Thickness GetTextRendererPadding(TextBlock owner)
+    {
+        // TextRenderer's glyph overhang margins use the current font height, not a
+        // screenshot offset. Reuse the same GDI metric as native measurement on Windows.
+        if (OperatingSystem.IsWindows()
+            && TryMeasureWithGdi(owner.FontFamily, owner.FontStyle, owner.FontWeight,
+                owner.FontSize, "0", true, true, out _, out Avalonia.Thickness padding))
+        {
+            return padding;
+        }
+
+        double overhangPadding = MeasureSize(owner, "0").Height / 6;
+        return new Avalonia.Thickness(Math.Ceiling(overhangPadding), 0, Math.Ceiling(overhangPadding * 1.5), 0);
+    }
+
     public static double Measure(TemplatedControl owner, string value)
         => MeasureSize(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize, value).Width;
 
@@ -73,7 +91,8 @@ internal static class WinFormsTextMeasurer
                 measuredValue,
                 singleLine,
                 useTextRendererPadding,
-                out AvaloniaSize size))
+                out AvaloniaSize size,
+                out _))
         {
             return size;
         }
@@ -104,8 +123,10 @@ internal static class WinFormsTextMeasurer
         string value,
         bool singleLine,
         bool useTextRendererPadding,
-        out AvaloniaSize size)
+        out AvaloniaSize size,
+        out Avalonia.Thickness textPadding)
     {
+        textPadding = default;
         const int defaultCharset = 1;
         const int outDefaultPrecision = 0;
         const int clipDefaultPrecision = 0;
@@ -149,6 +170,7 @@ internal static class WinFormsTextMeasurer
             rectangle.Right = int.MaxValue;
             rectangle.Bottom = int.MaxValue;
             float overhangPadding = metric.Height / 6f;
+            textPadding = new Avalonia.Thickness(Math.Ceiling(overhangPadding), 0, Math.Ceiling(overhangPadding * 1.5f), 0);
             DrawTextParameters parameters = new()
             {
                 Size = (uint)Marshal.SizeOf<DrawTextParameters>(),

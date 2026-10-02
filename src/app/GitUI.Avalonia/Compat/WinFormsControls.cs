@@ -19,6 +19,21 @@ public class Label : TextBlock
 }
 
 /// <summary>
+///  Preserves the source link identity while using Avalonia's routed button input and accessibility.
+/// </summary>
+public class LinkLabel : Button
+{
+    /// <summary>
+    ///  Gets the link caption independently of its image/content renderer.
+    /// </summary>
+    public string Text => Content is Grid grid
+        ? grid.Children.OfType<TextBlock>().Single().Text ?? string.Empty
+        : Content as string ?? string.Empty;
+
+    protected override Type StyleKeyOverride => typeof(Button);
+}
+
+/// <summary>
 /// Preserves the source group-box identity while using Avalonia headered-content rendering.
 /// </summary>
 public class GroupBox : HeaderedContentControl
