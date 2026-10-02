@@ -51,7 +51,7 @@ public sealed class InputAccessibilityTests
                 Path.Combine(repositoryRoot, "src", "plugins", "Gource")),
         ]));
         WinFormsInputMetadata.ByType.Should().HaveCount(142);
-        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1526);
+        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1531);
         WinFormsInputMetadata.SourceByType.Should().ContainKey("GitUI.CommandsDialogs.FormBrowse");
         WinFormsInputMetadata.SourceByType["GitUI.CommandsDialogs.FormBrowse"]
             .Single(item => item.FieldName == "toolStripButtonPull")
@@ -62,6 +62,30 @@ public sealed class InputAccessibilityTests
         WinFormsInputMetadata.AutoSizeRootTypes.Should().Contain("GitUI.CommandsDialogs.FormCompareToBranch");
         WinFormsInputMetadata.DesignerDpiByType["GitUI.CommandsDialogs.FormFormatPatch"]
             .Should().Be(new DesignerDpiMetadata(120, 120));
+    }
+
+    [Test]
+    public void Generated_dashboard_metadata_should_include_named_native_layout_and_menu_fields()
+    {
+        const string DashboardType = "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard";
+        const string RepositoryListType = "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList";
+        WinFormsInputMetadata.SourceByType[DashboardType]
+            .Single(item => item.FieldName == "tableLayoutPanel1").SourceType.Should().Be("TableLayoutPanel");
+        foreach (string name in new[] { "tableLayoutPanel1", "tableLayoutPanel2" })
+        {
+            WinFormsInputMetadata.SourceByType[RepositoryListType]
+                .Single(item => item.FieldName == name).SourceType.Should().Be("TableLayoutPanel");
+        }
+
+        WinFormsInputMetadata.SourceByType[RepositoryListType]
+            .Single(item => item.FieldName == "menuStripRecentMenu").SourceType.Should().Be("MenuStrip");
+        WinFormsInputMetadata.SourceByType[RepositoryListType]
+            .Single(item => item.FieldName == "mnuTop").SourceType.Should().Be("ToolStripMenuItem");
+        DesignerLayoutMetadata header = WinFormsInputMetadata.LayoutByType[RepositoryListType]
+            .Single(item => item.FieldName == "tableLayoutPanel1");
+        header.Dock.Should().Be("Bottom");
+        header.AutoSize.Should().BeTrue();
+        header.Margin.Should().Be(new Thickness(2));
     }
 
     [Test]

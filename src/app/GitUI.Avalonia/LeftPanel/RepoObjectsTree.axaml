@@ -78,7 +78,7 @@
                          Icon="{x:Static properties:Images.Preview}" />
     </Grid>
     <TreeView x:Name="treeMain"
-              Classes="gitextensions-native-tree"
+              Classes="gitextensions-native-tree gitextensions-explorer-tree gitextensions-hide-tree-selection"
               Focusable="True"
               KeyboardNavigation.TabIndex="3"
               Grid.Row="2"

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Drawing.Drawing2D;
 using System.Reflection;
+using System.Windows.Forms.VisualStyles;
 using GitExtensions.ParityCapture;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
@@ -187,6 +188,8 @@ internal sealed class ControlTreeReader
     {
         string? selectionForeground = null;
         string? selectionBackground = null;
+        string? inactiveSelectionForeground = null;
+        string? inactiveSelectionBackground = null;
         string? gridLine = null;
         string? border = null;
         Color resolvedBackground = control.BackColor;
@@ -202,6 +205,19 @@ internal sealed class ControlTreeReader
             selectionBackground = ColorToArgb(grid.DefaultCellStyle.SelectionBackColor);
             gridLine = ColorToArgb(grid.GridColor);
             border = ColorToArgb(isRevisionGrid ? resolvedBackground : grid.RowHeadersDefaultCellStyle.BackColor);
+        }
+        else if (control is GitUI.UserControls.NativeTreeView { DrawMode: TreeViewDrawMode.Normal } tree
+                 && VisualStyleRenderer.IsSupported && !SystemInformation.HighContrast)
+        {
+            NativeTreePalette selected = NativeTreePalette.Read(tree, state: 3);
+            NativeTreePalette inactive = NativeTreePalette.Read(tree, state: 5);
+            selectionForeground = ColorToArgb(selected.Foreground);
+            selectionBackground = ColorToArgb(selected.Background);
+            additional["selectionBorder"] = ColorToArgb(selected.Border)!;
+            additional["inactiveSelectionBorder"] = ColorToArgb(tree.HideSelection ? Color.Transparent : inactive.Border)!;
+            additional["hotTrack"] = ColorToArgb(ResolveSystemColor(KnownColor.HotTrack))!;
+            inactiveSelectionForeground = ColorToArgb(tree.HideSelection ? tree.ForeColor : inactive.Foreground);
+            inactiveSelectionBackground = ColorToArgb(tree.HideSelection ? Color.Transparent : inactive.Background);
         }
         else if (control is ListView or TreeView or ListBox)
         {
@@ -235,10 +251,10 @@ internal sealed class ControlTreeReader
             Border = border,
             SelectionForeground = selectionForeground,
             SelectionBackground = selectionBackground,
-            InactiveSelectionForeground = selectionForeground,
-            InactiveSelectionBackground = selectionBackground is null
+            InactiveSelectionForeground = inactiveSelectionForeground ?? selectionForeground,
+            InactiveSelectionBackground = inactiveSelectionBackground ?? (selectionBackground is null
                 ? null
-                : ColorToArgb(ResolveSystemColor(KnownColor.InactiveCaption)),
+                : ColorToArgb(ResolveSystemColor(KnownColor.InactiveCaption))),
             DisabledForeground = ColorToArgb(ResolveSystemColor(KnownColor.GrayText)),
             DisabledBackground = ColorToArgb(resolvedBackground),
             GridLine = gridLine,

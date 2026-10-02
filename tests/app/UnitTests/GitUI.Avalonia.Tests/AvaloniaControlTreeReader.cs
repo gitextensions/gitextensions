@@ -796,6 +796,11 @@ internal sealed class AvaloniaControlTreeReader
                 or GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard
                 or GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList;
         bool isDashboardRepositoryList = hasDashboardRuntimeColors && semanticName == "listView1";
+        bool isDashboardRuntimeFillPanel = sourceOwnerType == "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard"
+            && semanticName == "pnlLeft";
+        bool isDashboardRuntimeAutoSizeTable = sourceOwnerType == "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard"
+            && semanticName == "tableLayoutPanel1";
+        bool isSourceMenuStrip = GetSourceTypeName(sourceType) is "MenuStrip" or "MenuStripEx";
         CaptureColors? formCommitSemanticColors = ReadFormCommitSemanticColors(
             control,
             fieldName);
@@ -1436,6 +1441,9 @@ internal sealed class AvaloniaControlTreeReader
                 ? null
                 : ReadCornerRadius(control),
             Anchor = isComboBoxPopup || isComboBoxPopupItem ? []
+                // Dashboard changes this panel from Designer anchoring to Dock.Fill at runtime.
+                // Native Dock resets Anchor; the port stretches the same measured table cell.
+                : isDashboardRuntimeFillPanel ? ["Top", "Left"]
                 : isShellPreviewPanel || isLocalSourceFlowLayoutPanel || isCommitPickerLocalLayout
                     || isCommitInfoHeaderLocalLayout || isRuntimeOutputHistoryControl ? ["Top", "Left"] : designerLayout?.Anchor
                 ?? (isSurfaceRoot && !isPopupRoot ? new[] { "Top", "Left" } : null)
@@ -1459,6 +1467,7 @@ internal sealed class AvaloniaControlTreeReader
                 ? ["Top", "Left"]
                 : []),
             Dock = isComboBoxPopup || isComboBoxPopupItem ? null
+                : isDashboardRuntimeFillPanel ? "Fill"
                 : isRemoteLocalSourceFlowLayoutPanel || isShellPreviewPanel ? "Fill"
                 : isGitIgnoreLocalSourceFlowLayoutPanel ? "Bottom"
                 : isSearchWindowControl ? "Fill"
@@ -1478,6 +1487,7 @@ internal sealed class AvaloniaControlTreeReader
                     ? "Bottom"
                 : designerLayout?.Dock
                 ?? (isSurfaceRoot && !isPopupRoot ? "None" : null)
+                ?? (isSourceMenuStrip ? "Top" : null)
                 ?? (isFormCommitSurface
                     ? semanticName switch
                     {
@@ -1528,6 +1538,9 @@ internal sealed class AvaloniaControlTreeReader
                                     ? isNativeButton && control.Name == "buttonBrowse" ? "Fill" : "None"
                                     : isRevisionGridView || isNativeListView || isNativeTabControl ? "Fill" : null),
             AutoSize = isComboBoxPopupItem ? false
+                // Dashboard's native constructor enables GrowAndShrink after InitializeComponent.
+                // The twin calculates that same content minimum and fills larger hosts.
+                : isDashboardRuntimeAutoSizeTable ? true
                 : isSettingsHeaderTable || isChecklistGroup ? true
                 : isSettingsPageHeader ? false
                 : isEnvironmentInfoLayout ? true
@@ -1537,6 +1550,7 @@ internal sealed class AvaloniaControlTreeReader
                 : isRuntimeOutputHistoryControl ? false
                 : isFormBrowseMenuStrip && semanticName == "mainMenuStrip" ? true
                 : designerLayout?.AutoSize
+                ?? (isSourceMenuStrip ? true : (bool?)null)
                 ?? (isSurfaceRoot && !isPopupRoot
                     ? WinFormsInputMetadata.AutoSizeRootTypes.Contains(GetMetadataTypeName(_root.GetType()))
                     : (bool?)null)
@@ -5755,7 +5769,8 @@ internal sealed class AvaloniaControlTreeReader
                    ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm"));
 
     private bool IsSemanticLayoutWrapper(Control control)
-        => (_usesDesignerLayoutMetadata
+        => IsDashboardCategoryPopupOwner(control)
+           || (_usesDesignerLayoutMetadata
             && control is Panel or ScrollViewer
             && string.IsNullOrEmpty(control.Name)
             && GetFieldNames(control).Count == 0
@@ -5807,6 +5822,17 @@ internal sealed class AvaloniaControlTreeReader
            || (control is StackPanel
                && control.Parent is Control parent
                && IsFileViewerToolbar(parent));
+
+    private bool IsDashboardCategoryPopupOwner(Control control)
+        // ContextMenuStrip is a nonvisual WinForms component. Only its invisible, empty
+        // Avalonia owner is infrastructure; the named menu retains its separate popup surface.
+        => control is Border { IsVisible: false, Child: null, Background: null, ContextMenu: { } menu } border
+           && border.BorderThickness == default
+           && string.IsNullOrEmpty(control.Name)
+           && GetFieldNames(control).Count == 0
+           && GetFieldNames(menu).Contains("contextMenuStripCategory", StringComparer.Ordinal)
+           && control.GetLogicalAncestors().Any(ancestor => ancestor.GetType().FullName
+               == "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList");
 
     private bool IsRendererOnlyControl(Control control)
         => control.Name == "ImagePreview"
@@ -5967,9 +5993,16 @@ internal sealed class AvaloniaControlTreeReader
         // parity-scaffolding: flattened Avalonia layout owners still participate in source
         // visibility. A hidden WinForms control cannot become visible merely because its
         // unnamed/Grid wrapper was omitted from the semantic tree.
+        // An open ContextMenu renders in its own visual root: its retained logical owner
+        // may be invisible without hiding the popup or its locally visible menu rows.
+        bool isOpenContextMenu = control is ContextMenu { IsOpen: true }
+            || control.GetLogicalAncestors().OfType<ContextMenu>().Any(menu => menu.IsOpen);
+        IEnumerable<Control> visibilityAncestors = isOpenContextMenu
+            ? control.GetVisualAncestors().OfType<Control>()
+            : control.GetLogicalAncestors().OfType<Control>();
         return semanticStateControl.IsVisible
                && semanticStateControl.Opacity > 0
-               && control.GetLogicalAncestors().OfType<Control>().All(
+               && visibilityAncestors.All(
                    ancestor => ancestor.IsVisible && ancestor.Opacity > 0);
     }
 
@@ -6692,6 +6725,34 @@ internal sealed class AvaloniaControlTreeReader
     {
         string? background = ResolveResourceArgb(backgroundResource)
                              ?? BrushToArgb(GetPropertyValue(control, "Background"));
+        if (control is TreeView tree && tree.Classes.Contains("gitextensions-explorer-tree"))
+        {
+            bool hideSelection = tree.Classes.Contains("gitextensions-hide-tree-selection");
+            string? foreground = BrushToArgb(GetPropertyValue(control, "Foreground"))
+                                 ?? ResolveResourceArgb("GitExtensionsWindowTextBrush");
+            return new CaptureColors
+            {
+                Foreground = foreground,
+                Background = background,
+                Border = null,
+                SelectionForeground = ResolveResourceArgb("GitExtensionsNativeTreeSelectionForegroundBrush"),
+                SelectionBackground = ResolveResourceArgb("GitExtensionsNativeTreeSelectionBackgroundBrush"),
+                InactiveSelectionForeground = hideSelection ? foreground : ResolveResourceArgb("GitExtensionsNativeTreeInactiveSelectionForegroundBrush"),
+                InactiveSelectionBackground = hideSelection ? ResolveResourceArgb("GitExtensionsTransparentBrush") : ResolveResourceArgb("GitExtensionsNativeTreeInactiveSelectionBackgroundBrush"),
+                DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush"),
+                DisabledBackground = background,
+                Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+                {
+                    ["selectionBorder"] = ResolveResourceArgb("GitExtensionsNativeTreeSelectionBorderBrush")
+                                          ?? throw new InvalidDataException("Native tree selection border did not resolve."),
+                    ["inactiveSelectionBorder"] = (hideSelection ? ResolveResourceArgb("GitExtensionsTransparentBrush") : ResolveResourceArgb("GitExtensionsNativeTreeInactiveSelectionBorderBrush"))
+                        ?? throw new InvalidDataException("Native tree inactive selection border did not resolve."),
+                    ["hotTrack"] = ResolveResourceArgb("GitExtensionsNativeListHotTrackBrush")
+                                   ?? throw new InvalidDataException("Native tree hot-track role did not resolve.")
+                }
+            };
+        }
+
         return new CaptureColors
         {
             Foreground = BrushToArgb(GetPropertyValue(control, "Foreground"))

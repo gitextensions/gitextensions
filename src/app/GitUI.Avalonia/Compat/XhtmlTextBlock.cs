@@ -29,10 +29,11 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     private string _plainText = string.Empty;
     private IReadOnlyList<double> _tabStops = [];
     private IReadOnlyList<double> _widthTabStops = [];
+    private int _defaultTabInterval;
     private bool _usesNativeWidthMeasurement;
 
-    /// <summary>Gets or sets the source RichEdit contents-width overhang for this instance.</summary>
-    public double NativeContentOverhang { get; set; }
+    /// <summary>Gets or sets the source RichEdit contents-width edge allowance for this instance.</summary>
+    public double NativeContentOverhang { get; set; } = TextRendererOverhang + RichTextContentOverhang;
 
     /// <summary>Occurs when an XHTML anchor is activated.</summary>
     public event EventHandler<LinkClickedEventArgs>? LinkClicked;
@@ -49,10 +50,11 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     /// <summary>Clears the rendered content.</summary>
     public void Clear() => SetXHTMLText(string.Empty);
 
-    /// <summary>Applies rendered tab stops and, where native RichEdit differs, its separate width-measurement stops.</summary>
-    public void SetTabStops(IEnumerable<int> tabStops, IEnumerable<int>? widthTabStops = null)
+    /// <summary>Applies explicit tab stops and the native default interval used after the last stop.</summary>
+    public void SetTabStops(IEnumerable<int> tabStops, IEnumerable<int>? widthTabStops = null, int defaultTabInterval = 0)
     {
         _tabStops = [.. tabStops.Select(value => (double)value)];
+        _defaultTabInterval = defaultTabInterval;
         _usesNativeWidthMeasurement = widthTabStops is not null;
         if (!_usesNativeWidthMeasurement)
         {
@@ -118,7 +120,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     private void UpdateTabbedMinimumWidth()
     {
-        if (_widthTabStops.Count == 0 || string.IsNullOrEmpty(_plainText))
+        if ((_widthTabStops.Count == 0 && _defaultTabInterval == 0) || string.IsNullOrEmpty(_plainText))
         {
             return;
         }
@@ -133,9 +135,8 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             {
                 if (index > 0)
                 {
-                    lineWidth = tabIndex < _widthTabStops.Count
-                        ? Math.Max(lineWidth, _widthTabStops[tabIndex++])
-                        : lineWidth + WinFormsTextMeasurer.Measure(this, "    ");
+                    lineWidth = GetNextTabStop(_widthTabStops, ref tabIndex, lineWidth,
+                        WinFormsTextMeasurer.Measure(this, "    "));
                 }
 
                 lineWidth += WinFormsTextMeasurer.Measure(this, parts[index]);
@@ -144,13 +145,13 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             maximumLineWidth = Math.Max(maximumLineWidth, lineWidth);
         }
 
-        // TextRenderer and a borderless RichEdit contents rectangle retain renderer-owned
-        // horizontal overhang outside the measured glyph advances.
-        MinWidth = Math.Ceiling(maximumLineWidth + TextRendererOverhang + RichTextContentOverhang + NativeContentOverhang);
+        // The native formatting rectangle contributes its own edge allowance; it is not
+        // TextRenderer glyph padding or an offset applied to the measured tab stops.
+        MinWidth = Math.Ceiling(maximumLineWidth + NativeContentOverhang);
         if (_usesNativeWidthMeasurement)
         {
-            // The native ContentsResized width is based on its separate measured tab stops;
-            // Avalonia's inline spacers otherwise expand the control to their paint extent.
+            // RichEdit sizes its contents from native glyph metrics; Avalonia's inline
+            // spacers and text rasterizer otherwise determine a different preferred width.
             Width = MinWidth;
         }
     }
@@ -163,6 +164,28 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         }
 
         base.OnPointerPressed(e);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (!string.IsNullOrEmpty(_xhtml)
+            && (change.Property == FontFamilyProperty
+                || change.Property == FontSizeProperty
+                || change.Property == FontStyleProperty
+                || change.Property == FontWeightProperty
+                || change.Property == LetterSpacingProperty))
+        {
+            // RichEdit invalidates its contents rectangle when font metrics change.
+            // Avalonia inheritance can settle only after the seeded XHTML is attached.
+            int selectionStart = SelectionStart;
+            int selectionEnd = SelectionEnd;
+            string? selectedLinkUri = SelectedLinkUri;
+            SetXHTMLText(_xhtml);
+            SelectionStart = selectionStart;
+            SelectionEnd = selectionEnd;
+            SelectedLinkUri = selectedLinkUri;
+        }
     }
 
     private static string DecodeAndStripMarkup(string value)
@@ -181,7 +204,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
                 plainText.AppendLine();
             }
 
-            string[] tabParts = _tabStops.Count > 0 ? lines[index].Split('\t') : [lines[index]];
+            string[] tabParts = _tabStops.Count > 0 || _defaultTabInterval > 0 ? lines[index].Split('\t') : [lines[index]];
             for (int partIndex = 0; partIndex < tabParts.Length; partIndex++)
             {
                 if (partIndex > 0)
@@ -202,14 +225,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     private void AddTab(ref LineLayout lineLayout)
     {
-        while (lineLayout.TabIndex < _tabStops.Count && _tabStops[lineLayout.TabIndex] <= lineLayout.Advance)
-        {
-            lineLayout.TabIndex++;
-        }
-
-        double nextStop = lineLayout.TabIndex < _tabStops.Count
-            ? _tabStops[lineLayout.TabIndex++]
-            : lineLayout.Advance + MeasureInline("    ");
+        double nextStop = GetNextTabStop(_tabStops, ref lineLayout.TabIndex, lineLayout.Advance, MeasureInline("    "));
         double spacerWidth = Math.Max(0, nextStop - lineLayout.Advance);
         Inlines?.Add(new InlineUIContainer(new Border
         {
@@ -219,6 +235,23 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             Tag = "\t",
         }));
         lineLayout.Advance += spacerWidth;
+    }
+
+    private double GetNextTabStop(IReadOnlyList<double> stops, ref int tabIndex, double advance, double fallbackWidth)
+    {
+        while (tabIndex < stops.Count && stops[tabIndex] <= advance)
+        {
+            tabIndex++;
+        }
+
+        if (tabIndex < stops.Count)
+        {
+            return stops[tabIndex++];
+        }
+
+        return _defaultTabInterval > 0
+            ? (Math.Floor(advance / _defaultTabInterval) + 1) * _defaultTabInterval
+            : advance + fallbackWidth;
     }
 
     private double MeasureInline(string text)

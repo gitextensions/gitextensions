@@ -12,7 +12,6 @@ namespace GitUI.CommitInfo;
 
 public partial class CommitInfoHeader : GitModuleControl
 {
-    private const int TextRendererOverhang = 7;
     private readonly IDateFormatter _dateFormatter = new DateFormatter();
     private readonly ILinkFactory _linkFactory = new LinkFactory();
     private readonly ICommitDataManager _commitDataManager;
@@ -36,14 +35,11 @@ public partial class CommitInfoHeader : GitModuleControl
         _commitDataManager = new CommitDataManager(() => Module);
         _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);
 
-        // The source sets explicit RichEdit tabs, but its captured XHTML paragraph paints
-        // at the half-inch default intervals. The explicit stops still determine its
-        // ContentsResized width. Preserve both measured native results at 96 DPI.
+        // The source XHTML loader inserts SelectedRtf for its first author link, clearing
+        // explicit paragraph tabs. Both painting and ContentsResized use half-inch defaults.
         const int richEditDefaultTabInterval = 48;
-        int[] sourceTabStops = [.. _commitDataHeaderRenderer.GetTabStops()];
-        rtbRevisionHeader.SetTabStops(
-            sourceTabStops.Select((_, index) => (index + 1) * richEditDefaultTabInterval),
-            sourceTabStops.Select(tabStop => tabStop + TextRendererOverhang));
+        rtbRevisionHeader.NativeContentOverhang = 2; // Borderless RichEdit retains one formatting pixel at each edge.
+        rtbRevisionHeader.SetTabStops([], [], richEditDefaultTabInterval);
     }
 
     // Avalonia constraint: ContextMenu is the native counterpart of ContextMenuStrip.
