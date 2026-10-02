@@ -1077,11 +1077,11 @@ public sealed partial class ParityScreenshotTests
     {
         if (root is Dashboard or FormBrowse)
         {
-            // parity-scaffolding: Match the independently isolated reference workers. Dashboard
-            // owns categorized history; its seed must not leak into a later Browse/theme cell.
+            // parity-scaffolding: Both hosts use the same categorized history. Seed every cell
+            // explicitly rather than depending on a preceding Dashboard capture's settings.
             Repository repository = new(context.Module.WorkingDir);
             await RepositoryHistoryManager.Locals.AddAsMostRecentAsync(repository.Path);
-            await RepositoryHistoryManager.Locals.AssignCategoryAsync(repository, root is Dashboard ? "Development" : null);
+            await RepositoryHistoryManager.Locals.AssignCategoryAsync(repository, "Development");
             context.Commands.GetRequiredService<IUserRepositoriesListController>().ClearCache();
             context.Commands.GetRequiredService<IRepositoryHistoryUIService>().Invalidate();
         }
@@ -1091,14 +1091,6 @@ public sealed partial class ParityScreenshotTests
 
     private static void PrepareView(Control root, CaptureContext context)
     {
-        if (root is FormSettings formSettings)
-        {
-            // parity-scaffolding: The WinForms capture tool is built in Release, where the
-            // source's DEBUG-only discard button stays hidden. Keep the paired render in the
-            // same compilation state without changing the debug-only product affordance.
-            formSettings.GetTestAccessor().DiscardButton.IsVisible = false;
-        }
-
         if (root is FormAbout formAbout)
         {
             FieldInfo thanksTimer = typeof(FormAbout).GetField("_thanksTimer", BindingFlags.Instance | BindingFlags.NonPublic)
@@ -2255,6 +2247,13 @@ public sealed partial class ParityScreenshotTests
 
     private static (double Width, double Height) GetCaptureSize(Type viewType)
     {
+        if (viewType == typeof(FilterToolBar))
+        {
+            // parity-scaffolding: The native AutoSize strip resolves to this standalone
+            // viewport at the shared reference font; do not compare it to the generic host.
+            return (551, 25);
+        }
+
         if (viewType == typeof(SettingControlBindingsCaptureSurface)
             || viewType == typeof(SettingControlBindingsNullCaptureSurface))
         {

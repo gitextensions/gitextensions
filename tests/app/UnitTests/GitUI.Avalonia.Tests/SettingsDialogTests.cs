@@ -44,11 +44,13 @@ public sealed class SettingsDialogTests
     [AvaloniaTest]
     public void FormBrowse_should_expose_the_live_settings_toolbar_action()
     {
-        FormBrowse form = new();
+        using FormBrowse form = new();
 
-        Button settings = form.FindControl<Button>("EditSettings")
+        IconButton settings = form.FindControl<IconButton>("EditSettings")
             ?? throw new InvalidOperationException("Settings toolbar button was not created.");
-        settings.Content.Should().Be("Settings");
+        settings.Content.Should().BeNull("the source Settings command is image-only");
+        settings.Icon.Should().NotBeNull();
+        ToolTip.GetTip(settings).Should().Be("Settings");
         settings.IsVisible.Should().BeTrue();
     }
 
@@ -1681,12 +1683,14 @@ public sealed class SettingsDialogTests
                     .Single(item => item.setting.Name == FormBrowse.HotkeySettingsName)
                     .index;
                 accessor.Hotkeys.Settings.SelectedIndex = browseIndex;
-                int refreshIndex = accessor.Hotkeys.Mappings.Items
+                // Refresh is not a default Browse mapping in the original; customize
+                // the source Commit mapping to exercise capture/apply/clear/reset/save.
+                int commitIndex = accessor.Hotkeys.Mappings.Items
                     .Cast<HotkeyCommand>()
                     .Select((command, index) => (command, index))
-                    .Single(item => item.command.CommandCode == (int)FormBrowse.Command.Refresh)
+                    .Single(item => item.command.CommandCode == (int)FormBrowse.Command.Commit)
                     .index;
-                accessor.Hotkeys.Mappings.SelectedIndex = refreshIndex;
+                accessor.Hotkeys.Mappings.SelectedIndex = commitIndex;
                 accessor.Hotkeys.Hotkey.Focus();
 
                 window.KeyPress(
@@ -1697,7 +1701,7 @@ public sealed class SettingsDialogTests
                 accessor.Hotkeys.Hotkey.KeyData.Should()
                     .Be(WinFormsShims.Keys.Control | WinFormsShims.Keys.F6);
                 accessor.Hotkeys.Apply.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                accessor.Hotkeys.Values![browseIndex].Commands![refreshIndex].KeyData.Should()
+                accessor.Hotkeys.Values![browseIndex].Commands![commitIndex].KeyData.Should()
                     .Be(WinFormsShims.Keys.Control | WinFormsShims.Keys.F6);
                 Dispatcher.UIThread.RunJobs();
                 accessor.Hotkeys.Mappings.GetVisualDescendants()
@@ -1705,24 +1709,24 @@ public sealed class SettingsDialogTests
                     .Should()
                     .Contain(textBlock => textBlock.Text == "Ctrl+F6");
 
-                accessor.Hotkeys.Mappings.SelectedIndex = refreshIndex;
+                accessor.Hotkeys.Mappings.SelectedIndex = commitIndex;
                 accessor.Hotkeys.Clear.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                accessor.Hotkeys.Values[browseIndex].Commands![refreshIndex].KeyData.Should()
+                accessor.Hotkeys.Values[browseIndex].Commands![commitIndex].KeyData.Should()
                     .Be(WinFormsShims.Keys.None);
 
                 accessor.Hotkeys.Reset.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                HotkeyCommand resetRefresh = accessor.Hotkeys.Values!
+                HotkeyCommand resetCommit = accessor.Hotkeys.Values!
                     .Single(setting => setting.Name == FormBrowse.HotkeySettingsName)
                     .Commands!
-                    .Single(command => command.CommandCode == (int)FormBrowse.Command.Refresh);
-                resetRefresh.KeyData.Should().Be(WinFormsShims.Keys.F5);
+                    .Single(command => command.CommandCode == (int)FormBrowse.Command.Commit);
+                resetCommit.KeyData.Should().Be(WinFormsShims.Keys.Control | WinFormsShims.Keys.Space);
 
                 page.SaveSettings();
                 manager.LoadHotkeys(FormBrowse.HotkeySettingsName)
                     .Should()
                     .ContainSingle(command =>
-                        command.CommandCode == (int)FormBrowse.Command.Refresh
-                        && command.KeyData == WinFormsShims.Keys.F5);
+                        command.CommandCode == (int)FormBrowse.Command.Commit
+                        && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Space));
                 window.CaptureRenderedFrame().Should().NotBeNull();
             }
             finally

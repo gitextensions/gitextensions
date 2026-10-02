@@ -28,6 +28,45 @@ public sealed class DashboardTests
 {
     [AvaloniaTest]
     [Category("P8.6i.126")]
+    public void Repository_group_chrome_should_use_native_text_styles_and_update_its_divider_without_reloading()
+    {
+        Repository recent = new(@"C:\repos\recent");
+        RepositoryHistorySnapshot snapshot = new(
+            [new RepositoryHistoryEntry(recent, "recent", "main", IsFavourite: false, IsAnchored: false)], []);
+        UserRepositoriesList list = new();
+        list.Initialize(CreateController(snapshot), CreateHistory(snapshot), () => Substitute.For<IGitUICommands>());
+        list.ShowRecentRepositories(reloadData: false);
+        Window window = new() { Width = 700, Height = 500, Content = list, RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Light };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Button task = list.GetVisualDescendants().OfType<Button>()
+                .Single(button => button.Classes.Contains("dashboard-group-action"));
+            Grid header = (Grid)task.Parent!;
+            TextBlock caption = header.Children.OfType<TextBlock>().Single();
+            Border divider = header.Children.OfType<Border>().Single();
+            ((Avalonia.Media.SolidColorBrush)caption.Foreground!).Color.Should().Be(Avalonia.Media.Color.Parse("#003399"));
+            ((Avalonia.Media.SolidColorBrush)task.Foreground!).Color.Should().Be(Avalonia.Media.Color.Parse("#0066CC"));
+            ((Avalonia.Media.SolidColorBrush)divider.Background!).Color.Should().Be(Avalonia.Media.Color.Parse("#B2C1E0"));
+
+            window.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Dark;
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            ((Avalonia.Media.SolidColorBrush)caption.Foreground!).Color.Should().Be(Avalonia.Media.Color.Parse("#003399"));
+            ((Avalonia.Media.SolidColorBrush)task.Foreground!).Color.Should().Be(Avalonia.Media.Color.Parse("#0066CC"));
+            ((Avalonia.Media.SolidColorBrush)divider.Background!).Color.Should().Be(Avalonia.Media.Color.Parse("#2D2D2D"));
+            task.Parent.Should().BeSameAs(header, "theme changes must repaint the existing group, not clear repository selection");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
     [TestCase(false)]
     [TestCase(true)]
     public void Repository_focus_should_select_the_first_tile_through_keyboard_and_capture_routes(bool captureRoute)
