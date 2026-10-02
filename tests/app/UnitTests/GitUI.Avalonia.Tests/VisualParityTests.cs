@@ -921,7 +921,7 @@ public sealed class VisualParityTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void Browse_commands_and_plugins_should_remeasure_for_font_and_translation_changes()
+    public void Browse_auto_size_menu_items_should_remeasure_for_font_and_translation_changes()
     {
         using FormBrowse form = new();
         form.Show();
@@ -929,26 +929,46 @@ public sealed class VisualParityTests
         {
             Dispatcher.UIThread.RunJobs();
             Menu menu = form.FindControl<Menu>("mainMenuStrip")!;
-            foreach (string name in new[] { "commandsToolStripMenuItem", "pluginsToolStripMenuItem" })
+            foreach (string name in new[] { "commandsToolStripMenuItem", "pluginsToolStripMenuItem", "toolsToolStripMenuItem", "helpToolStripMenuItem" })
             {
                 MenuItem item = menu.Items.OfType<MenuItem>().Single(control => control.Name == name);
                 item.IsVisible = true;
                 Dispatcher.UIThread.RunJobs();
+                item.Bounds.Width.Should().Be(MeasurePreferredWidth(item));
                 double initialWidth = item.Bounds.Width;
                 item.Header = "_A considerably longer translated command";
                 Dispatcher.UIThread.RunJobs();
                 item.Bounds.Width.Should().BeGreaterThan(initialWidth);
+                item.Bounds.Width.Should().Be(MeasurePreferredWidth(item));
                 item.Width.Should().Be(Math.Ceiling(item.Width));
 
                 double translatedWidth = item.Bounds.Width;
                 item.FontSize += 4;
                 Dispatcher.UIThread.RunJobs();
                 item.Bounds.Width.Should().BeGreaterThan(translatedWidth);
+                item.Bounds.Width.Should().Be(MeasurePreferredWidth(item));
             }
         }
         finally
         {
             form.Close();
+        }
+
+        return;
+
+        static double MeasurePreferredWidth(MenuItem item)
+        {
+            const int nativeItemBorderWidth = 2;
+            string text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(item.Header as string ?? string.Empty);
+            if (OperatingSystem.IsWindows())
+            {
+                text = text.Replace("&", "&&", StringComparison.Ordinal);
+            }
+
+            Thickness padding = GitUI.Compat.WinFormsControls.MenuStripEx.GetNativeItemPadding(item);
+            return Math.Ceiling(Math.Max(item.MinWidth,
+                WinFormsTextMeasurer.MeasureTextRenderer(item, text).Width
+                + (nativeItemBorderWidth * 2) + padding.Left + padding.Right));
         }
     }
 

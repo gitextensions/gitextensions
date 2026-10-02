@@ -139,12 +139,15 @@ public partial class Dashboard : GitModuleControl
         Avalonia.Size heading = WinFormsTextMeasurer.MeasureTextRenderer(lblContribute, lblContribute.Text ?? string.Empty);
         lblContribute.Width = Math.Ceiling(heading.Width);
         lblContribute.Height = Math.Ceiling(heading.Height);
-        double startHeight = SizeLinks(startLinks) + flpnlStart.Padding.Top + flpnlStart.Padding.Bottom;
         double contributionHeight = SizeLinks((StackPanel)flpnlContribute.Child!)
             + lblContribute.Height + lblContribute.Margin.Top + lblContribute.Margin.Bottom
             + flpnlContribute.Padding.Top + flpnlContribute.Padding.Bottom;
-        flpnlStart.MinHeight = startHeight;
+
+        // Native onLayout fixes the contribution Height and MinimumSize before sizing start links.
         flpnlContribute.Height = contributionHeight;
+        flpnlContribute.MinHeight = contributionHeight;
+        double startHeight = SizeLinks(startLinks) + flpnlStart.Padding.Top + flpnlStart.Padding.Bottom;
+        flpnlStart.MinHeight = startHeight;
         tableLayoutPanel1.MinHeight = pnlLogo.Height + startHeight + contributionHeight;
 
         // Dock.Fill inside native AutoScroll uses the host/minimum height, not the background's preferred size.
