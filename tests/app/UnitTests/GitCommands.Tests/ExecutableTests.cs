@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel;
+using System.Text;
 using GitCommands;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
@@ -17,6 +18,45 @@ public sealed class ExecutableTests
     [TearDown]
     public void TearDown()
     {
+    }
+
+    [Test]
+    [TestCase(true)]
+    [TestCase(false)]
+    [NonParallelizable]
+    public void Process_start_failure_should_rethrow_without_leaking_an_unobserved_exit_task(bool missingExecutable)
+    {
+        string missingPath = Path.Combine(Path.GetTempPath(), $"GitExtensions.StartFailure-{Guid.NewGuid():N}");
+        int unobservedFaultCount = 0;
+        void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+        {
+            if (e.Exception.Flatten().InnerExceptions.Any(exception => exception.Message.Contains(missingPath, StringComparison.Ordinal)))
+            {
+                Interlocked.Increment(ref unobservedFaultCount);
+            }
+        }
+
+        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+        try
+        {
+            IExecutable executable = missingExecutable
+                ? new Executable(missingPath)
+                : new Executable(Environment.ProcessPath!, missingPath);
+            Action start = () => executable.Start();
+            start.Should().Throw<ExternalOperationException>().Which.InnerException
+                .Should().BeOfType<Win32Exception>().Which.Message.Should().Contain(missingPath);
+            for (int attempt = 0; attempt < 3; attempt++)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+
+            unobservedFaultCount.Should().Be(0, "the constructor rethrows the startup error and cannot publish its exit task");
+        }
+        finally
+        {
+            TaskScheduler.UnobservedTaskException -= OnUnobservedTaskException;
+        }
     }
 
     [Test]

@@ -15,20 +15,41 @@
           <SolidColorBrush x:Key="DashboardRepositoryHoverBrush" Color="#202020" />
         </ResourceDictionary>
       </ResourceDictionary.ThemeDictionaries>
+      <!-- The native ListView task is a text link, not a Fluent button. -->
+      <ControlTheme x:Key="DashboardGroupActionTheme" TargetType="Button">
+        <Setter Property="Template">
+          <ControlTemplate>
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Content="{TemplateBinding Content}"
+                              Padding="{TemplateBinding Padding}"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              VerticalContentAlignment="Center" />
+          </ControlTemplate>
+        </Setter>
+      </ControlTheme>
     </ResourceDictionary>
   </UserControl.Resources>
   <UserControl.Styles>
-    <Style Selector="ListBoxItem.repository-tile:pointerover /template/ ContentPresenter#PART_ContentPresenter,
-                     ListBoxItem.repository-tile:selected /template/ ContentPresenter#PART_ContentPresenter,
-                     ListBoxItem.repository-tile:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter,
-                     ListBox:not(:focus-within) ListBoxItem.repository-tile:selected /template/ ContentPresenter#PART_ContentPresenter">
+    <Style Selector="ListBoxItem.repository-tile:pointerover Grid.repository-tile-content,
+                     ListBoxItem.repository-tile:selected Grid.repository-tile-content,
+                     ListBoxItem.repository-tile:selected:pointerover Grid.repository-tile-content,
+                     ListBox:not(:focus-within) ListBoxItem.repository-tile:selected Grid.repository-tile-content">
       <Setter Property="Background" Value="{DynamicResource DashboardRepositoryHoverBrush}" />
     </Style>
     <Style Selector="ListBoxItem.repository-group:pointerover /template/ ContentPresenter#PART_ContentPresenter,
-                     ListBoxItem.repository-group:selected /template/ ContentPresenter#PART_ContentPresenter">
+                     ListBoxItem.repository-group:selected /template/ ContentPresenter#PART_ContentPresenter,
+                     ListBoxItem.repository-tile:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                     ListBoxItem.repository-tile:selected /template/ ContentPresenter#PART_ContentPresenter,
+                     ListBox:not(:focus-within) ListBoxItem.repository-tile:selected /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
     </Style>
     <Style Selector="Button.dashboard-group-action">
+      <Setter Property="Theme" Value="{StaticResource DashboardGroupActionTheme}" />
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorHotTrackBrush}" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="MinWidth" Value="0" />
+      <Setter Property="Cursor" Value="Hand" />
       <Setter Property="Padding" Value="4,1" />
       <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
       <Setter Property="BorderThickness" Value="0" />
@@ -67,6 +88,7 @@
                            RowDefinitions="45,*"
                            Margin="0">
         <TextBox x:Name="textBoxSearch"
+                 Foreground="{DynamicResource GitExtensionsKnownColorWindowTextBrush}"
                  compat:TranslationCompat.TranslateWatermark="False"
                  Margin="3"
                  Height="23"

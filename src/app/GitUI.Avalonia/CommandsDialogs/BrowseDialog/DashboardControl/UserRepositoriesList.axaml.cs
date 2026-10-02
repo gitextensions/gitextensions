@@ -475,13 +475,23 @@ public partial class UserRepositoriesList : TranslatedControl
                 Tag = group,
             };
             actions.Click += listView1.RaiseGroupTaskLinkClick;
-            Grid header = new() { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"), Margin = new Avalonia.Thickness(9, 10, 4, 4) };
+
+            // The native grouped tile ListView reserves a 21px header at 96 DPI,
+            // with a 3px gap between groups (LVM_GETGROUPRECT, not bitmap offsets).
+            Grid header = new()
+            {
+                ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"),
+                Background = Brushes.Transparent,
+                Height = 21,
+                Margin = new Thickness(0, listView1.Items.IndexOf(group) == 0 ? 0 : 3, 0, 0),
+            };
             header.Children.Add(new TextBlock
             {
                 Text = group.Name,
                 Foreground = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(
                     AvaloniaThemeResources.ResolveSystemColor(GitUI.Theming.ThemeModule.Settings, System.Drawing.KnownColor.HotTrack))),
-                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(10, 2, 0, 0),
+                VerticalAlignment = VerticalAlignment.Top,
                 IsHitTestVisible = false,
             });
             Border rule = new()
@@ -517,8 +527,12 @@ public partial class UserRepositoriesList : TranslatedControl
         };
         Grid row = new()
         {
-            MinHeight = repository.TileSize.Height,
-            Width = repository.TileSize.Width,
+            // Native tile Bounds exclude 2px on either side and 1px above/below.
+            // The owner-draw offsets below are relative to that inner rectangle.
+            Classes = { "repository-tile-content" },
+            Margin = new Thickness(2, 1),
+            MinHeight = Math.Max(0, repository.TileSize.Height - 2),
+            Width = Math.Max(0, repository.TileSize.Width - 4),
             HorizontalAlignment = HorizontalAlignment.Left,
         };
         if (!string.IsNullOrWhiteSpace(repository.Repository.Repo.Category))
@@ -539,21 +553,30 @@ public partial class UserRepositoriesList : TranslatedControl
         // retain the original layer order.
         row.Children.Add(image);
 
+        TextBlock path = new()
+        {
+            FontFamily = new FontFamily(AppSettings.Font.Name),
+            FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
+            FontStyle = AppSettings.Font.Italic ? FontStyle.Italic : FontStyle.Normal,
+            FontWeight = AppSettings.Font.Bold ? FontWeight.Bold : FontWeight.Normal,
+            Text = ShortenText(
+                repository.Text,
+                AppSettings.Font,
+                (float)Math.Max(1, row.Width - 2 - image.Width - 2)),
+            Foreground = _foreColorBrush,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        };
+
+        // DrawItem advances by TextRenderer's measured height, not the Avalonia
+        // TextBlock line box. Retain that source baseline algorithm for the branch.
+        path.Height = WinFormsTextMeasurer.MeasureTextRenderer(path, repository.Text).Height;
         StackPanel text = new()
         {
             Spacing = 1,
             Margin = new Avalonia.Thickness(4 + 2 + image.Width + 2, 6, 4, 0),
             Children =
             {
-                new TextBlock
-                {
-                    Text = ShortenText(
-                        repository.Text,
-                        AppSettings.Font,
-                        (float)Math.Max(1, repository.TileSize.Width - 2 - image.Width - 2)),
-                    Foreground = _foreColorBrush,
-                    TextTrimming = TextTrimming.CharacterEllipsis,
-                },
+                path,
                 new TextBlock
                 {
                     Text = repository.BranchName,
@@ -768,7 +791,11 @@ public partial class UserRepositoriesList : TranslatedControl
         tsmiCategoryDelete.IsVisible = !group.IsRecentGroup;
         tsmiCategoryRename.IsVisible = !group.IsRecentGroup;
         tsmiCategoryClear.IsVisible = group.IsRecentGroup;
-        contextMenuStripCategory.Open(button);
+
+        // Avalonia opens a retained ContextMenu through its declared owner;
+        // the clicked task is its placement target, not a different menu owner.
+        contextMenuStripCategory.PlacementTarget = button;
+        contextMenuStripCategory.Open();
     }
 
     private void listView1_PointerPressed(object? sender, PointerPressedEventArgs e)
@@ -1103,6 +1130,12 @@ public partial class UserRepositoriesList : TranslatedControl
         e.Container.Focusable = !isHeader;
         e.Container.Classes.Set("repository-group", isHeader);
         e.Container.Classes.Set("repository-tile", !isHeader);
+        if (e.Container is ListBoxItem container)
+        {
+            RepositoryListItem? repository = listView1.Items[e.Index] as RepositoryListItem;
+            container.Width = repository?.TileSize.Width ?? double.NaN;
+            container.HorizontalAlignment = isHeader ? HorizontalAlignment.Stretch : HorizontalAlignment.Left;
+        }
     }
 
     private void RepositoryHistoryUIService_HistoryChanged(object? sender, EventArgs e)

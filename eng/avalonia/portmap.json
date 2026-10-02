@@ -184,25 +184,25 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.axaml.cs",
     "status": "functional",
     "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "2026-10-02 verified working batch based on 63860cbc7c95fdfafbc8421ac044529ca7ee2132: Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/ Full six-axis parity remains incomplete."
+    "notes": "2026-10-02 verified working batch based on f5dfb3cb41f2d889eafe4946b877904a27a99f23: Normal capture preserves the source visible-change search focus instead of retabbing to the first link. Embedded native group/tile geometry and branch-text baselines are repaired; actual search background/menu color roles are recorded. Images, source focus-border shape, exact text and exhaustive interaction parity remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.axaml",
     "status": "functional",
     "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "2026-10-02 verified working batch based on 63860cbc7c95fdfafbc8421ac044529ca7ee2132: Dashboard recreates anonymous source-ordered links at refresh, preserves caption font styles and native image/text overhang placement, and uses a chrome-free link theme. Capture distinguishes painted link foreground from inherited control foreground and opaque parent background. Remaining layout, search focus, group/text and exhaustive interaction parity remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/ Full six-axis parity remains incomplete."
+    "notes": "2026-10-02 verified working batch based on f5dfb3cb41f2d889eafe4946b877904a27a99f23: Normal capture preserves the source visible-change search focus instead of retabbing to the first link. Embedded native group/tile geometry and branch-text baselines are repaired; actual search background/menu color roles are recorded. Images, source focus-border shape, exact text and exhaustive interaction parity remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml.cs",
     "status": "functional",
     "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "2026-10-02 verified working batch based on 63860cbc7c95fdfafbc8421ac044529ca7ee2132: Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/ Full six-axis parity remains incomplete."
+    "notes": "2026-10-02 verified working batch based on f5dfb3cb41f2d889eafe4946b877904a27a99f23: Repository group headers use native 96-DPI LVM_GETGROUPRECT defaults, with source-inner tile Bounds and measured text height. Hover paints those bounds; a real pointer reveals Actions and opens its retained menu without a mismatched-owner exception. Capture reads the actual configured search background. Images, header-task popup pixels, search focus-border shape and exhaustive state coverage remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml",
     "status": "functional",
     "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "2026-10-02 verified working batch based on 63860cbc7c95fdfafbc8421ac044529ca7ee2132: Dashboard headings preserve the source normal heading font and font-derived GDI overhang padding. Native source column widths remain 60. Capture preserves source-authored stored dock margins separately from Avalonia runtime insets. Native group/search/state parity remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-66/ Full six-axis parity remains incomplete."
+    "notes": "2026-10-02 verified working batch based on f5dfb3cb41f2d889eafe4946b877904a27a99f23: Repository group headers use native 96-DPI LVM_GETGROUPRECT defaults, with source-inner tile Bounds and measured text height. Hover paints those bounds; a real pointer reveals Actions and opens its retained menu without a mismatched-owner exception. Capture reads the actual configured search background. Images, header-task popup pixels, search focus-border shape and exhaustive state coverage remain open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/ Full six-axis parity remains incomplete."
   },
   "src/app/GitUI/CommandsDialogs/InvalidRepositoryRemover.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/InvalidRepositoryRemover.cs",
