@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:GitUI.CommandsDialogs.BrowseDialog.DashboardControl"
+             xmlns:compat="using:GitUI.Compat"
              xmlns:wf="using:GitUI.Compat.WinFormsControls"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard"
@@ -51,13 +52,12 @@
       <Setter Property="MinHeight" Value="0" />
       <Setter Property="HorizontalAlignment" Value="Left" />
       <Setter Property="Foreground" Value="{DynamicResource DashboardLinkForegroundBrush}" />
-      <Setter Property="Cursor" Value="Hand" />
       <Setter Property="Theme" Value="{StaticResource DashboardLinkTheme}" />
     </Style>
-    <Style Selector="Button.dashboard-link:pointerover">
+    <Style Selector="Button.dashboard-link:native-mousehover">
       <Setter Property="Foreground" Value="{DynamicResource DashboardLinkHoverForegroundBrush}" />
     </Style>
-    <Style Selector="Button.dashboard-link:pressed">
+    <Style Selector="Button.dashboard-link:native-link-active">
       <!-- WinForms LinkLabel's default ActiveLinkColor is Red, independently of LinkColor. -->
       <Setter Property="Foreground" Value="{StaticResource GitExtensionsNativeLinkActiveBrush}" />
     </Style>
@@ -103,7 +103,7 @@
               ClipToBounds="True"
               Background="{DynamicResource DashboardContributeBackgroundBrush}">
         <StackPanel>
-          <wf:Label x:Name="lblContribute" Text="Contribute" Margin="2,0,2,8" HorizontalAlignment="Left" />
+          <compat:DashboardTextBlock x:Name="lblContribute" Text="Contribute" Margin="2,0,2,8" HorizontalAlignment="Left" />
         </StackPanel>
       </Border>
       </Grid>

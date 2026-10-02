@@ -4,11 +4,13 @@ using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
+using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
+using Avalonia.Utilities;
 using GitExtUtils;
 using Point = Avalonia.Point;
 using Size = Avalonia.Size;
@@ -35,6 +37,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     private int _defaultTabInterval;
     private int _nativeFormattingInset;
     private bool _usesNativeWidthMeasurement;
+    private bool _usesSelectedRtfFont;
 
     /// <summary>Initializes the XHTML renderer with source-shaped clipboard semantics.</summary>
     public XhtmlTextBlock()
@@ -226,23 +229,53 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         }
 
         double maximumLineWidth = 0;
-        foreach (string line in _plainText.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
+        if (_usesNativeWidthMeasurement && Inlines is { Count: > 0 })
         {
             double lineWidth = 0;
             int tabIndex = 0;
-            string[] parts = line.Split('\t');
-            for (int index = 0; index < parts.Length; index++)
+            foreach (Inline inline in Inlines)
             {
-                if (index > 0)
+                switch (inline)
                 {
-                    lineWidth = GetNextTabStop(_widthTabStops, ref tabIndex, lineWidth,
-                        WinFormsTextMeasurer.Measure(this, "    "));
+                    case LineBreak:
+                        maximumLineWidth = Math.Max(maximumLineWidth, lineWidth);
+                        lineWidth = 0;
+                        tabIndex = 0;
+                        break;
+                    case InlineUIContainer { Child: { Tag: "\t" } }:
+                        lineWidth = GetNextTabStop(_widthTabStops, ref tabIndex, lineWidth, MeasureNativeInline("    "));
+                        break;
+                    case InlineUIContainer { Child: HyperlinkButton { Content: string caption, Tag: string uri } }:
+                        lineWidth += MeasureNativeInline(caption, rtfRoundTrip: caption != uri);
+                        break;
+                    case Run run:
+                        lineWidth += MeasureNativeInline(run.Text ?? string.Empty);
+                        break;
                 }
-
-                lineWidth += WinFormsTextMeasurer.Measure(this, parts[index]);
             }
 
             maximumLineWidth = Math.Max(maximumLineWidth, lineWidth);
+        }
+        else
+        {
+            foreach (string line in _plainText.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
+            {
+                double lineWidth = 0;
+                int tabIndex = 0;
+                string[] parts = line.Split('\t');
+                for (int index = 0; index < parts.Length; index++)
+                {
+                    if (index > 0)
+                    {
+                        lineWidth = GetNextTabStop(_widthTabStops, ref tabIndex, lineWidth,
+                            WinFormsTextMeasurer.Measure(this, "    "));
+                    }
+
+                    lineWidth += WinFormsTextMeasurer.Measure(this, parts[index]);
+                }
+
+                maximumLineWidth = Math.Max(maximumLineWidth, lineWidth);
+            }
         }
 
         // The native formatting rectangle contributes its own edge allowance; it is not
@@ -329,6 +362,153 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
         return arrangedSize;
     }
+
+    protected override TextLayout CreateTextLayout(string? text)
+    {
+        if (!_usesNativeWidthMeasurement || _textRuns is null || FlowDirection != FlowDirection.LeftToRight || LineSpacing != 0)
+        {
+            return base.CreateTextLayout(text);
+        }
+
+        // ContentsResized and painting use the same native character advances. Merely
+        // assigning a GDI-measured Width leaves Skia's wider advances clipping the final
+        // characters. Preserve its glyphs and offsets; adapt advances before layout so
+        // painting, selection and hit testing all see the same character positions.
+        List<TextRun> runs = [];
+        List<ValueSpan<TextRunProperties>>? selectionStyles = null;
+        int sourcePosition = 0;
+        double nativeFontSize = GetNativeFontSize();
+        foreach (TextRun run in _textRuns)
+        {
+            int runPosition = sourcePosition;
+            sourcePosition += run.Length;
+            int selectionStart = Math.Max(runPosition, Math.Min(SelectionStart, SelectionEnd));
+            int selectionEnd = Math.Min(sourcePosition, Math.Max(SelectionStart, SelectionEnd));
+            if (run is TextCharacters selectionCharacters && selectionEnd > selectionStart && SelectionForegroundBrush is not null)
+            {
+                // Retain SelectableTextBlock's foreground override for runs that use
+                // framework fallback rather than the native shaped-buffer adaptation.
+                selectionStyles ??= [];
+                selectionStyles.Add(new ValueSpan<TextRunProperties>(selectionStart,
+                    selectionEnd - selectionStart, GetSelectionProperties(selectionCharacters.Properties)));
+            }
+
+            if (run is not TextCharacters characters
+                || !WinFormsRichEditTextMeasurer.TryGetCharacterAdvances(this, characters.Text.ToString(), out int[] advances, nativeFontSize)
+                || !FontManager.Current.TryGetGlyphTypeface(characters.Properties.Typeface, out GlyphTypeface? glyphTypeface)
+                || glyphTypeface is null)
+            {
+                runs.Add(run);
+                continue;
+            }
+
+            GenericTextRunProperties runProperties = new(characters.Properties.Typeface, nativeFontSize,
+                characters.Properties.TextDecorations, characters.Properties.ForegroundBrush,
+                characters.Properties.BackgroundBrush, characters.Properties.BaselineAlignment,
+                characters.Properties.CultureInfo, characters.Properties.FontFeatures);
+            ShapedBuffer buffer = TextShaper.Current.ShapeText(characters.Text,
+                new TextShaperOptions(glyphTypeface, nativeFontSize,
+                    culture: characters.Properties.CultureInfo, fontFeatures: characters.Properties.FontFeatures));
+            int firstCluster = buffer.Length == 0 ? 0 : buffer.Min(glyph => glyph.GlyphCluster);
+            bool supported = buffer.Length > 0 && buffer.All(glyph => glyph.GlyphIndex != 0);
+            for (int index = 0; supported && index < buffer.Length; index++)
+            {
+                int cluster = buffer[index].GlyphCluster - firstCluster;
+                supported = cluster >= 0 && cluster < advances.Length
+                    && (index == 0 || buffer[index].GlyphCluster >= buffer[index - 1].GlyphCluster);
+            }
+
+            if (!supported)
+            {
+                buffer.Dispose();
+                runs.Add(run);
+                continue;
+            }
+
+            for (int index = 0; index < buffer.Length;)
+            {
+                int cluster = buffer[index].GlyphCluster - firstCluster;
+                double advance = 0;
+                while (index < buffer.Length && buffer[index].GlyphCluster - firstCluster == cluster)
+                {
+                    advance += buffer[index++].GlyphAdvance;
+                }
+
+                int end = index < buffer.Length ? buffer[index].GlyphCluster - firstCluster : advances.Length;
+                double nativeAdvance = advances[end - 1] - (cluster == 0 ? 0 : advances[cluster - 1]);
+                GlyphInfo lastGlyph = buffer[index - 1];
+                buffer[index - 1] = new GlyphInfo(lastGlyph.GlyphIndex, lastGlyph.GlyphCluster,
+                    lastGlyph.GlyphAdvance + nativeAdvance - advance, lastGlyph.GlyphOffset);
+            }
+
+            AddNativeTextRuns(runs, buffer, runProperties, selectionStart - runPosition, selectionEnd - runPosition);
+        }
+
+        GenericTextRunProperties properties = new(new Typeface(FontFamily, FontStyle, FontWeight, FontStretch),
+            FontSize, TextDecorations, Foreground, fontFeatures: FontFeatures);
+        GenericTextParagraphProperties paragraph = new(FlowDirection,
+            IsMeasureValid ? TextAlignment : TextAlignment.Left, true, false, properties,
+            TextWrapping, LineHeight, 0, LetterSpacing);
+        Size maximumSize = GetMaxSizeFromConstraint();
+        return new TextLayout(new InlinesTextSource(runs, selectionStyles), paragraph, TextTrimming,
+            maximumSize.Width, maximumSize.Height, MaxLines);
+    }
+
+    private void AddNativeTextRuns(List<TextRun> runs, ShapedBuffer buffer, TextRunProperties properties, int selectionStart, int selectionEnd)
+    {
+        if (SelectionForegroundBrush is null || selectionEnd <= selectionStart)
+        {
+            runs.Add(new ShapedTextRun(buffer, properties));
+            return;
+        }
+
+        if (selectionStart > 0)
+        {
+            SplitResult<ShapedBuffer> prefix = buffer.Split(selectionStart);
+            ShapedBuffer first = prefix.First
+                ?? throw new InvalidOperationException("A native text prefix must contain its original glyphs.");
+            if (!ReferenceEquals(first, buffer))
+            {
+                buffer.Dispose();
+            }
+
+            runs.Add(new ShapedTextRun(first, properties));
+            selectionEnd -= first.Text.Length;
+            if (prefix.Second is not { } remaining)
+            {
+                return;
+            }
+
+            buffer = remaining;
+        }
+
+        if (selectionEnd <= 0)
+        {
+            runs.Add(new ShapedTextRun(buffer, properties));
+            return;
+        }
+
+        // Split the already shaped glyphs, not the source string: selecting text must
+        // change its brush without reshaping it or changing the native advances/hit bounds.
+        SplitResult<ShapedBuffer> selected = buffer.Split(selectionEnd);
+        ShapedBuffer selectedBuffer = selected.First
+            ?? throw new InvalidOperationException("A native text selection must contain its original glyphs.");
+        if (!ReferenceEquals(selectedBuffer, buffer))
+        {
+            buffer.Dispose();
+        }
+
+        runs.Add(new ShapedTextRun(selectedBuffer, GetSelectionProperties(properties)));
+        if (selected.Second is { } suffix)
+        {
+            runs.Add(new ShapedTextRun(suffix, properties));
+        }
+    }
+
+    private TextRunProperties GetSelectionProperties(TextRunProperties properties)
+        => new GenericTextRunProperties(properties.Typeface, properties.FontRenderingEmSize,
+            properties.TextDecorations, SelectionForegroundBrush, properties.BackgroundBrush,
+            properties.BaselineAlignment, properties.CultureInfo, properties.FontFeatures);
 
     protected override void RenderTextLayout(DrawingContext context, Point origin)
     {
@@ -448,6 +628,14 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     private double MeasureInline(string text)
     {
+        if (_usesNativeWidthMeasurement
+            && WinFormsRichEditTextMeasurer.TryGetCharacterAdvances(this, text, out int[] advances,
+                GetNativeFontSize())
+            && advances.Length > 0)
+        {
+            return advances[^1];
+        }
+
         TextLayout textLayout = new(
             text,
             new Typeface(FontFamily, FontStyle, FontWeight),
@@ -456,6 +644,15 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             letterSpacing: LetterSpacing);
         return textLayout.WidthIncludingTrailingWhitespace;
     }
+
+    private double MeasureNativeInline(string text, bool rtfRoundTrip = false)
+        => WinFormsRichEditTextMeasurer.TryGetCharacterAdvances(this, text, out int[] advances,
+            GetNativeFontSize(rtfRoundTrip)) && advances.Length > 0
+            ? advances[^1]
+            : WinFormsTextMeasurer.Measure(this, text);
+
+    private double GetNativeFontSize(bool rtfRoundTrip = false)
+        => _usesSelectedRtfFont ? FontSize : WinFormsRichEditTextMeasurer.GetFontSize(this, rtfRoundTrip);
 
     private void AddLineBreak()
         => Inlines?.Add(new LineBreak());
@@ -477,6 +674,30 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             Tag = uri,
         };
         ToolTip.SetTip(link, uri);
+        if (_usesNativeWidthMeasurement)
+        {
+            link.FontSize = GetNativeFontSize(rtfRoundTrip: caption != uri);
+
+            // The button keeps its source caption/URI and activation routes. Its text
+            // presenter must use the same native advances as the surrounding RichEdit
+            // runs, rather than reacquiring Fluent/Skia's wider unadapted caption metrics.
+            link.ContentTemplate = new FuncDataTemplate<string>((text, _) =>
+            {
+                XhtmlTextBlock presenter = new()
+                {
+                    _usesSelectedRtfFont = true,
+                    NativeContentOverhang = 0,
+                    IsHitTestVisible = false,
+                    Focusable = false,
+                    TextWrapping = TextWrapping.NoWrap,
+                    TextDecorations = Avalonia.Media.TextDecorations.Underline,
+                };
+                presenter.SetTabStops([], [], 48);
+                presenter.SetXHTMLText(WebUtility.HtmlEncode(text));
+                return presenter;
+            });
+        }
+
         link.Click += Link_Click;
 
         // Button handles the press before ordinary instance handlers; retain the link target

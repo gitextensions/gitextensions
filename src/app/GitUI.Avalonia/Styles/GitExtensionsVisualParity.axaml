@@ -1029,6 +1029,7 @@
                   Margin="0,0,0,-2"
                   Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
             <ItemsPresenter x:Name="PART_ItemsPresenter"
+                            Margin="2,0,0,0"
                             ItemsPanel="{TemplateBinding ItemsPanel}" />
           </Border>
           <Grid>
@@ -1044,18 +1045,30 @@
       </ControlTemplate>
     </Setter>
   </Style>
-  <!-- Keep ControlDpiExtensions' source TabItem padding (8,6). The template consumes one
-       less vertical DIP per edge and overlaps the content by two DIPs to match native paint. -->
+  <!-- Keep ControlDpiExtensions' source TabItem padding (8,6). Native padding includes the
+       outline; subtract the framework border rather than adding it to the allocation.
+       The selected outline overpaints its fixed allocation without reflowing its siblings. -->
   <Style Selector="Window.gitextensions-browse-window TabItem.gitextensions-workspace-tab">
     <Setter Property="Height" Value="NaN" />
     <Setter Property="MinHeight" Value="0" />
     <Setter Property="Padding" Value="8,6" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="HeaderTemplate">
+      <DataTemplate>
+        <compat:NativeTabHeaderPanel>
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[TabItem].Icon}" />
+          <AccessText VerticalAlignment="Center" Text="{Binding}" />
+        </compat:NativeTabHeaderPanel>
+      </DataTemplate>
+    </Setter>
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="PART_LayoutRoot"
                 Margin="0,2,0,0"
-                Padding="8,5"
+                Padding="7,5"
                 BorderBrush="{DynamicResource GitExtensionsNativeTabBorderBrush}"
                 BorderThickness="1,1,1,0"
                 Background="{DynamicResource GitExtensionsBrowseTabUnselectedBackgroundBrush}">
@@ -1073,7 +1086,7 @@
     <!-- Native tabs overpaint two DIPs beyond their fixed allocation. Compensating padding
          keeps the icon/caption fixed horizontally while the complete selected tab rises. -->
     <Setter Property="Margin" Value="-2,0,-2,0" />
-    <Setter Property="Padding" Value="10,5" />
+    <Setter Property="Padding" Value="9,5" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsBrowseTabSelectedBackgroundBrush}" />
   </Style>
   <!-- RichEdit's automatic link foreground follows the native theme, not Fluent's blue link palette. -->
