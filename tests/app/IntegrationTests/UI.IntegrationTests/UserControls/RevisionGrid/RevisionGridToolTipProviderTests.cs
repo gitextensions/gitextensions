@@ -53,6 +53,16 @@ public class RevisionGridToolTipProviderTests
     }
 
     [Test]
+    public void Hide_should_return_false_if_no_tooltip_is_shown()
+    {
+        RunProviderTest(provider =>
+        {
+            provider.Hide().Should().BeFalse(
+                "Esc is consumed if a tooltip was hidden, so it would not reach the hotkeys, e.g. 'Close repository'");
+        });
+    }
+
+    [Test]
     public void Clear_should_forget_the_cell_the_tooltip_was_built_for()
     {
         RunProviderTest(provider =>
