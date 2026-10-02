@@ -4,6 +4,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
@@ -26,6 +27,126 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class DashboardTests
 {
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(669, 358)]
+    [TestCase(1000, 600)]
+    public void Dashboard_capture_should_describe_runtime_docking_and_content_sizing_without_changing_pixels(int width, int height)
+    {
+        RepositoryHistorySnapshot snapshot = new([], []);
+        Dashboard dashboard = new();
+        dashboard.Initialize(CreateController(snapshot), CreateHistory(snapshot));
+        Window window = new() { Width = width, Height = height, Content = dashboard };
+        try
+        {
+            window.Show();
+            dashboard.RefreshContent();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            window.Focus();
+            Grid layout = dashboard.FindControl<Grid>("tableLayoutPanel1")!;
+            Border left = dashboard.FindControl<Border>("pnlLeft")!;
+            layout.Bounds.Height.Should().Be(Math.Max(dashboard.Bounds.Height, layout.MinHeight));
+            left.Bounds.Should().Be(new Rect(layout.ColumnDefinitions[0].ActualWidth, 0,
+                layout.ColumnDefinitions[1].ActualWidth, layout.Bounds.Height));
+            Rect layoutBounds = layout.Bounds;
+            Rect leftBounds = left.Bounds;
+            using WriteableBitmap before = window.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The Dashboard frame is unavailable.");
+            CaptureNode root = new AvaloniaControlTreeReader(dashboard, 1)
+                .ReadPrimary(dashboard, PixelSize.FromSize(AvaloniaControlTreeReader.GetSourceClientSize(dashboard), 1)).Root;
+            CaptureNode outerTable = EnumerateDashboardCaptureNodes(root)
+                .Single(node => node.FieldName == "tableLayoutPanel1" && node.Children.Any(child => child.FieldName == "pnlLeft"));
+            outerTable.Dock.Should().Be("Fill");
+            outerTable.AutoSize.Should().BeTrue();
+            outerTable.BoundsDip.Width.Should().Be((decimal)layout.Bounds.Width);
+            outerTable.BoundsDip.Height.Should().Be((decimal)layout.Bounds.Height);
+            CaptureNode panel = outerTable.Children.Single(node => node.FieldName == "pnlLeft");
+            panel.Dock.Should().Be("Fill");
+            panel.Anchor.Should().Equal("Top", "Left");
+            panel.BoundsDip.X.Should().Be((decimal)left.Bounds.X);
+            panel.BoundsDip.Y.Should().Be((decimal)left.Bounds.Y);
+            panel.BoundsDip.Width.Should().Be((decimal)left.Bounds.Width);
+            panel.BoundsDip.Height.Should().Be((decimal)left.Bounds.Height);
+            layout.Bounds.Should().Be(layoutBounds);
+            left.Bounds.Should().Be(leftBounds);
+            using WriteableBitmap after = window.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The Dashboard frame is unavailable.");
+            using MemoryStream beforeBytes = new();
+            using MemoryStream afterBytes = new();
+            before.Save(beforeBytes, PngBitmapEncoderOptions.Default);
+            after.Save(afterBytes, PngBitmapEncoderOptions.Default);
+            afterBytes.ToArray().Should().Equal(beforeBytes.ToArray(), "reading semantic runtime layout must not repaint or resize the product");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Repository_capture_should_use_native_menu_defaults_and_omit_only_the_nonvisual_popup_owner()
+    {
+        Repository favourite = new(@"C:\repos\favourite") { Category = "Team" };
+        RepositoryHistorySnapshot snapshot = new([], [
+            new RepositoryHistoryEntry(favourite, "favourite", "main", IsFavourite: true, IsAnchored: false)]);
+        UserRepositoriesList list = new();
+        list.Initialize(CreateController(snapshot), CreateHistory(snapshot), () => Substitute.For<IGitUICommands>());
+        list.ShowRecentRepositories(reloadData: false);
+        Window window = new() { Width = 700, Height = 500, Content = list };
+        ContextMenu categoryMenu = list.FindControl<ContextMenu>("contextMenuStripCategory")!;
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            AvaloniaControlTreeReader reader = new(list, 1);
+            CaptureNode root = reader.ReadPrimary(list, PixelSize.FromSize(list.Bounds.Size, 1)).Root;
+            CaptureNode menu = EnumerateDashboardCaptureNodes(root).Single(node => node.FieldName == "menuStripRecentMenu");
+            menu.Dock.Should().Be("Top");
+            menu.AutoSize.Should().BeTrue();
+            menu.TabStop.Should().BeFalse();
+            CaptureNode body = root.Children.Single(node => node.FieldName == "pnlBody");
+            body.Children.Should().ContainSingle(node => node.FieldName == "tableLayoutPanel2");
+            root.Children.Should().NotContain(node => node.FieldName == null,
+                "the empty, invisible popup owner has no native control or pixels");
+
+            Button task = list.GetVisualDescendants().OfType<Button>()
+                .Single(button => button.Classes.Contains("dashboard-group-action"));
+            task.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            categoryMenu.IsOpen.Should().BeTrue();
+            MenuItem rename = categoryMenu.Items.OfType<MenuItem>().Single(item => item.Name == "tsmiCategoryRename");
+            rename.IsVisible.Should().BeTrue();
+            rename.Bounds.Height.Should().BeGreaterThan(0, "the retained menu row must actually be laid out in the open popup");
+            CaptureNode popup = reader.ReadSurface(categoryMenu, "popup:category", new PixelRect(0, 0,
+                (int)categoryMenu.Bounds.Width, (int)categoryMenu.Bounds.Height)).Root;
+            popup.Children.Select(node => node.FieldName).Should().Contain(new[]
+            {
+                "tsmiCategoryRename",
+                "tsmiCategoryDelete",
+                "tsmiCategoryClear",
+            });
+            popup.Children.Single(node => node.FieldName == "tsmiCategoryRename").Visible.Should().BeTrue();
+            popup.Children.Single(node => node.FieldName == "tsmiCategoryClear").Visible.Should().BeFalse();
+
+            Grid content = (Grid)list.Content!;
+            Border unrelated = new() { IsVisible = false, Background = Avalonia.Media.Brushes.Red };
+            content.Children.Add(unrelated);
+            CaptureNode withUnrelatedControl = new AvaloniaControlTreeReader(list, 1)
+                .ReadPrimary(list, PixelSize.FromSize(list.Bounds.Size, 1)).Root;
+            withUnrelatedControl.Children.Should().ContainSingle(node => node.FieldName == null,
+                "an unrelated invisible or painted control must not be silently omitted");
+        }
+        finally
+        {
+            categoryMenu.Close();
+            window.Close();
+        }
+    }
+
     [AvaloniaTest]
     [Category("P8.6i.126")]
     public void Repository_group_chrome_should_use_native_text_styles_and_update_its_divider_without_reloading()
@@ -484,7 +605,7 @@ public sealed class DashboardTests
             logo.Bounds.Size.Should().Be(new Size(185, 44));
             Image image = (Image)logo.Child!;
             logo.SizeMode.Should().Be(WinFormsControls.PictureBoxSizeMode.Zoom);
-            image.Stretch.Should().Be(Avalonia.Media.Stretch.Uniform);
+            image.Stretch.Should().Be(Avalonia.Media.Stretch.Fill);
             image.Bounds.Width.Should().BeLessThan(logo.Bounds.Width);
             image.Bounds.Height.Should().Be(logo.Bounds.Height);
             logo.SizeMode = WinFormsControls.PictureBoxSizeMode.CenterImage;
@@ -1330,6 +1451,9 @@ public sealed class DashboardTests
         remover.Received(1).ShowDeleteInvalidRepositoryDialog(beta.Path);
         branchCache.Received(1).InvalidateAll();
     }
+
+    private static IEnumerable<CaptureNode> EnumerateDashboardCaptureNodes(CaptureNode node)
+        => node.Children.SelectMany(child => new[] { child }.Concat(EnumerateDashboardCaptureNodes(child)));
 
     private static IRepositoryHistoryUIService CreateHistory(RepositoryHistorySnapshot snapshot)
     {

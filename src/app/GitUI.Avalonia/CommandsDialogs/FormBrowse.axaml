@@ -169,7 +169,7 @@
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.DashboardFolderGit}" /></MenuItem.Icon>
         </wf:ToolStripMenuItem>
       </wf:ToolStripMenuItem>
-      <wf:ToolStripMenuItem x:Name="commandsToolStripMenuItem" Width="81" Header="_Commands">
+      <wf:ToolStripMenuItem x:Name="commandsToolStripMenuItem" Header="_Commands">
         <wf:ToolStripMenuItem x:Name="commitToolStripMenuItem" Header="_Commit...">
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RepoStateClean}" /></MenuItem.Icon>
         </wf:ToolStripMenuItem>
@@ -257,7 +257,7 @@
         <wf:ToolStripMenuItem x:Name="_addUpstreamRemoteToolStripMenuItem"
                   Header="_Add upstream remote" />
       </wf:ToolStripMenuItem>
-      <wf:ToolStripMenuItem x:Name="pluginsToolStripMenuItem" Width="58" Header="_Plugins">
+      <wf:ToolStripMenuItem x:Name="pluginsToolStripMenuItem" Header="_Plugins">
         <wf:ToolStripMenuItem x:Name="pluginsLoadingToolStripMenuItem"
                   Header="Loading..."
                   IsEnabled="False" />

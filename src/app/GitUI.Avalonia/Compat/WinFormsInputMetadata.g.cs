@@ -50,6 +50,7 @@ internal static class WinFormsInputMetadata
                 new("pbLogo", 0, false, null),
                 new("pnlLeft", 0, null, null),
                 new("pnlLogo", 0, null, null),
+                new("tableLayoutPanel1", 2, null, null),
                 new("userRepositoriesList", 1, null, null),
             ],
             ["GitUI.CommandsDialogs.BrowseDialog.DashboardControl.FormDashboardCategoryTitle"] =
@@ -65,8 +66,11 @@ internal static class WinFormsInputMetadata
             [
                 new("lblRecentRepositories", 2, null, null),
                 new("listView1", 1, null, null),
+                new("menuStripRecentMenu", 3, null, null),
                 new("pnlBody", 1, null, null),
                 new("pnlHeader", 0, null, null),
+                new("tableLayoutPanel1", 3, null, null),
+                new("tableLayoutPanel2", 4, null, null),
                 new("textBoxSearch", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.BrowseDialog.FormBisect"] =
@@ -160,6 +164,7 @@ internal static class WinFormsInputMetadata
                 new("linkDirectDownload", 1, true, null),
                 new("linkRequiredDotNetRuntime", 2, null, null),
                 new("progressBar1", 1, null, null),
+                new("tlpnlContent", 3, null, null),
             ],
             ["GitUI.CommandsDialogs.CommitDialog.FormCommitTemplateSettings"] =
             [
@@ -2065,6 +2070,7 @@ internal static class WinFormsInputMetadata
                 new("pbLogo", "PictureBox"),
                 new("pnlLeft", "Panel"),
                 new("pnlLogo", "Panel"),
+                new("tableLayoutPanel1", "TableLayoutPanel"),
                 new("userRepositoriesList", "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList"),
             ],
             ["GitUI.CommandsDialogs.BrowseDialog.DashboardControl.FormDashboardCategoryTitle"] =
@@ -2082,9 +2088,13 @@ internal static class WinFormsInputMetadata
                 new("contextMenuStripRepository", "ContextMenuStrip"),
                 new("lblRecentRepositories", "Label"),
                 new("listView1", "GitUI.UserControls.NativeListView"),
+                new("menuStripRecentMenu", "MenuStrip"),
                 new("mnuConfigure", "ToolStripMenuItem"),
+                new("mnuTop", "ToolStripMenuItem"),
                 new("pnlBody", "Panel"),
                 new("pnlHeader", "Panel"),
+                new("tableLayoutPanel1", "TableLayoutPanel"),
+                new("tableLayoutPanel2", "TableLayoutPanel"),
                 new("textBoxSearch", "TextBox"),
                 new("toolStripMenuItem1", "ToolStripSeparator"),
                 new("toolStripMenuItem2", "ToolStripSeparator"),
@@ -2167,10 +2177,15 @@ internal static class WinFormsInputMetadata
                 new("TopLabel", "Label"),
                 new("_NO_TRANSLATE_RecentRepositoriesHistorySize", "NumericUpDown"),
                 new("_NO_TRANSLATE_maxRecentRepositories", "NumericUpDown"),
+                new("anchorToRecentReposToolStripMenuItem", "ToolStripMenuItem"),
+                new("anchorToTopReposToolStripMenuItem", "ToolStripMenuItem"),
+                new("chdrRepository", "ColumnHeader"),
+                new("chdrRepository1", "ColumnHeader"),
                 new("comboMinWidthEdit", "NumericUpDown"),
                 new("comboMinWidthLabel", "Label"),
                 new("comboMinWidthNote", "Label"),
                 new("comboPanel", "Panel"),
+                new("contextMenuStrip1", "ContextMenuStrip"),
                 new("dontShortenRB", "RadioButton"),
                 new("flpnlControls", "FlowLayoutPanel"),
                 new("hideTopRepositoriesFromRecentList", "CheckBox"),
@@ -2181,6 +2196,8 @@ internal static class WinFormsInputMetadata
                 new("mostSigDirRB", "RadioButton"),
                 new("panel2", "Panel"),
                 new("panel3", "Panel"),
+                new("removeAnchorToolStripMenuItem", "ToolStripMenuItem"),
+                new("removeRecentToolStripMenuItem", "ToolStripMenuItem"),
                 new("shorteningGB", "GroupBox"),
                 new("sortRecentRepos", "CheckBox"),
                 new("sortTopRepos", "CheckBox"),
@@ -2194,6 +2211,7 @@ internal static class WinFormsInputMetadata
                 new("linkDirectDownload", "LinkLabel"),
                 new("linkRequiredDotNetRuntime", "SettingsLinkLabel"),
                 new("progressBar1", "ProgressBar"),
+                new("tlpnlContent", "TableLayoutPanel"),
             ],
             ["GitUI.CommandsDialogs.CommitDialog.FormCommitTemplateSettings"] =
             [
@@ -4755,6 +4773,7 @@ internal static class WinFormsInputMetadata
                 new("lblContribute", null, null, true, new Avalonia.Thickness(2, 0, 2, 8), null, null, null, null, false, false),
                 new("pnlLeft", ["Top", "Bottom", "Left", "Right"], null, null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
                 new("pnlLogo", null, "Top", null, new Avalonia.Thickness(8, 8, 8, 8), new Avalonia.Thickness(20, 0, 20, 14), null, null, null, false, false),
+                new("tableLayoutPanel1", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, true),
                 new("userRepositoriesList", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
             ],
             ["GitUI.CommandsDialogs.BrowseDialog.DashboardControl.FormDashboardCategoryTitle"] =
@@ -4772,6 +4791,8 @@ internal static class WinFormsInputMetadata
                 new("listView1", null, "Fill", null, new Avalonia.Thickness(0, 3, 0, 3), null, null, "None", null, false, false),
                 new("pnlBody", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), new Avalonia.Thickness(20, 18, 20, 3), null, null, null, false, false),
                 new("pnlHeader", null, "Top", null, new Avalonia.Thickness(0, 0, 0, 0), new Avalonia.Thickness(20, 0, 20, 11), null, null, null, false, false),
+                new("tableLayoutPanel1", null, "Bottom", true, new Avalonia.Thickness(2, 2, 2, 2), null, null, null, null, false, false),
+                new("tableLayoutPanel2", null, "Fill", null, null, null, null, null, null, false, false),
                 new("textBoxSearch", null, "Fill", null, null, null, null, null, null, false, false),
             ],
             ["GitUI.CommandsDialogs.BrowseDialog.FormBisect"] =
@@ -4861,6 +4882,7 @@ internal static class WinFormsInputMetadata
                 new("linkDirectDownload", ["Top", "Bottom", "Left"], null, true, null, null, "MiddleCenter", null, null, false, false),
                 new("linkRequiredDotNetRuntime", null, "Fill", true, new Avalonia.Thickness(4, 3, 4, 3), null, null, null, null, false, false),
                 new("progressBar1", null, "Fill", null, null, null, null, null, null, false, false),
+                new("tlpnlContent", null, "Fill", null, new Avalonia.Thickness(0, 0, 0, 0), null, null, null, null, false, false),
             ],
             ["GitUI.CommandsDialogs.CommitDialog.FormCommitTemplateSettings"] =
             [

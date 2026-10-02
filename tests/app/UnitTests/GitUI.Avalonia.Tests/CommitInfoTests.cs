@@ -145,17 +145,18 @@ public sealed class CommitInfoTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void XhtmlTextBlock_should_apply_the_source_RichEdit_content_overhang_per_instance()
+    public void XhtmlTextBlock_should_apply_the_source_RichEdit_content_edge_allowance_per_instance()
     {
         XhtmlTextBlock block = new();
         block.SetTabStops([80, 81]);
         block.SetXHTMLText("Author:\tName");
         double baseline = block.MinWidth;
+        double originalAllowance = block.NativeContentOverhang;
 
         block.NativeContentOverhang = 1;
         block.SetXHTMLText("Author:\tName");
 
-        block.MinWidth.Should().Be(baseline + 1);
+        block.MinWidth.Should().Be(baseline - originalAllowance + 1);
     }
 
     [AvaloniaTest]
@@ -172,6 +173,95 @@ public sealed class CommitInfoTests
 
         block.MinWidth.Should().BeGreaterThan(sourceWidth);
         block.GetPlainText().Should().Be("Author:\t\tName");
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void XhtmlTextBlock_should_skip_width_tab_stops_behind_the_current_text_advance()
+    {
+        XhtmlTextBlock block = new() { NativeContentOverhang = 2 };
+        double labelWidth = WinFormsTextMeasurer.Measure(block, "Commit hash:");
+        int firstStop = (int)Math.Ceiling(labelWidth) + 10;
+        int secondStop = firstStop + 10;
+        block.SetTabStops([1, firstStop, secondStop], [1, firstStop, secondStop]);
+
+        block.SetXHTMLText("Commit hash:\tvalue");
+
+        block.Width.Should().Be(Math.Ceiling(firstStop + WinFormsTextMeasurer.Measure(block, "value") + 2));
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void XhtmlTextBlock_should_continue_default_tab_intervals_after_a_long_translated_label()
+    {
+        const string label = "A long translated commit-header label that exceeds four half-inch intervals:";
+        XhtmlTextBlock block = new() { NativeContentOverhang = 2 };
+        block.SetTabStops([], [], defaultTabInterval: 48);
+        block.SetXHTMLText($"{label}\t<a href='gitext://value'>value</a>");
+        Window window = new() { Width = 1000, Height = 100, Content = block };
+        window.Show();
+        try
+        {
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            double nativeLabelWidth = WinFormsTextMeasurer.Measure(block, label);
+            double nativeStop = (Math.Floor(nativeLabelWidth / 48) + 1) * 48;
+            block.Width.Should().Be(Math.Ceiling(nativeStop + WinFormsTextMeasurer.Measure(block, "value") + 2));
+            TextLayout labelLayout = new(label, new Typeface(block.FontFamily, block.FontStyle, block.FontWeight), block.FontSize, foreground: null);
+            double renderedStop = (Math.Floor(labelLayout.WidthIncludingTrailingWhitespace / 48) + 1) * 48;
+            HyperlinkButton link = block.GetVisualDescendants().OfType<HyperlinkButton>().Single();
+            link.TranslatePoint(new Point(0, 0), block)!.Value.X.Should().BeApproximately(renderedStop, 1);
+            renderedStop.Should().BeGreaterThan(192);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void XhtmlTextBlock_should_refresh_contents_metrics_when_the_inherited_font_changes(bool bold)
+    {
+        const string label = "A translated commit-header label:";
+        const string value = "A long author identity";
+        XhtmlTextBlock block = new() { NativeContentOverhang = 2 };
+        block.SetTabStops([], [], defaultTabInterval: 48);
+        block.SetXHTMLText($"{label}\t<a href='gitext://author'>{value}</a>");
+        Window window = new() { Width = 1000, Height = 100, Content = block };
+        window.Show();
+        try
+        {
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            string plainText = block.GetPlainText();
+            double previousWidth = block.Width;
+            block.SelectionStart = 2;
+            block.SelectionEnd = 5;
+            if (bold)
+            {
+                window.FontWeight = FontWeight.Bold;
+            }
+            else
+            {
+                window.FontSize = 20;
+            }
+
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            double labelWidth = WinFormsTextMeasurer.Measure(block, label);
+            double nativeStop = (Math.Floor(labelWidth / 48) + 1) * 48;
+            block.Width.Should().Be(Math.Ceiling(nativeStop + WinFormsTextMeasurer.Measure(block, value) + 2));
+            block.Width.Should().BeGreaterThan(previousWidth);
+            block.GetPlainText().Should().Be(plainText);
+            block.SelectionStart.Should().Be(2);
+            block.SelectionEnd.Should().Be(5);
+            HyperlinkButton link = block.GetVisualDescendants().OfType<HyperlinkButton>().Single();
+            link.Tag.Should().Be("gitext://author");
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]
@@ -215,8 +305,8 @@ public sealed class CommitInfoTests
     {
         CommitInfoHeader header = new();
         CommitInfoHeader.TestAccessor accessor = header.GetTestAccessor();
-        accessor.RevisionHeader.NativeContentOverhang.Should().Be(0,
-            "the original uses the renderer's ContentsResized rectangle without an additional pixel");
+        accessor.RevisionHeader.NativeContentOverhang.Should().Be(2,
+            "the original borderless RichEdit retains one formatting pixel at each edge");
         ContextMenu contextMenu = new();
 
         header.SetContextMenuStrip(contextMenu);
@@ -248,6 +338,25 @@ public sealed class CommitInfoTests
         {
             window.Close();
         }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase("Parity Capture <parity@example.invalid>", "ceaece927abc97012d5cc36ea9dfba32321e9704")]
+    [TestCase("Avalonia Contributor <avalonia@example.com>", "c932f21268731785cec9d37bfa3ff8f10485b46e")]
+    public void CommitInfoHeader_should_measure_author_and_hash_rows_at_the_same_default_tab_origin(string author, string hash)
+    {
+        const string date = "9 months ago (1/2/2026 12:00:00 PM)";
+        CommitInfoHeader header = new();
+        XhtmlTextBlock block = header.GetTestAccessor().RevisionHeader;
+        block.SetXHTMLText($"Author:\t\t<a href='mailto:parity@example.invalid'>{System.Net.WebUtility.HtmlEncode(author)}</a>"
+            + $"<br/>Date:\t\t{date}<br/>Commit hash:\t{hash}");
+        double longestValueWidth = new[] { author, date, hash }
+            .Max(value => WinFormsTextMeasurer.Measure(block, value));
+
+        block.Width.Should().Be(Math.Ceiling(96 + longestValueWidth + 2));
+        block.MinWidth.Should().Be(block.Width);
+        block.GetPlainText().Should().Contain($"Commit hash:\t{hash}");
     }
 
     [AvaloniaTest]
