@@ -1,7 +1,9 @@
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using AwesomeAssertions;
+using GitExtensions.ParityCapture;
 using GitUI.UserControls;
 using NUnit.Framework;
 
@@ -51,15 +53,30 @@ public sealed class NativeTreeSearchPaintTests
             node.Expand();
             tree.SelectedNode = node;
             (focused ? (Control)tree : other).Focus().Should().BeTrue();
-            Application.DoEvents();
+
+            // Native activation/focus changes queue client painting after Show.
+            // Settle those real messages before PrintWindow, as the EDIT chrome
+            // fixture does; a title-only result is not a verified tree capture.
+            long paintingStartedAt = Environment.TickCount64;
+            long paintingSettledAt = paintingStartedAt + 100;
+            while (Environment.TickCount64 < paintingSettledAt)
+            {
+                Application.DoEvents();
+            }
+
             window.Refresh();
             tree.Refresh();
+            window.Update();
+            tree.Update();
+            long paintingSettlementMilliseconds = Environment.TickCount64 - paintingStartedAt;
             tree.Focused.Should().Be(focused);
             tree.DeviceDpi.Should().Be(96);
+            window.DeviceDpi.Should().Be(96);
 
             string directory = Path.Combine(TestContext.CurrentContext.WorkDirectory, "TreeSearchProbe", Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(directory);
             using CaptureImageResult capture = ImageCapture.Capture(window, [], []);
+            capture.Method.Should().Be(CaptureMethod.PrintWindow, "this native client/chrome assertion requires the full-content window path");
             capture.Bitmap.Save(Path.Combine(directory, "search.png"), ImageFormat.Png);
             Point origin = tree.PointToScreen(Point.Empty) - new Size(capture.ScreenBounds.Location);
             Rectangle text = node.Bounds;
@@ -77,6 +94,12 @@ public sealed class NativeTreeSearchPaintTests
                 colorMode = Application.ColorMode.ToString(),
                 nativeDarkModeEnabled = Application.IsDarkModeEnabled,
                 deviceDpi = tree.DeviceDpi,
+                windowDeviceDpi = window.DeviceDpi,
+                paintingSettlementMilliseconds,
+                nativeWindowVisible = IsWindowVisible(window.Handle),
+                nativeTreeVisible = IsWindowVisible(tree.Handle),
+                nativeFocusHandle = GetFocus().ToInt64(),
+                expectedFocusHandle = (focused ? tree.Handle : other.Handle).ToInt64(),
                 textBounds = new { text.X, text.Y, text.Width, text.Height },
                 window = Argb(tree.BackColor),
                 info = Argb(SystemColors.Info),
@@ -86,7 +109,8 @@ public sealed class NativeTreeSearchPaintTests
                 right = Argb(right),
                 hierarchy = Argb(hierarchy),
             }, new JsonSerializerOptions { WriteIndented = true }));
-            TestContext.Out.WriteLine($"diagnostics={directory} dark={dark} focused={focused} text={text} window={Argb(tree.BackColor)} info={Argb(SystemColors.Info)} infoText={Argb(SystemColors.InfoText)} label={Argb(label)} icon={Argb(icon)} right={Argb(right)} hierarchy={Argb(hierarchy)}");
+            TestContext.Out.WriteLine($"diagnostics={directory} dark={dark} focused={focused} text={text} window={Argb(tree.BackColor)} info={Argb(SystemColors.Info)} infoText={Argb(SystemColors.InfoText)} label={Argb(label)} icon={Argb(icon)} right={Argb(right)} hierarchy={Argb(hierarchy)} paintingSettlementMilliseconds={paintingSettlementMilliseconds} nativeWindowVisible={IsWindowVisible(window.Handle)} nativeTreeVisible={IsWindowVisible(tree.Handle)} nativeFocusHandle={GetFocus()} expectedFocusHandle={(focused ? tree.Handle : other.Handle)} captureMethod={capture.Method}");
+            GetFocus().Should().Be(focused ? tree.Handle : other.Handle);
             node.BackColor.Should().Be(SystemColors.Info);
             node.ForeColor.Should().Be(SystemColors.InfoText);
             right.ToArgb().Should().Be(tree.BackColor.ToArgb());
@@ -114,4 +138,11 @@ public sealed class NativeTreeSearchPaintTests
     }
 
     private static string Argb(Color color) => $"#{color.ToArgb():X8}";
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool IsWindowVisible(nint window);
+
+    [DllImport("user32.dll")]
+    private static extern nint GetFocus();
 }

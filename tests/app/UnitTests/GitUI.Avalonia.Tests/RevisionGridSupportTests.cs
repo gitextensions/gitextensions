@@ -40,10 +40,9 @@ public sealed class RevisionGridSupportTests
         double renderScale,
         double expectedHeightDip)
     {
+        // Actual native Segoe UI 9pt Graphics.MeasureString("By") height.
         double actual = RevisionGridControl.CalculateRowHeight(
-            fontSizeDip: 12,
-            lineSpacing: 2724,
-            designEmHeight: 2048,
+            measuredTextHeightDip: 17.4609375,
             renderScale);
 
         actual.Should().BeApproximately(expectedHeightDip, 0.0001);

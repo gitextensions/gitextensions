@@ -119,6 +119,11 @@ public partial class CommitInfo : GitModuleControl
         _ = AppSettings.CommitFont;
         _ = AppSettings.Font;
 
+        // TextLayout replaces ContentsResized for these wrapped controls. Preserve the
+        // source configured-font line metrics, not a fixed default-font LineHeight.
+        rtbxCommitMessage.UseNativeContentsHeightMeasurement();
+        RevisionInfo.UseNativeContentsHeightMeasurement();
+
         copyLinkToolStripMenuItem.Click += copyLinkToolStripMenuItem_Click;
         copyCommitInfoToolStripMenuItem.Click += copyCommitInfoToolStripMenuItem_Click;
         showContainedInBranchesToolStripMenuItem.Click += showContainedInBranchesToolStripMenuItem_Click;
