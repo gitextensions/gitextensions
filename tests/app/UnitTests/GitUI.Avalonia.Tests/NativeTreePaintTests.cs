@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -5,9 +6,12 @@ using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using GitCommands;
 using GitExtensions.ParityCapture;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Compat;
@@ -38,6 +42,125 @@ public sealed class NativeTreePaintTests
         palette.Background.Should().Be(Color.Parse(background));
         palette.Border.Should().Be(Color.Parse(border));
         palette.Foreground.Should().Be(dark ? Colors.White : Colors.Black);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(false, false, "#FFFFFF", "#CCE4F6", "#0078D4", "#CCE8FF")]
+    [TestCase(false, true, "#FFFFFF", "#9D9D9D", "#949494", "#D9D9D9")]
+    [TestCase(false, false, "#AAD282", "#88C092", "#0078D4", "#88C49B")]
+    [TestCase(false, true, "#AAD282", "#698150", "#637A4B", "#91B36F")]
+    [TestCase(true, false, "#2B2D3A", "#3D647D", "#5BC1F0", "#5C5C5D")]
+    [TestCase(true, true, "#2B2D3A", "#2F313D", "#363842", "#343436")]
+    public void Explorer_corner_paint_should_match_native_mask_pixels_without_changing_layout(
+        bool dark, bool inactive, string backdrop, string corner, string adjacentEdge, string innerCorner)
+    {
+        NativeTreePaintPalette palette = NativeTreePaintPalette.Resolve(dark, Color.Parse(backdrop), inactive);
+        palette.Corner.Should().Be(Color.Parse(corner));
+        palette.AdjacentEdge.Should().Be(Color.Parse(adjacentEdge));
+        palette.InnerCorner.Should().Be(Color.Parse(innerCorner));
+        Border selection = new()
+        {
+            Width = 75,
+            Height = 18,
+            Background = new SolidColorBrush(palette.Background),
+            BorderBrush = new SolidColorBrush(palette.Border),
+            BorderThickness = new Thickness(1),
+        };
+        NativeTreeSelectionCorners corners = new()
+        {
+            UseNativeCorners = true,
+            CornerBrush = new SolidColorBrush(palette.Corner),
+            AdjacentEdgeBrush = new SolidColorBrush(palette.AdjacentEdge),
+            InnerCornerBrush = new SolidColorBrush(palette.InnerCorner),
+        };
+        Grid header = new() { Width = 75, Height = 18, Children = { selection, corners } };
+        Window window = new()
+        {
+            Width = 100,
+            Height = 40,
+            Content = new Canvas { Background = new SolidColorBrush(Color.Parse(backdrop)), Children = { header } },
+        };
+        try
+        {
+            window.Show();
+            window.UpdateLayout();
+            selection.Bounds.Size.Should().Be(new Avalonia.Size(75, 18));
+            corners.Bounds.Should().Be(selection.Bounds);
+            corners.IsHitTestVisible.Should().BeFalse();
+            corners.Focusable.Should().BeFalse();
+            using WriteableBitmap frame = window.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The native tree corner frame is unavailable.");
+            foreach (PixelPoint point in new[] { new PixelPoint(0, 0), new PixelPoint(74, 0), new PixelPoint(0, 17), new PixelPoint(74, 17) })
+            {
+                int innerX = point.X == 0 ? 1 : 73;
+                int innerY = point.Y == 0 ? 1 : 16;
+                ReadFramePixel(frame, point).Should().Be(palette.Corner);
+                ReadFramePixel(frame, new PixelPoint(innerX, point.Y)).Should().Be(palette.AdjacentEdge);
+                ReadFramePixel(frame, new PixelPoint(point.X, innerY)).Should().Be(palette.AdjacentEdge);
+                ReadFramePixel(frame, new PixelPoint(innerX, innerY)).Should().Be(palette.InnerCorner);
+            }
+
+            ReadFramePixel(frame, new PixelPoint(2, 0)).Should().Be(palette.Border);
+            ReadFramePixel(frame, new PixelPoint(37, 9)).Should().Be(palette.Background);
+            corners.UseNativeCorners = false;
+            using WriteableBitmap ordinary = window.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The ordinary tree border frame is unavailable.");
+            ReadFramePixel(ordinary, default).Should().Be(palette.Border, "non-Explorer consumers retain the ordinary Border renderer");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Explorer_regular_node_font_should_follow_the_control_after_styled_selection_is_reset()
+    {
+        RepoObjectsTree control = new();
+        control.SetRefs([]);
+        TreeView tree = control.GetTestAccessor().Tree;
+        TreeViewItem item = tree.Items.Cast<TreeViewItem>().First();
+        NodeBase node = (NodeBase)item.Tag!;
+        NativeTreeTextBlock text = ((StackPanel)item.Header!).Children.OfType<NativeTreeTextBlock>().Single();
+        Window window = new() { Width = 360, Height = 220, Content = control };
+        try
+        {
+            window.Show();
+            node.ApplyStyle();
+            tree.FontFamily = new FontFamily("DejaVu Sans");
+            tree.FontSize = 24;
+            tree.FontWeight = FontWeight.Bold;
+            tree.FontStyle = FontStyle.Italic;
+            window.UpdateLayout();
+            text.UsesAmbientFont.Should().BeTrue();
+            text.FontFamily.Should().Be(tree.FontFamily);
+            text.FontSize.Should().Be(tree.FontSize);
+            text.FontWeight.Should().Be(tree.FontWeight);
+            text.FontStyle.Should().Be(tree.FontStyle);
+            window.Resources["GitExtensionsUiFontSize"] = 16d;
+            Dispatcher.UIThread.RunJobs();
+            text.FontSize.Should().Be(tree.FontSize, "a global text style cannot replace the native node's ambient control font");
+            node.Select(true);
+            window.UpdateLayout();
+            text.UsesAmbientFont.Should().BeFalse();
+            text.FontFamily.Name.Should().Be(AppSettings.Font.Name);
+            text.FontSize.Should().Be(AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size));
+            text.TextDecorations.Should().BeSameAs(TextDecorations.Underline);
+            node.Select(false);
+            window.UpdateLayout();
+            text.UsesAmbientFont.Should().BeTrue();
+            text.FontFamily.Should().Be(tree.FontFamily);
+            text.FontSize.Should().Be(tree.FontSize);
+            text.FontWeight.Should().Be(tree.FontWeight);
+            text.FontStyle.Should().Be(tree.FontStyle);
+            text.TextDecorations.Should().BeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]
@@ -91,7 +214,7 @@ public sealed class NativeTreePaintTests
     [Category("P8.6i.126")]
     public void Explorer_label_font_tracking_should_follow_its_current_tree_after_reparenting()
     {
-        NativeTreeTextBlock text = new() { Text = "Branches" };
+        NativeTreeTextBlock text = new() { Text = "Branches", UsesAmbientFont = true };
         TreeViewItem item = new() { Header = text };
         TreeView first = new() { FontSize = 12, Items = { item } };
         TreeView second = new() { FontSize = 24 };
@@ -101,15 +224,18 @@ public sealed class NativeTreePaintTests
             window.Show();
             window.UpdateLayout();
             text.DesiredSize.Width.Should().Be(GetNativeLabelWidth(first, text.Text));
+            text.FontSize.Should().Be(first.FontSize);
             first.Items.Remove(item);
             second.Items.Add(item);
             window.Content = second;
             window.UpdateLayout();
             text.DesiredSize.Width.Should().Be(GetNativeLabelWidth(second, text.Text));
+            text.FontSize.Should().Be(second.FontSize);
             first.FontSize = 48;
             second.FontSize = 16;
             window.UpdateLayout();
             text.DesiredSize.Width.Should().Be(GetNativeLabelWidth(second, text.Text));
+            text.FontSize.Should().Be(second.FontSize);
         }
         finally
         {
@@ -139,6 +265,10 @@ public sealed class NativeTreePaintTests
             tree.Focus().Should().BeTrue();
             Border selection = item.GetVisualDescendants().OfType<Border>()
                 .Single(border => border.Name == "PART_NativeSelectionBorder" && border.FindAncestorOfType<TreeViewItem>() == item);
+            NativeTreeSelectionCorners nativeSelection = item.GetVisualDescendants().OfType<NativeTreeSelectionCorners>()
+                .Single(corners => corners.Name == "PART_NativeSelectionCorners" && corners.FindAncestorOfType<TreeViewItem>() == item);
+            nativeSelection.UseNativeCorners.Should().BeTrue();
+            nativeSelection.Bounds.Should().Be(selection.Bounds);
             ((ISolidColorBrush)selection.Background!).Color.Should().Be(Color.Parse("#CCE8FF"));
             Theme theme = new(
                 new Dictionary<AppColor, DrawingColor> { [AppColor.PanelBackground] = DrawingColor.FromArgb(170, 210, 130) },
@@ -154,6 +284,9 @@ public sealed class NativeTreePaintTests
             Dispatcher.UIThread.RunJobs();
             ((ISolidColorBrush)selection.Background!).Color.Should().Be(Color.Parse("#88C49B"));
             ((ISolidColorBrush)selection.BorderBrush!).Color.Should().Be(Color.Parse("#0078D4"));
+            ((ISolidColorBrush)nativeSelection.CornerBrush!).Color.Should().Be(Color.Parse("#88C092"));
+            ((ISolidColorBrush)nativeSelection.AdjacentEdgeBrush!).Color.Should().Be(Color.Parse("#0078D4"));
+            ((ISolidColorBrush)nativeSelection.InnerCornerBrush!).Color.Should().Be(Color.Parse("#88C49B"));
             tree.SelectedItem.Should().BeSameAs(item);
             AvaloniaThemeResources.Apply(application, ThemeSettings.Default);
             Dispatcher.UIThread.RunJobs();
@@ -284,6 +417,17 @@ public sealed class NativeTreePaintTests
         return (WinFormsRichEditTextMeasurer.TryGetTextWidth(ambient, caption, out double width)
             ? width
             : WinFormsTextMeasurer.MeasureSize(ambient, caption).Width) + 4;
+    }
+
+    private static Color ReadFramePixel(WriteableBitmap frame, PixelPoint point)
+    {
+        using ILockedFramebuffer buffer = frame.Lock();
+        buffer.Format.BitsPerPixel.Should().Be(32);
+        byte[] pixel = new byte[4];
+        Marshal.Copy(IntPtr.Add(buffer.Address, (point.Y * buffer.RowBytes) + (point.X * 4)), pixel, 0, pixel.Length);
+        return buffer.Format == PixelFormat.Bgra8888
+            ? Color.FromArgb(pixel[3], pixel[2], pixel[1], pixel[0])
+            : Color.FromArgb(pixel[3], pixel[0], pixel[1], pixel[2]);
     }
 
     private static IEnumerable<CaptureNode> Flatten(CaptureNode node)

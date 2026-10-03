@@ -346,9 +346,15 @@
           <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionBackgroundBrush" Color="#CCE8FF" />
           <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionForegroundBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionBorderBrush" Color="#0078D4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionCornerBrush" Color="#CCE4F6" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionAdjacentEdgeBrush" Color="#0078D4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionInnerCornerBrush" Color="#CCE8FF" />
           <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionBackgroundBrush" Color="#D9D9D9" />
           <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionForegroundBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionBorderBrush" Color="#949494" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionCornerBrush" Color="#9D9D9D" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionAdjacentEdgeBrush" Color="#949494" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionInnerCornerBrush" Color="#D9D9D9" />
           <SolidColorBrush x:Key="GitExtensionsXhtmlLinkForegroundBrush" Color="#0066CC" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#FFFFFF" />
@@ -360,6 +366,16 @@
           <SolidColorBrush x:Key="GitExtensionsDataGridViewSelectionBackgroundBrush" Color="#0078D7" />
           <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#FDFDFD" />
+          <x:Boolean x:Key="GitExtensionsNativeFlatButtonDarkMode">False</x:Boolean>
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonHoverBackgroundBrush" Color="#D8D8D8" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonPressedBackgroundBrush" Color="#E5E5E5" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonDisabledBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonBorderBrush" Color="Transparent" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonHoverBorderBrush" Color="Transparent" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonPressedBorderBrush" Color="Transparent" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonDisabledBorderBrush" Color="Transparent" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonFocusBrush" Color="#A0A0A0" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBorderBrush" Color="#D0D0D0" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonPointerOverBackgroundBrush" Color="#E0EEF9" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonPointerOverBorderBrush" Color="#0F80D6" />
@@ -500,9 +516,15 @@
           <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionBackgroundBrush" Color="#626262" />
           <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionForegroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionBorderBrush" Color="#60CDFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionCornerBrush" Color="#426778" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionAdjacentEdgeBrush" Color="#5CC1EF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionInnerCornerBrush" Color="#5C5C5C" />
           <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionBackgroundBrush" Color="#333333" />
           <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionForegroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionBorderBrush" Color="#3D3D3D" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionCornerBrush" Color="#353535" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionAdjacentEdgeBrush" Color="#3C3C3C" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionInnerCornerBrush" Color="#353535" />
           <SolidColorBrush x:Key="GitExtensionsXhtmlLinkForegroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#323232" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#2E2E2E" />
@@ -514,6 +536,16 @@
           <SolidColorBrush x:Key="GitExtensionsDataGridViewSelectionBackgroundBrush" Color="#2864B4" />
           <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#333333" />
+          <x:Boolean x:Key="GitExtensionsNativeFlatButtonDarkMode">True</x:Boolean>
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonBackgroundBrush" Color="#333333" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonHoverBackgroundBrush" Color="#454545" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonPressedBackgroundBrush" Color="#666666" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonDisabledBackgroundBrush" Color="#333333" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonBorderBrush" Color="#9B9B9B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonHoverBorderBrush" Color="#9B9B9B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonPressedBorderBrush" Color="#A0A0A0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonDisabledBorderBrush" Color="#373737" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonFocusBrush" Color="Black" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBorderBrush" Color="#9B9B9B" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonPointerOverBackgroundBrush" Color="#454545" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonPointerOverBorderBrush" Color="#919191" />
@@ -1551,16 +1583,19 @@
                                 Focusable="False"
                                 IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
                 </Panel>
-                <Border x:Name="PART_NativeSelectionBorder" Grid.Column="1">
-                  <ContentPresenter x:Name="PART_HeaderPresenter"
-                                  Focusable="False"
-                                  Background="Transparent"
-                                  Content="{TemplateBinding Header}"
-                                  ContentTemplate="{TemplateBinding HeaderTemplate}"
-                                  HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                  VerticalAlignment="{TemplateBinding VerticalAlignment}"
-                                  Margin="{TemplateBinding Padding}" />
-                </Border>
+                <Grid Grid.Column="1">
+                  <Border x:Name="PART_NativeSelectionBorder">
+                    <ContentPresenter x:Name="PART_HeaderPresenter"
+                                      Focusable="False"
+                                      Background="Transparent"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                      Margin="{TemplateBinding Padding}" />
+                  </Border>
+                  <compat:NativeTreeSelectionCorners x:Name="PART_NativeSelectionCorners" />
+                </Grid>
               </Grid>
             </Grid>
           </Border>
@@ -1597,12 +1632,20 @@
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="BorderBrush" Value="Transparent" />
   </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree TreeViewItem /template/ compat|NativeTreeSelectionCorners#PART_NativeSelectionCorners">
+    <Setter Property="UseNativeCorners" Value="True" />
+  </Style>
   <Style Selector="TreeView.gitextensions-explorer-tree TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
     <Setter Property="Background" Value="Transparent" />
   </Style>
   <Style Selector="TreeView.gitextensions-explorer-tree:focus-within TreeViewItem:selected /template/ Border#PART_NativeSelectionBorder">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTreeSelectionBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeTreeSelectionBorderBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree:focus-within TreeViewItem:selected /template/ compat|NativeTreeSelectionCorners#PART_NativeSelectionCorners">
+    <Setter Property="CornerBrush" Value="{DynamicResource GitExtensionsNativeTreeSelectionCornerBrush}" />
+    <Setter Property="AdjacentEdgeBrush" Value="{DynamicResource GitExtensionsNativeTreeSelectionAdjacentEdgeBrush}" />
+    <Setter Property="InnerCornerBrush" Value="{DynamicResource GitExtensionsNativeTreeSelectionInnerCornerBrush}" />
   </Style>
   <Style Selector="TreeView.gitextensions-explorer-tree:focus-within TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
     <Setter Property="Background" Value="Transparent" />
@@ -1612,6 +1655,11 @@
     <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionBorderBrush}" />
   </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree:not(:focus-within) TreeViewItem:selected /template/ compat|NativeTreeSelectionCorners#PART_NativeSelectionCorners">
+    <Setter Property="CornerBrush" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionCornerBrush}" />
+    <Setter Property="AdjacentEdgeBrush" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionAdjacentEdgeBrush}" />
+    <Setter Property="InnerCornerBrush" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionInnerCornerBrush}" />
+  </Style>
   <Style Selector="TreeView.gitextensions-explorer-tree:not(:focus-within) TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionForegroundBrush}" />
@@ -1619,6 +1667,11 @@
   <Style Selector="TreeView.gitextensions-explorer-tree.gitextensions-hide-tree-selection:not(:focus-within) TreeViewItem:selected /template/ Border#PART_NativeSelectionBorder">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree.gitextensions-hide-tree-selection:not(:focus-within) TreeViewItem:selected /template/ compat|NativeTreeSelectionCorners#PART_NativeSelectionCorners">
+    <Setter Property="CornerBrush" Value="Transparent" />
+    <Setter Property="AdjacentEdgeBrush" Value="Transparent" />
+    <Setter Property="InnerCornerBrush" Value="Transparent" />
   </Style>
   <Style Selector="TreeView.gitextensions-explorer-tree.gitextensions-hide-tree-selection:not(:focus-within) TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
@@ -1788,6 +1841,51 @@
                    SplitButton.gitextensions-toolbar-button:pointerover /template/ Button#PART_SecondaryButton /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripPointerOverBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <!-- A source FlatStyle.Flat Button is not a ToolStrip button. Its shared painter leaves
+       the content and authored padding untouched and supplies the native adapter chrome. -->
+  <Style Selector="Button.gitextensions-native-flat-button">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <compat:NativeFlatButtonChrome x:Name="PART_NativeFlatButtonChrome"
+                                        UseDarkMode="{DynamicResource GitExtensionsNativeFlatButtonDarkMode}" />
+          <ContentPresenter x:Name="PART_ContentPresenter"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            RecognizesAccessKey="True" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Button.gitextensions-native-flat-button /template/ compat|NativeFlatButtonChrome#PART_NativeFlatButtonChrome">
+    <Setter Property="BackdropBrush" Value="{DynamicResource GitExtensionsKnownColorControlBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeFlatButtonBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeFlatButtonBorderBrush}" />
+    <Setter Property="FocusBrush" Value="{DynamicResource GitExtensionsNativeFlatButtonFocusBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-flat-button:focus-visible /template/ compat|NativeFlatButtonChrome#PART_NativeFlatButtonChrome">
+    <Setter Property="ShowKeyboardFocus" Value="True" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-flat-button:pointerover /template/ compat|NativeFlatButtonChrome#PART_NativeFlatButtonChrome">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeFlatButtonHoverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeFlatButtonHoverBorderBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-flat-button:pressed /template/ compat|NativeFlatButtonChrome#PART_NativeFlatButtonChrome">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeFlatButtonPressedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeFlatButtonPressedBorderBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-flat-button:disabled /template/ compat|NativeFlatButtonChrome#PART_NativeFlatButtonChrome">
+    <Setter Property="ShowKeyboardFocus" Value="False" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeFlatButtonDisabledBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeFlatButtonDisabledBorderBrush}" />
   </Style>
   <!-- Fluent paints ToggleButton's checked surface on its inner presenter. Override both
        layers so ToolStrip buttons never inherit the host platform accent. -->

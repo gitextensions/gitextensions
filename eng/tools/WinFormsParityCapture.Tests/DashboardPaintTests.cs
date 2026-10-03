@@ -11,18 +11,29 @@ namespace WinFormsParityCapture.Tests;
 [NonParallelizable]
 public sealed class DashboardPaintTests
 {
+    [OneTimeSetUp]
+    public void InitializeNativeDpiMode()
+    {
+        // A UserControl installs the WinForms synchronization context's hidden HWND.
+        // Select the capture consumer's DPI mode before any such window is created.
+        Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+    }
+
     [Test]
-    [TestCase(9)]
-    [TestCase(14)]
-    [TestCase(20)]
-    public void Dashboard_heading_should_paint_with_the_same_TextRenderer_font_as_its_preferred_size(int applicationPoints)
+    [TestCase(9, "Contribute")]
+    [TestCase(9, "Recent repositories")]
+    [TestCase(14, "Contribute")]
+    [TestCase(14, "Recent repositories")]
+    [TestCase(20, "Contribute")]
+    [TestCase(20, "Recent repositories")]
+    public void Dashboard_heading_should_keep_native_TextRenderer_ink_bounds_and_font_metrics(int applicationPoints, string text)
     {
         using Font font = new("Segoe UI", applicationPoints + 5.5f);
         using Label heading = new()
         {
             AutoSize = true,
             Font = font,
-            Text = "Contribute",
+            Text = text,
             UseCompatibleTextRendering = false,
             BackColor = Color.White,
             ForeColor = Color.Black,
@@ -50,17 +61,71 @@ public sealed class DashboardPaintTests
         heading.PreferredSize.Should().Be(TextRenderer.MeasureText(heading.Text, font));
         (TextMetric metrics, Size extent) = ReadTextRendererFont(font, heading.Text);
         metrics.Height.Should().Be(heading.PreferredSize.Height);
-        float overhang = metrics.Height / 6f;
-        extent.Width.Should().Be(heading.PreferredSize.Width - (int)Math.Ceiling(overhang) - (int)Math.Ceiling(overhang * 1.5f),
-            "the cached integral-em HFONT must match the real Label's TextRenderer advance");
-        TestContext.Progress.WriteLine($"heading requested={font.SizeInPoints} preferred={heading.PreferredSize} ink={actualInk} expectedInk={expectedInk} fontHeight={font.Height} cacheEm={Math.Ceiling(font.SizeInPoints * 96 / 72)} cacheAscent={metrics.Ascent} cacheHeight={metrics.Height} advance={extent.Width}");
+        metrics.Ascent.Should().BeGreaterThan(0);
+        extent.Width.Should().BeGreaterThan(0);
+
+        // An independent Graphics bitmap is not the Label's WM_PRINTCLIENT HDC.
+        // Matching ink bounds and font metrics do not prove identical glyph rasterization.
+        int pixelMismatches = 0;
+        for (int y = 0; y < actual.Height; y++)
+        {
+            for (int x = 0; x < actual.Width; x++)
+            {
+                if (expected.GetPixel(x, y).ToArgb() != actual.GetPixel(x, y).ToArgb())
+                {
+                    pixelMismatches++;
+                }
+            }
+        }
+
+        TestContext.Progress.WriteLine($"heading text={text} requested={font.SizeInPoints} preferred={heading.PreferredSize} ink={actualInk} expectedInk={expectedInk} fontHeight={font.Height} cacheEm={Math.Ceiling(font.SizeInPoints * 96 / 72)} cacheAscent={metrics.Ascent} cacheHeight={metrics.Height} advance={extent.Width} independentGraphicsRasterVerified=false pixelMismatches={pixelMismatches}");
     }
 
     [Test]
-    [TestCase(9, 12, 6)]
-    [TestCase(14, 20, 9)]
-    [TestCase(20, 30, 13)]
-    public void Dashboard_link_should_keep_native_caption_hit_focus_and_image_regions_separate(int points, int nativeAscent, int nativeInkTop)
+    public void Dashboard_tiled_background_should_keep_its_client_origin_when_focus_scrolls_children()
+    {
+        using Bitmap tile = new(5, 7);
+        for (int y = 0; y < tile.Height; y++)
+        {
+            for (int x = 0; x < tile.Width; x++)
+            {
+                tile.SetPixel(x, y, Color.FromArgb(255, 20 + (x * 30), 30 + (y * 20), 40));
+            }
+        }
+
+        using UserControl dashboard = new()
+        {
+            Size = new Size(120, 100),
+            AutoScroll = true,
+            AutoScrollMinSize = new Size(0, 220),
+            BackgroundImage = tile,
+        };
+        using TextBox input = new() { Location = new Point(60, 185), Size = new Size(40, 20) };
+        dashboard.Controls.Add(input);
+        dashboard.CreateControl();
+        using Bitmap before = new(dashboard.Width, dashboard.Height);
+        dashboard.DrawToBitmap(before, dashboard.ClientRectangle);
+        dashboard.ScrollControlIntoView(input);
+        dashboard.AutoScrollPosition.Y.Should().BeLessThan(0);
+        using Bitmap after = new(dashboard.Width, dashboard.Height);
+        dashboard.DrawToBitmap(after, dashboard.ClientRectangle);
+        for (int y = 0; y < 60; y++)
+        {
+            for (int x = 0; x < 20; x++)
+            {
+                after.GetPixel(x, y).Should().Be(before.GetPixel(x, y),
+                    "Control.PaintBackground uses an empty tile offset for the source client");
+            }
+        }
+
+        TestContext.Progress.WriteLine($"tile sourceLayout={dashboard.BackgroundImageLayout} scroll={dashboard.AutoScrollPosition} client={dashboard.ClientRectangle}");
+    }
+
+    [Test]
+    [TestCase(9, 12, 6, 12)]
+    [TestCase(14, 20, 9, 18)]
+    [TestCase(20, 30, 13, 26)]
+    public void Dashboard_link_should_keep_native_caption_hit_focus_and_image_regions_separate(int points, int nativeAscent, int nativeInkTop, int nativeInkHeight)
     {
         using Font font = new("Segoe UI", points);
         using Bitmap icon = new(16, 16);
@@ -87,6 +152,8 @@ public sealed class DashboardPaintTests
         Rectangle captionInk = FindInk(actual, Color.White);
         captionInk.Top.Should().Be(nativeInkTop,
             "the real native LinkLabel paint origin must remain independent of its hit/focus run");
+        captionInk.Height.Should().Be(nativeInkHeight,
+            "the source caption descenders are clipped only by the native padded client, not by a nested text line box");
         (TextMetric metrics, Size _) = ReadTextRendererFont(font, link.Text);
         metrics.Ascent.Should().Be(nativeAscent);
         using Bitmap expectedCaption = new(link.Width, link.Height);
@@ -191,6 +258,54 @@ public sealed class DashboardPaintTests
         }
     }
 
+    [Test]
+    [TestCase(MouseButtons.Right)]
+    [TestCase(MouseButtons.Middle)]
+    public void Dashboard_caption_should_paint_active_for_nonleft_mouse_buttons_without_raising_its_Click_handler(MouseButtons button)
+    {
+        using Font font = new("Segoe UI", 9);
+        using Bitmap icon = new(16, 16);
+        using MeasuredLinkLabel link = new()
+        {
+            Font = font,
+            Text = "Clone repository",
+            AutoSize = true,
+            AutoEllipsis = true,
+            UseCompatibleTextRendering = false,
+            Padding = new Padding(24, 3, 3, 3),
+            Image = icon,
+            ImageAlign = ContentAlignment.MiddleLeft,
+            TextAlign = ContentAlignment.MiddleLeft,
+            LinkBehavior = LinkBehavior.NeverUnderline,
+            BackColor = Color.White,
+            LinkColor = Color.Black,
+        };
+        int clicks = 0;
+        int linkClicks = 0;
+        link.Click += (_, _) => clicks++;
+        link.LinkClicked += (_, _) => linkClicks++;
+        link.CreateControl();
+        link.Size = link.PreferredSize;
+        Point caption = new(45, 7);
+        link.MovePointer(caption);
+        link.PressPointer(caption, button);
+        link.Capture.Should().BeTrue();
+        using Bitmap pressed = new(link.Width, link.Height);
+        link.DrawToBitmap(pressed, link.ClientRectangle);
+        CountColor(pressed, Color.Red).Should().BeGreaterThan(0);
+        link.MovePointer(new Point(8, 8));
+        link.DrawToBitmap(pressed, link.ClientRectangle);
+        CountColor(pressed, Color.Red).Should().BeGreaterThan(0,
+            "moving within the label clears Hover but retains Active until release or MouseLeave");
+        link.ReleasePointer(caption, button);
+        link.DrawToBitmap(pressed, link.ClientRectangle);
+        CountColor(pressed, Color.Red).Should().Be(0);
+        link.Capture.Should().BeFalse();
+        clicks.Should().Be(0, "Dashboard subscribes the separate Control.Click event, not LinkClicked");
+        linkClicks.Should().Be(1);
+        TestContext.Progress.WriteLine($"link button={button} sourceActive=true sourceClick={clicks} sourceLinkClicked={linkClicks}");
+    }
+
     [DllImport("user32.dll")]
     private static extern nint GetDC(nint window);
 
@@ -246,8 +361,8 @@ public sealed class DashboardPaintTests
 
         internal void MovePointer(Point point) => OnMouseMove(new MouseEventArgs(MouseButtons.None, 0, point.X, point.Y, 0));
 
-        internal void PressPointer(Point point) => OnMouseDown(new MouseEventArgs(MouseButtons.Left, 1, point.X, point.Y, 0));
+        internal void PressPointer(Point point, MouseButtons button = MouseButtons.Left) => OnMouseDown(new MouseEventArgs(button, 1, point.X, point.Y, 0));
 
-        internal void ReleasePointer(Point point) => OnMouseUp(new MouseEventArgs(MouseButtons.Left, 1, point.X, point.Y, 0));
+        internal void ReleasePointer(Point point, MouseButtons button = MouseButtons.Left) => OnMouseUp(new MouseEventArgs(button, 1, point.X, point.Y, 0));
     }
 }

@@ -120,6 +120,17 @@ internal abstract class NodeBase
             return;
         }
 
+        if (style == WinFormsShims.FontStyle.Regular)
+        {
+            ResetFont();
+            return;
+        }
+
+        if (text is NativeTreeTextBlock nativeText)
+        {
+            nativeText.UsesAmbientFont = false;
+        }
+
         text.FontFamily = new FontFamily(AppSettings.Font.Name);
         text.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size);
 
@@ -131,7 +142,14 @@ internal abstract class NodeBase
     }
 
     private void ResetFont()
-        => SetFont(WinFormsShims.FontStyle.Regular);
+    {
+        if (TreeViewNode.Header is StackPanel panel
+            && panel.Children.OfType<NativeTreeTextBlock>().FirstOrDefault() is { } text)
+        {
+            text.UsesAmbientFont = true;
+            text.TextDecorations = null;
+        }
+    }
     #endregion
 
     internal virtual void OnDoubleClick()

@@ -26,7 +26,7 @@ internal static class WinFormsTextMeasurer
         // screenshot offset. Reuse the same GDI metric as native measurement on Windows.
         if (OperatingSystem.IsWindows()
             && TryMeasureWithGdi(owner.FontFamily, owner.FontStyle, owner.FontWeight,
-                owner.FontSize, "0", true, true, out _, out Avalonia.Thickness padding))
+                owner.FontSize, "0", true, true, out _, out Avalonia.Thickness padding, out _))
         {
             return padding;
         }
@@ -67,6 +67,23 @@ internal static class WinFormsTextMeasurer
     public static AvaloniaSize MeasureSize(TemplatedControl owner, string value)
         => MeasureSize(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize, value, singleLine: true);
 
+    /// <summary>
+    ///  Gets the common control's default image-free tab minimum, excluding its outer padding.
+    /// </summary>
+    public static double GetTabCaptionMinimumWidth(TextBlock owner)
+    {
+        // The native tab reserves six average-width characters even for an empty caption.
+        if (OperatingSystem.IsWindows()
+            && TryMeasureWithGdi(owner.FontFamily, owner.FontStyle, owner.FontWeight,
+                owner.FontSize, "0", true, false, out _, out _, out double averageWidth)
+            && averageWidth > 0)
+        {
+            return 6 * averageWidth;
+        }
+
+        return 6 * Math.Ceiling(MeasureSize(owner, "0").Width);
+    }
+
     private static AvaloniaSize MeasureSize(
         FontFamily fontFamily,
         FontStyle fontStyle,
@@ -92,6 +109,7 @@ internal static class WinFormsTextMeasurer
                 singleLine,
                 useTextRendererPadding,
                 out AvaloniaSize size,
+                out _,
                 out _))
         {
             return size;
@@ -124,9 +142,11 @@ internal static class WinFormsTextMeasurer
         bool singleLine,
         bool useTextRendererPadding,
         out AvaloniaSize size,
-        out Avalonia.Thickness textPadding)
+        out Avalonia.Thickness textPadding,
+        out double averageWidth)
     {
         textPadding = default;
+        averageWidth = 0;
         const int defaultCharset = 1;
         const int outDefaultPrecision = 0;
         const int clipDefaultPrecision = 0;
@@ -163,6 +183,11 @@ internal static class WinFormsTextMeasurer
         }
 
         nint previousFont = SelectObject(deviceContext, font);
+        if (GetTextMetrics(deviceContext, out TextMetric fontMetrics))
+        {
+            averageWidth = fontMetrics.AverageCharacterWidth;
+        }
+
         NativeRectangle rectangle = default;
         int measuredHeight;
         if (useTextRendererPadding && GetTextMetrics(deviceContext, out TextMetric metric))

@@ -287,6 +287,16 @@ internal sealed class AvaloniaControlTreeReader
         {
             switch (inline)
             {
+                case XhtmlLinkRun link:
+                    text.Append(link.Text);
+                    if (!string.IsNullOrEmpty(link.LinkUri))
+                    {
+                        text.Append("|||");
+                        text.Append(link.LinkUri);
+                    }
+
+                    break;
+
                 case Avalonia.Controls.Documents.Run run:
                     text.Append(run.Text);
                     break;

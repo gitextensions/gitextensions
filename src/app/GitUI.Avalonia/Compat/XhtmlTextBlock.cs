@@ -4,10 +4,10 @@ using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
-using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
 using Avalonia.Utilities;
@@ -29,6 +29,8 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 {
     private const double RichTextContentOverhang = 12;
     private const double TextRendererOverhang = 7;
+    private static readonly Cursor _textCursor = new(StandardCursorType.Ibeam);
+    private static readonly Cursor _linkCursor = new(StandardCursorType.Hand);
     private static readonly Regex _tokenRegex = TokenRegex();
     private string _xhtml = string.Empty;
     private string _plainText = string.Empty;
@@ -36,8 +38,8 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     private IReadOnlyList<double> _widthTabStops = [];
     private int _defaultTabInterval;
     private int _nativeFormattingInset;
+    private int _pointerSelectionAnchor = -1;
     private bool _usesNativeWidthMeasurement;
-    private bool _usesSelectedRtfFont;
 
     /// <summary>Initializes the XHTML renderer with source-shaped clipboard semantics.</summary>
     public XhtmlTextBlock()
@@ -248,6 +250,9 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
                     case InlineUIContainer { Child: HyperlinkButton { Content: string caption, Tag: string uri } }:
                         lineWidth += MeasureNativeInline(caption, rtfRoundTrip: caption != uri);
                         break;
+                    case XhtmlLinkRun link:
+                        lineWidth += MeasureNativeInline(link.Text ?? string.Empty, rtfRoundTrip: link.Text != link.LinkUri);
+                        break;
                     case Run run:
                         lineWidth += MeasureNativeInline(run.Text ?? string.Empty);
                         break;
@@ -291,7 +296,32 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
-        if (!e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
+        if (_usesNativeWidthMeasurement)
+        {
+            EnsureNativePointerLayout();
+            _pointerSelectionAnchor = -1;
+            PointerPointProperties properties = e.GetCurrentPoint(this).Properties;
+            if (properties.IsXButton1Pressed || properties.IsXButton2Pressed)
+            {
+                // The source header's MouseDown dispatches history navigation. The
+                // SelectableTextBlock base consumes every button before that instance
+                // handler, although these presses do not start a text selection.
+                return;
+            }
+
+            XhtmlLinkRun? link = GetLinkAtPoint(e.GetPosition(this));
+            SelectedLinkUri = link?.LinkUri;
+            if (link is not null && properties.IsLeftButtonPressed)
+            {
+                // RichTextBox raises EN_LINK on WM_LBUTTONDOWN and consumes that
+                // notification. A drag begun in ordinary text still uses text selection.
+                Focus();
+                LinkClicked?.Invoke(this, new LinkClickedEventArgs(link.LinkUri));
+                e.Handled = true;
+                return;
+            }
+        }
+        else if (!e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
         {
             SelectedLinkUri = null;
         }
@@ -299,6 +329,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         if (NativeFormattingInset == 0 || TopLevel.GetTopLevel(this) is not { } root)
         {
             base.OnPointerPressed(e);
+            RememberNativePointerSelection(e);
             return;
         }
 
@@ -311,13 +342,26 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         };
         base.OnPointerPressed(textEvent);
         e.Handled = textEvent.Handled;
+        RememberNativePointerSelection(e);
     }
 
     protected override void OnPointerMoved(PointerEventArgs e)
     {
+        if (_usesNativeWidthMeasurement)
+        {
+            EnsureNativePointerLayout();
+            XhtmlLinkRun? link = GetLinkAtPoint(e.GetPosition(this));
+            SetCurrentValue(CursorProperty, link is null ? _textCursor : _linkCursor);
+            ToolTip.SetTip(this, link?.LinkUri);
+        }
+
+        // Selection invalidates TextBlock's measured inline runs. Resolve this input's
+        // endpoint before the base changes selection and clears that text-layout cache.
+        int? nativeSelectionPosition = GetNativePointerSelectionPosition(e);
         if (NativeFormattingInset == 0 || TopLevel.GetTopLevel(this) is not { } root)
         {
             base.OnPointerMoved(e);
+            UpdateNativePointerSelection(nativeSelectionPosition);
             return;
         }
 
@@ -328,10 +372,12 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         };
         base.OnPointerMoved(textEvent);
         e.Handled = textEvent.Handled;
+        UpdateNativePointerSelection(nativeSelectionPosition);
     }
 
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
+        _pointerSelectionAnchor = -1;
         if (NativeFormattingInset == 0 || TopLevel.GetTopLevel(this) is not { } root)
         {
             base.OnPointerReleased(e);
@@ -377,13 +423,13 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         List<TextRun> runs = [];
         List<ValueSpan<TextRunProperties>>? selectionStyles = null;
         int sourcePosition = 0;
-        double nativeFontSize = GetNativeFontSize();
         foreach (TextRun run in _textRuns)
         {
             int runPosition = sourcePosition;
             sourcePosition += run.Length;
             int selectionStart = Math.Max(runPosition, Math.Min(SelectionStart, SelectionEnd));
             int selectionEnd = Math.Min(sourcePosition, Math.Max(SelectionStart, SelectionEnd));
+            double nativeFontSize = GetLinkAtPosition(runPosition)?.FontSize ?? GetNativeFontSize();
             if (run is TextCharacters selectionCharacters && selectionEnd > selectionStart && SelectionForegroundBrush is not null)
             {
                 // Retain SelectableTextBlock's foreground override for runs that use
@@ -563,6 +609,146 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         => this.TranslatePoint(e.GetPosition(this) - new Vector(NativeFormattingInset, 0), root)
             ?? e.GetPosition(root);
 
+    private XhtmlLinkRun? GetLinkAtPosition(int position)
+    {
+        if (Inlines is null)
+        {
+            return null;
+        }
+
+        int start = 0;
+        foreach (Inline inline in Inlines)
+        {
+            int length = inline switch
+            {
+                Run run => run.Text?.Length ?? 0,
+                LineBreak => Environment.NewLine.Length,
+                InlineUIContainer => 1,
+                _ => 0,
+            };
+            if (inline is XhtmlLinkRun link && position >= start && position < start + length)
+            {
+                return link;
+            }
+
+            start += length;
+        }
+
+        return null;
+    }
+
+    private XhtmlLinkRun? GetLinkAtPoint(Point point)
+    {
+        point -= new Vector(NativeFormattingInset + Padding.Left, Padding.Top);
+        TextHitTestResult hit = TextLayout.HitTestPoint(point);
+        return hit.IsInside ? GetLinkAtPosition(hit.CharacterHit.FirstCharacterIndex) : null;
+    }
+
+    private void RememberNativePointerSelection(PointerPressedEventArgs e)
+    {
+        if (_usesNativeWidthMeasurement && e.ClickCount == 1
+            && !e.KeyModifiers.HasFlag(KeyModifiers.Shift)
+            && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            _pointerSelectionAnchor = SelectionStart;
+        }
+    }
+
+    private void EnsureNativePointerLayout()
+    {
+        if (!IsMeasureValid && Bounds.Width > 0 && Bounds.Height > 0)
+        {
+            // Consecutive captured input can precede the normal layout pass. Rebuild
+            // the same inline runs with the already arranged client constraint.
+            Measure(Bounds.Size);
+        }
+    }
+
+    private int? GetNativePointerSelectionPosition(PointerEventArgs e)
+    {
+        if (!_usesNativeWidthMeasurement || _pointerSelectionAnchor < 0 || e.Pointer.Captured != this
+            || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed
+            || Inlines?.Text is not { Length: > 0 } text
+            || text.Any(character => character is not (>= ' ' and <= '~') and not '\r' and not '\n' and not '\uFFFC'))
+        {
+            return null;
+        }
+
+        Point point = e.GetPosition(this) - new Vector(NativeFormattingInset + Padding.Left, Padding.Top);
+        return TextLayout.HitTestPoint(point).TextPosition;
+    }
+
+    private void UpdateNativePointerSelection(int? nativeSelectionPosition)
+    {
+        if (nativeSelectionPosition is not { } position || Inlines?.Text is not { Length: > 0 } text)
+        {
+            return;
+        }
+
+        // The source HWND retains ECO_AUTOWORDSELECTION despite the managed false
+        // default. A drag within its first word selects characters; crossing a word
+        // expands both endpoints, with a CFE_LINK caption acting as one native unit.
+        (int start, int end) = GetNativeSelectionUnit(text, _pointerSelectionAnchor);
+        if (position >= start && position < end)
+        {
+            SetCurrentValue(SelectionStartProperty, _pointerSelectionAnchor);
+            return;
+        }
+
+        (int targetStart, int targetEnd) = GetNativeSelectionUnit(text, position);
+        SetCurrentValue(SelectionStartProperty, position >= _pointerSelectionAnchor ? start : end);
+        SetCurrentValue(SelectionEndProperty, position >= _pointerSelectionAnchor ? targetEnd : targetStart);
+    }
+
+    private (int Start, int End) GetNativeSelectionUnit(string text, int position)
+    {
+        position = Math.Clamp(position, 0, text.Length - 1);
+        if (GetLinkAtPosition(position) is { } link && Inlines is not null)
+        {
+            int linkStart = 0;
+            foreach (Inline inline in Inlines)
+            {
+                if (ReferenceEquals(inline, link))
+                {
+                    return (linkStart, linkStart + (link.Text?.Length ?? 0));
+                }
+
+                linkStart += inline switch
+                {
+                    Run run => run.Text?.Length ?? 0,
+                    LineBreak => Environment.NewLine.Length,
+                    InlineUIContainer => 1,
+                    _ => 0,
+                };
+            }
+        }
+
+        int start = position;
+        int end = position + 1;
+        bool word = char.IsLetterOrDigit(text[position]) || text[position] == '_';
+        while (start > 0 && GetLinkAtPosition(start - 1) is null
+            && MatchesWordCategory(text[start - 1], word))
+        {
+            start--;
+        }
+
+        while (end < text.Length && GetLinkAtPosition(end) is null && MatchesWordCategory(text[end], word))
+        {
+            end++;
+        }
+
+        while (end < text.Length && text[end] is ' ' or '\t' or '\uFFFC')
+        {
+            end++;
+        }
+
+        return (start, end);
+    }
+
+    private static bool MatchesWordCategory(char character, bool word)
+        => character is not (' ' or '\t' or '\r' or '\n' or '\uFFFC')
+            && (char.IsLetterOrDigit(character) || character == '_') == word;
+
     private void AddText(string text, StringBuilder plainText, ref LineLayout lineLayout, TextDecorationCollection? decorations = null)
     {
         string normalized = text.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
@@ -652,13 +838,29 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             : WinFormsTextMeasurer.Measure(this, text);
 
     private double GetNativeFontSize(bool rtfRoundTrip = false)
-        => _usesSelectedRtfFont ? FontSize : WinFormsRichEditTextMeasurer.GetFontSize(this, rtfRoundTrip);
+        => WinFormsRichEditTextMeasurer.GetFontSize(this, rtfRoundTrip);
 
     private void AddLineBreak()
         => Inlines?.Add(new LineBreak());
 
     private void AddLink(string caption, string uri, ref LineLayout lineLayout)
     {
+        if (_usesNativeWidthMeasurement)
+        {
+            // RichEdit CFE_LINK decorates real selectable characters. An embedded
+            // button replaces the entire caption with one object position and cannot
+            // preserve partial caption selection, source copy, or native press timing.
+            XhtmlLinkRun run = new(caption, uri)
+            {
+                FontSize = GetNativeFontSize(rtfRoundTrip: caption != uri),
+                TextDecorations = Avalonia.Media.TextDecorations.Underline,
+            };
+            run[!TextElement.ForegroundProperty] = new DynamicResourceExtension("GitExtensionsXhtmlLinkForegroundBrush");
+            Inlines?.Add(run);
+            lineLayout.Advance += MeasureNativeInline(caption, rtfRoundTrip: caption != uri);
+            return;
+        }
+
         HyperlinkButton link = new()
         {
             Content = caption,
@@ -674,30 +876,6 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             Tag = uri,
         };
         ToolTip.SetTip(link, uri);
-        if (_usesNativeWidthMeasurement)
-        {
-            link.FontSize = GetNativeFontSize(rtfRoundTrip: caption != uri);
-
-            // The button keeps its source caption/URI and activation routes. Its text
-            // presenter must use the same native advances as the surrounding RichEdit
-            // runs, rather than reacquiring Fluent/Skia's wider unadapted caption metrics.
-            link.ContentTemplate = new FuncDataTemplate<string>((text, _) =>
-            {
-                XhtmlTextBlock presenter = new()
-                {
-                    _usesSelectedRtfFont = true,
-                    NativeContentOverhang = 0,
-                    IsHitTestVisible = false,
-                    Focusable = false,
-                    TextWrapping = TextWrapping.NoWrap,
-                    TextDecorations = Avalonia.Media.TextDecorations.Underline,
-                };
-                presenter.SetTabStops([], [], 48);
-                presenter.SetXHTMLText(WebUtility.HtmlEncode(text));
-                return presenter;
-            });
-        }
-
         link.Click += Link_Click;
 
         // Button handles the press before ordinary instance handlers; retain the link target
@@ -738,6 +916,13 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     [GeneratedRegex("(?is)(?<anchor><a\\s+href\\s*=\\s*['\"](?<href>.*?)['\"]\\s*>(?<anchorText>.*?)</a>)|<u>(?<underline>.*?)</u>|(?<break><br\\s*/?>)|(?<text>[^<]+)|<[^>]+>", RegexOptions.ExplicitCapture)]
     private static partial Regex TokenRegex();
+}
+
+/// <summary>Preserves a source RichEdit link's selectable caption and URI.</summary>
+internal sealed class XhtmlLinkRun(string caption, string linkUri) : Run(caption)
+{
+    /// <summary>Gets the actual target represented by the decorated source characters.</summary>
+    public string LinkUri { get; } = linkUri;
 }
 
 /// <summary>Provides the target of an activated XHTML anchor.</summary>

@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Runtime.InteropServices;
 using AwesomeAssertions;
 using NUnit.Framework;
 
@@ -9,6 +10,48 @@ namespace WinFormsParityCapture.Tests;
 [NonParallelizable]
 public sealed class TabSizingTests
 {
+    [Test]
+    [TestCase(9)]
+    [TestCase(11)]
+    [TestCase(14)]
+    public void Image_free_tabs_should_retain_the_native_font_based_minimum_width(int points)
+    {
+        using Font font = new("Segoe UI", points);
+        using GitUI.CommandsDialogs.FullBleedTabControl tabs = new()
+        {
+            Dock = DockStyle.Fill,
+            Font = font,
+            Padding = new Point(8, 6),
+        };
+        tabs.TabPages.Add(new TabPage("i"));
+        tabs.TabPages.Add(new TabPage("Diff"));
+        tabs.TabPages.Add(new TabPage("A long tab caption"));
+        tabs.TabPages.Add(new TabPage(string.Empty));
+        using Form window = new() { ClientSize = new Size(600, 240), AutoScaleMode = AutoScaleMode.None, ShowInTaskbar = false };
+        window.Controls.Add(tabs);
+        window.Show();
+        Application.DoEvents();
+        nint context = GetDC(tabs.Handle);
+        nint previous = SelectObject(context, font.ToHfont());
+        try
+        {
+            GetTextMetrics(context, out TextMetric metrics).Should().BeTrue();
+            int minimum = (6 * metrics.AverageCharacterWidth) + (2 * tabs.Padding.X);
+            tabs.GetTabRect(0).Width.Should().Be(minimum);
+            tabs.GetTabRect(3).Width.Should().Be(minimum);
+            tabs.GetTabRect(3).Height.Should().Be(tabs.GetTabRect(0).Height);
+            tabs.GetTabRect(1).Width.Should().Be(Math.Max(minimum,
+                TextRenderer.MeasureText("Diff", font, Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.SingleLine).Width + (2 * tabs.Padding.X)));
+            TestContext.Progress.WriteLine($"points={points} average={metrics.AverageCharacterWidth} minimum={minimum} allocations={tabs.GetTabRect(0)},{tabs.GetTabRect(1)}");
+        }
+        finally
+        {
+            nint current = SelectObject(context, previous);
+            DeleteObject(current);
+            ReleaseDC(tabs.Handle, context);
+        }
+    }
+
     [Test]
     [TestCase(9, false)]
     [TestCase(9, true)]
@@ -80,5 +123,47 @@ public sealed class TabSizingTests
                 TestContext.Progress.WriteLine($"image index={index} item={item} ink={ink}");
             }
         }
+    }
+
+    [DllImport("user32.dll")]
+    private static extern nint GetDC(nint window);
+
+    [DllImport("user32.dll")]
+    private static extern int ReleaseDC(nint window, nint context);
+
+    [DllImport("gdi32.dll")]
+    private static extern nint SelectObject(nint context, nint value);
+
+    [DllImport("gdi32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool DeleteObject(nint value);
+
+    [DllImport("gdi32.dll", CharSet = CharSet.Unicode)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetTextMetrics(nint context, out TextMetric metric);
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    private struct TextMetric
+    {
+        public int Height;
+        public int Ascent;
+        public int Descent;
+        public int InternalLeading;
+        public int ExternalLeading;
+        public int AverageCharacterWidth;
+        public int MaximumCharacterWidth;
+        public int Weight;
+        public int Overhang;
+        public int DigitizedAspectX;
+        public int DigitizedAspectY;
+        public char FirstCharacter;
+        public char LastCharacter;
+        public char DefaultCharacter;
+        public char BreakCharacter;
+        public byte Italic;
+        public byte Underlined;
+        public byte StruckOut;
+        public byte PitchAndFamily;
+        public byte CharacterSet;
     }
 }

@@ -25,6 +25,7 @@ public sealed class NativeTabHeaderPanel : Panel
     {
         Size desired = default;
         bool hasImage = false;
+        double captionMinimum = 0;
         foreach (Control child in Children)
         {
             child.Measure(Size.Infinity);
@@ -36,16 +37,38 @@ public sealed class NativeTabHeaderPanel : Panel
             Size size = child is TextBlock text
                 ? WinFormsTextMeasurer.MeasureSize(text, GetCaption(text))
                 : child.DesiredSize;
+            if (child is TextBlock emptyCaption && size.Height == 0)
+            {
+                size = new Size(size.Width, WinFormsTextMeasurer.MeasureSize(emptyCaption, "0").Height);
+            }
+
             desired = new Size(desired.Width + Math.Ceiling(size.Width), Math.Max(desired.Height, Math.Ceiling(size.Height)));
             hasImage |= child is Image;
+            if (child is TextBlock caption)
+            {
+                captionMinimum = WinFormsTextMeasurer.GetTabCaptionMinimumWidth(caption);
+            }
         }
 
-        return new Size(desired.Width + (hasImage ? ImageTextSpacing : 0), desired.Height);
+        double width = desired.Width + (hasImage ? ImageTextSpacing : 0);
+        return new Size(Math.Max(width, captionMinimum), desired.Height);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        double x = 0;
+        double contentWidth = 0;
+        foreach (Control child in Children)
+        {
+            if (child.IsVisible && child is not Image { Source: null })
+            {
+                contentWidth += child is TextBlock text
+                    ? Math.Ceiling(WinFormsTextMeasurer.MeasureSize(text, GetCaption(text)).Width)
+                    : child.DesiredSize.Width + (child is Image ? ImageTextSpacing : 0);
+            }
+        }
+
+        // Short image-free captions are centred inside the native minimum allocation.
+        double x = Math.Floor((finalSize.Width - contentWidth) / 2);
         foreach (Control child in Children)
         {
             if (!child.IsVisible || child is Image { Source: null })
@@ -56,6 +79,11 @@ public sealed class NativeTabHeaderPanel : Panel
             Size size = child is TextBlock text
                 ? WinFormsTextMeasurer.MeasureSize(text, GetCaption(text))
                 : child.DesiredSize;
+            if (child is TextBlock emptyCaption && size.Height == 0)
+            {
+                size = new Size(size.Width, WinFormsTextMeasurer.MeasureSize(emptyCaption, "0").Height);
+            }
+
             double width = Math.Ceiling(size.Width);
             double height = Math.Ceiling(size.Height);
             double y = Math.Floor((finalSize.Height - height) / 2);
