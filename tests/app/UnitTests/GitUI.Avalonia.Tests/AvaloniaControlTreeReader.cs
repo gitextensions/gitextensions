@@ -752,9 +752,6 @@ internal sealed class AvaloniaControlTreeReader
         bool isEnvironmentInfoBottomSeparator = sourceOwnerType == "GitUI.CommandsDialogs.EnvironmentInfo"
             && control.Name == "lblSeparatorBottom";
         bool isEnvironmentInfoSeparator = isEnvironmentInfoTopSeparator || isEnvironmentInfoBottomSeparator;
-        bool hasSourceRichTextOuterExtent = isFormBrowseSurface
-            && sourceOwnerType == "GitUI.CommitInfo.CommitInfo"
-            && semanticName == "rtbxCommitMessage";
         bool isFormBrowseSearchTextBox = isFormBrowseSurface
             && semanticName == "txtSearchBox";
         bool usesFormBrowseFilterToolbar = isFormBrowseSurface
@@ -873,13 +870,6 @@ internal sealed class AvaloniaControlTreeReader
                 0,
                 Math.Max(0, revisionInfoTabs.Bounds.Width - 2),
                 Math.Max(0, revisionInfoTabs.Bounds.Height - 30));
-        }
-
-        if (hasSourceRichTextOuterExtent)
-        {
-            // A borderless WinForms RichTextBox retains one outer control pixel beyond the
-            // native contents-height notification used to size its parent row.
-            bounds = new Rect(bounds.Position, new Size(bounds.Width, bounds.Height + 1));
         }
 
         if (rootMetadataType == "GitUI.UserControls.InteractiveGitActionControl"
@@ -4505,6 +4495,14 @@ internal sealed class AvaloniaControlTreeReader
 
     private IEnumerable<Control> GetCaptureChildren(Control control)
     {
+        if (control is NativeToolStrip strip)
+        {
+            // Native ToolStrip exposes its authored Items, not its framework-owned overflow
+            // button/popup host. Item ownership remains stable while the visual parent moves;
+            // a genuinely open popup is still captured as its own rendered surface.
+            return strip.Items;
+        }
+
         if (IsRepositoryHostDiscussion(control))
         {
             // parity-scaffolding: WinForms exposes the read-only WebBrowser as one semantic
@@ -5989,6 +5987,15 @@ internal sealed class AvaloniaControlTreeReader
     private static bool IsSemanticallyVisible(Control control, Control semanticStateControl)
     {
         if (TopLevel.GetTopLevel(control) is null
+            && control.GetLogicalAncestors().OfType<NativeToolStrip>().Any())
+        {
+            // parity-scaffolding: source item ownership survives overflow reparenting,
+            // but its closed popup does not display the item. Logical ownership alone
+            // must not turn a detached overflow control into a visible primary pixel.
+            return false;
+        }
+
+        if (TopLevel.GetTopLevel(control) is null
             && control.GetLogicalAncestors().All(ancestor => ancestor is not Window))
         {
             // parity-scaffolding: controls owned by a closed Flyout retain their local
@@ -6020,6 +6027,14 @@ internal sealed class AvaloniaControlTreeReader
 
     private static bool IsInsideClippedAncestors(Control control)
     {
+        if (TopLevel.GetTopLevel(control) is null
+            && control.GetLogicalAncestors().OfType<NativeToolStrip>().Any())
+        {
+            // A closed overflow has no visual viewport; the stable logical owner
+            // does not make its detached items part of the painted main strip.
+            return false;
+        }
+
         const double layoutTolerance = 0.5;
         foreach (Control ancestor in control.GetVisualAncestors().OfType<Control>().Where(ancestor => ancestor.ClipToBounds))
         {

@@ -238,6 +238,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
         _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
+        _ = new NativeTreeKeyboardAdapter(treeMain);
         _explorerNavigationDecorator = new NativeTreeViewExplorerNavigationDecorator(treeMain);
         _explorerNavigationDecorator.AfterSelect += OnNodeSelected;
 
@@ -459,12 +460,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             Spacing = 3,
             Children =
             {
-                new Image
+                new NativeTreeImageListControl(icon)
                 {
                     Width = 16,
                     Height = 16,
                     Stretch = Stretch.Uniform,
-                    Source = icon,
                 },
                 new NativeTreeTextBlock
                 {

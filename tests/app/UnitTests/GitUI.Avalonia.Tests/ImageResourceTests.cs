@@ -14,6 +14,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.Menus;
 using GitUI.Compat;
 using GitUI.Editor;
 using GitUI.LeftPanel;
@@ -301,7 +302,7 @@ public sealed class ImageResourceTests
             MenuItem commit = form.FindControl<MenuItem>("commitToolStripMenuItem")!;
             commit.Icon.Should().BeOfType<Image>()
                 .Which.Source.Should().BeSameAs(Images.RepoStateClean);
-            form.FindControl<MenuItem>("translateToolStripMenuItem")!.Icon.Should().BeOfType<Image>()
+            form.FindControl<HelpToolStripMenuItem>("helpToolStripMenuItem")!.GetTestAccessor().TranslateMenuItem.Icon.Should().BeOfType<Image>()
                 .Which.Source.Should().BeSameAs(Images.Translate.AdaptLightness());
 
             commitForm.FindControl<Image>("toolStripStatusBranchIcon")!.Source
@@ -323,7 +324,9 @@ public sealed class ImageResourceTests
             TreeViewItem branches = treeMain.Items.Cast<TreeViewItem>().First();
             branches.Header.Should().BeOfType<StackPanel>()
                 .Which.Children.OfType<Image>().Should().ContainSingle()
-                .Which.Source.Should().BeSameAs(Images.BranchLocalRoot);
+                .Which.Source.Should().BeOfType<NativeTreeImageListImage>();
+            NativeTreeImageListImage.Create(((StackPanel)branches.Header!).Children.OfType<Image>().Single().Source!)
+                .Should().BeSameAs(NativeTreeImageListImage.Create(Images.BranchLocalRoot));
 
             fileStatusList.SetDiffs([new GitItemStatus("new-file.txt") { IsNew = true }]);
             listWindow.Show();

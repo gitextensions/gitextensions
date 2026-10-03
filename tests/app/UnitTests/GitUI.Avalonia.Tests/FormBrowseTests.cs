@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -178,7 +179,7 @@ public sealed class FormBrowseTests
 
             Button overflow = form.FindControl<Button>("toolStripMainOverflow")!;
             overflow.IsVisible.Should().BeTrue();
-            overflow.Bounds.Width.Should().Be(11);
+            overflow.Bounds.Width.Should().Be(16, "the actual source ToolStripOverflowButton reserves its sixteen-pixel maximum width");
 
             foreach ((ThemeVariant theme, string background, string foreground, string sourceForeground, string windowText) in
                      new[]
@@ -234,9 +235,16 @@ public sealed class FormBrowseTests
                 CaptureNode stashSeparator = nodes.Single(node => node.FieldName == "toolStripSeparator2");
                 stashSeparator.Colors.Background.Should().Be(stashSeparator.Visible == true ? "#00FFFFFF" : background);
                 stashSeparator.Colors.DisabledBackground.Should().Be(stashSeparator.Visible == true ? "#00FFFFFF" : background);
-                nodes.Single(node => node.FieldName == "toolStripButtonPull").Visible.Should().BeTrue();
-                nodes.Single(node => node.FieldName == "toolStripButtonCommit").Visible.Should().BeTrue();
-                nodes.Single(node => node.FieldName == "toolStripFileExplorer").Visible.Should().BeFalse();
+                foreach (Control item in form.ToolStripMain.Items)
+                {
+                    if (item.Name is not null && nodes.SingleOrDefault(node => node.FieldName == item.Name) is CaptureNode node)
+                    {
+                        node.Visible.Should().Be(item.IsVisible
+                            && form.ToolStripMain.GetItemPlacement(item) == NativeToolStripItemPlacement.Main,
+                            $"{item.Name} remains a logical source item, but a closed overflow does not paint it in the main surface");
+                    }
+                }
+
                 nodes.Single(node => node.FieldName == "_gridView").Colors.Foreground.Should().Be(windowText);
                 nodes.Where(node => node.FieldName == "sepRefresh")
                     .Should().HaveCount(2).And.OnlyContain(node => node.Colors.Background == background);
@@ -563,39 +571,36 @@ public sealed class FormBrowseTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void Browse_toolbar_overflow_should_reach_commands_between_the_first_and_last_page()
+    public void Browse_toolbar_overflow_should_present_the_same_source_commands_in_a_wrapped_popup()
     {
         using FormBrowse form = new() { Width = 360, Height = 573 };
         form.Show();
         try
         {
             Dispatcher.UIThread.RunJobs();
-            ScrollViewer viewport = form.toolStripMainViewport;
+            NativeToolStrip toolbar = form.ToolStripMain;
             Button overflow = form.toolStripMainOverflow;
-            double maximumOffset = form.ToolStripMain.Bounds.Width - viewport.Viewport.Width;
-            maximumOffset.Should().BeGreaterThan(viewport.Viewport.Width);
+            Control[] sourceItems = toolbar.Items.ToArray();
+            toolbar.PreferredSize.Width.Should().BeGreaterThan(toolbar.Bounds.Width);
             overflow.IsVisible.Should().BeTrue();
 
             overflow.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
-            viewport.Offset.X.Should().BeGreaterThan(0).And.BeLessThan(maximumOffset);
-            overflow.Content.Should().Be("»");
-
-            while (viewport.Offset.X < maximumOffset)
+            toolbar.IsOverflowOpen.Should().BeTrue();
+            toolbar.Items.Should().Equal(sourceItems);
+            toolbar.OverflowItems.Should().Contain(form.EditSettings);
+            foreach (Control command in toolbar.OverflowItems)
             {
-                overflow.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                Dispatcher.UIThread.RunJobs();
+                command.Parent.Should().BeSameAs(toolbar, "visual popup reparenting must retain the command owner");
+                command.GetVisualParent().Should().BeSameAs(toolbar.OverflowContent);
+                command.Opacity.Should().Be(1);
+                command.IsHitTestVisible.Should().BeTrue();
             }
-
-            overflow.Content.Should().Be("«");
-            Point settingsPosition = form.EditSettings.TranslatePoint(default, viewport)!.Value;
-            settingsPosition.X.Should().BeGreaterThanOrEqualTo(0);
-            settingsPosition.X.Should().BeLessThan(viewport.Viewport.Width);
 
             overflow.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
-            viewport.Offset.X.Should().Be(0);
-            overflow.Content.Should().Be("»");
+            toolbar.IsOverflowOpen.Should().BeFalse();
+            toolbar.Items.Should().Equal(sourceItems);
         }
         finally
         {
@@ -605,7 +610,7 @@ public sealed class FormBrowseTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void Browse_toolbar_should_keep_branch_and_commit_visible_with_a_long_repository_caption()
+    public void Browse_toolbar_should_move_whole_long_repository_and_later_commands_to_source_overflow()
     {
         using FormBrowse form = new() { Width = 760, Height = 573 };
         form.Show();
@@ -613,18 +618,82 @@ public sealed class FormBrowseTests
         {
             WorkingDirectoryToolStripSplitButton selector = form.FindControl<WorkingDirectoryToolStripSplitButton>(
                 "_NO_TRANSLATE_WorkingDir")!;
+            selector.Width = double.NaN;
             selector.Content = new string('x', 200);
             form.UpdateLayout();
             Dispatcher.UIThread.RunJobs();
 
-            ScrollViewer viewport = form.toolStripMainViewport;
-            Point branchPosition = form.branchSelect.TranslatePoint(default, viewport)!.Value;
-            Point commitPosition = form.toolStripButtonCommit.TranslatePoint(default, viewport)!.Value;
-            branchPosition.X.Should().BeGreaterThanOrEqualTo(0);
-            commitPosition.X.Should().BeGreaterThan(branchPosition.X);
-            (commitPosition.X + form.toolStripButtonCommit.Bounds.Width)
-                .Should().BeLessThanOrEqualTo(viewport.Viewport.Width);
-            selector.Bounds.Width.Should().BeGreaterThanOrEqualTo(83);
+            NativeToolStrip toolbar = form.ToolStripMain;
+            toolbar.GetItemPlacement(selector).Should().Be(NativeToolStripItemPlacement.Overflow);
+            toolbar.GetItemPlacement(form.branchSelect).Should().Be(NativeToolStripItemPlacement.Overflow);
+            toolbar.GetItemPlacement(form.toolStripButtonCommit).Should().Be(NativeToolStripItemPlacement.Overflow);
+            selector.MaxWidth.Should().Be(double.PositiveInfinity, "native AsNeeded moves whole items instead of squeezing the repository selector");
+            toolbar.ShowOverflow();
+            Dispatcher.UIThread.RunJobs();
+            selector.Bounds.Width.Should().BeGreaterThan(toolbar.Bounds.Width);
+            const int sourceBorder = 2;
+            const int sourceImageWidth = 16;
+            const int sourceDropDownWidth = 11;
+            const int sourceSplitterWidth = 1;
+            double sourceWidth = Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(selector, selector.Content as string ?? string.Empty).Width)
+                + sourceImageWidth + (sourceBorder * 2) + sourceDropDownWidth + sourceSplitterWidth;
+            selector.Bounds.Width.Should().Be(sourceWidth, "the source split-button preferred allocation is retained even when the popup host is narrower");
+            toolbar.IsOverflowOpen.Should().BeTrue();
+            toolbar.OverflowContent.Bounds.Width.Should().BeGreaterThan(0);
+            TestContext.Out.WriteLine($"Source item width={sourceWidth}; actual popup viewport width={toolbar.OverflowContent.Bounds.Width}; "
+                + $"actual host chain={string.Join(", ", toolbar.OverflowContent.GetVisualAncestors().Select(parent => parent.GetType().Name))}; "
+                + "full accessibility of an item wider than the available popup viewport is unverified.");
+            form.branchSelect.GetVisualParent().Should().BeSameAs(toolbar.OverflowContent);
+            form.toolStripButtonCommit.GetVisualParent().Should().BeSameAs(toolbar.OverflowContent);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(0, 71)]
+    [TestCase(2, 88)]
+    [TestCase(10, 94)]
+    public void Browse_commit_status_width_should_measure_current_source_text_while_the_overflow_is_closed(int count, int nativeWidth)
+    {
+        using FormBrowse form = new() { Width = 360, Height = 573 };
+        form.Show();
+        try
+        {
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            IconButton command = form.toolStripButtonCommit;
+            form.ToolStripMain.GetItemPlacement(command).Should().Be(NativeToolStripItemPlacement.Overflow);
+            command.GetVisualParent().Should().BeNull();
+            MethodInfo update = typeof(FormBrowse).GetMethod("UpdateCommitButtonAndGetBrush", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?? throw new InvalidOperationException("The original commit-status sizing boundary must remain available.");
+            GitItemStatus[] statuses = Enumerable.Range(0, count)
+                .Select(index => new GitItemStatus($"file-{index}.txt") { Staged = StagedStatus.WorkTree, IsChanged = true }).ToArray();
+            update.Invoke(form, [statuses, count > 0]);
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            string caption = count > 0 ? $"Commit ({count})" : "Commit";
+            command.Content.Should().Be(caption);
+            double preferred = Math.Max(23, Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(command, caption).Width) + 20);
+            command.Width.Should().Be(preferred);
+            if (OperatingSystem.IsWindows())
+            {
+                command.Width.Should().Be(nativeWidth, "actual original default-font ToolStripButton preferred sizes compose the current caption and image");
+            }
+
+            update.Invoke(form, [null, true]);
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            command.Content.Should().Be("Commit");
+            command.Width.Should().Be(preferred, "the source retains the counted width while loading, even before the closed overflow has arranged the item");
+
+            form.ToolStripMain.ShowOverflow();
+            Dispatcher.UIThread.RunJobs();
+            command.Bounds.Width.Should().Be(preferred);
+            command.GetVisualParent().Should().BeSameAs(form.ToolStripMain.OverflowContent);
         }
         finally
         {
@@ -645,18 +714,18 @@ public sealed class FormBrowseTests
 
             IconSplitButton stash = form.FindControl<IconSplitButton>("toolStripSplitStash")!;
             IconButton settings = form.FindControl<IconButton>("EditSettings")!;
-            Point stashPosition = stash.TranslatePoint(default, form.toolStripMainViewport)!.Value;
-            Point settingsPosition = settings.TranslatePoint(default, form.toolStripMainViewport)!.Value;
+            Point stashPosition = stash.TranslatePoint(default, form.ToolStripMain)!.Value;
+            Point settingsPosition = settings.TranslatePoint(default, form.ToolStripMain)!.Value;
             stash.Icon.Should().NotBeNull();
             stash.Content.Should().Be(string.Empty);
             stash.Classes.Should().Contain("gitextensions-icon-only");
             (stashPosition.X + stash.Bounds.Width)
-                .Should().BeLessThanOrEqualTo(form.toolStripMainViewport.Viewport.Width);
+                .Should().BeLessThanOrEqualTo(form.ToolStripMain.Bounds.Width);
             settings.Opacity.Should().Be(1);
             settings.IsHitTestVisible.Should().BeTrue();
             settingsPosition.X.Should().BeGreaterThanOrEqualTo(0);
             (settingsPosition.X + settings.Bounds.Width)
-                .Should().BeLessThanOrEqualTo(form.toolStripMainViewport.Viewport.Width + 0.5);
+                .Should().BeLessThanOrEqualTo(form.ToolStripMain.Bounds.Width);
             foreach (Control ancestor in stash.GetVisualAncestors().OfType<Control>().Where(control => control.ClipToBounds))
             {
                 Point position = stash.TranslatePoint(default, ancestor)!.Value;
@@ -1184,13 +1253,24 @@ public sealed class FormBrowseTests
             capturedPush.Should().NotBeNull();
             capturedPush!.Text.Should().Be("1↑");
 
-            commitButton.Bounds.Width.Should().Be(Math.Ceiling(commitButton.Bounds.Width));
-            commitButton.Bounds.Width.Should().BeGreaterThanOrEqualTo(88);
+            double sourceCommitWidth = Math.Max(23,
+                Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(commitButton, "Commit (2)").Width) + 20);
+            commitButton.Width.Should().Be(sourceCommitWidth);
+            commitButton.Width.Should().Be(Math.Ceiling(commitButton.Width));
             if (OperatingSystem.IsWindows())
             {
-                commitButton.Bounds.Width.Should().Be(88);
+                commitButton.Width.Should().Be(88);
             }
 
+            if (form.ToolStripMain.GetItemPlacement(commitButton) == NativeToolStripItemPlacement.Overflow)
+            {
+                form.ToolStripMain.ShowOverflow();
+                Dispatcher.UIThread.RunJobs();
+                commitButton.GetVisualParent().Should().BeSameAs(form.ToolStripMain.OverflowContent);
+            }
+
+            commitButton.Bounds.Width.Should().Be(sourceCommitWidth);
+            form.ToolStripMain.CloseOverflow();
             form.RevisionGrid.ShowUncommittedChangesIfPossible.Should().BeTrue();
             form.RevisionGrid.GetChangeCount(ObjectId.WorkTreeId)!.Changed.Should().ContainSingle();
             form.RevisionGrid.GetChangeCount(ObjectId.IndexId)!.New.Should().ContainSingle();
@@ -2815,7 +2895,7 @@ public sealed class FormBrowseTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void Browse_toolbar_should_hide_a_partially_clipped_stash_command()
+    public void Browse_toolbar_should_overflow_the_whole_stash_command_without_disabling_or_hiding_it()
     {
         using FormBrowse form = new() { Width = 923, Height = 573 };
         form.Show();
@@ -2823,33 +2903,23 @@ public sealed class FormBrowseTests
         {
             WorkingDirectoryToolStripSplitButton selector = form.FindControl<WorkingDirectoryToolStripSplitButton>(
                 "_NO_TRANSLATE_WorkingDir")!;
-            string caption = "~\\AppData\\Local\\Temp\\GitExtensions.MainScreenParity.MenuFocus";
-            selector.Content = caption;
+            selector.Content = new string('x', 200);
             form.UpdateLayout();
             Dispatcher.UIThread.RunJobs();
 
-            ScrollViewer viewport = form.toolStripMainViewport;
+            NativeToolStrip toolbar = form.ToolStripMain;
             IconSplitButton stash = form.FindControl<IconSplitButton>("toolStripSplitStash")!;
-            Point position = stash.TranslatePoint(default, viewport)!.Value;
-            while (position.X >= viewport.Viewport.Width && caption.Length > 1)
-            {
-                // Platform font metrics can cap the repository selector at a slightly
-                // different width; find the first genuinely clipped Stash position.
-                caption = caption[..^1];
-                selector.Content = caption;
-                form.UpdateLayout();
-                Dispatcher.UIThread.RunJobs();
-                position = stash.TranslatePoint(default, viewport)!.Value;
-            }
-
-            position.X.Should().BeLessThan(viewport.Viewport.Width);
-            (position.X + stash.Bounds.Width).Should().BeGreaterThan(viewport.Viewport.Width);
-            stash.Opacity.Should().Be(0, "ToolStrip sends the entire partly clipped Stash command to overflow");
-            stash.IsHitTestVisible.Should().BeFalse();
+            toolbar.GetItemPlacement(stash).Should().Be(NativeToolStripItemPlacement.Overflow);
+            stash.GetVisualParent().Should().BeNull("the closed popup does not paint a clipped main-row fragment");
+            stash.Opacity.Should().Be(1);
+            stash.IsHitTestVisible.Should().BeTrue();
 
             form.toolStripMainOverflow.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
-            stash.Opacity.Should().Be(1, "the complete command becomes available on the next overflow page");
+            toolbar.IsOverflowOpen.Should().BeTrue();
+            stash.GetVisualParent().Should().BeSameAs(toolbar.OverflowContent);
+            stash.Bounds.Width.Should().Be(32);
+            stash.Opacity.Should().Be(1, "the complete original command is available inside the actual source-shaped popup");
             stash.IsHitTestVisible.Should().BeTrue();
         }
         finally
