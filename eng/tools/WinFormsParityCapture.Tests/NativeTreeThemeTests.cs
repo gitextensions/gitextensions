@@ -17,6 +17,38 @@ public sealed class NativeTreeThemeTests
     private const uint GetItemRectangleMessage = 0x1104;
 
     [Test]
+    [TestCase("Explorer::TREEVIEW", 3)]
+    [TestCase("Explorer::TREEVIEW", 5)]
+    [TestCase("DarkMode_Explorer::TREEVIEW", 3)]
+    [TestCase("DarkMode_Explorer::TREEVIEW", 5)]
+    public void Native_tree_selection_corners_should_preserve_image_mask_composition(string className, int state)
+    {
+        using Bitmap black = RenderTreePart(className, state, Color.Black);
+        using Bitmap white = RenderTreePart(className, state, Color.White);
+        foreach (Color backdrop in new[] { Color.FromArgb(43, 45, 58), Color.FromArgb(170, 210, 130), Color.FromArgb(127, 128, 129) })
+        {
+            using Bitmap actual = RenderTreePart(className, state, backdrop);
+            for (int y = 0; y < 3; y++)
+            {
+                for (int x = 0; x < 3; x++)
+                {
+                    Color value = actual.GetPixel(x, y);
+                    value.Should().Be(CompositeSamples(backdrop, black.GetPixel(x, y), white.GetPixel(x, y)));
+                    value.Should().Be(actual.GetPixel(actual.Width - x - 1, y));
+                    value.Should().Be(actual.GetPixel(x, actual.Height - y - 1));
+                }
+            }
+        }
+
+        foreach (Point point in new[] { new Point(0, 0), new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(2, 0), new Point(2, 2) })
+        {
+            TestContext.Progress.WriteLine($"class={className} state={state} point={point} black=#{black.GetPixel(point.X, point.Y).ToArgb():X8} white=#{white.GetPixel(point.X, point.Y).ToArgb():X8}");
+        }
+
+        white.GetPixel(0, 0).Should().NotBe(white.GetPixel(2, 0), "the native image corner has different backdrop composition from its edge");
+    }
+
+    [Test]
     public void Native_tree_image_list_should_preserve_the_source_padding_alpha_pipeline()
     {
         using Bitmap source = (Bitmap)GitUI.Properties.Images.BranchLocalRoot.Clone();
@@ -94,9 +126,19 @@ public sealed class NativeTreeThemeTests
         tree.Focused.Should().BeTrue();
         tree.SelectedNode.Should().BeSameAs(node);
         tree.HotTracking.Should().BeFalse();
+        window.Refresh();
         tree.Refresh();
+        long settledAt = Environment.TickCount64 + 100;
+        while (Environment.TickCount64 < settledAt)
+        {
+            Application.DoEvents();
+        }
+
+        tree.DeviceDpi.Should().Be(96);
+        window.DeviceDpi.Should().Be(96);
         using CaptureImageResult capture = ImageCapture.Capture(window, [], []);
         Point origin = tree.PointToScreen(Point.Empty) - new Size(capture.ScreenBounds.Location);
+        TestContext.Progress.WriteLine($"windowVisible={window.Visible} nativeWindowVisible={IsWindowVisible(window.Handle)} treeVisible={tree.Visible} nativeTreeVisible={IsWindowVisible(tree.Handle)} windowDpi={window.DeviceDpi} treeDpi={tree.DeviceDpi} treeClient={tree.ClientRectangle} text={text} captureBounds={capture.ScreenBounds} treeOrigin={origin} captureMethod={capture.Method}");
         Color fill = capture.Bitmap.GetPixel(origin.X + text.Left - 3, origin.Y + text.Top + 2);
         NativeTreePalette palette = NativeTreePalette.Read(tree, 3);
         Color[] adjacentEdge = Enumerable.Range(text.Left + 8, 4)
@@ -343,8 +385,44 @@ public sealed class NativeTreeThemeTests
         }
     }
 
+    private static Bitmap RenderTreePart(string className, int state, Color backdrop)
+    {
+        VisualStyleElement element = VisualStyleElement.CreateElement(className, TreeItemPart, state);
+        VisualStyleRenderer.IsElementDefined(element).Should().BeTrue();
+        VisualStyleRenderer renderer = new(element);
+        Bitmap bitmap = new(75, 18, PixelFormat.Format24bppRgb);
+        try
+        {
+            using Graphics graphics = Graphics.FromImage(bitmap);
+            nint deviceContext = graphics.GetHdc();
+            nint brush = CreateSolidBrush(unchecked((uint)(backdrop.R | (backdrop.G << 8) | (backdrop.B << 16))));
+            try
+            {
+                NativeRectangle bounds = new() { Right = bitmap.Width, Bottom = bitmap.Height };
+                FillRect(deviceContext, ref bounds, brush).Should().NotBe(0);
+                DrawThemeBackground(renderer.Handle, deviceContext, TreeItemPart, state, ref bounds, 0).Should().Be(0);
+            }
+            finally
+            {
+                DeleteObject(brush);
+                graphics.ReleaseHdc(deviceContext);
+            }
+
+            return bitmap;
+        }
+        catch
+        {
+            bitmap.Dispose();
+            throw;
+        }
+    }
+
     [DllImport("user32.dll", EntryPoint = "SendMessageW")]
     private static extern nint SendMessage(nint window, uint message, nint parameter, nint data);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool IsWindowVisible(nint window);
 
     [DllImport("gdi32.dll")]
     private static extern nint CreateSolidBrush(uint color);

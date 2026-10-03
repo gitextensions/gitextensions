@@ -67,6 +67,12 @@ internal sealed class DashboardLinkLabel : WinFormsControls.LinkLabel
     {
         base.OnPointerMoved(e);
         Point position = e.GetPosition(this);
+        if (e.Pointer.Captured == this && !new Rect(Bounds.Size).Contains(position))
+        {
+            ResetPointerState();
+            return;
+        }
+
         UpdateCaptionCursor(position);
         if (!_hoverRaised
             && (Math.Abs(position.X - _hoverOrigin.X) >= _hoverSize.Width / 2
@@ -81,15 +87,33 @@ internal sealed class DashboardLinkLabel : WinFormsControls.LinkLabel
     protected override void OnPointerExited(PointerEventArgs e)
     {
         base.OnPointerExited(e);
+
+        // Avalonia clears pointer-over when a captured parent differs from its hit-tested
+        // caption/image child. Native MouseLeave means leaving the whole label's HWND.
+        if (e.Pointer.Captured == this && new Rect(Bounds.Size).Contains(e.GetPosition(this)))
+        {
+            return;
+        }
+
         ResetPointerState();
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
-        _captionPressed = e.GetCurrentPoint(this).Properties.IsLeftButtonPressed
+        PointerPointProperties properties = e.GetCurrentPoint(this).Properties;
+        _captionPressed = IsEffectivelyEnabled && e.ClickCount <= 1
+            && (properties.IsLeftButtonPressed || properties.IsRightButtonPressed || properties.IsMiddleButtonPressed)
             && CaptionHitBounds.Contains(e.GetPosition(this));
         base.OnPointerPressed(e);
-        PseudoClasses.Set(":native-link-active", _captionPressed && IsPressed);
+        if (_captionPressed)
+        {
+            // Native LinkLabel activates/focuses its caption for any mouse button.
+            // Its Dashboard Click handler still follows Button's left-button route.
+            Focus(NavigationMethod.Pointer);
+            e.Pointer.Capture(this);
+        }
+
+        PseudoClasses.Set(":native-link-active", _captionPressed);
     }
 
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
@@ -97,6 +121,10 @@ internal sealed class DashboardLinkLabel : WinFormsControls.LinkLabel
         base.OnPointerReleased(e);
         _captionPressed = false;
         PseudoClasses.Set(":native-link-active", false);
+        if (e.Pointer.Captured == this)
+        {
+            e.Pointer.Capture(null);
+        }
     }
 
     protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)

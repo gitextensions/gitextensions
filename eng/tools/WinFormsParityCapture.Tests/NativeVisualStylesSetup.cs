@@ -8,8 +8,9 @@ public sealed class NativeVisualStylesSetup
     [OneTimeSetUp]
     public void EnableVisualStylesBeforeCreatingNativeHandles()
     {
-        // The reference worker enables styles before constructing any control. Calling this
-        // in an individual fixture is too late once another fixture creates an EDIT handle.
+        // Match the reference worker before any fixture creates a native handle. Setting
+        // process DPI awareness in an individual fixture is too late after an earlier HWND.
+        Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
         Application.EnableVisualStyles();
     }
 }

@@ -469,6 +469,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 },
                 new NativeTreeTextBlock
                 {
+                    UsesAmbientFont = !isBold && !isItalic,
                     FontFamily = new FontFamily(AppSettings.Font.Name),
                     FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
                     FontWeight = isBold ? FontWeight.Bold : FontWeight.Normal,

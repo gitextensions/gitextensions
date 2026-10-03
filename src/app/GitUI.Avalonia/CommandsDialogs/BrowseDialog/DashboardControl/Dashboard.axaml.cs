@@ -111,9 +111,9 @@ public partial class Dashboard : GitModuleControl
                 (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged));
         }
 
-        // WinForms BackgroundImageLayout defaults to Tile; an Image stretched to the
-        // table changes the original artwork at every client size.
-        tableLayoutPanel1.Background = new ImageBrush((IImageBrushSource)selectedTheme.BackgroundImage)
+        // The source paints its tiled BackgroundImage in the Dashboard's client, not
+        // in the scrolling child table. Keep the tile origin fixed when focus scrolls.
+        ((ScrollViewer)Content!).Background = new ImageBrush((IImageBrushSource)selectedTheme.BackgroundImage)
         {
             TileMode = TileMode.Tile,
             Stretch = Stretch.None,
@@ -213,6 +213,10 @@ public partial class Dashboard : GitModuleControl
             FontStyle = AppSettings.Font.Italic ? FontStyle.Italic : FontStyle.Normal,
             FontWeight = AppSettings.Font.Bold ? FontWeight.Bold : FontWeight.Normal,
             VerticalAlignment = VerticalAlignment.Top,
+
+            // Native LinkLabel clips once at its HWND client. This anonymous renderer
+            // has a smaller Skia line box, which must not clip native-em descenders.
+            ClipToBounds = false,
         };
         caption.Padding = WinFormsTextMeasurer.GetTextRendererPadding(caption);
         return new Grid

@@ -70,7 +70,7 @@
           ColumnDefinitions="*,26">
       <compat:IconButton x:Name="btnSearch"
                          Grid.Column="1"
-                         Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                         Classes="gitextensions-toolbar-button gitextensions-icon-only gitextensions-native-flat-button"
                          Width="26"
                          Height="26"
                          Margin="0"

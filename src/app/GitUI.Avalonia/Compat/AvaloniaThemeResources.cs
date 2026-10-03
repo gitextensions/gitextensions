@@ -278,6 +278,16 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsNativeButtonDisabledBackgroundBrush", nativeButtonDisabledBackground);
         SetBrush(resources, "GitExtensionsNativeButtonDisabledBorderBrush", nativeButtonDisabledBorder);
         SetBrush(resources, "GitExtensionsNativeButtonDisabledForegroundBrush", nativeButtonDisabledForeground);
+        resources["GitExtensionsNativeFlatButtonDarkMode"] = isDark;
+        SetBrush(resources, "GitExtensionsNativeFlatButtonBackgroundBrush", isDark ? nativeButtonBackground : control);
+        SetBrush(resources, "GitExtensionsNativeFlatButtonHoverBackgroundBrush", isDark ? DrawingColor.FromArgb(69, 69, 69) : LowFlatButtonColor(control));
+        SetBrush(resources, "GitExtensionsNativeFlatButtonPressedBackgroundBrush", isDark ? nativeButtonPressedBackground : LowFlatButtonColor(ResolveSystemColor(settings, KnownColor.ControlLightLight)));
+        SetBrush(resources, "GitExtensionsNativeFlatButtonDisabledBackgroundBrush", isDark ? nativeButtonDisabledBackground : control);
+        SetBrush(resources, "GitExtensionsNativeFlatButtonBorderBrush", isDark ? nativeButtonBorder : DrawingColor.Transparent);
+        SetBrush(resources, "GitExtensionsNativeFlatButtonHoverBorderBrush", isDark ? nativeButtonBorder : DrawingColor.Transparent);
+        SetBrush(resources, "GitExtensionsNativeFlatButtonPressedBorderBrush", isDark ? nativeButtonPressedBorder : DrawingColor.Transparent);
+        SetBrush(resources, "GitExtensionsNativeFlatButtonDisabledBorderBrush", isDark ? nativeButtonDisabledBorder : DrawingColor.Transparent);
+        SetBrush(resources, "GitExtensionsNativeFlatButtonFocusBrush", isDark ? DrawingColor.Black : ResolveSystemColor(settings, KnownColor.ControlDark));
         SetBrush(resources, "GitExtensionsNativeTabBorderBrush", nativeTabBorder);
         SetBrush(resources, "GitExtensionsNativeTabSelectedBackgroundBrush", nativeTabSelectedBackground);
         SetBrush(resources, "GitExtensionsNativeTabUnselectedBackgroundBrush", control);
@@ -326,9 +336,15 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsNativeTreeSelectionBackgroundBrush", treeSelection.Background);
         SetBrush(resources, "GitExtensionsNativeTreeSelectionForegroundBrush", treeSelection.Foreground);
         SetBrush(resources, "GitExtensionsNativeTreeSelectionBorderBrush", treeSelection.Border);
+        SetBrush(resources, "GitExtensionsNativeTreeSelectionCornerBrush", treeSelection.Corner);
+        SetBrush(resources, "GitExtensionsNativeTreeSelectionAdjacentEdgeBrush", treeSelection.AdjacentEdge);
+        SetBrush(resources, "GitExtensionsNativeTreeSelectionInnerCornerBrush", treeSelection.InnerCorner);
         SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionBackgroundBrush", treeInactiveSelection.Background);
         SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionForegroundBrush", treeInactiveSelection.Foreground);
         SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionBorderBrush", treeInactiveSelection.Border);
+        SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionCornerBrush", treeInactiveSelection.Corner);
+        SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionAdjacentEdgeBrush", treeInactiveSelection.AdjacentEdge);
+        SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionInnerCornerBrush", treeInactiveSelection.InnerCorner);
         SetBrush(resources, "GitExtensionsToolStripCheckedBackgroundBrush", nativeListSelectionBackground);
         SetBrush(resources, "GitExtensionsRevisionAlternatingRowBrush", alternatingRow);
         SetBrush(resources, "GitExtensionsRevisionAuthoredBrush", ResolveAppColor(settings, AppColor.AuthoredHighlight));
@@ -533,6 +549,16 @@ internal static class AvaloniaThemeResources
 
         color = value is null ? DrawingColor.Empty : System.Drawing.ColorTranslator.FromHtml(value);
         return !color.IsEmpty;
+    }
+
+    private static DrawingColor LowFlatButtonColor(DrawingColor color)
+    {
+        // ButtonBaseAdapter.ColorData.LowButtonFace/LowHighlight use this source rule.
+        float factor = color.GetBrightness() >= 0.5f ? 0.9f : 1.2f;
+        return DrawingColor.FromArgb(
+            Math.Min(255, (int)(color.R * factor)),
+            Math.Min(255, (int)(color.G * factor)),
+            Math.Min(255, (int)(color.B * factor)));
     }
 
     private static void PublishColor(ResourceDictionary resources, string key, DrawingColor color)
