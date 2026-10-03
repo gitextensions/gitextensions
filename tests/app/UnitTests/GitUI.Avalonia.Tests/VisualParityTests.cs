@@ -602,7 +602,25 @@ public sealed class VisualParityTests
                     int itemHeight = splitButton.FindAncestorOfType<FilterToolBar>() is null ? 22 : 24;
                     splitButton.Bounds.Height.Should().Be(itemHeight);
                     primaryButton.Bounds.Height.Should().Be(itemHeight);
-                    secondaryButton.Bounds.Width.Should().Be(13);
+                    if (splitButton is NativeToolStripSplitButton { UseNativeToolStripLayout: true } nativeSplitButton)
+                    {
+                        // The main source ToolStrip reserves eleven pixels for its
+                        // drop-down plus one splitter; the separate filter adapter
+                        // has not opted into that source-specific implementation.
+                        secondaryButton.Bounds.Width.Should().Be(11);
+                        primaryButton.Bounds.Width.Should().Be(splitButton.Bounds.Width - 12);
+                        primaryButton.Bounds.Should().Be(nativeSplitButton.ButtonBounds);
+                        secondaryButton.Bounds.Should().Be(nativeSplitButton.DropDownButtonBounds);
+                        Border splitter = splitButton.GetVisualDescendants()
+                            .OfType<Border>()
+                            .Single(border => border.Name == "SeparatorBorder");
+                        splitter.Bounds.Should().Be(nativeSplitButton.SplitterBounds);
+                    }
+                    else
+                    {
+                        secondaryButton.Bounds.Width.Should().Be(13);
+                    }
+
                     secondaryButton.Bounds.Height.Should().Be(itemHeight);
                     arrow.Bounds.Size.Should().Be(new Size(7, 5));
                 }

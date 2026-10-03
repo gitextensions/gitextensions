@@ -5865,6 +5865,8 @@ internal sealed class AvaloniaControlTreeReader
                    || (control is Border
                        && control.Classes.Contains("gitextensions-workspace-page-frame"))
                    || control is NativeToolStripSeparatorChrome
+                   || (control is NativeToolStripSplitButtonFrame
+                       && control.GetVisualAncestors().OfType<NativeToolStripSplitButton>().Any())
                    || control.Name is "lblRepoPath" or "lblStatus"
                    || control.Parent is TreeView))
            || (control.GetType().Namespace == "GitUI.Compat.WinFormsControls"

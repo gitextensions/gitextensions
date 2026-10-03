@@ -26,13 +26,13 @@ internal sealed class StashTree : BaseRevisionTree
 
         OwnerControl.UpdateNodes(() =>
         {
-            HashSet<string> selected = OwnerControl.CaptureSelectedNodeIdentities(this);
+            TreeSelectionState selected = OwnerControl.CaptureSelectionState(this);
             bool wasExpanded = TreeViewNode.IsExpanded;
             TreeViewNode.Items.Clear();
             Nodes.Clear();
             Nodes.AddNodes(FillStashTree(getStashRevs.Value, CancellationToken.None));
             Complete(TranslatedStrings.Stashes, Images.Stash, expanded: wasExpanded);
-            OwnerControl.RestoreSelectedNodes(this, selected);
+            OwnerControl.RestoreSelectionState(this, selected);
         });
     }
 

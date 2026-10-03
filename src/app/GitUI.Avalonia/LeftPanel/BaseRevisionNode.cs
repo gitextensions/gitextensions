@@ -50,6 +50,10 @@ internal abstract class BaseRevisionNode : Node
     public override void ApplyStyle()
     {
         SetHeader(DisplayText(), Visible ? GetVisibleIcon() : Images.EyeClosed);
+
+        // The source revision node reapplies its normal/invisible ForeColor on style
+        // updates, even if a previous search assigned SystemColors.InfoText.
+        TreeViewNode.Classes.Remove("repo-search-foreground");
         TreeViewNode.Classes.Set("repo-node-invisible", !Visible);
         base.ApplyStyle();
         if (!Visible)

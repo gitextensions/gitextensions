@@ -28,7 +28,7 @@ internal sealed class WorktreeTree : Tree
     public void Load(IReadOnlyList<GitWorktree> worktrees, string currentWorkingDirectory)
         => OwnerControl.UpdateNodes(() =>
     {
-        HashSet<string> selected = OwnerControl.CaptureSelectedNodeIdentities(this);
+        TreeSelectionState selected = OwnerControl.CaptureSelectionState(this);
         bool wasExpanded = TreeViewNode.IsExpanded;
         TreeViewNode.Items.Clear();
         Nodes.Clear();
@@ -36,7 +36,7 @@ internal sealed class WorktreeTree : Tree
         Nodes loadedNodes = FillWorktreeTree(worktrees, currentWorkingDirectory, CancellationToken.None);
         Nodes.AddNodes(loadedNodes);
         Complete(TranslatedStrings.Worktrees, Images.WorkTree, expanded: wasExpanded);
-        OwnerControl.RestoreSelectedNodes(this, selected);
+        OwnerControl.RestoreSelectionState(this, selected);
     });
 
     private async Task<Nodes> LoadNodesAsync(CancellationToken token)

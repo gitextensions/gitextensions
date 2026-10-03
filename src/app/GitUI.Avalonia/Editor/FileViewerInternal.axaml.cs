@@ -103,11 +103,13 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             CloseFindAndReplaceForm();
         };
         VRulerPosition = AppSettings.DiffVerticalRulerPosition;
+        TextEditor.TextArea.Caret.PositionChanged += GutterSelectedLineChanged;
         InitializeComplete();
     }
 
     public void DontMarkGutterSelectedLine()
     {
+        TextEditor.TextArea.Caret.PositionChanged -= GutterSelectedLineChanged;
         _lineNumbersControl.DontMarkSelectedLine();
     }
 

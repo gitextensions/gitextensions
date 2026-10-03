@@ -310,7 +310,9 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
 
     private void WireEvents()
     {
-        SearchTextBox.TextChanged += txtSearchBox_TextChange;
+        // WinForms TextChanged runs synchronously after Text is assigned. Avalonia's
+        // TextChanged is deferred until rendering; TextChanging preserves the source order.
+        SearchTextBox.TextChanging += txtSearchBox_TextChange;
         SearchTextBox.KeyDown += txtSearchBox_KeyDown;
         SearchTextBox.KeyUp += txtSearchBox_KeyUp;
         SearchTextBox.GotFocus += (_, _) => ApplySearchBoxBorderColor();

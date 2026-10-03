@@ -38,14 +38,10 @@ internal abstract class NodeBase
 
     /// <summary>
     /// Marks this node to be included in multi-selection. See <see cref="Select(bool, bool)"/>.
-    /// This is remembered by Avalonia's native selected-item collection instead of a second flag
-    /// because each model node retains its own <see cref="TreeViewNode"/>.
+    /// This flag is independent of the tree's single highlighted node, so keyboard
+    /// navigation does not change which references participate in multi-selection.
     /// </summary>
-    protected internal bool IsSelected
-    {
-        get => Owner.IsNodeSelected(TreeViewNode);
-        set => Owner.SetNodeSelected(TreeViewNode, value);
-    }
+    protected internal bool IsSelected { get; set; }
 
     /// <summary>
     /// Gets whether the commit that the node represents is currently visible in the revision grid.
@@ -88,7 +84,7 @@ internal abstract class NodeBase
         {
             foreach (NodeBase child in DescendantsAndSelf().Skip(1))
             {
-                child.IsSelected = select;
+                child.Select(select);
             }
         }
     }
