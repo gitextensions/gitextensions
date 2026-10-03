@@ -73,7 +73,7 @@ partial class FormRemotes
         columnHeader1 = new ColumnHeader();
         tabPage2 = new TabPage();
         tableLayoutPanel2 = new TableLayoutPanel();
-        panelDetails = new Panel();
+        panelDetails = new TableLayoutPanel();
         label4 = new Label();
         label5 = new Label();
         label6 = new Label();
@@ -658,85 +658,90 @@ partial class FormRemotes
         // 
         // panelDetails
         // 
-        panelDetails.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-        panelDetails.Controls.Add(label4);
-        panelDetails.Controls.Add(label5);
-        panelDetails.Controls.Add(label6);
-        panelDetails.Controls.Add(DefaultMergeWithCombo);
-        panelDetails.Controls.Add(RemoteRepositoryCombo);
-        panelDetails.Controls.Add(LocalBranchNameEdit);
-        panelDetails.Controls.Add(SaveDefaultPushPull);
+        panelDetails.AutoSize = true;
+        panelDetails.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        panelDetails.ColumnCount = 2;
+        panelDetails.ColumnStyles.Add(new ColumnStyle());
+        panelDetails.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        panelDetails.Controls.Add(label4, 0, 0);
+        panelDetails.Controls.Add(LocalBranchNameEdit, 1, 0);
+        panelDetails.Controls.Add(label5, 0, 1);
+        panelDetails.Controls.Add(RemoteRepositoryCombo, 1, 1);
+        panelDetails.Controls.Add(label6, 0, 2);
+        panelDetails.Controls.Add(DefaultMergeWithCombo, 1, 2);
+        panelDetails.Controls.Add(SaveDefaultPushPull, 1, 3);
+        panelDetails.Dock = DockStyle.Fill;
         panelDetails.Location = new Point(3, 203);
         panelDetails.Name = "panelDetails";
+        panelDetails.Padding = new Padding(33, 5, 50, 8);
+        panelDetails.RowCount = 4;
+        panelDetails.RowStyles.Add(new RowStyle());
+        panelDetails.RowStyles.Add(new RowStyle());
+        panelDetails.RowStyles.Add(new RowStyle());
+        panelDetails.RowStyles.Add(new RowStyle());
         panelDetails.Size = new Size(724, 121);
         panelDetails.TabIndex = 0;
         // 
         // label4
         // 
         label4.AutoSize = true;
-        label4.Location = new Point(36, 11);
+        label4.Dock = DockStyle.Fill;
         label4.Name = "label4";
-        label4.Size = new Size(108, 15);
         label4.TabIndex = 0;
         label4.Text = "&Local branch name";
+        label4.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // LocalBranchNameEdit
+        // 
+        LocalBranchNameEdit.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+        LocalBranchNameEdit.Name = "LocalBranchNameEdit";
+        LocalBranchNameEdit.TabIndex = 1;
         // 
         // label5
         // 
         label5.AutoSize = true;
-        label5.Location = new Point(36, 37);
+        label5.Dock = DockStyle.Fill;
         label5.Name = "label5";
-        label5.Size = new Size(104, 15);
-        label5.TabIndex = 1;
+        label5.TabIndex = 2;
         label5.Text = "&Remote repository";
+        label5.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // RemoteRepositoryCombo
+        // 
+        RemoteRepositoryCombo.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+        RemoteRepositoryCombo.FormattingEnabled = true;
+        RemoteRepositoryCombo.Name = "RemoteRepositoryCombo";
+        RemoteRepositoryCombo.TabIndex = 3;
+        RemoteRepositoryCombo.Validated += RemoteRepositoryComboValidated;
         // 
         // label6
         // 
         label6.AutoSize = true;
-        label6.Location = new Point(36, 64);
+        label6.Dock = DockStyle.Fill;
         label6.Name = "label6";
-        label6.Size = new Size(108, 15);
-        label6.TabIndex = 2;
+        label6.TabIndex = 4;
         label6.Text = "&Default merge with";
+        label6.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // DefaultMergeWithCombo
         // 
-        DefaultMergeWithCombo.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        DefaultMergeWithCombo.Anchor = AnchorStyles.Left | AnchorStyles.Right;
         DefaultMergeWithCombo.FormattingEnabled = true;
-        DefaultMergeWithCombo.Location = new Point(158, 61);
         DefaultMergeWithCombo.Name = "DefaultMergeWithCombo";
-        DefaultMergeWithCombo.Size = new Size(513, 23);
-        DefaultMergeWithCombo.TabIndex = 2;
+        DefaultMergeWithCombo.TabIndex = 5;
         DefaultMergeWithCombo.DropDown += DefaultMergeWithComboDropDown;
         DefaultMergeWithCombo.Validated += DefaultMergeWithComboValidated;
         // 
-        // RemoteRepositoryCombo
-        // 
-        RemoteRepositoryCombo.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        RemoteRepositoryCombo.FormattingEnabled = true;
-        RemoteRepositoryCombo.Location = new Point(158, 34);
-        RemoteRepositoryCombo.Name = "RemoteRepositoryCombo";
-        RemoteRepositoryCombo.Size = new Size(513, 23);
-        RemoteRepositoryCombo.TabIndex = 1;
-        RemoteRepositoryCombo.Validated += RemoteRepositoryComboValidated;
-        // 
-        // LocalBranchNameEdit
-        // 
-        LocalBranchNameEdit.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        LocalBranchNameEdit.Location = new Point(158, 8);
-        LocalBranchNameEdit.Name = "LocalBranchNameEdit";
-        LocalBranchNameEdit.Size = new Size(513, 23);
-        LocalBranchNameEdit.TabIndex = 0;
-        // 
         // SaveDefaultPushPull
         // 
-        SaveDefaultPushPull.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        SaveDefaultPushPull.Anchor = AnchorStyles.Right;
+        SaveDefaultPushPull.AutoSize = true;
+        SaveDefaultPushPull.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         SaveDefaultPushPull.Image = Properties.Images.Save;
         SaveDefaultPushPull.ImageAlign = ContentAlignment.MiddleLeft;
-        SaveDefaultPushPull.Location = new Point(541, 88);
         SaveDefaultPushPull.MinimumSize = new Size(130, 25);
         SaveDefaultPushPull.Name = "SaveDefaultPushPull";
-        SaveDefaultPushPull.Size = new Size(130, 25);
-        SaveDefaultPushPull.TabIndex = 3;
+        SaveDefaultPushPull.TabIndex = 6;
         SaveDefaultPushPull.Text = "&Save changes";
         SaveDefaultPushPull.TextImageRelation = TextImageRelation.ImageBeforeText;
         SaveDefaultPushPull.UseVisualStyleBackColor = true;
@@ -902,7 +907,7 @@ partial class FormRemotes
     private ToolTip toolTip1;
     private Button btnToggleState;
     private ColumnHeader columnHeader1;
-    private Panel panelDetails;
+    private TableLayoutPanel panelDetails;
     private Label lblRemoteColor;
     private Button btnRemoteColor;
     private ColorDialog colorDialog;
