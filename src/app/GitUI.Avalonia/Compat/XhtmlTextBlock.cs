@@ -39,6 +39,10 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     private int _defaultTabInterval;
     private int _nativeFormattingInset;
     private int _pointerSelectionAnchor = -1;
+    private Thickness? _nativeAnchorInsets;
+    private int _contentsHeight;
+    private int _reportedContentsHeight;
+    private int _contentsResizeSuspendCount;
     private bool _usesNativeContentsHeightMeasurement;
     private bool _usesNativeWidthMeasurement;
 
@@ -73,6 +77,12 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     /// <summary>Occurs when an XHTML anchor is activated.</summary>
     public event EventHandler<LinkClickedEventArgs>? LinkClicked;
+
+    /// <summary>Reports the actual wrapped contents height to the source-shaped parent layout.</summary>
+    internal event Action<int>? ContentsResized;
+
+    /// <summary>Gets the measured contents height independently of the anchored client rectangle.</summary>
+    internal int ContentsHeight => _contentsHeight;
 
     /// <summary>Gets the link most recently targeted by the pointer.</summary>
     public string? SelectedLinkUri { get; private set; }
@@ -196,6 +206,29 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     {
         _usesNativeContentsHeightMeasurement = true;
         UpdateNativeContentsHeight();
+    }
+
+    /// <summary>Preserves the source panel's cached edge distances independently of its public Margin.</summary>
+    internal void SetNativeAnchorInsets(Thickness insets)
+    {
+        _nativeAnchorInsets = insets;
+        InvalidateMeasure();
+    }
+
+    /// <summary>Defers notifications while the parent chooses the actual wrapped viewport width.</summary>
+    internal void SuspendContentsResized()
+        => _contentsResizeSuspendCount++;
+
+    /// <summary>Publishes only the final actual contents after the parent's width transaction.</summary>
+    internal void ResumeContentsResized()
+    {
+        if (_contentsResizeSuspendCount == 0)
+        {
+            throw new InvalidOperationException("A contents-resize transaction must be suspended before it is resumed.");
+        }
+
+        _contentsResizeSuspendCount--;
+        PublishContentsResized();
     }
 
     /// <summary>Renders the supported XHTML subset.</summary>
@@ -475,6 +508,60 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         };
         base.OnPointerReleased(textEvent);
         e.Handled = textEvent.Handled;
+    }
+
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        if (_nativeAnchorInsets is { } insets)
+        {
+            // DefaultLayout anchors use the parent's initial bounds, not the child's
+            // Margin. Keep this width consistent between wrapping and final arrangement.
+            availableSize = availableSize.WithWidth(Math.Max(0,
+                availableSize.Width - insets.Left - insets.Right + Margin.Left + Margin.Right));
+        }
+
+        // RichEdit's ContentsResized describes every wrapped line, independently of
+        // the current client height. The parent retains its previous absolute row
+        // height until this notification arrives; feeding that height back into
+        // TextBlock's layout would truncate newly loaded refs to the previous row.
+        Size contentsSize = _usesNativeContentsHeightMeasurement
+            ? availableSize.WithHeight(double.PositiveInfinity)
+            : availableSize;
+        Size desiredSize = base.MeasureOverride(contentsSize);
+        if (_usesNativeContentsHeightMeasurement)
+        {
+            int contentsHeight = (int)Math.Ceiling(TextLayout.Height);
+            if (_contentsHeight != contentsHeight)
+            {
+                _contentsHeight = contentsHeight;
+                PublishContentsResized();
+            }
+        }
+
+        return desiredSize;
+    }
+
+    private void PublishContentsResized()
+    {
+        if (_contentsResizeSuspendCount == 0 && _reportedContentsHeight != _contentsHeight)
+        {
+            _reportedContentsHeight = _contentsHeight;
+            ContentsResized?.Invoke(_contentsHeight);
+        }
+    }
+
+    protected override void ArrangeCore(Rect finalRect)
+    {
+        if (_nativeAnchorInsets is { } insets)
+        {
+            finalRect = new Rect(new Point(
+                finalRect.X + insets.Left - Margin.Left,
+                finalRect.Y + insets.Top - Margin.Top), new Size(
+                Math.Max(0, finalRect.Width - insets.Left - insets.Right + Margin.Left + Margin.Right),
+                Math.Max(0, finalRect.Height - insets.Top - insets.Bottom + Margin.Top + Margin.Bottom)));
+        }
+
+        base.ArrangeCore(finalRect);
     }
 
     protected override Size ArrangeOverride(Size finalSize)

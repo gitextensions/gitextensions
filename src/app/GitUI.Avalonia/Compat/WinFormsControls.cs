@@ -539,18 +539,29 @@ public class MenuStripEx : MenuStrip
 /// </summary>
 public class ToolStripContainer : Avalonia.Controls.Panel
 {
-    private const double ContentTop = 27;
+    private const double MinimumContentTop = 27;
+    private double _contentTop = MinimumContentTop;
 
     protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
     {
+        Control? topPanel = Children.FirstOrDefault(child => child.Name == "_topPanel");
+        topPanel?.Measure(new Avalonia.Size(availableSize.Width, double.PositiveInfinity));
+
+        // Framework constraint: the source ToolStripPanel grows with an explicitly assigned
+        // toolbar font. Its authored 27-pixel row remains the minimum, not a clipping height.
+        _contentTop = Math.Max(MinimumContentTop, topPanel?.DesiredSize.Height ?? MinimumContentTop);
         foreach (Control child in Children)
         {
+            if (ReferenceEquals(child, topPanel))
+            {
+                continue;
+            }
+
             child.Measure(child.Name switch
             {
-                "_topPanel" => new Avalonia.Size(availableSize.Width, ContentTop),
                 "_contentPanel" => new Avalonia.Size(
                     availableSize.Width,
-                    Math.Max(0, availableSize.Height - ContentTop)),
+                    Math.Max(0, availableSize.Height - _contentTop)),
                 _ => new Avalonia.Size(0, 0),
             });
         }
@@ -564,12 +575,12 @@ public class ToolStripContainer : Avalonia.Controls.Panel
         {
             Avalonia.Rect bounds = child.Name switch
             {
-                "_topPanel" => new Avalonia.Rect(0, 0, finalSize.Width, ContentTop),
+                "_topPanel" => new Avalonia.Rect(0, 0, finalSize.Width, _contentTop),
                 "_contentPanel" => new Avalonia.Rect(
                     0,
-                    ContentTop,
+                    _contentTop,
                     finalSize.Width,
-                    Math.Max(0, finalSize.Height - ContentTop)),
+                    Math.Max(0, finalSize.Height - _contentTop)),
                 "_leftPanel" => new Avalonia.Rect(0, 0, 0, 175),
                 "_rightPanel" => new Avalonia.Rect(150, 0, 0, 175),
                 "_bottomPanel" => new Avalonia.Rect(0, 175, 150, 0),
@@ -596,6 +607,8 @@ public class ToolStripPanel : Avalonia.Controls.Panel
 
     public double MainPreferredWidth { get; set; } = double.PositiveInfinity;
 
+    public double MainPreferredHeight { get; set; } = ToolStripHeight;
+
     private static (double MainWidth, double FilterWidth) GetToolbarWidths(double totalWidth, double mainPreferredWidth)
     {
         double availableWidth = Math.Max(0, totalWidth - LeadingInset - ScriptsWidth - TrailingInset);
@@ -610,14 +623,14 @@ public class ToolStripPanel : Avalonia.Controls.Panel
         {
             child.Measure(child.Name switch
             {
-                "toolStripMainHost" => new Avalonia.Size(mainWidth, ToolStripHeight),
+                "toolStripMainHost" => new Avalonia.Size(mainWidth, MainPreferredHeight),
                 "toolStripFiltersHost" => new Avalonia.Size(filterWidth, FilterToolStripHeight),
                 "ToolStripScripts" => new Avalonia.Size(ScriptsWidth, ToolStripHeight),
                 _ => default,
             });
         }
 
-        return new Avalonia.Size(availableSize.Width, FilterToolStripHeight);
+        return new Avalonia.Size(availableSize.Width, Math.Max(FilterToolStripHeight, MainPreferredHeight));
     }
 
     protected override Avalonia.Size ArrangeOverride(Avalonia.Size finalSize)
@@ -628,7 +641,7 @@ public class ToolStripPanel : Avalonia.Controls.Panel
         {
             Avalonia.Rect bounds = child.Name switch
             {
-                "toolStripMainHost" => new Avalonia.Rect(LeadingInset, 0, mainWidth, ToolStripHeight),
+                "toolStripMainHost" => new Avalonia.Rect(LeadingInset, 0, mainWidth, MainPreferredHeight),
                 "toolStripFiltersHost" => new Avalonia.Rect(filterX, 0, filterWidth, FilterToolStripHeight),
                 "ToolStripScripts" => new Avalonia.Rect(
                     Math.Max(0, finalSize.Width - ScriptsWidth - TrailingInset),

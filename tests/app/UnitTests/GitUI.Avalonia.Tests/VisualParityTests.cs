@@ -285,7 +285,7 @@ public sealed class VisualParityTests
                 form.MinWidth.Should().Be(0);
                 form.MinHeight.Should().Be(0);
                 GitUI.Compat.WinFormsControls.ToolStripContainer toolPanel = form.FindControl<GitUI.Compat.WinFormsControls.ToolStripContainer>("toolPanel")!;
-                StackPanel toolStripMain = form.FindControl<StackPanel>("ToolStripMain")!;
+                NativeToolStrip toolStripMain = form.FindControl<NativeToolStrip>("ToolStripMain")!;
                 FilterToolBar toolStripFilters = form.FindControl<FilterToolBar>("ToolStripFilters")!;
                 toolPanel.Bounds.Should().Be(new Rect(0, 27, 923, 546));
                 // The native strip ends after Settings and gives its remaining row width
@@ -293,7 +293,7 @@ public sealed class VisualParityTests
                 // fixed-width assumption that forced every filter into overflow.
                 form.toolStripMainHost.Bounds.Position.Should().Be(new Point(7, 0));
                 form.toolStripMainHost.Bounds.Height.Should().Be(25);
-                form.toolStripMainHost.Bounds.Width.Should().BeApproximately(form.EditSettings.Bounds.Right + 2, 1);
+                form.toolStripMainHost.Bounds.Width.Should().Be(toolStripMain.PreferredSize.Width);
                 form.toolStripFiltersHost.Bounds.X.Should().Be(form.toolStripMainHost.Bounds.Right);
                 form.toolStripFiltersHost.Bounds.Right.Should().Be(869);
                 form.toolStripFiltersHost.Bounds.Height.Should().Be(27);
@@ -321,8 +321,8 @@ public sealed class VisualParityTests
                 form.toolStripFiltersViewport.Content.Should().BeSameAs(toolStripFilters);
                 filterItems.Orientation.Should().Be(Avalonia.Layout.Orientation.Horizontal);
                 filterItems.Children.Should().Contain(item => item.IsVisible && item.Opacity == 0 && !item.IsHitTestVisible);
-                Point settingsPosition = form.EditSettings.TranslatePoint(default, form.toolStripMainViewport)!.Value;
-                settingsPosition.X.Should().BeLessThan(form.toolStripMainViewport.Viewport.Width);
+                Point settingsPosition = form.EditSettings.TranslatePoint(default, toolStripMain)!.Value;
+                settingsPosition.X.Should().BeLessThan(toolStripMain.Bounds.Width);
                 Point repoTreePosition = form.repoObjectsTree.TranslatePoint(new Point(), form)
                     ?? throw new InvalidOperationException("The repository tree position was not available.");
                 repoTreePosition.X.Should().BeApproximately(7, 0.1);
@@ -538,10 +538,11 @@ public sealed class VisualParityTests
             {
                 Dispatcher.UIThread.RunJobs();
                 GitUI.Compat.WinFormsControls.ToolStripContainer toolPanel = form.FindControl<GitUI.Compat.WinFormsControls.ToolStripContainer>("toolPanel")!;
-                StackPanel mainToolbar = form.FindControl<StackPanel>("ToolStripMain")!;
+                NativeToolStrip mainToolbar = form.FindControl<NativeToolStrip>("ToolStripMain")!;
                 mainToolbar.Bounds.Height.Should().Be(25);
                 toolPanel.Bounds.Height.Should().Be(673);
                 mainToolbar.GetVisualDescendants().OfType<Button>()
+                    .Where(button => !ReferenceEquals(button, mainToolbar.OverflowButton))
                     .Should().OnlyContain(button => button.Bounds.Height <= 23);
 
                 ComboBox[] editableInputs = form.GetVisualDescendants()

@@ -42,9 +42,6 @@
                      SplitButton.gitextensions-toolbar-button.gitextensions-icon-only">
       <Setter Property="Width" Value="32" />
     </Style>
-    <Style Selector="Button.gitextensions-toolbar-button.gitextensions-toolbar-first">
-      <Setter Property="Margin" Value="5,1,0,2" />
-    </Style>
     <Style Selector="Button.gitextensions-toolbar-overflow">
       <Setter Property="Width" Value="11" />
       <Setter Property="MinWidth" Value="11" />
@@ -62,6 +59,9 @@
     <Style Selector="Border.gitextensions-toolbar-separator">
       <Setter Property="Width" Value="6" />
       <Setter Property="Height" Value="25" />
+      <!-- ToolStripSeparator.GetPreferredSize returns 6x23; its main owner stretches
+           the item to the display height while the overflow uses its preferred height. -->
+      <Setter Property="compat:NativeToolStrip.ItemPreferredHeight" Value="23" />
       <Setter Property="Margin" Value="0" />
       <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
     </Style>
@@ -257,20 +257,20 @@
     <wf:ToolStripContainer x:Name="toolPanel"
                            Background="{StaticResource GitExtensionsTransparentBrush}"
                            ClipToBounds="True">
-      <wf:ToolStripPanel x:Name="_topPanel" Height="27" ClipToBounds="True">
-      <!-- Keep Stash visible at the normal Browse width while the following separator
-           and File Explorer remain in overflow, as on the source ToolStrip. -->
-      <Grid x:Name="toolStripMainHost" ColumnDefinitions="*,10,16" Height="25" ClipToBounds="True">
-        <ScrollViewer x:Name="toolStripMainViewport"
-                      Grid.Column="0"
-                      Height="25"
-                      HorizontalScrollBarVisibility="Hidden"
-                      VerticalScrollBarVisibility="Disabled">
-          <StackPanel x:Name="ToolStripMain"
-                      Background="{StaticResource GitExtensionsTransparentBrush}"
-                      Height="25"
-                      Orientation="Horizontal"
-                      Spacing="0">
+      <wf:ToolStripPanel x:Name="_topPanel" ClipToBounds="True">
+      <Grid x:Name="toolStripMainHost" ClipToBounds="True">
+          <compat:NativeToolStrip x:Name="ToolStripMain"
+                                  Background="{StaticResource GitExtensionsTransparentBrush}">
+            <compat:NativeToolStrip.OverflowButton>
+              <Button x:Name="toolStripMainOverflow"
+                      compat:TranslationCompat.TranslateText="False"
+                      compat:TranslationCompat.TranslateToolTip="False"
+                      Focusable="False"
+                      Classes="gitextensions-toolbar-button gitextensions-toolbar-overflow"
+                      Width="16" MinWidth="16"
+                      Content="»"
+                      ToolTip.Tip="More toolbar commands" />
+            </compat:NativeToolStrip.OverflowButton>
         <Button x:Name="RefreshButton" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only gitextensions-toolbar-first">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ReloadRevisions}" />
         </Button>
@@ -336,7 +336,7 @@
         <menus:WorkingDirectoryToolStripSplitButton x:Name="_NO_TRANSLATE_WorkingDir"
                                                     UseNativeToolStripLayout="True"
                                                     Classes="gitextensions-toolbar-button"
-                                                    Height="22" />
+                                                    compat:NativeToolStrip.ItemHeight="22" />
         <compat:IconSplitButton x:Name="branchSelect"
                                 UseNativeToolStripLayout="True"
                                 compat:TranslationCompat.TranslateToolTip="False"
@@ -437,17 +437,7 @@
                            Classes="gitextensions-toolbar-button gitextensions-icon-only"
                            Icon="{x:Static properties:Images.Settings}"
                            ToolTip.Tip="Settings" />
-          </StackPanel>
-        </ScrollViewer>
-        <Button x:Name="toolStripMainOverflow"
-                Grid.Column="2"
-                compat:TranslationCompat.TranslateText="False"
-                compat:TranslationCompat.TranslateToolTip="False"
-                HorizontalAlignment="Right"
-                Focusable="False"
-                Classes="gitextensions-toolbar-button gitextensions-toolbar-overflow"
-                Content="»"
-                ToolTip.Tip="More toolbar commands" />
+          </compat:NativeToolStrip>
       </Grid>
       <Grid x:Name="toolStripFiltersHost" ColumnDefinitions="*,16" Height="27" ClipToBounds="True">
         <ScrollViewer x:Name="toolStripFiltersViewport"

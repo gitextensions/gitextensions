@@ -153,7 +153,7 @@
         <wf:ToolStripMenuItem x:Name="mnuConfigure"
                               Header="Recent repositories _settings">
           <MenuItem.Icon>
-            <Image Source="{x:Static properties:Images.Settings}" />
+            <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Settings}" />
           </MenuItem.Icon>
         </wf:ToolStripMenuItem>
       </wf:ToolStripMenuItem>

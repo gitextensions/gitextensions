@@ -18,6 +18,7 @@ namespace GitExtensionsTests;
 [Category("P8.6i.126")]
 public sealed class CommitInfoBodyFontTests
 {
+    private const int SourceCommitMessageMinimumHeight = 1;
     private const string PlainParagraphs = "first short line\nsecond line with descenders gjpq\nlast line";
     private const string WrappedParagraph = "first short line second line with descenders gjpq last line repeated ordinary words for genuine RichEdit word wrapping";
 
@@ -67,20 +68,20 @@ public sealed class CommitInfoBodyFontTests
                 block.FontWeight.Should().Be(FontWeight.Normal);
                 AssertSourceFontHeight(block, nativeLineHeight);
                 GetLayout(block).TextLines.Should().HaveCount(3);
-                AssertAutomaticContents(block);
+                AssertAutomaticContents(block, ReferenceEquals(block, accessor.CommitMessage) ? SourceCommitMessageMinimumHeight : 0);
                 double ordinaryHeight = block.Bounds.Height;
                 block.SetXHTMLText(PlainParagraphs + "\n");
                 RunLayout(window);
                 GetLayout(block).TextLines.Should().HaveCount(4,
                     "the source native contents rectangle includes the empty paragraph after a trailing newline");
-                AssertAutomaticContents(block);
+                AssertAutomaticContents(block, ReferenceEquals(block, accessor.CommitMessage) ? SourceCommitMessageMinimumHeight : 0);
                 block.Bounds.Height.Should().Be(ordinaryHeight + block.LineHeight);
                 block.Margin.Top.Should().Be(8);
                 block.Margin.Bottom.Should().Be(8);
             }
 
             accessor.TableLayout.RowDefinitions[1].ActualHeight.Should()
-                .Be(accessor.CommitMessage.Bounds.Height + accessor.CommitMessage.Margin.Top + accessor.CommitMessage.Margin.Bottom);
+                .Be(accessor.CommitMessageHeight + accessor.CommitMessage.Margin.Top + accessor.CommitMessage.Margin.Bottom);
             accessor.TableLayout.RowDefinitions[2].ActualHeight.Should()
                 .Be(accessor.RevisionInfo.Bounds.Height + accessor.RevisionInfo.Margin.Top + accessor.RevisionInfo.Margin.Bottom);
 
@@ -89,7 +90,8 @@ public sealed class CommitInfoBodyFontTests
                 block.Clear();
                 RunLayout(window);
                 block.GetPlainText().Should().BeEmpty();
-                block.Bounds.Height.Should().Be(block.LineHeight,
+                int anchoredMinimum = ReferenceEquals(block, accessor.CommitMessage) ? SourceCommitMessageMinimumHeight : 0;
+                block.Bounds.Height.Should().Be(block.LineHeight + anchoredMinimum,
                     "an empty source RichEdit still retains one native-font paragraph");
                 block.MinHeight.Should().Be(block.LineHeight);
                 double.IsNaN(block.Height).Should().BeTrue();
@@ -205,7 +207,7 @@ public sealed class CommitInfoBodyFontTests
             accessor.RevisionInfo.FontSize.Should().Be(AvaloniaFontSettings.ToDeviceIndependentPixels(11));
             AssertSourceFontHeight(accessor.CommitMessage, 28);
             AssertSourceFontHeight(accessor.RevisionInfo, 20);
-            AssertAutomaticContents(accessor.CommitMessage);
+            AssertAutomaticContents(accessor.CommitMessage, SourceCommitMessageMinimumHeight);
             AssertAutomaticContents(accessor.RevisionInfo);
             double headerWidth = header.Width;
             double headerMinWidth = header.MinWidth;
@@ -219,7 +221,7 @@ public sealed class CommitInfoBodyFontTests
             accessor.RevisionInfo.FontFamily.Name.Should().Be("Consolas");
             AssertSourceFontHeight(accessor.CommitMessage, 15);
             AssertSourceFontHeight(accessor.RevisionInfo, 34);
-            AssertAutomaticContents(accessor.CommitMessage);
+            AssertAutomaticContents(accessor.CommitMessage, SourceCommitMessageMinimumHeight);
             AssertAutomaticContents(accessor.RevisionInfo);
             header.Width.Should().Be(headerWidth);
             header.MinWidth.Should().Be(headerMinWidth);
@@ -233,13 +235,13 @@ public sealed class CommitInfoBodyFontTests
         }
     }
 
-    private static void AssertAutomaticContents(XhtmlTextBlock block)
+    private static void AssertAutomaticContents(XhtmlTextBlock block, int anchoredMinimum = 0)
     {
         TextLayout layout = GetLayout(block);
         double.IsNaN(block.Height).Should().BeTrue();
         block.MinHeight.Should().Be(block.LineHeight);
-        block.Bounds.Height.Should().Be(Math.Ceiling(layout.Height),
-            "the actual wrapped visual lines must determine contents height, not the number of source newlines");
+        block.Bounds.Height.Should().Be(Math.Ceiling(layout.Height) + anchoredMinimum,
+            "the actual visual lines determine contents; only the source parent's cached minimum-height anchor adds client space");
         layout.TextLines.All(line => line.Height == block.LineHeight).Should().BeTrue();
     }
 
