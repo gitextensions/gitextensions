@@ -181,6 +181,12 @@ internal static class AvaloniaThemeResources
         DrawingColor sectionBorder = isDark
             ? DrawingColor.FromArgb(47, 47, 47)
             : DrawingColor.FromArgb(224, 224, 224);
+        DrawingColor separatorShadow = ResolveNativeSystemColor(isDark, KnownColor.ButtonShadow);
+        DrawingColor separatorWindow = ResolveNativeSystemColor(isDark, KnownColor.Window);
+        DrawingColor separatorDark = DrawingColor.FromArgb(
+            ((separatorShadow.R * 70) + (separatorWindow.R * 30) + 50) / 100,
+            ((separatorShadow.G * 70) + (separatorWindow.G * 30) + 50) / 100,
+            ((separatorShadow.B * 70) + (separatorWindow.B * 30) + 50) / 100);
         ThemeSettings adaptationSettings = CreatePortableAdaptationSettings(settings);
 
         // OtherColors uses AdaptBackColor for these invariant values. The resolved results
@@ -346,6 +352,13 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionAdjacentEdgeBrush", treeInactiveSelection.AdjacentEdge);
         SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionInnerCornerBrush", treeInactiveSelection.InnerCorner);
         SetBrush(resources, "GitExtensionsToolStripCheckedBackgroundBrush", nativeListSelectionBackground);
+
+        // The original ProfessionalColorTable consumes the application's native
+        // SystemColors, not CSS pane borders or configurable editor-selection colors.
+        // Its high-resolution separator blend rounds the 70/30 result to nearest.
+        resources["GitExtensionsToolStripSeparatorUseSystemVisualStyle"] = settings.UseSystemVisualStyle;
+        SetBrush(resources, "GitExtensionsToolStripSeparatorDarkBrush", separatorDark);
+        SetBrush(resources, "GitExtensionsToolStripSeparatorLightBrush", ResolveNativeSystemColor(isDark, KnownColor.ButtonHighlight));
         SetBrush(resources, "GitExtensionsRevisionAlternatingRowBrush", alternatingRow);
         SetBrush(resources, "GitExtensionsRevisionAuthoredBrush", ResolveAppColor(settings, AppColor.AuthoredHighlight));
         SetBrush(resources, "GitExtensionsRevisionSelectedSubjectBrush", isDark ? controlText : highlightText);
@@ -462,6 +475,13 @@ internal static class AvaloniaThemeResources
             settings.Variations,
             settings.UseSystemVisualStyle);
     }
+
+    private static DrawingColor ResolveNativeSystemColor(bool isDark, KnownColor name)
+        => isDark && TryGetDarkSystemColor(name, out DrawingColor dark)
+            ? dark
+            : TryGetLightSystemColor(name, out DrawingColor light)
+                ? light
+                : DrawingColor.FromKnownColor(name);
 
     private static bool TryGetLightSystemColor(KnownColor name, out DrawingColor color)
     {

@@ -76,6 +76,8 @@ capture_log="$evidence_dir/capture.log"
 backend_log="$evidence_dir/backend-assemblies.txt"
 connection_log="$evidence_dir/backend-connections.txt"
 manifest="$evidence_dir/smoke.json"
+font_report="$evidence_dir/fonts.json"
+font_request="$font_report.request"
 rm -f -- \
     "$stdout_log" \
     "$stderr_log" \
@@ -83,7 +85,10 @@ rm -f -- \
     "$capture_log" \
     "$backend_log" \
     "$connection_log" \
-    "$manifest"
+    "$manifest" \
+    "$font_report" \
+    "$font_request" \
+    "$font_report.tmp"
 
 wayland_display=${WAYLAND_DISPLAY:-}
 x11_display=${DISPLAY:-}
@@ -224,7 +229,8 @@ export XDG_CACHE_HOME="$settings_root/cache"
 export GIT_CONFIG_GLOBAL=/dev/null
 export GITEXTENSIONS_DEBUG_FAIL_FAST=1
 
-"$app" browse "$fixture_repo" >"$stdout_log" 2>"$stderr_log" &
+GITEXTENSIONS_RUNTIME_FONT_REPORT="$font_report" \
+    "$app" browse "$fixture_repo" >"$stdout_log" 2>"$stderr_log" &
 app_pid=$!
 
 for _ in {1..30}; do
@@ -321,6 +327,25 @@ if ! kill -0 "$app_pid" 2>/dev/null; then
     echo "error: Avalonia exited during the $backend capture" >&2
     exit 1
 fi
+
+# Additional typeface requests can populate fallback caches. Retain the unmodified
+# runtime image first, then ask that same process for actual and requested families.
+printf 'postScreenshot\n' > "$font_request"
+for _ in {1..50}; do
+    [[ -s "$font_report" ]] && break
+    if ! kill -0 "$app_pid" 2>/dev/null; then
+        echo "error: Avalonia exited before the post-screenshot font report" >&2
+        exit 1
+    fi
+    sleep 0.2
+done
+if [[ ! -s "$font_report" ]] \
+    || ! grep -Fq '"phase": "postScreenshot"' "$font_report" \
+    || ! grep -Fq '"status": "captured"' "$font_report"; then
+    echo "error: no completed post-screenshot font report was produced" >&2
+    sed -n '1,160p' "$stderr_log" >&2
+    exit 1
+fi
 if grep -Eiq 'Unhandled exception|fatal error|JIT debugger|Avalonia.*error' "$stdout_log" "$stderr_log"; then
     echo "error: runtime logs contain a failure signature" >&2
     sed -n '1,160p' "$stderr_log" >&2
@@ -328,6 +353,7 @@ if grep -Eiq 'Unhandled exception|fatal error|JIT debugger|Avalonia.*error' "$st
 fi
 
 screenshot_sha256="$(sha256sum "$screenshot" | cut -d' ' -f1)"
+font_report_sha256="$(sha256sum "$font_report" | cut -d' ' -f1)"
 backend_assembly="$expected_assembly"
 cat > "$manifest" <<EOF
 {
@@ -342,6 +368,9 @@ cat > "$manifest" <<EOF
   "repositoryLocation": "outsideWorkingTree",
   "screenshot": "window.png",
   "screenshotSha256": "$screenshot_sha256",
+  "fontReport": "fonts.json",
+  "fontReportSha256": "$font_report_sha256",
+  "fontReportPhase": "postScreenshot",
   "stdout": "stdout.log",
   "stderr": "stderr.log"
 }

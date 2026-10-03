@@ -367,6 +367,9 @@
           <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#FDFDFD" />
           <x:Boolean x:Key="GitExtensionsNativeFlatButtonDarkMode">False</x:Boolean>
+          <x:Boolean x:Key="GitExtensionsToolStripSeparatorUseSystemVisualStyle">True</x:Boolean>
+          <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorDarkBrush" Color="#BDBDBD" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorLightBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonBackgroundBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonHoverBackgroundBrush" Color="#D8D8D8" />
           <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonPressedBackgroundBrush" Color="#E5E5E5" />
@@ -537,6 +540,9 @@
           <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#333333" />
           <x:Boolean x:Key="GitExtensionsNativeFlatButtonDarkMode">True</x:Boolean>
+          <x:Boolean x:Key="GitExtensionsToolStripSeparatorUseSystemVisualStyle">False</x:Boolean>
+          <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorDarkBrush" Color="#404040" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorLightBrush" Color="#101010" />
           <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonBackgroundBrush" Color="#333333" />
           <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonHoverBackgroundBrush" Color="#454545" />
           <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonPressedBackgroundBrush" Color="#666666" />

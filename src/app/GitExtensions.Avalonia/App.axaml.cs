@@ -100,6 +100,9 @@ public partial class App : Application
 
             // parity-scaffolding: opt-in XDG portal evidence until the platform gate closes.
             PortalConformanceProbe.StartIfRequested(desktop);
+
+            // parity-scaffolding: font evidence is requested only after the runtime screenshot.
+            RuntimeFontProbe.StartIfRequested(desktop);
         }
         catch (Exception exception)
         {
