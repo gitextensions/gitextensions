@@ -10,12 +10,38 @@ internal sealed class NativeTreeTextBlock : TextBlock
 {
     private readonly TextBlock _ambientFont = new();
     private TreeView? _tree;
+    private bool _usesAmbientFont;
 
     public NativeTreeTextBlock()
     {
         // TVM_GETITEMRECT includes two text-slot pixels on each side of the ambient
         // HFONT advance. NodeFont affects paint, not the native item's cached width.
         Padding = new Thickness(2, 0);
+    }
+
+    /// <summary>
+    ///  Gets or sets whether the native node has no authored NodeFont and paints with the tree font.
+    /// </summary>
+    internal bool UsesAmbientFont
+    {
+        get => _usesAmbientFont;
+        set
+        {
+            if (_usesAmbientFont == value)
+            {
+                return;
+            }
+
+            _usesAmbientFont = value;
+            if (value)
+            {
+                ClearValue(FontFamilyProperty);
+                ClearValue(FontSizeProperty);
+                ClearValue(FontWeightProperty);
+                ClearValue(FontStyleProperty);
+                UpdateAmbientPaintFont();
+            }
+        }
     }
 
     protected override Type StyleKeyOverride => typeof(TextBlock);
@@ -48,6 +74,7 @@ internal sealed class NativeTreeTextBlock : TextBlock
             _tree.PropertyChanged += OnTreePropertyChanged;
         }
 
+        UpdateAmbientPaintFont();
         InvalidateMeasure();
     }
 
@@ -67,7 +94,21 @@ internal sealed class NativeTreeTextBlock : TextBlock
         if (e.Property == FontFamilyProperty || e.Property == FontSizeProperty
             || e.Property == FontWeightProperty || e.Property == FontStyleProperty)
         {
+            UpdateAmbientPaintFont();
             InvalidateMeasure();
+        }
+    }
+
+    private void UpdateAmbientPaintFont()
+    {
+        if (UsesAmbientFont && _tree is { } tree)
+        {
+            // A global TextBlock font style outranks Avalonia's inherited value. Native
+            // NodeFont=null instead uses the control font, including runtime changes.
+            FontFamily = tree.FontFamily;
+            FontSize = tree.FontSize;
+            FontWeight = tree.FontWeight;
+            FontStyle = tree.FontStyle;
         }
     }
 }

@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
@@ -201,6 +202,94 @@ public sealed class CommitInfoTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(5, 8, "off")]
+    [TestCase(6, 10, "ffic")]
+    [TestCase(12, 16, "affi")]
+    [TestCase(16, 20, "nity")]
+    [TestCase(3, 23, "d office affinity\tne")]
+    [TestCase(25, 20, "\tnext")]
+    public void Native_XHTML_links_should_copy_actual_partial_caption_characters_through_keyboard(int start, int end, string expected)
+    {
+        WinFormsShims.IClipboard? previousClipboard = GetInstalledClipboard();
+        WinFormsShims.IClipboard clipboard = Substitute.For<WinFormsShims.IClipboard>();
+        WinFormsShims.ShimHost.Clipboard = clipboard;
+        XhtmlTextBlock block = new() { NativeContentOverhang = 2, NativeFormattingInset = 1 };
+        block.SetTabStops([], [], 48);
+        block.SetXHTMLText("head <a href='gitext://author'>office affinity</a>\t<a href='gitext://next'>next</a><br/>tail");
+        Window window = new() { Width = 500, Height = 100, Content = block };
+        try
+        {
+            window.Show();
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            block.Focus().Should().BeTrue();
+            block.SelectionStart = start;
+            block.SelectionEnd = end;
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+            block.GetSelectionPlainText().Should().Be(expected);
+            window.KeyPress(Key.C, RawInputModifiers.Control, PhysicalKey.C, keySymbol: "c");
+
+            clipboard.Received(1).SetText(expected);
+            block.SelectionStart.Should().Be(start);
+            block.SelectionEnd.Should().Be(end);
+            GetTextLinks(block).Should().HaveCount(2);
+            block.GetVisualDescendants().OfType<HyperlinkButton>().Should().BeEmpty(
+                "native RichEdit anchors decorate actual selectable characters, not atomic embedded buttons");
+            block.SelectAll();
+            block.GetSelectionPlainText().Should().Be($"head office affinity\tnext{Environment.NewLine}tail");
+        }
+        finally
+        {
+            window.Close();
+            // Restore even an absent test-host service; the public setter cannot express that state.
+            WinFormsShims.ShimHost.Clipboard = previousClipboard!;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Native_XHTML_links_should_copy_a_partial_caption_through_the_framework_context_command()
+    {
+        WinFormsShims.IClipboard? previousClipboard = GetInstalledClipboard();
+        WinFormsShims.IClipboard clipboard = Substitute.For<WinFormsShims.IClipboard>();
+        WinFormsShims.ShimHost.Clipboard = clipboard;
+        XhtmlTextBlock block = new() { NativeContentOverhang = 2 };
+        block.SetTabStops([], [], 48);
+        block.SetXHTMLText("head <a href='gitext://author'>office affinity</a> tail");
+        Window window = new() { Width = 400, Height = 100, Content = block };
+        try
+        {
+            window.Show();
+            block.TryFindResource(typeof(SelectableTextBlock), block.ActualThemeVariant, out object? theme).Should().BeTrue();
+            block.Theme = theme.Should().BeOfType<ControlTheme>().Subject;
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            block.Focus().Should().BeTrue();
+            block.SelectionStart = 6;
+            block.SelectionEnd = 10;
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            MenuFlyout flyout = block.ContextFlyout.Should().BeOfType<MenuFlyout>().Subject;
+            flyout.ShowAt(block);
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            MenuItem copy = flyout.Items.OfType<MenuItem>().Single();
+            System.Windows.Input.ICommand command = copy.Command
+                ?? throw new InvalidOperationException("The framework Copy command must exist.");
+            command.CanExecute(copy.CommandParameter).Should().BeTrue();
+
+            command.Execute(copy.CommandParameter);
+
+            clipboard.Received(1).SetText("ffic");
+            flyout.Hide();
+        }
+        finally
+        {
+            window.Close();
+            // Restore even an absent test-host service; the public setter cannot express that state.
+            WinFormsShims.ShimHost.Clipboard = previousClipboard!;
+        }
+    }
+
+    [AvaloniaTest]
     public void XhtmlTextBlock_should_preserve_source_tab_stop_width()
     {
         XhtmlTextBlock block = new();
@@ -239,7 +328,9 @@ public sealed class CommitInfoTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void XhtmlTextBlock_links_should_follow_the_native_light_and_dark_foregrounds()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void XhtmlTextBlock_links_should_follow_the_native_light_and_dark_foregrounds(bool nativeHeader)
     {
         foreach ((ThemeVariant theme, Color expected) in new[]
         {
@@ -248,6 +339,11 @@ public sealed class CommitInfoTests
         })
         {
             XhtmlTextBlock block = new();
+            if (nativeHeader)
+            {
+                block.SetTabStops([], [], 48);
+            }
+
             block.SetXHTMLText("<a href='gitext://commit'>commit</a>");
             Window window = new() { Width = 200, Height = 40, RequestedThemeVariant = theme, Content = block };
             window.Show();
@@ -255,8 +351,10 @@ public sealed class CommitInfoTests
             try
             {
                 Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-                HyperlinkButton link = block.GetVisualDescendants().OfType<HyperlinkButton>().Single();
-                link.Foreground.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(expected);
+                IBrush? foreground = nativeHeader
+                    ? GetTextLinks(block).Single().Foreground
+                    : block.GetVisualDescendants().OfType<HyperlinkButton>().Single().Foreground;
+                foreground.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(expected);
             }
             finally
             {
@@ -333,8 +431,8 @@ public sealed class CommitInfoTests
                 ? advances[^1]
                 : labelLayout.WidthIncludingTrailingWhitespace;
             double renderedStop = (Math.Floor(renderedLabelWidth / 48) + 1) * 48;
-            HyperlinkButton link = block.GetVisualDescendants().OfType<HyperlinkButton>().Single();
-            link.TranslatePoint(new Point(0, 0), block)!.Value.X.Should().BeApproximately(renderedStop, 1);
+            XhtmlLinkRun link = GetTextLinks(block).Single();
+            GetTextLinkBounds(block, link).X.Should().BeApproximately(renderedStop, 1);
             renderedStop.Should().BeGreaterThan(192);
         }
         finally
@@ -380,8 +478,8 @@ public sealed class CommitInfoTests
             block.GetPlainText().Should().Be(plainText);
             block.SelectionStart.Should().Be(2);
             block.SelectionEnd.Should().Be(5);
-            HyperlinkButton link = block.GetVisualDescendants().OfType<HyperlinkButton>().Single();
-            link.Tag.Should().Be("gitext://author");
+            XhtmlLinkRun link = GetTextLinks(block).Single();
+            link.LinkUri.Should().Be("gitext://author");
         }
         finally
         {
@@ -456,10 +554,10 @@ public sealed class CommitInfoTests
         try
         {
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-            HyperlinkButton[] links = [.. block.GetVisualDescendants().OfType<HyperlinkButton>()];
+            XhtmlLinkRun[] links = GetTextLinks(block);
             links.Should().HaveCount(2);
-            links[0].TranslatePoint(new Point(0, 0), block)!.Value.X.Should().Be(97);
-            links[1].TranslatePoint(new Point(0, 0), block)!.Value.X.Should().Be(97);
+            GetTextLinkBounds(block, links[0]).X.Should().Be(97);
+            GetTextLinkBounds(block, links[1]).X.Should().Be(97);
         }
         finally
         {
@@ -614,25 +712,24 @@ public sealed class CommitInfoTests
         try
         {
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-            HyperlinkButton link = block.GetVisualDescendants().OfType<HyperlinkButton>().Single();
-            Point click = link.TranslatePoint(new Point(link.Bounds.Width / 2, link.Bounds.Height / 2), window)!.Value;
+            XhtmlLinkRun link = GetTextLinks(block).Single();
+            Rect linkBounds = GetTextLinkBounds(block, link);
+            Point click = block.TranslatePoint(linkBounds.Center, window)
+                ?? throw new InvalidOperationException("The rendered text link must have real window coordinates.");
             block.AddHandler(InputElement.PointerPressedEvent, (_, e) => TracePointer("blockPressed", e),
                 RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
             block.AddHandler(InputElement.PointerReleasedEvent, (_, e) => TracePointer("blockReleased", e),
                 RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
-            link.AddHandler(InputElement.PointerPressedEvent, (_, e) => TracePointer("linkPressed", e),
-                RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
-            link.AddHandler(InputElement.PointerReleasedEvent, (_, e) => TracePointer("linkReleased", e),
-                RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
-            TestContext.Progress.WriteLine($"beforePointer blockBounds={block.Bounds} linkBounds={link.Bounds} click={click} hit={window.InputHitTest(click)?.GetType().Name} selectedUri={block.SelectedLinkUri}");
+            TestContext.Progress.WriteLine($"beforePointer blockBounds={block.Bounds} linkBounds={linkBounds} click={click} hit={window.InputHitTest(click)?.GetType().Name} selectedUri={block.SelectedLinkUri}");
             window.MouseMove(click);
             window.MouseDown(click, MouseButton.Left);
             TestContext.Progress.WriteLine($"afterMouseDown selectedUri={block.SelectedLinkUri} activatedUri={activatedUri}");
+            activatedUri.Should().Be("gitext://author", "the native RichTextBox activates on left-button down, not release");
             window.MouseUp(click, MouseButton.Left);
             TestContext.Progress.WriteLine($"afterMouseUp selectedUri={block.SelectedLinkUri} activatedUri={activatedUri}");
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
 
-            TestContext.Progress.WriteLine($"linkBounds={link.Bounds} click={click} activatedUri={activatedUri} selectedUri={block.SelectedLinkUri}");
+            TestContext.Progress.WriteLine($"linkBounds={linkBounds} click={click} activatedUri={activatedUri} selectedUri={block.SelectedLinkUri}");
             activatedUri.Should().Be("gitext://author");
             block.SelectedLinkUri.Should().Be("gitext://author");
             block.Padding.Should().Be(new Thickness(0));
@@ -642,7 +739,7 @@ public sealed class CommitInfoTests
             window.MouseUp(click, MouseButton.Right);
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
             block.SelectedLinkUri.Should().Be("gitext://author",
-                "right-click Copy link must retain the actual target even when Button handles the pointer event");
+                "right-click Copy link must retain the actual decorated text target");
             activatedUri.Should().BeNull("a context-menu click must not activate the link");
 
             Rect labelGlyph = block.TextLayout.HitTestTextPosition(2);
@@ -657,6 +754,136 @@ public sealed class CommitInfoTests
             {
                 TestContext.Progress.WriteLine($"stage={stage} source={e.Source?.GetType().Name}/{(e.Source as Control)?.Name} handled={e.Handled} pointer={e.GetPosition(block)} captured={e.Pointer.Captured?.GetType().Name} selectedUri={block.SelectedLinkUri}");
             }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(false, false, false, "head office ")]
+    [TestCase(true, false, false, "head office affinity")]
+    [TestCase(false, true, false, "office affinity tail")]
+    [TestCase(true, true, false, "office affinity tail")]
+    [TestCase(false, false, true, "a")]
+    [TestCase(true, false, true, "a")]
+    public void Native_XHTML_caption_should_preserve_source_smart_drag_selection_without_activating_links(bool useLink, bool backwards, bool withinWord, string expected)
+    {
+        XhtmlTextBlock block = new() { NativeContentOverhang = 2, NativeFormattingInset = 1 };
+        block.SetTabStops([], [], 48);
+        block.SetXHTMLText(useLink ? "head <a href='gitext://author'>office affinity</a> tail" : "head office affinity tail");
+        int activations = 0;
+        block.LinkClicked += (_, _) => activations++;
+        Window window = new() { Width = 500, Height = 100, Content = block };
+        try
+        {
+            window.Show();
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            string text = block.Inlines?.Text ?? throw new InvalidOperationException("The selectable source text must be present.");
+            int first = backwards ? text.IndexOf("tail", StringComparison.Ordinal) + 1 : 2;
+            int last = withinWord ? 3 : 8;
+            Rect start = block.TextLayout.HitTestTextPosition(first);
+            Rect middle = block.TextLayout.HitTestTextPosition(first + 1);
+            Rect end = block.TextLayout.HitTestTextPosition(last);
+            Point from = block.TranslatePoint(new Point(start.X + block.NativeFormattingInset, start.Center.Y), window)
+                ?? throw new InvalidOperationException("The source selection start must be arranged.");
+            Point to = block.TranslatePoint(new Point(end.X + block.NativeFormattingInset, end.Center.Y), window)
+                ?? throw new InvalidOperationException("The actual caption character must be arranged.");
+            Point partial = block.TranslatePoint(new Point(middle.X + block.NativeFormattingInset, middle.Center.Y), window)
+                ?? throw new InvalidOperationException("The first word's character selection must be arranged.");
+            IPointer? capturedPointer = null;
+            PointerPointProperties moveProperties = default;
+            ulong moveTimestamp = 0;
+            block.AddHandler(InputElement.PointerPressedEvent, (_, e) =>
+                TestContext.Progress.WriteLine($"smartDrag pressed route={e.Route} clickCount={e.ClickCount} handled={e.Handled} left={e.GetCurrentPoint(block).Properties.IsLeftButtonPressed} captured={e.Pointer.Captured?.GetType().Name} position={e.GetPosition(block)} selection={block.SelectionStart}/{block.SelectionEnd}"),
+                RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
+            block.AddHandler(InputElement.PointerMovedEvent, (_, e) =>
+            {
+                capturedPointer = e.Pointer;
+                moveProperties = e.Properties;
+                moveTimestamp = e.Timestamp;
+                TestContext.Progress.WriteLine($"smartDrag moved route={e.Route} handled={e.Handled} left={e.GetCurrentPoint(block).Properties.IsLeftButtonPressed} captured={e.Pointer.Captured?.GetType().Name} position={e.GetPosition(block)} selection={block.SelectionStart}/{block.SelectionEnd}");
+            },
+                RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
+            TestContext.Progress.WriteLine($"smartDrag before first={first} last={last} from={from} to={to} frame={block.Bounds} layout={block.TextLayout.WidthIncludingTrailingWhitespace}/{block.TextLayout.Height} text={text}");
+            window.MouseDown(from, MouseButton.Left);
+            TestContext.Progress.WriteLine($"smartDrag down selection={block.SelectionStart}/{block.SelectionEnd}");
+            window.MouseMove(partial, RawInputModifiers.LeftMouseButton);
+            block.SelectionStart.Should().Be(first);
+            block.SelectionEnd.Should().Be(first + 1);
+            block.GetSelectionPlainText().Should().Be(text.Substring(first, 1));
+
+            // Use the actual captured pointer and held-button properties for consecutive
+            // routed input before layout runs; a previous selection must not empty its runs.
+            RaiseCapturedMove();
+            RaiseCapturedMove();
+            TestContext.Progress.WriteLine($"smartDrag move selection={block.SelectionStart}/{block.SelectionEnd}");
+            window.MouseUp(to, MouseButton.Left);
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+            block.GetSelectionPlainText().Should().Be(expected);
+            if (withinWord)
+            {
+                block.SelectionStart.Should().Be(first);
+                block.SelectionEnd.Should().Be(last);
+            }
+            else
+            {
+                block.SelectionStart.Should().Be(backwards ? text.Length : 0);
+                block.SelectionEnd.Should().Be(backwards ? 5 : useLink ? 20 : 12);
+            }
+
+            activations.Should().Be(0, "moving a captured selection into decorated caption text is not link activation");
+
+            void RaiseCapturedMove()
+            {
+                IPointer pointer = capturedPointer ?? throw new InvalidOperationException("The actual left-button drag must capture a pointer.");
+                pointer.Captured.Should().BeSameAs(block);
+                block.RaiseEvent(new PointerEventArgs(InputElement.PointerMovedEvent, block, pointer, window,
+                    to, moveTimestamp + 1, moveProperties, KeyModifiers.None));
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(MouseButton.XButton1, "navigatebackward")]
+    [TestCase(MouseButton.XButton2, "navigateforward")]
+    public void CommitInfoHeader_should_dispatch_history_mouse_buttons_without_consuming_them_as_text_selection(MouseButton button, string expected)
+    {
+        CommitInfoHeader header = new();
+        XhtmlTextBlock block = header.GetTestAccessor().RevisionHeader;
+        block.SetXHTMLText("Author:\t\t<a href='gitext://author'>office affinity</a>");
+        List<string> commands = [];
+        header.CommandClicked += (_, e) => commands.Add(e.Command);
+        int linkActivations = 0;
+        block.LinkClicked += (_, _) => linkActivations++;
+        Window window = new() { Width = 500, Height = 100, Content = header };
+        try
+        {
+            window.Show();
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            block.Focus().Should().BeTrue();
+            block.SelectionStart = 2;
+            block.SelectionEnd = 5;
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            Rect linkBounds = GetTextLinkBounds(block, GetTextLinks(block).Single());
+            Point point = block.TranslatePoint(linkBounds.Center, window)
+                ?? throw new InvalidOperationException("The source history route must receive a real header pointer event.");
+            window.MouseDown(point, button);
+            window.MouseUp(point, button);
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+            commands.Should().Equal(expected);
+            linkActivations.Should().Be(0);
+            block.SelectionStart.Should().Be(2);
+            block.SelectionEnd.Should().Be(5);
         }
         finally
         {
@@ -739,14 +966,14 @@ public sealed class CommitInfoTests
             block.FontSize = (11d * 96) / 72;
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
             block.FontSize.Should().Be((11d * 96) / 72);
-            HyperlinkButton link = block.GetVisualDescendants().OfType<HyperlinkButton>().Single();
+            XhtmlLinkRun link = GetTextLinks(block).Single();
             if (OperatingSystem.IsWindows())
             {
                 // The native fixture has 225-twip plain text. SelectedRtf serializes its
                 // author as \fs23, producing 230 twips; the two author tabs reach 144px.
                 WinFormsRichEditTextMeasurer.GetFontSize(block).Should().Be(15);
                 link.FontSize.Should().Be(11.5d * (96d / 72));
-                link.TranslatePoint(new Point(0, 0), block)!.Value.X.Should().Be(145);
+                GetTextLinkBounds(block, link).X.Should().Be(145);
                 block.Bounds.Width.Should().Be(419);
                 block.Bounds.Height.Should().Be(60);
             }
@@ -832,9 +1059,8 @@ public sealed class CommitInfoTests
             int hashStart = layoutText.IndexOf(hash, StringComparison.Ordinal);
             Rect[] characterBounds = Enumerable.Range(0, hash.Length)
                 .Select(index => block.TextLayout.HitTestTextPosition(hashStart + index)).ToArray();
-            HyperlinkButton link = block.GetVisualDescendants().OfType<HyperlinkButton>().Single();
-            Point linkOrigin = link.TranslatePoint(default, block)
-                ?? throw new InvalidOperationException("The author link must be arranged within the header.");
+            XhtmlLinkRun link = GetTextLinks(block).Single();
+            Rect linkBounds = GetTextLinkBounds(block, link);
             Rect bounds = block.Bounds;
 
             block.SelectionStart = hashStart + (reversed ? last : first);
@@ -845,7 +1071,7 @@ public sealed class CommitInfoTests
             Enumerable.Range(0, hash.Length).Select(index => block.TextLayout.HitTestTextPosition(hashStart + index))
                 .Should().Equal(characterBounds, "selection must reuse the exact native glyph advances and hit bounds");
             block.Bounds.Should().Be(bounds);
-            link.TranslatePoint(default, block).Should().Be(linkOrigin);
+            GetTextLinkBounds(block, link).Should().Be(linkBounds);
 
             block.ClearSelection();
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
@@ -923,14 +1149,13 @@ public sealed class CommitInfoTests
             double.IsNaN(header.Height).Should().BeTrue("the original parent AutoSizes around the RichEdit client rectangle");
             header.Bounds.Height.Should().Be(Math.Max(contentsHeight, showAvatar ? AppSettings.AuthorImageSizeInCommitInfo : 0));
             header.GetTestAccessor().Avatar.IsVisible.Should().Be(showAvatar);
-            foreach (HyperlinkButton link in block.GetVisualDescendants().OfType<HyperlinkButton>())
+            foreach (XhtmlLinkRun link in GetTextLinks(block))
             {
-                link.BorderThickness.Should().Be(new Thickness(0));
-                link.Bounds.Height.Should().BeLessThanOrEqualTo(lineHeight);
-                Point linkOrigin = link.TranslatePoint(new Point(0, 0), block)!.Value;
-                linkOrigin.Y.Should().BeGreaterThanOrEqualTo(0);
-                (linkOrigin.Y + link.Bounds.Height).Should().BeLessThanOrEqualTo(contentsHeight,
-                    "the actual parent/child link control must fit inside its native client rectangle");
+                Rect linkBounds = GetTextLinkBounds(block, link);
+                linkBounds.Height.Should().BeLessThanOrEqualTo(lineHeight);
+                linkBounds.Y.Should().BeGreaterThanOrEqualTo(0);
+                linkBounds.Bottom.Should().BeLessThanOrEqualTo(contentsHeight,
+                    "the actual decorated parent/child link characters must fit inside the native client rectangle");
             }
 
             Point origin = block.TranslatePoint(new Point(0, 0), window)!.Value;
@@ -1168,6 +1393,37 @@ public sealed class CommitInfoTests
         {
             return null;
         }
+    }
+
+    private static XhtmlLinkRun[] GetTextLinks(XhtmlTextBlock block)
+        => block.Inlines?.OfType<XhtmlLinkRun>().ToArray() ?? [];
+
+    private static Rect GetTextLinkBounds(XhtmlTextBlock block, XhtmlLinkRun link)
+    {
+        if (block.Inlines is null)
+        {
+            throw new InvalidOperationException("The source text link must belong to the rendered inline collection.");
+        }
+
+        int position = 0;
+        foreach (Inline inline in block.Inlines)
+        {
+            if (ReferenceEquals(inline, link))
+            {
+                Rect bounds = block.TextLayout.HitTestTextRange(position, link.Text?.Length ?? 0).Single();
+                return bounds.Translate(new Vector(block.NativeFormattingInset + block.Padding.Left, block.Padding.Top));
+            }
+
+            position += inline switch
+            {
+                Run run => run.Text?.Length ?? 0,
+                LineBreak => Environment.NewLine.Length,
+                InlineUIContainer => 1,
+                _ => throw new InvalidOperationException("The source text link has an unsupported preceding inline."),
+            };
+        }
+
+        throw new InvalidOperationException("The source text link must remain in its rendered inline collection.");
     }
 
     private static GitRevision CreateHeaderRevision(bool artificial)
