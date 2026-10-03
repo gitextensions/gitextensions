@@ -35,4 +35,10 @@ public sealed class RevisionGraphSegment
 
     public RevisionGraphRevision Parent { get; }
     public RevisionGraphRevision Child { get; }
+
+    /// <summary>
+    ///  The reserved lane this segment should go in. Set along the first parent chain from the node of a reserved lane branch;
+    ///  otherwise equal to <see cref="int.MaxValue"/>.
+    /// </summary>
+    public int ReservedLaneIndex { get; set; } = int.MaxValue;
 }
