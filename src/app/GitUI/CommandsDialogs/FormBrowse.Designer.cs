@@ -651,7 +651,6 @@ partial class FormBrowse
         // 
         notificationBarBisectInProgress.Dock = DockStyle.Top;
         notificationBarBisectInProgress.Location = new Point(0, 33);
-        notificationBarBisectInProgress.MinimumSize = new Size(0, 33);
         notificationBarBisectInProgress.Name = "notificationBarBisectInProgress";
         notificationBarBisectInProgress.Size = new Size(561, 33);
         notificationBarBisectInProgress.TabIndex = 1;
@@ -661,7 +660,6 @@ partial class FormBrowse
         // 
         notificationBarGitActionInProgress.Dock = DockStyle.Top;
         notificationBarGitActionInProgress.Location = new Point(0, 0);
-        notificationBarGitActionInProgress.MinimumSize = new Size(0, 33);
         notificationBarGitActionInProgress.Name = "notificationBarGitActionInProgress";
         notificationBarGitActionInProgress.Size = new Size(561, 33);
         notificationBarGitActionInProgress.TabIndex = 0;
