@@ -7,6 +7,7 @@ internal partial class SimplePrompt : Form, IUserInputPrompt
     public SimplePrompt(string? title, string? label, string? defaultValue)
     {
         InitializeComponent();
+        this.EnableProperWordBoundaries();
         txtUserInput.Text = defaultValue;
 
         if (!string.IsNullOrWhiteSpace(title))

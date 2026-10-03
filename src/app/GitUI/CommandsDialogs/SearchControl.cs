@@ -32,6 +32,8 @@ public partial class SearchControl<T> : UserControl, IDisposable where T : class
         _onSizeChanged = onSizeChanged;
         AutoFit();
 
+        this.EnableProperWordBoundaries();
+
         void CloseDropDownWhenLostFocus()
         {
             if (!txtSearchBox.Focused && !listBoxSearchResult.Focused)

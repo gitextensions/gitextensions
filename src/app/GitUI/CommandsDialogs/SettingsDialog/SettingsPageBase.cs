@@ -70,6 +70,7 @@ public abstract partial class SettingsPageBase : TranslatedControl, ISettingsPag
 
         result.AdjustForDpiScaling();
         result.EnableRemoveWordHotkey();
+        result.EnableProperWordBoundaries();
         result.FixVisualStyle();
 
         result.Init(pageHost);
