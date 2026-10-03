@@ -135,7 +135,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         commitInfoBelowHost.SizeChanged += CommitInfoHost_SizeChanged;
         commitInfoLeftHost.SizeChanged += CommitInfoHost_SizeChanged;
         commitInfoRightHost.SizeChanged += CommitInfoHost_SizeChanged;
-        ApplySourceToolbarAutoSize();
         toolStripSplitStash.Content = string.Empty;
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip);
         InitializeWorkspaceLayout();
@@ -173,7 +172,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _commitDataManager = new CommitDataManager(() => Module);
         _commitDataManager.RevisionDetailsLoaded += (_, _) => RevisionGrid.InvalidateVisual();
         InitializeComponent();
-        ApplySourceToolbarAutoSize();
         toolStripSplitStash.Content = string.Empty;
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip);
 
@@ -1331,14 +1329,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         IReadOnlyList<ObjectId> children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
         RevisionInfo.SetRevisionWithChildren(revision, children);
-    }
-
-    private void ApplySourceToolbarAutoSize()
-    {
-        // WinForms ToolStrip item preferred widths include renderer-owned chrome which is
-        // not part of Avalonia's content measurement.
-        WinFormsAutoSizeContentControl.Attach(_NO_TRANSLATE_WorkingDir, 39, 22);
-        WinFormsAutoSizeContentControl.Attach(branchSelect, 39, 22);
     }
 
     private void InitializeToolbarsMenus()

@@ -34,9 +34,14 @@ internal sealed class AuthorNameColumnProvider : ColumnProvider
     public override void OnCellPainting(Control control, GitRevision revision)
     {
         TextBlock textBlock = (TextBlock)control;
-        textBlock.FontWeight = _authorHighlighting.IsHighlighted(revision)
+        bool emphasized = _authorHighlighting.IsHighlighted(revision);
+        GitExtensions.Shims.WinForms.Font normalFont = AppSettings.Font;
+
+        // The source's BoldFont replaces the normal style rather than adding Bold.
+        textBlock.FontWeight = emphasized || normalFont.Bold
             ? FontWeight.Bold
             : FontWeight.Normal;
+        textBlock.FontStyle = !emphasized && normalFont.Italic ? FontStyle.Italic : FontStyle.Normal;
         _grid.DrawColumnText(textBlock, textBlock.Text);
     }
 

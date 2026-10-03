@@ -47,6 +47,7 @@ public static class AvaloniaFontSettings
         Application application = Application.Current
             ?? throw new InvalidOperationException("The Avalonia application was not created.");
 
+        WinFormsGraphicsTextMeasurer.ClearCache();
         ApplyFont(application, "GitExtensionsUi", AppSettings.Font);
         ApplyFont(application, "GitExtensionsCommit", AppSettings.CommitFont);
         ApplyFont(application, "GitExtensionsFixedWidth", AppSettings.FixedWidthFont);

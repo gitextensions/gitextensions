@@ -72,21 +72,6 @@
       <Setter Property="DarkBrush" Value="{DynamicResource GitExtensionsToolStripSeparatorDarkBrush}" />
       <Setter Property="LightBrush" Value="{DynamicResource GitExtensionsToolStripSeparatorLightBrush}" />
     </Style>
-    <Style Selector="compat|IconSplitButton#branchSelect">
-      <Setter Property="Padding" Value="2,1" />
-    </Style>
-    <Style Selector="compat|IconSplitButton#_NO_TRANSLATE_WorkingDir">
-      <Setter Property="ContentTemplate">
-        <DataTemplate>
-          <Grid ColumnDefinitions="16,4,*">
-            <Image Grid.Column="0" Classes="gitextensions-icon-16" Stretch="Uniform"
-                   Source="{Binding $parent[compat:IconSplitButton].Icon}" />
-            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding}"
-                       TextTrimming="CharacterEllipsis" />
-          </Grid>
-        </DataTemplate>
-      </Setter>
-    </Style>
     <Style Selector="MenuItem.worktree-deleted">
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
     </Style>
@@ -351,7 +336,6 @@
         <menus:WorkingDirectoryToolStripSplitButton x:Name="_NO_TRANSLATE_WorkingDir"
                                                     UseNativeToolStripLayout="True"
                                                     Classes="gitextensions-toolbar-button"
-                                                    MinWidth="83"
                                                     Height="22" />
         <compat:IconSplitButton x:Name="branchSelect"
                                 UseNativeToolStripLayout="True"
