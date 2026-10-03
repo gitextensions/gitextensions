@@ -165,8 +165,6 @@ public partial class FileViewer : GitModuleControl
         };
         internalFileViewer.TextChanged += (sender, e) =>
         {
-            internalFileViewer.AddTextHighlighting();
-
             TextChanged?.Invoke(sender, e);
         };
         internalFileViewer.HScrollPositionChanged += (sender, e) => HScrollPositionChanged?.Invoke(sender, e);

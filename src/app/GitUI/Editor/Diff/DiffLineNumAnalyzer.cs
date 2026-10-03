@@ -23,6 +23,7 @@ public partial class DiffLineNumAnalyzer
         string[] lines = text.Split(Delimiters.LineFeed);
         int textOffset = 0;
         int lastLine = lines.Length - 1;
+        LineMarkerReader markerReader = new(allTextMarkers);
         for (int i = 0; i <= lastLine; i++)
         {
             string line = lines[i];
@@ -40,7 +41,7 @@ public partial class DiffLineNumAnalyzer
             }
 
             Lazy<List<TextMarker>> textMarkers = new(()
-                => [.. allTextMarkers.Where(m => (m.Offset < textOffset + lineLength && m.EndOffset >= textOffset))]);
+                => markerReader.GetMarkers(textOffset, lineLength));
 
             lineNumInDiff++;
             if (line.StartsWith("@@"))
@@ -231,6 +232,40 @@ public partial class DiffLineNumAnalyzer
         static bool IsMinusLineInCombinedDiff(string line)
         {
             return line.StartsWith("--") || line.StartsWith("- ") || line.StartsWith(" -");
+        }
+    }
+
+    /// <summary>
+    /// Reads overlapping markers for successive lines without searching the whole document each time.
+    /// Marker order is significant to the moved-line heuristics, so retain the input order even when
+    /// markers overlap or are supplied out of offset order.
+    /// </summary>
+    internal sealed class LineMarkerReader(IReadOnlyList<TextMarker> markers)
+    {
+        private readonly (TextMarker Marker, int Index)[] _byOffset = markers
+            .Select((marker, index) => (Marker: marker, Index: index))
+            .OrderBy(entry => entry.Marker.Offset)
+            .ToArray();
+        private readonly SortedDictionary<int, TextMarker> _active = [];
+        private int _next;
+
+        public List<TextMarker> GetMarkers(int offset, int length)
+        {
+            foreach (int index in _active.Where(entry => entry.Value.EndOffset < offset).Select(entry => entry.Key).ToArray())
+            {
+                _active.Remove(index);
+            }
+
+            while (_next < _byOffset.Length && _byOffset[_next].Marker.Offset < offset + length)
+            {
+                (TextMarker marker, int index) = _byOffset[_next++];
+                if (marker.EndOffset >= offset)
+                {
+                    _active.Add(index, marker);
+                }
+            }
+
+            return [.. _active.Values];
         }
     }
 }
