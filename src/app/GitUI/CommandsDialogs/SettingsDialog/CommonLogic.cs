@@ -11,7 +11,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog;
 
-public sealed class CommonLogic : Translate
+public sealed class CommonLogic : Translate, IDisposable
 {
     internal const string PresetGitEditorEnvVariableName = "GIT_EDITOR";
     internal const string AmbientGitEditorEnvVariableName = "EDITOR";
@@ -26,10 +26,18 @@ public sealed class CommonLogic : Translate
     public readonly GitConfigSettingsSet GitConfigSettingsSet;
     public readonly IGitModule Module;
 
+    /// <summary>
+    ///  The caches this instance owns exclusively, i.e. those created with
+    ///  <c>useSharedCache: false</c>. Each of them watches the directory of its settings file,
+    ///  which keeps a handle on the repository open until the cache is disposed.
+    /// </summary>
+    private readonly SettingsCache[] _ownedSettingsCaches;
+
     private CommonLogic()
     {
         // For translation only
         Module = null!;
+        _ownedSettingsCaches = [];
     }
 
     public CommonLogic(IGitModule module)
@@ -61,6 +69,21 @@ public sealed class CommonLogic : Translate
             new SettingsSource<IPersistentConfigValueStore>(localGitConfigSettings),
             new SettingsSource<IPersistentConfigValueStore>(globalGitConfigSettings),
             new SettingsSource<IConfigValueStore>(systemGitConfigSettings));
+
+        _ownedSettingsCaches =
+        [
+            distributedGlobalSettings.SettingsCache,
+            distributedPulledSettings.SettingsCache,
+            distributedLocalSettings.SettingsCache
+        ];
+    }
+
+    public void Dispose()
+    {
+        foreach (SettingsCache settingsCache in _ownedSettingsCaches)
+        {
+            settingsCache.Dispose();
+        }
     }
 
     /// <summary>
