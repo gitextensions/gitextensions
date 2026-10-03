@@ -167,9 +167,16 @@ public class ToolStripPushButtonTests
 
         _sut.DisplayAheadBehindInformation(_aheadBehindDataProvider?.GetData(branchName), branchName, string.Empty);
         int updatedSize = _sut.GetTestAccessor().GetButtonWidth();
+        string? displayedText = _sut.GetTestAccessor().GetButtonText();
         _sut.ResetBeforeUpdate();
+
         _sut.GetTestAccessor().GetButtonWidth().Should().Be(updatedSize);
-        _sut.GetTestAccessor().GetButtonText().Should().BeNullOrEmpty();
-        _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
+
+        // ResetBeforeUpdate freezes AutoSize=false to keep the button width stable while the next
+        // refresh is in progress. Text is deliberately left in place: clearing it would fire
+        // TextChanged, and every clone of this button mirrors that event, so each custom toolbar
+        // would blink empty between ResetBeforeUpdate and the next DisplayAheadBehindInformation.
+        _sut.GetTestAccessor().GetButtonText().Should().Be(displayedText);
+        _sut.AutoSize.Should().BeFalse();
     }
 }

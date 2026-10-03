@@ -14,6 +14,11 @@ namespace GitUI.LeftPanel;
 
 partial class RepoObjectsTree : IMenuItemFactory
 {
+    // Fired after context menu item states (Enabled/Visible) have been updated,
+    // either on menu opening or on tree selection change.
+    // Subscribers can use this to sync toolbar button states.
+    public event EventHandler? ContextMenuStateUpdated;
+
     private GitRefsSortOrderContextMenuItem _sortOrderContextMenuItem;
     private GitRefsSortByContextMenuItem _sortByContextMenuItem;
 
@@ -242,6 +247,36 @@ partial class RepoObjectsTree : IMenuItemFactory
             return;
         }
 
+        UpdateContextMenuItemStates();
+
+        // AddUserScripts / RemoveUserScripts mutate the menu's item collection, so they must run
+        // only when the menu is actually opening — not on every tree selection change (which also
+        // calls UpdateContextMenuItemStates, on a hot navigation path).
+        bool hasSingleSelection = GetSelectedNodes().Take(2).Count() == 1;
+        LocalBranchNode? selectedLocalBranch = treeMain.SelectedNode?.Tag as LocalBranchNode;
+        if (hasSingleSelection && selectedLocalBranch?.Visible == true)
+        {
+            contextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.AddToRevisionGridContextMenu, UICommands);
+        }
+        else
+        {
+            contextMenu.RemoveUserScripts(runScriptToolStripMenuItem);
+        }
+
+        /* Cancel context menu opening if no items are Enabled.
+         * This relies on that flag being set correctly on all menu items above. */
+        e.Cancel = !contextMenu.Items.OfType<ToolStripMenuItem>().Any(i => i.Enabled);
+    }
+
+    /// <summary>
+    /// Updates the Enabled/Visible state of all context-menu items from the current tree
+    /// selection, then raises <see cref="ContextMenuStateUpdated"/> so toolbar buttons that
+    /// mirror these actions can sync. This is a pure state update: it does not mutate the menu's
+    /// item collection (no user-script add/remove), so it is cheap enough to run on every tree
+    /// selection change.
+    /// </summary>
+    private void UpdateContextMenuItemStates()
+    {
         NodeBase[] selectedNodes = [.. GetSelectedNodes()];
         bool hasSingleSelection = selectedNodes.Length == 1;
         NodeBase? selectedNode = treeMain.SelectedNode?.Tag as NodeBase;
@@ -279,18 +314,7 @@ partial class RepoObjectsTree : IMenuItemFactory
         EnableMoveTreeUpDownContexMenu(hasSingleSelection, selectedNode);
         EnableSortContextMenu(hasSingleSelection, selectedNode);
 
-        if (hasSingleSelection && selectedLocalBranch?.Visible == true)
-        {
-            contextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.AddToRevisionGridContextMenu, UICommands);
-        }
-        else
-        {
-            contextMenu.RemoveUserScripts(runScriptToolStripMenuItem);
-        }
-
-        /* Cancel context menu opening if no items are Enabled.
-         * This relies on that flag being set correctly on all menu items above. */
-        e.Cancel = !contextMenu.Items.OfType<ToolStripMenuItem>().Any(i => i.Enabled);
+        ContextMenuStateUpdated?.Invoke(this, EventArgs.Empty);
     }
 
     private void contextMenu_Opened(object sender, EventArgs e)
