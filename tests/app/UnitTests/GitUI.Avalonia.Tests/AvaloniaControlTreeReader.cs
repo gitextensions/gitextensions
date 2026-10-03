@@ -5863,8 +5863,8 @@ internal sealed class AvaloniaControlTreeReader
                        && control.Parent?.Name == "RevisionsSplitContainer"
                        && control.Classes.Contains("gitextensions-revision-split-frame"))
                    || (control is Border
-                       && (control.Classes.Contains("gitextensions-workspace-page-frame")
-                           || control.Classes.Contains("gitextensions-toolbar-separator-line")))
+                       && control.Classes.Contains("gitextensions-workspace-page-frame"))
+                   || control is NativeToolStripSeparatorChrome
                    || control.Name is "lblRepoPath" or "lblStatus"
                    || control.Parent is TreeView))
            || (control.GetType().Namespace == "GitUI.Compat.WinFormsControls"
