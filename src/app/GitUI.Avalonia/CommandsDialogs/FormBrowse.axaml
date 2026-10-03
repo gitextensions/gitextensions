@@ -298,14 +298,15 @@
         <Button x:Name="toggleSplitViewLayout" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only">
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutFooter}" />
         </Button>
-        <SplitButton x:Name="menuCommitInfoPosition"
+        <compat:NativeToolStripSplitButton x:Name="menuCommitInfoPosition"
+                     UseNativeToolStripLayout="True"
                      compat:TranslationCompat.TranslateToolTip="False"
                      Classes="gitextensions-toolbar-button gitextensions-icon-only">
-          <SplitButton.Content>
+          <compat:NativeToolStripSplitButton.Content>
             <Image Classes="gitextensions-icon-16" x:Name="menuCommitInfoPositionImage"
                    Source="{x:Static properties:Images.LayoutFooterTab}" />
-          </SplitButton.Content>
-          <SplitButton.Flyout>
+          </compat:NativeToolStripSplitButton.Content>
+          <compat:NativeToolStripSplitButton.Flyout>
             <MenuFlyout>
               <wf:ToolStripMenuItem x:Name="commitInfoBelowMenuItem" Header="Commit info _below graph">
                 <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutFooterTab}" /></MenuItem.Icon>
@@ -317,12 +318,13 @@
                 <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutSidebarTopRight}" /></MenuItem.Icon>
               </wf:ToolStripMenuItem>
             </MenuFlyout>
-          </SplitButton.Flyout>
-        </SplitButton>
+          </compat:NativeToolStripSplitButton.Flyout>
+        </compat:NativeToolStripSplitButton>
         <Border x:Name="toolStripSeparator17" Classes="gitextensions-toolbar-separator">
           <compat:NativeToolStripSeparatorChrome Classes="gitextensions-toolbar-separator-line" />
         </Border>
         <compat:IconSplitButton x:Name="toolStripButtonLevelUp"
+                                UseNativeToolStripLayout="True"
                                 compat:TranslationCompat.TranslateText="False"
                                 compat:TranslationCompat.TranslateToolTip="False"
                                 compat:TranslationCompat.UseToolTipText="True"
@@ -334,6 +336,7 @@
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
         <compat:IconSplitButton x:Name="toolStripWorktrees"
+                                UseNativeToolStripLayout="True"
                                 compat:TranslationCompat.TranslateText="False"
                                 compat:TranslationCompat.TranslateToolTip="False"
                                 compat:TranslationCompat.UseToolTipText="True"
@@ -346,10 +349,12 @@
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
         <menus:WorkingDirectoryToolStripSplitButton x:Name="_NO_TRANSLATE_WorkingDir"
+                                                    UseNativeToolStripLayout="True"
                                                     Classes="gitextensions-toolbar-button"
                                                     MinWidth="83"
                                                     Height="22" />
         <compat:IconSplitButton x:Name="branchSelect"
+                                UseNativeToolStripLayout="True"
                                 compat:TranslationCompat.TranslateToolTip="False"
                                 Classes="gitextensions-toolbar-button"
                                 Content="Branch"
@@ -363,6 +368,7 @@
           <compat:NativeToolStripSeparatorChrome Classes="gitextensions-toolbar-separator-line" />
         </Border>
         <compat:IconSplitButton x:Name="toolStripButtonPull"
+                                UseNativeToolStripLayout="True"
                                 compat:TranslationCompat.TranslateToolTip="False"
                                 Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                 Content="Pull"
@@ -401,6 +407,7 @@
                            Content="Commit"
                            Icon="{x:Static properties:Images.RepoStateClean}" />
         <compat:IconSplitButton x:Name="toolStripSplitStash"
+                                UseNativeToolStripLayout="True"
                                 compat:TranslationCompat.TranslateText="False"
                                 compat:TranslationCompat.TranslateToolTip="False"
                                 compat:TranslationCompat.UseToolTipText="True"
@@ -427,6 +434,7 @@
           <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" />
         </Button>
         <compat:IconSplitButton x:Name="userShell"
+                                UseNativeToolStripLayout="True"
                                 compat:TranslationCompat.TranslateText="False"
                                 compat:TranslationCompat.TranslateToolTip="False"
                                 compat:TranslationCompat.UseToolTipText="True"

@@ -124,7 +124,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
                 .Where(node => node.TreeViewNode.IsExpanded)
                 .Select(RepoObjectsTree.GetNodeIdentity),
         ];
-        HashSet<string> selectedNodes = Owner.CaptureSelectedNodeIdentities(this);
+        TreeSelectionState selectedNodes = Owner.CaptureSelectionState(this);
 
         Owner.UpdateNodes(() =>
         {
@@ -144,7 +144,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
                 node.TreeViewNode.IsExpanded = expandedNodes.Contains(RepoObjectsTree.GetNodeIdentity(node));
             }
 
-            Owner.RestoreSelectedNodes(this, selectedNodes);
+            Owner.RestoreSelectionState(this, selectedNodes);
         });
     }
 

@@ -65,7 +65,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
             return default;
         }
 
-        int digits = MaxLineNumber > 0 ? ((int)Math.Log10(MaxLineNumber) + 1) : 1;
+        int digits = MaxLineNumber > 0 ? ((int)Math.Log10(MaxLineNumber) + 1) : 0;
         int spaceWidth = (int)Math.Round(CreateFormattedText(" ", bold: false, Brushes.Black).Width, MidpointRounding.AwayFromZero);
         int xWidth = (int)Math.Round(CreateFormattedText("x", bold: false, Brushes.Black).Width, MidpointRounding.AwayFromZero);
         int wideSpaceWidth = Math.Max(1, Math.Max(spaceWidth, xWidth));
@@ -91,6 +91,15 @@ public class DiffViewerLineNumberControl : AbstractMargin
         }
     }
 
+    protected override void OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsEffectivelyEnabledProperty)
+        {
+            InvalidateVisual();
+        }
+    }
+
     public override void Render(DrawingContext context)
     {
         TextView? textView = TextView;
@@ -99,7 +108,14 @@ public class DiffViewerLineNumberControl : AbstractMargin
             return;
         }
 
-        IBrush background = GetBrush("GitExtensionsDiffLineNumberBackgroundBrush", GetAppColor(AppColor.LineNumberBackground));
+        // The source switches only the base fill to SystemBrushes.InactiveBorder;
+        // semantic added/removed/section backgrounds are still painted over it.
+        IBrush background = _editor.IsEffectivelyEnabled
+            ? GetBrush("GitExtensionsDiffLineNumberBackgroundBrush", GetAppColor(AppColor.LineNumberBackground))
+            : GetBrush("GitExtensionsNativeDisabledGutterBackgroundBrush", AvaloniaThemeResources.ToMediaColor(
+                AvaloniaThemeResources.ResolveNativeSystemColor(
+                    ThemeModule.Settings.Theme.SystemColorMode == GitExtensions.Shims.WinForms.SystemColorMode.Dark,
+                    System.Drawing.KnownColor.InactiveBorder)));
         IBrush numberBrush = GetBrush("GitExtensionsDiffLineNumberBrush", GetSystemColor(System.Drawing.KnownColor.GrayText));
         IBrush selectedBrush = GetBrush("GitExtensionsDiffLineNumberSelectedBrush", GetSystemColor(System.Drawing.KnownColor.WindowText));
         context.FillRectangle(background, new Avalonia.Rect(Bounds.Size));

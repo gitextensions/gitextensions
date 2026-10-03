@@ -79,6 +79,47 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     /// <summary>Gets the decoded plain text represented by the current XHTML.</summary>
     public string GetPlainText() => _plainText;
 
+    /// <summary>Reads the source link at the nearest character for a fresh context request.</summary>
+    internal string? GetContextLinkAtPoint(Point point)
+    {
+        EnsureNativePointerLayout();
+        if (Inlines?.Text is not { Length: > 0 } text)
+        {
+            return null;
+        }
+
+        // RichTextBox.GetCharIndexFromPosition returns the nearest character even
+        // outside its ink. Unlike pointer activation, context lookup must not reject
+        // blank client space simply because TextLayout reports IsInside == false.
+        point -= new Vector(NativeFormattingInset + Padding.Left, Padding.Top);
+        TextHitTestResult hit = TextLayout.HitTestPoint(point);
+        int position = Math.Clamp(hit.CharacterHit.FirstCharacterIndex, 0, text.Length - 1);
+        int start = 0;
+        foreach (Inline inline in Inlines)
+        {
+            int length = inline switch
+            {
+                Run run => run.Text?.Length ?? 0,
+                LineBreak => Environment.NewLine.Length,
+                InlineUIContainer => 1,
+                _ => 0,
+            };
+            if (position >= start && position < start + length)
+            {
+                return inline switch
+                {
+                    XhtmlLinkRun link => link.LinkUri,
+                    InlineUIContainer { Child: HyperlinkButton { Tag: string link } } => link,
+                    _ => null,
+                };
+            }
+
+            start += length;
+        }
+
+        return null;
+    }
+
     /// <summary>Gets the decoded selected text.</summary>
     public string GetSelectionPlainText()
     {
@@ -311,6 +352,16 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
             XhtmlLinkRun? link = GetLinkAtPoint(e.GetPosition(this));
             SelectedLinkUri = link?.LinkUri;
+            if (properties.IsRightButtonPressed)
+            {
+                // The source read-only RichEdit preserves its selection both inside and
+                // outside a right-button press. Do not acquire SelectableTextBlock's
+                // capture, which would collapse that selection on release. The unhandled
+                // release still raises the framework's ordinary context-menu request.
+                Focus();
+                return;
+            }
+
             if (link is not null && properties.IsLeftButtonPressed)
             {
                 // RichTextBox raises EN_LINK on WM_LBUTTONDOWN and consumes that
@@ -378,6 +429,21 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
         _pointerSelectionAnchor = -1;
+        if (_usesNativeWidthMeasurement && e.InitialPressMouseButton == MouseButton.Right)
+        {
+            // MouseDevice implicitly captures the pressed source before routing input.
+            // Release only this editor's capture so SelectableTextBlock does not collapse
+            // the source RichEdit selection. Control still raises its ordinary context
+            // request from the real event's source and unshifted pointer coordinates.
+            if (e.Pointer.Captured == this)
+            {
+                e.Pointer.Capture(null);
+            }
+
+            base.OnPointerReleased(e);
+            return;
+        }
+
         if (NativeFormattingInset == 0 || TopLevel.GetTopLevel(this) is not { } root)
         {
             base.OnPointerReleased(e);

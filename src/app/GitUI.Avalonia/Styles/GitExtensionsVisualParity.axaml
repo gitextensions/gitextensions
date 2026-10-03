@@ -367,6 +367,20 @@
           <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#FDFDFD" />
           <x:Boolean x:Key="GitExtensionsNativeFlatButtonDarkMode">False</x:Boolean>
+          <x:Boolean x:Key="GitExtensionsNativeToolStripSplitUseSystemVisualStyle">True</x:Boolean>
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalSelectedBrush" Color="#B3D7F3" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalPressedBrush" Color="#80BCEB" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalBorderBrush" Color="#0078D7" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalSplitterBrush" Color="#0078D7" />
+          <LinearGradientBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalOpenBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Offset="0" Color="#FCFCFC" />
+            <GradientStop Offset="1" Color="#F8F8F8" />
+          </LinearGradientBrush>
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalOpenBorderBrush" Color="#808080" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSearchBackgroundBrush" Color="#FFFFE1" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSearchForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeDefaultBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeDisabledGutterBackgroundBrush" Color="#F4F7FC" />
           <x:Boolean x:Key="GitExtensionsToolStripSeparatorUseSystemVisualStyle">True</x:Boolean>
           <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorDarkBrush" Color="#BDBDBD" />
           <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorLightBrush" Color="#FFFFFF" />
@@ -540,6 +554,20 @@
           <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#333333" />
           <x:Boolean x:Key="GitExtensionsNativeFlatButtonDarkMode">True</x:Boolean>
+          <x:Boolean x:Key="GitExtensionsNativeToolStripSplitUseSystemVisualStyle">False</x:Boolean>
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalSelectedBrush" Color="#2F4159" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalPressedBrush" Color="#2D4B73" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalBorderBrush" Color="#2864B4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalSplitterBrush" Color="#C0C0C0" />
+          <LinearGradientBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalOpenBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Offset="0" Color="#2E2E2E" />
+            <GradientStop Offset="1" Color="#292929" />
+          </LinearGradientBrush>
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalOpenBorderBrush" Color="#6B6B6B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSearchBackgroundBrush" Color="#50503C" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSearchForegroundBrush" Color="#BEBEBE" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeDefaultBackgroundBrush" Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsNativeDisabledGutterBackgroundBrush" Color="#3C3F41" />
           <x:Boolean x:Key="GitExtensionsToolStripSeparatorUseSystemVisualStyle">False</x:Boolean>
           <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorDarkBrush" Color="#404040" />
           <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorLightBrush" Color="#101010" />
@@ -1278,6 +1306,28 @@
     <Setter Property="Width" Value="7" />
     <Setter Property="Height" Value="5" />
   </Style>
+  <!-- Native ToolStripSplitButton reserves 11px for its drop-down and 1px for the
+       splitter. Borders are paint, not extra image/caption layout padding. The
+       framework's original parts and presenters remain in place. -->
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="compat:NativeToolStripSplitButton.UseSystemVisualStyle" Value="{DynamicResource GitExtensionsNativeToolStripSplitUseSystemVisualStyle}" />
+    <Setter Property="compat:NativeToolStripSplitButton.ProfessionalSelectedBrush" Value="{DynamicResource GitExtensionsNativeToolStripSplitProfessionalSelectedBrush}" />
+    <Setter Property="compat:NativeToolStripSplitButton.ProfessionalPressedBrush" Value="{DynamicResource GitExtensionsNativeToolStripSplitProfessionalPressedBrush}" />
+    <Setter Property="compat:NativeToolStripSplitButton.ProfessionalBorderBrush" Value="{DynamicResource GitExtensionsNativeToolStripSplitProfessionalBorderBrush}" />
+    <Setter Property="compat:NativeToolStripSplitButton.ProfessionalSplitterBrush" Value="{DynamicResource GitExtensionsNativeToolStripSplitProfessionalSplitterBrush}" />
+    <Setter Property="compat:NativeToolStripSplitButton.ProfessionalOpenBrush" Value="{DynamicResource GitExtensionsNativeToolStripSplitProfessionalOpenBrush}" />
+    <Setter Property="compat:NativeToolStripSplitButton.ProfessionalOpenBorderBrush" Value="{DynamicResource GitExtensionsNativeToolStripSplitProfessionalOpenBorderBrush}" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button /template/ Button#PART_PrimaryButton,
+                   SplitButton.gitextensions-native-toolstrip-split-button /template/ Button#PART_SecondaryButton">
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
   <Style Selector="Border.gitextensions-toolbar-separator">
     <Setter Property="Width" Value="1" />
     <Setter Property="Height" Value="17" />
@@ -1850,6 +1900,23 @@
   </Style>
   <!-- A source FlatStyle.Flat Button is not a ToolStrip button. Its shared painter leaves
        the content and authored padding untouched and supplies the native adapter chrome. -->
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button:pointerover">
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button:native-selected">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-professional-toolstrip-split-button.gitextensions-native-toolstrip-split-button">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-professional-toolstrip-split-button.gitextensions-native-toolstrip-split-button /template/ Button#PART_PrimaryButton /template/ ContentPresenter#PART_ContentPresenter,
+                   SplitButton.gitextensions-native-professional-toolstrip-split-button.gitextensions-native-toolstrip-split-button /template/ Button#PART_SecondaryButton /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
   <Style Selector="Button.gitextensions-native-flat-button">
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">

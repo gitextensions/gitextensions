@@ -425,6 +425,33 @@ public sealed class FileViewerSearchTests
     }
 
     [AvaloniaTest]
+    [TestCase("nextChangeButton", "Next change")]
+    [TestCase("previousChangeButton", "Previous change")]
+    [TestCase("increaseNumberOfLines", "Increase the number of lines of context")]
+    [TestCase("decreaseNumberOfLines", "Decrease the number of lines of context")]
+    [TestCase("showEntireFileButton", "Show entire file")]
+    [TestCase("showNonPrintChars", "Show nonprinting characters")]
+    [TestCase("showSyntaxHighlighting", "Show syntax highlighting")]
+    [TestCase("ignoreWhitespaceAtEol", "Ignore whitespace changes at end of line")]
+    [TestCase("ignoreWhiteSpaces", "Ignore changes in amount of whitespace")]
+    [TestCase("ignoreAllWhitespaces", "Ignore all whitespace changes")]
+    [TestCase("settingsButton", "Settings")]
+    public void Toolbar_tooltips_should_have_source_defaults_before_runtime_load_and_keep_the_original_translation_key(string name, string sourceText)
+    {
+        FileViewer viewer = new() { IsVisible = false };
+        Control button = viewer.FindControl<Control>(name)!;
+        ToolTip.GetTip(button).Should().Be(sourceText,
+            "the native Designer initializes tooltips even before the containing viewer becomes visible");
+        ITranslation translation = Substitute.For<ITranslation>();
+        translation.TranslateItem(nameof(FileViewer), name, "ToolTipText", Arg.Any<Func<string?>>())
+            .Returns("Localized " + name);
+
+        viewer.TranslateItems(translation);
+
+        ToolTip.GetTip(button).Should().BeOfType<TextBlock>().Which.Text.Should().Be("Localized " + name);
+    }
+
+    [AvaloniaTest]
     public void FindAndReplaceForm_should_preserve_original_layout_and_translation_keys()
     {
         FindAndReplaceForm form = new();
