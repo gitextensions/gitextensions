@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.Text;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
 
@@ -56,8 +57,12 @@ public interface ICommitMessageManager
     /// <param name="messageType">The type of message to write out.</param>
     /// <param name="usingCommitTemplate">The indicator whether a commit template is used.</param>
     /// <param name="ensureCommitMessageSecondLineEmpty">The indicator whether empty second line is enforced.</param>
+    /// <param name="commentString">
+    ///  The comment prefix configured in git (see <see cref="CommitMessageManager.GetConfiguredCommentString"/>),
+    ///  or <see langword="null"/> to use the default handling of "#".
+    /// </param>
     Task WriteCommitMessageToFileAsync(string commitMessage, CommitMessageType messageType, bool usingCommitTemplate,
-                                       bool ensureCommitMessageSecondLineEmpty, CancellationToken cancellationToken = default);
+                                       bool ensureCommitMessageSecondLineEmpty, string? commentString = null, CancellationToken cancellationToken = default);
 }
 
 public sealed class CommitMessageManager : ICommitMessageManager
@@ -170,17 +175,37 @@ public sealed class CommitMessageManager : ICommitMessageManager
     }
 
     public async Task WriteCommitMessageToFileAsync(string commitMessage, CommitMessageType messageType, bool usingCommitTemplate,
-                                                    bool ensureCommitMessageSecondLineEmpty, CancellationToken cancellationToken = default)
+                                                    bool ensureCommitMessageSecondLineEmpty, string? commentString = null, CancellationToken cancellationToken = default)
     {
         await TaskScheduler.Default;
 
-        string formattedCommitMessage = FormatCommitMessage(commitMessage, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
+        string formattedCommitMessage = FormatCommitMessage(commitMessage, usingCommitTemplate, ensureCommitMessageSecondLineEmpty, commentString);
 
         string path = messageType == CommitMessageType.Normal ? CommitMessagePath : MergeMessagePath;
         await WriteFileAsync(path, CannotSaveCommitMessage, formattedCommitMessage, _commitEncoding, cancellationToken);
     }
 
-    internal static string FormatCommitMessage(string commitMessage, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
+    /// <summary>
+    ///  Gets the comment prefix configured via "core.commentString" or "core.commentChar".
+    /// </summary>
+    /// <remarks>
+    ///  Both settings are aliases in Git 2.45+ where the last one in the config wins, while older Git versions only know "core.commentChar".
+    ///  The effective settings do not tell which one comes last, so "core.commentString" takes precedence.
+    ///  "auto" lets git pick a character which does not occur in the message, which cannot be reproduced here, so it is treated as not set.
+    /// </remarks>
+    /// <returns>The configured comment prefix; <see langword="null"/> if not set or "auto".</returns>
+    public static string? GetConfiguredCommentString(IGitModule module)
+    {
+        string commentString = module.GetEffectiveSetting("core.commentstring");
+        if (string.IsNullOrEmpty(commentString))
+        {
+            commentString = module.GetEffectiveSetting("core.commentchar");
+        }
+
+        return string.IsNullOrEmpty(commentString) || commentString == "auto" ? null : commentString;
+    }
+
+    internal static string FormatCommitMessage(string commitMessage, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty, string? commentString = null)
     {
         if (string.IsNullOrEmpty(commitMessage))
         {
@@ -194,7 +219,7 @@ public sealed class CommitMessageManager : ICommitMessageManager
         {
             // When a committemplate is used, skip comments and do not count them as line.
             // otherwise: "#" is probably not used for comment but for issue number
-            if (usingCommitTemplate && line.StartsWith('#'))
+            if (usingCommitTemplate && IsComment(line, commentString))
             {
                 continue;
             }
@@ -210,6 +235,17 @@ public sealed class CommitMessageManager : ICommitMessageManager
         }
 
         return formattedCommitMessage.ToString();
+
+        static bool IsComment(string line, string? commentString)
+        {
+            if (commentString is not null)
+            {
+                return line.StartsWith(commentString, StringComparison.Ordinal);
+            }
+
+            // Git's default comment char, but keep issue references like "#123"
+            return line.StartsWith('#') && (line.Length == 1 || !char.IsAsciiDigit(line[1]));
+        }
     }
 
     private string GetFilePath(string workingDirGitDir, string fileName) => _fileSystem.Path.Join(workingDirGitDir, fileName);

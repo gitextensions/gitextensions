@@ -420,6 +420,29 @@ public class CommitMessageManagerTests
             .Should().Be(expectedMessage);
     }
 
+    // null: not configured - the git config of the machine is not queried in order to be independent from it
+    [TestCase(null, "# comment", false)]
+    [TestCase(null, "#", false)]
+    [TestCase(null, "#123 issue", true)]
+    [TestCase("auto", "#comment", false)]
+    [TestCase("auto", "#123 issue", true)]
+    [TestCase(";", "; comment", false)]
+    [TestCase(";", "#123 issue", true)]
+    [TestCase(";", "# no comment", true)]
+    public void FormatCommitMessage_should_skip_template_comments_per_core_commentChar(string? commentChar, string line, bool expectedKept)
+    {
+        string? commentString = null;
+        if (commentChar is not null)
+        {
+            _referenceRepository.Module.SetSetting("core.commentchar", commentChar);
+            commentString = CommitMessageManager.GetConfiguredCommentString(_referenceRepository.Module);
+        }
+
+        string nl = Environment.NewLine;
+        CommitMessageManager.FormatCommitMessage($"subject\n{line}", usingCommitTemplate: true, ensureCommitMessageSecondLineEmpty: false, commentString)
+            .Should().Be(expectedKept ? $"subject{nl}{line}{nl}" : $"subject{nl}");
+    }
+
     public class FormatCommitMessageTestData
     {
         private static readonly string NL = Environment.NewLine;
@@ -443,16 +466,16 @@ public class CommitMessageManagerTests
                 yield return new TestCaseData(["\n", true, true, NL + NL]);
                 yield return new TestCaseData(["1", true, false, "1" + NL]);
                 yield return new TestCaseData(["#1", false, false, "#1" + NL]);
-                yield return new TestCaseData(["#1", true, false, ""]);
+                yield return new TestCaseData(["# 1", true, false, ""]);
                 yield return new TestCaseData(["1\n\n3", false, false, "1" + NL + NL + "3" + NL]);
                 yield return new TestCaseData(["1\n\n3", false, true, "1" + NL + NL + "3" + NL]);
                 yield return new TestCaseData(["1\n2\n3", false, false, "1" + NL + "2" + NL + "3" + NL]);
                 yield return new TestCaseData(["1\n2\n3", false, true, "1" + NL + NL + "2" + NL + "3" + NL]);
-                yield return new TestCaseData(["#0\n1\n\n3", true, false, "1" + NL + NL + "3" + NL]);
-                yield return new TestCaseData(["#0\n1\n\n3", true, true, "1" + NL + NL + "3" + NL]);
-                yield return new TestCaseData(["#0\n1\n2\n3", true, false, "1" + NL + "2" + NL + "3" + NL]);
-                yield return new TestCaseData(["#0\n1\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL]);
-                yield return new TestCaseData(["#0\n1\n#0\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL]);
+                yield return new TestCaseData(["# 0\n1\n\n3", true, false, "1" + NL + NL + "3" + NL]);
+                yield return new TestCaseData(["# 0\n1\n\n3", true, true, "1" + NL + NL + "3" + NL]);
+                yield return new TestCaseData(["# 0\n1\n2\n3", true, false, "1" + NL + "2" + NL + "3" + NL]);
+                yield return new TestCaseData(["# 0\n1\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL]);
+                yield return new TestCaseData(["# 0\n1\n# 0\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL]);
                 yield return new TestCaseData(["1\n2\n3\n4\n5\n\n7\n\n\n10", true, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL]);
                 yield return new TestCaseData(["1\n2\n3\n4\n5\n\n7\n\n\n10", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL]);
                 yield return new TestCaseData(["1\n2\n3\n4\n5\n\n7\n\n\n10\n", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL + NL]);
