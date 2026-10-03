@@ -150,6 +150,64 @@ public class FormBrowseTests
             });
     }
 
+    [Test]
+    public void Switching_repo_while_the_grid_is_refreshing_should_reload_the_grid()
+    {
+        // Regression test for #12792: switching the repository while the revision grid was still loading
+        // silently dropped the refresh for the new repository, so the grid kept displaying the revisions of
+        // the previous one. This is a latch state, not a race: with a refresh flagged as running at the time
+        // of the switch, the refresh was dropped in 100% of the cases, so the flag can be set artificially.
+        using ReferenceRepository otherRepository = new();
+        ObjectId otherCommit = ObjectId.Parse(otherRepository.CreateCommit("Commit in the repository switched to"));
+
+        RunFormTest(
+            form =>
+            {
+                WaitForRevisionsToBeLoaded(form);
+
+                RevisionGridControl revisionGrid = form.GetTestAccessor().RevisionGrid;
+                revisionGrid.GetRevision(otherCommit).Should().BeNull();
+
+                // Pretend that the revisions of the current repository are still being loaded
+                revisionGrid.GetTestAccessor().IsRefreshingRevisions = true;
+
+                form.SetWorkingDir(otherRepository.Module.WorkingDir);
+
+                UITest.ProcessUntil(
+                    "loading the revisions of the repository switched to",
+                    () => revisionGrid.GetTestAccessor().IsDataLoadComplete && revisionGrid.GetRevision(otherCommit) is not null,
+                    maxMilliseconds: 10_000);
+
+                revisionGrid.GetTestAccessor().IsRefreshingRevisions.Should().BeFalse();
+            });
+    }
+
+    [Test]
+    public void Refreshing_the_grid_while_it_is_refreshing_should_reload_the_grid()
+    {
+        RunFormTest(
+            form =>
+            {
+                WaitForRevisionsToBeLoaded(form);
+
+                RevisionGridControl revisionGrid = form.GetTestAccessor().RevisionGrid;
+                ObjectId newCommit = ObjectId.Parse(_referenceRepository.CreateCommit("Commit created after the grid was loaded"));
+                revisionGrid.GetRevision(newCommit).Should().BeNull();
+
+                // Pretend that the revisions are still being loaded - the refresh must supersede that load
+                revisionGrid.GetTestAccessor().IsRefreshingRevisions = true;
+
+                form.GetTestAccessor().RefreshRevisions();
+
+                UITest.ProcessUntil(
+                    "reloading the revisions",
+                    () => revisionGrid.GetTestAccessor().IsDataLoadComplete && revisionGrid.GetRevision(newCommit) is not null,
+                    maxMilliseconds: 10_000);
+
+                revisionGrid.GetTestAccessor().IsRefreshingRevisions.Should().BeFalse();
+            });
+    }
+
     [TestCase("", "file.txt")]
     [TestCase("", "file with spaces.txt")]
     [TestCase("Dir with spaces", "file.txt")]

@@ -47,6 +47,12 @@ public sealed partial class RevisionDataGridView : DataGridView
     private Lazy<IList<int>> _toBeSelectedGraphIndexesCache;
     private int _loadedToBeSelectedRevisionsCount = 0;
 
+    // Identifies the current data load, incremented by MarkAsDataLoading() and MarkAsDataLoadingCancelled().
+    // A load can be cancelled and superseded by a newer one (e.g. when the repository is switched
+    // while the grid is still loading), so the completion of a load must be ignored unless it is
+    // still the current one - otherwise the grid would be reported as loaded while it is not.
+    private int _dataLoadId;
+
     private int _backgroundScrollTo;
     private long _lastMouseWheelTickCount; // Timestamp of the last vertical scroll via mouse wheel.
     private int _mouseWheelDeltaRemainder; // Corresponds to unconsumed scroll distance while scrolling via mouse wheel, see OnMouseWheel().
@@ -514,8 +520,22 @@ public sealed partial class RevisionDataGridView : DataGridView
         }
     }
 
-    public void LoadingCompleted()
+    /// <summary>
+    ///  Completes the data load identified by <paramref name="dataLoadId"/>, selecting and scrolling to the
+    ///  revisions which were requested to be selected.
+    /// </summary>
+    /// <param name="dataLoadId">
+    ///  The id returned by the <see cref="MarkAsDataLoading"/> call which started the load.
+    ///  The call is ignored if the load has meanwhile been superseded by a newer one.
+    /// </param>
+    public void LoadingCompleted(int dataLoadId)
     {
+        if (dataLoadId != _dataLoadId)
+        {
+            // This load has been cancelled and superseded by a newer one, which owns the grid now.
+            return;
+        }
+
         if (_loadedToBeSelectedRevisionsCount < ToBeSelectedObjectIds.Count)
         {
             // All expected revisions not found, settle with partial (empty) match
@@ -525,13 +545,18 @@ public sealed partial class RevisionDataGridView : DataGridView
         _revisionGraph.LoadingCompleted();
         if (_revisionGraph.Count == 0)
         {
-            MarkAsDataLoadingComplete();
+            MarkAsDataLoadingComplete(dataLoadId);
             return;
         }
 
         // Rows have not been selected yet
         this.InvokeAndForget(async () =>
         {
+            if (dataLoadId != _dataLoadId)
+            {
+                return;
+            }
+
             SetRowCountAndSelectRowsIfReady();
 
             if (_toBeSelectedGraphIndexesCache.Value.Count == 0)
@@ -575,6 +600,11 @@ public sealed partial class RevisionDataGridView : DataGridView
 
         void LoadingFinishedWithRevisions()
         {
+            if (dataLoadId != _dataLoadId)
+            {
+                return;
+            }
+
             // As fallback, select the first shown real commit or the first row (which exists here)
             if (SelectedRows.Count == 0)
             {
@@ -584,7 +614,7 @@ public sealed partial class RevisionDataGridView : DataGridView
                 EnsureRowVisible(index);
             }
 
-            MarkAsDataLoadingComplete();
+            MarkAsDataLoadingComplete(dataLoadId);
         }
 
         int GetFallbackRowIndexToSelect()
@@ -601,16 +631,46 @@ public sealed partial class RevisionDataGridView : DataGridView
         }
     }
 
-    public void MarkAsDataLoadingComplete()
+    /// <summary>
+    ///  Marks the data load identified by <paramref name="dataLoadId"/> as complete.
+    /// </summary>
+    /// <param name="dataLoadId">
+    ///  The id returned by the <see cref="MarkAsDataLoading"/> call which started the load.
+    ///  The call is ignored if the load has meanwhile been cancelled or superseded by a newer one.
+    /// </param>
+    public void MarkAsDataLoadingComplete(int dataLoadId)
     {
+        if (dataLoadId != _dataLoadId)
+        {
+            // A completion which was still in flight when its load was cancelled must not mark the newer load as complete.
+            return;
+        }
+
         DebugHelpers.Assert(!IsDataLoadComplete, "The grid is already marked as 'data load complete'.");
         IsDataLoadComplete = true;
     }
 
-    public void MarkAsDataLoading()
+    /// <summary>
+    ///  Marks the grid as no longer loading data because the current load, if any, has been cancelled.
+    /// </summary>
+    /// <remarks>
+    ///  A cancelled load never signals its completion, so this has to be done on its behalf.
+    ///  Its id is invalidated, so that a completion which is still in flight is ignored.
+    /// </remarks>
+    public void MarkAsDataLoadingCancelled()
     {
-        DebugHelpers.Assert(IsDataLoadComplete, "The grid is already marked as 'data load in process'.");
+        ++_dataLoadId;
+        IsDataLoadComplete = true;
+    }
+
+    /// <summary>
+    ///  Marks the grid as loading data, superseding any load which may still be in progress.
+    /// </summary>
+    /// <returns>The id identifying this load, to be passed to <see cref="LoadingCompleted"/>.</returns>
+    public int MarkAsDataLoading()
+    {
         IsDataLoadComplete = false;
+        return ++_dataLoadId;
     }
 
     /// <summary>
