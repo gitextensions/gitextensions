@@ -521,7 +521,7 @@ public sealed partial class GitModule : IGitModule
         return result.ExitedSuccessfully && !string.IsNullOrEmpty(result.StandardOutput);
     }
 
-    public bool HandleConflictSelectSide(string fileName, string side)
+    public bool HandleConflictSelectSide(string fileName, string side, out string errorMessage)
     {
         Directory.SetCurrentDirectory(WorkingDir);
         GitArgumentBuilder args = new("checkout-index")
@@ -531,10 +531,11 @@ public sealed partial class GitModule : IGitModule
             "--",
             fileName.ToPosixPath().QuoteNE()
         };
-        string output = GitExecutable.GetOutput(args);
 
-        if (!string.IsNullOrEmpty(output))
+        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
+        if (IsConflictSelectSideFailure(result))
         {
+            errorMessage = FormatConflictSelectSideError(result);
             return false;
         }
 
@@ -543,8 +544,22 @@ public sealed partial class GitModule : IGitModule
             "--",
             fileName.ToPosixPath().QuoteNE()
         };
-        output = GitExecutable.GetOutput(args);
-        return string.IsNullOrEmpty(output);
+        result = GitExecutable.Execute(args, throwOnErrorExit: false);
+        if (IsConflictSelectSideFailure(result))
+        {
+            errorMessage = FormatConflictSelectSideError(result);
+            return false;
+        }
+
+        errorMessage = string.Empty;
+        return true;
+
+        static string FormatConflictSelectSideError(ExecutionResult result)
+            => $"{result.ExitCodeDisplay}: {result.AllOutput.Trim()}";
+
+        // Both commands are silent on success, so any stdout is treated as a failure, too.
+        static bool IsConflictSelectSideFailure(ExecutionResult result)
+            => !result.ExitedSuccessfully || !string.IsNullOrEmpty(result.StandardOutput);
     }
 
     public bool HandleConflictsSaveSide(string fileName, string saveAsFileName, string side)
