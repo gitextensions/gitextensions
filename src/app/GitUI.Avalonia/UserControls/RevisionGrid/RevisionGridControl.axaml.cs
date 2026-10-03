@@ -434,6 +434,23 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         DragDrop.AddDragOverHandler(_gridView, OnGridViewDragEnter);
         DragDrop.AddDropHandler(_gridView, OnGridViewDragDrop);
         _gridView.LayoutUpdated += (_, _) => UpdateVisibleGraphColumnWidth();
+        _gridView.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == FontFamilyProperty || e.Property == FontSizeProperty
+                || e.Property == FontStyleProperty || e.Property == FontWeightProperty)
+            {
+                // Source ApplySettings updates the font-dependent row and provider sizes.
+                // Avalonia typography resources also change on an already-realized list.
+                ApplyColumnSettings();
+                foreach (RevisionRowControl row in _gridView.GetVisualDescendants().OfType<RevisionRowControl>())
+                {
+                    row.InvalidateMeasure();
+                }
+
+                _gridView.InvalidateMeasure();
+                RefreshRealizedRows();
+            }
+        };
         mainContextMenu.Opening += ContextMenuOpening;
         mainContextMenu.Opened += (_, _) =>
         {
@@ -3588,30 +3605,31 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal static double GetRowHeight(TemplatedControl control)
     {
-        // The WinForms default is Segoe UI 9 pt. Linux font substitution must not change
-        // the source grid's measured 26-DIP row height or its row-height-driven avatar width.
-        const double winFormsLineSpacing = 2724;
-        const double winFormsDesignEmHeight = 2048;
+        // RevisionDataGridView uses AppSettings.Font, not a bold ref/author cell's font.
+        // Its Graphics.MeasureString result depends on the configured family and style.
+        WinFormsShims.Font font = AppSettings.Font;
+        Avalonia.Size measured = WinFormsGraphicsTextMeasurer.MeasureSize("By", new FontFamily(font.Name),
+            font.Italic ? FontStyle.Italic : FontStyle.Normal,
+            font.Bold ? FontWeight.Bold : FontWeight.Normal,
+            AvaloniaFontSettings.ToDeviceIndependentPixels(font.Size));
         double renderScale = TopLevel.GetTopLevel(control)?.RenderScaling ?? 1;
-        return CalculateRowHeight(control.FontSize, winFormsLineSpacing, winFormsDesignEmHeight, renderScale);
+        return CalculateRowHeight(measured.Height, renderScale);
     }
 
-    internal static double CalculateRowHeight(
-        double fontSizeDip,
-        double lineSpacing,
-        double designEmHeight,
-        double renderScale)
+    internal static double CalculateRowHeight(double measuredTextHeightDip, double renderScale)
     {
-        if (fontSizeDip <= 0 || lineSpacing <= 0 || designEmHeight <= 0 || renderScale <= 0)
+        if (!double.IsFinite(measuredTextHeightDip) || measuredTextHeightDip <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(fontSizeDip));
+            throw new ArgumentOutOfRangeException(nameof(measuredTextHeightDip));
         }
 
-        // Avalonia exposes the font metrics directly. GDI+ MeasureString adds one eighth
-        // of an em to the font line spacing, then the original truncates that physical-pixel
-        // height and adds DpiUtil.Scale(9).
-        const double measureStringPaddingEm = 0.125;
-        double measuredTextHeightDip = fontSizeDip * ((lineSpacing / designEmHeight) + measureStringPaddingEm);
+        if (!double.IsFinite(renderScale) || renderScale <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(renderScale));
+        }
+
+        // Keep the original physical-pixel truncation plus DpiUtil.Scale(9). Font metrics
+        // come from the actual measurement boundary, never a universal em-padding guess.
         int measuredTextHeightPx = (int)(measuredTextHeightDip * renderScale);
         int spacingPx = (int)Math.Round(RowSpacing * renderScale);
         return (measuredTextHeightPx + spacingPx) / renderScale;

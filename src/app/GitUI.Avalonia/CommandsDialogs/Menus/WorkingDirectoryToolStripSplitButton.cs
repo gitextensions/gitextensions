@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
@@ -85,7 +86,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             if (string.IsNullOrWhiteSpace(path))
             {
                 button.Content = _noWorkingFolderText.Text;
-                button.MinWidth = AppSettings.RecentReposComboMinWidth;
                 return;
             }
 
@@ -133,6 +133,11 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         Name = nameof(WorkingDirectoryToolStripSplitButton);
         Content = "WorkingDir";
         Icon = Images.RepoOpen;
+
+        // Avalonia separates horizontal alignment from the source MiddleLeft value.
+        ImageAlign = HorizontalAlignment.Left;
+        TextAlign = HorizontalAlignment.Left;
+        TranslationCompat.SetConvertMnemonics(this, false);
         Flyout = _menu;
         _menu.Placement = PlacementMode.BottomEdgeAlignedLeft;
         _menu.FlyoutPresenterClasses.Add("gitextensions-branch-menu");
@@ -212,16 +217,31 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private void RefreshContent(string path, IList<Repository> recentRepositoryHistory)
     {
         List<RecentRepoInfo> pinnedRepos = [];
+        using GitExtensions.Shims.WinForms.Font measurementFont = new(FontFamily.Name, (float)(FontSize * 72 / 96),
+            (FontWeight >= Avalonia.Media.FontWeight.Bold ? GitExtensions.Shims.WinForms.FontStyle.Bold : GitExtensions.Shims.WinForms.FontStyle.Regular)
+            | (FontStyle == Avalonia.Media.FontStyle.Italic ? GitExtensions.Shims.WinForms.FontStyle.Italic : GitExtensions.Shims.WinForms.FontStyle.Regular));
         RecentRepoSplitter splitter = new()
         {
-            MeasureFont = AppSettings.Font,
+            MeasureFont = measurementFont,
         };
         splitter.SplitRecentRepos(recentRepositoryHistory, pinnedRepos, pinnedRepos);
         RecentRepoInfo? repositoryInfo = pinnedRepos.Find(
             item => item.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
 
         Content = PathUtil.GetDisplayPath(repositoryInfo?.Caption ?? path);
-        MinWidth = AppSettings.RecentReposComboMinWidth;
+        MinWidth = 0;
+        if (AppSettings.RecentReposComboMinWidth > 0)
+        {
+            // The source deliberately uses GDI+ MeasureString here, not the
+            // ToolStrip's padded TextRenderer preferred size or its image width.
+            float captionWidth = (float)WinFormsGraphicsTextMeasurer.MeasureSize(this, Content as string ?? string.Empty).Width;
+            captionWidth = captionWidth + 11 + 5;
+            Width = Math.Max(AppSettings.RecentReposComboMinWidth, (int)captionWidth);
+        }
+        else
+        {
+            Width = double.NaN;
+        }
     }
 
     public void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)

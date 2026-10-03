@@ -637,7 +637,11 @@ public sealed class VisualParityTests
                 })
                 {
                     iconOnlyButton.GetVisualDescendants().OfType<Image>().Should().ContainSingle();
-                    iconOnlyButton.GetVisualDescendants().OfType<TextBlock>().Should().BeEmpty();
+                    // Native DisplayStyle.Image neither paints a caption nor allocates
+                    // caption space, even when the reusable presenter retains its child.
+                    iconOnlyButton.GetVisualDescendants().OfType<TextBlock>()
+                        .Should().OnlyContain(text => !text.IsVisible
+                            && text.DesiredSize == default(Size) && text.Bounds.Size == default(Size));
                 }
 
                 form.Width = 900;

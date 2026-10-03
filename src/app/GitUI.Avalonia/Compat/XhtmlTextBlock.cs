@@ -39,6 +39,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     private int _defaultTabInterval;
     private int _nativeFormattingInset;
     private int _pointerSelectionAnchor = -1;
+    private bool _usesNativeContentsHeightMeasurement;
     private bool _usesNativeWidthMeasurement;
 
     /// <summary>Initializes the XHTML renderer with source-shaped clipboard semantics.</summary>
@@ -190,6 +191,13 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         SetXHTMLText(_xhtml);
     }
 
+    /// <summary>Uses the source RichEdit font height while retaining the wrapped contents' automatic height.</summary>
+    internal void UseNativeContentsHeightMeasurement()
+    {
+        _usesNativeContentsHeightMeasurement = true;
+        UpdateNativeContentsHeight();
+    }
+
     /// <summary>Renders the supported XHTML subset.</summary>
     public void SetXHTMLText(string? xhtml)
     {
@@ -245,7 +253,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     private void UpdateNativeContentsHeight()
     {
-        if (!_usesNativeWidthMeasurement)
+        if (!_usesNativeWidthMeasurement && !_usesNativeContentsHeightMeasurement)
         {
             return;
         }
@@ -254,8 +262,18 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         // includes the final paragraph and uses its current native font's line metrics.
         // Do not constrain the parent to a newline count, which omits that final row.
         double lineHeight = WinFormsRichEditTextMeasurer.GetLineHeight(this);
-        int paragraphCount = _plainText.Count(character => character == '\n') + 1;
         LineHeight = lineHeight;
+        if (!_usesNativeWidthMeasurement)
+        {
+            // CommitInfo's body and refs keep WordWrap enabled. TextLayout measures the
+            // actual visual lines at the available width, including the final paragraph;
+            // forcing the header's paragraph-count Height would clip wrapped contents.
+            MinHeight = lineHeight;
+            Height = double.NaN;
+            return;
+        }
+
+        int paragraphCount = _plainText.Count(character => character == '\n') + 1;
         MinHeight = Height = lineHeight * paragraphCount;
         if (_plainText.Length == 0)
         {

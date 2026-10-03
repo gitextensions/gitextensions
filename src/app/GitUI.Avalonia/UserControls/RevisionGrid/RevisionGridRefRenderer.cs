@@ -5,6 +5,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.VisualTree;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Compat;
@@ -328,7 +329,12 @@ internal static class RevisionGridRefRenderer
             GetRemoteRefBrush(gitRef),
             highlightedLabel)
         {
-            FontWeight = fontWeight ?? (gitRef.IsSelected ? FontWeight.Bold : FontWeight.Normal),
+            // Explicit Normal denotes the source NormalFont, which may itself be bold.
+            // Its selected/forced BoldFont replaces configured Italic rather than adding Bold.
+            FontWeight = fontWeight == FontWeight.Bold || (fontWeight is null && gitRef.IsSelected) || AppSettings.Font.Bold
+                ? FontWeight.Bold : FontWeight.Normal,
+            FontStyle = fontWeight != FontWeight.Bold && (fontWeight is not null || !gitRef.IsSelected) && AppSettings.Font.Italic
+                ? FontStyle.Italic : FontStyle.Normal,
             VerticalAlignment = VerticalAlignment.Center,
         };
 

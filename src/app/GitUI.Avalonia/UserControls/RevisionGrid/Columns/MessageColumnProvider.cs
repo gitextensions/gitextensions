@@ -588,10 +588,16 @@ internal sealed class MessageColumnProvider : ColumnProvider
             : string.Empty;
 
         // Draw the multi-line indicator
-        panel.Subject.FontWeight = _grid.IsCurrentCheckout(revision)
+        bool emphasized = _grid.IsCurrentCheckout(revision);
+        GitExtensions.Shims.WinForms.Font normalFont = AppSettings.Font;
+
+        // Source BoldFont replaces configured Italic; NormalFont keeps its full style.
+        panel.Subject.FontWeight = emphasized || normalFont.Bold
             ? FontWeight.Bold
             : FontWeight.Normal;
+        panel.Subject.FontStyle = !emphasized && normalFont.Italic ? FontStyle.Italic : FontStyle.Normal;
         panel.Body.FontWeight = panel.Subject.FontWeight;
+        panel.Body.FontStyle = panel.Subject.FontStyle;
     }
 
     private bool FilterRef(IGitRef gitRef)
