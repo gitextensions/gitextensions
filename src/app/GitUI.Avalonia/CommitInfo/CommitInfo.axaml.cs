@@ -2,8 +2,11 @@ using System.ComponentModel;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Git;
@@ -19,6 +22,7 @@ using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
+using Point = Avalonia.Point;
 
 namespace GitUI.CommitInfo;
 
@@ -75,6 +79,13 @@ public partial class CommitInfo : GitModuleControl
     private bool _showAllBranches;
     private bool _showAllTags;
 
+    // ContextMenu.Opening precedes Avalonia's popup placement; retain the requesting
+    // source and point locally instead of borrowing another editor's last clicked URI.
+    private XhtmlTextBlock? _contextMenuSourceControl;
+    private Point? _contextMenuSourcePosition;
+    private TopLevel? _contextMenuRoot;
+    private Point? _contextMenuPointerPosition;
+
     [DefaultValue(false)]
     public bool ShowBranchesAsLinks { get; set; }
 
@@ -118,12 +129,32 @@ public partial class CommitInfo : GitModuleControl
         showTagThisCommitDerivesFromMenuItem.Click += showTagThisCommitDerivesFromMenuItem_Click;
         addNoteToolStripMenuItem.Click += addNoteToolStripMenuItem_Click;
         commitInfoContextMenuStrip.Opening += commitInfoContextMenuStrip_Opening;
+        commitInfoContextMenuStrip.Closed += (_, _) => ClearContextMenuSource();
+        AddHandler(ContextRequestedEvent, commitInfoContextMenuStrip_ContextRequested, RoutingStrategies.Tunnel);
         rtbxCommitMessage.KeyDown += RichTextBox_KeyDown;
         RevisionInfo.KeyDown += RichTextBox_KeyDown;
         commitInfoHeader.SetContextMenuStrip(commitInfoContextMenuStrip);
 
         // Avalonia constraint: controls have no DisposeCustomResources lifecycle hook.
         DetachedFromVisualTree += (_, _) => _asyncLoadCancellation.CancelCurrent();
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _contextMenuRoot = TopLevel.GetTopLevel(this);
+        _contextMenuRoot?.AddHandler(PointerMovedEvent, ContextMenuPointerMoved, RoutingStrategies.Tunnel, handledEventsToo: true);
+        _contextMenuRoot?.AddHandler(PointerExitedEvent, ContextMenuPointerExited, RoutingStrategies.Direct, handledEventsToo: true);
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        _contextMenuRoot?.RemoveHandler(PointerMovedEvent, ContextMenuPointerMoved);
+        _contextMenuRoot?.RemoveHandler(PointerExitedEvent, ContextMenuPointerExited);
+        _contextMenuRoot = null;
+        _contextMenuPointerPosition = null;
+        ClearContextMenuSource();
+        base.OnDetachedFromVisualTree(e);
     }
 
     protected override void OnRuntimeLoad()
@@ -664,12 +695,67 @@ public partial class CommitInfo : GitModuleControl
 
     private void commitInfoContextMenuStrip_Opening(object sender, CancelEventArgs e)
     {
-        string? link = rtbxCommitMessage.SelectedLinkUri
-            ?? RevisionInfo.SelectedLinkUri
-            ?? commitInfoHeader.SelectedLinkUri;
+        if (_contextMenuSourceControl is not { } rtb || _contextMenuSourcePosition is not { } point)
+        {
+            copyLinkToolStripMenuItem.IsVisible = false;
+            copyLinkToolStripMenuItem.Tag = null;
+            ClearContextMenuSource();
+            return;
+        }
+
+        string? link = rtb.GetContextLinkAtPoint(point);
         copyLinkToolStripMenuItem.IsVisible = link is not null;
         copyLinkToolStripMenuItem.Header = string.Format(_copyLink.Text, link);
         copyLinkToolStripMenuItem.Tag = link;
+        ClearContextMenuSource();
+    }
+
+    private void commitInfoContextMenuStrip_ContextRequested(object? sender, ContextRequestedEventArgs e)
+    {
+        ClearContextMenuSource();
+        if (e.Source is not Visual origin)
+        {
+            return;
+        }
+
+        XhtmlTextBlock? source = origin as XhtmlTextBlock
+            ?? origin.GetVisualAncestors().OfType<XhtmlTextBlock>().FirstOrDefault();
+        if (source is null)
+        {
+            return;
+        }
+
+        Point? position = e.TryGetPosition(source, out Point point) ? point
+            : _contextMenuRoot is { } root && _contextMenuPointerPosition is { } pointer
+                ? root.TranslatePoint(pointer, source)
+                : null;
+        _contextMenuSourceControl = source;
+        _contextMenuSourcePosition = position;
+    }
+
+    private void ContextMenuPointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (_contextMenuRoot is { } root && e.Pointer.Type == PointerType.Mouse)
+        {
+            // Keyboard requests provide no pointer point. WinForms uses MousePosition,
+            // not the caret; track actual input in the owning window without inventing
+            // a global cursor location after the pointer leaves that window.
+            _contextMenuPointerPosition = e.GetPosition(root);
+        }
+    }
+
+    private void ContextMenuPointerExited(object? sender, PointerEventArgs e)
+    {
+        if (ReferenceEquals(e.Source, _contextMenuRoot))
+        {
+            _contextMenuPointerPosition = null;
+        }
+    }
+
+    private void ClearContextMenuSource()
+    {
+        _contextMenuSourceControl = null;
+        _contextMenuSourcePosition = null;
     }
 
     private void copyLinkToolStripMenuItem_Click(object sender, EventArgs e)
@@ -944,6 +1030,10 @@ public partial class CommitInfo : GitModuleControl
         public CommitInfoHeader Header => _commitInfo.commitInfoHeader;
 
         public MenuItem AddNoteMenuItem => _commitInfo.addNoteToolStripMenuItem;
+
+        public ContextMenu ContextMenu => _commitInfo.commitInfoContextMenuStrip;
+
+        public MenuItem CopyLinkMenuItem => _commitInfo.copyLinkToolStripMenuItem;
 
         public MenuItem ShowLocalBranchesMenuItem => _commitInfo.showContainedInBranchesToolStripMenuItem;
 

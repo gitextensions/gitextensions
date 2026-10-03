@@ -42,6 +42,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private readonly NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
     private readonly NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
+    private readonly NativeTreeScrollAdapter _scrollAdapter;
 
     private readonly List<Tree> _rootNodes = [];
     private readonly SearchControl<string> _txtBranchCriterion;
@@ -163,7 +164,8 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 .Where(node => node.TreeViewNode.IsExpanded)
                 .Select(GetNodeIdentity),
         ];
-        HashSet<string> selectedNodes = [.. GetSelectedNodes().Select(GetNodeIdentity)];
+        HashSet<string> selectedNodes = [.. _rootNodes.SelectMany(tree => tree.GetSelectedNodes()).Select(GetNodeIdentity)];
+        string? highlightedNode = SelectedNode is { } caret ? GetNodeIdentity(caret) : null;
         bool restoreState = _rootNodes.Count > 0 && !moduleChanged;
 
         ClearSearchResults();
@@ -190,20 +192,18 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 node.TreeViewNode.IsExpanded = expandedNodes.Contains(GetNodeIdentity(node));
             }
 
-            if (treeMain.SelectedItems is not null)
+            foreach (NodeBase node in nodes.Where(node => selectedNodes.Contains(GetNodeIdentity(node))))
             {
-                treeMain.SelectedItems.Clear();
-                foreach (NodeBase node in nodes.Where(node => selectedNodes.Contains(GetNodeIdentity(node))))
-                {
-                    treeMain.SelectedItems.Add(node.TreeViewNode);
-                }
+                node.Select(true);
             }
+
+            treeMain.SelectedItem = nodes.FirstOrDefault(node => GetNodeIdentity(node) == highlightedNode)?.TreeViewNode;
         }
 
-        if (!GetSelectedNodes().Any()
+        if (treeMain.SelectedItem is null
             && _branchesTree.DepthEnumerator<LocalBranchNode>().FirstOrDefault(node => node.IsCurrent) is { } current)
         {
-            SetNodeSelected(current.TreeViewNode, selected: true);
+            treeMain.SelectedItem = current.TreeViewNode;
         }
     });
 
@@ -225,6 +225,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     public RepoObjectsTree()
     {
         InitializeComponent();
+        _scrollAdapter = new NativeTreeScrollAdapter(treeMain);
         _txtBranchCriterion = CreateSearchBox();
         Grid.SetColumn(_txtBranchCriterion, 0);
         branchSearchPanel.Children.Add(_txtBranchCriterion);
@@ -240,7 +241,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _explorerNavigationDecorator = new NativeTreeViewExplorerNavigationDecorator(treeMain);
         _explorerNavigationDecorator.AfterSelect += OnNodeSelected;
 
-        treeMain.PointerPressed += OnNodeClick;
+        // Avalonia's Ctrl-click toggles its caret even in single-selection mode. Native
+        // TreeView keeps that caret independent of the source's underlined logical flags.
+        treeMain.AddHandler(InputElement.PointerPressedEvent, OnNodeClick, RoutingStrategies.Tunnel, handledEventsToo: true);
         treeMain.AddHandler(InputElement.DoubleTappedEvent, OnNodeDoubleClick, RoutingStrategies.Bubble, handledEventsToo: true);
         menuMain.Opening += contextMenu_Opening;
         menuMain.Opened += contextMenu_Opened;
@@ -345,6 +348,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         foreach (Tree tree in _rootNodes)
         {
+            foreach (NodeBase node in tree.GetSelectedNodes().ToArray())
+            {
+                node.Select(false);
+            }
+
             tree.OnModuleChanged();
         }
     }
@@ -412,42 +420,33 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     internal static string GetNodeIdentity(NodeBase node)
         => $"{node.GetType().Name}:{node.SearchText}";
 
-    internal HashSet<string> CaptureSelectedNodeIdentities(NodeBase root)
+    internal TreeSelectionState CaptureSelectionState(NodeBase root)
     {
-        HashSet<NodeBase> descendants = [.. root.DescendantsAndSelf()];
-        TreeViewItem[] selectedItems =
-        [
-            .. (treeMain.SelectedItems?.OfType<TreeViewItem>()
-                ?? (treeMain.SelectedItem is TreeViewItem selected ? [selected] : []))
-                .Where(item => item.Tag is NodeBase node && descendants.Contains(node)),
-        ];
+        NodeBase[] descendants = [.. root.DescendantsAndSelf()];
         HashSet<string> identities =
         [
-            .. selectedItems
-                .Select(item => (NodeBase)item.Tag!)
+            .. descendants.Where(node => node.IsSelected)
                 .Select(GetNodeIdentity),
         ];
-        if (treeMain.SelectedItems is not null)
-        {
-            foreach (TreeViewItem item in selectedItems)
-            {
-                treeMain.SelectedItems.Remove(item);
-            }
-        }
-
-        return identities;
+        string? highlightedNode = SelectedNode is { } caret && descendants.Any(node => ReferenceEquals(node, caret))
+            ? GetNodeIdentity(caret) : null;
+        return new TreeSelectionState(identities, highlightedNode);
     }
 
-    internal void RestoreSelectedNodes(NodeBase root, IReadOnlySet<string> identities)
+    internal void RestoreSelectionState(NodeBase root, TreeSelectionState state)
     {
-        if (identities.Count == 0 || treeMain.SelectedItems is null)
+        foreach (NodeBase node in root.DescendantsAndSelf())
         {
-            return;
-        }
+            string identity = GetNodeIdentity(node);
+            if (state.SelectedNodes.Contains(identity))
+            {
+                node.Select(true);
+            }
 
-        foreach (NodeBase node in root.DescendantsAndSelf().Where(node => identities.Contains(GetNodeIdentity(node))))
-        {
-            treeMain.SelectedItems.Add(node.TreeViewNode);
+            if (identity == state.HighlightedNode)
+            {
+                treeMain.SelectedItem = node is not BaseRevisionNode || node.Visible ? node.TreeViewNode : null;
+            }
         }
     }
 
@@ -653,7 +652,8 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
 
         SelectNode(node, multiple: false, includingDescendants: false);
-        node.TreeViewNode.BringIntoView();
+        EnsureVerticallyVisible(node.TreeViewNode);
+        treeMain.SelectedItem = node.TreeViewNode;
     }
 
     protected override void OnRuntimeLoad()
@@ -686,7 +686,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private static void AddTreeNodeToSearchResult(ICollection<TreeViewItem> ret, TreeViewItem node)
     {
+        node.Classes.Remove("repo-search-cleared");
         node.Classes.Add("repo-search-result");
+        node.Classes.Add("repo-search-foreground");
         ret.Add(node);
     }
 
@@ -750,34 +752,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         ApplyRoots();
     }
 
-    internal bool IsNodeSelected(TreeViewItem item)
-        => treeMain.SelectedItems?.Contains(item) == true || ReferenceEquals(treeMain.SelectedItem, item);
-
-    internal void SetNodeSelected(TreeViewItem item, bool selected)
-    {
-        if (treeMain.SelectedItems is null)
-        {
-            if (selected)
-            {
-                treeMain.SelectedItem = item;
-            }
-
-            return;
-        }
-
-        if (selected)
-        {
-            if (!treeMain.SelectedItems.Contains(item))
-            {
-                treeMain.SelectedItems.Add(item);
-            }
-        }
-        else
-        {
-            treeMain.SelectedItems.Remove(item);
-        }
-    }
-
     internal void FocusTree()
         => treeMain.Focus();
 
@@ -789,34 +763,41 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private void DoSearch()
     {
-        if (_searchCriteriaChanged)
+        _txtBranchCriterion.CloseDropdown();
+        if (_searchCriteriaChanged && _searchResult?.Count is > 0)
         {
             _searchCriteriaChanged = false;
             ClearSearchResults();
-        }
-
-        string criterion = _txtBranchCriterion.Text?.Trim() ?? string.Empty;
-        if (string.IsNullOrEmpty(criterion))
-        {
-            ClearSearchResults();
-            _txtBranchCriterion.FocusSearchBox();
-            return;
-        }
-
-        if (_searchResult is null)
-        {
-            _searchResult = [];
-            foreach (TreeViewItem result in _rootNodes
-                         .Where(tree => tree.IsEnabled)
-                         .SelectMany(tree => tree.DescendantsAndSelf())
-                         .Where(node => node.SearchText.Contains(criterion, StringComparison.InvariantCultureIgnoreCase))
-                         .Select(node => node.TreeViewNode))
+            if (string.IsNullOrWhiteSpace(_txtBranchCriterion.Text))
             {
-                AddTreeNodeToSearchResult(_searchResult, result);
+                _txtBranchCriterion.FocusSearchBox();
+                return;
             }
         }
 
-        if (_searchResult.Count == 0)
+        string criterion = _txtBranchCriterion.Text ?? string.Empty;
+        if ((_searchResult is null || _searchResult.Count == 0) && !string.IsNullOrWhiteSpace(criterion))
+        {
+            _searchResult = [];
+            Queue<TreeViewItem> queue = new(treeMain.Items.Cast<TreeViewItem>());
+            while (queue.TryDequeue(out TreeViewItem? item))
+            {
+                string text = item.Tag is BaseRevisionNode revisionNode
+                    ? revisionNode.FullPath
+                    : (item.Header as StackPanel)?.Children.OfType<TextBlock>().FirstOrDefault()?.Text ?? string.Empty;
+                if (text.Contains(criterion, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    AddTreeNodeToSearchResult(_searchResult, item);
+                }
+
+                foreach (TreeViewItem child in item.Items.Cast<TreeViewItem>())
+                {
+                    queue.Enqueue(child);
+                }
+            }
+        }
+
+        if (_searchResult?.Count is not > 0)
         {
             return;
         }
@@ -833,7 +814,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
 
         treeMain.SelectedItem = next;
-        next.BringIntoView();
+        EnsureVerticallyVisible(next);
     }
 
     private void ClearSearchResults()
@@ -843,6 +824,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             foreach (TreeViewItem item in _searchResult)
             {
                 item.Classes.Remove("repo-search-result");
+                item.Classes.Add("repo-search-cleared");
             }
         }
 
@@ -876,7 +858,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private void OnBranchCriterionChanged(object? sender, EventArgs e)
     {
         _searchCriteriaChanged = true;
-        ClearSearchResults();
     }
 
     private void SetActionVisible(RepoAction action, bool enabled)
@@ -957,6 +938,31 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     internal void SelectTreeViewItem(TreeViewItem item)
         => treeMain.SelectedItem = item;
 
+    internal void EnsureHighlightedNodeVisible()
+    {
+        if (treeMain.SelectedItem is TreeViewItem caret)
+        {
+            EnsureVerticallyVisible(caret);
+        }
+        else if (treeMain.Items.OfType<TreeViewItem>().FirstOrDefault() is { } first)
+        {
+            EnsureVerticallyVisible(first);
+        }
+    }
+
+    internal void EnsureVerticallyVisible(TreeViewItem item)
+    {
+        if (item.Tag is NodeBase node)
+        {
+            for (NodeBase? parent = node.Parent; parent is not null; parent = parent.Parent)
+            {
+                parent.TreeViewNode.IsExpanded = true;
+            }
+        }
+
+        _scrollAdapter.EnsureVerticallyVisible(item);
+    }
+
     public override bool ProcessHotkey(WinFormsShims.Keys keyData)
     {
         if (_txtBranchCriterion.IsKeyboardFocusWithin && GitExtensionsControl.IsTextEditKey(keyData))
@@ -1007,11 +1013,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     }
 
     private IEnumerable<NodeBase> GetSelectedNodes()
-    {
-        IEnumerable<TreeViewItem> items = treeMain.SelectedItems?.OfType<TreeViewItem>()
-            ?? (treeMain.SelectedItem is TreeViewItem selected ? [selected] : []);
-        return items.Select(item => item.Tag).OfType<NodeBase>();
-    }
+        => _rootNodes.Where(tree => tree.IsEnabled).SelectMany(tree => tree.GetSelectedNodes());
 
     private void OnNodeClick(object? sender, PointerPressedEventArgs e)
     {
@@ -1020,14 +1022,17 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         NodeBase? node = item?.Tag as NodeBase;
         bool rightButton = e.GetCurrentPoint(treeMain).Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed;
 
-        if (rightButton && node?.IsSelected is true)
-        {
-            return; // don't undo multi-selection on opening context menu, even without Ctrl
-        }
-
         if (node is null || IsExpansionToggle(e.Source))
         {
             return;
+        }
+
+        item!.Focus(NavigationMethod.Pointer, e.KeyModifiers);
+        treeMain.SelectedItem = item;
+        e.Handled = true;
+        if (rightButton && node.IsSelected)
+        {
+            return; // don't undo multi-selection on opening context menu, even without Ctrl
         }
 
         bool multiple = e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Meta);
@@ -1036,8 +1041,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         {
             clickable.OnClick();
         }
-
-        e.Handled = rightButton || multiple || e.KeyModifiers.HasFlag(KeyModifiers.Shift);
     }
 
     private void SelectNode(NodeBase node, bool multiple, bool includingDescendants)
@@ -1055,11 +1058,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             }
 
             node.Select(true); // and only select the clicked one
-        }
-
-        if (node.IsSelected && !multiple)
-        {
-            treeMain.SelectedItem = node.TreeViewNode;
         }
     }
 
@@ -1127,6 +1125,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     internal readonly struct TestAccessor(RepoObjectsTree control)
     {
         internal TreeView Tree => control.treeMain;
+
+        internal IEnumerable<TreeViewItem> LogicalSelection
+            => control.GetSelectedNodes().Select(node => node.TreeViewNode);
 
         internal Avalonia.Controls.ContextMenu ContextMenu => control.menuMain;
 
@@ -1209,7 +1210,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         /// <exception cref="ArgumentException">Thrown if either <paramref name="nodeTexts"/> don't point to an existing node
         /// or the selected node is not of type <typeparamref name="TExpected"/>.</exception>
         internal void SelectNode<TExpected>(string[] nodeTexts, bool multiple = false, bool includingDescendants = false)
-            where TExpected : Node
+            where TExpected : NodeBase
         {
             IEnumerable<TreeViewItem> nodes = control.treeMain.Items.Cast<TreeViewItem>();
             TreeViewItem? item = null;
@@ -1229,6 +1230,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 throw new ArgumentException($"The selected node is of type {item?.Tag?.GetType()} instead of the expected type {typeof(TExpected)}.", nameof(TExpected));
             }
 
+            control.treeMain.SelectedItem = item;
             control.SelectNode((NodeBase)item.Tag, multiple, includingDescendants);
 
             // simulates a node click well enough for UI tests
@@ -1238,6 +1240,8 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 }
+
+internal readonly record struct TreeSelectionState(IReadOnlySet<string> SelectedNodes, string? HighlightedNode);
 
 /// <summary>
 /// Draws the dotted hierarchy lines supplied by the native WinForms tree but absent from

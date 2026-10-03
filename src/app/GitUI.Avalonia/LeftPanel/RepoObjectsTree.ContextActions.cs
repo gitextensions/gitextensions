@@ -305,11 +305,11 @@ partial class RepoObjectsTree : IMenuItemFactory
         bool canRunCommands = TryGetUICommandsDirect(out IGitUICommands? commands);
         bool canChangeWorkingTree = canRunCommands && !commands!.Module.IsBareRepository();
 
-        bool canCopy = selectedNode is BaseBranchLeafNode or StashNode;
+        bool canCopy = hasSingleSelection && (selectedNode is BaseBranchLeafNode or StashNode) && selectedNode.Visible;
         copyContextMenuItem.Enable(canCopy);
 
         // enable if selection contains refs
-        bool canFilter = GetSelectedNodes().OfType<IGitRefActions>().Any()
+        bool canFilter = selectedNodes.OfType<IGitRefActions>().Any()
             && _filterRevisionGridBySpaceSeparatedRefs is not null;
         SetAction(RepoAction.Filter, canFilter, canFilter);
 

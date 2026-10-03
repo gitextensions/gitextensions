@@ -94,7 +94,7 @@ internal sealed class SubmoduleTree : Tree
                 .Where(node => node.TreeViewNode.IsExpanded)
                 .Select(node => $"{node.GetType().Name}:{node.SearchText}"),
         ];
-        HashSet<string> selected = OwnerControl.CaptureSelectedNodeIdentities(this);
+        TreeSelectionState selected = OwnerControl.CaptureSelectionState(this);
         bool firstLoad = TreeViewNode.Items.Count == 0;
         TreeViewNode.Items.Clear();
         Nodes.Clear();
@@ -110,7 +110,7 @@ internal sealed class SubmoduleTree : Tree
                 || expanded.Contains($"{node.GetType().Name}:{node.SearchText}");
         }
 
-        OwnerControl.RestoreSelectedNodes(this, selected);
+        OwnerControl.RestoreSelectionState(this, selected);
     });
 
     private async Task<Nodes> LoadNodesAsync(SubmoduleInfoResult info, CancellationToken token)

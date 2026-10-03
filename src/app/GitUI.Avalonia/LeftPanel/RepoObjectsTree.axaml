@@ -11,8 +11,14 @@
     <Style Selector="Button.gitextensions-toolbar-button, ToggleButton.gitextensions-toolbar-button">
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
     </Style>
-    <Style Selector="TreeViewItem.repo-search-result /template/ Border#PART_LayoutRoot">
-      <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
+    <Style Selector="TreeView:not(:focus-within) TreeViewItem.repo-search-result /template/ Border#PART_NativeSelectionBorder, TreeView:focus-within TreeViewItem.repo-search-result:not(:selected) /template/ Border#PART_NativeSelectionBorder">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTreeSearchBackgroundBrush}" />
+    </Style>
+    <Style Selector="TreeView:not(:focus-within) TreeViewItem.repo-search-cleared /template/ Border#PART_NativeSelectionBorder, TreeView:focus-within TreeViewItem.repo-search-cleared:not(:selected) /template/ Border#PART_NativeSelectionBorder">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTreeDefaultBackgroundBrush}" />
+    </Style>
+    <Style Selector="TreeView:not(:focus-within) TreeViewItem.repo-search-foreground TextBlock, TreeView:focus-within TreeViewItem.repo-search-foreground:not(:selected) TextBlock">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsNativeTreeSearchForegroundBrush}" />
     </Style>
     <Style Selector="TreeViewItem.worktree-deleted TextBlock">
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
@@ -84,7 +90,7 @@
               Grid.Row="2"
               Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
               Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
-              SelectionMode="Multiple"
+              SelectionMode="Single"
               ScrollViewer.HorizontalScrollBarVisibility="Auto"
               ScrollViewer.VerticalScrollBarVisibility="Auto"
               ScrollViewer.AllowAutoHide="False">

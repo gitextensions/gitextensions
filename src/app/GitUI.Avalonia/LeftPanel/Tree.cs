@@ -167,13 +167,13 @@ internal abstract class Tree : NodeBase, IDisposable
                     }
 
                     // remember multi-selected nodes
-                    HashSet<string> selected = OwnerControl.CaptureSelectedNodeIdentities(this);
+                    TreeSelectionState selected = OwnerControl.CaptureSelectionState(this);
                     Nodes.Clear();
                     Nodes.AddNodes(newNodes);
                     FillTreeViewNode(originalSelectedNodeFullNamePath: null, _firstReloadNodesSinceModuleChanged);
 
                     // re-apply multi-selection
-                    OwnerControl.RestoreSelectedNodes(this, selected);
+                    OwnerControl.RestoreSelectionState(this, selected);
                     ExpandPathToSelectedNode();
                     _firstReloadNodesSinceModuleChanged = false;
                 });
@@ -223,8 +223,6 @@ internal abstract class Tree : NodeBase, IDisposable
         }
 
         // If no selected node, just make sure that the first node is visible
-        TreeViewItem node = GetSelectedNodes().FirstOrDefault()?.TreeViewNode
-            ?? TreeViewNode.Items.OfType<TreeViewItem>().First();
-        node.BringIntoView();
+        OwnerControl.EnsureHighlightedNodeVisible();
     }
 }
