@@ -236,3 +236,4 @@ YYYY/MM/DD, github id, Full name, email
 2026/08/21, gusarov, Dmitry Gusarov, Dmitry.Gusarov@gmail.com
 2026/09/08, norgera, Nathan Orgera, nathan.orgera@gmail.com
 2026/09/10, SAPHemlock, Sandip Patel, spatel(at)hemlock(dot)com
+2026/08/31, inuik, Rishi Theivendran, vaendaam-29522253(at)yahoo(dot)com
