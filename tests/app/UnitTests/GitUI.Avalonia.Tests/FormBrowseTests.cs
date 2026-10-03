@@ -938,13 +938,39 @@ public sealed class FormBrowseTests
                      })
             {
                 Border separator = form.FindControl<Border>(name)!;
-                Border line = separator.GetVisualDescendants()
-                    .OfType<Border>()
-                    .Single(border => border.Classes.Contains("gitextensions-toolbar-separator-line"));
+                NativeToolStripSeparatorChrome line = (NativeToolStripSeparatorChrome)separator.Child!;
                 separator.Bounds.Width.Should().Be(6);
                 GetColor(separator.Background).Should().Be(Colors.Transparent);
-                line.Bounds.Width.Should().Be(1);
-                line.Bounds.Height.Should().Be(17);
+                separator.Bounds.Height.Should().Be(25);
+                line.Bounds.Size.Should().Be(separator.Bounds.Size);
+                line.IsHitTestVisible.Should().BeFalse();
+                line.Focusable.Should().BeFalse();
+                line.UseSystemVisualStyle.Should().Be(theme == ThemeVariant.Light);
+            }
+
+            using (WriteableBitmap frame = form.CaptureRenderedFrame()
+                       ?? throw new InvalidOperationException("The Browse toolbar frame is unavailable."))
+            {
+                using MemoryStream stream = new();
+                frame.Save(stream, PngBitmapEncoderOptions.Default);
+                stream.Position = 0;
+                using SKBitmap bitmap = SKBitmap.Decode(stream);
+                Border separator = form.FindControl<Border>("toolStripSeparator0")!;
+                Avalonia.Point origin = separator.TranslatePoint(default, form)!.Value;
+                Color backdrop = GetColor(form.Background);
+                for (int y = 0; y < 25; y++)
+                {
+                    for (int x = 0; x < 6; x++)
+                    {
+                        Color expected = theme == ThemeVariant.Light
+                            ? x == 2 && y >= 2 && y <= 22 ? Color.Parse("#8C8C8C") : backdrop
+                            : x == 3 && y >= 5 && y <= 19 ? Color.Parse("#404040")
+                                : x == 4 && y >= 6 && y <= 20 ? Color.Parse("#101010") : backdrop;
+                        bitmap.GetPixel((int)origin.X + x, (int)origin.Y + y).Should().Be(
+                            new SKColor(expected.R, expected.G, expected.B, expected.A),
+                            $"the actual named toolbar owner paints source chrome at {x},{y} in {theme}");
+                    }
+                }
             }
 
             Button toggleLeftPanel = form.FindControl<Button>("toggleLeftPanel")!;
