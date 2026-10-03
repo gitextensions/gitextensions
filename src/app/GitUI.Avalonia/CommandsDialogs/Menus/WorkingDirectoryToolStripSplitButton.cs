@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
@@ -68,17 +69,25 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
         internal void RefreshContent()
         {
-            if (TopLevel.GetTopLevel(button) is not Window)
+            Window? owner = TopLevel.GetTopLevel(button) as Window
+                ?? button.GetLogicalAncestors().OfType<Window>().FirstOrDefault(window => window.IsVisible);
+            if (owner is null)
             {
                 // The component is unparented, no point doing anything.
                 return;
             }
 
+            // The source uses an open Form for measurement, not the item's current
+            // ToolStrip parent. Overflow retains its logical owner even when its visual
+            // parent is a PopupRoot or the closed overflow has no visual parent.
             if (Module is not IGitModule module)
             {
                 return;
             }
 
+            // A successful explicit refresh already crossed the source open-form boundary.
+            // Its first overflow attachment must not repeat repository-history writes.
+            button._contentOwner = owner;
             string path = module.WorkingDir;
 
             // It appears at times Module.WorkingDir path is an empty string,
@@ -111,6 +120,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private readonly TextBox _txtFilter = new();
 
     private Implementation? _implementation;
+    private Window? _contentOwner;
 
     private bool _dropDownPreparedForTest;
     private Action? _closeRepository;
@@ -168,9 +178,21 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     {
         base.OnAttachedToVisualTree(e);
 
-        // The source waits for an open graphics-owning form. Avalonia attachment supplies
-        // that boundary after the constructor's deliberately unparented refresh was skipped.
-        RefreshContent();
+        // The source waits for an open graphics-owning form. First owner attachment supplies
+        // that boundary; moving the same owned item into overflow must not refresh its text
+        // or repository history merely because its visual parent changed.
+        Window? owner = this.GetLogicalAncestors().OfType<Window>().FirstOrDefault();
+        if (owner is not null && !ReferenceEquals(owner, _contentOwner))
+        {
+            _contentOwner = owner;
+            RefreshContent();
+        }
+    }
+
+    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
+    {
+        _contentOwner = null;
+        base.OnDetachedFromLogicalTree(e);
     }
 
     /// <summary>

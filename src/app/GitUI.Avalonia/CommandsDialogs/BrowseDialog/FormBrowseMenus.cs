@@ -268,6 +268,7 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
     private static IReadOnlyList<Control> GetToolbarItems(Control toolStrip)
         => toolStrip switch
         {
+            NativeToolStrip strip => strip.Items,
             Panel panel => panel.Children,
             ContentControl { Content: Panel panel } => panel.Children,
             _ => [],

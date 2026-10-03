@@ -110,7 +110,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private int _gpgInfoLoadVersion;
     private IReadOnlyList<GitWorktree> _worktrees = [];
     private readonly IRepositoryHistoryUIService? _repositoryHistoryUIService;
-    private readonly HashSet<Control> _partiallyHiddenMainToolbarItems = [];
     private readonly HashSet<Control> _partiallyHiddenFilterToolbarItems = [];
     private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
     private List<MenuItem>? _currentSubmoduleMenuItems;
@@ -377,22 +376,17 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         ToolStripScripts.IsVisible = true;
     }
 
-    private static void ToggleToolbarOverflow(Control content, ScrollViewer viewport, Button overflowButton)
-    {
-        double maximumOffset = Math.Max(0, content.Bounds.Width - viewport.Viewport.Width);
-        double nextOffset = viewport.Offset.X >= maximumOffset
-            ? 0
-            : Math.Min(maximumOffset, viewport.Offset.X + viewport.Viewport.Width);
-        viewport.Offset = new Vector(nextOffset, viewport.Offset.Y);
-        overflowButton.Content = nextOffset >= maximumOffset ? "«" : "»";
-    }
-
     private void InitializeToolbarOverflow()
     {
-        toolStripMainOverflow.Click += (_, _) => ToggleToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
-        toolStripMainViewport.SizeChanged += (_, _) => UpdateMainToolbarOverflow();
-        toolStripMainViewport.ScrollChanged += (_, _) => UpdateMainToolbarItemVisibility();
-        ToolStripMain.LayoutUpdated += (_, _) => UpdateMainToolbarOverflow();
+        ToolStripMain.PreferredSizeChanged += (_, _) => UpdateMainToolbarOverflow();
+        _NO_TRANSLATE_WorkingDir.PropertyChanged += (_, args) =>
+        {
+            if (args.Property == WidthProperty)
+            {
+                NativeToolStrip.SetItemAutoSize(_NO_TRANSLATE_WorkingDir, double.IsNaN(_NO_TRANSLATE_WorkingDir.Width));
+            }
+        };
+        NativeToolStrip.SetItemAutoSize(_NO_TRANSLATE_WorkingDir, double.IsNaN(_NO_TRANSLATE_WorkingDir.Width));
 
         // ToolStripPanel gives the filter strip the space left after the main commands.
         // Keep its on-strip controls visible where they fit, and move the same instances
@@ -438,96 +432,13 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void UpdateMainToolbarOverflow()
     {
-        if (EditSettings.Bounds.Right > 0)
+        double preferredWidth = ToolStripMain.PreferredSize.Width;
+        double preferredHeight = Math.Max(25, ToolStripMain.PreferredSize.Height);
+        if (_topPanel.MainPreferredWidth != preferredWidth || _topPanel.MainPreferredHeight != preferredHeight)
         {
-            // The source strip retains its 2-DIP trailing space after Settings.
-            // Its remaining width belongs to FilterToolBar, not a stretched main strip.
-            double preferredWidth = EditSettings.Bounds.Right + 2;
-            if (Math.Abs(_topPanel.MainPreferredWidth - preferredWidth) > 0.25)
-            {
-                _topPanel.MainPreferredWidth = preferredWidth;
-                _topPanel.InvalidateMeasure();
-            }
-        }
-
-        if (toolStripMainViewport.Viewport.Width > 0
-            && toolStripButtonCommit.Bounds.Width > 0)
-        {
-            // ToolStrip reserves space for later commands when a long repository path would
-            // otherwise push Branch and Commit into overflow. Use their measured widths so
-            // translations and the configured repository-selector minimum still apply.
-            double followingCommandsWidth = toolStripButtonCommit.Bounds.Right - _NO_TRANSLATE_WorkingDir.Bounds.Right;
-            double availableWidth = toolStripMainViewport.Viewport.Width
-                - _NO_TRANSLATE_WorkingDir.Bounds.Left
-                - followingCommandsWidth;
-            double maximumWidth = Math.Max(_NO_TRANSLATE_WorkingDir.MinWidth, availableWidth);
-            if (_NO_TRANSLATE_WorkingDir.MaxWidth != maximumWidth)
-            {
-                _NO_TRANSLATE_WorkingDir.MaxWidth = maximumWidth;
-            }
-        }
-
-        const double layoutTolerance = 0.5;
-        bool mainFits = toolStripMainHost.Bounds.Width + layoutTolerance >= _topPanel.MainPreferredWidth;
-        GridLength overflowGap = new(mainFits ? 0 : 10);
-        GridLength overflowWidth = new(mainFits ? 0 : 16);
-        if (toolStripMainHost.ColumnDefinitions[1].Width != overflowGap)
-        {
-            toolStripMainHost.ColumnDefinitions[1].Width = overflowGap;
-        }
-
-        if (toolStripMainHost.ColumnDefinitions[2].Width != overflowWidth)
-        {
-            toolStripMainHost.ColumnDefinitions[2].Width = overflowWidth;
-        }
-
-        if (mainFits)
-        {
-            toolStripMainOverflow.IsVisible = false;
-            if (toolStripMainViewport.Offset.X > 0)
-            {
-                toolStripMainViewport.Offset = new Vector(0, toolStripMainViewport.Offset.Y);
-            }
-        }
-        else
-        {
-            UpdateToolbarOverflow(ToolStripMain, toolStripMainViewport, toolStripMainOverflow);
-        }
-
-        UpdateMainToolbarItemVisibility();
-    }
-
-    private void UpdateMainToolbarItemVisibility()
-    {
-        const double layoutTolerance = 0.5;
-        double width = toolStripMainViewport.Viewport.Width;
-        if (width <= 0)
-        {
-            return;
-        }
-
-        double left = toolStripMainViewport.Offset.X;
-        double right = left + width;
-        foreach (Control item in ToolStripMain.Children.OfType<Control>())
-        {
-            bool partiallyClipped = item.IsVisible
-                && item.Bounds.Width > 0
-                && item.Bounds.Right > left
-                && item.Bounds.Left < right
-                && (item.Bounds.Left < left - layoutTolerance
-                    || item.Bounds.Right > right + layoutTolerance);
-            if (partiallyClipped && _partiallyHiddenMainToolbarItems.Add(item))
-            {
-                // ToolStrip moves a whole item to overflow; a clipped half-button must
-                // neither paint nor accept clicks while the same item remains in layout.
-                item.Opacity = 0;
-                item.IsHitTestVisible = false;
-            }
-            else if (!partiallyClipped && _partiallyHiddenMainToolbarItems.Remove(item))
-            {
-                item.ClearValue(OpacityProperty);
-                item.ClearValue(IsHitTestVisibleProperty);
-            }
+            _topPanel.MainPreferredWidth = preferredWidth;
+            _topPanel.MainPreferredHeight = preferredHeight;
+            _topPanel.InvalidateMeasure();
         }
     }
 
@@ -659,6 +570,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void OnFormClosed(EventArgs e)
     {
+        ToolStripMain.Dispose();
         if (_hasRuntimeCommands)
         {
             PluginRegistry.Unregister(UICommands);
@@ -1089,6 +1001,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void ShowDashboard()
     {
+        ToolStripMain.CloseOverflow();
         if (_dashboard is null)
         {
             _dashboard = new Dashboard

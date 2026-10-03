@@ -124,13 +124,13 @@ partial class FormBrowse
 
     private void InsertFetchPullShortcuts()
     {
-        int i = ToolStripMain.Children.IndexOf(toolStripButtonPull);
-        ToolStripMain.Children.Insert(i++, CreateCorrespondingToolbarButton(fetchToolStripMenuItem, Images.PullFetch, Command.QuickFetch));
-        ToolStripMain.Children.Insert(i++, CreateCorrespondingToolbarButton(fetchAllToolStripMenuItem, Images.PullFetchAll));
-        ToolStripMain.Children.Insert(i++, CreateCorrespondingToolbarButton(fetchPruneAllToolStripMenuItem, Images.PullFetchPruneAll));
-        ToolStripMain.Children.Insert(i++, CreateCorrespondingToolbarButton(mergeToolStripMenuItem, Images.PullMerge, Command.QuickPull));
-        ToolStripMain.Children.Insert(i++, CreateCorrespondingToolbarButton(rebaseToolStripMenuItem1, Images.PullRebase));
-        ToolStripMain.Children.Insert(i, CreateCorrespondingToolbarButton(pullToolStripMenuItem1, Images.Pull, Command.PullOrFetch));
+        int i = ToolStripMain.Items.IndexOf(toolStripButtonPull);
+        ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(fetchToolStripMenuItem, Images.PullFetch, Command.QuickFetch));
+        ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(fetchAllToolStripMenuItem, Images.PullFetchAll));
+        ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(fetchPruneAllToolStripMenuItem, Images.PullFetchPruneAll));
+        ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(mergeToolStripMenuItem, Images.PullMerge, Command.QuickPull));
+        ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(rebaseToolStripMenuItem1, Images.PullRebase));
+        ToolStripMain.Items.Insert(i, CreateCorrespondingToolbarButton(pullToolStripMenuItem1, Images.Pull, Command.PullOrFetch));
 
         IconButton CreateCorrespondingToolbarButton(
             MenuItem toolStripMenuItem,
@@ -319,7 +319,8 @@ partial class FormBrowse
     {
         RepoStateVisualiser repoStateVisualiser = new();
         (Avalonia.Media.IImage image, Avalonia.Media.IBrush brush) = repoStateVisualiser.Invoke(status);
-        double currentWidth = toolStripButtonCommit.Bounds.Width;
+        double currentWidth = double.IsNaN(toolStripButtonCommit.Width)
+            ? toolStripButtonCommit.Bounds.Width : toolStripButtonCommit.Width;
 
         if (showCount)
         {
@@ -334,13 +335,19 @@ partial class FormBrowse
             toolStripButtonCommit.Content = _commitButtonText.Text;
         }
 
-        // WinForms ToolStrip autosizing resolves to whole 96-DPI pixels and retains the wider
-        // status allocation while a refresh temporarily has no status. Avalonia measures in
-        // fractional DIPs, so round the same content-driven result instead of scaling a capture.
-        toolStripButtonCommit.Width = double.NaN;
-        toolStripButtonCommit.Measure(new Avalonia.Size(double.PositiveInfinity, double.PositiveInfinity));
+        // ToolStripItem's CommonLayoutOptions measures the current text independently of
+        // its visual parent, with border2, image16 and no text/image inset. An Avalonia
+        // presenter can still have its previous text while the closed overflow is detached;
+        // it cannot be the source of an explicit width retained after that update.
+        const int itemBorder = 2;
+        const int itemImageWidth = 16;
+        string caption = toolStripButtonCommit.Content as string ?? string.Empty;
+        double preferredWidth = Math.Max(23,
+            Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(toolStripButtonCommit, caption).Width)
+            + itemImageWidth + (itemBorder * 2));
         double minimumWidth = showCount && status is null ? currentWidth : 0;
-        toolStripButtonCommit.Width = Math.Max(minimumWidth, Math.Ceiling(toolStripButtonCommit.DesiredSize.Width));
+        toolStripButtonCommit.Width = Math.Max(minimumWidth, preferredWidth);
+        NativeToolStrip.SetItemAutoSize(toolStripButtonCommit, minimumWidth <= preferredWidth);
 
         return brush;
     }

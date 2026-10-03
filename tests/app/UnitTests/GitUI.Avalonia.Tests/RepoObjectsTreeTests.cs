@@ -1239,12 +1239,14 @@ public sealed class RepoObjectsTreeTests
             control.SetRefs([], [CreateStash()]);
             TreeViewItem stash = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>().Last().Items.Cast<TreeViewItem>().Single();
 
-            ((Image)((StackPanel)stash.Header!).Children[0]).Source.Should().BeSameAs(GitUI.Properties.Images.EyeClosed);
+            NativeTreeImageListImage.Create(((Image)((StackPanel)stash.Header!).Children[0]).Source!)
+                .Should().BeSameAs(NativeTreeImageListImage.Create(GitUI.Properties.Images.EyeClosed));
 
             refsSource.Contains(StashId).Returns(true);
             control.RefreshRevisionsLoaded();
 
-            ((Image)((StackPanel)stash.Header!).Children[0]).Source.Should().BeSameAs(GitUI.Properties.Images.Stash);
+            NativeTreeImageListImage.Create(((Image)((StackPanel)stash.Header!).Children[0]).Source!)
+                .Should().BeSameAs(NativeTreeImageListImage.Create(GitUI.Properties.Images.Stash));
         }
         finally
         {
@@ -1773,7 +1775,8 @@ public sealed class RepoObjectsTreeTests
                 .Items.Cast<TreeViewItem>()
                 .Single();
             Image icon = (Image)((StackPanel)tag.Header!).Children[0];
-            icon.Source.Should().BeSameAs(GitUI.Properties.Images.EyeClosed);
+            NativeTreeImageListImage.Create(icon.Source!)
+                .Should().BeSameAs(NativeTreeImageListImage.Create(GitUI.Properties.Images.EyeClosed));
             tag.Classes.Should().Contain("repo-node-invisible");
             ToolTip.GetTip(tag)!.ToString().Should().Contain("v1");
 
