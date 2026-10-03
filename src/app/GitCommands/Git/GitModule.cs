@@ -4098,7 +4098,8 @@ public sealed partial class GitModule : IGitModule
         }
     }
 
-    private void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value, bool append = false)
+    /// <inheritdoc/>
+    public void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value, bool append = false)
     {
         Commands.SetGitSetting(GitExecutable, settingLevel, setting, value, append);
 

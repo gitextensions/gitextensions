@@ -66,6 +66,15 @@ public interface IGitModule
     void SetSetting(string setting, string value, bool append = false);
     void UnsetSetting(string setting);
 
+    /// <summary>
+    ///  Sets or unsets a git config setting at the given level and invalidates the cached settings.
+    /// </summary>
+    /// <param name="settingLevel">The scope for the config (must not be <see cref="GitSettingLevel.Effective"/>).</param>
+    /// <param name="setting">The name of the setting (may contain dots, e.g. "core.autocrlf").</param>
+    /// <param name="value">The value of the setting or <see langword="null"/> for removing the setting.</param>
+    /// <param name="append">Whether to add the value to a multi-value setting instead of replacing it.</param>
+    void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value, bool append = false);
+
     Encoding CommitEncoding { get; }
 
     Encoding FilesEncoding { get; }
