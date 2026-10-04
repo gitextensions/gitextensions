@@ -150,21 +150,67 @@ public class ToolbarItemConverterTests
         clicks.Should().Be(1);
     }
 
-    [TestCase(true, ToolStripItemDisplayStyle.ImageAndText)]
-    [TestCase(false, ToolStripItemDisplayStyle.Image)]
-    public void CloneItem_should_honour_its_own_text_preference(bool wantsText, ToolStripItemDisplayStyle expected)
+    [TestCase(true, ToolStripItemDisplayStyle.Image, ToolStripItemDisplayStyle.ImageAndText)]
+    [TestCase(true, ToolStripItemDisplayStyle.ImageAndText, ToolStripItemDisplayStyle.ImageAndText)]
+    [TestCase(false, ToolStripItemDisplayStyle.Image, ToolStripItemDisplayStyle.Image)]
+    [TestCase(false, ToolStripItemDisplayStyle.ImageAndText, ToolStripItemDisplayStyle.Image)]
+    public void CloneItem_should_honour_its_own_text_preference(bool wantsText, ToolStripItemDisplayStyle originalStyle, ToolStripItemDisplayStyle expected)
     {
-        // Each toolbar decides on its own whether its copy of an action shows a label, so a clone
-        // that does not want text stays icon-only whatever the original does.
+        // Each toolbar decides on its own whether its copy of an action shows a label. Built-in
+        // buttons are mostly icon-only, which is exactly when a clone asking for its label must
+        // not copy the original's style.
         using ToolStripButton original = new("Commit")
         {
             Name = "toolStripButtonCommit",
-            DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
+            DisplayStyle = originalStyle
         };
 
         using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText);
 
         clone.DisplayStyle.Should().Be(expected);
+    }
+
+    [TestCase(true, ToolStripItemDisplayStyle.ImageAndText)]
+    [TestCase(false, ToolStripItemDisplayStyle.Image)]
+    public void CloneItem_should_honour_its_own_text_preference_for_a_split_button(bool wantsText, ToolStripItemDisplayStyle expected)
+    {
+        using ToolStripSplitButton original = new("Working directory")
+        {
+            Name = "toolStripSplitButtonWorkingDir",
+            DisplayStyle = wantsText ? ToolStripItemDisplayStyle.Image : ToolStripItemDisplayStyle.ImageAndText
+        };
+
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText);
+
+        clone.DisplayStyle.Should().Be(expected);
+    }
+
+    [Test]
+    public void CloneItem_should_keep_its_label_when_the_original_text_changes()
+    {
+        // The original's text changes all the time (a count, a branch name); following it used to
+        // put the original's icon-only style back on the clone each time.
+        using ToolStripButton original = new("Commit") { Name = "toolStripButtonCommit", DisplayStyle = ToolStripItemDisplayStyle.Image };
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText: true);
+
+        original.Text = "Commit (2)";
+
+        clone.Text.Should().Be("Commit (2)");
+        clone.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
+    }
+
+    [Test]
+    public void CloneItem_should_keep_its_own_style_when_the_original_changes_its()
+    {
+        using ToolStripButton original = new("Commit") { Name = "toolStripButtonCommit", DisplayStyle = ToolStripItemDisplayStyle.Image };
+        using ToolStripItem iconOnly = ToolbarItemConverter.CloneItem(original, wantsText: false);
+        using ToolStripItem labelled = ToolbarItemConverter.CloneItem(original, wantsText: true);
+
+        original.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+        original.DisplayStyle = ToolStripItemDisplayStyle.Text;
+
+        iconOnly.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.Image);
+        labelled.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
     }
 
     [Test]

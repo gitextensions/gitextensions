@@ -1667,14 +1667,16 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
                 if (!resolved.ConfigName.StartsWith('_') && placedConfigNames.Contains(resolved.ConfigName)
                     && itemToAdd is ToolStripButton or ToolStripSplitButton or ToolStripDropDownButton)
                 {
+                    // CloneItem gives the clone the style it asks for; applying the label as well,
+                    // as startup does, falls back on the tooltip when the original has no text.
                     itemToAdd = ToolbarItemConverter.CloneItem(itemToAdd, wantsText: resolved.ShowText);
+                    FormBrowse.ApplyItemDisplayStyle(itemToAdd, resolved.ShowText, resolved.LabelText);
                 }
                 else if (isCustomToolbar && !resolved.ConfigName.StartsWith('_'))
                 {
                     // Honor the per-icon text toggle (wrapper.ShowText) on the freshly converted
                     // button. Without this, ConvertMenuItemToButton's forced ImageAndText would
                     // always show the label on Apply, discarding the user's "For this icon" choice.
-                    // CloneItem already applies it on the clone path above.
                     FormBrowse.ApplyItemDisplayStyle(itemToAdd, resolved.ShowText, resolved.LabelText);
                 }
 

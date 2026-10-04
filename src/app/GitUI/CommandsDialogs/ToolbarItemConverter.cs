@@ -359,10 +359,11 @@ internal static class ToolbarItemConverter
     /// requires a delegate clone that forwards all interactions to the original.
     /// </summary>
     /// <param name="wantsText">
-    /// Whether this clone should display its text label. When <see langword="false"/>, the clone
-    /// stays in <see cref="ToolStripItemDisplayStyle.Image"/> mode regardless of what the original
-    /// does (e.g. the Push button switching to ImageAndText while showing ahead/behind data).
-    /// When <see langword="true"/>, the clone mirrors the original's DisplayStyle exactly.
+    /// Whether this clone should display its text label: <see cref="ToolStripItemDisplayStyle.ImageAndText"/>
+    /// when <see langword="true"/>, <see cref="ToolStripItemDisplayStyle.Image"/> otherwise. The
+    /// clone keeps that style whatever the original's is or becomes, since each toolbar decides on
+    /// its own whether its copy of an action shows a label; it follows only the original's text,
+    /// image, tooltip and state.
     /// </param>
     public static ToolStripItem CloneItem(ToolStripItem original, bool wantsText = false)
     {
@@ -389,7 +390,7 @@ internal static class ToolbarItemConverter
             Text = splitOriginal.Text,
             Image = splitOriginal.Image,
             ToolTipText = splitOriginal.ToolTipText,
-            DisplayStyle = wantsText ? splitOriginal.DisplayStyle : ToolStripItemDisplayStyle.Image,
+            DisplayStyle = CloneDisplayStyle(wantsText),
             ImageTransparentColor = splitOriginal.ImageTransparentColor,
             Enabled = splitOriginal.Enabled,
             Visible = true,
@@ -406,7 +407,6 @@ internal static class ToolbarItemConverter
             clone.Text = splitOriginal.Text;
             clone.Image = splitOriginal.Image;
             clone.ToolTipText = splitOriginal.ToolTipText;
-            clone.DisplayStyle = wantsText ? splitOriginal.DisplayStyle : ToolStripItemDisplayStyle.Image;
             clone.Enabled = splitOriginal.Enabled;
             clone.ImageAlign = splitOriginal.ImageAlign;
         }
@@ -490,7 +490,7 @@ internal static class ToolbarItemConverter
             Text = dropOriginal.Text,
             Image = dropOriginal.Image,
             ToolTipText = dropOriginal.ToolTipText,
-            DisplayStyle = wantsText ? dropOriginal.DisplayStyle : ToolStripItemDisplayStyle.Image,
+            DisplayStyle = CloneDisplayStyle(wantsText),
             ImageTransparentColor = dropOriginal.ImageTransparentColor,
             Enabled = dropOriginal.Enabled,
             Visible = true,
@@ -502,7 +502,6 @@ internal static class ToolbarItemConverter
             clone.Text = dropOriginal.Text;
             clone.Image = dropOriginal.Image;
             clone.ToolTipText = dropOriginal.ToolTipText;
-            clone.DisplayStyle = wantsText ? dropOriginal.DisplayStyle : ToolStripItemDisplayStyle.Image;
             clone.Enabled = dropOriginal.Enabled;
             clone.ImageAlign = dropOriginal.ImageAlign;
         }
@@ -552,7 +551,7 @@ internal static class ToolbarItemConverter
             Text = btnOriginal.Text,
             Image = btnOriginal.Image,
             ToolTipText = btnOriginal.ToolTipText,
-            DisplayStyle = wantsText ? btnOriginal.DisplayStyle : ToolStripItemDisplayStyle.Image,
+            DisplayStyle = CloneDisplayStyle(wantsText),
             ImageTransparentColor = btnOriginal.ImageTransparentColor,
             AutoSize = btnOriginal.AutoSize,
             ImageAlign = btnOriginal.ImageAlign,
@@ -564,13 +563,12 @@ internal static class ToolbarItemConverter
         btnClone.Click += (s, e) => btnOriginal.PerformClick();
 
         // Keep visual properties in sync when the original updates (e.g. toggle state changed
-        // via menu bar / keyboard shortcut). wantsText controls whether this clone shows text.
+        // via menu bar / keyboard shortcut). The display style is the clone's own (see CloneItem).
         void SyncFromOriginal(object? s, EventArgs e)
         {
             btnClone.Text = btnOriginal.Text;
             btnClone.Image = btnOriginal.Image;
             btnClone.ToolTipText = btnOriginal.ToolTipText;
-            btnClone.DisplayStyle = wantsText ? btnOriginal.DisplayStyle : ToolStripItemDisplayStyle.Image;
             btnClone.AutoSize = btnOriginal.AutoSize;
             btnClone.ImageAlign = btnOriginal.ImageAlign;
         }
@@ -594,6 +592,12 @@ internal static class ToolbarItemConverter
 
         return btnClone;
     }
+
+    // A clone shows its label because its own toolbar asks for it, not because the original does:
+    // built-in buttons are mostly icon-only, and copying their style would leave a clone that
+    // should show its label without one.
+    private static ToolStripItemDisplayStyle CloneDisplayStyle(bool wantsText)
+        => wantsText ? ToolStripItemDisplayStyle.ImageAndText : ToolStripItemDisplayStyle.Image;
 
     private static void Store(ToolStripItem item, Dictionary<string, ToolStripItem>? storeIn, Action<string>? log)
     {
