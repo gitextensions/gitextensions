@@ -51,6 +51,10 @@
              Link="Infrastructure\PlinkTests.cs" />
     <Compile Include="..\..\..\..\eng\tools\WinFormsInputParityToAvalonia\InputMetadataGenerator.cs"
              Link="Parity\InputMetadataGenerator.cs" />
+    <!-- The shared schema has no Windows dependency; run its exact contract cases
+         on both desktop test targets without referencing the Windows capture tool. -->
+    <Compile Include="..\..\..\..\eng\tools\WinFormsParityCapture.Tests\CaptureDocumentTests.cs"
+             Link="Parity\CaptureDocumentTests.cs" />
   </ItemGroup>
 
   <ItemGroup>

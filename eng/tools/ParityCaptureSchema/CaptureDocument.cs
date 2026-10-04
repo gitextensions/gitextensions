@@ -1,4 +1,6 @@
-﻿namespace GitExtensions.ParityCapture;
+﻿using System.Text.Json.Serialization;
+
+namespace GitExtensions.ParityCapture;
 
 /// <summary>
 ///  Identifies how a capture reached its requested DPI.
@@ -20,7 +22,8 @@ public enum CaptureMethod
     ScreenGrab,
     HeadlessSkia,
     HeadlessSkiaComposite,
-    Unsupported
+    Unsupported,
+    PrintWindowScreenGrabComposite
 }
 
 /// <summary>
@@ -115,6 +118,26 @@ public sealed record CaptureImage
     public required int HeightPx { get; init; }
 
     public required CaptureMethod CaptureMethod { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public IReadOnlyList<CaptureImageAcquisition>? Acquisitions { get; init; }
+}
+
+/// <summary>
+///  Records an unscaled pixel acquisition supplementing the primary image API.
+/// </summary>
+public sealed record CaptureImageAcquisition
+{
+    public required string SurfaceRole { get; init; }
+
+    /// <summary>
+    ///  Gets the acquired rectangle relative to its named surface's screen origin.
+    /// </summary>
+    public required CaptureRectangle RegionPx { get; init; }
+
+    public required CaptureMethod CaptureMethod { get; init; }
+
+    public required string Reason { get; init; }
 }
 
 /// <summary>
