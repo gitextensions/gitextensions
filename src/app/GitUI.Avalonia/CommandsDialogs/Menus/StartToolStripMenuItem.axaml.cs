@@ -46,6 +46,8 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
 
     public override void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
     {
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(
+            openToolStripMenuItem, hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenRepo));
         openToolStripMenuItem.InputGesture = KeysMapper.ToKeyGesture(
             hotkeys?.FirstOrDefault(command => command.CommandCode == (int)FormBrowse.Command.OpenRepo)?.KeyData);
 
