@@ -134,6 +134,47 @@ public sealed class RebaseTests
     }
 
     [AvaloniaTest]
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("Translated date tooltip")]
+    public void FormRebase_should_initialize_and_translate_the_date_tooltips_once(string? translatedTip)
+    {
+        const string ignoreDateTip = "Sets the author date to the current date (same as\r\ncommit date), ignoring the original author date.";
+        const string committerDateTip = "Sets the commit date to the original author date\r\n(instead of the current date).";
+        string? currentTranslation = AppSettings.CurrentTranslation;
+        AppSettings.CurrentTranslation = "";
+        try
+        {
+            FormRebase form = new();
+            try
+            {
+                CheckBox ignoreDate = form.FindControl<CheckBox>("chkIgnoreDate")!;
+                CheckBox committerDate = form.FindControl<CheckBox>("chkCommitterDateIsAuthorDate")!;
+                ToolTip.GetTip(ignoreDate).Should().Be(ignoreDateTip);
+                ToolTip.GetTip(committerDate).Should().Be(committerDateTip);
+                ITranslation translation = Substitute.For<ITranslation>();
+                translation.TranslateItem(nameof(FormRebase), "chkIgnoreDate", "toolTip1", Arg.Any<Func<string?>>()).Returns(translatedTip);
+                translation.TranslateItem(nameof(FormRebase), "chkCommitterDateIsAuthorDate", "toolTip1", Arg.Any<Func<string?>>()).Returns(translatedTip);
+
+                form.TranslateItems(translation);
+
+                ToolTip.GetTip(ignoreDate).Should().Be(string.IsNullOrEmpty(translatedTip) ? ignoreDateTip : translatedTip);
+                ToolTip.GetTip(committerDate).Should().Be(string.IsNullOrEmpty(translatedTip) ? committerDateTip : translatedTip);
+                translation.Received(1).TranslateItem(nameof(FormRebase), "chkIgnoreDate", "toolTip1", Arg.Is<Func<string?>>(getDefault => getDefault() == ignoreDateTip));
+                translation.Received(1).TranslateItem(nameof(FormRebase), "chkCommitterDateIsAuthorDate", "toolTip1", Arg.Is<Func<string?>>(getDefault => getDefault() == committerDateTip));
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.CurrentTranslation = currentTranslation;
+        }
+    }
+
+    [AvaloniaTest]
     public void FormRebase_should_load_refs_and_offer_interactive_rebase()
     {
         (IGitUICommands commands, IGitModule module) = CreateCommands("main", "feature", "origin/main");

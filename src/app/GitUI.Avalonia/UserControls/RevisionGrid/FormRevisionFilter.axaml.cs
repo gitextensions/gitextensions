@@ -162,6 +162,10 @@ public partial class FormRevisionFilter : GitExtensionsDialog
         BranchFilterCheck.IsEnabled = CurrentBranchOnlyCheck.IsChecked != true
             && ReflogCheck.IsChecked != true;
         BranchFilter.IsEnabled = BranchFilterCheck.IsChecked == true;
+
+        // Simplifying the merges has no effect without the full history, as the file history
+        // already indicates by disabling its menu item the same way
+        SimplifyMergesCheck.IsEnabled = FullHistoryCheck.IsChecked == true;
     }
 
     private void OkClick(object? sender, EventArgs e)

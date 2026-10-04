@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Gpg;
 using GitCommands.Logging;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
@@ -17,6 +18,7 @@ using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
+using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.CommitInfo;
 using GitUI.HelperDialogs;
 using GitUI.LeftPanel;
@@ -32,6 +34,29 @@ internal static class ComponentFactory
 {
     private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<Control, RepositoryHostCaptureFixture> RepositoryHostFixtures = new();
 
+    // parity-scaffolding: Identical pure-patch input to the candidate capture helper.
+    internal static string StandalonePatch =>
+        """
+        diff --git a/src/App.cs b/src/App.cs
+        index 8c1d2ab..b437e55 100644
+        --- a/src/App.cs
+        +++ b/src/App.cs
+        @@ -1,3 +1,4 @@
+         using Avalonia;
+        +using GitUI;
+         namespace GitExtensions;
+        -// Windows-only application shell
+        +// Cross-platform application shell
+
+        """.ReplaceLineEndings("\n");
+
+    // parity-scaffolding: This is display input, not a claim that the fixture was GPG-signed.
+    internal static GpgInfo StandaloneGpgInfo => new(
+        CommitStatus.GoodSignature,
+        "Good signature from Visual Parity <visual@example.com>\nPrimary key fingerprint: 0123 4567 89AB CDEF",
+        TagStatus.OneGood,
+        "Good signature on tag v1.0.0\nTagger: Visual Parity <visual@example.com>");
+
     public static Control Create(CaptureComponentPlan component, GitUICommands commands, CaptureStatePlan state)
     {
         // parity-scaffolding: The real application initialises this before constructing About/EnvironmentInfo.
@@ -43,6 +68,10 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormFileHistory" => new FormFileHistory(commands, "src/App.cs", CreateRevision(commands)),
             "GitUI.CommandsDialogs.FormStash" => new FormStash(commands),
             "GitUI.CommandsDialogs.FormVerify" => CreateFormVerify(commands),
+            "GitUI.CommandsDialogs.WorktreeDialog.FormCreateWorktree" =>
+                new FormCreateWorktree(commands, Path.TrimEndingDirectorySeparator(commands.Module.WorkingDir)),
+            "GitUI.CommandsDialogs.FormResolveConflicts" => new FormResolveConflicts(commands),
+            "GitUI.UserControls.RevisionGrid.FormRevisionFilter" => new FormRevisionFilter(commands, new FilterInfo()),
             "GitUI.CommandsDialogs.FormPull" => new FormPull(commands, "main", "origin", GitPullAction.Merge),
             "GitUI.CommandsDialogs.FormPush" => new FormPush(commands, "main"),
             "GitUI.CommandsDialogs.FormRemotes" => new FormRemotes(commands) { PreselectRemoteOnLoad = "origin" },
@@ -456,6 +485,27 @@ internal static class ComponentFactory
 
         switch (control)
         {
+            case RevisionGpgInfoControl revisionGpgInfo:
+                revisionGpgInfo.DisplayGpgInfo(StandaloneGpgInfo);
+                break;
+            case GitUI.Editor.FileViewer standaloneFileViewer:
+                // parity-scaffolding: The candidate's pure-patch overload supplies no item,
+                // filename, or Git ANSI coloring. Drive the same original rendering path
+                // with those exact inputs, not its settings-dependent public overload.
+                System.Reflection.MethodInfo viewPatch = typeof(GitUI.Editor.FileViewer).GetMethod(
+                    "ViewPrivateAsync",
+                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                    ?? throw new MissingMethodException(typeof(GitUI.Editor.FileViewer).FullName, "ViewPrivateAsync");
+                ThreadHelper.JoinableTaskFactory.Run(() =>
+                    (Task?)viewPatch.Invoke(standaloneFileViewer,
+                        [null, null, StandalonePatch, null, null, GitUI.Editor.ViewMode.Diff, false, CancellationToken.None])
+                    ?? throw new InvalidOperationException("The original patch renderer did not return its readiness task."));
+                if (!standaloneFileViewer.GetText().ReplaceLineEndings("\n").Equals(StandalonePatch, StringComparison.Ordinal))
+                {
+                    throw new CaptureStateNotReadyException("The original standalone patch renderer did not retain the paired fixture text.");
+                }
+
+                break;
             case FormAbout formAbout:
                 ((System.Windows.Forms.Timer?)FindFieldValue(formAbout, "thanksTimer"))?.Stop();
                 break;
@@ -605,6 +655,29 @@ internal static class ComponentFactory
                 .OfType<GitUI.Editor.FileViewer>()
                 .Single();
             WaitForEditorContent(editor, ".git/info/sparse-checkout");
+        }
+
+        if (control is FormCreateWorktree)
+        {
+            ComboBox branches = (ComboBox?)FindFieldValue(control, "cbxBranches")
+                ?? throw new InvalidOperationException("FormCreateWorktree did not create its branch selector.");
+            string selectedBranch = commands.Module.GetSelectedBranch();
+            int expectedCount = commands.Module.GetRefs(RefsFilter.Heads).Count(branch => branch.Name != selectedBranch);
+            string loadingData = (string?)typeof(FormBrowse).Assembly.GetType("GitUI.TranslatedStrings", throwOnError: true)!
+                .GetProperty("LoadingData", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)?
+                .GetValue(null) ?? throw new MissingMemberException("GitUI.TranslatedStrings", "LoadingData");
+            DateTime deadline = DateTime.UtcNow.AddSeconds(15);
+            while ((branches.Items.Count != expectedCount || branches.Text == loadingData)
+                   && DateTime.UtcNow < deadline)
+            {
+                Application.DoEvents();
+                Thread.Sleep(25);
+            }
+
+            if (branches.Items.Count != expectedCount || branches.Text == loadingData)
+            {
+                throw new CaptureStateNotReadyException("The original worktree branch loader did not complete before capture.");
+            }
         }
 
         RevisionGridControl? revisionGrid = control as RevisionGridControl;

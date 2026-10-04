@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
@@ -344,6 +345,99 @@ public sealed class FileViewerContentTests
 
         viewer.TextEditor.Text.Should().Be("café!");
         viewer.FilePreamble.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    public async Task Added_file_line_patching_should_include_copied_files_and_respect_revision_and_path_state(
+        [Values] bool copied,
+        [Values(StagedStatus.WorkTree, StagedStatus.Index, StagedStatus.Unknown)] StagedStatus staged,
+        [Values] bool exists)
+    {
+        const string fileName = "added-file.txt";
+        if (exists)
+        {
+            File.WriteAllText(Path.Combine(_workingDirectory, fileName), "added file contents\n");
+        }
+
+        GitItemStatus status = new(fileName)
+        {
+            IsNew = !copied,
+            IsCopied = copied,
+            IsTracked = true,
+            Staged = staged,
+        };
+        FileStatusItem item = new(firstRev: null, secondRev: new GitRevision(ObjectId.Random()), status);
+        FileViewer viewer = CreateViewer();
+
+        await viewer.ViewTextAsync(fileName, "added file contents\n", item);
+
+        viewer.SupportLinePatching.Should().Be(staged is StagedStatus.WorkTree or StagedStatus.Index || !exists);
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task Reset_selected_lines_should_decline_Escape_and_window_close_without_changing_the_file([Values] bool byEscape)
+    {
+        DiffDisplayAppearance originalAppearance = AppSettings.DiffDisplayAppearance.Value;
+        Window owner = new();
+        try
+        {
+            AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+            const string fileName = "reset-selected-lines.txt";
+            string path = Path.Combine(_workingDirectory, fileName);
+            File.WriteAllText(path, "one\ntwo\nthree\n");
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", fileName }).Should().BeTrue();
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "reset selected lines".Quote() }).Should().BeTrue();
+            ObjectId head = _module.GetCurrentCheckout();
+            const string changed = "ONE\ntwo\nthree\n";
+            File.WriteAllText(path, changed);
+            FileStatusItem item = new(
+                new GitRevision(ObjectId.IndexId) { ParentIds = [head] },
+                new GitRevision(ObjectId.WorkTreeId) { ParentIds = [ObjectId.IndexId] },
+                new GitItemStatus(fileName) { IsTracked = true, IsChanged = true, Staged = StagedStatus.WorkTree });
+            FileViewer viewer = CreateViewer();
+            owner.Content = viewer;
+            owner.Show();
+            await viewer.ViewChangesAsync(item, CancellationToken.None);
+            viewer.SupportLinePatching.Should().BeTrue();
+            int selectedLine = viewer.GetText().IndexOf("+ONE", StringComparison.Ordinal);
+            selectedLine.Should().BeGreaterThanOrEqualTo(0);
+            viewer.TextEditor.Select(selectedLine, "+ONE".Length);
+            int applied = 0;
+            bool cancelButtonWasAbsent = false;
+            viewer.PatchApplied += (_, _) => applied++;
+            using UpstreamTaskDialogObserver opened = new(dialog =>
+            {
+                cancelButtonWasAbsent = !dialog.GetLogicalDescendants().OfType<Button>().Any(button => button.IsCancel);
+                if (byEscape)
+                {
+                    dialog.RaiseEvent(new Avalonia.Input.KeyEventArgs
+                    {
+                        RoutedEvent = Avalonia.Input.InputElement.KeyDownEvent,
+                        Key = Avalonia.Input.Key.Escape,
+                        KeyModifiers = Avalonia.Input.KeyModifiers.None,
+                    });
+                }
+                else
+                {
+                    dialog.Close();
+                }
+            });
+
+            viewer.ResetNoncommittedSelectedLines();
+
+            opened.Count.Should().Be(1);
+            opened.Failure.Should().BeNull();
+            cancelButtonWasAbsent.Should().BeTrue("AllowCancel makes Escape cancel rather than selecting No");
+            applied.Should().Be(0);
+            File.ReadAllText(path).Should().Be(changed);
+            _module.GitExecutable.GetOutput(new GitArgumentBuilder("diff") { "--cached" }).Should().BeEmpty();
+        }
+        finally
+        {
+            owner.Close();
+            AppSettings.DiffDisplayAppearance.Value = originalAppearance;
+        }
     }
 
     [AvaloniaTest]

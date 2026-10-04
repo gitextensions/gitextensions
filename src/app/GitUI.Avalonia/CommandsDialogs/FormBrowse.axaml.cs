@@ -1205,7 +1205,14 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             cancellationToken,
             _loadOperationsCancellationTokenSource.Token);
         CancellationToken linkedCancellationToken = linkedCancellationTokenSource.Token;
-        GpgInfo? info = await _controller.LoadGpgInfoAsync(revision).WaitAsync(linkedCancellationToken);
+
+        // Verifying spawns git and gpg, which can take seconds while the agent is cold. Until it is
+        // done, neither the result for the previously selected revision nor the default "not signed"
+        // may be presented as if it was verified.
+        GpgInfo? info = await _controller.LoadGpgInfoAsync(revision, linkedCancellationToken).WaitAsync(linkedCancellationToken);
+
+        // A newer selection may have started (and cancelled this token) while awaiting above;
+        // avoid overwriting its result with this now-stale verdict.
         await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(linkedCancellationToken);
         if (loadVersion != _gpgInfoLoadVersion
             || !ReferenceEquals(RevisionGrid.SelectedRevision, revision))
@@ -1587,7 +1594,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _gpgInfoLoadingRevision = null;
         _gpgInfoRevision = revision;
         _gpgInfoLoaded = false;
-        revisionGpgInfo1.DisplayGpgInfo(null);
+        revisionGpgInfo1.DisplayVerificationPending();
 
         bool showGpgInfoTab = revision?.IsArtificial is false && AppSettings.ShowGpgInformation.Value;
         GpgInfoTabPage.IsVisible = showGpgInfoTab;

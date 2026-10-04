@@ -38,7 +38,11 @@ public class FormProcess : FormStatus
 
                 // In some WSL environments the current working directory is not passed along to the git command without using the `--cd` argument. Adding it to
                 // the command line is required for these environments. For those that do not need it using the argument is just redundant.
-                arguments = $"-d {wslDistro} --cd {WorkingDirectory.RemoveTrailingPathSeparator().Quote()} {AppSettings.WslGitCommand} {arguments}";
+                // `--exec` bypasses the distro's default login shell. Without it, wsl.exe re-parses the git command line through that shell
+                // (e.g. zsh), which glob-expands patterns like "--exclude=refs/sessions/**" before git ever sees them. zsh's default
+                // "nomatch" behaviour then aborts the whole command with a non-zero exit and no output when the pattern matches nothing,
+                // which silently empties revision/diff output for any repo whose distro defaults to zsh (or any shell) with that setting.
+                arguments = $"-d {wslDistro} --cd {WorkingDirectory.RemoveTrailingPathSeparator().Quote()} --exec {AppSettings.WslGitCommand} {arguments}";
             }
         }
 
@@ -64,11 +68,16 @@ public class FormProcess : FormStatus
     // so that result is other than OK or Cancel.
 
     public static bool ShowDialog(IWin32Window? owner, IGitUICommands commands, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, string? process = null)
+        => ShowDialog(owner, commands, arguments, workingDirectory, input, useDialogSettings, out string _, process);
+
+    public static bool ShowDialog(IWin32Window? owner, IGitUICommands commands, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, out string output, string? process = null)
     {
         DebugHelpers.Assert(owner is not null, "Progress window must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
 
         using FormProcess formProcess = new(commands, arguments, workingDirectory, input, useDialogSettings, process);
         formProcess.ShowDialog(owner);
+        output = formProcess.GetOutputString();
+
         return !formProcess.ErrorOccurred();
     }
 

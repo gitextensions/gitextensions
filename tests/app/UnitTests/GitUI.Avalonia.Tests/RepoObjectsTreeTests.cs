@@ -1580,6 +1580,15 @@ public sealed class RepoObjectsTreeTests
 
             commands.Received(1).WorktreeSwitch(control, linkedPath);
             commands.Received(1).WorktreeDelete(control, linkedPath);
+
+            accessor.SetWorktrees([main with { IsMain = true }, linked], linkedPath);
+            TreeViewItem mainFromLinked = accessor.Tree.Items.Cast<TreeViewItem>()
+                .Single(item => HeaderText(item).StartsWith("Worktrees", StringComparison.Ordinal))
+                .Items.Cast<TreeViewItem>().First();
+            SelectNode<WorktreeNode>(accessor, mainFromLinked);
+            accessor.UpdateContextMenu().Should().BeTrue();
+            accessor.OpenWorktreeMenuItem.IsEnabled.Should().BeTrue();
+            accessor.DeleteWorktreeMenuItem.IsEnabled.Should().BeFalse("the noncurrent main worktree still owns the entire repository");
         }
         finally
         {

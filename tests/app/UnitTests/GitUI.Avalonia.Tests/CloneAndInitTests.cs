@@ -26,12 +26,15 @@ public sealed class CloneAndInitTests
     private string _workingDirectory = null!;
     private StubMessageBoxHost _messageBoxes = null!;
     private bool _closeProcessDialog;
+    private bool _cloneInitializeAllSubmodules;
 
     [SetUp]
     public void SetUp()
     {
         // The clone runs in the process dialog; it must close itself on success.
         _closeProcessDialog = AppSettings.CloseProcessDialog;
+        _cloneInitializeAllSubmodules = AppSettings.CloneInitializeAllSubmodules;
+        AppSettings.CloneInitializeAllSubmodules = true;
         AppSettings.CloseProcessDialog = true;
 
         AvaloniaSynchronizationContext.InstallIfNeeded();
@@ -60,6 +63,7 @@ public sealed class CloneAndInitTests
     public void TearDown()
     {
         AppSettings.CloseProcessDialog = _closeProcessDialog;
+        AppSettings.CloneInitializeAllSubmodules = _cloneInitializeAllSubmodules;
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
     }
@@ -169,6 +173,23 @@ public sealed class CloneAndInitTests
     }
 
     [AvaloniaTest]
+    [TestCase(true)]
+    [TestCase(false)]
+    public void FormClone_should_restore_the_initialize_submodules_preference(bool initializeSubmodules)
+    {
+        AppSettings.CloneInitializeAllSubmodules = initializeSubmodules;
+        FormClone form = new(CreateCommands().Commands, url: null, openedFromProtocolHandler: false, gitModuleChanged: null);
+        try
+        {
+            form.FindControl<CheckBox>("cbIntializeAllSubmodules")!.IsChecked.Should().Be(initializeSubmodules);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FormClone_should_preserve_mnemonics_in_native_labels()
     {
         FormClone form = new();
@@ -205,6 +226,51 @@ public sealed class CloneAndInitTests
         translation.Received(1).AddTranslationItem(nameof(FormClone), "cbDownloadFullHistory", "ttHints", Arg.Is<string>(tip => tip.StartsWith("The default Git behavior")));
 
         AssertDistinctKeys(translation);
+    }
+
+    [AvaloniaTest]
+    [TestCase(false, null)]
+    [TestCase(false, "")]
+    [TestCase(false, "Translated history tooltip")]
+    [TestCase(true, null)]
+    [TestCase(true, "")]
+    [TestCase(true, "Translated history tooltip")]
+    public void FormClone_should_initialize_and_translate_the_history_tooltip_once(bool useCommands, string? translatedTip)
+    {
+        const string neutralTip =
+            "The default Git behavior is to download all historical revisions.\n" +
+            "If you turn this off, we'll only download the latest revision for all branches.\n\n" +
+            "Actual command line (if unchecked): --depth 1 --no-single-branch";
+        string? currentTranslation = AppSettings.CurrentTranslation;
+        AppSettings.CurrentTranslation = "";
+        try
+        {
+            FormClone form = useCommands
+                ? new(CreateCommands().Commands, url: null, openedFromProtocolHandler: false, gitModuleChanged: null)
+                : new();
+            try
+            {
+                CheckBox history = form.FindControl<CheckBox>("cbDownloadFullHistory")!;
+                ToolTip.GetTip(history).Should().Be(neutralTip, "the Designer resource exists before any translation runs");
+                ITranslation translation = Substitute.For<ITranslation>();
+                translation.TranslateItem(nameof(FormClone), "cbDownloadFullHistory", "ttHints", Arg.Any<Func<string?>>())
+                    .Returns(translatedTip);
+
+                form.TranslateItems(translation);
+
+                ToolTip.GetTip(history).Should().Be(string.IsNullOrEmpty(translatedTip) ? neutralTip : translatedTip);
+                translation.Received(1).TranslateItem(
+                    nameof(FormClone), "cbDownloadFullHistory", "ttHints", Arg.Is<Func<string?>>(getDefault => getDefault() == neutralTip));
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.CurrentTranslation = currentTranslation;
+        }
     }
 
     [AvaloniaTest]
@@ -254,7 +320,9 @@ public sealed class CloneAndInitTests
     }
 
     [AvaloniaTest]
-    public async Task FormClone_should_clone_a_local_repository()
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task FormClone_should_clone_a_local_repository(bool initializeSubmodules)
     {
         string sourcePath = CreateSourceRepository();
         string destination = Path.Combine(_workingDirectory, "cloned");
@@ -284,6 +352,8 @@ public sealed class CloneAndInitTests
             newDirectory.Text.Should().Be("source");
             info.Text.Should().Contain(dirTo).And.Contain("(New directory)");
 
+            form.FindControl<CheckBox>("cbIntializeAllSubmodules")!.IsChecked = initializeSubmodules;
+
             form.FindControl<Button>("Ok")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
             await WaitUntilAsync(() => !form.IsVisible);
@@ -291,6 +361,7 @@ public sealed class CloneAndInitTests
             GitModule clonedModule = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), dirTo);
             clonedModule.IsValidGitWorkingDir().Should().BeTrue();
             File.Exists(Path.Combine(dirTo, "readme.txt")).Should().BeTrue("the work tree should be checked out");
+            AppSettings.CloneInitializeAllSubmodules.Should().Be(initializeSubmodules);
         }
         finally
         {

@@ -181,6 +181,31 @@ public sealed class MergeBranchTests
     }
 
     [AvaloniaTest]
+    [TestCase(40)]
+    [TestCase(289)]
+    public void Help_image_changes_should_resize_the_unshown_logical_host_from_its_designer_width(int designerWidth)
+    {
+        HelpImageDisplayUserControl help = new() { IsExpanded = true, Width = designerWidth };
+        Window host = new() { Width = 674, MinWidth = 674, Content = new StackPanel { Children = { help } } };
+        try
+        {
+            host.IsVisible.Should().BeFalse();
+
+            help.Image1 = GitUI.Properties.Images.HelpPullFetch;
+
+            double expectedWidth = 674 + GitUI.Properties.Images.HelpPullFetch.PixelSize.Width - designerWidth;
+            host.Width.Should().Be(expectedWidth);
+            host.MinWidth.Should().Be(expectedWidth);
+            help.Image1 = GitUI.Properties.Images.HelpPullFetch;
+            host.Width.Should().Be(expectedWidth, "the same image must not contribute its width twice");
+        }
+        finally
+        {
+            host.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FormMergeBranch_should_load_refs_and_honor_the_default_branch()
     {
         (IGitUICommands commands, IGitModule module) = CreateCommands("main", "feature", "origin/main");

@@ -39,6 +39,10 @@
              Link="CommandsDialogs\BrowseDialog\ReleaseVersionTests.cs" />
     <Compile Include="..\GitUI.Tests\LeftPanel\WorktreeTreeTests.cs"
              Link="LeftPanel\WorktreeTreeTests.cs" />
+    <Compile Include="..\GitUI.Tests\UserControls\FileStatusListTests.cs"
+             Link="UserControls\FileStatusListTests.cs" />
+    <Compile Include="..\GitUI.Tests\UserControls\FileStatusDiffCalculatorTests.cs"
+             Link="UserControls\FileStatusDiffCalculatorTests.cs" />
     <Compile Include="..\GitUI.Tests\UserControls\CommitInfo\BranchComparerTests.cs"
              Link="UserControls\CommitInfo\BranchComparerTests.cs" />
     <Compile Include="..\GitUI.Tests\UserControls\CommitInfo\RefsFormatterTests.cs"

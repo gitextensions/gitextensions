@@ -1,8 +1,23 @@
-﻿using AwesomeAssertions;
+﻿using System.ComponentModel.Design;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
+using AwesomeAssertions;
+using GitCommands;
+using GitCommands.Git;
+using GitCommands.Git.Gpg;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.ParityCapture;
+using GitUI;
+using GitUI.CommandsDialogs;
+using GitUI.Editor;
+using GitUI.ScriptsEngine;
 using GitUI.SettingControlBindings;
+using Microsoft.VisualStudio.Threading;
+using NSubstitute;
 using NUnit.Framework;
+using ResourceManager;
 
 namespace WinFormsParityCapture.Tests;
 
@@ -10,6 +25,125 @@ namespace WinFormsParityCapture.Tests;
 [Category("P0_1")]
 public sealed class EndToEndCaptureTests
 {
+    [TestCase("GitUI.CommandsDialogs.WorktreeDialog.FormCreateWorktree")]
+    [TestCase("GitUI.CommandsDialogs.FormResolveConflicts")]
+    [TestCase("GitUI.UserControls.RevisionGrid.FormRevisionFilter")]
+    [Apartment(ApartmentState.STA)]
+    [NonParallelizable]
+    public void Capture_factory_should_construct_repository_dialogs_with_the_runtime_commands(string typeName)
+    {
+        MethodInfo isolate = typeof(ToolStripOwnerOverflowTests).GetMethod(
+            "WithIsolatedSettings", BindingFlags.Static | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(typeof(ToolStripOwnerOverflowTests).FullName, "WithIsolatedSettings");
+        isolate.Invoke(null, [(Action<string>)(directory =>
+        {
+            FieldInfo manager = typeof(ThreadHelper).GetField("_taskManager", BindingFlags.Static | BindingFlags.NonPublic)
+                ?? throw new MissingFieldException(typeof(ThreadHelper).FullName, "_taskManager");
+            object? originalManager = manager.GetValue(null);
+            SynchronizationContext? originalContext = SynchronizationContext.Current;
+            using JoinableTaskContext context = new();
+            PropertyInfo contextProperty = typeof(ThreadHelper).GetProperty(nameof(ThreadHelper.JoinableTaskContext))
+                ?? throw new MissingMemberException(typeof(ThreadHelper).FullName, nameof(ThreadHelper.JoinableTaskContext));
+            contextProperty.SetValue(null, context);
+            try
+            {
+                using ServiceContainer services = new();
+                services.AddService(typeof(IGitBranchNameNormaliser), Substitute.For<IGitBranchNameNormaliser>());
+                services.AddService(typeof(IHotkeySettingsLoader), Substitute.For<IHotkeySettingsLoader>());
+                services.AddService(typeof(IScriptsRunner), Substitute.For<IScriptsRunner>());
+                IGitModule module = Substitute.For<IGitModule>();
+                module.WorkingDir.Returns(Path.Combine(directory, "reference-repository"));
+                GitUICommands commands = new(services, module);
+                CaptureStatePlan state = new() { Id = "normal", Kind = CaptureStateKind.Normal };
+                CaptureComponentPlan component = new() { TypeName = typeName, States = [state] };
+
+                using Control control = ComponentFactory.Create(component, commands, state);
+
+                control.GetType().FullName.Should().Be(typeName);
+                ((GitModuleForm)control).UICommands.Should().BeSameAs(commands);
+                module.DidNotReceive().GetRefs(Arg.Any<RefsFilter>());
+            }
+            finally
+            {
+                manager.SetValue(null, originalManager);
+                SynchronizationContext.SetSynchronizationContext(originalContext);
+            }
+        })]);
+    }
+
+    [TestCase("GitUI.CommandsDialogs.RevisionGpgInfoControl")]
+    [TestCase("GitUI.Editor.FileViewer")]
+    [Apartment(ApartmentState.STA)]
+    [NonParallelizable]
+    public void Capture_factory_should_seed_standalone_reference_content(string typeName)
+    {
+        MethodInfo isolate = typeof(ToolStripOwnerOverflowTests).GetMethod(
+            "WithIsolatedSettings", BindingFlags.Static | BindingFlags.NonPublic)
+            ?? throw new MissingMethodException(typeof(ToolStripOwnerOverflowTests).FullName, "WithIsolatedSettings");
+        isolate.Invoke(null, [(Action<string>)(directory =>
+        {
+            FieldInfo manager = typeof(ThreadHelper).GetField("_taskManager", BindingFlags.Static | BindingFlags.NonPublic)
+                ?? throw new MissingFieldException(typeof(ThreadHelper).FullName, "_taskManager");
+            object? originalManager = manager.GetValue(null);
+            SynchronizationContext? originalContext = SynchronizationContext.Current;
+            using JoinableTaskContext context = new();
+            PropertyInfo contextProperty = typeof(ThreadHelper).GetProperty(nameof(ThreadHelper.JoinableTaskContext))
+                ?? throw new MissingMemberException(typeof(ThreadHelper).FullName, nameof(ThreadHelper.JoinableTaskContext));
+            contextProperty.SetValue(null, context);
+            try
+            {
+                using ServiceContainer services = new();
+                services.AddService(typeof(IHotkeySettingsLoader), Substitute.For<IHotkeySettingsLoader>());
+                services.AddService(typeof(IScriptsRunner), Substitute.For<IScriptsRunner>());
+                IGitModule module = Substitute.For<IGitModule>();
+                module.WorkingDir.Returns(directory);
+                GitUICommands commands = new(services, module);
+                CaptureStatePlan state = new() { Id = "normal", Kind = CaptureStateKind.Normal };
+                CaptureComponentPlan component = new() { TypeName = typeName, States = [state] };
+                using Control control = ComponentFactory.Create(component, commands, state);
+
+                ComponentFactory.PrepareAfterHandle(control, commands, component);
+
+                if (control is RevisionGpgInfoControl)
+                {
+                    GpgInfo info = ComponentFactory.StandaloneGpgInfo;
+                    string canonicalFixture = string.Join("\n", info.CommitStatus, info.CommitVerificationMessage,
+                        info.TagStatus, info.TagVerificationMessage);
+                    Hash(canonicalFixture).Should().Be("10a21fe19908c4a84ff417e0217744d44f964b39ee1dbb04aa766f002cdce207");
+                    Field<TextBox>("txtCommitGpgInfo").Text.ReplaceLineEndings("\n").Should().Be(info.CommitVerificationMessage);
+                    Field<TextBox>("txtTagGpgInfo").Text.ReplaceLineEndings("\n").Should().Be(info.TagVerificationMessage);
+                    Field<PictureBox>("commitSignPicture").Image.Should().NotBeNull();
+                    Field<PictureBox>("tagSignPicture").Image.Should().NotBeNull();
+                    Field<TableLayoutPanel>("tableLayoutPanel1").RowStyles[1].Height.Should().Be(50);
+                }
+                else
+                {
+                    FileViewer viewer = (FileViewer)control;
+                    string patch = ComponentFactory.StandalonePatch;
+                    patch.Length.Should().Be(246);
+                    Hash(patch).Should().Be("aa7462de0a54661922f159ab474393115cd6d00e6a432ff297b69b7427ea705e");
+                    viewer.GetText().ReplaceLineEndings("\n").Should().Be(patch);
+                    Field<ViewMode>("_viewMode").Should().Be(ViewMode.Diff);
+                    Field<object?>("_viewItem").Should().BeNull();
+                }
+
+                T Field<T>(string name)
+                {
+                    FieldInfo field = control.GetType().GetField(name, BindingFlags.Instance | BindingFlags.NonPublic)
+                        ?? throw new MissingFieldException(control.GetType().FullName, name);
+                    return (T)field.GetValue(control)!;
+                }
+            }
+            finally
+            {
+                manager.SetValue(null, originalManager);
+                SynchronizationContext.SetSynchronizationContext(originalContext);
+            }
+        })]);
+
+        static string Hash(string text) => Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(text)));
+    }
+
     [Test]
     public void Capture_jump_list_service_should_disable_taskbar_updates()
     {

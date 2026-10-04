@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -227,6 +228,56 @@ public sealed class CheckoutBranchTests
         }
         finally
         {
+            AppSettings.AutoPopStashAfterCheckoutBranch = original;
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("cancel")]
+    [TestCase("Yes")]
+    [TestCase("No")]
+    public void OkClick_should_remember_only_an_actual_verified_auto_pop_stash_answer(string answer)
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands("main", "feature");
+        module.IsDirtyDir().Returns(true);
+        commands.StartCommandLineProcessDialog(Arg.Any<WinFormsShims.IWin32Window>(), Arg.Any<IGitCommand>()).Returns(true);
+        bool? original = AppSettings.AutoPopStashAfterCheckoutBranch;
+        AppSettings.AutoPopStashAfterCheckoutBranch = null;
+        FormCheckoutBranch form = new(commands, branch: string.Empty, remote: false);
+        try
+        {
+            using UpstreamTaskDialogObserver observer = new(window =>
+            {
+                window.GetVisualDescendants().OfType<CheckBox>().Single().IsChecked = true;
+                if (answer == "cancel")
+                {
+                    window.Close();
+                }
+                else
+                {
+                    UpstreamTaskDialogObserver.Click(window, answer);
+                }
+            });
+            form.Show();
+            form.FindControl<ComboBox>("Branches")!.SelectedItem = "feature";
+            form.FindControl<RadioButton>("rbStash")!.IsChecked = true;
+            form.FindControl<Button>("Ok")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+            observer.Count.Should().Be(1);
+            observer.Failure.Should().BeNull();
+            AppSettings.AutoPopStashAfterCheckoutBranch.Should().Be(answer == "cancel" ? null : answer == "Yes");
+            if (answer == "Yes")
+            {
+                commands.Received(1).StashPop(Arg.Any<WinFormsShims.IWin32Window>(), Arg.Any<string>());
+            }
+            else
+            {
+                commands.DidNotReceive().StashPop(Arg.Any<WinFormsShims.IWin32Window>(), Arg.Any<string>());
+            }
+        }
+        finally
+        {
+            form.Close();
             AppSettings.AutoPopStashAfterCheckoutBranch = original;
         }
     }

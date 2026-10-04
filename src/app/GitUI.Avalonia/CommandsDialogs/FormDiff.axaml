@@ -98,7 +98,7 @@
                  Height="15"
                  Padding="0"
                  TabIndex="14"
-                 VerticalAlignment="Center"
+                 VerticalAlignment="Top"
                  Background="{DynamicResource GitExtensionsAppColorAnsiTerminalRedBackNormalBrush}" />
           <Button x:Name="btnAnotherFirstBranch"
                   Margin="3"
@@ -143,7 +143,7 @@
                  Height="15"
                  Padding="0"
                  TabIndex="1"
-                 VerticalAlignment="Center"
+                 VerticalAlignment="Top"
                  Background="{DynamicResource GitExtensionsAppColorAnsiTerminalGreenBackNormalBrush}" />
           <Button x:Name="btnAnotherSecondBranch"
                   Margin="3"

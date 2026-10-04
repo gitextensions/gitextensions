@@ -7,7 +7,10 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
 using GitCommands;
+using GitCommands.Settings;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
@@ -134,6 +137,84 @@ public sealed class ProcessDialogTests
         using FormProcess form = new(CreateCommands(Path.GetTempPath()), arguments: "version", Path.GetTempPath(), input: null, useDialogSettings: true);
         form.Title.Should().StartWith("Process");
         form.ProcessString.Should().NotBeNullOrEmpty();
+    }
+
+    [AvaloniaTest]
+    public void FormProcess_should_pass_WSL_git_globs_directly_without_a_login_shell_reparse()
+    {
+        string settingsPath = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.WslArguments-{Guid.NewGuid():N}.settings");
+        DistributedSettings settings = new(lowerPriority: null, new GitExtSettingsCache(settingsPath, autoSave: false), SettingLevel.Unknown);
+        try
+        {
+            AppSettings.UsingContainer(settings, () =>
+            {
+                AppSettings.SetBool(nameof(AppSettings.WslGitEnabled), true);
+                AppSettings.SetString(nameof(AppSettings.WslCommand), "wsl");
+                AppSettings.SetString(nameof(AppSettings.WslGitCommand), "git");
+                const string directory = @"\\wsl$\Ubuntu\home\example repo\";
+                const string arguments = "log --exclude=refs/sessions/** --exclude=refs/agents/** --all";
+                using FormProcess form = new(CreateCommands(Path.GetTempPath()), arguments, directory, input: null, useDialogSettings: true);
+
+                form.ProcessString.Should().Be("wsl");
+                form.ProcessArguments.Should().Be($"-d Ubuntu --cd {directory.RemoveTrailingPathSeparator().Quote()} --exec git {arguments}");
+                File.Exists(settingsPath).Should().BeFalse("the argument-only fixture must not persist even its isolated settings");
+            });
+        }
+        finally
+        {
+            File.Delete(settingsPath);
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("version", true)]
+    [TestCase("definitely-not-a-git-command", false)]
+    public void FormProcess_ShowDialog_should_return_the_completed_command_output_without_changing_success(string arguments, bool expectedSuccess)
+    {
+        using GitExtensionsForm owner = new();
+        FormProcess? openedProcess = null;
+        DispatcherTimer timer = new() { Interval = TimeSpan.FromMilliseconds(20) };
+        Stopwatch elapsed = Stopwatch.StartNew();
+        using IDisposable subscription = Window.WindowOpenedEvent.AddClassHandler<Window>((window, _) =>
+        {
+            if (window is FormProcess process)
+            {
+                openedProcess = process;
+                timer.Start();
+            }
+        });
+        timer.Tick += (_, _) =>
+        {
+            if (openedProcess is { } process && (process.Ok.IsEnabled || elapsed.Elapsed > TimeSpan.FromSeconds(30)))
+            {
+                timer.Stop();
+                process.Close();
+            }
+        };
+        owner.Show();
+        try
+        {
+            bool success = FormProcess.ShowDialog(owner, CreateCommands(Path.GetTempPath()), arguments, Path.GetTempPath(), input: null, useDialogSettings: false, out string output);
+
+            success.Should().Be(expectedSuccess);
+            openedProcess.Should().NotBeNull();
+            openedProcess!.Ok.IsEnabled.Should().BeTrue("the process must complete rather than time out");
+            output.Should().Be(openedProcess.GetOutputString()).And.NotBeNullOrWhiteSpace();
+            if (expectedSuccess)
+            {
+                output.Should().Contain("git version");
+            }
+            else
+            {
+                output.Should().Contain("definitely-not-a-git-command");
+            }
+        }
+        finally
+        {
+            timer.Stop();
+            openedProcess?.Close();
+            owner.Close();
+        }
     }
 
     [AvaloniaTest]

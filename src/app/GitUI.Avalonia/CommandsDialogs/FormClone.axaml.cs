@@ -64,10 +64,14 @@ public sealed partial class FormClone : GitExtensionsDialog
         _defaultBranchItems = new[] { _branchDefaultRemoteHead.Text, _branchNone.Text };
         _NO_TRANSLATE_Branches.ItemsSource = _defaultBranchItems;
         _NO_TRANSLATE_Branches.SelectedIndex = 0;
+        cbIntializeAllSubmodules.IsChecked = AppSettings.CloneInitializeAllSubmodules;
     }
 
     private void WireControls()
     {
+        // The WinForms Designer supplies the neutral tooltip before translation, even without a language file.
+        ToolTip.SetTip(cbDownloadFullHistory, CbDownloadFullHistoryToolTipText);
+
         Ok.Click += OkClick;
         LoadSSHKey.Click += LoadSshKeyClick;
         FromBrowse.Click += FromBrowseClick;
@@ -289,6 +293,8 @@ public sealed partial class FormClone : GitExtensionsDialog
             // git-executable selection (Windows vs WSL) match the destination directory, not the
             // currently open module which may live on a different subsystem.
             IGitUICommands destUICommands = UICommands.WithWorkingDirectory(dirTo);
+
+            AppSettings.CloneInitializeAllSubmodules = cbIntializeAllSubmodules.IsChecked == true;
 
             ArgumentString cloneCmd = Commands.Clone(from,
                 dirTo,
@@ -552,14 +558,6 @@ public sealed partial class FormClone : GitExtensionsDialog
         }
 
         return !string.IsNullOrEmpty(url);
-    }
-
-    public override void TranslateItems(GitExtensions.Extensibility.Translations.ITranslation translation)
-    {
-        base.TranslateItems(translation);
-
-        string? toolTip = translation.TranslateItem(nameof(FormClone), nameof(cbDownloadFullHistory), "ttHints", () => CbDownloadFullHistoryToolTipText);
-        ToolTip.SetTip(cbDownloadFullHistory, toolTip);
     }
 
     private static string CbDownloadFullHistoryToolTipText =>
