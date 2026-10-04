@@ -1763,6 +1763,7 @@ public partial class FileStatusList : GitModuleControl
 
     public void Clear()
     {
+        ClearSelected();
         UpdateToolbar([]);
         _allListItems = [];
         GitItemStatusesWithDescription = [];
