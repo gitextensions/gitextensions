@@ -164,8 +164,11 @@ public partial class CommitInfo : GitModuleControl
         commitInfoContextMenuStrip.Opening += commitInfoContextMenuStrip_Opening;
         commitInfoContextMenuStrip.Closed += (_, _) => ClearContextMenuSource();
         AddHandler(ContextRequestedEvent, commitInfoContextMenuStrip_ContextRequested, RoutingStrategies.Tunnel);
-        rtbxCommitMessage.KeyDown += RichTextBox_KeyDown;
-        RevisionInfo.KeyDown += RichTextBox_KeyDown;
+
+        // Run the original Copy handlers before SelectableTextBlock's default action;
+        // its empty-selection shortcut otherwise consumes the event without copying.
+        rtbxCommitMessage.AddHandler(KeyDownEvent, RichTextBox_KeyDown, RoutingStrategies.Tunnel);
+        RevisionInfo.AddHandler(KeyDownEvent, RichTextBox_KeyDown, RoutingStrategies.Tunnel);
         commitInfoHeader.SetContextMenuStrip(commitInfoContextMenuStrip);
 
         // Avalonia constraint: controls have no DisposeCustomResources lifecycle hook.

@@ -1,11 +1,13 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Media.TextFormatting;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -20,6 +22,7 @@ using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
+using SkiaSharp;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -84,10 +87,14 @@ public sealed class CommitInfoParentLayoutTests
             accessor.RevisionInfo.SetXHTMLText(accessor.CommitMessage.GetPlainText());
             RunLayout(window);
             AssertParentLayout(control);
-            HyperlinkButton link = accessor.CommitMessage.GetVisualDescendants().OfType<HyperlinkButton>().Single();
-            Point? linkOrigin = link.TranslatePoint(default, accessor.CommitMessage);
-            linkOrigin.Should().NotBeNull();
-            (linkOrigin.GetValueOrDefault().Y + link.Bounds.Height).Should().BeLessThanOrEqualTo(accessor.CommitMessage.Bounds.Height);
+            XhtmlLinkRun link = GetLinks(accessor.CommitMessage).Single();
+            link.Text.Should().Be("caption");
+            link.LinkUri.Should().Be("https://example.invalid/source");
+            foreach (Rect bounds in GetLinkBounds(accessor.CommitMessage, link))
+            {
+                bounds.Y.Should().BeGreaterThanOrEqualTo(0);
+                bounds.Bottom.Should().BeLessThanOrEqualTo(accessor.CommitMessage.Bounds.Height);
+            }
 
             accessor.CommitMessage.Clear();
             accessor.RevisionInfo.Clear();
@@ -245,11 +252,13 @@ public sealed class CommitInfoParentLayoutTests
             window.Width = 700;
             RunLayout(window);
             AssertParentLayout(control);
-            HyperlinkButton link = accessor.CommitMessage.GetVisualDescendants().OfType<HyperlinkButton>().Single();
-            Point? linkOrigin = link.TranslatePoint(default, window);
-            linkOrigin.Should().NotBeNull();
-            Point click = linkOrigin.GetValueOrDefault() + new Vector(link.Bounds.Width / 2, link.Bounds.Height / 2);
+            XhtmlLinkRun link = GetLinks(accessor.CommitMessage).Single();
+            Rect linkBounds = GetLinkBounds(accessor.CommitMessage, link).Single();
+            Point click = accessor.CommitMessage.TranslatePoint(linkBounds.Center, window)
+                ?? throw new AssertionException("The actual caption characters must be attached to the owned window.");
             window.MouseDown(click, MouseButton.Left);
+            activatedUri.Should().Be("gitext://gotocommit/source",
+                "the source RichEdit activates a CFE_LINK on its left-button press");
             window.MouseUp(click, MouseButton.Left);
             activatedUri.Should().Be("gitext://gotocommit/source");
             command.Should().NotBeNull("the real source LinkFactory must dispatch the body's internal command");
@@ -363,15 +372,23 @@ public sealed class CommitInfoParentLayoutTests
             scrollbar.Bounds.Width.Should().BeGreaterThan(0);
             accessor.TableLayout.Bounds.Width.Should().Be(Math.Max(
                 control.Bounds.Width - scrollbar.Bounds.Width, accessor.Header.DesiredSize.Width));
-            HyperlinkButton[] links = accessor.RevisionInfo.GetVisualDescendants().OfType<HyperlinkButton>().ToArray();
-            links.Should().HaveCount(4, "the last tag link must not disappear from the actual visual tree");
-            HyperlinkButton lastLink = links.Last();
-            Point? lastLinkOrigin = lastLink.TranslatePoint(default, accessor.RevisionInfo);
-            lastLinkOrigin.Should().NotBeNull();
-            lastLinkOrigin.GetValueOrDefault().Y.Should().BeGreaterThanOrEqualTo(
+            XhtmlLinkRun[] links = GetLinks(accessor.RevisionInfo);
+            links.Select(link => link.Text).Should().Equal("main", "feature/parity", "v1.0", "v1.0");
+            links.Select(link => link.LinkUri).Should().Equal("gitext://gotobranch/main",
+                "gitext://gotobranch/feature/parity", "gitext://gototag/v1.0", "gitext://gototag/v1.0");
+            accessor.RevisionInfo.GetVisualDescendants().OfType<HyperlinkButton>().Should().BeEmpty(
+                "the source decorates actual characters instead of adding atomic button objects");
+            XhtmlLinkRun lastLink = links.Last();
+            Rect lastLinkBounds = GetLinkBounds(accessor.RevisionInfo, lastLink).Single();
+            lastLinkBounds.Y.Should().BeGreaterThanOrEqualTo(
                 (sourceParagraphCount - 1) * accessor.RevisionInfo.LineHeight);
-            (lastLinkOrigin.GetValueOrDefault().Y + lastLink.Bounds.Height)
-                .Should().BeLessThanOrEqualTo(accessor.RevisionInfo.Bounds.Height);
+            lastLinkBounds.Bottom.Should().BeLessThanOrEqualTo(accessor.RevisionInfo.Bounds.Height);
+
+            // Scroll the real final paragraph into view and inspect its actual ink.
+            // A present logical run alone does not prove the finite client renders it.
+            scroll.Offset = new Vector(0, scroll.Extent.Height - scroll.Viewport.Height);
+            RunLayout(window);
+            AssertLinkPainted(window, accessor.RevisionInfo, lastLink);
 
             Rect tableBounds = accessor.TableLayout.Bounds;
             for (int pass = 0; pass < 5; pass++)
@@ -557,6 +574,69 @@ public sealed class CommitInfoParentLayoutTests
 
     private static TextLayout GetLayout(XhtmlTextBlock block)
         => block.TextLayout ?? throw new AssertionException("The source-shaped parent must retain its actual measured TextLayout.");
+
+    private static Rect[] GetLinkBounds(XhtmlTextBlock block, XhtmlLinkRun link)
+    {
+        int position = 0;
+        foreach (Inline inline in block.Inlines ?? throw new AssertionException("The source caption must belong to the attached inline collection."))
+        {
+            if (ReferenceEquals(inline, link))
+            {
+                return GetLayout(block).HitTestTextRange(position, link.Text?.Length ?? 0)
+                    .Select(bounds => bounds.Translate(new Vector(block.NativeFormattingInset + block.Padding.Left, block.Padding.Top)))
+                    .ToArray();
+            }
+
+            position += inline switch
+            {
+                Run run => run.Text?.Length ?? 0,
+                LineBreak => Environment.NewLine.Length,
+                InlineUIContainer => 1,
+                _ => throw new AssertionException("The source caption has an unsupported preceding inline."),
+            };
+        }
+
+        throw new AssertionException("The source caption must remain in the measured inline collection.");
+    }
+
+    private static XhtmlLinkRun[] GetLinks(XhtmlTextBlock block)
+        => block.Inlines?.OfType<XhtmlLinkRun>().ToArray() ?? [];
+
+    private static void AssertLinkPainted(Window window, XhtmlTextBlock block, XhtmlLinkRun link)
+    {
+        Rect bounds = GetLinkBounds(block, link).Single();
+        Point origin = block.TranslatePoint(bounds.Position, window)
+            ?? throw new AssertionException("The source caption must be attached to the rendered window.");
+        Rect windowBounds = new(origin, bounds.Size);
+        windowBounds.Y.Should().BeGreaterThanOrEqualTo(0);
+        windowBounds.Bottom.Should().BeLessThanOrEqualTo(window.Bounds.Height);
+        using WriteableBitmap frame = window.CaptureRenderedFrame()
+            ?? throw new AssertionException("The final paragraph must have a real rendered frame.");
+        using MemoryStream bytes = new();
+        frame.Save(bytes, PngBitmapEncoderOptions.Default);
+        using SKBitmap pixels = SKBitmap.Decode(bytes.ToArray());
+        int firstRow = (int)Math.Floor(windowBounds.Y);
+        int lastRow = (int)Math.Ceiling(windowBounds.Bottom);
+        int firstColumn = (int)Math.Floor(windowBounds.X);
+        int lastColumn = (int)Math.Ceiling(windowBounds.Right);
+        lastColumn.Should().BeLessThan(pixels.Width,
+            "the final caption and its adjacent blank background must be genuinely visible");
+        SKColor background = pixels.GetPixel(lastColumn, firstRow);
+        int paintedPixels = 0;
+        for (int y = firstRow; y < lastRow; y++)
+        {
+            for (int x = firstColumn; x < lastColumn; x++)
+            {
+                if (pixels.GetPixel(x, y) != background)
+                {
+                    paintedPixels++;
+                }
+            }
+        }
+
+        paintedPixels.Should().BeGreaterThan(0,
+            "the last link caption must actually paint inside the source-sized client after asynchronous growth");
+    }
 
     private static void RunLayout(Window window)
     {

@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -14,19 +15,31 @@ internal sealed class NativeTreeKeyboardAdapter
     private const int IncrementalSearchIdleMilliseconds = 1000;
     private readonly TreeView _tree;
     private readonly Func<long> _getTextInputTimestamp;
+    private readonly Func<bool> _isUpdating;
+    private readonly Dictionary<ItemCollection, ItemsControl> _collectionOwners = [];
+    private readonly Dictionary<TreeViewItem, ItemsControl> _itemOwners = [];
+    private readonly List<TreeViewItem> _caretPath = [];
+    private bool _caretHadFocus;
     private string _incrementalSearch = string.Empty;
     private long _lastTextInputTimestamp;
 
-    internal NativeTreeKeyboardAdapter(TreeView tree, Func<long>? getTextInputTimestamp = null)
+    internal NativeTreeKeyboardAdapter(TreeView tree, Func<long>? getTextInputTimestamp = null, Func<bool>? isUpdating = null)
     {
         _tree = tree;
         _getTextInputTimestamp = getTextInputTimestamp ?? (() => Environment.TickCount64);
+        _isUpdating = isUpdating ?? (() => false);
 
         // Avalonia tunnels through instance handlers in reverse registration order.
         // Install before the explorer decorator so its preview arrow guard runs first.
         tree.AddHandler(InputElement.KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel);
         tree.AddHandler(InputElement.TextInputEvent, OnTextInput, RoutingStrategies.Tunnel);
         tree.PropertyChanged += OnTreePropertyChanged;
+        tree.AddHandler(TreeViewItem.CollapsedEvent, OnItemCollapsed, RoutingStrategies.Tunnel);
+        RegisterItems(tree);
+        if (tree.SelectedItem is TreeViewItem selected)
+        {
+            RememberCaret(selected);
+        }
     }
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
@@ -38,16 +51,16 @@ internal sealed class NativeTreeKeyboardAdapter
 
         if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
-            if (e.Key is Key.Up or Key.Down)
+            if (e.Key is Key.Home or Key.End or Key.PageUp or Key.PageDown or Key.Up or Key.Down or Key.Left or Key.Right)
             {
-                ScrollOneRow(e.Key == Key.Up ? -1 : 1);
+                ScrollWithoutMovingCaret(e.Key);
                 e.Handled = true;
             }
 
             return;
         }
 
-        if (e.Key is not (Key.Home or Key.End or Key.PageUp or Key.PageDown or Key.Up or Key.Down or Key.Left or Key.Right))
+        if (e.Key is not (Key.Home or Key.End or Key.PageUp or Key.PageDown or Key.Up or Key.Down or Key.Left or Key.Right or Key.Back))
         {
             return;
         }
@@ -85,6 +98,9 @@ internal sealed class NativeTreeKeyboardAdapter
                 break;
             case Key.Left:
                 target = index < 0 ? nodes[0].Item : GetLeftTarget(nodes[index]);
+                break;
+            case Key.Back:
+                target = index < 0 ? null : nodes[index].Parent;
                 break;
             default:
                 target = index < 0 ? nodes[0].Item : GetRightTarget(nodes[index].Item);
@@ -147,6 +163,161 @@ internal sealed class NativeTreeKeyboardAdapter
         {
             _incrementalSearch = string.Empty;
         }
+
+        if (e.Property == TreeView.SelectedItemProperty)
+        {
+            if (_tree.SelectedItem is TreeViewItem selected)
+            {
+                RememberCaret(selected);
+            }
+            else if (_caretPath.Count == 0 || IsPresent(_caretPath[0]))
+            {
+                // Explicitly clearing a live caret is not a node-removal fallback.
+                // Avalonia also clears root selection before its Items notification;
+                // retain the removed path until that notification can choose a target.
+                _caretPath.Clear();
+                _caretHadFocus = false;
+            }
+        }
+        else if (e.Property == InputElement.IsKeyboardFocusWithinProperty
+            && _caretPath.Count > 0 && IsPresent(_caretPath[0]))
+        {
+            _caretHadFocus = _tree.IsKeyboardFocusWithin;
+        }
+    }
+
+    private void RegisterItems(ItemsControl owner)
+    {
+        if (_collectionOwners.TryAdd(owner.Items, owner))
+        {
+            owner.Items.CollectionChanged += OnItemsCollectionChanged;
+        }
+
+        foreach (TreeViewItem item in owner.Items.OfType<TreeViewItem>())
+        {
+            _itemOwners[item] = owner;
+            RegisterItems(item);
+        }
+    }
+
+    private void UnregisterItem(TreeViewItem item)
+    {
+        foreach (TreeViewItem child in item.Items.OfType<TreeViewItem>())
+        {
+            UnregisterItem(child);
+        }
+
+        item.Items.CollectionChanged -= OnItemsCollectionChanged;
+        _collectionOwners.Remove(item.Items);
+        _itemOwners.Remove(item);
+    }
+
+    private void OnItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (sender is not ItemCollection collection || !_collectionOwners.TryGetValue(collection, out ItemsControl? owner))
+        {
+            return;
+        }
+
+        bool removedCaret = _caretPath.Count > 0 && !IsPresent(_caretPath[0]);
+        bool hadFocus = _caretHadFocus;
+        TreeViewItem? target = removedCaret
+            ? owner.Items.Skip(Math.Max(0, e.OldStartingIndex)).OfType<TreeViewItem>().FirstOrDefault()
+                ?? owner.Items.OfType<TreeViewItem>().LastOrDefault()
+                ?? _caretPath.Skip(1).FirstOrDefault(IsPresent)
+            : null;
+        if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            foreach (TreeViewItem oldItem in _itemOwners.Where(pair => ReferenceEquals(pair.Value, owner)).Select(pair => pair.Key).ToArray())
+            {
+                UnregisterItem(oldItem);
+            }
+        }
+        else if (e.Action is NotifyCollectionChangedAction.Remove or NotifyCollectionChangedAction.Replace)
+        {
+            foreach (TreeViewItem oldItem in e.OldItems!.OfType<TreeViewItem>())
+            {
+                UnregisterItem(oldItem);
+            }
+        }
+
+        if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            RegisterItems(owner);
+        }
+        else if (e.Action is NotifyCollectionChangedAction.Add or NotifyCollectionChangedAction.Replace)
+        {
+            foreach (TreeViewItem newItem in e.NewItems!.OfType<TreeViewItem>())
+            {
+                _itemOwners[newItem] = owner;
+                RegisterItems(newItem);
+            }
+        }
+
+        // Ref refresh reconstructs containers under the owner's source-shaped
+        // selection suppression and restores its saved identity afterwards.
+        // Track the new collections above, but do not select a transient fallback.
+        if (removedCaret && _isUpdating())
+        {
+            // An identity absent from the rebuilt tree must not let a later,
+            // unrelated collection mutation resurrect the removed caret.
+            // The owner's saved selection re-seeds this path when it survives.
+            _caretPath.Clear();
+            _caretHadFocus = false;
+        }
+        else if (removedCaret)
+        {
+            // Native deletion prefers the next sibling, then the previous sibling,
+            // then its surviving parent. This caret is not a logical filter flag.
+            if (target is not null)
+            {
+                SelectCaret(target, hadFocus);
+            }
+            else
+            {
+                _tree.SelectedItem = null;
+                _caretPath.Clear();
+                _caretHadFocus = false;
+            }
+        }
+    }
+
+    private void OnItemCollapsed(object? sender, RoutedEventArgs e)
+    {
+        if (!_isUpdating() && e.Source is TreeViewItem item && _caretPath.Skip(1).Contains(item))
+        {
+            // The native caret cannot remain in a collapsed descendant. Do not
+            // steal keyboard focus when the tree's container was already unfocused.
+            SelectCaret(item, _tree.IsKeyboardFocusWithin);
+        }
+    }
+
+    private void RememberCaret(TreeViewItem selected)
+    {
+        _caretPath.Clear();
+        for (TreeViewItem? item = selected; item is not null;
+             item = _itemOwners.TryGetValue(item, out ItemsControl? owner) ? owner as TreeViewItem : null)
+        {
+            _caretPath.Add(item);
+        }
+
+        _caretHadFocus = _tree.IsKeyboardFocusWithin;
+    }
+
+    private bool IsPresent(TreeViewItem item)
+    {
+        ItemsControl current = item;
+        while (current is TreeViewItem node)
+        {
+            if (!_itemOwners.TryGetValue(node, out ItemsControl? owner) || !owner.Items.Contains(node))
+            {
+                return false;
+            }
+
+            current = owner;
+        }
+
+        return ReferenceEquals(current, _tree);
     }
 
     private static string GetCaption(TreeViewItem item)
@@ -198,7 +369,7 @@ internal sealed class NativeTreeKeyboardAdapter
         return child;
     }
 
-    private void ScrollOneRow(int direction)
+    private void ScrollWithoutMovingCaret(Key key)
     {
         if (_tree.SelectedItem is not TreeViewItem selected
             || _tree.GetVisualDescendants().OfType<ScrollViewer>()
@@ -207,14 +378,30 @@ internal sealed class NativeTreeKeyboardAdapter
             return;
         }
 
-        // Native Ctrl+Up/Down changes the vertical scroll position by one item,
-        // without selecting, focusing, or bringing the unchanged caret into view.
-        // Use the arranged header rather than the expanded item's subtree height.
+        // Native Ctrl navigation scrolls without selecting, focusing or revealing
+        // the unchanged caret. Its horizontal SB_LINE is five pixels at96DPI;
+        // vertical pages share one visible row. Use the arranged header, not subtree.
         double rowHeight = GetRowHeight(selected);
-        if (rowHeight > 0)
+        double maximumX = Math.Max(0, scroll.Extent.Width - scroll.Viewport.Width);
+        double maximumY = Math.Max(0, scroll.Extent.Height - scroll.Viewport.Height);
+        if (key is Key.Left or Key.Right)
         {
-            double next = Math.Clamp(scroll.Offset.Y + (direction * rowHeight), 0,
-                Math.Max(0, scroll.Extent.Height - scroll.Viewport.Height));
+            int direction = key == Key.Left ? -1 : 1;
+            double next = Math.Clamp(scroll.Offset.X + (direction * NativeTreeScrollAdapter.NativeHorizontalLine), 0, maximumX);
+            scroll.Offset = new Vector(next, scroll.Offset.Y);
+        }
+        else if (rowHeight > 0)
+        {
+            double next = key switch
+            {
+                Key.Home => 0,
+                Key.End => maximumY,
+                Key.PageUp => scroll.Offset.Y - (GetPageStep(selected) * rowHeight),
+                Key.PageDown => scroll.Offset.Y + (GetPageStep(selected) * rowHeight),
+                Key.Up => scroll.Offset.Y - rowHeight,
+                _ => scroll.Offset.Y + rowHeight,
+            };
+            next = Math.Clamp(next, 0, maximumY);
             scroll.Offset = new Vector(scroll.Offset.X, next);
         }
     }
@@ -237,13 +424,27 @@ internal sealed class NativeTreeKeyboardAdapter
             .FirstOrDefault(control => control.Name == "PART_LayoutRoot"
                 && control.FindAncestorOfType<TreeViewItem>() == selected)?.Bounds.Height ?? 0;
 
-    private void SelectCaret(TreeViewItem target)
+    private void SelectCaret(TreeViewItem target, bool focus = true)
     {
         // Directional focus lets Avalonia paint its keyboard cue. Set the
         // single native caret explicitly, never the consumer's logical flags.
-        target.Focus(NavigationMethod.Directional);
+        ScrollViewer? scroll = _tree.GetVisualDescendants().OfType<ScrollViewer>()
+            .FirstOrDefault(viewer => viewer.FindAncestorOfType<TreeView>() == _tree);
+        double? horizontal = scroll?.Offset.X;
+        if (focus)
+        {
+            target.Focus(NavigationMethod.Directional);
+        }
+
         _tree.SelectedItem = target;
         target.BringIntoView();
+        if (scroll is not null && horizontal.HasValue)
+        {
+            // Native caret navigation reveals its row vertically without resetting
+            // horizontal scroll, including Backspace and incremental caption search.
+            scroll.Offset = new Vector(Math.Clamp(horizontal.Value, 0,
+                Math.Max(0, scroll.Extent.Width - scroll.Viewport.Width)), scroll.Offset.Y);
+        }
     }
 
     private readonly record struct VisibleNode(TreeViewItem Item, TreeViewItem? Parent);
