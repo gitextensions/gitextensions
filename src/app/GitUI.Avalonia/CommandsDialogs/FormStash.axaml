@@ -66,19 +66,15 @@
 
       <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
                            Grid.Row="4"
-                           ColumnDefinitions="140,140"
+                           ColumnDefinitions="*,*"
                            RowDefinitions="25,31,31,31,31">
         <CheckBox x:Name="StashKeepIndex"
-                  Width="83"
-                  Height="19"
                   Margin="3"
                   HorizontalAlignment="Left"
                   Content="_Keep index"
                   ToolTip.Tip="All changes already added to the index are left intact" />
         <CheckBox x:Name="chkIncludeUntrackedFiles"
                   Grid.Column="1"
-                  Width="134"
-                  Height="19"
                   Margin="3"
                   HorizontalAlignment="Left"
                   Content="_Include untracked files"

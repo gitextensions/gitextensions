@@ -118,6 +118,89 @@ public sealed partial class ParityScreenshotTests
     }
 
     [AvaloniaTest]
+    [TestCase(typeof(FormCreateWorktree))]
+    [TestCase(typeof(FormResolveConflicts))]
+    [TestCase(typeof(FormRevisionFilter))]
+    public void Capture_factory_should_use_runtime_commands_for_repository_dialogs(Type viewType)
+    {
+        ThreadHelper.JoinableTaskContext = new Microsoft.VisualStudio.Threading.JoinableTaskContext();
+        using CaptureContext context = new();
+        Control view = CreateView(context, viewType);
+        try
+        {
+            view.GetType().Should().Be(viewType);
+            ((GitModuleForm)view).UICommands.Should().BeSameAs(context.Commands);
+        }
+        finally
+        {
+            ((Window)view).Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    [NonParallelizable]
+    public async Task External_stash_capture_should_wait_for_runtime_readiness_without_deterministic_mode(bool hasChanges)
+    {
+        string? originalDeterministic = Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable);
+        string? originalRepository = Environment.GetEnvironmentVariable(CaptureRepositoryEnvironmentVariable);
+        try
+        {
+            Environment.SetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable, null);
+            Environment.SetEnvironmentVariable(CaptureRepositoryEnvironmentVariable, null);
+            AvaloniaSynchronizationContext.InstallIfNeeded();
+            ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+            using CaptureContext repositoryOwner = new();
+            if (!hasChanges)
+            {
+                repositoryOwner.Module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--all" });
+                repositoryOwner.Module.GitExecutable.RunCommand(new GitArgumentBuilder("commit")
+                {
+                    "--quiet", "--no-gpg-sign", "-m", "\"Clean external stash capture fixture\""
+                });
+            }
+
+            Environment.SetEnvironmentVariable(CaptureRepositoryEnvironmentVariable, repositoryOwner.WorkingDirectory);
+            using CaptureContext externalContext = new();
+            FormStash form = (FormStash)CreateView(externalContext, typeof(FormStash));
+            try
+            {
+                await PrepareViewAsync(form, externalContext);
+                form.Show();
+                form.Loading.IsVisible.Should().BeTrue("the real worktree loader has started before capture readiness is awaited");
+
+                Task readiness = WaitForAsyncViewsAsync(form, externalContext);
+                readiness.IsCompleted.Should().BeFalse("external capture must await the loader even without deterministic mode");
+                await readiness.WaitAsync(TimeSpan.FromSeconds(35));
+
+                form.Loading.IsVisible.Should().BeFalse();
+                form.Stashes.IsEnabled.Should().BeTrue();
+                form.Stashed.HasSelection.Should().Be(hasChanges);
+                if (hasChanges)
+                {
+                    form.Stashed.GitItemStatuses.Should().NotBeEmpty();
+                    form.View.GetText().Should().NotBeEmpty();
+                }
+                else
+                {
+                    form.Stashed.GitItemStatuses.Should().BeEmpty();
+                    form.View.GetText().Should().BeNullOrEmpty();
+                }
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable, originalDeterministic);
+            Environment.SetEnvironmentVariable(CaptureRepositoryEnvironmentVariable, originalRepository);
+        }
+    }
+
+    [AvaloniaTest]
     [Category("P8.6i.126")]
     public async Task Standalone_tree_capture_should_match_reference_repository_and_root_selection()
     {
@@ -768,6 +851,16 @@ public sealed partial class ParityScreenshotTests
             return new FormGoToCommit(context.Commands);
         }
 
+        if (viewType == typeof(FormCreateWorktree))
+        {
+            return new FormCreateWorktree(context.Commands, Path.TrimEndingDirectorySeparator(context.WorkingDirectory));
+        }
+
+        if (viewType == typeof(FormRevisionFilter))
+        {
+            return new FormRevisionFilter(context.Commands, new FilterInfo());
+        }
+
         if (viewType == typeof(FormCheckoutRevision))
         {
             FormCheckoutRevision form = new(context.Commands);
@@ -1261,16 +1354,6 @@ public sealed partial class ParityScreenshotTests
             accessor.Branch.Text = "master";
         }
 
-        if (root is FormCreateWorktree formCreateWorktree)
-        {
-            IGitRef feature = Substitute.For<IGitRef>();
-            feature.Name.Returns("feature/visual-parity");
-            feature.LocalName.Returns("feature/visual-parity");
-            FormCreateWorktree.TestAccessor accessor = formCreateWorktree.GetTestAccessor();
-            accessor.SetBranches([feature]);
-            accessor.WorktreeDirectory.Text = Path.Combine(context.WorkingDirectory, "..", "visual-parity-worktree");
-        }
-
         if (root is FormManageWorktree formManageWorktree)
         {
             string rootPath = OperatingSystem.IsWindows() ? @"C:\Repos" : "/home/user/repos";
@@ -1696,6 +1779,23 @@ public sealed partial class ParityScreenshotTests
         CaptureContext context,
         CaptureStatePlan? state = null)
     {
+        if (root is FormCreateWorktree formCreateWorktree)
+        {
+            ComboBox branches = formCreateWorktree.GetTestAccessor().Branches;
+            string selectedBranch = context.Module.GetSelectedBranch();
+            int expectedCount = context.Module.GetRefs(RefsFilter.Heads).Count(branch => branch.Name != selectedBranch);
+            Stopwatch branchStopwatch = Stopwatch.StartNew();
+            while ((branches.ItemCount != expectedCount || branches.PlaceholderText == GitUI.TranslatedStrings.LoadingData)
+                   && branchStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            branches.ItemCount.Should().Be(expectedCount, "the runtime worktree branch loader must finish before capture");
+            branches.PlaceholderText.Should().NotBe(GitUI.TranslatedStrings.LoadingData);
+        }
+
         if (root is CreatePullRequestForm createPullRequestForm)
         {
             CreatePullRequestForm.TestAccessor accessor = createPullRequestForm.GetTestAccessor();
@@ -2100,8 +2200,7 @@ public sealed partial class ParityScreenshotTests
             diff.TextEditor.Text.Should().NotBeEmpty();
         }
 
-        if (Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
-            && root is FormStash formStash)
+        if (root is FormStash formStash)
         {
             // The source capture waits for the asynchronous worktree refresh before rendering.
             // Do the same here so a transient loading overlay is never treated as dialog state.
@@ -2118,16 +2217,19 @@ public sealed partial class ParityScreenshotTests
             loading.IsVisible.Should().BeFalse();
             stashes.IsEnabled.Should().BeTrue();
 
-            FileViewer view = GetRequiredControl<FileViewer>(formStash, "View");
-            Stopwatch diffStopwatch = Stopwatch.StartNew();
-            while (string.IsNullOrEmpty(view.TextEditor.Text)
-                   && diffStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            if (formStash.Stashed.HasSelection)
             {
-                Dispatcher.UIThread.RunJobs();
-                await Task.Delay(10);
-            }
+                FileViewer view = GetRequiredControl<FileViewer>(formStash, "View");
+                Stopwatch diffStopwatch = Stopwatch.StartNew();
+                while (string.IsNullOrEmpty(view.TextEditor.Text)
+                       && diffStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+                {
+                    Dispatcher.UIThread.RunJobs();
+                    await Task.Delay(10);
+                }
 
-            view.TextEditor.Text.Should().NotBeEmpty();
+                view.TextEditor.Text.Should().NotBeEmpty();
+            }
         }
 
         CommitDiff? commitDiff = root as CommitDiff

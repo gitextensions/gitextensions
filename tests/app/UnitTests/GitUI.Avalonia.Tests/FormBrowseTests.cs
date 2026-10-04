@@ -3168,11 +3168,13 @@ public sealed class FormBrowseTests
 
             ConcurrentDictionary<ObjectId, TaskCompletionSource<GpgInfo?>> completions = [];
             IGpgInfoProvider provider = Substitute.For<IGpgInfoProvider>();
-            provider.LoadGpgInfoAsync(Arg.Any<GitRevision?>()).Returns(callInfo =>
+            ConcurrentDictionary<ObjectId, CancellationToken> cancellationTokens = [];
+            provider.LoadGpgInfoAsync(Arg.Any<GitRevision?>(), Arg.Any<CancellationToken>()).Returns(callInfo =>
             {
                 GitRevision revision = callInfo.Arg<GitRevision>();
                 TaskCompletionSource<GpgInfo?> completion = new();
                 completions[revision.ObjectId] = completion;
+                cancellationTokens[revision.ObjectId] = callInfo.Arg<CancellationToken>();
                 return completion.Task;
             });
 
@@ -3188,15 +3190,20 @@ public sealed class FormBrowseTests
                 await WaitUntilAsync(() => form.GpgInfoTabPage.IsVisible);
                 form.GpgInfoTabPage.IsVisible.Should().BeTrue();
                 form.revisionGpgInfo1.Margin.Should().Be(new Thickness(1, 0, 1, 1));
-                _ = provider.DidNotReceive().LoadGpgInfoAsync(Arg.Any<GitRevision?>());
+                _ = provider.DidNotReceive().LoadGpgInfoAsync(Arg.Any<GitRevision?>(), Arg.Any<CancellationToken>());
 
                 form.CommitInfoTabControl.SelectedItem = form.GpgInfoTabPage;
                 Dispatcher.UIThread.RunJobs();
                 await WaitUntilAsync(() => completions.ContainsKey(headRevision.ObjectId));
                 form.revisionGpgInfo1.IsKeyboardFocusWithin.Should().BeTrue();
+                form.revisionGpgInfo1.FindControl<TextBox>("txtCommitGpgInfo")!.Text.Should().Be(GitUI.TranslatedStrings.LoadingData);
+                cancellationTokens[headRevision.ObjectId].CanBeCanceled.Should().BeTrue();
 
                 form.RevisionGrid.SetSelectedRevision(parentId).Should().BeTrue();
                 await WaitUntilAsync(() => completions.ContainsKey(parentId));
+                cancellationTokens[headRevision.ObjectId].IsCancellationRequested.Should().BeTrue();
+                form.revisionGpgInfo1.FindControl<TextBox>("txtCommitGpgInfo")!.Text.Should().Be(GitUI.TranslatedStrings.LoadingData);
+                form.revisionGpgInfo1.FindControl<Image>("commitSignPicture")!.IsVisible.Should().BeFalse();
                 completions[parentId].SetResult(new GpgInfo(
                     CommitStatus.MissingPublicKey,
                     "current revision signature",
@@ -3252,7 +3259,14 @@ public sealed class FormBrowseTests
             GitModule module = CreateRepositoryWithInitialCommit();
             TaskCompletionSource<GpgInfo?> unfinishedLoad = new(TaskCreationOptions.RunContinuationsAsynchronously);
             IGpgInfoProvider provider = Substitute.For<IGpgInfoProvider>();
-            provider.LoadGpgInfoAsync(Arg.Any<GitRevision?>()).Returns(unfinishedLoad.Task);
+            CancellationToken providerCancellationToken = default;
+            provider.LoadGpgInfoAsync(Arg.Any<GitRevision?>(), Arg.Any<CancellationToken>()).Returns(callInfo =>
+            {
+                providerCancellationToken = callInfo.Arg<CancellationToken>();
+#pragma warning disable VSTHRD003 // The fake provider deliberately owns an unfinished task to prove browser cancellation does not wait for it.
+                return unfinishedLoad.Task;
+#pragma warning restore VSTHRD003
+            });
 
             FormBrowse form = new(new GitUICommands(_serviceContainer, module), provider);
             try
@@ -3266,6 +3280,8 @@ public sealed class FormBrowseTests
                 await WaitUntilAsync(() => provider.ReceivedCalls().Any());
                 form.RefreshGpgInfo(new GitRevision(ObjectId.WorkTreeId));
                 Dispatcher.UIThread.RunJobs();
+
+                providerCancellationToken.IsCancellationRequested.Should().BeTrue();
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 form.Close();

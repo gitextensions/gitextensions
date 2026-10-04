@@ -197,6 +197,33 @@ public sealed class RevisionFilterTests
     }
 
     [AvaloniaTest]
+    public void Advanced_filter_should_enable_simplify_merges_only_with_full_history_without_losing_the_choice()
+    {
+        FilterInfo filter = new() { ShowFullHistory = false, ShowSimplifyMerges = true };
+        FormRevisionFilter form = new(Substitute.For<IGitUICommands>(), filter);
+        try
+        {
+            FormRevisionFilter.TestAccessor accessor = form.GetTestAccessor();
+            accessor.LoadFilters();
+
+            accessor.SimplifyMergesCheck.IsEnabled.Should().BeFalse();
+            accessor.SimplifyMergesCheck.IsChecked.Should().BeTrue();
+            accessor.FullHistoryCheck.IsChecked = true;
+            accessor.SimplifyMergesCheck.IsEnabled.Should().BeTrue();
+            accessor.FullHistoryCheck.IsChecked = false;
+            accessor.SimplifyMergesCheck.IsEnabled.Should().BeFalse();
+            accessor.SimplifyMergesCheck.IsChecked.Should().BeTrue();
+
+            accessor.SaveFilters();
+            (filter with { IsRaw = true }).ShowSimplifyMerges.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void Filter_surfaces_should_reuse_the_original_translation_identities()
     {
         FilterToolBar toolbar = new();

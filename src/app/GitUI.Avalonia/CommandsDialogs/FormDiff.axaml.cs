@@ -252,6 +252,10 @@ public partial class FormDiff : GitModuleForm
 
     private void WireEvents()
     {
+        firstCommitPanel.SizeChanged += (_, _) => UpdateCommitLabelAlignment(firstCommitPanel, lblFirstCommit);
+        lblFirstCommit.SizeChanged += (_, _) => UpdateCommitLabelAlignment(firstCommitPanel, lblFirstCommit);
+        secondCommitPanel.SizeChanged += (_, _) => UpdateCommitLabelAlignment(secondCommitPanel, lblSecondCommit);
+        lblSecondCommit.SizeChanged += (_, _) => UpdateCommitLabelAlignment(secondCommitPanel, lblSecondCommit);
         DiffFiles.SelectedIndexChanged += delegate { ShowSelectedFileDiff(); };
         DiffText.ExtraDiffArgumentsChanged += delegate { ShowSelectedFileDiff(); };
         DiffText.TopScrollReached += FileViewer_TopScrollReached;
@@ -263,6 +267,22 @@ public partial class FormDiff : GitModuleForm
         btnAnotherFirstCommit.Click += btnAnotherFirstCommit_Click;
         btnAnotherSecondBranch.Click += btnAnotherSecondBranch_Click;
         btnAnotherSecondCommit.Click += btnAnotherSecondCommit_Click;
+    }
+
+    private static void UpdateCommitLabelAlignment(StackPanel panel, Label label)
+    {
+        if (panel.Bounds.Height <= 0 || label.Bounds.Height <= 0)
+        {
+            return;
+        }
+
+        // WinForms FlowLayoutPanel centers Anchor.Left with integer rectangle division, not half-DIP alignment.
+        double top = Math.Truncate((panel.Bounds.Height - label.Bounds.Height) / 2);
+        if (label.Margin.Top != top)
+        {
+            // Only size changes enter this adapter; changing the top inset cannot retrigger a size-change loop.
+            label.Margin = new Avalonia.Thickness(label.Margin.Left, top, label.Margin.Right, label.Margin.Bottom);
+        }
     }
 
     // parity-scaffolding: Exposes the original named fields to focused tests and paired capture seeding.

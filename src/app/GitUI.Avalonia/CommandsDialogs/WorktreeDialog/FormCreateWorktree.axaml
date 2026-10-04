@@ -41,7 +41,7 @@
 
             <RadioButton x:Name="rbCreateNewBranch"
                          Grid.Row="1"
-                         Content="Create a _new branch:&#x0a;(from current commit)"
+                         Content="Create a _new branch:&#x0d;&#x0a;(from current commit)"
                          VerticalAlignment="Center" />
             <TextBox x:Name="txtNewBranchName"
                      Grid.Row="1" Grid.Column="1"

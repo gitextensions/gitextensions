@@ -87,6 +87,52 @@ public sealed class ResolveConflictsTests
     }
 
     [AvaloniaTest]
+    public void Selecting_a_file_deleted_on_both_sides_should_replace_the_previous_conflict_description()
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        module.GetConflictsAsync(Arg.Any<string?>()).Returns(
+        [
+            CreateConflict("a.txt", hasBase: true, hasLocal: true, hasRemote: true),
+            CreateConflict("b.txt", hasBase: true, hasLocal: false, hasRemote: false),
+        ]);
+        FormResolveConflicts form = new(commands);
+        form.Show();
+        try
+        {
+            form.conflictDescription.Text.Should().Contain("changed both locally");
+            form.ConflictedFiles.SelectedIndex = 1;
+            form.conflictDescription.Text.Should().Contain("deleted both locally").And.NotContain("changed both");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Selecting_an_unclassified_conflict_should_clear_the_previous_description()
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        module.GetConflictsAsync(Arg.Any<string?>()).Returns(
+        [
+            CreateConflict("a.txt", hasBase: true, hasLocal: true, hasRemote: true),
+            CreateConflict("b.txt", hasBase: false, hasLocal: true, hasRemote: false),
+        ]);
+        FormResolveConflicts form = new(commands);
+        form.Show();
+        try
+        {
+            form.conflictDescription.Text.Should().Contain("changed both locally");
+            form.ConflictedFiles.SelectedIndex = 1;
+            form.conflictDescription.Text.Should().BeEmpty();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void Selecting_multiple_conflicts_should_reduce_the_available_commands()
     {
         (IGitUICommands commands, IGitModule module) = CreateCommands();

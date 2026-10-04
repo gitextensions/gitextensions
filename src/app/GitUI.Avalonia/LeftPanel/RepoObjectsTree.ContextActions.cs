@@ -118,7 +118,7 @@ partial class RepoObjectsTree : IMenuItemFactory
         mnubtnOpenWorktree.IsVisible = isSingleWorktreeSelected;
         mnubtnOpenWorktree.IsEnabled = canActOnWorktree && canRunCommands;
         mnubtnDeleteWorktree.IsVisible = isSingleWorktreeSelected;
-        mnubtnDeleteWorktree.IsEnabled = canActOnWorktree && canRunCommands;
+        mnubtnDeleteWorktree.IsEnabled = canActOnWorktree && canRunCommands && worktreeNode is { Worktree.IsMain: false };
         toolStripSeparator13.IsVisible = isSingleWorktreeSelected;
         mnubtnCopyWorktreePath.IsVisible = isSingleWorktreeSelected;
         mnubtnCopyWorktreePath.IsEnabled = isSingleWorktreeSelected;

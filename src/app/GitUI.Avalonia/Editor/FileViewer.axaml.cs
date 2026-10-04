@@ -177,6 +177,10 @@ public partial class FileViewer : GitModuleControl
             Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
             DefaultButton = TaskDialogButton.Yes,
             SizeToContent = true,
+
+            // Yes and No alone do not make the dialog cancelable, so Esc and the title bar's close
+            // button would be ignored. Cancelling is evaluated as declining below.
+            AllowCancel = true,
         };
 
         stageSelectedLinesToolStripMenuItem.Click += stageSelectedLinesToolStripMenuItem_Click;
@@ -1094,7 +1098,10 @@ public partial class FileViewer : GitModuleControl
                     && (text?.Contains("@@", StringComparison.Ordinal) ?? false)
                     && AppSettings.DiffDisplayAppearance.Value != DiffDisplayAppearance.GitWordDiff
                     && File.Exists(fullPath))
-                || ((item?.Item.IsNew ?? false)
+
+                // Added files, i.e. new or copied ones: patching only applies for an artificial
+                // revision, or if the file does not exist
+                || (item?.Item.IsAdded is true
                     && (item.Item.Staged is StagedStatus.WorkTree or StagedStatus.Index
                         || !File.Exists(fullPath))))
             && hasModule

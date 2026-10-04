@@ -86,7 +86,7 @@ sync_source()
     fi
 
     git -C "$mirror_root" remote set-url source "$source_root"
-    git -C "$mirror_root" fetch --quiet source "$source_branch"
+    git -C "$mirror_root" fetch --quiet --no-recurse-submodules source "$source_branch"
     git -C "$mirror_root" update-ref "refs/heads/$mirror_branch" "$source_head"
     git -C "$mirror_root" read-tree "$source_head"
     rsync -a --delete \

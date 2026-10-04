@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.Design;
+using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
@@ -439,6 +441,43 @@ public sealed class FormPullTests
             form.ErrorOccurred.Should().BeFalse();
             module.GetCurrentCheckout().Should().Be(remoteCommit);
             File.ReadAllLines(localFile).Should().Equal("local edit");
+            module.GitExecutable.GetOutput(new GitArgumentBuilder("stash") { "list" }).Should().BeEmpty();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("cancel")]
+    [TestCase("No")]
+    public void FormPull_should_not_persist_a_dismissed_verified_auto_pop_stash_prompt(string answer)
+    {
+        AppSettings.AutoPopStashAfterPull = null;
+        GitModule module = CreateRepositoryWithNewRemoteCommit(out _);
+        FormPull form = new(new GitUICommands(_serviceContainer, module), module.GetSelectedBranch(), "origin", GitPullAction.Merge);
+        try
+        {
+            using UpstreamTaskDialogObserver observer = new(window =>
+            {
+                window.GetVisualDescendants().OfType<CheckBox>().Single().IsChecked = true;
+                if (answer == "cancel")
+                {
+                    window.Close();
+                }
+                else
+                {
+                    UpstreamTaskDialogObserver.Click(window, answer);
+                }
+            });
+            MethodInfo popStash = typeof(FormPull).GetMethod("PopStash", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?? throw new InvalidOperationException("The source auto-pop stash route is absent.");
+            popStash.Invoke(form, [form]);
+
+            observer.Count.Should().Be(1);
+            observer.Failure.Should().BeNull();
+            AppSettings.AutoPopStashAfterPull.Should().Be(answer == "cancel" ? null : false);
             module.GitExecutable.GetOutput(new GitArgumentBuilder("stash") { "list" }).Should().BeEmpty();
         }
         finally
