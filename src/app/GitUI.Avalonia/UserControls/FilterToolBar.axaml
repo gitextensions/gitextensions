@@ -5,17 +5,39 @@
              x:Class="GitUI.UserControls.FilterToolBar"
              Foreground="{DynamicResource GitExtensionsWindowTextBrush}">
   <UserControl.Styles>
+    <!-- ToolStrip items retain their source margins while their native owner stretches
+         AutoSize items and moves the same controls into its overflow. -->
+    <Style Selector="ToggleButton.gitextensions-toolbar-button,
+                     SplitButton.gitextensions-toolbar-button,
+                     DropDownButton.gitextensions-toolbar-button,
+                     Label.gitextensions-toolbar-label">
+      <Setter Property="Margin" Value="0,1,0,2" />
+    </Style>
+    <Style Selector="ToggleButton.gitextensions-toolbar-button,
+                     DropDownButton.gitextensions-toolbar-button">
+      <Setter Property="compat:NativeToolStrip.ItemPreferredHeight" Value="20" />
+    </Style>
     <Style Selector="DropDownButton.gitextensions-toolbar-button.gitextensions-icon-only">
       <Setter Property="Width" Value="29" />
       <Setter Property="MinWidth" Value="29" />
     </Style>
+    <Style Selector="Border.gitextensions-toolbar-separator">
+      <Setter Property="Width" Value="6" />
+      <Setter Property="Margin" Value="0" />
+      <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
+    </Style>
+    <Style Selector="compat|NativeToolStripSeparatorChrome.gitextensions-toolbar-separator-line">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="VerticalAlignment" Value="Stretch" />
+      <Setter Property="UseSystemVisualStyle" Value="{DynamicResource GitExtensionsToolStripSeparatorUseSystemVisualStyle}" />
+      <Setter Property="DarkBrush" Value="{DynamicResource GitExtensionsToolStripSeparatorDarkBrush}" />
+      <Setter Property="LightBrush" Value="{DynamicResource GitExtensionsToolStripSeparatorLightBrush}" />
+    </Style>
   </UserControl.Styles>
-  <StackPanel Height="25"
-              Orientation="Horizontal"
-              Spacing="0">
+  <compat:NativeToolStrip x:Name="innerStackPanel"
+                          Background="{StaticResource GitExtensionsTransparentBrush}">
     <compat:IconSplitButton x:Name="tsbtnAdvancedFilter"
-                            Margin="5,0,0,0"
-                            Height="24"
+                            UseNativeToolStripLayout="True"
                             Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
                             compat:TranslationCompat.TranslateText="False"
                             Classes="gitextensions-toolbar-button gitextensions-icon-only"
@@ -32,8 +54,6 @@
     </compat:IconSplitButton>
     <ToggleButton x:Name="tsbShowReflog"
                   Width="23"
-                  Height="24"
-                  Margin="0"
                   Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
                   compat:TranslationCompat.TranslateToolTip="False"
                   Classes="gitextensions-toolbar-button"
@@ -41,9 +61,7 @@
       <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Book}" />
     </ToggleButton>
     <compat:IconSplitButton x:Name="tssbtnShowBranches"
-                            Width="104"
-                            Height="24"
-                            Margin="0"
+                            UseNativeToolStripLayout="True"
                             Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
                             compat:TranslationCompat.UseToolTipText="True"
                             Classes="gitextensions-toolbar-button"
@@ -58,8 +76,6 @@
       </compat:IconSplitButton.Flyout>
     </compat:IconSplitButton>
     <Label x:Name="toolStripLabel1"
-           Width="58"
-           Height="24"
            Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
            Tag="ToolBar_group:Branch filter"
            compat:TranslationCompat.UseToolTipText="True"
@@ -70,8 +86,9 @@
     <compat:ToolbarComboBox x:Name="tscboBranchFilter"
                             Tag="ToolBar_group:Branch filter"
                             Width="100"
-                            Height="23"
-                            Margin="1,0,1,0"
+                            compat:NativeToolStrip.ItemIsControlHost="True"
+                            compat:NativeToolStrip.ItemAutoSize="False"
+                            compat:NativeToolStrip.ItemHeight="23"
                             IsEditable="True" />
     <compat:IconDropDownButton x:Name="tsddbtnBranchFilter"
                                Tag="ToolBar_group:Branch filter"
@@ -87,7 +104,11 @@
         </MenuFlyout>
       </compat:IconDropDownButton.Flyout>
     </compat:IconDropDownButton>
-    <Border x:Name="toolStripSeparator19" Classes="gitextensions-toolbar-separator" />
+    <Border x:Name="toolStripSeparator19"
+            compat:NativeToolStrip.ItemIsSeparator="True"
+            Classes="gitextensions-toolbar-separator">
+      <compat:NativeToolStripSeparatorChrome Classes="gitextensions-toolbar-separator-line" />
+    </Border>
     <Label x:Name="tslblRevisionFilter"
            Tag="ToolBar_group:Text filter"
            compat:TranslationCompat.UseToolTipText="True"
@@ -98,8 +119,9 @@
     <compat:ToolbarComboBox x:Name="tstxtRevisionFilter"
                             Tag="ToolBar_group:Text filter"
                             Width="100"
-                            Height="23"
-                            Margin="1,0,1,0"
+                            compat:NativeToolStrip.ItemIsControlHost="True"
+                            compat:NativeToolStrip.ItemAutoSize="False"
+                            compat:NativeToolStrip.ItemHeight="23"
                             IsEditable="True" />
     <compat:IconDropDownButton x:Name="tsddbtnRevisionFilter"
                                Tag="ToolBar_group:Text filter"
@@ -117,10 +139,11 @@
       </compat:IconDropDownButton.Flyout>
     </compat:IconDropDownButton>
     <ToggleButton x:Name="tsmiShowOnlyFirstParent"
+                  Width="23"
                   compat:TranslationCompat.TranslateToolTip="False"
                   Classes="gitextensions-toolbar-button"
                   Padding="3">
       <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ShowOnlyFirstParent}" />
     </ToggleButton>
-  </StackPanel>
+  </compat:NativeToolStrip>
 </UserControl>

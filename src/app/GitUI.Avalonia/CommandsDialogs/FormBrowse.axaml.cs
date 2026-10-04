@@ -110,7 +110,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private int _gpgInfoLoadVersion;
     private IReadOnlyList<GitWorktree> _worktrees = [];
     private readonly IRepositoryHistoryUIService? _repositoryHistoryUIService;
-    private readonly HashSet<Control> _partiallyHiddenFilterToolbarItems = [];
     private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
     private List<MenuItem>? _currentSubmoduleMenuItems;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
@@ -388,46 +387,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         };
         NativeToolStrip.SetItemAutoSize(_NO_TRANSLATE_WorkingDir, double.IsNaN(_NO_TRANSLATE_WorkingDir.Width));
 
-        // ToolStripPanel gives the filter strip the space left after the main commands.
-        // Keep its on-strip controls visible where they fit, and move the same instances
-        // into the overflow flyout when the user opens it.
-        StackPanel filterItems = (StackPanel)ToolStripFilters.Content!;
-        toolStripFiltersViewport.SizeChanged += (_, _) => UpdateFilterToolbarOverflow(filterItems);
-        toolStripFiltersViewport.ScrollChanged += (_, _) => UpdateFilterToolbarItemVisibility(filterItems);
-        filterItems.LayoutUpdated += (_, _) => UpdateFilterToolbarOverflow(filterItems);
-        Flyout filterOverflow = new() { Placement = PlacementMode.BottomEdgeAlignedRight };
-        filterOverflow.FlyoutPresenterClasses.Add("gitextensions-toolstrip-flyout");
-        Border filterOverflowHost = new();
-        filterOverflowHost.Classes.Add("gitextensions-toolstrip-overflow-host");
-        toolStripFiltersOverflow.Tag = filterOverflow;
-        void RestoreFilterToolbar()
-        {
-            filterOverflow.Content = null;
-            filterOverflowHost.Child = null;
-            filterItems.Orientation = Avalonia.Layout.Orientation.Horizontal;
-            filterItems.Height = 25;
-            toolStripFiltersViewport.Content = ToolStripFilters;
-            UpdateFilterToolbarOverflow(filterItems);
-        }
-
-        toolStripFiltersOverflow.Click += (_, _) =>
-        {
-            foreach (Control item in _partiallyHiddenFilterToolbarItems)
-            {
-                item.ClearValue(OpacityProperty);
-                item.ClearValue(IsHitTestVisibleProperty);
-            }
-
-            _partiallyHiddenFilterToolbarItems.Clear();
-            toolStripFiltersViewport.Content = null;
-            filterItems.Orientation = Avalonia.Layout.Orientation.Vertical;
-            filterItems.Height = double.NaN;
-            filterOverflowHost.Child = ToolStripFilters;
-            filterOverflow.Content = filterOverflowHost;
-            filterOverflow.ShowAt(toolStripFiltersOverflow);
-        };
-        filterOverflow.Closed += (_, _) => RestoreFilterToolbar();
-        RestoreFilterToolbar();
+        // The filter strip owns item-by-item overflow. ToolStripPanel supplies the
+        // remaining row width without clipping items or moving the whole toolbar.
     }
 
     private void UpdateMainToolbarOverflow()
@@ -439,57 +400,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             _topPanel.MainPreferredWidth = preferredWidth;
             _topPanel.MainPreferredHeight = preferredHeight;
             _topPanel.InvalidateMeasure();
-        }
-    }
-
-    private static void UpdateToolbarOverflow(Control content, ScrollViewer viewport, Button overflowButton)
-    {
-        bool hasOverflow = content.Bounds.Width > viewport.Viewport.Width;
-        overflowButton.IsVisible = hasOverflow;
-        if (!hasOverflow && viewport.Offset.X > 0)
-        {
-            viewport.Offset = new Vector(0, viewport.Offset.Y);
-            overflowButton.Content = "»";
-        }
-    }
-
-    private void UpdateFilterToolbarOverflow(StackPanel filterItems)
-    {
-        if (toolStripFiltersViewport.Content is null)
-        {
-            return;
-        }
-
-        UpdateToolbarOverflow(filterItems, toolStripFiltersViewport, toolStripFiltersOverflow);
-        UpdateFilterToolbarItemVisibility(filterItems);
-    }
-
-    private void UpdateFilterToolbarItemVisibility(StackPanel filterItems)
-    {
-        const double layoutTolerance = 0.5;
-        if (toolStripFiltersViewport.Content is null || toolStripFiltersViewport.Viewport.Width <= 0)
-        {
-            return;
-        }
-
-        double left = toolStripFiltersViewport.Offset.X;
-        double right = left + toolStripFiltersViewport.Viewport.Width;
-        foreach (Control item in filterItems.Children.OfType<Control>())
-        {
-            bool clipped = item.IsVisible
-                && item.Bounds.Width > 0
-                && (item.Bounds.Left < left - layoutTolerance
-                    || item.Bounds.Right > right + layoutTolerance);
-            if (clipped && _partiallyHiddenFilterToolbarItems.Add(item))
-            {
-                item.Opacity = 0;
-                item.IsHitTestVisible = false;
-            }
-            else if (!clipped && _partiallyHiddenFilterToolbarItems.Remove(item))
-            {
-                item.ClearValue(OpacityProperty);
-                item.ClearValue(IsHitTestVisibleProperty);
-            }
         }
     }
 
@@ -571,6 +481,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private void OnFormClosed(EventArgs e)
     {
         ToolStripMain.Dispose();
+        ToolStripFilters.Strip.Dispose();
         if (_hasRuntimeCommands)
         {
             PluginRegistry.Unregister(UICommands);
