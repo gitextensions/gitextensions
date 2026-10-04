@@ -870,36 +870,41 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
     private void ButtonRemoveToolbar_Click(object? sender, EventArgs e)
     {
-        if (IsCustomToolbar(_currentToolbarName))
+        // Captured once and used throughout: removing the selected combo box item below fires
+        // SelectedIndexChanged, which repoints _currentToolbarName at whichever toolbar becomes
+        // selected - the deletion would then be persisted for that one instead.
+        string toolbarName = _currentToolbarName;
+        if (IsCustomToolbar(toolbarName))
         {
             DialogResult result = MessageBoxes.Show(
-                string.Format(_deleteToolbarFormat.Text, _currentToolbarName),
+                string.Format(_deleteToolbarFormat.Text, toolbarName),
                 _deleteToolbarCaption.Text,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
-                if (_dynamicToolbars.TryGetValue(_currentToolbarName, out ToolStrip? toolStripToRemove))
+                if (_dynamicToolbars.TryGetValue(toolbarName, out ToolStrip? toolStripToRemove))
                 {
                     toolStripToRemove.Parent?.Controls.Remove(toolStripToRemove);
                     toolStripToRemove.Items.Clear();
                     toolStripToRemove.Visible = false;
                     toolStripToRemove.Dispose();
 
-                    _dynamicToolbars.Remove(_currentToolbarName);
+                    _dynamicToolbars.Remove(toolbarName);
                 }
 
                 // Remove from _toolbarItems BEFORE touching the combobox to prevent
                 // ComboBoxToolbar_SelectedIndexChanged from saving a layout for a toolbar
                 // that no longer exists (Items.Remove fires SelectedIndexChanged).
-                _toolbarItems.Remove(_currentToolbarName);
-                comboBoxToolbar.Items.Remove(_currentToolbarName);
+                _toolbarItems.Remove(toolbarName);
+                DropUndoSnapshotsOf(toolbarName);
+                comboBoxToolbar.Items.Remove(toolbarName);
                 comboBoxToolbar.SelectedIndex = 0;
 
                 // Persist the deletion so the removed toolbar is not recreated on next startup.
                 ToolbarLayoutConfig config = ToolbarLayoutStore.Load();
-                config.RemoveCustomToolbarMetadata(_currentToolbarName);
+                config.RemoveCustomToolbarMetadata(toolbarName);
                 ToolbarLayoutStore.Save(config);
                 AppSettings.SettingsContainer.Save();
 
@@ -1357,6 +1362,20 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     {
         _undoStack.Push((_currentToolbarName, GetCurrentItemsSnapshot()));
         buttonUndo.Enabled = true;
+    }
+
+    // An undo snapshot of a deleted toolbar has nowhere to go back to: ButtonUndo_Click cannot
+    // select that toolbar any more, and would restore its items onto the current one instead.
+    private void DropUndoSnapshotsOf(string toolbarName)
+    {
+        var kept = _undoStack.Where(snapshot => snapshot.toolbarName != toolbarName).Reverse().ToList();
+        _undoStack.Clear();
+        foreach (var snapshot in kept)
+        {
+            _undoStack.Push(snapshot);
+        }
+
+        buttonUndo.Enabled = _undoStack.Count > 0;
     }
 
     private void ButtonUndo_Click(object? sender, EventArgs e)
