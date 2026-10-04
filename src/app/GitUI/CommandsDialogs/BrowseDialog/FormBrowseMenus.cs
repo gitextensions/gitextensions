@@ -162,8 +162,9 @@ public class FormBrowseMenus : ITranslate
         {
             DebugHelpers.Assert(!string.IsNullOrEmpty(toolStrip.Text), "Toolstrip must specify its name via Text property.");
 
-            // Only show Custom toolbars if they have at least one item
-            if (toolStrip.Text.StartsWith("Custom ") && toolStrip.Items.Count == 0)
+            // Only show custom toolbars if they have at least one item. Tell them apart by their
+            // control name: their display name is the user's choice and need not start with "Custom ".
+            if (toolStrip.Name.StartsWith(FormBrowse.CustomToolbarNamePrefix, StringComparison.Ordinal) && toolStrip.Items.Count == 0)
             {
                 continue;
             }

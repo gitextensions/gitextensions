@@ -370,7 +370,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             foreach (Control control in toolPanel.TopToolStripPanel.Controls)
             {
                 if (control is ToolStripEx customToolStrip &&
-                    customToolStrip.Name.StartsWith("ToolStripCustom"))
+                    customToolStrip.Name.StartsWith(FormBrowse.CustomToolbarNamePrefix))
                 {
                     string toolbarName = customToolStrip.Text;
                     StoreOriginalItems(customToolStrip);
@@ -631,12 +631,12 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         }
 
         int nextNumber = 1;
-        while (comboBoxToolbar.Items.Cast<string>().Any(name => name == $"Custom {nextNumber:D2}"))
+        while (comboBoxToolbar.Items.Cast<string>().Any(name => name == $"{CustomToolbarDisplayPrefix}{nextNumber:D2}"))
         {
             nextNumber++;
         }
 
-        string newToolbarName = $"Custom {nextNumber:D2}";
+        string newToolbarName = $"{CustomToolbarDisplayPrefix}{nextNumber:D2}";
 
         if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
         {
@@ -672,7 +672,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         comboBoxToolbar.Items.Add(newToolbarName);
 
         string sanitizedName = new string(newToolbarName.Where(c => char.IsLetterOrDigit(c)).ToArray());
-        string controlName = $"ToolStripCustom{sanitizedName}";
+        string controlName = $"{FormBrowse.CustomToolbarNamePrefix}{sanitizedName}";
 
         // A different display name can produce the same sanitized WinForms control Name
         // (e.g. "Mon-Outil" and "Mon Outil" both yield "ToolStripCustomMonOutil"). The
@@ -870,7 +870,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
     private void ButtonRemoveToolbar_Click(object? sender, EventArgs e)
     {
-        if (_currentToolbarName.StartsWith(CustomToolbarDisplayPrefix))
+        if (IsCustomToolbar(_currentToolbarName))
         {
             DialogResult result = MessageBoxes.Show(
                 string.Format(_deleteToolbarFormat.Text, _currentToolbarName),
@@ -910,7 +910,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
     private void UpdateToolbarButtons()
     {
-        buttonRemoveToolbar.Enabled = _currentToolbarName.StartsWith(CustomToolbarDisplayPrefix);
+        buttonRemoveToolbar.Enabled = IsCustomToolbar(_currentToolbarName);
         buttonAdd.Enabled = listBoxAvailable.SelectedIndex >= 0;
     }
 
@@ -1567,7 +1567,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             bool visible = toolStrip?.Visible ?? true;
             bool allIconsShowText = toolStrip != null && AllRealItemsShowText(toolStrip);
 
-            if (toolbarName.StartsWith(CustomToolbarDisplayPrefix))
+            if (IsCustomToolbar(toolbarName))
             {
                 // SetCustomToolbarMetadata writes both CustomToolbars and ToolbarsVisibility in
                 // one call, using ToolbarsVisibility as the authoritative source for Row/OrderInRow
@@ -1772,7 +1772,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             ? original
             : wrapper.Item!;
 
-        if (toolbarName.StartsWith(CustomToolbarDisplayPrefix) && item is ToolStripMenuItem menuItem)
+        if (IsCustomToolbar(toolbarName) && item is ToolStripMenuItem menuItem)
         {
             item = ConvertMenuItemToButton(menuItem);
         }
@@ -1834,6 +1834,10 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             toolPanel.TopToolStripPanel.Join(toolStrip, toolPanel.TopToolStripPanel.Rows.Length);
         }
     }
+
+    // A custom toolbar is told apart by being one of _dynamicToolbars, never by its name: only a
+    // generated name starts with "Custom ", and one given with Shift held can be anything.
+    private bool IsCustomToolbar(string toolbarName) => _dynamicToolbars.ContainsKey(toolbarName);
 
     private ToolStrip? GetToolStripByName(string name)
     {

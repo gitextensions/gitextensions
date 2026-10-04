@@ -23,7 +23,7 @@ partial class FormBrowse
     private const string ScriptsToolbarName = ToolbarNames.Scripts;
 
     // Control-name prefix shared by all dynamically created custom toolbars.
-    private const string CustomToolbarNamePrefix = "ToolStripCustom";
+    internal const string CustomToolbarNamePrefix = "ToolStripCustom";
 
     // Dictionary to store original toolbar items before any manipulation
     // This preserves event handlers and allows items to be found even after they've been moved
