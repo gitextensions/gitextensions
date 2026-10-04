@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
@@ -68,6 +69,52 @@ internal static class WinFormsTextMeasurer
         => MeasureSize(owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize, value, singleLine: true);
 
     /// <summary>
+    ///  Measures the source renderer's NoPadding-only text without changing its literal paint caption.
+    /// </summary>
+    public static AvaloniaSize MeasureTextRendererNoPadding(TemplatedControl owner, string value)
+    {
+        if (value.Length == 0)
+        {
+            return default;
+        }
+
+        // Ref labels measure with NoPadding alone but paint with NoPrefix. Keep this
+        // separate from the literal single-line route used by other controls.
+        if (OperatingSystem.IsWindows()
+            && TryMeasureWithGdi(owner.FontFamily, owner.FontStyle, owner.FontWeight,
+                owner.FontSize, value, false, false, out AvaloniaSize size, out _, out _, parsePrefixes: true))
+        {
+            return size;
+        }
+
+        string measuredValue = RemoveMeasurePrefixes(value);
+        FormattedText text = new(measuredValue.Length == 0 ? " " : measuredValue,
+            CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
+            new Typeface(owner.FontFamily, owner.FontStyle, owner.FontWeight), owner.FontSize, foreground: null);
+        return new AvaloniaSize(measuredValue.Length == 0 ? 0 : text.WidthIncludingTrailingWhitespace, text.Height);
+    }
+
+    private static string RemoveMeasurePrefixes(string value)
+    {
+        StringBuilder text = new(value.Length);
+        for (int index = 0; index < value.Length; index++)
+        {
+            char character = value[index];
+            if (character != '&')
+            {
+                text.Append(character);
+            }
+            else if (index + 1 < value.Length && value[index + 1] == '&')
+            {
+                text.Append('&');
+                index++;
+            }
+        }
+
+        return text.ToString();
+    }
+
+    /// <summary>
     ///  Gets the common control's default image-free tab minimum, excluding its outer padding.
     /// </summary>
     public static double GetTabCaptionMinimumWidth(TextBlock owner)
@@ -84,7 +131,10 @@ internal static class WinFormsTextMeasurer
         return 6 * Math.Ceiling(MeasureSize(owner, "0").Width);
     }
 
-    private static AvaloniaSize MeasureSize(
+    /// <summary>
+    ///  Measures a literal caption using the current font and source text-renderer flags.
+    /// </summary>
+    public static AvaloniaSize MeasureSize(
         FontFamily fontFamily,
         FontStyle fontStyle,
         FontWeight fontWeight,
@@ -143,7 +193,8 @@ internal static class WinFormsTextMeasurer
         bool useTextRendererPadding,
         out AvaloniaSize size,
         out Avalonia.Thickness textPadding,
-        out double averageWidth)
+        out double averageWidth,
+        bool parsePrefixes = false)
     {
         textPadding = default;
         averageWidth = 0;
@@ -212,12 +263,19 @@ internal static class WinFormsTextMeasurer
         }
         else
         {
+            if (parsePrefixes)
+            {
+                // TextRenderer's Size.Empty proposed bounds become unconstrained.
+                rectangle.Right = int.MaxValue;
+                rectangle.Bottom = int.MaxValue;
+            }
+
             measuredHeight = DrawText(
                 deviceContext,
                 value,
                 value.Length,
                 ref rectangle,
-                DrawTextCalculateRectangle | DrawTextNoPrefix | (singleLine ? DrawTextSingleLine : 0));
+                DrawTextCalculateRectangle | (parsePrefixes ? 0 : DrawTextNoPrefix) | (singleLine ? DrawTextSingleLine : 0));
         }
 
         SelectObject(deviceContext, previousFont);

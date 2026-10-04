@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -25,35 +26,37 @@ namespace GitUI.UserControls.RevisionGrid;
 /// </summary>
 internal static class RevisionGridRefRenderer
 {
-    private const double MarginRight = 5;
+    private const int MarginRight = 5;
     private static readonly double[] _dashPattern = [4, 4];
     private static readonly Point[] _arrowPoints = new Point[4];
     private static readonly DashStyle DashedLine = new(_dashPattern, 0);
 
-    private static double PaddingTopBottom => 2;
+    private static int PaddingTopBottom => 2;
 
-    // Pixel radius for the rounded corners of ref label capsules.
-    private static double RefLabelCornerRadius => 5;
+    // Diameter of the source AddArc corner rectangles; the circular radius is half this value.
+    private static int RefLabelCornerRadius => 5;
 
     // Pixel width of the highlight frame drawn around a hovered ref label,
     // and the left-side offset used when drawing the nestled remote label.
-    private static double RefLabelHighlightWidth => 1;
+    private static int RefLabelHighlightWidth => 1;
 
-    private static double PointWidth(double height) => height / 2;
+    private static int PointWidth(int height) => height / 2;
 
-    private static double PaddingLeftRight(string name) => string.IsNullOrEmpty(name) ? 1 : 4;
+    private static int PaddingLeftRight(string name) => string.IsNullOrEmpty(name) ? 1 : 4;
 
     /// <summary>
     ///  Creates a closed path for a capsule whose left edge is a concave '>' notch
     ///  that exactly fits the convex point tip of a preceding capsule.
     /// </summary>
-    private static StreamGeometry CreateNotchLeftRoundRectPath(Rect bounds, double radius, double pointWidth)
+    private static StreamGeometry CreateNotchLeftRoundRectPath(Rect rect, int radius, int pointWidth)
     {
-        double left = bounds.Left;
-        double top = bounds.Top;
-        double right = bounds.Right;
-        double bottom = bounds.Bottom;
-        double midY = bounds.Center.Y;
+        double left = rect.X;
+        double top = rect.Y;
+        double right = rect.Right;
+        double bottom = rect.Bottom;
+        double midY = top + ((int)rect.Height / 2);
+        double arcRadius = radius / 2d;
+        double arcOffset = QuarterCircleControlOffset(arcRadius);
 
         // The notch corners are at the leftmost pixels; the notch tip is indented by pointWidth.
         return CreatePath(path =>
@@ -61,10 +64,12 @@ internal static class RevisionGridRefRenderer
             path.BeginFigure(new Point(left, top), isFilled: true);
             path.LineTo(new Point(left + pointWidth, midY)); // top notch corner → indented tip
             path.LineTo(new Point(left, bottom)); // indented tip → bottom notch corner
-            path.LineTo(new Point(right - radius, bottom));
-            path.QuadraticBezierTo(new Point(right, bottom), new Point(right, bottom - radius)); // bottom-right arc
-            path.LineTo(new Point(right, top + radius));
-            path.QuadraticBezierTo(new Point(right, top), new Point(right - radius, top)); // top-right arc
+            path.LineTo(new Point(right - arcRadius, bottom));
+            path.CubicBezierTo(new Point(right - arcRadius + arcOffset, bottom),
+                new Point(right, bottom - arcRadius + arcOffset), new Point(right, bottom - arcRadius)); // bottom-right arc
+            path.LineTo(new Point(right, top + arcRadius));
+            path.CubicBezierTo(new Point(right, top + arcRadius - arcOffset),
+                new Point(right - arcRadius + arcOffset, top), new Point(right - arcRadius, top)); // top-right arc
         });
     }
 
@@ -72,22 +77,26 @@ internal static class RevisionGridRefRenderer
     ///  Creates a closed path for a capsule whose right edge is a concave '&lt;' notch
     ///  that exactly fits the convex point tip of a following capsule.
     /// </summary>
-    private static StreamGeometry CreateNotchRightRoundRectPath(Rect bounds, double radius, double pointWidth)
+    private static StreamGeometry CreateNotchRightRoundRectPath(Rect rect, int radius, int pointWidth)
     {
-        double left = bounds.Left;
-        double top = bounds.Top;
-        double right = bounds.Right;
-        double bottom = bounds.Bottom;
-        double midY = bounds.Center.Y;
+        double left = rect.X;
+        double top = rect.Y;
+        double right = rect.Right;
+        double bottom = rect.Bottom;
+        double midY = top + ((int)rect.Height / 2);
+        double arcRadius = radius / 2d;
+        double arcOffset = QuarterCircleControlOffset(arcRadius);
 
         // The notch corners are at the rightmost pixels; the notch tip is indented by pointWidth.
         return CreatePath(path =>
         {
-            path.BeginFigure(new Point(left + radius, top), isFilled: true); // top-left arc
+            path.BeginFigure(new Point(left, top + arcRadius), isFilled: true);
+            path.CubicBezierTo(new Point(left, top + arcRadius - arcOffset),
+                new Point(left + arcRadius - arcOffset, top), new Point(left + arcRadius, top)); // top-left arc
             path.LineTo(new Point(right, top));
             path.LineTo(new Point(right - pointWidth, midY)); // top notch corner → indented tip
             path.LineTo(new Point(right, bottom)); // indented tip → bottom notch corner
-            AddBottomAndLeft(path, left, bottom, top, radius); // bottom-left arc
+            AddBottomAndLeft(path, left, bottom, top, arcRadius); // bottom-left arc
         });
     }
 
@@ -95,21 +104,22 @@ internal static class RevisionGridRefRenderer
     ///  Creates a closed path for a capsule whose left edge is a convex '&lt;' point
     ///  that protrudes leftward, so it visually connects to a nestled preceding label.
     /// </summary>
-    private static StreamGeometry CreatePointLeftRoundRectPath(Rect bounds, double radius, double pointWidth)
+    private static StreamGeometry CreatePointLeftRoundRectPath(Rect rect, int radius, int pointWidth)
     {
-        double left = bounds.Left;
-        double top = bounds.Top;
-        double right = bounds.Right;
-        double bottom = bounds.Bottom;
-        double midY = bounds.Center.Y;
+        double left = rect.X;
+        double top = rect.Y;
+        double right = rect.Right;
+        double bottom = rect.Bottom;
+        double midY = top + ((int)rect.Height / 2);
+        double arcRadius = radius / 2d;
 
         // The point tip is at the leftmost pixel; the top/bottom corners step back by pointWidth.
         return CreatePath(path =>
         {
             path.BeginFigure(new Point(left, midY), isFilled: true); // tip → top-left corner
             path.LineTo(new Point(left + pointWidth, top));
-            path.LineTo(new Point(right - radius, top));
-            AddRight(path, right, top, bottom, radius); // top-right arc, bottom-right arc
+            path.LineTo(new Point(right - arcRadius, top));
+            AddRight(path, right, top, bottom, arcRadius); // top-right arc, bottom-right arc
             path.LineTo(new Point(left + pointWidth, bottom)); // bottom-left corner → tip
         });
     }
@@ -118,32 +128,40 @@ internal static class RevisionGridRefRenderer
     ///  Creates a closed path for a capsule whose right edge is a convex '&gt;' point
     ///  instead of a rounded cap, so it visually connects to a nestled following label.
     /// </summary>
-    private static StreamGeometry CreatePointRightRoundRectPath(Rect bounds, double radius, double pointWidth)
+    private static StreamGeometry CreatePointRightRoundRectPath(Rect rect, int radius, int pointWidth)
     {
-        double left = bounds.Left;
-        double top = bounds.Top;
-        double right = bounds.Right;
-        double bottom = bounds.Bottom;
-        double midY = bounds.Center.Y;
+        double left = rect.X;
+        double top = rect.Y;
+        double right = rect.Right;
+        double bottom = rect.Bottom;
+        double midY = top + ((int)rect.Height / 2);
+        double arcRadius = radius / 2d;
+        double arcOffset = QuarterCircleControlOffset(arcRadius);
 
         // The point tip is at the rightmost pixel; the top/bottom corners step back by pointWidth.
         return CreatePath(path =>
         {
-            path.BeginFigure(new Point(left + radius, top), isFilled: true); // top-left arc
+            path.BeginFigure(new Point(left, top + arcRadius), isFilled: true);
+            path.CubicBezierTo(new Point(left, top + arcRadius - arcOffset),
+                new Point(left + arcRadius - arcOffset, top), new Point(left + arcRadius, top)); // top-left arc
             path.LineTo(new Point(right - pointWidth, top));
             path.LineTo(new Point(right, midY)); // top-right corner → tip
             path.LineTo(new Point(right - pointWidth, bottom)); // tip → bottom-right corner
-            AddBottomAndLeft(path, left, bottom, top, radius); // bottom-left arc
+            AddBottomAndLeft(path, left, bottom, top, arcRadius); // bottom-left arc
         });
     }
 
-    private static StreamGeometry CreateRoundRectPath(Rect bounds, double radius)
+    private static StreamGeometry CreateRoundRectPath(Rect rect, int radius)
         => CreatePath(path =>
         {
-            path.BeginFigure(new Point(bounds.Left + radius, bounds.Top), isFilled: true);
-            path.LineTo(new Point(bounds.Right - radius, bounds.Top));
-            AddRight(path, bounds.Right, bounds.Top, bounds.Bottom, radius);
-            AddBottomAndLeft(path, bounds.Left, bounds.Bottom, bounds.Top, radius);
+            double arcRadius = radius / 2d;
+            double arcOffset = QuarterCircleControlOffset(arcRadius);
+            path.BeginFigure(new Point(rect.Left, rect.Top + arcRadius), isFilled: true);
+            path.CubicBezierTo(new Point(rect.Left, rect.Top + arcRadius - arcOffset),
+                new Point(rect.Left + arcRadius - arcOffset, rect.Top), new Point(rect.Left + arcRadius, rect.Top));
+            path.LineTo(new Point(rect.Right - arcRadius, rect.Top));
+            AddRight(path, rect.Right, rect.Top, rect.Bottom, arcRadius);
+            AddBottomAndLeft(path, rect.Left, rect.Bottom, rect.Top, arcRadius);
         });
 
     /// <summary>
@@ -247,6 +265,7 @@ internal static class RevisionGridRefRenderer
     {
         private readonly RefLabelControl _localLabel;
         private readonly RefLabelControl _remoteLabel;
+        private readonly RefLabelHighlightOverlay _highlightOverlay;
 
         public NestledRefLabelPanel(
             RefLabelControl localLabel,
@@ -254,31 +273,69 @@ internal static class RevisionGridRefRenderer
         {
             _localLabel = localLabel;
             _remoteLabel = remoteLabel;
+            _highlightOverlay = new RefLabelHighlightOverlay(this);
             Children.Add(localLabel);
             Children.Add(remoteLabel);
+
+            // Avalonia paints a parent's Render before its children. A visual-only,
+            // noninteractive final sibling preserves the source's deferred pair frames.
+            VisualChildren.Add(_highlightOverlay);
         }
+
+        internal int PointWidth => _localLabel.FontPointWidth;
+
+        internal void InvalidateHighlight() => _highlightOverlay.InvalidateVisual();
 
         protected override Size MeasureOverride(Size availableSize)
         {
             _localLabel.Measure(availableSize);
-            _remoteLabel.Measure(availableSize);
-            double overlap = MarginRight + _remoteLabel.PointWidth - 1;
+            double remoteX = Math.Max(0, _localLabel.GetCapsuleWidth(availableSize.Width)
+                - PointWidth + RefLabelHighlightWidth);
+            _remoteLabel.Measure(new Size(Math.Max(0, availableSize.Width - remoteX), availableSize.Height));
+            _highlightOverlay.Measure(availableSize);
             return new Size(
-                _localLabel.DesiredSize.Width + _remoteLabel.DesiredSize.Width - overlap,
+                remoteX + _remoteLabel.DesiredSize.Width,
                 Math.Max(_localLabel.DesiredSize.Height, _remoteLabel.DesiredSize.Height));
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            _localLabel.Arrange(new Rect(new Point(0, 0), _localLabel.DesiredSize));
-            double remoteX = _localLabel.DesiredSize.Width
-                - MarginRight
-                - _remoteLabel.PointWidth
-                + 1;
+            _localLabel.Arrange(new Rect(0, 0,
+                Math.Min(finalSize.Width, _localLabel.DesiredSize.Width), finalSize.Height));
+
+            // The source resets offset from the actual clipped branch rectangle,
+            // then clips the remote to the remaining cell width, not its ideal width.
+            double remoteX = Math.Max(0, _localLabel.CapsuleBounds.Right - PointWidth + RefLabelHighlightWidth);
             _remoteLabel.Arrange(new Rect(
-                new Point(remoteX, 0),
-                _remoteLabel.DesiredSize));
+                remoteX, 0,
+                Math.Min(Math.Max(0, finalSize.Width - remoteX), _remoteLabel.DesiredSize.Width),
+                finalSize.Height));
+            _highlightOverlay.Arrange(new Rect(finalSize));
+            InvalidateHighlight();
             return finalSize;
+        }
+
+        private sealed class RefLabelHighlightOverlay : Control
+        {
+            private readonly NestledRefLabelPanel _owner;
+
+            public RefLabelHighlightOverlay(NestledRefLabelPanel owner)
+            {
+                _owner = owner;
+                IsHitTestVisible = false;
+                Focusable = false;
+            }
+
+            public override void Render(DrawingContext context)
+            {
+                foreach (RefLabelControl label in new[] { _owner._localLabel, _owner._remoteLabel })
+                {
+                    using (context.PushTransform(Matrix.CreateTranslation(label.Bounds.X, label.Bounds.Y)))
+                    {
+                        label.DrawHighlight(context);
+                    }
+                }
+            }
         }
     }
 
@@ -313,16 +370,19 @@ internal static class RevisionGridRefRenderer
         bool showHeadIndicator = true,
         bool dashed = false,
         FontWeight? fontWeight = null,
-        string? highlightedLabel = null)
+        string? highlightedLabel = null,
+        RefLabelIcon? icon = null)
         => new(
             gitRef,
             label,
             GetBrushResourceKey(gitRef),
-            showHeadIndicator && gitRef.IsSelected
-                ? RefLabelIcon.Head
-                : showHeadIndicator && gitRef.IsSelectedHeadMergeSource
-                    ? RefLabelIcon.HeadMergeSource
-                    : RefLabelIcon.None,
+            icon is { } explicitIcon
+                ? GetEffectiveIcon(explicitIcon)
+                : showHeadIndicator && gitRef.IsSelected
+                    ? RefLabelIcon.Head
+                    : showHeadIndicator && gitRef.IsSelectedHeadMergeSource
+                        ? RefLabelIcon.HeadMergeSource
+                        : RefLabelIcon.None,
             shape,
             fill,
             dashed,
@@ -387,8 +447,9 @@ internal static class RevisionGridRefRenderer
             shape,
             fill,
             showHeadIndicator: icon != RefLabelIcon.None,
-            dashed: dashedLine);
-        DrawRefBackground(label, isRowSelected, highlight);
+            dashed: dashedLine,
+            icon: icon);
+        DrawRefBackground(label, isRowSelected, highlight: false);
         return (label, highlight ? () => label.IsHighlighted = true : null);
     }
 
@@ -514,10 +575,16 @@ internal static class RevisionGridRefRenderer
     {
         StreamGeometry geometry = new();
         using StreamGeometryContext path = geometry.Open();
+        path.SetFillRule(FillRule.EvenOdd);
         draw(path);
         path.EndFigure(isClosed: true);
         return geometry;
     }
+
+    // GraphicsPath.AddArc stores circular quarters as cubic Beziers. The source
+    // radius parameter is the arc rectangle's diameter, not a quadratic corner radius.
+    private static double QuarterCircleControlOffset(double radius)
+        => radius * (4d / 3) * Math.Tan(Math.PI / 8);
 
     private static void AddRight(
         StreamGeometryContext path,
@@ -526,13 +593,12 @@ internal static class RevisionGridRefRenderer
         double bottom,
         double radius)
     {
-        path.QuadraticBezierTo(
-            new Point(right, top),
-            new Point(right, top + radius));
+        double arcOffset = QuarterCircleControlOffset(radius);
+        path.CubicBezierTo(new Point(right - radius + arcOffset, top),
+            new Point(right, top + radius - arcOffset), new Point(right, top + radius));
         path.LineTo(new Point(right, bottom - radius));
-        path.QuadraticBezierTo(
-            new Point(right, bottom),
-            new Point(right - radius, bottom));
+        path.CubicBezierTo(new Point(right, bottom - radius + arcOffset),
+            new Point(right - radius + arcOffset, bottom), new Point(right - radius, bottom));
     }
 
     private static void AddBottomAndLeft(
@@ -542,14 +608,11 @@ internal static class RevisionGridRefRenderer
         double top,
         double radius)
     {
+        double arcOffset = QuarterCircleControlOffset(radius);
         path.LineTo(new Point(left + radius, bottom));
-        path.QuadraticBezierTo(
-            new Point(left, bottom),
-            new Point(left, bottom - radius));
+        path.CubicBezierTo(new Point(left + radius - arcOffset, bottom),
+            new Point(left, bottom - radius + arcOffset), new Point(left, bottom - radius));
         path.LineTo(new Point(left, top + radius));
-        path.QuadraticBezierTo(
-            new Point(left, top),
-            new Point(left + radius, top));
     }
 
     private static void DrawArrow(
@@ -585,11 +648,19 @@ internal static class RevisionGridRefRenderer
             : RefLabelIcon.None;
 
     /// <summary>
-    ///  Computes the point width for the given row height, which is needed to calculate the ideal
-    ///  capsule size for Notch and Point shapes.
+    ///  Computes the point width for the given font, which is needed to calculate the ideal capsule
+    ///  size for Notch and Point shapes.
     /// </summary>
-    public static double GetPointWidth(double rowHeight)
-        => PointWidth(Math.Max(0, rowHeight - 1));
+    /// <remarks>
+    ///  Computes the capsule's ideal height given the same font as <see cref="DrawRef"/> and
+    ///  <see cref="DrawRefEx"/>. Does not account for clipping to available cell width.
+    /// </remarks>
+    public static int GetPointWidth(TemplatedControl owner)
+    {
+        int textHeight = (int)Math.Ceiling(WinFormsTextMeasurer.MeasureTextRendererNoPadding(owner, " ").Height);
+        int backgroundHeight = textHeight + (PaddingTopBottom * 2) - 1;
+        return PointWidth(backgroundHeight);
+    }
 
     /// <summary>
     ///  One custom-drawn ref label. Keeping the WinForms shape vocabulary here avoids
@@ -601,10 +672,13 @@ internal static class RevisionGridRefRenderer
         private readonly string? _highlightedLabel;
         private readonly IBrush? _refBrush;
         private string _normalLabel;
-        private double _backgroundHeight;
+        private int _backgroundHeight;
+        private int _fontPointWidth;
         private bool _isHighlighted;
-        private double _labelWidth;
+        private int _labelWidth;
+        private double _literalTextWidth;
         private FormattedText? _formattedText;
+        private Size _textSize;
 
         public RefLabelControl(
             IGitRef? gitRef,
@@ -627,7 +701,17 @@ internal static class RevisionGridRefRenderer
             Shape = shape;
             Fill = fill;
             IsDashed = dashed;
-            ActualThemeVariantChanged += (_, _) => InvalidateVisual();
+            ActualThemeVariantChanged += (_, _) =>
+            {
+                InvalidateVisual();
+                InvalidateHighlight();
+            };
+            ResourcesChanged += (_, _) =>
+            {
+                // A custom palette can change without changing the active theme variant.
+                InvalidateVisual();
+                InvalidateHighlight();
+            };
         }
 
         public IGitRef? GitRef { get; }
@@ -642,6 +726,7 @@ internal static class RevisionGridRefRenderer
                 : _normalLabel;
             InvalidateMeasure();
             InvalidateVisual();
+            InvalidateHighlight();
         }
 
         public RefLabelIcon Icon { get; }
@@ -670,10 +755,38 @@ internal static class RevisionGridRefRenderer
                     : _normalLabel;
                 InvalidateMeasure();
                 InvalidateVisual();
+                InvalidateHighlight();
             }
         }
 
-        public double PointWidth => RevisionGridRefRenderer.PointWidth(_backgroundHeight);
+        /// <summary>
+        ///  Gets the source integer slant width derived from the capsule's text height.
+        /// </summary>
+        public int PointWidth => RevisionGridRefRenderer.PointWidth(_backgroundHeight);
+
+        /// <summary>
+        ///  Gets the source font-space slant width independently of the caption's line count.
+        /// </summary>
+        internal int FontPointWidth => _fontPointWidth;
+
+        /// <summary>
+        ///  Gets the source hit slant width, shared from the first label of a nestled pair.
+        /// </summary>
+        public int HitPointWidth => Parent is NestledRefLabelPanel panel ? panel.PointWidth : FontPointWidth;
+
+        /// <summary>
+        ///  Gets the unshrunk, source integer painted rectangle in label-local coordinates.
+        /// </summary>
+        public Rect CapsuleBounds => new(0, ((int)Bounds.Height - _backgroundHeight) / 2,
+            GetCapsuleWidth(Bounds.Width), _backgroundHeight);
+
+        internal int GetCapsuleWidth(double availableWidth)
+            => (int)Math.Min(Math.Max(0, availableWidth), _labelWidth);
+
+        internal TextTrimming GetTextTrimming(int availableTextWidth)
+            => _literalTextWidth <= availableTextWidth
+                ? TextTrimming.None
+                : TextTrimming.CharacterEllipsis;
 
         public IBrush RefBrush => _refBrush ?? GetResourceBrush(_brushResourceKey, Brushes.Gray);
 
@@ -694,23 +807,37 @@ internal static class RevisionGridRefRenderer
         protected override Size MeasureOverride(Size availableSize)
         {
             _formattedText = CreateFormattedText(Brushes.Black);
-            _backgroundHeight = Math.Ceiling(_formattedText.Height) + (PaddingTopBottom * 2) - 1;
-            double rowHeight = RevisionGridControl.GetRowHeight(this);
+
+            // The source measures prefixes with NoPadding but paints the literal caption
+            // with NoPrefix. Empty labels retain the font's space height and zero width.
+            Size measuredText = WinFormsTextMeasurer.MeasureTextRendererNoPadding(this,
+                string.IsNullOrEmpty(Label) ? " " : Label);
+            _textSize = new Size(string.IsNullOrEmpty(Label) ? 0 : Math.Ceiling(measuredText.Width),
+                Math.Ceiling(measuredText.Height));
+            _literalTextWidth = WinFormsTextMeasurer.MeasureSize(FontFamily, FontStyle, FontWeight,
+                FontSize, Label, singleLine: false, useTextRendererPadding: false).Width;
+
+            // Nestled hits share the first font's space height, not a multiline
+            // caption's height. Cache it with layout rather than querying GDI per move.
+            _fontPointWidth = GetPointWidth(this);
+            _backgroundHeight = (int)_textSize.Height + (PaddingTopBottom * 2) - 1;
+            int rowHeight = (int)RevisionGridControl.GetRowHeight(this);
             RefLabelIcon effectiveIcon = GetEffectiveIcon(Icon);
-            double iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : rowHeight / 2;
-            double extraWidth = Shape switch
+            int iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : rowHeight / 2;
+            int extraWidth = Shape switch
             {
                 RefLabelShape.NotchLeft or RefLabelShape.NotchRight => PointWidth,
                 RefLabelShape.PointLeft or RefLabelShape.PointRight => PointWidth / 2,
                 _ => 0,
             };
 
-            _labelWidth = Math.Ceiling(_formattedText.Width)
+            _labelWidth = (int)_textSize.Width
                 + iconWidth
                 + (PaddingLeftRight(Label) * 2)
                 + extraWidth
                 - 1;
 
+            InvalidateHighlight();
             return new Size(_labelWidth + MarginRight, rowHeight);
         }
 
@@ -723,8 +850,13 @@ internal static class RevisionGridRefRenderer
 
             IBrush refBrush = RefBrush;
             RefLabelIcon effectiveIcon = GetEffectiveIcon(Icon);
-            double top = (Bounds.Height - _backgroundHeight) / 2;
-            Rect capsuleBounds = new(0.5, top + 0.5, Math.Max(0, _labelWidth - 1), _backgroundHeight - 1);
+            Rect capsuleBounds = CapsuleBounds;
+            if (capsuleBounds.Width <= 0 || capsuleBounds.Height <= 0)
+            {
+                // It may happen, as observed in #5396
+                return;
+            }
+
             StreamGeometry geometry = CreateGeometry(capsuleBounds, Shape, PointWidth);
             DrawingColor drawingRefColor = ToDrawingColor(refBrush);
             DrawingColor windowColor = ToDrawingColor(CapsuleBackgroundBrush);
@@ -751,15 +883,7 @@ internal static class RevisionGridRefRenderer
                     : null;
             Pen outline = new(OutlineBrush, RefLabelHighlightWidth, IsDashed ? DashedLine : null);
             context.DrawGeometry(background, outline, geometry);
-            if (IsHighlighted)
-            {
-                context.DrawGeometry(
-                    null,
-                    new Pen(refBrush, RefLabelHighlightWidth, IsDashed ? DashedLine : null),
-                    geometry);
-            }
-
-            double iconXOffset = Shape is RefLabelShape.NotchLeft or RefLabelShape.PointLeft
+            int iconXOffset = Shape is RefLabelShape.NotchLeft or RefLabelShape.PointLeft
                 ? PointWidth
                 : 0;
             if (effectiveIcon != RefLabelIcon.None)
@@ -767,16 +891,44 @@ internal static class RevisionGridRefRenderer
                 DrawArrow(context, refBrush, capsuleBounds, iconXOffset, effectiveIcon == RefLabelIcon.Head);
             }
 
-            double iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : Bounds.Height / 2;
-            double textX = iconXOffset
+            int iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : (int)Bounds.Height / 2;
+            int paddingLeftRight = PaddingLeftRight(Label);
+            int textX = iconXOffset
                 + iconWidth
-                + PaddingLeftRight(Label)
+                + paddingLeftRight
                 - (Shape == RefLabelShape.PointLeft ? PointWidth / 2 : 0);
-            FormattedText formattedText = CreateFormattedText(
-                Fill
-                    ? refBrush
-                    : TextBrush);
-            context.DrawText(formattedText, new Point(textX, capsuleBounds.Y + PaddingTopBottom - 1));
+            int availableWidth = Math.Max(0, (int)Bounds.Width);
+            int textWidth = Math.Clamp(Math.Min(availableWidth - paddingLeftRight - paddingLeftRight, (int)_textSize.Width),
+                0, Math.Max(0, availableWidth - textX));
+            Rect textBounds = new(textX, capsuleBounds.Y + PaddingTopBottom - 1, textWidth, _textSize.Height);
+            if (textWidth > 0 && _textSize.Height > 0)
+            {
+                // NoPrefix keeps the raw caption; EndEllipsis does not introduce word
+                // wrapping or suppress explicit line breaks. The source adjusts vertical
+                // alignment with integer halves and leaves oversized text at the top.
+                // Native literal metrics decide whether ellipsis is needed, so a different
+                // Avalonia glyph advance cannot abbreviate a caption that fits in GDI.
+                using TextLayout textLayout = new(Label, new Typeface(FontFamily, FontStyle, FontWeight),
+                    FontSize, Fill ? refBrush : TextBrush, textWrapping: TextWrapping.NoWrap,
+                    textTrimming: GetTextTrimming(textWidth), flowDirection: FlowDirection.LeftToRight,
+                    maxWidth: textWidth);
+                int paintHeight = (int)Math.Ceiling(textLayout.Height);
+                int textY = (int)textBounds.Y;
+                if (paintHeight <= textBounds.Height)
+                {
+                    textY += ((int)textBounds.Height / 2) - (paintHeight / 2);
+                }
+
+                using (context.PushClip(textBounds))
+                {
+                    textLayout.Draw(context, new Point(textBounds.X, textY));
+                }
+            }
+
+            if (Parent is not NestledRefLabelPanel)
+            {
+                DrawHighlight(context);
+            }
         }
 
         public bool Contains(Point point)
@@ -786,9 +938,44 @@ internal static class RevisionGridRefRenderer
                 return false;
             }
 
-            double top = (Bounds.Height - _backgroundHeight) / 2;
-            Rect capsuleBounds = new(0, top, Math.Max(0, _labelWidth), _backgroundHeight);
-            return CreateGeometry(capsuleBounds, Shape, PointWidth).FillContains(point);
+            return new RefLabelHitInfo(CapsuleBounds, Shape, HitPointWidth, GitRef, null).Contains(point);
+        }
+
+        internal void DrawHighlight(DrawingContext context)
+        {
+            Rect capsuleBounds = CapsuleBounds;
+            if (!IsHighlighted || capsuleBounds.Width <= 0 || capsuleBounds.Height <= 0)
+            {
+                return;
+            }
+
+            context.DrawGeometry(null,
+                new Pen(RefBrush, RefLabelHighlightWidth, IsDashed ? DashedLine : null),
+                CreateGeometry(capsuleBounds, Shape, PointWidth));
+        }
+
+        private void InvalidateHighlight()
+        {
+            if (Parent is NestledRefLabelPanel panel)
+            {
+                panel.InvalidateHighlight();
+            }
+        }
+
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+        {
+            base.OnPropertyChanged(change);
+            if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty
+                || change.Property == FontStyleProperty || change.Property == FontWeightProperty)
+            {
+                InvalidateMeasure();
+                InvalidateVisual();
+                InvalidateHighlight();
+            }
+            else if (change.Property == BoundsProperty)
+            {
+                InvalidateHighlight();
+            }
         }
 
         private FormattedText CreateFormattedText(IBrush foreground)
@@ -820,9 +1007,9 @@ internal static class RevisionGridRefRenderer
         private static StreamGeometry CreateGeometry(
             Rect bounds,
             RefLabelShape labelShape,
-            double pointWidth)
+            int pointWidth)
         {
-            double radius = RefLabelCornerRadius / 2;
+            int radius = RefLabelCornerRadius;
             return labelShape switch
             {
                 RefLabelShape.NotchLeft => CreateNotchLeftRoundRectPath(bounds, radius, pointWidth),

@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
+  "analyzedCommit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
   "axisOrder": [
     "structural",
     "functional",
@@ -40299,29 +40299,31 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [],
           "findingCount": 41,
-          "note": "P8.6i progress 69 groups 31 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 41 actionable and 72 total differences for this mapping; every structural difference stays open. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "P8.6i progress 69 groups 31 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 41 actionable and 72 total differences for this mapping; every structural difference stays open. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/MessageColumnProvider.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/avalonia/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/winforms/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/diff/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [
             "windows",
@@ -40330,64 +40332,68 @@
             "flatpak"
           ],
           "findingCount": 84,
-          "note": "P8.6h.3b.2b.2a adds the exact WinForms relative/non-relative, selected/unselected subject/body foreground matrix, keyed by RevisionGraphDrawNonRelativesTextGray and refreshed across focus/selection changes. The 84 source findings remain structural native-renderer differences and the broader exact menu/live-state closure remains P8.6h.3b.2b.2b; no complete axis is claimed. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "P8.6h.3b.2b.2a adds the exact WinForms relative/non-relative, selected/unselected subject/body foreground matrix, keyed by RevisionGraphDrawNonRelativesTextGray and refreshed across focus/selection changes. The 84 source findings remain structural native-renderer differences and the broader exact menu/live-state closure remains P8.6h.3b.2b.2b; no complete axis is claimed. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "visual": {
           "status": "notApplicable",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/diff-native100-final/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "This source mapping does not declare UI chrome. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "themingAndColor": {
           "status": "notApplicable",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/diff-native100-final/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "This source mapping does not declare UI chrome. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "behavioralState": {
           "status": "unverified",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/diff-native100-final/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "the complete interaction state matrix has not been exercised 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "platform": {
           "status": "unverified",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/windows-runtime-final1/window.png",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/runtime-wayland-final1/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/runtime-x11-final1/window.png"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/runtime-x11-final1/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         }
       }
     },
@@ -42615,22 +42621,23 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.RevisionGridControl.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.RevisionGridControl.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.RevisionGridControl.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.RevisionGridControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [],
           "findingCount": 393,
-          "note": "P8.6i progress 69 groups 181 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 393 actionable and 574 total differences for this mapping; every structural difference stays open. 2026-10-03 batch76: Revision row height measures actual configured-family/style Graphics.MeasureString(By), then preserves physical truncation plus scaled9 spacing. Segoe-only formula removed. Live resource changes update realized rows and avatar-column allocation without replacing selection. Off-Windows uses actual resolved Avalonia font metrics; native Windows raster equivalence and higherDPI remain unverified. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "P8.6i progress 69 groups 181 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 393 actionable and 574 total differences for this mapping; every structural difference stays open. 2026-10-03 batch76: Revision row height measures actual configured-family/style Graphics.MeasureString(By), then preserves physical truncation plus scaled9 spacing. Segoe-only formula removed. Live resource changes update realized rows and avatar-column allocation without replacing selection. Off-Windows uses actual resolved Avalonia font metrics; native Windows raster equivalence and higherDPI remain unverified. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/RevisionGridControl.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b15/accepted/avalonia/manifest.json",
@@ -42644,7 +42651,8 @@
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b18/accepted/tests/windows/focused.trx",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b18/accepted/tests/linux/focused.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.RevisionGridControl.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.RevisionGridControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [
             "windows",
@@ -42653,12 +42661,12 @@
             "flatpak"
           ],
           "findingCount": 921,
-          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture readers expose the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Recycled rows resolve the original selected, authored, alternating and panel-background precedence at the row boundary. Reload carries a pending focus request through the loading page and focuses the native ListBox once it is displayed; the owning FormBrowse focus command targets that inner list directly. Final-order replacement retains the primary and multi-selection by revision identity, scrolls the primary row into view, and restores focus only when the grid owned it before Avalonia reset the collection. Modifier-only or unsupported input no longer reaches its first unassigned command. The source-shape sweep maps the actual native popup tree to the original ContextMenuStrip, ToolStripMenuItem, and ToolStripSeparator identities and restores the source handler signatures. The menu closure restores the omitted original remote-branch delete group, separator and StartDeleteRemoteBranchDialog route. The fresh scoped inventory remains at 921 known source-shape findings, including deliberate Avalonia focus-lifecycle members, and the broader exhaustive behavior audit remains open. Worktree update 2026-09-22 (uncommitted, based on 99b182cbd): Restores ref-focused context menus and advanced grouping, single-child menu actions, bounded untracked-stash rows, and WorkTree/Index/HEAD cycling with clean-row skipping. Keeps native popup anchors stable during asynchronous row refresh and repaints author highlighting without recycling pressed labels. The affected selection passes 166 tests on Windows and WSL; evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/tests/{windows,linux}-batch-2-final.trx. Full source, visual/state and platform closure remains open; no axis is promoted. 2026-10-03 batch76: Revision row height measures actual configured-family/style Graphics.MeasureString(By), then preserves physical truncation plus scaled9 spacing. Segoe-only formula removed. Live resource changes update realized rows and avatar-column allocation without replacing selection. Off-Windows uses actual resolved Avalonia font metrics; native Windows raster equivalence and higherDPI remain unverified. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture readers expose the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Recycled rows resolve the original selected, authored, alternating and panel-background precedence at the row boundary. Reload carries a pending focus request through the loading page and focuses the native ListBox once it is displayed; the owning FormBrowse focus command targets that inner list directly. Final-order replacement retains the primary and multi-selection by revision identity, scrolls the primary row into view, and restores focus only when the grid owned it before Avalonia reset the collection. Modifier-only or unsupported input no longer reaches its first unassigned command. The source-shape sweep maps the actual native popup tree to the original ContextMenuStrip, ToolStripMenuItem, and ToolStripSeparator identities and restores the source handler signatures. The menu closure restores the omitted original remote-branch delete group, separator and StartDeleteRemoteBranchDialog route. The fresh scoped inventory remains at 921 known source-shape findings, including deliberate Avalonia focus-lifecycle members, and the broader exhaustive behavior audit remains open. Worktree update 2026-09-22 (uncommitted, based on 99b182cbd): Restores ref-focused context menus and advanced grouping, single-child menu actions, bounded untracked-stash rows, and WorkTree/Index/HEAD cycling with clean-row skipping. Keeps native popup anchors stable during asynchronous row refresh and repaints author highlighting without recycling pressed labels. The affected selection passes 166 tests on Windows and WSL; evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/tests/{windows,linux}-batch-2-final.trx. Full source, visual/state and platform closure remains open; no axis is promoted. 2026-10-03 batch76: Revision row height measures actual configured-family/style Graphics.MeasureString(By), then preserves physical truncation plus scaled9 spacing. Segoe-only formula removed. Live resource changes update realized rows and avatar-column allocation without replacing selection. Off-Windows uses actual resolved Avalonia font metrics; native Windows raster equivalence and higherDPI remain unverified. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/diff-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/winforms/manifest.json",
@@ -42678,18 +42686,19 @@
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.RevisionGridControl.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/diff-native100-final/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 75,
-          "note": "The same native-100% matrix compares 16 normal, focused, disabled, context-menu, copy-menu, and View-menu states across light/dark/custom. Source-derived ToolStrip row, separator, border, shared-width and shortcut metrics plus semantic popup normalization close all 1,059 non-image findings: geometry, state, font, layout and control findings are zero. The 75 retained diagnostics are 73 image findings and the two explicit dark/custom WinForms View-menu unsupported captures. Prior native-125% evidence remains valid; native 150/200%, exact pixels, exhaustive live states, and macOS remain open. 2026-10-03 batch76: Revision row height measures actual configured-family/style Graphics.MeasureString(By), then preserves physical truncation plus scaled9 spacing. Segoe-only formula removed. Live resource changes update realized rows and avatar-column allocation without replacing selection. Off-Windows uses actual resolved Avalonia font metrics; native Windows raster equivalence and higherDPI remain unverified. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "The same native-100% matrix compares 16 normal, focused, disabled, context-menu, copy-menu, and View-menu states across light/dark/custom. Source-derived ToolStrip row, separator, border, shared-width and shortcut metrics plus semantic popup normalization close all 1,059 non-image findings: geometry, state, font, layout and control findings are zero. The 75 retained diagnostics are 73 image findings and the two explicit dark/custom WinForms View-menu unsupported captures. Prior native-125% evidence remains valid; native 150/200%, exact pixels, exhaustive live states, and macOS remain open. 2026-10-03 batch76: Revision row height measures actual configured-family/style Graphics.MeasureString(By), then preserves physical truncation plus scaled9 spacing. Segoe-only formula removed. Live resource changes update realized rows and avatar-column allocation without replacing selection. Off-Windows uses actual resolved Avalonia font metrics; native Windows raster equivalence and higherDPI remain unverified. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "themingAndColor": {
           "status": "partial",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/winforms/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/avalonia-final/manifest.json",
@@ -42697,18 +42706,19 @@
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.RevisionGridControl.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/diff-native100-final/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "The fresh light/dark/custom matrix resolves ordinary, alternating and authored revision backgrounds through shared semantic roles and exact ARGB values, alongside selection, disabled, inactive, menu, separator and checked-command roles. The desktop popup renderer surface is distinct from the semantic control BackColor: light resolves to #FFFDFDFD with border #FF808080, while dark and the custom theme resolve to #FF2F2F2F with border #FF6B6B6B. All 18 pairs have zero color diagnostics. Exhaustive configurable-color and live theme states remain open, so this axis stays partial. 2026-10-03 batch76: Revision row height measures actual configured-family/style Graphics.MeasureString(By), then preserves physical truncation plus scaled9 spacing. Segoe-only formula removed. Live resource changes update realized rows and avatar-column allocation without replacing selection. Off-Windows uses actual resolved Avalonia font metrics; native Windows raster equivalence and higherDPI remain unverified. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "The fresh light/dark/custom matrix resolves ordinary, alternating and authored revision backgrounds through shared semantic roles and exact ARGB values, alongside selection, disabled, inactive, menu, separator and checked-command roles. The desktop popup renderer surface is distinct from the semantic control BackColor: light resolves to #FFFDFDFD with border #FF808080, while dark and the custom theme resolve to #FF2F2F2F with border #FF6B6B6B. All 18 pairs have zero color diagnostics. Exhaustive configurable-color and live theme states remain open, so this axis stays partial. 2026-10-03 batch76: Revision row height measures actual configured-family/style Graphics.MeasureString(By), then preserves physical truncation plus scaled9 spacing. Segoe-only formula removed. Live resource changes update realized rows and avatar-column allocation without replacing selection. Off-Windows uses actual resolved Avalonia font metrics; native Windows raster equivalence and higherDPI remain unverified. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/winforms/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/avalonia-final/manifest.json",
@@ -42729,7 +42739,8 @@
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.RevisionGridControl.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/diff-native100-final/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [
             "windows",
@@ -42738,12 +42749,12 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Focused tests and the comparable native-100% matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus, copy-menu selection, complete View-menu checked states, disabled italic captions, full shortcut display, and local/remote branch deletion routes with zero semantic state findings. Reviewer-feedback tests verify initial list focus after asynchronous loading, explicit filter focus, command-driven focus restoration, and selected-row focus retention through final ordering. The exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open. 2026-10-03 batch76: Revision row height measures actual configured-family/style Graphics.MeasureString(By), then preserves physical truncation plus scaled9 spacing. Segoe-only formula removed. Live resource changes update realized rows and avatar-column allocation without replacing selection. Off-Windows uses actual resolved Avalonia font metrics; native Windows raster equivalence and higherDPI remain unverified. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "Focused tests and the comparable native-100% matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus, copy-menu selection, complete View-menu checked states, disabled italic captions, full shortcut display, and local/remote branch deletion routes with zero semantic state findings. Reviewer-feedback tests verify initial list focus after asynchronous loading, explicit filter focus, command-driven focus restoration, and selected-row focus retention through final ordering. The exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open. 2026-10-03 batch76: Revision row height measures actual configured-family/style Graphics.MeasureString(By), then preserves physical truncation plus scaled9 spacing. Segoe-only formula removed. Live resource changes update realized rows and avatar-column allocation without replacing selection. Off-Windows uses actual resolved Avalonia font metrics; native Windows raster equivalence and higherDPI remain unverified. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P0.6/windows/smoke.json",
             "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
@@ -42761,7 +42772,8 @@
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.RevisionGridControl.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/windows-runtime-final1/window.png",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/runtime-wayland-final1/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/runtime-x11-final1/window.png"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/runtime-x11-final1/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [
             "windows",
@@ -42770,7 +42782,7 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Fresh runtime smokes pass and screenshots were inspected on Windows, exclusive Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host and no X11 fallback. The expanded focused browse/grid/menu suite passes 93/93 on Windows and native-ext4 Linux. Native DPI beyond 125%, exhaustive component states, and macOS remain open. 2026-10-03 batch76: Revision row height measures actual configured-family/style Graphics.MeasureString(By), then preserves physical truncation plus scaled9 spacing. Segoe-only formula removed. Live resource changes update realized rows and avatar-column allocation without replacing selection. Off-Windows uses actual resolved Avalonia font metrics; native Windows raster equivalence and higherDPI remain unverified. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "Fresh runtime smokes pass and screenshots were inspected on Windows, exclusive Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host and no X11 fallback. The expanded focused browse/grid/menu suite passes 93/93 on Windows and native-ext4 Linux. Native DPI beyond 125%, exhaustive component states, and macOS remain open. 2026-10-03 batch76: Revision row height measures actual configured-family/style Graphics.MeasureString(By), then preserves physical truncation plus scaled9 spacing. Segoe-only formula removed. Live resource changes update realized rows and avatar-column allocation without replacing selection. Off-Windows uses actual resolved Avalonia font metrics; native Windows raster equivalence and higherDPI remain unverified. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         }
       }
     },
@@ -42849,29 +42861,31 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.UserControls.RevisionGrid.RevisionGridRefRenderer.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.UserControls.RevisionGrid.RevisionGridRefRenderer.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.RevisionGridRefRenderer.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.RevisionGridRefRenderer.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [],
           "findingCount": 55,
-          "note": "P8.6i progress 69 groups 11 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 55 actionable and 66 total differences for this mapping; every structural difference stays open. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "P8.6i progress 69 groups 11 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 55 actionable and 66 total differences for this mapping; every structural difference stays open. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/RevisionGridRefRenderer.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/avalonia/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/winforms/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/diff/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.RevisionGridRefRenderer.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.RevisionGridRefRenderer.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [
             "windows",
@@ -42880,64 +42894,68 @@
             "flatpak"
           ],
           "findingCount": 68,
-          "note": "P8.6h.3b.2b.2a restores the original shape-helper vocabulary, empty-label padding, dash/arrow state and highlight-width boundary without changing the golden rendering. The 68 classified framework-representation findings and broader exact visual/state closure remain P8.6h.3b.2b.2b; no complete axis is claimed. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "P8.6h.3b.2b.2a restores the original shape-helper vocabulary, empty-label padding, dash/arrow state and highlight-width boundary without changing the golden rendering. The 68 classified framework-representation findings and broader exact visual/state closure remain P8.6h.3b.2b.2b; no complete axis is claimed. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "status": "unverified",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.RevisionGridRefRenderer.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/diff-native100-final/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "Previous notApplicable classification was incorrect: this renderer creates and paints visible themed capsules, arrows, text and hover outlines. Full native raster/theming state closure remains unverified. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "status": "unverified",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.RevisionGridRefRenderer.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/diff-native100-final/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "Previous notApplicable classification was incorrect: this renderer creates and paints visible themed capsules, arrows, text and hover outlines. Full native raster/theming state closure remains unverified. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "behavioralState": {
           "status": "unverified",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.RevisionGridRefRenderer.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/diff-native100-final/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/capture-composition.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "the complete interaction state matrix has not been exercised 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "platform": {
           "status": "unverified",
-          "verifiedOn": "2026-10-03",
-          "commit": "7c6a6b2e6b74dfcb5bdae478783cf4da0bce968e",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/types/GitUI.UserControls.RevisionGrid.RevisionGridRefRenderer.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/windows-runtime-final1/window.png",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/runtime-wayland-final1/window.png",
-            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/runtime-x11-final1/window.png"
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/runtime-x11-final1/window.png",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
+          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity. 2026-10-03 batch76: Normal revision text retains the configured font style/weight. Source emphasized author/message/ref text uses Bold as the replacement style rather than accidentally retaining configured Italic. The actual unchanged native grid bold Font and focused portable consumer regressions support this bounded correction. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         }
       }
     },
@@ -42948,65 +42966,80 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-27",
-          "commit": "9b5ea806a03e1fbdf44911848adca44563b92bac",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6i/framework-signatures-65/sweep/windows/types/GitUI.RevisionGridToolTipProvider.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/framework-signatures-65/sweep/linux/types/GitUI.RevisionGridToolTipProvider.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/framework-signatures-65/sweep/linux/types/GitUI.RevisionGridToolTipProvider.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
           "platforms": [],
           "findingCount": 15,
-          "note": "P8.6i progress 65 restores safely anchored source comments and moves exact native-control field type substitutions into pinned, visible reviewed-deviation evidence. The byte-identical Windows/Linux schema-v4 inventory records 15 ordinary findings for this mapping; every remaining structural difference stays open."
+          "note": "P8.6i progress 65 restores safely anchored source comments and moves exact native-control field type substitutions into pinned, visible reviewed-deviation evidence. The byte-identical Windows/Linux schema-v4 inventory records 15 ordinary findings for this mapping; every remaining structural difference stays open. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "functional": {
           "status": "verified",
-          "verifiedOn": "2026-08-12",
-          "commit": "d7e5f25166841a7c379c5b1f67dc4b99f03e4b2a",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory/GitUI.RevisionGridToolTipProvider.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory-classification.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b/tests/windows/p8.6h3b1-focused-windows.trx",
-            "eng/avalonia/parity-evidence/P8.6h/h3b/build/linux-gate.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b/build/linux-gate.log",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
           ],
-          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 16,
-          "note": "All findings are classified native pointer, attached ToolTip and realized-cell representation differences. Focused Windows/Linux tests verify the setting gate, truncation cache, previous-cell suppression, hide, clear and text contract; exact timing/visual state, native DPI, and macOS remain P8.6h.3b.2/P8.6a/P8.4."
+          "note": "All findings are classified native pointer, attached ToolTip and realized-cell representation differences. Focused Windows/Linux tests verify the setting gate, truncation cache, previous-cell suppression, hide, clear and text contract; exact timing/visual state, native DPI, and macOS remain P8.6h.3b.2/P8.6a/P8.4. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "visual": {
           "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "This source mapping does not declare UI chrome. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "themingAndColor": {
           "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "This source mapping does not declare UI chrome. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "behavioralState": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "the complete interaction state matrix has not been exercised 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         },
         "platform": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity. 2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Batch80 production finite ref allocation clips each label to the remaining message-cell width and advances by painted width plus the source margin; transparent full-cell input supplies source rounded-corner routing. Cached literal metrics prevent false ellipsis without expanding the original clip or claiming native glyph-raster identity. WorkingDir popup capture-only fixed coordinates are removed, exposing rather than repairing actual placement and margins."
         }
       }
     },
@@ -48927,6 +48960,85 @@
         "themingAndColor": { "status": "partial", "verifiedOn": "2026-08-24", "commit": "557bca349d2db4f69468b9e792d3458168dca90a", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-states-31/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-states-31/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-states-31/tests/linux/focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The overlay resolves KnownColor.AppWorkspace at creation and is now present over the complete client surface in paired light, dark, and custom loading frames; consuming-form color diagnostics remain open." },
         "behavioralState": { "status": "partial", "verifiedOn": "2026-08-24", "commit": "557bca349d2db4f69468b9e792d3458168dca90a", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-states-31/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-states-31/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-states-31/tests/linux/focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "Idempotent mask/unmask, animation stop, full-surface initial-load visibility, successful completion, provider failure, and capture-owned release paths are covered; exhaustive live timing remains open." },
         "platform": { "status": "partial", "verifiedOn": "2026-08-24", "commit": "557bca349d2db4f69468b9e792d3458168dca90a", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-states-31/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-states-31/tests/linux/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-states-31/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-states-31/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-states-31/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-states-31/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Focused coverage and fresh shipping-app smokes pass on Windows, native Wayland, X11, and Wayland-only Flatpak with --filesystem=host; macOS and exhaustive provider timing remain open." }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/Columns/RefLabelHitInfo.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/RefLabelHitInfo.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/current-inventory.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed. Current inventory reports this record-struct mapping unsupported (no supported top-level declaration), not zero structural differences. Actual source structural completeness remains unmeasured debt; no type/report/finding count is invented."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/current-inventory.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/current-inventory.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This immutable coordinate/identity record performs no painting or palette lookup. The renderer and revision-grid visual/theming axes remain open; hit tests do not establish raster parity."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/current-inventory.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This immutable coordinate/identity record performs no painting or palette lookup. The renderer and revision-grid visual/theming axes remain open; hit tests do not establish raster parity."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/current-inventory.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-10-04",
+          "commit": "ced3016e2bba2b7537b82f73542f17edf0466ac1",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-80/current-inventory.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed."
+        }
       }
     }
   ]

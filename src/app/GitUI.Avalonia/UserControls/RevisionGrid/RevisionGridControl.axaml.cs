@@ -1667,9 +1667,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 .FirstOrDefault();
 
             // Check if a ref label was clicked in the message column
-            RevisionGridRefRenderer.RefLabelControl? label = source.GetSelfAndVisualAncestors()
-                .OfType<RevisionGridRefRenderer.RefLabelControl>()
-                .FirstOrDefault(label => label.GitRef is not null);
+            Control? messageCell = source.GetSelfAndVisualAncestors()
+                .OfType<Control>()
+                .FirstOrDefault(control => control.Classes.Contains("revision-message-cell"));
+            RevisionGridRefRenderer.RefLabelControl? label = revision is not null && messageCell is not null
+                ? _messageColumnProvider.HitTest(GetRevisionIndex(revision), e.GetPosition(this))
+                : null;
 
             bool leftButton = properties.PointerUpdateKind == PointerUpdateKind.LeftButtonPressed;
             if (leftButton
@@ -1733,9 +1736,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             if (properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
             {
                 _rightClickedHitInfo = label;
-                Control? messageCell = label?.GetSelfAndVisualAncestors()
-                    .OfType<Control>()
-                    .FirstOrDefault(control => control.Classes.Contains("revision-message-cell"));
                 _messageColumnProvider.SetHighlight(messageCell, label);
                 if (revision is not null && _gridView.SelectedItems?.Contains(revision) != true)
                 {
