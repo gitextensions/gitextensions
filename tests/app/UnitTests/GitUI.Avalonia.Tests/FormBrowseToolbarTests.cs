@@ -1,8 +1,17 @@
+using System.Reflection;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
+using Avalonia.Input.Raw;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -10,6 +19,9 @@ using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Compat;
 using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
+using NSubstitute;
+using Image = Avalonia.Controls.Image;
+using Point = Avalonia.Point;
 
 namespace GitExtensionsTests;
 
@@ -187,5 +199,248 @@ public sealed class FormBrowseToolbarTests
         }
 
         static Border Separator() => new() { Classes = { "gitextensions-toolbar-separator" } };
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(GitPullAction.Merge)]
+    [TestCase(GitPullAction.Rebase)]
+    [TestCase(GitPullAction.Fetch)]
+    [TestCase(GitPullAction.FetchAll)]
+    [TestCase(GitPullAction.FetchPruneAll)]
+    public void Pull_submenu_should_keep_each_source_Designer_icon(GitPullAction action)
+    {
+        using FormBrowse form = new();
+        MenuItem source = PullSource(form, action);
+
+        source.Icon.Should().BeOfType<Image>().Which.Source.Should().BeSameAs(PullIcon(action));
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(GitPullAction.None)]
+    [TestCase(GitPullAction.Merge)]
+    [TestCase(GitPullAction.Rebase)]
+    [TestCase(GitPullAction.Fetch)]
+    [TestCase(GitPullAction.FetchAll)]
+    [TestCase(GitPullAction.FetchPruneAll)]
+    public void Default_Pull_action_clone_should_keep_its_source_image_at_actual_menu_icon_size_and_allow_repeated_selection(
+        GitPullAction action)
+    {
+        using PullMenuFixture fixture = new();
+        fixture.Open();
+        MenuItem source = PullSource(fixture.Form, action);
+        MenuItem clone = fixture.Clone(action);
+        Image sourceIcon = source.Icon.Should().BeOfType<Image>().Subject;
+        Image cloneIcon = clone.Icon.Should().BeOfType<Image>().Subject;
+
+        clone.Name.Should().Be($"{source.Name}SetDefault");
+        clone.Header.Should().Be(source.Header);
+        clone.Tag.Should().Be(action);
+        clone.ToggleType.Should().Be(MenuItemToggleType.CheckBox,
+            "the source CheckOnClick menu item renders a check mark rather than a radio dot");
+        clone.StaysOpenOnClick.Should().BeTrue(
+            "the source cancels ItemClicked closing on its default-action submenu");
+        cloneIcon.Should().NotBeSameAs(sourceIcon, "Avalonia image controls cannot share visual ownership");
+        cloneIcon.Source.Should().BeSameAs(PullIcon(action));
+        cloneIcon.Source.Should().BeSameAs(sourceIcon.Source);
+        cloneIcon.Bounds.Size.Should().Be(new Avalonia.Size(16, 16),
+            "the source ToolStrip menu image allocation is sixteen pixels at its 96-DPI default");
+        TopLevel.GetTopLevel(clone).Should().NotBeNull();
+        fixture.Parent.IsSubMenuOpen.Should().BeTrue();
+        fixture.Flyout.IsOpen.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Opened_default_Pull_action_submenu_should_apply_repeated_actual_clicks_without_closing_either_menu()
+    {
+        using PullMenuFixture fixture = new();
+        fixture.Open();
+        foreach (GitPullAction action in new[]
+        {
+            GitPullAction.None, GitPullAction.Merge, GitPullAction.Rebase,
+            GitPullAction.Fetch, GitPullAction.FetchAll, GitPullAction.FetchPruneAll,
+        })
+        {
+            MenuItem clone = fixture.Clone(action);
+            for (int selection = 0; selection < 2; selection++)
+            {
+                fixture.Click(clone);
+
+                AppSettings.DefaultPullAction.Should().Be(action);
+                clone.IsChecked.Should().BeTrue();
+                fixture.Parent.Items.OfType<MenuItem>().Where(item => !ReferenceEquals(item, clone))
+                    .Should().OnlyContain(item => !item.IsChecked);
+                fixture.Form.toolStripButtonPull.Icon.Should().BeSameAs(PullIcon(action));
+                fixture.Parent.IsSubMenuOpen.Should().BeTrue();
+                fixture.Flyout.IsOpen.Should().BeTrue();
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Default_Pull_action_submenu_should_still_close_with_its_owner_after_actual_outside_input()
+    {
+        using PullMenuFixture fixture = new();
+        fixture.Open();
+        fixture.Click(fixture.Clone(GitPullAction.Fetch));
+        fixture.ClickOutside();
+
+        fixture.Parent.IsSubMenuOpen.Should().BeFalse();
+        fixture.Flyout.IsOpen.Should().BeFalse(
+            "the source cancels ItemClicked closing, not outside-menu closing");
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Default_Pull_action_submenu_should_still_close_on_actual_Escape_input()
+    {
+        using PullMenuFixture fixture = new();
+        fixture.Open();
+        MenuItem clone = fixture.Clone(GitPullAction.Fetch);
+        fixture.Click(clone);
+        clone.Focus().Should().BeTrue();
+        TopLevel popup = TopLevel.GetTopLevel(clone)
+            ?? throw new InvalidOperationException("The opened default-action submenu has no input root.");
+
+        popup.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, null);
+        fixture.Settle();
+
+        fixture.Parent.IsSubMenuOpen.Should().BeFalse(
+            "the source cancels ItemClicked closing but permits keyboard closing of the active submenu");
+    }
+
+    private static IImage PullIcon(GitPullAction action)
+        => action switch
+        {
+            GitPullAction.None => GitUI.Properties.Images.Pull,
+            GitPullAction.Merge => GitUI.Properties.Images.PullMerge,
+            GitPullAction.Rebase => GitUI.Properties.Images.PullRebase,
+            GitPullAction.Fetch => GitUI.Properties.Images.PullFetch,
+            GitPullAction.FetchAll => GitUI.Properties.Images.PullFetchAll,
+            GitPullAction.FetchPruneAll => GitUI.Properties.Images.PullFetchPruneAll,
+            _ => throw new ArgumentOutOfRangeException(nameof(action)),
+        };
+
+    private static MenuItem PullSource(FormBrowse form, GitPullAction action)
+        => action switch
+        {
+            GitPullAction.None => form.pullToolStripMenuItem1,
+            GitPullAction.Merge => form.mergeToolStripMenuItem,
+            GitPullAction.Rebase => form.rebaseToolStripMenuItem1,
+            GitPullAction.Fetch => form.fetchToolStripMenuItem,
+            GitPullAction.FetchAll => form.fetchAllToolStripMenuItem,
+            GitPullAction.FetchPruneAll => form.fetchPruneAllToolStripMenuItem,
+            _ => throw new ArgumentOutOfRangeException(nameof(action)),
+        };
+
+    private sealed class PullMenuFixture : IDisposable
+    {
+        private readonly GitPullAction _originalAction = AppSettings.DefaultPullAction;
+
+        public PullMenuFixture()
+        {
+            Form = new FormBrowse();
+
+            // Supply Module through the real protected setter without invoking the
+            // runtime constructor or showing Browse and starting repository/plugin loaders.
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(Substitute.For<IGitModule>());
+            (typeof(GitModuleForm).GetProperty(nameof(GitModuleForm.UICommands), BindingFlags.Instance | BindingFlags.Public)
+                ?? throw new InvalidOperationException("The original-shaped UICommands boundary was not found."))
+                .SetValue(Form, commands);
+            Form.ToolStripMain.Items.Remove(Form.toolStripButtonPull);
+
+            // Keep the real Browse button, flyout, clones and handlers without loading
+            // a repository or starting the Browse window's plugin/background lifecycle.
+            Window = new Window
+            {
+                Width = 1024,
+                Height = 600,
+                Content = new Border
+                {
+                    Padding = new Avalonia.Thickness(8),
+                    Child = Form.toolStripButtonPull,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
+                },
+            };
+            Window.Show();
+            Settle();
+        }
+
+        public FormBrowse Form { get; }
+
+        public Window Window { get; }
+
+        public MenuFlyout Flyout => (MenuFlyout)Form.toolStripButtonPull.Flyout!;
+
+        public MenuItem Parent => Form.setDefaultPullButtonActionToolStripMenuItem;
+
+        public MenuItem Clone(GitPullAction action)
+            => Parent.Items.OfType<MenuItem>().Single(item => item.Tag is GitPullAction itemAction && itemAction == action);
+
+        public void Open()
+        {
+            Form.toolStripButtonPull.ShowDropDown();
+            Settle();
+
+            // The no-repository fixture does not claim remote-count visibility parity.
+            // Exercise the optional source action's retained menu layout explicitly.
+            Form.fetchAllToolStripMenuItem.IsVisible = true;
+            Clone(GitPullAction.FetchAll).IsVisible = true;
+            Parent.IsSubMenuOpen = true;
+            Settle();
+            Flyout.IsOpen.Should().BeTrue();
+            Parent.IsSubMenuOpen.Should().BeTrue();
+        }
+
+        public void Click(Control control)
+        {
+            TopLevel topLevel = TopLevel.GetTopLevel(control)
+                ?? throw new InvalidOperationException("The actual menu control has no input root.");
+            using WriteableBitmap? frame = topLevel.CaptureRenderedFrame();
+            Point point = control.TranslatePoint(new Point(control.Bounds.Width / 2, control.Bounds.Height / 2), topLevel)
+                ?? throw new InvalidOperationException("The actual menu control has no input coordinate.");
+            topLevel.MouseMove(point);
+            topLevel.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            topLevel.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Settle();
+        }
+
+        public void ClickOutside()
+        {
+            Point point = new(Window.Bounds.Width - 8, Window.Bounds.Height - 8);
+            Window.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            Window.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Settle();
+        }
+
+        public void Settle()
+        {
+            Dispatcher.UIThread.RunJobs();
+            Window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            using WriteableBitmap? ownerFrame = Window.CaptureRenderedFrame();
+            if (TopLevel.GetTopLevel(Parent) is { } parentPopup)
+            {
+                using WriteableBitmap? parentFrame = parentPopup.CaptureRenderedFrame();
+            }
+
+            if (TopLevel.GetTopLevel(Clone(GitPullAction.None)) is { } submenuPopup)
+            {
+                using WriteableBitmap? submenuFrame = submenuPopup.CaptureRenderedFrame();
+            }
+        }
+
+        public void Dispose()
+        {
+            Flyout.Hide();
+            Window.Close();
+            AppSettings.DefaultPullAction = _originalAction;
+            ((IDisposable)Form).Dispose();
+        }
     }
 }

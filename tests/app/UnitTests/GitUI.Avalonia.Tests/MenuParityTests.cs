@@ -10,6 +10,8 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.Menus;
+using GitUI.Compat;
+using GitUI.Hotkey;
 using NSubstitute;
 
 namespace GitExtensionsTests;
@@ -50,6 +52,33 @@ public sealed class MenuParityTests
 
         transition.Should().NotBeNull();
         transition!.GitModule.WorkingDir.Should().Be(recent.Path);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Start_menu_should_keep_source_shortcut_display_alongside_the_executable_gesture()
+    {
+        HotkeySettings browse = HotkeySettingsManager.CreateDefaultSettingsCore(scriptsManager: null)
+            .Single(settings => settings.Name == FormBrowse.HotkeySettingsName);
+        StartToolStripMenuItem menu = new();
+
+        menu.RefreshShortcutKeys(browse.Commands);
+
+        MenuItem open = menu.OpenRepositoryMenuItem;
+        open.InputGesture.Should().Be(KeysMapper.ToKeyGesture(
+            GitExtensions.Shims.WinForms.Keys.Control | GitExtensions.Shims.WinForms.Keys.O));
+        WinFormsToolStripMenuSizer.GetShortcutDisplayString(open).Should().Be("Ctrl+O");
+        browse.Commands!.Single(command => command.CommandCode == (int)FormBrowse.Command.OpenRepo).KeyData =
+            GitExtensions.Shims.WinForms.Keys.Control | GitExtensions.Shims.WinForms.Keys.Oemcomma;
+
+        menu.RefreshShortcutKeys(browse.Commands);
+
+        open.InputGesture.Should().Be(KeysMapper.ToKeyGesture(
+            GitExtensions.Shims.WinForms.Keys.Control | GitExtensions.Shims.WinForms.Keys.Oemcomma));
+        WinFormsToolStripMenuSizer.GetShortcutDisplayString(open).Should().Be("Ctrl+,");
+        menu.RefreshShortcutKeys(null);
+        open.InputGesture.Should().BeNull();
+        WinFormsToolStripMenuSizer.GetShortcutDisplayString(open).Should().BeNull();
     }
 
     [AvaloniaTest]

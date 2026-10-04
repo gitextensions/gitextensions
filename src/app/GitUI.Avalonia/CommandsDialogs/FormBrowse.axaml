@@ -360,20 +360,30 @@
                                 Icon="{x:Static properties:Images.Pull}">
           <compat:IconSplitButton.Flyout>
             <MenuFlyout>
-              <wf:ToolStripMenuItem x:Name="pullToolStripMenuItem1" Header="Open _pull dialog..." />
+              <wf:ToolStripMenuItem x:Name="pullToolStripMenuItem1" Header="Open _pull dialog...">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Pull}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
               <wf:ToolStripSeparator />
-              <wf:ToolStripMenuItem x:Name="mergeToolStripMenuItem" Header="Pull - _merge" />
-              <wf:ToolStripMenuItem x:Name="rebaseToolStripMenuItem1" Header="Pull - _rebase" />
+              <wf:ToolStripMenuItem x:Name="mergeToolStripMenuItem" Header="Pull - _merge">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullMerge}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
+              <wf:ToolStripMenuItem x:Name="rebaseToolStripMenuItem1" Header="Pull - _rebase">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullRebase}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
               <wf:ToolStripMenuItem x:Name="fetchToolStripMenuItem"
                                     Header="_Fetch"
-                                    ToolTip.Tip="Fetch branches and tags" />
+                                    ToolTip.Tip="Fetch branches and tags">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetch}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
               <wf:ToolStripMenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all">
                 <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetchAll}" /></MenuItem.Icon>
                 <ToolTip.Tip>Fetch branches and tags from all remote repositories</ToolTip.Tip>
               </wf:ToolStripMenuItem>
               <wf:ToolStripMenuItem x:Name="fetchPruneAllToolStripMenuItem"
                                     Header="F_etch and prune all"
-                                    ToolTip.Tip="Fetch branches and tags from all remote repositories also prune deleted branches" />
+                                    ToolTip.Tip="Fetch branches and tags from all remote repositories also prune deleted branches">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetchPruneAll}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
               <wf:ToolStripSeparator />
               <wf:ToolStripMenuItem x:Name="setDefaultPullButtonActionToolStripMenuItem" Header="Set _default Pull button action" />
             </MenuFlyout>

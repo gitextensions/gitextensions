@@ -163,7 +163,7 @@ partial class FormBrowse
     {
         // Show both Check and Image margins in a menu
         // Prevent submenu from closing while options are changed
-        // Avalonia's native menu owns its margins and dismissal behavior; the actions remain independently selectable.
+        // Avalonia's StaysOpenOnClick preserves the source's ItemClicked cancellation.
         (MenuItem Source, GitPullAction Action)[] items =
         [
             (pullToolStripMenuItem1, GitPullAction.None),
@@ -182,7 +182,8 @@ partial class FormBrowse
                 Header = source.Header,
                 Icon = CloneMenuIcon(source.Icon),
                 Tag = action,
-                ToggleType = MenuItemToggleType.Radio,
+                ToggleType = MenuItemToggleType.CheckBox,
+                StaysOpenOnClick = true,
             };
             item.Tag = action;
             item.Click += SetDefaultPullActionMenuItemClick;
@@ -197,15 +198,29 @@ partial class FormBrowse
         }
 
         static object? CloneMenuIcon(object? icon)
-            => icon is Image image
-                ? new Image
-                {
-                    Width = image.Width,
-                    Height = image.Height,
-                    Source = image.Source,
-                    Stretch = image.Stretch,
-                }
-                : null;
+        {
+            if (icon is not Image image)
+            {
+                return null;
+            }
+
+            Image clone = new()
+            {
+                Width = image.Width,
+                Height = image.Height,
+                Source = image.Source,
+                Stretch = image.Stretch,
+            };
+
+            // The source copies its image; Avalonia also needs the icon's sizing
+            // classes because the original menu may not yet have applied its styles.
+            foreach (string className in image.Classes)
+            {
+                clone.Classes.Add(className);
+            }
+
+            return clone;
+        }
     }
 
     private void FillUserShells(string defaultShell)
