@@ -56,6 +56,11 @@ public partial class FileViewer : GitModuleControl
     private int _lastCaretLine = -1;
 
     /// <summary>
+    ///  Gets or sets the owning task factory so its synchronous joins can pump rendering work.
+    /// </summary>
+    internal JoinableTaskFactory? MainThreadFactory { get; set; }
+
+    /// <summary>
     /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
     /// </summary>
     public event Action? EscapePressed;
@@ -2667,6 +2672,12 @@ public partial class FileViewer : GitModuleControl
         {
             action();
         }
+        else if (MainThreadFactory is JoinableTaskFactory mainThreadFactory)
+        {
+            await mainThreadFactory.SwitchToMainThreadAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            action();
+        }
         else
         {
             await Dispatcher.InvokeAsync(action, DispatcherPriority.Normal, cancellationToken);
@@ -2678,6 +2689,13 @@ public partial class FileViewer : GitModuleControl
         cancellationToken.ThrowIfCancellationRequested();
         if (Dispatcher.CheckAccess())
         {
+            return action();
+        }
+
+        if (MainThreadFactory is JoinableTaskFactory mainThreadFactory)
+        {
+            await mainThreadFactory.SwitchToMainThreadAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
             return action();
         }
 

@@ -25,6 +25,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
     private readonly TaskManager _taskManager = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly CancellationTokenSequence _viewChangesSequence = new();
+    private readonly CancellationTokenSequence _showSelectedFileSequence = new();
     private readonly CancellationTokenSequence _setDiffSequence = new();
     private Action? _refreshGitStatus;
     private GitItemStatus? _selectedBlameItem;
@@ -42,6 +43,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         InitializeComponent();
 
         _diffCalculator = new FileStatusDiffCalculator(() => Module);
+        DiffText.MainThreadFactory = _taskManager.JoinableTaskFactory;
         DiffFiles.SelectionMode = SelectionMode.Multiple;
         DiffFiles.CanUseFindInCommitFilesGitGrep = true;
         DiffFiles.SelectedIndexChanged += DiffFiles_SelectedIndexChanged;
@@ -130,6 +132,9 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         _taskManager.FileAndForget(async () =>
         {
             await SetDiffsAsync(revisions);
+
+            // A switch inside SetDiffsAsync does not move this worker continuation.
+            await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!DiffFiles.SelectedItems.Any())
             {
                 DiffFiles.SelectStoredNextItem(orSelectFirst: true);
@@ -273,6 +278,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         _taskManager.FileAndForget(async () =>
         {
             await SetDiffsAsync(revisions);
+            await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!DiffFiles.SelectedItems.Any())
             {
                 DiffFiles.SelectFirstVisibleItem();
@@ -415,6 +421,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
 
     public void Clear()
     {
+        _showSelectedFileSequence.CancelCurrent();
         _setDiffSequence.CancelCurrent();
         _viewChangesSequence.CancelCurrent();
         _displayedRevisions = [];
@@ -608,13 +615,19 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
     /// </summary>
     private void ShowSelectedFile(bool ensureNoSwitchToFilter = false, int? line = null)
     {
+        CancellationToken cancellationToken = _showSelectedFileSequence.Next();
         _taskManager.FileAndForget(async () =>
         {
+            // FileAndForget starts on a worker; WinForms invokes this selection work on the UI thread.
+            await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
             await (DiffFiles.SelectedFolder is RelativePath relativePath
                 ? ShowSelectedFolderAsync(relativePath)
                 : DiffFiles.tsmiBlame.IsChecked
                     ? ShowSelectedFileBlameAsync(ensureNoSwitchToFilter, line)
                     : ShowSelectedFileDiffAsync(ensureNoSwitchToFilter, line));
+            await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
             _toBeSelectedItemLine = null;
             _updatingDiffs = false;
         });
@@ -693,7 +706,11 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
 
         if (AppSettings.OpenSubmoduleDiffInSeparateWindow && item.Item.IsSubmodule)
         {
-            _taskManager.FileAndForget(DiffFiles.OpenSubmoduleAsync);
+            _taskManager.FileAndForget(async () =>
+            {
+                await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync();
+                await DiffFiles.OpenSubmoduleAsync();
+            });
         }
         else
         {
@@ -809,5 +826,10 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         public FileStatusList DiffFiles => control.DiffFiles;
         public Editor.FileViewer DiffText => control.DiffText;
         public Grid DiffSplitContainer => control.DiffSplitContainer;
+        public Blame.BlameControl BlameControl => control.BlameControl;
+        public TaskManager TaskManager => control._taskManager;
+
+        public void ShowSelectedFile(bool ensureNoSwitchToFilter = false, int? line = null)
+            => control.ShowSelectedFile(ensureNoSwitchToFilter, line);
     }
 }
