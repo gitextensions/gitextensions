@@ -4377,6 +4377,20 @@ internal sealed class AvaloniaControlTreeReader
 
         if (IsHostedMenuTextBox(control))
         {
+            if (control.GetLogicalAncestors().OfType<NativeToolStrip>().Any()
+                && control.GetLogicalAncestors().Any(ancestor => ancestor.GetType().FullName
+                    == "GitUI.CommandsDialogs.Menus.WorkingDirectoryToolStripSplitButton"))
+            {
+                // ToolStripItem.Bounds belongs to its current drop-down parent even when
+                // the primary tree also lists the item under its logical split-button owner.
+                // Omit only the MenuItem/template wrappers, not their actual layout offsets.
+                Control? currentParent = control.GetVisualAncestors().OfType<Control>()
+                    .FirstOrDefault(IsPopupSurface);
+                return currentParent is not null && control.TranslatePoint(default, currentParent) is Point hostedOrigin
+                    ? new Rect(hostedOrigin, control.Bounds.Size)
+                    : control.Bounds;
+            }
+
             // ToolStripControlHost reports the hosted input within the popup's image-margin
             // coordinate space. Keep that semantic ToolStrip geometry here; actual placement
             // remains independently covered by the captured popup pixels.

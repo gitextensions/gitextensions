@@ -123,6 +123,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         int rowIndex = _grid.GetRevisionIndex(revision);
 
         bool restoreHighlight = DetachHighlightForUpdate(panel, revision);
+        panel.ContentPanel.ClearMinimumAdvances();
         panel.ContentPanel.Children.RemoveRange(0, panel.ContentPanel.Children.Count - 1);
         panel.FixupAndSquashMarker.IsVisible = false;
         panel.Body.Text = string.Empty;
@@ -130,7 +131,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         if (revision.IsArtificial)
         {
             RevisionGridRefRenderer.RefLabelControl artificialLabel = DrawArtificialRevision(revision);
-            artificialLabel.MinWidth = GetArtificialLabelWidth(panel);
+            panel.ContentPanel.SetMinimumAdvance(artificialLabel, GetArtificialLabelWidth(panel));
             DrawRef(panel, artificialLabel);
 
             foreach (Control statusControl in CreateArtificialStatusControls(revision.ObjectId))
@@ -722,7 +723,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
             hitInfos.AddRange(cell.GetVisualDescendants().OfType<RevisionGridRefRenderer.RefLabelControl>());
             return hitInfos.FirstOrDefault(label =>
                 (label.GitRef is not null || label.Icon == RefLabelIcon.Stash)
-                && label.Contains(_grid.TranslatePoint(gridClientPoint, label) ?? default));
+                && _grid.TranslatePoint(gridClientPoint, label) is Avalonia.Point point
+                && label.Contains(point));
         }
         finally
         {
@@ -960,6 +962,87 @@ internal sealed class MessageColumnProvider : ColumnProvider
             => value.StartsWith(prefix, StringComparison.Ordinal) ? value[prefix.Length..] : value;
     }
 
+    private sealed class MessageContentPanel : Panel
+    {
+        private const int RefMarginRight = 5;
+
+        private readonly Dictionary<Control, double> _minimumAdvances = [];
+
+        public void ClearMinimumAdvances() => _minimumAdvances.Clear();
+
+        public void SetMinimumAdvance(Control control, double advance)
+            => _minimumAdvances[control] = advance;
+
+        protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
+        {
+            double offset = 0;
+            double height = 0;
+            foreach (Control child in Children.Where(child => child.IsVisible))
+            {
+                double remainingWidth = Math.Max(0, availableSize.Width - offset);
+                child.Measure(new Avalonia.Size(remainingWidth, availableSize.Height));
+                offset += GetAdvance(child, remainingWidth);
+                height = Math.Max(height, child.DesiredSize.Height);
+            }
+
+            return new Avalonia.Size(offset, height);
+        }
+
+        protected override Avalonia.Size ArrangeOverride(Avalonia.Size finalSize)
+        {
+            double offset = 0;
+            foreach (Control child in Children.Where(child => child.IsVisible))
+            {
+                double remainingWidth = Math.Max(0, finalSize.Width - offset);
+                double advance = GetAdvance(child, remainingWidth);
+                child.Arrange(new Rect(offset, 0, Math.Min(remainingWidth, advance), finalSize.Height));
+                offset += advance;
+            }
+
+            return finalSize;
+        }
+
+        private double GetAdvance(Control child, double remainingWidth)
+        {
+            // A horizontal StackPanel measures refs with infinite width. DrawRefEx
+            // instead clips each capsule to the remaining cell before advancing by
+            // its painted width plus five; an empty capsule does not advance.
+            double advance = child switch
+            {
+                RevisionGridRefRenderer.RefLabelControl label => GetRefAdvance(label, remainingWidth),
+                RevisionGridRefRenderer.NestledRefLabelPanel pair => GetPairAdvance(pair, remainingWidth),
+                _ => child.DesiredSize.Width,
+            };
+
+            // Artificial rows reserve the status-count span independently of the
+            // capsule paint bounds. MinWidth would force that capsule past clipping.
+            return Math.Max(advance, _minimumAdvances.GetValueOrDefault(child));
+        }
+
+        private static double GetRefAdvance(RevisionGridRefRenderer.RefLabelControl label, double remainingWidth)
+        {
+            int width = label.GetCapsuleWidth(remainingWidth);
+            return width > 0 ? width + RefMarginRight : 0;
+        }
+
+        private static double GetPairAdvance(RevisionGridRefRenderer.NestledRefLabelPanel pair, double remainingWidth)
+        {
+            RevisionGridRefRenderer.RefLabelControl first = (RevisionGridRefRenderer.RefLabelControl)pair.Children[0];
+            RevisionGridRefRenderer.RefLabelControl second = (RevisionGridRefRenderer.RefLabelControl)pair.Children[1];
+            int firstWidth = first.GetCapsuleWidth(remainingWidth);
+            if (firstWidth <= 0)
+            {
+                return 0;
+            }
+
+            // DrawNestled resets from the clipped first rectangle rather than its
+            // advance, then the second DrawRefEx consumes only the remaining width.
+            double secondX = Math.Max(0, firstWidth - pair.PointWidth + 1);
+            int secondWidth = second.GetCapsuleWidth(Math.Max(0, remainingWidth - secondX));
+            return secondX + (secondWidth > 0 ? secondWidth + RefMarginRight : 0);
+        }
+    }
+
     private sealed class MessageCell : DockPanel
     {
         private readonly MessageColumnProvider _provider;
@@ -967,6 +1050,10 @@ internal sealed class MessageColumnProvider : ColumnProvider
         public MessageCell(MessageColumnProvider provider)
         {
             _provider = provider;
+
+            // DataGridView routes input over the entire cell, including unpainted
+            // rounded corners. Avalonia otherwise hit-tests only the drawn children.
+            Background = Brushes.Transparent;
             FixupAndSquashMarker.Source = provider._fixupAndSquashImage;
             FixupAndSquashMarker.Classes.Add("revision-message-marker");
             Subject.Classes.Add("revision-subject");
@@ -988,7 +1075,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             DoubleTapped += OnDoubleTapped;
         }
 
-        public StackPanel ContentPanel { get; } = new() { Orientation = Orientation.Horizontal };
+        public MessageContentPanel ContentPanel { get; } = new();
 
         public StackPanel MessagePanel { get; } = new() { Orientation = Orientation.Horizontal };
 
@@ -1028,10 +1115,9 @@ internal sealed class MessageColumnProvider : ColumnProvider
         }
 
         private RevisionGridRefRenderer.RefLabelControl? HitTest(Func<Visual, Avalonia.Point> getPosition)
-            => this.GetVisualDescendants()
-                .OfType<RevisionGridRefRenderer.RefLabelControl>()
-                .FirstOrDefault(label => (label.GitRef is not null || label.Icon == RefLabelIcon.Stash)
-                    && label.Contains(getPosition(label)));
+            => Revision is not null
+                ? _provider.HitTest(_provider._grid.GetRevisionIndex(Revision), getPosition(_provider._grid))
+                : null;
 
         private void OnPointerMoved(object? sender, PointerEventArgs e)
         {

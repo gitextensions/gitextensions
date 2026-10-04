@@ -472,32 +472,36 @@ public sealed class FormBrowseTests
                 .ReadPrimary(form, new PixelSize(923, 573)).Root;
             CaptureNode workingDirectory = Flatten(primary)
                 .Single(node => node.FieldName == "_NO_TRANSLATE_WorkingDir");
-            AssertHostedFilterOrder(workingDirectory.Children);
-
             Control popupRoot = driver.PopupSurfaceRoots.Should().ContainSingle().Subject;
+            WorkingDirectoryToolStripSplitButton selector = form.FindControl<WorkingDirectoryToolStripSplitButton>("_NO_TRANSLATE_WorkingDir")!;
+            TextBox filter = selector.GetTestAccessor().Filter;
+            Point filterOrigin = filter.TranslatePoint(default, popupRoot)!.Value;
+            Rect actualFilterBounds = new(filterOrigin, filter.Bounds.Size);
+            AssertHostedFilterOrder(workingDirectory.Children, actualFilterBounds);
+
             CaptureNode popup = new AvaloniaControlTreeReader(form, renderScale: 1)
                 .ReadSurface(
                     popupRoot,
                     "popup:0",
                     new PixelRect(0, 0, (int)popupRoot.Bounds.Width, (int)popupRoot.Bounds.Height))
                 .Root;
-            AssertHostedFilterOrder(popup.Children);
+            AssertHostedFilterOrder(popup.Children, actualFilterBounds);
         }
         finally
         {
             form.Close();
         }
 
-        static void AssertHostedFilterOrder(IReadOnlyList<CaptureNode> nodes)
+        static void AssertHostedFilterOrder(IReadOnlyList<CaptureNode> nodes, Rect actualBounds)
         {
             nodes.Should().HaveCountGreaterThan(1);
             nodes[0].Type.Should().Be("System.Windows.Forms.ToolStripTextBox");
             nodes[0].ControlKind.Should().Be("menuItem");
             nodes[0].Text.Should().BeEmpty();
-            nodes[0].BoundsDip.X.Should().Be(34);
-            nodes[0].BoundsDip.Y.Should().Be(3);
-            nodes[0].BoundsDip.Width.Should().BeGreaterThan(0);
-            nodes[0].BoundsDip.Height.Should().Be(23);
+            nodes[0].BoundsDip.X.Should().Be(decimal.Round((decimal)actualBounds.X, 4));
+            nodes[0].BoundsDip.Y.Should().Be(decimal.Round((decimal)actualBounds.Y, 4));
+            nodes[0].BoundsDip.Width.Should().Be(decimal.Round((decimal)actualBounds.Width, 4));
+            nodes[0].BoundsDip.Height.Should().Be(decimal.Round((decimal)actualBounds.Height, 4));
             nodes[1].Type.Should().Be(typeof(Separator).FullName);
         }
 
