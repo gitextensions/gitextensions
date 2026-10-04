@@ -7,6 +7,7 @@ using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 using GitUI.Properties;
 using GitUI.Shells;
 using GitUI.UserControls;
+using ResourceManager;
 using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs;
@@ -30,6 +31,10 @@ partial class FormBrowse
     private readonly Dictionary<string, ToolStripItem> _originalToolbarItems = new();
 
     public IReadOnlyDictionary<string, ToolStripItem> OriginalToolbarItems => _originalToolbarItems;
+
+    private readonly TranslationString _removeToolbarItemQuestion = new("Remove \"{0}\" from this toolbar?");
+    private readonly TranslationString _removeToolbarItemCaption = new("Remove toolbar item");
+    private readonly TranslationString _unnamedToolbarItem = new("this item");
 
     // Snapshots of the default toolbar order, captured before ApplySavedToolbarLayout() runs.
     // Used by ToolbarsSettingsPage to populate the "Default Standard toolbar" and "Default Filters toolbar" categories.
@@ -149,8 +154,8 @@ partial class FormBrowse
         }
 
         // Confirm before removing to guard against accidental right-clicks.
-        string itemName = GetToolbarItemConfirmName(item);
-        if (!MessageBoxes.Confirm(this, $"Remove \"{itemName}\" from this toolbar?", "Remove toolbar item"))
+        string itemName = GetToolbarItemConfirmName(item) ?? _unnamedToolbarItem.Text;
+        if (!MessageBoxes.Confirm(this, string.Format(_removeToolbarItemQuestion.Text, itemName), _removeToolbarItemCaption.Text))
         {
             return;
         }
@@ -163,7 +168,8 @@ partial class FormBrowse
     }
 
     // Builds a human-readable name for an item, used in the removal confirmation prompt.
-    private static string GetToolbarItemConfirmName(ToolStripItem item)
+    // Null when the item has nothing to be called by.
+    private static string? GetToolbarItemConfirmName(ToolStripItem item)
     {
         static string FirstLine(string text)
         {
@@ -181,7 +187,7 @@ partial class FormBrowse
             return FirstLine(item.ToolTipText).Replace("&", "");
         }
 
-        return !string.IsNullOrWhiteSpace(item.Name) ? item.Name! : "this item";
+        return !string.IsNullOrWhiteSpace(item.Name) ? item.Name : null;
     }
 
     // Snapshots the current item layout of every toolbar into the saved config.

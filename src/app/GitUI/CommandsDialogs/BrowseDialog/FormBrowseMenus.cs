@@ -5,6 +5,7 @@ using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 using Microsoft;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs;
 
@@ -24,6 +25,13 @@ public class FormBrowseMenus : ITranslate
     /// The context menu that be shown to allow toggle visibility of toolbars in <see cref="FormBrowse"/>.
     /// </summary>
     private readonly ContextMenuStrip _toolStripContextMenu = new();
+
+    // Shared by View > Toolbars and the toolbar context menu, which offer the same action.
+    private readonly TranslationString _customizeToolbarText = new("Customize toolbar...");
+
+    // Offered by the toolbar context menu when the right-click landed on an item.
+    private readonly TranslationString _removeToolbarItemText = new("Remove this");
+
     private string? _clickedToolbarName;
     private ToolStrip? _clickedToolStrip;
     private ToolStripItem? _clickedItem;
@@ -105,7 +113,7 @@ public class FormBrowseMenus : ITranslate
 
         // Add separator and Customize menu item
         _toolbarsMenuItem.DropDownItems.Add(new ToolStripSeparator { Name = "toolbarsCustomizeSeparator" });
-        ToolStripMenuItem customizeItem = new("Customize toolbar...")
+        ToolStripMenuItem customizeItem = new(_customizeToolbarText.Text)
         {
             Name = "customizeToolbarsMenuItem"
         };
@@ -192,7 +200,7 @@ public class FormBrowseMenus : ITranslate
         _toolStripContextMenu.Items.Clear();
 
         // Add only the Customize menu item to context menu (no toolbar visibility toggles)
-        ToolStripMenuItem customizeContextItem = new("Customize toolbar...")
+        ToolStripMenuItem customizeContextItem = new(_customizeToolbarText.Text)
         {
             Name = "customizeToolbarsContextMenuItem",
             Image = GitUI.Properties.Images.Settings
@@ -219,7 +227,7 @@ public class FormBrowseMenus : ITranslate
         {
             _toolStripContextMenu.Items.Add(new ToolStripSeparator());
 
-            ToolStripMenuItem removeItem = new("Remove this")
+            ToolStripMenuItem removeItem = new(_removeToolbarItemText.Text)
             {
                 Name = "removeToolbarItemContextMenuItem"
             };
@@ -537,6 +545,11 @@ public class FormBrowseMenus : ITranslate
 
             yield return (menuItem.Name!, menuItem);
         }
+
+        // The entries using these are created afterwards, and again on every right-click, so
+        // they read the strings rather than being translated as menu items.
+        yield return (nameof(_customizeToolbarText), _customizeToolbarText);
+        yield return (nameof(_removeToolbarItemText), _removeToolbarItemText);
     }
 
     private void SetDropDownItems(ToolStripMenuItem toolStripMenuItemTarget, IEnumerable<MenuCommand> menuCommands)

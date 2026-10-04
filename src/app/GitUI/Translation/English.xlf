@@ -2789,6 +2789,10 @@ compare with first:</source>
         <source>&amp;Create pull requests...</source>
         <target />
       </trans-unit>
+      <trans-unit id="_customizeToolbarText.Text">
+        <source>Customize toolbar...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
         <source>&amp;Fork/Clone repository...</source>
         <target />
@@ -2849,6 +2853,18 @@ compare with first:</source>
         <source>Pull - rebase</source>
         <target />
       </trans-unit>
+      <trans-unit id="_removeToolbarItemCaption.Text">
+        <source>Remove toolbar item</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_removeToolbarItemQuestion.Text">
+        <source>Remove "{0}" from this toolbar?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_removeToolbarItemText.Text">
+        <source>Remove this</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_repositoryHostsToolStripMenuItem.Text">
         <source>(Repository hosts)</source>
         <target />
@@ -2880,6 +2896,10 @@ Right click starts the "Open repository" dialog.</source>
         <source>You will still be able to find all the commit's changes in the staging area
 
 Do you want to continue?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_unnamedToolbarItem.Text">
+        <source>this item</source>
         <target />
       </trans-unit>
       <trans-unit id="_updateCurrentSubmodule.Text">
