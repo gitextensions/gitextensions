@@ -455,8 +455,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             return null;
         }
 
-        if (!string.IsNullOrWhiteSpace(item.Name) &&
-            !item.Name.StartsWith(FormBrowse.FetchPullToolbarShortcutsPrefix, StringComparison.Ordinal))
+        if (!string.IsNullOrWhiteSpace(item.Name))
         {
             return new ToolStripItemWrapper(item);
         }
@@ -2399,7 +2398,6 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         {
             if (subItem is ToolStripMenuItem subMenuItem &&
                 !string.IsNullOrWhiteSpace(subMenuItem.Name) &&
-                !subMenuItem.Name.StartsWith(FormBrowse.FetchPullToolbarShortcutsPrefix, StringComparison.Ordinal) &&
                 subMenuItem.Name != "setDefaultPullButtonActionToolStripMenuItem" &&
                 !usedItemNames.Contains(subMenuItem.Name) &&
                 !addedItemNames.Contains(subMenuItem.Name))

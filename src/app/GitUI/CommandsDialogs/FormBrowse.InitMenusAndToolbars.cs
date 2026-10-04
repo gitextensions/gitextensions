@@ -16,8 +16,6 @@ partial class FormBrowse
 {
     // This file is dedicated to init logic for FormBrowse menus and toolbars
 
-    internal static readonly string FetchPullToolbarShortcutsPrefix = "pull_shortcut_";
-
     // Stable identifiers for the three built-in toolbars, used as settings keys and layout names.
     private const string StandardToolbarName = ToolbarNames.Standard;
     private const string FiltersToolbarName = ToolbarNames.Filters;
@@ -110,9 +108,9 @@ partial class FormBrowse
         // Store all original items BEFORE any manipulation
         StoreOriginalToolbarItems();
 
-        InsertFetchPullShortcuts();
-
         toolStripButtonPull.DropDownOpening += (_, _) => UpdateFetchAllVisibility();
+
+        MigrateLegacyToolbarVisibility();
 
         LoadDynamicToolbarsFromConfig();
 
@@ -335,7 +333,7 @@ partial class FormBrowse
         StoreItemsFromToolbar(ToolStripFilters);
         StoreItemsFromToolbar(ToolStripScripts);
 
-        // Capture default order snapshots before InsertFetchPullShortcuts and ApplySavedToolbarLayout run
+        // Capture default order snapshots before ApplySavedToolbarLayout runs
         DefaultStandardToolbarSnapshot = ToolStripMain.Items.Cast<ToolStripItem>().ToList();
         DefaultFiltersToolbarSnapshot = ToolStripFilters.Items.Cast<ToolStripItem>().ToList();
 
@@ -364,6 +362,77 @@ partial class FormBrowse
                 }
             }
         }
+    }
+
+    // Translates the visibility settings View > Toolbars used to write, before toolbars could be
+    // customized, into the saved layout - once, since they are removed afterwards. A layout saved
+    // since then supersedes them, so they are only removed in that case.
+    private void MigrateLegacyToolbarVisibility()
+    {
+        if (!LegacyToolbarVisibility.HasAny(AppSettings.GetBool))
+        {
+            return;
+        }
+
+        ToolbarLayoutConfig config = ToolbarLayoutStore.Load();
+        if (!HasSavedToolbarLayout(config))
+        {
+            // All three built-in toolbars are written, because the loader rebuilds every one of
+            // them as soon as the layout holds any item (see PersistCurrentToolbarItemsLayout).
+            bool changed = false;
+            foreach (ToolStrip toolStrip in new ToolStrip[] { ToolStripMain, ToolStripFilters, ToolStripScripts })
+            {
+                changed |= AddLegacyToolbarItems(config, toolStrip);
+            }
+
+            // Settings that change nothing leave no layout behind: a default install keeps
+            // following the designer's toolbars rather than a frozen copy of them.
+            if (changed)
+            {
+                ToolbarLayoutStore.Save(config);
+                LogToolbar($"[MigrateLegacyToolbarVisibility] Translated the old visibility settings into {config.Items.Count} items");
+            }
+        }
+
+        LegacyToolbarVisibility.Purge(name => AppSettings.SetBool(name, null));
+        AppSettings.SettingsContainer.Save();
+    }
+
+    // Adds a toolbar's items to config as the old visibility settings leave them, and tells
+    // whether those settings hide or add anything on it.
+    private static bool AddLegacyToolbarItems(ToolbarLayoutConfig config, ToolStrip toolStrip)
+    {
+        List<ToolStripItem> items = toolStrip.Items.Cast<ToolStripItem>().ToList();
+        List<LegacyToolbarSlot> slots = LegacyToolbarVisibility.Apply(
+            items.Select(item => new LegacyToolbarItem(item.Name, item.Tag as string, item is ToolStripSeparator)).ToList(),
+            AppSettings.GetBool,
+            out bool changed);
+
+        int order = 0;
+        foreach (LegacyToolbarSlot slot in slots)
+        {
+            // A shortcut the old settings showed is stored as the drop-down entry it stood for,
+            // which the loader turns into a button the way it does any menu item.
+            ToolStripItem? item = slot.SourceIndex is int index ? items[index] : null;
+            string itemName = item is not null ? GetItemSerializationName(item, order) : slot.InsertedItemName!;
+
+            // Same rule as PersistCurrentToolbarItemsLayout: an item with no name of its own (a
+            // user script button) is rebuilt from the scripts settings, not from the layout.
+            if (ToolbarItemNames.IsValid(itemName))
+            {
+                config.Items.Add(new ToolbarItemConfig
+                {
+                    ItemName = itemName,
+                    ToolbarName = toolStrip.Text,
+                    Order = order,
+                    ShowText = item is not null && GetItemShowText(item)
+                });
+            }
+
+            order++;
+        }
+
+        return changed;
     }
 
     private void LoadDynamicToolbarsFromConfig()
@@ -1541,49 +1610,6 @@ partial class FormBrowse
 
     private static void UpdateTooltipWithShortcut(ToolStripItem button, Keys keys)
         => button.ToolTipText = button.ToolTipText!.UpdateSuffix(keys.ToShortcutKeyToolTipString());
-
-    private void InsertFetchPullShortcuts()
-    {
-        int i = ToolStripMain.Items.IndexOf(toolStripButtonPull);
-        ToolStripButton btn1 = CreateCorrespondingToolbarButton(fetchToolStripMenuItem, Command.QuickFetch);
-        ToolStripButton btn2 = CreateCorrespondingToolbarButton(fetchAllToolStripMenuItem);
-        ToolStripButton btn3 = CreateCorrespondingToolbarButton(fetchPruneAllToolStripMenuItem);
-        ToolStripButton btn4 = CreateCorrespondingToolbarButton(mergeToolStripMenuItem, Command.QuickPull);
-        ToolStripButton btn5 = CreateCorrespondingToolbarButton(rebaseToolStripMenuItem1);
-        ToolStripButton btn6 = CreateCorrespondingToolbarButton(pullToolStripMenuItem1, Command.PullOrFetch);
-
-        ToolStripMain.Items.Insert(i++, btn1);
-        ToolStripMain.Items.Insert(i++, btn2);
-        ToolStripMain.Items.Insert(i++, btn3);
-        ToolStripMain.Items.Insert(i++, btn4);
-        ToolStripMain.Items.Insert(i++, btn5);
-        ToolStripMain.Items.Insert(i, btn6);
-
-        // Store newly created items in the original items dictionary
-        _originalToolbarItems[btn1.Name!] = btn1;
-        _originalToolbarItems[btn2.Name!] = btn2;
-        _originalToolbarItems[btn3.Name!] = btn3;
-        _originalToolbarItems[btn4.Name!] = btn4;
-        _originalToolbarItems[btn5.Name!] = btn5;
-        _originalToolbarItems[btn6.Name!] = btn6;
-
-        ToolStripButton CreateCorrespondingToolbarButton(ToolStripMenuItem toolStripMenuItem, Command? command = null)
-        {
-            string toolTipText = toolStripMenuItem.Text!.Replace("&", string.Empty);
-            ToolStripButton clonedToolStripMenuItem = new()
-            {
-                Image = toolStripMenuItem.Image,
-                Name = FetchPullToolbarShortcutsPrefix + toolStripMenuItem.Name,
-                Size = toolStripMenuItem.Size,
-                Text = toolTipText,
-                ToolTipText = toolTipText.UpdateSuffix(command.HasValue ? GetShortcutKeyTooltipString(command.Value) : null!),
-                DisplayStyle = ToolStripItemDisplayStyle.Image,
-            };
-
-            clonedToolStripMenuItem.Click += (_, _) => toolStripMenuItem.PerformClick();
-            return clonedToolStripMenuItem;
-        }
-    }
 
     private void FillNextPullActionAsDefaultToolStripMenuItems()
     {
