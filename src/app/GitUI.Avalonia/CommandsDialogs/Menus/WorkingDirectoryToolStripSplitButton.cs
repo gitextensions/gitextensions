@@ -134,7 +134,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private readonly HashSet<MenuItem> _fixedItems = [];
     private readonly Dictionary<MenuItem, string> _repositoryItemTexts = [];
     private readonly MenuItem _filterHost;
-    private readonly MenuFlyout _menu = new NativeToolStripDropDownMenuFlyout();
+    private readonly MenuFlyout _menu;
     private readonly TextBox _txtFilter = new NativeToolStripMenuTextBox();
     private readonly NativeToolStripDropDownLayout _dropDownLayout;
 
@@ -147,6 +147,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private Window? _contentOwner;
 
     private bool _dropDownPreparedForTest;
+    private KeyModifiers _repositoryActivationModifiers;
     private Action? _closeRepository;
     private Action? _configure;
     private Func<IGitUICommands>? _getUICommands;
@@ -172,6 +173,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         ImageAlign = HorizontalAlignment.Left;
         TextAlign = HorizontalAlignment.Left;
         TranslationCompat.SetConvertMnemonics(this, false);
+        _menu = new NativeToolStripDropDownMenuFlyout(new WorkingDirectoryMenuInteractionHandler(
+            _txtFilter, GetSourceItemText, ActivateRepositoryItem));
         Flyout = _menu;
         _menu.Placement = PlacementMode.BottomEdgeAlignedLeft;
         _menu.FlyoutPresenterClasses.Add("gitextensions-branch-menu");
@@ -182,6 +185,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         // A focusable MenuItem consumes the pointer focus intended for its TextBox header.
         _filterHost = new NativeToolStripDropDownMenuItem
         {
+            UseSourceMnemonicRouting = true,
             Focusable = false,
             Header = _txtFilter,
             StaysOpenOnClick = true,
@@ -393,7 +397,11 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
                      .GroupBy(item => item.Repository.Category)
                      .OrderBy(item => item.Key))
         {
-            MenuItem categoryItem = new NativeToolStripDropDownMenuItem { Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(category.Key ?? string.Empty) };
+            MenuItem categoryItem = new NativeToolStripDropDownMenuItem
+            {
+                UseSourceMnemonicRouting = true,
+                Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(category.Key ?? string.Empty),
+            };
             categoryItem.Classes.Add("gitextensions-working-directory-entry");
             int number = 0;
             foreach (RepositoryHistoryEntry repository in category)
@@ -450,6 +458,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         {
             MenuItem categoryItem = new NativeToolStripDropDownMenuItem
             {
+                UseSourceMnemonicRouting = true,
                 Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(category.Key ?? string.Empty),
             };
             categoryItem.Classes.Add("gitextensions-working-directory-entry");
@@ -504,6 +513,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         string sourceText = $"{numberString}: {repository.Caption}";
         MenuItem item = new NativeToolStripDropDownMenuItem
         {
+            UseSourceMnemonicRouting = true,
             Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(sourceText),
             Tag = repository,
             Icon = anchored ? CreateIcon(Images.Pin) : null,
@@ -512,8 +522,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         item.Classes.Add("gitextensions-working-directory-entry");
         item.Classes.Add("gitextensions-working-directory-repository");
         ToolTip.SetTip(item, repository.Repo.Path == repository.Caption ? null : repository.Repo.Path);
-        item.PointerPressed += RepositoryItem_PointerPressed;
-        item.KeyDown += RepositoryItem_KeyDown;
         item.Click += RepositoryItem_Click;
         return item;
     }
@@ -529,6 +537,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         string sourceText = $"{numberString}: {repository.Caption}";
         MenuItem item = new NativeToolStripDropDownMenuItem
         {
+            UseSourceMnemonicRouting = true,
             Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(sourceText),
             Tag = repository,
             Icon = anchored ? CreateIcon(Images.Pin) : null,
@@ -540,26 +549,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         ToolTip.SetTip(
             item,
             repository.Repository.Path == repository.Caption ? null : repository.Repository.Path);
-        item.PointerPressed += RepositoryItem_PointerPressed;
-        item.KeyDown += RepositoryItem_KeyDown;
         item.Click += RepositoryItem_Click;
         return item;
-    }
-
-    private void RepositoryItem_PointerPressed(object? sender, PointerPressedEventArgs e)
-    {
-        if (sender is MenuItem item)
-        {
-            item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers == KeyModifiers.Control);
-        }
-    }
-
-    private void RepositoryItem_KeyDown(object? sender, KeyEventArgs e)
-    {
-        if (sender is MenuItem item)
-        {
-            item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers == KeyModifiers.Control);
-        }
     }
 
     private void RepositoryItem_Click(object? sender, RoutedEventArgs e)
@@ -569,8 +560,9 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             return;
         }
 
-        bool openInNewInstance = item.GetValue(OpenInNewInstanceProperty);
-        item.ClearValue(OpenInNewInstanceProperty);
+        KeyModifiers sourceControlModifier = KeysMapper.ToKeyGesture(
+            GitExtensions.Shims.WinForms.Keys.Control | GitExtensions.Shims.WinForms.Keys.A)!.KeyModifiers;
+        bool openInNewInstance = _repositoryActivationModifiers == sourceControlModifier;
         string? path = item.Tag switch
         {
             RecentRepoInfo repository => repository.Repo.Path,
@@ -581,6 +573,63 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         {
             OpenRepository(path, openInNewInstance);
         }
+    }
+
+    private void ActivateRepositoryItem(KeyModifiers modifiers, Action activate)
+    {
+        KeyModifiers previous = _repositoryActivationModifiers;
+        _repositoryActivationModifiers = modifiers;
+        try
+        {
+            activate();
+        }
+        finally
+        {
+            _repositoryActivationModifiers = previous;
+        }
+    }
+
+    private string? GetSourceItemText(MenuItem item)
+    {
+        if (_repositoryItemTexts.TryGetValue(item, out string? sourceText))
+        {
+            return sourceText;
+        }
+
+        if (item.Header is not string text)
+        {
+            return null;
+        }
+
+        // Header's encoding is reversible; the owned presenter normalizes only its
+        // painted Content, so fixed/category captions retain every native marker.
+        System.Text.StringBuilder source = new(text.Length);
+        for (int index = 0; index < text.Length; index++)
+        {
+            char character = text[index];
+            if (character == '_')
+            {
+                if (index + 1 < text.Length && text[index + 1] == '_')
+                {
+                    source.Append('_');
+                    index++;
+                }
+                else
+                {
+                    source.Append('&');
+                }
+            }
+            else
+            {
+                source.Append(character);
+                if (character == '&')
+                {
+                    source.Append('&');
+                }
+            }
+        }
+
+        return source.ToString();
     }
 
     private void OpenRepository(string path, bool openInNewInstance)
@@ -604,6 +653,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     {
         _tsmiCategorisedRepos ??= new NativeToolStripDropDownMenuItem
         {
+            UseSourceMnemonicRouting = true,
             Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_favouriteRepositoriesText),
             Icon = CreateIcon(Images.Star),
         };
@@ -626,6 +676,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     {
         MenuItem item = new NativeToolStripDropDownMenuItem
         {
+            UseSourceMnemonicRouting = true,
             Header = header,
             Icon = CreateIcon(icon),
             InputGesture = gesture,
@@ -731,9 +782,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         _menu.Hide();
         _dropDownLayout.Dispose();
     }
-
-    private static readonly AttachedProperty<bool> OpenInNewInstanceProperty =
-        AvaloniaProperty.RegisterAttached<WorkingDirectoryToolStripSplitButton, MenuItem, bool>("OpenInNewInstance");
 
     internal TestAccessor GetTestAccessor() => new(this);
 

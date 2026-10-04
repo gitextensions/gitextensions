@@ -1,7 +1,9 @@
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Platform;
 using Avalonia.Controls.Presenters;
+using Avalonia.Interactivity;
 
 namespace GitUI.Compat;
 
@@ -10,17 +12,24 @@ namespace GitUI.Compat;
 /// </summary>
 public sealed class NativeToolStripDropDownMenuFlyout : MenuFlyout
 {
+    private readonly IMenuInteractionHandler? _interactionHandler;
+
     public NativeToolStripDropDownMenuFlyout()
     {
     }
 
+    internal NativeToolStripDropDownMenuFlyout(IMenuInteractionHandler interactionHandler)
+        => _interactionHandler = interactionHandler;
+
     protected override Control CreatePresenter()
-        => new NativeToolStripDropDownPresenter
-        {
-            ItemsSource = Items,
-            [!ItemsControl.ItemTemplateProperty] = this[!ItemTemplateProperty],
-            [!ItemsControl.ItemContainerThemeProperty] = this[!ItemContainerThemeProperty],
-        };
+    {
+        NativeToolStripDropDownPresenter presenter = _interactionHandler is null
+            ? new() : new(_interactionHandler);
+        presenter.ItemsSource = Items;
+        presenter[!ItemsControl.ItemTemplateProperty] = this[!ItemTemplateProperty];
+        presenter[!ItemsControl.ItemContainerThemeProperty] = this[!ItemContainerThemeProperty];
+        return presenter;
+    }
 }
 
 /// <summary>
@@ -29,6 +38,11 @@ public sealed class NativeToolStripDropDownMenuFlyout : MenuFlyout
 public sealed class NativeToolStripDropDownPresenter : MenuFlyoutPresenter
 {
     public NativeToolStripDropDownPresenter()
+    {
+    }
+
+    internal NativeToolStripDropDownPresenter(IMenuInteractionHandler interactionHandler)
+        : base(interactionHandler)
     {
     }
 
@@ -63,6 +77,8 @@ public sealed class NativeToolStripDropDownMenuItem : MenuItem
     {
     }
 
+    internal bool UseSourceMnemonicRouting { get; set; }
+
     protected override Type StyleKeyOverride => typeof(MenuItem);
 
     protected override bool BypassFlowDirectionPolicies => true;
@@ -70,6 +86,19 @@ public sealed class NativeToolStripDropDownMenuItem : MenuItem
     public static bool GetUseSystemVisualStyle(MenuItem item) => item.GetValue(UseSystemVisualStyleProperty);
 
     public static void SetUseSystemVisualStyle(MenuItem item, bool value) => item.SetValue(UseSystemVisualStyleProperty, value);
+
+    protected override void OnAccessKey(RoutedEventArgs e)
+    {
+        if (UseSourceMnemonicRouting)
+        {
+            // Only this owned popup replaces AccessText's first-marker routing.
+            // Its existing presenter and always-visible underline policy remain.
+            e.Handled = true;
+            return;
+        }
+
+        base.OnAccessKey(e);
+    }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
