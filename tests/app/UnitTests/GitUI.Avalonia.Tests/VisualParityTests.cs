@@ -298,29 +298,30 @@ public sealed class VisualParityTests
                 form.toolStripFiltersHost.Bounds.Right.Should().Be(869);
                 form.toolStripFiltersHost.Bounds.Height.Should().Be(27);
                 form.toolStripFiltersOverflow.IsVisible.Should().BeTrue();
-                StackPanel filterItems = (StackPanel)toolStripFilters.Content!;
-                filterItems.Children.Should().Contain(item => item.IsVisible && item.Opacity == 0 && !item.IsHitTestVisible);
+                NativeToolStrip filterItems = toolStripFilters.Strip;
+                Control[] originalFilterItems = filterItems.Items.ToArray();
+                filterItems.OverflowItems.Should().NotBeEmpty();
+                filterItems.Items.Should().OnlyContain(item => item.Opacity == 1 && item.IsHitTestVisible);
                 form.toolStripFiltersOverflow.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
                 Dispatcher.UIThread.RunJobs();
-                form.toolStripFiltersViewport.Content.Should().BeNull();
-                filterItems.Orientation.Should().Be(Avalonia.Layout.Orientation.Vertical);
+                toolStripFilters.Parent.Should().BeSameAs(form.toolStripFiltersHost);
                 filterItems.Opacity.Should().Be(1);
                 filterItems.IsHitTestVisible.Should().BeTrue();
-                Flyout filterOverflow = (Flyout)form.toolStripFiltersOverflow.Tag!;
-                filterOverflow.IsOpen.Should().BeTrue();
-                Border filterOverflowHost = (Border)filterOverflow.Content!;
-                filterOverflowHost.Child.Should().BeSameAs(toolStripFilters);
-                IconSplitButton advancedFilter = toolStripFilters.GetTestAccessor().AdvancedFilter;
-                advancedFilter.IsEffectivelyVisible.Should().BeTrue();
-                advancedFilter.ShowDropDown();
+                filterItems.IsOverflowOpen.Should().BeTrue();
+                Control[] displayedOverflow = filterItems.OverflowItems.Where(item => !NativeToolStrip.GetItemIsSeparator(item)).ToArray();
+                displayedOverflow.Should().OnlyContain(item => item.GetVisualParent() == filterItems.OverflowContent);
+                IconDropDownButton branchFilter = toolStripFilters.FindControl<IconDropDownButton>("tsddbtnBranchFilter")!;
+                filterItems.GetItemPlacement(branchFilter).Should().Be(NativeToolStripItemPlacement.Overflow);
+                branchFilter.IsEffectivelyVisible.Should().BeTrue();
+                branchFilter.Flyout!.ShowAt(branchFilter);
                 Dispatcher.UIThread.RunJobs();
-                advancedFilter.Flyout!.IsOpen.Should().BeTrue();
-                advancedFilter.Flyout.Hide();
-                filterOverflow.Hide();
+                branchFilter.Flyout.IsOpen.Should().BeTrue();
+                branchFilter.Flyout.Hide();
+                filterItems.CloseOverflow();
                 Dispatcher.UIThread.RunJobs();
-                form.toolStripFiltersViewport.Content.Should().BeSameAs(toolStripFilters);
-                filterItems.Orientation.Should().Be(Avalonia.Layout.Orientation.Horizontal);
-                filterItems.Children.Should().Contain(item => item.IsVisible && item.Opacity == 0 && !item.IsHitTestVisible);
+                toolStripFilters.Parent.Should().BeSameAs(form.toolStripFiltersHost);
+                filterItems.Items.Should().Equal(originalFilterItems);
+                filterItems.Items.Should().OnlyContain(item => item.Opacity == 1 && item.IsHitTestVisible);
                 Point settingsPosition = form.EditSettings.TranslatePoint(default, toolStripMain)!.Value;
                 settingsPosition.X.Should().BeLessThan(toolStripMain.Bounds.Width);
                 Point repoTreePosition = form.repoObjectsTree.TranslatePoint(new Point(), form)
@@ -563,7 +564,8 @@ public sealed class VisualParityTests
                         .Single();
 
                     input.Bounds.Height.Should().Be(23);
-                    input.Bounds.Y.Should().Be(1);
+                    input.Bounds.Y.Should().Be(2,
+                        "the running Browse filter owner is27px, centering its fixed23px hosted combo independently of the standalone25px context");
                     textViewport.Bounds.Height.Should().BeGreaterThanOrEqualTo(textPresenter.Bounds.Height);
                     Point presenterPosition = textPresenter.TranslatePoint(default, input)!.Value;
                     double topInset = presenterPosition.Y;

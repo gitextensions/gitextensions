@@ -59,9 +59,10 @@
     <Style Selector="Border.gitextensions-toolbar-separator">
       <Setter Property="Width" Value="6" />
       <Setter Property="Height" Value="25" />
-      <!-- ToolStripSeparator.GetPreferredSize returns 6x23; its main owner stretches
-           the item to the display height while the overflow uses its preferred height. -->
+      <!-- ToolStripSeparator.GetPreferredSize returns 6x23. The main owner stretches
+           its display height; overflow retains its placement but omits its painting. -->
       <Setter Property="compat:NativeToolStrip.ItemPreferredHeight" Value="23" />
+      <Setter Property="compat:NativeToolStrip.ItemIsSeparator" Value="True" />
       <Setter Property="Margin" Value="0" />
       <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
     </Style>
@@ -439,23 +440,19 @@
                            ToolTip.Tip="Settings" />
           </compat:NativeToolStrip>
       </Grid>
-      <Grid x:Name="toolStripFiltersHost" ColumnDefinitions="*,16" Height="27" ClipToBounds="True">
-        <ScrollViewer x:Name="toolStripFiltersViewport"
-                      Grid.Column="0"
-                      Height="27"
-                      HorizontalScrollBarVisibility="Hidden"
-                      VerticalScrollBarVisibility="Disabled">
-          <controls:FilterToolBar x:Name="ToolStripFilters" />
-        </ScrollViewer>
-        <Button x:Name="toolStripFiltersOverflow"
-                Grid.Column="1"
-                compat:TranslationCompat.TranslateText="False"
-                compat:TranslationCompat.TranslateToolTip="False"
-                HorizontalAlignment="Right"
-                Focusable="False"
-                Classes="gitextensions-toolbar-button gitextensions-toolbar-overflow"
-                Content="»"
-                ToolTip.Tip="More filter commands" />
+      <Grid x:Name="toolStripFiltersHost" Height="27" ClipToBounds="True">
+        <controls:FilterToolBar x:Name="ToolStripFilters">
+          <controls:FilterToolBar.OverflowButton>
+            <Button x:Name="toolStripFiltersOverflow"
+                    compat:TranslationCompat.TranslateText="False"
+                    compat:TranslationCompat.TranslateToolTip="False"
+                    HorizontalAlignment="Right"
+                    Focusable="False"
+                    Classes="gitextensions-toolbar-button gitextensions-toolbar-overflow"
+                    Content="»"
+                    ToolTip.Tip="More filter commands" />
+          </controls:FilterToolBar.OverflowButton>
+        </controls:FilterToolBar>
       </Grid>
       <StackPanel x:Name="ToolStripScripts"
                   Width="50"

@@ -7,6 +7,7 @@ using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Compat;
+using GitUI.UserControls;
 using Microsoft;
 using ResourceManager;
 using Point = Avalonia.Point;
@@ -269,6 +270,7 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
         => toolStrip switch
         {
             NativeToolStrip strip => strip.Items,
+            FilterToolBar filters => filters.Strip.Items,
             Panel panel => panel.Children,
             ContentControl { Content: Panel panel } => panel.Children,
             _ => [],

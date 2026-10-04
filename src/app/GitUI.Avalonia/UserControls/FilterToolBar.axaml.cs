@@ -1,7 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Data;
+using Avalonia.Diagnostics;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
@@ -65,10 +68,12 @@ internal sealed partial class FilterToolBar : TranslatedControl
     private Func<RefsFilter, IReadOnlyList<IGitRef>>? _getRefs;
     private Action<string>? _showInvalidReference;
     private string? _tslblRevisionFilterToolTip;
+    private readonly (FontFamily Family, double Size, FontStyle Style, FontWeight Weight) _defaultOwnerFont;
 
     public FilterToolBar()
     {
         InitializeComponent();
+        _defaultOwnerFont = (innerStackPanel.FontFamily, innerStackPanel.FontSize, innerStackPanel.FontStyle, innerStackPanel.FontWeight);
 
         // Select an option until we get a filter bound.
         tsbtnAdvancedFilter.Click += tsbtnAdvancedFilter_ButtonClick;
@@ -106,6 +111,133 @@ internal sealed partial class FilterToolBar : TranslatedControl
         SetBranchMode(tsmiShowBranchesAll, Properties.Images.BranchLocal);
         InitializeComplete();
         _advancedFilterToolTip = ToolTip.GetTip(tsbtnAdvancedFilter)?.ToString() ?? string.Empty;
+    }
+
+    /// <summary>
+    ///  Gets or sets the source owner's overflow button while retaining the same filter items.
+    /// </summary>
+    public Button OverflowButton
+    {
+        get => innerStackPanel.OverflowButton;
+        set => innerStackPanel.OverflowButton = value;
+    }
+
+    // Avalonia does not notify when an equal style value becomes a local assignment.
+    // The source owner's explicit font API must still override its independent menu font.
+
+    /// <summary>
+    ///  Gets or sets the wrapper font family and explicitly assigned source owner font.
+    /// </summary>
+    public new FontFamily FontFamily
+    {
+        get => base.FontFamily;
+        set
+        {
+            base.FontFamily = value;
+            RefreshOwnerFont(FontFamilyProperty);
+        }
+    }
+
+    /// <summary>
+    ///  Gets or sets the wrapper font size and explicitly assigned source owner font.
+    /// </summary>
+    public new double FontSize
+    {
+        get => base.FontSize;
+        set
+        {
+            base.FontSize = value;
+            RefreshOwnerFont(FontSizeProperty);
+        }
+    }
+
+    /// <summary>
+    ///  Gets or sets the wrapper font style and explicitly assigned source owner font.
+    /// </summary>
+    public new FontStyle FontStyle
+    {
+        get => base.FontStyle;
+        set
+        {
+            base.FontStyle = value;
+            RefreshOwnerFont(FontStyleProperty);
+        }
+    }
+
+    /// <summary>
+    ///  Gets or sets the wrapper font weight and explicitly assigned source owner font.
+    /// </summary>
+    public new FontWeight FontWeight
+    {
+        get => base.FontWeight;
+        set
+        {
+            base.FontWeight = value;
+            RefreshOwnerFont(FontWeightProperty);
+        }
+    }
+
+    /// <summary>
+    ///  Clears an authored property and restores the source menu font when clearing typography.
+    /// </summary>
+    /// <param name="property">The authored property to clear.</param>
+    public new void ClearValue(AvaloniaProperty property)
+    {
+        base.ClearValue(property);
+        RefreshOwnerFont(property);
+    }
+
+    /// <summary>
+    ///  Clears an authored property and restores the source menu font when clearing typography.
+    /// </summary>
+    /// <typeparam name="T">The property's value type.</typeparam>
+    /// <param name="property">The authored property to clear.</param>
+    public new void ClearValue<T>(StyledProperty<T> property)
+    {
+        base.ClearValue(property);
+        RefreshOwnerFont(property);
+    }
+
+    /// <summary>
+    ///  Gets the native horizontal owner used by the Browse ToolStripPanel allocation.
+    /// </summary>
+    internal NativeToolStrip Strip => innerStackPanel;
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        RefreshOwnerFont(change.Property);
+    }
+
+    private void RefreshOwnerFont(AvaloniaProperty property)
+    {
+        if (innerStackPanel is null || _defaultOwnerFont.Size <= 0
+            || (property != FontFamilyProperty && property != FontSizeProperty
+                && property != FontStyleProperty && property != FontWeightProperty))
+        {
+            return;
+        }
+
+        // The Avalonia wrapper inherits the application's control style, whereas an
+        // unassigned source ToolStrip keeps its menu font. Only an explicit owner
+        // assignment crosses this framework boundary; clearing it restores the default.
+        bool local = this.GetDiagnostic(property).Priority == BindingPriority.LocalValue;
+        if (property == FontFamilyProperty)
+        {
+            innerStackPanel.FontFamily = local ? FontFamily : _defaultOwnerFont.Family;
+        }
+        else if (property == FontSizeProperty)
+        {
+            innerStackPanel.FontSize = local ? FontSize : _defaultOwnerFont.Size;
+        }
+        else if (property == FontStyleProperty)
+        {
+            innerStackPanel.FontStyle = local ? FontStyle : _defaultOwnerFont.Style;
+        }
+        else if (property == FontWeightProperty)
+        {
+            innerStackPanel.FontWeight = local ? FontWeight : _defaultOwnerFont.Weight;
+        }
     }
 
     private IRevisionGridFilter RevisionGridFilter
@@ -605,6 +737,7 @@ internal sealed partial class FilterToolBar : TranslatedControl
             page);
     }
 
+    // parity-scaffolding: exposes the original filter commands and retained native owner to the parity tests.
     internal TestAccessor GetTestAccessor()
         => new(this);
 
@@ -689,6 +822,7 @@ internal sealed partial class FilterToolBar : TranslatedControl
         public MenuItem CommitterFilter => _control.tsmiCommitterFilter;
         public MenuItem AuthorFilter => _control.tsmiAuthorFilter;
         public MenuItem DiffContainsFilter => _control.tsmiDiffContainsFilter;
+        public NativeToolStrip Strip => _control.innerStackPanel;
         public ToggleButton ShowOnlyFirstParent => _control.tsmiShowOnlyFirstParent;
         public ToggleButton ShowReflog => _control.tsbShowReflog;
         public ToolbarComboBox RevisionFilter => _control.tstxtRevisionFilter;

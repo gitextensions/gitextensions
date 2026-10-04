@@ -1093,7 +1093,9 @@ internal sealed class AvaloniaControlTreeReader
                     : isNativeTabPage || isNativeButton
                         ? default(Thickness)
                         : GetPropertyValue(control, "Padding"))),
-            Margin = ReadThicknessPair(isHostedMenuTextBox ? new Thickness(1)
+            Margin = ReadThicknessPair(control.GetLogicalAncestors().OfType<NativeToolStrip>().Any()
+                ? control.Margin
+                : isHostedMenuTextBox ? new Thickness(1)
                 : hasDashboardRuntimeColors
                     // Native Dock ignores the stored Margin. Report that source property
                     // separately from the zero runtime inset required by Avalonia layout.
@@ -1151,7 +1153,13 @@ internal sealed class AvaloniaControlTreeReader
                         : isRevisionGrid || isRevisionGridView
                             ? new Thickness(3)
                         : hasNativeListComposite ? nativeListComposite!.Margin : control.Margin)),
-            Font = (rootMetadataType == "GitUI.UserControls.WaitSpinner"
+            Font = (control is GitUI.UserControls.FilterToolBar filterOwner
+                ? ReadFont(filterOwner.Strip)
+                : control is NativeToolStrip
+                ? ReadFont(control)
+                : control.GetLogicalAncestors().OfType<NativeToolStrip>().FirstOrDefault() is { } stripOwner
+                ? ReadFont(control) ?? ReadFont(stripOwner)
+                : rootMetadataType == "GitUI.UserControls.WaitSpinner"
                 ? ReadUiFont()
                 : isMenuCaption
                 ? ReadFont(control) is { } menuCaptionFont
@@ -3785,7 +3793,14 @@ internal sealed class AvaloniaControlTreeReader
                 ancestor => ancestor.GetType().FullName == "GitUI.UserControls.FilterToolBar");
         if (isFileHistoryToolbarControl)
         {
-            node = ApplyFileHistoryToolbarBounds(node, semanticName);
+            bool nativeOwner = control.GetLogicalAncestors().OfType<NativeToolStrip>().Any();
+            if (!nativeOwner)
+            {
+                // The legacy file-history layout still needs its source projection.
+                // NativeToolStrip owners expose actual arranged main/popup geometry.
+                node = ApplyFileHistoryToolbarBounds(node, semanticName);
+            }
+
             string? toolbarSourceType = GetSourceTypeName(GetSourceType(control, semanticName));
             if (toolbarSourceType is "ToolStripButton" or "ToolStripSplitButton" or "ToolStripDropDownButton" or "ToolStripLabel" or "ToolStripSeparator")
             {
@@ -3794,7 +3809,7 @@ internal sealed class AvaloniaControlTreeReader
             else if (toolbarSourceType == "ToolStripComboBox")
             {
                 node = WithSemanticColors(node, "GitExtensionsWindowBackgroundBrush", windowText);
-                node = node with { Margin = ReadThicknessPair(new Thickness(1, 0, 1, 0)) };
+                node = node with { Margin = ReadThicknessPair(nativeOwner ? control.Margin : new Thickness(1, 0, 1, 0)) };
             }
 
             if (semanticName == "toolStripSeparator3")
@@ -4495,6 +4510,14 @@ internal sealed class AvaloniaControlTreeReader
 
     private IEnumerable<Control> GetCaptureChildren(Control control)
     {
+        if (control is GitUI.UserControls.FilterToolBar filters)
+        {
+            // The source FilterToolBar is itself a ToolStrip. Its Avalonia wrapper
+            // exposes the same authored Items, not the internal layout owner.
+            // Read each item's actual geometry; an open overflow remains a surface.
+            return filters.Strip.Items;
+        }
+
         if (control is NativeToolStrip strip)
         {
             // Native ToolStrip exposes its authored Items, not its framework-owned overflow
@@ -5844,6 +5867,10 @@ internal sealed class AvaloniaControlTreeReader
 
     private bool IsRendererOnlyControl(Control control)
         => control.Name == "ImagePreview"
+           || (control is NativeToolStripSeparatorChrome
+               && control.GetLogicalAncestors().OfType<NativeToolStrip>().Any())
+           || (control is NativeToolStripSplitButtonFrame
+               && control.GetVisualAncestors().OfType<NativeToolStripSplitButton>().Any())
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormCherryPick"
                && control is Border or Grid or TextBlock
                && string.IsNullOrEmpty(control.Name)
@@ -5862,9 +5889,6 @@ internal sealed class AvaloniaControlTreeReader
                        && control.Classes.Contains("gitextensions-revision-split-frame"))
                    || (control is Border
                        && control.Classes.Contains("gitextensions-workspace-page-frame"))
-                   || control is NativeToolStripSeparatorChrome
-                   || (control is NativeToolStripSplitButtonFrame
-                       && control.GetVisualAncestors().OfType<NativeToolStripSplitButton>().Any())
                    || control.Name is "lblRepoPath" or "lblStatus"
                    || control.Parent is TreeView))
            || (control.GetType().Namespace == "GitUI.Compat.WinFormsControls"
