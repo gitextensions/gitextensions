@@ -5,6 +5,7 @@ using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
+using GitUI.Compat;
 using GitUI.Properties;
 using Microsoft.VisualStudio.Threading;
 using ToolStripDropDownItem = GitUI.Compat.WinFormsControls.ToolStripDropDownItem;
@@ -22,7 +23,13 @@ public sealed record RepositoryHistoryEntry(
 
 public sealed record RepositoryHistorySnapshot(
     IReadOnlyList<RepositoryHistoryEntry> Recent,
-    IReadOnlyList<RepositoryHistoryEntry> Favourites);
+    IReadOnlyList<RepositoryHistoryEntry> Favourites)
+{
+    /// <summary>
+    ///  Gets the number of recent entries supplied by the splitter's top group.
+    /// </summary>
+    public int TopCount { get; init; }
+}
 
 /// <summary>
 ///  Represents a service for managing the git repository history.
@@ -92,19 +99,21 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
     {
         string numberString = number switch
         {
-            < 10 => $"_{number}",
-            10 => "1_0",
+            < 10 => $"&{number}",
+            10 => "1&0",
             _ => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
         };
         string? branchName = _branchNameCache.GetCachedBranchName(repo.Path);
         ToolStripMenuItem item = new()
         {
-            Header = CreateRepositoryHeader($"{numberString}: {caption}", branchName),
+            Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics($"{numberString}: {caption}"),
             Tag = repo,
             Icon = anchored
                 ? new Image { Classes = { "gitextensions-icon-16" }, Source = Images.Pin }
                 : null,
         };
+
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(item, branchName);
 
         if (repo.Path != caption)
         {
@@ -112,9 +121,9 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
 
         item.PointerPressed += (_, e) =>
-            item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers.HasFlag(KeyModifiers.Control));
+            item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers == KeyModifiers.Control);
         item.KeyDown += (_, e) =>
-            item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers.HasFlag(KeyModifiers.Control));
+            item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers == KeyModifiers.Control);
         item.Click += (_, _) =>
         {
             bool openInNewInstance = item.GetValue(OpenInNewInstanceProperty);
@@ -182,7 +191,10 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
                      .GroupBy(item => item.Repository.Category)
                      .OrderBy(group => group.Key))
         {
-            ToolStripMenuItem menuItemCategory = new() { Header = repositories.Key ?? string.Empty };
+            ToolStripMenuItem menuItemCategory = new()
+            {
+                Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(repositories.Key ?? string.Empty),
+            };
             container.Items.Add(menuItemCategory);
 
             int number = 0;
@@ -214,15 +226,19 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         container.Items.Clear();
 
-        RepositoryHistorySnapshot snapshot = LoadSnapshot();
+        PopulateRecentRepositoriesMenu(container, LoadSnapshot());
+    }
+
+    private void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container, RepositoryHistorySnapshot snapshot)
+    {
         int number = 0;
-        bool hasAnchored = false;
         foreach (RepositoryHistoryEntry repository in snapshot.Recent)
         {
-            if (!repository.IsAnchored && hasAnchored)
+            // A top group can contain unanchored entries, and a recent group can
+            // contain pinned entries. Only the splitter's boundary determines the separator.
+            if (number > 0 && number == snapshot.TopCount)
             {
                 container.Items.Add(new ToolStripSeparator());
-                hasAnchored = false;
             }
 
             AddRecentRepositories(
@@ -231,7 +247,6 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
                 repository.Caption,
                 ++number,
                 repository.IsAnchored);
-            hasAnchored |= repository.IsAnchored;
         }
     }
 
@@ -244,9 +259,7 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         IList<Repository> recent = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
         IList<Repository> favourites = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
-        _snapshot = new RepositoryHistorySnapshot(
-            Split(recent, isFavourite: false),
-            Split(favourites, isFavourite: true));
+        _snapshot = CreateSnapshot(recent, favourites);
         return _snapshot;
     }
 
@@ -342,7 +355,18 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
-    private IReadOnlyList<RepositoryHistoryEntry> Split(IList<Repository> repositories, bool isFavourite)
+    private RepositoryHistorySnapshot CreateSnapshot(IList<Repository> recent, IList<Repository> favourites)
+    {
+        IReadOnlyList<RepositoryHistoryEntry> recentEntries = Split(recent, isFavourite: false, out int topCount);
+        return new RepositoryHistorySnapshot(
+            recentEntries,
+            Split(favourites, isFavourite: true, out _))
+        {
+            TopCount = topCount,
+        };
+    }
+
+    private IReadOnlyList<RepositoryHistoryEntry> Split(IList<Repository> repositories, bool isFavourite, out int topCount)
     {
         List<RecentRepoInfo> top = [];
         List<RecentRepoInfo> recent = [];
@@ -351,42 +375,20 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
             MeasureFont = AppSettings.Font,
         };
         splitter.SplitRecentRepos(repositories, top, recent);
+        topCount = top.Count;
+
+        // Source favourites deduplicate shared RecentRepoInfo instances between
+        // groups. Projecting first would change Union's reference-identity semantics.
+        IEnumerable<RecentRepoInfo> ordered = isFavourite ? top.Union(recent) : top.Concat(recent);
         return
         [
-            .. top.Concat(recent).Select(info => new RepositoryHistoryEntry(
+            .. ordered.Select(info => new RepositoryHistoryEntry(
                 info.Repo,
                 info.Caption ?? info.Repo.Path,
                 _branchNameCache.GetCachedBranchName(info.Repo.Path),
                 isFavourite,
                 info.Anchored)),
         ];
-    }
-
-    private static Control CreateRepositoryHeader(string caption, string? branchName)
-    {
-        Grid header = new()
-        {
-            ColumnDefinitions = new ColumnDefinitions("Auto,18,Auto"),
-            MinWidth = 260,
-        };
-        header.Children.Add(new TextBlock
-        {
-            Text = caption,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-        });
-        if (!string.IsNullOrWhiteSpace(branchName))
-        {
-            TextBlock branch = new()
-            {
-                Text = branchName,
-                Opacity = 0.7,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-            };
-            Grid.SetColumn(branch, 2);
-            header.Children.Add(branch);
-        }
-
-        return header;
     }
 
     private static StringComparer GetPathComparer()
@@ -397,8 +399,17 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
     internal readonly struct TestAccessor(RepositoryHistoryUIService service)
     {
-        internal void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number)
-            => service.AddRecentRepositories(menuItemContainer, repo, caption, number);
+        internal void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number, bool anchored = false)
+            => service.AddRecentRepositories(menuItemContainer, repo, caption, number, anchored);
+
+        internal RepositoryHistorySnapshot CreateSnapshot(IList<Repository> recent, IList<Repository> favourites)
+            => service.CreateSnapshot(recent, favourites);
+
+        internal void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container, RepositoryHistorySnapshot snapshot)
+            => service.PopulateRecentRepositoriesMenu(container, snapshot);
+
+        internal bool GetOpenInNewInstance(ToolStripMenuItem item)
+            => item.GetValue(OpenInNewInstanceProperty);
 
         internal void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, IReadOnlyList<RepositoryHistoryEntry> repositoryHistory)
             => service.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);

@@ -111,13 +111,34 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
                 hotkeys?.FirstOrDefault(command => command.CommandCode == (int)FormBrowse.Command.OpenRepo)?.KeyData);
             button._closeRepositoryGesture = KeysMapper.ToKeyGesture(
                 hotkeys?.FirstOrDefault(command => command.CommandCode == (int)FormBrowse.Command.CloseRepository)?.KeyData);
+
+            if (button._tsmiOpenLocalRepository is MenuItem open)
+            {
+                open.InputGesture = button._openRepositoryGesture;
+                WinFormsToolStripMenuSizer.SetShortcutDisplayString(open, button._openRepositoryShortcutDisplay);
+            }
+
+            if (button._tsmiCloseRepo is MenuItem close)
+            {
+                close.InputGesture = button._closeRepositoryGesture;
+                WinFormsToolStripMenuSizer.SetShortcutDisplayString(close, button._closeRepositoryShortcutDisplay);
+            }
+
+            if (button._menu.IsOpen)
+            {
+                button.ApplySourceShortcutText();
+            }
         }
     }
 
     private readonly HashSet<MenuItem> _fixedItems = [];
+    private readonly Dictionary<MenuItem, string> _repositoryItemTexts = [];
     private readonly MenuItem _filterHost;
     private readonly MenuFlyout _menu = new();
     private readonly TextBox _txtFilter = new();
+
+    private MenuItem? _tsmiOpenLocalRepository;
+    private MenuItem? _tsmiCloseRepo;
 
     private Implementation? _implementation;
     private Window? _contentOwner;
@@ -276,7 +297,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     {
         ResetDropDown();
         AddFavouriteRepositories(snapshot.Favourites);
-        AddRecentRepositories(snapshot.Recent);
+        AddRecentRepositories(snapshot.Recent, snapshot.TopCount);
         AddFixedItems();
         ApplySourceDropDownWidth();
     }
@@ -310,6 +331,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         }
 
         _fixedItems.Clear();
+        _repositoryItemTexts.Clear();
         _txtFilter.Text = string.Empty;
         _txtFilter.PlaceholderText = _repositorySearchPlaceholder.Text;
         _menu.Items.Add(new Separator());
@@ -318,15 +340,15 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private void AddFixedItems()
     {
         _menu.Items.Add(new Separator());
-        AddFixedItem(
+        _tsmiOpenLocalRepository = AddFixedItem(
             _openRepositoryText,
             Images.RepoOpen,
             _openRepositoryGesture,
             _openRepositoryShortcutDisplay,
             _openRepository);
-        AddFixedItem(
+        _tsmiCloseRepo = AddFixedItem(
             _closeRepositoryText,
-            icon: null,
+            Images.DashboardFolderGit,
             _closeRepositoryGesture,
             _closeRepositoryShortcutDisplay,
             _closeRepository);
@@ -386,14 +408,14 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         MenuItem favourites = new()
         {
             Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_favouriteRepositoriesText),
-            Icon = CreateIcon(Images.Pin),
+            Icon = CreateIcon(Images.Star),
         };
         favourites.Classes.Add("gitextensions-working-directory-entry");
         foreach (IGrouping<string?, RepositoryHistoryEntry> category in repositories
                      .GroupBy(item => item.Repository.Category)
                      .OrderBy(item => item.Key))
         {
-            MenuItem categoryItem = new() { Header = category.Key ?? string.Empty };
+            MenuItem categoryItem = new() { Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(category.Key ?? string.Empty) };
             categoryItem.Classes.Add("gitextensions-working-directory-entry");
             int number = 0;
             foreach (RepositoryHistoryEntry repository in category)
@@ -408,12 +430,22 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         _fixedItems.Add(favourites);
     }
 
-    private void AddRecentRepositories(IReadOnlyList<RepositoryHistoryEntry> repositories)
+    private void AddRecentRepositories(IReadOnlyList<RepositoryHistoryEntry> repositories, int topCount)
     {
         int number = 0;
-        foreach (RepositoryHistoryEntry repository in repositories)
+        foreach (RepositoryHistoryEntry repository in repositories.Take(topCount))
         {
-            _menu.Items.Add(CreateRepositoryItem(repository, ++number));
+            _menu.Items.Add(CreateRepositoryItem(repository, ++number, repository.IsAnchored));
+        }
+
+        if (topCount > 0 && repositories.Count > topCount)
+        {
+            _menu.Items.Add(new Separator());
+        }
+
+        foreach (RepositoryHistoryEntry repository in repositories.Skip(topCount))
+        {
+            _menu.Items.Add(CreateRepositoryItem(repository, ++number, repository.IsAnchored));
         }
     }
 
@@ -435,7 +467,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         MenuItem favourites = new()
         {
             Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_favouriteRepositoriesText),
-            Icon = CreateIcon(Images.Pin),
+            Icon = CreateIcon(Images.Star),
         };
         favourites.Classes.Add("gitextensions-working-directory-entry");
         foreach (IGrouping<string?, RecentRepoInfo> category in top
@@ -445,7 +477,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         {
             MenuItem categoryItem = new()
             {
-                Header = category.Key ?? string.Empty,
+                Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(category.Key ?? string.Empty),
             };
             categoryItem.Classes.Add("gitextensions-working-directory-entry");
             int number = 0;
@@ -474,7 +506,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         int number = 0;
         foreach (RecentRepoInfo repository in pinned)
         {
-            _menu.Items.Add(CreateRepositoryItem(repository, ++number));
+            _menu.Items.Add(CreateRepositoryItem(repository, ++number, repository.Anchored));
         }
 
         if (pinned.Count > 0 && recent.Count > 0)
@@ -484,24 +516,26 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
         foreach (RecentRepoInfo repository in recent)
         {
-            _menu.Items.Add(CreateRepositoryItem(repository, ++number));
+            _menu.Items.Add(CreateRepositoryItem(repository, ++number, repository.Anchored));
         }
     }
 
-    private MenuItem CreateRepositoryItem(RecentRepoInfo repository, int number)
+    private MenuItem CreateRepositoryItem(RecentRepoInfo repository, int number, bool anchored = false)
     {
         string numberString = number switch
         {
-            < 10 => $"_{number}",
-            10 => "1_0",
+            < 10 => $"&{number}",
+            10 => "1&0",
             _ => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
         };
+        string sourceText = $"{numberString}: {repository.Caption}";
         MenuItem item = new()
         {
-            Header = $"{numberString}: {repository.Caption}",
+            Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(sourceText),
             Tag = repository,
-            Icon = repository.Anchored ? CreateIcon(Images.Pin) : null,
+            Icon = anchored ? CreateIcon(Images.Pin) : null,
         };
+        _repositoryItemTexts.Add(item, sourceText);
         item.Classes.Add("gitextensions-working-directory-entry");
         item.Classes.Add("gitextensions-working-directory-repository");
         ToolTip.SetTip(item, repository.Repo.Path == repository.Caption ? null : repository.Repo.Path);
@@ -511,20 +545,22 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         return item;
     }
 
-    private MenuItem CreateRepositoryItem(RepositoryHistoryEntry repository, int number)
+    private MenuItem CreateRepositoryItem(RepositoryHistoryEntry repository, int number, bool anchored = false)
     {
         string numberString = number switch
         {
-            < 10 => $"_{number}",
-            10 => "1_0",
+            < 10 => $"&{number}",
+            10 => "1&0",
             _ => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
         };
+        string sourceText = $"{numberString}: {repository.Caption}";
         MenuItem item = new()
         {
-            Header = $"{numberString}: {repository.Caption}",
+            Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(sourceText),
             Tag = repository,
-            Icon = repository.IsAnchored ? CreateIcon(Images.Pin) : null,
+            Icon = anchored ? CreateIcon(Images.Pin) : null,
         };
+        _repositoryItemTexts.Add(item, sourceText);
         item.Classes.Add("gitextensions-working-directory-entry");
         item.Classes.Add("gitextensions-working-directory-repository");
         WinFormsToolStripMenuSizer.SetShortcutDisplayString(item, repository.BranchName);
@@ -541,7 +577,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     {
         if (sender is MenuItem item)
         {
-            item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers.HasFlag(KeyModifiers.Control));
+            item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers == KeyModifiers.Control);
         }
     }
 
@@ -549,7 +585,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     {
         if (sender is MenuItem item)
         {
-            item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers.HasFlag(KeyModifiers.Control));
+            item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers == KeyModifiers.Control);
         }
     }
 
@@ -576,23 +612,22 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     private void OpenRepository(string path, bool openInNewInstance)
     {
+        if (openInNewInstance)
+        {
+            _launchRepository?.Invoke(path);
+            return;
+        }
+
         if (_repositoryHistoryUIService is not null
             && !_repositoryHistoryUIService.CanOpenRepository(path))
         {
             return;
         }
 
-        if (openInNewInstance)
-        {
-            _launchRepository?.Invoke(path);
-        }
-        else
-        {
-            _setWorkingDirectory?.Invoke(path);
-        }
+        _setWorkingDirectory?.Invoke(path);
     }
 
-    private void AddFixedItem(
+    private MenuItem AddFixedItem(
         string header,
         Avalonia.Media.IImage? icon,
         KeyGesture? gesture,
@@ -610,6 +645,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         item.Click += (_, _) => action?.Invoke();
         _fixedItems.Add(item);
         _menu.Items.Add(item);
+        return item;
     }
 
     private void ApplyFilter()
@@ -621,8 +657,12 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             {
                 // WinForms filters only the displayed recent-repository captions. Favourite
                 // categories and fixed actions are explicitly excluded, including their children.
+                // Its ToolStripItem.Text retains the source '&' markers and literal '_';
+                // Avalonia's escaped AccessText Header must not become the search model.
+                string? sourceText = _repositoryItemTexts.TryGetValue(item, out string? repositoryText)
+                    ? repositoryText : item.Header as string;
                 item.IsVisible = string.IsNullOrWhiteSpace(filter)
-                    || (item.Header as string)?.Contains(filter, StringComparison.CurrentCultureIgnoreCase) is true;
+                    || sourceText?.Contains(filter, StringComparison.CurrentCultureIgnoreCase) is true;
             }
         }
     }
@@ -631,7 +671,9 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     {
         if (e.Key == Key.Escape)
         {
-            _txtFilter.Text = string.Empty;
+            // The native hosted input preprocesses Escape by closing its dropdown;
+            // FillDropDown clears the retained text only on the next actual opening.
+            _menu.Hide();
             e.Handled = true;
         }
     }
