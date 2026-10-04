@@ -158,6 +158,57 @@ internal class ToolbarLayoutConfig
         }
     }
 
+    /// <summary>
+    /// Renames a custom toolbar everywhere the layout refers to it by name: its metadata in both
+    /// lists, and the items placed on it.
+    /// </summary>
+    /// <remarks>
+    /// The name is the key every part of the layout uses to find a toolbar, so renaming only the
+    /// metadata would strand the toolbar's items, and renaming nothing would recreate the toolbar
+    /// under its old name on the next start.
+    /// </remarks>
+    /// <param name="oldName">Current display name of the toolbar.</param>
+    /// <param name="newName">Display name to give it.</param>
+    /// <exception cref="ArgumentException">
+    /// Either name is <see langword="null"/> or blank, either is the name of a built-in toolbar, or
+    /// <paramref name="newName"/> is already taken by another toolbar.
+    /// </exception>
+    public void RenameCustomToolbar(string oldName, string newName)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(oldName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(newName);
+
+        if (ToolbarNames.BuiltIn.Contains(oldName) || ToolbarNames.BuiltIn.Contains(newName))
+        {
+            throw new ArgumentException("A built-in toolbar cannot be renamed, nor its name taken.");
+        }
+
+        if (oldName == newName)
+        {
+            return;
+        }
+
+        if (ToolbarsVisibility.Any(t => t.Name == newName) || CustomToolbars.Any(c => c.Name == newName))
+        {
+            throw new ArgumentException($"A toolbar named '{newName}' already exists.", nameof(newName));
+        }
+
+        foreach (ToolbarBuiltInMetadata visMeta in ToolbarsVisibility.Where(t => t.Name == oldName))
+        {
+            visMeta.Name = newName;
+        }
+
+        foreach (ToolbarCustomMetadata customMeta in CustomToolbars.Where(c => c.Name == oldName))
+        {
+            customMeta.Name = newName;
+        }
+
+        foreach (ToolbarItemConfig item in Items.Where(i => i.ToolbarName == oldName))
+        {
+            item.ToolbarName = newName;
+        }
+    }
+
     // The three built-in toolbars occupy 0-2, so a custom one starts at 3.
     private int NextFreeIndex()
         => CustomToolbars.Count == 0

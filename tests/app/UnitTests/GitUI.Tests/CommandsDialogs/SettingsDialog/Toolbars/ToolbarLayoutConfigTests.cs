@@ -178,6 +178,86 @@ public class ToolbarLayoutConfigTests
         config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == "Scripts" && t.Visible);
     }
 
+    [Test]
+    public void RenameCustomToolbar_should_rename_the_toolbar_everywhere_the_layout_names_it()
+    {
+        ToolbarLayoutConfig config = new()
+        {
+            Items =
+            {
+                new ToolbarItemConfig { ItemName = "toolStripButtonPush", ToolbarName = "Custom 01", Order = 0 },
+                new ToolbarItemConfig { ItemName = "toolStripButtonCommit", ToolbarName = "Standard", Order = 0 }
+            }
+        };
+        config.SetCustomToolbarMetadata("Custom 01", row: 2, orderInRow: 1, visible: false, iconSize: 24, index: 3);
+
+        config.RenameCustomToolbar("Custom 01", "Review");
+
+        config.ToolbarsVisibility.Should().ContainSingle()
+            .Which.Should().BeEquivalentTo(new { Name = "Review", Row = 2, OrderInRow = 1, Visible = false, IconSize = 24 });
+        config.CustomToolbars.Should().ContainSingle()
+            .Which.Should().BeEquivalentTo(new { Name = "Review", Index = 3, Row = 2, OrderInRow = 1, Visible = false });
+        config.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush").Which.ToolbarName.Should().Be("Review");
+        config.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonCommit").Which.ToolbarName.Should().Be("Standard");
+    }
+
+    [Test]
+    public void RenameCustomToolbar_should_leave_the_other_toolbars_alone()
+    {
+        ToolbarLayoutConfig config = new();
+        config.SetCustomToolbarMetadata("Custom 01", row: 1, orderInRow: 0, visible: true, iconSize: 16);
+        config.SetCustomToolbarMetadata("Custom 02", row: 2, orderInRow: 0, visible: true, iconSize: 16);
+
+        config.RenameCustomToolbar("Custom 01", "Review");
+
+        config.CustomToolbars.Select(c => c.Name).Should().Equal("Review", "Custom 02");
+    }
+
+    [Test]
+    public void RenameCustomToolbar_should_accept_a_change_of_case_only()
+    {
+        ToolbarLayoutConfig config = new();
+        config.SetCustomToolbarMetadata("review", row: 1, orderInRow: 0, visible: true, iconSize: 16);
+
+        config.RenameCustomToolbar("review", "Review");
+
+        config.CustomToolbars.Should().ContainSingle(c => c.Name == "Review");
+    }
+
+    [Test]
+    public void RenameCustomToolbar_should_refuse_a_name_another_toolbar_holds()
+    {
+        ToolbarLayoutConfig config = new();
+        config.SetCustomToolbarMetadata("Custom 01", row: 1, orderInRow: 0, visible: true, iconSize: 16);
+        config.SetCustomToolbarMetadata("Custom 02", row: 2, orderInRow: 0, visible: true, iconSize: 16);
+
+        ((Action)(() => config.RenameCustomToolbar("Custom 01", "Custom 02"))).Should().Throw<ArgumentException>();
+        config.CustomToolbars.Select(c => c.Name).Should().Equal("Custom 01", "Custom 02");
+    }
+
+    [TestCase("Standard", "Review")]
+    [TestCase("Custom 01", "Filters")]
+    [TestCase("Custom 01", "scripts")]
+    public void RenameCustomToolbar_should_refuse_to_touch_a_built_in_name(string oldName, string newName)
+    {
+        ToolbarLayoutConfig config = new();
+        config.SetCustomToolbarMetadata("Custom 01", row: 1, orderInRow: 0, visible: true, iconSize: 16);
+
+        ((Action)(() => config.RenameCustomToolbar(oldName, newName))).Should().Throw<ArgumentException>();
+    }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void RenameCustomToolbar_should_reject_a_blank_name(string? name)
+    {
+        ToolbarLayoutConfig config = new();
+        config.SetCustomToolbarMetadata("Custom 01", row: 1, orderInRow: 0, visible: true, iconSize: 16);
+
+        ((Action)(() => config.RenameCustomToolbar("Custom 01", name!))).Should().Throw<ArgumentException>();
+        ((Action)(() => config.RenameCustomToolbar(name!, "Review"))).Should().Throw<ArgumentException>();
+    }
+
     [TestCase(null)]
     [TestCase("")]
     [TestCase("   ")]

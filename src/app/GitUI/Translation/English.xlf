@@ -10452,6 +10452,14 @@ Useful for finding where a toolbar is located</source>
         <source>Remove the selected action from the current toolbar (←)</source>
         <target />
       </trans-unit>
+      <trans-unit id="_renameToolbarDialogCaption.Text">
+        <source>Rename Toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_renameToolbarTooltip.Text">
+        <source>Rename the selected custom toolbar (built-in toolbars cannot be renamed)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_repositoryCategory.Text">
         <source>Repository</source>
         <target />

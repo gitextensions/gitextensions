@@ -21,6 +21,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     private readonly TranslationString _toolbarVisibleTooltip = new("Show or hide the selected toolbar in the main window");
     private readonly TranslationString _addToolbarTooltip = new("Add a new custom toolbar\nHold SHIFT while clicking to specify a custom name instead of 'Custom XX'");
     private readonly TranslationString _removeToolbarTooltip = new("Delete the selected custom toolbar (built-in toolbars cannot be deleted)");
+    private readonly TranslationString _renameToolbarTooltip = new("Rename the selected custom toolbar (built-in toolbars cannot be renamed)");
     private readonly TranslationString _categoryComboTooltip = new("Filter available actions by category");
     private readonly TranslationString _filterAvailableTooltip = new("Type to search and filter available actions");
     private readonly TranslationString _clearAvailableFilterTooltip = new("Clear the search filter for available actions");
@@ -56,6 +57,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     private readonly TranslationString _locateToolbarCaption = new("Locate Toolbar");
 
     private readonly TranslationString _newToolbarDialogCaption = new("New Toolbar");
+    private readonly TranslationString _renameToolbarDialogCaption = new("Rename Toolbar");
     private readonly TranslationString _newToolbarPrompt = new("Enter toolbar name:");
     private readonly TranslationString _addLabelDialogCaption = new("Add Label");
     private readonly TranslationString _addLabelPrompt = new("Enter label text:");
@@ -261,6 +263,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         checkBoxToolbarVisible.Enabled = enabled;
         buttonAddToolbar.Enabled = enabled;
         buttonRemoveToolbar.Enabled = enabled;
+        buttonRenameToolbar.Enabled = enabled;
         comboBoxCategory.Enabled = enabled;
         textBoxFilterAvailable.Enabled = enabled;
         textBoxFilterCurrent.Enabled = enabled;
@@ -284,6 +287,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         ToolTip.SetToolTip(checkBoxToolbarVisible, _toolbarVisibleTooltip.Text);
         ToolTip.SetToolTip(buttonAddToolbar, _addToolbarTooltip.Text);
         ToolTip.SetToolTip(buttonRemoveToolbar, _removeToolbarTooltip.Text);
+        ToolTip.SetToolTip(buttonRenameToolbar, _renameToolbarTooltip.Text);
         ToolTip.SetToolTip(comboBoxCategory, _categoryComboTooltip.Text);
         ToolTip.SetToolTip(textBoxFilterAvailable, _filterAvailableTooltip.Text);
         ToolTip.SetToolTip(buttonClearAvailableFilter, _clearAvailableFilterTooltip.Text);
@@ -629,56 +633,22 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
         {
-            string? customName = ShowToolbarNameDialog(newToolbarName);
-            if (customName == null)
+            string? customName = ShowToolbarNameDialog(newToolbarName, _newToolbarDialogCaption.Text);
+            if (customName == null || !IsAcceptableToolbarName(customName, renamedToolbar: null))
             {
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(customName))
-            {
-                MessageBoxes.Show(
-                    _emptyToolbarName.Text,
-                    _invalidNameCaption.Text,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (comboBoxToolbar.Items.Cast<string>().Any(name => name.Equals(customName, StringComparison.OrdinalIgnoreCase)))
-            {
-                MessageBoxes.Show(
-                    string.Format(_duplicateNameFormat.Text, customName),
-                    _duplicateNameCaption.Text,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
                 return;
             }
 
             newToolbarName = customName;
         }
 
-        comboBoxToolbar.Items.Add(newToolbarName);
-
-        string sanitizedName = new string(newToolbarName.Where(c => char.IsLetterOrDigit(c)).ToArray());
-        string controlName = $"{FormBrowse.CustomToolbarNamePrefix}{sanitizedName}";
-
-        // A different display name can produce the same sanitized WinForms control Name
-        // (e.g. "Mon-Outil" and "Mon Outil" both yield "ToolStripCustomMonOutil"). The
-        // display-name check above passes in the Shift path, but two sibling controls sharing
-        // the same Name violates a WinForms invariant and breaks FindControl. Abort if already
-        // taken — display name collision was already caught above, so this can only fire when
-        // two distinct names produce identical sanitized output.
-        if (_dynamicToolbars.Values.Any(ts => ts.Name == controlName))
+        string controlName = GetCustomToolbarControlName(newToolbarName);
+        if (!IsAcceptableControlName(controlName, newToolbarName, renamedToolStrip: null))
         {
-            comboBoxToolbar.Items.Remove(newToolbarName);
-            MessageBoxes.Show(
-                string.Format(_duplicateInternalNameFormat.Text, newToolbarName),
-                _duplicateInternalNameCaption.Text,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning);
             return;
         }
+
+        comboBoxToolbar.Items.Add(newToolbarName);
 
         ToolStripEx newToolStrip = new()
         {
@@ -705,6 +675,108 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         comboBoxToolbar.SelectedItem = newToolbarName;
     }
 
+    private void ButtonRenameToolbar_Click(object? sender, EventArgs e)
+    {
+        string oldName = _currentToolbarName;
+        if (_formBrowse == null || !_dynamicToolbars.TryGetValue(oldName, out ToolStrip? toolStrip))
+        {
+            return;
+        }
+
+        string? newName = ShowToolbarNameDialog(oldName, _renameToolbarDialogCaption.Text);
+        if (newName == null || newName == oldName || !IsAcceptableToolbarName(newName, renamedToolbar: oldName))
+        {
+            return;
+        }
+
+        string controlName = GetCustomToolbarControlName(newName);
+        if (!IsAcceptableControlName(controlName, newName, renamedToolStrip: toolStrip))
+        {
+            return;
+        }
+
+        // The name is the key of every per-toolbar structure here, so each is moved to the new
+        // name before anything can look the toolbar up again.
+        _dynamicToolbars.Remove(oldName);
+        _dynamicToolbars[newName] = toolStrip;
+
+        if (_toolbarItems.Remove(oldName, out List<ToolStripItemWrapper>? items))
+        {
+            _toolbarItems[newName] = items;
+        }
+
+        RenameUndoSnapshots(oldName, newName);
+
+        toolStrip.Text = newName;
+        toolStrip.Name = controlName;
+
+        // Persisted at once, as creating and deleting a toolbar are: Apply looks up a toolbar's
+        // row and size in the saved layout by its name, and would not find it under the old one.
+        ToolbarLayoutConfig config = ToolbarLayoutStore.Load();
+        config.RenameCustomToolbar(oldName, newName);
+        ToolbarLayoutStore.Save(config);
+        AppSettings.SettingsContainer.Save();
+
+        _currentToolbarName = newName;
+        int index = comboBoxToolbar.Items.IndexOf(oldName);
+        comboBoxToolbar.Items[index] = newName;
+        comboBoxToolbar.SelectedIndex = index;
+
+        // Refreshes View > Toolbars, which lists the toolbars by name.
+        _formBrowse.ReorganizeToolbars();
+    }
+
+    // Checks a toolbar name the user typed, telling them what is wrong with it if anything.
+    // renamedToolbar is the toolbar being renamed, whose own name is not a clash.
+    private bool IsAcceptableToolbarName(string name, string? renamedToolbar)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            MessageBoxes.Show(
+                _emptyToolbarName.Text,
+                _invalidNameCaption.Text,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+            return false;
+        }
+
+        // The combo box lists the built-in toolbars too, so their names are refused here as well.
+        if (comboBoxToolbar.Items.Cast<string>().Any(existing => existing != renamedToolbar
+                && existing.Equals(name, StringComparison.OrdinalIgnoreCase)))
+        {
+            MessageBoxes.Show(
+                string.Format(_duplicateNameFormat.Text, name),
+                _duplicateNameCaption.Text,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+            return false;
+        }
+
+        return true;
+    }
+
+    private static string GetCustomToolbarControlName(string toolbarName)
+        => $"{FormBrowse.CustomToolbarNamePrefix}{new string(toolbarName.Where(char.IsLetterOrDigit).ToArray())}";
+
+    // A different display name can produce the same sanitized WinForms control Name
+    // (e.g. "Mon-Outil" and "Mon Outil" both yield "ToolStripCustomMonOutil"). The display-name
+    // check passes for those, but two sibling controls sharing the same Name violates a WinForms
+    // invariant and breaks FindControl, so refuse the name if another toolbar holds it.
+    private bool IsAcceptableControlName(string controlName, string toolbarName, ToolStrip? renamedToolStrip)
+    {
+        if (_dynamicToolbars.Values.Any(ts => ts != renamedToolStrip && ts.Name == controlName))
+        {
+            MessageBoxes.Show(
+                string.Format(_duplicateInternalNameFormat.Text, toolbarName),
+                _duplicateInternalNameCaption.Text,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+            return false;
+        }
+
+        return true;
+    }
+
     private static void AssignNewToolbarToNewRow(string newToolbarName)
     {
         ToolbarLayoutConfig config = ToolbarLayoutStore.Load();
@@ -728,13 +800,27 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         AppSettings.SettingsContainer.Save();
     }
 
-    private string? ShowToolbarNameDialog(string defaultName)
+    // Keeps the name within what a saved layout accepts.
+    private string? ShowToolbarNameDialog(string defaultName, string caption)
+        => ShowTextInputDialog(caption, _newToolbarPrompt.Text, defaultName, ToolbarLayoutValidator.MaxToolbarNameLength);
+
+    // Keeps the text within what a saved layout accepts, so the label survives the round trip
+    // through the settings file rather than being truncated behind the user's back.
+    private string? ShowLabelTextDialog()
+        => ShowTextInputDialog(_addLabelDialogCaption.Text, _addLabelPrompt.Text, string.Empty, ToolbarItemNames.MaxLabelTextLength);
+
+    // The one dialog asking for a line of text: a toolbar's name, or the text of a label.
+    // Sizes are pixels at 96 DPI, which the form scales itself. The buttons are the size of a
+    // standard Windows dialog button (50 x 14 dialog units) rather than WinForms' 75 x 23 default,
+    // which leaves the text of "Cancel" cramped.
+    private string? ShowTextInputDialog(string caption, string prompt, string defaultText, int maxLength)
     {
         using Form inputForm = new()
         {
-            Text = _newToolbarDialogCaption.Text,
-            Width = 350,
-            Height = 175,
+            AutoScaleDimensions = new SizeF(96F, 96F),
+            AutoScaleMode = AutoScaleMode.Dpi,
+            Text = caption,
+            ClientSize = new Size(330, 125),
             FormBorderStyle = FormBorderStyle.FixedDialog,
             StartPosition = FormStartPosition.CenterParent,
             MaximizeBox = false,
@@ -743,7 +829,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         Label label = new()
         {
-            Text = _newToolbarPrompt.Text,
+            Text = prompt,
             Left = 15,
             Top = 20,
             Width = 300
@@ -751,31 +837,28 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         TextBox textBox = new()
         {
-            Text = defaultName,
+            Text = defaultText,
             Left = 15,
             Top = 45,
             Width = 300,
-
-            // Keep the name within what a saved layout accepts.
-            MaxLength = ToolbarLayoutValidator.MaxToolbarNameLength
+            MaxLength = maxLength
         };
 
+        // Right-aligned with the text box above them.
         Button confirmButton = new()
         {
             Text = _ok.Text,
             DialogResult = DialogResult.OK,
-            Left = 155,
-            Top = 80,
-            Width = 75
+            Location = new Point(131, 80),
+            Size = new Size(88, 28)
         };
 
         Button cancelButton = new()
         {
             Text = _cancel.Text,
             DialogResult = DialogResult.Cancel,
-            Left = 240,
-            Top = 80,
-            Width = 75
+            Location = new Point(227, 80),
+            Size = new Size(88, 28)
         };
 
         inputForm.Controls.Add(label);
@@ -786,73 +869,6 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         inputForm.CancelButton = cancelButton;
 
         textBox.SelectAll();
-
-        DialogResult result = inputForm.ShowDialog(this);
-
-        if (result == DialogResult.OK)
-        {
-            return textBox.Text.Trim();
-        }
-
-        return null;
-    }
-
-    private string? ShowLabelTextDialog()
-    {
-        using Form inputForm = new()
-        {
-            Text = _addLabelDialogCaption.Text,
-            Width = 350,
-            Height = 175,
-            FormBorderStyle = FormBorderStyle.FixedDialog,
-            StartPosition = FormStartPosition.CenterParent,
-            MaximizeBox = false,
-            MinimizeBox = false
-        };
-
-        Label label = new()
-        {
-            Text = _addLabelPrompt.Text,
-            Left = 15,
-            Top = 20,
-            Width = 300
-        };
-
-        TextBox textBox = new()
-        {
-            Left = 15,
-            Top = 45,
-            Width = 300,
-
-            // Keep the text within what a saved layout accepts, so the label survives the round
-            // trip through the settings file rather than being truncated behind the user's back.
-            MaxLength = ToolbarItemNames.MaxLabelTextLength
-        };
-
-        Button confirmButton = new()
-        {
-            Text = _ok.Text,
-            DialogResult = DialogResult.OK,
-            Left = 155,
-            Top = 80,
-            Width = 75
-        };
-
-        Button cancelButton = new()
-        {
-            Text = _cancel.Text,
-            DialogResult = DialogResult.Cancel,
-            Left = 240,
-            Top = 80,
-            Width = 75
-        };
-
-        inputForm.Controls.Add(label);
-        inputForm.Controls.Add(textBox);
-        inputForm.Controls.Add(confirmButton);
-        inputForm.Controls.Add(cancelButton);
-        inputForm.AcceptButton = confirmButton;
-        inputForm.CancelButton = cancelButton;
 
         return inputForm.ShowDialog(this) == DialogResult.OK ? textBox.Text.Trim() : null;
     }
@@ -902,6 +918,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     private void UpdateToolbarButtons()
     {
         buttonRemoveToolbar.Enabled = IsCustomToolbar(_currentToolbarName);
+        buttonRenameToolbar.Enabled = IsCustomToolbar(_currentToolbarName);
         buttonAdd.Enabled = listBoxAvailable.SelectedIndex >= 0;
     }
 
@@ -1377,12 +1394,22 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     // An undo snapshot of a deleted toolbar has nowhere to go back to: ButtonUndo_Click cannot
     // select that toolbar any more, and would restore its items onto the current one instead.
     private void DropUndoSnapshotsOf(string toolbarName)
+        => ReplaceUndoSnapshots(_undoStack.Where(snapshot => snapshot.toolbarName != toolbarName));
+
+    // Undo snapshots name the toolbar they belong to; a renamed toolbar keeps its history.
+    private void RenameUndoSnapshots(string oldName, string newName)
+        => ReplaceUndoSnapshots(_undoStack.Select(snapshot => snapshot.toolbarName == oldName ? (newName, snapshot.items) : snapshot));
+
+    // Refills the undo stack with snapshots listed top first, the order a Stack enumerates in.
+    private void ReplaceUndoSnapshots(IEnumerable<(string toolbarName, List<ToolStripItemWrapper> items)> snapshots)
     {
-        var kept = _undoStack.Where(snapshot => snapshot.toolbarName != toolbarName).Reverse().ToList();
+        // Materialized before clearing, since the snapshots are usually read from the stack itself.
+        List<(string toolbarName, List<ToolStripItemWrapper> items)> topFirst = [.. snapshots];
+
         _undoStack.Clear();
-        foreach (var snapshot in kept)
+        for (int i = topFirst.Count - 1; i >= 0; i--)
         {
-            _undoStack.Push(snapshot);
+            _undoStack.Push(topFirst[i]);
         }
 
         buttonUndo.Enabled = _undoStack.Count > 0;

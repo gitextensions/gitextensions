@@ -29,6 +29,7 @@ partial class ToolbarsSettingsPage
         comboBoxToolbar = new ComboBox();
         buttonAddToolbar = new Button();
         buttonRemoveToolbar = new Button();
+        buttonRenameToolbar = new Button();
         labelPosition = new Label();
         buttonToolbarLayout = new Button();
         buttonLocateToolbar = new Button();
@@ -90,6 +91,7 @@ partial class ToolbarsSettingsPage
         topPanel.Controls.Add(comboBoxToolbar);
         topPanel.Controls.Add(buttonAddToolbar);
         topPanel.Controls.Add(buttonRemoveToolbar);
+        topPanel.Controls.Add(buttonRenameToolbar);
         topPanel.Controls.Add(labelPosition);
         topPanel.Controls.Add(buttonToolbarLayout);
         topPanel.Controls.Add(buttonLocateToolbar);
@@ -127,14 +129,14 @@ partial class ToolbarsSettingsPage
         comboBoxToolbar.FormattingEnabled = true;
         comboBoxToolbar.Location = new Point(100, 9);
         comboBoxToolbar.Name = "comboBoxToolbar";
-        comboBoxToolbar.Size = new Size(190, 23);
+        comboBoxToolbar.Size = new Size(154, 23);
         comboBoxToolbar.TabIndex = 2;
         comboBoxToolbar.SelectedIndexChanged += ComboBoxToolbar_SelectedIndexChanged;
         // 
         // buttonAddToolbar
         // 
         buttonAddToolbar.Image = global::GitUI.Properties.Images.RemoteAdd;
-        buttonAddToolbar.Location = new Point(296, 7);
+        buttonAddToolbar.Location = new Point(260, 7);
         buttonAddToolbar.Name = "buttonAddToolbar";
         buttonAddToolbar.Size = new Size(30, 28);
         buttonAddToolbar.TabIndex = 3;
@@ -144,12 +146,22 @@ partial class ToolbarsSettingsPage
         // buttonRemoveToolbar
         // 
         buttonRemoveToolbar.Image = global::GitUI.Properties.Images.RemoteDelete;
-        buttonRemoveToolbar.Location = new Point(332, 7);
+        buttonRemoveToolbar.Location = new Point(296, 7);
         buttonRemoveToolbar.Name = "buttonRemoveToolbar";
         buttonRemoveToolbar.Size = new Size(30, 28);
         buttonRemoveToolbar.TabIndex = 4;
         buttonRemoveToolbar.UseVisualStyleBackColor = true;
         buttonRemoveToolbar.Click += ButtonRemoveToolbar_Click;
+        // 
+        // buttonRenameToolbar
+        // 
+        buttonRenameToolbar.Image = global::GitUI.Properties.Images.Renamed;
+        buttonRenameToolbar.Location = new Point(332, 7);
+        buttonRenameToolbar.Name = "buttonRenameToolbar";
+        buttonRenameToolbar.Size = new Size(30, 28);
+        buttonRenameToolbar.TabIndex = 5;
+        buttonRenameToolbar.UseVisualStyleBackColor = true;
+        buttonRenameToolbar.Click += ButtonRenameToolbar_Click;
         // 
         // labelPosition
         // 
@@ -479,6 +491,7 @@ partial class ToolbarsSettingsPage
     private ComboBox comboBoxToolbar;
     private Button buttonAddToolbar;
     private Button buttonRemoveToolbar;
+    private Button buttonRenameToolbar;
     private Label labelPosition;
     private Button buttonToolbarLayout;
     private Button buttonLocateToolbar;
