@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+  "analyzedCommit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
   "axisOrder": [
     "structural",
     "functional",
@@ -3714,9 +3714,10 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-10-03",
-          "commit": "35ad54d54995000e243a4c2455a56faedebff8b8",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormBrowseMenus.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormBrowseMenus.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/verification.json",
@@ -3728,9 +3729,10 @@
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-10-03",
-          "commit": "35ad54d54995000e243a4c2455a56faedebff8b8",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/inventory/FormBrowseMenus.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/tests/windows/tranche-focused.log",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/tests/linux/gate.log",
@@ -3745,9 +3747,10 @@
         },
         "visual": {
           "status": "notApplicable",
-          "verifiedOn": "2026-10-03",
-          "commit": "35ad54d54995000e243a4c2455a56faedebff8b8",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/types/GitUI.CommandsDialogs.FormBrowseMenus.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/diff-native100-accepted-final/findings.json",
@@ -3759,9 +3762,10 @@
         },
         "themingAndColor": {
           "status": "notApplicable",
-          "verifiedOn": "2026-10-03",
-          "commit": "35ad54d54995000e243a4c2455a56faedebff8b8",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/types/GitUI.CommandsDialogs.FormBrowseMenus.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/diff-native100-accepted-final/findings.json",
@@ -3773,9 +3777,10 @@
         },
         "behavioralState": {
           "status": "unverified",
-          "verifiedOn": "2026-10-03",
-          "commit": "35ad54d54995000e243a4c2455a56faedebff8b8",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/types/GitUI.CommandsDialogs.FormBrowseMenus.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/diff-native100-accepted-final/findings.json",
@@ -3787,9 +3792,10 @@
         },
         "platform": {
           "status": "unverified",
-          "verifiedOn": "2026-10-03",
-          "commit": "35ad54d54995000e243a4c2455a56faedebff8b8",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/types/GitUI.CommandsDialogs.FormBrowseMenus.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-77/windows-runtime-final2/window.png",
@@ -5736,8 +5742,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
@@ -5771,8 +5778,9 @@
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
@@ -5805,8 +5813,10 @@
         "visual": {
           "status": "notApplicable",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -5858,8 +5868,10 @@
         "themingAndColor": {
           "status": "notApplicable",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -5911,8 +5923,10 @@
         "behavioralState": {
           "status": "unverified",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -5964,8 +5978,12 @@
         "platform": {
           "status": "unverified",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/windows-runtime-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-wayland-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-x11-final1/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -6037,8 +6055,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
@@ -6072,8 +6091,9 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/FormBrowse.json",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx",
@@ -6112,8 +6132,10 @@
         "visual": {
           "status": "notApplicable",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -6165,8 +6187,10 @@
         "themingAndColor": {
           "status": "notApplicable",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -6218,8 +6242,10 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/winforms-border/manifest.json",
@@ -6278,8 +6304,12 @@
         "platform": {
           "status": "unverified",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/windows-runtime-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-wayland-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-x11-final1/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -6351,8 +6381,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
@@ -6386,8 +6417,9 @@
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
@@ -6420,8 +6452,10 @@
         "visual": {
           "status": "notApplicable",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -6473,8 +6507,10 @@
         "themingAndColor": {
           "status": "notApplicable",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -6526,8 +6562,10 @@
         "behavioralState": {
           "status": "unverified",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -6579,8 +6617,12 @@
         "platform": {
           "status": "unverified",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/windows-runtime-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-wayland-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-x11-final1/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -6652,8 +6694,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
@@ -6687,8 +6730,9 @@
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
@@ -6721,8 +6765,10 @@
         "visual": {
           "status": "notApplicable",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -6774,8 +6820,10 @@
         "themingAndColor": {
           "status": "notApplicable",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -6827,8 +6875,10 @@
         "behavioralState": {
           "status": "unverified",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -6880,8 +6930,12 @@
         "platform": {
           "status": "unverified",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/windows-runtime-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-wayland-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-x11-final1/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
@@ -6953,8 +7007,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/verification.json",
@@ -6987,8 +7042,9 @@
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/windows-accepted.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/tests/linux-accepted.trx",
@@ -7025,8 +7081,10 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json",
@@ -7083,8 +7141,10 @@
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json",
@@ -7141,8 +7201,10 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/diff-native100-accepted/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/winforms-native100/manifest.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/avalonia-native100-accepted/manifest.json",
@@ -7199,8 +7261,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-10-04",
-          "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/windows-runtime-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-wayland-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-x11-final1/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/windows-runtime/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-wayland/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/runtime-x11/smoke.json",
@@ -38066,9 +38132,10 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-10-02",
-          "commit": "72e5b9dccb440dfb51ca13a856ed92b132d20d3a",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/verification.json",
@@ -38086,9 +38153,10 @@
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-10-02",
-          "commit": "72e5b9dccb440dfb51ca13a856ed92b132d20d3a",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
@@ -38105,9 +38173,11 @@
         },
         "visual": {
           "status": "unverified",
-          "verifiedOn": "2026-10-02",
-          "commit": "72e5b9dccb440dfb51ca13a856ed92b132d20d3a",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/diff-native100-final/findings.json",
@@ -38131,9 +38201,11 @@
         },
         "themingAndColor": {
           "status": "unverified",
-          "verifiedOn": "2026-10-02",
-          "commit": "72e5b9dccb440dfb51ca13a856ed92b132d20d3a",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/diff-native100-final/findings.json",
@@ -38157,9 +38229,11 @@
         },
         "behavioralState": {
           "status": "unverified",
-          "verifiedOn": "2026-10-02",
-          "commit": "72e5b9dccb440dfb51ca13a856ed92b132d20d3a",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/diff-native100-final/findings.json",
@@ -38183,9 +38257,13 @@
         },
         "platform": {
           "status": "unverified",
-          "verifiedOn": "2026-10-02",
-          "commit": "72e5b9dccb440dfb51ca13a856ed92b132d20d3a",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/windows-runtime-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-wayland-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-x11-final1/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/windows-runtime-final/window.png",
@@ -38220,9 +38298,10 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-10-02",
-          "commit": "72e5b9dccb440dfb51ca13a856ed92b132d20d3a",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/verification.json",
@@ -38240,9 +38319,10 @@
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-10-02",
-          "commit": "72e5b9dccb440dfb51ca13a856ed92b132d20d3a",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
@@ -38259,9 +38339,11 @@
         },
         "visual": {
           "status": "unverified",
-          "verifiedOn": "2026-10-02",
-          "commit": "72e5b9dccb440dfb51ca13a856ed92b132d20d3a",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/diff-native100-final/findings.json",
@@ -38285,9 +38367,11 @@
         },
         "themingAndColor": {
           "status": "unverified",
-          "verifiedOn": "2026-10-02",
-          "commit": "72e5b9dccb440dfb51ca13a856ed92b132d20d3a",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/diff-native100-final/findings.json",
@@ -38311,9 +38395,11 @@
         },
         "behavioralState": {
           "status": "unverified",
-          "verifiedOn": "2026-10-02",
-          "commit": "72e5b9dccb440dfb51ca13a856ed92b132d20d3a",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/diff-native100-accepted-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/diff-native100-final/findings.json",
@@ -38337,9 +38423,13 @@
         },
         "platform": {
           "status": "unverified",
-          "verifiedOn": "2026-10-02",
-          "commit": "72e5b9dccb440dfb51ca13a856ed92b132d20d3a",
+          "verifiedOn": "2026-10-04",
+          "commit": "bc89fd5a78eb284fec0b7e8adc17b0e1405eafa5",
           "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/windows-runtime-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-wayland-final1/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/runtime-x11-final1/smoke.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-69/windows-runtime-final/window.png",

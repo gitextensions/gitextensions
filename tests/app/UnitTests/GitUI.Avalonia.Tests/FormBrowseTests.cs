@@ -533,16 +533,24 @@ public sealed class FormBrowseTests
             form.toolStripFiltersHost.Bounds.Width.Should().BeGreaterThan(200);
             advancedFilter.Opacity.Should().Be(1);
             showBranches.Opacity.Should().Be(1);
-            showReflog.Margin.Should().Be(default(Thickness));
-            showBranches.Margin.Should().Be(default(Thickness));
-            StackPanel items = (StackPanel)filters.Content!;
-            form.toolStripFiltersOverflow.IsVisible.Should().Be(items.Bounds.Width > form.toolStripFiltersViewport.Viewport.Width);
+            showReflog.Margin.Should().Be(new Thickness(0, 1, 0, 2));
+            showBranches.Margin.Should().Be(new Thickness(0, 1, 0, 2));
+            NativeToolStrip items = filters.Strip;
+            Control[] originalItems = items.Items.ToArray();
+            form.toolStripFiltersOverflow.IsVisible.Should().Be(items.HasOverflow);
 
             form.Width = 923;
             Dispatcher.UIThread.RunJobs();
             form.UpdateLayout();
             Dispatcher.UIThread.RunJobs();
             form.toolStripFiltersOverflow.IsVisible.Should().BeTrue();
+            items.Items.Should().Equal(originalItems);
+            items.Items.Should().OnlyContain(item => item.Opacity == 1 && item.IsHitTestVisible);
+            items.OverflowItems.Should().NotBeEmpty();
+            foreach (Control item in items.Items.Where(item => items.GetItemPlacement(item) == NativeToolStripItemPlacement.Main))
+            {
+                item.Bounds.Right.Should().BeLessThanOrEqualTo(items.Bounds.Width);
+            }
         }
         finally
         {
@@ -559,9 +567,11 @@ public sealed class FormBrowseTests
             narrow.UpdateLayout();
             Dispatcher.UIThread.RunJobs();
             narrow.toolStripFiltersHost.Bounds.Width.Should().Be(50);
-            narrow.FindControl<FilterToolBar>("ToolStripFilters")!
-                .FindControl<Control>("tsbtnAdvancedFilter")!.Opacity.Should().Be(0,
-                    "even the first item cannot fit beside the overflow button");
+            FilterToolBar filters = narrow.FindControl<FilterToolBar>("ToolStripFilters")!;
+            Control advanced = filters.FindControl<Control>("tsbtnAdvancedFilter")!;
+            advanced.Opacity.Should().Be(1);
+            filters.Strip.GetItemPlacement(advanced).Should().Be(NativeToolStripItemPlacement.Overflow,
+                "even the first item cannot fit beside the overflow button");
         }
         finally
         {
@@ -592,7 +602,15 @@ public sealed class FormBrowseTests
             foreach (Control command in toolbar.OverflowItems)
             {
                 command.Parent.Should().BeSameAs(toolbar, "visual popup reparenting must retain the command owner");
-                command.GetVisualParent().Should().BeSameAs(toolbar.OverflowContent);
+                if (NativeToolStrip.GetItemIsSeparator(command))
+                {
+                    command.GetVisualParent().Should().BeNull("the native overflow omits separators from DisplayedItems");
+                }
+                else
+                {
+                    command.GetVisualParent().Should().BeSameAs(toolbar.OverflowContent);
+                }
+
                 command.Opacity.Should().Be(1);
                 command.IsHitTestVisible.Should().BeTrue();
             }
@@ -1078,7 +1096,14 @@ public sealed class FormBrowseTests
         object? focused = TopLevel.GetTopLevel(revisions)?.FocusManager?.GetFocusedElement();
         revisions.IsKeyboardFocusWithin.Should().BeTrue($"the focused element was {focused}");
 
+        // A long temporary repository path can legitimately push both editors into
+        // source overflow. Exercise the visible focus route using owner preferred sizes.
+        form.Width = form.ToolStripMain.PreferredSize.Width + form.ToolStripFilters.Strip.PreferredSize.Width + 100;
+        form.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
         ComboBox revisionFilter = form.ToolStripFilters.GetTestAccessor().RevisionFilter;
+        form.ToolStripFilters.Strip.GetItemPlacement(revisionFilter).Should().Be(NativeToolStripItemPlacement.Main,
+            "the actual source focus route does not open closed overflow controls");
         form.ToolStripFilters.SetFocus();
         revisionFilter.IsKeyboardFocusWithin.Should().BeTrue();
 

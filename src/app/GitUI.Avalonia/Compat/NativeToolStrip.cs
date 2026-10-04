@@ -10,13 +10,14 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Metadata;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Size = Avalonia.Size;
 
 namespace GitUI.Compat;
 
 /// <summary>
-///  Preserves the main horizontal ToolStrip's item ownership and split-stack overflow layout.
+///  Preserves the horizontal ToolStrip's item ownership and split-stack overflow layout.
 /// </summary>
 /// <remarks>
 ///  WinForms items retain their Owner while their current parent changes to ToolStripOverflow.
@@ -30,12 +31,19 @@ public sealed class NativeToolStrip : Control, IDisposable
     private const int DefaultWidth = 100;
     private const int OverflowWidth = 16;
     private const int VisualStyleGripWidth = 5;
+    private const int DefaultMenuFontSize = 12;
+    private static readonly FontFamily DefaultMenuFontFamily = new("Segoe UI");
+    private static readonly Thickness ControlHostMainMargin = new(1, 0, 1, 0);
+    private static readonly Thickness ControlHostOverflowMargin = new(2);
     private readonly NativeToolStripPresenter _mainPresenter;
     private readonly NativeToolStripOverflowPresenter _overflowPresenter;
     private readonly Popup _popup;
     private readonly Dictionary<Control, Size> _preferredSizes = new(ReferenceEqualityComparer.Instance);
     private readonly Dictionary<Control, NativeToolStripItemPlacement> _placements = new(ReferenceEqualityComparer.Instance);
     private readonly Dictionary<Control, IDisposable?[]> _autoSizeValues = new(ReferenceEqualityComparer.Instance);
+    private readonly Dictionary<Control, Thickness> _controlHostMainMargins = new(ReferenceEqualityComparer.Instance);
+    private readonly Dictionary<Control, (bool Overflow, IDisposable? Value)> _controlHostMarginValues = new(ReferenceEqualityComparer.Instance);
+    private readonly HashSet<Control> _pendingControlHostMargins = new(ReferenceEqualityComparer.Instance);
     private IDisposable?[] _overflowValues = [];
     private Button _overflowButton;
     private bool _measuring;
@@ -56,6 +64,10 @@ public sealed class NativeToolStrip : Control, IDisposable
         AvaloniaProperty.RegisterAttached<NativeToolStrip, Control, double>("ItemPreferredHeight", double.NaN);
     public static readonly AttachedProperty<NativeToolStripItemOverflow> ItemOverflowProperty =
         AvaloniaProperty.RegisterAttached<NativeToolStrip, Control, NativeToolStripItemOverflow>("ItemOverflow");
+    public static readonly AttachedProperty<bool> ItemIsControlHostProperty =
+        AvaloniaProperty.RegisterAttached<NativeToolStrip, Control, bool>("ItemIsControlHost");
+    public static readonly AttachedProperty<bool> ItemIsSeparatorProperty =
+        AvaloniaProperty.RegisterAttached<NativeToolStrip, Control, bool>("ItemIsSeparator");
 
     static NativeToolStrip()
     {
@@ -67,8 +79,8 @@ public sealed class NativeToolStrip : Control, IDisposable
         // ToolStrip.Font uses ToolStripManager's menu default, not its Form's configured font.
         // The original Browse's unassigned menu font remains Segoe UI 9pt at every configured
         // form-font size. Avalonia resolves the family normally on each desktop platform.
-        SetCurrentValue(FontFamilyProperty, new FontFamily("Segoe UI"));
-        SetCurrentValue(FontSizeProperty, 12);
+        SetCurrentValue(FontFamilyProperty, DefaultMenuFontFamily);
+        SetCurrentValue(FontSizeProperty, DefaultMenuFontSize);
         SetCurrentValue(FontStyleProperty, FontStyle.Normal);
         SetCurrentValue(FontWeightProperty, FontWeight.Normal);
         ClipToBounds = true;
@@ -88,7 +100,21 @@ public sealed class NativeToolStrip : Control, IDisposable
         LogicalChildren.Add(_popup);
         _popup.Closed += Popup_Closed;
 
-        _overflowButton = new Button();
+        _overflowButton = new Button
+        {
+            Classes = { "gitextensions-toolbar-button", "gitextensions-toolbar-overflow" },
+            Width = OverflowWidth,
+            MinWidth = OverflowWidth,
+
+            // The native chevron spans the owner's complete height; shared command
+            // button margins must not inset this generated overflow control.
+            Margin = new Thickness(0),
+            Height = double.NaN,
+            MinHeight = 0,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
+            Content = "»",
+        };
         AttachOverflowButton(_overflowButton);
         Items.CollectionChanged += Items_CollectionChanged;
     }
@@ -240,6 +266,26 @@ public sealed class NativeToolStrip : Control, IDisposable
     public static void SetItemOverflow(Control control, NativeToolStripItemOverflow value) => control.SetValue(ItemOverflowProperty, value);
 
     /// <summary>
+    ///  Gets whether the item represents an original ToolStripControlHost.
+    /// </summary>
+    public static bool GetItemIsControlHost(Control control) => control.GetValue(ItemIsControlHostProperty);
+
+    /// <summary>
+    ///  Sets whether the item preserves the source hosted-control font and parent-specific margins.
+    /// </summary>
+    public static void SetItemIsControlHost(Control control, bool value) => control.SetValue(ItemIsControlHostProperty, value);
+
+    /// <summary>
+    ///  Gets whether the item represents an original ToolStripSeparator.
+    /// </summary>
+    public static bool GetItemIsSeparator(Control control) => control.GetValue(ItemIsSeparatorProperty);
+
+    /// <summary>
+    ///  Sets whether the source separator is omitted from the overflow's displayed items.
+    /// </summary>
+    public static void SetItemIsSeparator(Control control, bool value) => control.SetValue(ItemIsSeparatorProperty, value);
+
+    /// <summary>
     ///  Gets the current source split-stack placement without changing item visibility.
     /// </summary>
     public NativeToolStripItemPlacement GetItemPlacement(Control control)
@@ -320,6 +366,7 @@ public sealed class NativeToolStrip : Control, IDisposable
             foreach (Control item in Items)
             {
                 ApplyItemAutoSize(item);
+                ApplyControlHostMargin(item, GetItemPlacement(item) == NativeToolStripItemPlacement.Overflow);
                 item.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
                 Thickness margin = item.Margin;
                 double preferredHeight = GetItemPreferredHeight(item);
@@ -327,6 +374,16 @@ public sealed class NativeToolStrip : Control, IDisposable
                     GetItemAutoSize(item)
                         ? Pixel(double.IsNaN(preferredHeight) ? item.DesiredSize.Height - margin.Top - margin.Bottom : preferredHeight)
                         : Pixel(GetItemHeight(item)));
+                if (GetItemAutoSize(item) && item is Label { Content: string caption } label)
+                {
+                    // ToolStripLabel preferred text includes TextRenderer's native
+                    // overhang, unlike the framework Label's natural caption allocation.
+                    string display = TranslationCompat.GetConvertMnemonics(label)
+                        ? AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(caption) : caption;
+                    Size measured = WinFormsTextMeasurer.MeasureTextRenderer(label, display);
+                    _preferredSizes[item] = new Size(Pixel(measured.Width + label.Padding.Left + label.Padding.Right),
+                        Pixel(double.IsNaN(preferredHeight) ? measured.Height + label.Padding.Top + label.Padding.Bottom : preferredHeight));
+                }
             }
         }
         finally
@@ -340,8 +397,9 @@ public sealed class NativeToolStrip : Control, IDisposable
         foreach (Control item in participating.Where(item => GetItemOverflow(item) != NativeToolStripItemOverflow.Always))
         {
             Size itemSize = _preferredSizes[item];
-            width += itemSize.Width + item.Margin.Left + item.Margin.Right;
-            height = Math.Max(height, itemSize.Height + item.Margin.Top + item.Margin.Bottom);
+            Thickness margin = GetMainMargin(item);
+            width += itemSize.Width + margin.Left + margin.Right;
+            height = Math.Max(height, itemSize.Height + margin.Top + margin.Bottom);
         }
 
         width += participating.Any(item => GetItemOverflow(item) == NativeToolStripItemOverflow.Always) ? OverflowWidth : 2;
@@ -366,6 +424,19 @@ public sealed class NativeToolStrip : Control, IDisposable
             Math.Max(0, width - Padding.Left - Padding.Right - VisualStyleGripWidth),
             Math.Max(0, height - Padding.Top - Padding.Bottom));
         CalculatePlacements(display.Width);
+        _measuring = true;
+        try
+        {
+            foreach (Control item in Items)
+            {
+                ApplyControlHostMargin(item, GetItemPlacement(item) == NativeToolStripItemPlacement.Overflow);
+            }
+        }
+        finally
+        {
+            _measuring = false;
+        }
+
         Control[] main = Items.Where(item => item.IsVisible && GetItemPlacement(item) == NativeToolStripItemPlacement.Main).ToArray();
         Control[] overflow = Items.Where(item => item.IsVisible && GetItemPlacement(item) == NativeToolStripItemPlacement.Overflow).ToArray();
         OverflowItems = overflow;
@@ -529,7 +600,9 @@ public sealed class NativeToolStrip : Control, IDisposable
         LogicalChildren.Remove(item);
         _preferredSizes.Remove(item);
         _placements.Remove(item);
+        _pendingControlHostMargins.Remove(item);
         ReleaseAutoSize(item);
+        ReleaseControlHostMargin(item);
     }
 
     private void ApplyItemAutoSize(Control item)
@@ -549,11 +622,13 @@ public sealed class NativeToolStrip : Control, IDisposable
         if (item is TemplatedControl control)
         {
             // The source item inherits ToolStrip.Font, not the application's generic
-            // control-font style. Explicit local item fonts still take precedence.
-            values.Add(control.SetValue(TemplatedControl.FontFamilyProperty, FontFamily, BindingPriority.StyleTrigger));
-            values.Add(control.SetValue(TemplatedControl.FontSizeProperty, FontSize, BindingPriority.StyleTrigger));
-            values.Add(control.SetValue(TemplatedControl.FontStyleProperty, FontStyle, BindingPriority.StyleTrigger));
-            values.Add(control.SetValue(TemplatedControl.FontWeightProperty, FontWeight, BindingPriority.StyleTrigger));
+            // control-font style. ToolStripComboBox constructs its own menu-default
+            // font independently of an assigned owner font. Local fonts retain precedence.
+            bool controlHost = GetItemIsControlHost(item);
+            values.Add(control.SetValue(TemplatedControl.FontFamilyProperty, controlHost ? DefaultMenuFontFamily : FontFamily, BindingPriority.StyleTrigger));
+            values.Add(control.SetValue(TemplatedControl.FontSizeProperty, controlHost ? DefaultMenuFontSize : FontSize, BindingPriority.StyleTrigger));
+            values.Add(control.SetValue(TemplatedControl.FontStyleProperty, controlHost ? FontStyle.Normal : FontStyle, BindingPriority.StyleTrigger));
+            values.Add(control.SetValue(TemplatedControl.FontWeightProperty, controlHost ? FontWeight.Normal : FontWeight, BindingPriority.StyleTrigger));
         }
 
         _autoSizeValues[item] = values.ToArray();
@@ -570,6 +645,43 @@ public sealed class NativeToolStrip : Control, IDisposable
         }
     }
 
+    private void ApplyControlHostMargin(Control item, bool overflow)
+    {
+        if (!GetItemIsControlHost(item))
+        {
+            return;
+        }
+
+        if (!_controlHostMarginValues.TryGetValue(item, out (bool Overflow, IDisposable? Value) current))
+        {
+            current = (false, item.SetValue(MarginProperty, ControlHostMainMargin, BindingPriority.StyleTrigger));
+            _controlHostMainMargins[item] = item.Margin;
+            _controlHostMarginValues[item] = current;
+        }
+
+        if (current.Overflow == overflow)
+        {
+            return;
+        }
+
+        // Source CurrentParent changes even before the overflow is shown. Keep its
+        // public margin current without feeding that popup margin back into owner sizing.
+        current.Value?.Dispose();
+        _controlHostMarginValues[item] = (overflow,
+            item.SetValue(MarginProperty, overflow ? ControlHostOverflowMargin : ControlHostMainMargin, BindingPriority.StyleTrigger));
+    }
+
+    private void ReleaseControlHostMargin(Control item)
+    {
+        _controlHostMainMargins.Remove(item);
+        if (_controlHostMarginValues.Remove(item, out (bool Overflow, IDisposable? Value) current))
+        {
+            current.Value?.Dispose();
+        }
+    }
+
+    private Thickness GetMainMargin(Control item) => _controlHostMainMargins.GetValueOrDefault(item, item.Margin);
+
     private void Item_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (_measuring || sender is not Control item || e.Property == BoundsProperty)
@@ -577,12 +689,16 @@ public sealed class NativeToolStrip : Control, IDisposable
             return;
         }
 
-        if (e.Property == ItemAutoSizeProperty || e.Property == ItemHeightProperty)
+        if (e.Property == ItemAutoSizeProperty || e.Property == ItemHeightProperty || e.Property == ItemIsControlHostProperty)
         {
             _measuring = true;
             try
             {
                 ReleaseAutoSize(item);
+                if (e.Property == ItemIsControlHostProperty)
+                {
+                    ReleaseControlHostMargin(item);
+                }
             }
             finally
             {
@@ -590,10 +706,45 @@ public sealed class NativeToolStrip : Control, IDisposable
             }
         }
 
+        if (e.Property == MarginProperty && GetItemIsControlHost(item))
+        {
+            ResetControlHostMarginAfterPropertyChange(item);
+        }
+
         if (e.Property != IsPointerOverProperty && e.Property != IsFocusedProperty)
         {
             InvalidateMeasure();
         }
+    }
+
+    private void ResetControlHostMarginAfterPropertyChange(Control item)
+    {
+        if (!_pendingControlHostMargins.Add(item))
+        {
+            return;
+        }
+
+        // A margin notification can arrive inside Avalonia's style-frame iteration.
+        // Dispose value entries only after that evaluation has returned.
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!_pendingControlHostMargins.Remove(item) || _disposed || !Items.Contains(item))
+            {
+                return;
+            }
+
+            _measuring = true;
+            try
+            {
+                ReleaseControlHostMargin(item);
+            }
+            finally
+            {
+                _measuring = false;
+            }
+
+            InvalidateMeasure();
+        });
     }
 
     private void Item_Click(object? sender, RoutedEventArgs e)
@@ -693,7 +844,10 @@ public sealed class NativeToolStrip : Control, IDisposable
     }
 
     private double ItemWidth(Control item)
-        => _preferredSizes[item].Width + item.Margin.Left + item.Margin.Right;
+    {
+        Thickness margin = GetMainMargin(item);
+        return _preferredSizes[item].Width + margin.Left + margin.Right;
+    }
 }
 
 /// <summary>
@@ -828,8 +982,10 @@ internal sealed class NativeToolStripOverflowPresenter : NativeToolStripPresente
 
     public new void SetItems(IReadOnlyList<Control> items)
     {
-        _items = items;
-        base.SetItems(items);
+        // ToolStripOverflow's DisplayedItems excludes separators while their source
+        // Items membership and Overflow placement remain unchanged.
+        _items = items.Where(item => !NativeToolStrip.GetItemIsSeparator(item)).ToArray();
+        base.SetItems(_items);
     }
 
     public override void Render(DrawingContext context)
