@@ -136,6 +136,70 @@ public sealed class FormCommitTests
     }
 
     [AvaloniaTest]
+    public async Task Lists_must_not_select_an_item_when_a_click_gives_the_focus_back([Values] bool byMouse, [Values] bool staged)
+    {
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        FormCommit form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+            FileStatusList stagedList = form.FindControl<FileStatusList>("Staged")!;
+            await WaitForCountsAsync(unstaged, 2, stagedList, 0);
+            if (staged)
+            {
+                form.FindControl<Button>("toolStageAllItem")!
+                    .RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+                await WaitForCountsAsync(unstaged, 0, stagedList, 2);
+            }
+
+            FileStatusList list = staged ? stagedList : unstaged;
+            form.GetTestAccessor().Message.Focus();
+            list.ClearSelected();
+            list.HasSelection.Should().BeFalse();
+
+            if (staged)
+            {
+                form.GetTestAccessor().RaiseStagedEnter(byMouse);
+            }
+            else
+            {
+                form.GetTestAccessor().RaiseUnstagedEnter(byMouse);
+            }
+
+            list.HasSelection.Should().Be(!byMouse,
+                "the pointer click selects its hit item after the Enter notification, while keyboard Enter restores selection");
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommit_progress_bar_should_follow_the_adjacent_runtime_status_height()
+    {
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        FormCommit form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            await WaitForCountsAsync(form.FindControl<FileStatusList>("Unstaged")!, 2,
+                form.FindControl<FileStatusList>("Staged")!, 0);
+            ProgressBar progress = form.FindControl<ProgressBar>("toolStripProgressBar1")!;
+            TextBlock counter = form.FindControl<TextBlock>("commitStagedCount")!;
+
+            progress.Height.Should().Be(counter.Height - progress.Margin.Top - progress.Margin.Bottom);
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormCommit_should_add_body_only_word_wrap_to_the_message_context_menu()
     {
         int originalLineLimit = AppSettings.CommitValidationMaxCntCharsPerLine;

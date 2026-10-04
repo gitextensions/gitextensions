@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using GitCommands;
 using GitCommands.Utils;
@@ -11,12 +12,27 @@ namespace GitUI;
 public sealed partial class AvatarControl : GitExtensionsControl
 {
     private readonly CancellationTokenSequence _cancellationTokenSequence = new();
-    private readonly IAvatarProvider _avatarProvider = AvatarService.DefaultProvider;
-    private readonly IAvatarCacheCleaner _avatarCacheCleaner = AvatarService.CacheCleaner;
+    private readonly IAvatarProvider _avatarProvider;
+    private readonly IAvatarCacheCleaner _avatarCacheCleaner;
+    private readonly Action<Func<Task>> _scheduleUpdate;
     private Bitmap? _ownedImage;
+    private bool _isCacheClearSubscriptionActive;
 
     public AvatarControl()
+        : this(AvatarService.DefaultProvider, AvatarService.CacheCleaner)
     {
+    }
+
+    // parity-scaffolding: offline dependencies and a per-control scheduler make cache/detach races deterministic.
+
+    /// <summary>
+    ///  Supplies offline providers and an optional queued-worker scheduler for lifecycle tests.
+    /// </summary>
+    internal AvatarControl(IAvatarProvider provider, IAvatarCacheCleaner cacheCleaner, Action<Func<Task>>? scheduleUpdate = null)
+    {
+        _avatarProvider = provider;
+        _avatarCacheCleaner = cacheCleaner;
+        _scheduleUpdate = scheduleUpdate ?? ThreadHelper.FileAndForget;
         InitializeComponent();
 
         foreach (AvatarProvider avatarProvider in EnumHelper.GetValues<AvatarProvider>())
@@ -59,19 +75,50 @@ public sealed partial class AvatarControl : GitExtensionsControl
         registerGravatarToolStripMenuItem.Click += OnRegisterGravatarClick;
         avatarProviderToolStripMenuItem.SubmenuOpened += avatarProviderToolStripMenuItem_DropDownOpening;
         fallbackAvatarStyleToolStripMenuItem.SubmenuOpened += OnDefaultImageDropDownOpening;
-        DetachedFromVisualTree += (_, _) => _cancellationTokenSequence.CancelCurrent();
-
         RefreshImage(null);
         InitializeComplete();
     }
 
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+
+        // Avalonia controls have no Dispose boundary; do not retain detached controls in the shared cache.
+        lock (_cancellationTokenSequence)
+        {
+            _avatarCacheCleaner.CacheCleared += OnCacheCleared;
+            _isCacheClearSubscriptionActive = true;
+        }
+
+        if (Email is not null)
+        {
+            OnCacheCleared(this, EventArgs.Empty);
+        }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        lock (_cancellationTokenSequence)
+        {
+            _avatarCacheCleaner.CacheCleared -= OnCacheCleared;
+            _isCacheClearSubscriptionActive = false;
+            _cancellationTokenSequence.CancelCurrent();
+        }
+
+        base.OnDetachedFromVisualTree(e);
+    }
+
     public void ClearCache()
     {
-        ThreadHelper.FileAndForget(async () =>
+        CancellationToken token = _cancellationTokenSequence.Next();
+        _scheduleUpdate(async () =>
         {
             AvatarService.UpdateAvatarProvider();
             await _avatarCacheCleaner.ClearCacheAsync();
-            await UpdateAvatarAsync();
+            if (!_isCacheClearSubscriptionActive)
+            {
+                await UpdateAvatarAsync(token);
+            }
         });
     }
 
@@ -83,7 +130,24 @@ public sealed partial class AvatarControl : GitExtensionsControl
     {
         Email = email;
         AuthorName = name;
-        ThreadHelper.FileAndForget(UpdateAvatarAsync);
+        CancellationToken token = _cancellationTokenSequence.Next();
+        _scheduleUpdate(() => UpdateAvatarAsync(token));
+    }
+
+    private void OnCacheCleared(object? sender, EventArgs e)
+    {
+        CancellationToken token;
+        lock (_cancellationTokenSequence)
+        {
+            if (!_isCacheClearSubscriptionActive)
+            {
+                return;
+            }
+
+            token = _cancellationTokenSequence.Next();
+        }
+
+        _scheduleUpdate(() => UpdateAvatarAsync(token));
     }
 
     private void RefreshImage(Bitmap? image)
@@ -94,8 +158,9 @@ public sealed partial class AvatarControl : GitExtensionsControl
         previous?.Dispose();
     }
 
-    private async Task UpdateAvatarAsync()
+    private async Task UpdateAvatarAsync(CancellationToken token)
     {
+        // Capture the token before queuing work so visual detachment also cancels a worker that has not started.
         await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
         {
             double imageSize = AppSettings.AuthorImageSizeInCommitInfo;
@@ -103,16 +168,14 @@ public sealed partial class AvatarControl : GitExtensionsControl
             Height = imageSize;
             _avatarImage.Width = imageSize;
             _avatarImage.Height = imageSize;
-        });
+        }, Avalonia.Threading.DispatcherPriority.Normal, token);
 
         string? email = Email;
         if (!AppSettings.ShowAuthorAvatarInCommitInfo || string.IsNullOrWhiteSpace(email))
         {
-            await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => RefreshImage(null));
+            await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => RefreshImage(null), Avalonia.Threading.DispatcherPriority.Normal, token);
             return;
         }
-
-        CancellationToken token = _cancellationTokenSequence.Next();
 
         // resize our control (I'm not using AutoSize for a reason)
         byte[]? imageData = await _avatarProvider.GetAvatarAsync(email, AuthorName, AppSettings.AuthorImageSizeInCommitInfo);

@@ -165,6 +165,191 @@ public sealed class AvatarTests
         }
     }
 
+    [Test]
+    public async Task AvatarMemoryCache_should_leave_handed_out_bytes_usable_after_clearing()
+    {
+        byte[] imageData = [1, 2, 3];
+        IAvatarProvider inner = Substitute.For<IAvatarProvider>();
+        inner.GetAvatarAsync("author@example.com", "Author", 20).Returns(Task.FromResult<byte[]?>(imageData));
+        AvatarMemoryCache cache = new(inner);
+
+        byte[]? handedOut = await cache.GetAvatarAsync("author@example.com", "Author", 20);
+        await cache.ClearCacheAsync();
+
+        handedOut.Should().BeSameAs(imageData);
+        handedOut.Should().Equal(1, 2, 3);
+        (await cache.GetAvatarAsync("author@example.com", "Author", 20)).Should().BeSameAs(imageData);
+        _ = inner.Received(2).GetAvatarAsync("author@example.com", "Author", 20);
+    }
+
+    [AvaloniaTest]
+    public async Task AvatarControl_should_refresh_external_cache_clear_without_blanking_the_current_image()
+    {
+        bool originalShowAvatar = AppSettings.ShowAuthorAvatarInCommitInfo;
+        Window window = new();
+        try
+        {
+            AppSettings.ShowAuthorAvatarInCommitInfo = true;
+            byte[] firstImage = (await new InitialsAvatarProvider().GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo))!;
+            byte[] secondImage = (await new InitialsAvatarProvider().GetAvatarAsync("author@example.com", "Changed Author", AppSettings.AuthorImageSizeInCommitInfo))!;
+            TaskCompletionSource<byte[]?> refreshed = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            IAvatarProvider provider = Substitute.For<IAvatarProvider>();
+            provider.GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo)
+                .Returns(Task.FromResult<byte[]?>(firstImage), refreshed.Task);
+            IAvatarCacheCleaner cleaner = Substitute.For<IAvatarCacheCleaner>();
+            AvatarControl control = new(provider, cleaner);
+            window.Content = control;
+            window.Show();
+            control.LoadImage("author@example.com", "Author");
+            await WaitUntilAsync(() => control.GetTestAccessor().Image.Source is Bitmap bitmap
+                && !ReferenceEquals(bitmap, GitUI.Properties.Images.User80));
+            Bitmap previous = (Bitmap)control.GetTestAccessor().Image.Source!;
+
+            cleaner.CacheCleared += Raise.Event();
+            await WaitUntilAsync(() => provider.ReceivedCalls().Count() == 2);
+
+            control.GetTestAccessor().Image.Source.Should().BeSameAs(previous);
+            using MemoryStream retained = new();
+            ((Action)(() => previous.Save(retained, PngBitmapEncoderOptions.Default))).Should().NotThrow();
+            refreshed.SetResult(secondImage);
+            await WaitUntilAsync(() => control.GetTestAccessor().Image.Source is Bitmap bitmap
+                && !ReferenceEquals(bitmap, previous));
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.ShowAuthorAvatarInCommitInfo = originalShowAvatar;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task AvatarControl_should_unsubscribe_while_detached_and_refresh_once_when_reattached()
+    {
+        bool originalShowAvatar = AppSettings.ShowAuthorAvatarInCommitInfo;
+        Window window = new();
+        try
+        {
+            AppSettings.ShowAuthorAvatarInCommitInfo = true;
+            byte[] imageData = (await new InitialsAvatarProvider().GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo))!;
+            IAvatarProvider provider = Substitute.For<IAvatarProvider>();
+            provider.GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo).Returns(Task.FromResult<byte[]?>(imageData));
+            IAvatarCacheCleaner cleaner = Substitute.For<IAvatarCacheCleaner>();
+            AvatarControl control = new(provider, cleaner);
+            window.Content = control;
+            window.Show();
+            control.LoadImage("author@example.com", "Author");
+            await WaitUntilAsync(() => control.GetTestAccessor().Image.Source is Bitmap bitmap
+                && !ReferenceEquals(bitmap, GitUI.Properties.Images.User80));
+            Bitmap previous = (Bitmap)control.GetTestAccessor().Image.Source!;
+
+            window.Content = null;
+            cleaner.CacheCleared += Raise.Event();
+            Dispatcher.UIThread.RunJobs();
+
+            _ = provider.Received(1).GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo);
+            control.GetTestAccessor().Image.Source.Should().BeSameAs(previous);
+            window.Content = control;
+            await WaitUntilAsync(() => control.GetTestAccessor().Image.Source is Bitmap bitmap
+                && !ReferenceEquals(bitmap, previous));
+            _ = provider.Received(2).GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo);
+
+            window.Content = null;
+            window.Content = control;
+            await WaitUntilAsync(() => provider.ReceivedCalls().Count() == 3);
+            cleaner.CacheCleared += Raise.Event();
+            await WaitUntilAsync(() => provider.ReceivedCalls().Count() == 4);
+            _ = provider.Received(4).GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo);
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.ShowAuthorAvatarInCommitInfo = originalShowAvatar;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task AvatarControl_should_refresh_its_own_clear_once_through_the_shared_event()
+    {
+        bool originalShowAvatar = AppSettings.ShowAuthorAvatarInCommitInfo;
+        Window window = new();
+        try
+        {
+            AppSettings.ShowAuthorAvatarInCommitInfo = true;
+            byte[] imageData = (await new InitialsAvatarProvider().GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo))!;
+            IAvatarProvider provider = Substitute.For<IAvatarProvider>();
+            provider.GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo).Returns(Task.FromResult<byte[]?>(imageData));
+            IAvatarCacheCleaner cleaner = Substitute.For<IAvatarCacheCleaner>();
+            cleaner.ClearCacheAsync().Returns(_ =>
+            {
+                cleaner.CacheCleared += Raise.Event();
+                return Task.CompletedTask;
+            });
+            AvatarControl control = new(provider, cleaner);
+            window.Content = control;
+            window.Show();
+            control.LoadImage("author@example.com", "Author");
+            await WaitUntilAsync(() => control.GetTestAccessor().Image.Source is Bitmap bitmap
+                && !ReferenceEquals(bitmap, GitUI.Properties.Images.User80));
+
+            control.ClearCache();
+            await WaitUntilAsync(() => provider.ReceivedCalls().Count() == 2);
+            Dispatcher.UIThread.RunJobs();
+
+            _ = cleaner.Received(1).ClearCacheAsync();
+            _ = provider.Received(2).GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo);
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.ShowAuthorAvatarInCommitInfo = originalShowAvatar;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task AvatarControl_should_cancel_a_refresh_detached_before_its_worker_starts()
+    {
+        bool originalShowAvatar = AppSettings.ShowAuthorAvatarInCommitInfo;
+        Window window = new();
+        try
+        {
+            AppSettings.ShowAuthorAvatarInCommitInfo = true;
+            byte[] imageData = (await new InitialsAvatarProvider().GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo))!;
+            IAvatarProvider provider = Substitute.For<IAvatarProvider>();
+            provider.GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo).Returns(Task.FromResult<byte[]?>(imageData));
+            IAvatarCacheCleaner cleaner = Substitute.For<IAvatarCacheCleaner>();
+            Queue<Func<Task>> workers = new();
+            AvatarControl control = new(provider, cleaner, workers.Enqueue);
+            window.Content = control;
+            window.Show();
+            control.LoadImage("author@example.com", "Author");
+            await workers.Dequeue()();
+            Bitmap previous = (Bitmap)control.GetTestAccessor().Image.Source!;
+
+            cleaner.CacheCleared += Raise.Event();
+            workers.Should().HaveCount(1);
+            window.Content = null;
+            Func<Task> detachedWorker = workers.Dequeue();
+
+            await detachedWorker.Should().ThrowAsync<OperationCanceledException>();
+
+            _ = provider.Received(1).GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo);
+            control.GetTestAccessor().Image.Source.Should().BeSameAs(previous);
+            cleaner.CacheCleared += Raise.Event();
+            workers.Should().BeEmpty();
+
+            window.Content = control;
+            workers.Should().HaveCount(1);
+            await workers.Dequeue()();
+            _ = provider.Received(2).GetAvatarAsync("author@example.com", "Author", AppSettings.AuthorImageSizeInCommitInfo);
+            control.GetTestAccessor().Image.Source.Should().NotBeSameAs(previous);
+        }
+        finally
+        {
+            window.Close();
+            AppSettings.ShowAuthorAvatarInCommitInfo = originalShowAvatar;
+        }
+    }
+
     [AvaloniaTest]
     public async Task Avatar_cell_should_ignore_a_late_result_from_a_recycled_row()
     {

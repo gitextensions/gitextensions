@@ -184,6 +184,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
                 Heading = TranslatedStrings.CannotBeUndone,
                 Icon = TaskDialogIcon.Warning,
                 DefaultButton = TaskDialogButton.No,
+                AllowCancel = true,
                 SizeToContent = true,
             };
             page.Buttons.Add(TaskDialogButton.Yes);

@@ -23,7 +23,6 @@ public class PathUtilTest
     [TestCase('"', false)]
     [TestCase('<', false)]
     [TestCase('>', false)]
-    [TestCase('|', false)]
     [TestCase('\0', false)]
     [TestCase('\t', false)]
     [TestCase('\n', false)]
@@ -32,6 +31,15 @@ public class PathUtilTest
     public void IsValidPathChar_should_return_expected(char c, bool expected)
     {
         PathUtil.IsValidPathChar(c).Should().Be(expected);
+    }
+
+    [Test]
+    public void IsValidPathChar_should_follow_native_path_rules_for_pipe()
+    {
+        // Unlike explicitly rejected quotes and angle brackets, pipes are valid in native Unix paths.
+        bool expected = !Path.GetInvalidPathChars().Contains('|');
+
+        PathUtil.IsValidPathChar('|').Should().Be(expected);
     }
 
     [Test]

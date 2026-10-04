@@ -200,6 +200,49 @@ public sealed class DiffPatchDialogTests
     }
 
     [AvaloniaTest]
+    public void Diff_commit_labels_should_preserve_integer_flow_centering_after_resize()
+    {
+        FormDiff form = new();
+        form.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            (string Panel, string Group, string Label)[] controls =
+            [
+                ("firstCommitPanel", "firstCommitGroup", "lblFirstCommit"),
+                ("secondCommitPanel", "secondCommitGroup", "lblSecondCommit"),
+            ];
+            foreach ((string panelName, string groupName, string labelName) in controls)
+            {
+                StackPanel panel = form.FindControl<StackPanel>(panelName)!;
+                GroupBox group = form.FindControl<GroupBox>(groupName)!;
+                Label label = form.FindControl<Label>(labelName)!;
+                double originalPanelHeight = panel.Height;
+                double originalGroupHeight = group.Height;
+                Avalonia.Rect originalLabelBounds = label.Bounds;
+                group.Height = originalGroupHeight + 1;
+                panel.Height = originalPanelHeight + 1;
+                Dispatcher.UIThread.RunJobs();
+
+                panel.Bounds.Height.Should().Be(originalPanelHeight + 1);
+                label.Bounds.Y.Should().Be((int)(panel.Bounds.Height - label.Bounds.Height) / 2);
+                Avalonia.Rect resizedLabelBounds = label.Bounds;
+                Dispatcher.UIThread.RunJobs();
+                label.Bounds.Should().Be(resizedLabelBounds);
+
+                panel.Height = originalPanelHeight;
+                group.Height = originalGroupHeight;
+                Dispatcher.UIThread.RunJobs();
+                label.Bounds.Should().Be(originalLabelBounds);
+            }
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void Format_patch_should_preserve_the_original_runtime_table_layout()
     {
         FormFormatPatch form = new();
@@ -652,6 +695,7 @@ public sealed class DiffPatchDialogTests
     {
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(Path.GetTempPath());
+        module.IsValidGitWorkingDir().Returns(true);
         module.GetRefs(Arg.Any<RefsFilter>()).Returns([]);
         module.GetSelectedBranch(Arg.Any<bool>()).Returns("main");
 

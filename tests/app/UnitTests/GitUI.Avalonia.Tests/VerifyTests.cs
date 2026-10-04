@@ -123,6 +123,33 @@ public sealed class VerifyTests
     }
 
     [AvaloniaTest]
+    public void FormVerify_should_describe_an_unreadable_object_without_failing_the_read_only_view()
+    {
+        ExternalOperationException error = new(command: "git", arguments: "show", workingDirectory: Path.GetTempPath(), innerException: new Exception("fatal: bad object"));
+        IGitModule module = Substitute.For<IGitModule>();
+        module.ShowObject(Arg.Any<ObjectId>(), Arg.Any<bool>()).Returns(_ => throw error);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        FormVerify form = new(commands);
+        try
+        {
+            FormVerify.TestAccessor accessor = form.GetTestAccessor();
+            accessor.SetPreviewRows();
+            FormEdit? view = accessor.CreateCurrentItemView();
+            view.Should().NotBeNull();
+            using FormEdit actualView = view!;
+            actualView.IsReadOnly.Should().BeTrue();
+            actualView.GetTestAccessor().Viewer.GetText().Should()
+                .StartWith("Object could not be read. It may be corrupted or no longer available.")
+                .And.Contain(error.Message);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FormVerify_should_parse_unreachable_objects_from_a_real_repository()
     {
         GitModule module = CreateRepositoryWithUnreachableCommit();

@@ -341,6 +341,9 @@ public sealed partial class FormCommit : GitModuleForm
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
+
+        // Keep the progress bar within the height of the other status items.
+        toolStripProgressBar1.Height = commitStagedCount.Height - toolStripProgressBar1.Margin.Top - toolStripProgressBar1.Margin.Bottom;
     }
 
     private void RestoreSplitters()
@@ -1162,17 +1165,23 @@ public sealed partial class FormCommit : GitModuleForm
         _changingSelection = false;
         if (!Unstaged.HasSelection)
         {
-            if (Unstaged.FocusedItem is null)
+            // The click which is giving the focus back selects an item by itself. Selecting one
+            // here scrolls the list to it beforehand, so that the click misses what it aimed at.
+            if (!e.ByMouse)
             {
-                Unstaged.SelectFirstVisibleItem();
-                if (!Unstaged.HasSelection)
+                if (Unstaged.FocusedItem is null)
                 {
-                    UnstagedSelectionChanged(Unstaged, EventArgs.Empty);
+                    Unstaged.SelectFirstVisibleItem();
+                }
+                else
+                {
+                    Unstaged.SelectedItems = [Unstaged.FocusedItem];
                 }
             }
-            else
+
+            if (!Unstaged.HasSelection)
             {
-                Unstaged.SelectedItems = [Unstaged.FocusedItem];
+                UnstagedSelectionChanged(Unstaged, EventArgs.Empty);
             }
         }
         else
@@ -1279,26 +1288,31 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void Staged_Enter(object? sender, EnterEventArgs e)
     {
-        SelectStaged();
+        SelectStaged(e.ByMouse);
     }
 
-    private void SelectStaged()
+    private void SelectStaged(bool byMouse = false)
     {
         _currentFilesList = Staged;
         _changingSelection = false;
         if (!Staged.HasSelection)
         {
-            if (Staged.FocusedItem is null)
+            // See Unstaged_Enter
+            if (!byMouse)
             {
-                Staged.SelectFirstVisibleItem();
-                if (!Staged.HasSelection)
+                if (Staged.FocusedItem is null)
                 {
-                    StagedSelectionChanged(Staged, EventArgs.Empty);
+                    Staged.SelectFirstVisibleItem();
+                }
+                else
+                {
+                    Staged.SelectedItems = [Staged.FocusedItem];
                 }
             }
-            else
+
+            if (!Staged.HasSelection)
             {
-                Staged.SelectedItems = [Staged.FocusedItem];
+                StagedSelectionChanged(Staged, EventArgs.Empty);
             }
         }
         else
@@ -2573,6 +2587,9 @@ public sealed partial class FormCommit : GitModuleForm
         internal Task ClosePersistenceTask => form._closePersistenceTask;
         internal ComboBox SelectionFilter => form.selectionFilter;
         internal bool SelectionFilterVisible => form.toolbarSelectionFilter.IsVisible;
+
+        internal void RaiseUnstagedEnter(bool byMouse) => form.Unstaged_Enter(form.Unstaged, new EnterEventArgs(byMouse));
+        internal void RaiseStagedEnter(bool byMouse) => form.Staged_Enter(form.Staged, new EnterEventArgs(byMouse));
 
         internal ArgumentString CreateCommitArguments(bool amend, bool allowEmpty)
             => form.CreateCommitArguments(amend, allowEmpty);

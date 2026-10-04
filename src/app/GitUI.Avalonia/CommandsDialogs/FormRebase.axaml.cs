@@ -17,10 +17,10 @@ namespace GitUI.CommandsDialogs;
 public partial class FormRebase : GitExtensionsDialog
 {
     private const string IgnoreDateToolTip =
-        "Sets the author date to the current date (same as" + "\n" +
+        "Sets the author date to the current date (same as\r\n" +
         "commit date), ignoring the original author date.";
     private const string CommitterDateToolTip =
-        "Sets the commit date to the original author date" + "\n" +
+        "Sets the commit date to the original author date\r\n" +
         "(instead of the current date).";
 
     // Available: GHJLVWXYZ
@@ -128,18 +128,6 @@ public partial class FormRebase : GitExtensionsDialog
         base.TranslateItems(translation);
 
         PanelLeftImage.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
-        string? ignoreDateToolTip = translation.TranslateItem(
-            nameof(FormRebase),
-            nameof(chkIgnoreDate),
-            "toolTip1",
-            () => IgnoreDateToolTip.Replace("\n", Environment.NewLine, StringComparison.Ordinal));
-        string? committerDateToolTip = translation.TranslateItem(
-            nameof(FormRebase),
-            nameof(chkCommitterDateIsAuthorDate),
-            "toolTip1",
-            () => CommitterDateToolTip.Replace("\n", Environment.NewLine, StringComparison.Ordinal));
-        ToolTip.SetTip(chkIgnoreDate, ignoreDateToolTip);
-        ToolTip.SetTip(chkCommitterDateIsAuthorDate, committerDateToolTip);
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -211,6 +199,9 @@ public partial class FormRebase : GitExtensionsDialog
 
     private void InitializeStaticContent()
     {
+        // The Designer supplies both neutral tooltips before translation, including their CRLF key values.
+        ToolTip.SetTip(chkIgnoreDate, IgnoreDateToolTip);
+        ToolTip.SetTip(chkCommitterDateIsAuthorDate, CommitterDateToolTip);
         cboBranches.ItemTemplate = CreateRefTemplate();
         cboTo.ItemTemplate = CreateRefTemplate();
         PanelLeftImage.Image1 = Properties.Images.HelpCommandRebase.AdaptLightness();
@@ -330,7 +321,8 @@ public partial class FormRebase : GitExtensionsDialog
                 arguments: Commands.ContinueRebase(),
                 Module.WorkingDir,
                 input: null,
-                useDialogSettings: true);
+                useDialogSettings: true,
+                out string cmdOutput);
 
             if (!Module.InTheMiddleOfRebase())
             {
@@ -341,6 +333,18 @@ public partial class FormRebase : GitExtensionsDialog
             if (Module.InTheMiddleOfRebase())
             {
                 PatchGrid.Initialize();
+            }
+
+            if (Module.CanContinueAction(cmdOutput))
+            {
+                // Avalonia queues the existing continuation handler instead of WinForms BeginInvoke/PerformClick.
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    if (IsVisible && btnContinueRebase.IsVisible && btnContinueRebase.IsEffectivelyEnabled)
+                    {
+                        ResolvedClick(btnContinueRebase, EventArgs.Empty);
+                    }
+                });
             }
         }
     }
@@ -511,6 +515,18 @@ public partial class FormRebase : GitExtensionsDialog
             if (Module.InTheMiddleOfRebase())
             {
                 PatchGrid.Initialize();
+            }
+
+            if (Module.CanContinueAction(commandOutput))
+            {
+                // Avalonia queues the existing continuation handler instead of WinForms BeginInvoke/PerformClick.
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    if (IsVisible && btnContinueRebase.IsVisible && btnContinueRebase.IsEffectivelyEnabled)
+                    {
+                        ResolvedClick(btnContinueRebase, EventArgs.Empty);
+                    }
+                });
             }
         }
     }

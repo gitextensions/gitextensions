@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -141,6 +142,19 @@ public static class TaskDialog
             dialog.Classes.Add("gitextensions-task-dialog");
 
             TaskDialogButton result = TaskDialogButton.Cancel;
+            if (page.AllowCancel)
+            {
+                // WinForms AllowCancel dismisses without choosing No, even when no Cancel button is shown.
+                dialog.KeyDown += (_, e) =>
+                {
+                    if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
+                    {
+                        result = TaskDialogButton.Cancel;
+                        e.Handled = true;
+                        dialog.Close();
+                    }
+                };
+            }
 
             StackPanel content = new()
             {
@@ -237,7 +251,8 @@ public static class TaskDialog
                 button.IsDefault = page.DefaultButton is null
                     ? isFirst
                     : ReferenceEquals(pageButton, page.DefaultButton);
-                button.IsCancel = pageButton == TaskDialogButton.Cancel || pageButton == TaskDialogButton.No;
+                button.IsCancel = pageButton == TaskDialogButton.Cancel
+                    || (!page.AllowCancel && pageButton == TaskDialogButton.No);
                 isFirst = false;
                 buttonPanel.Children.Add(button);
             }

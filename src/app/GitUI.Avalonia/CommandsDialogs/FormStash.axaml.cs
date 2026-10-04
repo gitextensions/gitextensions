@@ -72,6 +72,24 @@ public sealed partial class FormStash : GitModuleForm
     {
         HotkeysEnabled = true;
         InitializeComplete();
+        SetMinimumStashPanelWidth();
+    }
+
+    private void SetMinimumStashPanelWidth()
+    {
+        // The buttons and the check boxes above them have to fit even when the accessibility
+        // text size enlarges the system font without changing the DPI.
+        // Keep the source width as a lower bound, so that the layout tuned for high DPI is preserved.
+        // Avalonia's equal star columns need each child's intrinsic width, not the old arranged client width.
+        double preferredWidth = 0;
+        foreach (Control child in tableLayoutPanel1.Children.Where(child => child.IsVisible))
+        {
+            child.Measure(Avalonia.Size.Infinity);
+            int columnSpan = Math.Min(Grid.GetColumnSpan(child), tableLayoutPanel1.ColumnDefinitions.Count);
+            preferredWidth = Math.Max(preferredWidth, child.DesiredSize.Width * tableLayoutPanel1.ColumnDefinitions.Count / columnSpan);
+        }
+
+        splitContainer1.ColumnDefinitions[0].Width = new GridLength(Math.Max(280, Math.Ceiling(preferredWidth)));
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
@@ -132,6 +150,7 @@ public sealed partial class FormStash : GitModuleForm
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);
+        SetMinimumStashPanelWidth();
         FormStashLoad(this, e);
     }
 

@@ -169,12 +169,14 @@ public partial class FormMergeBranch : GitModuleForm
                 arguments: command,
                 Module.WorkingDir,
                 input: null,
-                useDialogSettings: true);
+                useDialogSettings: true,
+                out string commandOutput);
 
             bool wasConflict = MergeConflictHandler.HandleMergeConflicts(
                 UICommands,
                 this,
-                offerCommit: noCommit.IsChecked != true);
+                offerCommit: noCommit.IsChecked != true)
+                || Module.CanContinueAction(commandOutput);
 
             if (success || wasConflict)
             {

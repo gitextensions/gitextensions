@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.LogicalTree;
 using Avalonia.Media.Imaging;
 using GitCommands;
 using ResourceManager;
@@ -19,7 +20,7 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
     {
         InitializeComponent();
 
-        linkLabelShowHelp.Content = $"Show{Environment.NewLine}help";
+        linkLabelShowHelp.Content = "Show\r\nhelp";
         buttonShowHelp.Click += buttonShowHelp_Click;
         linkLabelShowHelp.Click += linkLabelShowHelp_LinkClicked;
         linkLabelHide.Click += linkLabelHide_LinkClicked;
@@ -140,11 +141,16 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
         double width = IsExpanded
             ? Math.Max(Image1?.PixelSize.Width ?? 40, Image2?.PixelSize.Width ?? 40)
             : 30;
-        double widthDelta = width - _hostContributionWidth;
+
+        // The Designer may have assigned Width after IsExpanded: use that actual source baseline.
+        double widthDelta = width - (double.IsNaN(Width) ? _hostContributionWidth : Width);
 
         Width = width;
         MinWidth = width;
-        if (TopLevel.GetTopLevel(this) is not Window form)
+
+        // WinForms TopLevelControl finds its Form before showing; Avalonia's visual root may not yet exist.
+        Window? form = TopLevel.GetTopLevel(this) as Window ?? this.FindLogicalAncestorOfType<Window>();
+        if (form is null)
         {
             // The control already contributes this width when it is first attached. Remember
             // that pre-attachment state so loading an expanded preference does not add the
