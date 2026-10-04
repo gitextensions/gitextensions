@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -24,7 +25,11 @@ public partial class CommitInfoHeader : GitModuleControl
     public CommitInfoHeader()
     {
         InitializeComponent();
-        rtbRevisionHeader.KeyDown += rtbRevisionHeader_KeyDown;
+
+        // WinForms raises the source handler before its default Copy action. Avalonia's
+        // SelectableTextBlock consumes Ctrl+C in the bubble route, including an empty
+        // selection; tunnel preserves the source's unconditional helper copy exactly once.
+        rtbRevisionHeader.AddHandler(KeyDownEvent, rtbRevisionHeader_KeyDown, RoutingStrategies.Tunnel);
         rtbRevisionHeader.LinkClicked += rtbRevisionHeader_LinkClicked;
         rtbRevisionHeader.PointerPressed += rtbRevisionHeader_MouseDown;
         InitializeComplete();

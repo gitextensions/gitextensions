@@ -1,3 +1,4 @@
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -8,6 +9,7 @@ using Avalonia.Input;
 using Avalonia.Input.Raw;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
@@ -23,6 +25,7 @@ using GitUI.LeftPanel;
 using GitUI.LeftPanel.Interfaces;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
 using ResourceManager.Hotkey;
@@ -1038,6 +1041,85 @@ public sealed class RepoObjectsTreeTests
             HeaderLabel(currentBranch).FontWeight.Should().Be(FontWeight.Bold);
             accessor.Tree.SelectedItems!.Cast<TreeViewItem>().Should().Contain(currentBranch);
             HeaderText(roots.Single(item => HeaderText(item).StartsWith("Stashes", StringComparison.Ordinal))).Should().Be("Stashes");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public async Task Async_owner_reload_should_restore_same_name_caret_and_logical_filters_without_transient_activation()
+    {
+        AvaloniaSynchronizationContext.InstallIfNeeded();
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            IGitModule module = Substitute.For<IGitModule>();
+            module.IsValidGitWorkingDir().Returns(true);
+            IBrowseRepo browseRepo = Substitute.For<IBrowseRepo>();
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            commands.BrowseRepo.Returns(browseRepo);
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            RepoObjectsTree control = new() { UICommandsSource = source };
+            control.SetRefs([CreateRef("refs/heads/main"), CreateRef("refs/heads/feature"), CreateRef("refs/tags/v1")], [], "main");
+            RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
+            TreeViewItem[] originalRoots = [.. accessor.Tree.Items.Cast<TreeViewItem>()];
+            TreeViewItem branches = originalRoots.First();
+            LocalBranchTree branchTree = (LocalBranchTree)branches.Tag!;
+            TreeViewItem originalMain = branches.Items.Cast<TreeViewItem>().Single(item => HeaderText(item) == "main");
+            accessor.SelectNode<LocalBranchNode>(["Branches", "main"]);
+            accessor.SelectNode<TagNode>(["Tags", "v1"], multiple: true);
+            accessor.Tree.SelectedItem = originalMain;
+            browseRepo.ClearReceivedCalls();
+            int selectionEvents = 0;
+            control.NodeSelectionChanged += (_, _) => selectionEvents++;
+            Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = _ => [CreateRef("refs/heads/main"), CreateRef("refs/heads/feature")];
+            Func<Func<RefsFilter, IReadOnlyList<IGitRef>>, CancellationToken, Task<Nodes>> loadNodes = async (refs, token) =>
+            {
+                await Task.Yield();
+                token.ThrowIfCancellationRequested();
+                Nodes loaded = new(branchTree);
+                foreach (IGitRef gitRef in refs(RefsFilter.Heads))
+                {
+                    loaded.AddNode(new LocalBranchNode(branchTree, branchTree, gitRef, gitRef.Name == "main"));
+                }
+
+                return loaded;
+            };
+
+            // Exercise the actual protected source-shaped async reload boundary on
+            // the owner's real branch tree, without adding a production test API.
+            MethodInfo reload = typeof(Tree).GetMethod("ReloadNodesDetached", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            JoinableTask operation = (JoinableTask)reload.Invoke(branchTree, [loadNodes, getRefs])!;
+            await operation.JoinAsync();
+            Dispatcher.UIThread.RunJobs();
+
+            TreeViewItem refreshedMain = branches.Items.Cast<TreeViewItem>().Single(item => HeaderText(item) == "main");
+            refreshedMain.Should().NotBeSameAs(originalMain);
+            accessor.Tree.Items.Cast<TreeViewItem>().Should().Equal(originalRoots);
+            accessor.Tree.SelectedItem.Should().BeSameAs(refreshedMain);
+            accessor.Tree.SelectedItems.Cast<object>().Should().ContainSingle().Which.Should().BeSameAs(refreshedMain);
+            accessor.LogicalSelection.Select(HeaderText).Should().BeEquivalentTo(["main", "v1"]);
+            foreach (TreeViewItem item in accessor.LogicalSelection)
+            {
+                HeaderLabel(item).TextDecorations.Should().BeSameAs(TextDecorations.Underline);
+            }
+
+            selectionEvents.Should().Be(0);
+            browseRepo.DidNotReceiveWithAnyArgs().GoToRef(default!, default, default);
+            TreeViewItem feature = branches.Items.Cast<TreeViewItem>().Single(item => HeaderText(item) == "feature");
+
+            branches.Items.Remove(refreshedMain);
+
+            accessor.Tree.SelectedItem.Should().BeSameAs(feature);
+            selectionEvents.Should().Be(1, "ordinary deletion is no longer inside the owner's source suppression boundary");
+            browseRepo.Received(1).GoToRef("feature", showNoRevisionMsg: true, toggleSelection: false);
         }
         finally
         {

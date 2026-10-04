@@ -166,16 +166,21 @@ internal abstract class Tree : NodeBase, IDisposable
                         return;
                     }
 
-                    // remember multi-selected nodes
-                    TreeSelectionState selected = OwnerControl.CaptureSelectionState(this);
-                    Nodes.Clear();
-                    Nodes.AddNodes(newNodes);
-                    FillTreeViewNode(originalSelectedNodeFullNamePath: null, _firstReloadNodesSinceModuleChanged);
+                    // Avalonia routes selection changes through the owning tree;
+                    // preserve the native IgnoreSelectionChangedEvent rebuild boundary.
+                    OwnerControl.UpdateNodes(() =>
+                    {
+                        // remember multi-selected nodes
+                        TreeSelectionState selected = OwnerControl.CaptureSelectionState(this);
+                        Nodes.Clear();
+                        Nodes.AddNodes(newNodes);
+                        FillTreeViewNode(originalSelectedNodeFullNamePath: null, _firstReloadNodesSinceModuleChanged);
 
-                    // re-apply multi-selection
-                    OwnerControl.RestoreSelectionState(this, selected);
-                    ExpandPathToSelectedNode();
-                    _firstReloadNodesSinceModuleChanged = false;
+                        // re-apply multi-selection
+                        OwnerControl.RestoreSelectionState(this, selected);
+                        ExpandPathToSelectedNode();
+                        _firstReloadNodesSinceModuleChanged = false;
+                    });
                 });
             }
             finally

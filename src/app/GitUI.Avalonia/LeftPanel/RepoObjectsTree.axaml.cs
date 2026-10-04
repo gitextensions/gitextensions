@@ -238,7 +238,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
         _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
-        _ = new NativeTreeKeyboardAdapter(treeMain);
+        _ = new NativeTreeKeyboardAdapter(treeMain, isUpdating: () => _selectionUpdateDepth != 0);
         _explorerNavigationDecorator = new NativeTreeViewExplorerNavigationDecorator(treeMain);
         _explorerNavigationDecorator.AfterSelect += OnNodeSelected;
 
@@ -552,7 +552,13 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 .ThenBy(tree => tree.Kind)
                 .Select(tree => tree.TreeViewNode),
         ];
-        treeMain.ItemsSource = visibleRoots;
+
+        // WinForms visibility updates leave existing roots attached. Resetting an
+        // identical Avalonia ItemsSource would instead invalidate the restored caret.
+        if (!treeMain.Items.Cast<TreeViewItem>().SequenceEqual(visibleRoots))
+        {
+            treeMain.ItemsSource = visibleRoots;
+        }
     }
 
     private void ToggleTree(RepoTreeKind kind, bool show)
