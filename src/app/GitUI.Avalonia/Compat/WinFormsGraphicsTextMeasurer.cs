@@ -99,7 +99,30 @@ internal static class WinFormsGraphicsTextMeasurer
         }
     }
 
-    private static bool TryMeasureNativeSize(MeasurementKey key, out Size size)
+    /// <summary>
+    ///  Gets Font.Height's ceiling of GDI+ line spacing, not TextRenderer's HFONT character height.
+    /// </summary>
+    public static int GetFontHeight(TemplatedControl owner)
+    {
+        int style = (owner.FontWeight >= FontWeight.Bold ? 1 : 0) | (owner.FontStyle == FontStyle.Italic ? 2 : 0);
+        MeasurementKey key = new(string.Empty, owner.FontFamily.Name, (float)(owner.FontSize * PointsPerInch / NativeDpi), style);
+        if (OperatingSystem.IsWindows() && IsNativeDpiContext()
+            && TryMeasureNativeSize(key, out Size measured, measureFontHeight: true))
+        {
+            return (int)measured.Height;
+        }
+
+        // The portable substitute uses the actual resolved font's line spacing.
+        // It does not establish native GDI+ font-height or glyph-raster identity.
+        if (FontManager.Current.TryGetGlyphTypeface(new Typeface(owner.FontFamily, owner.FontStyle, owner.FontWeight), out GlyphTypeface? typeface))
+        {
+            return (int)Math.Ceiling(typeface.Metrics.LineSpacing * owner.FontSize / typeface.Metrics.DesignEmHeight);
+        }
+
+        return (int)Math.Ceiling(MeasurePortableSize("0", owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize).Height);
+    }
+
+    private static bool TryMeasureNativeSize(MeasurementKey key, out Size size, bool measureFontHeight = false)
     {
         size = default;
         nint deviceContext = GetDC(0);
@@ -124,6 +147,17 @@ internal static class WinFormsGraphicsTextMeasurer
                 || GdipCreateFont(family, key.Points, key.Style, UnitPoint, out font) != 0)
             {
                 return false;
+            }
+
+            if (measureFontHeight)
+            {
+                if (GdipGetFontHeightGivenDPI(font, NativeDpi, out float height) != 0 || !float.IsFinite(height) || height <= 0)
+                {
+                    return false;
+                }
+
+                size = new Size(0, Math.Ceiling(height));
+                return true;
             }
 
             // The original overload passes an empty layout rectangle and a null format
@@ -207,6 +241,9 @@ internal static class WinFormsGraphicsTextMeasurer
 
     [DllImport("gdiplus.dll")]
     private static extern int GdipCreateFont(nint family, float size, int style, int unit, out nint font);
+
+    [DllImport("gdiplus.dll")]
+    private static extern int GdipGetFontHeightGivenDPI(nint font, float dpi, out float height);
 
     [DllImport("gdiplus.dll", CharSet = CharSet.Unicode)]
     private static extern int GdipMeasureString(nint graphics, string text, int length, nint font,

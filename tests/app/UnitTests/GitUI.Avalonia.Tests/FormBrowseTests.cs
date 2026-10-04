@@ -502,7 +502,7 @@ public sealed class FormBrowseTests
             nodes[0].BoundsDip.Y.Should().Be(decimal.Round((decimal)actualBounds.Y, 4));
             nodes[0].BoundsDip.Width.Should().Be(decimal.Round((decimal)actualBounds.Width, 4));
             nodes[0].BoundsDip.Height.Should().Be(decimal.Round((decimal)actualBounds.Height, 4));
-            nodes[1].Type.Should().Be(typeof(Separator).FullName);
+            nodes[1].Type.Should().Be(typeof(NativeToolStripDropDownSeparator).FullName);
         }
 
         static IEnumerable<CaptureNode> Flatten(CaptureNode node)

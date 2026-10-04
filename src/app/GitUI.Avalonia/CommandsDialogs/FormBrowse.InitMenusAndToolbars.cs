@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -50,7 +51,17 @@ partial class FormBrowse
 
         InsertFetchPullShortcuts();
 
-        ((MenuFlyout)toolStripButtonPull.Flyout!).Opening += (_, _) => UpdateFetchAllVisibility();
+        MenuFlyout pullDropDown = (MenuFlyout)toolStripButtonPull.Flyout!;
+        pullDropDown.Opening += (_, _) => UpdateFetchAllVisibility();
+        pullDropDown.Opened += (_, _) =>
+        {
+            // Avalonia realizes this toolbar flyout outside ToolStripDropDownItem's
+            // submenu route. Apply the source shortcut text after its row templates exist.
+            WinFormsToolStripMenuSizer.Apply(pullDropDown, pullToolStripMenuItem1);
+            Dispatcher.UIThread.Post(
+                () => WinFormsToolStripMenuSizer.Apply(pullDropDown, pullToolStripMenuItem1),
+                DispatcherPriority.Loaded);
+        };
 
         // Layout engine bug (?) which may change the order of toolbars
         // if the 1st one becomes longer than the 2nd toolbar's Location.X

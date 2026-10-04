@@ -574,6 +574,17 @@ public sealed class WorkingDirPopupContractTests
         }
 
         Application.DoEvents();
+
+        // Screen acquisitions observe the live desktop compositor. Allow its
+        // window/shadow transitions to settle without probing expected pixels.
+        Stopwatch desktopSettlement = Stopwatch.StartNew();
+        do
+        {
+            Application.DoEvents();
+            Thread.Sleep(1);
+        }
+        while (desktopSettlement.ElapsedMilliseconds < 500);
+
         browse.Visible.Should().BeFalse("the source load route must remain uninvoked");
         Application.OpenForms.Cast<Form>().Where(form => form.Visible)
             .Should().OnlyContain(form => ReferenceEquals(form, host), "no script/error/picker dialog belongs to this consumer probe");
@@ -586,10 +597,50 @@ public sealed class WorkingDirPopupContractTests
     private static void RetainFrame(Form host, ToolStripDropDown popup, string directory, string stage)
     {
         popup.Visible.Should().BeTrue();
+        ToolStripEx owner = popup.OwnerItem?.Owner as ToolStripEx
+            ?? throw new InvalidOperationException("The actual opened source selector must retain its original native toolbar owner.");
+        NativeMethods.IsRedrawDisabled(owner.Handle).Should().BeTrue();
+        Rectangle ownerBounds = NativeMethods.GetWindowRectangle(owner.Handle);
+        Rectangle popupBounds = NativeMethods.GetWindowRectangle(popup.Handle);
+        IReadOnlyList<NativePopupShadow> popupShadows = NativeMethods.GetAssociatedPopupShadows([popup.Handle]);
+        bool ownerOverlapsPopup = ownerBounds.IntersectsWith(popupBounds)
+            || popupShadows.Any(shadow => shadow.Bounds.IntersectsWith(ownerBounds));
+        CaptureMethod expectedMethod = ownerOverlapsPopup ? CaptureMethod.ScreenGrab : CaptureMethod.PrintWindowScreenGrabComposite;
         using Bitmap client = new(popup.ClientSize.Width, popup.ClientSize.Height, PixelFormat.Format32bppArgb);
         client.SetResolution(96, 96);
         popup.DrawToBitmap(client, popup.ClientRectangle);
         client.Save(Path.Combine(directory, stage + ".popup-client.png"), ImageFormat.Png);
+        Rectangle hostBounds = NativeMethods.GetWindowRectangle(host.Handle);
+        HashSet<IntPtr> capturedWindows = [host.Handle, popup.Handle];
+        bool fullyOnScreen = NativeMethods.IsEntirelyOnScreen(hostBounds) && NativeMethods.IsEntirelyOnScreen(popupBounds);
+        File.WriteAllText(Path.Combine(directory, stage + ".screen-diagnostic.json"), JsonSerializer.Serialize(new
+        {
+            stage,
+            diagnosticOnly = true,
+            acquisition = "Requested native screen footprints, possibly including occluder pixels; never an accepted capture or an unobscured owner.",
+            fullyOnScreen,
+            hostBounds,
+            ownerBounds,
+            popupBounds,
+            associatedPopupShadows = popupShadows,
+            hostBlockers = NativeMethods.GetOccludingNativeWindows(host.Handle, hostBounds, capturedWindows),
+            ownerBlockers = NativeMethods.GetOccludingNativeWindows(owner.Handle, ownerBounds, capturedWindows),
+            popupBlockers = NativeMethods.GetOccludingNativeWindows(popup.Handle, popupBounds, capturedWindows),
+        }, JsonOptions));
+        if (fullyOnScreen)
+        {
+            Rectangle diagnosticBounds = Rectangle.Union(hostBounds, popupBounds);
+            using Bitmap diagnostic = new(diagnosticBounds.Width, diagnosticBounds.Height, PixelFormat.Format32bppArgb);
+            using Graphics graphics = Graphics.FromImage(diagnostic);
+            foreach (Rectangle surface in new[] { hostBounds, popupBounds })
+            {
+                graphics.CopyFromScreen(surface.Location, new Point(surface.X - diagnosticBounds.X, surface.Y - diagnosticBounds.Y),
+                    surface.Size, CopyPixelOperation.SourceCopy);
+            }
+
+            diagnostic.Save(Path.Combine(directory, stage + ".screen-diagnostic.png"), ImageFormat.Png);
+        }
+
         using CaptureImageResult capture = ImageCapture.Capture(host, [popup], []);
         capture.Bitmap.Save(Path.Combine(directory, stage + ".owned-frame.png"), ImageFormat.Png);
         File.WriteAllText(Path.Combine(directory, stage + ".capture.json"), JsonSerializer.Serialize(new
@@ -598,12 +649,41 @@ public sealed class WorkingDirPopupContractTests
             method = capture.Method.ToString(),
             capture.ScreenBounds,
             capture.PrimaryScreenBounds,
+            capture.Acquisitions,
+            capture.AcquisitionNote,
+            capture.NativePopupShadows,
+            ownerBounds,
+            popupBounds,
+            ownerOverlapsPopup,
+            expectedMethod = expectedMethod.ToString(),
             popup.Bounds,
             hostDpi = host.DeviceDpi,
             popupDpi = popup.DeviceDpi,
             note = "Unmodified actual native popup client and owned frame, not an expected image or pixel-equivalence assertion.",
         }, JsonOptions));
-        capture.Method.Should().Be(CaptureMethod.PrintWindow);
+        capture.Method.Should().Be(expectedMethod, "the actual native owner/popup intersection determines whether an unobscured frozen-HWND supplement is possible");
+        if (ownerOverlapsPopup)
+        {
+            capture.Acquisitions.Should().BeNull("a real overlapping popup requires whole requested surfaces from the screen, not a frozen-owner PrintWindow supplement");
+        }
+        else
+        {
+            CaptureImageAcquisition acquisition = capture.Acquisitions?.Single()
+                ?? throw new InvalidOperationException("The original frozen toolbar must record its whole-HWND screen acquisition.");
+            acquisition.SurfaceRole.Should().Be("primary");
+            acquisition.CaptureMethod.Should().Be(CaptureMethod.ScreenGrab);
+            acquisition.Reason.Should().Be("redrawDisabledNativeSurface");
+            acquisition.RegionPx.Should().BeEquivalentTo(new CaptureRectangle
+            {
+                X = ownerBounds.X - capture.PrimaryScreenBounds.X,
+                Y = ownerBounds.Y - capture.PrimaryScreenBounds.Y,
+                Width = ownerBounds.Width,
+                Height = ownerBounds.Height,
+            });
+        }
+
+        capture.AcquisitionNote.Should().NotBeNullOrWhiteSpace();
+        NativeMethods.IsRedrawDisabled(owner.Handle).Should().BeTrue();
         capture.ScreenBounds.Contains(popup.Bounds).Should().BeTrue();
     }
 

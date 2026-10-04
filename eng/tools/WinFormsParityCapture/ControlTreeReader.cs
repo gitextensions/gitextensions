@@ -552,67 +552,84 @@ internal sealed class ControlTreeReader
     private void IndexFields(object owner)
     {
         HashSet<object> visited = new(ReferenceEqualityComparer.Instance);
-        Queue<object> queue = new();
-        queue.Enqueue(owner);
+        Queue<(object Value, object Owner)> queue = new();
+        queue.Enqueue((owner, owner));
 
         while (queue.Count > 0)
         {
-            object current = queue.Dequeue();
+            (object current, object owningOwner) = queue.Dequeue();
             if (!visited.Add(current))
             {
                 continue;
             }
 
-            Type type = current.GetType();
-            bool isFrameworkType = type.Namespace?.StartsWith("System.Windows.Forms", StringComparison.Ordinal) == true;
-            IEnumerable<FieldInfo> fields = isFrameworkType
-                ? []
-                : type.GetFields(
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
-            foreach (FieldInfo field in fields)
+            Type currentType = current.GetType();
+            for (Type? declaringType = currentType;
+                 declaringType is not null
+                 && declaringType.Namespace?.StartsWith("System.", StringComparison.Ordinal) is not true;
+                 declaringType = declaringType.BaseType)
             {
-                object? value;
-                try
+                foreach (FieldInfo field in declaringType.GetFields(
+                             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                             .OrderBy(field => field.MetadataToken))
                 {
-                    value = field.GetValue(current);
-                }
-                catch (TargetInvocationException)
-                {
-                    continue;
-                }
-
-                if (value is null || value is string || value.GetType().IsValueType || ReferenceEquals(value, current))
-                {
-                    continue;
-                }
-
-                if (value is ToolTip toolTip && !_toolTips.Contains(toolTip))
-                {
-                    _toolTips.Add(toolTip);
-                }
-
-                if (value is System.ComponentModel.IContainer container)
-                {
-                    foreach (System.ComponentModel.IComponent component in container.Components)
+                    // Nested helpers can capture their owner in compiler-generated fields.
+                    // Those fields are implementation links, not authored control aliases.
+                    if (current is not Control and not ToolStripItem && field.Name.StartsWith('<'))
                     {
-                        if (component is ToolTip containedToolTip && !_toolTips.Contains(containedToolTip))
+                        continue;
+                    }
+
+                    object? value;
+                    try
+                    {
+                        value = field.GetValue(current);
+                    }
+                    catch (TargetInvocationException)
+                    {
+                        continue;
+                    }
+
+                    if (value is null || value is string || value.GetType().IsValueType || ReferenceEquals(value, current)
+                        || (current is not Control and not ToolStripItem && ReferenceEquals(value, owningOwner)))
+                    {
+                        continue;
+                    }
+
+                    if (value is ToolTip toolTip && !_toolTips.Contains(toolTip))
+                    {
+                        _toolTips.Add(toolTip);
+                    }
+
+                    if (value is System.ComponentModel.IContainer container)
+                    {
+                        foreach (System.ComponentModel.IComponent component in container.Components)
                         {
-                            _toolTips.Add(containedToolTip);
+                            if (component is ToolTip containedToolTip && !_toolTips.Contains(containedToolTip))
+                            {
+                                _toolTips.Add(containedToolTip);
+                            }
                         }
                     }
-                }
 
-                if (value is Control or ToolStripItem or DataGridViewColumn or ColumnHeader)
-                {
-                    if (!_fieldNames.TryGetValue(value, out List<string>? names))
+                    if (value is Control or ToolStripItem or DataGridViewColumn or ColumnHeader)
                     {
-                        names = [];
-                        _fieldNames.Add(value, names);
+                        if (!_fieldNames.TryGetValue(value, out List<string>? names))
+                        {
+                            names = [];
+                            _fieldNames.Add(value, names);
+                        }
+
+                        if (!names.Contains(field.Name, StringComparer.Ordinal))
+                        {
+                            names.Add(field.Name);
+                        }
                     }
-
-                    if (!names.Contains(field.Name, StringComparer.Ordinal))
+                    else if (IsOwnedNestedHelper(value, currentType) || IsOwnedNestedHelper(value, owningOwner.GetType()))
                     {
-                        names.Add(field.Name);
+                        // Preserve the control owner's boundary through sibling/nested
+                        // helpers, without following arbitrary services or object graphs.
+                        queue.Enqueue((value, owningOwner));
                     }
                 }
             }
@@ -621,14 +638,14 @@ internal sealed class ControlTreeReader
             {
                 foreach (Control child in control.Controls)
                 {
-                    queue.Enqueue(child);
+                    queue.Enqueue((child, child));
                 }
 
                 if (control is ToolStrip toolStrip)
                 {
                     foreach (ToolStripItem item in toolStrip.Items)
                     {
-                        queue.Enqueue(item);
+                        queue.Enqueue((item, item));
                     }
                 }
             }
@@ -636,10 +653,36 @@ internal sealed class ControlTreeReader
             {
                 foreach (ToolStripItem item in dropDownItem.DropDownItems)
                 {
-                    queue.Enqueue(item);
+                    queue.Enqueue((item, item));
                 }
             }
         }
+    }
+
+    private static bool IsOwnedNestedHelper(object value, Type ownerType)
+    {
+        Type helperType = value.GetType();
+        if (value is Delegate or IEnumerable or IServiceProvider or System.ComponentModel.IComponent
+            || !helperType.IsClass
+            || helperType.IsDefined(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), inherit: false)
+            || helperType.Namespace?.StartsWith("System.", StringComparison.Ordinal) is true
+            || helperType.Namespace?.StartsWith("Avalonia.", StringComparison.Ordinal) is true
+            || helperType.DeclaringType is not Type declaringType)
+        {
+            return false;
+        }
+
+        Type declaration = declaringType.IsGenericType ? declaringType.GetGenericTypeDefinition() : declaringType;
+        for (Type? candidate = ownerType; candidate is not null; candidate = candidate.BaseType)
+        {
+            Type ownerDeclaration = candidate.IsGenericType ? candidate.GetGenericTypeDefinition() : candidate;
+            if (declaration == ownerDeclaration)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private CaptureNode ReadControl(Control control, string parentId, int ordinal, Point semanticOffset = default)

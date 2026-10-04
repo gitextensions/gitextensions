@@ -40,7 +40,7 @@ public sealed class WorkingDirectorySelectorTests
             ?? throw new InvalidOperationException("The working-directory selector was not created.");
 
         selector.Icon.Should().BeSameAs(GitUI.Properties.Images.RepoOpen);
-        selector.Flyout.Should().BeOfType<MenuFlyout>();
+        selector.Flyout.Should().BeOfType<NativeToolStripDropDownMenuFlyout>();
         selector.Height.Should().Be(22, "the original 96-DPI Designer specifies a 22-pixel toolbar item");
     }
 
@@ -134,7 +134,14 @@ public sealed class WorkingDirectorySelectorTests
 
         accessor.Menu.Placement.Should().Be(PlacementMode.BottomEdgeAlignedLeft);
         accessor.Menu.FlyoutPresenterClasses.Should().Contain("gitextensions-branch-menu");
-        accessor.FilterHost.Height.Should().Be(25);
+        accessor.FilterHost.Height.Should().Be(WinFormsGraphicsTextMeasurer.GetFontHeight(accessor.Filter) + 4 + 3
+            + accessor.Filter.Margin.Top + accessor.Filter.Margin.Bottom,
+            "the hosted TextBox uses its own resolved Font.Height and native border/margin algorithm");
+        if (OperatingSystem.IsWindows())
+        {
+            accessor.FilterHost.Height.Should().Be(25, "the actual native 96-DPI Segoe UI 9pt probes retain this result");
+        }
+
         MenuItem open = accessor.Menu.Items.OfType<MenuItem>()
             .Single(item => item.Header as string == "Open repository");
         MenuItem close = accessor.Menu.Items.OfType<MenuItem>()
@@ -178,7 +185,7 @@ public sealed class WorkingDirectorySelectorTests
         if (topCount is > 0 and < 12)
         {
             int boundary = accessor.Menu.Items.IndexOf(recentItems[topCount - 1]) + 1;
-            accessor.Menu.Items[boundary].Should().BeOfType<Separator>();
+            accessor.Menu.Items[boundary].Should().BeOfType<NativeToolStripDropDownSeparator>();
             accessor.Menu.Items[boundary + 1].Should().BeSameAs(recentItems[topCount],
                 "the service's source splitter boundary does not depend on recent-item anchor flags");
         }

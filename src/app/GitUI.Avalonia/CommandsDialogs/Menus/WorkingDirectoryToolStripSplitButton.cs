@@ -134,11 +134,14 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private readonly HashSet<MenuItem> _fixedItems = [];
     private readonly Dictionary<MenuItem, string> _repositoryItemTexts = [];
     private readonly MenuItem _filterHost;
-    private readonly MenuFlyout _menu = new();
-    private readonly TextBox _txtFilter = new();
+    private readonly MenuFlyout _menu = new NativeToolStripDropDownMenuFlyout();
+    private readonly TextBox _txtFilter = new NativeToolStripMenuTextBox();
+    private readonly NativeToolStripDropDownLayout _dropDownLayout;
 
+    private MenuItem? _tsmiCategorisedRepos;
     private MenuItem? _tsmiOpenLocalRepository;
     private MenuItem? _tsmiCloseRepo;
+    private MenuItem? _tsmiRecentReposSettings;
 
     private Implementation? _implementation;
     private Window? _contentOwner;
@@ -172,19 +175,22 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         Flyout = _menu;
         _menu.Placement = PlacementMode.BottomEdgeAlignedLeft;
         _menu.FlyoutPresenterClasses.Add("gitextensions-branch-menu");
+        _menu.FlyoutPresenterClasses.Add("gitextensions-working-directory-menu");
         ToolTip.SetTip(this, _toolTip.Text);
         TranslationCompat.SetUseToolTipText(this, true);
 
         // A focusable MenuItem consumes the pointer focus intended for its TextBox header.
-        _filterHost = new MenuItem
+        _filterHost = new NativeToolStripDropDownMenuItem
         {
             Focusable = false,
             Header = _txtFilter,
-            Height = 25,
             StaysOpenOnClick = true,
         };
         _filterHost.Classes.Add("gitextensions-working-directory-filter");
-        _txtFilter.Margin = new Thickness(2, 0, 0, 0);
+        _txtFilter.Classes.Add("gitextensions-working-directory-input");
+        _txtFilter.Margin = new Thickness(1);
+        _txtFilter.Width = 100;
+        _dropDownLayout = new NativeToolStripDropDownLayout(this, _menu, _filterHost, _txtFilter);
         _menu.Items.Add(_filterHost);
         Click += (_, _) => OpenFlyout();
         _menu.Opening += Menu_Opening;
@@ -325,6 +331,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     private void ResetDropDown()
     {
+        _dropDownLayout.Clear();
         while (_menu.Items.Count > 1)
         {
             _menu.Items.RemoveAt(1);
@@ -332,71 +339,47 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
         _fixedItems.Clear();
         _repositoryItemTexts.Clear();
+        _tsmiCategorisedRepos?.Items.Clear();
         _txtFilter.Text = string.Empty;
         _txtFilter.PlaceholderText = _repositorySearchPlaceholder.Text;
-        _menu.Items.Add(new Separator());
+        _menu.Items.Add(new NativeToolStripDropDownSeparator());
     }
 
     private void AddFixedItems()
     {
-        _menu.Items.Add(new Separator());
-        _tsmiOpenLocalRepository = AddFixedItem(
+        _menu.Items.Add(new NativeToolStripDropDownSeparator());
+        _tsmiOpenLocalRepository ??= CreateFixedItem(
             _openRepositoryText,
             Images.RepoOpen,
             _openRepositoryGesture,
             _openRepositoryShortcutDisplay,
-            _openRepository);
-        _tsmiCloseRepo = AddFixedItem(
+            () => _openRepository?.Invoke());
+        _tsmiOpenLocalRepository.Header = _openRepositoryText;
+        AddFixedItem(_tsmiOpenLocalRepository);
+        _tsmiCloseRepo ??= CreateFixedItem(
             _closeRepositoryText,
             Images.DashboardFolderGit,
             _closeRepositoryGesture,
             _closeRepositoryShortcutDisplay,
-            _closeRepository);
-        _menu.Items.Add(new Separator());
-        AddFixedItem(
+            () => _closeRepository?.Invoke());
+        _tsmiCloseRepo.Header = _closeRepositoryText;
+        AddFixedItem(_tsmiCloseRepo);
+        _menu.Items.Add(new NativeToolStripDropDownSeparator());
+        _tsmiRecentReposSettings ??= CreateFixedItem(
             AvaloniaTranslationUtils.ToAvaloniaMnemonics(_configureWorkingDirMenu.Text),
             icon: null,
             gesture: null,
             shortcutDisplay: null,
-            _configure);
+            () => _configure?.Invoke());
+        _tsmiRecentReposSettings.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_configureWorkingDirMenu.Text);
+        AddFixedItem(_tsmiRecentReposSettings);
     }
 
     private void ApplySourceDropDownWidth()
-    {
-        double maximumItemWidth = WinFormsToolStripMenuSizer.Apply(_menu, this, _filterHost);
-
-        // This mixed ToolStripTextBox menu's native item measurement consumes one seven-pixel
-        // TextRenderer overhang and adds its one-pixel layout border, making it six pixels
-        // narrower than the ordinary ToolStripDropDownMenu calculation used above.
-        const int retainedMenuOverhang = 6;
-        double sourceItemWidth = Math.Max(0, maximumItemWidth - retainedMenuOverhang);
-
-        // The retained popup reserves its trailing border outside each row, while ToolStrip
-        // includes that pixel in the row width returned by its populated-item maximum.
-        double retainedItemWidth = Math.Max(0, sourceItemWidth - 1);
-        foreach (MenuItem item in _menu.Items.OfType<MenuItem>().Where(item => item != _filterHost))
-        {
-            item.Width = retainedItemWidth;
-        }
-
-        const int paddingToAvoidGrowth = 61;
-        _txtFilter.Width = Math.Max(0, sourceItemWidth - paddingToAvoidGrowth);
-        _filterHost.Width = retainedItemWidth;
-    }
+        => _dropDownLayout.Apply(setFilterWidth: true);
 
     private void ApplySourceShortcutText()
-    {
-        Dictionary<MenuItem, double> widths = _menu.Items.OfType<MenuItem>()
-            .ToDictionary(item => item, item => item.Width);
-        double filterWidth = _txtFilter.Width;
-        WinFormsToolStripMenuSizer.Apply(_menu, this, _filterHost);
-        foreach ((MenuItem item, double width) in widths)
-        {
-            item.Width = width;
-        }
-
-        _txtFilter.Width = filterWidth;
-    }
+        => _dropDownLayout.Apply(setFilterWidth: false);
 
     private void AddFavouriteRepositories(IReadOnlyList<RepositoryHistoryEntry> repositories)
     {
@@ -405,17 +388,12 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             return;
         }
 
-        MenuItem favourites = new()
-        {
-            Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_favouriteRepositoriesText),
-            Icon = CreateIcon(Images.Star),
-        };
-        favourites.Classes.Add("gitextensions-working-directory-entry");
+        MenuItem favourites = GetCategorisedRepositoriesItem();
         foreach (IGrouping<string?, RepositoryHistoryEntry> category in repositories
                      .GroupBy(item => item.Repository.Category)
                      .OrderBy(item => item.Key))
         {
-            MenuItem categoryItem = new() { Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(category.Key ?? string.Empty) };
+            MenuItem categoryItem = new NativeToolStripDropDownMenuItem { Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(category.Key ?? string.Empty) };
             categoryItem.Classes.Add("gitextensions-working-directory-entry");
             int number = 0;
             foreach (RepositoryHistoryEntry repository in category)
@@ -440,7 +418,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
         if (topCount > 0 && repositories.Count > topCount)
         {
-            _menu.Items.Add(new Separator());
+            _menu.Items.Add(new NativeToolStripDropDownSeparator());
         }
 
         foreach (RepositoryHistoryEntry repository in repositories.Skip(topCount))
@@ -464,18 +442,13 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         };
         splitter.SplitRecentRepos(repositories, top, recent);
 
-        MenuItem favourites = new()
-        {
-            Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_favouriteRepositoriesText),
-            Icon = CreateIcon(Images.Star),
-        };
-        favourites.Classes.Add("gitextensions-working-directory-entry");
+        MenuItem favourites = GetCategorisedRepositoriesItem();
         foreach (IGrouping<string?, RecentRepoInfo> category in top
                      .Union(recent)
                      .GroupBy(item => item.Repo.Category)
                      .OrderBy(item => item.Key))
         {
-            MenuItem categoryItem = new()
+            MenuItem categoryItem = new NativeToolStripDropDownMenuItem
             {
                 Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(category.Key ?? string.Empty),
             };
@@ -511,7 +484,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
         if (pinned.Count > 0 && recent.Count > 0)
         {
-            _menu.Items.Add(new Separator());
+            _menu.Items.Add(new NativeToolStripDropDownSeparator());
         }
 
         foreach (RecentRepoInfo repository in recent)
@@ -529,7 +502,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             _ => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
         };
         string sourceText = $"{numberString}: {repository.Caption}";
-        MenuItem item = new()
+        MenuItem item = new NativeToolStripDropDownMenuItem
         {
             Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(sourceText),
             Tag = repository,
@@ -554,7 +527,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             _ => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
         };
         string sourceText = $"{numberString}: {repository.Caption}";
-        MenuItem item = new()
+        MenuItem item = new NativeToolStripDropDownMenuItem
         {
             Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(sourceText),
             Tag = repository,
@@ -627,14 +600,31 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         _setWorkingDirectory?.Invoke(path);
     }
 
-    private MenuItem AddFixedItem(
+    private MenuItem GetCategorisedRepositoriesItem()
+    {
+        _tsmiCategorisedRepos ??= new NativeToolStripDropDownMenuItem
+        {
+            Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_favouriteRepositoriesText),
+            Icon = CreateIcon(Images.Star),
+        };
+        if (!_tsmiCategorisedRepos.Classes.Contains("gitextensions-working-directory-entry"))
+        {
+            _tsmiCategorisedRepos.Classes.Add("gitextensions-working-directory-entry");
+        }
+
+        _tsmiCategorisedRepos.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_favouriteRepositoriesText);
+        _tsmiCategorisedRepos.Items.Clear();
+        return _tsmiCategorisedRepos;
+    }
+
+    private static MenuItem CreateFixedItem(
         string header,
         Avalonia.Media.IImage? icon,
         KeyGesture? gesture,
         string? shortcutDisplay,
         Action? action)
     {
-        MenuItem item = new()
+        MenuItem item = new NativeToolStripDropDownMenuItem
         {
             Header = header,
             Icon = CreateIcon(icon),
@@ -643,9 +633,13 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         item.Classes.Add("gitextensions-working-directory-entry");
         WinFormsToolStripMenuSizer.SetShortcutDisplayString(item, shortcutDisplay);
         item.Click += (_, _) => action?.Invoke();
+        return item;
+    }
+
+    private void AddFixedItem(MenuItem item)
+    {
         _fixedItems.Add(item);
         _menu.Items.Add(item);
-        return item;
     }
 
     private void ApplyFilter()
@@ -734,6 +728,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     void IDisposable.Dispose()
     {
+        _menu.Hide();
+        _dropDownLayout.Dispose();
     }
 
     private static readonly AttachedProperty<bool> OpenInNewInstanceProperty =
@@ -748,6 +744,9 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         public TextBox Filter => control._txtFilter;
 
         public MenuItem FilterHost => control._filterHost;
+
+        // parity-scaffolding: expose the consumed layout model, not native-looking capture projections.
+        public NativeToolStripDropDownLayout.Group Layout => control._dropDownLayout.Root;
 
         public void FillDropDown(IList<Repository> favourites, IList<Repository> recent)
             => control.FillDropDown(favourites, recent);
@@ -766,6 +765,12 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         public void PrepareDropDown(IList<Repository> favourites, IList<Repository> recent)
         {
             control.FillDropDown(favourites, recent);
+            control._dropDownPreparedForTest = true;
+        }
+
+        public void PrepareDropDown(RepositoryHistorySnapshot snapshot)
+        {
+            control.FillDropDown(snapshot);
             control._dropDownPreparedForTest = true;
         }
 

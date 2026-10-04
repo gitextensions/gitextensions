@@ -99,8 +99,35 @@
         "widthPx": { "type": "integer", "minimum": 1 },
         "heightPx": { "type": "integer", "minimum": 1 },
         "captureMethod": {
-          "enum": [ "drawToBitmap", "printWindow", "screenGrab", "headlessSkia" ]
+          "enum": [ "drawToBitmap", "printWindow", "screenGrab", "headlessSkia", "headlessSkiaComposite", "printWindowScreenGrabComposite" ]
+        },
+        "acquisitions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/imageAcquisition" }
         }
+      },
+      "if": { "properties": { "captureMethod": { "const": "printWindowScreenGrabComposite" } } },
+      "then": { "required": [ "acquisitions" ] },
+      "else": { "not": { "required": [ "acquisitions" ] } }
+    },
+    "imageAcquisition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "surfaceRole", "regionPx", "captureMethod", "reason" ],
+      "properties": {
+        "surfaceRole": { "const": "primary" },
+        "regionPx": {
+          "$ref": "#/$defs/rectangleInteger",
+          "properties": {
+            "x": { "minimum": 0 },
+            "y": { "minimum": 0 },
+            "width": { "minimum": 1 },
+            "height": { "minimum": 1 }
+          }
+        },
+        "captureMethod": { "const": "screenGrab" },
+        "reason": { "const": "redrawDisabledNativeSurface" }
       }
     },
     "surface": {
