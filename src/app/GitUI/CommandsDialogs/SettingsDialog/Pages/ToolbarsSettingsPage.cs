@@ -1768,7 +1768,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         if (IsLabelDisplayName(wrapper.DisplayName))
         {
-            string labelText = wrapper.DisplayName.Substring(10, wrapper.DisplayName.Length - 14);
+            string labelText = ParseLabelDisplayName(wrapper.DisplayName);
             ToolStripLabel label = new()
             {
                 Name = $"editableLabel_{order}",
@@ -2662,7 +2662,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     {
         if (isEditableLabel)
         {
-            return $"[Label] {wrapper.DisplayName.Substring(10, wrapper.DisplayName.Length - 14)}";
+            return $"[Label] {ParseLabelDisplayName(wrapper.DisplayName)}";
         }
 
         if (isEditableLabelAction)
