@@ -116,6 +116,62 @@ internal class ToolbarLayoutConfig
     }
 
     /// <summary>
+    /// Writes the metadata of every toolbar the settings page lists, keeping the place and icon
+    /// size each one had in <paramref name="existing"/>.
+    /// </summary>
+    /// <remarks>
+    /// A custom toolbar goes to both lists, since startup recreates custom toolbars from
+    /// <see cref="CustomToolbars"/>; a built-in one only to <see cref="ToolbarsVisibility"/>.
+    /// Which is which comes from <see cref="ToolbarState.IsCustom"/>, never from the name: a name
+    /// given with Shift held need not look like a generated one.
+    /// </remarks>
+    /// <param name="toolbars">
+    /// The toolbars in the order the settings page lists them: the three built-in ones, then the
+    /// custom ones. A toolbar's position in that order is its index, unique by construction.
+    /// </param>
+    /// <param name="existing">The layout saved so far, read for places and icon sizes.</param>
+    public void AddToolbarsMetadata(IReadOnlyList<ToolbarState> toolbars, ToolbarLayoutConfig? existing)
+    {
+        for (int position = 0; position < toolbars.Count; position++)
+        {
+            ToolbarState toolbar = toolbars[position];
+            ToolbarBuiltInMetadata? visMeta = existing?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == toolbar.Name);
+
+            if (toolbar.IsCustom)
+            {
+                // ToolbarsVisibility is the authoritative source for Row/OrderInRow (the same
+                // priority as FormBrowse.BuildToolbarLayoutInfo), which keeps the two lists from
+                // drifting apart when the existing layout has them out of step.
+                ToolbarCustomMetadata? customMeta = existing?.CustomToolbars?.FirstOrDefault(c => c.Name == toolbar.Name);
+
+                SetCustomToolbarMetadata(
+                    name: toolbar.Name,
+                    row: visMeta?.Row ?? customMeta?.Row ?? 0,
+                    orderInRow: visMeta?.OrderInRow ?? customMeta?.OrderInRow ?? position,
+                    visible: toolbar.Visible,
+                    iconSize: visMeta?.IconSize ?? customMeta?.IconSize ?? 16,
+                    index: position,
+                    allIconsShowText: toolbar.AllIconsShowText);
+            }
+            else
+            {
+                ToolbarsVisibility.Add(new ToolbarBuiltInMetadata
+                {
+                    Name = toolbar.Name,
+                    Visible = toolbar.Visible,
+                    Row = visMeta?.Row ?? 0,
+
+                    // The built-in toolbars come first, in their usual order, so the position
+                    // already gives each one its default place in the row.
+                    OrderInRow = visMeta?.OrderInRow ?? position,
+                    IconSize = visMeta?.IconSize ?? 16,
+                    AllIconsShowText = toolbar.AllIconsShowText
+                });
+            }
+        }
+    }
+
+    /// <summary>
     /// Records whether the toolbar named <paramref name="name"/> is shown, in every list that
     /// describes it.
     /// </summary>

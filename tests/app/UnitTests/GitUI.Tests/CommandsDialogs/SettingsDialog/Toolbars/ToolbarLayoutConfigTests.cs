@@ -112,6 +112,76 @@ public class ToolbarLayoutConfigTests
         config.CustomToolbars[0].IconSize.Should().Be(expected);
     }
 
+    private static readonly ToolbarState[] _builtIn =
+    [
+        new("Standard", IsCustom: false, Visible: true, AllIconsShowText: false),
+        new("Filters", IsCustom: false, Visible: true, AllIconsShowText: false),
+        new("Scripts", IsCustom: false, Visible: true, AllIconsShowText: false)
+    ];
+
+    [Test]
+    public void AddToolbarsMetadata_should_keep_a_custom_toolbar_whatever_its_name()
+    {
+        // A toolbar named with Shift held need not start with "Custom "; going by the name left it
+        // out of CustomToolbars, which startup recreates custom toolbars from.
+        ToolbarLayoutConfig config = new();
+
+        config.AddToolbarsMetadata(
+            [.. _builtIn, new("Review", IsCustom: true, Visible: true, AllIconsShowText: false)],
+            existing: null);
+
+        config.CustomToolbars.Should().ContainSingle().Which.Should().BeEquivalentTo(new { Name = "Review", Index = 3 });
+        config.ToolbarsVisibility.Select(t => t.Name).Should().Equal("Standard", "Filters", "Scripts", "Review");
+    }
+
+    [Test]
+    public void AddToolbarsMetadata_should_not_take_a_built_in_toolbar_for_a_custom_one()
+    {
+        ToolbarLayoutConfig config = new();
+
+        config.AddToolbarsMetadata(_builtIn, existing: null);
+
+        config.CustomToolbars.Should().BeEmpty();
+        config.ToolbarsVisibility.Select(t => (t.Name, t.Row, t.OrderInRow))
+            .Should().Equal(("Standard", 0, 0), ("Filters", 0, 1), ("Scripts", 0, 2));
+    }
+
+    [Test]
+    public void AddToolbarsMetadata_should_index_the_custom_toolbars_by_their_position()
+    {
+        ToolbarLayoutConfig config = new();
+
+        config.AddToolbarsMetadata(
+            [
+                .. _builtIn,
+                new("MyTools", IsCustom: true, Visible: true, AllIconsShowText: false),
+                new("Custom 01", IsCustom: true, Visible: true, AllIconsShowText: false)
+            ],
+            existing: null);
+
+        config.CustomToolbars.Select(c => (c.Name, c.Index)).Should().Equal(("MyTools", 3), ("Custom 01", 4));
+    }
+
+    [Test]
+    public void AddToolbarsMetadata_should_keep_the_place_and_size_each_toolbar_had()
+    {
+        ToolbarLayoutConfig existing = new()
+        {
+            ToolbarsVisibility = { new ToolbarBuiltInMetadata { Name = "Filters", Row = 1, OrderInRow = 0, IconSize = 32 } }
+        };
+        existing.SetCustomToolbarMetadata("Review", row: 2, orderInRow: 1, visible: true, iconSize: 24);
+        ToolbarLayoutConfig config = new();
+
+        config.AddToolbarsMetadata(
+            [.. _builtIn, new("Review", IsCustom: true, Visible: false, AllIconsShowText: true)],
+            existing);
+
+        config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == "Filters")
+            .Which.Should().BeEquivalentTo(new { Row = 1, OrderInRow = 0, IconSize = 32 });
+        config.CustomToolbars.Should().ContainSingle()
+            .Which.Should().BeEquivalentTo(new { Name = "Review", Row = 2, OrderInRow = 1, IconSize = 24, Visible = false, AllIconsShowText = true });
+    }
+
     [TestCase("Standard", 0)]
     [TestCase("Filters", 1)]
     [TestCase("Scripts", 2)]

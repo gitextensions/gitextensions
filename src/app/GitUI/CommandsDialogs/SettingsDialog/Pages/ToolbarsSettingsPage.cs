@@ -1577,55 +1577,23 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         return plan;
     }
 
+    // comboBoxToolbar lists the three built-in toolbars followed by the custom ones, the order
+    // AddToolbarsMetadata takes each toolbar's index from.
     private void ComputeToolbarsVisibilityConfig(List<string> allToolbarNames, ToolbarLayoutConfig? existingConfig, ToolbarLayoutConfig config)
     {
-        // A toolbar's index is its position in comboBoxToolbar, which holds the three built-in
-        // toolbars followed by the custom ones. Deriving it from the position rather than from the
-        // name is what makes it unique: a name only yields a number when it happens to be spelled
-        // "Custom NN", so any other name had to fall back on the position anyway - and the two
-        // schemes then handed the same number to two different toolbars.
-        for (int position = 0; position < allToolbarNames.Count; position++)
-        {
-            string toolbarName = allToolbarNames[position];
-            ToolStrip? toolStrip = GetToolStripByName(toolbarName);
-            bool visible = toolStrip?.Visible ?? true;
-            bool allIconsShowText = toolStrip != null && AllRealItemsShowText(toolStrip);
-
-            if (IsCustomToolbar(toolbarName))
+        List<ToolbarState> toolbars = allToolbarNames
+            .Select(toolbarName =>
             {
-                // SetCustomToolbarMetadata writes both CustomToolbars and ToolbarsVisibility in
-                // one call, using ToolbarsVisibility as the authoritative source for Row/OrderInRow
-                // (same priority as BuildToolbarLayoutInfo). This prevents the two lists from
-                // drifting apart when existingConfig has them out of sync.
-                ToolbarBuiltInMetadata? visMeta = existingConfig?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == toolbarName);
-                ToolbarCustomMetadata? customMeta = existingConfig?.CustomToolbars?.FirstOrDefault(c => c.Name == toolbarName);
+                ToolStrip? toolStrip = GetToolStripByName(toolbarName);
+                return new ToolbarState(
+                    toolbarName,
+                    IsCustom: IsCustomToolbar(toolbarName),
+                    Visible: toolStrip?.Visible ?? true,
+                    AllIconsShowText: toolStrip != null && AllRealItemsShowText(toolStrip));
+            })
+            .ToList();
 
-                config.SetCustomToolbarMetadata(
-                    name: toolbarName,
-                    row: visMeta?.Row ?? customMeta?.Row ?? 0,
-                    orderInRow: visMeta?.OrderInRow ?? customMeta?.OrderInRow ?? position,
-                    visible: visible,
-                    iconSize: visMeta?.IconSize ?? customMeta?.IconSize ?? 16,
-                    index: position,
-                    allIconsShowText: allIconsShowText);
-            }
-            else
-            {
-                ToolbarBuiltInMetadata? existingMeta = existingConfig?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == toolbarName);
-                config.ToolbarsVisibility.Add(new ToolbarBuiltInMetadata
-                {
-                    Name = toolbarName,
-                    Visible = visible,
-                    Row = existingMeta?.Row ?? 0,
-
-                    // The combo box lists Standard, Filters and Scripts in that order, so the
-                    // position already gives each built-in toolbar its default place in the row.
-                    OrderInRow = existingMeta?.OrderInRow ?? position,
-                    IconSize = existingMeta?.IconSize ?? 16,
-                    AllIconsShowText = allIconsShowText
-                });
-            }
-        }
+        config.AddToolbarsMetadata(toolbars, existingConfig);
     }
 
     private void ApplyResolvedItemsToToolStrips(Dictionary<ToolStrip, List<ResolvedToolbarItem>> plan)
