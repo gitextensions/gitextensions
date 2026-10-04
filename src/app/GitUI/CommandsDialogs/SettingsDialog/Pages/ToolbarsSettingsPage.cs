@@ -128,7 +128,6 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     private bool _isDragging;
     private bool _dragUndoSnapshotTaken;
     private bool _allIconTextActive;
-    private bool _isInitialized;
     private bool _isFlashing;
 
     public ToolbarsSettingsPage(IServiceProvider serviceProvider)
@@ -238,7 +237,6 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             labelNoFormBrowse.Visible = true;
         }
 
-        _isInitialized = true;
         base.SettingsToPage();
     }
 
@@ -524,12 +522,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             return;
         }
 
-        List<ToolStripItemWrapper> currentItems = _toolbarItems[_currentToolbarName];
-
-        foreach (ToolStripItemWrapper wrapper in currentItems)
-        {
-            listBoxCurrent.Items.Add(wrapper);
-        }
+        ShowCurrentItems();
 
         FilterAvailableActionsByCategory();
 
@@ -541,11 +534,6 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
     private void ComboBoxToolbar_SelectedIndexChanged(object? sender, EventArgs e)
     {
-        if (_isInitialized && !string.IsNullOrEmpty(_currentToolbarName) && _toolbarItems.ContainsKey(_currentToolbarName))
-        {
-            SaveCurrentToolbarLayout();
-        }
-
         _currentToolbarName = comboBoxToolbar.SelectedItem?.ToString() ?? StandardToolbarName;
         ToolStrip? newToolbar = GetToolStripByName(_currentToolbarName);
         _allIconTextActive = newToolbar != null && AllRealItemsShowText(newToolbar);
@@ -603,7 +591,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         if (result == DialogResult.Yes)
         {
             PushUndoSnapshot();
-            listBoxCurrent.Items.Clear();
+            CurrentItems.Clear();
+            ShowCurrentItems();
             FilterAvailableActionsByCategory();
             buttonMoveUp.Enabled = false;
             buttonMoveDown.Enabled = false;
@@ -894,9 +883,6 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
                     _dynamicToolbars.Remove(toolbarName);
                 }
 
-                // Remove from _toolbarItems BEFORE touching the combobox to prevent
-                // ComboBoxToolbar_SelectedIndexChanged from saving a layout for a toolbar
-                // that no longer exists (Items.Remove fires SelectedIndexChanged).
                 _toolbarItems.Remove(toolbarName);
                 DropUndoSnapshotsOf(toolbarName);
                 comboBoxToolbar.Items.Remove(toolbarName);
@@ -925,8 +911,6 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         {
             return;
         }
-
-        SaveCurrentToolbarLayout();
 
         using FormToolbarsLayout layoutForm = new(_formBrowse, _dynamicToolbars);
         if (layoutForm.ShowDialog(this) == DialogResult.OK)
@@ -1030,8 +1014,9 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         // Update live toolbar items and keep wrapper.ShowText in sync.
         // Iterate wrappers (not currentToolbar.Items directly) to have access to
-        // DisplayName so items with dynamic ToolTipText get a stable label.
-        foreach (ToolStripItemWrapper wrapper in listBoxCurrent.Items)
+        // DisplayName so items with dynamic ToolTipText get a stable label - all of them, not
+        // only the ones the search filter leaves in view.
+        foreach (ToolStripItemWrapper wrapper in CurrentItems)
         {
             if (wrapper.Item is not null and not ToolStripSeparator and not ToolStripLabel)
             {
@@ -1093,7 +1078,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         }
         else
         {
-            bool alreadyInCurrent = listBoxCurrent.Items.Cast<ToolStripItemWrapper>()
+            bool alreadyInCurrent = CurrentItems
                 .Any(w => w.Item != null && w.Item.Name == wrapper.Item?.Name);
             if (!alreadyInCurrent)
             {
@@ -1107,15 +1092,15 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         }
 
         PushUndoSnapshot();
-        listBoxCurrent.Items.Add(itemToAdd);
-        listBoxCurrent.SelectedItem = itemToAdd;
+        CurrentItems.Add(itemToAdd);
+        ShowCurrentItems(selection: itemToAdd);
     }
 
     private void ButtonAddAll_Click(object? sender, EventArgs e)
     {
         PushUndoSnapshot();
 
-        HashSet<string> currentItemNames = listBoxCurrent.Items.Cast<ToolStripItemWrapper>()
+        HashSet<string> currentItemNames = CurrentItems
             .Where(w => w.Item is not null && w.Item.Name is not null)
             .Select(w => w.Item!.Name!)
             .ToHashSet();
@@ -1128,13 +1113,10 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         StripTrailingSeparators(ref insertedCount);
 
+        ShowCurrentItems(selection: insertedCount > 0 ? CurrentItems[^insertedCount] : null);
         FilterAvailableActionsByCategory();
 
-        if (insertedCount > 0 && listBoxCurrent.Items.Count > 0)
-        {
-            listBoxCurrent.SelectedIndex = Math.Max(0, listBoxCurrent.Items.Count - insertedCount);
-        }
-        else if (insertedCount == 0)
+        if (insertedCount == 0)
         {
             // Nothing was added — discard the snapshot to keep the undo stack clean.
             _undoStack.TryPop(out _);
@@ -1149,35 +1131,35 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         if (isSeparatorOrSpacer)
         {
             // Skip if the current list is empty or already ends with a separator/spacer
-            if (listBoxCurrent.Items.Count == 0)
+            if (CurrentItems.Count == 0)
             {
                 return;
             }
 
-            ToolStripItemWrapper last = (ToolStripItemWrapper)listBoxCurrent.Items[listBoxCurrent.Items.Count - 1];
+            ToolStripItemWrapper last = CurrentItems[^1];
             if (last.DisplayName == SeparatorDisplayName || last.DisplayName == ExpandingSpacerDisplayName)
             {
                 return;
             }
 
-            listBoxCurrent.Items.Add(wrapper);
+            CurrentItems.Add(wrapper);
             insertedCount++;
         }
         else if (wrapper.Item is null || wrapper.Item.Name is null || !currentItemNames.Contains(wrapper.Item.Name))
         {
-            listBoxCurrent.Items.Add(wrapper);
+            CurrentItems.Add(wrapper);
             insertedCount++;
         }
     }
 
     private void StripTrailingSeparators(ref int insertedCount)
     {
-        while (listBoxCurrent.Items.Count > 0)
+        while (CurrentItems.Count > 0)
         {
-            ToolStripItemWrapper last = (ToolStripItemWrapper)listBoxCurrent.Items[listBoxCurrent.Items.Count - 1];
+            ToolStripItemWrapper last = CurrentItems[^1];
             if (last.DisplayName == SeparatorDisplayName || last.DisplayName == ExpandingSpacerDisplayName)
             {
-                listBoxCurrent.Items.RemoveAt(listBoxCurrent.Items.Count - 1);
+                CurrentItems.RemoveAt(CurrentItems.Count - 1);
                 insertedCount--;
             }
             else
@@ -1193,7 +1175,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         {
             PushUndoSnapshot();
             int currentIndex = listBoxCurrent.SelectedIndex;
-            listBoxCurrent.Items.Remove(wrapper);
+            CurrentItems.Remove(wrapper);
+            ShowCurrentItems();
 
             FilterAvailableActionsByCategory();
 
@@ -1223,10 +1206,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         if (index > 0)
         {
             PushUndoSnapshot();
-            object item = listBoxCurrent.Items[index];
-            listBoxCurrent.Items.RemoveAt(index);
-            listBoxCurrent.Items.Insert(index - 1, item);
-            listBoxCurrent.SelectedIndex = index - 1;
+            MoveCurrentItem(index, index - 1);
 
             ListBox_SelectedIndexChanged(listBoxCurrent, EventArgs.Empty);
         }
@@ -1238,10 +1218,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         if (index >= 0 && index < listBoxCurrent.Items.Count - 1)
         {
             PushUndoSnapshot();
-            object item = listBoxCurrent.Items[index];
-            listBoxCurrent.Items.RemoveAt(index);
-            listBoxCurrent.Items.Insert(index + 1, item);
-            listBoxCurrent.SelectedIndex = index + 1;
+            MoveCurrentItem(index, index + 1);
 
             ListBox_SelectedIndexChanged(listBoxCurrent, EventArgs.Empty);
         }
@@ -1303,11 +1280,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             Rectangle prevRect = listBoxCurrent.GetItemRectangle(_dragSourceIndex - 1);
             if (mouseY < prevRect.Bottom)
             {
-                object item = listBoxCurrent.Items[_dragSourceIndex];
-                listBoxCurrent.Items.RemoveAt(_dragSourceIndex);
+                MoveCurrentItem(_dragSourceIndex, _dragSourceIndex - 1);
                 _dragSourceIndex--;
-                listBoxCurrent.Items.Insert(_dragSourceIndex, item);
-                listBoxCurrent.SelectedIndex = _dragSourceIndex;
             }
         }
 
@@ -1316,11 +1290,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             Rectangle nextRect = listBoxCurrent.GetItemRectangle(_dragSourceIndex + 1);
             if (mouseY > nextRect.Top)
             {
-                object item = listBoxCurrent.Items[_dragSourceIndex];
-                listBoxCurrent.Items.RemoveAt(_dragSourceIndex);
+                MoveCurrentItem(_dragSourceIndex, _dragSourceIndex + 1);
                 _dragSourceIndex++;
-                listBoxCurrent.Items.Insert(_dragSourceIndex, item);
-                listBoxCurrent.SelectedIndex = _dragSourceIndex;
             }
         }
 
@@ -1341,26 +1312,65 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         listBoxCurrent.Invalidate();
     }
 
-    private void SaveCurrentToolbarLayout()
+    // The current toolbar's items, all of them: the one list every edit goes to. listBoxCurrent is
+    // only a view of it - the part matching the search filter - so an edit made to the list box
+    // alone would be lost for whatever the filter hides.
+    private List<ToolStripItemWrapper> CurrentItems
     {
-        _toolbarItems[_currentToolbarName] = GetCurrentItemsSnapshot();
+        get
+        {
+            if (!_toolbarItems.TryGetValue(_currentToolbarName, out List<ToolStripItemWrapper>? items))
+            {
+                items = [];
+                _toolbarItems[_currentToolbarName] = items;
+            }
+
+            return items;
+        }
     }
 
-    // Returns a snapshot of the current toolbar's full (unfiltered) item list.
-    // When a text filter is active, Tag holds the complete list; otherwise Items is complete.
-    private List<ToolStripItemWrapper> GetCurrentItemsSnapshot()
+    // Rebuilds listBoxCurrent from CurrentItems, keeping the rows that match the search filter.
+    private void ShowCurrentItems(ToolStripItemWrapper? selection = null)
     {
-        if (listBoxCurrent.Tag is List<ToolStripItemWrapper> taggedItems)
+        string filterText = textBoxFilterCurrent.Text;
+
+        listBoxCurrent.BeginUpdate();
+        listBoxCurrent.Items.Clear();
+        foreach (ToolStripItemWrapper wrapper in CurrentItems)
         {
-            return [..taggedItems];
+            if (string.IsNullOrWhiteSpace(filterText)
+                || wrapper.DisplayName.Contains(filterText, StringComparison.OrdinalIgnoreCase))
+            {
+                listBoxCurrent.Items.Add(wrapper);
+            }
         }
 
-        return listBoxCurrent.Items.Cast<ToolStripItemWrapper>().ToList();
+        listBoxCurrent.EndUpdate();
+
+        int selectedIndex = selection is null ? -1 : listBoxCurrent.Items.IndexOf(selection);
+        if (selectedIndex >= 0)
+        {
+            listBoxCurrent.SelectedIndex = selectedIndex;
+        }
+    }
+
+    // Moves a row of listBoxCurrent to a neighbouring row, in CurrentItems as well as in view.
+    private void MoveCurrentItem(int fromIndex, int toIndex)
+    {
+        List<ToolStripItemWrapper> visible = listBoxCurrent.Items.Cast<ToolStripItemWrapper>().ToList();
+        FilteredListEditing.Move(CurrentItems, visible, fromIndex, toIndex);
+
+        // The view of the moved list is the same as moving the row within the view, so the list
+        // box is updated in place rather than rebuilt, which would flicker while dragging.
+        object item = listBoxCurrent.Items[fromIndex];
+        listBoxCurrent.Items.RemoveAt(fromIndex);
+        listBoxCurrent.Items.Insert(toIndex, item);
+        listBoxCurrent.SelectedIndex = toIndex;
     }
 
     private void PushUndoSnapshot()
     {
-        _undoStack.Push((_currentToolbarName, GetCurrentItemsSnapshot()));
+        _undoStack.Push((_currentToolbarName, [.. CurrentItems]));
         buttonUndo.Enabled = true;
     }
 
@@ -1402,17 +1412,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             textBoxFilterCurrent.Text = string.Empty;
         }
 
-        listBoxCurrent.Tag = null;
-        listBoxCurrent.BeginUpdate();
-        listBoxCurrent.Items.Clear();
-        foreach (ToolStripItemWrapper wrapper in items)
-        {
-            listBoxCurrent.Items.Add(wrapper);
-        }
-
-        listBoxCurrent.EndUpdate();
-
         _toolbarItems[_currentToolbarName] = items;
+        ShowCurrentItems();
 
         FilterAvailableActionsByCategory();
 
@@ -1437,27 +1438,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
     private void TextBoxFilterCurrent_TextChanged(object? sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(textBoxFilterCurrent.Text))
-        {
-            listBoxCurrent.Tag = null;
-
-            listBoxCurrent.BeginUpdate();
-            listBoxCurrent.Items.Clear();
-
-            if (_toolbarItems.ContainsKey(_currentToolbarName))
-            {
-                foreach (ToolStripItemWrapper wrapper in _toolbarItems[_currentToolbarName])
-                {
-                    listBoxCurrent.Items.Add(wrapper);
-                }
-            }
-
-            listBoxCurrent.EndUpdate();
-        }
-        else
-        {
-            FilterListBox(listBoxCurrent, textBoxFilterCurrent.Text);
-        }
+        ShowCurrentItems();
     }
 
     private static void FilterListBox(ListBox listBox, string filterText)
@@ -1505,8 +1486,6 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         {
             return;
         }
-
-        SaveCurrentToolbarLayout();
 
         List<string> allToolbarNames = comboBoxToolbar.Items.Cast<string>().ToList();
         ToolbarLayoutConfig? existingConfig = ToolbarLayoutStore.Load();
