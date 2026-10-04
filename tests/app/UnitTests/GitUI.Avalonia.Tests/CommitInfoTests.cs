@@ -144,12 +144,19 @@ public sealed class CommitInfoTests
 
             window.KeyPress(Key.C, RawInputModifiers.Control, PhysicalKey.C, keySymbol: "c");
 
-            clipboard.Received().SetText($"Author:\t\tA & B{Environment.NewLine}Commit:\tabc123");
+            clipboard.Received(1).SetText("Author:\t\tA & B\nCommit:\tabc123");
             clipboard.DidNotReceive().SetText(Arg.Is<string>(text => text.Contains('\uFFFC')));
             block.ClearSelection();
             clipboard.ClearReceivedCalls();
             window.KeyPress(Key.C, RawInputModifiers.Control, PhysicalKey.C, keySymbol: "c");
-            clipboard.DidNotReceive().SetText(Arg.Any<string>());
+            if (useHeader)
+            {
+                clipboard.Received(1).SetText(string.Empty);
+            }
+            else
+            {
+                clipboard.DidNotReceive().SetText(Arg.Any<string>());
+            }
         }
         finally
         {
@@ -237,7 +244,7 @@ public sealed class CommitInfoTests
             block.GetVisualDescendants().OfType<HyperlinkButton>().Should().BeEmpty(
                 "native RichEdit anchors decorate actual selectable characters, not atomic embedded buttons");
             block.SelectAll();
-            block.GetSelectionPlainText().Should().Be($"head office affinity\tnext{Environment.NewLine}tail");
+            block.GetSelectionPlainText().Should().Be("head office affinity\tnext\ntail");
         }
         finally
         {

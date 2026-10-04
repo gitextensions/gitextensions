@@ -84,6 +84,8 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     /// <summary>Gets the measured contents height independently of the anchored client rectangle.</summary>
     internal int ContentsHeight => _contentsHeight;
 
+    private bool UsesNativeRichEditText => _usesNativeWidthMeasurement || _usesNativeContentsHeightMeasurement;
+
     /// <summary>Gets the link most recently targeted by the pointer.</summary>
     public string? SelectedLinkUri { get; private set; }
 
@@ -205,7 +207,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     internal void UseNativeContentsHeightMeasurement()
     {
         _usesNativeContentsHeightMeasurement = true;
-        UpdateNativeContentsHeight();
+        SetXHTMLText(_xhtml);
     }
 
     /// <summary>Preserves the source panel's cached edge distances independently of its public Margin.</summary>
@@ -255,7 +257,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             {
                 AddLineBreak();
                 lineLayout = default;
-                plainText.AppendLine();
+                AppendPlainLineBreak(plainText);
                 continue;
             }
 
@@ -332,6 +334,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
                 switch (inline)
                 {
                     case LineBreak:
+                    case Run { Text: "\n" }:
                         maximumLineWidth = Math.Max(maximumLineWidth, lineWidth);
                         lineWidth = 0;
                         tabIndex = 0;
@@ -388,7 +391,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
-        if (_usesNativeWidthMeasurement)
+        if (UsesNativeRichEditText)
         {
             EnsureNativePointerLayout();
             _pointerSelectionAnchor = -1;
@@ -449,7 +452,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     protected override void OnPointerMoved(PointerEventArgs e)
     {
-        if (_usesNativeWidthMeasurement)
+        if (UsesNativeRichEditText)
         {
             EnsureNativePointerLayout();
             XhtmlLinkRun? link = GetLinkAtPoint(e.GetPosition(this));
@@ -480,7 +483,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
         _pointerSelectionAnchor = -1;
-        if (_usesNativeWidthMeasurement && e.InitialPressMouseButton == MouseButton.Right)
+        if (UsesNativeRichEditText && e.InitialPressMouseButton == MouseButton.Right)
         {
             // MouseDevice implicitly captures the pressed source before routing input.
             // Release only this editor's capture so SelectableTextBlock does not collapse
@@ -817,7 +820,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
 
     private void RememberNativePointerSelection(PointerPressedEventArgs e)
     {
-        if (_usesNativeWidthMeasurement && e.ClickCount == 1
+        if (UsesNativeRichEditText && e.ClickCount == 1
             && !e.KeyModifiers.HasFlag(KeyModifiers.Shift)
             && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
@@ -831,13 +834,15 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         {
             // Consecutive captured input can precede the normal layout pass. Rebuild
             // the same inline runs with the already arranged client constraint.
-            Measure(Bounds.Size);
+            Thickness insets = _nativeAnchorInsets ?? Margin;
+            Measure(new Size(Bounds.Width + insets.Left + insets.Right,
+                Bounds.Height + insets.Top + insets.Bottom));
         }
     }
 
     private int? GetNativePointerSelectionPosition(PointerEventArgs e)
     {
-        if (!_usesNativeWidthMeasurement || _pointerSelectionAnchor < 0 || e.Pointer.Captured != this
+        if (!UsesNativeRichEditText || _pointerSelectionAnchor < 0 || e.Pointer.Captured != this
             || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed
             || Inlines?.Text is not { Length: > 0 } text
             || text.Any(character => character is not (>= ' ' and <= '~') and not '\r' and not '\n' and not '\uFFFC'))
@@ -930,7 +935,7 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
             {
                 AddLineBreak();
                 lineLayout = default;
-                plainText.AppendLine();
+                AppendPlainLineBreak(plainText);
             }
 
             string[] tabParts = _tabStops.Count > 0 || _defaultTabInterval > 0 ? lines[index].Split('\t') : [lines[index]];
@@ -1012,11 +1017,19 @@ public sealed partial class XhtmlTextBlock : SelectableTextBlock
         => WinFormsRichEditTextMeasurer.GetFontSize(this, rtfRoundTrip);
 
     private void AddLineBreak()
-        => Inlines?.Add(new LineBreak());
+    {
+        // Native RichEdit exposes each paragraph as one LF position. Avalonia's
+        // LineBreak uses Environment.NewLine, creating two caret positions on Windows.
+        // Keep that framework behavior only for unrelated generic XHTML consumers.
+        Inlines?.Add(UsesNativeRichEditText ? new Run("\n") : new LineBreak());
+    }
+
+    private void AppendPlainLineBreak(StringBuilder plainText)
+        => plainText.Append(UsesNativeRichEditText ? "\n" : Environment.NewLine);
 
     private void AddLink(string caption, string uri, ref LineLayout lineLayout)
     {
-        if (_usesNativeWidthMeasurement)
+        if (UsesNativeRichEditText)
         {
             // RichEdit CFE_LINK decorates real selectable characters. An embedded
             // button replaces the entire caption with one object position and cannot

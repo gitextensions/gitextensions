@@ -13,7 +13,7 @@ internal sealed class NativeTreeScrollAdapter
 {
     // The real native TREEVIEW at 96 DPI advances five pixels per SB_LINE and uses
     // viewport minus that line for SB_PAGE, independently of its 9/11pt control font.
-    private const int NativeHorizontalLine = 5;
+    internal const int NativeHorizontalLine = 5;
     private const int PortableWheelScrollLines = 3;
     private readonly TreeView _tree;
     private readonly Func<int> _getWheelScrollLines;

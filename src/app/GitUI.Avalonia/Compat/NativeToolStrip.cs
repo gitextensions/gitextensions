@@ -445,8 +445,13 @@ public sealed class NativeToolStrip : Control, IDisposable
     private void AttachOverflowButton(Button button)
     {
         LogicalChildren.Add(button);
+
+        // ToolStripOverflowButton opens on the owner's left mouse-down; the
+        // framework Press mode leaves its first release inert. Its named Button
+        // and existing keyboard/access-key Click route remain the same instances.
         _overflowValues =
         [
+            button.SetValue(Button.ClickModeProperty, ClickMode.Press, BindingPriority.StyleTrigger),
             button.SetValue(HeightProperty, double.NaN, BindingPriority.StyleTrigger),
             button.SetValue(MinHeightProperty, 0d, BindingPriority.StyleTrigger),
             button.SetValue(VerticalAlignmentProperty, Avalonia.Layout.VerticalAlignment.Stretch, BindingPriority.StyleTrigger),
@@ -454,6 +459,10 @@ public sealed class NativeToolStrip : Control, IDisposable
         ];
         button.Click += OverflowButton_Click;
         _popup.PlacementTarget = button;
+
+        // The chevron remains interactive underneath light dismissal so a second
+        // press closes its open dropdown rather than being swallowed by the overlay.
+        _popup.OverlayInputPassThroughElement = button;
     }
 
     private void ReleaseOverflowValues()

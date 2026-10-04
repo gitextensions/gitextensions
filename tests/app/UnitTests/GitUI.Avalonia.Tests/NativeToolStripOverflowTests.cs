@@ -172,6 +172,172 @@ public sealed class NativeToolStripOverflowTests
     }
 
     [AvaloniaTest]
+    [TestCase(false, MouseButton.Left)]
+    [TestCase(true, MouseButton.Left)]
+    [TestCase(false, MouseButton.Right)]
+    [TestCase(true, MouseButton.Right)]
+    [TestCase(false, MouseButton.Middle)]
+    [TestCase(true, MouseButton.Middle)]
+    public void Overflow_pointer_should_open_on_left_down_keep_first_release_and_close_the_next_down(bool rightToLeft, MouseButton button)
+    {
+        using NativeToolStrip strip = NewStrip(rightToLeft);
+        Button command = new() { Name = "btnOriginalCommand", Width = 140, Content = "same command", Margin = new Thickness(0, 1, 0, 2) };
+        ComboBox combo = new() { Name = "cbxRetainedFilter", Width = 100, ItemsSource = new[] { "retained filter" }, SelectedIndex = 0 };
+        Button overflowCommand = new() { Name = "btnOverflowCommand", Width = 90, Content = "overflow command", Margin = new Thickness(0, 1, 0, 2) };
+        Control[] original = [command, combo, overflowCommand];
+        int commands = 0;
+        command.Click += (_, _) => commands++;
+        overflowCommand.Click += (_, _) => commands++;
+        strip.Items.AddRange(original);
+        Window window = NewWindow(strip, 180);
+        try
+        {
+            window.Show();
+            Settle(window);
+            strip.HasOverflow.Should().BeTrue();
+            Point point = strip.OverflowButton.TranslatePoint(new Rect(strip.OverflowButton.Bounds.Size).Center, window)
+                ?? throw new InvalidOperationException("The actual chevron must be connected to its source owner window.");
+            window.MouseMove(point);
+            window.MouseDown(point, button);
+            Settle(window);
+            bool expectedOpen = button == MouseButton.Left;
+            strip.IsOverflowOpen.Should().Be(expectedOpen, "native ToolStripOverflowButton opens on left mouse-down, not release");
+            if (expectedOpen)
+            {
+                strip.Items.Should().Equal(original);
+                combo.Parent.Should().BeSameAs(strip);
+                combo.GetVisualParent().Should().BeSameAs(strip.OverflowContent);
+                combo.SelectedItem.Should().Be("retained filter");
+                RecordEvidence(window, strip, "source-left-down");
+            }
+
+            window.MouseUp(point, button);
+            Settle(window);
+            strip.IsOverflowOpen.Should().Be(expectedOpen, "the first release must not toggle the opening mouse-down again");
+            commands.Should().Be(0);
+            if (expectedOpen)
+            {
+                window.MouseDown(point, button);
+                Settle(window);
+                strip.IsOverflowOpen.Should().BeFalse("the same chevron remains a real hit target underneath its popup overlay");
+                window.MouseUp(point, button);
+                Settle(window);
+                strip.IsOverflowOpen.Should().BeFalse("the second release must not reopen the already-closed dropdown");
+            }
+
+            strip.Items.Should().Equal(original);
+            original.Should().OnlyContain(item => item.Parent == strip);
+            commands.Should().Be(0);
+            RecordEvidence(window, strip, $"source-overflow-input-{button}");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Overflow_Escape_should_close_after_hosted_combo_focus_without_replacing_or_resetting_the_control(bool rightToLeft)
+    {
+        using NativeToolStrip strip = NewStrip(rightToLeft);
+        ComboBox combo = new() { Name = "cbxRetainedFilter", Width = 100, ItemsSource = new[] { "retained filter", "other filter" }, SelectedIndex = 0 };
+        strip.Items.Add(combo);
+        Window window = NewWindow(strip, 50);
+        try
+        {
+            window.Show();
+            Settle(window);
+            Point point = strip.OverflowButton.TranslatePoint(new Rect(strip.OverflowButton.Bounds.Size).Center, window)
+                ?? throw new InvalidOperationException("The actual chevron must have a window input coordinate.");
+            window.MouseDown(point, MouseButton.Left);
+            window.MouseUp(point, MouseButton.Left);
+            Settle(window);
+            strip.IsOverflowOpen.Should().BeTrue();
+            strip.Items.Should().Equal(combo);
+            combo.Parent.Should().BeSameAs(strip);
+            combo.GetVisualParent().Should().BeSameAs(strip.OverflowContent);
+            combo.Focus().Should().BeTrue();
+            combo.IsFocused.Should().BeTrue();
+            TopLevel popup = TopLevel.GetTopLevel(combo)
+                ?? throw new InvalidOperationException("The real hosted control must have an input root in its open popup.");
+            RecordEvidence(window, strip, "source-hosted-combo-before-escape");
+            popup.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, null);
+            Dispatcher.UIThread.RunJobs();
+            strip.IsOverflowOpen.Should().BeFalse();
+            strip.Items.Should().Equal(combo);
+            combo.Parent.Should().BeSameAs(strip);
+            combo.GetVisualParent().Should().BeNull();
+            combo.SelectedItem.Should().Be("retained filter");
+            combo.SelectedIndex.Should().Be(0);
+            strip.ShowOverflow();
+            Settle(window);
+            combo.GetVisualParent().Should().BeSameAs(strip.OverflowContent);
+            combo.SelectedItem.Should().Be("retained filter");
+            RecordEvidence(window, strip, "source-hosted-combo-reopened");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Overflow_keyboard_Enter_should_keep_the_existing_named_button_Click_route_without_double_toggle(bool rightToLeft)
+    {
+        using NativeToolStrip strip = NewStrip(rightToLeft);
+        strip.Items.Add(NewItem("overflowCommand", 100, 20));
+        Button sameChevron = strip.OverflowButton;
+        int clicks = 0;
+        sameChevron.Click += (_, _) => clicks++;
+        Window window = NewWindow(strip, 50);
+        try
+        {
+            window.Show();
+            Settle(window);
+            sameChevron.Focus().Should().BeTrue();
+            window.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+            Settle(window);
+            clicks.Should().Be(1);
+            strip.IsOverflowOpen.Should().BeTrue();
+            strip.OverflowButton.Should().BeSameAs(sameChevron);
+            strip.CloseOverflow();
+            Settle(window);
+            sameChevron.Focus().Should().BeTrue();
+            window.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+            Settle(window);
+            clicks.Should().Be(2);
+            strip.IsOverflowOpen.Should().BeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Overflow_named_button_replacement_and_disposal_should_release_the_temporary_press_scope()
+    {
+        using NativeToolStrip strip = NewStrip(false);
+        Button original = new() { Name = "originalChevron" };
+        Button replacement = new() { Name = "replacementChevron" };
+        original.ClickMode.Should().Be(ClickMode.Release);
+        replacement.ClickMode.Should().Be(ClickMode.Release);
+        strip.OverflowButton = original;
+        original.ClickMode.Should().Be(ClickMode.Press);
+        strip.OverflowButton = replacement;
+        original.Parent.Should().BeNull();
+        original.ClickMode.Should().Be(ClickMode.Release);
+        replacement.ClickMode.Should().Be(ClickMode.Press);
+        strip.Dispose();
+        replacement.Parent.Should().BeNull();
+        replacement.ClickMode.Should().Be(ClickMode.Release);
+    }
+
+    [AvaloniaTest]
     [TestCase(false)]
     [TestCase(true)]
     public void Overflow_commands_should_preserve_the_original_click_handler_content_and_flyout(bool rightToLeft)
