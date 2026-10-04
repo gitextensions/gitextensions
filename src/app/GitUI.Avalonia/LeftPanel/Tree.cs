@@ -23,7 +23,11 @@ internal enum RepoTreeKind
 internal abstract class Tree : NodeBase, IDisposable
 {
     private IGitUICommandsSource? _uiCommandsSource;
-    private readonly ExclusiveTaskRunner _reloadTaskRunner = ThreadHelper.CreateExclusiveTaskRunner();
+
+    // The previewer constructs repository trees without the runtime ThreadHelper bootstrap.
+    private readonly ExclusiveTaskRunner _reloadTaskRunner = Design.IsDesignMode
+        ? new ExclusiveTaskRunner(new TaskManager(new JoinableTaskContext()))
+        : ThreadHelper.CreateExclusiveTaskRunner();
     private bool _firstReloadNodesSinceModuleChanged = true;
     protected TaskCompletionSource LoadingCompleted = new();
 
