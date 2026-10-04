@@ -400,13 +400,14 @@ internal static class CaptureRunner
                     DpiMode = dpiMode,
                     State = state.Id,
                     StateStatus = CaptureStateStatus.Captured,
-                    StateNote = null
+                    StateNote = image.AcquisitionNote
                 },
                 Image = new CaptureImage
                 {
                     WidthPx = image.Bitmap.Width,
                     HeightPx = image.Bitmap.Height,
-                    CaptureMethod = image.Method
+                    CaptureMethod = image.Method,
+                    Acquisitions = image.Acquisitions
                 },
                 Surfaces = surfaces
             };
@@ -420,7 +421,7 @@ internal static class CaptureRunner
                 ScalePercent = scale,
                 State = state.Id,
                 Status = CaptureStateStatus.Captured,
-                Note = null,
+                Note = image.AcquisitionNote,
                 DpiMode = dpiMode,
                 CaptureMethod = image.Method,
                 ImageFile = relativeImagePath,

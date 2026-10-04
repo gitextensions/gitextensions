@@ -1,6 +1,8 @@
+using System.Globalization;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
@@ -10,6 +12,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -17,10 +20,14 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Compat;
+using GitUI.Hotkey;
 using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using ResourceManager;
+using ResourceManager.Hotkey;
 using Image = Avalonia.Controls.Image;
+using Keys = GitExtensions.Shims.WinForms.Keys;
 using Point = Avalonia.Point;
 
 namespace GitExtensionsTests;
@@ -312,6 +319,116 @@ public sealed class FormBrowseToolbarTests
             "the source cancels ItemClicked closing but permits keyboard closing of the active submenu");
     }
 
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    public void Opened_Pull_popup_should_display_the_source_default_shortcut_without_adding_quick_action_or_clone_shortcuts()
+    {
+        using PullMenuFixture fixture = new();
+        fixture.RefreshShortcuts();
+        fixture.Open();
+        MenuItem source = fixture.Form.pullToolStripMenuItem1;
+
+        source.InputGesture.Should().Be(new KeyGesture(Key.Down, KeyModifiers.Control));
+        WinFormsToolStripMenuSizer.GetShortcutDisplayString(source).Should().Be("Ctrl+Down");
+        PullShortcutText(source).Text.Should().Be("Ctrl+Down",
+            "the native hotkey display says Down, not Avalonia's automatic Down Arrow");
+        AssertPullCaptionAndShortcutDoNotOverlap(source);
+        foreach (GitPullAction action in new[]
+        {
+            GitPullAction.None, GitPullAction.Merge, GitPullAction.Rebase,
+            GitPullAction.Fetch, GitPullAction.FetchAll, GitPullAction.FetchPruneAll,
+        })
+        {
+            if (action != GitPullAction.None)
+            {
+                MenuItem quickAction = PullSource(fixture.Form, action);
+                quickAction.InputGesture.Should().BeNull();
+                WinFormsToolStripMenuSizer.GetShortcutDisplayString(quickAction).Should().BeNull();
+                PullShortcutText(quickAction).Text.Should().BeNullOrEmpty();
+            }
+
+            MenuItem clone = fixture.Clone(action);
+            clone.InputGesture.Should().BeNull();
+            WinFormsToolStripMenuSizer.GetShortcutDisplayString(clone).Should().BeNull();
+            PullShortcutText(clone).Text.Should().BeNullOrEmpty(
+                "the source default-action clones copy Text and Image, not ShortcutKeyDisplayString");
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(Keys.Control | Keys.Shift | Keys.Up, "Ctrl+Shift+Up")]
+    [TestCase(Keys.Control | Keys.Oemcomma, "Ctrl+,")]
+    [TestCase(Keys.Shift | Keys.Home, "Shift+Home")]
+    [TestCase(Keys.None, "")]
+    public void Reopened_Pull_popup_should_refresh_source_shortcut_display_and_keep_customized_gestures_without_rebuilding(
+        Keys customizedKeys, string expectedDisplay)
+    {
+        using PullMenuFixture fixture = new();
+        fixture.RefreshShortcuts();
+        fixture.Open();
+        object?[] originalItems = fixture.Flyout.Items.ToArray();
+        object?[] originalClones = fixture.Parent.Items.ToArray();
+        fixture.Flyout.Hide();
+        fixture.Settle();
+
+        fixture.RefreshShortcuts(customizedKeys);
+        fixture.Open();
+        MenuItem source = fixture.Form.pullToolStripMenuItem1;
+        KeyGesture? expectedGesture = KeysMapper.ToKeyGesture(customizedKeys);
+
+        fixture.Flyout.Items.Should().Equal(originalItems);
+        fixture.Parent.Items.Should().Equal(originalClones);
+        source.InputGesture.Should().Be(expectedGesture);
+        fixture.Form.pullToolStripMenuItem.InputGesture.Should().Be(expectedGesture,
+            "both source Pull dialog presentations keep the same executable command gesture");
+        WinFormsToolStripMenuSizer.GetShortcutDisplayString(source).Should().Be(
+            string.IsNullOrEmpty(expectedDisplay) ? null : expectedDisplay);
+        if (string.IsNullOrEmpty(expectedDisplay))
+        {
+            PullShortcutText(source).Text.Should().BeNullOrEmpty();
+        }
+        else
+        {
+            PullShortcutText(source).Text.Should().Be(expectedDisplay);
+            AssertPullCaptionAndShortcutDoNotOverlap(source);
+        }
+    }
+
+    private static TextBlock PullShortcutText(MenuItem item)
+        => item.GetVisualDescendants().OfType<TextBlock>()
+            .Single(text => text.Name == "PART_InputGestureText");
+
+    private static void AssertPullCaptionAndShortcutDoNotOverlap(MenuItem item)
+    {
+        ContentPresenter header = item.GetVisualDescendants().OfType<ContentPresenter>()
+            .Single(presenter => presenter.Name == "PART_HeaderPresenter");
+        TextBlock shortcut = PullShortcutText(item);
+        Point captionOrigin = header.TranslatePoint(default, item)
+            ?? throw new InvalidOperationException("The opened Pull caption has no row coordinate.");
+        Point shortcutOrigin = shortcut.TranslatePoint(default, item)
+            ?? throw new InvalidOperationException("The opened Pull shortcut has no row coordinate.");
+        FormattedText captionText = new(
+            AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(item.Header?.ToString() ?? string.Empty),
+            CultureInfo.CurrentCulture,
+            item.FlowDirection,
+            new Typeface(item.FontFamily, item.FontStyle, item.FontWeight),
+            item.FontSize,
+            Brushes.Black);
+        FormattedText shortcutText = new(
+            shortcut.Text ?? string.Empty,
+            CultureInfo.CurrentCulture,
+            shortcut.FlowDirection,
+            new Typeface(shortcut.FontFamily, shortcut.FontStyle, shortcut.FontWeight),
+            shortcut.FontSize,
+            Brushes.Black);
+
+        // Compare live translated paint positions with the actual portable typography;
+        // this is not a native popup-width or glyph-raster equivalence assertion.
+        (captionOrigin.X + captionText.WidthIncludingTrailingWhitespace).Should().BeLessThanOrEqualTo(shortcutOrigin.X);
+        (shortcutOrigin.X + shortcutText.WidthIncludingTrailingWhitespace).Should().BeLessThanOrEqualTo(item.Bounds.Width);
+    }
+
     private static IImage PullIcon(GitPullAction action)
         => action switch
         {
@@ -339,6 +456,7 @@ public sealed class FormBrowseToolbarTests
     private sealed class PullMenuFixture : IDisposable
     {
         private readonly GitPullAction _originalAction = AppSettings.DefaultPullAction;
+        private readonly IGitUICommands _commands;
 
         public PullMenuFixture()
         {
@@ -346,11 +464,11 @@ public sealed class FormBrowseToolbarTests
 
             // Supply Module through the real protected setter without invoking the
             // runtime constructor or showing Browse and starting repository/plugin loaders.
-            IGitUICommands commands = Substitute.For<IGitUICommands>();
-            commands.Module.Returns(Substitute.For<IGitModule>());
+            _commands = Substitute.For<IGitUICommands>();
+            _commands.Module.Returns(Substitute.For<IGitModule>());
             (typeof(GitModuleForm).GetProperty(nameof(GitModuleForm.UICommands), BindingFlags.Instance | BindingFlags.Public)
                 ?? throw new InvalidOperationException("The original-shaped UICommands boundary was not found."))
-                .SetValue(Form, commands);
+                .SetValue(Form, _commands);
             Form.ToolStripMain.Items.Remove(Form.toolStripButtonPull);
 
             // Keep the real Browse button, flyout, clones and handlers without loading
@@ -381,6 +499,34 @@ public sealed class FormBrowseToolbarTests
 
         public MenuItem Clone(GitPullAction action)
             => Parent.Items.OfType<MenuItem>().Single(item => item.Tag is GitPullAction itemAction && itemAction == action);
+
+        public void RefreshShortcuts(Keys? customizedPullKeys = null)
+        {
+            HotkeySettings browse = HotkeySettingsManager.CreateDefaultSettingsCore(scriptsManager: null)
+                .Single(settings => settings.Name == FormBrowse.HotkeySettingsName);
+            HotkeyCommand[] hotkeys = browse.Commands
+                ?? throw new InvalidOperationException("The source Browse hotkey defaults have no commands.");
+            if (customizedPullKeys is Keys keyData)
+            {
+                hotkeys.Single(command => command.CommandCode == (int)FormBrowse.Command.PullOrFetch).KeyData = keyData;
+            }
+
+            IHotkeySettingsLoader loader = Substitute.For<IHotkeySettingsLoader>();
+            loader.LoadHotkeys(FormBrowse.HotkeySettingsName).Returns(hotkeys);
+            _commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
+
+            // Exercise the same protected loading and private mapping boundaries as
+            // the runtime constructor, without starting its repository lifecycle.
+            (typeof(GitExtensionsFormBase).GetProperty("HotkeysEnabled", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?? throw new InvalidOperationException("The form hotkey-enable boundary was not found."))
+                .SetValue(Form, true);
+            (typeof(GitExtensionsFormBase).GetMethod("LoadHotkeys", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?? throw new InvalidOperationException("The form hotkey-loading boundary was not found."))
+                .Invoke(Form, [FormBrowse.HotkeySettingsName]);
+            (typeof(FormBrowse).GetMethod("SetShortcutKeyDisplayStringsFromHotkeySettings", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?? throw new InvalidOperationException("The source menu-shortcut mapping was not found."))
+                .Invoke(Form, []);
+        }
 
         public void Open()
         {

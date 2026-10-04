@@ -108,6 +108,9 @@ public sealed class WorkingDirPopupCaptureTreeTests
                 .ReadSurface(popup, "popup:0", new PixelRect(0, 0, (int)popup.Bounds.Width, (int)popup.Bounds.Height))
                 .Root.Children.Single(child => child.Type == "System.Windows.Forms.ToolStripTextBox");
 
+            node.FieldName.Should().BeNull();
+            node.FieldAliases.Should().BeEmpty();
+            node.Name.Should().BeNull();
             node.BoundsDip.X.Should().Be(34);
             node.BoundsDip.Y.Should().Be(3);
             node.BoundsDip.Width.Should().Be(Round(filter.Bounds.Width));
@@ -139,6 +142,9 @@ public sealed class WorkingDirPopupCaptureTreeTests
             .Root.Children.Single(node => node.Type == "System.Windows.Forms.ToolStripTextBox");
         foreach (CaptureNode node in new[] { primaryFilter, popupFilter })
         {
+            node.FieldName.Should().Be("_txtFilter");
+            node.FieldAliases.Should().BeEmpty();
+            node.Name.Should().BeNull();
             node.BoundsDip.X.Should().Be(Round(origin.X));
             node.BoundsDip.Y.Should().Be(Round(origin.Y));
             node.BoundsDip.Width.Should().Be(Round(filter.Bounds.Width));

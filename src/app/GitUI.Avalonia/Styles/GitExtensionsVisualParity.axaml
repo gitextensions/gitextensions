@@ -10,6 +10,9 @@
            device-independent-pixel sizes until AppSettings replaces them at startup. -->
       <FontFamily x:Key="GitExtensionsUiFontFamily">Segoe UI</FontFamily>
       <x:Double x:Key="GitExtensionsUiFontSize">12</x:Double>
+      <!-- Raw ToolStripRenderer system text colors do not consume custom CSS's
+           configurable HighlightText/GrayText/ControlDark resources. -->
+      <SolidColorBrush x:Key="GitExtensionsWorkingDirectorySelectedForegroundBrush" Color="#FFFFFF" />
       <FontStyle x:Key="GitExtensionsUiFontStyle">Normal</FontStyle>
       <FontWeight x:Key="GitExtensionsUiFontWeight">Normal</FontWeight>
       <FontFamily x:Key="GitExtensionsCommitFontFamily">Segoe UI</FontFamily>
@@ -303,6 +306,9 @@
 
       <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="GitExtensionsWorkingDirectoryDisabledForegroundBrush" Color="#6D6D6D" />
+          <SolidColorBrush x:Key="GitExtensionsWorkingDirectoryDisabledArrowBrush" Color="#A0A0A0" />
+          <SolidColorBrush x:Key="GitExtensionsWorkingDirectorySystemSelectionBrush" Color="#0078D7" />
           <SolidColorBrush x:Key="GitExtensionsNativeListHeaderBackgroundBrush"
                            Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsNativeListSelectionBackgroundBrush"
@@ -490,6 +496,9 @@
           <SolidColorBrush x:Key="GitExtensionsBlameAge6Brush" Color="#00441B" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="GitExtensionsWorkingDirectoryDisabledForegroundBrush" Color="#969696" />
+          <SolidColorBrush x:Key="GitExtensionsWorkingDirectoryDisabledArrowBrush" Color="#4A4A4A" />
+          <SolidColorBrush x:Key="GitExtensionsWorkingDirectorySystemSelectionBrush" Color="#2864B4" />
           <SolidColorBrush x:Key="GitExtensionsNativeListHeaderBackgroundBrush"
                            Color="#191919" />
           <SolidColorBrush x:Key="GitExtensionsNativeListSelectionBackgroundBrush"
@@ -2007,28 +2016,6 @@
       <TranslateTransform X="-10" Y="-1" />
     </Setter>
   </Style>
-  <Style Selector="MenuItem.gitextensions-working-directory-entry /template/ ContentPresenter#PART_HeaderPresenter">
-    <Setter Property="RenderTransform">
-      <TranslateTransform X="7" Y="-1" />
-    </Setter>
-  </Style>
-  <Style Selector="MenuItem.gitextensions-working-directory-repository /template/ ContentPresenter#PART_HeaderPresenter">
-    <!-- ToolStrip reserves its empty image gutter for numbered recent-repository rows. -->
-    <Setter Property="RenderTransform">
-      <TranslateTransform X="14" Y="-1" />
-    </Setter>
-  </Style>
-  <Style Selector="MenuItem.gitextensions-working-directory-filter /template/ ContentPresenter#PART_HeaderPresenter">
-    <!-- ToolStripTextBox starts after the same image gutter even though the row has no icon. -->
-    <Setter Property="RenderTransform">
-      <TranslateTransform X="26" Y="-1" />
-    </Setter>
-  </Style>
-  <Style Selector="MenuItem.gitextensions-working-directory-entry /template/ TextBlock#PART_InputGestureText">
-    <Setter Property="RenderTransform">
-      <TranslateTransform X="-34" Y="-1" />
-    </Setter>
-  </Style>
   <Style Selector="MenuItem:not(:disabled) /template/ Path#PART_ChevronPath,
                    MenuItem:disabled /template/ Path#PART_ChevronPath">
     <!-- ToolStripRenderer.DrawArrow uses a filled right-facing triangle, not Fluent's
@@ -2109,6 +2096,146 @@
   <Style Selector="MenuItem ScrollViewer">
     <!-- Native ToolStripDropDownMenu leaves one content pixel inside each border edge. -->
     <Setter Property="Margin" Value="0,1" />
+  </Style>
+  <!-- This consumed menu opts into the source dropdown algorithm. Generic branch/context
+       menus retain their existing templates; no captured coordinates enter these slots. -->
+  <Style Selector="MenuFlyoutPresenter.gitextensions-working-directory-menu">
+    <!-- ToolStrip sizes this menu from its item metrics; Fluent's generic flyout
+         width cap must not truncate the owned source allocation. -->
+    <Setter Property="MaxWidth" Value="Infinity" />
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <compat:NativeToolStripDropDownPanel />
+      </ItemsPanelTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel Background="{TemplateBinding Background}">
+          <ScrollViewer Margin="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ItemsPresenter Name="PART_ItemsPresenter"
+                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                            KeyboardNavigation.TabNavigation="Continue" />
+          </ScrollViewer>
+          <!-- ToolStrip paints its border over the item canvas rather than reserving
+               an extra layout inset. The owned panel supplies native dropdown padding. -->
+          <Border Name="LayoutRoot"
+                  Background="Transparent"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="1"
+                  Padding="0"
+                  IsHitTestVisible="False" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry">
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsSourceControlTextBrush}" />
+    <Setter Property="compat:NativeToolStripDropDownMenuItem.UseSystemVisualStyle" Value="{DynamicResource GitExtensionsNativeToolStripSplitUseSystemVisualStyle}" />
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <compat:NativeToolStripDropDownPanel />
+      </ItemsPanelTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Border Name="PART_LayoutRoot" Background="{TemplateBinding Background}">
+            <compat:NativeToolStripMenuItemPanel>
+              <compat:NativeToolStripMenuIconPresenter Name="PART_IconPresenter"
+                              Content="{TemplateBinding Icon}"
+                              HorizontalContentAlignment="Center"
+                              VerticalContentAlignment="Center"
+                              RenderTransform="{x:Null}" />
+              <compat:NativeToolStripMenuCaption Name="PART_HeaderPresenter"
+                                Content="{TemplateBinding Header}"
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                RecognizesAccessKey="True"
+                                Foreground="{TemplateBinding Foreground}"
+                                VerticalContentAlignment="Center"
+                                ClipToBounds="True"
+                                RenderTransform="{x:Null}" />
+              <TextBlock Name="PART_InputGestureText"
+                         Foreground="{Binding $parent[MenuItem].Foreground}"
+                         VerticalAlignment="Stretch"
+                         TextWrapping="NoWrap"
+                         ClipToBounds="True"
+                         RenderTransform="{x:Null}" />
+              <compat:NativeToolStripMenuArrow Name="PART_ChevronPath"
+                                               Foreground="{TemplateBinding Foreground}" />
+            </compat:NativeToolStripMenuItemPanel>
+          </Border>
+          <Popup Name="PART_Popup"
+                 Placement="RightEdgeAlignedTop"
+                 PlacementTarget="{Binding $parent[MenuItem]}"
+                 IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}">
+            <Panel Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
+              <ScrollViewer Margin="0"
+                            HorizontalScrollBarVisibility="Disabled"
+                            VerticalScrollBarVisibility="Auto">
+                <ItemsPresenter Name="PART_ItemsPresenter"
+                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                KeyboardNavigation.TabNavigation="Continue" />
+              </ScrollViewer>
+              <Border BorderThickness="1"
+                      BorderBrush="{DynamicResource GitExtensionsMenuRenderedBorderBrush}"
+                      IsHitTestVisible="False" />
+            </Panel>
+          </Popup>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:selected,
+                   MenuItem.gitextensions-working-directory-entry:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWorkingDirectorySelectedForegroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:selected /template/ Border#PART_LayoutRoot,
+                   MenuItem.gitextensions-working-directory-entry:pointerover /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuCheckBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:source-system-renderer:selected /template/ Border#PART_LayoutRoot,
+                   MenuItem.gitextensions-working-directory-entry:source-system-renderer:pointerover /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsWorkingDirectorySystemSelectionBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWorkingDirectoryDisabledForegroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:disabled /template/ compat|NativeToolStripMenuArrow#PART_ChevronPath">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWorkingDirectoryDisabledArrowBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:not(:disabled) /template/ ContentPresenter#PART_HeaderPresenter,
+                   MenuItem.gitextensions-working-directory-entry:disabled /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- Active Fluent child foreground setters otherwise mask the source item's
+         actual foreground, including keyboard-selected and disabled states. -->
+    <Setter Property="Foreground" Value="{Binding $parent[MenuItem].Foreground}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:not(:disabled) /template/ TextBlock#PART_InputGestureText,
+                   MenuItem.gitextensions-working-directory-entry:disabled /template/ TextBlock#PART_InputGestureText">
+    <Setter Property="Foreground" Value="{Binding $parent[MenuItem].Foreground}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-filter">
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <compat:NativeToolStripMenuCaption Name="PART_HeaderPresenter"
+                          Content="{TemplateBinding Header}"
+                          Padding="0"
+                          HorizontalContentAlignment="Stretch"
+                          VerticalContentAlignment="Stretch"
+                          RenderTransform="{x:Null}" />
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TextBox.gitextensions-working-directory-input">
+    <!-- ToolStripTextBox owns the default 9pt input font independently of its menu.
+         Fixed3D's non-client border surrounds the client area by two source pixels. -->
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="BorderThickness" Value="2" />
+    <Setter Property="CornerRadius" Value="0" />
   </Style>
   <Style Selector="Menu">
     <Setter Property="Padding" Value="4,0" />

@@ -74,7 +74,8 @@ internal static partial class NativeMethods
         const uint gwHwndPrev = 3;
         for (IntPtr above = GetWindow(target, gwHwndPrev); above != IntPtr.Zero; above = GetWindow(above, gwHwndPrev))
         {
-            if (!capturedWindows.Contains(above) && IsWindowVisible(above) && !IsIconic(above)
+            if (!capturedWindows.Contains(above) && !IsAssociatedPopupShadow(above, capturedWindows)
+                && (IsWindowVisible(above) || IsRedrawDisabled(above)) && !IsIconic(above)
                 && GetWindowRectangle(above).IntersectsWith(bounds))
             {
                 return false;
@@ -84,8 +85,195 @@ internal static partial class NativeMethods
         return true;
     }
 
+    internal static bool IsOwnedNativeSurfaceUnoccluded(IntPtr surface, IntPtr host, Rectangle bounds, IReadOnlySet<IntPtr> capturedWindows)
+    {
+        HashSet<IntPtr> visited = [];
+        for (IntPtr current = surface; current != host;)
+        {
+            if (current == IntPtr.Zero || !visited.Add(current)
+                || !IsUnoccluded(current, bounds, capturedWindows))
+            {
+                return false;
+            }
+
+            IntPtr parent = GetParent(current);
+            if (parent == IntPtr.Zero || !IsWindowShown(parent)
+                || !TryGetNativeClientRectangle(parent, out Rectangle clientBounds)
+                || !clientBounds.Contains(bounds))
+            {
+                return false;
+            }
+
+            // Only the acquired frozen HWND is exempt from WS_VISIBLE. Check every
+            // ancestor's siblings and client clipping, not merely its outer bounds.
+            current = parent;
+        }
+
+        return IsWindowShown(host) && IsUnoccluded(host, bounds, capturedWindows);
+    }
+
+    internal static IReadOnlyList<NativeWindowOccluder> GetOccludingNativeWindows(IntPtr target, Rectangle bounds, IReadOnlySet<IntPtr> capturedWindows)
+    {
+        const uint previousWindow = 3;
+        const uint ownerWindow = 4;
+        List<NativeWindowOccluder> blockers = [];
+        for (IntPtr above = GetWindow(target, previousWindow); above != IntPtr.Zero; above = GetWindow(above, previousWindow))
+        {
+            bool shown = IsWindowVisible(above);
+            bool redrawDisabled = IsRedrawDisabled(above);
+            if (capturedWindows.Contains(above) || IsAssociatedPopupShadow(above, capturedWindows)
+                || (!shown && !redrawDisabled) || IsIconic(above))
+            {
+                continue;
+            }
+
+            Rectangle windowBounds = GetWindowRectangle(above);
+            if (!windowBounds.IntersectsWith(bounds))
+            {
+                continue;
+            }
+
+            uint threadId = GetWindowThreadProcessId(above, out uint processId);
+            blockers.Add(new NativeWindowOccluder(above.ToString(), GetParent(above).ToString(),
+                GetWindow(above, ownerWindow).ToString(), GetNativeWindowClass(above), processId,
+                threadId, GetClassLong(above, -26), GetWindow(above, previousWindow).ToString(),
+                GetWindow(above, 2).ToString(), windowBounds, shown, redrawDisabled));
+        }
+
+        return blockers;
+    }
+
+    internal static IReadOnlyList<NativePopupShadow> GetAssociatedPopupShadows(IEnumerable<IntPtr> requestedPopups)
+    {
+        const uint nextWindow = 2;
+        const uint previousWindow = 3;
+        List<NativePopupShadow> shadows = [];
+        foreach (IntPtr popup in requestedPopups.Distinct())
+        {
+            IntPtr shadow = GetWindow(popup, nextWindow);
+            if (!IsAssociatedPopupShadow(shadow, popup))
+            {
+                continue;
+            }
+
+            uint threadId = GetWindowThreadProcessId(popup, out uint processId);
+            uint shadowThreadId = GetWindowThreadProcessId(shadow, out uint shadowProcessId);
+            shadows.Add(new NativePopupShadow(shadow.ToString(), popup.ToString(), processId, threadId,
+                shadowProcessId, shadowThreadId, GetClassLong(popup, -26), GetWindow(popup, nextWindow).ToString(),
+                GetWindow(shadow, previousWindow).ToString(), GetWindowRectangle(shadow), GetWindowRectangle(popup)));
+        }
+
+        return shadows;
+    }
+
+    internal static IReadOnlyList<NativeWindowOccluder> GetNativeWindowAndNeighborReceipts(IntPtr handle)
+    {
+        List<NativeWindowOccluder> windows = [];
+        foreach (IntPtr window in new[] { handle, GetWindow(handle, 3), GetWindow(handle, 2) }.Where(window => window != IntPtr.Zero).Distinct())
+        {
+            uint threadId = GetWindowThreadProcessId(window, out uint processId);
+            windows.Add(new NativeWindowOccluder(window.ToString(), GetParent(window).ToString(),
+                GetWindow(window, 4).ToString(), GetNativeWindowClass(window), processId, threadId,
+                GetClassLong(window, -26), GetWindow(window, 3).ToString(), GetWindow(window, 2).ToString(),
+                GetWindowRectangle(window), IsWindowShown(window), IsRedrawDisabled(window)));
+        }
+
+        return windows;
+    }
+
+    private static bool IsAssociatedPopupShadow(IntPtr shadow, IReadOnlySet<IntPtr> capturedWindows)
+        => capturedWindows.Any(popup => IsAssociatedPopupShadow(shadow, popup));
+
+    private static bool IsAssociatedPopupShadow(IntPtr shadow, IntPtr popup)
+    {
+        const int classStyle = -26;
+        const uint dropShadow = 0x00020000;
+        const uint nextWindow = 2;
+        const uint previousWindow = 3;
+        if (shadow == IntPtr.Zero || popup == IntPtr.Zero
+            || !IsWindowShown(popup) || !IsWindowShown(shadow)
+            || (Control.FromHandle(popup) is not ToolStripDropDown && GetNativeWindowClass(popup) != "ComboLBox")
+            || (GetClassLong(popup, classStyle) & dropShadow) == 0
+            || GetNativeWindowClass(shadow) != "SysShadow"
+            || GetWindow(popup, nextWindow) != shadow || GetWindow(shadow, previousWindow) != popup)
+        {
+            return false;
+        }
+
+        uint popupThread = GetWindowThreadProcessId(popup, out uint popupProcess);
+        uint shadowThread = GetWindowThreadProcessId(shadow, out uint shadowProcess);
+        if (popupThread == 0 || popupProcess == 0 || popupThread != shadowThread || popupProcess != shadowProcess)
+        {
+            return false;
+        }
+
+        // CS_DROPSHADOW creates native decoration outside the popup HWND. Accept
+        // only its actual adjacent SysShadow, never a class/process-wide exception.
+        Rectangle popupBounds = GetWindowRectangle(popup);
+        Rectangle shadowBounds = GetWindowRectangle(shadow);
+        return shadowBounds.Location == popupBounds.Location && shadowBounds.Contains(popupBounds);
+    }
+
+    internal static IntPtr GetNativeParentWindow(IntPtr handle) => GetParent(handle);
+
+    internal static bool TryGetNativeClientRectangle(IntPtr handle, out Rectangle bounds)
+    {
+        bounds = Rectangle.Empty;
+        if (!GetClientRect(handle, out NativeRectangle rectangle))
+        {
+            return false;
+        }
+
+        // Map both RECT corners together so native RTL window layouts retain their
+        // physical client bounds; MapWindowPoints may validly return a zero offset.
+        int offset = MapWindowPoints(handle, IntPtr.Zero, ref rectangle, 2);
+        if (offset == 0 && Marshal.GetLastPInvokeError() != 0)
+        {
+            return false;
+        }
+
+        bounds = Rectangle.FromLTRB(Math.Min(rectangle.Left, rectangle.Right), Math.Min(rectangle.Top, rectangle.Bottom),
+            Math.Max(rectangle.Left, rectangle.Right), Math.Max(rectangle.Top, rectangle.Bottom));
+        return true;
+    }
+
+    private static unsafe string GetNativeWindowClass(IntPtr handle)
+    {
+        const int maximumClassNameLength = 256;
+        Span<char> name = stackalloc char[maximumClassNameLength];
+        fixed (char* buffer = name)
+        {
+            int length = GetClassName(handle, buffer, name.Length);
+            return new string(name[..length]);
+        }
+    }
+
     internal static bool PrintWindowContent(IntPtr handle, IntPtr deviceContext) =>
         PrintWindow(handle, deviceContext, PwRenderFullContent);
+
+    // DefWindowProc removes WS_VISIBLE for WM_SETREDRAW(FALSE), but leaves the
+    // previously painted pixels on screen. Do not infer this state from Visible.
+    internal static bool IsRedrawDisabled(IntPtr handle) => GetProp(handle, "SysSetRedraw") != IntPtr.Zero;
+
+    internal static bool IsWindowShown(IntPtr handle) => IsWindowVisible(handle) && !IsIconic(handle);
+
+    internal static bool IsEntirelyOnScreen(Rectangle bounds)
+    {
+        if (bounds.Width <= 0 || bounds.Height <= 0)
+        {
+            return false;
+        }
+
+        using Region uncovered = new(bounds);
+        foreach (Screen screen in Screen.AllScreens)
+        {
+            uncovered.Exclude(screen.Bounds);
+        }
+
+        using Bitmap pixel = new(1, 1);
+        using Graphics graphics = Graphics.FromImage(pixel);
+        return uncovered.IsEmpty(graphics);
+    }
 
     internal static void FocusWindow(IntPtr handle) => SetFocus(handle);
 
@@ -229,6 +417,25 @@ internal static partial class NativeMethods
 
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool GetClientRect(IntPtr window, out NativeRectangle rectangle);
+
+    [LibraryImport("user32.dll", SetLastError = true)]
+    private static partial int MapWindowPoints(IntPtr source, IntPtr target, ref NativeRectangle rectangle, uint pointCount);
+
+    [LibraryImport("user32.dll")]
+    private static partial IntPtr GetParent(IntPtr window);
+
+    [LibraryImport("user32.dll", EntryPoint = "GetClassNameW")]
+    private static unsafe partial int GetClassName(IntPtr window, char* name, int length);
+
+    [LibraryImport("user32.dll")]
+    private static partial uint GetWindowThreadProcessId(IntPtr window, out uint processId);
+
+    [LibraryImport("user32.dll", EntryPoint = "GetClassLongW")]
+    private static partial uint GetClassLong(IntPtr window, int index);
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool GetComboBoxInfo(IntPtr comboBox, ref ComboBoxInfo info);
 
     [LibraryImport("user32.dll")]
@@ -262,6 +469,9 @@ internal static partial class NativeMethods
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool IsIconic(IntPtr window);
+
+    [LibraryImport("user32.dll", EntryPoint = "GetPropW", StringMarshalling = StringMarshalling.Utf16)]
+    private static partial IntPtr GetProp(IntPtr window, string name);
 
     [LibraryImport("user32.dll")]
     private static partial IntPtr MonitorFromWindow(IntPtr window, int flags);
@@ -310,3 +520,30 @@ internal static partial class NativeMethods
         public IntPtr ListHandle;
     }
 }
+
+internal sealed record NativeWindowOccluder(
+    string Handle,
+    string Parent,
+    string Owner,
+    string ClassName,
+    uint ProcessId,
+    uint ThreadId,
+    uint ClassStyle,
+    string PreviousWindow,
+    string NextWindow,
+    Rectangle Bounds,
+    bool Shown,
+    bool RedrawDisabled);
+
+internal sealed record NativePopupShadow(
+    string Handle,
+    string PopupHandle,
+    uint ProcessId,
+    uint ThreadId,
+    uint ShadowProcessId,
+    uint ShadowThreadId,
+    uint PopupClassStyle,
+    string PopupNextWindow,
+    string ShadowPreviousWindow,
+    Rectangle Bounds,
+    Rectangle PopupBounds);

@@ -17,6 +17,11 @@ public static partial class CaptureJson
     public static string Serialize(CaptureDocument document)
     {
         Validate(document);
+        if (document.Image.Acquisitions is { Count: 0 })
+        {
+            document = document with { Image = document.Image with { Acquisitions = null } };
+        }
+
         return JsonSerializer.Serialize(document, Options) + Environment.NewLine;
     }
 
@@ -65,6 +70,8 @@ public static partial class CaptureJson
             throw new InvalidDataException("A captured tree must contain at least one surface.");
         }
 
+        ValidateAcquisitions(document);
+
         foreach (CaptureSurface surface in document.Surfaces)
         {
             ValidateNode(surface.Root);
@@ -86,6 +93,43 @@ public static partial class CaptureJson
         };
         options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
         return options;
+    }
+
+    private static void ValidateAcquisitions(CaptureDocument document)
+    {
+        bool isComposite = document.Image.CaptureMethod == CaptureMethod.PrintWindowScreenGrabComposite;
+        IReadOnlyList<CaptureImageAcquisition>? acquisitions = document.Image.Acquisitions;
+        if (isComposite && acquisitions is not { Count: > 0 })
+        {
+            throw new InvalidDataException("A PrintWindow/screen composite must record its acquired regions.");
+        }
+
+        if (acquisitions is not { Count: > 0 })
+        {
+            return;
+        }
+
+        if (!isComposite)
+        {
+            throw new InvalidDataException("Supplemental screen acquisitions require the composite capture method.");
+        }
+
+        foreach (CaptureImageAcquisition acquisition in acquisitions)
+        {
+            CaptureSurface[] matchingSurfaces = document.Surfaces.Where(surface => surface.Role == acquisition.SurfaceRole).ToArray();
+            CaptureSurface? surface = matchingSurfaces.Length == 1 ? matchingSurfaces[0] : null;
+            CaptureRectangle region = acquisition.RegionPx;
+            if (acquisition.SurfaceRole != "primary"
+                || surface is null
+                || acquisition.CaptureMethod != CaptureMethod.ScreenGrab
+                || acquisition.Reason != "redrawDisabledNativeSurface"
+                || region.X < 0 || region.Y < 0 || region.Width <= 0 || region.Height <= 0
+                || (long)region.X + region.Width > surface.ScreenBoundsPx.Width
+                || (long)region.Y + region.Height > surface.ScreenBoundsPx.Height)
+            {
+                throw new InvalidDataException("A supplemental acquisition must describe an in-bounds primary redraw-disabled native surface.");
+            }
+        }
     }
 
     private static void ValidateColors(CaptureColors colors)

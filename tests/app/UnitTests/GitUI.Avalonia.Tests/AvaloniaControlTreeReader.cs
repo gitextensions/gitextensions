@@ -389,22 +389,26 @@ internal sealed class AvaloniaControlTreeReader
 
     private void IndexFields(Control root)
     {
-        Queue<Control> pending = new();
-        HashSet<Control> visited = new(ReferenceEqualityComparer.Instance);
-        pending.Enqueue(root);
-        while (pending.TryDequeue(out Control? owner))
+        Queue<(object Value, object Owner)> pending = new();
+        HashSet<object> visited = new(ReferenceEqualityComparer.Instance);
+        pending.Enqueue((root, root));
+        while (pending.TryDequeue(out (object Value, object Owner) entry))
         {
+            (object owner, object owningOwner) = entry;
             if (!visited.Add(owner))
             {
                 continue;
             }
 
-            foreach (Control child in owner.GetLogicalChildren()
-                         .OfType<Control>()
-                         .Where(child => child.TemplatedParent is null
-                                         && child.GetType().Name != "TopLevelHost"))
+            if (owner is Control ownerControl)
             {
-                pending.Enqueue(child);
+                foreach (Control child in ownerControl.GetLogicalChildren()
+                             .OfType<Control>()
+                             .Where(child => child.TemplatedParent is null
+                                             && child.GetType().Name != "TopLevelHost"))
+                {
+                    pending.Enqueue((child, child));
+                }
             }
 
             Type ownerType = owner.GetType();
@@ -421,7 +425,8 @@ internal sealed class AvaloniaControlTreeReader
                  declaringType = declaringType.BaseType)
             {
                 foreach (FieldInfo field in declaringType.GetFields(
-                             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+                             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                             .OrderBy(field => field.MetadataToken))
                 {
                     if (declaringType == typeof(ResourceManager.GitExtensionsFormBase)
                         && field.Name is "_acceptButton" or "_cancelButton")
@@ -446,9 +451,21 @@ internal sealed class AvaloniaControlTreeReader
                         continue;
                     }
 
-                    if (value is not null
-                        && !ReferenceEquals(value, owner)
-                        && (value is Control || value.GetType().Name.Contains("Column", StringComparison.Ordinal)))
+                    if (value is null || ReferenceEquals(value, owner)
+                        || (owner is not Control && ReferenceEquals(value, owningOwner)))
+                    {
+                        continue;
+                    }
+
+                    if (IsOwnedNestedHelper(value, ownerType) || IsOwnedNestedHelper(value, owningOwner.GetType()))
+                    {
+                        // Preserve the control owner's boundary through sibling/nested
+                        // helpers, without following arbitrary services or object graphs.
+                        pending.Enqueue((value, owningOwner));
+                        continue;
+                    }
+
+                    if (value is Control || value.GetType().Name.Contains("Column", StringComparison.Ordinal))
                     {
                         if (!_fieldNames.TryGetValue(value, out List<string>? names))
                         {
@@ -462,15 +479,41 @@ internal sealed class AvaloniaControlTreeReader
                         }
 
                         _fieldOwnerTypes.TryAdd(value, GetMetadataTypeName(declaringType));
-                        _fieldOwners.TryAdd(value, owner);
+                        _fieldOwners.TryAdd(value, owner is Control ? owner : owningOwner);
                         if (value is Control fieldControl)
                         {
-                            pending.Enqueue(fieldControl);
+                            pending.Enqueue((fieldControl, fieldControl));
                         }
                     }
                 }
             }
         }
+    }
+
+    private static bool IsOwnedNestedHelper(object value, Type ownerType)
+    {
+        Type helperType = value.GetType();
+        if (value is Delegate or IEnumerable or IServiceProvider or System.ComponentModel.IComponent or AvaloniaObject
+            || !helperType.IsClass
+            || helperType.IsDefined(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), inherit: false)
+            || helperType.Namespace?.StartsWith("System.", StringComparison.Ordinal) is true
+            || helperType.Namespace?.StartsWith("Avalonia.", StringComparison.Ordinal) is true
+            || helperType.DeclaringType is not Type declaringType)
+        {
+            return false;
+        }
+
+        Type declaration = declaringType.IsGenericType ? declaringType.GetGenericTypeDefinition() : declaringType;
+        for (Type? candidate = ownerType; candidate is not null; candidate = candidate.BaseType)
+        {
+            Type ownerDeclaration = candidate.IsGenericType ? candidate.GetGenericTypeDefinition() : candidate;
+            if (declaration == ownerDeclaration)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static string GetMetadataTypeName(Type type)
@@ -581,8 +624,14 @@ internal sealed class AvaloniaControlTreeReader
         bool isComboBoxPopup = isPopupRoot && IsComboBoxPopup(control);
         bool isComboBoxPopupItem = IsComboBoxPopupItem(control);
         string sourceOwnerType = GetSourceOwnerType(control);
+
+        // The retained WorkingDir input is an actual indexed source field. Other
+        // hosted inputs remain anonymous rather than acquiring their slot's identity.
+        bool isOwnedWorkingDirFilter = isHostedMenuTextBox
+            && _fieldOwners.GetValueOrDefault(control) is GitUI.CommandsDialogs.Menus.WorkingDirectoryToolStripSplitButton
+            && fieldNames.Contains("_txtFilter", StringComparer.Ordinal);
         string? fieldName = isSurfaceRoot || isInheritedFormProcessContainer || isLocalSourceFlowLayoutPanel
-            || isHostedMenuTextBox
+            || (isHostedMenuTextBox && !isOwnedWorkingDirFilter)
             ? null
             : fieldNames.FirstOrDefault()
               ?? (control is MenuItem or Separator || string.IsNullOrEmpty(control.Name) ? null : control.Name);
@@ -7364,7 +7413,7 @@ internal sealed class AvaloniaControlTreeReader
                .All(header => header.Classes.Contains("gitextensions-list-header-cell"));
 
     private static bool IsPopupPresenter(Control control) =>
-        control.GetType().Name == "MenuFlyoutPresenter";
+        control is MenuFlyoutPresenter;
 
     private static bool IsPopupSurface(Control control) =>
         control is ContextMenu || IsPopupPresenter(control) || IsOverlayPopupHost(control);
