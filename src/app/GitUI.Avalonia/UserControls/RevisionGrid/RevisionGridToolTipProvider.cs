@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.VisualTree;
+using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 
@@ -58,7 +59,31 @@ internal sealed class RevisionGridToolTipProvider
             return;
         }
 
-        object? highlight = (e.Source as Control) is { } source && !ReferenceEquals(source, cell)
+        ColumnProvider provider = _gridView.ColumnProviders[state.ColumnIndex];
+        if (provider is MessageColumnProvider messageProvider)
+        {
+            if (_gridView.GetRevisionIndex(state.Revision) != state.RowIndex)
+            {
+                return;
+            }
+
+            IGitRef? gitRef = messageProvider.HitTest(state.RowIndex, e.GetPosition(_gridView))?.GitRef;
+            if (gitRef is not null)
+            {
+                if (gitRef.Equals(_previousHighlight))
+                {
+                    return;
+                }
+
+                _previousHighlight = gitRef;
+                _previousRowIndex = -1;
+                UpdateToolTip(highlightRef: gitRef);
+                return;
+            }
+        }
+
+        object? highlight = provider is not MessageColumnProvider
+            && (e.Source as Control) is { } source && !ReferenceEquals(source, cell)
             ? ToolTip.GetTip(source)
             : null;
         if (highlight is not null)
@@ -95,9 +120,9 @@ internal sealed class RevisionGridToolTipProvider
 
         return;
 
-        void UpdateToolTip(object? highlightToolTip = null)
+        void UpdateToolTip(object? highlightToolTip = null, IGitRef? highlightRef = null)
         {
-            string newText = GetToolTipText(highlightToolTip);
+            string newText = GetToolTipText(highlightToolTip, highlightRef);
             object? tip = string.IsNullOrEmpty(newText) ? null : newText;
             if (!Equals(ToolTip.GetTip(cell), tip))
             {
@@ -107,7 +132,7 @@ internal sealed class RevisionGridToolTipProvider
             _toolTip = tip is null ? null : cell;
         }
 
-        string GetToolTipText(object? highlightToolTip)
+        string GetToolTipText(object? highlightToolTip, IGitRef? highlightRef)
         {
             try
             {
@@ -116,8 +141,11 @@ internal sealed class RevisionGridToolTipProvider
                     return highlightText;
                 }
 
-                ColumnProvider provider = _gridView.ColumnProviders[state.ColumnIndex];
-                if (provider.TryGetToolTip(state.Revision, out string? toolTip)
+                string? toolTip;
+                bool hasToolTip = provider is MessageColumnProvider
+                    ? provider.TryGetToolTip(state.Revision, highlightRef, out toolTip)
+                    : provider.TryGetToolTip(state.Revision, out toolTip);
+                if (hasToolTip
                     && !string.IsNullOrWhiteSpace(toolTip))
                 {
                     return toolTip;
