@@ -572,16 +572,16 @@ public sealed class WorkingDirectorySelectorTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    [TestCase(KeyModifiers.None, false)]
-    [TestCase(KeyModifiers.Control, true)]
-    [TestCase(KeyModifiers.Control | KeyModifiers.Shift, false)]
-    [TestCase(KeyModifiers.Control | KeyModifiers.Alt, false)]
-    [TestCase(KeyModifiers.Control | KeyModifiers.Meta, false)]
-    [TestCase(KeyModifiers.Control | KeyModifiers.Shift | KeyModifiers.Alt, false)]
-    [TestCase(KeyModifiers.Shift, false)]
-    [TestCase(KeyModifiers.Alt, false)]
-    public void Working_directory_repository_key_route_should_use_only_the_exact_Control_modifier(
-        KeyModifiers modifiers, bool openInNewInstance)
+    [TestCase(KeyModifiers.None)]
+    [TestCase(KeyModifiers.Control)]
+    [TestCase(KeyModifiers.Control | KeyModifiers.Shift)]
+    [TestCase(KeyModifiers.Control | KeyModifiers.Alt)]
+    [TestCase(KeyModifiers.Control | KeyModifiers.Meta)]
+    [TestCase(KeyModifiers.Control | KeyModifiers.Shift | KeyModifiers.Alt)]
+    [TestCase(KeyModifiers.Shift)]
+    [TestCase(KeyModifiers.Alt)]
+    public void Working_directory_nonactivation_key_should_not_leave_modifier_state_for_a_later_synthetic_Click(
+        KeyModifiers modifiers)
     {
         WorkingDirectoryToolStripSplitButton selector = new();
         WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
@@ -598,13 +598,16 @@ public sealed class WorkingDirectorySelectorTests
             Key = Key.A,
             KeyModifiers = modifiers,
         });
+
+        // This synthetic Click proves only the absence of a stale row snapshot.
+        // Real opened release/keyboard activation has separate input-route coverage.
         repository.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
-        current.Should().Equal(openInNewInstance ? Array.Empty<string>() : new[] { "/repos/route" });
-        launched.Should().Equal(openInNewInstance ? new[] { "/repos/route" } : Array.Empty<string>());
+        current.Should().Equal("/repos/route");
+        launched.Should().BeEmpty();
         repository.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-        current.Should().HaveCount(openInNewInstance ? 1 : 2, "the consumed modifier route must not leak into another click");
-        launched.Should().HaveCount(openInNewInstance ? 1 : 0);
+        current.Should().Equal("/repos/route", "/repos/route");
+        launched.Should().BeEmpty("a nonactivation key is not the current modifier context of either Click");
     }
 
     [AvaloniaTest]
