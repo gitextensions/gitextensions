@@ -12,6 +12,7 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
     private readonly TranslationString _copyToClipboardText = new("&Copy to clipboard");
     private Func<IEnumerable<string>, IEnumerable<string>> _filterRefsFunc = refs => refs;
     private Func<IReadOnlyList<GitRevision>>? _revisionFunc;
+    private Func<string, bool> _copyText = ClipboardUtil.TrySetText;
     private uint _itemNumber;
 
     // Persistent named items for the fixed sub-actions, exposed for toolbar introspection.
@@ -36,8 +37,24 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
             DateMenuItem,
         });
 
+        // A toolbar button can click these items without the Copy menu ever being opened, so
+        // what they copy is read from the selection at click time, never kept from the last time
+        // the menu was shown.
+        CommitHashMenuItem.Click += (_, _) => CopyRevisionTexts(CommitHashOf);
+        MessageMenuItem.Click += (_, _) => CopyRevisionTexts(MessageOf);
+        AuthorMenuItem.Click += (_, _) => CopyRevisionTexts(AuthorOf);
+        DateMenuItem.Click += (_, _) => CopyRevisionTexts(AuthorDateOf);
+
         DropDownOpening += OnDropDownOpening;
     }
+
+    private static string CommitHashOf(GitRevision revision) => revision.Guid;
+
+    private static string MessageOf(GitRevision revision) => revision.Body ?? revision.Subject;
+
+    private static string AuthorOf(GitRevision revision) => $"{revision.Author} <{revision.AuthorEmail}>";
+
+    private static string AuthorDateOf(GitRevision revision) => revision.AuthorDate.ToString();
 
     public void SetFilterRefsFunc(Func<IEnumerable<string>, IEnumerable<string>> filterRefsFunc)
     {
@@ -73,7 +90,7 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
 
         item.Click += delegate
         {
-            ClipboardUtil.TrySetText(textToCopy);
+            _copyText(textToCopy);
         };
 
         DropDownItems.Insert(index, item);
@@ -169,19 +186,19 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
     private void UpdateFixedRevisionItems(IReadOnlyList<GitRevision> revisions)
     {
         int count = revisions.Count;
-        UpdateFixedItem(CommitHashMenuItem, ResourceManager.TranslatedStrings.GetCommitHash(count), r => r.Guid, 'C');
-        UpdateFixedItem(MessageMenuItem,    ResourceManager.TranslatedStrings.GetMessage(count),    r => r.Body ?? r.Subject, 'M');
-        UpdateFixedItem(AuthorMenuItem,     ResourceManager.TranslatedStrings.GetAuthor(count),     r => $"{r.Author} <{r.AuthorEmail}>", 'A');
+        UpdateFixedItem(CommitHashMenuItem, ResourceManager.TranslatedStrings.GetCommitHash(count), CommitHashOf, 'C');
+        UpdateFixedItem(MessageMenuItem,    ResourceManager.TranslatedStrings.GetMessage(count),    MessageOf, 'M');
+        UpdateFixedItem(AuthorMenuItem,     ResourceManager.TranslatedStrings.GetAuthor(count),     AuthorOf, 'A');
 
         if (count == 1 && revisions[0].AuthorDate == revisions[0].CommitDate)
         {
             // Single date: reuse the persistent DateMenuItem.
-            UpdateFixedItem(DateMenuItem, ResourceManager.TranslatedStrings.Date, r => r.AuthorDate.ToString(), 'D');
+            UpdateFixedItem(DateMenuItem, ResourceManager.TranslatedStrings.Date, AuthorDateOf, 'D');
             return;
         }
 
         // Two distinct dates: DateMenuItem shows AuthorDate, insert a transient CommitDate after it.
-        UpdateFixedItem(DateMenuItem, ResourceManager.TranslatedStrings.GetAuthorDate(count), r => r.AuthorDate.ToString(), 'T');
+        UpdateFixedItem(DateMenuItem, ResourceManager.TranslatedStrings.GetAuthorDate(count), AuthorDateOf, 'T');
         InsertTransientCommitDate(count);
     }
 
@@ -208,7 +225,7 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
             Image = Images.Date,
         };
         string joined = commitDates.Join("\n");
-        transientCommitDate.Click += (_, _) => ClipboardUtil.TrySetText(joined);
+        transientCommitDate.Click += (_, _) => _copyText(joined);
         DropDownItems.Insert(DropDownItems.IndexOf(DateMenuItem) + 1, transientCommitDate);
     }
 
@@ -232,23 +249,30 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
 
         item.Text = fullText.TrimEnd(Delimiters.LineFeedAndCarriageReturn);
         item.ShowShortcutKeys = true;
-
-        string joined = textToCopy.Join("\n");
-        item.Click -= OnFixedItemClick;
-        item.Tag = joined;
-        item.Click += OnFixedItemClick;
     }
 
-    private static void OnFixedItemClick(object? sender, EventArgs e)
+    private void CopyRevisionTexts(Func<GitRevision, string> extractRevisionText)
     {
-        if (sender is ToolStripMenuItem item && item.Tag is string text)
+        string[]? textToCopy = ExtractRevisionTexts(extractRevisionText);
+        if (textToCopy is not null)
         {
-            ClipboardUtil.TrySetText(text);
+            _copyText(textToCopy.Join("\n"));
         }
     }
 
     private string PrependItemNumber(string name)
     {
         return ++_itemNumber > 10 ? name : "&" + (_itemNumber % 10) + ":   " + name;
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(CopyContextMenuItem item)
+    {
+        // Stands in for the clipboard, so a test can see what would be copied without touching it.
+        public Func<string, bool> CopyText
+        {
+            set => item._copyText = value;
+        }
     }
 }
