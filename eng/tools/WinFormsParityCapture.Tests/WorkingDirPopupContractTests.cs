@@ -132,6 +132,7 @@ public sealed class WorkingDirPopupContractTests
             List<object> stages = [];
             List<object> renderEvents = [];
             List<object> lifetime = [];
+            Exception? probeException = null;
             Exception? threadException = null;
             ThreadExceptionEventHandler exceptionHandler = (_, args) => threadException ??= args.Exception;
             Application.ThreadException += exceptionHandler;
@@ -411,10 +412,28 @@ public sealed class WorkingDirPopupContractTests
                     }
                 }));
             }
+            catch (Exception exception)
+            {
+                probeException = exception;
+                TestContext.Out.WriteLine($"workingDirPopupPrimaryFailure={exception}");
+                throw;
+            }
             finally
             {
-                WriteDiagnostic(evidenceDirectory, stages, renderEvents, lifetime);
-                Application.ThreadException -= exceptionHandler;
+                try
+                {
+                    WriteDiagnostic(evidenceDirectory, stages, renderEvents, lifetime);
+                }
+                catch (Exception diagnosticException) when (probeException is not null)
+                {
+                    // Preserve the original failing probe and retain this secondary
+                    // journal error; a sole diagnostic failure still propagates.
+                    TestContext.Out.WriteLine($"workingDirPopupSecondaryDiagnosticFailure={diagnosticException}");
+                }
+                finally
+                {
+                    Application.ThreadException -= exceptionHandler;
+                }
             }
         }));
     }
