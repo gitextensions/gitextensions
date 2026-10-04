@@ -252,33 +252,10 @@ public class FormBrowseMenus : ITranslate
             // Persist the new visibility so that ReorganizeToolbars reads an up-to-date config
             // and the state is preserved across restarts. Unchecking only hides the toolbar; it must
             // not delete it.
-            ToolbarLayoutConfig? config = ToolbarLayoutStore.Load();
-            if (config != null)
-            {
-                bool changed = false;
-
-                ToolbarBuiltInMetadata? meta = config.ToolbarsVisibility?.FirstOrDefault(t => t.Name == senderToolStrip.Text);
-                if (meta != null)
-                {
-                    meta.Visible = senderToolStrip.Visible;
-                    changed = true;
-                }
-
-                // Keep the parallel CustomToolbars list in sync: custom toolbars are recreated from
-                // their CustomToolbars metadata at startup, so its Visible flag must match.
-                ToolbarCustomMetadata? customMeta = config.CustomToolbars?.FirstOrDefault(c => c.Name == senderToolStrip.Text);
-                if (customMeta != null)
-                {
-                    customMeta.Visible = senderToolStrip.Visible;
-                    changed = true;
-                }
-
-                if (changed)
-                {
-                    ToolbarLayoutStore.Save(config);
-                    AppSettings.SettingsContainer.Save();
-                }
-            }
+            ToolbarLayoutConfig config = ToolbarLayoutStore.Load();
+            config.SetToolbarVisibility(senderToolStrip.Text, senderToolStrip.Visible);
+            ToolbarLayoutStore.Save(config);
+            AppSettings.SettingsContainer.Save();
 
             if (_mainMenuStrip.FindForm() is FormBrowse formBrowse)
             {

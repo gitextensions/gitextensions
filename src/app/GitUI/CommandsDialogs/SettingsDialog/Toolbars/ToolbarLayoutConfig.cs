@@ -115,6 +115,49 @@ internal class ToolbarLayoutConfig
         }
     }
 
+    /// <summary>
+    /// Records whether the toolbar named <paramref name="name"/> is shown, in every list that
+    /// describes it.
+    /// </summary>
+    /// <remarks>
+    /// A built-in toolbar exists whether or not the layout mentions it, so on a default install
+    /// there is no entry to update: one is created, at the place the toolbar has by default, so
+    /// that hiding it is not forgotten on the next start. A custom toolbar always has its entries,
+    /// written when it was created.
+    /// </remarks>
+    /// <param name="name">Toolbar display name.</param>
+    /// <param name="visible">Whether the toolbar is visible.</param>
+    /// <exception cref="ArgumentException"><paramref name="name"/> is <see langword="null"/> or blank.</exception>
+    public void SetToolbarVisibility(string name, bool visible)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+
+        ToolbarBuiltInMetadata? visMeta = ToolbarsVisibility.FirstOrDefault(t => t.Name == name);
+        ToolbarCustomMetadata? customMeta = CustomToolbars.FirstOrDefault(c => c.Name == name);
+
+        if (visMeta is null && customMeta is null && ToolbarNames.BuiltIn.Contains(name))
+        {
+            visMeta = new ToolbarBuiltInMetadata
+            {
+                Name = name,
+                Row = 0,
+                OrderInRow = ToolbarGridArrangement.GetDefaultOrder(name)
+            };
+            ToolbarsVisibility.Add(visMeta);
+        }
+
+        if (visMeta is not null)
+        {
+            visMeta.Visible = visible;
+        }
+
+        // Custom toolbars are recreated from CustomToolbars at startup, so its flag must match.
+        if (customMeta is not null)
+        {
+            customMeta.Visible = visible;
+        }
+    }
+
     // The three built-in toolbars occupy 0-2, so a custom one starts at 3.
     private int NextFreeIndex()
         => CustomToolbars.Count == 0

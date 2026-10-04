@@ -111,4 +111,80 @@ public class ToolbarLayoutConfigTests
 
         config.CustomToolbars[0].IconSize.Should().Be(expected);
     }
+
+    [TestCase("Standard", 0)]
+    [TestCase("Filters", 1)]
+    [TestCase("Scripts", 2)]
+    public void SetToolbarVisibility_should_remember_a_built_in_toolbar_the_layout_never_mentioned(string name, int defaultOrder)
+    {
+        // A default install has no entry at all; hiding a toolbar must still survive a restart,
+        // without moving it from where it sits by default.
+        ToolbarLayoutConfig config = new();
+
+        config.SetToolbarVisibility(name, visible: false);
+
+        config.ToolbarsVisibility.Should().ContainSingle()
+            .Which.Should().BeEquivalentTo(new { Name = name, Visible = false, Row = 0, OrderInRow = defaultOrder, IconSize = 16 });
+        config.CustomToolbars.Should().BeEmpty();
+    }
+
+    [Test]
+    public void SetToolbarVisibility_should_keep_the_place_of_a_built_in_toolbar_already_laid_out()
+    {
+        ToolbarLayoutConfig config = new()
+        {
+            ToolbarsVisibility = { new ToolbarBuiltInMetadata { Name = "Filters", Row = 2, OrderInRow = 1, IconSize = 24 } }
+        };
+
+        config.SetToolbarVisibility("Filters", visible: false);
+
+        config.ToolbarsVisibility.Should().ContainSingle()
+            .Which.Should().BeEquivalentTo(new { Visible = false, Row = 2, OrderInRow = 1, IconSize = 24 });
+    }
+
+    [Test]
+    public void SetToolbarVisibility_should_update_both_lists_of_a_custom_toolbar()
+    {
+        ToolbarLayoutConfig config = new();
+        config.SetCustomToolbarMetadata("Review", row: 1, orderInRow: 0, visible: true, iconSize: 16);
+
+        config.SetToolbarVisibility("Review", visible: false);
+
+        config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == "Review" && !t.Visible);
+        config.CustomToolbars.Should().ContainSingle(c => c.Name == "Review" && !c.Visible);
+    }
+
+    [Test]
+    public void SetToolbarVisibility_should_not_invent_a_custom_toolbar()
+    {
+        // Startup recreates custom toolbars from CustomToolbars; an entry for a name that has none
+        // would describe a toolbar that does not exist.
+        ToolbarLayoutConfig config = new();
+
+        config.SetToolbarVisibility("Unknown", visible: false);
+
+        config.ToolbarsVisibility.Should().BeEmpty();
+        config.CustomToolbars.Should().BeEmpty();
+    }
+
+    [Test]
+    public void SetToolbarVisibility_should_show_a_hidden_toolbar_again()
+    {
+        ToolbarLayoutConfig config = new();
+        config.SetToolbarVisibility("Scripts", visible: false);
+
+        config.SetToolbarVisibility("Scripts", visible: true);
+
+        config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == "Scripts" && t.Visible);
+    }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void SetToolbarVisibility_should_reject_a_blank_name(string? name)
+    {
+        ToolbarLayoutConfig config = new();
+
+        ((Action)(() => config.SetToolbarVisibility(name!, visible: true))).Should().Throw<ArgumentException>();
+    }
 }
