@@ -7,6 +7,8 @@ using GitCommands;
 using GitUI.Avatars;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
+using Point = Avalonia.Point;
+using Size = Avalonia.Size;
 
 namespace GitUI.UserControls.RevisionGrid.Columns;
 
@@ -95,6 +97,9 @@ internal sealed class AvatarColumnProvider : ColumnProvider
     {
         private readonly IAvatarProvider _avatarProvider;
         private readonly IImage _placeholderImage;
+        private StreamGeometry? _cornerClip;
+        private double _cornerClipScale;
+        private Size _cornerClipSize;
         private int _cacheVersion = -1;
         private string? _email;
         private int _imageSize = -1;
@@ -113,6 +118,21 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         public AvatarCell(IAvatarProvider avatarProvider)
             : this(avatarProvider, Images.User80)
         {
+        }
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            Size arranged = base.ArrangeOverride(finalSize);
+            double scale = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1;
+            if (_cornerClip is null || _cornerClipSize != arranged || _cornerClipScale != scale)
+            {
+                _cornerClipSize = arranged;
+                _cornerClipScale = scale;
+                _cornerClip = CreateCornerClip(arranged, scale);
+                Clip = _cornerClip;
+            }
+
+            return arranged;
         }
 
         public void Clear()
@@ -144,30 +164,81 @@ internal sealed class AvatarColumnProvider : ColumnProvider
             _imageSize = imageSize;
             _cacheVersion = cacheVersion;
             int requestVersion = ++_requestVersion;
-            if (identityChanged)
+            LastLoadTask = LoadCoreAsync(email, name, imageSize, requestVersion, identityChanged);
+        }
+
+        private async Task<byte[]?> LoadCoreAsync(string email, string? name, int imageSize, int requestVersion, bool identityChanged)
+        {
+            Task<byte[]?> imageTask = _avatarProvider.GetAvatarAsync(email, name, imageSize);
+            if (identityChanged && !imageTask.IsCompletedSuccessfully)
             {
                 ReplaceSource(_placeholderImage);
             }
 
-            LastLoadTask = LoadCoreAsync(email, name, imageSize, requestVersion);
-        }
-
-        private async Task<byte[]?> LoadCoreAsync(string email, string? name, int imageSize, int requestVersion)
-        {
-            byte[]? imageData = await _avatarProvider.GetAvatarAsync(email, name, imageSize);
+            byte[]? imageData = await imageTask.ConfigureAwait(false);
             Bitmap? bitmap = AvatarImage.Decode(imageData);
 
-            await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+            // Framework constraint: completed cache hits paint inline like WinForms;
+            // only a genuinely asynchronous load needs to return to the owner thread.
+            if (Avalonia.Threading.Dispatcher.UIThread.CheckAccess())
             {
-                if (requestVersion != _requestVersion)
-                {
-                    bitmap?.Dispose();
-                    return;
-                }
+                ApplyLoadedImage(bitmap, requestVersion);
+            }
+            else
+            {
+                await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => ApplyLoadedImage(bitmap, requestVersion));
+            }
 
-                ReplaceSource(bitmap);
-            });
             return imageData;
+        }
+
+        private void ApplyLoadedImage(Bitmap? bitmap, int requestVersion)
+        {
+            if (requestVersion != _requestVersion)
+            {
+                bitmap?.Dispose();
+                return;
+            }
+
+            ReplaceSource(bitmap);
+        }
+
+        private static StreamGeometry CreateCornerClip(Size size, double scale)
+        {
+            // The source covers each corner with two perpendicular pixel blocks,
+            // independent of DPI. Clipping leaves the actual row background visible.
+            const int CornerWidth = 2;
+            double pixel = 1 / scale;
+            double corner = CornerWidth * pixel;
+            double right = size.Width;
+            double bottom = size.Height;
+            StreamGeometry geometry = new();
+            using (StreamGeometryContext path = geometry.Open())
+            {
+                path.BeginFigure(new Point(corner, 0), isFilled: true);
+                path.LineTo(new Point(right - corner, 0));
+                path.LineTo(new Point(right - corner, pixel));
+                path.LineTo(new Point(right - pixel, pixel));
+                path.LineTo(new Point(right - pixel, corner));
+                path.LineTo(new Point(right, corner));
+                path.LineTo(new Point(right, bottom - corner));
+                path.LineTo(new Point(right - pixel, bottom - corner));
+                path.LineTo(new Point(right - pixel, bottom - pixel));
+                path.LineTo(new Point(right - corner, bottom - pixel));
+                path.LineTo(new Point(right - corner, bottom));
+                path.LineTo(new Point(corner, bottom));
+                path.LineTo(new Point(corner, bottom - pixel));
+                path.LineTo(new Point(pixel, bottom - pixel));
+                path.LineTo(new Point(pixel, bottom - corner));
+                path.LineTo(new Point(0, bottom - corner));
+                path.LineTo(new Point(0, corner));
+                path.LineTo(new Point(pixel, corner));
+                path.LineTo(new Point(pixel, pixel));
+                path.LineTo(new Point(corner, pixel));
+                path.EndFigure(isClosed: true);
+            }
+
+            return geometry;
         }
 
         private void ReplaceSource(IImage? image)

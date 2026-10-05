@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -3339,6 +3340,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
             // The graph rows straightened after the final CacheTo become visible only when the
             // realized row controls render again, so refresh the realized rows once at the end.
+            UpdateVisibleGraphColumnWidth();
             RefreshRealizedRows();
         }
 
@@ -3487,10 +3489,18 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void UpdateVisibleGraphColumnWidth()
     {
-        RevisionRowControl[] visibleRows =
+        RevisionRowControl[] realizedRows =
         [
             .. _gridView.GetVisualDescendants().OfType<RevisionRowControl>(),
         ];
+        ScrollContentPresenter? viewport = _gridView.GetVisualDescendants().OfType<ScrollContentPresenter>().FirstOrDefault();
+
+        // Virtualization realizes extra rows beyond the viewport. Like DataGridView.VisibleRowRange,
+        // only intersecting rows (including partially visible endpoints) choose the graph width.
+        RevisionRowControl[] visibleRows = viewport is { Bounds.Height: > 0 }
+            ? [.. realizedRows.Where(row => row.TranslatePoint(default, viewport) is Avalonia.Point origin
+                && origin.Y < viewport.Bounds.Height && origin.Y + row.Bounds.Height > 0)]
+            : realizedRows;
         _revisionGraphColumnProvider.UpdateVisibleRange(
             visibleRows.Select(row => row.DataContext).OfType<GitRevision>());
         int visibleLaneCount = visibleRows
@@ -3501,13 +3511,16 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             .Max();
         int graphColumnWidth = CalculateGraphColumnWidth(visibleLaneCount);
         GridLength graphColumnGridLength = new(graphColumnWidth);
-        if (_revisionGraphColumnProvider.Column.Width == graphColumnGridLength)
+        if (_revisionGraphColumnProvider.Column.Width == graphColumnGridLength
+            && realizedRows.All(row => row.ColumnDefinitions[_revisionGraphColumnProvider.Index].Width == graphColumnGridLength))
         {
             return;
         }
 
+        // UpdateVisibleRange already publishes the model width; recycled rows still retain
+        // their old Grid allocation until it is applied, otherwise additional lanes are clipped.
         _revisionGraphColumnProvider.Column.Width = graphColumnGridLength;
-        foreach (RevisionRowControl row in visibleRows)
+        foreach (RevisionRowControl row in realizedRows)
         {
             row.ApplyColumnLayout();
         }
@@ -3539,9 +3552,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 hoverHighlightedIds);
             return true;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
             // The reader can advance the row cache while layout is painting realized rows.
+            // Keep the source painter's diagnostic instead of silently losing every graph node.
+            System.Diagnostics.Trace.WriteLine(exception);
             return false;
         }
     }

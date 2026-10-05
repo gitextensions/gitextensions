@@ -69,9 +69,21 @@
                             Icon="{x:Static properties:Images.BranchLocal}">
       <compat:IconSplitButton.Flyout>
         <MenuFlyout>
-          <MenuItem x:Name="tsmiShowBranchesAll" compat:TranslationCompat.UseToolTipText="True" Header="_All branches" />
-          <MenuItem x:Name="tsmiShowBranchesCurrent" compat:TranslationCompat.UseToolTipText="True" Header="_Current branch only" />
-          <MenuItem x:Name="tsmiShowBranchesFiltered" compat:TranslationCompat.UseToolTipText="True" Header="_Filtered branches" />
+          <MenuItem x:Name="tsmiShowBranchesAll" compat:TranslationCompat.UseToolTipText="True" Header="_All branches">
+            <MenuItem.Icon>
+              <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchLocal}" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="tsmiShowBranchesCurrent" compat:TranslationCompat.UseToolTipText="True" Header="_Current branch only">
+            <MenuItem.Icon>
+              <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchFilter}" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="tsmiShowBranchesFiltered" compat:TranslationCompat.UseToolTipText="True" Header="_Filtered branches">
+            <MenuItem.Icon>
+              <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchFilter}" />
+            </MenuItem.Icon>
+          </MenuItem>
         </MenuFlyout>
       </compat:IconSplitButton.Flyout>
     </compat:IconSplitButton>
@@ -81,11 +93,14 @@
            compat:TranslationCompat.UseToolTipText="True"
            Classes="gitextensions-toolbar-label"
            Padding="0"
+           HorizontalContentAlignment="Center"
+           VerticalContentAlignment="Center"
            Content="_Branches:"
            Target="{Binding #tscboBranchFilter}" />
     <compat:ToolbarComboBox x:Name="tscboBranchFilter"
                             Tag="ToolBar_group:Branch filter"
                             Width="100"
+                            DropDownWidth="300"
                             compat:NativeToolStrip.ItemIsControlHost="True"
                             compat:NativeToolStrip.ItemAutoSize="False"
                             compat:NativeToolStrip.ItemHeight="23"
@@ -114,11 +129,14 @@
            compat:TranslationCompat.UseToolTipText="True"
            Classes="gitextensions-toolbar-label"
            Padding="0"
+           HorizontalContentAlignment="Center"
+           VerticalContentAlignment="Center"
            Content="_Filter:"
            Target="{Binding #tstxtRevisionFilter}" />
     <compat:ToolbarComboBox x:Name="tstxtRevisionFilter"
                             Tag="ToolBar_group:Text filter"
                             Width="100"
+                            DropDownWidth="300"
                             compat:NativeToolStrip.ItemIsControlHost="True"
                             compat:NativeToolStrip.ItemAutoSize="False"
                             compat:NativeToolStrip.ItemHeight="23"
