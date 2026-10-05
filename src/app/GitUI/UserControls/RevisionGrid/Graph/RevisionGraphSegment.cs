@@ -37,8 +37,21 @@ public sealed class RevisionGraphSegment
     public RevisionGraphRevision Child { get; }
 
     /// <summary>
-    ///  The reserved lane this segment should go in. Set along the first parent chain from the node of a reserved lane branch;
+    ///  The reserved lane this segment should go in. Set along the first parent chain from the node of a reserved lane
+    ///  and possiblty for one of its outgoing merge segments;
     ///  otherwise equal to <see cref="int.MaxValue"/>.
     /// </summary>
     public int ReservedLaneIndex { get; set; } = int.MaxValue;
+
+    /// <summary>
+    ///  If true, this segment occupies a reserved lane above the lane's node and is invisible.
+    /// </summary>
+    public bool IsReservedLanePlaceholder => Child is null;
+
+    /// <summary>
+    ///  If true, this segment may use the same lane as the placeholder segment for its parent node.
+    /// </summary>
+    public bool MayUseReservedLane { get; set; }
+
+    public bool IsIncomingMerge => Child?.ParentCount > 1 && Parent != Child.Parents.First();
 }

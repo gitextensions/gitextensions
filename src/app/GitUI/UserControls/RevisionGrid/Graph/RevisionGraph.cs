@@ -474,17 +474,14 @@ public class RevisionGraph : IRevisionGraphRowProvider
         Dictionary<int, int> reservedLaneForIndex = firstIndexForReservedLane
             .Select((firstIndex, priority) => (firstIndex, priority))
             .ToDictionary(x => x.firstIndex, x => x.priority);
-        int emptyReservedLaneCount = firstIndexForReservedLane.Length;
+
+        SelectSegmentsInReservedLane();
 
         for (int nextIndex = startIndex; nextIndex <= lastToCacheRowIndex; ++nextIndex)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            bool reserveLaneForCurrentRevision = reservedLaneForIndex.TryGetValue(nextIndex, out int laneForCurrentRevision);
-            if (reserveLaneForCurrentRevision)
-            {
-                --emptyReservedLaneCount;
-            }
+            bool revisionGoesInReservedLane = reservedLaneForIndex.TryGetValue(nextIndex, out int laneForCurrentRevision);
 
             RevisionGraphRevision revision = orderedNodesCache[nextIndex];
             RevisionGraphSegment[] revisionStartSegments = revision.GetStartSegments();
@@ -494,7 +491,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
             {
                 RevisionGraphSegment firstStartSegment = revisionStartSegments[0];
 
-                if (reserveLaneForCurrentRevision)
+                if (revisionGoesInReservedLane)
                 {
                     // First parent segment gets the node's reserved lane
                     firstStartSegment.ReservedLaneIndex = laneForCurrentRevision;
@@ -510,7 +507,8 @@ public class RevisionGraph : IRevisionGraphRowProvider
                             // Inherit reserved lane from segment ending in the node
                             if (prevRowSegment.ReservedLaneIndex < firstStartSegment.ReservedLaneIndex)
                             {
-                                firstStartSegment.ReservedLaneIndex = prevRowSegment.ReservedLaneIndex;
+                                firstStartSegment.ReservedLaneIndex = laneForCurrentRevision = prevRowSegment.ReservedLaneIndex;
+                                revisionGoesInReservedLane = true;
                             }
                         }
                     }
@@ -550,7 +548,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 bool startSegmentsAdded = false;
 
                 List<RevisionGraphSegment> segmentsForNode = segments;
-                if (reserveLaneForCurrentRevision)
+                if (revisionGoesInReservedLane)
                 {
                     // Collect the segments connecting to this row's node in a separate list, which
                     // will be inserted in the right position after the rest of the row has been built.
@@ -604,7 +602,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
                     for (int startSegmentIndex = 0; startSegmentIndex < startSegmentsCount; ++startSegmentIndex)
                     {
                         RevisionGraphSegment startSegment = revisionStartSegments[startSegmentIndex];
-                        if (startSegment == revisionStartSegments[0])
+                        if (startSegment == revisionStartSegments[0] && !segment.IsReservedLanePlaceholder)
                         {
                             if (startSegment.LaneInfo is null || startSegment.LaneInfo.StartScore > segment.LaneInfo?.StartScore)
                             {
@@ -639,37 +637,38 @@ public class RevisionGraph : IRevisionGraphRowProvider
                     }
                 }
 
-                if (reserveLaneForCurrentRevision)
+                if (revisionGoesInReservedLane)
                 {
                     // Now we can insert the segments for this node first in the row.
                     segments.InsertRange(0, segmentsForNode);
                 }
             }
 
-            // Ensure that all segments with a reserved lane are first, in the correct order
-            segments = [.. segments.OrderBy(s => s.ReservedLaneIndex)];
-
-            RevisionGraphRow row = new(revision, segments, Config.MergeGraphLanesHavingCommonParent, reserveLaneForCurrentRevision);
-
-            if (emptyReservedLaneCount > 0 || (reserveLaneForCurrentRevision && row.GetCurrentRevisionLane() != laneForCurrentRevision))
+            if (nextIndex == 0)
             {
-                _ = row.GetLaneCount();
-
+                // First row: Add a placeholder segment for each reserved lane.
+                // The segment is invisible and keeps the lane occupied above the lane's first node.
                 for (int lane = 0; lane < firstIndexForReservedLane.Length; ++lane)
                 {
-                    if (firstIndexForReservedLane[lane] > nextIndex)
+                    if (firstIndexForReservedLane[lane] > 0)
                     {
-                        // Make space for a not yet filled reserved lane
-                        row.MoveLanesRight(lane);
-                    }
-
-                    if (reserveLaneForCurrentRevision && lane == row.GetCurrentRevisionLane() && lane < laneForCurrentRevision)
-                    {
-                        // Move node toward its correct reserved lane (may happen on lane reuse)
-                        row.MoveLanesRight(lane);
+                        RevisionGraphRevision parent = orderedNodesCache[firstIndexForReservedLane[lane]];
+                        segments.Insert(lane, new RevisionGraphSegment(parent, null!) { ReservedLaneIndex = lane });
                     }
                 }
             }
+
+            // Ensure that all segments with a reserved lane are first, in the correct order
+            segments = [.. segments.OrderBy(s => s.ReservedLaneIndex)];
+
+            RevisionGraphRow row = new(revision, segments, Config.MergeGraphLanesHavingCommonParent, revisionGoesInReservedLane);
+
+            // Prevent the revision node appearing too far left (may happen on lane reuse)
+            int minimumLane = revisionGoesInReservedLane
+                ? laneForCurrentRevision
+                : segments.Where(s => s.IsReservedLanePlaceholder).Select(s => s.ReservedLaneIndex + 1).Append(0).Max();
+
+            row.MoveLanesRight(row.GetCurrentRevisionLane(), minimumLane - row.GetCurrentRevisionLane());
 
             _orderedRowCache.Add(row);
         }
@@ -1104,6 +1103,70 @@ public class RevisionGraph : IRevisionGraphRowProvider
 
                 // if moved, check again whether the lanes of previous rows can be moved, too
                 currentIndex = moved ? Math.Max(currentIndex - straightenDiagonalsLookAhead, goBackLimit) : currentIndex + 1;
+            }
+        }
+
+        // Selects the segments that are allowed to use a reserved lane above the lane's first node.
+        // These segments must be merges from the lane's first node to other lanes.
+        // If MergeGraphLanesHavingCommonParent is false, only one segment per parent is selected: the one whose child node
+        // is furthest counter-clockwise in the graph.
+        void SelectSegmentsInReservedLane()
+        {
+            if (firstIndexForReservedLane.Length == 0)
+            {
+                return;
+            }
+
+            // Gather the outgoing merges from first nodes of reserved lanes
+
+            Dictionary<RevisionGraphRevision, int> laneForReservedRevision = firstIndexForReservedLane
+                .Select((firstRowIndex, lane) => (firstRowIndex, lane))
+                .ToDictionary(x => orderedNodesCache[x.firstRowIndex], x => x.lane);
+
+            List<RevisionGraphSegment> mergesFromReservedLane = [];
+            int maxIndex = Math.Min(orderedNodesCount, firstIndexForReservedLane.Max() + 1);
+            for (int i = 0; i < maxIndex; ++i)
+            {
+                RevisionGraphRevision revision = orderedNodesCache[i];
+                foreach (RevisionGraphSegment segment in revision.GetStartSegments())
+                {
+                    if (laneForReservedRevision.ContainsKey(segment.Parent) && segment.IsIncomingMerge)
+                    {
+                        mergesFromReservedLane.Add(segment);
+                    }
+                }
+            }
+
+            // Select allowed segment(s) in each reserved lane
+            for (int lane = 0; lane < firstIndexForReservedLane.Length; ++lane)
+            {
+                RevisionGraphSegment[] segments = mergesFromReservedLane.Where(s => laneForReservedRevision[s.Parent] == lane).ToArray();
+                if (Config.MergeGraphLanesHavingCommonParent)
+                {
+                    // Allow all segments
+                    foreach (RevisionGraphSegment segment in segments)
+                    {
+                        segment.MayUseReservedLane = true;
+                    }
+                }
+                else if (segments.Length > 0)
+                {
+                    // Allow segment with most counter-clockwise child node
+                    segments.MinBy(Key)!.ReservedLaneIndex = lane;
+                }
+
+                int Key(RevisionGraphSegment segment)
+                {
+                    int childRowIndex = orderedNodesCache.IndexOf(segment.Child);
+                    if (reservedLaneForIndex.TryGetValue(childRowIndex, out int laneForChild) && laneForChild < lane)
+                    {
+                        // Child lane is to the left: Prefer lower rows
+                        return -childRowIndex;
+                    }
+
+                    // Child lane is to the right: Prefer higher rows
+                    return childRowIndex;
+                }
             }
         }
     }

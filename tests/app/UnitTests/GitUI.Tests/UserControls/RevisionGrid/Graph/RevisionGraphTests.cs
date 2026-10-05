@@ -445,6 +445,30 @@ public class RevisionGraphTests
         await VerifyGraphLayoutAsync(revisionGraph);
     }
 
+    [Test]
+    public async Task MergesCanUseReservedLaneBeforeFirstNode_1()
+    {
+        AppSettings.ReservedLanesBranchNames = "A;B;C";
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:1 4:1 5:3:B 6:2 7:4 8:6,5:A 9:7:C");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task MergesCanUseReservedLaneBeforeFirstNode_2([Values] bool mergeGraphLanesHavingCommonParent,
+        [Values("A;B;C", "A;C;B", "B;A;C", "B;C;A", "C;A;B", "C;B;A", "A;B", "B;A", "B;C", "C;B", "B")] string reservedLanes)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.ReservedLanesBranchNames = reservedLanes;
+
+        // Reserved lane B is merged into A and C.
+        // When MergeGraphLanesHavingCommonParent is true, both merges should use B's lane above B.
+        // When false, only one may: the one whose destination is most counter-clockwise from B.
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:1 4:1 5:3:B 6:2 7:4 8:6,5:A 9:7,5:C");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
     private const string graphWithMultiLaneCrossings = "0:C,1,2,3,4,5,6,7,8,9,A,B 1:R 2:R 3:R 4:C 5:C 6:C 7:R 8:C 9:R A:C B:R C:D D:E E:F F:G G:H,K,R H:I,R I:J,R J:R K:R R";
 
     [Test]
@@ -725,17 +749,25 @@ public class RevisionGraphTests
         {
             // Create a line for commit
 
-            IRevisionGraphRow? row = revisionGraph.GetSegmentsForRow(rowIndex);
-            char[] line = [.. Enumerable.Repeat(' ', (row!.GetLaneCount() * 2) - 1)];
+            IRevisionGraphRow row = revisionGraph.GetSegmentsForRow(rowIndex)!;
+            int width = row.Segments.Where(s => !s.IsReservedLanePlaceholder)
+                .Select(s => row.GetLaneForSegment(s).Index)
+                .Append(row.GetCurrentRevisionLane())
+                .Max() + 1;
+            // width = Math.Max(width, row.GetCurrentRevisionLane() + 1);
+            char[] line = [.. Enumerable.Repeat(' ', (width * 2) - 1)];
 
             // Show '|' in lanes passing through
             foreach (RevisionGraphSegment segment in row.Segments)
             {
-                line[row.GetLaneForSegment(segment).Index * 2] = '|';
+                if (!segment.IsReservedLanePlaceholder)
+                {
+                    line[row.GetLaneForSegment(segment).Index * 2] = '|';
+                }
             }
 
             // Show first char of commit ID, or '*', in lane of actual commit
-            string? subject = row!.Revision.GitRevision?.Subject;
+            string? subject = row.Revision.GitRevision?.Subject;
             line[row.GetCurrentRevisionLane() * 2] = subject?.Length is 1 ? subject[0] : '*';
 
             // List refs applying to commit
@@ -767,6 +799,11 @@ public class RevisionGraphTests
 
             foreach (RevisionGraphSegment segment in row.Segments)
             {
+                if (segment.IsReservedLanePlaceholder)
+                {
+                    continue;
+                }
+
                 int fromPos = row.GetLaneForSegment(segment).Index * 2;
                 int toPos = nextRow.GetLaneForSegment(segment).Index * 2;
                 if (toPos == -2)
@@ -850,11 +887,27 @@ public class RevisionGraphTests
 
     private static void VerifyGraphConsistency(RevisionGraph graph)
     {
+        // Verify that the lane count for each row is correct
         for (int rowIndex = 0; rowIndex < graph.GetCachedCount(); ++rowIndex)
         {
             IRevisionGraphRow row = graph.GetSegmentsForRow(rowIndex)!;
             List<int> usedLanes = row.Segments.Select(s => row.GetLaneForSegment(s).Index).Append(row.GetCurrentRevisionLane()).Distinct().ToList();
             row.GetLaneCount().Should().Be(usedLanes.Max() + 1);
+        }
+
+        if (!new RevisionGraphConfig().ReduceGraphCrossings)
+        {
+            // Verify that first parent segment is the most vertical in merge commits
+            // This does not always hold if ReduceGraphCrossings is true, due to re-sorting parents
+            for (int rowIndex = 0; rowIndex < graph.GetCachedCount() - 1; ++rowIndex)
+            {
+                IRevisionGraphRow row = graph.GetSegmentsForRow(rowIndex)!;
+
+                RevisionGraphSegment mostVerticalSegment = row.Segments.Where(s => s.Child == row.Revision)
+                    .MinBy(s => Math.Abs(row.GetLaneForSegment(s).Index - row.GetCurrentRevisionLane()))!;
+
+                mostVerticalSegment.Parent.GitRevision!.Subject.Should().Be(row.Revision.Parents.First().GitRevision!.Subject);
+            }
         }
     }
 

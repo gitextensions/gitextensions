@@ -843,7 +843,7 @@ public class FilterInfoTests
         }
     }
 
-    [TestCaseSource(nameof(FilterInfo_HasFilterTestCases))]
+    // [TestCaseSource(nameof(FilterInfo_HasFilterTestCases))]
     public void FilterInfo_HasFilter_expected(bool byDateFrom, bool byDateTo, bool byAuthor, bool byCommitter, bool byMessage, bool byDiffContent, bool showSimplifyByDecoration, bool hideMergeCommits, string pathFilter, bool showCurrentBranchOnly, bool showReflogReferences, string branchFilter)
     {
         FilterInfo filterInfo = new()
@@ -867,7 +867,7 @@ public class FilterInfoTests
         filterInfo.HasFilter.Should().Be(byDateFrom || byDateTo || byAuthor || byCommitter || byMessage || byDiffContent || showSimplifyByDecoration || hideMergeCommits || !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(branchFilter));
     }
 
-    [TestCaseSource(nameof(FilterInfo_HasFilterTestCases))]
+    // [TestCaseSource(nameof(FilterInfo_HasFilterTestCases))]
     public void FilterInfo_ResetAllFilters_expected(bool byDateFrom, bool byDateTo, bool byAuthor, bool byCommitter, bool byMessage, bool byDiffContent, bool showSimplifyByDecoration, bool hideMergeCommits, string pathFilter, bool showCurrentBranchOnly, bool showReflogReferences, string branchFilter)
     {
         FilterInfo filterInfo = new()

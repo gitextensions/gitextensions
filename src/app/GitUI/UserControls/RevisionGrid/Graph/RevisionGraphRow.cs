@@ -183,12 +183,25 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
                 // *
                 if (_mergeGraphLanesHavingCommonParent)
                 {
-                    foreach (KeyValuePair<RevisionGraphSegment, Lane> searchParent in _segmentLanes)
+                    foreach ((RevisionGraphSegment? otherSegment, Lane lane) in _segmentLanes)
                     {
                         // If there is another segment with the same parent, and it is not this row's revision, merge into one lane.
-                        if (searchParent.Value.Index != _revisionLane && searchParent.Key.Parent == segment.Parent)
+                        if (lane.Index != _revisionLane && otherSegment.Parent == segment.Parent
+                            && (!otherSegment.IsReservedLanePlaceholder || segment.MayUseReservedLane))
                         {
-                            return new Lane(searchParent.Value.Index, SecondarySharing(segment, Revision.Score));
+                            return new Lane(lane.Index, SecondarySharing(segment, Revision.Score));
+                        }
+                    }
+                }
+                else if (segment.ReservedLaneIndex < int.MaxValue)
+                {
+                    // Merge lane for segments with the same reserved lane index
+                    foreach ((RevisionGraphSegment? otherSegment, Lane lane) in _segmentLanes)
+                    {
+                        if (lane.Index != _revisionLane && otherSegment.Parent == segment.Parent
+                            && otherSegment.ReservedLaneIndex == segment.ReservedLaneIndex)
+                        {
+                            return new Lane(lane.Index, SecondarySharing(segment, Revision.Score));
                         }
                     }
                 }
