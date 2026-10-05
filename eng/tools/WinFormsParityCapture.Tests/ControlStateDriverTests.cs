@@ -200,6 +200,156 @@ public sealed class ControlStateDriverTests
         openingCount.Should().Be(1, "the driver must observe the real native DropDown event before deciding whether the lazy list is supported");
     }
 
+    [TestCase(false)]
+    [TestCase(true)]
+    [Apartment(ApartmentState.STA)]
+    public void Apply_should_open_the_real_popup_before_hovering_its_declared_row(bool context)
+    {
+        using ContextMenuStrip contextMenu = new();
+        using MenuStrip strip = new();
+        using ToolStripMenuItem owner = new("Owner");
+        using ToolStripMenuItem row = new("Action");
+        using HoverRowHost form = new(row) { ClientSize = new Size(420, 300) };
+        ToolStripDropDown popup;
+        if (context)
+        {
+            contextMenu.Items.Add(row);
+            form.ContextMenuStrip = contextMenu;
+            popup = contextMenu;
+        }
+        else
+        {
+            owner.DropDownItems.Add(row);
+            strip.Items.Add(owner);
+            form.Controls.Add(strip);
+            popup = owner.DropDown;
+        }
+
+        int openings = 0;
+        popup.Opening += (_, _) => openings++;
+        form.Show();
+        using (ControlStateDriver driver = ControlStateDriver.Apply(form,
+                   new CaptureStatePlan { Id = "row.hover", Kind = CaptureStateKind.Hover, TargetField = "_hoverRow" }))
+        {
+            popup.Visible.Should().BeTrue();
+            row.Selected.Should().BeTrue();
+            driver.Popups.Should().ContainSingle().Which.Should().BeSameAs(popup);
+            openings.Should().Be(1);
+        }
+
+        popup.Visible.Should().BeFalse();
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    [Apartment(ApartmentState.STA)]
+    public void Apply_should_close_opened_popup_ancestors_and_restore_size_when_the_hover_row_is_hidden(bool context)
+    {
+        using ContextMenuStrip contextMenu = new();
+        using MenuStrip strip = new();
+        using ToolStripMenuItem owner = new("Owner");
+        using ToolStripMenuItem row = new("Hidden action") { Available = false };
+        using ToolStripMenuItem visibleRow = new("Visible action");
+        using HoverRowHost form = new(row) { ClientSize = new Size(420, 300) };
+        ToolStripDropDown popup;
+        if (context)
+        {
+            contextMenu.Items.AddRange([visibleRow, row]);
+            form.ContextMenuStrip = contextMenu;
+            popup = contextMenu;
+        }
+        else
+        {
+            owner.DropDownItems.AddRange([visibleRow, row]);
+            strip.Items.Add(owner);
+            form.Controls.Add(strip);
+            popup = owner.DropDown;
+        }
+
+        int openings = 0;
+        popup.Opening += (_, _) => openings++;
+        form.Show();
+        Action capture = () => ControlStateDriver.Apply(form, new CaptureStatePlan
+        {
+            Id = "hidden-row.hover",
+            Kind = CaptureStateKind.Hover,
+            TargetField = "_hoverRow",
+            WidthDip = 640,
+            HeightDip = 480,
+        });
+
+        capture.Should().Throw<CaptureStateUnsupportedException>().WithMessage("*hover state requires a visible item*");
+
+        openings.Should().Be(1, "the target must fail after its actual popup owner opened");
+        popup.Visible.Should().BeFalse();
+        form.ClientSize.Should().Be(new Size(420, 300));
+    }
+
+    [TestCase(CaptureStateKind.MenuOpen)]
+    [TestCase(CaptureStateKind.MenuOpenHoveredOwner)]
+    [Apartment(ApartmentState.STA)]
+    public void Apply_should_preserve_the_declared_menu_owner_pointer_route(CaptureStateKind kind)
+    {
+        Point originalCursor = NativeMethods.GetCursorPosition();
+        using MenuStrip strip = new();
+        using ToolStripMenuItem owner = new("Owner");
+        owner.DropDownItems.Add("Action");
+        strip.Items.Add(owner);
+        using HoverRowHost form = new(owner) { ClientSize = new Size(420, 300) };
+        form.Controls.Add(strip);
+        form.Show();
+        try
+        {
+            Point neutralCursor = form.PointToScreen(new Point(form.ClientSize.Width - 10, form.ClientSize.Height - 10));
+            NativeMethods.SetCursorPosition(neutralCursor);
+            Point ownerCursor = strip.PointToScreen(new Point(
+                owner.Bounds.Left + (owner.Bounds.Width / 2),
+                owner.Bounds.Top + (owner.Bounds.Height / 2)));
+
+            using (ControlStateDriver driver = ControlStateDriver.Apply(form,
+                       new CaptureStatePlan { Id = "owner.open", Kind = kind, TargetField = "_hoverRow" }))
+            {
+                owner.DropDown.Visible.Should().BeTrue();
+                NativeMethods.GetCursorPosition().Should().Be(
+                    kind == CaptureStateKind.MenuOpenHoveredOwner ? ownerCursor : neutralCursor);
+                driver.Popups.Should().ContainSingle().Which.Should().BeSameAs(owner.DropDown);
+            }
+
+            owner.DropDown.Visible.Should().BeFalse();
+            NativeMethods.GetCursorPosition().Should().Be(neutralCursor);
+        }
+        finally
+        {
+            NativeMethods.SetCursorPosition(originalCursor);
+        }
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    public void Apply_should_restore_the_cursor_when_hover_succeeds_but_the_requested_menu_is_unsupported()
+    {
+        Point originalCursor = NativeMethods.GetCursorPosition();
+        using Form form = new() { ClientSize = new Size(420, 300) };
+        form.Show();
+        Action capture = () => ControlStateDriver.Apply(form, new CaptureStatePlan
+        {
+            Id = "unsupported-owner.open",
+            Kind = CaptureStateKind.MenuOpenHoveredOwner,
+            WidthDip = 640,
+            HeightDip = 480,
+        });
+
+        capture.Should().Throw<CaptureStateUnsupportedException>().WithMessage("*open-menu state requires*");
+
+        NativeMethods.GetCursorPosition().Should().Be(originalCursor);
+        form.ClientSize.Should().Be(new Size(420, 300));
+    }
+
+    private sealed class HoverRowHost(ToolStripMenuItem row) : Form
+    {
+        private readonly ToolStripMenuItem _hoverRow = row;
+    }
+
     private sealed class MenuOwner : UserControl
     {
         private readonly ContextMenuStrip _menu;

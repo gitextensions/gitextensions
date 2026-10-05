@@ -52,6 +52,14 @@ Windows dependency. P0.2 will deliberately reference that one schema project fro
 Avalonia test build graph so both capture implementations serialize the same contract. The
 Windows-only capture tool itself remains outside both solutions.
 
+`menuOpen` retains its programmatic opening route. `menuOpenHoveredOwner` first delivers
+pointer hover to the actual owner and then runs its normal opening handler. This distinction
+matters for ToolStripEx, which freezes the previously painted toolbar during a dropdown.
+Use distinct state identifiers for these routes; hovering then opening is not evidence of
+a physical click or a keyboard opening. A hover target within a closed popup first opens its
+real owning menus, without substituting the row or seeding its collection. Failed state
+application restores acquired popup, cursor and size state before reporting unsupported.
+
 Menu and combo-box captures render the primary window and each owned popup separately with
 `PrintWindow(PW_RENDERFULLCONTENT)`, then compose the unscaled images at their native screen
 offsets. The unused canvas is transparent; it never contains unrelated desktop windows.

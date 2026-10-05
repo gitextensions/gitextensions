@@ -12,6 +12,7 @@ using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using Color = Avalonia.Media.Color;
 using Size = Avalonia.Size;
 
 namespace GitUI.Compat;
@@ -35,6 +36,12 @@ public sealed class NativeToolStrip : Control, IDisposable
     private static readonly FontFamily DefaultMenuFontFamily = new("Segoe UI");
     private static readonly Thickness ControlHostMainMargin = new(1, 0, 1, 0);
     private static readonly Thickness ControlHostOverflowMargin = new(2);
+
+    // Effective REBAR/GRIPPER part paint, verified independently over black and
+    // white by the native renderer. These are composite roles, not DDB alpha.
+    private static readonly IBrush SystemGripLight = new SolidColorBrush(Color.FromArgb(178, 255, 255, 255));
+    private static readonly IBrush SystemGripMiddle = new SolidColorBrush(Color.FromArgb(197, 220, 220, 220));
+    private static readonly IBrush SystemGripShadow = new SolidColorBrush(Color.FromArgb(60, 0, 0, 0));
     private readonly NativeToolStripPresenter _mainPresenter;
     private readonly NativeToolStripOverflowPresenter _overflowPresenter;
     private readonly Popup _popup;
@@ -56,6 +63,12 @@ public sealed class NativeToolStrip : Control, IDisposable
     public static readonly StyledProperty<IBrush?> ForegroundProperty = TextElement.ForegroundProperty.AddOwner<NativeToolStrip>();
     public static readonly StyledProperty<IBrush?> BackgroundProperty = Border.BackgroundProperty.AddOwner<NativeToolStrip>();
     public static readonly StyledProperty<Thickness> PaddingProperty = Border.PaddingProperty.AddOwner<NativeToolStrip>();
+    public static readonly StyledProperty<bool> UseSystemVisualStyleProperty =
+        AvaloniaProperty.Register<NativeToolStrip, bool>(nameof(UseSystemVisualStyle), true);
+    public static readonly StyledProperty<IBrush?> GripDarkBrushProperty =
+        AvaloniaProperty.Register<NativeToolStrip, IBrush?>(nameof(GripDarkBrush));
+    public static readonly StyledProperty<IBrush?> GripLightBrushProperty =
+        AvaloniaProperty.Register<NativeToolStrip, IBrush?>(nameof(GripLightBrush));
     public static readonly AttachedProperty<bool> ItemAutoSizeProperty =
         AvaloniaProperty.RegisterAttached<NativeToolStrip, Control, bool>("ItemAutoSize", true);
     public static readonly AttachedProperty<double> ItemHeightProperty =
@@ -68,10 +81,13 @@ public sealed class NativeToolStrip : Control, IDisposable
         AvaloniaProperty.RegisterAttached<NativeToolStrip, Control, bool>("ItemIsControlHost");
     public static readonly AttachedProperty<bool> ItemIsSeparatorProperty =
         AvaloniaProperty.RegisterAttached<NativeToolStrip, Control, bool>("ItemIsSeparator");
+    public static readonly AttachedProperty<bool> FreezeDropDownOwnerPaintProperty =
+        AvaloniaProperty.RegisterAttached<NativeToolStrip, Control, bool>("FreezeDropDownOwnerPaint");
 
     static NativeToolStrip()
     {
-        AffectsRender<NativeToolStrip>(BackgroundProperty);
+        AffectsRender<NativeToolStrip>(BackgroundProperty, UseSystemVisualStyleProperty,
+            GripDarkBrushProperty, GripLightBrushProperty, FlowDirectionProperty);
     }
 
     public NativeToolStrip()
@@ -169,6 +185,21 @@ public sealed class NativeToolStrip : Control, IDisposable
     ///  Gets or sets the source owner's display padding.
     /// </summary>
     public Thickness Padding { get => GetValue(PaddingProperty); set => SetValue(PaddingProperty, value); }
+
+    /// <summary>
+    ///  Gets or sets the original ToolStrip renderer selection.
+    /// </summary>
+    public bool UseSystemVisualStyle { get => GetValue(UseSystemVisualStyleProperty); set => SetValue(UseSystemVisualStyleProperty, value); }
+
+    /// <summary>
+    ///  Gets or sets the Professional renderer's raw SystemColors.ControlText grip role.
+    /// </summary>
+    public IBrush? GripDarkBrush { get => GetValue(GripDarkBrushProperty); set => SetValue(GripDarkBrushProperty, value); }
+
+    /// <summary>
+    ///  Gets or sets the Professional renderer's ColorTable.GripLight role.
+    /// </summary>
+    public IBrush? GripLightBrush { get => GetValue(GripLightBrushProperty); set => SetValue(GripLightBrushProperty, value); }
 
     /// <summary>
     ///  Gets or sets the source ToolStrip translation text.
@@ -286,6 +317,16 @@ public sealed class NativeToolStrip : Control, IDisposable
     public static void SetItemIsSeparator(Control control, bool value) => control.SetValue(ItemIsSeparatorProperty, value);
 
     /// <summary>
+    ///  Gets whether the source ToolStripEx retains its pre-opening owner state paint.
+    /// </summary>
+    public static bool GetFreezeDropDownOwnerPaint(Control control) => control.GetValue(FreezeDropDownOwnerPaintProperty);
+
+    /// <summary>
+    ///  Sets the source ToolStripEx dropdown owner's pre-opening state-paint contract.
+    /// </summary>
+    public static void SetFreezeDropDownOwnerPaint(Control control, bool value) => control.SetValue(FreezeDropDownOwnerPaintProperty, value);
+
+    /// <summary>
     ///  Gets the current source split-stack placement without changing item visibility.
     /// </summary>
     public NativeToolStripItemPlacement GetItemPlacement(Control control)
@@ -353,7 +394,47 @@ public sealed class NativeToolStrip : Control, IDisposable
     public override void Render(DrawingContext context)
     {
         context.FillRectangle(Background ?? Brushes.Transparent, new Rect(Bounds.Size));
+        RenderGrip(context);
         base.Render(context);
+    }
+
+    private void RenderGrip(DrawingContext context)
+    {
+        // GripEnabled=false in ToolStripEx disables dragging, not painting. Keep
+        // the existing source reserve and paint directly, without an input child.
+        int height = (int)Pixel(Bounds.Height);
+        bool rightToLeft = FlowDirection == FlowDirection.RightToLeft;
+        double left = rightToLeft ? Math.Max(0, Pixel(Bounds.Width) - VisualStyleGripWidth) : 0;
+        using (context.PushClip(new Rect(left, 0, VisualStyleGripWidth, height)))
+        {
+            if (UseSystemVisualStyle)
+            {
+                // ToolStripSystemRenderer rounds its vertical part height to4.
+                // Native REBAR/GRIPPER metadata specifies a5x4 tile, no margins.
+                int renderedHeight = Math.Max(0, ((height - 2) / 4) * 4);
+                int top = Math.Max(0, (height - renderedHeight - 2) / 2);
+                for (int y = top; y < top + renderedHeight; y += 4)
+                {
+                    context.FillRectangle(SystemGripLight, new Rect(left + 1, y, 2, 1));
+                    context.FillRectangle(SystemGripLight, new Rect(left + 1, y + 1, 1, 1));
+                    context.FillRectangle(SystemGripMiddle, new Rect(left + 2, y + 1, 1, 1));
+                    context.FillRectangle(SystemGripShadow, new Rect(left + 3, y + 1, 1, 1));
+                }
+
+                return;
+            }
+
+            // ToolStripProfessionalRenderer: GripPadding=4, two-pixel dots every4.
+            int count = Math.Max(0, (height - 8) / 4);
+            int lightX = (VisualStyleGripWidth / 2) - (rightToLeft ? 1 : 0);
+            int darkX = lightX + (rightToLeft ? 1 : -1);
+            for (int index = 0; index < count; index++)
+            {
+                int y = 5 + (index * 4);
+                context.FillRectangle(GripLightBrush ?? Brushes.Transparent, new Rect(left + lightX, y, 2, 2));
+                context.FillRectangle(GripDarkBrush ?? Brushes.Transparent, new Rect(left + darkX, y - 1, 2, 2));
+            }
+        }
     }
 
     protected override bool BypassFlowDirectionPolicies => true;
@@ -619,6 +700,13 @@ public sealed class NativeToolStrip : Control, IDisposable
             item.SetValue(VerticalAlignmentProperty, Avalonia.Layout.VerticalAlignment.Stretch, BindingPriority.StyleTrigger),
             item.SetValue(HorizontalAlignmentProperty, Avalonia.Layout.HorizontalAlignment.Stretch, BindingPriority.StyleTrigger),
         ];
+        if (item is NativeToolStripSplitButton or IconDropDownButton)
+        {
+            // ToolStripEx disables its HWND redraw during DropDownOpening. Retain the
+            // owner's pre-opening state paint, without introducing a bitmap snapshot.
+            values.Add(item.SetValue(FreezeDropDownOwnerPaintProperty, true, BindingPriority.StyleTrigger));
+        }
+
         if (item is TemplatedControl control)
         {
             // The source item inherits ToolStrip.Font, not the application's generic

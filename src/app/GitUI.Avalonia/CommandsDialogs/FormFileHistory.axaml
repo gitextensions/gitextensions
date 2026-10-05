@@ -74,6 +74,7 @@
         </compat:IconSplitButton.Flyout>
       </compat:IconSplitButton>
       <compat:IconDropDownButton x:Name="ShowFullHistory"
+                                 compat:NativeToolStrip.FreezeDropDownOwnerPaint="True"
                                  Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                  Icon="{x:Static properties:Images.FileHistory}"
                                  ToolTip.Tip="Show Full History"
@@ -90,6 +91,7 @@
         </compat:IconDropDownButton.Flyout>
       </compat:IconDropDownButton>
       <compat:IconDropDownButton x:Name="toolStripBlameOptions"
+                                 compat:NativeToolStrip.FreezeDropDownOwnerPaint="True"
                                  Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                  Content="Blame options"
                                  ToolTip.Tip="Blame options"

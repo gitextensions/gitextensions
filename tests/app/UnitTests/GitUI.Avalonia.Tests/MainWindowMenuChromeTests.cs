@@ -55,8 +55,8 @@ public sealed class MainWindowMenuChromeTests
         fixture.Title.IsPointerOver.Should().BeTrue();
         fixture.Title.IsSubMenuOpen.Should().BeFalse();
         Border chrome = fixture.TitleChrome;
-        GetColor(chrome.Background).Should().Be(fixture.ResourceColor("GitExtensionsToolStripPointerOverBackgroundBrush"));
-        GetColor(chrome.BorderBrush).Should().Be(fixture.ResourceColor("GitExtensionsHighlightBackgroundBrush"));
+        GetColor(chrome.Background).Should().Be(fixture.ResourceColor("GitExtensionsNativeMenuSelectedBackgroundBrush"));
+        GetColor(chrome.BorderBrush).Should().Be(fixture.ResourceColor("GitExtensionsNativeMenuSelectedBorderBrush"));
         chrome.BorderThickness.Should().Be(new Thickness(1));
         fixture.AssertTitleText();
         fixture.Title.Bounds.Should().Be(allocation);
@@ -122,9 +122,102 @@ public sealed class MainWindowMenuChromeTests
         fixture.Title.IsSubMenuOpen.Should().BeFalse();
         fixture.Title.IsPointerOver.Should().BeTrue();
         fixture.AssertTitleText();
-        GetColor(fixture.TitleChrome.Background).Should().Be(fixture.ResourceColor("GitExtensionsToolStripPointerOverBackgroundBrush"));
-        GetColor(fixture.TitleChrome.BorderBrush).Should().Be(fixture.ResourceColor("GitExtensionsHighlightBackgroundBrush"));
+        GetColor(fixture.TitleChrome.Background).Should().Be(fixture.ResourceColor("GitExtensionsNativeMenuSelectedBackgroundBrush"));
+        GetColor(fixture.TitleChrome.BorderBrush).Should().Be(fixture.ResourceColor("GitExtensionsNativeMenuSelectedBorderBrush"));
         fixture.TitleChrome.BorderThickness.Should().Be(new Thickness(1));
+    }
+
+    [AvaloniaTest]
+    [TestCase("light")]
+    [TestCase("dark")]
+    [TestCase("custom")]
+    public void Top_title_caption_allocation_and_rendered_ink_should_not_move_between_normal_hover_and_open(string theme)
+    {
+        using MenuFixture fixture = new(theme);
+        Rect caption = fixture.TitleCaptionBounds;
+        SKRectI ink = fixture.CaptureTitleInkBounds();
+        fixture.Window.MouseMove(fixture.TitleCentre);
+        fixture.Layout();
+
+        fixture.Title.IsPointerOver.Should().BeTrue();
+        fixture.TitleCaptionBounds.Should().Be(caption);
+        fixture.CaptureTitleInkBounds().Should().Be(ink);
+        fixture.ClickTitle();
+
+        fixture.Title.IsSubMenuOpen.Should().BeTrue();
+        fixture.TitleCaptionBounds.Should().Be(caption);
+        fixture.CaptureTitleInkBounds().Should().Be(ink);
+        fixture.MovePointerToPopup(fixture.PopupItem);
+
+        fixture.TitleCaptionBounds.Should().Be(caption);
+        fixture.CaptureTitleInkBounds().Should().Be(ink);
+    }
+
+    [AvaloniaTest]
+    [TestCase("light")]
+    [TestCase("dark")]
+    [TestCase("custom")]
+    public void Actual_popup_should_anchor_to_the_title_edge_and_erase_only_its_connected_border(string theme)
+    {
+        using MenuFixture fixture = new(theme);
+        fixture.ClickTitle();
+        Popup popup = fixture.Title.GetVisualDescendants().OfType<Popup>().Single();
+        popup.PlacementTarget.Should().BeSameAs(fixture.Title);
+        popup.VerticalOffset.Should().Be(-1, "ToolStripDropDownItem BelowRight overlaps one border pixel");
+        NativeToolStripMenuPopupBorder border = fixture.PopupItem.GetVisualAncestors()
+            .OfType<NativeToolStripMenuPopupBorder>().Single();
+        border.ConnectedTitleWidth.Should().Be(fixture.Title.Bounds.Width);
+
+        TopLevel popupRoot = TopLevel.GetTopLevel(fixture.PopupItem)
+            ?? throw new AssertionException("The connected menu must render in its actual popup root.");
+
+        // Headless popups may render in the owner's OverlayPopupHost rather than
+        // a separate TopLevel. Inspect the actual border origin in that same frame.
+        Point origin = border.TranslatePoint(default, popupRoot)
+            ?? throw new AssertionException("The connected border must have an actual frame coordinate.");
+        int x = (int)origin.X;
+        int y = (int)origin.Y;
+        using SKBitmap pixels = fixture.Capture(popupRoot);
+        SKColor background = ToSkColor(fixture.ResourceColor("GitExtensionsMenuRenderedBackgroundBrush"));
+        SKColor outline = ToSkColor(fixture.ResourceColor("GitExtensionsMenuRenderedBorderBrush"));
+        pixels.GetPixel(x, y).Should().Be(outline);
+        pixels.GetPixel(x + 1, y).Should().Be(background);
+        pixels.GetPixel(x + (int)fixture.Title.Bounds.Width - 2, y).Should().Be(background);
+        pixels.GetPixel(x + (int)fixture.Title.Bounds.Width, y).Should().Be(outline);
+    }
+
+    [AvaloniaTest]
+    [TestCase("light")]
+    [TestCase("dark")]
+    [TestCase("custom")]
+    public void Context_popup_hover_should_use_Professional_native_selection_without_moving_or_recoloring_the_caption(string theme)
+    {
+        using MenuFixture fixture = new(theme);
+        MenuItem command = new() { Header = "_Context command" };
+        SourceControls.ContextMenuStrip menu = new() { Items = { command } };
+        menu.Classes.Add("gitextensions-toolstrip-context-menu");
+        fixture.Window.ContextMenu = menu;
+        menu.Open(fixture.Window);
+        fixture.Layout();
+        ContentPresenter caption = command.GetVisualDescendants().OfType<ContentPresenter>()
+            .Single(part => part.Name == "PART_HeaderPresenter");
+        Rect allocation = caption.Bounds;
+        Color foreground = GetColor(caption.Foreground);
+        fixture.MovePointerToPopup(command);
+
+        command.IsPointerOver.Should().BeTrue();
+        Border selection = command.GetVisualDescendants().OfType<Border>()
+            .Single(part => part.Name == "PART_NativeSelectionBorder");
+        selection.IsVisible.Should().BeTrue();
+        selection.Margin.Should().Be(new Thickness(2, 0, 1, 0));
+        GetColor(selection.Background).Should().Be(fixture.ResourceColor("GitExtensionsNativeMenuSelectedBackgroundBrush"));
+        GetColor(selection.BorderBrush).Should().Be(fixture.ResourceColor("GitExtensionsNativeMenuSelectedBorderBrush"));
+        GetColor(caption.Foreground).Should().Be(foreground);
+        caption.Bounds.Should().Be(allocation);
+        Color background = fixture.ResourceColor("GitExtensionsNativeMenuSelectedBackgroundBrush");
+        background.Should().Be(theme == "dark" ? Color.Parse("#2F4159") : Color.Parse("#B3D7F3"),
+            "ProfessionalColorTable uses the native system Window/Highlight blend, not CSS Highlight");
+        menu.Close();
     }
 
     [AvaloniaTest]
@@ -395,6 +488,18 @@ public sealed class MainWindowMenuChromeTests
         public Border TitleChrome => Title.GetVisualDescendants().OfType<Border>()
             .Single(border => border.Name == "PART_LayoutRoot");
 
+        public Rect TitleCaptionBounds
+        {
+            get
+            {
+                ContentPresenter presenter = Title.GetVisualDescendants().OfType<ContentPresenter>()
+                    .Single(part => part.Name == "PART_HeaderPresenter");
+                Point point = presenter.TranslatePoint(default, Window)
+                    ?? throw new AssertionException("The caption must retain its actual owner coordinate.");
+                return new Rect(point, presenter.Bounds.Size);
+            }
+        }
+
         public Color ResourceColor(string key)
             => Window.TryFindResource(key, Window.ActualThemeVariant, out object? resource)
                 ? GetColor(resource as IBrush)
@@ -411,8 +516,10 @@ public sealed class MainWindowMenuChromeTests
 
         public void AssertOpenTitleChrome()
         {
-            GetColor(TitleChrome.Background).Should().Be(ResourceColor("GitExtensionsMenuRenderedBackgroundBrush"));
-            GetColor(TitleChrome.BorderBrush).Should().Be(ResourceColor("GitExtensionsMenuRenderedBorderBrush"));
+            Window.TryFindResource("GitExtensionsNativeMenuOpenBackgroundBrush", Window.ActualThemeVariant, out object? background)
+                .Should().BeTrue();
+            TitleChrome.Background.Should().BeSameAs(background);
+            GetColor(TitleChrome.BorderBrush).Should().Be(ResourceColor("GitExtensionsNativeMenuOpenBorderBrush"));
             TitleChrome.BorderThickness.Should().Be(new Thickness(1, 1, 1, 0));
         }
 
@@ -441,9 +548,39 @@ public sealed class MainWindowMenuChromeTests
             Window.UpdateLayout();
         }
 
-        public SKBitmap CaptureOwner()
+        public SKRectI CaptureTitleInkBounds()
         {
-            using WriteableBitmap frame = Window.CaptureRenderedFrame()
+            using SKBitmap pixels = CaptureOwner();
+            Point origin = Title.TranslatePoint(default, Window)
+                ?? throw new AssertionException("The caption must render within its actual menu title.");
+            SKColor foreground = ToSkColor(ResourceColor("GitExtensionsWindowTextBrush"));
+            int left = pixels.Width;
+            int top = pixels.Height;
+            int right = 0;
+            int bottom = 0;
+            for (int y = (int)origin.Y + 1; y < (int)(origin.Y + Title.Bounds.Height) - 1; y++)
+            {
+                for (int x = (int)origin.X + 1; x < (int)(origin.X + Title.Bounds.Width) - 1; x++)
+                {
+                    if (pixels.GetPixel(x, y) == foreground)
+                    {
+                        left = Math.Min(left, x);
+                        top = Math.Min(top, y);
+                        right = Math.Max(right, x + 1);
+                        bottom = Math.Max(bottom, y + 1);
+                    }
+                }
+            }
+
+            right.Should().BeGreaterThan(left, "the actual title frame must contain caption ink");
+            return new SKRectI(left, top, right, bottom);
+        }
+
+        public SKBitmap CaptureOwner() => Capture(Window);
+
+        public SKBitmap Capture(TopLevel root)
+        {
+            using WriteableBitmap frame = root.CaptureRenderedFrame()
                 ?? throw new AssertionException("The actual open menu owner must render a frame.");
             using MemoryStream stream = new();
             frame.Save(stream, PngBitmapEncoderOptions.Default);

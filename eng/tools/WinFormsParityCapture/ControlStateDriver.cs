@@ -27,47 +27,59 @@ internal sealed class ControlStateDriver : IDisposable
     public static ControlStateDriver Apply(Control root, CaptureStatePlan state)
     {
         ControlStateDriver driver = new(root);
-        driver.ApplyRequestedSize(state);
-        object? target = state.TargetField is null ? root : FindFieldValue(root, state.TargetField);
-        if (target is null)
+        try
         {
-            throw new CaptureStateUnsupportedException($"Field '{state.TargetField}' was not found.");
-        }
+            driver.ApplyRequestedSize(state);
+            object? target = state.TargetField is null ? root : FindFieldValue(root, state.TargetField);
+            if (target is null)
+            {
+                throw new CaptureStateUnsupportedException($"Field '{state.TargetField}' was not found.");
+            }
 
-        switch (state.Kind)
+            switch (state.Kind)
+            {
+                case CaptureStateKind.Normal:
+                    break;
+                case CaptureStateKind.Focus:
+                    driver.Focus(target);
+                    break;
+                case CaptureStateKind.Disabled:
+                    driver.Disable(target);
+                    break;
+                case CaptureStateKind.ReadOnly:
+                    driver.MakeReadOnly(target);
+                    break;
+                case CaptureStateKind.Checked:
+                    driver.Check(target);
+                    break;
+                case CaptureStateKind.Expanded:
+                    driver.Expand(target);
+                    break;
+                case CaptureStateKind.Hover:
+                    driver.Hover(target);
+                    break;
+                case CaptureStateKind.Pressed:
+                    driver.Press(target);
+                    break;
+                case CaptureStateKind.MenuOpen:
+                    driver.OpenMenu(target);
+                    break;
+                case CaptureStateKind.MenuOpenHoveredOwner:
+                    driver.Hover(target);
+                    driver.OpenMenu(target);
+                    break;
+                default:
+                    throw new CaptureStateUnsupportedException($"State kind '{state.Kind}' is not implemented.");
+            }
+
+            PumpEvents();
+            return driver;
+        }
+        catch
         {
-            case CaptureStateKind.Normal:
-                break;
-            case CaptureStateKind.Focus:
-                driver.Focus(target);
-                break;
-            case CaptureStateKind.Disabled:
-                driver.Disable(target);
-                break;
-            case CaptureStateKind.ReadOnly:
-                driver.MakeReadOnly(target);
-                break;
-            case CaptureStateKind.Checked:
-                driver.Check(target);
-                break;
-            case CaptureStateKind.Expanded:
-                driver.Expand(target);
-                break;
-            case CaptureStateKind.Hover:
-                driver.Hover(target);
-                break;
-            case CaptureStateKind.Pressed:
-                driver.Press(target);
-                break;
-            case CaptureStateKind.MenuOpen:
-                driver.OpenMenu(target);
-                break;
-            default:
-                throw new CaptureStateUnsupportedException($"State kind '{state.Kind}' is not implemented.");
+            driver.Dispose();
+            throw;
         }
-
-        PumpEvents();
-        return driver;
     }
 
     private void ApplyRequestedSize(CaptureStatePlan state)
@@ -368,8 +380,14 @@ internal sealed class ControlStateDriver : IDisposable
 
     private void Hover(object target)
     {
+        OpenPointerOwner(target);
         (Control mouseTarget, Point mousePoint) = FindPointerTarget(target, "hover");
         Point originalCursorPosition = NativeMethods.GetCursorPosition();
+        _restoreActions.Add(() =>
+        {
+            NativeMethods.SendMouseMessage(mouseTarget.Handle, NativeMethods.WmMouseLeave, 0, 0);
+            NativeMethods.SetCursorPosition(originalCursorPosition);
+        });
         NativeMethods.SetCursorPosition(mouseTarget.PointToScreen(mousePoint));
         NativeMethods.SendMouseMessage(mouseTarget.Handle, NativeMethods.WmMouseMove, mousePoint.X, mousePoint.Y);
         PumpEvents();
@@ -383,12 +401,30 @@ internal sealed class ControlStateDriver : IDisposable
                 throw new CaptureStateUnsupportedException("WinForms did not retain the requested toolbar hover state.");
             }
         }
+    }
 
-        _restoreActions.Add(() =>
+    private void OpenPointerOwner(object target)
+    {
+        if (target is not ToolStripItem { Owner: ToolStripDropDown { Visible: false } popup })
         {
-            NativeMethods.SendMouseMessage(mouseTarget.Handle, NativeMethods.WmMouseLeave, 0, 0);
-            NativeMethods.SetCursorPosition(originalCursorPosition);
-        });
+            return;
+        }
+
+        // Menu rows are populated and laid out by the real opening route. Hovering
+        // their hidden owner cannot establish the state or expose a capture surface.
+        if (popup is ContextMenuStrip contextMenu)
+        {
+            OpenMenu(contextMenu);
+        }
+        else if (popup.OwnerItem is ToolStripDropDownItem owner)
+        {
+            OpenPointerOwner(owner);
+            OpenMenu(owner);
+        }
+        else
+        {
+            throw new CaptureStateUnsupportedException("The hover row has no supported popup owner.");
+        }
     }
 
     private static (Control Control, Point Point) FindPointerTarget(object target, string state)

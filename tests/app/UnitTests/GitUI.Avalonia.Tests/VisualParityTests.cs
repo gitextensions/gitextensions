@@ -625,7 +625,8 @@ public sealed class VisualParityTests
                     }
 
                     secondaryButton.Bounds.Height.Should().Be(itemHeight);
-                    arrow.Bounds.Size.Should().Be(new Size(7, 5));
+                    arrow.Bounds.Size.Should().Be(splitButton is NativeToolStripSplitButton { UseNativeToolStripLayout: true }
+                        ? new Size(5, 3) : new Size(7, 5));
                 }
 
                 IconSplitButton branchSelect = form.FindControl<IconSplitButton>("branchSelect")!;
