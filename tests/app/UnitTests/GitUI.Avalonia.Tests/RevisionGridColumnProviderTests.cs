@@ -157,11 +157,13 @@ public sealed class RevisionGridColumnProviderTests
                 Grid row = control.GetVisualDescendants()
                     .OfType<Grid>()
                     .Single(grid => grid.Classes.Contains("revision-row"));
+                double expectedRowHeight = RevisionGridControl.GetRowHeight(control);
+                row.Bounds.Height.Should().Be(expectedRowHeight);
                 row.ColumnDefinitions.Select(column => column.Width).Should().Equal(
                     new GridLength(22),
                     new GridLength(1, GridUnitType.Star),
                     new GridLength(50),
-                    new GridLength(26),
+                    new GridLength(expectedRowHeight),
                     new GridLength(0),
                     new GridLength(130),
                     new GridLength(60),

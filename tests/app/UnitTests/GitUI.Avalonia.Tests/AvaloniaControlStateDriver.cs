@@ -530,29 +530,42 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
         if (target is ComboBox comboBox)
         {
-            if (comboBox.ItemCount == 0)
-            {
-                throw new AvaloniaCaptureStateUnsupportedException("The ComboBox popup requires a populated control.");
-            }
-
             bool comboPrevious = comboBox.IsDropDownOpen;
-            comboBox.IsDropDownOpen = true;
-            Dispatcher.UIThread.RunJobs();
-            if (!comboBox.IsDropDownOpen)
+            try
             {
-                throw new AvaloniaCaptureStateUnsupportedException("The requested ComboBox popup declined to open.");
-            }
+                // The source branch filter populates its list in DropDown. Let the
+                // twin's real DropDownOpened handler run before judging its items.
+                comboBox.IsDropDownOpen = true;
+                Dispatcher.UIThread.RunJobs();
+                if (comboBox.ItemCount == 0)
+                {
+                    throw new AvaloniaCaptureStateUnsupportedException(
+                        "The requested ComboBox popup remained unpopulated after opening.");
+                }
 
-            TrackExternalTopLevels(comboBox);
-            if (_externalTopLevels.Count == 0 && _popupSurfaceRoots.Count == 0)
+                if (!comboBox.IsDropDownOpen)
+                {
+                    throw new AvaloniaCaptureStateUnsupportedException("The requested ComboBox popup declined to open.");
+                }
+
+                TrackExternalTopLevels(comboBox);
+                if (_externalTopLevels.Count == 0 && _popupSurfaceRoots.Count == 0)
+                {
+                    throw new AvaloniaCaptureStateUnsupportedException(
+                        "The ComboBox opened without exposing a rendered popup surface.");
+                }
+
+                _restoreActions.Add(() => comboBox.IsDropDownOpen = comboPrevious);
+                return;
+            }
+            catch
             {
+                // Apply cannot return a disposable driver on failure, so this owned
+                // popup also needs its normal rollback on the unsupported path.
                 comboBox.IsDropDownOpen = comboPrevious;
-                throw new AvaloniaCaptureStateUnsupportedException(
-                    "The ComboBox opened without exposing a rendered popup surface.");
+                Dispatcher.UIThread.RunJobs();
+                throw;
             }
-
-            _restoreActions.Add(() => comboBox.IsDropDownOpen = comboPrevious);
-            return;
         }
 
         if (target is ContextMenu contextMenu)

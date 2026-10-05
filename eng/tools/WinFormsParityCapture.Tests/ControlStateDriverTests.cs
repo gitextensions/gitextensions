@@ -147,6 +147,59 @@ public sealed class ControlStateDriverTests
         button.Selected.Should().BeTrue();
     }
 
+    [TestCase(false)]
+    [TestCase(true)]
+    [Apartment(ApartmentState.STA)]
+    [Category("P8_6i")]
+    public void Apply_should_allow_actual_DropDown_population_and_restore_genuinely_empty_popups(bool populateOnOpening)
+    {
+        using Form form = new() { ClientSize = new Size(300, 200) };
+        using ComboBox combo = new() { Name = "lazyCombo", Width = 200 };
+        int openingCount = 0;
+        combo.DropDown += (_, _) =>
+        {
+            openingCount++;
+            if (populateOnOpening)
+            {
+                combo.Items.AddRange(["feature/filter", "main"]);
+            }
+        };
+        form.Controls.Add(combo);
+        form.Show();
+        combo.IsHandleCreated.Should().BeTrue();
+        combo.Items.Cast<object>().Should().BeEmpty();
+        combo.DroppedDown.Should().BeFalse();
+        CaptureStatePlan state = new()
+        {
+            Id = "lazy-combo.open",
+            Kind = CaptureStateKind.MenuOpen,
+            TargetField = combo.Name,
+        };
+        if (populateOnOpening)
+        {
+            using (ControlStateDriver driver = ControlStateDriver.Apply(form, state))
+            {
+                combo.DroppedDown.Should().BeTrue();
+                combo.Items.Cast<string>().Should().Equal("feature/filter", "main");
+                ComboBoxPopup popup = driver.ComboBoxPopups.Should().ContainSingle().Which;
+                popup.Owner.Should().BeSameAs(combo);
+                popup.Bounds.Width.Should().BeGreaterThan(0);
+                popup.Bounds.Height.Should().BeGreaterThan(0);
+            }
+
+            combo.DroppedDown.Should().BeFalse();
+        }
+        else
+        {
+            Action capture = () => ControlStateDriver.Apply(form, state);
+            capture.Should().Throw<CaptureStateUnsupportedException>().WithMessage("*remained unpopulated after opening*");
+            combo.Items.Cast<object>().Should().BeEmpty();
+            combo.DroppedDown.Should().BeFalse();
+        }
+
+        openingCount.Should().Be(1, "the driver must observe the real native DropDown event before deciding whether the lazy list is supported");
+    }
+
     private sealed class MenuOwner : UserControl
     {
         private readonly ContextMenuStrip _menu;

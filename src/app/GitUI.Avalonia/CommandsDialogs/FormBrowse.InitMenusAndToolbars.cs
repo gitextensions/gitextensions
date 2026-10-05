@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -50,6 +51,22 @@ partial class FormBrowse
         FillUserShells(defaultShell: BashShell.ShellName);
 
         InsertFetchPullShortcuts();
+
+        foreach (TemplatedControl button in ToolStripMain.Items.OfType<TemplatedControl>())
+        {
+            MenuFlyout? menu = button switch
+            {
+                SplitButton split => split.Flyout as MenuFlyout,
+                DropDownButton dropDown => dropDown.Flyout as MenuFlyout,
+                _ => null,
+            };
+            if (menu is not null)
+            {
+                // Native ToolStrip popups extend from an item edge, not its center.
+                // Resolve the source direction when opening so live RTL still applies.
+                menu.Opening += (_, _) => WinFormsToolStripMenuSizer.ApplyToolbarDropDownPlacement(menu, button);
+            }
+        }
 
         MenuFlyout pullDropDown = (MenuFlyout)toolStripButtonPull.Flyout!;
         pullDropDown.Opening += (_, _) => UpdateFetchAllVisibility();
