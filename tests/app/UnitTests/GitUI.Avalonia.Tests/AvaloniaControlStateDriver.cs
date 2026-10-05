@@ -61,65 +61,77 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         TopLevel topLevel = TopLevel.GetTopLevel(root)
             ?? throw new AvaloniaCaptureStateUnsupportedException("The control is not attached to a headless top level.");
         AvaloniaControlStateDriver driver = new(root, topLevel);
-        driver.ApplyRequestedSize(state);
-        object? target = state.TargetField is null ? root : FindFieldValue(root, state.TargetField);
-        if (target is null)
+        try
         {
-            throw new AvaloniaCaptureStateUnsupportedException($"Field '{state.TargetField}' was not found.");
+            driver.ApplyRequestedSize(state);
+            object? target = state.TargetField is null ? root : FindFieldValue(root, state.TargetField);
+            if (target is null)
+            {
+                throw new AvaloniaCaptureStateUnsupportedException($"Field '{state.TargetField}' was not found.");
+            }
+
+            target = ResolveFrameworkSplitTarget(root, target);
+
+            if (state.Kind != CaptureStateKind.Focus)
+            {
+                driver.FocusSourceDefault();
+            }
+
+            switch (state.Kind)
+            {
+                case CaptureStateKind.Normal:
+                    if (root is EditNetSpell editNetSpell)
+                    {
+                        editNetSpell.Focus();
+                    }
+
+                    break;
+                case CaptureStateKind.Focus:
+                    driver.Focus(target);
+                    break;
+                case CaptureStateKind.Disabled:
+                    driver.Disable(target);
+                    break;
+                case CaptureStateKind.ReadOnly:
+                    driver.MakeReadOnly(target);
+                    break;
+                case CaptureStateKind.Checked:
+                    driver.Check(target);
+                    break;
+                case CaptureStateKind.Expanded:
+                    driver.Expand(target);
+                    break;
+                case CaptureStateKind.Hover:
+                    driver.Hover(target);
+                    break;
+                case CaptureStateKind.Pressed:
+                    driver.Press(target);
+                    break;
+                case CaptureStateKind.MenuOpen:
+                    driver.OpenMenu(target);
+                    break;
+                case CaptureStateKind.MenuOpenHoveredOwner:
+                    driver.Hover(target);
+                    driver.OpenMenu(target, neutralizePointer: false);
+                    break;
+                default:
+                    throw new AvaloniaCaptureStateUnsupportedException($"State kind '{state.Kind}' is not implemented.");
+            }
+
+            if (state.Kind == CaptureStateKind.Disabled
+                && topLevel.FocusManager?.GetFocusedElement() is null)
+            {
+                driver.FocusSourceDefault();
+            }
+
+            Dispatcher.UIThread.RunJobs();
+            return driver;
         }
-
-        target = ResolveFrameworkSplitTarget(root, target);
-
-        if (state.Kind != CaptureStateKind.Focus)
+        catch
         {
-            driver.FocusSourceDefault();
+            driver.Dispose();
+            throw;
         }
-
-        switch (state.Kind)
-        {
-            case CaptureStateKind.Normal:
-                if (root is EditNetSpell editNetSpell)
-                {
-                    editNetSpell.Focus();
-                }
-
-                break;
-            case CaptureStateKind.Focus:
-                driver.Focus(target);
-                break;
-            case CaptureStateKind.Disabled:
-                driver.Disable(target);
-                break;
-            case CaptureStateKind.ReadOnly:
-                driver.MakeReadOnly(target);
-                break;
-            case CaptureStateKind.Checked:
-                driver.Check(target);
-                break;
-            case CaptureStateKind.Expanded:
-                driver.Expand(target);
-                break;
-            case CaptureStateKind.Hover:
-                driver.Hover(target);
-                break;
-            case CaptureStateKind.Pressed:
-                driver.Press(target);
-                break;
-            case CaptureStateKind.MenuOpen:
-                driver.OpenMenu(target);
-                break;
-            default:
-                throw new AvaloniaCaptureStateUnsupportedException($"State kind '{state.Kind}' is not implemented.");
-        }
-
-        if (state.Kind == CaptureStateKind.Disabled
-            && topLevel.FocusManager?.GetFocusedElement() is null)
-        {
-            driver.FocusSourceDefault();
-        }
-
-        Dispatcher.UIThread.RunJobs();
-        return driver;
     }
 
     private void FocusSourceDefault()
@@ -501,9 +513,11 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
     private void Hover(object target)
     {
+        OpenPointerOwner(target);
         Control control = RequireVisibleControl(target, "hover");
         IInputElement? focusedElement = _topLevel.FocusManager?.GetFocusedElement();
         Point point = GetCenter(control);
+        _restoreActions.Add(() => _topLevel.MouseMove(new Point(-1, -1), RawInputModifiers.None));
         _topLevel.MouseMove(point, RawInputModifiers.None);
         Dispatcher.UIThread.RunJobs();
         if (!control.IsPointerOver)
@@ -516,11 +530,60 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         {
             focusedControl.Focus();
         }
-
-        _restoreActions.Add(() => _topLevel.MouseMove(new Point(-1, -1), RawInputModifiers.None));
     }
 
-    private void OpenMenu(object target)
+    private void OpenPointerOwner(object target)
+    {
+        if (target is not MenuItem row)
+        {
+            return;
+        }
+
+        // A declared popup row is not yet a visual child. Open its actual owning
+        // menu before driving input, retaining the original handlers and collection.
+        ContextMenu? contextMenu = EnumerateLogicalControls(_root)
+            .Select(control => control.ContextMenu)
+            .OfType<ContextMenu>()
+            .FirstOrDefault(menu => HasMenuRow(menu, row));
+        if (contextMenu is not null && !contextMenu.IsOpen)
+        {
+            OpenMenu(contextMenu);
+        }
+
+        ItemsControl? owningMenu = contextMenu;
+        owningMenu ??= EnumerateLogicalControls(_root).OfType<Menu>().FirstOrDefault(menu => HasMenuRow(menu, row));
+        MenuItem[] owners = owningMenu is null
+            ? row.GetLogicalAncestors().OfType<MenuItem>().Reverse().ToArray()
+            : EnumerateMenuOwners(owningMenu, row).ToArray();
+        foreach (MenuItem owner in owners)
+        {
+            if (!owner.IsSubMenuOpen)
+            {
+                OpenMenu(owner);
+            }
+        }
+    }
+
+    private static IEnumerable<MenuItem> EnumerateMenuOwners(ItemsControl owner, MenuItem row)
+    {
+        // Closed submenu containers have no logical ancestry until their popup opens.
+        foreach (MenuItem child in owner.Items.OfType<MenuItem>().Where(child => HasMenuRow(child, row)))
+        {
+            yield return child;
+            foreach (MenuItem descendant in EnumerateMenuOwners(child, row))
+            {
+                yield return descendant;
+            }
+        }
+    }
+
+    private static bool HasMenuRow(ItemsControl owner, MenuItem expected)
+    {
+        return owner.Items.Any(item => ReferenceEquals(item, expected)
+            || (item is ItemsControl child && HasMenuRow(child, expected)));
+    }
+
+    private void OpenMenu(object target, bool neutralizePointer = true)
     {
         if (target is ListBox { Name: "AutoComplete" } && _root is EditNetSpell editNetSpell)
         {
@@ -574,6 +637,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             Control owner = EnumerateLogicalControls(_root)
                 .FirstOrDefault(control => ReferenceEquals(control.ContextMenu, contextMenu))
                 ?? throw new AvaloniaCaptureStateUnsupportedException("The ContextMenu is not attached to a control in the captured view.");
+            _restoreActions.Add(contextMenu.Close);
             if (_root is EditNetSpell spellEditor)
             {
                 spellEditor.CheckSpelling();
@@ -598,12 +662,12 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
                 _referencePlacedPopupRoot = _popupSurfaceRoots[previousPopupCount];
             }
 
-            _restoreActions.Add(contextMenu.Close);
             return;
         }
 
         if (target is Control { ContextMenu: { } attachedContextMenu })
         {
+            _restoreActions.Add(attachedContextMenu.Close);
             ((Control)target).RaiseEvent(new ContextRequestedEventArgs());
             Dispatcher.UIThread.RunJobs();
             RequireOpenContextMenu(attachedContextMenu);
@@ -611,7 +675,6 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             attachedContextMenu.Open((Control)target);
             Dispatcher.UIThread.RunJobs();
             TrackExternalTopLevels(attachedContextMenu);
-            _restoreActions.Add(attachedContextMenu.Close);
             return;
         }
 
@@ -669,12 +732,12 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         {
             Control owner = EnumerateLogicalControls(_root)
                 .First(control => ReferenceEquals(control.ContextMenu, owningContextMenu));
+            _restoreActions.Add(owningContextMenu.Close);
             owner.RaiseEvent(new ContextRequestedEventArgs());
             Dispatcher.UIThread.RunJobs();
             RequireOpenContextMenu(owningContextMenu);
             owningContextMenu.Open(owner);
             Dispatcher.UIThread.RunJobs();
-            _restoreActions.Add(owningContextMenu.Close);
         }
 
         if (owningContextMenu is not null
@@ -724,9 +787,14 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
         // parity-scaffolding: A headless overlay can open underneath the last synthetic pointer
         // position and select a dynamic child that the equivalent WinForms ShowDropDown leaves idle.
-        _topLevel.MouseMove(new Point(-1, -1), RawInputModifiers.None);
-        Dispatcher.UIThread.RunJobs();
+        if (neutralizePointer)
+        {
+            _topLevel.MouseMove(new Point(-1, -1), RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+        }
+
         bool previous = menuItem.IsSubMenuOpen;
+        _restoreActions.Add(() => menuItem.IsSubMenuOpen = previous);
         menuItem.IsSubMenuOpen = true;
         Dispatcher.UIThread.RunJobs();
         if (!menuItem.IsSubMenuOpen)
@@ -740,11 +808,13 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
                 "The requested menu item was not realized in the opened menu, so its popup surface cannot be captured honestly.");
         }
 
-        _topLevel.MouseMove(new Point(-1, -1), RawInputModifiers.None);
-        Dispatcher.UIThread.RunJobs();
+        if (neutralizePointer)
+        {
+            _topLevel.MouseMove(new Point(-1, -1), RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+        }
 
         TrackExternalTopLevels(menuItem);
-        _restoreActions.Add(() => menuItem.IsSubMenuOpen = previous);
 
         static bool ContainsMenuItem(ItemsControl owner, MenuItem expected)
         {

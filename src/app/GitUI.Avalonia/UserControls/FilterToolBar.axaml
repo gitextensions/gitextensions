@@ -17,10 +17,6 @@
                      DropDownButton.gitextensions-toolbar-button">
       <Setter Property="compat:NativeToolStrip.ItemPreferredHeight" Value="20" />
     </Style>
-    <Style Selector="DropDownButton.gitextensions-toolbar-button.gitextensions-icon-only">
-      <Setter Property="Width" Value="29" />
-      <Setter Property="MinWidth" Value="29" />
-    </Style>
     <Style Selector="Border.gitextensions-toolbar-separator">
       <Setter Property="Width" Value="6" />
       <Setter Property="Margin" Value="0" />

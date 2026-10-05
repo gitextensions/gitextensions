@@ -15,6 +15,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Compat;
 using GitUI.Editor;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -130,6 +131,28 @@ public sealed class FileHistoryTests
         form.FindControl<MenuItem>("manipulateCommitToolStripMenuItem").Should().NotBeNull();
         form.FindControl<MenuItem>("revertCommitToolStripMenuItem").Should().NotBeNull();
         form.FindControl<MenuItem>("cherryPickThisCommitToolStripMenuItem").Should().NotBeNull();
+    }
+
+    [AvaloniaTest]
+    [TestCase("ShowFullHistory")]
+    [TestCase("toolStripBlameOptions")]
+    public void FormFileHistory_icon_dropdowns_should_retain_source_owner_paint_and_image_bounds_with_actual_popup_hover(string fieldName)
+    {
+        FormFileHistory form = new() { Width = 1200, Height = 700 };
+        try
+        {
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
+            form.UpdateLayout();
+            IconDropDownButton button = form.FindControl<IconDropDownButton>(fieldName)
+                ?? throw new AssertionException($"The original {fieldName} owner is missing.");
+            NativeToolStripDropDownButtonTests.AssertSourceConsumer(form, button);
+        }
+        finally
+        {
+            form.Close();
+            Dispatcher.UIThread.RunJobs();
+        }
     }
 
     [AvaloniaTest]

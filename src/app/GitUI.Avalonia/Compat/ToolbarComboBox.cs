@@ -30,6 +30,14 @@ public class ToolbarComboBox : ComboBox
     public static readonly StyledProperty<double> DropDownWidthProperty =
         AvaloniaProperty.Register<ToolbarComboBox, double>(nameof(DropDownWidth), double.NaN);
 
+    static ToolbarComboBox()
+    {
+        // ToolStripComboBox.DefaultMargin applies before any owner is measured.
+        // A metadata default lets the native owner's dropdown margin and explicit
+        // consumer assignments keep their original higher-priority behavior.
+        MarginProperty.OverrideDefaultValue<ToolbarComboBox>(new Thickness(1, 0, 1, 0));
+    }
+
     public ToolbarComboBox()
     {
         Classes.Add("gitextensions-toolbar-input");

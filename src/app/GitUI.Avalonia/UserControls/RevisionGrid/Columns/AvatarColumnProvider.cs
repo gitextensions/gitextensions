@@ -32,10 +32,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         _revisionGridView = revisionGridView;
         _avatarProvider = avatarProvider;
         _avatarCacheCleaner = avatarCacheCleaner;
-        _ = new CacheRefreshSubscription(
-            _revisionGridView,
-            _avatarCacheCleaner,
-            () => Interlocked.Increment(ref _cacheVersion));
+        _ = new CacheRefreshSubscription(this, _avatarCacheCleaner);
     }
 
     public override void ApplySettings()
@@ -256,26 +253,24 @@ internal sealed class AvatarColumnProvider : ColumnProvider
     private sealed class CacheRefreshSubscription
     {
         private readonly IAvatarCacheCleaner _avatarCacheCleaner;
-        private readonly Action _invalidateCacheVersion;
-        private readonly WeakReference<RevisionGridControl> _revisionGridView;
+        private readonly WeakReference<AvatarColumnProvider> _columnProvider;
 
         public CacheRefreshSubscription(
-            RevisionGridControl revisionGridView,
-            IAvatarCacheCleaner avatarCacheCleaner,
-            Action invalidateCacheVersion)
+            AvatarColumnProvider columnProvider,
+            IAvatarCacheCleaner avatarCacheCleaner)
         {
-            _revisionGridView = new WeakReference<RevisionGridControl>(revisionGridView);
+            // The shared cleaner must not retain a closed grid through an instance callback.
+            _columnProvider = new WeakReference<AvatarColumnProvider>(columnProvider);
             _avatarCacheCleaner = avatarCacheCleaner;
-            _invalidateCacheVersion = invalidateCacheVersion;
             _avatarCacheCleaner.CacheCleared += OnCacheCleared;
         }
 
         private void OnCacheCleared(object? sender, EventArgs e)
         {
-            if (_revisionGridView.TryGetTarget(out RevisionGridControl? revisionGridView))
+            if (_columnProvider.TryGetTarget(out AvatarColumnProvider? columnProvider))
             {
-                _invalidateCacheVersion();
-                revisionGridView.RefreshRealizedRows();
+                Interlocked.Increment(ref columnProvider._cacheVersion);
+                columnProvider._revisionGridView.RefreshRealizedRows();
                 return;
             }
 

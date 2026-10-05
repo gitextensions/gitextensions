@@ -13,6 +13,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitUI;
 using GitUI.Compat;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -25,6 +26,79 @@ namespace GitExtensionsTests;
 [NonParallelizable]
 public sealed class FilterToolBarInteractionTests
 {
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Advanced_filter_tooltip_should_follow_the_actual_summary_without_suppressing_an_open_menu(bool openMenu)
+    {
+        bool branchFilterEnabled = AppSettings.BranchFilterEnabled;
+        bool showCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool showOnlyFirstParent = AppSettings.ShowOnlyFirstParent;
+        bool showReflogReferences = AppSettings.ShowReflogReferences;
+        bool showSimplifyByDecoration = AppSettings.ShowSimplifyByDecoration;
+        try
+        {
+            AppSettings.BranchFilterEnabled.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
+            AppSettings.ShowOnlyFirstParent = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.ShowSimplifyByDecoration = false;
+            using FilterFixture fixture = new();
+            (TemplatedControl owner, MenuFlyout menu) = fixture.Menu("tsbtnAdvancedFilter");
+            try
+            {
+                FilterChangedEventArgs empty = new(new FilterInfo());
+                empty.FilterSummary.Should().BeEmpty();
+                fixture.RevisionGridFilter.FilterChanged += Raise.EventWith(fixture.RevisionGridFilter, empty);
+                ToolTip.GetTip(owner).Should().BeNull("the source clears its Designer tooltip when no filter summary remains");
+                if (openMenu)
+                {
+                    menu.ShowAt(owner);
+                    fixture.Settle();
+                }
+
+                ToolTip.SetIsOpen(owner, true);
+                ToolTip.GetIsOpen(owner).Should().BeFalse("a source-empty tooltip must not cover the popup's first row");
+                FilterChangedEventArgs applied = new(new FilterInfo
+                {
+                    ByDateFrom = true,
+                    DateFrom = new DateTime(2026, 1, 2),
+                });
+                applied.FilterSummary.Should().NotBeEmpty();
+                fixture.RevisionGridFilter.FilterChanged += Raise.EventWith(fixture.RevisionGridFilter, applied);
+                ToolTip.GetTip(owner).Should().Be(applied.FilterSummary);
+                ToolTip.SetIsOpen(owner, true);
+                fixture.Settle();
+                ToolTip.GetIsOpen(owner).Should().BeTrue("the source permits a configured tooltip while its dropdown is open");
+                menu.IsOpen.Should().Be(openMenu);
+
+                fixture.RevisionGridFilter.FilterChanged += Raise.EventWith(fixture.RevisionGridFilter, empty);
+                fixture.Settle();
+                ToolTip.GetTip(owner).Should().BeNull();
+                ToolTip.GetIsOpen(owner).Should().BeFalse("clearing the summary must also close a tooltip already visible");
+                menu.IsOpen.Should().Be(openMenu);
+                menu.Hide();
+                fixture.Settle();
+                fixture.RevisionGridFilter.FilterChanged += Raise.EventWith(fixture.RevisionGridFilter, applied);
+                ToolTip.SetIsOpen(owner, true);
+                ToolTip.GetTip(owner).Should().Be(applied.FilterSummary);
+                ToolTip.GetIsOpen(owner).Should().BeTrue("closing the menu must leave summary tooltips available");
+            }
+            finally
+            {
+                ToolTip.SetIsOpen(owner, false);
+            }
+        }
+        finally
+        {
+            AppSettings.BranchFilterEnabled.Value = branchFilterEnabled;
+            AppSettings.ShowCurrentBranchOnly.Value = showCurrentBranchOnly;
+            AppSettings.ShowOnlyFirstParent = showOnlyFirstParent;
+            AppSettings.ShowReflogReferences.Value = showReflogReferences;
+            AppSettings.ShowSimplifyByDecoration = showSimplifyByDecoration;
+        }
+    }
+
     [AvaloniaTest]
     [TestCase(false)]
     [TestCase(true)]
@@ -440,7 +514,8 @@ public sealed class FilterToolBarInteractionTests
             Toolbar = new() { Width = 1000, VerticalAlignment = VerticalAlignment.Top };
             IGitModule module = Substitute.For<IGitModule>();
             module.IsValidGitWorkingDir().Returns(true);
-            Toolbar.Bind(() => module, Substitute.For<IRevisionGridFilter>());
+            RevisionGridFilter = Substitute.For<IRevisionGridFilter>();
+            Toolbar.Bind(() => module, RevisionGridFilter);
             IReadOnlyList<IGitRef> refs =
             [
                 new GitRef(module, ObjectId.Random(), "refs/heads/main"),
@@ -467,6 +542,8 @@ public sealed class FilterToolBarInteractionTests
         }
 
         public FilterToolBar Toolbar { get; }
+
+        public IRevisionGridFilter RevisionGridFilter { get; }
 
         public Window Window { get; }
 
