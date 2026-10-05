@@ -369,14 +369,23 @@ public sealed class AvatarTests
         AvatarColumnProvider.AvatarCell cell = new(provider);
 
         cell.Load("first@example.com", "First Author", cacheVersion: 0);
+        Task<byte[]?> firstLoad = cell.LastLoadTask
+            ?? throw new AssertionException("The first pending provider request must retain its presentation task.");
+        firstLoad.IsCompleted.Should().BeFalse();
         cell.Load("second@example.com", "Second Author", cacheVersion: 0);
+        Task<byte[]?> secondLoad = cell.LastLoadTask
+            ?? throw new AssertionException("The recycled row must retain its own pending presentation task.");
+        secondLoad.IsCompleted.Should().BeFalse();
         secondResult.SetResult(secondImageData);
-        await WaitUntilAsync(() => cell.Source is Bitmap);
-        Bitmap second = (Bitmap)cell.Source!;
+        await WaitUntilAsync(() => secondLoad.IsCompleted);
+        await secondLoad;
+        Bitmap second = cell.Source.Should().BeOfType<Bitmap>().Which;
+        second.Should().NotBeSameAs(GitUI.Properties.Images.User80,
+            "the placeholder is also a bitmap and must not be mistaken for the completed second request");
 
         firstResult.SetResult(firstImageData);
-        await WaitUntilAsync(() => firstResult.Task.IsCompleted);
-        Dispatcher.UIThread.RunJobs();
+        await WaitUntilAsync(() => firstLoad.IsCompleted);
+        await firstLoad;
 
         cell.Source.Should().BeSameAs(second);
     }

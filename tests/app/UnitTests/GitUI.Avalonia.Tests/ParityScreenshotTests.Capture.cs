@@ -780,6 +780,70 @@ public sealed partial class ParityScreenshotTests
 
     [AvaloniaTest]
     [Category(P02Category)]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Avalonia_state_driver_should_allow_actual_DropDown_population_and_restore_genuinely_empty_popups(bool populateOnOpening)
+    {
+        ComboBox comboBox = new() { Name = "cbxLazy", Width = 220 };
+        Window window = new() { Width = 320, Height = 180, Content = comboBox };
+        int openingCount = 0;
+        comboBox.DropDownOpened += (_, _) =>
+        {
+            openingCount++;
+            if (populateOnOpening)
+            {
+                comboBox.ItemsSource = new[] { "feature/filter", "main" };
+            }
+        };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            comboBox.ItemCount.Should().Be(0);
+            comboBox.IsDropDownOpen.Should().BeFalse();
+            CaptureStatePlan state = new()
+            {
+                Id = "lazy-combo.open",
+                Kind = CaptureStateKind.MenuOpen,
+                TargetField = comboBox.Name,
+            };
+            if (populateOnOpening)
+            {
+                using (AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(window, state))
+                {
+                    comboBox.IsDropDownOpen.Should().BeTrue();
+                    comboBox.Items.Cast<string>().Should().Equal("feature/filter", "main");
+                    Control popupRoot = driver.PopupSurfaceRoots.Should().ContainSingle().Subject;
+                    popupRoot.IsEffectivelyVisible.Should().BeTrue();
+                    popupRoot.Bounds.Width.Should().BeGreaterThan(0);
+                    popupRoot.Bounds.Height.Should().BeGreaterThan(0);
+                    using WriteableBitmap? frame = window.CaptureRenderedFrame();
+                    frame.Should().NotBeNull();
+                }
+
+                comboBox.IsDropDownOpen.Should().BeFalse();
+            }
+            else
+            {
+                Action capture = () => AvaloniaControlStateDriver.Apply(window, state);
+                capture.Should().Throw<AvaloniaCaptureStateUnsupportedException>()
+                    .WithMessage("*remained unpopulated after opening*");
+                comboBox.ItemCount.Should().Be(0);
+                comboBox.IsDropDownOpen.Should().BeFalse();
+            }
+
+            openingCount.Should().Be(1,
+                "the driver must observe the real DropDownOpened event before deciding whether a lazy list is supported");
+        }
+        finally
+        {
+            comboBox.IsDropDownOpen = false;
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
     public void Avalonia_state_driver_should_preserve_the_reference_context_menu_capture_point()
     {
         ContextMenuCaptureHost host = new();

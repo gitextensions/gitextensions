@@ -470,28 +470,45 @@ internal sealed class ControlStateDriver : IDisposable
 
         if (target is ComboBox comboBox)
         {
-            if (!comboBox.IsHandleCreated || comboBox.Items.Count == 0)
+            if (!comboBox.IsHandleCreated)
             {
-                throw new CaptureStateUnsupportedException("The ComboBox popup requires a created, populated control.");
+                throw new CaptureStateUnsupportedException("The ComboBox popup requires a created control.");
             }
 
             bool previous = comboBox.DroppedDown;
-            comboBox.DroppedDown = true;
-            PumpEvents();
-            if (!comboBox.DroppedDown)
+            try
             {
-                throw new CaptureStateUnsupportedException("The requested ComboBox popup declined to open.");
-            }
+                // The source branch filter populates its list in DropDown, not before
+                // that event. Let the real control run its opening handler first.
+                comboBox.DroppedDown = true;
+                PumpEvents();
+                if (comboBox.Items.Count == 0)
+                {
+                    throw new CaptureStateUnsupportedException("The requested ComboBox popup remained unpopulated after opening.");
+                }
 
-            Rectangle bounds = NativeMethods.GetComboBoxListRectangle(comboBox.Handle);
-            if (bounds.Width <= 0 || bounds.Height <= 0)
+                if (!comboBox.DroppedDown)
+                {
+                    throw new CaptureStateUnsupportedException("The requested ComboBox popup declined to open.");
+                }
+
+                Rectangle bounds = NativeMethods.GetComboBoxListRectangle(comboBox.Handle);
+                if (bounds.Width <= 0 || bounds.Height <= 0)
+                {
+                    throw new CaptureStateUnsupportedException("The native ComboBox popup has no drawable area.");
+                }
+
+                _comboBoxPopups.Add(new ComboBoxPopup(comboBox, bounds));
+                _restoreActions.Add(() => comboBox.DroppedDown = previous);
+                return;
+            }
+            catch
             {
-                throw new CaptureStateUnsupportedException("The native ComboBox popup has no drawable area.");
+                // Apply cannot return a disposable driver when the requested state is
+                // unsupported, so restore this owned popup on its failing path as well.
+                comboBox.DroppedDown = previous;
+                throw;
             }
-
-            _comboBoxPopups.Add(new ComboBoxPopup(comboBox, bounds));
-            _restoreActions.Add(() => comboBox.DroppedDown = previous);
-            return;
         }
 
         // parity-scaffolding: Capture the grid-owned ContextMenuStrip through its real popup surface.

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Automation;
@@ -1996,7 +1996,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 KnownColor.Menu);
             MenuItem item = new()
             {
-                Header = branch.Name,
+                // WinForms treats underscores literally; escape Avalonia's mnemonic marker only.
+                Header = branch.Name.Replace("_", "__", StringComparison.Ordinal),
                 Icon = new Image
                 {
                     Width = 16,
@@ -2004,10 +2005,13 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                     Source = (isBranchVisible ? Images.Branch : Images.EyeClosed).AdaptLightness(),
                 },
                 Foreground = isBranchVisible
-                    ? null
+                    ? branchSelect.Foreground
                     : new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(
                         DrawingColor.Silver.AdaptForeColor(menuBackColor))),
             };
+
+            // Source branch captions use the empty shortcut column even when checkout has a shortcut.
+            item.Classes.Add("gitextensions-menu-no-gesture");
             item.Classes.Add("gitextensions-branch-entry");
             item.Click += (_, _) => QueueBranchCheckout(branch.Name);
             BranchSelectFlyout.Items.Add(item);

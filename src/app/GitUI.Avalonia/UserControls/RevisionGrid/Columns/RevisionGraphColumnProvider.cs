@@ -4,7 +4,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -92,7 +91,9 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     {
         RenderGraphToCache(range, toRowIndex, rowHeight);
         cancellationToken.ThrowIfCancellationRequested();
-        await Dispatcher.UIThread.InvokeAsync(cancellationToken.ThrowIfCancellationRequested, DispatcherPriority.Render);
+
+        // Dispatching a no-op does not move this worker continuation onto the control's thread.
+        await _grid.SwitchToMainThreadAsync(cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
 
         _graphDisplayCache.CopyFrom(_graphRenderCache);
