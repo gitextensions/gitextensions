@@ -367,6 +367,8 @@ internal static class AvaloniaThemeResources
         resources["GitExtensionsToolStripSeparatorUseSystemVisualStyle"] = settings.UseSystemVisualStyle;
         SetBrush(resources, "GitExtensionsToolStripSeparatorDarkBrush", separatorDark);
         SetBrush(resources, "GitExtensionsToolStripSeparatorLightBrush", ResolveNativeSystemColor(isDark, KnownColor.ButtonHighlight));
+        SetBrush(resources, "GitExtensionsNativeToolStripGripDarkBrush", ResolveNativeSystemColor(isDark, KnownColor.ControlText));
+        SetBrush(resources, "GitExtensionsNativeToolStripGripLightBrush", ResolveNativeSystemColor(isDark, KnownColor.ButtonHighlight));
         DrawingColor nativeWindow = ResolveNativeSystemColor(isDark, KnownColor.Window);
         DrawingColor nativeHighlight = ResolveNativeSystemColor(isDark, KnownColor.Highlight);
 
@@ -396,6 +398,14 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsNativeToolStripSplitProfessionalOpenBorderBrush",
             BlendNativeColors(ResolveNativeSystemColor(isDark, KnownColor.ButtonShadow),
                 ResolveNativeSystemColor(isDark, KnownColor.ControlText), 20));
+
+        // MenuStrip and ContextMenuStrip default to Professional, even when a
+        // neighbouring toolbar uses System. Their paint uses native system colors,
+        // not configurable CSS Highlight; the item foreground still honors CSS.
+        SetBrush(resources, "GitExtensionsNativeMenuSelectedBackgroundBrush", BlendNativeColors(nativeWindow, nativeHighlight, 30));
+        SetBrush(resources, "GitExtensionsNativeMenuSelectedBorderBrush", nativeHighlight);
+        resources["GitExtensionsNativeMenuOpenBackgroundBrush"] = resources["GitExtensionsNativeToolStripSplitProfessionalOpenBrush"];
+        resources["GitExtensionsNativeMenuOpenBorderBrush"] = resources["GitExtensionsNativeToolStripSplitProfessionalOpenBorderBrush"];
         SetBrush(resources, "GitExtensionsRevisionAlternatingRowBrush", alternatingRow);
         SetBrush(resources, "GitExtensionsRevisionAuthoredBrush", ResolveAppColor(settings, AppColor.AuthoredHighlight));
         SetBrush(resources, "GitExtensionsRevisionSelectedSubjectBrush", isDark ? controlText : highlightText);

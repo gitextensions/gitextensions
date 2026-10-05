@@ -49,6 +49,9 @@ public sealed class NativeToolStripSplitButtonTests
             primary.Content.Should().BeSameAs(button.Content);
             primary.MinWidth.Should().Be(0);
             secondary.MinWidth.Should().Be(0);
+            PathIcon arrow = secondary.GetVisualDescendants().OfType<PathIcon>().Single();
+            arrow.Bounds.Size.Should().Be(new Size(5, 3));
+            arrow.TranslatePoint(default, button).Should().Be(new Point(dropdownBounds.X + 3, 10));
         }
         finally
         {
@@ -62,6 +65,7 @@ public sealed class NativeToolStripSplitButtonTests
     public void Native_icon_should_paint_at_source_two_by_three_origin_without_layout_border_inset(bool rightToLeft)
     {
         NativeToolStripSplitButton button = NewButton(32, rightToLeft);
+        button.Foreground = Brushes.Black;
         Window window = NewWindow(button);
         try
         {
@@ -77,6 +81,8 @@ public sealed class NativeToolStripSplitButtonTests
             ReadPixel(frame, new PixelPoint(first + 15, 18)).Should().Be(Colors.Magenta);
             ReadPixel(frame, new PixelPoint(first - 1, 3)).Should().Be(Colors.White);
             ReadPixel(frame, new PixelPoint(first, 2)).Should().Be(Colors.White);
+            NativeToolStripDropDownButtonTests.AssertNativeArrow(frame,
+                (int)button.DropDownButtonBounds.X + 3, 10, Colors.Black, Colors.White);
         }
         finally
         {
@@ -330,6 +336,7 @@ public sealed class NativeToolStripSplitButtonTests
             window.UpdateLayout();
             secondary.Width.Should().Be(double.NaN);
             secondary.MinWidth.Should().Be(13);
+            secondary.GetVisualDescendants().OfType<PathIcon>().Single().Bounds.Size.Should().Be(new Size(7, 5));
             button.Classes.Should().NotContain("gitextensions-native-toolstrip-split-button");
             button.Classes.Should().NotContain("gitextensions-native-professional-toolstrip-split-button");
         }
@@ -399,6 +406,63 @@ public sealed class NativeToolStripSplitButtonTests
         finally
         {
             button.Flyout!.Hide();
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Source_ToolStripEx_split_should_retain_hover_paint_until_actual_dropdown_closure(bool rightToLeft)
+    {
+        using NativeToolStrip strip = new();
+        NativeToolStripSplitButton button = NewButton(32, rightToLeft);
+        button.Margin = new Thickness(0, 1, 0, 2);
+        strip.Items.Add(button);
+        MenuFlyout menu = (MenuFlyout)button.Flyout!;
+        MenuItem option = menu.Items.OfType<MenuItem>().Single();
+        Window window = NewWindow(strip);
+        try
+        {
+            window.Show();
+            window.UpdateLayout();
+            NativeToolStrip.GetFreezeDropDownOwnerPaint(button).Should().BeTrue();
+            Point point = button.TranslatePoint(Centre(button.DropDownButtonBounds), window)!.Value;
+            window.MouseMove(point);
+            IBrush? selectedBackground = button.Background;
+            IBrush? selectedBorder = button.BorderBrush;
+            Rect primaryBounds = Part(button, "PART_PrimaryButton").Bounds;
+            window.MouseDown(point, MouseButton.Left);
+            window.MouseUp(point, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            menu.IsOpen.Should().BeTrue();
+            button.DropDownButtonPressed.Should().BeTrue("logical open state still exists while source HWND state paint is suspended");
+            button.PaintDropDownPressed.Should().BeFalse();
+            window.MouseMove(new Point(170, 80));
+            TopLevel popup = TopLevel.GetTopLevel(option) ?? throw new InvalidOperationException("The source option must be in a real popup.");
+            popup.MouseMove(option.TranslatePoint(new Rect(option.Bounds.Size).Center, popup)!.Value);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            button.IsPointerOver.Should().BeFalse();
+            option.IsPointerOver.Should().BeTrue();
+            button.PaintSelected.Should().BeTrue();
+            button.Background.Should().BeSameAs(selectedBackground);
+            button.BorderBrush.Should().BeSameAs(selectedBorder);
+            Part(button, "PART_PrimaryButton").Bounds.Should().Be(primaryBounds);
+            menu.Hide();
+            Dispatcher.UIThread.RunJobs();
+            button.PaintSelected.Should().BeFalse();
+            button.DropDownButtonPressed.Should().BeFalse();
+            window.MouseMove(point);
+            window.MouseDown(point, MouseButton.Left);
+            window.MouseUp(point, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            menu.IsOpen.Should().BeTrue();
+            button.Background.Should().BeSameAs(selectedBackground);
+        }
+        finally
+        {
+            menu.Hide();
             window.Close();
         }
     }

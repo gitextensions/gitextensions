@@ -114,5 +114,10 @@ public enum CaptureStateKind
     Expanded,
     Hover,
     Pressed,
-    MenuOpen
+    MenuOpen,
+
+    /// <summary>
+    ///  Opens a menu after placing the pointer over its owner, preserving that input route.
+    /// </summary>
+    MenuOpenHoveredOwner
 }

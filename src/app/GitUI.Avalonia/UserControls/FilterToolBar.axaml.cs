@@ -65,7 +65,6 @@ internal sealed partial class FilterToolBar : TranslatedControl
     private bool _isApplyingFilter;
     private bool _filterBeingChanged;
     private bool _updatingSuggestions;
-    private string _advancedFilterToolTip = string.Empty;
     private Func<RefsFilter, IReadOnlyList<IGitRef>>? _getRefs;
     private Action<string>? _showInvalidReference;
     private string? _tslblRevisionFilterToolTip;
@@ -115,7 +114,6 @@ internal sealed partial class FilterToolBar : TranslatedControl
 
         SetBranchMode(tsmiShowBranchesAll, Properties.Images.BranchLocal);
         InitializeComplete();
-        _advancedFilterToolTip = ToolTip.GetTip(tsbtnAdvancedFilter)?.ToString() ?? string.Empty;
 
         foreach (TemplatedControl button in new TemplatedControl[]
         {
@@ -634,9 +632,12 @@ internal sealed partial class FilterToolBar : TranslatedControl
 
             // Add to dropdown and settings, unless already included
             PromoteRevisionFilter(tstxtRevisionFilter.Text?.Trim() ?? string.Empty);
+
+            // Native ToolStripItem only shows nonempty ToolTipText. An empty
+            // Avalonia string would still create a popup, so clear its tip.
             ToolTip.SetTip(
                 tsbtnAdvancedFilter,
-                string.IsNullOrEmpty(e.FilterSummary) ? _advancedFilterToolTip : e.FilterSummary);
+                string.IsNullOrEmpty(e.FilterSummary) ? null : e.FilterSummary);
             tsbtnAdvancedFilter.Icon = e.HasFilter
                 ? Properties.Images.FunnelExclamation
                 : Properties.Images.FunnelPencil;

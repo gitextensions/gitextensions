@@ -373,10 +373,15 @@ public class NativeToolStripSplitButton : SplitButton
     private readonly List<IDisposable?> _partValues = [];
     private Button? _primaryButton;
     private Button? _secondaryButton;
+    private PathIcon? _dropDownArrow;
     private Border? _splitter;
     private Grid? _partGrid;
     private NativeToolStripSplitButtonFrame? _systemFrame;
     private IDisposable? _overlayPassThrough;
+    private PopupFlyoutBase? _paintFlyout;
+    private bool _paintSuspended;
+    private bool _suspendedSelected;
+    private bool _suspendedButtonPressed;
     private bool _buttonPressed;
     private bool _dropDownButtonPressed;
     private bool _secondaryPointerSequence;
@@ -498,6 +503,14 @@ public class NativeToolStripSplitButton : SplitButton
     /// <summary>Gets whether the owned drop-down is open.</summary>
     public bool DropDownButtonPressed => _dropDownButtonPressed;
 
+    internal bool PaintSelected => _paintSuspended ? _suspendedSelected : ButtonSelected;
+
+    internal bool PaintButtonPressed => _paintSuspended ? _suspendedButtonPressed : ButtonPressed;
+
+    internal bool PaintDropDownPressed => !_paintSuspended && DropDownButtonPressed;
+
+    internal IBrush? ArrowForeground => _dropDownArrow?.Foreground ?? Foreground;
+
     protected override Type StyleKeyOverride => typeof(SplitButton);
 
     protected override bool BypassFlowDirectionPolicies => UseNativeToolStripLayout;
@@ -506,13 +519,13 @@ public class NativeToolStripSplitButton : SplitButton
     {
         base.Render(context);
         if (!UseNativeToolStripLayout || UseSystemVisualStyle || !IsEffectivelyEnabled
-            || (!ButtonSelected && !ButtonPressed && !DropDownButtonPressed))
+            || (!PaintSelected && !PaintButtonPressed && !PaintDropDownPressed))
         {
             return;
         }
 
         Rect bounds = new(Bounds.Size);
-        if (DropDownButtonPressed)
+        if (PaintDropDownPressed)
         {
             // An open source item uses the menu-title gradient/border, not the
             // primary button's pressed color and not an accent-colored Fluent fill.
@@ -523,7 +536,7 @@ public class NativeToolStripSplitButton : SplitButton
         {
             context.FillRectangle(ProfessionalSelectedBrush ?? Brushes.Transparent, bounds);
             FillOutline(context, ProfessionalBorderBrush, bounds);
-            if (ButtonPressed)
+            if (PaintButtonPressed)
             {
                 Rect primary = ButtonBounds;
                 Thickness sourceDeflate = FlowDirection == FlowDirection.RightToLeft
@@ -547,6 +560,7 @@ public class NativeToolStripSplitButton : SplitButton
         base.OnApplyTemplate(e);
         _primaryButton = e.NameScope.Find<Button>("PART_PrimaryButton");
         _secondaryButton = e.NameScope.Find<Button>("PART_SecondaryButton");
+        _dropDownArrow = _secondaryButton?.Content as PathIcon;
         _splitter = e.NameScope.Find<Border>("SeparatorBorder");
         _partGrid = _primaryButton?.GetVisualParent<Grid>();
         if (_partGrid is not null)
@@ -568,6 +582,17 @@ public class NativeToolStripSplitButton : SplitButton
             // RTL placement. A Grid's independent Auto column minima cannot own them.
             _primaryButton?.Arrange(GetButtonBounds(finalSize));
             _secondaryButton?.Arrange(GetDropDownButtonBounds(finalSize));
+            if (_dropDownArrow?.GetVisualParent() is Visual arrowParent && _secondaryButton is not null
+                && _secondaryButton.TranslatePoint(default, arrowParent) is Point arrowOrigin)
+            {
+                // RenderArrowCore centres on integer Width/2,Height/2, then uses
+                // its Down polygon's top at middleY-1; ordinary fractional centring
+                // puts a three-pixel glyph one row too high on an even-height item.
+                Rect dropdown = GetDropDownButtonBounds(finalSize);
+                _dropDownArrow.Arrange(new Rect(arrowOrigin.X + ((int)dropdown.Width / 2) - 2,
+                    arrowOrigin.Y + ((int)dropdown.Height / 2) - 1, 5, 3));
+            }
+
             _splitter?.Arrange(GetSplitterBounds(finalSize));
             _systemFrame?.Arrange(new Rect(finalSize));
         }
@@ -611,9 +636,14 @@ public class NativeToolStripSplitButton : SplitButton
 
             UpdateNativeStates();
         }
-        else if (change.Property == BorderBrushProperty)
+        else if (change.Property == BorderBrushProperty || change.Property == ForegroundProperty)
         {
             _systemFrame?.InvalidateVisual();
+        }
+        else if (change.Property == NativeToolStrip.FreezeDropDownOwnerPaintProperty && !NativeToolStrip.GetFreezeDropDownOwnerPaint(this))
+        {
+            _paintSuspended = false;
+            UpdateNativeStates();
         }
     }
 
@@ -625,6 +655,7 @@ public class NativeToolStripSplitButton : SplitButton
 
     protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
     {
+        ReleasePaintFlyout();
         ResetNativePress();
         _overlayPassThrough?.Dispose();
         _overlayPassThrough = null;
@@ -641,6 +672,7 @@ public class NativeToolStripSplitButton : SplitButton
     protected override void OnFlyoutClosed()
     {
         base.OnFlyoutClosed();
+        _paintSuspended = false;
         _dropDownButtonPressed = false;
         UpdateNativeStates();
     }
@@ -704,6 +736,17 @@ public class NativeToolStripSplitButton : SplitButton
         {
             _partValues.Add(_partGrid.SetValue(FlowDirectionProperty, FlowDirection.LeftToRight, BindingPriority.Template));
         }
+
+        if (_dropDownArrow is not null)
+        {
+            // Keep the framework glyph allocation/foreground, but the source
+            // GDI triangle's verified5/3/1 integer rows are painted by the frame.
+            _partValues.Add(_dropDownArrow.SetValue(OpacityProperty, 0d, BindingPriority.Template));
+
+            // Native Down-arrow coordinates are owner-relative, not text flow.
+            // Otherwise Avalonia mirrors its retained glyph's local origin in RTL.
+            _partValues.Add(_dropDownArrow.SetValue(FlowDirectionProperty, FlowDirection.LeftToRight, BindingPriority.Template));
+        }
     }
 
     private Rect GetButtonBounds(Size size) => new(
@@ -736,14 +779,45 @@ public class NativeToolStripSplitButton : SplitButton
 
     private void ApplyFlyoutInputRoute()
     {
+        ReleasePaintFlyout();
         _overlayPassThrough?.Dispose();
         _overlayPassThrough = null;
         if (UseNativeToolStripLayout && Flyout is PopupFlyoutBase popup)
         {
+            _paintFlyout = popup;
+            _paintFlyout.Opening += PaintFlyoutOpening;
+
             // Only this source owner remains an input target under its popup. Other
             // outside clicks keep the ordinary dismiss behavior and are not replayed.
             _overlayPassThrough = popup.SetValue(PopupFlyoutBase.OverlayInputPassThroughElementProperty, this, BindingPriority.Template);
         }
+
+        UpdateNativeStates();
+    }
+
+    private void PaintFlyoutOpening(object? sender, EventArgs e)
+    {
+        if (NativeToolStrip.GetFreezeDropDownOwnerPaint(this))
+        {
+            // The original ToolStripEx sends WM_SETREDRAW before the item's open
+            // state changes. This bounded adapter freezes state paint only; arbitrary
+            // content, theme and owner-size changes are not an HWND redraw suspension.
+            _suspendedSelected = ButtonSelected;
+            _suspendedButtonPressed = ButtonPressed;
+            _paintSuspended = true;
+            UpdateNativeStates();
+        }
+    }
+
+    private void ReleasePaintFlyout()
+    {
+        if (_paintFlyout is not null)
+        {
+            _paintFlyout.Opening -= PaintFlyoutOpening;
+            _paintFlyout = null;
+        }
+
+        _paintSuspended = false;
     }
 
     private void NativePointerPressed(object? sender, PointerPressedEventArgs e)
@@ -811,9 +885,10 @@ public class NativeToolStripSplitButton : SplitButton
 
     private void UpdateNativeStates()
     {
-        PseudoClasses.Set(":native-selected", UseNativeToolStripLayout && IsEffectivelyEnabled && ButtonSelected);
-        PseudoClasses.Set(":native-button-pressed", UseNativeToolStripLayout && IsEffectivelyEnabled && ButtonPressed);
-        PseudoClasses.Set(":native-dropdown-pressed", UseNativeToolStripLayout && IsEffectivelyEnabled && DropDownButtonPressed);
+        PseudoClasses.Set(":native-selected", UseNativeToolStripLayout && IsEffectivelyEnabled && PaintSelected);
+        PseudoClasses.Set(":native-button-pressed", UseNativeToolStripLayout && IsEffectivelyEnabled && PaintButtonPressed);
+        PseudoClasses.Set(":native-dropdown-pressed", UseNativeToolStripLayout && IsEffectivelyEnabled && PaintDropDownPressed);
+        PseudoClasses.Set(":native-paint-suspended", UseNativeToolStripLayout && _paintSuspended);
         InvalidateVisual();
         _systemFrame?.InvalidateVisual();
     }
@@ -835,7 +910,7 @@ public class NativeToolStripSplitButton : SplitButton
 /// <summary>
 /// Paints the existing System toolbar outline over the framework presenters without
 /// making that one-pixel frame part of the source image/caption layout or hit target.
-/// The native themed background asset remains a distinct paint boundary.
+/// Also paints the source filled Down arrow; the framework glyph retains layout only.
 /// </summary>
 internal sealed class NativeToolStripSplitButtonFrame : Control
 {
@@ -852,12 +927,36 @@ internal sealed class NativeToolStripSplitButtonFrame : Control
     {
         base.Render(context);
         if (_owner.UseNativeToolStripLayout && _owner.UseSystemVisualStyle && _owner.IsEffectivelyEnabled
-            && (_owner.ButtonSelected || _owner.ButtonPressed))
+            && (_owner.PaintSelected || _owner.PaintButtonPressed))
         {
             NativeToolStripSplitButton.FillOutline(context, _owner.BorderBrush, new Rect(Bounds.Size));
             if (_owner.BorderBrush is not null)
             {
                 context.FillRectangle(_owner.BorderBrush, _owner.SplitterBounds);
+            }
+        }
+
+        if (_owner.UseNativeToolStripLayout)
+        {
+            Rect dropdown = _owner.DropDownButtonBounds;
+            NativeToolStripArrowPainter.DrawDown(context, _owner.ArrowForeground,
+                dropdown.X + ((int)dropdown.Width / 2) - 2, ((int)dropdown.Height / 2) - 1);
+        }
+    }
+}
+
+internal static class NativeToolStripArrowPainter
+{
+    internal static void DrawDown(DrawingContext context, IBrush? foreground, double left, int top)
+    {
+        // RenderArrowCore's integer Down polygon rasterizes to5/3/1 full rows
+        // at native96 (actual System and Professional DrawArrow probes agree).
+        // Filled integer rectangles retain that GDI raster without Skia edge AA.
+        if (foreground is not null)
+        {
+            for (int row = 0; row < 3; row++)
+            {
+                context.FillRectangle(foreground, new Rect(left + row, top + row, 5 - (row * 2), 1));
             }
         }
     }
@@ -869,13 +968,30 @@ internal sealed class NativeToolStripSplitButtonFrame : Control
 /// </summary>
 public class IconDropDownButton : DropDownButton
 {
+    private IDisposable? _nativeContentTemplateValue;
+    private IDataTemplate? _nativeContentTemplate;
+    private PopupFlyoutBase? _paintFlyout;
+    private IDisposable? _overlayPassThrough;
+    private bool _paintSuspended;
+    private bool _suspendedSelected;
+
     public IconDropDownButton()
     {
         Classes.Add("gitextensions-icon-drop-down-button");
+        AddHandler(PointerPressedEvent, NativePointerPressed, RoutingStrategies.Tunnel);
+        AddHandler(PointerReleasedEvent, NativePointerReleased, RoutingStrategies.Tunnel);
     }
 
     public static readonly StyledProperty<IImage?> IconProperty =
         AvaloniaProperty.Register<IconDropDownButton, IImage?>(nameof(Icon));
+
+    public static readonly StyledProperty<bool> UseNativeToolStripLayoutProperty =
+        AvaloniaProperty.Register<IconDropDownButton, bool>(nameof(UseNativeToolStripLayout));
+
+    static IconDropDownButton()
+    {
+        AffectsMeasure<IconDropDownButton>(IconProperty, UseNativeToolStripLayoutProperty);
+    }
 
     public IImage? Icon
     {
@@ -883,7 +999,265 @@ public class IconDropDownButton : DropDownButton
         set => SetValue(IconProperty, value);
     }
 
+    /// <summary>
+    ///  Gets or sets the source image-only ToolStripDropDownButton layout and pointer route.
+    /// </summary>
+    public bool UseNativeToolStripLayout
+    {
+        get => GetValue(UseNativeToolStripLayoutProperty);
+        set => SetValue(UseNativeToolStripLayoutProperty, value);
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        UpdateNativeContentTemplate();
+        base.OnApplyTemplate(e);
+    }
+
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        UpdateNativeContentTemplate();
+        Size measured = base.MeasureOverride(availableSize);
+        return _nativeContentTemplate is not null && ReferenceEquals(ContentTemplate, _nativeContentTemplate)
+            ? NativeToolStripDropDownButtonContent.GetPreferredSize(this) : measured;
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == UseNativeToolStripLayoutProperty)
+        {
+            Classes.Set("gitextensions-native-toolstrip-drop-down-button", UseNativeToolStripLayout);
+            UpdateNativeContentTemplate();
+            ApplyNativeFlyout();
+        }
+        else if (change.Property == FlyoutProperty)
+        {
+            ApplyNativeFlyout();
+        }
+        else if (change.Property == IsPointerOverProperty || change.Property == IsFocusedProperty
+            || change.Property == IsEffectivelyEnabledProperty)
+        {
+            UpdateNativeState();
+        }
+        else if (change.Property == NativeToolStrip.FreezeDropDownOwnerPaintProperty && !NativeToolStrip.GetFreezeDropDownOwnerPaint(this))
+        {
+            _paintSuspended = false;
+            UpdateNativeState();
+        }
+    }
+
+    protected override void OnAttachedToLogicalTree(LogicalTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToLogicalTree(e);
+        ApplyNativeFlyout();
+    }
+
+    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
+    {
+        ReleaseNativeFlyout();
+        base.OnDetachedFromLogicalTree(e);
+    }
+
+    private void UpdateNativeContentTemplate()
+    {
+        if (UseNativeToolStripLayout && _nativeContentTemplateValue is null)
+        {
+            _nativeContentTemplate ??= new FuncDataTemplate(_ => true, (_, _) => new NativeToolStripDropDownButtonContent(this));
+            _nativeContentTemplateValue = SetValue(ContentTemplateProperty, _nativeContentTemplate, BindingPriority.StyleTrigger);
+        }
+        else if (!UseNativeToolStripLayout && _nativeContentTemplateValue is not null)
+        {
+            _nativeContentTemplateValue.Dispose();
+            _nativeContentTemplateValue = null;
+        }
+    }
+
+    private void ApplyNativeFlyout()
+    {
+        ReleaseNativeFlyout();
+        if (UseNativeToolStripLayout && Flyout is PopupFlyoutBase popup)
+        {
+            _paintFlyout = popup;
+            popup.Opening += NativeFlyoutOpening;
+            popup.Closed += NativeFlyoutClosed;
+            _overlayPassThrough = popup.SetValue(PopupFlyoutBase.OverlayInputPassThroughElementProperty, this, BindingPriority.Template);
+        }
+
+        UpdateNativeState();
+    }
+
+    private void ReleaseNativeFlyout()
+    {
+        if (_paintFlyout is not null)
+        {
+            _paintFlyout.Opening -= NativeFlyoutOpening;
+            _paintFlyout.Closed -= NativeFlyoutClosed;
+            _paintFlyout = null;
+        }
+
+        _overlayPassThrough?.Dispose();
+        _overlayPassThrough = null;
+        _paintSuspended = false;
+    }
+
+    private void NativeFlyoutOpening(object? sender, EventArgs e)
+    {
+        if (NativeToolStrip.GetFreezeDropDownOwnerPaint(this))
+        {
+            _suspendedSelected = IsPointerOver || IsFocused;
+            _paintSuspended = true;
+        }
+
+        UpdateNativeState();
+    }
+
+    private void NativeFlyoutClosed(object? sender, EventArgs e)
+    {
+        _paintSuspended = false;
+        UpdateNativeState();
+    }
+
+    private void UpdateNativeState()
+    {
+        bool selected = _paintSuspended ? _suspendedSelected : IsPointerOver || IsFocused;
+        PseudoClasses.Set(":native-selected", UseNativeToolStripLayout && IsEffectivelyEnabled && selected);
+        PseudoClasses.Set(":native-paint-suspended", UseNativeToolStripLayout && _paintSuspended);
+    }
+
+    private void NativePointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (UseNativeToolStripLayout && IsEffectivelyEnabled && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed
+            && (e.KeyModifiers & KeyModifiers.Alt) == 0 && Flyout is { } flyout)
+        {
+            // The source opens on MouseDown, before base.OnMouseDown changes pressed
+            // paint; the opening MouseUp does not execute a second framework click.
+            e.Handled = true;
+            if (flyout.IsOpen)
+            {
+                flyout.Hide();
+            }
+            else
+            {
+                flyout.ShowAt(this);
+            }
+        }
+    }
+
+    private void NativePointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (UseNativeToolStripLayout && e.InitialPressMouseButton == MouseButton.Left && (e.KeyModifiers & KeyModifiers.Alt) == 0)
+        {
+            e.Handled = true;
+        }
+    }
+
     protected override Type StyleKeyOverride => typeof(DropDownButton);
+
+    protected override bool BypassFlowDirectionPolicies => UseNativeToolStripLayout;
+}
+
+/// <summary>
+///  Retains the original image-only dropdown's separate image and arrow rectangles.
+/// </summary>
+internal sealed class NativeToolStripDropDownButtonContent : Panel
+{
+    private const int ImageExtent = 16;
+    private const int ContentBorder = 2;
+    private const int ArrowWidth = 5;
+    private const int ArrowPadding = 2;
+    private readonly IconDropDownButton _owner;
+    private readonly Image _image = new() { Stretch = Stretch.Fill, IsHitTestVisible = false };
+    private readonly NativeDropDownArrow _arrow;
+
+    public NativeToolStripDropDownButtonContent(IconDropDownButton owner)
+    {
+        _owner = owner;
+        _arrow = new NativeDropDownArrow(owner);
+        Children.Add(_image);
+        Children.Add(_arrow);
+        ClipToBounds = true;
+        FlowDirection = FlowDirection.LeftToRight;
+    }
+
+    protected override bool BypassFlowDirectionPolicies => true;
+
+    internal static Size GetPreferredSize(IconDropDownButton owner)
+        => new((owner.Icon is null ? 0 : ImageExtent) + (ContentBorder * 2) + ArrowWidth + (ArrowPadding * 2),
+            (owner.Icon is null ? 0 : ImageExtent) + (ContentBorder * 2));
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _owner.PropertyChanged += OwnerPropertyChanged;
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        _owner.PropertyChanged -= OwnerPropertyChanged;
+        base.OnDetachedFromVisualTree(e);
+    }
+
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        _image.Source = _owner.Icon;
+        _image.IsVisible = _owner.Icon is not null;
+        _image.Measure(new Size(ImageExtent, ImageExtent));
+        _arrow.Measure(new Size(ArrowWidth, 3));
+        return GetPreferredSize(_owner);
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        int arrowAllocation = ArrowWidth + (ArrowPadding * 2);
+        int contentWidth = Math.Max(0, (int)finalSize.Width - arrowAllocation);
+        int x = ContentBorder + ((contentWidth - (ContentBorder * 2) - ImageExtent) / 2);
+        if (_owner.FlowDirection == FlowDirection.RightToLeft)
+        {
+            x += arrowAllocation;
+        }
+
+        int y = ((int)finalSize.Height - ImageExtent) / 2;
+        _image.Arrange(_owner.Icon is null ? default : new Rect(x, y, ImageExtent, ImageExtent));
+        int arrowLeft = _owner.FlowDirection == FlowDirection.RightToLeft ? ArrowPadding : (int)finalSize.Width - arrowAllocation;
+        _arrow.Arrange(new Rect(arrowLeft, ((int)finalSize.Height / 2) - 1, ArrowWidth, 3));
+        return finalSize;
+    }
+
+    private void OwnerPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == IconDropDownButton.IconProperty || e.Property == FlowDirectionProperty)
+        {
+            InvalidateMeasure();
+            _arrow.InvalidateVisual();
+        }
+        else if (e.Property == TemplatedControl.ForegroundProperty)
+        {
+            _arrow.InvalidateVisual();
+        }
+    }
+
+    // Panel.Render is sealed in Avalonia; keep paint in a noninteractive child,
+    // while this panel still owns the source image/arrow allocation algorithm.
+    private sealed class NativeDropDownArrow : Control
+    {
+        private readonly IconDropDownButton _owner;
+
+        public NativeDropDownArrow(IconDropDownButton owner)
+        {
+            _owner = owner;
+            IsHitTestVisible = false;
+            Focusable = false;
+        }
+
+        protected override bool BypassFlowDirectionPolicies => true;
+
+        public override void Render(DrawingContext context)
+        {
+            base.Render(context);
+            NativeToolStripArrowPainter.DrawDown(context, _owner.Foreground, 0, 0);
+        }
+    }
 }
 
 /// <summary>
