@@ -37,7 +37,7 @@ public sealed partial class GitModuleTests
     [TestCase(".gitignore", "LOCAL", 7, "_LOCAL_7.gitignore")]
     public void GetConflictPartFileName_should_use_git_mergetool_scheme(string fileName, string side, int processId, string expected)
     {
-        _gitModule.GetTestAccessor().GetConflictPartFileName(fileName, side, processId).Should().Be(expected);
+        GitModule.TestAccessor.ConflictPartFileName(fileName, side, processId).Should().Be(expected);
     }
 
     [Test]
@@ -45,9 +45,9 @@ public sealed partial class GitModuleTests
     {
         HashSet<string> existing = ["file_LOCAL_1234.cs", "file_LOCAL_1234_1.cs"];
 
-        _gitModule.GetTestAccessor().GetAvailableFileName("file_LOCAL_1234.cs", existing.Contains).Should().Be("file_LOCAL_1234_2.cs");
-        _gitModule.GetTestAccessor().GetAvailableFileName("other_LOCAL_1234.cs", existing.Contains).Should().Be("other_LOCAL_1234.cs");
-        _gitModule.GetTestAccessor().GetAvailableFileName("README_LOCAL_1234", _ => true).Should().Be("README_LOCAL_1234_49");
+        GitModule.TestAccessor.AvailableFileName("file_LOCAL_1234.cs", existing.Contains).Should().Be("file_LOCAL_1234_2.cs");
+        GitModule.TestAccessor.AvailableFileName("other_LOCAL_1234.cs", existing.Contains).Should().Be("other_LOCAL_1234.cs");
+        GitModule.TestAccessor.AvailableFileName("README_LOCAL_1234", _ => true).Should().Be("README_LOCAL_1234_49");
     }
 
     [Test]
@@ -76,7 +76,7 @@ public sealed partial class GitModuleTests
             Run("add .");
             Run("commit -m ours");
 
-            module.GitExecutable.Execute("merge other", throwOnErrorExit: false);
+            await module.GitExecutable.ExecuteAsync("merge other", throwOnErrorExit: false);
 
             string processId = Environment.ProcessId.ToString();
 
@@ -89,15 +89,15 @@ public sealed partial class GitModuleTests
             baseFile.Should().Be(expectedBaseFile);
             localFile.Should().Be(expectedLocalFile);
             remoteFile.Should().Be(expectedRemoteFile);
-            File.ReadAllText(expectedBaseFile).Should().Be("base");
-            File.ReadAllText(expectedLocalFile).Should().Be("ours");
-            File.ReadAllText(expectedRemoteFile).Should().Be("theirs");
+            (await File.ReadAllTextAsync(expectedBaseFile)).Should().Be("base");
+            (await File.ReadAllTextAsync(expectedLocalFile)).Should().Be("ours");
+            (await File.ReadAllTextAsync(expectedRemoteFile)).Should().Be("theirs");
 
             // the files still exist, so a second checkout must not overwrite them
             string expectedSecondBaseFile = Path.Combine(module.WorkingDir, $"dir/file_BASE_{processId}_1.cs");
             (string? baseFile2, _, _) = module.CheckoutConflictedFiles(conflict);
             baseFile2.Should().Be(expectedSecondBaseFile);
-            File.ReadAllText(expectedSecondBaseFile).Should().Be("base");
+            (await File.ReadAllTextAsync(expectedSecondBaseFile)).Should().Be("base");
 
             // add/add conflict: no base side
             ConflictData addAddConflict = await module.GetConflictAsync("new.txt");
