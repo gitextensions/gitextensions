@@ -52,7 +52,7 @@ internal static class VisualStudioIntegration
             {
                 try
                 {
-                    if (await TryOpenFileInRunningInstanceAsync(filePath, lineNumber))
+                    if (TryOpenFileInRunningInstance(filePath, lineNumber))
                     {
                         return;
                     }
@@ -76,7 +76,7 @@ internal static class VisualStudioIntegration
         });
     }
 
-    private static async Task<bool> TryOpenFileInRunningInstanceAsync(string filePath, int lineNumber = 0)
+    private static bool TryOpenFileInRunningInstance(string filePath, int lineNumber = 0)
     {
         if (!File.Exists(filePath))
         {
