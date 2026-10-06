@@ -657,14 +657,17 @@ public sealed partial class GitModule : IGitModule
     {
         Directory.SetCurrentDirectory(WorkingDir);
 
-        string? baseFile = CheckoutPart(1, unmergedData.Filename + ".BASE", unmergedData.Base.Filename);
-        string? localFile = CheckoutPart(2, unmergedData.Filename + ".LOCAL", unmergedData.Local.Filename);
-        string? remoteFile = CheckoutPart(3, unmergedData.Filename + ".REMOTE", unmergedData.Remote.Filename);
+        int processId = Environment.ProcessId;
+        string? baseFile = CheckoutPart(1, "BASE", unmergedData.Base.Filename);
+        string? localFile = CheckoutPart(2, "LOCAL", unmergedData.Local.Filename);
+        string? remoteFile = CheckoutPart(3, "REMOTE", unmergedData.Remote.Filename);
 
         return (baseFile, localFile, remoteFile);
 
-        string? CheckoutPart(int part, string fileName, string? unmerged)
+        string? CheckoutPart(int part, string side, string? unmerged)
         {
+            string fileName = GetConflictPartFileName(unmergedData.Filename, side, processId);
+
             if (unmerged is not null)
             {
                 GitArgumentBuilder args = new("checkout-index")
@@ -697,20 +700,37 @@ public sealed partial class GitModule : IGitModule
             return File.Exists(fileName) ? fileName : null;
         }
 
-        string FindAvailableFileName(string basePath)
+        static string FindAvailableFileName(string basePath) => GetAvailableFileName(basePath, File.Exists);
+    }
+
+    /// <summary>
+    ///  Gets the name of the temporary file holding one side of a conflicted file.
+    /// </summary>
+    /// <remarks>
+    ///  Uses the same scheme as git-mergetool ("folder/file_LOCAL_1234.ext"):
+    ///  the extension is kept at the end so that merge tools recognize the file type.
+    /// </remarks>
+    internal static string GetConflictPartFileName(string fileName, string side, int processId)
+    {
+        string extension = Path.GetExtension(fileName);
+        return $"{fileName[..^extension.Length]}_{side}_{processId}{extension}";
+    }
+
+    /// <summary>
+    ///  If necessary, inserts an index before the extension of the path until the file does not exist.
+    /// </summary>
+    internal static string GetAvailableFileName(string basePath, Func<string, bool> fileExists)
+    {
+        string extension = Path.GetExtension(basePath);
+        string stem = basePath[..^extension.Length];
+        string test = basePath;
+
+        for (int index = 1; fileExists(test) && index < 50; index++)
         {
-            // If necessary, append an index to the base path until the file does not exist
-            int index = 1;
-            string test = basePath;
-
-            while (File.Exists(test) && index < 50)
-            {
-                test = basePath + index;
-                index++;
-            }
-
-            return test;
+            test = $"{stem}_{index}{extension}";
         }
+
+        return test;
     }
 
     public async Task<ConflictData> GetConflictAsync(string? filename)
@@ -4133,5 +4153,11 @@ public sealed partial class GitModule : IGitModule
 
         public StagedStatus GetStagedStatus(ObjectId firstId, ObjectId secondId, ObjectId parentToSecond)
             => GitModule.GetStagedStatus(firstId, secondId, parentToSecond);
+
+        public string GetConflictPartFileName(string fileName, string side, int processId)
+            => GitModule.GetConflictPartFileName(fileName, side, processId);
+
+        public string GetAvailableFileName(string basePath, Func<string, bool> fileExists)
+            => GitModule.GetAvailableFileName(basePath, fileExists);
     }
 }
