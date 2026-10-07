@@ -710,7 +710,7 @@ public sealed partial class GitModule : IGitModule
     ///  Uses the same scheme as git-mergetool ("folder/file_LOCAL_1234.ext"):
     ///  the extension is kept at the end so that merge tools recognize the file type.
     /// </remarks>
-    internal static string GetConflictPartFileName(string fileName, string side, int processId)
+    private static string GetConflictPartFileName(string fileName, string side, int processId)
     {
         string extension = Path.GetExtension(fileName);
         return $"{fileName[..^extension.Length]}_{side}_{processId}{extension}";
