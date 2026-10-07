@@ -719,7 +719,7 @@ public sealed partial class GitModule : IGitModule
     /// <summary>
     ///  If necessary, inserts an index before the extension of the path until the file does not exist.
     /// </summary>
-    internal static string GetAvailableFileName(string basePath, Func<string, bool> fileExists)
+    private static string GetAvailableFileName(string basePath, Func<string, bool> fileExists)
     {
         string extension = Path.GetExtension(basePath);
         string stem = basePath[..^extension.Length];
