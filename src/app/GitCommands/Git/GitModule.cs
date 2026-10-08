@@ -4154,10 +4154,10 @@ public sealed partial class GitModule : IGitModule
         public StagedStatus GetStagedStatus(ObjectId firstId, ObjectId secondId, ObjectId parentToSecond)
             => GitModule.GetStagedStatus(firstId, secondId, parentToSecond);
 
-        public string GetConflictPartFileName(string fileName, string side, int processId)
+        public static string GetConflictPartFileName(string fileName, string side, int processId)
             => GitModule.GetConflictPartFileName(fileName, side, processId);
 
-        public string GetAvailableFileName(string basePath, Func<string, bool> fileExists)
+        public static string GetAvailableFileName(string basePath, Func<string, bool> fileExists)
             => GitModule.GetAvailableFileName(basePath, fileExists);
     }
 }
