@@ -37,7 +37,7 @@ public sealed partial class GitModuleTests
     [TestCase(".gitignore", "LOCAL", 7, "_LOCAL_7.gitignore")]
     public void GetConflictPartFileName_should_use_git_mergetool_scheme(string fileName, string side, int processId, string expected)
     {
-        _gitModule.GetTestAccessor().GetConflictPartFileName(fileName, side, processId).Should().Be(expected);
+        GitModule.TestAccessor.GetConflictPartFileName(fileName, side, processId).Should().Be(expected);
     }
 
     [Test]
@@ -45,10 +45,9 @@ public sealed partial class GitModuleTests
     {
         HashSet<string> existing = ["file_LOCAL_1234.cs", "file_LOCAL_1234_1.cs"];
 
-        GitModule.TestAccessor accessor = _gitModule.GetTestAccessor();
-        accessor.GetAvailableFileName("file_LOCAL_1234.cs", existing.Contains).Should().Be("file_LOCAL_1234_2.cs");
-        accessor.GetAvailableFileName("other_LOCAL_1234.cs", existing.Contains).Should().Be("other_LOCAL_1234.cs");
-        accessor.GetAvailableFileName("README_LOCAL_1234", _ => true).Should().Be("README_LOCAL_1234_49");
+        GitModule.TestAccessor.GetAvailableFileName("file_LOCAL_1234.cs", existing.Contains).Should().Be("file_LOCAL_1234_2.cs");
+        GitModule.TestAccessor.GetAvailableFileName("other_LOCAL_1234.cs", existing.Contains).Should().Be("other_LOCAL_1234.cs");
+        GitModule.TestAccessor.GetAvailableFileName("README_LOCAL_1234", _ => true).Should().Be("README_LOCAL_1234_49");
     }
 
     [Test]
