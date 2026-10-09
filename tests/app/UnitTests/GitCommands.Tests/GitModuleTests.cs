@@ -31,6 +31,90 @@ public sealed partial class GitModuleTests
         _executable.Verify();
     }
 
+    [TestCase("file.cs", "LOCAL", 1234, "file_LOCAL_1234.cs")]
+    [TestCase("dir/sub.dir/file.min.js", "BASE", 1, "dir/sub.dir/file.min_BASE_1.js")]
+    [TestCase("dir.d/README", "REMOTE", 42, "dir.d/README_REMOTE_42")]
+    [TestCase(".gitignore", "LOCAL", 7, "_LOCAL_7.gitignore")]
+    public void GetConflictPartFileName_should_use_git_mergetool_scheme(string fileName, string side, int processId, string expected)
+    {
+        GitModule.TestAccessor.GetConflictPartFileName(fileName, side, processId).Should().Be(expected);
+    }
+
+    [Test]
+    public void GetAvailableFileName_should_insert_index_before_extension()
+    {
+        HashSet<string> existing = ["file_LOCAL_1234.cs", "file_LOCAL_1234_1.cs"];
+
+        GitModule.TestAccessor.GetAvailableFileName("file_LOCAL_1234.cs", existing.Contains).Should().Be("file_LOCAL_1234_2.cs");
+        GitModule.TestAccessor.GetAvailableFileName("other_LOCAL_1234.cs", existing.Contains).Should().Be("other_LOCAL_1234.cs");
+        GitModule.TestAccessor.GetAvailableFileName("README_LOCAL_1234", _ => true).Should().Be("README_LOCAL_1234_49");
+    }
+
+    [Test]
+    public async Task CheckoutConflictedFiles_should_write_sides_next_to_file_with_extension_kept()
+    {
+        string originalDirectory = Directory.GetCurrentDirectory();
+        using GitModuleTestHelper helper = new();
+        GitModule module = helper.Module;
+        try
+        {
+            // base: file.cs exists; both branches change it; both branches add new.txt (no base)
+            helper.CreateRepoFile("dir", "file.cs", "base");
+            Run("add .");
+            Run("commit -m base");
+            string mainBranch = module.GetSelectedBranch();
+
+            Run("checkout -b other");
+            helper.CreateRepoFile("dir", "file.cs", "theirs");
+            helper.CreateRepoFile("new.txt", "theirs");
+            Run("add .");
+            Run("commit -m theirs");
+
+            Run($"checkout {mainBranch}");
+            helper.CreateRepoFile("dir", "file.cs", "ours");
+            helper.CreateRepoFile("new.txt", "ours");
+            Run("add .");
+            Run("commit -m ours");
+
+            await module.GitExecutable.ExecuteAsync("merge other", throwOnErrorExit: false);
+
+            string processId = Environment.ProcessId.ToString();
+
+            ConflictData conflict = await module.GetConflictAsync("dir/file.cs");
+            (string? baseFile, string? localFile, string? remoteFile) = module.CheckoutConflictedFiles(conflict);
+
+            string expectedBaseFile = Path.Combine(module.WorkingDir, $"dir/file_BASE_{processId}.cs");
+            string expectedLocalFile = Path.Combine(module.WorkingDir, $"dir/file_LOCAL_{processId}.cs");
+            string expectedRemoteFile = Path.Combine(module.WorkingDir, $"dir/file_REMOTE_{processId}.cs");
+            baseFile.Should().Be(expectedBaseFile);
+            localFile.Should().Be(expectedLocalFile);
+            remoteFile.Should().Be(expectedRemoteFile);
+            (await File.ReadAllTextAsync(expectedBaseFile)).Should().Be("base");
+            (await File.ReadAllTextAsync(expectedLocalFile)).Should().Be("ours");
+            (await File.ReadAllTextAsync(expectedRemoteFile)).Should().Be("theirs");
+
+            // the files still exist, so a second checkout must not overwrite them
+            string expectedSecondBaseFile = Path.Combine(module.WorkingDir, $"dir/file_BASE_{processId}_1.cs");
+            (string? baseFile2, _, _) = module.CheckoutConflictedFiles(conflict);
+            baseFile2.Should().Be(expectedSecondBaseFile);
+            (await File.ReadAllTextAsync(expectedSecondBaseFile)).Should().Be("base");
+
+            // add/add conflict: no base side
+            ConflictData addAddConflict = await module.GetConflictAsync("new.txt");
+            (string? noBaseFile, string? addedLocalFile, _) = module.CheckoutConflictedFiles(addAddConflict);
+            noBaseFile.Should().BeNull();
+            addedLocalFile.Should().Be(Path.Combine(module.WorkingDir, $"new_LOCAL_{processId}.txt"));
+        }
+        finally
+        {
+            Directory.SetCurrentDirectory(originalDirectory);
+        }
+
+        return;
+
+        void Run(string arguments) => module.GitExecutable.GetOutput(arguments);
+    }
+
     [Test]
     public void ParseGitBlame()
     {
