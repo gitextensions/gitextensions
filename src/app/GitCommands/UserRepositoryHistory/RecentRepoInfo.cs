@@ -71,6 +71,14 @@ public class RecentRepoSplitter
         bool middleDot = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MiddleDots;
         bool signDir = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MostSignDir;
 
+        HashSet<string> mixedFileSystemRepoPaths = signDir
+            ? repositories.GroupBy(repository => GetRepoPathSuffix(repository.Path))
+                .Where(group => group.Any(repository => PathUtil.IsWslPath(repository.Path))
+                    && group.Any(repository => !PathUtil.IsWslPath(repository.Path)))
+                .Select(group => group.Key)
+                .ToHashSet()
+            : [];
+
         int n = Math.Min(MaxTopRepositories, repositories.Count);
 
         // the topRepositories repositories will be added at beginning
@@ -96,7 +104,12 @@ public class RecentRepoSplitter
             }
             else
             {
-                AddToOrderedSignDir(orderedRepos, ri, signDir);
+                string fileSystemLabel = signDir && mixedFileSystemRepoPaths.Contains(GetRepoPathSuffix(repository.Path))
+                    ? PathUtil.IsWslPath(repository.Path)
+                        ? "WSL"
+                        : Path.GetPathRoot(repository.Path)?.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) ?? ""
+                    : "";
+                AddToOrderedSignDir(orderedRepos, ri, signDir, fileSystemLabel);
             }
 
             if (ri.Caption is not null)
@@ -155,12 +168,20 @@ public class RecentRepoSplitter
         }
     }
 
-    private static void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
+    private static string GetRepoPathSuffix(string path)
+    {
+        string nativePath = path.ToNativePath();
+        return nativePath[(Path.GetPathRoot(nativePath)?.Length ?? 0)..].Trim(Path.DirectorySeparatorChar);
+    }
+
+    private static void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath, string fileSystemLabel, bool compareWslDistro = false)
     {
         // if there is no short name for a repo, then try to find unique caption extending short directory path
         if (shortenPath && repoInfo.DirInfo is not null)
         {
-            string s = repoInfo.DirName[repoInfo.DirInfo.FullName.Length..];
+            string s = compareWslDistro
+                ? PathUtil.GetWslDistro(repoInfo.Repo.Path.NormalizeWslPath())
+                : repoInfo.DirName[repoInfo.DirInfo.FullName.Length..];
             if (!string.IsNullOrEmpty(s))
             {
                 s = s.Trim(Path.DirectorySeparatorChar);
@@ -173,7 +194,10 @@ public class RecentRepoSplitter
                 repoInfo.Caption += " (" + s + ")";
             }
 
-            repoInfo.DirInfo = repoInfo.DirInfo.Parent;
+            if (!string.IsNullOrEmpty(fileSystemLabel))
+            {
+                repoInfo.Caption += $" ({fileSystemLabel})";
+            }
         }
         else
         {
@@ -215,7 +239,13 @@ public class RecentRepoSplitter
         // find unique caption for repos with no title
         foreach (RecentRepoInfo r in tmpList)
         {
-            AddToOrderedSignDir(orderedRepos, r, shortenPath);
+            bool useWslDistro = !compareWslDistro && r.DirInfo is { Parent: null } && PathUtil.IsWslPath(r.Repo.Path);
+            if (!useWslDistro)
+            {
+                r.DirInfo = r.DirInfo?.Parent;
+            }
+
+            AddToOrderedSignDir(orderedRepos, r, shortenPath, fileSystemLabel, useWslDistro);
         }
     }
 

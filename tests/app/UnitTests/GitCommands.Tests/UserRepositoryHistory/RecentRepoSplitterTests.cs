@@ -33,6 +33,104 @@ public class RecentRepoSplitterTests
         recentRepoList.Should().ContainSingle();
     }
 
+    [TestCase(@"\\wsl$\Ubuntu\home\user\repo\")]
+    [TestCase(@"\\wsl.localhost\Ubuntu\home\user\repo\")]
+    public void SplitRecentRepos_should_not_mark_unique_wsl_captions(string path)
+    {
+        List<Repository> history = [new Repository(path) { Anchor = Repository.RepositoryAnchor.AnchoredInTop }];
+        RecentRepoSplitter sut = new() { ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MostSignDir };
+        List<RecentRepoInfo> topRepoList = [];
+        List<RecentRepoInfo> recentRepoList = [];
+
+        sut.SplitRecentRepos(history, topRepoList, recentRepoList);
+
+        topRepoList.Should().ContainSingle().Which.Caption.Should().Be("repo");
+    }
+
+    [TestCase(@"\\wsl$\Ubuntu\home\user\repo\", false)]
+    [TestCase(@"\\wsl$\Ubuntu\home\user\repo\", true)]
+    [TestCase(@"\\wsl.localhost\Ubuntu\home\user\repo\", false)]
+    [TestCase(@"\\WSL$\Ubuntu\home\user\repo\", true)]
+    public void SplitRecentRepos_should_mark_colliding_filesystems(string wslPath, bool reverseOrder)
+    {
+        const string windowsPath = @"X:\home\user\repo\";
+        List<Repository> history =
+        [
+            new Repository(wslPath) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
+            new Repository(windowsPath) { Anchor = Repository.RepositoryAnchor.AnchoredInTop }
+        ];
+        if (reverseOrder)
+        {
+            history.Reverse();
+        }
+
+        RecentRepoSplitter sut = new() { ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MostSignDir };
+        List<RecentRepoInfo> topRepoList = [];
+        List<RecentRepoInfo> recentRepoList = [];
+
+        sut.SplitRecentRepos(history, topRepoList, recentRepoList);
+
+        topRepoList.Single(repo => repo.Repo.Path == wslPath).Caption.Should().Be("repo (WSL)");
+        topRepoList.Single(repo => repo.Repo.Path == windowsPath).Caption.Should().Be("repo (X:)");
+    }
+
+    [TestCase(@"X:\home\other\repo\", "repo (user)", "repo (other)", false)]
+    [TestCase(@"X:\home\other\repo\", "repo (user)", "repo (other)", true)]
+    [TestCase(@"X:\projects\user\repo\", @"repo (home\user)", @"repo (projects\user)", false)]
+    [TestCase(@"X:\projects\user\repo\", @"repo (home\user)", @"repo (projects\user)", true)]
+    public void SplitRecentRepos_should_not_mark_filesystems_with_distinct_path_suffixes(string windowsPath, string wslCaption, string windowsCaption, bool reverseOrder)
+    {
+        const string wslPath = @"\\wsl$\Ubuntu\home\user\repo\";
+        List<Repository> history =
+        [
+            new Repository(wslPath) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
+            new Repository(windowsPath) { Anchor = Repository.RepositoryAnchor.AnchoredInTop }
+        ];
+        if (reverseOrder)
+        {
+            history.Reverse();
+        }
+
+        RecentRepoSplitter sut = new() { ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MostSignDir };
+        List<RecentRepoInfo> topRepoList = [];
+        List<RecentRepoInfo> recentRepoList = [];
+
+        sut.SplitRecentRepos(history, topRepoList, recentRepoList);
+
+        topRepoList.Single(repo => repo.Repo.Path == wslPath).Caption.Should().Be(wslCaption);
+        topRepoList.Single(repo => repo.Repo.Path == windowsPath).Caption.Should().Be(windowsCaption);
+    }
+
+    [TestCase(@"\\wsl$", false)]
+    [TestCase(@"\\wsl$", true)]
+    [TestCase(@"\\wsl.localhost", false)]
+    [TestCase(@"\\wsl.localhost", true)]
+    public void SplitRecentRepos_should_distinguish_wsl_distributions_by_path(string wslPrefix, bool includeWindowsRepo)
+    {
+        string ubuntuPath = $@"{wslPrefix}\Ubuntu\home\user\repo\";
+        string debianPath = $@"{wslPrefix}\Debian\home\user\repo\";
+        List<Repository> history =
+        [
+            new Repository(ubuntuPath) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
+            new Repository(debianPath) { Anchor = Repository.RepositoryAnchor.AnchoredInTop }
+        ];
+        if (includeWindowsRepo)
+        {
+            history.Add(new Repository(@"X:\home\user\repo\") { Anchor = Repository.RepositoryAnchor.AnchoredInTop });
+        }
+
+        RecentRepoSplitter sut = new() { ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MostSignDir };
+        List<RecentRepoInfo> topRepoList = [];
+        List<RecentRepoInfo> recentRepoList = [];
+
+        sut.SplitRecentRepos(history, topRepoList, recentRepoList);
+
+        string fileSystemSuffix = includeWindowsRepo ? " (WSL)" : "";
+        topRepoList.Single(repo => repo.Repo.Path == ubuntuPath).Caption.Should().Be($"repo (Ubuntu){fileSystemSuffix}");
+        topRepoList.Single(repo => repo.Repo.Path == debianPath).Caption.Should().Be($"repo (Debian){fileSystemSuffix}");
+        topRepoList.Select(repo => repo.Caption).Should().OnlyHaveUniqueItems();
+    }
+
     [Test]
     public void SplitRecentRepos_Should_not_shorten_as_caption()
     {
