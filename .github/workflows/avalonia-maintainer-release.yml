@@ -1,0 +1,274 @@
+name: Avalonia maintainer build
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: avalonia-maintainer-build
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  windows:
+    name: Windows x64
+    if: ${{ github.repository == 'begota98/gitextensions' }}
+    runs-on: windows-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+    - name: Checkout
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      with:
+        submodules: recursive
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Cache NuGet packages
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+      with:
+        path: ~/.nuget/packages
+        key: avalonia-maintainer-nuget-${{ runner.os }}-${{ hashFiles('Directory.Packages.props') }}
+        restore-keys: |
+          avalonia-maintainer-nuget-${{ runner.os }}-
+
+    - name: Restore
+      run: |
+        dotnet restore GitExtensions.Avalonia.slnx --force-evaluate
+        dotnet restore GitExtensions.Avalonia.slnx -p:Configuration=Release --force-evaluate
+
+    - name: Build
+      run: dotnet build GitExtensions.Avalonia.slnx -c Release -m:1 --no-restore
+
+    - name: Test startup and view construction
+      run: >-
+        dotnet test tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj
+        -c Release --no-build --no-restore
+        -p:BuildAvalonia=true
+        --filter "Category=P0_8B|Category=P0_6"
+
+    - name: Publish
+      shell: pwsh
+      run: |
+        $shortSha = '${{ github.sha }}'.Substring(0, 8)
+        $label = "${{ github.run_number }}-$shortSha"
+        $publish = Join-Path $env:RUNNER_TEMP 'publish-win-x64'
+        $archive = Join-Path $env:RUNNER_TEMP "GitExtensions-Avalonia-$label-win-x64.zip"
+        dotnet publish src/app/GitExtensions.Avalonia/GitExtensions.Avalonia.csproj `
+          -c Release -p:BuildAvalonia=true -r win-x64 --self-contained true -m:1 `
+          --output $publish
+        & ./eng/avalonia/Stage-MaintainerPublish.ps1 -PublishDirectory $publish
+        Compress-Archive -Path (Join-Path $publish '*') -DestinationPath $archive
+
+    - name: Upload package
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      with:
+        name: avalonia-maintainer-win-x64
+        path: ${{ runner.temp }}/GitExtensions-Avalonia-*-win-x64.zip
+        if-no-files-found: error
+        retention-days: 14
+
+  flatpak:
+    name: Linux Flatpak x64
+    if: ${{ github.repository == 'begota98/gitextensions' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    steps:
+    - name: Checkout
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      with:
+        submodules: recursive
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Cache NuGet packages
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+      with:
+        path: ~/.nuget/packages
+        key: avalonia-maintainer-nuget-${{ runner.os }}-${{ hashFiles('Directory.Packages.props') }}
+        restore-keys: |
+          avalonia-maintainer-nuget-${{ runner.os }}-
+
+    - name: Install Flatpak tooling
+      run: |
+        sudo apt-get update
+        sudo apt-get install --yes appstream desktop-file-utils flatpak flatpak-builder
+        sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+        sudo flatpak install --noninteractive --assumeyes flathub \
+          org.freedesktop.Platform//25.08 \
+          org.freedesktop.Sdk//25.08
+
+    - name: Restore
+      run: |
+        dotnet restore GitExtensions.Avalonia.slnx --force-evaluate
+        dotnet restore GitExtensions.Avalonia.slnx -p:Configuration=Release --force-evaluate
+
+    - name: Build
+      run: dotnet build GitExtensions.Avalonia.slnx -c Release -m:1 --no-restore
+
+    - name: Test startup and view construction
+      run: >-
+        dotnet test tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj
+        -c Release --no-build --no-restore
+        -p:BuildAvalonia=true
+        --filter "Category=P0_8B|Category=P0_6"
+
+    - name: Publish
+      run: |
+        dotnet publish src/app/GitExtensions.Avalonia/GitExtensions.Avalonia.csproj \
+          -c Release -p:BuildAvalonia=true -r linux-x64 --self-contained true -m:1 \
+          --output "$RUNNER_TEMP/publish-linux-x64"
+        pwsh eng/avalonia/Stage-MaintainerPublish.ps1 \
+          -PublishDirectory "$RUNNER_TEMP/publish-linux-x64"
+
+    - name: Build Flatpak bundle
+      run: |
+        label="${{ github.run_number }}-${GITHUB_SHA:0:8}"
+        bundle="$RUNNER_TEMP/GitExtensions-Avalonia-$label-linux-x64.flatpak"
+        bash eng/avalonia/flatpak/build-bundle.sh "$RUNNER_TEMP/publish-linux-x64" "$bundle"
+
+    - name: Upload package
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      with:
+        name: avalonia-maintainer-linux-flatpak-x64
+        path: ${{ runner.temp }}/GitExtensions-Avalonia-*-linux-x64.flatpak
+        if-no-files-found: error
+        retention-days: 14
+
+  macos:
+    name: macOS Apple Silicon
+    if: ${{ github.repository == 'begota98/gitextensions' }}
+    runs-on: macos-15
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+    - name: Checkout
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      with:
+        submodules: recursive
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Cache NuGet packages
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+      with:
+        path: ~/.nuget/packages
+        key: avalonia-maintainer-nuget-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('Directory.Packages.props') }}
+        restore-keys: |
+          avalonia-maintainer-nuget-${{ runner.os }}-${{ runner.arch }}-
+
+    - name: Restore
+      run: |
+        dotnet restore GitExtensions.Avalonia.slnx --force-evaluate
+        dotnet restore GitExtensions.Avalonia.slnx -p:Configuration=Release --force-evaluate
+
+    - name: Build
+      run: dotnet build GitExtensions.Avalonia.slnx -c Release -m:1 --no-restore
+
+    - name: Test startup and view construction
+      run: >-
+        dotnet test tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj
+        -c Release --no-build --no-restore
+        -p:BuildAvalonia=true
+        --filter "Category=P0_8B|Category=P0_6"
+
+    - name: Publish and package
+      run: |
+        label="${{ github.run_number }}-${GITHUB_SHA:0:8}"
+        publish="$RUNNER_TEMP/publish-osx-arm64"
+        archive="$RUNNER_TEMP/GitExtensions-Avalonia-$label-osx-arm64.app.zip"
+        dotnet publish src/app/GitExtensions.Avalonia/GitExtensions.Avalonia.csproj \
+          -c Release -p:BuildAvalonia=true -r osx-arm64 --self-contained true -m:1 \
+          --output "$publish"
+        pwsh eng/avalonia/Stage-MaintainerPublish.ps1 -PublishDirectory "$publish"
+        bash eng/avalonia/package-macos-app.sh \
+          "$publish" "$archive" "${{ github.run_number }}" "0.${{ github.run_number }}"
+
+    - name: Upload package
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      with:
+        name: avalonia-maintainer-osx-arm64
+        path: ${{ runner.temp }}/GitExtensions-Avalonia-*-osx-arm64.app.zip
+        if-no-files-found: error
+        retention-days: 14
+
+  release:
+    name: Publish maintainer prerelease
+    if: ${{ github.repository == 'begota98/gitextensions' && github.ref == 'refs/heads/master' }}
+    needs:
+      - windows
+      - flatpak
+      - macos
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+    - name: Download packages
+      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+      with:
+        path: release-assets
+        merge-multiple: true
+
+    - name: Generate checksums and release notes
+      run: |
+        cd release-assets
+        sha256sum GitExtensions-Avalonia-* > SHA256SUMS.txt
+        cd ..
+        label="${GITHUB_RUN_NUMBER}-${GITHUB_SHA:0:8}"
+        tag="avalonia-test-$label"
+        title="Avalonia maintainer build $label"
+        cat > release-notes.md <<EOF
+        Automated unsigned testing build for commit [\`${GITHUB_SHA}\`](https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}).
+
+        These packages are development snapshots for maintainers and issue reporters. They are not production releases and may contain known parity gaps.
+
+        - Windows: extract the \`win-x64.zip\` archive and run \`GitExtensions.Avalonia.exe\`.
+        - Linux: install with \`flatpak install --user ./GitExtensions-Avalonia-*-linux-x64.flatpak\`.
+        - macOS: on Apple Silicon, extract the \`osx-arm64\` archive and open \`Git Extensions Avalonia.app\`. The app is not Developer ID signed or notarized, so Gatekeeper may require explicit approval.
+
+        Verify downloads against \`SHA256SUMS.txt\`. Report problems in this fork and include this build label (\`$label\`) and operating system.
+        EOF
+        echo "tag=$tag" >> "$GITHUB_ENV"
+        echo "title=$title" >> "$GITHUB_ENV"
+
+    - name: Create or update prerelease
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+          gh release edit "$tag" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$title" \
+            --notes-file release-notes.md \
+            --prerelease
+        else
+          gh release create "$tag" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "$title" \
+            --notes-file release-notes.md \
+            --prerelease
+        fi
+        gh release upload "$tag" release-assets/* \
+          --repo "$GITHUB_REPOSITORY" \
+          --clobber

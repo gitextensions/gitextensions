@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Git Extensions
+Comment=Graphical user interface for Git
+Exec=GitExtensions.Avalonia browse %f
+Icon=com.github.gitextensions.GitExtensions.Avalonia
+Terminal=false
+Categories=Development;RevisionControl;
+Keywords=git;repository;revision;version control;
+StartupNotify=true

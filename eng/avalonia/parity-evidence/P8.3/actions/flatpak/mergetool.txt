@@ -1,0 +1,6 @@
+Merging:
+tracked.txt
+
+Normal merge conflict for 'tracked.txt':
+  {local}: modified file
+  {remote}: modified file

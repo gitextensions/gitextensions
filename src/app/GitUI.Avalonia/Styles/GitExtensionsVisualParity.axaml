@@ -1,0 +1,2691 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:converters="using:Avalonia.Controls.Converters"
+        xmlns:leftpanel="using:GitUI.LeftPanel">
+  <Styles.Resources>
+    <ResourceDictionary>
+      <!-- WinForms stores fonts in points; these defaults are the equivalent Avalonia
+           device-independent-pixel sizes until AppSettings replaces them at startup. -->
+      <FontFamily x:Key="GitExtensionsUiFontFamily">Segoe UI</FontFamily>
+      <x:Double x:Key="GitExtensionsUiFontSize">12</x:Double>
+      <!-- Raw ToolStripRenderer system text colors do not consume custom CSS's
+           configurable HighlightText/GrayText/ControlDark resources. -->
+      <SolidColorBrush x:Key="GitExtensionsWorkingDirectorySelectedForegroundBrush" Color="#FFFFFF" />
+      <FontStyle x:Key="GitExtensionsUiFontStyle">Normal</FontStyle>
+      <FontWeight x:Key="GitExtensionsUiFontWeight">Normal</FontWeight>
+      <FontFamily x:Key="GitExtensionsCommitFontFamily">Segoe UI</FontFamily>
+      <x:Double x:Key="GitExtensionsCommitFontSize">12</x:Double>
+      <FontStyle x:Key="GitExtensionsCommitFontStyle">Normal</FontStyle>
+      <FontWeight x:Key="GitExtensionsCommitFontWeight">Normal</FontWeight>
+      <FontFamily x:Key="GitExtensionsFixedWidthFontFamily">Consolas</FontFamily>
+      <x:Double x:Key="GitExtensionsFixedWidthFontSize">13.333333333333334</x:Double>
+      <FontStyle x:Key="GitExtensionsFixedWidthFontStyle">Normal</FontStyle>
+      <FontWeight x:Key="GitExtensionsFixedWidthFontWeight">Normal</FontWeight>
+      <FontFamily x:Key="GitExtensionsMonospaceFontFamily">Consolas</FontFamily>
+      <x:Double x:Key="GitExtensionsMonospaceFontSize">12</x:Double>
+      <FontStyle x:Key="GitExtensionsMonospaceFontStyle">Normal</FontStyle>
+      <FontWeight x:Key="GitExtensionsMonospaceFontWeight">Normal</FontWeight>
+      <FontFamily x:Key="GitExtensionsGenericMonospaceFontFamily">Courier New</FontFamily>
+      <!-- System.Windows.Forms.TreeView.Indent defaults to 19 at 96 DPI. FileStatusList
+           overrides this resource with its source-authored 14-DIP indent. -->
+      <x:Double x:Key="GitExtensionsTreeViewItemIndent">19</x:Double>
+      <Thickness x:Key="GitExtensionsTreeViewChevronMargin">4,0</Thickness>
+      <SolidColorBrush x:Key="GitExtensionsTransparentBrush" Color="Transparent" />
+      <SolidColorBrush x:Key="GitExtensionsErrorForegroundBrush" Color="Red" />
+      <SolidColorBrush x:Key="GitExtensionsSettingReadOnlyBackgroundBrush" Color="#F0F0F0" />
+      <compat:WinFormsFocusAdornerTemplate x:Key="GitExtensionsFocusAdorner" />
+      <converters:PlatformKeyGestureConverter x:Key="GitExtensionsMenuKeyGestureConverter" />
+
+      <!-- Avalonia popup descendants live in a detached visual root, so an outer style cannot
+           override the Fluent dropdown content margin. Preserve the framework template and
+           change only the popup measurements and chrome that differ from native WinForms. -->
+      <ControlTheme x:Key="GitExtensionsNativeComboBoxTheme"
+                    TargetType="ComboBox"
+                    BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Setter Property="Template">
+          <ControlTemplate>
+            <DataValidationErrors>
+              <Grid ColumnDefinitions="*,18">
+                <Border x:Name="Background"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        MinWidth="{DynamicResource ComboBoxThemeMinWidth}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}" />
+                <Border x:Name="HighlightBackground"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Background="{DynamicResource ComboBoxBackgroundUnfocused}"
+                        BorderBrush="{DynamicResource ComboBoxBackgroundBorderBrushUnfocused}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        IsVisible="False" />
+                <TextBlock x:Name="PlaceholderTextBlock"
+                           Grid.Column="0"
+                           Margin="{TemplateBinding Padding}"
+                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                           Foreground="{TemplateBinding PlaceholderForeground}"
+                           Opacity="{DynamicResource TextControlPlaceholderOpacity}"
+                           Text="{TemplateBinding PlaceholderText}">
+                  <TextBlock.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                      <Binding Path="SelectionBoxItem"
+                               RelativeSource="{RelativeSource TemplatedParent}"
+                               Converter="{x:Static ObjectConverters.IsNull}" />
+                      <Binding Path="!IsEditable" RelativeSource="{RelativeSource TemplatedParent}" />
+                    </MultiBinding>
+                  </TextBlock.IsVisible>
+                </TextBlock>
+                <ContentControl x:Name="ContentPresenter"
+                                Grid.Column="0"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}" />
+                <TextBox x:Name="PART_EditableTextBox"
+                         Grid.Column="0"
+                         Padding="{TemplateBinding Padding}"
+                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                         Foreground="{TemplateBinding Foreground}"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         IsVisible="{TemplateBinding IsEditable}"
+                         PlaceholderText="{TemplateBinding PlaceholderText}"
+                         Text="{TemplateBinding Text, Mode=TwoWay}">
+                  <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
+                    <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+                  </TextBox.Resources>
+                </TextBox>
+                <Border x:Name="DropDownOverlay"
+                        Grid.Column="1"
+                        Width="17"
+                        Margin="0,1,1,1"
+                        HorizontalAlignment="Right"
+                        Background="Transparent"
+                        IsVisible="False" />
+                <PathIcon x:Name="DropDownGlyph"
+                          Grid.Column="1"
+                          Width="7"
+                          Height="4"
+                          Margin="0,0,5,0"
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Center"
+                          Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"
+                          Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
+                          IsHitTestVisible="False"
+                          UseLayoutRounding="False" />
+                <Popup x:Name="PART_Popup"
+                       MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                       MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                       InheritsTransform="True"
+                       IsLightDismissEnabled="True"
+                       IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
+                       PlacementTarget="Background"
+                       WindowManagerAddShadowHint="False">
+                  <Border x:Name="PopupBorder"
+                          Padding="0"
+                          HorizontalAlignment="Stretch"
+                          Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
+                          BorderBrush="{DynamicResource GitExtensionsWindowTextBrush}"
+                          BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
+                          CornerRadius="0">
+                    <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                  VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                                  IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}"
+                                  IsScrollChainingEnabled="False">
+                      <ItemsPresenter x:Name="PART_ItemsPresenter"
+                                      Margin="0"
+                                      ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    </ScrollViewer>
+                  </Border>
+                </Popup>
+              </Grid>
+            </DataValidationErrors>
+          </ControlTemplate>
+        </Setter>
+      </ControlTheme>
+
+      <!-- ThemeFix deliberately leaves native EDIT chrome unchanged, even in a dark CSS
+           theme. Native Fixed3D search inputs retain a light rim and focus underline,
+           independently of KnownColor.Highlight or the user's desktop accent. -->
+      <SolidColorBrush x:Key="GitExtensionsNativeSearchRimBrush" Color="#ECECEC" />
+      <SolidColorBrush x:Key="GitExtensionsNativeSearchInnerRimBrush" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="GitExtensionsNativeSearchUnderlineBrush" Color="#838383" />
+      <SolidColorBrush x:Key="GitExtensionsNativeSearchFocusedUnderlineBrush" Color="#0067C0" />
+      <SolidColorBrush x:Key="GitExtensionsNativeLinkActiveBrush" Color="Red" />
+      <SolidColorBrush x:Key="GitExtensionsChecklistStatusHoverBrush" Color="#C0C0FF" />
+      <SolidColorBrush x:Key="GitExtensionsFileFilterRemovedBrush" Color="#FF0000" />
+      <SolidColorBrush x:Key="GitExtensionsFileFilterRenamedBrush" Color="#BD7CFF" />
+      <SolidColorBrush x:Key="GitExtensionsFileFilterModifiedBrush" Color="#A8A800" />
+      <SolidColorBrush x:Key="GitExtensionsFileFilterAddedBrush" Color="#00A800" />
+      <ControlTheme x:Key="GitExtensionsNativeSearchInputTheme"
+                    TargetType="TextBox"
+                    BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <DataValidationErrors>
+              <Panel>
+                <Border Name="NativeFrame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{StaticResource GitExtensionsNativeSearchRimBrush}"
+                        BorderThickness="1" />
+                <Border Margin="1"
+                        BorderBrush="{StaticResource GitExtensionsNativeSearchInnerRimBrush}"
+                        BorderThickness="1" />
+                <Border Name="NativeUnderline"
+                        Height="1"
+                        Background="{StaticResource GitExtensionsNativeSearchUnderlineBrush}"
+                        VerticalAlignment="Bottom" />
+                <ScrollViewer Name="PART_ScrollViewer" Margin="2"
+                              HorizontalScrollBarVisibility="Hidden"
+                              VerticalScrollBarVisibility="Disabled">
+                  <Panel>
+                    <TextBlock Name="PART_Placeholder"
+                               Text="{TemplateBinding PlaceholderText}"
+                               Foreground="{TemplateBinding PlaceholderForeground}"
+                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                      <TextBlock.IsVisible>
+                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text"
+                                 Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                      </TextBlock.IsVisible>
+                    </TextBlock>
+                    <TextPresenter Name="PART_TextPresenter"
+                                   Text="{TemplateBinding Text, Mode=TwoWay}"
+                                   CaretIndex="{TemplateBinding CaretIndex}"
+                                   CaretBrush="{TemplateBinding CaretBrush}"
+                                   CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                   SelectionStart="{TemplateBinding SelectionStart}"
+                                   SelectionEnd="{TemplateBinding SelectionEnd}"
+                                   SelectionBrush="{TemplateBinding SelectionBrush}"
+                                   SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                  </Panel>
+                </ScrollViewer>
+              </Panel>
+            </DataValidationErrors>
+          </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus /template/ Border#NativeUnderline">
+          <Setter Property="Height" Value="2" />
+          <Setter Property="Background" Value="{StaticResource GitExtensionsNativeSearchFocusedUnderlineBrush}" />
+        </Style>
+      </ControlTheme>
+
+      <!-- WinForms MenuStrip is a compact desktop control: 24px bar, 20px top-level
+           items, and 22px dropdown rows. Fluent's defaults are intentionally roomier. -->
+      <x:Double x:Key="MenuBarHeight">24</x:Double>
+      <Thickness x:Key="MenuBarItemPadding">7,0</Thickness>
+      <Thickness x:Key="MenuFlyoutItemThemePaddingNarrow">8,1</Thickness>
+      <Thickness x:Key="MenuInputGestureTextMargin">7,0,0,0</Thickness>
+      <Thickness x:Key="MenuFlyoutScrollerMargin">0</Thickness>
+      <x:Double x:Key="MenuFlyoutThemeMinHeight">0</x:Double>
+      <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
+
+      <StreamGeometry x:Key="GitExtensionsSpinnerIncreaseIcon">M0,4 L4,0 L8,4</StreamGeometry>
+      <StreamGeometry x:Key="GitExtensionsSpinnerDecreaseIcon">M0,0 L4,4 L8,0</StreamGeometry>
+      <ControlTheme x:Key="GitExtensionsCompactSpinnerButtonTheme"
+                    TargetType="RepeatButton">
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+              <ContentPresenter Content="{TemplateBinding Content}"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center" />
+            </Border>
+          </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+          <Setter Property="Background" Value="{DynamicResource RepeatButtonBackgroundPointerOver}" />
+        </Style>
+        <Style Selector="^:pressed">
+          <Setter Property="Background" Value="{DynamicResource RepeatButtonBackgroundPressed}" />
+        </Style>
+      </ControlTheme>
+      <ControlTheme x:Key="GitExtensionsCompactButtonSpinnerTheme"
+                    TargetType="ButtonSpinner">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+              <Grid ColumnDefinitions="*,18"
+                    RowDefinitions="*,*">
+                <ContentPresenter x:Name="PART_ContentPresenter"
+                                  Grid.RowSpan="2"
+                                  Content="{TemplateBinding Content}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                <RepeatButton x:Name="PART_IncreaseButton"
+                              Grid.Column="1"
+                              Theme="{StaticResource GitExtensionsCompactSpinnerButtonTheme}"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="1,0,0,1">
+                  <PathIcon Width="8"
+                            Height="4"
+                            Foreground="{TemplateBinding Foreground}"
+                            Data="{StaticResource GitExtensionsSpinnerIncreaseIcon}" />
+                </RepeatButton>
+                <RepeatButton x:Name="PART_DecreaseButton"
+                              Grid.Row="1"
+                              Grid.Column="1"
+                              Theme="{StaticResource GitExtensionsCompactSpinnerButtonTheme}"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="1,0,0,0">
+                  <PathIcon Width="8"
+                            Height="4"
+                            Foreground="{TemplateBinding Foreground}"
+                            Data="{StaticResource GitExtensionsSpinnerDecreaseIcon}" />
+                </RepeatButton>
+              </Grid>
+            </Border>
+          </ControlTemplate>
+        </Setter>
+      </ControlTheme>
+
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="GitExtensionsWorkingDirectoryDisabledForegroundBrush" Color="#6D6D6D" />
+          <SolidColorBrush x:Key="GitExtensionsWorkingDirectoryDisabledArrowBrush" Color="#A0A0A0" />
+          <SolidColorBrush x:Key="GitExtensionsWorkingDirectorySystemSelectionBrush" Color="#0078D7" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListHeaderBackgroundBrush"
+                           Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListSelectionBackgroundBrush"
+                           Color="#CCE8FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListInactiveSelectionBackgroundBrush"
+                           Color="#D9D9D9" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListHotTrackBrush"
+                           Color="#0066CC" />
+          <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
+                           Color="#C3C3FF" />
+          <SolidColorBrush x:Key="GitExtensionsSelectionPointerOverBackgroundBrush"
+                           Color="#B3B3EB" />
+          <SolidColorBrush x:Key="GitExtensionsSelectionForegroundBrush"
+                           Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsNativeSelectionBackgroundBrush"
+                           Color="#0078D7" />
+          <SolidColorBrush x:Key="GitExtensionsNativeSelectionForegroundBrush"
+                           Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsInactiveSelectionBackgroundBrush"
+                           Color="#E6E6E6" />
+          <SolidColorBrush x:Key="GitExtensionsPanelBackgroundBrush"
+                           Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionAlternatingRowBrush"
+                           Color="#F9F9F9" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionAuthoredBrush"
+                           Color="#FFFFC8" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionSelectedSubjectBrush"
+                           Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeSubjectBrush"
+                           Color="#6D6D6D" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeSelectedSubjectBrush"
+                           Color="#BCBCBC" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionSelectedBodyBrush"
+                           Color="#BCBCBC" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeBodyBrush"
+                           Color="#989898" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeSelectedBodyBrush"
+                           Color="#A1A1A1" />
+          <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
+                           Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionBackgroundBrush" Color="#CCE8FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionBorderBrush" Color="#0078D4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionCornerBrush" Color="#CCE4F6" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionAdjacentEdgeBrush" Color="#0078D4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionInnerCornerBrush" Color="#CCE8FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionBackgroundBrush" Color="#D9D9D9" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionBorderBrush" Color="#949494" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionCornerBrush" Color="#9D9D9D" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionAdjacentEdgeBrush" Color="#949494" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionInnerCornerBrush" Color="#D9D9D9" />
+          <SolidColorBrush x:Key="GitExtensionsXhtmlLinkForegroundBrush" Color="#0066CC" />
+          <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsCommitEditorReadOnlyBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsTextInputBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsDialogControlsBackgroundBrush" Color="#EEEEEE" />
+          <SolidColorBrush x:Key="GitExtensionsReadOnlyTextInputBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsDataGridViewGridLineBrush" Color="#646464" />
+          <SolidColorBrush x:Key="GitExtensionsDataGridViewSelectionBackgroundBrush" Color="#0078D7" />
+          <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#FDFDFD" />
+          <x:Boolean x:Key="GitExtensionsNativeFlatButtonDarkMode">False</x:Boolean>
+          <x:Boolean x:Key="GitExtensionsNativeToolStripSplitUseSystemVisualStyle">True</x:Boolean>
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalSelectedBrush" Color="#B3D7F3" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalPressedBrush" Color="#80BCEB" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalBorderBrush" Color="#0078D7" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalSplitterBrush" Color="#0078D7" />
+          <LinearGradientBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalOpenBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Offset="0" Color="#FCFCFC" />
+            <GradientStop Offset="1" Color="#F8F8F8" />
+          </LinearGradientBrush>
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalOpenBorderBrush" Color="#808080" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSearchBackgroundBrush" Color="#FFFFE1" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSearchForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeDefaultBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeDisabledGutterBackgroundBrush" Color="#F4F7FC" />
+          <x:Boolean x:Key="GitExtensionsToolStripSeparatorUseSystemVisualStyle">True</x:Boolean>
+          <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorDarkBrush" Color="#BDBDBD" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorLightBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripGripDarkBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripGripLightBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonHoverBackgroundBrush" Color="#D8D8D8" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonPressedBackgroundBrush" Color="#E5E5E5" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonDisabledBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonBorderBrush" Color="Transparent" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonHoverBorderBrush" Color="Transparent" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonPressedBorderBrush" Color="Transparent" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonDisabledBorderBrush" Color="Transparent" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonFocusBrush" Color="#A0A0A0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonBorderBrush" Color="#D0D0D0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPointerOverBackgroundBrush" Color="#E0EEF9" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPointerOverBorderBrush" Color="#0F80D6" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPressedBackgroundBrush" Color="#CCE4F7" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPressedBorderBrush" Color="#005499" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBackgroundBrush" Color="#F9F9F9" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBorderBrush" Color="#E9E9E9" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledForegroundBrush" Color="#A0A0A0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabBorderBrush" Color="#E5E5E5" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabSelectedBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabUnselectedBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsBrowseTabSelectedBackgroundBrush" Color="#F9F9F9" />
+          <SolidColorBrush x:Key="GitExtensionsBrowseTabUnselectedBackgroundBrush" Color="#F3F3F3" />
+          <SolidColorBrush x:Key="GitExtensionsNativeScrollBarBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeScrollBarThumbBrush" Color="#858585" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripOverflowBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabPageBackgroundBrush" Color="Transparent" />
+          <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsMenuBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#FDFDFD" />
+          <SolidColorBrush x:Key="GitExtensionsMenuRenderedBorderBrush" Color="#808080" />
+          <SolidColorBrush x:Key="GitExtensionsNativeMenuSelectedBackgroundBrush" Color="#B3D7F3" />
+          <SolidColorBrush x:Key="GitExtensionsNativeMenuSelectedBorderBrush" Color="#0078D7" />
+          <LinearGradientBrush x:Key="GitExtensionsNativeMenuOpenBackgroundBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#FCFCFC" Offset="0" />
+            <GradientStop Color="#F8F8F8" Offset="1" />
+          </LinearGradientBrush>
+          <SolidColorBrush x:Key="GitExtensionsNativeMenuOpenBorderBrush" Color="#808080" />
+          <SolidColorBrush x:Key="GitExtensionsMenuCheckBackgroundBrush" Color="#B5D7F3" />
+          <SolidColorBrush x:Key="GitExtensionsMenuCheckForegroundBrush" Color="#393939" />
+          <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsSourceControlTextBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#A0A0A0" />
+          <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#E3E3E3" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripPointerOverBackgroundBrush" Color="#E5F3FF" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripCheckedBackgroundBrush" Color="#CCE8FF" />
+          <SolidColorBrush x:Key="GitExtensionsControlPressedBackgroundBrush" Color="#A0A0A0" />
+          <SolidColorBrush x:Key="GitExtensionsDisabledForegroundBrush" Color="#6D6D6D" />
+          <SolidColorBrush x:Key="GitExtensionsHighlightBackgroundBrush" Color="#0078D7" />
+          <SolidColorBrush x:Key="GitExtensionsHighlightForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsFileStatusSelectionForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsInactiveSelectionForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsSystemInactiveSelectionBackgroundBrush" Color="#BFCDDB" />
+          <SolidColorBrush x:Key="GitExtensionsToolTipBackgroundBrush" Color="#FFFFE1" />
+          <SolidColorBrush x:Key="GitExtensionsToolTipForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsPaneBorderBrush"
+                           Color="#E0E0E0" />
+          <SolidColorBrush x:Key="GitExtensionsSectionBorderBrush"
+                           Color="#E0E0E0" />
+          <SolidColorBrush x:Key="GitExtensionsFileStatusSplitterBrush"
+                           Color="#E0E0E0" />
+          <SolidColorBrush x:Key="GitExtensionsOtherBackgroundBrush" Color="#FBFBFB" />
+          <SolidColorBrush x:Key="GitExtensionsMergeConflictsBackgroundBrush" Color="#E66363" />
+          <SolidColorBrush x:Key="GitExtensionsMergeConflictsForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsRefLabelBackgroundBrush"
+                           Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsBranchRefBrush"
+                           Color="#008000" />
+          <SolidColorBrush x:Key="GitExtensionsRemoteBranchRefBrush"
+                           Color="#8B0009" />
+          <SolidColorBrush x:Key="GitExtensionsTagRefBrush"
+                           Color="#00008B" />
+          <SolidColorBrush x:Key="GitExtensionsOtherRefBrush"
+                           Color="#808080" />
+          <SolidColorBrush x:Key="GitExtensionsTreeConnectorBrush"
+                           Color="#6D6D6D" />
+          <SolidColorBrush x:Key="GitExtensionsValidFilterBackgroundBrush"
+                           Color="#C8FFC8" />
+          <SolidColorBrush x:Key="GitExtensionsInvalidFilterBackgroundBrush"
+                           Color="#FFC8C8" />
+          <SolidColorBrush x:Key="GitExtensionsResetSoftBackgroundBrush" Color="#80FF80" />
+          <SolidColorBrush x:Key="GitExtensionsResetMixedBackgroundBrush" Color="#FFFF80" />
+          <SolidColorBrush x:Key="GitExtensionsResetHardBackgroundBrush" Color="#FF8080" />
+          <SolidColorBrush x:Key="GitExtensionsResetSoftForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsResetMixedForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsResetHardForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsDiffEditorBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsDiffTextBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBackgroundBrush" Color="#EBEBEB" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBrush" Color="#666666" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberSelectedBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsDiffSectionBrush" Color="#E6E6E6" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedBrush" Color="#FFC8C8" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedBrush" Color="#C8FFC8" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedDimBrush" Color="#FFF1F1" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedDimBrush" Color="#F1FFF1" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedBrush" Color="#F6CEFF" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedBrush" Color="#C8D0F4" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedForegroundBrush" Color="#D3000B" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedForegroundBrush" Color="#189100" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedDimForegroundBrush" Color="#F4C0C2" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedDimForegroundBrush" Color="#C5E4BF" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedForegroundBrush" Color="#B148C6" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedForegroundBrush" Color="#005DFF" />
+          <SolidColorBrush x:Key="GitExtensionsBlameHighlightBrush" Color="#E3E3E3" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAuthorBrush" Color="#666666" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge0Brush" Color="#F7FCF5" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge1Brush" Color="#C7E9C0" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge2Brush" Color="#A1D99B" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge3Brush" Color="#74C476" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge4Brush" Color="#41AB5D" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge5Brush" Color="#238B45" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge6Brush" Color="#00441B" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="GitExtensionsWorkingDirectoryDisabledForegroundBrush" Color="#969696" />
+          <SolidColorBrush x:Key="GitExtensionsWorkingDirectoryDisabledArrowBrush" Color="#4A4A4A" />
+          <SolidColorBrush x:Key="GitExtensionsWorkingDirectorySystemSelectionBrush" Color="#2864B4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListHeaderBackgroundBrush"
+                           Color="#191919" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListSelectionBackgroundBrush"
+                           Color="#28445B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListInactiveSelectionBackgroundBrush"
+                           Color="#2B2B2B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListHotTrackBrush"
+                           Color="#2D5FAF" />
+          <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
+                           Color="#00009B" />
+          <SolidColorBrush x:Key="GitExtensionsSelectionPointerOverBackgroundBrush"
+                           Color="#1313A2" />
+          <SolidColorBrush x:Key="GitExtensionsSelectionForegroundBrush"
+                           Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeSelectionBackgroundBrush"
+                           Color="#2864B4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeSelectionForegroundBrush"
+                           Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsInactiveSelectionBackgroundBrush"
+                           Color="#3A3A3A" />
+          <SolidColorBrush x:Key="GitExtensionsPanelBackgroundBrush"
+                           Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionAlternatingRowBrush"
+                           Color="#373737" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionAuthoredBrush"
+                           Color="#665E00" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionSelectedSubjectBrush"
+                           Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeSubjectBrush"
+                           Color="#C0C0C0" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeSelectedSubjectBrush"
+                           Color="#EBEBD7" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionSelectedBodyBrush"
+                           Color="#AAAA96" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeBodyBrush"
+                           Color="#828282" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeSelectedBodyBrush"
+                           Color="#AAAA96" />
+          <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
+                           Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionBackgroundBrush" Color="#626262" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionBorderBrush" Color="#60CDFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionCornerBrush" Color="#426778" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionAdjacentEdgeBrush" Color="#5CC1EF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSelectionInnerCornerBrush" Color="#5C5C5C" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionBackgroundBrush" Color="#333333" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionBorderBrush" Color="#3D3D3D" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionCornerBrush" Color="#353535" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionAdjacentEdgeBrush" Color="#3C3C3C" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeInactiveSelectionInnerCornerBrush" Color="#353535" />
+          <SolidColorBrush x:Key="GitExtensionsXhtmlLinkForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#2E2E2E" />
+          <SolidColorBrush x:Key="GitExtensionsCommitEditorReadOnlyBackgroundBrush" Color="#2E2E2E" />
+          <SolidColorBrush x:Key="GitExtensionsTextInputBackgroundBrush" Color="#2E2E2E" />
+          <SolidColorBrush x:Key="GitExtensionsDialogControlsBackgroundBrush" Color="#383838" />
+          <SolidColorBrush x:Key="GitExtensionsReadOnlyTextInputBackgroundBrush" Color="#5A5A5A" />
+          <SolidColorBrush x:Key="GitExtensionsDataGridViewGridLineBrush" Color="#282828" />
+          <SolidColorBrush x:Key="GitExtensionsDataGridViewSelectionBackgroundBrush" Color="#2864B4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#333333" />
+          <x:Boolean x:Key="GitExtensionsNativeFlatButtonDarkMode">True</x:Boolean>
+          <x:Boolean x:Key="GitExtensionsNativeToolStripSplitUseSystemVisualStyle">False</x:Boolean>
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalSelectedBrush" Color="#2F4159" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalPressedBrush" Color="#2D4B73" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalBorderBrush" Color="#2864B4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalSplitterBrush" Color="#C0C0C0" />
+          <LinearGradientBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalOpenBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Offset="0" Color="#2E2E2E" />
+            <GradientStop Offset="1" Color="#292929" />
+          </LinearGradientBrush>
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalOpenBorderBrush" Color="#6B6B6B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSearchBackgroundBrush" Color="#50503C" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeSearchForegroundBrush" Color="#BEBEBE" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTreeDefaultBackgroundBrush" Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsNativeDisabledGutterBackgroundBrush" Color="#3C3F41" />
+          <x:Boolean x:Key="GitExtensionsToolStripSeparatorUseSystemVisualStyle">False</x:Boolean>
+          <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorDarkBrush" Color="#404040" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorLightBrush" Color="#101010" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripGripDarkBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripGripLightBrush" Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonBackgroundBrush" Color="#333333" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonHoverBackgroundBrush" Color="#454545" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonPressedBackgroundBrush" Color="#666666" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonDisabledBackgroundBrush" Color="#333333" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonBorderBrush" Color="#9B9B9B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonHoverBorderBrush" Color="#9B9B9B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonPressedBorderBrush" Color="#A0A0A0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonDisabledBorderBrush" Color="#373737" />
+          <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonFocusBrush" Color="Black" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonBorderBrush" Color="#9B9B9B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPointerOverBackgroundBrush" Color="#454545" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPointerOverBorderBrush" Color="#919191" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPressedBackgroundBrush" Color="#666666" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPressedBorderBrush" Color="#A0A0A0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBackgroundBrush" Color="#333333" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBorderBrush" Color="#373737" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledForegroundBrush" Color="#CCCCCC" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabBorderBrush" Color="#3B3B3B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabSelectedBackgroundBrush" Color="#202020" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabUnselectedBackgroundBrush" Color="#202020" />
+          <SolidColorBrush x:Key="GitExtensionsBrowseTabSelectedBackgroundBrush" Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsBrowseTabUnselectedBackgroundBrush" Color="#202020" />
+          <SolidColorBrush x:Key="GitExtensionsNativeScrollBarBackgroundBrush" Color="#171717" />
+          <SolidColorBrush x:Key="GitExtensionsNativeScrollBarThumbBrush" Color="#959595" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripOverflowBackgroundBrush" Color="#232323" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabPageBackgroundBrush" Color="#202020" />
+          <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#202020" />
+          <SolidColorBrush x:Key="GitExtensionsMenuBackgroundBrush" Color="#373737" />
+          <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#2F2F2F" />
+          <SolidColorBrush x:Key="GitExtensionsMenuRenderedBorderBrush" Color="#6B6B6B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeMenuSelectedBackgroundBrush" Color="#2F4159" />
+          <SolidColorBrush x:Key="GitExtensionsNativeMenuSelectedBorderBrush" Color="#2864B4" />
+          <LinearGradientBrush x:Key="GitExtensionsNativeMenuOpenBackgroundBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#2E2E2E" Offset="0" />
+            <GradientStop Color="#292929" Offset="1" />
+          </LinearGradientBrush>
+          <SolidColorBrush x:Key="GitExtensionsNativeMenuOpenBorderBrush" Color="#6B6B6B" />
+          <SolidColorBrush x:Key="GitExtensionsMenuCheckBackgroundBrush" Color="#2E3F56" />
+          <SolidColorBrush x:Key="GitExtensionsMenuCheckForegroundBrush" Color="#E1E3E6" />
+          <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsSourceControlTextBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#4A4A4A" />
+          <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#2E2E2E" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripPointerOverBackgroundBrush" Color="#2F4159" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripCheckedBackgroundBrush" Color="#28445B" />
+          <SolidColorBrush x:Key="GitExtensionsControlPressedBackgroundBrush" Color="#4A4A4A" />
+          <SolidColorBrush x:Key="GitExtensionsDisabledForegroundBrush" Color="#969696" />
+          <SolidColorBrush x:Key="GitExtensionsHighlightBackgroundBrush" Color="#2864B4" />
+          <SolidColorBrush x:Key="GitExtensionsHighlightForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsFileStatusSelectionForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsInactiveSelectionForegroundBrush" Color="#BEBEBE" />
+          <SolidColorBrush x:Key="GitExtensionsSystemInactiveSelectionBackgroundBrush" Color="#374B5A" />
+          <SolidColorBrush x:Key="GitExtensionsToolTipBackgroundBrush" Color="#50503C" />
+          <SolidColorBrush x:Key="GitExtensionsToolTipForegroundBrush" Color="#BEBEBE" />
+          <SolidColorBrush x:Key="GitExtensionsPaneBorderBrush"
+                           Color="#4C4C4C" />
+          <SolidColorBrush x:Key="GitExtensionsSectionBorderBrush"
+                           Color="#4C4C4C" />
+          <SolidColorBrush x:Key="GitExtensionsFileStatusSplitterBrush"
+                           Color="#2F2F2F" />
+          <SolidColorBrush x:Key="GitExtensionsOtherBackgroundBrush" Color="#353535" />
+          <SolidColorBrush x:Key="GitExtensionsMergeConflictsBackgroundBrush" Color="#701212" />
+          <SolidColorBrush x:Key="GitExtensionsMergeConflictsForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsRefLabelBackgroundBrush"
+                           Color="#202020" />
+          <SolidColorBrush x:Key="GitExtensionsBranchRefBrush"
+                           Color="#7FE28A" />
+          <SolidColorBrush x:Key="GitExtensionsRemoteBranchRefBrush"
+                           Color="#FD9797" />
+          <SolidColorBrush x:Key="GitExtensionsTagRefBrush"
+                           Color="#40BAF7" />
+          <SolidColorBrush x:Key="GitExtensionsOtherRefBrush"
+                           Color="#CFB3B3" />
+          <SolidColorBrush x:Key="GitExtensionsTreeConnectorBrush"
+                           Color="#6D6D6D" />
+          <SolidColorBrush x:Key="GitExtensionsValidFilterBackgroundBrush"
+                           Color="#274439" />
+          <SolidColorBrush x:Key="GitExtensionsInvalidFilterBackgroundBrush"
+                           Color="#453030" />
+          <SolidColorBrush x:Key="GitExtensionsResetSoftBackgroundBrush" Color="#63BE63" />
+          <SolidColorBrush x:Key="GitExtensionsResetMixedBackgroundBrush" Color="#BEBE63" />
+          <SolidColorBrush x:Key="GitExtensionsResetHardBackgroundBrush" Color="#BE6363" />
+          <SolidColorBrush x:Key="GitExtensionsResetSoftForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsResetMixedForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsResetHardForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsDiffEditorBackgroundBrush" Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsDiffTextBrush" Color="#F1F1F1" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBackgroundBrush" Color="#252526" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBrush" Color="#AAAAAA" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberSelectedBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsDiffSectionBrush" Color="#5F5E5E" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedBrush" Color="#6E1919" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedBrush" Color="#076641" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedDimBrush" Color="#453030" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedDimBrush" Color="#274439" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedBrush" Color="#622163" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedBrush" Color="#12396B" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedForegroundBrush" Color="#CD3131" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedForegroundBrush" Color="#0DBC79" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedDimForegroundBrush" Color="#5E3131" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedDimForegroundBrush" Color="#2B544A" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedForegroundBrush" Color="#D670D6" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedForegroundBrush" Color="#65A4FF" />
+          <SolidColorBrush x:Key="GitExtensionsBlameHighlightBrush" Color="#414141" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAuthorBrush" Color="#B8B8B8" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge0Brush" Color="#263A2C" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge1Brush" Color="#315B3C" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge2Brush" Color="#347A47" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge3Brush" Color="#2F9952" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge4Brush" Color="#29B35B" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge5Brush" Color="#46CA70" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge6Brush" Color="#78E391" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+    </ResourceDictionary>
+  </Styles.Resources>
+
+  <!-- Runtime values come from the shared Git Extensions CSS theme. These light/dark values
+       remain as designer and pre-startup fallbacks. -->
+  <Style Selector="Window">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
+    <!-- Preserve the source Designer's 96-DPI coordinates through fractional render scales.
+         Recursive layout rounding compounds at nested container boundaries; resolving the
+         final rendered edges once avoids that accumulated drift. -->
+    <Setter Property="UseLayoutRounding" Value="False" />
+  </Style>
+  <Style Selector="UserControl">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
+  </Style>
+  <Style Selector="Control">
+    <Setter Property="ToolTip.ShowDelay" Value="500" />
+    <Setter Property="ToolTip.BetweenShowDelay" Value="100" />
+    <Setter Property="ToolTip.Placement" Value="Pointer" />
+  </Style>
+
+  <Style Selector="TextBox">
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="Padding" Value="3,1" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsTextInputBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="SelectionBrush" Value="{DynamicResource GitExtensionsNativeSelectionBackgroundBrush}" />
+    <Setter Property="SelectionForegroundBrush" Value="{DynamicResource GitExtensionsNativeSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="TextBox:pointerover">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="TextBox:focus">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="TextBox:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+  </Style>
+  <Style Selector="TextBox.file-filter-active">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsValidFilterBackgroundBrush}" />
+  </Style>
+  <Style Selector="TextBox.file-filter-invalid">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInvalidFilterBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBox.file-filter-active">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsValidFilterBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBox.file-filter-active /template/ TextBox#PART_EditableTextBox">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsValidFilterBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBox.file-filter-invalid">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInvalidFilterBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBox.file-filter-invalid /template/ TextBox#PART_EditableTextBox">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInvalidFilterBackgroundBrush}" />
+  </Style>
+  <Style Selector="TextBox.plugin-setting-number">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+  </Style>
+  <Style Selector="TextBox.plugin-setting-invalid">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInvalidSettingBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsInvalidSettingForegroundBrush}" />
+  </Style>
+  <Style Selector="TextBox.plugin-setting-text:read-only">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsSettingReadOnlyBackgroundBrush}" />
+  </Style>
+  <Style Selector="TextBox.gitextensions-borderless-readonly">
+    <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="TextBox.gitextensions-stash-message /template/ Border#PART_BorderElement">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsKnownColorInfoBrush}" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="TextBox.gitextensions-cleanup-preview /template/ Border#PART_BorderElement">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsCleanupPreviewBackgroundBrush}" />
+  </Style>
+  <Style Selector="TextBox.gitextensions-cleanup-path-input:disabled /template/ Border#PART_BorderElement">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBox">
+    <Setter Property="Theme" Value="{StaticResource GitExtensionsNativeComboBoxTheme}" />
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="Padding" Value="4,1,0,1" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="ComboBox:pointerover">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBox:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBoxItem">
+    <!-- WinForms ComboBox defaults to the 15px text-metric item height at 96 DPI. -->
+    <Setter Property="Height" Value="15" />
+    <Setter Property="MinHeight" Value="15" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Padding" Value="3,0" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBoxItem:not(:pointerover):not(:selected) /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBoxItem:pointerover,
+                   ComboBoxItem:selected,
+                   ComboBoxItem:selected:pointerover">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsHighlightForegroundBrush}" />
+  </Style>
+  <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                   ComboBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter,
+                   ComboBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsHighlightForegroundBrush}" />
+  </Style>
+  <Style Selector="ComboBox /template/ ListBox">
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
+  <Style Selector="ComboBox.gitextensions-toolbar-input">
+    <!-- Fluent's default 5/7px padding and 32px arrow column are touch metrics. Keep the
+         editor vertically symmetric and use the compact ToolStripComboBox arrow segment. -->
+    <Setter Property="Padding" Value="4,2,0,2" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="ComboBox.gitextensions-toolbar-input /template/ TextBox#PART_EditableTextBox">
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="ComboBox.gitextensions-toolbar-input /template/ Border#DropDownOverlay">
+    <Setter Property="Width" Value="15" />
+  </Style>
+  <Style Selector="ComboBox.gitextensions-toolbar-input /template/ PathIcon#DropDownGlyph">
+    <Setter Property="Width" Value="7" />
+    <Setter Property="Height" Value="5" />
+    <Setter Property="Margin" Value="0,0,5,0" />
+  </Style>
+  <Style Selector="Button.gitextensions-dialog-action">
+    <Setter Property="MinWidth" Value="75" />
+    <Setter Property="MinHeight" Value="25" />
+    <Setter Property="Padding" Value="4,1" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="CheckBox">
+    <Setter Property="Height" Value="19" />
+    <Setter Property="MinHeight" Value="19" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid ColumnDefinitions="13,*">
+          <Border x:Name="PART_Indicator"
+                  Width="13"
+                  Height="13"
+                  VerticalAlignment="Center"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="1"
+                  CornerRadius="0">
+            <Grid>
+              <Path x:Name="PART_CheckGlyph"
+                    Width="9"
+                    Height="8"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Data="M 0,4 L 3,7 L 8,0"
+                    IsVisible="False"
+                    Stroke="{DynamicResource GitExtensionsHighlightForegroundBrush}"
+                    StrokeLineCap="Square"
+                    StrokeThickness="1.5" />
+              <Border x:Name="PART_IndeterminateGlyph"
+                      Width="7"
+                      Height="3"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Background="{DynamicResource GitExtensionsHighlightForegroundBrush}"
+                      IsVisible="False" />
+            </Grid>
+          </Border>
+          <ContentPresenter Grid.Column="1"
+                            Margin="3,0,0,0"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            RecognizesAccessKey="True"
+                            VerticalContentAlignment="Center" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="CheckBox:pointerover">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPointerOverBackgroundBrush}" />
+  </Style>
+  <Style Selector="CheckBox:pressed">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPressedBackgroundBrush}" />
+  </Style>
+  <Style Selector="CheckBox:checked">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="CheckBox:checked /template/ Path#PART_CheckGlyph">
+    <Setter Property="IsVisible" Value="True" />
+  </Style>
+  <Style Selector="CheckBox:indeterminate">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="CheckBox:indeterminate /template/ Border#PART_IndeterminateGlyph">
+    <Setter Property="IsVisible" Value="True" />
+  </Style>
+  <Style Selector="CheckBox:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+  </Style>
+  <Style Selector="ScrollViewer.gitextensions-compact-checkboxes CheckBox">
+    <Setter Property="Margin" Value="0,-4" />
+  </Style>
+  <Style Selector="RadioButton">
+    <Setter Property="Height" Value="19" />
+    <Setter Property="MinHeight" Value="19" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid ColumnDefinitions="13,*">
+          <Border x:Name="PART_Indicator"
+                  Width="13"
+                  Height="13"
+                  VerticalAlignment="Center"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="1"
+                  CornerRadius="7">
+            <Ellipse x:Name="PART_CheckedGlyph"
+                     Width="5"
+                     Height="5"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     Fill="{DynamicResource GitExtensionsHighlightForegroundBrush}"
+                     IsVisible="False" />
+          </Border>
+          <ContentPresenter Grid.Column="1"
+                            Margin="3,0,0,0"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            RecognizesAccessKey="True"
+                            VerticalContentAlignment="Center" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="RadioButton:pointerover">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPointerOverBackgroundBrush}" />
+  </Style>
+  <Style Selector="RadioButton:pressed">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPressedBackgroundBrush}" />
+  </Style>
+  <Style Selector="RadioButton:checked">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="RadioButton:checked /template/ Ellipse#PART_CheckedGlyph">
+    <Setter Property="IsVisible" Value="True" />
+  </Style>
+  <Style Selector="RadioButton:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+  </Style>
+  <Style Selector="NumericUpDown">
+    <Setter Property="Height" Value="23" />
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="Padding" Value="3,1" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsTextInputBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="NumericUpDown:pointerover, NumericUpDown:focus">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="NumericUpDown:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+  </Style>
+  <Style Selector="NumericUpDown /template/ ButtonSpinner#PART_Spinner">
+    <Setter Property="Theme" Value="{StaticResource GitExtensionsCompactButtonSpinnerTheme}" />
+  </Style>
+  <Style Selector="compat|NativeToolStrip">
+    <Setter Property="UseSystemVisualStyle" Value="{DynamicResource GitExtensionsNativeToolStripSplitUseSystemVisualStyle}" />
+    <Setter Property="GripDarkBrush" Value="{DynamicResource GitExtensionsNativeToolStripGripDarkBrush}" />
+    <Setter Property="GripLightBrush" Value="{DynamicResource GitExtensionsNativeToolStripGripLightBrush}" />
+  </Style>
+  <!-- Button.Content must stay a string so AvaloniaTranslationUtils can continue mapping
+       the original control .Text key. These templates add the original raster icon without
+       wrapping or replacing that translatable value in each form. -->
+  <Style Selector="Button.gitextensions-icon-button">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[compat:IconButton].Icon}" />
+          <AccessText VerticalAlignment="Center" Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Image.gitextensions-icon-16">
+    <Setter Property="Width" Value="16" />
+    <Setter Property="Height" Value="16" />
+  </Style>
+  <Style Selector="Button.gitextensions-icon-button.gitextensions-icon-only">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <Image Width="16"
+               Height="16"
+               Stretch="Uniform"
+               Source="{Binding $parent[compat:IconButton].Icon}" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="ToggleButton.gitextensions-icon-toggle-button.gitextensions-icon-only">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <Image Width="16"
+               Height="16"
+               Stretch="Uniform"
+               Source="{Binding $parent[compat:IconToggleButton].Icon}" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="SplitButton.gitextensions-icon-split-button">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[compat:IconSplitButton].Icon}" />
+          <AccessText VerticalAlignment="Center" Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="SplitButton.gitextensions-icon-split-button.gitextensions-icon-only">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <Image Width="16"
+               Height="16"
+               Stretch="Uniform"
+               Source="{Binding $parent[compat:IconSplitButton].Icon}" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="DropDownButton.gitextensions-icon-drop-down-button.gitextensions-icon-only">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <Image Width="16"
+               Height="16"
+               Stretch="Uniform"
+               Source="{Binding $parent[compat:IconDropDownButton].Icon}" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <!-- Only the source image-only ToolStripDropDownButton consumers use this layout.
+       Fluent's hollow glyph and trailing margin squeeze a native image-only item. -->
+  <Style Selector="DropDownButton.gitextensions-icon-drop-down-button.gitextensions-toolbar-button.gitextensions-icon-only">
+    <Setter Property="compat:IconDropDownButton.UseNativeToolStripLayout" Value="True" />
+  </Style>
+  <Style Selector="DropDownButton.gitextensions-native-toolstrip-drop-down-button">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="RenderTransform" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <!-- The original border is paint, not an inset to the image/arrow layout. -->
+          <Border x:Name="RootBorder"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}" />
+          <ContentPresenter x:Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TabItem.gitextensions-workspace-tab">
+    <Setter Property="Height" Value="23" />
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="Normal" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Padding" Value="6,1" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="HeaderTemplate">
+      <DataTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[TabItem].Icon}" />
+          <TextBlock VerticalAlignment="Center" Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <!-- FormBrowse's native TabControl paints the unused header strip with Window despite
+       its Control BackColor. Its 96-DPI display rectangle begins 29 DIPs below the header.
+       Scope these template parts to FormBrowse: File History shares the tab class. -->
+  <Style Selector="Window.gitextensions-browse-window TabControl.gitextensions-workspace-tabs">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel>
+          <Border DockPanel.Dock="Top"
+                  Margin="0,0,0,-2"
+                  Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
+            <ItemsPresenter x:Name="PART_ItemsPresenter"
+                            Margin="2,0,0,0"
+                            ItemsPanel="{TemplateBinding ItemsPanel}" />
+          </Border>
+          <Grid>
+            <Border Classes="gitextensions-workspace-page-frame"
+                    BorderBrush="{DynamicResource GitExtensionsNativeTabBorderBrush}"
+                    BorderThickness="1,0,0,0"
+                    IsHitTestVisible="False" />
+            <ContentPresenter x:Name="PART_SelectedContentHost"
+                              Content="{TemplateBinding SelectedContent}"
+                              ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+          </Grid>
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Window.gitextensions-browse-window TabControl.gitextensions-workspace-tabs[TabStripPlacement=Top] /template/ ItemsPresenter#PART_ItemsPresenter">
+    <!-- Fluent's active top-placement margin overrides the template's source inset.
+         Retain its page-overlap allowance while restoring the native first-tab inset. -->
+    <Setter Property="Margin" Value="2,0,0,2" />
+  </Style>
+  <!-- Keep ControlDpiExtensions' source TabItem padding (8,6). Native padding includes the
+       outline; subtract the framework border rather than adding it to the allocation.
+       The selected outline overpaints its fixed allocation without reflowing its siblings. -->
+  <Style Selector="Window.gitextensions-browse-window TabItem.gitextensions-workspace-tab">
+    <!-- The native selected outline extends beyond its fixed header slot. Keep the
+         owner pane's clip, but do not clip that overpainting inside each TabItem. -->
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="Height" Value="NaN" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="8,6" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="HeaderTemplate">
+      <DataTemplate>
+        <compat:NativeTabHeaderPanel>
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[TabItem].Icon}" />
+          <AccessText VerticalAlignment="Center" Text="{Binding}" />
+        </compat:NativeTabHeaderPanel>
+      </DataTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border x:Name="PART_LayoutRoot"
+                Margin="0,2,0,0"
+                Padding="7,5"
+                BorderBrush="{DynamicResource GitExtensionsNativeTabBorderBrush}"
+                BorderThickness="1,1,1,0"
+                Background="{DynamicResource GitExtensionsBrowseTabUnselectedBackgroundBrush}">
+          <ContentPresenter x:Name="PART_ContentPresenter"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                            RecognizesAccessKey="True" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Window.gitextensions-browse-window TabItem.gitextensions-workspace-tab:selected /template/ Border#PART_LayoutRoot">
+    <!-- Native tabs overpaint two DIPs beyond their fixed allocation. Compensating padding
+         keeps the icon/caption fixed horizontally while the complete selected tab rises. -->
+    <Setter Property="Margin" Value="-2,0,-2,0" />
+    <Setter Property="Padding" Value="9,5" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsBrowseTabSelectedBackgroundBrush}" />
+  </Style>
+  <!-- RichEdit's automatic link foreground follows the native theme, not Fluent's blue link palette. -->
+  <Style Selector="compat|XhtmlTextBlock HyperlinkButton">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsXhtmlLinkForegroundBrush}" />
+  </Style>
+  <Style Selector="TabItem.gitextensions-dialog-tab">
+    <Setter Property="Height" Value="27" />
+    <Setter Property="MinHeight" Value="27" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="Normal" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs">
+    <Setter Property="Focusable" Value="True" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsKnownColorControlBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel>
+          <ItemsPresenter x:Name="PART_ItemsPresenter"
+                          DockPanel.Dock="Top"
+                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+          <Grid>
+            <Border Margin="3,2,3,3"
+                    BorderBrush="{DynamicResource GitExtensionsNativeTabBorderBrush}"
+                    BorderThickness="1"
+                    Background="{DynamicResource GitExtensionsNativeTabPageBackgroundBrush}" />
+            <ContentPresenter x:Name="PART_SelectedContentHost2"
+                              Content="{TemplateBinding SelectedContent}"
+                              ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+            <ContentPresenter x:Name="PART_SelectedContentHost"
+                              Content="{TemplateBinding SelectedContent}"
+                              ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+          </Grid>
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs TabItem.gitextensions-dialog-tab">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTabPageBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border x:Name="PART_LayoutRoot"
+                Margin="0,2,0,0"
+                Padding="{TemplateBinding Padding}"
+                BorderBrush="{DynamicResource GitExtensionsNativeTabBorderBrush}"
+                BorderThickness="1,1,1,0"
+                Background="{DynamicResource GitExtensionsNativeTabUnselectedBackgroundBrush}">
+          <ContentPresenter x:Name="PART_ContentPresenter"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                            RecognizesAccessKey="True" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs TabItem.gitextensions-dialog-tab:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTabSelectedBackgroundBrush}" />
+  </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs.gitextensions-dialog-inset-tabs /template/ ContentPresenter#PART_SelectedContentHost">
+    <Setter Property="Margin" Value="4,3,4,2" />
+  </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs.gitextensions-dialog-inset-tabs /template/ ContentPresenter#PART_SelectedContentHost2">
+    <Setter Property="Margin" Value="4,3,4,2" />
+  </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs.gitextensions-full-bleed-tabs">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel>
+          <ItemsPresenter x:Name="PART_ItemsPresenter"
+                          DockPanel.Dock="Top"
+                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+          <Grid>
+            <Border BorderBrush="{DynamicResource GitExtensionsNativeTabBorderBrush}"
+                    BorderThickness="1"
+                    Background="{DynamicResource GitExtensionsNativeTabPageBackgroundBrush}" />
+            <ContentPresenter x:Name="PART_SelectedContentHost"
+                              Margin="1,4,1,1"
+                              Content="{TemplateBinding SelectedContent}"
+                              ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+          </Grid>
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs.gitextensions-contributors-tabs">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel>
+          <ItemsPresenter x:Name="PART_ItemsPresenter"
+                          DockPanel.Dock="Top"
+                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+          <Grid>
+            <Border BorderBrush="{DynamicResource GitExtensionsNativeTabBorderBrush}"
+                    BorderThickness="1"
+                    Background="{DynamicResource GitExtensionsNativeTabPageBackgroundBrush}" />
+            <ContentPresenter x:Name="PART_SelectedContentHost"
+                              Margin="1,0,1,1"
+                              Content="{TemplateBinding SelectedContent}"
+                              ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+          </Grid>
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TabControl.gitextensions-full-bleed-tabs TabItem.gitextensions-dialog-tab">
+    <Setter Property="Height" Value="23" />
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="Padding" Value="8,0" />
+  </Style>
+  <Style Selector="Button.gitextensions-toolbar-button,
+                   ToggleButton.gitextensions-toolbar-button,
+                   compat|IconButton.gitextensions-toolbar-button,
+                   compat|IconToggleButton.gitextensions-toolbar-button,
+                   compat|IconSplitButton.gitextensions-toolbar-button,
+                   compat|IconDropDownButton.gitextensions-toolbar-button,
+                   SplitButton.gitextensions-toolbar-button,
+                   DropDownButton.gitextensions-toolbar-button">
+    <Setter Property="Height" Value="23" />
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="MinWidth" Value="23" />
+    <Setter Property="Padding" Value="3,1" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <!-- The native repository-tree ToolStrip has 16px images in 23×22 item allocations. -->
+  <Style Selector="StackPanel.gitextensions-tree-toolbar > Button.gitextensions-toolbar-button,
+                   StackPanel.gitextensions-tree-toolbar > ToggleButton.gitextensions-toolbar-button">
+    <Setter Property="Width" Value="23" />
+    <Setter Property="MinWidth" Value="23" />
+    <Setter Property="Height" Value="22" />
+    <Setter Property="MinHeight" Value="22" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_PrimaryButton">
+    <Setter Property="MinWidth" Value="23" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_SecondaryButton">
+    <Setter Property="MinWidth" Value="13" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_SecondaryButton > PathIcon">
+    <Setter Property="Width" Value="7" />
+    <Setter Property="Height" Value="5" />
+  </Style>
+  <!-- Native ToolStripSplitButton reserves 11px for its drop-down and 1px for the
+       splitter. Borders are paint, not extra image/caption layout padding. The
+       framework's original parts and presenters remain in place. -->
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="compat:NativeToolStripSplitButton.UseSystemVisualStyle" Value="{DynamicResource GitExtensionsNativeToolStripSplitUseSystemVisualStyle}" />
+    <Setter Property="compat:NativeToolStripSplitButton.ProfessionalSelectedBrush" Value="{DynamicResource GitExtensionsNativeToolStripSplitProfessionalSelectedBrush}" />
+    <Setter Property="compat:NativeToolStripSplitButton.ProfessionalPressedBrush" Value="{DynamicResource GitExtensionsNativeToolStripSplitProfessionalPressedBrush}" />
+    <Setter Property="compat:NativeToolStripSplitButton.ProfessionalBorderBrush" Value="{DynamicResource GitExtensionsNativeToolStripSplitProfessionalBorderBrush}" />
+    <Setter Property="compat:NativeToolStripSplitButton.ProfessionalSplitterBrush" Value="{DynamicResource GitExtensionsNativeToolStripSplitProfessionalSplitterBrush}" />
+    <Setter Property="compat:NativeToolStripSplitButton.ProfessionalOpenBrush" Value="{DynamicResource GitExtensionsNativeToolStripSplitProfessionalOpenBrush}" />
+    <Setter Property="compat:NativeToolStripSplitButton.ProfessionalOpenBorderBrush" Value="{DynamicResource GitExtensionsNativeToolStripSplitProfessionalOpenBorderBrush}" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button /template/ Button#PART_PrimaryButton,
+                   SplitButton.gitextensions-native-toolstrip-split-button /template/ Button#PART_SecondaryButton">
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button /template/ Button#PART_PrimaryButton /template/ ContentPresenter#PART_ContentPresenter,
+                   SplitButton.gitextensions-native-toolstrip-split-button /template/ Button#PART_SecondaryButton /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <!-- ToolStripRenderer.RenderArrowCore paints the integer-centred filled Down
+       triangle. Only source-opted split owners replace Fluent's hollow chevron. -->
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button /template/ Button#PART_SecondaryButton > PathIcon">
+    <Setter Property="Width" Value="5" />
+    <Setter Property="Height" Value="3" />
+    <Setter Property="Data" Value="M0,0 L5,0 L2,3 Z" />
+  </Style>
+  <Style Selector="Border.gitextensions-toolbar-separator">
+    <Setter Property="Width" Value="1" />
+    <Setter Property="Height" Value="17" />
+    <Setter Property="Margin" Value="3,3" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
+  </Style>
+  <Style Selector="Separator.gitextensions-toolbar-separator">
+    <Setter Property="Width" Value="5" />
+    <Setter Property="Height" Value="25" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Width="1"
+                Height="17"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="{DynamicResource GitExtensionsSectionBorderBrush}" />
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TextBlock.gitextensions-toolbar-label">
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Margin" Value="3,0,1,0" />
+  </Style>
+  <Style Selector="RadioButton.gitextensions-icon-radio-button">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[compat:IconRadioButton].Icon}" />
+          <AccessText VerticalAlignment="Center" Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="StackPanel.gitextensions-dialog-controls">
+    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="Margin" Value="5" />
+    <Setter Property="Orientation" Value="Horizontal" />
+    <Setter Property="HorizontalAlignment" Value="Right" />
+    <Setter Property="Spacing" Value="6" />
+  </Style>
+  <Style Selector="Grid.gitextensions-dialog-main">
+    <Setter Property="Margin" Value="12" />
+  </Style>
+  <Style Selector="Border.gitextensions-dialog-main">
+    <Setter Property="Padding" Value="12" />
+  </Style>
+  <Style Selector="TextBlock.gitextensions-dialog-label">
+    <Setter Property="Margin" Value="3" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="TextBlock.gitextensions-auto-label">
+    <Setter Property="Height" Value="15" />
+    <Setter Property="Padding" Value="3,0" />
+  </Style>
+  <Style Selector="TextBlock.gitextensions-error-text">
+    <Setter Property="Foreground" Value="{StaticResource GitExtensionsErrorForegroundBrush}" />
+  </Style>
+  <Style Selector="Label.gitextensions-dialog-label">
+    <Setter Property="Margin" Value="3" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="HeaderedContentControl.gitextensions-group-box">
+    <Setter Property="Padding" Value="8" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid RowDefinitions="Auto,*" ColumnDefinitions="8,Auto,*">
+          <Border x:Name="PART_GroupBoxHeaderLeft"
+                  Grid.Column="0"
+                  Height="1"
+                  VerticalAlignment="Center"
+                  Background="{DynamicResource GitExtensionsSectionBorderBrush}" />
+          <ContentPresenter x:Name="PART_HeaderPresenter"
+                            Grid.Column="1"
+                            Margin="3,0"
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                            VerticalContentAlignment="Center" />
+          <Border x:Name="PART_GroupBoxHeaderRight"
+                  Grid.Column="2"
+                  Height="1"
+                  VerticalAlignment="Center"
+                  Background="{DynamicResource GitExtensionsSectionBorderBrush}" />
+          <Border x:Name="PART_GroupBoxFrame"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="3"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="1,0,1,1"
+                  CornerRadius="0" />
+          <ContentPresenter Grid.Row="1"
+                            Grid.ColumnSpan="3"
+                            Margin="{TemplateBinding Padding}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="GroupBox.gitextensions-native-group-box">
+    <Setter Property="Padding" Value="3" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsKnownColorControlBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
+    <Setter Property="BorderBrush" Value="#FFDCDCDC" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <Border Margin="0,8,0,0"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="1"
+                  CornerRadius="0" />
+          <ContentPresenter Margin="6,0,0,0"
+                            Padding="3,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Background="{TemplateBinding Background}"
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}" />
+          <ContentPresenter Margin="3,19,3,3"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="avaloniaEdit|TextEditor.gitextensions-diff-editor">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsFixedWidthFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsFixedWidthFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsFixedWidthFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsFixedWidthFontWeight}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsDiffEditorBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDiffTextBrush}" />
+  </Style>
+  <Style Selector="avaloniaEdit|TextEditor.gitextensions-diff-editor avaloniaEdit|TextArea">
+    <Setter Property="SelectionBrush" Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
+    <Setter Property="SelectionForeground" Value="{DynamicResource GitExtensionsSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="FlyoutPresenter.gitextensions-toolstrip-flyout">
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="Border.gitextensions-toolstrip-overflow-host">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="1" />
+  </Style>
+  <Style Selector="TextBlock.gitextensions-commit-header">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsMonospaceFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsMonospaceFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsMonospaceFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsMonospaceFontWeight}" />
+  </Style>
+  <Style Selector="SelectableTextBlock.gitextensions-commit-message">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsCommitFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsCommitFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsCommitFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsCommitFontWeight}" />
+  </Style>
+
+  <Style Selector="ListBoxItem">
+    <Setter Property="MinHeight" Value="24" />
+    <Setter Property="Padding" Value="6,2" />
+    <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-stretch-items ListBoxItem">
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-dense-items ListBoxItem">
+    <Setter Property="MinHeight" Value="24" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items ListBoxItem">
+    <Setter Property="MinHeight" Value="20" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items">
+    <Setter Property="Focusable" Value="True" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1,0,1,1" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="HeaderedContentControl.gitextensions-native-group-border /template/ Border#PART_GroupBoxHeaderLeft">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeGroupBoxBorderBrush}" />
+  </Style>
+  <Style Selector="HeaderedContentControl.gitextensions-native-group-border /template/ Border#PART_GroupBoxHeaderRight">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeGroupBoxBorderBrush}" />
+  </Style>
+  <Style Selector="HeaderedContentControl.gitextensions-native-group-border /template/ Border#PART_GroupBoxFrame">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeGroupBoxBorderBrush}" />
+  </Style>
+  <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsNativeSelectionBackgroundBrush}" />
+    <Setter Property="Foreground"
+            Value="{DynamicResource GitExtensionsNativeSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsNativeSelectionBackgroundBrush}" />
+  </Style>
+  <Style Selector="ListBox:not(:focus-within) ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
+    <Setter Property="Foreground"
+            Value="{DynamicResource GitExtensionsInactiveSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+    <!-- NativeListView uses the platform Explorer selection rather than the revision-grid AppColor. -->
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsNativeListSelectionBackgroundBrush}" />
+    <Setter Property="Foreground"
+            Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsNativeListSelectionBackgroundBrush}" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items ListBoxItem:pointerover:not(:selected) /template/ ContentPresenter#PART_ContentPresenter">
+    <!-- Native ListView does not paint Fluent's full-row hover fill unless hot tracking is enabled. -->
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items:focus-within ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items:not(:focus-within) ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsNativeListInactiveSelectionBackgroundBrush}" />
+    <Setter Property="Foreground"
+            Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+  </Style>
+
+  <Style Selector="TreeViewItem">
+    <Setter Property="MinHeight" Value="24" />
+    <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
+  </Style>
+  <Style Selector="TreeViewItem:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsNativeSelectionBackgroundBrush}" />
+  </Style>
+  <Style Selector="TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Foreground"
+            Value="{DynamicResource GitExtensionsNativeSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="TreeViewItem:selected:pointerover /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsNativeSelectionBackgroundBrush}" />
+  </Style>
+  <Style Selector="TreeView:not(:focus-within) TreeViewItem:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
+  </Style>
+  <Style Selector="TreeView:not(:focus-within) TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Foreground"
+            Value="{DynamicResource GitExtensionsInactiveSelectionForegroundBrush}" />
+  </Style>
+  <!-- Fluent deliberately omits the dotted hierarchy drawn by WinForms NativeTreeView.
+       Keep Fluent's selection states and template part names, but share one desktop tree
+       template across repository, settings, diff-group, and full File tree surfaces. -->
+  <Style Selector="TreeView.gitextensions-native-tree TreeViewItem">
+    <Setter Property="MinHeight" Value="18" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <StackPanel>
+          <Border x:Name="PART_LayoutRoot"
+                  Focusable="True"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  MinHeight="{TemplateBinding MinHeight}"
+                  TemplatedControl.IsTemplateFocusTarget="True">
+            <Grid x:Name="PART_Header">
+              <leftpanel:TreeConnectorControl Indent="{DynamicResource GitExtensionsTreeViewItemIndent}"
+                                              IsHitTestVisible="False" />
+              <Grid x:Name="PART_NativeHeaderContent" ColumnDefinitions="Auto,Auto" HorizontalAlignment="Left">
+                <Grid.Margin>
+                  <MultiBinding Converter="{x:Static converters:TreeViewItemIndentConverter.Instance}">
+                    <Binding Path="Level" RelativeSource="{RelativeSource TemplatedParent}" />
+                    <DynamicResource ResourceKey="GitExtensionsTreeViewItemIndent" />
+                  </MultiBinding>
+                </Grid.Margin>
+                <Panel x:Name="PART_ExpandCollapseChevronContainer"
+                       Width="12"
+                       Margin="{StaticResource GitExtensionsTreeViewChevronMargin}">
+                  <ToggleButton x:Name="PART_ExpandCollapseChevron"
+                                Theme="{StaticResource FluentTreeViewExpandCollapseChevron}"
+                                Focusable="False"
+                                IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
+                </Panel>
+                <Grid Grid.Column="1">
+                  <Border x:Name="PART_NativeSelectionBorder">
+                    <ContentPresenter x:Name="PART_HeaderPresenter"
+                                      Focusable="False"
+                                      Background="Transparent"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                      Margin="{TemplateBinding Padding}" />
+                  </Border>
+                  <compat:NativeTreeSelectionCorners x:Name="PART_NativeSelectionCorners" />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Border>
+          <ItemsPresenter x:Name="PART_ItemsPresenter"
+                          IsVisible="{TemplateBinding IsExpanded}"
+                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+        </StackPanel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <!-- Native TreeView reserves the complete expander slot for every item. Hide only the
+       glyph for leaves/group headers; collapsing its host shifts their icon and line left. -->
+  <Style Selector="TreeView.gitextensions-native-tree TreeViewItem.leaf-node /template/ ToggleButton#PART_ExpandCollapseChevron,
+                   TreeView.gitextensions-native-tree TreeViewItem.diff-group-header /template/ ToggleButton#PART_ExpandCollapseChevron">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-native-tree TreeViewItem:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <!-- NativeTreeView highlights the icon/label, not the expander or hierarchy lines. -->
+  <Style Selector="TreeView.gitextensions-native-tree:focus-within TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsFileStatusSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-native-tree:not(:focus-within) TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+  </Style>
+  <!-- Explorer paints the entire icon/label row using an image-based native theme part.
+       Owner-drawn FileStatusList trees retain their separate Highlight/AppColor palette. -->
+  <Style Selector="TreeView.gitextensions-explorer-tree TreeViewItem /template/ Border#PART_NativeSelectionBorder">
+    <Setter Property="MinHeight" Value="18" />
+    <Setter Property="Padding" Value="1,0" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree TreeViewItem /template/ compat|NativeTreeSelectionCorners#PART_NativeSelectionCorners">
+    <Setter Property="UseNativeCorners" Value="True" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree:focus-within TreeViewItem:selected /template/ Border#PART_NativeSelectionBorder">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTreeSelectionBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeTreeSelectionBorderBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree:focus-within TreeViewItem:selected /template/ compat|NativeTreeSelectionCorners#PART_NativeSelectionCorners">
+    <Setter Property="CornerBrush" Value="{DynamicResource GitExtensionsNativeTreeSelectionCornerBrush}" />
+    <Setter Property="AdjacentEdgeBrush" Value="{DynamicResource GitExtensionsNativeTreeSelectionAdjacentEdgeBrush}" />
+    <Setter Property="InnerCornerBrush" Value="{DynamicResource GitExtensionsNativeTreeSelectionInnerCornerBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree:focus-within TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsNativeTreeSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree:not(:focus-within) TreeViewItem:selected /template/ Border#PART_NativeSelectionBorder">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionBorderBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree:not(:focus-within) TreeViewItem:selected /template/ compat|NativeTreeSelectionCorners#PART_NativeSelectionCorners">
+    <Setter Property="CornerBrush" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionCornerBrush}" />
+    <Setter Property="AdjacentEdgeBrush" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionAdjacentEdgeBrush}" />
+    <Setter Property="InnerCornerBrush" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionInnerCornerBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree:not(:focus-within) TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsNativeTreeInactiveSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree.gitextensions-hide-tree-selection:not(:focus-within) TreeViewItem:selected /template/ Border#PART_NativeSelectionBorder">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree.gitextensions-hide-tree-selection:not(:focus-within) TreeViewItem:selected /template/ compat|NativeTreeSelectionCorners#PART_NativeSelectionCorners">
+    <Setter Property="CornerBrush" Value="Transparent" />
+    <Setter Property="AdjacentEdgeBrush" Value="Transparent" />
+    <Setter Property="InnerCornerBrush" Value="Transparent" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-explorer-tree.gitextensions-hide-tree-selection:not(:focus-within) TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+  </Style>
+
+  <Style Selector="MenuItem">
+    <Setter Property="Height" Value="22" />
+    <Setter Property="MinHeight" Value="22" />
+    <Setter Property="Padding" Value="0,1" />
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
+          <Border Name="PART_LayoutRoot"
+                  Padding="{TemplateBinding Padding}"
+                  Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}"
+                  IsHitTestVisible="False" />
+          <!-- ProfessionalRenderer deflates dropdown selection by its source
+               Padding(2,0,1,0). This paint must not move the item contents. -->
+          <Border Name="PART_NativeSelectionBorder"
+                  Margin="2,0,1,0"
+                  IsVisible="False"
+                  Background="{DynamicResource GitExtensionsNativeMenuSelectedBackgroundBrush}"
+                  BorderBrush="{DynamicResource GitExtensionsNativeMenuSelectedBorderBrush}"
+                  BorderThickness="1"
+                  IsHitTestVisible="False" />
+          <Border Name="PART_NativeContentRoot" Padding="{TemplateBinding Padding}" Background="Transparent">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="ToggleIcon" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIcon" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGT" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemChevron" />
+              </Grid.ColumnDefinitions>
+              <ContentControl Grid.Column="0"
+                              Name="PART_ToggleIconPresenter"
+                              IsVisible="False"
+                              Theme="{StaticResource FluentMenuItemIconTheme}"
+                              Margin="{DynamicResource MenuIconPresenterMargin}" />
+              <ContentControl Grid.Column="1"
+                              Name="PART_IconPresenter"
+                              IsVisible="False"
+                              Theme="{StaticResource FluentMenuItemIconTheme}"
+                              Content="{TemplateBinding Icon}"
+                              Margin="{DynamicResource MenuIconPresenterMargin}" />
+              <ContentPresenter Name="PART_HeaderPresenter"
+                                Content="{TemplateBinding Header}"
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Stretch"
+                                Grid.Column="2" />
+              <TextBlock Name="PART_InputGestureText"
+                         Grid.Column="3"
+                         Margin="{DynamicResource MenuInputGestureTextMargin}"
+                         Text="{TemplateBinding InputGesture, Converter={StaticResource GitExtensionsMenuKeyGestureConverter}}"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Center" />
+              <Path Name="PART_ChevronPath"
+                    Width="8"
+                    Height="16"
+                    Stretch="Uniform"
+                    Data="{StaticResource MenuItemChevronPathData}"
+                    Margin="{DynamicResource MenuFlyoutItemChevronMargin}"
+                    VerticalAlignment="Center"
+                    Grid.Column="4" />
+            </Grid>
+          </Border>
+          <Popup Name="PART_Popup"
+                 WindowManagerAddShadowHint="False"
+                 Placement="RightEdgeAlignedTop"
+                 HorizontalOffset="{DynamicResource MenuFlyoutSubItemPopupHorizontalOffset}"
+                 IsLightDismissEnabled="False"
+                 IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}">
+            <Border Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}"
+                    BorderBrush="{DynamicResource GitExtensionsMenuRenderedBorderBrush}"
+                    BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"
+                    Padding="{DynamicResource MenuFlyoutPresenterThemePadding}"
+                    MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
+                    MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
+                    HorizontalAlignment="Stretch"
+                    CornerRadius="{DynamicResource OverlayCornerRadius}">
+              <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
+                <ItemsPresenter Name="PART_ItemsPresenter"
+                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                Margin="{DynamicResource MenuFlyoutScrollerMargin}"
+                                Grid.IsSharedSizeScope="True" />
+              </ScrollViewer>
+            </Border>
+          </Popup>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem.gitextensions-menu-command-toggle /template/ ContentControl#PART_ToggleIconPresenter">
+    <!-- Preserve Avalonia's native checkbox role, but render it in ToolStrip's shared image/check gutter. -->
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-menu-command-toggle:icon /template/ ContentControl#PART_IconPresenter">
+    <Setter Property="Width" Value="18" />
+    <Setter Property="Height" Value="18" />
+  </Style>
+  <Style Selector="MenuItem:not(:pointerover) /template/ Border#PART_LayoutRoot">
+    <!-- ToolStrip's renderer paints a menu surface color distinct from each item's BackColor property. -->
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
+  </Style>
+  <!-- The filter strip uses System's Menu surface in visual-style mode. ThemeFix
+       selects Professional for dark/custom themes; keep that native renderer boundary. -->
+  <Style Selector="MenuItem.gitextensions-filter-menu, MenuFlyoutPresenter.gitextensions-filter-menu">
+    <Setter Property="compat:NativeToolStripDropDownMenuItem.UseSystemVisualStyle" Value="{DynamicResource GitExtensionsToolStripSeparatorUseSystemVisualStyle}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter.gitextensions-filter-menu[(compat|NativeToolStripDropDownMenuItem.UseSystemVisualStyle)=true]">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-filter-menu:not(:pointerover) /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-filter-menu[(compat|NativeToolStripDropDownMenuItem.UseSystemVisualStyle)=true]:not(:pointerover) /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-filter-menu:not(:disabled) /template/ ContentPresenter#PART_HeaderPresenter,
+                   MenuItem.gitextensions-filter-menu:disabled /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- Fluent's active child setters must not hide the source item's resolved color. -->
+    <Setter Property="Foreground" Value="{Binding $parent[MenuItem].Foreground}" />
+  </Style>
+  <Style Selector="ContextMenu Separator">
+    <Setter Property="Height" Value="6" />
+    <Setter Property="Margin" Value="2,0,1,0" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
+          <Border Height="1"
+                  Margin="28,0,1,0"
+                  VerticalAlignment="Center"
+                  Background="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="MenuFlyoutPresenter Separator, MenuItem Separator">
+    <Setter Property="Height" Value="6" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
+          <Border Height="1"
+                  Margin="28,0,1,0"
+                  VerticalAlignment="Center"
+                  Background="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Button">
+    <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action">
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border x:Name="PART_NativeButtonChrome"
+                Padding="{TemplateBinding Padding}"
+                Background="{DynamicResource GitExtensionsNativeButtonBackgroundBrush}"
+                BorderBrush="{DynamicResource GitExtensionsNativeButtonBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="4">
+          <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            RecognizesAccessKey="True" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action:pointerover /template/ Border#PART_NativeButtonChrome">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeButtonPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeButtonPointerOverBorderBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action:focus:not(:pointerover) /template/ Border#PART_NativeButtonChrome">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action:pressed /template/ Border#PART_NativeButtonChrome">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeButtonPressedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeButtonPressedBorderBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action:pressed">
+    <!-- WinForms changes native button chrome without scaling the control's source bounds. -->
+    <Setter Property="RenderTransform" Value="none" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action:disabled /template/ Border#PART_NativeButtonChrome">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeButtonDisabledBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeButtonDisabledBorderBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsNativeButtonDisabledForegroundBrush}" />
+  </Style>
+  <Style Selector="Button:pointerover">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="Button:pressed">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPressedBackgroundBrush}" />
+    <Setter Property="RenderTransform" Value="none" />
+  </Style>
+  <Style Selector="Button[IsDefault=true]">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+  <Style Selector="Button:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+  </Style>
+  <Style Selector="ToggleButton">
+    <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="ToggleButton:pointerover">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPointerOverBackgroundBrush}" />
+  </Style>
+  <Style Selector="ToggleButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+  </Style>
+  <Style Selector="ToggleButton:pressed, ToggleButton:checked">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPressedBackgroundBrush}" />
+  </Style>
+  <Style Selector="ToggleButton:pressed /template/ ContentPresenter#PART_ContentPresenter,
+                   ToggleButton:checked /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPressedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+  </Style>
+  <Style Selector="ToggleButton:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+  </Style>
+  <!-- The native ToolStrip renderer paints a distinct blue outlined hover, not the
+       Fluent gray button hover. Keep this after the general button states so it wins. -->
+  <Style Selector="Button.gitextensions-toolbar-button:pointerover,
+                   ToggleButton.gitextensions-toolbar-button:pointerover,
+                   SplitButton.gitextensions-toolbar-button:pointerover,
+                   DropDownButton.gitextensions-toolbar-button:pointerover">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Button.gitextensions-toolbar-button:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                   ToggleButton.gitextensions-toolbar-button:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                   DropDownButton.gitextensions-toolbar-button:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                   SplitButton.gitextensions-toolbar-button:pointerover /template/ Button#PART_PrimaryButton /template/ ContentPresenter#PART_ContentPresenter,
+                   SplitButton.gitextensions-toolbar-button:pointerover /template/ Button#PART_SecondaryButton /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <!-- A source FlatStyle.Flat Button is not a ToolStrip button. Its shared painter leaves
+       the content and authored padding untouched and supplies the native adapter chrome. -->
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button:pointerover">
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button:native-selected">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <!-- ToolStripEx's WM_SETREDRAW retains pre-opening state paint until DropDownClosed.
+       Keep actual logical pressed/open state separate from the retained pixels. -->
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button:native-selected /template/ Button#PART_PrimaryButton /template/ ContentPresenter#PART_ContentPresenter,
+                   SplitButton.gitextensions-native-toolstrip-split-button:native-selected /template/ Button#PART_SecondaryButton /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button:native-paint-suspended:not(:native-selected)">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button:native-paint-suspended:not(:native-selected) /template/ Button#PART_PrimaryButton /template/ ContentPresenter#PART_ContentPresenter,
+                   SplitButton.gitextensions-native-toolstrip-split-button:native-paint-suspended:not(:native-selected) /template/ Button#PART_SecondaryButton /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <Style Selector="DropDownButton.gitextensions-native-toolstrip-drop-down-button:native-selected">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="DropDownButton.gitextensions-native-toolstrip-drop-down-button:native-selected /template/ Border#RootBorder">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="DropDownButton.gitextensions-native-toolstrip-drop-down-button:native-paint-suspended:not(:native-selected)">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <Style Selector="DropDownButton.gitextensions-native-toolstrip-drop-down-button:native-paint-suspended:not(:native-selected) /template/ Border#RootBorder">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <!-- A System-rendered split owner stays joined to its open menu even after the
+       pointer enters a menu row. Fluent's private button state must not repaint it gray. -->
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button:not(.gitextensions-native-professional-toolstrip-split-button):native-dropdown-pressed">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button:not(.gitextensions-native-professional-toolstrip-split-button):native-dropdown-pressed /template/ Button#PART_PrimaryButton /template/ ContentPresenter#PART_ContentPresenter,
+                   SplitButton.gitextensions-native-toolstrip-split-button:not(.gitextensions-native-professional-toolstrip-split-button):native-dropdown-pressed /template/ Button#PART_SecondaryButton /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-professional-toolstrip-split-button.gitextensions-native-toolstrip-split-button">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-professional-toolstrip-split-button.gitextensions-native-toolstrip-split-button /template/ Button#PART_PrimaryButton /template/ ContentPresenter#PART_ContentPresenter,
+                   SplitButton.gitextensions-native-professional-toolstrip-split-button.gitextensions-native-toolstrip-split-button /template/ Button#PART_SecondaryButton /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-flat-button">
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <compat:NativeFlatButtonChrome x:Name="PART_NativeFlatButtonChrome"
+                                        UseDarkMode="{DynamicResource GitExtensionsNativeFlatButtonDarkMode}" />
+          <ContentPresenter x:Name="PART_ContentPresenter"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            RecognizesAccessKey="True" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Button.gitextensions-native-flat-button /template/ compat|NativeFlatButtonChrome#PART_NativeFlatButtonChrome">
+    <Setter Property="BackdropBrush" Value="{DynamicResource GitExtensionsKnownColorControlBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeFlatButtonBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeFlatButtonBorderBrush}" />
+    <Setter Property="FocusBrush" Value="{DynamicResource GitExtensionsNativeFlatButtonFocusBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-flat-button:focus-visible /template/ compat|NativeFlatButtonChrome#PART_NativeFlatButtonChrome">
+    <Setter Property="ShowKeyboardFocus" Value="True" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-flat-button:pointerover /template/ compat|NativeFlatButtonChrome#PART_NativeFlatButtonChrome">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeFlatButtonHoverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeFlatButtonHoverBorderBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-flat-button:pressed /template/ compat|NativeFlatButtonChrome#PART_NativeFlatButtonChrome">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeFlatButtonPressedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeFlatButtonPressedBorderBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-flat-button:disabled /template/ compat|NativeFlatButtonChrome#PART_NativeFlatButtonChrome">
+    <Setter Property="ShowKeyboardFocus" Value="False" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeFlatButtonDisabledBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeFlatButtonDisabledBorderBrush}" />
+  </Style>
+  <!-- Fluent paints ToggleButton's checked surface on its inner presenter. Override both
+       layers so ToolStrip buttons never inherit the host platform accent. -->
+  <Style Selector="Button.gitextensions-toolbar-button.checked,
+                   ToggleButton.gitextensions-toolbar-button:checked">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripCheckedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Button.gitextensions-toolbar-button.checked /template/ ContentPresenter#PART_ContentPresenter,
+                   ToggleButton.gitextensions-toolbar-button:checked /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripCheckedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Button.gitextensions-command-link">
+    <Setter Property="Padding" Value="8,5" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+  </Style>
+  <Style Selector="MenuItem:not(.gitextensions-filter-menu):pointerover /template/ Border#PART_LayoutRoot,
+                   MenuItem:not(.gitextensions-filter-menu):selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem:pointerover /template/ Border#PART_NativeSelectionBorder,
+                   MenuItem:selected /template/ Border#PART_NativeSelectionBorder">
+    <Setter Property="IsVisible" Value="True" />
+  </Style>
+  <Style Selector="MenuItem:disabled /template/ Border#PART_NativeSelectionBorder">
+    <!-- Professional retains a selected disabled outline but does not fill it. -->
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="MenuItem:not(:disabled) /template/ ContentPresenter#PART_HeaderPresenter,
+                   MenuItem:disabled /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- Fluent's selected child foreground is not Professional's item ForeColor. -->
+    <Setter Property="Foreground" Value="{Binding $parent[MenuItem].Foreground}" />
+  </Style>
+  <Style Selector="MenuItem:not(:disabled) /template/ TextBlock#PART_InputGestureText,
+                   MenuItem:disabled /template/ TextBlock#PART_InputGestureText">
+    <!-- Fluent's selected child foreground is not Professional's item ForeColor. -->
+    <Setter Property="Foreground" Value="{Binding $parent[MenuItem].Foreground}" />
+  </Style>
+  <!-- Filter toolbar menus retain their separately opted-in renderer path. -->
+  <Style Selector="MenuItem.gitextensions-filter-menu:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsHighlightForegroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-filter-menu:pointerover /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-filter-menu:pointerover /template/ Border#PART_NativeSelectionBorder,
+                   MenuItem.gitextensions-filter-menu:selected /template/ Border#PART_NativeSelectionBorder">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+  <!-- ToolStripDropDownMenu reserves a wider image/check gutter than Fluent and keeps
+       shortcut and submenu glyphs against the right edge. These integer paint offsets are
+       measured from the native 96-DPI renderer; RenderTransform preserves the already exact
+       item and popup bounds. -->
+  <Style Selector="MenuItem /template/ ContentControl#PART_IconPresenter">
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="5" />
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="9" Y="-1" />
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem.gitextensions-menu-no-gesture /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- WinForms lets caption-only commands use the otherwise empty shortcut column. -->
+    <Setter Property="Grid.ColumnSpan" Value="2" />
+  </Style>
+  <Style Selector="MenuItem /template/ TextBlock#PART_InputGestureText">
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="-10" Y="-1" />
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem:not(:disabled) /template/ Path#PART_ChevronPath,
+                   MenuItem:disabled /template/ Path#PART_ChevronPath">
+    <!-- ToolStripRenderer.DrawArrow uses a filled right-facing triangle, not Fluent's
+         open chevron. An active state selector is needed to override Fluent's template
+         Width=8 allocation; an ordinary style changes the transform but not that width. -->
+    <Setter Property="Data" Value="M 0,0 L 4,4 L 0,8 Z" />
+    <Setter Property="Width" Value="4" />
+    <Setter Property="Height" Value="8" />
+    <Setter Property="Stretch" Value="Fill" />
+    <Setter Property="Fill" Value="{Binding $parent[MenuItem].Foreground}" />
+    <Setter Property="StrokeThickness" Value="0" />
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="-7" />
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+  </Style>
+  <Style Selector="TabItem">
+    <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-menu-caption">
+    <Setter Property="FontStyle" Value="Italic" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-menu-caption /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- ToolStrip dims only the caption text; reducing the complete row opacity also changes the painted menu surface. -->
+    <Setter Property="Opacity" Value="0.7" />
+  </Style>
+  <Style Selector="ContextMenu">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
+    <!-- ContextMenu owns a private 4px scroller inset in Fluent; setting only the shared
+         resource does not affect this presenter variant. -->
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
+  </Style>
+  <Style Selector="ContextMenu /template/ ItemsPresenter#PART_ItemsPresenter">
+    <Setter Property="Margin" Value="0" />
+  </Style>
+  <Style Selector="ContextMenu /template/ Border">
+    <!-- Professional paints a menu surface independently of the public BackColor. -->
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
+  </Style>
+  <Style Selector="ContextMenu.gitextensions-toolstrip-context-menu /template/ ItemsPresenter#PART_ItemsPresenter">
+    <!-- ToolStrip paints its one-pixel border over the item canvas instead of reserving a
+         separate leading/top layout inset. -->
+    <Setter Property="Margin" Value="-1,1,0,1" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter /template/ Border#LayoutRoot">
+    <Setter Property="Padding" Value="0" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter /template/ ItemsPresenter#PART_ItemsPresenter">
+    <Setter Property="Margin" Value="0" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter.gitextensions-branch-menu">
+    <!-- The native branch ToolStripDropDownMenu has one horizontal border pixel. -->
+    <Setter Property="BorderThickness" Value="1,1,0,1" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter.gitextensions-branch-menu /template/ Border#LayoutRoot">
+    <!-- WinForms reserves one content pixel above and below its menu items. -->
+    <Setter Property="Padding" Value="0,1" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-branch-entry">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem ScrollViewer">
+    <!-- Native ToolStripDropDownMenu leaves one content pixel inside each border edge. -->
+    <Setter Property="Margin" Value="0,1" />
+  </Style>
+  <!-- This consumed menu opts into the source dropdown algorithm. Generic branch/context
+       menus retain their existing templates; no captured coordinates enter these slots. -->
+  <Style Selector="MenuFlyoutPresenter.gitextensions-working-directory-menu">
+    <!-- ToolStrip sizes this menu from its item metrics; Fluent's generic flyout
+         width cap must not truncate the owned source allocation. -->
+    <Setter Property="MaxWidth" Value="Infinity" />
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <compat:NativeToolStripDropDownPanel />
+      </ItemsPanelTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel Background="{TemplateBinding Background}">
+          <ScrollViewer Margin="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ItemsPresenter Name="PART_ItemsPresenter"
+                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                            KeyboardNavigation.TabNavigation="Continue" />
+          </ScrollViewer>
+          <!-- ToolStrip paints its border over the item canvas rather than reserving
+               an extra layout inset. The owned panel supplies native dropdown padding. -->
+          <Border Name="LayoutRoot"
+                  Background="Transparent"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="1"
+                  Padding="0"
+                  IsHitTestVisible="False" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry">
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsSourceControlTextBrush}" />
+    <Setter Property="compat:NativeToolStripDropDownMenuItem.UseSystemVisualStyle" Value="{DynamicResource GitExtensionsNativeToolStripSplitUseSystemVisualStyle}" />
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <compat:NativeToolStripDropDownPanel />
+      </ItemsPanelTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Border Name="PART_LayoutRoot" Background="{TemplateBinding Background}">
+            <compat:NativeToolStripMenuItemPanel>
+              <compat:NativeToolStripMenuIconPresenter Name="PART_IconPresenter"
+                              Content="{TemplateBinding Icon}"
+                              HorizontalContentAlignment="Center"
+                              VerticalContentAlignment="Center"
+                              RenderTransform="{x:Null}" />
+              <compat:NativeToolStripMenuCaption Name="PART_HeaderPresenter"
+                                Content="{TemplateBinding Header}"
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                RecognizesAccessKey="True"
+                                Foreground="{TemplateBinding Foreground}"
+                                VerticalContentAlignment="Center"
+                                ClipToBounds="True"
+                                RenderTransform="{x:Null}" />
+              <TextBlock Name="PART_InputGestureText"
+                         Foreground="{Binding $parent[MenuItem].Foreground}"
+                         VerticalAlignment="Stretch"
+                         TextWrapping="NoWrap"
+                         ClipToBounds="True"
+                         RenderTransform="{x:Null}" />
+              <compat:NativeToolStripMenuArrow Name="PART_ChevronPath"
+                                               Foreground="{TemplateBinding Foreground}" />
+            </compat:NativeToolStripMenuItemPanel>
+          </Border>
+          <Popup Name="PART_Popup"
+                 Placement="RightEdgeAlignedTop"
+                 PlacementTarget="{Binding $parent[MenuItem]}"
+                 IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}">
+            <Panel Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
+              <ScrollViewer Margin="0"
+                            HorizontalScrollBarVisibility="Disabled"
+                            VerticalScrollBarVisibility="Auto">
+                <ItemsPresenter Name="PART_ItemsPresenter"
+                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                KeyboardNavigation.TabNavigation="Continue" />
+              </ScrollViewer>
+              <Border BorderThickness="1"
+                      BorderBrush="{DynamicResource GitExtensionsMenuRenderedBorderBrush}"
+                      IsHitTestVisible="False" />
+            </Panel>
+          </Popup>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:selected,
+                   MenuItem.gitextensions-working-directory-entry:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWorkingDirectorySelectedForegroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:selected /template/ Border#PART_LayoutRoot,
+                   MenuItem.gitextensions-working-directory-entry:pointerover /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuCheckBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:source-system-renderer:selected /template/ Border#PART_LayoutRoot,
+                   MenuItem.gitextensions-working-directory-entry:source-system-renderer:pointerover /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsWorkingDirectorySystemSelectionBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWorkingDirectoryDisabledForegroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:disabled /template/ compat|NativeToolStripMenuArrow#PART_ChevronPath">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWorkingDirectoryDisabledArrowBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:not(:disabled) /template/ ContentPresenter#PART_HeaderPresenter,
+                   MenuItem.gitextensions-working-directory-entry:disabled /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- Active Fluent child foreground setters otherwise mask the source item's
+         actual foreground, including keyboard-selected and disabled states. -->
+    <Setter Property="Foreground" Value="{Binding $parent[MenuItem].Foreground}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:not(:disabled) /template/ TextBlock#PART_InputGestureText,
+                   MenuItem.gitextensions-working-directory-entry:disabled /template/ TextBlock#PART_InputGestureText">
+    <Setter Property="Foreground" Value="{Binding $parent[MenuItem].Foreground}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-filter">
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <compat:NativeToolStripMenuCaption Name="PART_HeaderPresenter"
+                          Content="{TemplateBinding Header}"
+                          Padding="0"
+                          HorizontalContentAlignment="Stretch"
+                          VerticalContentAlignment="Stretch"
+                          RenderTransform="{x:Null}" />
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TextBox.gitextensions-working-directory-input">
+    <!-- ToolStripTextBox owns the default 9pt input font independently of its menu.
+         Fixed3D's non-client border surrounds the client area by two source pixels. -->
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="BorderThickness" Value="2" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="Menu">
+    <Setter Property="Padding" Value="4,0" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
+  </Style>
+
+  <Style Selector="ScrollBar:vertical">
+    <Setter Property="Width" Value="17" />
+    <Setter Property="AllowAutoHide" Value="False" />
+  </Style>
+  <Style Selector="ScrollBar:horizontal">
+    <Setter Property="Height" Value="17" />
+    <Setter Property="AllowAutoHide" Value="False" />
+  </Style>
+  <Style Selector="ScrollBar /template/ Thumb">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+  </Style>
+  <Style Selector="ScrollBar /template/ Thumb:pointerover">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+
+  <Style Selector="ToolTip">
+    <Setter Property="MaxWidth" Value="500" />
+    <Setter Property="Padding" Value="4,2" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsToolTipForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolTipBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="Button, ToggleButton, CheckBox, RadioButton, TextBox, ComboBox, NumericUpDown, ListBox, TreeView, MenuItem, TabItem">
+    <Setter Property="ToolTip.ShowDelay" Value="500" />
+    <Setter Property="ToolTip.BetweenShowDelay" Value="100" />
+    <Setter Property="ToolTip.Placement" Value="Pointer" />
+  </Style>
+  <Style Selector="Menu > MenuItem">
+    <Setter Property="Margin" Value="0,2" />
+    <Setter Property="Padding" Value="4,0" />
+    <Setter Property="MinHeight" Value="20" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="1,1,1,0" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <!-- The source paints item borders over the canvas. Reserve one fixed
+               content allocation independently of hover/open stroke thickness. -->
+          <Border Name="PART_LayoutRoot"
+                  Background="Transparent"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  IsHitTestVisible="False" />
+          <Border BorderThickness="1,1,1,0" BorderBrush="Transparent">
+            <ContentPresenter Name="PART_HeaderPresenter"
+                              Content="{TemplateBinding Header}"
+                              ContentTemplate="{TemplateBinding HeaderTemplate}"
+                              RecognizesAccessKey="True"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Stretch"
+                              Margin="{TemplateBinding Padding}" />
+          </Border>
+          <Popup Name="PART_Popup"
+                 WindowManagerAddShadowHint="False"
+                 MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                 PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                 IsLightDismissEnabled="True"
+                 IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}"
+                 Placement="BottomEdgeAlignedLeft"
+                 VerticalOffset="-1"
+                 OverlayInputPassThroughElement="{Binding $parent[Menu]}">
+            <!-- ToolStripDropDownItem's BelowRight origin is the actual item edge,
+                 with one border pixel of overlap, not Fluent's inner panel edge. -->
+            <Panel>
+              <compat:NativeToolStripMenuPopupBorder Name="PART_NativePopupBorder"
+                      ConnectedTitleWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                      Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}"
+                      BorderBrush="{DynamicResource GitExtensionsMenuRenderedBorderBrush}"
+                      BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"
+                      Padding="{DynamicResource MenuFlyoutPresenterThemePadding}"
+                      MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
+                      MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
+                      HorizontalAlignment="Stretch"
+                      CornerRadius="{DynamicResource OverlayCornerRadius}">
+                <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
+                  <ItemsPresenter Name="PART_ItemsPresenter"
+                                  ItemsPanel="{TemplateBinding ItemsPanel}"
+                                  Margin="{DynamicResource MenuFlyoutScrollerMargin}"
+                                  Grid.IsSharedSizeScope="True" />
+                </ScrollViewer>
+              </compat:NativeToolStripMenuPopupBorder>
+              <compat:NativeToolStripMenuPopupConnection
+                      ConnectedTitleWidth="{Binding #PART_NativePopupBorder.ConnectedTitleWidth}"
+                      Background="{Binding #PART_NativePopupBorder.Background}"
+                      BorderThickness="{Binding #PART_NativePopupBorder.BorderThickness}"
+                      IsHitTestVisible="False" />
+            </Panel>
+          </Popup>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Menu > MenuItem /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- Native MenuStrip text begins one pixel right and one pixel above Fluent's presenter. -->
+    <Setter Property="RenderTransform">
+      <TranslateTransform X="1" Y="-1" />
+    </Setter>
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+  </Style>
+  <Style Selector="Menu > MenuItem:pointerover, Menu > MenuItem:selected">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+  </Style>
+  <Style Selector="Menu > MenuItem:pointerover /template/ ContentPresenter#PART_HeaderPresenter,
+                   Menu > MenuItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+  </Style>
+  <Style Selector="Menu > MenuItem:pointerover:not(:open) /template/ Border#PART_LayoutRoot,
+                   Menu > MenuItem:selected:not(:open) /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeMenuSelectedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeMenuSelectedBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Menu > MenuItem:open /template/ Border#PART_LayoutRoot">
+    <!-- WinForms joins an open top-level item visually to its dropdown. -->
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeMenuOpenBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeMenuOpenBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1,1,1,0" />
+  </Style>
+  <Style Selector="Menu > MenuItem:disabled:pointerover /template/ Border#PART_LayoutRoot,
+                   Menu > MenuItem:disabled:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="Menu > MenuItem:disabled /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Foreground" Value="{Binding $parent[MenuItem].Foreground}" />
+  </Style>
+  <Style Selector="Menu > MenuItem:not(:open):not(:pointerover):not(:selected) /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+
+  <Style Selector="GridSplitter">
+    <!-- SplitContainer.SplitterWidth is an invisible drag target in FormBrowse. The visible
+         separators are the adjacent panes' one-pixel borders, not an extra splitter rule. -->
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="Border.gitextensions-section">
+    <Setter Property="BorderBrush"
+            Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Border.gitextensions-list-header-cell">
+    <Setter Property="Padding" Value="6,3" />
+    <Setter Property="BorderBrush"
+            Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
+  </Style>
+  <Style Selector="ContentControl.gitextensions-list-header-cell">
+    <Setter Property="Padding" Value="6,3" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeListHeaderBackgroundBrush}" />
+    <Setter Property="BorderBrush"
+            Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{TemplateBinding Padding}">
+          <ContentPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TextBlock.gitextensions-summary-header-text">
+    <Setter Property="Height" Value="16" />
+  </Style>
+  <Style Selector="TextBlock.gitextensions-list-header-text">
+    <Setter Property="Margin" Value="6,3" />
+  </Style>
+  <Style Selector="Border.gitextensions-section-separator">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
+  </Style>
+</Styles>

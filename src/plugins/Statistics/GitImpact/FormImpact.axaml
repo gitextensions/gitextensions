@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:GitExtensions.Plugins.GitImpact"
+        x:Class="GitExtensions.Plugins.GitImpact.FormImpact"
+        Width="863"
+        Height="484"
+        WindowStartupLocation="CenterOwner"
+        Title="Impact">
+  <Grid RowDefinitions="32,*">
+    <Grid x:Name="pnlTop"
+          ColumnDefinitions="Auto,*,Auto">
+      <Border x:Name="pnlAuthorColor"
+              Width="20"
+              Height="20"
+              Margin="6,6,4,6"
+              VerticalAlignment="Center"
+              BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+              BorderThickness="1" />
+      <TextBlock x:Name="lblAuthor"
+                 Grid.Column="1"
+                 Margin="0,0,6,0"
+                 VerticalAlignment="Center"
+                 Text="Author" />
+      <CheckBox x:Name="cbIncludingSubmodules"
+                Grid.Column="2"
+                Margin="3,0,43,0"
+                VerticalAlignment="Center"
+                Content="Including submodules" />
+    </Grid>
+
+    <local:ImpactControl x:Name="Impact"
+                         Grid.Row="1" />
+  </Grid>
+</Window>

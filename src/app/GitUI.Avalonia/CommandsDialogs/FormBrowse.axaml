@@ -1,0 +1,590 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="clr-namespace:GitUI"
+        xmlns:commitinfo="clr-namespace:GitUI.CommitInfo"
+        xmlns:commandsDialogs="using:GitUI.CommandsDialogs"
+        xmlns:menus="using:GitUI.CommandsDialogs.Menus"
+        xmlns:leftpanel="clr-namespace:GitUI.LeftPanel"
+        xmlns:controls="clr-namespace:GitUI.UserControls"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormBrowse"
+        Classes="gitextensions-browse-window"
+        Width="923" Height="573"
+        Title="Git Extensions"
+        Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
+  <Window.Styles>
+    <!-- WinForms enables AllowDrop on every Browse descendant, including lazy child controls. -->
+    <Style Selector="Control">
+      <Setter Property="DragDrop.AllowDrop" Value="True" />
+    </Style>
+    <!-- The source ToolStrip lays out FormBrowse buttons at 22 DIPs high and reserves
+         the native image-button widths inside its 25-DIP toolbar row. -->
+    <Style Selector="Button.gitextensions-toolbar-button,
+                     ToggleButton.gitextensions-toolbar-button,
+                     compat|IconButton.gitextensions-toolbar-button,
+                     compat|IconToggleButton.gitextensions-toolbar-button,
+                     compat|IconSplitButton.gitextensions-toolbar-button,
+                     SplitButton.gitextensions-toolbar-button">
+      <Setter Property="Height" Value="22" />
+      <Setter Property="MinHeight" Value="22" />
+      <Setter Property="Margin" Value="0,1,0,2" />
+      <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+    <Style Selector="Button.gitextensions-toolbar-button.gitextensions-icon-only,
+                     ToggleButton.gitextensions-toolbar-button.gitextensions-icon-only,
+                     compat|IconButton.gitextensions-toolbar-button.gitextensions-icon-only,
+                     compat|IconToggleButton.gitextensions-toolbar-button.gitextensions-icon-only">
+      <Setter Property="Width" Value="23" />
+    </Style>
+    <Style Selector="compat|IconSplitButton.gitextensions-toolbar-button.gitextensions-icon-only,
+                     SplitButton.gitextensions-toolbar-button.gitextensions-icon-only">
+      <Setter Property="Width" Value="32" />
+    </Style>
+    <Style Selector="Button.gitextensions-toolbar-overflow">
+      <Setter Property="Width" Value="11" />
+      <Setter Property="MinWidth" Value="11" />
+      <Setter Property="Height" Value="25" />
+      <Setter Property="MinHeight" Value="25" />
+      <Setter Property="Margin" Value="0" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripOverflowBackgroundBrush}" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="CornerRadius" Value="0" />
+    </Style>
+    <Style Selector="Button.gitextensions-toolbar-overflow:pointerover">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripOverflowBackgroundBrush}" />
+    </Style>
+    <Style Selector="Border.gitextensions-toolbar-separator">
+      <Setter Property="Width" Value="6" />
+      <Setter Property="Height" Value="25" />
+      <!-- ToolStripSeparator.GetPreferredSize returns 6x23. The main owner stretches
+           its display height; overflow retains its placement but omits its painting. -->
+      <Setter Property="compat:NativeToolStrip.ItemPreferredHeight" Value="23" />
+      <Setter Property="compat:NativeToolStrip.ItemIsSeparator" Value="True" />
+      <Setter Property="Margin" Value="0" />
+      <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
+    </Style>
+    <Style Selector="compat|NativeToolStripSeparatorChrome.gitextensions-toolbar-separator-line">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="VerticalAlignment" Value="Stretch" />
+      <Setter Property="UseSystemVisualStyle" Value="{DynamicResource GitExtensionsToolStripSeparatorUseSystemVisualStyle}" />
+      <Setter Property="DarkBrush" Value="{DynamicResource GitExtensionsToolStripSeparatorDarkBrush}" />
+      <Setter Property="LightBrush" Value="{DynamicResource GitExtensionsToolStripSeparatorLightBrush}" />
+    </Style>
+    <Style Selector="MenuItem.worktree-deleted">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
+    </Style>
+    <Style Selector="Menu#mainMenuStrip > MenuItem">
+      <Setter Property="Height" Value="19" />
+      <Setter Property="MinHeight" Value="19" />
+      <Setter Property="Margin" Value="0,4" />
+      <Setter Property="Padding" Value="8,0" />
+    </Style>
+  </Window.Styles>
+  <DockPanel>
+    <wf:MenuStripEx x:Name="mainMenuStrip"
+                    DockPanel.Dock="Top"
+                    Height="27"
+                    Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
+      <menus:StartToolStripMenuItem x:Name="fileToolStripMenuItem" />
+      <wf:ToolStripMenuItem x:Name="dashboardToolStripMenuItem" Header="_Dashboard">
+        <wf:ToolStripMenuItem x:Name="refreshDashboardToolStripMenuItem" Header="_Refresh">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ReloadRevisions}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator42" />
+      </wf:ToolStripMenuItem>
+      <wf:ToolStripMenuItem x:Name="repositoryToolStripMenuItem" Header="_Repository">
+        <wf:ToolStripMenuItem x:Name="refreshToolStripMenuItem" Header="_Refresh">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ReloadRevisions}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="fileExplorerToolStripMenuItem"
+                  Header="File E_xplorer"
+                  HotKey="Ctrl+Shift+O"
+                  InputGesture="Ctrl+Shift+O">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator8" />
+        <wf:ToolStripMenuItem x:Name="manageRemoteRepositoriesToolStripMenuItem1" Header="Remo_te repositories...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Remotes}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator43" />
+        <wf:ToolStripMenuItem x:Name="manageSubmodulesToolStripMenuItem" Header="Manage _submodules...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SubmodulesManage}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="updateAllSubmodulesToolStripMenuItem" Header="_Update all submodules">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SubmodulesUpdate}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="synchronizeAllSubmodulesToolStripMenuItem" Header="Synchronize all su_bmodules">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SubmodulesSync}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator10" />
+        <wf:ToolStripMenuItem x:Name="manageWorktreeToolStripMenuItem" Header="Manage _worktrees...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.WorkTree}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator44" />
+        <wf:ToolStripMenuItem x:Name="editgitignoreToolStripMenuItem1" Header="Edit .git_ignore">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.EditGitIgnore}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="editgitinfoexcludeToolStripMenuItem" Header="Edit .git/info/_exclude" />
+        <wf:ToolStripMenuItem x:Name="editGitAttributesToolStripMenuItem" Header="Edit .git_attributes" />
+        <wf:ToolStripMenuItem x:Name="editmailmapToolStripMenuItem" Header="Edit ._mailmap" />
+        <wf:ToolStripMenuItem x:Name="menuitemSparse" Header="Sparse Wor_king Copy" />
+        <wf:ToolStripSeparator x:Name="toolStripSeparator4" />
+        <wf:ToolStripMenuItem x:Name="gitMaintenanceToolStripMenuItem" Header="_Git maintenance">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Maintenance}" /></MenuItem.Icon>
+          <wf:ToolStripMenuItem x:Name="compressGitDatabaseToolStripMenuItem" Header="_Compress git database">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CompressGitDatabase}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="recoverLostObjectsToolStripMenuItem" Header="_Recover lost objects...">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RecoverLostObjects}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="deleteIndexLockToolStripMenuItem" Header="_Delete index.lock">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.DeleteIndexLock}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="editLocalGitConfigToolStripMenuItem" Header="_Edit .git/config">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.EditGitConfig}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="repoSettingsToolStripMenuItem" Header="Rep_ository settings...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Settings}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator13" />
+        <wf:ToolStripMenuItem x:Name="closeToolStripMenuItem" Header="_Close (go to Dashboard)">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.DashboardFolderGit}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+      </wf:ToolStripMenuItem>
+      <wf:ToolStripMenuItem x:Name="commandsToolStripMenuItem" Header="_Commands">
+        <wf:ToolStripMenuItem x:Name="commitToolStripMenuItem" Header="_Commit...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RepoStateClean}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="undoLastCommitToolStripMenuItem" Header="_Undo last commit...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ResetFileTo}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="pullToolStripMenuItem" Header="Pull_/Fetch...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Pull}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="pushToolStripMenuItem" Header="_Push...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Push}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator21" />
+        <wf:ToolStripMenuItem x:Name="stashToolStripMenuItem" Header="Ma_nage stashes...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="resetToolStripMenuItem" Header="_Reset changes...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="cleanupToolStripMenuItem" Header="Clean _working directory...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CleanupRepo}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator25" />
+        <wf:ToolStripMenuItem x:Name="branchToolStripMenuItem" Header="Create _branch...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchCreate}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="deleteBranchToolStripMenuItem" Header="De_lete branch...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchDelete}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchCheckout}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="mergeBranchToolStripMenuItem" Header="_Merge branches...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Merge}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="rebaseToolStripMenuItem" Header="R_ebase...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Rebase}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="runMergetoolToolStripMenuItem" Header="_Solve merge conflicts...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Unmerged}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator45" />
+        <wf:ToolStripMenuItem x:Name="tagToolStripMenuItem" Header="Create _tag...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.TagCreate}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="deleteTagToolStripMenuItem" Header="_Delete tag...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.TagDelete}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator23" />
+        <wf:ToolStripMenuItem x:Name="cherryPickToolStripMenuItem" Header="Cherr_y pick...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CherryPick}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="archiveToolStripMenuItem" Header="Archi_ve revision...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ArchiveRevision}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="checkoutToolStripMenuItem" Header="Check_out revision...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Checkout}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="bisectToolStripMenuItem" Header="B_isect...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Bisect}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="toolStripMenuItemReflog" Header="Show reflo_g...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Book}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator22" />
+        <wf:ToolStripMenuItem x:Name="formatPatchToolStripMenuItem" Header="_Format patch...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PatchFormat}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="applyPatchToolStripMenuItem" Header="_Apply patch...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PatchApply}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="patchToolStripMenuItem" Header="View patc_h file...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PatchView}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+      </wf:ToolStripMenuItem>
+      <wf:ToolStripMenuItem x:Name="_repositoryHostsToolStripMenuItem"
+                Header="(Repository hosts)"
+                IsVisible="False">
+        <wf:ToolStripMenuItem x:Name="_forkCloneRepositoryToolStripMenuItem"
+                  Header="_Fork/Clone repository..." />
+        <wf:ToolStripMenuItem x:Name="_viewPullRequestsToolStripMenuItem"
+                  Header="View _pull requests..." />
+        <wf:ToolStripMenuItem x:Name="_createPullRequestsToolStripMenuItem"
+                  Header="_Create pull requests..." />
+        <wf:ToolStripMenuItem x:Name="_addUpstreamRemoteToolStripMenuItem"
+                  Header="_Add upstream remote" />
+      </wf:ToolStripMenuItem>
+      <wf:ToolStripMenuItem x:Name="pluginsToolStripMenuItem" Header="_Plugins">
+        <wf:ToolStripMenuItem x:Name="pluginsLoadingToolStripMenuItem"
+                  Header="Loading..."
+                  IsEnabled="False" />
+        <wf:ToolStripSeparator x:Name="toolStripSeparator15" />
+        <wf:ToolStripMenuItem x:Name="pluginSettingsToolStripMenuItem" Header="Plugins _settings...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Settings}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+      </wf:ToolStripMenuItem>
+      <menus:ToolsToolStripMenuItem x:Name="toolsToolStripMenuItem" />
+      <menus:HelpToolStripMenuItem x:Name="helpToolStripMenuItem" />
+    </wf:MenuStripEx>
+    <wf:ToolStripContainer x:Name="toolPanel"
+                           Background="{StaticResource GitExtensionsTransparentBrush}"
+                           ClipToBounds="True">
+      <wf:ToolStripPanel x:Name="_topPanel" ClipToBounds="True">
+      <Grid x:Name="toolStripMainHost" ClipToBounds="True">
+          <compat:NativeToolStrip x:Name="ToolStripMain"
+                                  Background="{StaticResource GitExtensionsTransparentBrush}">
+            <compat:NativeToolStrip.OverflowButton>
+              <Button x:Name="toolStripMainOverflow"
+                      compat:TranslationCompat.TranslateText="False"
+                      compat:TranslationCompat.TranslateToolTip="False"
+                      Focusable="False"
+                      Classes="gitextensions-toolbar-button gitextensions-toolbar-overflow"
+                      Width="16" MinWidth="16"
+                      Content="»"
+                      ToolTip.Tip="More toolbar commands" />
+            </compat:NativeToolStrip.OverflowButton>
+        <Button x:Name="RefreshButton" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only gitextensions-toolbar-first">
+          <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ReloadRevisions}" />
+        </Button>
+        <Border x:Name="toolStripSeparator0" Classes="gitextensions-toolbar-separator">
+          <compat:NativeToolStripSeparatorChrome Classes="gitextensions-toolbar-separator-line" />
+        </Border>
+        <Button x:Name="toggleLeftPanel" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only">
+          <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutSidebarLeft}" />
+        </Button>
+        <Button x:Name="toggleSplitViewLayout" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only">
+          <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutFooter}" />
+        </Button>
+        <compat:NativeToolStripSplitButton x:Name="menuCommitInfoPosition"
+                     UseNativeToolStripLayout="True"
+                     compat:TranslationCompat.TranslateToolTip="False"
+                     Classes="gitextensions-toolbar-button gitextensions-icon-only">
+          <compat:NativeToolStripSplitButton.Content>
+            <Image Classes="gitextensions-icon-16" x:Name="menuCommitInfoPositionImage"
+                   Source="{x:Static properties:Images.LayoutFooterTab}" />
+          </compat:NativeToolStripSplitButton.Content>
+          <compat:NativeToolStripSplitButton.Flyout>
+            <MenuFlyout>
+              <wf:ToolStripMenuItem x:Name="commitInfoBelowMenuItem" Header="Commit info _below graph">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutFooterTab}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
+              <wf:ToolStripMenuItem x:Name="commitInfoLeftwardMenuItem" Header="Commit info _left of graph">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutSidebarTopLeft}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
+              <wf:ToolStripMenuItem x:Name="commitInfoRightwardMenuItem" Header="Commit info _right of graph">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutSidebarTopRight}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
+            </MenuFlyout>
+          </compat:NativeToolStripSplitButton.Flyout>
+        </compat:NativeToolStripSplitButton>
+        <Border x:Name="toolStripSeparator17" Classes="gitextensions-toolbar-separator">
+          <compat:NativeToolStripSeparatorChrome Classes="gitextensions-toolbar-separator-line" />
+        </Border>
+        <compat:IconSplitButton x:Name="toolStripButtonLevelUp"
+                                UseNativeToolStripLayout="True"
+                                compat:TranslationCompat.TranslateText="False"
+                                compat:TranslationCompat.TranslateToolTip="False"
+                                compat:TranslationCompat.UseToolTipText="True"
+                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                Icon="{x:Static properties:Images.SubmodulesManage}"
+                                ToolTip.Tip="Submodules">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout />
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
+        <compat:IconSplitButton x:Name="toolStripWorktrees"
+                                UseNativeToolStripLayout="True"
+                                compat:TranslationCompat.TranslateText="False"
+                                compat:TranslationCompat.TranslateToolTip="False"
+                                compat:TranslationCompat.UseToolTipText="True"
+                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                Icon="{x:Static properties:Images.WorkTree}"
+                                IsVisible="False"
+                                ToolTip.Tip="Worktrees">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout />
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
+        <menus:WorkingDirectoryToolStripSplitButton x:Name="_NO_TRANSLATE_WorkingDir"
+                                                    UseNativeToolStripLayout="True"
+                                                    Classes="gitextensions-toolbar-button"
+                                                    compat:NativeToolStrip.ItemHeight="22" />
+        <compat:IconSplitButton x:Name="branchSelect"
+                                UseNativeToolStripLayout="True"
+                                compat:TranslationCompat.TranslateToolTip="False"
+                                Classes="gitextensions-toolbar-button"
+                                Content="Branch"
+                                Icon="{x:Static properties:Images.Branch}">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedLeft"
+                        FlyoutPresenterClasses="gitextensions-branch-menu" />
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
+        <Border x:Name="toolStripSeparator1" Classes="gitextensions-toolbar-separator">
+          <compat:NativeToolStripSeparatorChrome Classes="gitextensions-toolbar-separator-line" />
+        </Border>
+        <compat:IconSplitButton x:Name="toolStripButtonPull"
+                                UseNativeToolStripLayout="True"
+                                compat:TranslationCompat.TranslateToolTip="False"
+                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                Content="Pull"
+                                Icon="{x:Static properties:Images.Pull}">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout>
+              <wf:ToolStripMenuItem x:Name="pullToolStripMenuItem1" Header="Open _pull dialog...">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Pull}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
+              <wf:ToolStripSeparator />
+              <wf:ToolStripMenuItem x:Name="mergeToolStripMenuItem" Header="Pull - _merge">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullMerge}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
+              <wf:ToolStripMenuItem x:Name="rebaseToolStripMenuItem1" Header="Pull - _rebase">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullRebase}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
+              <wf:ToolStripMenuItem x:Name="fetchToolStripMenuItem"
+                                    Header="_Fetch"
+                                    ToolTip.Tip="Fetch branches and tags">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetch}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
+              <wf:ToolStripMenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetchAll}" /></MenuItem.Icon>
+                <ToolTip.Tip>Fetch branches and tags from all remote repositories</ToolTip.Tip>
+              </wf:ToolStripMenuItem>
+              <wf:ToolStripMenuItem x:Name="fetchPruneAllToolStripMenuItem"
+                                    Header="F_etch and prune all"
+                                    ToolTip.Tip="Fetch branches and tags from all remote repositories also prune deleted branches">
+                <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetchPruneAll}" /></MenuItem.Icon>
+              </wf:ToolStripMenuItem>
+              <wf:ToolStripSeparator />
+              <wf:ToolStripMenuItem x:Name="setDefaultPullButtonActionToolStripMenuItem" Header="Set _default Pull button action" />
+            </MenuFlyout>
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
+        <commandsDialogs:ToolStripPushButton x:Name="toolStripButtonPush"
+                                            compat:TranslationCompat.TranslateToolTip="False"
+                                            Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                            Foreground="{DynamicResource GitExtensionsSourceControlTextBrush}"
+                                            Content="Push"
+                                            Icon="{x:Static properties:Images.Push}" />
+        <compat:IconButton x:Name="toolStripButtonCommit"
+                           compat:TranslationCompat.TranslateToolTip="False"
+                           Classes="gitextensions-toolbar-button"
+                           Foreground="{DynamicResource GitExtensionsSourceControlTextBrush}"
+                           Content="Commit"
+                           Icon="{x:Static properties:Images.RepoStateClean}" />
+        <compat:IconSplitButton x:Name="toolStripSplitStash"
+                                UseNativeToolStripLayout="True"
+                                compat:TranslationCompat.TranslateText="False"
+                                compat:TranslationCompat.TranslateToolTip="False"
+                                compat:TranslationCompat.UseToolTipText="True"
+                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                Foreground="{DynamicResource GitExtensionsSourceControlTextBrush}"
+                                Background="{StaticResource GitExtensionsTransparentBrush}"
+                                Icon="{x:Static properties:Images.Stash}"
+                                ToolTip.Tip="Manage stashes">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout>
+              <wf:ToolStripMenuItem x:Name="stashChangesToolStripMenuItem" Header="_Stash" ToolTip.Tip="Stash changes" />
+              <wf:ToolStripMenuItem x:Name="stashStagedToolStripMenuItem" Header="S_tash staged" ToolTip.Tip="Stash staged changes" />
+              <wf:ToolStripMenuItem x:Name="stashPopToolStripMenuItem" Header="Stash _pop" ToolTip.Tip="Apply and drop single stash" />
+              <wf:ToolStripSeparator x:Name="toolStripSeparator9" />
+              <wf:ToolStripMenuItem x:Name="manageStashesToolStripMenuItem" Header="_Manage stashes..." ToolTip.Tip="Manage stashes" />
+              <wf:ToolStripMenuItem x:Name="createAStashToolStripMenuItem" Header="_Create a stash..." />
+            </MenuFlyout>
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
+        <Border x:Name="toolStripSeparator2" Classes="gitextensions-toolbar-separator">
+          <compat:NativeToolStripSeparatorChrome Classes="gitextensions-toolbar-separator-line" />
+        </Border>
+        <Button x:Name="toolStripFileExplorer" compat:TranslationCompat.TranslateToolTip="False" Classes="gitextensions-toolbar-button gitextensions-icon-only" Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}">
+          <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" />
+        </Button>
+        <compat:IconSplitButton x:Name="userShell"
+                                UseNativeToolStripLayout="True"
+                                compat:TranslationCompat.TranslateText="False"
+                                compat:TranslationCompat.TranslateToolTip="False"
+                                compat:TranslationCompat.UseToolTipText="True"
+                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
+                                Width="32"
+                                Icon="{x:Static properties:Images.GitForWindows}"
+                                ToolTip.Tip="Git bash">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout />
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
+        <compat:IconButton x:Name="EditSettings"
+                           compat:TranslationCompat.TranslateText="False"
+                           compat:TranslationCompat.UseToolTipText="True"
+                           Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                           Icon="{x:Static properties:Images.Settings}"
+                           ToolTip.Tip="Settings" />
+          </compat:NativeToolStrip>
+      </Grid>
+      <Grid x:Name="toolStripFiltersHost" Height="27" ClipToBounds="True">
+        <controls:FilterToolBar x:Name="ToolStripFilters">
+          <controls:FilterToolBar.OverflowButton>
+            <Button x:Name="toolStripFiltersOverflow"
+                    compat:TranslationCompat.TranslateText="False"
+                    compat:TranslationCompat.TranslateToolTip="False"
+                    HorizontalAlignment="Right"
+                    Focusable="False"
+                    Classes="gitextensions-toolbar-button gitextensions-toolbar-overflow"
+                    Content="»"
+                    ToolTip.Tip="More filter commands" />
+          </controls:FilterToolBar.OverflowButton>
+        </controls:FilterToolBar>
+      </Grid>
+      <StackPanel x:Name="ToolStripScripts"
+                  Width="50"
+                  Height="25"
+                  Orientation="Horizontal"
+                  Spacing="1" />
+      </wf:ToolStripPanel>
+    <Grid x:Name="_contentPanel"
+          Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
+      <TextBlock x:Name="lblRepoPath" IsVisible="False" />
+      <TextBlock x:Name="lblStatus" IsVisible="False" />
+      <Grid x:Name="mainContentGrid"
+            ColumnDefinitions="260,0,*"
+            RowDefinitions="*,0,0"
+            Margin="6">
+      <wf:SplitContainer x:Name="MainSplitContainer"
+                         x:FieldModifier="internal"
+                         Background="{StaticResource GitExtensionsTransparentBrush}"
+                         Grid.ColumnSpan="3"
+                         ColumnDefinitions="260,6,*">
+      <Border x:Name="leftPanel" Grid.Column="0" Classes="gitextensions-section">
+        <wf:SplitContainer x:Name="LeftSplitContainer"
+                           Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
+          <leftpanel:RepoObjectsTree x:Name="repoObjectsTree"
+                                     Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" />
+        </wf:SplitContainer>
+      </Border>
+      <GridSplitter x:Name="leftPanelSplitter" Grid.Column="1" ResizeDirection="Columns" />
+      <!-- SplitterDistance=209 in the source yields a 211-DIP first panel after the native
+           SplitContainer border; Avalonia has no equivalent implicit border. -->
+      <wf:SplitContainer x:Name="RightSplitContainer" Grid.Column="2" RowDefinitions="211,6,*" Background="{StaticResource GitExtensionsTransparentBrush}">
+          <wf:SplitContainer x:Name="RevisionsSplitContainer"
+                             Grid.Row="0"
+                             ColumnDefinitions="0,0,*,0,0"
+                             Background="{StaticResource GitExtensionsTransparentBrush}">
+          <!-- WinForms paints a one-pixel native split frame while the control's
+               semantic BackColor remains transparent. Keep paint separate. -->
+          <Border Classes="gitextensions-revision-split-frame"
+                  Grid.ColumnSpan="5"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="1"
+                  IsHitTestVisible="False" />
+          <Border x:Name="commitInfoLeftHost" Grid.Column="0" Classes="gitextensions-section" />
+          <GridSplitter x:Name="commitInfoLeftSplitter" Grid.Column="1" ResizeDirection="Columns" IsVisible="False" />
+          <wf:Panel x:Name="RevisionGridContainer"
+                     Grid.Column="2"
+                     Margin="1"
+                     Background="{DynamicResource GitExtensionsSectionBorderBrush}">
+            <Grid RowDefinitions="Auto,Auto,*">
+              <controls:InteractiveGitActionControl x:Name="notificationBarGitActionInProgress"
+                                                    Grid.Row="0"
+                                                    MinHeight="33"
+                                                    IsVisible="False" />
+              <controls:InteractiveGitActionControl x:Name="notificationBarBisectInProgress"
+                                                    Grid.Row="1"
+                                                    MinHeight="33"
+                                                    IsVisible="False" />
+              <gitui:RevisionGridControl x:Name="RevisionGrid" Grid.Row="2" />
+            </Grid>
+          </wf:Panel>
+          <GridSplitter x:Name="commitInfoRightSplitter" Grid.Column="3" ResizeDirection="Columns" IsVisible="False" />
+          <Border x:Name="commitInfoRightHost" Grid.Column="4" Classes="gitextensions-section" />
+        </wf:SplitContainer>
+        <GridSplitter x:Name="splitViewSplitter" Grid.Row="1" ResizeDirection="Rows" />
+        <commandsDialogs:FullBleedTabControl x:Name="CommitInfoTabControl"
+                                              Grid.Row="2"
+                                              SelectedIndex="0"
+                                              Padding="0"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Stretch"
+                                              Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
+                                              Classes="gitextensions-workspace-tabs">
+          <wf:TabPage x:Name="CommitInfoTabPage"
+                   Classes="gitextensions-workspace-tab"
+                   Header="Commit"
+                   Icon="{x:Static properties:Images.CommitSummary}">
+            <!-- The native TabPage owns the page frame; its child CommitInfo starts
+                 directly at the display rectangle, without a second section border. -->
+            <Border x:Name="commitInfoBelowHost" BorderThickness="0" Padding="1,0">
+              <commitinfo:CommitInfo x:Name="RevisionInfo"
+                                     Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" />
+            </Border>
+          </wf:TabPage>
+          <wf:TabPage x:Name="DiffTabPage"
+                   Classes="gitextensions-workspace-tab"
+                   Header="Diff"
+                   Icon="{x:Static properties:Images.Diff}">
+            <!-- Native TabPage's display rectangle leaves a one-DIP side/bottom inset. -->
+            <commandsDialogs:RevisionDiffControl x:Name="revisionDiff" Margin="1,0,1,1" />
+          </wf:TabPage>
+          <wf:TabPage x:Name="TreeTabPage"
+                   Classes="gitextensions-workspace-tab"
+                   Header="File tree"
+                   Icon="{x:Static properties:Images.FileTree}">
+            <commandsDialogs:RevisionDiffControl x:Name="fileTree" Margin="1,0,1,1" />
+          </wf:TabPage>
+          <wf:TabPage x:Name="GpgInfoTabPage"
+                   Classes="gitextensions-workspace-tab"
+                   Header="GPG"
+                   Icon="{x:Static properties:Images.Key}"
+                   IsVisible="False">
+            <!-- Native TabPage's display rectangle leaves a one-DIP side/bottom inset. -->
+            <commandsDialogs:RevisionGpgInfoControl x:Name="revisionGpgInfo1" Margin="1,0,1,1" Padding="6" />
+          </wf:TabPage>
+        </commandsDialogs:FullBleedTabControl>
+      </wf:SplitContainer>
+      </wf:SplitContainer>
+      <GridSplitter x:Name="outputHistorySplitter"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="3"
+                    ResizeDirection="Rows"
+                    IsVisible="False" />
+      <Border x:Name="outputHistoryPanelHost"
+              Grid.Row="2"
+              Grid.ColumnSpan="3"
+              Classes="gitextensions-section"
+              IsVisible="False" />
+      </Grid>
+    </Grid>
+    <wf:Panel Name="_bottomPanel" Height="0" VerticalAlignment="Bottom" IsHitTestVisible="False" />
+    <wf:Panel Name="_leftPanel" Width="0" HorizontalAlignment="Left" IsHitTestVisible="False" />
+    <wf:Panel Name="_rightPanel" Width="0" HorizontalAlignment="Right" IsHitTestVisible="False" />
+    </wf:ToolStripContainer>
+  </DockPanel>
+</Window>

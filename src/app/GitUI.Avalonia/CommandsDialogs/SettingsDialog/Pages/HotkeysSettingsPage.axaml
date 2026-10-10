@@ -1,0 +1,10 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:pages="using:GitUI.CommandsDialogs.SettingsDialog.Pages"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.HotkeysSettingsPage"
+                                 MinWidth="670"
+                                 MinHeight="330"
+                                 Text="Hotkeys">
+  <pages:ControlHotkeys x:Name="controlHotkeys" />
+</settings:SettingsPageWithHeader>

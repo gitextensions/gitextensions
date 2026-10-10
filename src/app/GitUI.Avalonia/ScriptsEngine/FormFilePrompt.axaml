@@ -1,0 +1,43 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="clr-namespace:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.ScriptsEngine.FormFilePrompt"
+        Width="549" Height="78" MinWidth="450" MaxWidth="800"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner"
+        Title="Select script files">
+  <Grid Classes="gitextensions-dialog-main"
+        Margin="8"
+        RowDefinitions="Auto,Auto"
+        ColumnDefinitions="Auto,*,Auto">
+    <TextBlock x:Name="lblSelectFiles"
+               Classes="gitextensions-dialog-label"
+               MinWidth="66"
+               VerticalAlignment="Center"
+               Text="Select file(s)" />
+    <TextBox x:Name="txtFilePath"
+             Grid.Column="1"
+             Height="21"
+             MinHeight="0"
+             Margin="3"
+             VerticalAlignment="Center" />
+    <compat:IconButton x:Name="btnBrowse"
+                       Grid.Column="2"
+                       MinWidth="115"
+                       MinHeight="25"
+                       Margin="3"
+                       Padding="4,0"
+                       HorizontalAlignment="Stretch"
+                       Content="Browse..."
+                       Icon="{x:Static properties:Images.BrowseFileExplorer}" />
+    <Button x:Name="btnOk"
+            Grid.Row="1" Grid.Column="2"
+            Classes="gitextensions-dialog-action"
+            MinWidth="115"
+            Margin="3"
+            HorizontalAlignment="Stretch"
+            Content="_OK"
+            IsDefault="True" />
+  </Grid>
+</Window>

@@ -1,0 +1,163 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.UserControls.FilterToolBar"
+             Foreground="{DynamicResource GitExtensionsWindowTextBrush}">
+  <UserControl.Styles>
+    <!-- ToolStrip items retain their source margins while their native owner stretches
+         AutoSize items and moves the same controls into its overflow. -->
+    <Style Selector="ToggleButton.gitextensions-toolbar-button,
+                     SplitButton.gitextensions-toolbar-button,
+                     DropDownButton.gitextensions-toolbar-button,
+                     Label.gitextensions-toolbar-label">
+      <Setter Property="Margin" Value="0,1,0,2" />
+    </Style>
+    <Style Selector="ToggleButton.gitextensions-toolbar-button,
+                     DropDownButton.gitextensions-toolbar-button">
+      <Setter Property="compat:NativeToolStrip.ItemPreferredHeight" Value="20" />
+    </Style>
+    <Style Selector="Border.gitextensions-toolbar-separator">
+      <Setter Property="Width" Value="6" />
+      <Setter Property="Margin" Value="0" />
+      <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
+    </Style>
+    <Style Selector="compat|NativeToolStripSeparatorChrome.gitextensions-toolbar-separator-line">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="VerticalAlignment" Value="Stretch" />
+      <Setter Property="UseSystemVisualStyle" Value="{DynamicResource GitExtensionsToolStripSeparatorUseSystemVisualStyle}" />
+      <Setter Property="DarkBrush" Value="{DynamicResource GitExtensionsToolStripSeparatorDarkBrush}" />
+      <Setter Property="LightBrush" Value="{DynamicResource GitExtensionsToolStripSeparatorLightBrush}" />
+    </Style>
+  </UserControl.Styles>
+  <compat:NativeToolStrip x:Name="innerStackPanel"
+                          Background="{StaticResource GitExtensionsTransparentBrush}">
+    <compat:IconSplitButton x:Name="tsbtnAdvancedFilter"
+                            UseNativeToolStripLayout="True"
+                            Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
+                            compat:TranslationCompat.TranslateText="False"
+                            Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                            Content="Advanced filter"
+                            Icon="{x:Static properties:Images.FunnelPencil}">
+      <compat:IconSplitButton.Flyout>
+        <MenuFlyout>
+          <MenuItem x:Name="tsmiResetPathFilters" Header="Reset _path filter" IsEnabled="False" />
+          <MenuItem x:Name="tsmiResetAllFilters" Header="_Reset revision filters" IsEnabled="False" />
+          <Separator x:Name="toolStripSeparatorAdvancedFilter" />
+          <MenuItem x:Name="tsmiAdvancedFilter" Header="_Advanced filter" />
+        </MenuFlyout>
+      </compat:IconSplitButton.Flyout>
+    </compat:IconSplitButton>
+    <ToggleButton x:Name="tsbShowReflog"
+                  Width="23"
+                  Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
+                  compat:TranslationCompat.TranslateToolTip="False"
+                  Classes="gitextensions-toolbar-button"
+                  Padding="3">
+      <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Book}" />
+    </ToggleButton>
+    <compat:IconSplitButton x:Name="tssbtnShowBranches"
+                            UseNativeToolStripLayout="True"
+                            Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
+                            compat:TranslationCompat.UseToolTipText="True"
+                            Classes="gitextensions-toolbar-button"
+                            Content="_All branches"
+                            Icon="{x:Static properties:Images.BranchLocal}">
+      <compat:IconSplitButton.Flyout>
+        <MenuFlyout>
+          <MenuItem x:Name="tsmiShowBranchesAll" compat:TranslationCompat.UseToolTipText="True" Header="_All branches">
+            <MenuItem.Icon>
+              <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchLocal}" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="tsmiShowBranchesCurrent" compat:TranslationCompat.UseToolTipText="True" Header="_Current branch only">
+            <MenuItem.Icon>
+              <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchFilter}" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="tsmiShowBranchesFiltered" compat:TranslationCompat.UseToolTipText="True" Header="_Filtered branches">
+            <MenuItem.Icon>
+              <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchFilter}" />
+            </MenuItem.Icon>
+          </MenuItem>
+        </MenuFlyout>
+      </compat:IconSplitButton.Flyout>
+    </compat:IconSplitButton>
+    <Label x:Name="toolStripLabel1"
+           Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
+           Tag="ToolBar_group:Branch filter"
+           compat:TranslationCompat.UseToolTipText="True"
+           Classes="gitextensions-toolbar-label"
+           Padding="0"
+           HorizontalContentAlignment="Center"
+           VerticalContentAlignment="Center"
+           Content="_Branches:"
+           Target="{Binding #tscboBranchFilter}" />
+    <compat:ToolbarComboBox x:Name="tscboBranchFilter"
+                            Tag="ToolBar_group:Branch filter"
+                            Width="100"
+                            DropDownWidth="300"
+                            compat:NativeToolStrip.ItemIsControlHost="True"
+                            compat:NativeToolStrip.ItemAutoSize="False"
+                            compat:NativeToolStrip.ItemHeight="23"
+                            IsEditable="True" />
+    <compat:IconDropDownButton x:Name="tsddbtnBranchFilter"
+                               Tag="ToolBar_group:Branch filter"
+                               compat:TranslationCompat.UseToolTipText="True"
+                               Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                               Content="Branch type"
+                               Icon="{x:Static properties:Images.EditFilter}">
+      <compat:IconDropDownButton.Flyout>
+        <MenuFlyout>
+          <MenuItem x:Name="tsmiBranchLocal" Header="_Local" ToggleType="CheckBox" IsChecked="True" />
+          <MenuItem x:Name="tsmiBranchRemote" Header="_Remote" ToggleType="CheckBox" />
+          <MenuItem x:Name="tsmiBranchTag" Header="_Tag" ToggleType="CheckBox" />
+        </MenuFlyout>
+      </compat:IconDropDownButton.Flyout>
+    </compat:IconDropDownButton>
+    <Border x:Name="toolStripSeparator19"
+            compat:NativeToolStrip.ItemIsSeparator="True"
+            Classes="gitextensions-toolbar-separator">
+      <compat:NativeToolStripSeparatorChrome Classes="gitextensions-toolbar-separator-line" />
+    </Border>
+    <Label x:Name="tslblRevisionFilter"
+           Tag="ToolBar_group:Text filter"
+           compat:TranslationCompat.UseToolTipText="True"
+           Classes="gitextensions-toolbar-label"
+           Padding="0"
+           HorizontalContentAlignment="Center"
+           VerticalContentAlignment="Center"
+           Content="_Filter:"
+           Target="{Binding #tstxtRevisionFilter}" />
+    <compat:ToolbarComboBox x:Name="tstxtRevisionFilter"
+                            Tag="ToolBar_group:Text filter"
+                            Width="100"
+                            DropDownWidth="300"
+                            compat:NativeToolStrip.ItemIsControlHost="True"
+                            compat:NativeToolStrip.ItemAutoSize="False"
+                            compat:NativeToolStrip.ItemHeight="23"
+                            IsEditable="True" />
+    <compat:IconDropDownButton x:Name="tsddbtnRevisionFilter"
+                               Tag="ToolBar_group:Text filter"
+                               compat:TranslationCompat.UseToolTipText="True"
+                               Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                               Content="Filter type"
+                               Icon="{x:Static properties:Images.EditFilter}">
+      <compat:IconDropDownButton.Flyout>
+        <MenuFlyout>
+          <MenuItem x:Name="tsmiCommitFilter" Header="Commit _message" ToggleType="CheckBox" IsChecked="True" />
+          <MenuItem x:Name="tsmiCommitterFilter" Header="_Committer" ToggleType="CheckBox" />
+          <MenuItem x:Name="tsmiAuthorFilter" Header="_Author" ToggleType="CheckBox" />
+          <MenuItem x:Name="tsmiDiffContainsFilter" Header="_Diff contains (SLOW)" ToggleType="CheckBox" />
+        </MenuFlyout>
+      </compat:IconDropDownButton.Flyout>
+    </compat:IconDropDownButton>
+    <ToggleButton x:Name="tsmiShowOnlyFirstParent"
+                  Width="23"
+                  compat:TranslationCompat.TranslateToolTip="False"
+                  Classes="gitextensions-toolbar-button"
+                  Padding="3">
+      <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ShowOnlyFirstParent}" />
+    </ToggleButton>
+  </compat:NativeToolStrip>
+</UserControl>

@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:properties="using:GitUI.Properties"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
+             x:Class="GitUI.Help.HelpImageDisplayUserControl">
+  <Grid x:Name="tableLayoutPanel1" RowDefinitions="15,20,*">
+    <StackPanel x:Name="flowLayoutPanel1"
+                Height="15"
+                Orientation="Horizontal">
+      <HyperlinkButton x:Name="linkLabelShowHelp"
+                       Width="36"
+                       Height="30"
+                       Margin="3,0"
+                       Padding="0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Content="Show help"
+                       IsVisible="False" />
+      <compat:IconButton x:Name="buttonShowHelp"
+                         Classes="gitextensions-icon-only gitextensions-native-dialog-action"
+                         Width="26"
+                         Height="26"
+                         Padding="2"
+                         Icon="{x:Static properties:Images.Information}" />
+      <HyperlinkButton x:Name="linkLabelHide"
+                       Width="58"
+                       Height="15"
+                       Margin="3,0"
+                       Padding="0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Content="Hide help" />
+    </StackPanel>
+    <TextBlock x:Name="labelHoverText"
+               Grid.Row="1"
+               Height="20"
+               Margin="3,0"
+               TextWrapping="Wrap" />
+    <wf:PictureBox x:Name="pictureBox1"
+                   Grid.Row="2"
+                   Margin="3"
+                   Background="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+  </Grid>
+</UserControl>
