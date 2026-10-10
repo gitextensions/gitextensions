@@ -1060,7 +1060,7 @@ public sealed class GitUICommands : IGitUICommands
                 is DialogResult.OK;
         }
 
-        return DoActionOnRepo(owner, Action, requiresValidWorkingDir: false, postEvent: PostSettings);
+        return DoActionOnRepo(owner, Action, requiresValidWorkingDir: false, changesRepo: false, postEvent: PostSettings);
     }
 
     public bool StartSettingsDialog(IGitPlugin gitPlugin)

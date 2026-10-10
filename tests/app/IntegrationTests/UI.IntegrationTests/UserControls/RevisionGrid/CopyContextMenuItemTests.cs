@@ -40,13 +40,102 @@ public class CopyContextMenuItemTests
     }
 
     [Test]
-    public void Should_should_contain_single_item_if_no_revision_supplied()
+    public void Fixed_item_should_copy_the_selection_without_the_menu_ever_being_opened()
+    {
+        // A toolbar button clicks the item directly; the Copy menu may never have been shown.
+        GitRevision revision = new(ObjectId.Random());
+        _copyContextMenuItem.SetRevisionFunc(() => [revision]);
+        List<string> copied = CaptureCopies();
+
+        _copyContextMenuItem.CommitHashMenuItem.PerformClick();
+
+        copied.Should().Equal(revision.Guid);
+    }
+
+    [Test]
+    public void Fixed_item_should_copy_the_current_selection_rather_than_the_one_last_shown()
+    {
+        GitRevision first = new(ObjectId.Random());
+        GitRevision second = new(ObjectId.Random());
+        GitRevision[] selection = [first];
+        _copyContextMenuItem.SetRevisionFunc(() => selection);
+        List<string> copied = CaptureCopies();
+
+        _copyContextMenuItem.ShowDropDown();
+        _copyContextMenuItem.HideDropDown();
+        selection = [second];
+        _copyContextMenuItem.CommitHashMenuItem.PerformClick();
+
+        copied.Should().Equal(second.Guid);
+    }
+
+    [Test]
+    public void Fixed_items_should_each_copy_their_own_part_of_the_selection()
+    {
+        GitRevision revision = new(ObjectId.Random())
+        {
+            Author = "John Doe",
+            AuthorEmail = "john@example.com",
+            Subject = "Subject",
+            Body = "Subject\n\nBody",
+            AuthorUnixTime = 1_791_115_200
+        };
+        _copyContextMenuItem.SetRevisionFunc(() => [revision]);
+        List<string> copied = CaptureCopies();
+
+        _copyContextMenuItem.MessageMenuItem.PerformClick();
+        _copyContextMenuItem.AuthorMenuItem.PerformClick();
+        _copyContextMenuItem.DateMenuItem.PerformClick();
+
+        copied.Should().Equal("Subject\n\nBody", "John Doe <john@example.com>", revision.AuthorDate.ToString());
+    }
+
+    [Test]
+    public void Fixed_item_should_copy_one_line_per_selected_revision()
+    {
+        GitRevision first = new(ObjectId.Random());
+        GitRevision second = new(ObjectId.Random());
+        _copyContextMenuItem.SetRevisionFunc(() => [first, second]);
+        List<string> copied = CaptureCopies();
+
+        _copyContextMenuItem.CommitHashMenuItem.PerformClick();
+
+        copied.Should().Equal($"{first.Guid}\n{second.Guid}");
+    }
+
+    [Test]
+    public void Fixed_item_should_copy_nothing_without_a_selection()
+    {
+        _copyContextMenuItem.SetRevisionFunc(() => []);
+        List<string> copied = CaptureCopies();
+
+        _copyContextMenuItem.CommitHashMenuItem.PerformClick();
+
+        copied.Should().BeEmpty();
+    }
+
+    private List<string> CaptureCopies()
+    {
+        List<string> copied = [];
+        _copyContextMenuItem.GetTestAccessor().CopyText = text =>
+        {
+            copied.Add(text);
+            return true;
+        };
+        return copied;
+    }
+
+    [Test]
+    public void Should_contain_persistent_fixed_items_if_no_revision_supplied()
     {
         _copyContextMenuItem.SetRevisionFunc(() => null!);
 
         _copyContextMenuItem.ShowDropDown();
 
-        _copyContextMenuItem.DropDownItems.Count.Should().Be(1);
+        // The four named sub-actions (commit hash, message, author, date) are seeded permanently so
+        // toolbar introspection can discover them before any revision is selected. The drop-down is
+        // hidden when there is no revision, so these items are never shown to the user.
+        _copyContextMenuItem.DropDownItems.Count.Should().Be(4);
     }
 
     [TestCaseSource(nameof(GetArtificialCommits))]

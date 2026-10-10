@@ -36,6 +36,15 @@ public partial class PluginSettingsPage : AutoLayoutSettingsPage
 
             foreach (ISetting setting in settingsArray)
             {
+                // Guard against third-party plugins whose GetSettings() returns a collection
+                // containing null entries (e.g. GitExtensions.PluginManager). Without this
+                // check, the NullReferenceException is re-thrown as an ExternalOperationException
+                // and prevents the Settings dialog from opening at all.
+                if (setting is null)
+                {
+                    continue;
+                }
+
                 AddSettingControl(SettingControlBindingsProvider.CreateControlBinding(setting));
                 state.Append('.');
             }
@@ -85,7 +94,8 @@ public partial class PluginSettingsPage : AutoLayoutSettingsPage
             throw new ApplicationException();
         }
 
-        return _gitPlugin.HasSettings ? _gitPlugin.GetSettings() : [];
+        // Guard against third-party plugins whose GetSettings() returns null despite HasSettings being true.
+        return _gitPlugin.HasSettings ? (_gitPlugin.GetSettings() ?? []) : [];
     }
 
     public override SettingsPageReference PageReference
