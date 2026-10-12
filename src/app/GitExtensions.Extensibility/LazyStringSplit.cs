@@ -118,6 +118,13 @@ public static class LazyStringSplitExtensions
         return new(s, delimiter, options);
     }
 
+    /// <summary>
+    ///  Lazily splits <paramref name="stringToSplit"/> and returns ranges into the original string.
+    /// </summary>
+    /// <param name="stringToSplit">The string to split.</param>
+    /// <param name="delimiter">The character that delimits the ranges.</param>
+    /// <param name="options">Options controlling trimming and removal of empty ranges.</param>
+    /// <returns>The zero-based beginning and length of each resulting range.</returns>
     public static IEnumerable<(int beginning, int length)> LazySplitRanges(this string stringToSplit, char delimiter, StringSplitOptions options = StringSplitOptions.None)
     {
         bool trim = options.HasFlag(StringSplitOptions.TrimEntries);
