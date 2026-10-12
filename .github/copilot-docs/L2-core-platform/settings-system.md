@@ -66,8 +66,8 @@ for the canonical pattern: a `SettingsPath` constant plus static `StringSetting`
 **Settings-dialog binding** — the page extends `DistributedSettingsPage`, which wires the
 Local / Distributed / Global / Effective level tabs automatically.  The constructor populates
 `_controlBindings` using `SettingControlBindingsProvider.CreateControlBinding(setting, control)`.
-The base class calls `LoadSetting` / `SaveSetting` on each binding; NEVER bypass them with direct
-`control.Text =` assignments — doing so breaks the layered load/save semantics.
+ The page calls `LoadSetting` / `SaveSetting` on each binding; use those bindings for
+ layered setting persistence instead of reading or writing a settings source directly.
 `StringSettingControlBinding` normalises `\n` ↔ `\r\n` for `TextBox.Multiline = true` automatically.
 See [DetailedSettingsPage.cs](../../../src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/DetailedSettingsPage.cs).
 

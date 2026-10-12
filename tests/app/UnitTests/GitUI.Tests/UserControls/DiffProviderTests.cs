@@ -27,7 +27,7 @@ public class DiffProviderTests
     [Test]
     public async Task AppendDiffsAsync_should_format_untracked_file_as_synthetic_diff()
     {
-        File.WriteAllLines(Path.Combine(_workingDir, "new.txt"), ["first", "second"]);
+        await File.WriteAllLinesAsync(Path.Combine(_workingDir, "new.txt"), ["first", "second"]);
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(_workingDir);
         FileStatusItem item = new(firstRev: null, new GitRevision(ObjectId.WorkTreeId), new GitItemStatus("new.txt") { IsTracked = false });
@@ -49,5 +49,28 @@ public class DiffProviderTests
         await DiffProvider.AppendDiffsAsync(sb, [item], module, contextLines: 3);
 
         sb.ToString().Should().BeEmpty();
+    }
+
+    [Test]
+    public async Task AppendDiffsAsync_should_format_untracked_symlink_as_link_target()
+    {
+        const string linkTarget = "target.txt";
+        try
+        {
+            File.CreateSymbolicLink(Path.Combine(_workingDir, "link.txt"), linkTarget);
+        }
+        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException)
+        {
+            Assert.Ignore("Creating symbolic links is not permitted in this environment.");
+        }
+
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(_workingDir);
+        FileStatusItem item = new(firstRev: null, new GitRevision(ObjectId.WorkTreeId), new GitItemStatus("link.txt") { IsTracked = false });
+        StringBuilder sb = new();
+
+        await DiffProvider.AppendDiffsAsync(sb, [item], module, contextLines: 3);
+
+        sb.ToString().Should().Be($"link.txt -> {linkTarget}{Environment.NewLine}");
     }
 }

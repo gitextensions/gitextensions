@@ -29,17 +29,24 @@ internal static class DiffProvider
 
             // Untracked files are read directly from the filesystem and formatted as a
             // synthetic unified diff so no git process is needed per file.
-            foreach (FileStatusItem item in group.Where(item => !item.Item.IsTracked))
+            foreach (GitItemStatus item in group.Select(item => item.Item).Where(item => !item.IsTracked))
             {
-                string fullPath = Path.Combine(module.WorkingDir, item.Item.Name);
-                if (!File.Exists(fullPath))
+                FileInfo fileInfo = new(Path.Combine(module.WorkingDir, item.Name));
+
+                if (fileInfo.LinkTarget is { } linkTarget)
+                {
+                    sb.AppendLine($"{item.Name} -> {linkTarget}");
+                    continue;
+                }
+
+                if (!fileInfo.Exists)
                 {
                     continue;
                 }
 
-                string[] lines = await File.ReadAllLinesAsync(fullPath);
+                string[] lines = await File.ReadAllLinesAsync(fileInfo.FullName);
                 sb.AppendLine("--- /dev/null");
-                sb.AppendLine($"+++ b/{item.Item.Name}");
+                sb.AppendLine($"+++ b/{item.Name}");
                 sb.AppendLine($"@@ -0,0 +1,{lines.Length} @@");
                 foreach (string line in lines)
                 {
@@ -47,7 +54,7 @@ internal static class DiffProvider
                 }
             }
 
-            List<GitItemStatus> trackedItems = [.. group.Where(item => item.Item.IsTracked).Select(item => item.Item)];
+            List<GitItemStatus> trackedItems = [.. group.Select(item => item.Item).Where(item => item.IsTracked)];
             if (trackedItems.Count == 0)
             {
                 continue;
