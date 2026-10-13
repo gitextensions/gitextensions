@@ -18,7 +18,8 @@ public partial class FormToolbarsLayout : GitExtensionsForm
     private readonly TranslationString _gridTooltip = new("Drag toolbars to reposition them");
     private readonly TranslationString _syncIconTextTooltip = new("When checked, icon text font size scales with the icon size (baseline: 16 px icons = default font size)");
 
-    // Static so the nested ToolbarItemPanel, which owns the dropdown, can reach it.
+    // Static so the nested panels, which own the row label and the dropdown, can reach them.
+    private static readonly TranslationString _rowLabelFormat = new("Row {0}");
     private static readonly TranslationString _iconSizeFormat = new("Icon size: {0}");
 
     private readonly TranslationString _resetLayoutQuestion = new("Reset toolbars to their default layout?\n\nThe built-in toolbars (Standard, Filters, Scripts) will be placed on row 1 in that order. Each custom toolbar will be moved to its own row and disabled.");
@@ -130,7 +131,6 @@ public partial class FormToolbarsLayout : GitExtensionsForm
 
         public RowPanel(int rowIndex)
         {
-            RowIndex = rowIndex;
             Height = RowHeight;
             BackColor = SystemColors.Control;
             BorderStyle = BorderStyle.FixedSingle;
@@ -139,7 +139,6 @@ public partial class FormToolbarsLayout : GitExtensionsForm
 
             RowLabel = new Label
             {
-                Text = $"Row {rowIndex + 1}",
                 AutoSize = false,
                 Width = 45,
                 Height = RowHeight - 12,
@@ -149,12 +148,14 @@ public partial class FormToolbarsLayout : GitExtensionsForm
                 Font = new Font(SystemFonts.DefaultFont.FontFamily, 8f)
             };
             Controls.Add(RowLabel);
+
+            UpdateRowIndex(rowIndex);
         }
 
         public void UpdateRowIndex(int newIndex)
         {
             RowIndex = newIndex;
-            RowLabel.Text = $"Row {newIndex + 1}";
+            RowLabel.Text = string.Format(_rowLabelFormat.Text, newIndex + 1);
         }
     }
 

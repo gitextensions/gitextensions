@@ -7804,6 +7804,10 @@ The built-in toolbars (Standard, Filters, Scripts) will be placed on row 1 in th
         <source>Reset layout to default (built-in toolbars on row 1; each custom toolbar on its own row and disabled)</source>
         <target />
       </trans-unit>
+      <trans-unit id="_rowLabelFormat.Text">
+        <source>Row {0}</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_syncIconTextTooltip.Text">
         <source>When checked, icon text font size scales with the icon size (baseline: 16 px icons = default font size)</source>
         <target />
