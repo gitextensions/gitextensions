@@ -36,6 +36,7 @@ partial class GitConfigAdvancedSettingsPage
         checkboxMergeAutoStash = new CheckBox();
         checkBoxReReReEnabled = new CheckBox();
         checkBoxReReReAutoUpdate = new CheckBox();
+        checkBoxPullFfOnly = new CheckBox();
         SuspendLayout();
         // 
         // checkBoxRebaseAutostash
@@ -126,10 +127,22 @@ partial class GitConfigAdvancedSettingsPage
         checkBoxReReReAutoUpdate.ThreeState = true;
         checkBoxReReReAutoUpdate.UseVisualStyleBackColor = true;
         // 
+        // checkBoxPullFfOnly
+        // 
+        checkBoxPullFfOnly.AutoSize = true;
+        checkBoxPullFfOnly.Location = new Point(19, 214);
+        checkBoxPullFfOnly.Name = "checkBoxPullFfOnly";
+        checkBoxPullFfOnly.Size = new Size(250, 19);
+        checkBoxPullFfOnly.TabIndex = 9;
+        checkBoxPullFfOnly.Text = "Only allow fast-forward when pulling";
+        checkBoxPullFfOnly.ThreeState = true;
+        checkBoxPullFfOnly.UseVisualStyleBackColor = true;
+        // 
         // GitConfigAdvancedSettingsPage
         // 
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
+        Controls.Add(checkBoxPullFfOnly);
         Controls.Add(checkBoxReReReAutoUpdate);
         Controls.Add(checkBoxReReReEnabled);
         Controls.Add(checkboxMergeAutoStash);
@@ -155,4 +168,5 @@ partial class GitConfigAdvancedSettingsPage
     private CheckBox checkboxMergeAutoStash;
     private CheckBox checkBoxReReReEnabled;
     private CheckBox checkBoxReReReAutoUpdate;
+    private CheckBox checkBoxPullFfOnly;
 }

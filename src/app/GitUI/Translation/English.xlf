@@ -8099,6 +8099,10 @@ Context menu for additional operations</source>
         <source>Prune remote branches during fetch</source>
         <target />
       </trans-unit>
+      <trans-unit id="checkBoxPullFfOnly.Text">
+        <source>Only allow fast-forward when pulling</source>
+        <target />
+      </trans-unit>
       <trans-unit id="checkBoxPullRebase.Text">
         <source>Rebase local branch when pulling (instead of merge)</source>
         <target />
