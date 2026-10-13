@@ -100,8 +100,7 @@ public sealed class ToolStripChromeFeedbackTests
         try
         {
             host.Show();
-            host.Activate();
-            Application.DoEvents();
+            NativeTestWindowActivation.Activate(host);
             strip.DeviceDpi.Should().Be(96);
             Point point = split && item is ToolStripSplitButton splitItem
                 ? new Point(item.Bounds.X + splitItem.DropDownButtonBounds.X + (splitItem.DropDownButtonBounds.Width / 2), item.Bounds.Y + (item.Height / 2))
@@ -118,12 +117,14 @@ public sealed class ToolStripChromeFeedbackTests
             }
 
             item.Selected.Should().BeTrue();
+            NativeTestWindowActivation.AssertForeground(host);
             using Bitmap before = ScreenOwner(strip, item);
             NativeMethods.SendMouseMessage(strip.Handle, 0x0201, point.X, point.Y);
             Application.DoEvents();
             item.DropDown.Visible.Should().BeTrue();
             NativeMethods.SendMouseMessage(strip.Handle, 0x0202, point.X, point.Y);
             Application.DoEvents();
+            NativeTestWindowActivation.AssertForeground(host);
             using Bitmap opened = ScreenOwner(strip, item);
             Rectangle ownerBounds = strip.RectangleToScreen(item.Bounds);
             Rectangle popupBounds = NativeMethods.GetWindowRectangle(item.DropDown.Handle);
@@ -143,6 +144,7 @@ public sealed class ToolStripChromeFeedbackTests
             }
 
             option.Selected.Should().BeTrue();
+            NativeTestWindowActivation.AssertForeground(host);
             using Bitmap hovered = ScreenOwner(strip, item);
             using Bitmap hoveredPopup = ScreenRectangle(popupFootprint);
             OwnerComparison openedComparison = CompareOwner(before, opened, openedPopup, ownerBounds, popupFootprint, occludingBounds);

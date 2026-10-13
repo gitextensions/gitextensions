@@ -1849,6 +1849,12 @@
                   BorderBrush="{DynamicResource GitExtensionsNativeMenuSelectedBorderBrush}"
                   BorderThickness="1"
                   IsHitTestVisible="False" />
+          <Border Name="PART_NativeSystemSelectionBorder"
+                  IsVisible="False"
+                  Background="Transparent"
+                  BorderBrush="{DynamicResource GitExtensionsHighlightBackgroundBrush}"
+                  BorderThickness="1"
+                  IsHitTestVisible="False" />
           <Border Name="PART_NativeContentRoot" Padding="{TemplateBinding Padding}" Background="Transparent">
             <Grid>
               <Grid.ColumnDefinitions>
@@ -2243,16 +2249,29 @@
     <!-- Fluent's selected child foreground is not Professional's item ForeColor. -->
     <Setter Property="Foreground" Value="{Binding $parent[MenuItem].Foreground}" />
   </Style>
-  <!-- Filter toolbar menus retain their separately opted-in renderer path. -->
-  <Style Selector="MenuItem.gitextensions-filter-menu:pointerover">
+  <!-- ToolStrip selects its renderer independently of the semantic menu colors. -->
+  <Style Selector="MenuItem.gitextensions-filter-menu:pointerover /template/ Border#PART_LayoutRoot,
+                   MenuItem.gitextensions-filter-menu:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-filter-menu.gitextensions-filter-menu-system-renderer:pointerover /template/ Border#PART_LayoutRoot,
+                   MenuItem.gitextensions-filter-menu.gitextensions-filter-menu-system-renderer:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-filter-menu.gitextensions-filter-menu-system-renderer:not(:disabled):pointerover,
+                   MenuItem.gitextensions-filter-menu.gitextensions-filter-menu-system-renderer:not(:disabled):selected">
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsHighlightForegroundBrush}" />
   </Style>
-  <Style Selector="MenuItem.gitextensions-filter-menu:pointerover /template/ Border#PART_LayoutRoot">
+  <Style Selector="MenuItem.gitextensions-filter-menu.gitextensions-filter-menu-system-renderer /template/ Border#PART_NativeSelectionBorder">
+    <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
   </Style>
-  <Style Selector="MenuItem.gitextensions-filter-menu:pointerover /template/ Border#PART_NativeSelectionBorder,
-                   MenuItem.gitextensions-filter-menu:selected /template/ Border#PART_NativeSelectionBorder">
-    <Setter Property="IsVisible" Value="False" />
+  <Style Selector="MenuItem.gitextensions-filter-menu.gitextensions-filter-menu-system-renderer:disabled /template/ Border#PART_NativeSelectionBorder">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-filter-menu.gitextensions-filter-menu-system-renderer:pointerover /template/ Border#PART_NativeSystemSelectionBorder,
+                   MenuItem.gitextensions-filter-menu.gitextensions-filter-menu-system-renderer:selected /template/ Border#PART_NativeSystemSelectionBorder">
+    <Setter Property="IsVisible" Value="True" />
   </Style>
   <!-- ToolStripDropDownMenu reserves a wider image/check gutter than Fluent and keeps
        shortcut and submenu glyphs against the right edge. These integer paint offsets are
@@ -2361,6 +2380,33 @@
   <Style Selector="MenuItem ScrollViewer">
     <!-- Native ToolStripDropDownMenu leaves one content pixel inside each border edge. -->
     <Setter Property="Margin" Value="0,1" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter.gitextensions-filter-menu">
+    <Setter Property="MaxWidth" Value="Infinity" />
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <compat:NativeFilterToolStripDropDownPanel />
+      </ItemsPanelTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel Background="{TemplateBinding Background}">
+          <ScrollViewer Margin="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ItemsPresenter Name="PART_ItemsPresenter"
+                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                            KeyboardNavigation.TabNavigation="Continue" />
+          </ScrollViewer>
+          <!-- Source padding belongs to its item canvas; the border only paints over it. -->
+          <Border Name="LayoutRoot"
+                  Background="Transparent"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="1"
+                  Padding="0"
+                  IsHitTestVisible="False" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
   </Style>
   <!-- This consumed menu opts into the source dropdown algorithm. Generic branch/context
        menus retain their existing templates; no captured coordinates enter these slots. -->

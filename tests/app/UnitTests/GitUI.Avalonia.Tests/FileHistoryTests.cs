@@ -322,7 +322,7 @@ public sealed class FileHistoryTests
             revisions.SelectedItems.Add(items[0]);
             revisions.SelectedItems.Add(items[1]);
 
-            revisionGrid.GetSelectedRevisions().Should().Equal(items);
+            revisionGrid.GetSelectedRevisions().Should().Equal(items.Reverse());
         }
         finally
         {

@@ -785,7 +785,11 @@ public sealed class FormBrowseTests
 
             Grid split = form.revisionDiff.FindControl<Grid>("DiffSplitContainer")!;
             split.Bounds.Width.Should().Be(643);
-            split.Bounds.Height.Should().Be(260);
+
+            // The source 573-DIP client leaves 509 after its 27-DIP menu, 25-DIP AutoSize
+            // toolbar and 12-DIP content padding. The proportional split takes floor(209 *
+            // 509 / 502) = 211; its 6-DIP splitter and 30-DIP tab insets leave 262.
+            split.Bounds.Height.Should().Be(262);
             split.ColumnDefinitions[0].ActualWidth.Should().Be(300);
             split.ColumnDefinitions[1].ActualWidth.Should().Be(6);
             split.ColumnDefinitions[2].ActualWidth.Should().BeGreaterThan(300);
@@ -2064,7 +2068,7 @@ public sealed class FormBrowseTests
         toolbarItems[1].Items.Should().HaveCount(7);
         toolbarItems[2].Items.Should().BeEmpty();
         MenuItem scripts = toolbars.Items.OfType<MenuItem>().Last();
-        StackPanel scriptsToolbar = form.FindControl<StackPanel>("ToolStripScripts")!;
+        NativeToolStrip scriptsToolbar = form.FindControl<NativeToolStrip>("ToolStripScripts")!;
         scriptsToolbar.IsVisible.Should().BeTrue();
         scripts.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
         scriptsToolbar.IsVisible.Should().BeFalse();
@@ -2169,6 +2173,7 @@ public sealed class FormBrowseTests
             // filter. A saved status setting must not skip its artificial destination.
             AppSettings.ShowGitStatusForArtificialCommits = false;
             GitModule module = CreateRepositoryWithInitialCommit();
+            ObjectId head = module.GetCurrentCheckout();
             File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "dirty");
             ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
             IGitUICommands commands = Substitute.For<IGitUICommands>();
@@ -2178,7 +2183,13 @@ public sealed class FormBrowseTests
                 .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
             using FormBrowse form = new(commands);
             form.Show();
-            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.IsArtificial == true);
+            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == head
+                && form.RevisionGrid.GetTestAccessor().Revisions.Items.OfType<GitRevision>()
+                    .Any(revision => revision.ObjectId == ObjectId.WorkTreeId));
+
+            // The source starts on HEAD; explicitly establish the artificial-row navigation precondition.
+            form.RevisionGrid.SetSelectedRevision(ObjectId.WorkTreeId).Should().BeTrue();
+            form.RevisionGrid.SelectedRevision!.IsArtificial.Should().BeTrue();
 
             MenuItem navigate = GetMainMenuItem(form, "navigateToolStripMenuItem");
             MenuItem goToCurrent = GetTaggedMenuItem(navigate, "GotoCurrentRevision");
@@ -2641,7 +2652,7 @@ public sealed class FormBrowseTests
             TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
             await WaitUntilAsync(() => loadingStatus.Text == "1 revisions" && form.RevisionGrid.SelectedRevision is not null);
 
-            form.RevisionGrid.SelectedId.Should().Be(selectedId);
+            form.RevisionGrid.SelectedRevision?.ObjectId.Should().Be(selectedId);
             form.FindControl<FilterToolBar>("ToolStripFilters")!
                 .FindControl<ComboBox>("tstxtRevisionFilter")!.Text.Should().Be("initial");
             form.FindControl<Control>("leftPanel")!.IsVisible.Should().BeFalse();

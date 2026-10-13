@@ -295,8 +295,10 @@ public sealed class VisualParityTests
                 form.toolStripMainHost.Bounds.Height.Should().Be(25);
                 form.toolStripMainHost.Bounds.Width.Should().Be(toolStripMain.PreferredSize.Width);
                 form.toolStripFiltersHost.Bounds.X.Should().Be(form.toolStripMainHost.Bounds.Right);
-                form.toolStripFiltersHost.Bounds.Right.Should().Be(869);
-                form.toolStripFiltersHost.Bounds.Height.Should().Be(27);
+                NativeToolStrip scriptsToolbar = form.FindControl<NativeToolStrip>("ToolStripScripts")!;
+                scriptsToolbar.Bounds.X.Should().Be(form.toolStripFiltersHost.Bounds.Right);
+                scriptsToolbar.Bounds.Right.Should().BeLessThanOrEqualTo(toolPanel.Bounds.Width - 4);
+                form.toolStripFiltersHost.Bounds.Height.Should().Be(toolStripFilters.Strip.PreferredSize.Height);
                 form.toolStripFiltersOverflow.IsVisible.Should().BeTrue();
                 NativeToolStrip filterItems = toolStripFilters.Strip;
                 Control[] originalFilterItems = filterItems.Items.ToArray();
@@ -564,8 +566,9 @@ public sealed class VisualParityTests
                         .Single();
 
                     input.Bounds.Height.Should().Be(23);
-                    input.Bounds.Y.Should().Be(2,
-                        "the running Browse filter owner is27px, centering its fixed23px hosted combo independently of the standalone25px context");
+                    NativeToolStrip owner = input.GetVisualAncestors().OfType<NativeToolStrip>().First();
+                    input.Bounds.Y.Should().Be(Math.Floor((owner.Bounds.Height - input.Bounds.Height) / 2),
+                        "the fixed hosted combo is centered in its actual AutoSize owner row");
                     textViewport.Bounds.Height.Should().BeGreaterThanOrEqualTo(textPresenter.Bounds.Height);
                     Point presenterPosition = textPresenter.TranslatePoint(default, input)!.Value;
                     double topInset = presenterPosition.Y;
@@ -600,9 +603,8 @@ public sealed class VisualParityTests
                         .OfType<PathIcon>()
                         .Single();
 
-                    // The live native filter strip grows to 27px around its editors;
-                    // its split items are 24px, unlike the main strip's 22px items.
-                    int itemHeight = splitButton.FindAncestorOfType<FilterToolBar>() is null ? 22 : 24;
+                    NativeToolStrip owner = splitButton.GetVisualAncestors().OfType<NativeToolStrip>().First();
+                    double itemHeight = owner.Bounds.Height - splitButton.Margin.Top - splitButton.Margin.Bottom;
                     splitButton.Bounds.Height.Should().Be(itemHeight);
                     primaryButton.Bounds.Height.Should().Be(itemHeight);
                     if (splitButton is NativeToolStripSplitButton { UseNativeToolStripLayout: true } nativeSplitButton)

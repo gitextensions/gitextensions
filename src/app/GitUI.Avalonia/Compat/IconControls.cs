@@ -344,7 +344,8 @@ internal sealed class NativeToolStripSplitContent : Panel
         }
 
         string display = TranslationCompat.GetConvertMnemonics(owner) ? AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(text) : text;
-        Size measured = WinFormsTextMeasurer.MeasureTextRenderer(owner, display.Replace("&", "&&", StringComparison.Ordinal));
+        string measuredCaption = OperatingSystem.IsWindows() ? display.Replace("&", "&&", StringComparison.Ordinal) : display;
+        Size measured = WinFormsTextMeasurer.MeasureTextRenderer(owner, measuredCaption);
         return new Size(Math.Ceiling(measured.Width), Math.Ceiling(measured.Height));
     }
 

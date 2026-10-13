@@ -450,7 +450,7 @@
                            ToolTip.Tip="Settings" />
           </compat:NativeToolStrip>
       </Grid>
-      <Grid x:Name="toolStripFiltersHost" Height="27" ClipToBounds="True">
+      <Grid x:Name="toolStripFiltersHost" ClipToBounds="True">
         <controls:FilterToolBar x:Name="ToolStripFilters">
           <controls:FilterToolBar.OverflowButton>
             <Button x:Name="toolStripFiltersOverflow"
@@ -464,11 +464,9 @@
           </controls:FilterToolBar.OverflowButton>
         </controls:FilterToolBar>
       </Grid>
-      <StackPanel x:Name="ToolStripScripts"
-                  Width="50"
-                  Height="25"
-                  Orientation="Horizontal"
-                  Spacing="1" />
+      <compat:NativeToolStrip x:Name="ToolStripScripts"
+                              GripVisible="False"
+                              Background="{StaticResource GitExtensionsTransparentBrush}" />
       </wf:ToolStripPanel>
     <Grid x:Name="_contentPanel"
           Background="{DynamicResource GitExtensionsWindowBackgroundBrush}">
