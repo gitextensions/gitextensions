@@ -891,7 +891,12 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
                 if (_dynamicToolbars.TryGetValue(toolbarName, out ToolStrip? toolStripToRemove))
                 {
                     toolStripToRemove.Parent?.Controls.Remove(toolStripToRemove);
+
+                    // Taken off first so that disposing the toolbar does not dispose the items it
+                    // shares with the rest of the window along with it.
+                    List<ToolStripItem> removedItems = [.. toolStripToRemove.Items.Cast<ToolStripItem>()];
                     toolStripToRemove.Items.Clear();
+                    ToolbarItemConverter.DisposeDerivedItems(removedItems, kept: _originalItems.Values.ToHashSet());
                     toolStripToRemove.Visible = false;
                     toolStripToRemove.Dispose();
 
@@ -1603,6 +1608,11 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         // rather than moved, so the original stays on the first toolbar.
         HashSet<string> placedConfigNames = new(StringComparer.Ordinal);
 
+        // The items this apply places again, and those the page may place later: of the items the
+        // toolbars hold now, any other built by ToolbarItemConverter is no longer needed.
+        HashSet<ToolStripItem> keptItems = [.. _originalItems.Values];
+        keptItems.UnionWith(plan.Values.SelectMany(resolvedItems => resolvedItems.Select(resolved => resolved.Item)));
+
         foreach ((ToolStrip toolStrip, List<ResolvedToolbarItem> resolvedItems) in plan)
         {
             // Custom toolbars rebuild a fresh converted button on every Apply (ConvertMenuItemToButton
@@ -1625,7 +1635,9 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
                 }
             }
 
+            List<ToolStripItem> removedItems = [.. toolStrip.Items.Cast<ToolStripItem>()];
             toolStrip.Items.Clear();
+            ToolbarItemConverter.DisposeDerivedItems(removedItems, keptItems);
 
             foreach (ResolvedToolbarItem resolved in resolvedItems)
             {

@@ -382,6 +382,27 @@ internal static class ToolbarItemConverter
         };
     }
 
+    /// <summary>
+    /// Disposes the items among <paramref name="removedItems"/> that <see cref="Convert"/> or
+    /// <see cref="CloneItem"/> built, except those in <paramref name="kept"/>.
+    /// </summary>
+    /// <remarks>
+    /// Such an item follows its source through events that only its disposal unsubscribes from:
+    /// merely taken off its toolbar, it would stay alive, and keep being updated, for as long as its
+    /// source. Any other item either belongs to the main window or follows nothing, and is left alone.
+    /// </remarks>
+    public static void DisposeDerivedItems(IEnumerable<ToolStripItem> removedItems, IReadOnlySet<ToolStripItem> kept)
+    {
+        foreach (ToolStripItem item in removedItems)
+        {
+            // Both record their source in Tag: the menu item converted, or the button cloned.
+            if (item.Tag is ToolStripItem && !kept.Contains(item))
+            {
+                item.Dispose();
+            }
+        }
+    }
+
     private static ToolStripItem CloneSplitButton(ToolStripSplitButton splitOriginal, string cloneName, bool wantsText)
     {
         ToolStripSplitButton clone = new()

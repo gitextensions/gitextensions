@@ -159,6 +159,7 @@ partial class FormBrowse
         }
 
         toolStrip.Items.Remove(item);
+        ToolbarItemConverter.DisposeDerivedItems([item], kept: _originalToolbarItems.Values.ToHashSet());
 
         PersistCurrentToolbarItemsLayout();
 

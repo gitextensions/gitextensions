@@ -263,6 +263,44 @@ public class ToolbarItemConverterTests
     }
 
     [Test]
+    public void DisposeDerivedItems_should_dispose_the_converted_buttons_and_clones_not_kept()
+    {
+        // Merely taken off its toolbar, either would keep following its source for good.
+        using ToolStripMenuItem menuItem = new("Commit") { Name = "commitToolStripMenuItem" };
+        using ToolStripButton original = new("Push") { Name = "toolStripButtonPush" };
+        ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+        ToolStripItem clone = ToolbarItemConverter.CloneItem(original);
+        List<ToolStripItem> disposed = [];
+        converted.Disposed += (s, e) => disposed.Add(converted);
+        clone.Disposed += (s, e) => disposed.Add(clone);
+
+        ToolbarItemConverter.DisposeDerivedItems([converted, clone], kept: new HashSet<ToolStripItem>());
+
+        disposed.Should().BeEquivalentTo([converted, clone]);
+        menuItem.Checked = true;
+        ((ToolStripButton)converted).Checked.Should().BeFalse();
+    }
+
+    [Test]
+    public void DisposeDerivedItems_should_leave_kept_items_and_items_derived_from_nothing()
+    {
+        // A kept item may be placed again, and an item derived from nothing belongs to the main
+        // window, which may place it again too.
+        using ToolStripMenuItem menuItem = new("Commit") { Name = "commitToolStripMenuItem" };
+        using ToolStripItem kept = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+        using ToolStripButton designerButton = new("Push") { Name = "toolStripButtonPush" };
+        using ToolStripButton scriptButton = new("Script") { Tag = "userscript" };
+        bool anyDisposed = false;
+        kept.Disposed += (s, e) => anyDisposed = true;
+        designerButton.Disposed += (s, e) => anyDisposed = true;
+        scriptButton.Disposed += (s, e) => anyDisposed = true;
+
+        ToolbarItemConverter.DisposeDerivedItems([kept, designerButton, scriptButton], kept: new HashSet<ToolStripItem> { kept });
+
+        anyDisposed.Should().BeFalse();
+    }
+
+    [Test]
     public void CloneItem_should_copy_the_dropdown_of_a_split_button()
     {
         using ToolStripSplitButton original = new("Working directory") { Name = "toolStripSplitButtonWorkingDir" };
