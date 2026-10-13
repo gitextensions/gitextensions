@@ -42,6 +42,8 @@ internal static class ToolbarGridArrangement
     /// <remarks>
     /// A custom toolbar is not put back on the first row because the toolbars would then be wider
     /// than the panel, which makes WinForms wrap them and leaves a gap at the start of the row.
+    /// There can be more custom toolbars than rows a saved layout accepts, so those that would go
+    /// past the last row share it instead.
     /// </remarks>
     public static void ResetToDefault(List<ToolbarLayoutItem> items)
     {
@@ -58,8 +60,9 @@ internal static class ToolbarGridArrangement
             }
             else
             {
-                item.Row = nextCustomRow++;
-                item.OrderInRow = 0;
+                int row = nextCustomRow++;
+                item.Row = Math.Min(row, ToolbarLayoutValidator.MaxRow);
+                item.OrderInRow = Math.Max(row - ToolbarLayoutValidator.MaxRow, 0);
                 item.IsVisible = false;
             }
         }

@@ -73,6 +73,26 @@ public class ToolbarGridArrangementTests
     }
 
     [Test]
+    public void ResetToDefault_should_share_the_last_row_once_the_custom_toolbars_run_out_of_rows()
+    {
+        // More toolbars are allowed than rows: a row past the last one could not be saved, and
+        // applying the reset layout would throw.
+        List<ToolbarLayoutItem> items = ThreeOnOneRow();
+        int customCount = ToolbarLayoutValidator.MaxToolbars - items.Count;
+        for (int i = 1; i <= customCount; i++)
+        {
+            items.Add(Item($"Custom {i:D2}", 0, 2 + i));
+        }
+
+        ToolbarGridArrangement.ResetToDefault(items);
+
+        items.Should().OnlyContain(i => i.Row <= ToolbarLayoutValidator.MaxRow);
+        List<ToolbarLayoutItem> lastRow = items.Where(i => i.Row == ToolbarLayoutValidator.MaxRow).ToList();
+        lastRow.Select(i => i.OrderInRow).Should().Equal(Enumerable.Range(0, lastRow.Count));
+        lastRow.Should().HaveCount(customCount - ToolbarLayoutValidator.MaxRow + 1);
+    }
+
+    [Test]
     public void MoveToRow_should_insert_at_the_drop_position_within_the_same_row()
     {
         List<ToolbarLayoutItem> items = ThreeOnOneRow();
