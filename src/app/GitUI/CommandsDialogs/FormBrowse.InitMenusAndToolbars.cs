@@ -1058,54 +1058,6 @@ partial class FormBrowse
         return null;
     }
 
-    // Synchronizes Enabled state of toolbar buttons whose Tag is a ToolStripMenuItem
-    // belonging to <paramref name="contextMenu"/>, so that buttons reflect the current
-    // context (e.g. tree selection) without requiring the context menu to be opened.
-    private void SyncToolbarButtonStatesFromContextMenu(ContextMenuStrip contextMenu)
-    {
-        // Build a fast lookup: menuItem instance → its current Enabled state
-        Dictionary<ToolStripMenuItem, bool> enabledByItem = BuildEnabledStates(contextMenu.Items);
-
-        foreach (Control control in toolPanel.TopToolStripPanel.Controls)
-        {
-            if (control is not ToolStrip toolStrip)
-            {
-                continue;
-            }
-
-            foreach (ToolStripItem toolStripItem in toolStrip.Items)
-            {
-                if (toolStripItem.Tag is ToolStripMenuItem linkedMenuItem &&
-                    enabledByItem.TryGetValue(linkedMenuItem, out bool enabled))
-                {
-                    toolStripItem.Enabled = enabled;
-                }
-            }
-        }
-
-        static Dictionary<ToolStripMenuItem, bool> BuildEnabledStates(ToolStripItemCollection items)
-        {
-            Dictionary<ToolStripMenuItem, bool> result = new();
-            CollectEnabledStates(items, result);
-            return result;
-        }
-
-        static void CollectEnabledStates(ToolStripItemCollection items, Dictionary<ToolStripMenuItem, bool> result)
-        {
-            foreach (ToolStripItem item in items)
-            {
-                if (item is ToolStripMenuItem menuItem)
-                {
-                    result[menuItem] = menuItem.Enabled;
-                    if (menuItem.DropDownItems.Count > 0)
-                    {
-                        CollectEnabledStates(menuItem.DropDownItems, result);
-                    }
-                }
-            }
-        }
-    }
-
     private void UpdateWorktreeToolStripVisibility()
     {
         if (!Module.IsValidGitWorkingDir())

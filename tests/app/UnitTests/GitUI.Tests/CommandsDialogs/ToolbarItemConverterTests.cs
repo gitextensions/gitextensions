@@ -80,6 +80,39 @@ public class ToolbarItemConverterTests
         converted.Checked.Should().BeFalse();
     }
 
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Convert_should_follow_the_enabled_state_of_the_menu_item(bool withChildren)
+    {
+        // Branch and tree actions are enabled or disabled whenever the selection changes, long
+        // after their button was built.
+        using ToolStripMenuItem menuItem = new("Delete branch") { Name = "deleteBranchToolStripMenuItem" };
+        if (withChildren)
+        {
+            menuItem.DropDownItems.Add(new ToolStripMenuItem("Force") { Name = "forceDeleteBranchToolStripMenuItem" });
+        }
+
+        using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+
+        menuItem.Enabled = false;
+        converted.Enabled.Should().BeFalse();
+
+        menuItem.Enabled = true;
+        converted.Enabled.Should().BeTrue();
+    }
+
+    [Test]
+    public void Convert_should_stop_following_the_enabled_state_once_the_button_is_disposed()
+    {
+        using ToolStripMenuItem menuItem = new("Delete branch") { Name = "deleteBranchToolStripMenuItem" };
+        ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+
+        converted.Dispose();
+        menuItem.Enabled = false;
+
+        converted.Enabled.Should().BeTrue();
+    }
+
     [Test]
     public void Convert_should_turn_a_menu_item_with_children_into_a_split_button()
     {
@@ -233,6 +266,20 @@ public class ToolbarItemConverterTests
         original.Checked = true;
 
         clone.Checked.Should().BeTrue();
+    }
+
+    [Test]
+    public void CloneItem_should_follow_the_enabled_state_of_the_original()
+    {
+        // A clone of a converted button is the last link of the chain menu item - button - clone.
+        using ToolStripButton original = new("Delete branch") { Name = "btn_deleteBranchToolStripMenuItem" };
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original);
+
+        original.Enabled = false;
+        clone.Enabled.Should().BeFalse();
+
+        original.Enabled = true;
+        clone.Enabled.Should().BeTrue();
     }
 
     [Test]

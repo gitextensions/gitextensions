@@ -332,7 +332,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
         toolStripButtonPush.ResetToDefaultState();
         repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, refsSource: RevisionGrid, revisionGridInfo: RevisionGrid);
-        repoObjectsTree.ContextMenuStateUpdated += (s, e) => SyncToolbarButtonStatesFromContextMenu(repoObjectsTree.MainContextMenu);
         revisionDiff.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: fileTree, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor);
         fileTree.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: null, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor, requestBlame: _isFileHistoryMode);
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);

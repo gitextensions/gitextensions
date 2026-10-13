@@ -170,6 +170,7 @@ internal static class ToolbarItemConverter
         };
 
         splitButton.ButtonClick += (s, e) => splitButton.ShowDropDown();
+        FollowEnabled(splitButton, menuItem);
 
         Store(splitButton, storeIn, log);
         return splitButton;
@@ -215,9 +216,19 @@ internal static class ToolbarItemConverter
         void SyncChecked(object? s, EventArgs e) => button.Checked = menuItem.Checked;
         menuItem.CheckedChanged += SyncChecked;
         button.Disposed += (s, e) => menuItem.CheckedChanged -= SyncChecked;
+        FollowEnabled(button, menuItem);
 
         Store(button, storeIn, log);
         return button;
+    }
+
+    // An action is enabled or disabled as its context changes - the selected branch or tree node,
+    // the repository state - not only when its button is built.
+    private static void FollowEnabled(ToolStripItem button, ToolStripMenuItem menuItem)
+    {
+        void SyncEnabled(object? s, EventArgs e) => button.Enabled = menuItem.Enabled;
+        menuItem.EnabledChanged += SyncEnabled;
+        button.Disposed += (s, e) => menuItem.EnabledChanged -= SyncEnabled;
     }
 
     private static void CloneDropDownItems(ToolStripSplitButton splitButton, ToolStripMenuItem menuItem, Action<string>? log)
@@ -592,17 +603,20 @@ internal static class ToolbarItemConverter
             btnClone.ToolTipText = btnOriginal.ToolTipText;
             btnClone.AutoSize = btnOriginal.AutoSize;
             btnClone.ImageAlign = btnOriginal.ImageAlign;
+            btnClone.Enabled = btnOriginal.Enabled;
         }
 
         void SyncCheckedFromOriginal(object? s, EventArgs e) => btnClone.Checked = btnOriginal.Checked;
 
         btnOriginal.TextChanged += SyncFromOriginal;
         btnOriginal.DisplayStyleChanged += SyncFromOriginal;
+        btnOriginal.EnabledChanged += SyncFromOriginal;
         btnOriginal.CheckedChanged += SyncCheckedFromOriginal;
         btnClone.Disposed += (s, e) =>
         {
             btnOriginal.TextChanged -= SyncFromOriginal;
             btnOriginal.DisplayStyleChanged -= SyncFromOriginal;
+            btnOriginal.EnabledChanged -= SyncFromOriginal;
             btnOriginal.CheckedChanged -= SyncCheckedFromOriginal;
         };
 
