@@ -1,0 +1,635 @@
+signal time=1786349088.226640 sender=org.freedesktop.DBus -> destination=:1.14 serial=2 path=/org/freedesktop/DBus; interface=org.freedesktop.DBus; member=NameAcquired
+   string ":1.14"
+signal time=1786349088.226691 sender=org.freedesktop.DBus -> destination=:1.14 serial=4 path=/org/freedesktop/DBus; interface=org.freedesktop.DBus; member=NameLost
+   string ":1.14"
+method call time=1786349088.569196 sender=:1.15 -> destination=org.freedesktop.portal.Desktop serial=5 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.DBus.Properties; member=Get
+   string "org.freedesktop.portal.Settings"
+   string "version"
+method call time=1786349088.830177 sender=:1.15 -> destination=org.freedesktop.portal.Desktop serial=6 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.portal.Settings; member=ReadOne
+   string "org.freedesktop.appearance"
+   string "color-scheme"
+method return time=1786349088.830988 sender=org.freedesktop.DBus -> destination=:1.2 serial=82 reply_serial=140
+   array [
+      dict entry(
+         string "ProcessID"
+         variant             uint32 133964
+      )
+      dict entry(
+         string "UnixUserID"
+         variant             uint32 1000
+      )
+      dict entry(
+         string "UnixGroupIDs"
+         variant             array [
+               uint32 4
+               uint32 20
+               uint32 24
+               uint32 25
+               uint32 27
+               uint32 29
+               uint32 30
+               uint32 44
+               uint32 46
+               uint32 100
+               uint32 107
+               uint32 1000
+            ]
+      )
+      dict entry(
+         string "LinuxSecurityLabel"
+         variant             array of bytes "kernel" + \0
+      )
+      dict entry(
+         string "ProcessFD"
+         variant             file descriptor
+                  inode: 134523
+                  type:       )
+   ]
+method return time=1786349088.832441 sender=:1.8 -> destination=:1.2 serial=50 reply_serial=141
+   variant       uint32 0
+method call time=1786349090.038957 sender=:1.15 -> destination=org.freedesktop.portal.Desktop serial=19 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.DBus.Properties; member=Get
+   string "org.freedesktop.portal.Settings"
+   string "version"
+method call time=1786349090.089345 sender=:1.15 -> destination=org.freedesktop.portal.Desktop serial=20 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.portal.Settings; member=ReadOne
+   string "org.freedesktop.appearance"
+   string "accent-color"
+error time=1786349090.090305 sender=:1.8 -> destination=:1.2 error_name=org.freedesktop.portal.Error.NotFound reply_serial=144
+   string "Requested setting not found"
+method call time=1786349090.502645 sender=:1.17 -> destination=org.freedesktop.portal.Desktop serial=2 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.DBus.Properties; member=Get
+   string "org.freedesktop.portal.FileChooser"
+   string "version"
+method call time=1786349090.511379 sender=:1.18 -> destination=org.freedesktop.portal.Desktop serial=2 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.DBus.Properties; member=Get
+   string "org.freedesktop.portal.OpenURI"
+   string "version"
+method call time=1786349090.530972 sender=:1.19 -> destination=org.freedesktop.portal.Desktop serial=2 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.portal.FileChooser; member=OpenFile
+   string ""
+   string "P8.2 Open file"
+   array [
+      dict entry(
+         string "directory"
+         variant             boolean false
+      )
+      dict entry(
+         string "handle_token"
+         variant             string "gitextensions_028d2e62f3794426b5036e27ca002b0b"
+      )
+      dict entry(
+         string "modal"
+         variant             boolean true
+      )
+      dict entry(
+         string "multiple"
+         variant             boolean false
+      )
+   ]
+method return time=1786349090.531749 sender=org.freedesktop.DBus -> destination=:1.2 serial=83 reply_serial=148
+   array [
+      dict entry(
+         string "ProcessID"
+         variant             uint32 133964
+      )
+      dict entry(
+         string "UnixUserID"
+         variant             uint32 1000
+      )
+      dict entry(
+         string "UnixGroupIDs"
+         variant             array [
+               uint32 4
+               uint32 20
+               uint32 24
+               uint32 25
+               uint32 27
+               uint32 29
+               uint32 30
+               uint32 44
+               uint32 46
+               uint32 100
+               uint32 107
+               uint32 1000
+            ]
+      )
+      dict entry(
+         string "LinuxSecurityLabel"
+         variant             array of bytes "kernel" + \0
+      )
+      dict entry(
+         string "ProcessFD"
+         variant             file descriptor
+                  inode: 134523
+                  type:       )
+   ]
+method return time=1786349090.532826 sender=org.freedesktop.DBus -> destination=:1.2 serial=84 reply_serial=149
+method return time=1786349090.532991 sender=org.freedesktop.DBus -> destination=:1.2 serial=85 reply_serial=150
+   uint32 2
+method return time=1786349090.533394 sender=org.freedesktop.DBus -> destination=:1.2 serial=86 reply_serial=151
+   string ":1.8"
+method return time=1786349092.607130 sender=:1.8 -> destination=:1.2 serial=58 reply_serial=152
+   uint32 0
+   array [
+      dict entry(
+         string "uris"
+         variant             array [
+               string "file:///tmp/gitextensions-p82-portal.8r0sC5/repository/portal.txt"
+            ]
+      )
+      dict entry(
+         string "writable"
+         variant             boolean true
+      )
+      dict entry(
+         string "choices"
+         variant             array [
+            ]
+      )
+   ]
+method return time=1786349092.607936 sender=org.freedesktop.DBus -> destination=:1.2 serial=87 reply_serial=155
+method call time=1786349092.619773 sender=:1.15 -> destination=org.freedesktop.portal.Desktop serial=21 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.DBus.Properties; member=Get
+   string "org.freedesktop.portal.FileChooser"
+   string "version"
+method call time=1786349092.625393 sender=:1.21 -> destination=org.freedesktop.portal.Desktop serial=2 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.portal.FileChooser; member=OpenFile
+   string ""
+   string "P8.2 Open folder"
+   array [
+      dict entry(
+         string "directory"
+         variant             boolean true
+      )
+      dict entry(
+         string "handle_token"
+         variant             string "gitextensions_45b63193374d48c48cda372b2927025e"
+      )
+      dict entry(
+         string "modal"
+         variant             boolean true
+      )
+      dict entry(
+         string "multiple"
+         variant             boolean false
+      )
+   ]
+method return time=1786349092.625948 sender=org.freedesktop.DBus -> destination=:1.2 serial=88 reply_serial=157
+   array [
+      dict entry(
+         string "ProcessID"
+         variant             uint32 133964
+      )
+      dict entry(
+         string "UnixUserID"
+         variant             uint32 1000
+      )
+      dict entry(
+         string "UnixGroupIDs"
+         variant             array [
+               uint32 4
+               uint32 20
+               uint32 24
+               uint32 25
+               uint32 27
+               uint32 29
+               uint32 30
+               uint32 44
+               uint32 46
+               uint32 100
+               uint32 107
+               uint32 1000
+            ]
+      )
+      dict entry(
+         string "LinuxSecurityLabel"
+         variant             array of bytes "kernel" + \0
+      )
+      dict entry(
+         string "ProcessFD"
+         variant             file descriptor
+                  inode: 134523
+                  type:       )
+   ]
+method return time=1786349092.626305 sender=org.freedesktop.DBus -> destination=:1.2 serial=89 reply_serial=158
+method return time=1786349092.626313 sender=org.freedesktop.DBus -> destination=:1.2 serial=90 reply_serial=159
+   uint32 2
+method return time=1786349092.626507 sender=org.freedesktop.DBus -> destination=:1.2 serial=91 reply_serial=160
+   string ":1.8"
+method return time=1786349094.164688 sender=:1.8 -> destination=:1.2 serial=61 reply_serial=161
+   uint32 0
+   array [
+      dict entry(
+         string "uris"
+         variant             array [
+               string "file:///tmp/gitextensions-p82-portal.8r0sC5/repository"
+            ]
+      )
+      dict entry(
+         string "writable"
+         variant             boolean true
+      )
+      dict entry(
+         string "choices"
+         variant             array [
+            ]
+      )
+   ]
+method return time=1786349094.165300 sender=org.freedesktop.DBus -> destination=:1.2 serial=92 reply_serial=164
+method call time=1786349094.170023 sender=:1.22 -> destination=org.freedesktop.portal.Desktop serial=2 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.portal.FileChooser; member=SaveFile
+   string ""
+   string "P8.2 Save file"
+   array [
+      dict entry(
+         string "directory"
+         variant             boolean false
+      )
+      dict entry(
+         string "handle_token"
+         variant             string "gitextensions_d5b37ec542d749c2a0ad1efcda0897fc"
+      )
+      dict entry(
+         string "modal"
+         variant             boolean true
+      )
+      dict entry(
+         string "multiple"
+         variant             boolean false
+      )
+      dict entry(
+         string "current_name"
+         variant             string "p82-portal.txt"
+      )
+   ]
+method return time=1786349094.170459 sender=org.freedesktop.DBus -> destination=:1.2 serial=93 reply_serial=165
+   array [
+      dict entry(
+         string "ProcessID"
+         variant             uint32 133964
+      )
+      dict entry(
+         string "UnixUserID"
+         variant             uint32 1000
+      )
+      dict entry(
+         string "UnixGroupIDs"
+         variant             array [
+               uint32 4
+               uint32 20
+               uint32 24
+               uint32 25
+               uint32 27
+               uint32 29
+               uint32 30
+               uint32 44
+               uint32 46
+               uint32 100
+               uint32 107
+               uint32 1000
+            ]
+      )
+      dict entry(
+         string "LinuxSecurityLabel"
+         variant             array of bytes "kernel" + \0
+      )
+      dict entry(
+         string "ProcessFD"
+         variant             file descriptor
+                  inode: 134523
+                  type:       )
+   ]
+method return time=1786349094.170830 sender=org.freedesktop.DBus -> destination=:1.2 serial=94 reply_serial=166
+method return time=1786349094.170835 sender=org.freedesktop.DBus -> destination=:1.2 serial=95 reply_serial=167
+   uint32 2
+method return time=1786349094.171060 sender=org.freedesktop.DBus -> destination=:1.2 serial=96 reply_serial=168
+   string ":1.8"
+method return time=1786349095.432980 sender=:1.8 -> destination=:1.2 serial=64 reply_serial=169
+   uint32 0
+   array [
+      dict entry(
+         string "uris"
+         variant             array [
+               string "file:///tmp/gitextensions-p82-portal.8r0sC5/p82-saved.txt.txt"
+            ]
+      )
+      dict entry(
+         string "writable"
+         variant             boolean true
+      )
+      dict entry(
+         string "choices"
+         variant             array [
+            ]
+      )
+   ]
+method call time=1786349095.436984 sender=:1.23 -> destination=org.freedesktop.portal.Desktop serial=2 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.portal.FileChooser; member=OpenFile
+   string ""
+   string "P8.3 Cancel file"
+   array [
+      dict entry(
+         string "directory"
+         variant             boolean false
+      )
+      dict entry(
+         string "handle_token"
+         variant             string "gitextensions_e43d62daf810475aa7b3ca132def4c79"
+      )
+      dict entry(
+         string "modal"
+         variant             boolean true
+      )
+      dict entry(
+         string "multiple"
+         variant             boolean false
+      )
+   ]
+method return time=1786349095.437276 sender=org.freedesktop.DBus -> destination=:1.2 serial=97 reply_serial=172
+   array [
+      dict entry(
+         string "ProcessID"
+         variant             uint32 133964
+      )
+      dict entry(
+         string "UnixUserID"
+         variant             uint32 1000
+      )
+      dict entry(
+         string "UnixGroupIDs"
+         variant             array [
+               uint32 4
+               uint32 20
+               uint32 24
+               uint32 25
+               uint32 27
+               uint32 29
+               uint32 30
+               uint32 44
+               uint32 46
+               uint32 100
+               uint32 107
+               uint32 1000
+            ]
+      )
+      dict entry(
+         string "LinuxSecurityLabel"
+         variant             array of bytes "kernel" + \0
+      )
+      dict entry(
+         string "ProcessFD"
+         variant             file descriptor
+                  inode: 134523
+                  type:       )
+   ]
+method return time=1786349095.437629 sender=org.freedesktop.DBus -> destination=:1.2 serial=98 reply_serial=173
+method return time=1786349095.437718 sender=org.freedesktop.DBus -> destination=:1.2 serial=99 reply_serial=174
+   uint32 2
+method return time=1786349095.437835 sender=org.freedesktop.DBus -> destination=:1.2 serial=100 reply_serial=175
+   string ":1.8"
+method return time=1786349095.583477 sender=:1.8 -> destination=:1.2 serial=68 reply_serial=176
+   uint32 2
+   array [
+      dict entry(
+         string "uris"
+         variant             array [
+            ]
+      )
+      dict entry(
+         string "writable"
+         variant             boolean true
+      )
+      dict entry(
+         string "choices"
+         variant             array [
+            ]
+      )
+   ]
+method return time=1786349095.584001 sender=org.freedesktop.DBus -> destination=:1.2 serial=101 reply_serial=179
+method call time=1786349095.601407 sender=:1.24 -> destination=org.freedesktop.portal.Desktop serial=2 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.portal.OpenURI; member=OpenFile
+   string ""
+   file descriptor
+         inode: 15526
+         type: file
+   array [
+      dict entry(
+         string "ask"
+         variant             boolean false
+      )
+      dict entry(
+         string "handle_token"
+         variant             string "gitextensions_5df84a6fdbaf43469fa26e31d0bb6d68"
+      )
+   ]
+method return time=1786349095.601978 sender=org.freedesktop.DBus -> destination=:1.2 serial=102 reply_serial=180
+   array [
+      dict entry(
+         string "ProcessID"
+         variant             uint32 133964
+      )
+      dict entry(
+         string "UnixUserID"
+         variant             uint32 1000
+      )
+      dict entry(
+         string "UnixGroupIDs"
+         variant             array [
+               uint32 4
+               uint32 20
+               uint32 24
+               uint32 25
+               uint32 27
+               uint32 29
+               uint32 30
+               uint32 44
+               uint32 46
+               uint32 100
+               uint32 107
+               uint32 1000
+            ]
+      )
+      dict entry(
+         string "LinuxSecurityLabel"
+         variant             array of bytes "kernel" + \0
+      )
+      dict entry(
+         string "ProcessFD"
+         variant             file descriptor
+                  inode: 134523
+                  type:       )
+   ]
+error time=1786349095.603973 sender=:1.4 -> destination=:1.2 error_name=org.freedesktop.portal.Error.NotFound reply_serial=182
+   string "No entry for text/plain"
+method return time=1786349095.604245 sender=org.freedesktop.DBus -> destination=:1.2 serial=103 reply_serial=183
+method return time=1786349095.604257 sender=org.freedesktop.DBus -> destination=:1.2 serial=104 reply_serial=184
+   uint32 2
+method return time=1786349095.604582 sender=org.freedesktop.DBus -> destination=:1.2 serial=105 reply_serial=185
+   string ":1.8"
+method return time=1786349095.942811 sender=:1.8 -> destination=:1.2 serial=70 reply_serial=186
+   uint32 0
+   array [
+      dict entry(
+         string "choice"
+         variant             string "vim"
+      )
+   ]
+error time=1786349096.428225 sender=:1.4 -> destination=:1.2 error_name=org.freedesktop.portal.Error.NotFound reply_serial=187
+   string "No entry for text/plain"
+method return time=1786349096.429173 sender=:1.4 -> destination=:1.2 serial=9 reply_serial=188
+method return time=1786349096.429462 sender=org.freedesktop.DBus -> destination=:1.2 serial=106 reply_serial=190
+method call time=1786349096.434364 sender=:1.25 -> destination=org.freedesktop.portal.Desktop serial=2 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.portal.OpenURI; member=OpenDirectory
+   string ""
+   file descriptor
+         inode: 15490
+         type: directory
+   array [
+      dict entry(
+         string "ask"
+         variant             boolean false
+      )
+      dict entry(
+         string "handle_token"
+         variant             string "gitextensions_d3571dcbdac64c669db79820618eefd5"
+      )
+   ]
+method return time=1786349096.434604 sender=org.freedesktop.DBus -> destination=:1.2 serial=107 reply_serial=191
+   array [
+      dict entry(
+         string "ProcessID"
+         variant             uint32 133964
+      )
+      dict entry(
+         string "UnixUserID"
+         variant             uint32 1000
+      )
+      dict entry(
+         string "UnixGroupIDs"
+         variant             array [
+               uint32 4
+               uint32 20
+               uint32 24
+               uint32 25
+               uint32 27
+               uint32 29
+               uint32 30
+               uint32 44
+               uint32 46
+               uint32 100
+               uint32 107
+               uint32 1000
+            ]
+      )
+      dict entry(
+         string "LinuxSecurityLabel"
+         variant             array of bytes "kernel" + \0
+      )
+      dict entry(
+         string "ProcessFD"
+         variant             file descriptor
+                  inode: 134523
+                  type:       )
+   ]
+error time=1786349096.435028 sender=org.freedesktop.DBus -> destination=:1.2 error_name=org.freedesktop.DBus.Error.ServiceUnknown reply_serial=193
+   string "The name org.freedesktop.FileManager1 was not provided by any .service files"
+error time=1786349096.435460 sender=:1.4 -> destination=:1.2 error_name=org.freedesktop.portal.Error.NotFound reply_serial=194
+   string "No entry for inode/directory"
+method call time=1786349096.451959 sender=:1.26 -> destination=org.freedesktop.portal.Desktop serial=2 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.portal.OpenURI; member=OpenDirectory
+   string ""
+   file descriptor
+         inode: 15490
+         type: directory
+   array [
+      dict entry(
+         string "ask"
+         variant             boolean false
+      )
+      dict entry(
+         string "handle_token"
+         variant             string "gitextensions_2556ea1c751240b1b0480eab31689324"
+      )
+   ]
+method return time=1786349096.452243 sender=org.freedesktop.DBus -> destination=:1.2 serial=109 reply_serial=197
+   array [
+      dict entry(
+         string "ProcessID"
+         variant             uint32 133964
+      )
+      dict entry(
+         string "UnixUserID"
+         variant             uint32 1000
+      )
+      dict entry(
+         string "UnixGroupIDs"
+         variant             array [
+               uint32 4
+               uint32 20
+               uint32 24
+               uint32 25
+               uint32 27
+               uint32 29
+               uint32 30
+               uint32 44
+               uint32 46
+               uint32 100
+               uint32 107
+               uint32 1000
+            ]
+      )
+      dict entry(
+         string "LinuxSecurityLabel"
+         variant             array of bytes "kernel" + \0
+      )
+      dict entry(
+         string "ProcessFD"
+         variant             file descriptor
+                  inode: 134523
+                  type:       )
+   ]
+error time=1786349096.452830 sender=org.freedesktop.DBus -> destination=:1.2 error_name=org.freedesktop.DBus.Error.ServiceUnknown reply_serial=199
+   string "The name org.freedesktop.FileManager1 was not provided by any .service files"
+error time=1786349096.453267 sender=:1.4 -> destination=:1.2 error_name=org.freedesktop.portal.Error.NotFound reply_serial=200
+   string "No entry for inode/directory"
+method call time=1786349096.459232 sender=:1.27 -> destination=org.freedesktop.portal.Desktop serial=2 path=/org/freedesktop/portal/desktop; interface=org.freedesktop.portal.OpenURI; member=OpenURI
+   string ""
+   string "https://portal-p82.example.invalid/"
+   array [
+      dict entry(
+         string "ask"
+         variant             boolean false
+      )
+      dict entry(
+         string "handle_token"
+         variant             string "gitextensions_7190fb8c0fe4414ca8cedb9f04ccf10f"
+      )
+   ]
+method return time=1786349096.459856 sender=org.freedesktop.DBus -> destination=:1.2 serial=111 reply_serial=203
+   array [
+      dict entry(
+         string "ProcessID"
+         variant             uint32 133964
+      )
+      dict entry(
+         string "UnixUserID"
+         variant             uint32 1000
+      )
+      dict entry(
+         string "UnixGroupIDs"
+         variant             array [
+               uint32 4
+               uint32 20
+               uint32 24
+               uint32 25
+               uint32 27
+               uint32 29
+               uint32 30
+               uint32 44
+               uint32 46
+               uint32 100
+               uint32 107
+               uint32 1000
+            ]
+      )
+      dict entry(
+         string "LinuxSecurityLabel"
+         variant             array of bytes "kernel" + \0
+      )
+      dict entry(
+         string "ProcessFD"
+         variant             file descriptor
+                  inode: 134523
+                  type:       )
+   ]
+error time=1786349096.460738 sender=:1.4 -> destination=:1.2 error_name=org.freedesktop.portal.Error.NotFound reply_serial=205
+   string "No entry for x-scheme-handler/https"

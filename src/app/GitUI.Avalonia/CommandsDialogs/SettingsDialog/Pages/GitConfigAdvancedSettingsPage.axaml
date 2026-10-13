@@ -1,0 +1,44 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.GitConfigAdvancedSettingsPage"
+                                 Text="Advanced">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="16,10"
+                Spacing="0">
+      <CheckBox x:Name="checkBoxPullRebase"
+                Height="28"
+                IsThreeState="True"
+                Content="Rebase local branch when pulling (instead of merge)" />
+      <CheckBox x:Name="checkBoxFetchPrune"
+                Height="28"
+                IsThreeState="True"
+                Content="Prune remote branches during fetch" />
+      <CheckBox x:Name="checkboxMergeAutoStash"
+                Height="28"
+                IsThreeState="True"
+                Content="Automatically stash before doing a merge" />
+      <CheckBox x:Name="checkBoxRebaseAutostash"
+                Height="28"
+                IsThreeState="True"
+                Content="Automatically stash before doing a rebase" />
+      <CheckBox x:Name="checkBoxRebaseAutosquash"
+                Height="28"
+                IsThreeState="True"
+                Content="Automatically squash commits when doing an interactive rebase" />
+      <CheckBox x:Name="checkBoxUpdateRefs"
+                Height="28"
+                IsThreeState="True"
+                Content="Rebase also dependent branches" />
+      <CheckBox x:Name="checkBoxReReReEnabled"
+                Height="28"
+                IsThreeState="True"
+                Content="Reuse recorded resolution of conflicted merges" />
+      <CheckBox x:Name="checkBoxReReReAutoUpdate"
+                Height="28"
+                IsThreeState="True"
+                Content="Automatically apply recorded resolution of conflicted merges" />
+    </StackPanel>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>

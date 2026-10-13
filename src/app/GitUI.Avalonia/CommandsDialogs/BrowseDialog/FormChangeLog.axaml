@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        x:Class="GitUI.CommandsDialogs.BrowseDialog.FormChangeLog"
+        Width="849" Height="411"
+        WindowStartupLocation="CenterOwner"
+        Title="Change log">
+  <TextBox x:Name="ChangeLog"
+           IsReadOnly="True"
+           AcceptsReturn="True"
+           TextWrapping="NoWrap"
+           compat:TranslationCompat.TranslateText="False"
+           ScrollViewer.HorizontalScrollBarVisibility="Auto"
+           ScrollViewer.VerticalScrollBarVisibility="Auto" />
+</Window>

@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="TeamCityIntegration.Settings.TeamCitySettingsUserControl"
+             MinWidth="400">
+  <Grid x:Name="tableLayoutPanel1"
+        ColumnDefinitions="Auto,*"
+        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+        ColumnSpacing="6"
+        RowSpacing="2">
+    <HyperlinkButton x:Name="lnkExtractDataFromBuildUrlCopiedInTheClipboard"
+                     Grid.Column="1"
+                     Margin="3,0,3,6"
+                     Padding="2,0"
+                     HorizontalAlignment="Left"
+                     Content="Extract the data from the build url copied in the clipboard" />
+
+    <TextBlock Grid.Row="1"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="TeamCity server URL" />
+    <TextBox x:Name="TeamCityServerUrl"
+             Grid.Row="1"
+             Grid.Column="1"
+             Margin="3,2" />
+
+    <TextBlock Grid.Row="2"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="Project name" />
+    <Grid x:Name="tableLayoutPanel2"
+          Grid.Row="2"
+          Grid.Column="1"
+          ColumnDefinitions="*,Auto">
+      <TextBox x:Name="TeamCityProjectName"
+               Margin="3,2" />
+      <Button x:Name="buttonProjectChooser"
+              Grid.Column="1"
+              Width="24"
+              Height="22"
+              Margin="3,2"
+              Padding="0"
+              Content="..." />
+    </Grid>
+
+    <TextBlock Grid.Row="3"
+               Grid.Column="1"
+               Margin="3,3,3,0"
+               Text="Several names splitted by | char" />
+
+    <TextBlock Grid.Row="4"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="Build Id Filter" />
+    <TextBox x:Name="TeamCityBuildIdFilter"
+             Grid.Row="4"
+             Grid.Column="1"
+             Margin="3,2" />
+
+    <WrapPanel x:Name="flowLayoutPanel1"
+               Grid.Row="5"
+               Grid.Column="1"
+               Margin="3,0"
+               Orientation="Horizontal">
+      <TextBlock Text="Regexp" />
+      <TextBlock x:Name="labelRegexError"
+                 Margin="6,0,0,0"
+                 Foreground="Red"
+                 IsVisible="False"
+                 TextWrapping="Wrap"
+                 Text="The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!" />
+    </WrapPanel>
+
+    <CheckBox x:Name="CheckBoxLogAsGuest"
+              Grid.Row="6"
+              Grid.Column="1"
+              Margin="3,6,3,2"
+              IsThreeState="True"
+              Content="Log as guest to display the build report" />
+  </Grid>
+</UserControl>

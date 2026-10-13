@@ -3,6 +3,14 @@
   <Import Project="eng\Tests.props" />
 
   <PropertyGroup>
+    <!-- Avalonia/Linux port: building the Avalonia solution implies the cross-platform
+         flavor of the shared engine projects. Everything else (the Windows Forms solution,
+         direct project builds, CI pipelines) is unaffected; on Windows, direct builds of
+         the Avalonia projects get the property from their Directory.Build.rsp instead. -->
+    <BuildAvalonia Condition="'$(BuildAvalonia)' == '' and '$(SolutionName)' == 'GitExtensions.Avalonia'">true</BuildAvalonia>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <LangVersion>14.0</LangVersion>
 
     <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
