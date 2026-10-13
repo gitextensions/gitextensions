@@ -4446,6 +4446,18 @@ internal sealed class AvaloniaControlTreeReader
             return new Rect(34, 3, control.Bounds.Width, control.Bounds.Height);
         }
 
+        if (control is MenuItem or Separator
+            && control.GetVisualAncestors().OfType<NativeFilterToolStripDropDownPanel>().Any())
+        {
+            Control? filterPresenter = control.GetVisualAncestors().OfType<Control>().FirstOrDefault(IsPopupPresenter);
+
+            // This opted-in renderer already arranges the native dropdown canvas.
+            // Retain its actual row bounds instead of projecting generic menu slots.
+            return filterPresenter is not null && control.TranslatePoint(default, filterPresenter) is Point filterOrigin
+                ? new Rect(filterOrigin, control.Bounds.Size)
+                : control.Bounds;
+        }
+
         Control? popupOwner = semanticParent is not null && IsOverlayPopupHost(semanticParent)
             ? semanticParent
             : control.GetVisualAncestors().OfType<Control>().FirstOrDefault(IsOverlayPopupHost);

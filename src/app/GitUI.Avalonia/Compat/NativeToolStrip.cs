@@ -32,6 +32,9 @@ public sealed class NativeToolStrip : Control, IDisposable
     private const int DefaultWidth = 100;
     private const int OverflowWidth = 16;
     private const int VisualStyleGripWidth = 5;
+    private const int ItemImageSize = 16;
+    private const int ItemBorderSize = 2;
+    private const int StandardButtonWidth = 23;
     private const int DefaultMenuFontSize = 12;
     private static readonly FontFamily DefaultMenuFontFamily = new("Segoe UI");
     private static readonly Thickness ControlHostMainMargin = new(1, 0, 1, 0);
@@ -65,6 +68,8 @@ public sealed class NativeToolStrip : Control, IDisposable
     public static readonly StyledProperty<Thickness> PaddingProperty = Border.PaddingProperty.AddOwner<NativeToolStrip>();
     public static readonly StyledProperty<bool> UseSystemVisualStyleProperty =
         AvaloniaProperty.Register<NativeToolStrip, bool>(nameof(UseSystemVisualStyle), true);
+    public static readonly StyledProperty<bool> GripVisibleProperty =
+        AvaloniaProperty.Register<NativeToolStrip, bool>(nameof(GripVisible), true);
     public static readonly StyledProperty<IBrush?> GripDarkBrushProperty =
         AvaloniaProperty.Register<NativeToolStrip, IBrush?>(nameof(GripDarkBrush));
     public static readonly StyledProperty<IBrush?> GripLightBrushProperty =
@@ -81,13 +86,15 @@ public sealed class NativeToolStrip : Control, IDisposable
         AvaloniaProperty.RegisterAttached<NativeToolStrip, Control, bool>("ItemIsControlHost");
     public static readonly AttachedProperty<bool> ItemIsSeparatorProperty =
         AvaloniaProperty.RegisterAttached<NativeToolStrip, Control, bool>("ItemIsSeparator");
+    public static readonly AttachedProperty<bool> ItemUseNativeButtonSizeProperty =
+        AvaloniaProperty.RegisterAttached<NativeToolStrip, Control, bool>("ItemUseNativeButtonSize");
     public static readonly AttachedProperty<bool> FreezeDropDownOwnerPaintProperty =
         AvaloniaProperty.RegisterAttached<NativeToolStrip, Control, bool>("FreezeDropDownOwnerPaint");
 
     static NativeToolStrip()
     {
         AffectsRender<NativeToolStrip>(BackgroundProperty, UseSystemVisualStyleProperty,
-            GripDarkBrushProperty, GripLightBrushProperty, FlowDirectionProperty);
+            GripVisibleProperty, GripDarkBrushProperty, GripLightBrushProperty, FlowDirectionProperty);
     }
 
     public NativeToolStrip()
@@ -190,6 +197,11 @@ public sealed class NativeToolStrip : Control, IDisposable
     ///  Gets or sets the original ToolStrip renderer selection.
     /// </summary>
     public bool UseSystemVisualStyle { get => GetValue(UseSystemVisualStyleProperty); set => SetValue(UseSystemVisualStyleProperty, value); }
+
+    /// <summary>
+    ///  Gets or sets whether the source grip is painted and reserves display space.
+    /// </summary>
+    public bool GripVisible { get => GetValue(GripVisibleProperty); set => SetValue(GripVisibleProperty, value); }
 
     /// <summary>
     ///  Gets or sets the Professional renderer's raw SystemColors.ControlText grip role.
@@ -317,6 +329,16 @@ public sealed class NativeToolStrip : Control, IDisposable
     public static void SetItemIsSeparator(Control control, bool value) => control.SetValue(ItemIsSeparatorProperty, value);
 
     /// <summary>
+    ///  Gets whether an autosized source ToolStripButton uses its native image/text preferred size.
+    /// </summary>
+    public static bool GetItemUseNativeButtonSize(Control control) => control.GetValue(ItemUseNativeButtonSizeProperty);
+
+    /// <summary>
+    ///  Sets native preferred sizing for a source-owned ToolStripButton without changing generic buttons.
+    /// </summary>
+    public static void SetItemUseNativeButtonSize(Control control, bool value) => control.SetValue(ItemUseNativeButtonSizeProperty, value);
+
+    /// <summary>
     ///  Gets whether the source ToolStripEx retains its pre-opening owner state paint.
     /// </summary>
     public static bool GetFreezeDropDownOwnerPaint(Control control) => control.GetValue(FreezeDropDownOwnerPaintProperty);
@@ -400,6 +422,11 @@ public sealed class NativeToolStrip : Control, IDisposable
 
     private void RenderGrip(DrawingContext context)
     {
+        if (!GripVisible)
+        {
+            return;
+        }
+
         // GripEnabled=false in ToolStripEx disables dragging, not painting. Keep
         // the existing source reserve and paint directly, without an input child.
         int height = (int)Pixel(Bounds.Height);
@@ -465,6 +492,21 @@ public sealed class NativeToolStrip : Control, IDisposable
                     _preferredSizes[item] = new Size(Pixel(measured.Width + label.Padding.Left + label.Padding.Right),
                         Pixel(double.IsNaN(preferredHeight) ? measured.Height + label.Padding.Top + label.Padding.Bottom : preferredHeight));
                 }
+
+                if (GetItemAutoSize(item) && GetItemUseNativeButtonSize(item) && item is IconButton button)
+                {
+                    // ToolStripButton's image/text layout has its own border allowance,
+                    // independent of the generic Avalonia button template's preferred size.
+                    string text = button.Classes.Contains("gitextensions-icon-only") ? string.Empty : button.Content as string ?? string.Empty;
+                    string display = TranslationCompat.GetConvertMnemonics(button)
+                        ? AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(text) : text;
+                    string measuredCaption = OperatingSystem.IsWindows() ? display.Replace("&", "&&", StringComparison.Ordinal) : display;
+                    Size measured = display.Length == 0 ? default
+                        : WinFormsTextMeasurer.MeasureTextRenderer(button, measuredCaption);
+                    double imageSize = button.Icon is null ? 0 : ItemImageSize;
+                    _preferredSizes[item] = new Size(Math.Max(StandardButtonWidth, Pixel(measured.Width + imageSize + (2 * ItemBorderSize))),
+                        Pixel(Math.Max(measured.Height, imageSize) + (2 * ItemBorderSize)));
+                }
             }
         }
         finally
@@ -473,7 +515,7 @@ public sealed class NativeToolStrip : Control, IDisposable
         }
 
         Control[] participating = Items.Where(item => item.IsVisible).ToArray();
-        double width = participating.Length == 0 ? DefaultWidth : 0;
+        double width = participating.Length == 0 ? Math.Max(0, DefaultWidth - Padding.Left - Padding.Right) : 0;
         double height = DefaultHeight - Padding.Top - Padding.Bottom;
         foreach (Control item in participating.Where(item => GetItemOverflow(item) != NativeToolStripItemOverflow.Always))
         {
@@ -484,11 +526,12 @@ public sealed class NativeToolStrip : Control, IDisposable
         }
 
         width += participating.Any(item => GetItemOverflow(item) == NativeToolStripItemOverflow.Always) ? OverflowWidth : 2;
-        Size preferred = new(width + VisualStyleGripWidth + Padding.Left + Padding.Right,
+        Size preferred = new(width + (GripVisible ? VisualStyleGripWidth : 0) + Padding.Left + Padding.Right,
             Math.Max(0, height) + Padding.Top + Padding.Bottom);
         if (PreferredSize != preferred)
         {
             PreferredSize = preferred;
+            InvalidateArrange();
             PreferredSizeChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -501,8 +544,9 @@ public sealed class NativeToolStrip : Control, IDisposable
         double width = Pixel(finalSize.Width);
         double height = Pixel(finalSize.Height);
         bool rightToLeft = FlowDirection == FlowDirection.RightToLeft;
-        Rect display = new(Padding.Left + (rightToLeft ? 0 : VisualStyleGripWidth), Padding.Top,
-            Math.Max(0, width - Padding.Left - Padding.Right - VisualStyleGripWidth),
+        double gripWidth = GripVisible ? VisualStyleGripWidth : 0;
+        Rect display = new(Padding.Left + (rightToLeft ? 0 : gripWidth), Padding.Top,
+            Math.Max(0, width - Padding.Left - Padding.Right - gripWidth),
             Math.Max(0, height - Padding.Top - Padding.Bottom));
         CalculatePlacements(display.Width);
         _measuring = true;
@@ -561,7 +605,8 @@ public sealed class NativeToolStrip : Control, IDisposable
 
         if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty
             || change.Property == FontStyleProperty || change.Property == FontWeightProperty
-            || change.Property == FlowDirectionProperty || change.Property == PaddingProperty)
+            || change.Property == FlowDirectionProperty || change.Property == PaddingProperty
+            || change.Property == GripVisibleProperty)
         {
             if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty
                 || change.Property == FontStyleProperty || change.Property == FontWeightProperty)
@@ -581,6 +626,7 @@ public sealed class NativeToolStrip : Control, IDisposable
             }
 
             InvalidateMeasure();
+            InvalidateArrange();
         }
     }
 
@@ -669,6 +715,7 @@ public sealed class NativeToolStrip : Control, IDisposable
         }
 
         InvalidateMeasure();
+        InvalidateArrange();
     }
 
     private void DetachItem(Control item)
@@ -802,6 +849,7 @@ public sealed class NativeToolStrip : Control, IDisposable
         if (e.Property != IsPointerOverProperty && e.Property != IsFocusedProperty)
         {
             InvalidateMeasure();
+            InvalidateArrange();
         }
     }
 
@@ -1018,7 +1066,16 @@ internal class NativeToolStripPresenter : Control
         _bounds.Remove(item);
     }
 
-    public void SetBounds(Control item, Rect bounds) => _bounds[item] = bounds;
+    public void SetBounds(Control item, Rect bounds)
+    {
+        if (!_bounds.TryGetValue(item, out Rect previous) || previous != bounds)
+        {
+            _bounds[item] = bounds;
+
+            // Item rectangles can change while this presenter's own arranged size stays unchanged.
+            InvalidateArrange();
+        }
+    }
 
     protected override Size MeasureOverride(Size availableSize) => default;
 

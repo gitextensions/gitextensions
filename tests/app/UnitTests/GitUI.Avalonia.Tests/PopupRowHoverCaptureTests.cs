@@ -1,12 +1,17 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
+using Avalonia.Layout;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AwesomeAssertions;
 using GitExtensions.ParityCapture;
+using GitUI.Compat;
+using GitUI.UserControls;
 using NUnit.Framework;
 using Point = Avalonia.Point;
 
@@ -252,6 +257,101 @@ public sealed class PopupRowHoverCaptureTests
         {
             window.Close();
         }
+    }
+
+    [AvaloniaTest]
+    [TestCase("tssbtnShowBranches", "tsmiShowBranchesCurrent")]
+    [TestCase("tsddbtnBranchFilter", "tsmiBranchRemote")]
+    [TestCase("tsddbtnRevisionFilter", "tsmiCommitFilter")]
+    public void Apply_should_open_the_actual_native_filter_flyout_and_hover_its_retained_field_row(string ownerName, string rowName)
+    {
+        NativeFlyoutRowHost window = CreateNativeFlyoutRowHost(ownerName, rowName, out MenuFlyout menu, out MenuItem row);
+        object?[] retained = menu.Items.ToArray();
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            menu.IsOpen.Should().BeFalse();
+            using (AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(window,
+                       new CaptureStatePlan { Id = "native-filter-row.hover", Kind = CaptureStateKind.Hover, TargetField = rowName }))
+            {
+                menu.IsOpen.Should().BeTrue();
+                row.IsPointerOver.Should().BeTrue();
+                row.IsSelected.Should().BeTrue();
+                row.GetVisualAncestors().OfType<NativeFilterToolStripDropDownPanel>().Should().ContainSingle();
+                row.Bounds.Width.Should().BeGreaterThan(0);
+                row.Bounds.Height.Should().BeGreaterThan(0);
+                driver.PopupSurfaceRoots.Should().ContainSingle();
+                menu.Items.Should().Equal(retained);
+                using WriteableBitmap? frame = window.CaptureRenderedFrame();
+                frame.Should().NotBeNull();
+            }
+
+            menu.IsOpen.Should().BeFalse();
+            row.IsPointerOver.Should().BeFalse();
+            menu.Items.Should().Equal(retained);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("tssbtnShowBranches", "tsmiShowBranchesCurrent")]
+    [TestCase("tsddbtnBranchFilter", "tsmiBranchRemote")]
+    [TestCase("tsddbtnRevisionFilter", "tsmiCommitFilter")]
+    public void Apply_should_roll_back_the_actual_native_filter_flyout_and_size_when_its_field_row_is_hidden(string ownerName, string rowName)
+    {
+        NativeFlyoutRowHost window = CreateNativeFlyoutRowHost(ownerName, rowName, out MenuFlyout menu, out MenuItem row);
+        object?[] retained = menu.Items.ToArray();
+        row.IsVisible = false;
+        int openings = 0;
+        menu.Opened += (_, _) => openings++;
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Action capture = () => AvaloniaControlStateDriver.Apply(window, new CaptureStatePlan
+            {
+                Id = "native-hidden-row.hover",
+                Kind = CaptureStateKind.Hover,
+                TargetField = rowName,
+                WidthDip = 1600,
+                HeightDip = 600,
+            });
+            capture.Should().Throw<AvaloniaCaptureStateUnsupportedException>().WithMessage("*hover state requires a visible Control*");
+            openings.Should().Be(1, "the failure must occur after the actual source flyout opened");
+            menu.IsOpen.Should().BeFalse();
+            row.IsPointerOver.Should().BeFalse();
+            row.IsVisible.Should().BeFalse();
+            menu.Items.Should().Equal(retained);
+            window.Width.Should().Be(1400);
+            window.Height.Should().Be(500);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    private static NativeFlyoutRowHost CreateNativeFlyoutRowHost(string ownerName, string rowName, out MenuFlyout menu, out MenuItem row)
+    {
+        FilterToolBar filter = new() { Width = 1100, VerticalAlignment = VerticalAlignment.Top };
+        TemplatedControl owner = filter.Strip.Items.OfType<TemplatedControl>().Single(item => item.Name == ownerName);
+        menu = owner switch
+        {
+            SplitButton split => (MenuFlyout)split.Flyout!,
+            DropDownButton dropDown => (MenuFlyout)dropDown.Flyout!,
+            _ => throw new AssertionException("The real filter menu must retain its native split/dropdown owner."),
+        };
+        row = menu.Items.OfType<MenuItem>().Single(item => item.Name == rowName);
+        return new NativeFlyoutRowHost(filter) { Width = 1400, Height = 500, Content = filter };
+    }
+
+    private sealed class NativeFlyoutRowHost(FilterToolBar filter) : Window
+    {
+        private readonly FilterToolBar _filter = filter;
     }
 
     private sealed class HoverRowHost(MenuItem row) : Window

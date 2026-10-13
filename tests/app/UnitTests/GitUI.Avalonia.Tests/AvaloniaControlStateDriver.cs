@@ -550,11 +550,21 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             OpenMenu(contextMenu);
         }
 
+        Control? flyoutOwner = EnumerateLogicalControls(_root)
+            .FirstOrDefault(control => GetFlyout(control) is MenuFlyout menu && HasMenuRow(menu.Items, row));
+        MenuFlyout? owningFlyout = flyoutOwner is null ? null : GetFlyout(flyoutOwner) as MenuFlyout;
+        if (flyoutOwner is not null && owningFlyout is not null)
+        {
+            OpenMenu(flyoutOwner);
+        }
+
         ItemsControl? owningMenu = contextMenu;
         owningMenu ??= EnumerateLogicalControls(_root).OfType<Menu>().FirstOrDefault(menu => HasMenuRow(menu, row));
-        MenuItem[] owners = owningMenu is null
-            ? row.GetLogicalAncestors().OfType<MenuItem>().Reverse().ToArray()
-            : EnumerateMenuOwners(owningMenu, row).ToArray();
+        MenuItem[] owners = owningFlyout is not null
+            ? EnumerateMenuOwners(owningFlyout.Items, row).ToArray()
+            : owningMenu is null
+                ? row.GetLogicalAncestors().OfType<MenuItem>().Reverse().ToArray()
+                : EnumerateMenuOwners(owningMenu.Items, row).ToArray();
         foreach (MenuItem owner in owners)
         {
             if (!owner.IsSubMenuOpen)
@@ -564,22 +574,24 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         }
     }
 
-    private static IEnumerable<MenuItem> EnumerateMenuOwners(ItemsControl owner, MenuItem row)
+    private static IEnumerable<MenuItem> EnumerateMenuOwners(IEnumerable<object?> items, MenuItem row)
     {
         // Closed submenu containers have no logical ancestry until their popup opens.
-        foreach (MenuItem child in owner.Items.OfType<MenuItem>().Where(child => HasMenuRow(child, row)))
+        foreach (MenuItem child in items.OfType<MenuItem>().Where(child => HasMenuRow(child, row)))
         {
             yield return child;
-            foreach (MenuItem descendant in EnumerateMenuOwners(child, row))
+            foreach (MenuItem descendant in EnumerateMenuOwners(child.Items, row))
             {
                 yield return descendant;
             }
         }
     }
 
-    private static bool HasMenuRow(ItemsControl owner, MenuItem expected)
+    private static bool HasMenuRow(ItemsControl owner, MenuItem expected) => HasMenuRow(owner.Items, expected);
+
+    private static bool HasMenuRow(IEnumerable<object?> items, MenuItem expected)
     {
-        return owner.Items.Any(item => ReferenceEquals(item, expected)
+        return items.Any(item => ReferenceEquals(item, expected)
             || (item is ItemsControl child && HasMenuRow(child, expected)));
     }
 
@@ -692,6 +704,13 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         if (target is Control controlWithFlyout && GetFlyout(controlWithFlyout) is PopupFlyoutBase flyout)
         {
             IInputElement? previouslyFocusedElement = _topLevel.FocusManager?.GetFocusedElement();
+            if (!flyout.IsOpen)
+            {
+                // Register before opening: unsupported layout or popup tracking must
+                // still retire only the real flyout this state driver opened.
+                _restoreActions.Add(flyout.Hide);
+            }
+
             flyout.ShowAt(controlWithFlyout);
             Dispatcher.UIThread.RunJobs();
             if (!flyout.IsOpen)
@@ -709,7 +728,6 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
                 Dispatcher.UIThread.RunJobs();
             }
 
-            _restoreActions.Add(flyout.Hide);
             return;
         }
 

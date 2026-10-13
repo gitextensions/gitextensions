@@ -345,10 +345,17 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private void LoadUserMenu()
     {
         ReloadScriptHotkeys();
-        ToolStripScripts.Children.Clear();
+        for (int i = ToolStripScripts.Items.Count - 1; i >= 0; i--)
+        {
+            if (ToolStripScripts.Items[i].Tag as string == "userscript")
+            {
+                ToolStripScripts.Items.RemoveAt(i);
+            }
+        }
+
         if (_scriptsManager is null)
         {
-            ToolStripScripts.IsVisible = true;
+            ToolStripScripts.GripVisible = false;
             return;
         }
 
@@ -360,11 +367,13 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             IconButton button = new()
             {
-                Content = script.Name,
+                // store scriptname
+                Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(script.Name ?? string.Empty),
                 Icon = script.GetIcon(),
                 Tag = "userscript",
             };
             button.Classes.Add("gitextensions-toolbar-button");
+            NativeToolStrip.SetItemUseNativeButtonSize(button, true);
             KeyGesture? gesture = KeysMapper.ToKeyGesture(
                 hotkeys.FirstOrDefault(hotkey => hotkey.Name == script.GetDisplayName())?.KeyData);
             ToolTip.SetTip(button, gesture is null ? script.Name : $"{script.Name} ({gesture})");
@@ -372,12 +381,25 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             ToolStripScripts.Children.Add(button);
         }
 
-        ToolStripScripts.IsVisible = true;
+        ToolStripScripts.GripVisible = ToolStripScripts.Items.Any(item => item.Tag as string == "userscript");
     }
 
     private void InitializeToolbarOverflow()
     {
         ToolStripMain.PreferredSizeChanged += (_, _) => UpdateMainToolbarOverflow();
+        foreach (Control toolbar in new Control[] { ToolStripMain, ToolStripFilters })
+        {
+            toolbar.PropertyChanged += (_, args) =>
+            {
+                if (args.Property == IsVisibleProperty)
+                {
+                    // Hidden wrapper grids can retain a zero measure constraint; the source
+                    // owners notify their actual ToolStripPanel when visibility is restored.
+                    _topPanel.InvalidateMeasure();
+                }
+            };
+        }
+
         _NO_TRANSLATE_WorkingDir.PropertyChanged += (_, args) =>
         {
             if (args.Property == WidthProperty)
@@ -482,6 +504,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         ToolStripMain.Dispose();
         ToolStripFilters.Strip.Dispose();
+        ToolStripScripts.Dispose();
         if (_hasRuntimeCommands)
         {
             PluginRegistry.Unregister(UICommands);
@@ -689,7 +712,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         toolStripFileExplorer.IsEnabled = isValidWorkingDir;
         userShell.IsEnabled = Directory.Exists(module.WorkingDir);
         ToolStripFilters.IsEnabled = isValidWorkingDir;
-        branchSelect.Content = string.IsNullOrEmpty(branchName) ? "Branch" : branchName;
+
+        // Avalonia uses underscores for access keys; retain the source ampersand notation and literal branch underscores.
+        branchSelect.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(string.IsNullOrEmpty(branchName) ? "Branch" : branchName);
         pluginsToolStripMenuItem.IsVisible = isValidWorkingDir;
         UpdateRepositoryHostsMenu();
         UpdatePluginMenu(isValidWorkingDir);
@@ -2164,7 +2189,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void AddNotes()
     {
-        // Avalonia exposes the current row directly instead of WinForms' GetSelectedRevisionOrDefault helper.
         GitRevision? revision = RevisionGrid.SelectedRevision;
         if (revision?.IsArtificial is not false)
         {

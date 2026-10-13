@@ -539,17 +539,22 @@ public class MenuStripEx : MenuStrip
 /// </summary>
 public class ToolStripContainer : Avalonia.Controls.Panel
 {
-    private const double MinimumContentTop = 27;
-    private double _contentTop = MinimumContentTop;
+    private double _contentTop;
 
     protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
     {
         Control? topPanel = Children.FirstOrDefault(child => child.Name == "_topPanel");
         topPanel?.Measure(new Avalonia.Size(availableSize.Width, double.PositiveInfinity));
 
-        // Framework constraint: the source ToolStripPanel grows with an explicitly assigned
-        // toolbar font. Its authored 27-pixel row remains the minimum, not a clipping height.
-        _contentTop = Math.Max(MinimumContentTop, topPanel?.DesiredSize.Height ?? MinimumContentTop);
+        // Framework constraint: ToolStripPanel AutoSize follows its actual owners' preferred
+        // heights, including independent menu fonts and explicitly assigned larger fonts.
+        double contentTop = topPanel?.DesiredSize.Height ?? 0;
+        if (_contentTop != contentTop)
+        {
+            _contentTop = contentTop;
+            InvalidateArrange();
+        }
+
         foreach (Control child in Children)
         {
             if (ReferenceEquals(child, topPanel))
@@ -599,58 +604,86 @@ public class ToolStripContainer : Avalonia.Controls.Panel
 public class ToolStripPanel : Avalonia.Controls.Panel
 {
     private const double LeadingInset = 7;
-    private const double MinimumFilterWidth = 50;
-    private const double ScriptsWidth = 50;
+    private const double MinimumToolStripWidth = 50;
     private const double TrailingInset = 4;
     private const double ToolStripHeight = 25;
-    private const double FilterToolStripHeight = 27;
+    private readonly Dictionary<Control, Avalonia.Size> _preferredSizes = new(ReferenceEqualityComparer.Instance);
 
     public double MainPreferredWidth { get; set; } = double.PositiveInfinity;
 
     public double MainPreferredHeight { get; set; } = ToolStripHeight;
 
-    private static (double MainWidth, double FilterWidth) GetToolbarWidths(double totalWidth, double mainPreferredWidth)
+    private Dictionary<Control, double> GetToolbarWidths(double totalWidth)
     {
-        double availableWidth = Math.Max(0, totalWidth - LeadingInset - ScriptsWidth - TrailingInset);
-        double filterWidth = Math.Min(availableWidth, Math.Max(MinimumFilterWidth, availableWidth - mainPreferredWidth));
-        return (availableWidth - filterWidth, filterWidth);
+        Dictionary<Control, double> widths = _preferredSizes.ToDictionary(pair => pair.Key, pair => pair.Value.Width);
+        double excessWidth = widths.Values.Sum() - Math.Max(0, totalWidth - LeadingInset - TrailingInset);
+
+        // ToolStripPanelRow first keeps each AutoSize owner at its preferred width, then
+        // shrinks the rightmost owners toward its default minimum. It never stretches surplus.
+        foreach (Control child in Children.Reverse())
+        {
+            if (excessWidth <= 0)
+            {
+                break;
+            }
+
+            if (widths.TryGetValue(child, out double preferredWidth))
+            {
+                double freedWidth = Math.Min(excessWidth, Math.Max(0, preferredWidth - MinimumToolStripWidth));
+                widths[child] -= freedWidth;
+                excessWidth -= freedWidth;
+            }
+        }
+
+        return widths;
     }
 
     protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
     {
-        (double mainWidth, double filterWidth) = GetToolbarWidths(availableSize.Width, MainPreferredWidth);
+        Dictionary<Control, Avalonia.Size> previousPreferredSizes = new(_preferredSizes, ReferenceEqualityComparer.Instance);
+        _preferredSizes.Clear();
         foreach (Control child in Children)
         {
-            child.Measure(child.Name switch
+            Control toolbar = child is Grid { Children.Count: > 0 } host ? host.Children[0] : child;
+            if (!child.IsVisible || !toolbar.IsVisible)
             {
-                "toolStripMainHost" => new Avalonia.Size(mainWidth, MainPreferredHeight),
-                "toolStripFiltersHost" => new Avalonia.Size(filterWidth, FilterToolStripHeight),
-                "ToolStripScripts" => new Avalonia.Size(ScriptsWidth, ToolStripHeight),
-                _ => default,
-            });
+                child.Measure(default);
+                continue;
+            }
+
+            child.Measure(new Avalonia.Size(double.PositiveInfinity, double.PositiveInfinity));
+            _preferredSizes[child] = child.Name == "toolStripMainHost"
+                ? new Avalonia.Size(Math.Min(MainPreferredWidth, child.DesiredSize.Width), Math.Max(MainPreferredHeight, child.DesiredSize.Height))
+                : child.DesiredSize;
         }
 
-        return new Avalonia.Size(availableSize.Width, Math.Max(FilterToolStripHeight, MainPreferredHeight));
+        Dictionary<Control, double> widths = GetToolbarWidths(availableSize.Width);
+        foreach ((Control child, double width) in widths)
+        {
+            child.Measure(new Avalonia.Size(width, _preferredSizes[child].Height));
+        }
+
+        if (_preferredSizes.Count != previousPreferredSizes.Count
+            || _preferredSizes.Any(pair => !previousPreferredSizes.TryGetValue(pair.Key, out Avalonia.Size previous) || previous != pair.Value))
+        {
+            // A changed row allocation still needs arrangement when its total desired height is unchanged.
+            InvalidateArrange();
+        }
+
+        return new Avalonia.Size(availableSize.Width, _preferredSizes.Values.Select(size => size.Height).DefaultIfEmpty().Max());
     }
 
     protected override Avalonia.Size ArrangeOverride(Avalonia.Size finalSize)
     {
-        (double mainWidth, double filterWidth) = GetToolbarWidths(finalSize.Width, MainPreferredWidth);
-        double filterX = LeadingInset + mainWidth;
+        Dictionary<Control, double> widths = GetToolbarWidths(finalSize.Width);
+        double x = LeadingInset;
         foreach (Control child in Children)
         {
-            Avalonia.Rect bounds = child.Name switch
+            if (widths.TryGetValue(child, out double width))
             {
-                "toolStripMainHost" => new Avalonia.Rect(LeadingInset, 0, mainWidth, MainPreferredHeight),
-                "toolStripFiltersHost" => new Avalonia.Rect(filterX, 0, filterWidth, FilterToolStripHeight),
-                "ToolStripScripts" => new Avalonia.Rect(
-                    Math.Max(0, finalSize.Width - ScriptsWidth - TrailingInset),
-                    0,
-                    ScriptsWidth,
-                    ToolStripHeight),
-                _ => default,
-            };
-            child.Arrange(bounds);
+                child.Arrange(new Avalonia.Rect(x, 0, width, _preferredSizes[child].Height));
+                x += width;
+            }
         }
 
         return finalSize;

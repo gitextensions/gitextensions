@@ -250,6 +250,9 @@ public sealed class FilterToolBarInteractionTests
         menu.ShowAt(owner);
         fixture.Settle();
         MenuItem row = menu.Items.OfType<MenuItem>().First();
+        fixture.Move(menu.Items.OfType<MenuItem>().Last(item => item.IsEnabled));
+        row.IsSelected.Should().BeFalse("the normal-color probe must leave the first row unselected through real pointer input");
+        row.IsPointerOver.Should().BeFalse();
         Border chrome = row.GetVisualDescendants().OfType<Border>()
             .Single(part => part.Name == "PART_LayoutRoot" && ReferenceEquals(part.TemplatedParent, row));
         ContentPresenter caption = row.GetVisualDescendants().OfType<ContentPresenter>()
@@ -260,11 +263,20 @@ public sealed class FilterToolBarInteractionTests
         ColorOf(caption.Foreground).Should().Be(ColorOf(fixture.ResourceBrush("GitExtensionsWindowTextBrush")));
         row.IsChecked.Should().BeTrue("checked is retained source state, not a reason to replace its normal menu surface");
         fixture.Move(row);
-        ColorOf(chrome.Background).Should().Be(ColorOf(fixture.ResourceBrush("GitExtensionsHighlightBackgroundBrush")));
-        ColorOf(caption.Foreground).Should().Be(ColorOf(fixture.ResourceBrush("GitExtensionsHighlightForegroundBrush")));
+        Border selection = row.GetVisualDescendants().OfType<Border>()
+            .Single(part => part.Name == "PART_NativeSelectionBorder" && ReferenceEquals(part.TemplatedParent, row));
+        string selectedBackground = systemRenderer ? "GitExtensionsHighlightBackgroundBrush" : "GitExtensionsNativeMenuSelectedBackgroundBrush";
+        string selectedForeground = systemRenderer ? "GitExtensionsHighlightForegroundBrush" : "GitExtensionsWindowTextBrush";
+        ColorOf(chrome.Background).Should().Be((systemRenderer ? systemSurface : professionalSurface).Color);
+        selection.IsVisible.Should().BeTrue();
+        ColorOf(selection.Background).Should().Be(ColorOf(fixture.ResourceBrush(selectedBackground)));
+        ColorOf(caption.Foreground).Should().Be(ColorOf(fixture.ResourceBrush(selectedForeground)));
         fixture.Window.Resources["GitExtensionsHighlightBackgroundBrush"] = new SolidColorBrush(Color.Parse("#192B3D"));
         fixture.Settle();
-        ColorOf(chrome.Background).Should().Be(ColorOf(fixture.ResourceBrush("GitExtensionsHighlightBackgroundBrush")));
+        ColorOf(selection.Background).Should().Be(ColorOf(fixture.ResourceBrush(selectedBackground)));
+        fixture.Window.Resources["GitExtensionsNativeMenuSelectedBackgroundBrush"] = new SolidColorBrush(Color.Parse("#354759"));
+        fixture.Settle();
+        ColorOf(selection.Background).Should().Be(ColorOf(fixture.ResourceBrush(selectedBackground)));
     }
 
     [AvaloniaTest]

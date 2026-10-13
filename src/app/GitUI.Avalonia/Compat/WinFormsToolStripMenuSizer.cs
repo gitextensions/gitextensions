@@ -4,6 +4,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -23,6 +25,7 @@ internal static class WinFormsToolStripMenuSizer
     private const double ArrowPaddingRight = 8;
     private const double DropDownLayoutBorder = 1;
     private const string FilterMenuClass = "gitextensions-filter-menu";
+    private const string SystemRendererClass = "gitextensions-filter-menu-system-renderer";
     private const string CaptionOnlyClass = "gitextensions-menu-no-gesture";
     private static readonly ConditionalWeakTable<MenuItem, ShortcutDisplay> ShortcutDisplays = new();
     private static readonly ConditionalWeakTable<MenuFlyout, ToolbarDropDownScope> ToolbarDropDowns = new();
@@ -195,10 +198,13 @@ internal static class WinFormsToolStripMenuSizer
         private readonly TemplatedControl _owner;
         private readonly Dictionary<MenuItem, ItemScope> _items = [];
         private readonly bool _hadPresenterClass;
+        private MenuFlyoutPresenter? _presenter;
+        private MenuItem? _disabledSelection;
         private (FontFamily Family, double Size, FontStyle Style, FontWeight Weight, FlowDirection Direction)? _font;
         private bool _updating;
         private bool _queued;
         private bool _disposed;
+        private bool _trackingPointer;
 
         public ToolbarDropDownScope(MenuFlyout flyout, TemplatedControl owner)
         {
@@ -208,7 +214,8 @@ internal static class WinFormsToolStripMenuSizer
             flyout.FlyoutPresenterClasses.Add(FilterMenuClass);
             ApplyToolbarDropDownPlacement(flyout, owner);
             flyout.Opening += OnOpening;
-            flyout.Opened += OnOpening;
+            flyout.Opened += OnOpened;
+            flyout.Closed += OnClosed;
             flyout.Items.CollectionChanged += OnItemsChanged;
             owner.PropertyChanged += OnOwnerChanged;
         }
@@ -224,7 +231,9 @@ internal static class WinFormsToolStripMenuSizer
 
             _disposed = true;
             _flyout.Opening -= OnOpening;
-            _flyout.Opened -= OnOpening;
+            _flyout.Opened -= OnOpened;
+            _flyout.Closed -= OnClosed;
+            DetachPresenter();
             _flyout.Items.CollectionChanged -= OnItemsChanged;
             _owner.PropertyChanged -= OnOwnerChanged;
             ItemScope[] scopes = _items.Values.ToArray();
@@ -242,8 +251,100 @@ internal static class WinFormsToolStripMenuSizer
 
         private void OnOpening(object? sender, EventArgs args) => Apply();
 
+        private void OnOpened(object? sender, EventArgs args)
+        {
+            Apply();
+            if (!_disposed && _flyout.Popup.Child is MenuFlyoutPresenter presenter && !ReferenceEquals(_presenter, presenter))
+            {
+                DetachPresenter();
+                _presenter = presenter;
+                presenter.AddHandler(InputElement.PointerMovedEvent, OnPointerMoved, RoutingStrategies.Bubble, handledEventsToo: true);
+                presenter.PointerExited += OnPointerExited;
+            }
+        }
+
+        private void OnClosed(object? sender, EventArgs args) => DetachPresenter();
+
+        private void OnPointerMoved(object? sender, PointerEventArgs args)
+        {
+            if (_disposed || _trackingPointer || !_flyout.IsOpen || _presenter is not MenuFlyoutPresenter presenter)
+            {
+                return;
+            }
+
+            _trackingPointer = true;
+            try
+            {
+                MenuItem? disabled = _items.Keys.FirstOrDefault(item => !item.IsEffectivelyEnabled
+                    && item.IsVisible && _flyout.Items.Contains(item)
+                    && new Rect(item.Bounds.Size).Contains(args.GetPosition(item)));
+                if (ReferenceEquals(disabled, _disabledSelection))
+                {
+                    return;
+                }
+
+                ClearDisabledSelection();
+                if (!_disposed && _flyout.IsOpen && ReferenceEquals(_presenter, presenter)
+                    && disabled is not null && _items.ContainsKey(disabled) && _flyout.Items.Contains(disabled))
+                {
+                    // ToolStripMenuItem supports disabled hot tracking. Avalonia excludes
+                    // disabled rows from pointer hit testing, so select the real row through
+                    // its menu's normal selection container without inventing pointer state.
+                    _disabledSelection = disabled;
+                    presenter.SetCurrentValue(SelectingItemsControl.SelectedItemProperty, disabled);
+                    if ((_disposed || !_flyout.IsOpen || !ReferenceEquals(_presenter, presenter)
+                        || !_items.ContainsKey(disabled) || !_flyout.Items.Contains(disabled))
+                        && ReferenceEquals(presenter.SelectedItem, disabled))
+                    {
+                        // Selection notifications may retire this scope before the
+                        // container finishes publishing its new selected item.
+                        presenter.SetCurrentValue(SelectingItemsControl.SelectedItemProperty, null);
+                    }
+                }
+            }
+            finally
+            {
+                _trackingPointer = false;
+            }
+        }
+
+        private void OnPointerExited(object? sender, PointerEventArgs args) => ClearDisabledSelection();
+
+        private void ClearDisabledSelection()
+        {
+            MenuItem? disabled = _disabledSelection;
+            _disabledSelection = null;
+            if (disabled is not null && _presenter is MenuFlyoutPresenter presenter && ReferenceEquals(presenter.SelectedItem, disabled))
+            {
+                presenter.SetCurrentValue(SelectingItemsControl.SelectedItemProperty, null);
+            }
+
+            if (disabled is not null && (!_flyout.IsOpen || !_flyout.Items.Contains(disabled)) && disabled.IsSelected)
+            {
+                // Removing a self-container or hiding the popup detaches containers
+                // before selection is cleared. Retire only the hot-tracked row we owned.
+                disabled.SetCurrentValue(MenuItem.IsSelectedProperty, false);
+            }
+        }
+
+        private void DetachPresenter()
+        {
+            ClearDisabledSelection();
+            if (_presenter is MenuFlyoutPresenter presenter)
+            {
+                _presenter = null;
+                presenter.RemoveHandler(InputElement.PointerMovedEvent, OnPointerMoved);
+                presenter.PointerExited -= OnPointerExited;
+            }
+        }
+
         private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
+            if (_disabledSelection is not null && !_flyout.Items.Contains(_disabledSelection))
+            {
+                ClearDisabledSelection();
+            }
+
             foreach (MenuItem removed in _items.Keys.Where(item => !_flyout.Items.Contains(item)).ToArray())
             {
                 if (_items.Remove(removed, out ItemScope? scope))
@@ -263,7 +364,9 @@ internal static class WinFormsToolStripMenuSizer
                 || args.Property == TemplatedControl.FontWeightProperty
                 || args.Property == MenuItem.HeaderProperty
                 || args.Property == MenuItem.InputGestureProperty
-                || args.Property == Control.IsVisibleProperty)
+                || args.Property == Control.IsVisibleProperty
+                || args.Property == Control.MarginProperty
+                || args.Property == NativeToolStripDropDownMenuItem.UseSystemVisualStyleProperty)
             {
                 QueueApply();
             }
@@ -346,6 +449,7 @@ internal static class WinFormsToolStripMenuSizer
                     }
 
                     scope.UpdateCaptionClass();
+                    scope.UpdateRendererClass();
                 }
 
                 if (_disposed)
@@ -359,7 +463,7 @@ internal static class WinFormsToolStripMenuSizer
                 {
                     if (!_disposed && _flyout.Items.Contains(item))
                     {
-                        scope.ApplySize(item, metrics.ItemWidth, metrics.ItemHeight);
+                        scope.ApplySize(item, metrics);
                     }
                 }
             }
@@ -377,6 +481,8 @@ internal static class WinFormsToolStripMenuSizer
             private readonly EventHandler<AvaloniaPropertyChangedEventArgs> _onChanged;
             private readonly bool _hadFilterClass;
             private readonly bool _hadCaptionClass;
+            private readonly bool _hadSystemRendererClass;
+            private IDisposable? _groupValue;
             private (int Width, int Height)? _size;
             private bool _disposed;
 
@@ -386,6 +492,7 @@ internal static class WinFormsToolStripMenuSizer
                 _onChanged = onChanged;
                 _hadFilterClass = item.Classes.Contains(FilterMenuClass);
                 _hadCaptionClass = item.Classes.Contains(CaptionOnlyClass);
+                _hadSystemRendererClass = item.Classes.Contains(SystemRendererClass);
                 item.Classes.Add(FilterMenuClass);
                 item.PropertyChanged += onChanged;
             }
@@ -395,6 +502,14 @@ internal static class WinFormsToolStripMenuSizer
                 if (!_disposed && !_hadCaptionClass)
                 {
                     _item.Classes.Set(CaptionOnlyClass, _item.InputGesture is null && GetShortcutDisplayString(_item) is null);
+                }
+            }
+
+            public void UpdateRendererClass()
+            {
+                if (!_disposed && !_hadSystemRendererClass)
+                {
+                    _item.Classes.Set(SystemRendererClass, NativeToolStripDropDownMenuItem.GetUseSystemVisualStyle(_item));
                 }
             }
 
@@ -408,8 +523,27 @@ internal static class WinFormsToolStripMenuSizer
                 SetValue(item, Control.FlowDirectionProperty, font.Direction, _fontValues);
             }
 
-            public void ApplySize(MenuItem item, int width, int height)
+            public void ApplySize(MenuItem item, NativeToolStripDropDownLayout.Group metrics)
             {
+                IDisposable? previousGroupValue = _groupValue;
+                _groupValue = null;
+                previousGroupValue?.Dispose();
+                if (_disposed)
+                {
+                    return;
+                }
+
+                IDisposable? groupValue = item.SetValue(NativeFilterToolStripDropDownPanel.GroupProperty, metrics, BindingPriority.Template);
+                if (_disposed)
+                {
+                    groupValue?.Dispose();
+                    return;
+                }
+
+                _groupValue = groupValue;
+                item.GetVisualAncestors().OfType<NativeFilterToolStripDropDownPanel>().FirstOrDefault()?.InvalidateMeasure();
+                int width = metrics.ItemWidth;
+                int height = metrics.ItemHeight;
                 if (!_disposed && _size != (width, height))
                 {
                     Release(_sizeValues);
@@ -428,6 +562,9 @@ internal static class WinFormsToolStripMenuSizer
 
                 _disposed = true;
                 _item.PropertyChanged -= _onChanged;
+                IDisposable? groupValue = _groupValue;
+                _groupValue = null;
+                groupValue?.Dispose();
                 Release(_fontValues);
                 Release(_sizeValues);
                 if (!_hadFilterClass)
@@ -438,6 +575,11 @@ internal static class WinFormsToolStripMenuSizer
                 if (!_hadCaptionClass)
                 {
                     _item.Classes.Remove(CaptionOnlyClass);
+                }
+
+                if (!_hadSystemRendererClass)
+                {
+                    _item.Classes.Remove(SystemRendererClass);
                 }
             }
 

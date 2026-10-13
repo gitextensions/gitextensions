@@ -88,7 +88,7 @@ partial class FormBrowse
             RevisionGrid_SelectionChanged(sender, e);
         };
 
-        RevisionGrid.SelectedId = selectedId.IsZero ? firstId : selectedId;
+        RevisionGrid.SelectedId = selectedId;
         RevisionGrid.FirstId = firstId;
 
         RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (_, _) =>

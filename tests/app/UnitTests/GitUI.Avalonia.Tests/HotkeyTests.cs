@@ -833,7 +833,7 @@ public sealed class HotkeyTests
             scriptsRunner,
             scriptHotkeys: []);
         scriptsManager.GetScript(script.HotkeyCommandIdentifier).Returns(script);
-        StackPanel toolbar = form.FindControl<StackPanel>("ToolStripScripts")!;
+        NativeToolStrip toolbar = form.FindControl<NativeToolStrip>("ToolStripScripts")!;
 
         toolbar.IsVisible.Should().BeTrue();
         IconButton button = toolbar.Children.Should().ContainSingle().Which.Should().BeOfType<IconButton>().Subject;

@@ -600,7 +600,7 @@ public sealed class NativeToolStripOverflowTests
             Children =
             {
                 host,
-                new Border { Name = "toolStripFiltersHost", Height = 27 },
+                new Border { Name = "toolStripFiltersHost", Height = 25 },
                 new Border { Name = "ToolStripScripts", Height = 25 },
             },
         };
@@ -618,14 +618,14 @@ public sealed class NativeToolStripOverflowTests
             window.Show();
             Settle(window);
             strip.Bounds.Height.Should().Be(25);
-            top.Bounds.Height.Should().Be(27);
-            body.Bounds.Y.Should().Be(27);
+            top.Bounds.Height.Should().Be(25);
+            body.Bounds.Y.Should().Be(25);
             strip.FontSize = points * 96d / 72;
             Settle(window);
             IconSplitButton item = (IconSplitButton)strip.Items.Single();
             double lineHeight = Math.Ceiling(WinFormsTextMeasurer.MeasureTextRenderer(item, "Branch").Height);
             double mainHeight = Math.Max(25, Math.Max(16, lineHeight) + 7);
-            double rowHeight = Math.Max(27, mainHeight);
+            double rowHeight = Math.Max(25, mainHeight);
             strip.Bounds.Height.Should().Be(mainHeight);
             host.Bounds.Height.Should().Be(mainHeight);
             top.Bounds.Height.Should().Be(rowHeight);
@@ -634,8 +634,8 @@ public sealed class NativeToolStripOverflowTests
             item.Bounds.Height.Should().Be(mainHeight - 3);
             strip.FontSize = 12;
             Settle(window);
-            top.Bounds.Height.Should().Be(27);
-            body.Bounds.Y.Should().Be(27);
+            top.Bounds.Height.Should().Be(25);
+            body.Bounds.Y.Should().Be(25);
         }
         finally
         {
