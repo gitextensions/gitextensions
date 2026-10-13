@@ -1326,7 +1326,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <target />
       </trans-unit>
       <trans-unit id="btnAiDiffPromptDefault.Text">
-        <source>Enter default prompt</source>
+        <source>Overwrite with default prompt</source>
         <target />
       </trans-unit>
       <trans-unit id="chkMergeGraphLanesHavingCommonParent.Text">

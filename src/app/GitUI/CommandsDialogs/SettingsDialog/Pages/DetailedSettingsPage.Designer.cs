@@ -299,7 +299,7 @@ partial class DetailedSettingsPage
         btnAiDiffPromptDefault.Location = new Point(3, 3);
         btnAiDiffPromptDefault.Name = "btnAiDiffPromptDefault";
         btnAiDiffPromptDefault.TabIndex = 0;
-        btnAiDiffPromptDefault.Text = "Enter default prompt";
+        btnAiDiffPromptDefault.Text = "Overwrite with default prompt";
         btnAiDiffPromptDefault.UseVisualStyleBackColor = true;
         btnAiDiffPromptDefault.Click += btnAiDiffPromptDefault_Click;
         // 
