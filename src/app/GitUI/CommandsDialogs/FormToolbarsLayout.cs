@@ -163,18 +163,17 @@ public partial class FormToolbarsLayout : GitExtensionsForm
     private sealed class ToolbarItemPanel : Panel
     {
         public ToolbarLayoutItem LayoutItem { get; }
+        private readonly Label _gripLabel;
         private readonly Label _label;
         private readonly CheckBox _checkBox;
         private readonly ComboBox _iconSizeCombo;
         private bool _isSelected;
+        private bool _isHighlighted;
 
         // Layout constants for child controls
         private const int LabelLeft = 40;   // grip(16) + checkbox offset(4) + checkbox(16) + gap(4)
         private const int ComboWidth = 90;
         private const int ComboMargin = 4;
-
-        // Highlight color used for both drag and selection
-        private static readonly Color HighlightColor = Color.FromArgb(255, 255, 180);
 
         public bool IsSelected
         {
@@ -182,7 +181,7 @@ public partial class FormToolbarsLayout : GitExtensionsForm
             set
             {
                 _isSelected = value;
-                UpdateBackColor();
+                UpdateColors();
             }
         }
 
@@ -191,13 +190,12 @@ public partial class FormToolbarsLayout : GitExtensionsForm
             LayoutItem = item;
             Width = ToolbarItemWidth;
             Height = ToolbarItemHeight;
-            BackColor = Color.FromArgb(220, 235, 252);
             BorderStyle = BorderStyle.FixedSingle;
             Cursor = Cursors.SizeAll;
             Margin = new Padding(ToolbarItemMargin);
 
             // Grip indicator
-            Label gripLabel = new()
+            _gripLabel = new Label
             {
                 Text = "⋮⋮",
                 AutoSize = false,
@@ -205,10 +203,9 @@ public partial class FormToolbarsLayout : GitExtensionsForm
                 Height = ToolbarItemHeight - 4,
                 Location = new Point(2, 2),
                 TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = SystemColors.GrayText,
                 Cursor = Cursors.SizeAll
             };
-            Controls.Add(gripLabel);
+            Controls.Add(_gripLabel);
 
             // Visibility checkbox — does not propagate mouse events so drag is not triggered
             _checkBox = new CheckBox
@@ -267,53 +264,39 @@ public partial class FormToolbarsLayout : GitExtensionsForm
             _label.MouseDown += (s, e) => OnMouseDown(e);
             _label.MouseMove += (s, e) => OnMouseMove(e);
             _label.MouseUp += (s, e) => OnMouseUp(e);
-            gripLabel.MouseDown += (s, e) => OnMouseDown(e);
-            gripLabel.MouseMove += (s, e) => OnMouseMove(e);
-            gripLabel.MouseUp += (s, e) => OnMouseUp(e);
+            _gripLabel.MouseDown += (s, e) => OnMouseDown(e);
+            _gripLabel.MouseMove += (s, e) => OnMouseMove(e);
+            _gripLabel.MouseUp += (s, e) => OnMouseUp(e);
         }
 
         public void SetHighlight(bool highlight)
         {
-            if (highlight)
-            {
-                BackColor = HighlightColor;
-            }
-            else
-            {
-                UpdateBackColor();
-            }
+            _isHighlighted = highlight;
+            UpdateColors();
         }
 
         private void UpdateLabelStyle()
         {
-            if (!LayoutItem.IsVisible)
-            {
-                _label.ForeColor = SystemColors.GrayText;
-                _label.Text = $"({LayoutItem.DisplayName})";
-            }
-            else
-            {
-                _label.ForeColor = SystemColors.ControlText;
-                _label.Text = LayoutItem.DisplayName;
-            }
-
-            UpdateBackColor();
+            _label.Text = LayoutItem.IsVisible ? LayoutItem.DisplayName : $"({LayoutItem.DisplayName})";
+            UpdateColors();
         }
 
-        private void UpdateBackColor()
+        // Background and text colors come in pairs from the theme, so that the text keeps its
+        // contrast in a dark or high-contrast theme: the selection pair while selected or dragged,
+        // the window pair for a shown toolbar, and dimmed text for a hidden one.
+        private void UpdateColors()
         {
-            if (_isSelected)
+            if (_isSelected || _isHighlighted)
             {
-                BackColor = HighlightColor;
+                BackColor = SystemColors.Highlight;
+                _label.ForeColor = SystemColors.HighlightText;
+                _gripLabel.ForeColor = SystemColors.HighlightText;
+                return;
             }
-            else if (!LayoutItem.IsVisible)
-            {
-                BackColor = Color.FromArgb(240, 240, 240);
-            }
-            else
-            {
-                BackColor = Color.FromArgb(220, 235, 252);
-            }
+
+            BackColor = LayoutItem.IsVisible ? SystemColors.Window : SystemColors.Control;
+            _label.ForeColor = LayoutItem.IsVisible ? SystemColors.WindowText : SystemColors.GrayText;
+            _gripLabel.ForeColor = SystemColors.GrayText;
         }
     }
 
@@ -554,7 +537,7 @@ public partial class FormToolbarsLayout : GitExtensionsForm
         _dropIndicator?.Dispose();
         _dropIndicator = new Panel
         {
-            BackColor = Color.FromArgb(0, 120, 215),
+            BackColor = SystemColors.Highlight,
             Height = 3,
             Width = 100,
             Visible = false
