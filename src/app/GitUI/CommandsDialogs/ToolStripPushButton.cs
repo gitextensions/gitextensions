@@ -24,6 +24,14 @@ public class ToolStripPushButton : ToolStripButton, IPushLabelItem
     // strip the previously displayed suffix even after LabelText has already been changed to a new value.
     private string? _lastDisplayedLabel;
 
+    /// <summary>
+    /// Raised once <see cref="ResetBeforeUpdate"/>, <see cref="DisplayAheadBehindInformation"/> or
+    /// <see cref="ResetToDefaultState()"/> has updated the button. Besides its text and display
+    /// style, they set its width mode, tooltip and image, which raise no event of their own - and
+    /// may leave the text and display style as they were.
+    /// </summary>
+    internal event EventHandler? StateUpdated;
+
     // Whether the user has enabled the text label for this button ("For this icon" / "For all icons").
     // When true, the label text ("Push") is appended after the ahead/behind counter.
     // Updating this property immediately refreshes the displayed text.
@@ -122,6 +130,7 @@ public class ToolStripPushButton : ToolStripButton, IPushLabelItem
         Text = ShowLabel ? $"{aheadBehind} {label}" : aheadBehind;
         _lastDisplayedLabel = ShowLabel ? label : null;
         DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+        StateUpdated?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>
@@ -131,6 +140,7 @@ public class ToolStripPushButton : ToolStripButton, IPushLabelItem
     {
         AutoSize = false;
         ToolTipText = _push.Text;
+        StateUpdated?.Invoke(this, EventArgs.Empty);
     }
 
     public void ResetToDefaultState()
@@ -153,6 +163,8 @@ public class ToolStripPushButton : ToolStripButton, IPushLabelItem
             Text = string.Empty;
             DisplayStyle = ToolStripItemDisplayStyle.Image;
         }
+
+        StateUpdated?.Invoke(this, EventArgs.Empty);
     }
 
     private string? GetToolTipText(AheadBehindData data)

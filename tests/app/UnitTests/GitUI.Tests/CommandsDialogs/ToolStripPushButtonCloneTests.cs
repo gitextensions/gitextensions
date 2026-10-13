@@ -128,6 +128,34 @@ public class ToolStripPushButtonCloneTests
     }
 
     [Test]
+    public void Clone_should_freeze_its_width_with_the_original_before_a_refresh()
+    {
+        // ResetBeforeUpdate keeps the text so that clones do not blink empty, which leaves its
+        // width freeze and placeholder tooltip without any event of their own.
+        using ToolStripPushButtonClone clone = new(_original, showLabel: false);
+        DisplayAheadBehind();
+
+        _original.ResetBeforeUpdate();
+
+        clone.AutoSize.Should().BeFalse();
+        clone.ToolTipText.Should().Be(_original.ToolTipText);
+    }
+
+    [Test]
+    public void Clone_should_follow_a_refresh_that_leaves_the_text_unchanged()
+    {
+        using ToolStripPushButtonClone clone = new(_original, showLabel: false);
+        DisplayAheadBehind();
+        _original.ResetBeforeUpdate();
+
+        DisplayAheadBehind();
+
+        clone.AutoSize.Should().BeTrue();
+        clone.ToolTipText.Should().Be(_original.ToolTipText);
+        clone.ToolTipText.Should().NotBe("Push");
+    }
+
+    [Test]
     public void Clone_should_forward_a_click_to_the_original()
     {
         int clicks = 0;

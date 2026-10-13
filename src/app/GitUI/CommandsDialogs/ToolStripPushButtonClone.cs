@@ -10,12 +10,11 @@
 /// next to the ahead/behind counter.
 /// </para>
 /// <para>
-/// Synchronisation is driven by TextChanged, DisplayStyleChanged and EnabledChanged events on
-/// the original. On each notification, the clone strips the original's label suffix from Text
-/// (using the original's own LabelText) and rebuilds its own Text using its independent
-/// ShowLabel/LabelText state. DisplayStyle, Image, ToolTipText, AutoSize and Enabled are
-/// forwarded as-is. Image is always mutated before Text/DisplayStyle in the original, so it
-/// arrives via the Text/DisplayStyle notifications without a dedicated ImageChanged subscription.
+/// Synchronisation is driven by the TextChanged, DisplayStyleChanged, EnabledChanged and
+/// StateUpdated events of the original. On each notification, the clone strips the original's
+/// label suffix from Text (using the original's own LabelText) and rebuilds its own Text using its
+/// independent ShowLabel/LabelText state. Image, ToolTipText, AutoSize and Enabled are forwarded
+/// as-is; the first three raise no event of their own, so they arrive through StateUpdated.
 /// </para>
 /// </summary>
 internal sealed class ToolStripPushButtonClone : ToolStripButton, IPushLabelItem
@@ -43,20 +42,19 @@ internal sealed class ToolStripPushButtonClone : ToolStripButton, IPushLabelItem
         // Compute initial Text / DisplayStyle from original's current state.
         SyncFromOriginal();
 
-        // Image is copied in SyncFromOriginal on every notification. No dedicated ImageChanged
-        // subscription is needed because every Image mutation in ToolStripPushButton
-        // (Images.Unstage in DisplayAheadBehindInformation, Images.Push in ResetToDefaultState)
-        // is immediately followed by a Text or DisplayStyle change that fires one of the events
-        // below. If that invariant ever breaks, add an internal ImageChanged event to
-        // ToolStripPushButton and subscribe here.
+        // StateUpdated carries what the original changes without an event of its own: the frozen
+        // width and placeholder tooltip of ResetBeforeUpdate, and the image, width and tooltip of a
+        // refresh that leaves the text as it was.
         original.TextChanged += OnOriginalChanged;
         original.DisplayStyleChanged += OnOriginalChanged;
         original.EnabledChanged += OnOriginalChanged;
+        original.StateUpdated += OnOriginalChanged;
         Disposed += (_, _) =>
         {
             original.TextChanged -= OnOriginalChanged;
             original.DisplayStyleChanged -= OnOriginalChanged;
             original.EnabledChanged -= OnOriginalChanged;
+            original.StateUpdated -= OnOriginalChanged;
         };
     }
 
