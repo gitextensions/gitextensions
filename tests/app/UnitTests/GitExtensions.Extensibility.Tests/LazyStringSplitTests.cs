@@ -141,7 +141,7 @@ public sealed class LazyStringSplitTests
     [TestCase(";\r;a\n;", ';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries, new[] { "a" })]
     [TestCase(" a\t", ';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries, new[] { "a" })]
     [TestCase("\taa ", ';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries, new[] { "aa" })]
-    public void Ranges(string input, char delimiter, StringSplitOptions options, string[] expected)
+    public void LazySplitRanges_should_match_string_split(string input, char delimiter, StringSplitOptions options, string[] expected)
     {
         List<string> actual = [];
         foreach ((int beginning, int length) in input.LazySplitRanges(delimiter, options))
