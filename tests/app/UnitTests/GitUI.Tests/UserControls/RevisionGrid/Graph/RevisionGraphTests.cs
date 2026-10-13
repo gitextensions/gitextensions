@@ -446,6 +446,19 @@ public class RevisionGraphTests
     }
 
     [Test]
+    public async Task ReservedLaneIsRespected([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        // Lane C is reserved until bottom of graph and should be empty also after reserved lanes A,B have collapsed to common history
+        AppSettings.ReservedLanesBranchNames = "A;B;C;D";
+        RevisionGraph revisionGraph = CreateGraph(" 1 c:1:C  2:1   3:1 4:1,3    5:4 6:4,5   7:2  8:6,7 b:8:B  a:8,b:A  d:a:D ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
     public async Task MergesCanUseReservedLaneBeforeFirstNode_1()
     {
         AppSettings.ReservedLanesBranchNames = "A;B;C";

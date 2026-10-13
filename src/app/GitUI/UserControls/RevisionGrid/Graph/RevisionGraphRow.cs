@@ -208,7 +208,15 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
 
                 // Segment has not been assigned a lane yet
                 segment.IsSecondarySharedLaneAtLeastSinceScore = int.MaxValue;
-                return new Lane(CreateLane(), LaneSharing.ExclusiveOrPrimary);
+
+                Lane result = new(CreateLane(), LaneSharing.ExclusiveOrPrimary);
+                while (segment.ReservedLaneIndex < int.MaxValue && result.Index < segment.ReservedLaneIndex)
+                {
+                    // Push segment with reserved lane to the correct lane
+                    result = new(CreateLane(), LaneSharing.ExclusiveOrPrimary);
+                }
+
+                return result;
 
                 static LaneSharing SecondarySharing(RevisionGraphSegment segment, int revisionScore)
                 {
