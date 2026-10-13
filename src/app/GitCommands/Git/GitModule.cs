@@ -3645,7 +3645,7 @@ public sealed partial class GitModule : IGitModule
         string command = result.StandardOutput.Trim();
         if (result.ExitedSuccessfully && command.Length > 0)
         {
-            args.Add(new GitConfigItem(key, Utils.WslUtil.AdaptDiffMergeToolCommandToWsl(command)));
+            args.Add(new GitConfigItem(key, Utils.WslUtil.AdaptDiffMergeToolCommandToWsl(command).Quote()));
         }
     }
 
