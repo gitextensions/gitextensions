@@ -88,6 +88,31 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     private static readonly TranslationString _labelDisplayNamePrefix = new("--- label:");
     private static readonly TranslationString _labelDisplayNameSuffix = new(" ---");
 
+    // Names of the actions whose own text cannot name them: icon-only buttons, and buttons whose
+    // text is live data (working directory path, branch name, ahead/behind counter). Static for
+    // the same reason as the rows above.
+    private static readonly TranslationString _advancedFilterDisplayName = new("Advanced filter");
+    private static readonly TranslationString _bashDisplayName = new("Bash");
+    private static readonly TranslationString _branchTypeDisplayName = new("Branch type");
+    private static readonly TranslationString _changeWorkingDirectoryDisplayName = new("Change working directory");
+    private static readonly TranslationString _commitDisplayName = new("Commit");
+    private static readonly TranslationString _commitInfoPositionDisplayName = new("Commit info position");
+    private static readonly TranslationString _fileExplorerDisplayName = new("File Explorer");
+    private static readonly TranslationString _filterTypeDisplayName = new("Filter type");
+    private static readonly TranslationString _manageStashesDisplayName = new("Manage stashes");
+    private static readonly TranslationString _pullDisplayName = new("Pull");
+    private static readonly TranslationString _pushDisplayName = new("Push");
+    private static readonly TranslationString _refreshDisplayName = new("Refresh");
+    private static readonly TranslationString _selectBranchDisplayName = new("Select branch");
+    private static readonly TranslationString _settingsDisplayName = new("Settings");
+    private static readonly TranslationString _showAllBranchesDisplayName = new("Show all branches");
+    private static readonly TranslationString _showOnlyFirstParentDisplayName = new("Show only first parent");
+    private static readonly TranslationString _showReflogDisplayName = new("Show all reflog references");
+    private static readonly TranslationString _submodulesDisplayName = new("Submodules");
+    private static readonly TranslationString _textFilterDisplayName = new("Text Filter");
+    private static readonly TranslationString _toggleLeftPanelDisplayName = new("Toggle left panel");
+    private static readonly TranslationString _toggleSplitViewLayoutDisplayName = new("Toggle split view layout");
+
     private static string SeparatorDisplayName => _separatorDisplayName.Text;
     private static string ExpandingSpacerDisplayName => _expandingSpacerDisplayName.Text;
     private static string LabelDisplayNamePrefix => _labelDisplayNamePrefix.Text;
@@ -1877,31 +1902,32 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             "branchSelect"
         };
 
-        private static readonly Dictionary<string, string> FriendlyNames = new()
+        // Read when a name is needed, so that it is the translated text.
+        private static readonly Dictionary<string, TranslationString> FriendlyNames = new()
         {
-            { "RefreshButton", "Refresh" },
-            { "toggleLeftPanel", "Toggle left panel" },
-            { "toggleSplitViewLayout", "Toggle split view layout" },
-            { "menuCommitInfoPosition", "Commit info position" },
-            { "toolStripButtonLevelUp", "Submodules" },
-            { "_NO_TRANSLATE_WorkingDir", "Change working directory" },
-            { "WorkingDirectoryToolStripSplitButton", "Change working directory" },
-            { "branchSelect", "Select branch" },
-            { "toolStripSplitStash", "Manage stashes" },
-            { "toolStripButtonCommit", "Commit" },
-            { "toolStripButtonPull", "Pull" },
-            { "toolStripButtonPush", "Push" },
-            { "toolStripFileExplorer", "File Explorer" },
-            { "userShell", "Bash" },
-            { "EditSettings", "Settings" },
-            { "tsbShowReflog", "Show all reflog references" },
-            { "tsbRevisionFilter", "Advanced filter" },
-            { "tsbtnAdvancedFilter", "Advanced filter" },
-            { "tsmiShowOnlyFirstParent", "Show only first parent" },
-            { "ToolStripLabel1", "Branch type" },
-            { "ToolStripLabel2", "Filter type" },
-            { "tscboBranchFilter", "Show all branches" },
-            { "toolStripTextBoxFilter", "Text Filter" }
+            { "RefreshButton", _refreshDisplayName },
+            { "toggleLeftPanel", _toggleLeftPanelDisplayName },
+            { "toggleSplitViewLayout", _toggleSplitViewLayoutDisplayName },
+            { "menuCommitInfoPosition", _commitInfoPositionDisplayName },
+            { "toolStripButtonLevelUp", _submodulesDisplayName },
+            { "_NO_TRANSLATE_WorkingDir", _changeWorkingDirectoryDisplayName },
+            { "WorkingDirectoryToolStripSplitButton", _changeWorkingDirectoryDisplayName },
+            { "branchSelect", _selectBranchDisplayName },
+            { "toolStripSplitStash", _manageStashesDisplayName },
+            { "toolStripButtonCommit", _commitDisplayName },
+            { "toolStripButtonPull", _pullDisplayName },
+            { "toolStripButtonPush", _pushDisplayName },
+            { "toolStripFileExplorer", _fileExplorerDisplayName },
+            { "userShell", _bashDisplayName },
+            { "EditSettings", _settingsDisplayName },
+            { "tsbShowReflog", _showReflogDisplayName },
+            { "tsbRevisionFilter", _advancedFilterDisplayName },
+            { "tsbtnAdvancedFilter", _advancedFilterDisplayName },
+            { "tsmiShowOnlyFirstParent", _showOnlyFirstParentDisplayName },
+            { "ToolStripLabel1", _branchTypeDisplayName },
+            { "ToolStripLabel2", _filterTypeDisplayName },
+            { "tscboBranchFilter", _showAllBranchesDisplayName },
+            { "toolStripTextBoxFilter", _textFilterDisplayName }
         };
 
         public ToolStripItem? Item { get; }
@@ -1950,12 +1976,12 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
                 if (text.Length >= 3 && text[1] == ':' && text[2] == '\\')
                 {
-                    return "Change working directory";
+                    return _changeWorkingDirectoryDisplayName.Text;
                 }
 
                 if (Regex.IsMatch(text, @"^\d+\s*[↑↓]+", RegexOptions.None, TimeSpan.FromSeconds(1)))
                 {
-                    return "Push";
+                    return _pushDisplayName.Text;
                 }
 
                 return text;
@@ -1971,9 +1997,9 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         private static string GetFriendlyName(string name)
         {
-            if (FriendlyNames.TryGetValue(name, out string? friendlyName))
+            if (FriendlyNames.TryGetValue(name, out TranslationString? friendlyName))
             {
-                return friendlyName;
+                return friendlyName.Text;
             }
 
             return ConvertToReadable(name);

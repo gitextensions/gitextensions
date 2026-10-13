@@ -10316,6 +10316,10 @@ Hold SHIFT while clicking to specify a custom name instead of 'Custom XX'</sourc
         <source>Add the selected action to the current toolbar (→)</source>
         <target />
       </trans-unit>
+      <trans-unit id="_advancedFilterDisplayName.Text">
+        <source>Advanced filter</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_allActionsCategory.Text">
         <source>All Actions</source>
         <target />
@@ -10325,12 +10329,24 @@ Hold SHIFT while clicking to specify a custom name instead of 'Custom XX'</sourc
 Double-click an action to add it</source>
         <target />
       </trans-unit>
+      <trans-unit id="_bashDisplayName.Text">
+        <source>Bash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_branchTypeDisplayName.Text">
+        <source>Branch type</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_cancel.Text">
         <source>Cancel</source>
         <target />
       </trans-unit>
       <trans-unit id="_categoryComboTooltip.Text">
         <source>Filter available actions by category</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_changeWorkingDirectoryDisplayName.Text">
+        <source>Change working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="_clearAvailableFilterTooltip.Text">
@@ -10355,6 +10371,14 @@ Double-click an action to add it</source>
       </trans-unit>
       <trans-unit id="_commandsCategory.Text">
         <source>Commands</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commitDisplayName.Text">
+        <source>Commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commitInfoPositionDisplayName.Text">
+        <source>Commit info position</source>
         <target />
       </trans-unit>
       <trans-unit id="_currentListTooltip.Text">
@@ -10407,12 +10431,20 @@ Please choose a different name.</source>
         <source>--- expanding spacer ---</source>
         <target />
       </trans-unit>
+      <trans-unit id="_fileExplorerDisplayName.Text">
+        <source>File Explorer</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_filterAvailableTooltip.Text">
         <source>Type to search and filter available actions</source>
         <target />
       </trans-unit>
       <trans-unit id="_filterCurrentTooltip.Text">
         <source>Type to search and filter current toolbar actions</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_filterTypeDisplayName.Text">
+        <source>Filter type</source>
         <target />
       </trans-unit>
       <trans-unit id="_gitHubCategory.Text">
@@ -10438,6 +10470,10 @@ Please choose a different name.</source>
       <trans-unit id="_locateToolbarTooltip.Text">
         <source>Highlight the selected toolbar in the main window
 Useful for finding where a toolbar is located</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_manageStashesDisplayName.Text">
+        <source>Manage stashes</source>
         <target />
       </trans-unit>
       <trans-unit id="_moveDownTooltip.Text">
@@ -10468,6 +10504,18 @@ Useful for finding where a toolbar is located</source>
         <source>Plugins</source>
         <target />
       </trans-unit>
+      <trans-unit id="_pullDisplayName.Text">
+        <source>Pull</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pushDisplayName.Text">
+        <source>Push</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_refreshDisplayName.Text">
+        <source>Refresh</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_removeToolbarTooltip.Text">
         <source>Delete the selected custom toolbar (built-in toolbars cannot be deleted)</source>
         <target />
@@ -10492,8 +10540,20 @@ Useful for finding where a toolbar is located</source>
         <source>Right click menu</source>
         <target />
       </trans-unit>
+      <trans-unit id="_selectBranchDisplayName.Text">
+        <source>Select branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_separatorDisplayName.Text">
         <source>--- separator ---</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_settingsDisplayName.Text">
+        <source>Settings</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_showAllBranchesDisplayName.Text">
+        <source>Show all branches</source>
         <target />
       </trans-unit>
       <trans-unit id="_showAllIconTextTooltip.Text">
@@ -10505,8 +10565,32 @@ Disables per-icon text toggle</source>
         <source>Show text label next to the selected icon only</source>
         <target />
       </trans-unit>
+      <trans-unit id="_showOnlyFirstParentDisplayName.Text">
+        <source>Show only first parent</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_showReflogDisplayName.Text">
+        <source>Show all reflog references</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_startCategory.Text">
         <source>Start</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_submodulesDisplayName.Text">
+        <source>Submodules</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_textFilterDisplayName.Text">
+        <source>Text Filter</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_toggleLeftPanelDisplayName.Text">
+        <source>Toggle left panel</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_toggleSplitViewLayoutDisplayName.Text">
+        <source>Toggle split view layout</source>
         <target />
       </trans-unit>
       <trans-unit id="_tooManyToolbarsCaption.Text">
