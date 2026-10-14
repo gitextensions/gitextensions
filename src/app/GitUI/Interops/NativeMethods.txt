@@ -16,6 +16,8 @@ SetWindowLong
 MoveWindow
 ShowWindow
 SetWindowPos
+IsWindowVisible
+RedrawWindow
 SetFocus
 AttachThreadInput
 GetWindowThreadProcessId
@@ -26,3 +28,7 @@ GetClassName
 VIRTUAL_KEY
 WINDOW_STYLE
 WINDOW_EX_STYLE
+
+// dwmapi - Window cloaking
+DwmSetWindowAttribute
+DWMWINDOWATTRIBUTE
