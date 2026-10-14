@@ -1004,7 +1004,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         // Use the wrapper's display name as the label so items with dynamic ToolTipText
         // (e.g. tsbtnAdvancedFilter whose tooltip reflects active filter state) get a
         // stable, human-readable label instead of whatever the tooltip says at that moment.
-        string labelText = wrapper.DisplayName;
+        string? labelText = wrapper.LabelText;
 
         // Try wrapper.Item directly first (it may already be the live toolbar item).
         if (wrapper.Item is not ToolStripSeparator and not ToolStripLabel)
@@ -1036,7 +1036,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         ApplyShowTextToToolbars(itemName, wrapper.Item, wrapper.ShowText, labelText, _dynamicToolbars.Values);
     }
 
-    private static void ApplyShowTextToToolbars(string itemName, ToolStripItem wrapperItem, bool showText, string labelText, IEnumerable<ToolStrip> toolbars)
+    private static void ApplyShowTextToToolbars(string itemName, ToolStripItem wrapperItem, bool showText, string? labelText, IEnumerable<ToolStrip> toolbars)
     {
         foreach (ToolStrip toolbar in toolbars)
         {
@@ -1532,8 +1532,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     }
 
     // Represents the fully-resolved item to add to a toolbar, its serialization name, and display style.
-    // LabelText is the human-readable label to show when ShowText is true (the wrapper's DisplayName).
-    private readonly record struct ResolvedToolbarItem(ToolStripItem Item, string ConfigName, bool ShowText, string LabelText);
+    // LabelText is the label to show when ShowText is true (see ToolStripItemWrapper.LabelText).
+    private readonly record struct ResolvedToolbarItem(ToolStripItem Item, string ConfigName, bool ShowText, string? LabelText);
 
     private void ApplyChangesCore()
     {
@@ -1729,7 +1729,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
             if (resolved is (ToolStripItem item, string configName))
             {
-                result.Add(new ResolvedToolbarItem(item, configName, wrapper.ShowText, wrapper.DisplayName));
+                result.Add(new ResolvedToolbarItem(item, configName, wrapper.ShowText, wrapper.LabelText));
             }
 
             order++;
@@ -1925,6 +1925,12 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         public ToolStripItem? Item { get; }
         public string DisplayName { get; }
 
+        // The text to give the item when its label is shown, or null to keep its own. An item
+        // whose text is live data - the working directory, the branch - keeps it up to date
+        // itself, and so does a clone of it, by following its original: a fixed name would
+        // replace that data until the next time it changes.
+        public string? LabelText => HasLiveText(Item) ? null : DisplayName;
+
         // Tracks whether this item should display its text label next to its icon.
         // Stored here so the intent survives item-type mismatches (e.g. ToolStripMenuItem
         // in the wrapper vs. ToolStripButton in the live toolbar).
@@ -1937,6 +1943,10 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             ShowText = item is not null and not ToolStripSeparator and not ToolStripLabel
                 && GetItemShowText(item);
         }
+
+        private static bool HasLiveText(ToolStripItem? item)
+            => item?.Name is { } name
+                && (DynamicTextItems.Contains(name) || (item.Tag is ToolStripItem original && HasLiveText(original)));
 
         private static string GetDisplayName(ToolStripItem? item)
         {
