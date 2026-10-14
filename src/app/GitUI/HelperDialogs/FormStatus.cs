@@ -231,11 +231,7 @@ public partial class FormStatus : GitExtensionsDialog
             TaskbarProgress.SetProgress(TaskbarProgressBarState.Normal, progressValue, 100);
         }
 
-        // Show last progress message in the title, unless it's showing in the control body already
-        if (ConsoleCommandRunner is IPlainTextConsoleCommandRunner)
-        {
-            Text = text;
-        }
+        Text = text;
     }
 
     private void Start()
