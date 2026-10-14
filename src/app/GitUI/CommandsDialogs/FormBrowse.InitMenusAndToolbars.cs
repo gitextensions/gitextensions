@@ -30,6 +30,9 @@ partial class FormBrowse
 
     public IReadOnlyDictionary<string, ToolStripItem> OriginalToolbarItems => _originalToolbarItems;
 
+    // The toolbars SubscribeToolbarEvents has already wired.
+    private readonly HashSet<ToolStrip> _toolStripsWithEvents = [];
+
     private readonly TranslationString _removeToolbarItemQuestion = new("Remove \"{0}\" from this toolbar?");
     private readonly TranslationString _removeToolbarItemCaption = new("Remove toolbar item");
     private readonly TranslationString _unnamedToolbarItem = new("this item");
@@ -61,12 +64,12 @@ partial class FormBrowse
 
         InitFilters(revFilter, pathFilter);
 
-        // Subscribe existing built-in toolbars to the right-click context menu
+        // Subscribe existing built-in toolbars to the right-click context menu and to dragging
         foreach (Control control in toolPanel.TopToolStripPanel.Controls)
         {
             if (control is ToolStrip ts)
             {
-                SubscribeToolbarContextMenu(ts);
+                SubscribeToolbarEvents(ts);
             }
         }
 
@@ -75,7 +78,7 @@ partial class FormBrowse
         {
             if (e.Control is ToolStrip ts)
             {
-                SubscribeToolbarContextMenu(ts);
+                SubscribeToolbarEvents(ts);
             }
         };
 
@@ -127,8 +130,16 @@ partial class FormBrowse
         };
     }
 
-    private void SubscribeToolbarContextMenu(ToolStrip ts)
+    private void SubscribeToolbarEvents(ToolStrip ts)
     {
+        // Reorganizing the toolbars takes every one of them off the panel and joins it again, which
+        // raises ControlAdded each time: subscribing again would run each handler once more per
+        // reorganization.
+        if (!_toolStripsWithEvents.Add(ts))
+        {
+            return;
+        }
+
         ts.MouseClick += (s2, e2) =>
         {
             if (e2.Button == MouseButtons.Right)
@@ -137,6 +148,50 @@ partial class FormBrowse
                 _formBrowseMenus.ShowToolStripContextMenu(Cursor.Position, ts.Text, ts, clickedItem);
             }
         };
+
+        ts.EndDrag += (_, _) => PersistToolbarPositions();
+        ts.Disposed += (_, _) => _toolStripsWithEvents.Remove(ts);
+    }
+
+    // A toolbar dragged by its grip stays where the user dropped it only until the next
+    // reorganization, which puts every toolbar back where the layout says: so the layout is told.
+    // Each panel row holding a shown toolbar becomes a layout row, and the toolbars on it are
+    // ordered left to right. A hidden toolbar keeps the place it had when it was last shown.
+    private void PersistToolbarPositions()
+    {
+        HashSet<ToolStrip> layoutToolStrips = [.. GetAllLayoutToolStrips()];
+        ToolbarLayoutConfig config = ToolbarLayoutStore.Load();
+
+        int row = 0;
+        foreach (ToolStripPanelRow panelRow in toolPanel.TopToolStripPanel.Rows)
+        {
+            List<ToolStrip> toolStripsInRow = panelRow.Controls
+                .OfType<ToolStrip>()
+                .Where(ts => ts.Visible && layoutToolStrips.Contains(ts))
+                .OrderBy(ts => ts.Left)
+                .ToList();
+
+            if (toolStripsInRow.Count == 0)
+            {
+                continue;
+            }
+
+            // Past the rows a layout accepts, a toolbar keeps the place it had.
+            if (row > ToolbarLayoutValidator.MaxRow)
+            {
+                break;
+            }
+
+            for (int orderInRow = 0; orderInRow < toolStripsInRow.Count; orderInRow++)
+            {
+                config.SetToolbarPosition(toolStripsInRow[orderInRow].Text, row, orderInRow);
+            }
+
+            row++;
+        }
+
+        ToolbarLayoutStore.Save(config);
+        AppSettings.SettingsContainer.Save();
     }
 
     /// <summary>

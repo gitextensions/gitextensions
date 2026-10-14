@@ -188,6 +188,59 @@ internal class ToolbarLayoutConfig
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
+        (ToolbarBuiltInMetadata? visMeta, ToolbarCustomMetadata? customMeta) = FindOrAddToolbarMetadata(name);
+
+        if (visMeta is not null)
+        {
+            visMeta.Visible = visible;
+        }
+
+        // Custom toolbars are recreated from CustomToolbars at startup, so its flag must match.
+        if (customMeta is not null)
+        {
+            customMeta.Visible = visible;
+        }
+    }
+
+    /// <summary>
+    /// Records where the toolbar named <paramref name="name"/> sits, in every list that describes it.
+    /// </summary>
+    /// <remarks>
+    /// As with <see cref="SetToolbarVisibility"/>, a built-in toolbar the layout does not mention
+    /// yet gets an entry, and a name that is neither built-in nor known changes nothing.
+    /// </remarks>
+    /// <param name="name">Toolbar display name.</param>
+    /// <param name="row">Row index in the toolbar panel (0-based).</param>
+    /// <param name="orderInRow">Position within the row (0 = leftmost).</param>
+    /// <exception cref="ArgumentException"><paramref name="name"/> is <see langword="null"/> or blank.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="row"/> or <paramref name="orderInRow"/> is negative or beyond the supported range.</exception>
+    public void SetToolbarPosition(string name, int row, int orderInRow)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentOutOfRangeException.ThrowIfNegative(row);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(row, ToolbarLayoutValidator.MaxRow);
+        ArgumentOutOfRangeException.ThrowIfNegative(orderInRow);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(orderInRow, ToolbarLayoutValidator.MaxOrderInRow);
+
+        (ToolbarBuiltInMetadata? visMeta, ToolbarCustomMetadata? customMeta) = FindOrAddToolbarMetadata(name);
+
+        if (visMeta is not null)
+        {
+            visMeta.Row = row;
+            visMeta.OrderInRow = orderInRow;
+        }
+
+        if (customMeta is not null)
+        {
+            customMeta.Row = row;
+            customMeta.OrderInRow = orderInRow;
+        }
+    }
+
+    // The entries describing the toolbar named name, after creating the one a built-in toolbar
+    // may still lack (see SetToolbarVisibility).
+    private (ToolbarBuiltInMetadata? VisMeta, ToolbarCustomMetadata? CustomMeta) FindOrAddToolbarMetadata(string name)
+    {
         ToolbarBuiltInMetadata? visMeta = ToolbarsVisibility.FirstOrDefault(t => t.Name == name);
         ToolbarCustomMetadata? customMeta = CustomToolbars.FirstOrDefault(c => c.Name == name);
 
@@ -202,16 +255,7 @@ internal class ToolbarLayoutConfig
             ToolbarsVisibility.Add(visMeta);
         }
 
-        if (visMeta is not null)
-        {
-            visMeta.Visible = visible;
-        }
-
-        // Custom toolbars are recreated from CustomToolbars at startup, so its flag must match.
-        if (customMeta is not null)
-        {
-            customMeta.Visible = visible;
-        }
+        return (visMeta, customMeta);
     }
 
     /// <summary>

@@ -249,6 +249,70 @@ public class ToolbarLayoutConfigTests
     }
 
     [Test]
+    public void SetToolbarPosition_should_place_a_built_in_toolbar_the_layout_never_mentioned()
+    {
+        // Dragging a toolbar on a default install, where the layout has no entry for it yet.
+        ToolbarLayoutConfig config = new();
+
+        config.SetToolbarPosition(ToolbarNames.Filters, row: 1, orderInRow: 0);
+
+        config.ToolbarsVisibility.Should().ContainSingle()
+            .Which.Should().BeEquivalentTo(new { Name = ToolbarNames.Filters, Visible = true, Row = 1, OrderInRow = 0, IconSize = 16 });
+        config.CustomToolbars.Should().BeEmpty();
+    }
+
+    [Test]
+    public void SetToolbarPosition_should_keep_everything_else_about_a_toolbar()
+    {
+        ToolbarLayoutConfig config = new()
+        {
+            ToolbarsVisibility = { new ToolbarBuiltInMetadata { Name = ToolbarNames.Scripts, Visible = false, Row = 0, OrderInRow = 2, IconSize = 24, AllIconsShowText = true } }
+        };
+
+        config.SetToolbarPosition(ToolbarNames.Scripts, row: 2, orderInRow: 1);
+
+        config.ToolbarsVisibility.Should().ContainSingle()
+            .Which.Should().BeEquivalentTo(new { Visible = false, Row = 2, OrderInRow = 1, IconSize = 24, AllIconsShowText = true });
+    }
+
+    [Test]
+    public void SetToolbarPosition_should_update_both_lists_of_a_custom_toolbar()
+    {
+        // Startup reads the place of a custom toolbar from ToolbarsVisibility first, and the layout
+        // window from CustomToolbars: the two must not disagree.
+        const string toolbarName = "Review";
+        ToolbarLayoutConfig config = new();
+        config.SetCustomToolbarMetadata(toolbarName, row: 1, orderInRow: 0, visible: true, iconSize: 16, index: 3);
+
+        config.SetToolbarPosition(toolbarName, row: 0, orderInRow: 3);
+
+        config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == toolbarName && t.Row == 0 && t.OrderInRow == 3);
+        config.CustomToolbars.Should().ContainSingle(c => c.Name == toolbarName && c.Row == 0 && c.OrderInRow == 3 && c.Index == 3);
+    }
+
+    [Test]
+    public void SetToolbarPosition_should_not_invent_a_custom_toolbar()
+    {
+        ToolbarLayoutConfig config = new();
+
+        config.SetToolbarPosition("Unknown", row: 0, orderInRow: 0);
+
+        config.ToolbarsVisibility.Should().BeEmpty();
+        config.CustomToolbars.Should().BeEmpty();
+    }
+
+    [TestCase(-1, 0)]
+    [TestCase(ToolbarLayoutValidator.MaxRow + 1, 0)]
+    [TestCase(0, -1)]
+    [TestCase(0, ToolbarLayoutValidator.MaxOrderInRow + 1)]
+    public void SetToolbarPosition_should_reject_a_place_a_layout_cannot_hold(int row, int orderInRow)
+    {
+        ToolbarLayoutConfig config = new();
+
+        ((Action)(() => config.SetToolbarPosition(ToolbarNames.Standard, row, orderInRow))).Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
     public void RenameCustomToolbar_should_rename_the_toolbar_everywhere_the_layout_names_it()
     {
         ToolbarLayoutConfig config = new()
