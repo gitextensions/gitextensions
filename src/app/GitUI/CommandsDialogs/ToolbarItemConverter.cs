@@ -404,13 +404,10 @@ internal static class ToolbarItemConverter
     /// </remarks>
     public static void DisposeDerivedItems(IEnumerable<ToolStripItem> removedItems, IReadOnlySet<ToolStripItem> kept)
     {
-        foreach (ToolStripItem item in removedItems)
+        // Both record their source in Tag: the menu item converted, or the button cloned.
+        foreach (ToolStripItem item in removedItems.Where(item => item.Tag is ToolStripItem && !kept.Contains(item)))
         {
-            // Both record their source in Tag: the menu item converted, or the button cloned.
-            if (item.Tag is ToolStripItem && !kept.Contains(item))
-            {
-                item.Dispose();
-            }
+            item.Dispose();
         }
     }
 

@@ -416,9 +416,9 @@ public partial class FormToolbarsLayout : GitExtensionsForm
             ToolStrip? actualToolStrip = _dynamicToolbars.Values.FirstOrDefault(ts => ts.Text == customMeta.Name);
             bool visible = actualToolStrip?.Visible ?? customMeta.Visible;
 
-            bool useVisualPosition = actualToolStrip != null && actualToolStrip.Visible && allStripsInPanel.Contains(actualToolStrip);
-            int row = useVisualPosition ? visualRow(actualToolStrip!) : customMeta.Row;
-            int orderInRow = useVisualPosition ? visualOrderInRow(actualToolStrip!) : customMeta.OrderInRow;
+            (int row, int orderInRow) = actualToolStrip is { Visible: true } && allStripsInPanel.Contains(actualToolStrip)
+                ? (visualRow(actualToolStrip), visualOrderInRow(actualToolStrip))
+                : (customMeta.Row, customMeta.OrderInRow);
 
             LogToolbar($"[FormToolbarsLayout.LoadCurrentLayout] Custom '{customMeta.Name}': Row={row}, OrderInRow={orderInRow}, Visible={visible}");
 
@@ -577,17 +577,15 @@ public partial class FormToolbarsLayout : GitExtensionsForm
             && !_isDragging
             && (Math.Abs(e.X - _dragStartPoint.X) > 5 || Math.Abs(e.Y - _dragStartPoint.Y) > 5))
         {
+            ToolbarItemPanel draggedItem = _draggedItem;
             _isDragging = true;
-            _draggedItem.SetHighlight(true);
-            _draggedItem.DoDragDrop(_draggedItem, DragDropEffects.Move);
+            draggedItem.SetHighlight(true);
+            draggedItem.DoDragDrop(draggedItem, DragDropEffects.Move);
 
             // DoDragDrop is blocking. Reset state unconditionally here in case
             // MouseUp was not fired on this panel (e.g. mouse released outside the form).
-            if (_draggedItem != null)
-            {
-                _draggedItem.SetHighlight(false);
-                _draggedItem = null;
-            }
+            draggedItem.SetHighlight(false);
+            _draggedItem = null;
 
             _isDragging = false;
             HideDropIndicator();

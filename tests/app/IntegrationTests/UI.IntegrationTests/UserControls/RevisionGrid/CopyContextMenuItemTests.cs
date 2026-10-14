@@ -117,11 +117,11 @@ public class CopyContextMenuItemTests
     private List<string> CaptureCopies()
     {
         List<string> copied = [];
-        _copyContextMenuItem.GetTestAccessor().CopyText = text =>
+        _copyContextMenuItem.GetTestAccessor().SetCopyText(text =>
         {
             copied.Add(text);
             return true;
-        };
+        });
         return copied;
     }
 

@@ -270,9 +270,6 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
     internal readonly struct TestAccessor(CopyContextMenuItem item)
     {
         // Stands in for the clipboard, so a test can see what would be copied without touching it.
-        public Func<string, bool> CopyText
-        {
-            set => item._copyText = value;
-        }
+        public void SetCopyText(Func<string, bool> copyText) => item._copyText = copyText;
     }
 }

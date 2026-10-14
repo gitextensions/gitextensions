@@ -331,7 +331,7 @@ partial class FormBrowse
     {
         if (item is ToolStripSeparator)
         {
-            return !string.IsNullOrWhiteSpace(item.Name) ? item.Name! : ToolbarItemNames.Separator(order);
+            return !string.IsNullOrWhiteSpace(item.Name) ? item.Name : ToolbarItemNames.Separator(order);
         }
 
         // Spacers and labels rebuilt from config already carry their placeholder name.
@@ -616,7 +616,7 @@ partial class FormBrowse
             // A shortcut the old settings showed is stored as the drop-down entry it stood for,
             // which the loader turns into a button the way it does any menu item.
             ToolStripItem? item = slot.SourceIndex is int index ? items[index] : null;
-            string itemName = item is not null ? GetItemSerializationName(item, order) : slot.InsertedItemName!;
+            string itemName = item is not null ? GetItemSerializationName(item, order) : slot.InsertedItemName ?? string.Empty;
 
             // Same rule as PersistCurrentToolbarItemsLayout: an item whose name the layout cannot
             // hold is left out of it.
@@ -753,7 +753,7 @@ partial class FormBrowse
 
     private void RestoreToolbarsVisibility(ToolbarLayoutConfig config)
     {
-        LogToolbar($"[ApplySavedToolbarLayout] Restoring visibility for {config.ToolbarsVisibility!.Count} toolbars");
+        LogToolbar($"[ApplySavedToolbarLayout] Restoring visibility for {config.ToolbarsVisibility.Count} toolbars");
 
         foreach (ToolbarBuiltInMetadata metadata in config.ToolbarsVisibility)
         {
@@ -787,7 +787,7 @@ partial class FormBrowse
 
     private void ApplyLayoutToCustomToolbars(ToolbarLayoutConfig config, bool hasItemLayout, HashSet<string> placedItemNames)
     {
-        LogToolbar($"[ApplySavedToolbarLayout] Processing {config.CustomToolbars!.Count} custom toolbars");
+        LogToolbar($"[ApplySavedToolbarLayout] Processing {config.CustomToolbars.Count} custom toolbars");
 
         foreach (ToolbarCustomMetadata metadata in config.CustomToolbars)
         {

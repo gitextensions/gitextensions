@@ -1067,13 +1067,10 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         // Iterate wrappers (not currentToolbar.Items directly) to have access to
         // DisplayName so items with dynamic ToolTipText get a stable label - all of them, not
         // only the ones the search filter leaves in view.
-        foreach (ToolStripItemWrapper wrapper in CurrentItems)
+        foreach (ToolStripItemWrapper wrapper in CurrentItems.Where(wrapper => wrapper.Item is not null and not ToolStripSeparator and not ToolStripLabel))
         {
-            if (wrapper.Item is not null and not ToolStripSeparator and not ToolStripLabel)
-            {
-                wrapper.ShowText = _allIconTextActive;
-                ApplyShowTextToLiveItem(wrapper);
-            }
+            wrapper.ShowText = _allIconTextActive;
+            ApplyShowTextToLiveItem(wrapper);
         }
 
         currentToolbar.Invalidate();
@@ -1152,8 +1149,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         PushUndoSnapshot();
 
         HashSet<string> currentItemNames = CurrentItems
-            .Where(w => w.Item is not null && w.Item.Name is not null)
-            .Select(w => w.Item!.Name!)
+            .Select(w => w.Item?.Name)
+            .OfType<string>()
             .ToHashSet();
 
         int insertedCount = 0;
@@ -1387,14 +1384,11 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         listBoxCurrent.BeginUpdate();
         listBoxCurrent.Items.Clear();
-        foreach (ToolStripItemWrapper wrapper in CurrentItems)
-        {
-            if (string.IsNullOrWhiteSpace(filterText)
-                || wrapper.DisplayName.Contains(filterText, StringComparison.OrdinalIgnoreCase))
-            {
-                listBoxCurrent.Items.Add(wrapper);
-            }
-        }
+        listBoxCurrent.Items.AddRange(
+        [
+            .. CurrentItems.Where(wrapper => string.IsNullOrWhiteSpace(filterText)
+                                             || wrapper.DisplayName.Contains(filterText, StringComparison.OrdinalIgnoreCase))
+        ]);
 
         listBoxCurrent.EndUpdate();
 
@@ -1729,20 +1723,12 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         foreach (ToolStripItemWrapper wrapper in wrappers)
         {
-            if (wrapper.Item == null)
-            {
-                (ToolStripItem? item, string? configName) = ResolveNullWrapper(wrapper, order);
-                if (item == null)
-                {
-                    order++;
-                    continue;
-                }
+            (ToolStripItem Item, string ConfigName)? resolved = wrapper.Item is null
+                ? ResolveNullWrapper(wrapper, order)
+                : ResolveRealWrapper(wrapper.Item, toolbarName);
 
-                result.Add(new ResolvedToolbarItem(item, configName!, wrapper.ShowText, wrapper.DisplayName));
-            }
-            else
+            if (resolved is (ToolStripItem item, string configName))
             {
-                (ToolStripItem item, string configName) = ResolveRealWrapper(wrapper, toolbarName);
                 result.Add(new ResolvedToolbarItem(item, configName, wrapper.ShowText, wrapper.DisplayName));
             }
 
@@ -1752,7 +1738,9 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         return result;
     }
 
-    private static (ToolStripItem? item, string? configName) ResolveNullWrapper(ToolStripItemWrapper wrapper, int order)
+    // A wrapper of no live item stands for a separator, a spacer or a label; anything else has
+    // nothing to resolve to.
+    private static (ToolStripItem Item, string ConfigName)? ResolveNullWrapper(ToolStripItemWrapper wrapper, int order)
     {
         if (wrapper.DisplayName == SeparatorDisplayName)
         {
@@ -1787,17 +1775,17 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             return (label, ToolbarItemNames.Label(labelText, order));
         }
 
-        return (null, null);
+        return null;
     }
 
-    private (ToolStripItem item, string configName) ResolveRealWrapper(ToolStripItemWrapper wrapper, string toolbarName)
+    private (ToolStripItem Item, string ConfigName) ResolveRealWrapper(ToolStripItem wrapperItem, string toolbarName)
     {
         // Resolve the canonical original from _originalItems when possible.
         // For a ToolStripPushButtonClone (or any clone whose Tag is the original),
         // look up by the original's name so ApplyChangesCore always clones from the
         // original ToolStripPushButton rather than from the clone itself.
-        string lookupName = wrapper.Item!.Name ?? string.Empty;
-        if (wrapper.Item is ToolStripPushButtonClone cloneItem
+        string lookupName = wrapperItem.Name ?? string.Empty;
+        if (wrapperItem is ToolStripPushButtonClone cloneItem
             && cloneItem.Tag is ToolStripPushButton pushOriginal)
         {
             lookupName = pushOriginal.Name ?? lookupName;
@@ -1805,7 +1793,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         ToolStripItem item = !string.IsNullOrWhiteSpace(lookupName) && _originalItems.TryGetValue(lookupName, out ToolStripItem? original)
             ? original
-            : wrapper.Item!;
+            : wrapperItem;
 
         if (IsCustomToolbar(toolbarName) && item is ToolStripMenuItem menuItem)
         {
@@ -2126,13 +2114,13 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         AddToolbarOnlyItems(noFilter, addedItemNames);
         AddScriptItems(addedItemNames);
 
-        ContextMenuStrip? revisionContextMenu = _formBrowse!.RevisionGridControl?.MainContextMenu;
+        ContextMenuStrip? revisionContextMenu = _formBrowse?.RevisionGridControl?.MainContextMenu;
         if (revisionContextMenu != null)
         {
             AddContextMenuItems(revisionContextMenu, noFilter, addedItemNames);
         }
 
-        ContextMenuStrip? repoObjectsTreeContextMenu = _formBrowse.RepoObjectsTreeContextMenu;
+        ContextMenuStrip? repoObjectsTreeContextMenu = _formBrowse?.RepoObjectsTreeContextMenu;
         if (repoObjectsTreeContextMenu != null)
         {
             AddContextMenuItems(repoObjectsTreeContextMenu, noFilter, addedItemNames);
@@ -2430,9 +2418,9 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     // Every enabled user script, whichever toolbar it is on, if any.
     private void AddScriptItems(HashSet<string> addedItemNames)
     {
-        foreach (ToolStripItem item in _formBrowse!.ScriptToolbarItems)
+        foreach (ToolStripItem item in _formBrowse?.ScriptToolbarItems ?? [])
         {
-            if (addedItemNames.Add(item.Name!))
+            if (item.Name is { } name && addedItemNames.Add(name))
             {
                 listBoxAvailable.Items.Add(new ToolStripItemWrapper(item));
             }
@@ -2675,8 +2663,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             e.Bounds.Width - textLeft,
             e.Bounds.Height);
 
-        using SolidBrush? separatorBrush = isSeparatorItem ? new SolidBrush(Color.FromArgb(0x80, 0x80, 0x80)) : null;
-        Brush textBrush = GetListItemBrush(e, isSeparatorItem, separatorBrush);
+        Brush textBrush = GetListItemBrush(e, isSeparatorItem);
 
         using StringFormat stringFormat = new()
         {
@@ -2718,11 +2705,11 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         return wrapper.DisplayName;
     }
 
-    private static Brush GetListItemBrush(DrawItemEventArgs e, bool isSeparatorItem, SolidBrush? separatorBrush)
+    private static Brush GetListItemBrush(DrawItemEventArgs e, bool isSeparatorItem)
     {
         if (isSeparatorItem)
         {
-            return separatorBrush!;
+            return SystemBrushes.GrayText;
         }
 
         return (e.State & DrawItemState.Selected) != 0
