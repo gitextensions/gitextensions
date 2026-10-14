@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Frozen;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Concurrency;
@@ -985,7 +986,10 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                   ? Module.GetSelectedBranch(emptyIfDetached: true)
                   : "");
 
-        _gridView.RemoteColors = Module.GetRemoteColors();
+        // Do not block the UI thread reading git config here.
+        // Colors are loaded in the background refs task below and applied when ready.
+        // Clear stale colors from the previous repo immediately (cheap).
+        _gridView.RemoteColors = FrozenDictionary<string, Color>.Empty;
 
         // Revision info is read in three parallel steps:
         // 1. Read current commit, refs, prepare grid etc.
@@ -1104,6 +1108,19 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 // Allow add revisions to the grid
                 semaphoreUpdateGrid.Release();
 
+                // Load remote colors off the UI thread (git config read) and apply when ready.
+                // The grid was cleared to Empty on the UI thread above to avoid showing stale colors.
+                FrozenDictionary<string, Color> remoteColors = capturedModule.GetRemoteColors();
+                cancellationToken.ThrowIfCancellationRequested();
+                await this.SwitchToMainThreadAsync(cancellationToken);
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    _gridView.RemoteColors = remoteColors;
+                }
+
+                await TaskScheduler.Default;
+                cancellationToken.ThrowIfCancellationRequested();
+
                 _superprojectCurrentCheckout = await GetSuperprojectCheckoutAsync(capturedModule, noLocks: true);
                 if (firstRevisionReceived && _superprojectCurrentCheckout is not null)
                 {
@@ -1116,16 +1133,27 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             // Apply settings early, adapt column widths, etc.
             Refresh();
 
-            if (!showStashes || getStashRevs.Value.Count == 0)
+            if (!showStashes)
             {
+                // No git process needed, release immediately on the UI thread.
                 semaphoreUpdateGrid.Release();
             }
             else
             {
+                // Evaluate stashes off the UI thread: `git stash list` can take seconds
+                // and must never freeze the UI while opening a repository.
                 ThreadHelper.FileAndForget(() =>
                 {
                     try
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        // First touch of the Lazy runs `git stash list` here (background), not on the UI thread.
+                        if (getStashRevs.Value.Count == 0)
+                        {
+                            return;
+                        }
+
                         stashesById = getStashRevs.Value.ToDictionary(r => r.ObjectId);
 
                         // Git stores stashes in 2 or 3 commits. The (first) "stash" commit is listed by git-stash-list,

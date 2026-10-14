@@ -12,6 +12,7 @@ using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls.RevisionGrid;
 
@@ -773,6 +774,12 @@ public sealed partial class RevisionDataGridView : DataGridView
 
     private async Task UpdateVisibleRowRangeInternalAsync()
     {
+        CancellationToken cancellationToken = _updateVisibleRowRangeSequence.Next();
+
+        // Snapshot DataGridView state on the UI thread: these properties have thread affinity
+        // and must never be read from the background thread.
+        await this.SwitchToMainThreadAsync(cancellationToken);
+
         if (!AppSettings.ShowRevisionGridGraphColumn
             || _columnProviders.Count == 0
             || _columnProviders[0] is not RevisionGraphColumnProvider revisionGraphColumnProvider)
@@ -780,13 +787,17 @@ public sealed partial class RevisionDataGridView : DataGridView
             return;
         }
 
-        CancellationToken cancellationToken = _updateVisibleRowRangeSequence.Next();
-
         int fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
         int visibleRowCount = DisplayedRowCount(includePartialRow: true);
-        visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
+        int graphCount = _revisionGraph.Count;
+        int rowHeight = _rowHeight;
+        RedrawMode redrawMode = _redrawMode;
+        VisibleRowRange currentRange = _visibleRowRange;
+        cancellationToken.ThrowIfCancellationRequested();
 
-        if (_redrawMode == RedrawMode.NoRedrawNeeded && _visibleRowRange.FromIndex == fromIndex && _visibleRowRange.Count == visibleRowCount)
+        visibleRowCount = Math.Min(graphCount - fromIndex, visibleRowCount);
+
+        if (redrawMode == RedrawMode.NoRedrawNeeded && currentRange.FromIndex == fromIndex && currentRange.Count == visibleRowCount)
         {
             return;
         }
@@ -799,6 +810,10 @@ public sealed partial class RevisionDataGridView : DataGridView
         {
             return;
         }
+
+        // Heavy graph layout and bitmap rendering run off the UI thread.
+        await TaskScheduler.Default;
+        cancellationToken.ThrowIfCancellationRequested();
 
         try
         {
@@ -824,11 +839,12 @@ public sealed partial class RevisionDataGridView : DataGridView
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            await revisionGraphColumnProvider.RenderGraphToCacheAsync(visibleRowRange, newBackgroundScrollTo, _rowHeight, cancellationToken);
+            await revisionGraphColumnProvider.RenderGraphToCacheAsync(visibleRowRange, newBackgroundScrollTo, rowHeight, cancellationToken);
         }
         catch (Exception exception)
         {
-            _visibleRowRange = new VisibleRowRange(fromIndex: 0, count: 0);
+            // Reset on the UI thread to avoid racing with the next scheduled update.
+            this.InvokeAndForget(() => _visibleRowRange = new VisibleRowRange(fromIndex: 0, count: 0));
             Trace.WriteLineIf(exception is not OperationCanceledException, exception);
         }
     }
