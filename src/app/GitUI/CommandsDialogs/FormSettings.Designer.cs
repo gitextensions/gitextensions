@@ -99,7 +99,7 @@ partial class FormSettings
         buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
         buttonOk.Location = new Point(359, 6);
         buttonOk.Name = "buttonOk";
-        buttonOk.Size = new Size(84, 25);
+        buttonOk.Size = new Size(84, 30);
         buttonOk.TabIndex = 0;
         buttonOk.Text = "OK";
         buttonOk.UseVisualStyleBackColor = true;
@@ -108,7 +108,7 @@ partial class FormSettings
         // tableLayoutPanel3
         //
         tableLayoutPanel3.ColumnCount = 2;
-        tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
+        tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 240F));
         tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         tableLayoutPanel3.Controls.Add(settingsTreeView, 0, 0);
         tableLayoutPanel3.Controls.Add(panelCurrentSettingsPage, 1, 0);
@@ -122,7 +122,7 @@ partial class FormSettings
         tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         tableLayoutPanel3.RowStyles.Add(new RowStyle());
         tableLayoutPanel3.RowStyles.Add(new RowStyle());
-        tableLayoutPanel3.Size = new Size(958, 646);
+        tableLayoutPanel3.Size = new Size(1086, 646);
         tableLayoutPanel3.TabIndex = 2;
         //
         // settingsTreeView
@@ -157,7 +157,7 @@ partial class FormSettings
         flowLayoutPanel4.FlowDirection = FlowDirection.RightToLeft;
         flowLayoutPanel4.Location = new Point(203, 609);
         flowLayoutPanel4.Name = "flowLayoutPanel4";
-        flowLayoutPanel4.Size = new Size(732, 34);
+        flowLayoutPanel4.Size = new Size(732, 40);
         flowLayoutPanel4.TabIndex = 3;
         flowLayoutPanel4.WrapContents = false;
         //
@@ -166,7 +166,7 @@ partial class FormSettings
         buttonApply.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
         buttonApply.Location = new Point(637, 6);
         buttonApply.Name = "buttonApply";
-        buttonApply.Size = new Size(92, 25);
+        buttonApply.Size = new Size(92, 30);
         buttonApply.TabIndex = 3;
         buttonApply.Text = "Apply";
         buttonApply.UseVisualStyleBackColor = true;
@@ -177,7 +177,7 @@ partial class FormSettings
         buttonDiscard.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
         buttonDiscard.Location = new Point(543, 6);
         buttonDiscard.Name = "buttonDiscard";
-        buttonDiscard.Size = new Size(88, 25);
+        buttonDiscard.Size = new Size(88, 30);
         buttonDiscard.TabIndex = 2;
         buttonDiscard.Text = "Discard";
         buttonDiscard.UseVisualStyleBackColor = true;
@@ -189,7 +189,7 @@ partial class FormSettings
         buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
         buttonCancel.Location = new Point(449, 6);
         buttonCancel.Name = "buttonCancel";
-        buttonCancel.Size = new Size(88, 25);
+        buttonCancel.Size = new Size(88, 30);
         buttonCancel.TabIndex = 1;
         buttonCancel.Text = "Cancel";
         buttonCancel.UseVisualStyleBackColor = true;
@@ -212,11 +212,11 @@ partial class FormSettings
         //
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
-        ClientSize = new Size(958, 646);
+        ClientSize = new Size(1086, 646);
         Controls.Add(tableLayoutPanel3);
         MaximizeBox = false;
         MinimizeBox = false;
-        MinimumSize = new Size(966, 785);
+        MinimumSize = new Size(1115, 785);
         Name = "FormSettings";
         SizeGripStyle = SizeGripStyle.Show;
         StartPosition = FormStartPosition.CenterParent;

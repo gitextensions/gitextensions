@@ -47,6 +47,7 @@ public static partial class AppSettings
     private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
     private static readonly SettingsPath HiddenSettingsPath = new AppSettingsPath("Hidden");
     private static readonly SettingsPath MigrationSettingsPath = new AppSettingsPath(HiddenSettingsPath, "Migration");
+    private static readonly SettingsPath ToolbarSettingsPath = new AppSettingsPath("Toolbar");
 
     private static Mutex? _globalMutex;
 
@@ -1500,6 +1501,13 @@ public static partial class AppSettings
         set => SetFont("font", value);
     }
 
+    public static Font MenuFont
+    {
+        // SystemFonts.MenuFont is annotated as nullable but never actually returns null.
+        get => GetFont("menufont", SystemFonts.MenuFont!);
+        set => SetFont("menufont", value);
+    }
+
     public static Font? ConEmuConsoleFont
     {
         get => GetFont("conemuconsolefont", null);
@@ -2276,6 +2284,23 @@ public static partial class AppSettings
         }
 
         public readonly void ResetDocumentationBaseUrl() => AppSettings._documentationBaseUrl = null;
+    }
+
+    // Gets or sets the raw XML representation of the toolbar layout configuration.
+    // The strongly-typed configuration model (and the code that serializes/deserializes it)
+    // lives in GitUI (see GitUI.CommandsDialogs.SettingsDialog.Toolbars), since toolbar
+    // customization is only meaningful to that project.
+    public static string ToolbarLayoutXml
+    {
+        get => SettingsContainer.GetString(ToolbarSettingsPath.PathFor("Layout"), string.Empty);
+        set => SettingsContainer.SetString(ToolbarSettingsPath.PathFor("Layout"), value);
+    }
+
+    // When true, toolbar icon text font size scales proportionally with the icon size.
+    public static bool ToolbarSyncIconTextWithSize
+    {
+        get => SettingsContainer.GetBool(ToolbarSettingsPath.PathFor("SyncIconTextWithSize"), false);
+        set => SettingsContainer.SetBool(ToolbarSettingsPath.PathFor("SyncIconTextWithSize"), value);
     }
 }
 
