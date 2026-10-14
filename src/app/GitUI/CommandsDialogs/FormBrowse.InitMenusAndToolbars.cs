@@ -34,9 +34,9 @@ partial class FormBrowse
     // The toolbars SubscribeToolbarEvents has already wired.
     private readonly HashSet<ToolStrip> _toolStripsWithEvents = [];
 
-    // The toolbar button of each user script shown in the user menu bar, by its Name. A button is
-    // built once and then kept up to date, rather than rebuilt on every repository load, so that it
-    // has a name the saved layout and the Toolbars settings page can refer it by.
+    // The toolbar button of each enabled user script, by its Name. A button is built once and then
+    // kept up to date, rather than rebuilt on every repository load, so that it has a name the saved
+    // layout and the Toolbars settings page can refer it by.
     private readonly Dictionary<string, ToolStripButton> _scriptToolbarItems = new(StringComparer.Ordinal);
 
     private readonly TranslationString _removeToolbarItemQuestion = new("Remove \"{0}\" from this toolbar?");
@@ -121,12 +121,16 @@ partial class FormBrowse
 
         MigrateLegacyToolbarVisibility();
 
+        MigrateUserMenuBarScripts();
+
         // Before the saved layout is applied, so that the layout can place the script buttons.
         RefreshScriptToolbarItems();
 
         LoadDynamicToolbarsFromConfig();
 
         ApplySavedToolbarLayout();
+
+        UpdateScriptsToolbarGrip();
 
         ApplyInitialToolbarLayout();
 
@@ -264,39 +268,40 @@ partial class FormBrowse
 
         foreach (ToolStrip toolStrip in GetAllLayoutToolStrips())
         {
-            string toolbarName = toolStrip.Text;
-            if (string.IsNullOrEmpty(toolbarName))
+            if (!string.IsNullOrEmpty(toolStrip.Text))
             {
-                continue;
-            }
-
-            int order = 0;
-            foreach (ToolStripItem item in toolStrip.Items)
-            {
-                string itemName = GetItemSerializationName(item, order);
-
-                // An item whose name the layout cannot hold - a plugin's, whose name may carry any
-                // character - has nothing to be stored under and nothing to be resolved by.
-                // Persisting it would only leave the layout carrying an item no loader could place.
-                if (!ToolbarItemNames.IsValid(itemName))
-                {
-                    order++;
-                    continue;
-                }
-
-                config.Items.Add(new ToolbarItemConfig
-                {
-                    ItemName = itemName,
-                    ToolbarName = toolbarName,
-                    Order = order,
-                    ShowText = GetItemShowText(item)
-                });
-                order++;
+                AddToolbarItems(config, toolStrip);
             }
         }
 
         ToolbarLayoutStore.Save(config);
         AppSettings.SettingsContainer.Save();
+    }
+
+    // Adds the items toolStrip holds now to config, in their order.
+    private static void AddToolbarItems(ToolbarLayoutConfig config, ToolStrip toolStrip)
+    {
+        int order = 0;
+        foreach (ToolStripItem item in toolStrip.Items)
+        {
+            string itemName = GetItemSerializationName(item, order);
+
+            // An item whose name the layout cannot hold - a plugin's, whose name may carry any
+            // character - has nothing to be stored under and nothing to be resolved by.
+            // Persisting it would only leave the layout carrying an item no loader could place.
+            if (ToolbarItemNames.IsValid(itemName))
+            {
+                config.Items.Add(new ToolbarItemConfig
+                {
+                    ItemName = itemName,
+                    ToolbarName = toolStrip.Text,
+                    Order = order,
+                    ShowText = GetItemShowText(item)
+                });
+            }
+
+            order++;
+        }
     }
 
     // All toolbars that participate in the saved layout: the three built-ins plus any custom toolbars.
@@ -428,13 +433,13 @@ partial class FormBrowse
     }
 
     // Brings the script buttons in line with the scripts settings, which may have changed since the
-    // last repository load: a button for each enabled script shown in the user menu bar, put on the
-    // Scripts toolbar unless it already sits on a toolbar, and none for any other script.
+    // last repository load: a button for each enabled script, and none for any other. Where a button
+    // goes is for the layout to say, so a new one is placed on no toolbar.
     private void RefreshScriptToolbarItems()
     {
         HashSet<string> shownItemNames = new(StringComparer.Ordinal);
 
-        foreach (ScriptInfo script in _scriptsManager.GetScripts().Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar))
+        foreach (ScriptInfo script in _scriptsManager.GetScripts().Where(script => script.Enabled))
         {
             int scriptId = script.HotkeyCommandIdentifier;
             string itemName = ToolbarItemNames.Script(scriptId);
@@ -462,11 +467,6 @@ partial class FormBrowse
             button.Image = script.GetIcon() ?? Images.ApplicationBlue;
             button.ToolTipText = script.Name is null ? string.Empty : script.GetDisplayName();
             UpdateTooltipWithShortcut(button, (Command)scriptId);
-
-            if (button.Owner is null)
-            {
-                ToolStripScripts.Items.Add(button);
-            }
         }
 
         foreach (string itemName in _scriptToolbarItems.Keys.Where(itemName => !shownItemNames.Contains(itemName)).ToList())
@@ -474,7 +474,70 @@ partial class FormBrowse
             RemoveScriptToolbarItem(itemName);
         }
 
-        ToolStripScripts.GripStyle = ToolStripScripts.Items.Count > 0 ? ToolStripGripStyle.Visible : ToolStripGripStyle.Hidden;
+        UpdateScriptsToolbarGrip();
+    }
+
+    // An empty Scripts toolbar shows nothing, not even its grip, as before it could be customized:
+    // a user with no scripts on it is not left with a stray grip in the toolbar panel.
+    private void UpdateScriptsToolbarGrip()
+        => ToolStripScripts.GripStyle = ToolStripScripts.Items.Count > 0 ? ToolStripGripStyle.Visible : ToolStripGripStyle.Hidden;
+
+    // Scripts used to be put on the Scripts toolbar by giving them the ShowInUserMenuBar event, which
+    // is gone: where a script goes is now for the layout to say, as for any other action. The enabled
+    // scripts that had the event are put at the end of that toolbar, once, since the scripts settings
+    // are saved without it afterwards. Disabled ones were not shown, so they are not placed either.
+    private void MigrateUserMenuBarScripts()
+    {
+        IReadOnlyList<ScriptInfo> legacyScripts = _scriptsManager.TakeScriptsFormerlyShownInUserMenuBar();
+        if (legacyScripts.Count == 0)
+        {
+            return;
+        }
+
+        ToolbarLayoutConfig config = ToolbarLayoutStore.Load();
+        List<string> itemNames = legacyScripts
+            .Where(script => script.Enabled)
+            .Select(script => ToolbarItemNames.Script(script.HotkeyCommandIdentifier))
+            .Where(itemName => !config.Items.Any(item => item.ItemName == itemName))
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
+
+        if (itemNames.Count > 0)
+        {
+            // The loader rebuilds every built-in toolbar as soon as the layout holds any item, so a
+            // layout without items is first given the ones the built-in toolbars hold now.
+            if (config.Items.Count == 0)
+            {
+                foreach (ToolStrip toolStrip in new ToolStrip[] { ToolStripMain, ToolStripFilters, ToolStripScripts })
+                {
+                    AddToolbarItems(config, toolStrip);
+                }
+            }
+
+            int order = config.Items
+                .Where(item => item.ToolbarName == ScriptsToolbarName)
+                .Select(item => item.Order + 1)
+                .DefaultIfEmpty(0)
+                .Max();
+
+            foreach (string itemName in itemNames)
+            {
+                // Shown with their label, as the Scripts toolbar always showed them.
+                config.Items.Add(new ToolbarItemConfig { ItemName = itemName, ToolbarName = ScriptsToolbarName, Order = order++, ShowText = true });
+            }
+
+            ToolbarLayoutStore.Save(config);
+            LogToolbar($"[MigrateUserMenuBarScripts] Placed {itemNames.Count} scripts on the Scripts toolbar");
+        }
+
+        // Only once the layout holds them, so that the scripts keep the event until it does.
+        string scriptsXml = _scriptsManager.SerializeIntoXml();
+        if (!string.IsNullOrEmpty(scriptsXml))
+        {
+            AppSettings.OwnScripts = scriptsXml;
+        }
+
+        AppSettings.SettingsContainer.Save();
     }
 
     // Takes the button of a script that is no longer shown off every toolbar, together with the
@@ -1586,6 +1649,9 @@ partial class FormBrowse
 
     internal void ReorganizeToolbarsCore()
     {
+        // Every change to the toolbar items ends here, emptying the Scripts toolbar or filling it.
+        UpdateScriptsToolbarGrip();
+
         ToolbarLayoutConfig? config = ToolbarLayoutStore.Load();
 
         HashSet<ToolStrip> customToolStrips = toolPanel.TopToolStripPanel.Controls

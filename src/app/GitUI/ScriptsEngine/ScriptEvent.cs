@@ -9,7 +9,6 @@ public enum ScriptEvent
     AfterPull,
     BeforePush,
     AfterPush,
-    ShowInUserMenuBar,
     BeforeCheckout,
     AfterCheckout,
     BeforeMerge,

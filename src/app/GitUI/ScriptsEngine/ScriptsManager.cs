@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -11,15 +12,23 @@ namespace GitUI.ScriptsEngine;
 internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
 {
     internal const int MinimumUserScriptID = 9000;
+
+    // ScriptEvent once had this value, which put the script on the Scripts toolbar.
+    private const string LegacyShowInUserMenuBar = "ShowInUserMenuBar";
+
     private static readonly XmlSerializer _serializer = new(typeof(BindingList<ScriptInfo>));
     private BindingList<ScriptInfo>? _scripts;
+    private List<ScriptInfo> _scriptsFormerlyShownInUserMenuBar = [];
 
     public BindingList<ScriptInfo> GetScripts()
     {
         if (_scripts is null)
         {
-            _scripts = DeserializeFromXml(AppSettings.OwnScripts);
+            _scripts = DeserializeFromXml(AppSettings.OwnScripts, out List<int> userMenuBarScriptIndices);
             FixAmbiguousHotkeyCommandIdentifiers(_scripts);
+
+            // Kept as instances rather than identifiers, which the fix-up above may have changed.
+            _scriptsFormerlyShownInUserMenuBar = [.. userMenuBarScriptIndices.Select(index => _scripts[index])];
         }
 
         return _scripts;
@@ -36,6 +45,15 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
                 }
             }
         }
+    }
+
+    public IReadOnlyList<ScriptInfo> TakeScriptsFormerlyShownInUserMenuBar()
+    {
+        GetScripts();
+
+        List<ScriptInfo> scripts = _scriptsFormerlyShownInUserMenuBar;
+        _scriptsFormerlyShownInUserMenuBar = [];
+        return scripts;
     }
 
     public ScriptInfo? GetScript(int scriptId)
@@ -91,8 +109,12 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
         }
     }
 
-    private static BindingList<ScriptInfo> DeserializeFromXml(string? xml)
+    // userMenuBarScriptIndices receives the position, in the returned list, of each script saved with
+    // the former ShowInUserMenuBar event (see ReadLegacyUserMenuBarEvent).
+    internal static BindingList<ScriptInfo> DeserializeFromXml(string? xml, out List<int> userMenuBarScriptIndices)
     {
+        userMenuBarScriptIndices = [];
+
         // When there is nothing to deserialize, add default scripts
         if (string.IsNullOrEmpty(xml))
         {
@@ -101,13 +123,14 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
 
         try
         {
-            using StringReader stringReader = new(xml);
+            using StringReader stringReader = new(ReadLegacyUserMenuBarEvent(xml, userMenuBarScriptIndices));
             using XmlTextReader xmlReader = new(stringReader);
             return (BindingList<ScriptInfo>)_serializer.Deserialize(xmlReader)!;
         }
         catch (Exception ex)
         {
             Trace.WriteLine(ex.Message);
+            userMenuBarScriptIndices.Clear();
             return DeserializeFromOldFormat(xml);
         }
 
@@ -151,7 +174,7 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
                     + @"fi'",
                 RunInBackground = true,
                 AskConfirmation = false,
-                OnEvent = ScriptEvent.ShowInUserMenuBar,
+                OnEvent = ScriptEvent.None,
                 AddToRevisionGridContextMenu = false,
                 Enabled = false
             },
@@ -163,7 +186,7 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
                 Arguments = "",
                 RunInBackground = false,
                 AskConfirmation = false,
-                OnEvent = ScriptEvent.ShowInUserMenuBar,
+                OnEvent = ScriptEvent.None,
                 AddToRevisionGridContextMenu = false,
                 Enabled = false
             },
@@ -244,6 +267,34 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
 
             return scripts;
         }
+    }
+
+    // ShowInUserMenuBar, which put a script on the Scripts toolbar, is no longer a ScriptEvent: the
+    // toolbar layout says where a script goes, as it does for any action. The serializer would reject
+    // the whole list over the one value it no longer knows, so a script saved with it is read as
+    // having no event, and its position among the scripts is added to scriptIndices so that its
+    // place on the toolbar can be carried over into the layout.
+    private static string ReadLegacyUserMenuBarEvent(string xml, List<int> scriptIndices)
+    {
+        if (!xml.Contains(LegacyShowInUserMenuBar, StringComparison.Ordinal))
+        {
+            return xml;
+        }
+
+        XDocument document = XDocument.Parse(xml);
+        List<XElement> scripts = document.Root?.Elements(nameof(ScriptInfo)).ToList() ?? [];
+
+        for (int index = 0; index < scripts.Count; index++)
+        {
+            XElement? onEvent = scripts[index].Element(nameof(ScriptInfo.OnEvent));
+            if (onEvent?.Value == LegacyShowInUserMenuBar)
+            {
+                onEvent.Value = nameof(ScriptEvent.None);
+                scriptIndices.Add(index);
+            }
+        }
+
+        return document.ToString();
     }
 
     internal static int NextHotkeyCommandIdentifier(BindingList<ScriptInfo> scripts)
