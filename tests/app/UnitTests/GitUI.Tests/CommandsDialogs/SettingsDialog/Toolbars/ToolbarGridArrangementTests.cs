@@ -6,6 +6,8 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Toolbars;
 // toolbar left closes up, and empty rows disappear. These are the sums behind that.
 public class ToolbarGridArrangementTests
 {
+    private const string Custom01 = "Custom 01";
+
     private static ToolbarLayoutItem Item(string name, int row, int orderInRow, bool builtIn = false)
         => new() { Name = name, DisplayName = name, Row = row, OrderInRow = orderInRow, IsBuiltIn = builtIn };
 
@@ -18,9 +20,9 @@ public class ToolbarGridArrangementTests
 
     private static List<ToolbarLayoutItem> ThreeOnOneRow() =>
     [
-        Item("Standard", 0, 0, builtIn: true),
-        Item("Filters", 0, 1, builtIn: true),
-        Item("Scripts", 0, 2, builtIn: true)
+        Item(ToolbarNames.Standard, 0, 0, builtIn: true),
+        Item(ToolbarNames.Filters, 0, 1, builtIn: true),
+        Item(ToolbarNames.Scripts, 0, 2, builtIn: true)
     ];
 
     [Test]
@@ -36,9 +38,9 @@ public class ToolbarGridArrangementTests
     [Test]
     public void GetDefaultOrder_should_keep_the_built_in_toolbars_in_their_usual_order()
     {
-        ToolbarGridArrangement.GetDefaultOrder("Standard").Should().BeLessThan(ToolbarGridArrangement.GetDefaultOrder("Filters"));
-        ToolbarGridArrangement.GetDefaultOrder("Filters").Should().BeLessThan(ToolbarGridArrangement.GetDefaultOrder("Scripts"));
-        ToolbarGridArrangement.GetDefaultOrder("Scripts").Should().BeLessThan(ToolbarGridArrangement.GetDefaultOrder("Custom 01"));
+        ToolbarGridArrangement.GetDefaultOrder(ToolbarNames.Standard).Should().BeLessThan(ToolbarGridArrangement.GetDefaultOrder(ToolbarNames.Filters));
+        ToolbarGridArrangement.GetDefaultOrder(ToolbarNames.Filters).Should().BeLessThan(ToolbarGridArrangement.GetDefaultOrder(ToolbarNames.Scripts));
+        ToolbarGridArrangement.GetDefaultOrder(ToolbarNames.Scripts).Should().BeLessThan(ToolbarGridArrangement.GetDefaultOrder(Custom01));
     }
 
     [Test]
@@ -46,9 +48,9 @@ public class ToolbarGridArrangementTests
     {
         List<ToolbarLayoutItem> items =
         [
-            Item("Scripts", 3, 0, builtIn: true),
-            Item("Standard", 2, 1, builtIn: true),
-            Item("Filters", 0, 0, builtIn: true)
+            Item(ToolbarNames.Scripts, 3, 0, builtIn: true),
+            Item(ToolbarNames.Standard, 2, 1, builtIn: true),
+            Item(ToolbarNames.Filters, 0, 0, builtIn: true)
         ];
 
         ToolbarGridArrangement.ResetToDefault(items);
@@ -63,7 +65,7 @@ public class ToolbarGridArrangementTests
         // Leaving one on the first row makes the toolbars wider than the panel, which WinForms
         // resolves by wrapping them and leaving a gap at the start of the row.
         List<ToolbarLayoutItem> items = ThreeOnOneRow();
-        items.Add(Item("Custom 01", 0, 3));
+        items.Add(Item(Custom01, 0, 3));
         items.Add(Item("Custom 02", 0, 4));
 
         ToolbarGridArrangement.ResetToDefault(items);
@@ -97,7 +99,7 @@ public class ToolbarGridArrangementTests
     {
         List<ToolbarLayoutItem> items = ThreeOnOneRow();
 
-        ToolbarGridArrangement.MoveToRow(items, items.Single(i => i.Name == "Scripts"), targetRow: 0, dropIndex: 0);
+        ToolbarGridArrangement.MoveToRow(items, items.Single(i => i.Name == ToolbarNames.Scripts), targetRow: 0, dropIndex: 0);
 
         Positions(items).Should().Equal("Scripts@0.0", "Standard@0.1", "Filters@0.2");
     }
@@ -106,9 +108,9 @@ public class ToolbarGridArrangementTests
     public void MoveToRow_should_close_the_gap_left_in_the_row_it_came_from()
     {
         List<ToolbarLayoutItem> items = ThreeOnOneRow();
-        items.Add(Item("Custom 01", 1, 0));
+        items.Add(Item(Custom01, 1, 0));
 
-        ToolbarGridArrangement.MoveToRow(items, items.Single(i => i.Name == "Filters"), targetRow: 1, dropIndex: 1);
+        ToolbarGridArrangement.MoveToRow(items, items.Single(i => i.Name == ToolbarNames.Filters), targetRow: 1, dropIndex: 1);
 
         Positions(items).Should().Equal("Standard@0.0", "Scripts@0.1", "Custom 01@1.0", "Filters@1.1");
     }
@@ -120,7 +122,7 @@ public class ToolbarGridArrangementTests
         // The drop position comes from where the cursor was, which can be past either end.
         List<ToolbarLayoutItem> items = ThreeOnOneRow();
 
-        ToolbarGridArrangement.MoveToRow(items, items.Single(i => i.Name == "Standard"), targetRow: 0, dropIndex: dropIndex);
+        ToolbarGridArrangement.MoveToRow(items, items.Single(i => i.Name == ToolbarNames.Standard), targetRow: 0, dropIndex: dropIndex);
 
         items.Select(i => i.OrderInRow).Order().Should().Equal(0, 1, 2);
     }
@@ -128,9 +130,9 @@ public class ToolbarGridArrangementTests
     [Test]
     public void MoveToRow_should_drop_the_row_left_empty()
     {
-        List<ToolbarLayoutItem> items = [Item("Standard", 0, 0, builtIn: true), Item("Custom 01", 1, 0)];
+        List<ToolbarLayoutItem> items = [Item(ToolbarNames.Standard, 0, 0, builtIn: true), Item(Custom01, 1, 0)];
 
-        ToolbarGridArrangement.MoveToRow(items, items.Single(i => i.Name == "Custom 01"), targetRow: 0, dropIndex: 1);
+        ToolbarGridArrangement.MoveToRow(items, items.Single(i => i.Name == Custom01), targetRow: 0, dropIndex: 1);
 
         Positions(items).Should().Equal("Standard@0.0", "Custom 01@0.1");
     }
@@ -139,9 +141,9 @@ public class ToolbarGridArrangementTests
     public void MoveToNewRow_should_push_the_rows_below_the_insertion_point_down()
     {
         List<ToolbarLayoutItem> items = ThreeOnOneRow();
-        items.Add(Item("Custom 01", 1, 0));
+        items.Add(Item(Custom01, 1, 0));
 
-        ToolbarGridArrangement.MoveToNewRow(items, items.Single(i => i.Name == "Filters"), newRow: 1);
+        ToolbarGridArrangement.MoveToNewRow(items, items.Single(i => i.Name == ToolbarNames.Filters), newRow: 1);
 
         Positions(items).Should().Equal("Standard@0.0", "Scripts@0.1", "Filters@1.0", "Custom 01@2.0");
     }
@@ -151,7 +153,7 @@ public class ToolbarGridArrangementTests
     {
         List<ToolbarLayoutItem> items = ThreeOnOneRow();
 
-        ToolbarGridArrangement.MoveToNewRow(items, items.Single(i => i.Name == "Scripts"), newRow: 0);
+        ToolbarGridArrangement.MoveToNewRow(items, items.Single(i => i.Name == ToolbarNames.Scripts), newRow: 0);
 
         Positions(items).Should().Equal("Scripts@0.0", "Standard@1.0", "Filters@1.1");
     }
@@ -163,13 +165,13 @@ public class ToolbarGridArrangementTests
         // toolbar started on - the case an off-by-one here would get wrong.
         List<ToolbarLayoutItem> items =
         [
-            Item("Standard", 0, 0, builtIn: true),
-            Item("Filters", 1, 0, builtIn: true),
-            Item("Scripts", 1, 1, builtIn: true),
-            Item("Custom 01", 1, 2)
+            Item(ToolbarNames.Standard, 0, 0, builtIn: true),
+            Item(ToolbarNames.Filters, 1, 0, builtIn: true),
+            Item(ToolbarNames.Scripts, 1, 1, builtIn: true),
+            Item(Custom01, 1, 2)
         ];
 
-        ToolbarGridArrangement.MoveToNewRow(items, items.Single(i => i.Name == "Scripts"), newRow: 1);
+        ToolbarGridArrangement.MoveToNewRow(items, items.Single(i => i.Name == ToolbarNames.Scripts), newRow: 1);
 
         Positions(items).Should().Equal("Standard@0.0", "Scripts@1.0", "Filters@2.0", "Custom 01@2.1");
     }
@@ -177,9 +179,9 @@ public class ToolbarGridArrangementTests
     [Test]
     public void MoveToNewRow_should_leave_a_lone_toolbar_where_it_is()
     {
-        List<ToolbarLayoutItem> items = [Item("Standard", 0, 0, builtIn: true), Item("Custom 01", 1, 0)];
+        List<ToolbarLayoutItem> items = [Item(ToolbarNames.Standard, 0, 0, builtIn: true), Item(Custom01, 1, 0)];
 
-        ToolbarGridArrangement.MoveToNewRow(items, items.Single(i => i.Name == "Custom 01"), newRow: 1);
+        ToolbarGridArrangement.MoveToNewRow(items, items.Single(i => i.Name == Custom01), newRow: 1);
 
         Positions(items).Should().Equal("Standard@0.0", "Custom 01@1.0");
     }
@@ -187,7 +189,7 @@ public class ToolbarGridArrangementTests
     [Test]
     public void Compact_should_renumber_rows_so_none_is_empty()
     {
-        List<ToolbarLayoutItem> items = [Item("Standard", 0, 0, builtIn: true), Item("Filters", 4, 0, builtIn: true), Item("Scripts", 9, 0, builtIn: true)];
+        List<ToolbarLayoutItem> items = [Item(ToolbarNames.Standard, 0, 0, builtIn: true), Item(ToolbarNames.Filters, 4, 0, builtIn: true), Item(ToolbarNames.Scripts, 9, 0, builtIn: true)];
 
         ToolbarGridArrangement.Compact(items);
 
@@ -197,7 +199,7 @@ public class ToolbarGridArrangementTests
     [Test]
     public void Compact_should_renumber_positions_within_a_row_without_reordering_them()
     {
-        List<ToolbarLayoutItem> items = [Item("Standard", 2, 7, builtIn: true), Item("Filters", 2, 3, builtIn: true), Item("Scripts", 2, 90, builtIn: true)];
+        List<ToolbarLayoutItem> items = [Item(ToolbarNames.Standard, 2, 7, builtIn: true), Item(ToolbarNames.Filters, 2, 3, builtIn: true), Item(ToolbarNames.Scripts, 2, 90, builtIn: true)];
 
         ToolbarGridArrangement.Compact(items);
 

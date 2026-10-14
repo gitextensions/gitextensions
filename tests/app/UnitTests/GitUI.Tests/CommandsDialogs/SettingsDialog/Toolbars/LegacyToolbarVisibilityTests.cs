@@ -6,6 +6,16 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Toolbars;
 // group. An upgrade must carry the user's choices over into the layout rather than drop them.
 public class LegacyToolbarVisibilityTests
 {
+    private const string LevelUp = "toolStripButtonLevelUp";
+    private const string Commit = "toolStripButtonCommit";
+    private const string Pull = "toolStripButtonPull";
+    private const string Push = "toolStripButtonPush";
+    private const string FileExplorer = "toolStripFileExplorer";
+    private const string UserShell = "userShell";
+    private const string BranchFilterGroup = "ToolBar_group:Branch filter";
+    private const string BranchFilter = "tscboBranchFilter";
+    private const string FetchShortcut = "pull_shortcut_fetchToolStripMenuItem";
+
     private const string Prefix = LegacyToolbarVisibility.SettingPrefix;
 
     private static LegacyToolbarItem Button(string name, string? group = null) => new(name, group, IsSeparator: false);
@@ -32,14 +42,14 @@ public class LegacyToolbarVisibilityTests
 
     private static readonly LegacyToolbarItem[] _standard =
     [
-        Button("toolStripButtonLevelUp"),
+        Button(LevelUp),
         Separator("sep1"),
-        Button("toolStripButtonCommit"),
-        Button("toolStripButtonPull"),
-        Button("toolStripButtonPush"),
+        Button(Commit),
+        Button(Pull),
+        Button(Push),
         Separator("sep2"),
-        Button("toolStripFileExplorer"),
-        Button("userShell"),
+        Button(FileExplorer),
+        Button(UserShell),
     ];
 
     [Test]
@@ -51,14 +61,14 @@ public class LegacyToolbarVisibilityTests
     [Test]
     public void Apply_should_leave_out_a_button_the_user_hid()
     {
-        Apply(_standard, Settings(("toolStripButtonCommit", false)))
-            .Should().Equal("toolStripButtonLevelUp", "sep1", "toolStripButtonPull", "toolStripButtonPush", "sep2", "toolStripFileExplorer", "userShell");
+        Apply(_standard, Settings((Commit, false)))
+            .Should().Equal(LevelUp, "sep1", Pull, Push, "sep2", FileExplorer, UserShell);
     }
 
     [Test]
     public void Apply_should_keep_a_button_explicitly_shown()
     {
-        Apply(_standard, Settings(("toolStripButtonCommit", true))).Should().Equal(_standard.Select(i => i.Name));
+        Apply(_standard, Settings((Commit, true))).Should().Equal(_standard.Select(i => i.Name));
     }
 
     [Test]
@@ -67,14 +77,14 @@ public class LegacyToolbarVisibilityTests
         LegacyToolbarItem[] filters =
         [
             Button("tssbtnShowBranches"),
-            Button("toolStripLabel1", "ToolBar_group:Branch filter"),
-            Button("tscboBranchFilter", "ToolBar_group:Branch filter"),
-            Button("tsddbtnBranchFilter", "ToolBar_group:Branch filter"),
+            Button("toolStripLabel1", BranchFilterGroup),
+            Button(BranchFilter, BranchFilterGroup),
+            Button("tsddbtnBranchFilter", BranchFilterGroup),
             Separator("sep"),
             Button("tstxtRevisionFilter", "ToolBar_group:Text filter"),
         ];
 
-        Apply(filters, Settings(("ToolBar_group:Branch filter", false)))
+        Apply(filters, Settings((BranchFilterGroup, false)))
             .Should().Equal("tssbtnShowBranches", "sep", "tstxtRevisionFilter");
     }
 
@@ -82,47 +92,47 @@ public class LegacyToolbarVisibilityTests
     public void Apply_should_read_a_grouped_item_by_its_group_not_its_name()
     {
         // The old code never stored a grouped item under its own name.
-        LegacyToolbarItem[] filters = [Button("tscboBranchFilter", "ToolBar_group:Branch filter"), Button("other")];
+        LegacyToolbarItem[] filters = [Button(BranchFilter, BranchFilterGroup), Button("other")];
 
-        Apply(filters, Settings(("tscboBranchFilter", false))).Should().Equal("tscboBranchFilter", "other");
+        Apply(filters, Settings((BranchFilter, false))).Should().Equal(BranchFilter, "other");
     }
 
     [Test]
     public void Apply_should_place_the_shortcuts_the_user_showed_before_the_pull_button_in_their_old_order()
     {
-        Apply(_standard, Settings(("pull_shortcut_pullToolStripMenuItem1", true), ("pull_shortcut_fetchToolStripMenuItem", true)))
+        Apply(_standard, Settings(("pull_shortcut_pullToolStripMenuItem1", true), (FetchShortcut, true)))
             .Should().Equal(
-                "toolStripButtonLevelUp", "sep1", "toolStripButtonCommit",
+                LevelUp, "sep1", Commit,
                 "+fetchToolStripMenuItem", "+pullToolStripMenuItem1",
-                "toolStripButtonPull", "toolStripButtonPush", "sep2", "toolStripFileExplorer", "userShell");
+                Pull, Push, "sep2", FileExplorer, UserShell);
     }
 
     [Test]
     public void Apply_should_not_place_a_shortcut_that_stayed_hidden()
     {
         // Hidden was their default, so a false setting was never written; treat one like absence.
-        Apply(_standard, Settings(("pull_shortcut_fetchToolStripMenuItem", false))).Should().Equal(_standard.Select(i => i.Name));
+        Apply(_standard, Settings((FetchShortcut, false))).Should().Equal(_standard.Select(i => i.Name));
     }
 
     [Test]
     public void Apply_should_place_the_shortcuts_even_when_the_pull_button_itself_was_hidden()
     {
-        Apply(_standard, Settings(("toolStripButtonPull", false), ("pull_shortcut_mergeToolStripMenuItem", true)))
+        Apply(_standard, Settings((Pull, false), ("pull_shortcut_mergeToolStripMenuItem", true)))
             .Should().Equal(
-                "toolStripButtonLevelUp", "sep1", "toolStripButtonCommit",
+                LevelUp, "sep1", Commit,
                 "+mergeToolStripMenuItem",
-                "toolStripButtonPush", "sep2", "toolStripFileExplorer", "userShell");
+                Push, "sep2", FileExplorer, UserShell);
     }
 
     [Test]
     public void Apply_should_drop_separators_left_with_nothing_to_separate()
     {
         Func<string, bool?> settings = Settings(
-            ("toolStripButtonLevelUp", false),
-            ("toolStripFileExplorer", false),
-            ("userShell", false));
+            (LevelUp, false),
+            (FileExplorer, false),
+            (UserShell, false));
 
-        Apply(_standard, settings).Should().Equal("toolStripButtonCommit", "toolStripButtonPull", "toolStripButtonPush");
+        Apply(_standard, settings).Should().Equal(Commit, Pull, Push);
     }
 
     [Test]
@@ -148,19 +158,19 @@ public class LegacyToolbarVisibilityTests
         // A present setting may change nothing on a toolbar; the migration must then leave no
         // layout behind, or a default install would stop following the designer's toolbars.
         Changes(_standard, Settings()).Should().BeFalse();
-        Changes(_standard, Settings(("toolStripButtonCommit", true))).Should().BeFalse();
+        Changes(_standard, Settings((Commit, true))).Should().BeFalse();
         Changes(_standard, Settings(("ToolBar_group:Text search", false))).Should().BeFalse();
-        Changes(_standard, Settings(("pull_shortcut_fetchToolStripMenuItem", false))).Should().BeFalse();
+        Changes(_standard, Settings((FetchShortcut, false))).Should().BeFalse();
 
-        Changes(_standard, Settings(("toolStripButtonCommit", false))).Should().BeTrue();
-        Changes(_standard, Settings(("pull_shortcut_fetchToolStripMenuItem", true))).Should().BeTrue();
+        Changes(_standard, Settings((Commit, false))).Should().BeTrue();
+        Changes(_standard, Settings((FetchShortcut, true))).Should().BeTrue();
     }
 
     [Test]
     public void HasAny_should_tell_whether_the_user_changed_anything_the_old_way()
     {
         LegacyToolbarVisibility.HasAny(Settings()).Should().BeFalse();
-        LegacyToolbarVisibility.HasAny(Settings(("userShell", false))).Should().BeTrue();
+        LegacyToolbarVisibility.HasAny(Settings((UserShell, false))).Should().BeTrue();
         LegacyToolbarVisibility.HasAny(Settings(("pull_shortcut_fetchAllToolStripMenuItem", true))).Should().BeTrue();
         LegacyToolbarVisibility.HasAny(Settings(("ToolBar_group:Text search", false))).Should().BeTrue();
     }
@@ -174,7 +184,7 @@ public class LegacyToolbarVisibilityTests
 
         removed.Should().BeEquivalentTo(LegacyToolbarVisibility.SettingNames);
         removed.Should().HaveCount(18)
-            .And.Contain(Prefix + "toolStripButtonCommit")
+            .And.Contain(Prefix + Commit)
             .And.Contain(Prefix + "pull_shortcut_rebaseToolStripMenuItem1")
             .And.Contain(Prefix + "ToolBar_group:Text filter")
             .And.OnlyContain(name => name.StartsWith(Prefix));

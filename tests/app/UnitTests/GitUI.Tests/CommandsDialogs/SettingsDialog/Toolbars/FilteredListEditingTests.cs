@@ -6,6 +6,9 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Toolbars;
 // them. The move must land in the whole list, and the hidden items must not notice.
 public class FilteredListEditingTests
 {
+    private const string Hidden1 = "hidden1";
+    private const string Hidden2 = "hidden2";
+
     private sealed class Row(string name)
     {
         public string Name { get; } = name;
@@ -33,23 +36,23 @@ public class FilteredListEditingTests
     [Test]
     public void Move_up_should_land_just_before_the_visible_neighbour()
     {
-        List<Row> items = Rows("a", "hidden1", "b", "hidden2", "c");
+        List<Row> items = Rows("a", Hidden1, "b", Hidden2, "c");
         List<Row> visible = Visible(items, "a", "b", "c");
 
         FilteredListEditing.Move(items, visible, fromIndex: 2, toIndex: 1);
 
-        Names(items).Should().Equal("a", "hidden1", "c", "b", "hidden2");
+        Names(items).Should().Equal("a", Hidden1, "c", "b", Hidden2);
     }
 
     [Test]
     public void Move_down_should_land_just_after_the_visible_neighbour()
     {
-        List<Row> items = Rows("a", "hidden1", "b", "hidden2", "c");
+        List<Row> items = Rows("a", Hidden1, "b", Hidden2, "c");
         List<Row> visible = Visible(items, "a", "b", "c");
 
         FilteredListEditing.Move(items, visible, fromIndex: 0, toIndex: 1);
 
-        Names(items).Should().Equal("hidden1", "b", "a", "hidden2", "c");
+        Names(items).Should().Equal(Hidden1, "b", "a", Hidden2, "c");
     }
 
     [Test]

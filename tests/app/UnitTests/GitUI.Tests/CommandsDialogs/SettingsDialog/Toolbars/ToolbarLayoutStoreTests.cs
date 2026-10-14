@@ -8,6 +8,9 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Toolbars;
 // tests drive it through AppSettings, the way the application does.
 public class ToolbarLayoutStoreTests
 {
+    private const string Custom01 = "Custom 01";
+    private const string Push = "toolStripButtonPush";
+
     private string _originalXml = string.Empty;
 
     [SetUp]
@@ -49,7 +52,7 @@ public class ToolbarLayoutStoreTests
         // A duplicate toolbar name makes the layout ambiguous, so the whole payload goes rather
         // than letting an arbitrary resolution reach the main window.
         ToolbarLayoutConfig config = new();
-        config.SetCustomToolbarMetadata("Custom 01", row: 1, orderInRow: 0, visible: true, iconSize: 24);
+        config.SetCustomToolbarMetadata(Custom01, row: 1, orderInRow: 0, visible: true, iconSize: 24);
         config.ToolbarsVisibility.Add(new ToolbarBuiltInMetadata { Name = "CUSTOM 01" });
         AppSettings.ToolbarLayoutXml = ToolbarXmlSerializer.Serialize(config);
 
@@ -60,30 +63,30 @@ public class ToolbarLayoutStoreTests
     public void Load_should_normalize_what_it_can_rather_than_discard_it()
     {
         ToolbarLayoutConfig config = new();
-        config.SetCustomToolbarMetadata("Custom 01", row: 1, orderInRow: 0, visible: true, iconSize: 24);
+        config.SetCustomToolbarMetadata(Custom01, row: 1, orderInRow: 0, visible: true, iconSize: 24);
         config.CustomToolbars[0].IconSize = 30;
-        config.Items.Add(new ToolbarItemConfig { ItemName = "toolStripButtonPush", ToolbarName = "Custom 01" });
-        config.Items.Add(new ToolbarItemConfig { ItemName = "_LABEL_broken", ToolbarName = "Custom 01" });
+        config.Items.Add(new ToolbarItemConfig { ItemName = Push, ToolbarName = Custom01 });
+        config.Items.Add(new ToolbarItemConfig { ItemName = "_LABEL_broken", ToolbarName = Custom01 });
         AppSettings.ToolbarLayoutXml = ToolbarXmlSerializer.Serialize(config);
 
         ToolbarLayoutConfig loaded = ToolbarLayoutStore.Load();
 
-        loaded.CustomToolbars.Should().ContainSingle(c => c.Name == "Custom 01" && c.IconSize == 28);
-        loaded.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush");
+        loaded.CustomToolbars.Should().ContainSingle(c => c.Name == Custom01 && c.IconSize == 28);
+        loaded.Items.Should().ContainSingle(i => i.ItemName == Push);
     }
 
     [Test]
     public void Save_then_Load_should_round_trip_a_layout()
     {
         ToolbarLayoutConfig config = new();
-        config.SetCustomToolbarMetadata("Custom 01", row: 2, orderInRow: 1, visible: true, iconSize: 32, index: 4);
-        config.Items.Add(new ToolbarItemConfig { ItemName = "toolStripButtonPush", ToolbarName = "Custom 01", Order = 0, ShowText = true });
+        config.SetCustomToolbarMetadata(Custom01, row: 2, orderInRow: 1, visible: true, iconSize: 32, index: 4);
+        config.Items.Add(new ToolbarItemConfig { ItemName = Push, ToolbarName = Custom01, Order = 0, ShowText = true });
 
         ToolbarLayoutStore.Save(config);
         ToolbarLayoutConfig loaded = ToolbarLayoutStore.Load();
 
-        loaded.CustomToolbars.Should().ContainSingle(c => c.Name == "Custom 01" && c.Index == 4 && c.Row == 2 && c.OrderInRow == 1 && c.IconSize == 32);
-        loaded.ToolbarsVisibility.Should().ContainSingle(t => t.Name == "Custom 01" && t.Visible);
-        loaded.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush" && i.ShowText);
+        loaded.CustomToolbars.Should().ContainSingle(c => c.Name == Custom01 && c.Index == 4 && c.Row == 2 && c.OrderInRow == 1 && c.IconSize == 32);
+        loaded.ToolbarsVisibility.Should().ContainSingle(t => t.Name == Custom01 && t.Visible);
+        loaded.Items.Should().ContainSingle(i => i.ItemName == Push && i.ShowText);
     }
 }

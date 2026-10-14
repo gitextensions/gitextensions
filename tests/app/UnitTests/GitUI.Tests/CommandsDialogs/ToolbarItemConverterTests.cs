@@ -7,17 +7,24 @@ namespace GitUITests.CommandsDialogs;
 // worth pinning down.
 public class ToolbarItemConverterTests
 {
+    private const string CommitText = "Commit";
+    private const string RenamedCommitText = "Commit (2)";
+    private const string CommitToolTip = "Commit changes";
+    private const string CommitButton = "toolStripButtonCommit";
+    private const string CommitMenuItem = "commitToolStripMenuItem";
+    private const string GotoCommitMenuItem = "gotoCommitToolStripMenuItem";
+
     [Test]
     public void Convert_should_turn_a_leaf_menu_item_into_a_button()
     {
-        using ToolStripMenuItem menuItem = new("&Commit") { Name = "commitToolStripMenuItem", ToolTipText = "Commit changes" };
+        using ToolStripMenuItem menuItem = new("&Commit") { Name = CommitMenuItem, ToolTipText = CommitToolTip };
 
         using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
 
         converted.Should().BeOfType<ToolStripButton>();
         converted.Name.Should().Be("btn_commitToolStripMenuItem");
         converted.Text.Should().Be("&Commit");
-        converted.ToolTipText.Should().Be("Commit changes");
+        converted.ToolTipText.Should().Be(CommitToolTip);
         converted.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.Image);
         converted.Tag.Should().BeSameAs(menuItem);
     }
@@ -26,17 +33,17 @@ public class ToolbarItemConverterTests
     public void Convert_should_fall_back_to_the_menu_text_as_tooltip()
     {
         // The ampersand is a mnemonic marker, not part of the tooltip.
-        using ToolStripMenuItem menuItem = new("&Commit") { Name = "commitToolStripMenuItem" };
+        using ToolStripMenuItem menuItem = new("&Commit") { Name = CommitMenuItem };
 
         using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
 
-        converted.ToolTipText.Should().Be("Commit");
+        converted.ToolTipText.Should().Be(CommitText);
     }
 
     [Test]
     public void Convert_should_forward_a_click_to_the_menu_item()
     {
-        using ToolStripMenuItem menuItem = new("Commit") { Name = "commitToolStripMenuItem" };
+        using ToolStripMenuItem menuItem = new(CommitText) { Name = CommitMenuItem };
         int clicks = 0;
         menuItem.Click += (s, e) => clicks++;
 
@@ -117,14 +124,14 @@ public class ToolbarItemConverterTests
     public void Convert_should_turn_a_menu_item_with_children_into_a_split_button()
     {
         using ToolStripMenuItem menuItem = new("Navigate") { Name = "navigateToolStripMenuItem" };
-        menuItem.DropDownItems.Add(new ToolStripMenuItem("Go to commit") { Name = "gotoCommitToolStripMenuItem" });
+        menuItem.DropDownItems.Add(new ToolStripMenuItem("Go to commit") { Name = GotoCommitMenuItem });
         menuItem.DropDownItems.Add(new ToolStripSeparator());
 
         using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.ImageAndText);
 
         converted.Should().BeOfType<ToolStripSplitButton>();
         ToolStripSplitButton splitButton = (ToolStripSplitButton)converted;
-        splitButton.DropDownItems.Cast<ToolStripItem>().Select(i => i.Name).Should().Contain("gotoCommitToolStripMenuItem");
+        splitButton.DropDownItems.Cast<ToolStripItem>().Select(i => i.Name).Should().Contain(GotoCommitMenuItem);
         splitButton.DropDownItems.OfType<ToolStripSeparator>().Should().ContainSingle();
     }
 
@@ -132,7 +139,7 @@ public class ToolbarItemConverterTests
     public void Convert_should_forward_a_dropdown_item_click_to_its_source()
     {
         using ToolStripMenuItem menuItem = new("Navigate") { Name = "navigateToolStripMenuItem" };
-        using ToolStripMenuItem child = new("Go to commit") { Name = "gotoCommitToolStripMenuItem" };
+        using ToolStripMenuItem child = new("Go to commit") { Name = GotoCommitMenuItem };
         menuItem.DropDownItems.Add(child);
         int clicks = 0;
         child.Click += (s, e) => clicks++;
@@ -140,7 +147,7 @@ public class ToolbarItemConverterTests
         using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
         ((ToolStripSplitButton)converted).DropDownItems
             .Cast<ToolStripItem>()
-            .Single(i => i.Name == "gotoCommitToolStripMenuItem")
+            .Single(i => i.Name == GotoCommitMenuItem)
             .PerformClick();
 
         clicks.Should().Be(1);
@@ -149,7 +156,7 @@ public class ToolbarItemConverterTests
     [Test]
     public void Convert_should_store_the_button_under_its_own_name()
     {
-        using ToolStripMenuItem menuItem = new("Commit") { Name = "commitToolStripMenuItem" };
+        using ToolStripMenuItem menuItem = new(CommitText) { Name = CommitMenuItem };
         Dictionary<string, ToolStripItem> store = [];
 
         using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image, store);
@@ -161,19 +168,19 @@ public class ToolbarItemConverterTests
     [Test]
     public void CloneItem_should_copy_a_button_and_point_back_at_it()
     {
-        using ToolStripButton original = new("Commit") { Name = "toolStripButtonCommit", ToolTipText = "Commit changes" };
+        using ToolStripButton original = new(CommitText) { Name = CommitButton, ToolTipText = CommitToolTip };
 
         using ToolStripItem clone = ToolbarItemConverter.CloneItem(original);
 
         clone.Name.Should().Be("clone_toolStripButtonCommit");
-        clone.ToolTipText.Should().Be("Commit changes");
+        clone.ToolTipText.Should().Be(CommitToolTip);
         clone.Tag.Should().BeSameAs(original);
     }
 
     [Test]
     public void CloneItem_should_forward_a_click_to_the_original()
     {
-        using ToolStripButton original = new("Commit") { Name = "toolStripButtonCommit" };
+        using ToolStripButton original = new(CommitText) { Name = CommitButton };
         int clicks = 0;
         original.Click += (s, e) => clicks++;
 
@@ -192,9 +199,9 @@ public class ToolbarItemConverterTests
         // Each toolbar decides on its own whether its copy of an action shows a label. Built-in
         // buttons are mostly icon-only, which is exactly when a clone asking for its label must
         // not copy the original's style.
-        using ToolStripButton original = new("Commit")
+        using ToolStripButton original = new(CommitText)
         {
-            Name = "toolStripButtonCommit",
+            Name = CommitButton,
             DisplayStyle = originalStyle
         };
 
@@ -223,19 +230,19 @@ public class ToolbarItemConverterTests
     {
         // The original's text changes all the time (a count, a branch name); following it used to
         // put the original's icon-only style back on the clone each time.
-        using ToolStripButton original = new("Commit") { Name = "toolStripButtonCommit", DisplayStyle = ToolStripItemDisplayStyle.Image };
+        using ToolStripButton original = new(CommitText) { Name = CommitButton, DisplayStyle = ToolStripItemDisplayStyle.Image };
         using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText: true);
 
-        original.Text = "Commit (2)";
+        original.Text = RenamedCommitText;
 
-        clone.Text.Should().Be("Commit (2)");
+        clone.Text.Should().Be(RenamedCommitText);
         clone.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
     }
 
     [Test]
     public void CloneItem_should_keep_its_own_style_when_the_original_changes_its()
     {
-        using ToolStripButton original = new("Commit") { Name = "toolStripButtonCommit", DisplayStyle = ToolStripItemDisplayStyle.Image };
+        using ToolStripButton original = new(CommitText) { Name = CommitButton, DisplayStyle = ToolStripItemDisplayStyle.Image };
         using ToolStripItem iconOnly = ToolbarItemConverter.CloneItem(original, wantsText: false);
         using ToolStripItem labelled = ToolbarItemConverter.CloneItem(original, wantsText: true);
 
@@ -249,12 +256,12 @@ public class ToolbarItemConverterTests
     [Test]
     public void CloneItem_should_follow_the_original_when_it_changes()
     {
-        using ToolStripButton original = new("Commit") { Name = "toolStripButtonCommit" };
+        using ToolStripButton original = new(CommitText) { Name = CommitButton };
         using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText: true);
 
-        original.Text = "Commit (2)";
+        original.Text = RenamedCommitText;
 
-        clone.Text.Should().Be("Commit (2)");
+        clone.Text.Should().Be(RenamedCommitText);
     }
 
     [Test]
@@ -285,13 +292,13 @@ public class ToolbarItemConverterTests
     [Test]
     public void CloneItem_should_stop_following_the_original_once_disposed()
     {
-        using ToolStripButton original = new("Commit") { Name = "toolStripButtonCommit" };
+        using ToolStripButton original = new(CommitText) { Name = CommitButton };
         ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText: true);
 
         clone.Dispose();
-        original.Text = "Commit (2)";
+        original.Text = RenamedCommitText;
 
-        clone.Text.Should().Be("Commit");
+        clone.Text.Should().Be(CommitText);
     }
 
     [Test]
@@ -303,9 +310,8 @@ public class ToolbarItemConverterTests
 
         using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText: true);
 
-        clone.Should().BeAssignableTo<IPushLabelItem>();
         clone.Should().NotBeOfType<ToolStripPushButton>();
-        ((IPushLabelItem)clone).ShowLabel.Should().BeTrue();
+        clone.Should().BeAssignableTo<IPushLabelItem>().Which.ShowLabel.Should().BeTrue();
         original.ShowLabel.Should().BeFalse();
     }
 
@@ -313,7 +319,7 @@ public class ToolbarItemConverterTests
     public void DisposeDerivedItems_should_dispose_the_converted_buttons_and_clones_not_kept()
     {
         // Merely taken off its toolbar, either would keep following its source for good.
-        using ToolStripMenuItem menuItem = new("Commit") { Name = "commitToolStripMenuItem" };
+        using ToolStripMenuItem menuItem = new(CommitText) { Name = CommitMenuItem };
         using ToolStripButton original = new("Push") { Name = "toolStripButtonPush" };
         ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
         ToolStripItem clone = ToolbarItemConverter.CloneItem(original);
@@ -333,7 +339,7 @@ public class ToolbarItemConverterTests
     {
         // A kept item may be placed again, and an item derived from nothing belongs to the main
         // window, which may place it again too.
-        using ToolStripMenuItem menuItem = new("Commit") { Name = "commitToolStripMenuItem" };
+        using ToolStripMenuItem menuItem = new(CommitText) { Name = CommitMenuItem };
         using ToolStripItem kept = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
         using ToolStripButton designerButton = new("Push") { Name = "toolStripButtonPush" };
         using ToolStripButton taggedButton = new("Branches") { Tag = "ToolBar_group:Branch filter" };

@@ -4,15 +4,19 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Toolbars;
 
 public class ToolbarLayoutConfigTests
 {
+    private const string Custom01 = "Custom 01";
+    private const string Custom02 = "Custom 02";
+    private const string Review = "Review";
+
     [Test]
     public void SetCustomToolbarMetadata_should_write_both_lists()
     {
         ToolbarLayoutConfig config = new();
 
-        config.SetCustomToolbarMetadata("Custom 01", row: 1, orderInRow: 0, visible: true, iconSize: 24, index: 3);
+        config.SetCustomToolbarMetadata(Custom01, row: 1, orderInRow: 0, visible: true, iconSize: 24, index: 3);
 
-        config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == "Custom 01" && t.Row == 1 && t.IconSize == 24);
-        config.CustomToolbars.Should().ContainSingle(c => c.Name == "Custom 01" && c.Index == 3 && c.IconSize == 24);
+        config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == Custom01 && t.Row == 1 && t.IconSize == 24);
+        config.CustomToolbars.Should().ContainSingle(c => c.Name == Custom01 && c.Index == 3 && c.IconSize == 24);
     }
 
     [Test]
@@ -24,17 +28,17 @@ public class ToolbarLayoutConfigTests
         {
             Items =
             {
-                new ToolbarItemConfig { ItemName = "toolStripButtonPush", ToolbarName = "Custom 01" },
-                new ToolbarItemConfig { ItemName = "toolStripButtonCommit", ToolbarName = "Standard" }
+                new ToolbarItemConfig { ItemName = "toolStripButtonPush", ToolbarName = Custom01 },
+                new ToolbarItemConfig { ItemName = "toolStripButtonCommit", ToolbarName = ToolbarNames.Standard }
             }
         };
-        config.SetCustomToolbarMetadata("Custom 01", row: 1, orderInRow: 0, visible: true, iconSize: 16);
+        config.SetCustomToolbarMetadata(Custom01, row: 1, orderInRow: 0, visible: true, iconSize: 16);
 
-        config.RemoveCustomToolbarMetadata("Custom 01");
+        config.RemoveCustomToolbarMetadata(Custom01);
 
         config.ToolbarsVisibility.Should().BeEmpty();
         config.CustomToolbars.Should().BeEmpty();
-        config.Items.Should().ContainSingle(i => i.ToolbarName == "Standard");
+        config.Items.Should().ContainSingle(i => i.ToolbarName == ToolbarNames.Standard);
     }
 
     [TestCase(null)]
@@ -56,7 +60,7 @@ public class ToolbarLayoutConfigTests
     {
         ToolbarLayoutConfig config = new();
 
-        ((Action)(() => config.SetCustomToolbarMetadata("Custom 01", row, orderInRow, visible: true, iconSize: 16)))
+        ((Action)(() => config.SetCustomToolbarMetadata(Custom01, row, orderInRow, visible: true, iconSize: 16)))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
@@ -68,7 +72,7 @@ public class ToolbarLayoutConfigTests
     {
         ToolbarLayoutConfig config = new();
 
-        ((Action)(() => config.SetCustomToolbarMetadata("Custom 01", row: 0, orderInRow: 0, visible: true, iconSize: 16, index: index)))
+        ((Action)(() => config.SetCustomToolbarMetadata(Custom01, row: 0, orderInRow: 0, visible: true, iconSize: 16, index: index)))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
@@ -78,9 +82,9 @@ public class ToolbarLayoutConfigTests
         // Counting the toolbars instead would hand out an index another one already holds as soon
         // as the indices are no longer an unbroken run - which one add/remove cycle is enough to do.
         ToolbarLayoutConfig config = new();
-        config.SetCustomToolbarMetadata("Custom 01", row: 0, orderInRow: 0, visible: true, iconSize: 16, index: 3);
-        config.SetCustomToolbarMetadata("Custom 02", row: 0, orderInRow: 1, visible: true, iconSize: 16, index: 7);
-        config.RemoveCustomToolbarMetadata("Custom 01");
+        config.SetCustomToolbarMetadata(Custom01, row: 0, orderInRow: 0, visible: true, iconSize: 16, index: 3);
+        config.SetCustomToolbarMetadata(Custom02, row: 0, orderInRow: 1, visible: true, iconSize: 16, index: 7);
+        config.RemoveCustomToolbarMetadata(Custom01);
 
         config.SetCustomToolbarMetadata("Custom 03", row: 0, orderInRow: 2, visible: true, iconSize: 16);
 
@@ -93,7 +97,7 @@ public class ToolbarLayoutConfigTests
     {
         ToolbarLayoutConfig config = new();
 
-        config.SetCustomToolbarMetadata("Custom 01", row: 0, orderInRow: 0, visible: true, iconSize: 16);
+        config.SetCustomToolbarMetadata(Custom01, row: 0, orderInRow: 0, visible: true, iconSize: 16);
 
         config.CustomToolbars[0].Index.Should().Be(3);
     }
@@ -107,16 +111,16 @@ public class ToolbarLayoutConfigTests
         // in-between value, so it is normalized instead of rejected.
         ToolbarLayoutConfig config = new();
 
-        config.SetCustomToolbarMetadata("Custom 01", row: 0, orderInRow: 0, visible: true, iconSize: iconSize);
+        config.SetCustomToolbarMetadata(Custom01, row: 0, orderInRow: 0, visible: true, iconSize: iconSize);
 
         config.CustomToolbars[0].IconSize.Should().Be(expected);
     }
 
     private static readonly ToolbarState[] _builtIn =
     [
-        new("Standard", IsCustom: false, Visible: true, AllIconsShowText: false),
-        new("Filters", IsCustom: false, Visible: true, AllIconsShowText: false),
-        new("Scripts", IsCustom: false, Visible: true, AllIconsShowText: false)
+        new(ToolbarNames.Standard, IsCustom: false, Visible: true, AllIconsShowText: false),
+        new(ToolbarNames.Filters, IsCustom: false, Visible: true, AllIconsShowText: false),
+        new(ToolbarNames.Scripts, IsCustom: false, Visible: true, AllIconsShowText: false)
     ];
 
     [Test]
@@ -127,11 +131,11 @@ public class ToolbarLayoutConfigTests
         ToolbarLayoutConfig config = new();
 
         config.AddToolbarsMetadata(
-            [.. _builtIn, new("Review", IsCustom: true, Visible: true, AllIconsShowText: false)],
+            [.. _builtIn, new(Review, IsCustom: true, Visible: true, AllIconsShowText: false)],
             existing: null);
 
-        config.CustomToolbars.Should().ContainSingle().Which.Should().BeEquivalentTo(new { Name = "Review", Index = 3 });
-        config.ToolbarsVisibility.Select(t => t.Name).Should().Equal("Standard", "Filters", "Scripts", "Review");
+        config.CustomToolbars.Should().ContainSingle().Which.Should().BeEquivalentTo(new { Name = Review, Index = 3 });
+        config.ToolbarsVisibility.Select(t => t.Name).Should().Equal(ToolbarNames.Standard, ToolbarNames.Filters, ToolbarNames.Scripts, Review);
     }
 
     [Test]
@@ -143,7 +147,7 @@ public class ToolbarLayoutConfigTests
 
         config.CustomToolbars.Should().BeEmpty();
         config.ToolbarsVisibility.Select(t => (t.Name, t.Row, t.OrderInRow))
-            .Should().Equal(("Standard", 0, 0), ("Filters", 0, 1), ("Scripts", 0, 2));
+            .Should().Equal((ToolbarNames.Standard, 0, 0), (ToolbarNames.Filters, 0, 1), (ToolbarNames.Scripts, 0, 2));
     }
 
     [Test]
@@ -155,11 +159,11 @@ public class ToolbarLayoutConfigTests
             [
                 .. _builtIn,
                 new("MyTools", IsCustom: true, Visible: true, AllIconsShowText: false),
-                new("Custom 01", IsCustom: true, Visible: true, AllIconsShowText: false)
+                new(Custom01, IsCustom: true, Visible: true, AllIconsShowText: false)
             ],
             existing: null);
 
-        config.CustomToolbars.Select(c => (c.Name, c.Index)).Should().Equal(("MyTools", 3), ("Custom 01", 4));
+        config.CustomToolbars.Select(c => (c.Name, c.Index)).Should().Equal(("MyTools", 3), (Custom01, 4));
     }
 
     [Test]
@@ -167,24 +171,24 @@ public class ToolbarLayoutConfigTests
     {
         ToolbarLayoutConfig existing = new()
         {
-            ToolbarsVisibility = { new ToolbarBuiltInMetadata { Name = "Filters", Row = 1, OrderInRow = 0, IconSize = 32 } }
+            ToolbarsVisibility = { new ToolbarBuiltInMetadata { Name = ToolbarNames.Filters, Row = 1, OrderInRow = 0, IconSize = 32 } }
         };
-        existing.SetCustomToolbarMetadata("Review", row: 2, orderInRow: 1, visible: true, iconSize: 24);
+        existing.SetCustomToolbarMetadata(Review, row: 2, orderInRow: 1, visible: true, iconSize: 24);
         ToolbarLayoutConfig config = new();
 
         config.AddToolbarsMetadata(
-            [.. _builtIn, new("Review", IsCustom: true, Visible: false, AllIconsShowText: true)],
+            [.. _builtIn, new(Review, IsCustom: true, Visible: false, AllIconsShowText: true)],
             existing);
 
-        config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == "Filters")
+        config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == ToolbarNames.Filters)
             .Which.Should().BeEquivalentTo(new { Row = 1, OrderInRow = 0, IconSize = 32 });
         config.CustomToolbars.Should().ContainSingle()
-            .Which.Should().BeEquivalentTo(new { Name = "Review", Row = 2, OrderInRow = 1, IconSize = 24, Visible = false, AllIconsShowText = true });
+            .Which.Should().BeEquivalentTo(new { Name = Review, Row = 2, OrderInRow = 1, IconSize = 24, Visible = false, AllIconsShowText = true });
     }
 
-    [TestCase("Standard", 0)]
-    [TestCase("Filters", 1)]
-    [TestCase("Scripts", 2)]
+    [TestCase(ToolbarNames.Standard, 0)]
+    [TestCase(ToolbarNames.Filters, 1)]
+    [TestCase(ToolbarNames.Scripts, 2)]
     public void SetToolbarVisibility_should_remember_a_built_in_toolbar_the_layout_never_mentioned(string name, int defaultOrder)
     {
         // A default install has no entry at all; hiding a toolbar must still survive a restart,
@@ -203,10 +207,10 @@ public class ToolbarLayoutConfigTests
     {
         ToolbarLayoutConfig config = new()
         {
-            ToolbarsVisibility = { new ToolbarBuiltInMetadata { Name = "Filters", Row = 2, OrderInRow = 1, IconSize = 24 } }
+            ToolbarsVisibility = { new ToolbarBuiltInMetadata { Name = ToolbarNames.Filters, Row = 2, OrderInRow = 1, IconSize = 24 } }
         };
 
-        config.SetToolbarVisibility("Filters", visible: false);
+        config.SetToolbarVisibility(ToolbarNames.Filters, visible: false);
 
         config.ToolbarsVisibility.Should().ContainSingle()
             .Which.Should().BeEquivalentTo(new { Visible = false, Row = 2, OrderInRow = 1, IconSize = 24 });
@@ -216,12 +220,12 @@ public class ToolbarLayoutConfigTests
     public void SetToolbarVisibility_should_update_both_lists_of_a_custom_toolbar()
     {
         ToolbarLayoutConfig config = new();
-        config.SetCustomToolbarMetadata("Review", row: 1, orderInRow: 0, visible: true, iconSize: 16);
+        config.SetCustomToolbarMetadata(Review, row: 1, orderInRow: 0, visible: true, iconSize: 16);
 
-        config.SetToolbarVisibility("Review", visible: false);
+        config.SetToolbarVisibility(Review, visible: false);
 
-        config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == "Review" && !t.Visible);
-        config.CustomToolbars.Should().ContainSingle(c => c.Name == "Review" && !c.Visible);
+        config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == Review && !t.Visible);
+        config.CustomToolbars.Should().ContainSingle(c => c.Name == Review && !c.Visible);
     }
 
     [Test]
@@ -241,11 +245,11 @@ public class ToolbarLayoutConfigTests
     public void SetToolbarVisibility_should_show_a_hidden_toolbar_again()
     {
         ToolbarLayoutConfig config = new();
-        config.SetToolbarVisibility("Scripts", visible: false);
+        config.SetToolbarVisibility(ToolbarNames.Scripts, visible: false);
 
-        config.SetToolbarVisibility("Scripts", visible: true);
+        config.SetToolbarVisibility(ToolbarNames.Scripts, visible: true);
 
-        config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == "Scripts" && t.Visible);
+        config.ToolbarsVisibility.Should().ContainSingle(t => t.Name == ToolbarNames.Scripts && t.Visible);
     }
 
     [Test]
@@ -280,7 +284,7 @@ public class ToolbarLayoutConfigTests
     {
         // Startup reads the place of a custom toolbar from ToolbarsVisibility first, and the layout
         // window from CustomToolbars: the two must not disagree.
-        const string toolbarName = "Review";
+        const string toolbarName = Review;
         ToolbarLayoutConfig config = new();
         config.SetCustomToolbarMetadata(toolbarName, row: 1, orderInRow: 0, visible: true, iconSize: 16, index: 3);
 
@@ -319,32 +323,32 @@ public class ToolbarLayoutConfigTests
         {
             Items =
             {
-                new ToolbarItemConfig { ItemName = "toolStripButtonPush", ToolbarName = "Custom 01", Order = 0 },
-                new ToolbarItemConfig { ItemName = "toolStripButtonCommit", ToolbarName = "Standard", Order = 0 }
+                new ToolbarItemConfig { ItemName = "toolStripButtonPush", ToolbarName = Custom01, Order = 0 },
+                new ToolbarItemConfig { ItemName = "toolStripButtonCommit", ToolbarName = ToolbarNames.Standard, Order = 0 }
             }
         };
-        config.SetCustomToolbarMetadata("Custom 01", row: 2, orderInRow: 1, visible: false, iconSize: 24, index: 3);
+        config.SetCustomToolbarMetadata(Custom01, row: 2, orderInRow: 1, visible: false, iconSize: 24, index: 3);
 
-        config.RenameCustomToolbar("Custom 01", "Review");
+        config.RenameCustomToolbar(Custom01, Review);
 
         config.ToolbarsVisibility.Should().ContainSingle()
-            .Which.Should().BeEquivalentTo(new { Name = "Review", Row = 2, OrderInRow = 1, Visible = false, IconSize = 24 });
+            .Which.Should().BeEquivalentTo(new { Name = Review, Row = 2, OrderInRow = 1, Visible = false, IconSize = 24 });
         config.CustomToolbars.Should().ContainSingle()
-            .Which.Should().BeEquivalentTo(new { Name = "Review", Index = 3, Row = 2, OrderInRow = 1, Visible = false });
-        config.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush").Which.ToolbarName.Should().Be("Review");
-        config.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonCommit").Which.ToolbarName.Should().Be("Standard");
+            .Which.Should().BeEquivalentTo(new { Name = Review, Index = 3, Row = 2, OrderInRow = 1, Visible = false });
+        config.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush").Which.ToolbarName.Should().Be(Review);
+        config.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonCommit").Which.ToolbarName.Should().Be(ToolbarNames.Standard);
     }
 
     [Test]
     public void RenameCustomToolbar_should_leave_the_other_toolbars_alone()
     {
         ToolbarLayoutConfig config = new();
-        config.SetCustomToolbarMetadata("Custom 01", row: 1, orderInRow: 0, visible: true, iconSize: 16);
-        config.SetCustomToolbarMetadata("Custom 02", row: 2, orderInRow: 0, visible: true, iconSize: 16);
+        config.SetCustomToolbarMetadata(Custom01, row: 1, orderInRow: 0, visible: true, iconSize: 16);
+        config.SetCustomToolbarMetadata(Custom02, row: 2, orderInRow: 0, visible: true, iconSize: 16);
 
-        config.RenameCustomToolbar("Custom 01", "Review");
+        config.RenameCustomToolbar(Custom01, Review);
 
-        config.CustomToolbars.Select(c => c.Name).Should().Equal("Review", "Custom 02");
+        config.CustomToolbars.Select(c => c.Name).Should().Equal(Review, Custom02);
     }
 
     [Test]
@@ -353,29 +357,29 @@ public class ToolbarLayoutConfigTests
         ToolbarLayoutConfig config = new();
         config.SetCustomToolbarMetadata("review", row: 1, orderInRow: 0, visible: true, iconSize: 16);
 
-        config.RenameCustomToolbar("review", "Review");
+        config.RenameCustomToolbar("review", Review);
 
-        config.CustomToolbars.Should().ContainSingle(c => c.Name == "Review");
+        config.CustomToolbars.Should().ContainSingle(c => c.Name == Review);
     }
 
     [Test]
     public void RenameCustomToolbar_should_refuse_a_name_another_toolbar_holds()
     {
         ToolbarLayoutConfig config = new();
-        config.SetCustomToolbarMetadata("Custom 01", row: 1, orderInRow: 0, visible: true, iconSize: 16);
-        config.SetCustomToolbarMetadata("Custom 02", row: 2, orderInRow: 0, visible: true, iconSize: 16);
+        config.SetCustomToolbarMetadata(Custom01, row: 1, orderInRow: 0, visible: true, iconSize: 16);
+        config.SetCustomToolbarMetadata(Custom02, row: 2, orderInRow: 0, visible: true, iconSize: 16);
 
-        ((Action)(() => config.RenameCustomToolbar("Custom 01", "Custom 02"))).Should().Throw<ArgumentException>();
-        config.CustomToolbars.Select(c => c.Name).Should().Equal("Custom 01", "Custom 02");
+        ((Action)(() => config.RenameCustomToolbar(Custom01, Custom02))).Should().Throw<ArgumentException>();
+        config.CustomToolbars.Select(c => c.Name).Should().Equal(Custom01, Custom02);
     }
 
-    [TestCase("Standard", "Review")]
-    [TestCase("Custom 01", "Filters")]
-    [TestCase("Custom 01", "scripts")]
+    [TestCase(ToolbarNames.Standard, Review)]
+    [TestCase(Custom01, ToolbarNames.Filters)]
+    [TestCase(Custom01, "scripts")]
     public void RenameCustomToolbar_should_refuse_to_touch_a_built_in_name(string oldName, string newName)
     {
         ToolbarLayoutConfig config = new();
-        config.SetCustomToolbarMetadata("Custom 01", row: 1, orderInRow: 0, visible: true, iconSize: 16);
+        config.SetCustomToolbarMetadata(Custom01, row: 1, orderInRow: 0, visible: true, iconSize: 16);
 
         ((Action)(() => config.RenameCustomToolbar(oldName, newName))).Should().Throw<ArgumentException>();
     }
@@ -386,10 +390,10 @@ public class ToolbarLayoutConfigTests
     public void RenameCustomToolbar_should_reject_a_blank_name(string? name)
     {
         ToolbarLayoutConfig config = new();
-        config.SetCustomToolbarMetadata("Custom 01", row: 1, orderInRow: 0, visible: true, iconSize: 16);
+        config.SetCustomToolbarMetadata(Custom01, row: 1, orderInRow: 0, visible: true, iconSize: 16);
 
-        ((Action)(() => config.RenameCustomToolbar("Custom 01", name!))).Should().Throw<ArgumentException>();
-        ((Action)(() => config.RenameCustomToolbar(name!, "Review"))).Should().Throw<ArgumentException>();
+        ((Action)(() => config.RenameCustomToolbar(Custom01, name!))).Should().Throw<ArgumentException>();
+        ((Action)(() => config.RenameCustomToolbar(name!, Review))).Should().Throw<ArgumentException>();
     }
 
     [TestCase(null)]

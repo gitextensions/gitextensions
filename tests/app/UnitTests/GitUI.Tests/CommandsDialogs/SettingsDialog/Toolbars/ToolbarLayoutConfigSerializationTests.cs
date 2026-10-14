@@ -5,6 +5,8 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Toolbars;
 
 public class ToolbarLayoutConfigSerializationTests
 {
+    private const string Custom02 = "Custom 02";
+
     private static string SerializeSample()
         => ToolbarXmlSerializer.Serialize(new ToolbarLayoutConfig
         {
@@ -17,18 +19,18 @@ public class ToolbarLayoutConfigSerializationTests
     {
         ToolbarLayoutConfig original = new()
         {
-            Items = { new ToolbarItemConfig { ItemName = "toolStripButtonPush", ToolbarName = "Custom 02", Order = 1, ShowText = true } },
-            CustomToolbars = { new ToolbarCustomMetadata { Name = "Custom 02", Index = 4, Row = 2, OrderInRow = 1, IconSize = 32 } },
-            ToolbarsVisibility = { new ToolbarBuiltInMetadata { Name = "Custom 02", Row = 2, OrderInRow = 1, IconSize = 32 } }
+            Items = { new ToolbarItemConfig { ItemName = "toolStripButtonPush", ToolbarName = Custom02, Order = 1, ShowText = true } },
+            CustomToolbars = { new ToolbarCustomMetadata { Name = Custom02, Index = 4, Row = 2, OrderInRow = 1, IconSize = 32 } },
+            ToolbarsVisibility = { new ToolbarBuiltInMetadata { Name = Custom02, Row = 2, OrderInRow = 1, IconSize = 32 } }
         };
 
         string xml = ToolbarXmlSerializer.Serialize(original);
         ToolbarLayoutConfig? roundTripped = ToolbarXmlSerializer.Deserialize<ToolbarLayoutConfig>(xml);
 
         roundTripped.Should().NotBeNull();
-        roundTripped!.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush" && i.ToolbarName == "Custom 02" && i.Order == 1 && i.ShowText);
-        roundTripped.CustomToolbars.Should().ContainSingle(c => c.Name == "Custom 02" && c.Index == 4 && c.Row == 2 && c.OrderInRow == 1 && c.IconSize == 32);
-        roundTripped.ToolbarsVisibility.Should().ContainSingle(t => t.Name == "Custom 02" && t.Row == 2 && t.OrderInRow == 1 && t.IconSize == 32);
+        roundTripped!.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush" && i.ToolbarName == Custom02 && i.Order == 1 && i.ShowText);
+        roundTripped.CustomToolbars.Should().ContainSingle(c => c.Name == Custom02 && c.Index == 4 && c.Row == 2 && c.OrderInRow == 1 && c.IconSize == 32);
+        roundTripped.ToolbarsVisibility.Should().ContainSingle(t => t.Name == Custom02 && t.Row == 2 && t.OrderInRow == 1 && t.IconSize == 32);
     }
 
     [Test]

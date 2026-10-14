@@ -4,11 +4,15 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Toolbars;
 
 public class ToolbarLayoutValidatorTests
 {
+    private const string Custom01 = "Custom 01";
+    private const string Custom02 = "Custom 02";
+    private const string Push = "toolStripButtonPush";
+
     private static ToolbarLayoutConfig ValidConfig() => new()
     {
-        Items = { new ToolbarItemConfig { ItemName = "toolStripButtonPush", ToolbarName = "Custom 01", Order = 0 } },
-        CustomToolbars = { new ToolbarCustomMetadata { Name = "Custom 01", Index = 3, Row = 1, OrderInRow = 0, IconSize = 24 } },
-        ToolbarsVisibility = { new ToolbarBuiltInMetadata { Name = "Custom 01", Row = 1, OrderInRow = 0, IconSize = 24 } }
+        Items = { new ToolbarItemConfig { ItemName = Push, ToolbarName = Custom01, Order = 0 } },
+        CustomToolbars = { new ToolbarCustomMetadata { Name = Custom01, Index = 3, Row = 1, OrderInRow = 0, IconSize = 24 } },
+        ToolbarsVisibility = { new ToolbarBuiltInMetadata { Name = Custom01, Row = 1, OrderInRow = 0, IconSize = 24 } }
     };
 
     [Test]
@@ -132,8 +136,8 @@ public class ToolbarLayoutValidatorTests
         // The index decides the order the custom toolbars are rebuilt in, so a tie leaves it
         // undecided which of the two comes first.
         ToolbarLayoutConfig config = ValidConfig();
-        config.CustomToolbars.Add(new ToolbarCustomMetadata { Name = "Custom 02", Index = 3 });
-        config.ToolbarsVisibility.Add(new ToolbarBuiltInMetadata { Name = "Custom 02" });
+        config.CustomToolbars.Add(new ToolbarCustomMetadata { Name = Custom02, Index = 3 });
+        config.ToolbarsVisibility.Add(new ToolbarBuiltInMetadata { Name = Custom02 });
 
         ToolbarLayoutValidator.TryNormalize(config).Should().BeFalse();
     }
@@ -142,8 +146,8 @@ public class ToolbarLayoutValidatorTests
     public void TryNormalize_should_accept_distinct_custom_indices()
     {
         ToolbarLayoutConfig config = ValidConfig();
-        config.CustomToolbars.Add(new ToolbarCustomMetadata { Name = "Custom 02", Index = 4 });
-        config.ToolbarsVisibility.Add(new ToolbarBuiltInMetadata { Name = "Custom 02" });
+        config.CustomToolbars.Add(new ToolbarCustomMetadata { Name = Custom02, Index = 4 });
+        config.ToolbarsVisibility.Add(new ToolbarBuiltInMetadata { Name = Custom02 });
 
         ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
     }
@@ -152,9 +156,9 @@ public class ToolbarLayoutValidatorTests
     public void TryNormalize_should_reject_a_custom_toolbar_shadowing_a_built_in_one()
     {
         ToolbarLayoutConfig config = ValidConfig();
-        config.CustomToolbars[0].Name = "Standard";
-        config.ToolbarsVisibility[0].Name = "Standard";
-        config.Items[0].ToolbarName = "Standard";
+        config.CustomToolbars[0].Name = ToolbarNames.Standard;
+        config.ToolbarsVisibility[0].Name = ToolbarNames.Standard;
+        config.Items[0].ToolbarName = ToolbarNames.Standard;
 
         ToolbarLayoutValidator.TryNormalize(config).Should().BeFalse();
     }
@@ -168,7 +172,7 @@ public class ToolbarLayoutValidatorTests
         config.Items.Add(new ToolbarItemConfig { ItemName = "toolStripButtonPull", ToolbarName = "Deleted toolbar" });
 
         ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
-        config.Items.Should().ContainSingle(i => i.ToolbarName == "Custom 01");
+        config.Items.Should().ContainSingle(i => i.ToolbarName == Custom01);
     }
 
     [Test]
@@ -178,7 +182,7 @@ public class ToolbarLayoutValidatorTests
         // before anything writes its visibility metadata. Rejecting that would wipe the layout.
         ToolbarLayoutConfig config = new()
         {
-            Items = { new ToolbarItemConfig { ItemName = "toolStripButtonCommit", ToolbarName = "Standard" } }
+            Items = { new ToolbarItemConfig { ItemName = "toolStripButtonCommit", ToolbarName = ToolbarNames.Standard } }
         };
 
         ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
@@ -190,7 +194,7 @@ public class ToolbarLayoutValidatorTests
         ToolbarLayoutConfig config = ValidConfig();
         for (int i = 0; i <= ToolbarLayoutValidator.MaxItems; i++)
         {
-            config.Items.Add(new ToolbarItemConfig { ItemName = $"item{i}", ToolbarName = "Custom 01" });
+            config.Items.Add(new ToolbarItemConfig { ItemName = $"item{i}", ToolbarName = Custom01 });
         }
 
         ToolbarLayoutValidator.TryNormalize(config).Should().BeFalse();
@@ -208,10 +212,10 @@ public class ToolbarLayoutValidatorTests
         // Such an item names nothing the loader could resolve, so it is unreachable rather than
         // ambiguous: dropping it keeps the rest of the user's layout.
         ToolbarLayoutConfig config = ValidConfig();
-        config.Items.Add(new ToolbarItemConfig { ItemName = itemName!, ToolbarName = "Custom 01" });
+        config.Items.Add(new ToolbarItemConfig { ItemName = itemName!, ToolbarName = Custom01 });
 
         ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
-        config.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush");
+        config.Items.Should().ContainSingle(i => i.ItemName == Push);
     }
 
     [Test]
@@ -222,11 +226,11 @@ public class ToolbarLayoutValidatorTests
         config.Items.Add(new ToolbarItemConfig
         {
             ItemName = $"{ToolbarItemNames.LabelPrefix}{Uri.EscapeDataString($"a{(char)1}b")}_0",
-            ToolbarName = "Custom 01"
+            ToolbarName = Custom01
         });
 
         ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
-        config.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush");
+        config.Items.Should().ContainSingle(i => i.ItemName == Push);
     }
 
     [Test]
@@ -237,11 +241,11 @@ public class ToolbarLayoutValidatorTests
         config.Items.Add(new ToolbarItemConfig
         {
             ItemName = $"{ToolbarItemNames.LabelPrefix}{new string('a', 2000)}_0",
-            ToolbarName = "Custom 01"
+            ToolbarName = Custom01
         });
 
         ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
-        config.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush");
+        config.Items.Should().ContainSingle(i => i.ItemName == Push);
     }
 
     [Test]
@@ -250,7 +254,7 @@ public class ToolbarLayoutValidatorTests
         // An action that no longer exists, or one contributed by a plugin that is not loaded right
         // now, is skipped by the loader and must not cost the user the item's toolbar.
         ToolbarLayoutConfig config = ValidConfig();
-        config.Items.Add(new ToolbarItemConfig { ItemName = "someRemovedToolStripMenuItem", ToolbarName = "Custom 01" });
+        config.Items.Add(new ToolbarItemConfig { ItemName = "someRemovedToolStripMenuItem", ToolbarName = Custom01 });
 
         ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
         config.Items.Should().HaveCount(2);
@@ -261,7 +265,7 @@ public class ToolbarLayoutValidatorTests
     {
         // Several real menu items are named that way; they are not placeholders.
         ToolbarLayoutConfig config = ValidConfig();
-        config.Items.Add(new ToolbarItemConfig { ItemName = "_viewPullRequestsToolStripMenuItem", ToolbarName = "Custom 01" });
+        config.Items.Add(new ToolbarItemConfig { ItemName = "_viewPullRequestsToolStripMenuItem", ToolbarName = Custom01 });
 
         ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
         config.Items.Should().HaveCount(2);
