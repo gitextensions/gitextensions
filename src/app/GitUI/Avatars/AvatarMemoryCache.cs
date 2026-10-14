@@ -106,14 +106,10 @@ public sealed class AvatarMemoryCache : IAvatarProvider, IAvatarCacheCleaner
     {
         lock (_cacheLock)
         {
-            foreach ((string email, int imageSize) key in _cache.Keys)
-            {
-                if (_cache.TryGetValue(key, out Image? cachedImage))
-                {
-                    cachedImage.Dispose();
-                }
-            }
-
+            // The cached images must not be disposed here: GetAvatarAsync hands out the cached
+            // instance itself, so a consumer may still be painting it - the picture box of an
+            // AvatarControl, the avatar column of the revision grid or the blame author margin.
+            // They do not keep their file open either, so nothing here has to be released eagerly.
             _cache.Clear();
         }
 

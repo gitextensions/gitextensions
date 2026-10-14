@@ -44,6 +44,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private readonly TranslationString _fileChangeLocallyAndRemotely = new("The file has been changed both locally ({0}) and remotely ({1}). Merge the changes.");
     private readonly TranslationString _fileCreatedLocallyAndRemotely = new("A file with the same name has been created locally ({0}) and remotely ({1}). Choose the file you want to keep or merge the files.");
     private readonly TranslationString _fileCreatedLocallyAndRemotelyLong = new("File '{0}' does not have a base revision." + Environment.NewLine + "A file with the same name has been created locally ({1}) and remotely ({2}) causing this conflict." + Environment.NewLine + Environment.NewLine + "Choose the file you want to keep, merge the files or delete the file?");
+    private readonly TranslationString _fileDeletedLocallyAndRemotely = new("The file has been deleted both locally ({0}) and remotely ({1}).");
     private readonly TranslationString _fileDeletedLocallyAndModifiedRemotely = new("The file has been deleted locally ({0}) and modified remotely ({1}). Choose to delete the file or keep the modified version.");
     private readonly TranslationString _fileDeletedLocallyAndModifiedRemotelyLong = new("File '{0}' does not have a local revision." + Environment.NewLine + "The file has been deleted locally ({1}) but modified remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
     private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLong = new("'{0}' and {1} other out of {2} selected files do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
@@ -858,7 +859,10 @@ public partial class FormResolveConflicts : GitModuleForm
             (false, true, true) => string.Format(_fileCreatedLocallyAndRemotely.Text, localSide, remoteSide),
             (true, false, true) => string.Format(_fileDeletedLocallyAndModifiedRemotely.Text, localSide, remoteSide),
             (true, true, false) => string.Format(_fileModifiedLocallyAndDeletedRemotely.Text, localSide, remoteSide),
-            _ => conflictDescription.Text
+            (true, false, false) => string.Format(_fileDeletedLocallyAndRemotely.Text, localSide, remoteSide),
+
+            // Describing nothing is better than keeping the description of the file selected before
+            _ => string.Empty
         };
 
         baseFileName.Text = baseFileExists ? item.Base.Filename : _noBase.Text;
@@ -1043,7 +1047,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 }
             },
             string.Format(_fileBinaryChooseLocalBaseRemote.Text, item.Local.Filename, GetLocalSideString(), GetRemoteSideString()),
-            string.Empty,
+            item.Filename,
             _solveMergeConflictDialogCaption.Text,
             _solveMergeConflictDialogCheckboxText,
             string.Format(_chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
@@ -1087,7 +1091,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 }
             },
             string.Format(_fileCreatedLocallyAndRemotelyLong.Text, item.Filename, GetLocalSideString(), GetRemoteSideString()),
-            string.Empty,
+            item.Filename,
             _solveMergeConflictDialogCaption.Text,
             _solveMergeConflictDialogCheckboxText,
             string.Format(_chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
@@ -1155,7 +1159,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 _filesDeletedLocallyAndModifiedRemotelySolved--;
             },
             dialogText,
-            string.Empty,
+            item.Filename,
             _solveMergeConflictDialogCaption.Text,
             (_filesDeletedLocallyAndModifiedRemotelySolved > 1) ? string.Format(_solveMergeConflictApplyToAllCheckBoxText.Text, item.Filename, _filesDeletedLocallyAndModifiedRemotelySolved - 1) : string.Empty,
             string.Format(_deleteFileButtonText.Text + " ({0})", GetLocalSideString()),
@@ -1223,7 +1227,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 _filesModifiedLocallyAndDeletedRemotelySolved--;
             },
             dialogText,
-            string.Empty,
+            item.Filename,
             _solveMergeConflictDialogCaption.Text,
             (_filesModifiedLocallyAndDeletedRemotelySolved > 1) ? string.Format(_solveMergeConflictApplyToAllCheckBoxText.Text, item.Filename, _filesModifiedLocallyAndDeletedRemotelySolved - 1) : string.Empty,
             string.Format(_keepModifiedButtonText.Text + " ({0})", GetLocalSideString()),

@@ -88,13 +88,33 @@ public sealed class GitDirectoryResolver : IGitDirectoryResolver
 
             if (line is not null)
             {
-                string path = line[gitdir.Length..].Trim().ToNativePath();
-                if (Path.IsPathRooted(path))
+                // The gitdir path is written by the git executable, so it is in the format that
+                // executable uses: a POSIX path for WSL git, a native Windows path otherwise.
+                // Do NOT convert to native separators before classifying, because
+                // GetWindowsPath() relies on the original POSIX form (e.g. "/mnt/c/..." or "/home/...").
+                string rawPath = line[gitdir.Length..].Trim();
+
+                // A fully qualified path (Windows drive path like "c:\..." or a UNC path like
+                // "\\wsl$\...") is already usable as-is once separators are normalized.
+                string nativePath = rawPath.ToNativePath();
+                if (Path.IsPathFullyQualified(nativePath))
                 {
-                    return path.EnsureTrailingPathSeparator();
+                    return nativePath.EnsureTrailingPathSeparator();
                 }
 
-                return Path.GetFullPath(Path.Join(repositoryPath, path)).EnsureTrailingPathSeparator();
+                // A rooted-but-not-fully-qualified path (e.g. "/home/user/...") is a POSIX
+                // absolute path produced by WSL git. Reconstruct the Windows \\wsl$ UNC path.
+                // For a non-WSL repository GetWslDistro() returns "", so GetWindowsPath() falls
+                // back to ToNativePath() and this remains correct for Windows too.
+                if (Path.IsPathRooted(nativePath))
+                {
+                    return PathUtil.GetWindowsPath(rawPath, PathUtil.GetWslDistro(repositoryPath))
+                        .EnsureTrailingPathSeparator();
+                }
+
+                // Otherwise it is a relative path (e.g. "../../.git/modules/...") — resolve it
+                // against the repository working folder.
+                return Path.GetFullPath(Path.Join(repositoryPath, nativePath)).EnsureTrailingPathSeparator();
             }
         }
 

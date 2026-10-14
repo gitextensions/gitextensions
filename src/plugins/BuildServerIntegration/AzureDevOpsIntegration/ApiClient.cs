@@ -75,19 +75,7 @@ public sealed class ApiClient : IDisposable
 
             string input = $"protocol={uri.Scheme}\nhost={uri.Host}\npath={uri.AbsolutePath.TrimStart('/')}\n\n";
 
-            using System.Diagnostics.Process process = new()
-            {
-                StartInfo = new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = gitExecutable ?? "git",
-                    Arguments = "credential fill",
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                }
-            };
+            using System.Diagnostics.Process process = new() { StartInfo = CreateCredentialFillStartInfo(gitExecutable) };
 
             process.Start();
             process.StandardInput.Write(input);
@@ -123,6 +111,41 @@ public sealed class ApiClient : IDisposable
         }
 
         return null;
+    }
+
+    /// <summary>
+    ///  Builds the start info for the <c>git credential fill</c> lookup.
+    /// </summary>
+    /// <param name="gitExecutable">Path to the git executable, or <see langword="null"/> to use <c>git</c> from the path.</param>
+    /// <returns>The start info for a credential lookup which cannot show any user interface.</returns>
+    /// <remarks>
+    ///  The lookup runs on a background refresh, with no window to parent a dialog to, so the
+    ///  credential helper must not prompt: an unattended poll which opens the account picker of Git
+    ///  Credential Manager every few minutes is indistinguishable from malware to the user.
+    ///  When no credential is stored yet, the helper simply returns nothing and the caller falls
+    ///  back to the default credentials.
+    ///  Both settings apply to this child process only, so the prompting which interactive git
+    ///  operations rely on is not affected.
+    /// </remarks>
+    internal static System.Diagnostics.ProcessStartInfo CreateCredentialFillStartInfo(string? gitExecutable)
+    {
+        System.Diagnostics.ProcessStartInfo startInfo = new()
+        {
+            FileName = gitExecutable ?? "git",
+            Arguments = "-c credential.interactive=false credential fill",
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+        };
+
+        startInfo.Environment["GIT_TERMINAL_PROMPT"] = "0";
+
+        // Releases of Git Credential Manager which predate credential.interactive honour this instead
+        startInfo.Environment["GCM_INTERACTIVE"] = "never";
+
+        return startInfo;
     }
 
     private static readonly JsonSerializerOptions _jsonOptions = new()

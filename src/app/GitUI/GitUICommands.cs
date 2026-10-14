@@ -259,6 +259,25 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool WorktreeDelete(IWin32Window? owner, string worktreePath)
     {
+        // The main worktree holds the repository in a ".git" directory, while a linked worktree only
+        // has a ".git" file pointing into it, so deleting the former destroys the repository - which
+        // is why git refuses to remove it even with --force. Deleting is done by removing the
+        // directory rather than by "git worktree remove", so that refusal has to be repeated here.
+        // This does not compare paths and therefore also holds where the current worktree is not
+        // recognised, e.g. when the repository is opened through a junction or a mount point.
+        if (Directory.Exists(Path.Combine(worktreePath, ".git")))
+        {
+            TaskDialog.ShowDialog(owner!, new TaskDialogPage
+            {
+                Text = string.Format(TranslatedStrings.DeleteMainWorktreeRefused, worktreePath),
+                Caption = TranslatedStrings.DeleteWorktreeCaption,
+                Icon = TaskDialogIcon.Error,
+                SizeToContent = true
+            });
+
+            return false;
+        }
+
         return DoActionOnRepo(owner, action: () =>
         {
             TaskDialogButton result = TaskDialog.ShowDialog(owner!, new TaskDialogPage

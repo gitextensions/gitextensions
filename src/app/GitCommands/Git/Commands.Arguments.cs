@@ -379,7 +379,9 @@ public static partial class Commands
     {
         return new GitArgumentBuilder("merge")
         {
-            { !allowFastForward, "--no-ff" },
+            // Always explicit: the dialog offers the choice, so merge.ff from the configuration
+            // must not decide it
+            { allowFastForward, "--ff", "--no-ff" },
             { !string.IsNullOrEmpty(strategy), $"--strategy={strategy}" },
             { squash, "--squash" },
             { noCommit, "--no-commit" },

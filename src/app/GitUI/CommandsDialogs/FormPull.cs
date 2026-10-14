@@ -583,12 +583,15 @@ public sealed partial class FormPull : GitExtensionsDialog
                     {
                         Text = TranslatedStrings.DontShowAgain
                     },
+                    AllowCancel = true,
                     SizeToContent = true
                 };
 
-                messageBoxResult = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page) == TaskDialogButton.Yes;
+                TaskDialogButton answer = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page);
+                messageBoxResult = answer == TaskDialogButton.Yes;
 
-                if (page.Verification.Checked)
+                // Dismissing the dialog is not an answer, so it must not be remembered as one
+                if (page.Verification.Checked && answer != TaskDialogButton.Cancel)
                 {
                     AppSettings.AutoPopStashAfterPull = messageBoxResult;
                 }

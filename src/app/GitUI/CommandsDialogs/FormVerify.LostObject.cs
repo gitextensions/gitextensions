@@ -91,9 +91,27 @@ partial class FormVerify
         /// <returns>the metadata for all the commits.</returns>
         public static string[] GetCommitsMetadata(IGitModule module, IEnumerable<string> commitIds)
         {
-            return module.GitExecutable
-                .GetOutput(string.Format(ShowCommandArgumentsFormat, string.Join(" ", commitIds)), outputEncoding: GitModule.LosslessEncoding)
-                .Split('\n');
+            string[] ids = [.. commitIds];
+
+            ExecutionResult result = module.GitExecutable.Execute(
+                string.Format(ShowCommandArgumentsFormat, string.Join(" ", ids)),
+                outputEncoding: GitModule.LosslessEncoding,
+                throwOnErrorExit: false);
+
+            // Fall back to querying each commit individually so a single unreadable object
+            // does not prevent the rest of the batch from being displayed.
+            return result.ExitedSuccessfully
+                ? result.StandardOutput.Split('\n')
+                : [.. ids.Select(id => GetCommitMetadataOrEmpty(module, id))];
+        }
+
+        private static string GetCommitMetadataOrEmpty(IGitModule module, string commitId)
+        {
+            ExecutionResult result = module.GitExecutable.Execute(
+                string.Format(ShowCommandArgumentsFormat, commitId),
+                outputEncoding: GitModule.LosslessEncoding,
+                throwOnErrorExit: false);
+            return result.ExitedSuccessfully ? result.StandardOutput : "";
         }
 
         public void FillCommitData(IGitModule module, string commitLog)
@@ -104,9 +122,9 @@ partial class FormVerify
                 // TODO: cache
                 Author = module.ReEncodeStringFromLossless(logPatternMatch.Groups["author"].Value);
                 Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups["subject"].Value) ?? "";
-                Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups["date"].Value);
-                string firstParent = logPatternMatch.Groups["first_parent"].Value;
-                if (!string.IsNullOrEmpty(firstParent))
+                Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups["date"].ValueSpan);
+                ReadOnlySpan<char> firstParent = logPatternMatch.Groups["first_parent"].ValueSpan;
+                if (!firstParent.IsEmpty)
                 {
                     Parent = ObjectId.Parse(firstParent);
                 }
@@ -153,7 +171,7 @@ partial class FormVerify
                     result.Author = module.ReEncodeStringFromLossless(tagPatternMatch.Groups["author"].Value);
                     result.TagName = tagPatternMatch.Groups["tagname"].Value;
                     result.Subject = $"{result.TagName}:{tagPatternMatch.Groups["subject"].ValueSpan}";
-                    result.Date = DateTimeUtils.ParseUnixTime(tagPatternMatch.Groups["date"].Value);
+                    result.Date = DateTimeUtils.ParseUnixTime(tagPatternMatch.Groups["date"].ValueSpan);
                 }
             }
             else if (objectType == LostObjectType.Blob)

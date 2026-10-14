@@ -170,6 +170,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
                 Icon = TaskDialogIcon.Warning,
                 Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
                 DefaultButton = TaskDialogButton.No,
+                AllowCancel = true,
                 SizeToContent = true,
             };
 
