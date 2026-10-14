@@ -309,9 +309,13 @@ public sealed partial class FileStatusList : GitModuleControl
         // Show/hide the search box if settings are changed
         void UICommands_PostSettings(object? sender, GitUIPostActionEventArgs? e)
         {
-            if (CanUseFindInCommitFilesGitGrep && Visible)
+            if (Visible)
             {
-                BeginInvoke(() => SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value));
+                BeginInvoke(() =>
+                {
+                    InitializeContextMenuAndToolbar();
+                    SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value);
+                });
             }
         }
     }
