@@ -369,7 +369,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowRepoCurrentBranch)], true, false, false);
             yield return (properties[nameof(AppSettings.OwnScripts)], string.Empty, true, false);
             yield return (properties[nameof(AppSettings.RecursiveSubmodules)], 1, false, false);
-            yield return (properties[nameof(AppSettings.ShorteningRecentRepoPathStrategy)], ShorteningRecentRepoPathStrategy.None, false, false);
+            yield return (properties[nameof(AppSettings.ShorteningRecentRepoPathStrategy)], ShorteningRecentRepoPathStrategy.MostSignDir, false, false);
             yield return (properties[nameof(AppSettings.MaxTopRepositories)], 0, false, false);
             yield return (properties[nameof(AppSettings.RecentRepositoriesHistorySize)], 30, false, false);
             yield return (properties[nameof(AppSettings.HideTopRepositoriesFromRecentList)], false, isNotNullable, isISetting);
