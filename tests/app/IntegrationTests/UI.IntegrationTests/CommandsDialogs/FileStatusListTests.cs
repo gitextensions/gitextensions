@@ -13,13 +13,14 @@ public class FileStatusListTests
     // Created once for each test
     private Form _form = null!;
     private FileStatusList _fileStatusList = null!;
+    private IGitModule _module = null!;
 
     [SetUp]
     public void SetUp()
     {
         ServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
-        IGitModule module = Substitute.For<IGitModule>();
-        GitUICommands commands = new(serviceContainer, module);
+        _module = Substitute.For<IGitModule>();
+        GitUICommands commands = new(serviceContainer, _module);
         IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
         uiCommandsSource.UICommands.Returns(x => commands);
 
@@ -37,6 +38,82 @@ public class FileStatusListTests
     {
         _fileStatusList.Dispose();
         _form.Dispose();
+    }
+
+    [Test]
+    public void Large_tree_filters_discard_obsolete_results_and_preserve_selection()
+    {
+        _fileStatusList.Bind(() => { }, isFileTreeMode: true);
+        GitItemStatus[] items = Enumerable.Range(0, 6000).Select(index => new GitItemStatus($"dir/file{index:D5}.txt")).ToArray();
+        _fileStatusList.SetDiffs(null, new GitRevision(ObjectId.Random()), items);
+        WaitForTree();
+        _fileStatusList.SelectedGitItems = [items[1]];
+
+        _fileStatusList.SetFilter("no matching file");
+        _fileStatusList.SetFilter("file0000[12]");
+        WaitForTree();
+
+        _fileStatusList.AllItems.Select(item => item.Item).Should().Equal(items[1], items[2]);
+        _fileStatusList.SelectedItems.Select(item => item.Item).Should().Equal(items[1]);
+    }
+
+    [Test]
+    public void Clearing_or_disposing_a_list_cancels_pending_tree_publication()
+    {
+        _fileStatusList.Bind(() => { }, isFileTreeMode: true);
+        GitItemStatus[] items = Enumerable.Range(0, 6000).Select(index => new GitItemStatus($"dir/file{index:D5}.txt")).ToArray();
+        _fileStatusList.SetDiffs(null, new GitRevision(ObjectId.Random()), items);
+        Task pending = _fileStatusList.TreeLoading;
+        _fileStatusList.ClearDiffs();
+        UITest.ProcessUntil("obsolete tree", () => pending.IsCompleted, maxMilliseconds: 10000);
+        pending.IsCompletedSuccessfully.Should().BeTrue();
+        _fileStatusList.AllItems.Should().BeEmpty();
+
+        _fileStatusList.SetDiffs(null, new GitRevision(ObjectId.Random()), items);
+        pending = _fileStatusList.TreeLoading;
+        _fileStatusList.Dispose();
+        UITest.ProcessUntil("disposed tree", () => pending.IsCompleted, maxMilliseconds: 10000);
+        pending.IsCompletedSuccessfully.Should().BeTrue();
+    }
+
+    [Test]
+    public void A_filter_during_revision_loading_is_applied_to_the_new_revision()
+    {
+        _fileStatusList.Bind(() => { }, isFileTreeMode: true);
+        _fileStatusList.SetDiffs(null, new GitRevision(ObjectId.Random()), [new GitItemStatus("previous.txt")]);
+        GitRevision revision = new(ObjectId.Random());
+        GitItemStatus[] items = Enumerable.Range(0, 6000).Select(index => new GitItemStatus($"new/file{index:D5}.txt")).ToArray();
+        using ManualResetEventSlim started = new();
+        using ManualResetEventSlim release = new();
+        _module.IsValidGitWorkingDir().Returns(true);
+        _module.GetTreeFiles(revision.ObjectId, true, Arg.Any<CancellationToken>()).Returns(_ =>
+        {
+            started.Set();
+            release.Wait(TimeSpan.FromSeconds(10)).Should().BeTrue();
+            return items;
+        });
+
+        Task loading = _fileStatusList.SetDiffsAsync([revision], revision.ObjectId, CancellationToken.None);
+        try
+        {
+            UITest.ProcessUntil("loading revision", () => started.IsSet, maxMilliseconds: 10000);
+            _fileStatusList.SetFilter("file00001");
+            _fileStatusList.AllItems.Should().BeEmpty();
+        }
+        finally
+        {
+            release.Set();
+        }
+
+        UITest.ProcessUntil("new revision", () => loading.IsCompleted, maxMilliseconds: 10000);
+        loading.IsCompletedSuccessfully.Should().BeTrue();
+        _fileStatusList.AllItems.Select(item => item.Item).Should().Equal(items[1]);
+    }
+
+    private void WaitForTree()
+    {
+        UITest.ProcessUntil("file tree", () => _fileStatusList.TreeLoading.IsCompleted, maxMilliseconds: 10000);
+        _fileStatusList.TreeLoading.IsCompletedSuccessfully.Should().BeTrue();
     }
 
     [Test]

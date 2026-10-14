@@ -3,6 +3,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
 using GitUI.Theming;
 using ICSharpCode.TextEditor;
+using ICSharpCode.TextEditor.Document;
 
 namespace GitUITests.Editor.Diff;
 
@@ -50,6 +51,21 @@ public class DiffLineNumAnalyzerTests
     public void OneTimeTearDown()
     {
         _textEditor.Dispose();
+    }
+
+    [Test]
+    public void Marker_reader_preserves_overlaps_boundaries_and_input_order()
+    {
+        Random random = new(731);
+        TextMarker[] markers = Enumerable.Range(0, 500)
+            .Select(_ => new TextMarker(random.Next(0, 1000), random.Next(0, 300), TextMarkerType.SolidBlock, Color.Red))
+            .ToArray();
+        DiffLineNumAnalyzer.LineMarkerReader reader = new(markers);
+        for (int offset = 0; offset < 1300; offset += 10)
+        {
+            int length = offset % 30 == 0 ? 0 : 9;
+            reader.GetMarkers(offset, length).Should().Equal(markers.Where(marker => marker.Offset < offset + length && marker.EndOffset >= offset));
+        }
     }
 
     [Test]

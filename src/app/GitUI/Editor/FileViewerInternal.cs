@@ -35,6 +35,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     private ContinuousScrollEventManager? _continuousScrollEventManager;
     private BlameAuthorMargin? _authorsAvatarMargin;
     private bool _showGutterAvatars;
+    private CancellationTokenSource? _inlineHighlightCancellation;
 
     public FileViewerInternal()
     {
@@ -46,6 +47,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             //// _textHighlightService not disposable
             //// _lineNumbersControl not disposable
             //// _currentViewPositionCache not disposable
+            _inlineHighlightCancellation?.Cancel();
             _findAndReplaceForm.Dispose();
         };
 
@@ -61,7 +63,12 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             }
         };
 
-        TextEditor.TextChanged += (s, e) => TextChanged?.Invoke(s, e);
+        TextEditor.TextChanged += (s, e) =>
+        {
+            _inlineHighlightCancellation?.Cancel();
+            AddTextHighlighting();
+            TextChanged?.Invoke(s, e);
+        };
         TextEditor.ActiveTextAreaControl.HScrollBar.ValueChanged += (s, e) => OnHScrollPositionChanged(EventArgs.Empty);
         TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += (s, e) => OnVScrollPositionChanged(EventArgs.Empty);
         TextEditor.ActiveTextAreaControl.TextArea.KeyUp += (s, e) => KeyUp?.Invoke(s, e);
@@ -238,6 +245,8 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
     public bool? ShowLineNumbers { get; set; }
 
+    internal Task InlineHighlightingTask { get; private set; } = Task.CompletedTask;
+
     /// <summary>
     /// Set plain text in the editor.
     /// </summary>
@@ -259,6 +268,11 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     {
         ThreadHelper.ThrowIfNotOnUIThread();
 
+        _inlineHighlightCancellation?.Cancel();
+        InlineHighlightingTask = Task.CompletedTask;
+        bool deferInlineHighlighting = text.Length >= 128 * 1024
+            && viewMode is ViewMode.Diff or ViewMode.FixedDiff
+            && (!useGitColoring || AppSettings.DiffDisplayAppearance.Value != GitCommands.Settings.DiffDisplayAppearance.GitWordDiff);
         _currentViewPositionCache.Capture();
 
         OpenWithDifftool = openWithDifftool;
@@ -269,7 +283,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         _textHighlightService = viewMode switch
         {
             ViewMode.Text => TextHighlightService.Instance,
-            ViewMode.Diff or ViewMode.FixedDiff => new PatchHighlightService(ref text, useGitColoring, _lineNumbersControl),
+            ViewMode.Diff or ViewMode.FixedDiff => new PatchHighlightService(ref text, useGitColoring, _lineNumbersControl, deferInlineHighlighting),
             ViewMode.CombinedDiff => new CombinedDiffHighlightService(ref text, useGitColoring, _lineNumbersControl),
             ViewMode.Difftastic => new DifftasticHighlightService(ref text, _lineNumbersControl, out vrulerpos),
             ViewMode.RangeDiff => new RangeDiffHighlightService(ref text, _lineNumbersControl),
@@ -328,7 +342,45 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             _shouldScrollToBottom = false;
         }
 
+        if (deferInlineHighlighting && _textHighlightService is PatchHighlightService service)
+        {
+            CancellationTokenSource cancellation = new();
+            _inlineHighlightCancellation = cancellation;
+            InlineHighlightingTask = CompleteInlineHighlightingAsync(service, text, cancellation);
+            ThreadHelper.FileAndForget(InlineHighlightingTask);
+        }
+
         return positionSet;
+    }
+
+    private async Task CompleteInlineHighlightingAsync(PatchHighlightService service, string text, CancellationTokenSource cancellation)
+    {
+        try
+        {
+            List<TextMarker> markers = await service.CalculateInlineMarkersAsync(text, cancellation.Token).ConfigureAwait(false);
+            await this.SwitchToMainThreadAsync(cancellation.Token);
+            if (!cancellation.IsCancellationRequested && !IsDisposed && ReferenceEquals(_textHighlightService, service))
+            {
+                service.PrependInlineMarkers(markers);
+
+                // Reapply selection overlays without replacing the document, caret or scroll position.
+                SelectionManagerSelectionChanged(this, EventArgs.Empty);
+            }
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        {
+        }
+        finally
+        {
+            // Clear on the UI thread: a subsequent SetText must not cancel a disposed source.
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            if (ReferenceEquals(_inlineHighlightCancellation, cancellation))
+            {
+                _inlineHighlightCancellation = null;
+            }
+
+            cancellation.Dispose();
+        }
     }
 
     protected override void OnPaintBackground(PaintEventArgs e)
