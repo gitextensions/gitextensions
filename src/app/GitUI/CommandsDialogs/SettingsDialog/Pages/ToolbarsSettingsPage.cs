@@ -149,6 +149,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         "commitInfoBelowMenuItem",            // sub-items of menuCommitInfoPosition split button (already in Standard toolbar)
         "commitInfoLeftwardMenuItem",
         "commitInfoRightwardMenuItem",
+        "runScriptToolStripMenuItem",         // a menu of the scripts, each of them offered under "Scripts" instead
     };
 
     private readonly Stack<(string toolbarName, List<ToolStripItemWrapper> items)> _undoStack = new();
@@ -2263,7 +2264,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     {
         // Ordered list of (itemName, separatorBefore) pairs, matching the visible context menu.
         // Items excluded from the preset (bisect, stash, branch push/rename/delete, tag delete,
-        // select-in-panel, build report, pull request, other actions) are simply omitted.
+        // select-in-panel, build report, pull request, other actions, and the scripts menu, whose
+        // scripts are offered one by one under "Scripts") are simply omitted.
         (string name, bool sepBefore)[] layout =
         [
             ("copyToClipboardToolStripMenuItem",          false),
@@ -2281,7 +2283,6 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             ("compareToolStripMenuItem",                  true),
             ("navigateToolStripMenuItem",                 true),
             ("viewToolStripMenuItem",                     false),
-            ("runScriptToolStripMenuItem",                false),
         ];
 
         Dictionary<string, ToolStripMenuItem> byName = contextMenu.Items
@@ -2364,6 +2365,12 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
     private void AddContextMenuItemRecursively(ToolStripMenuItem menuItem, HashSet<string> usedItemNames, HashSet<string> addedItemNames)
     {
+        // Along with what it holds: the items under "Run script" are the scripts themselves.
+        if (_excludedFromAllActions.Contains(menuItem.Name ?? string.Empty))
+        {
+            return;
+        }
+
         if (!string.IsNullOrWhiteSpace(menuItem.Name) &&
             !string.IsNullOrWhiteSpace(menuItem.Text) &&
             !menuItem.Text.StartsWith("-") &&
