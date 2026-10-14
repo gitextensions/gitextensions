@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 using ResourceManager;
 
@@ -175,6 +176,9 @@ public partial class FormToolbarsLayout : GitExtensionsForm
         private const int ComboWidth = 90;
         private const int ComboMargin = 4;
 
+        // Room for the dropdown's own borders and padding around the text of an entry.
+        private const int ComboTextPadding = 10;
+
         public bool IsSelected
         {
             get => _isSelected;
@@ -267,6 +271,34 @@ public partial class FormToolbarsLayout : GitExtensionsForm
             _gripLabel.MouseDown += (s, e) => OnMouseDown(e);
             _gripLabel.MouseMove += (s, e) => OnMouseMove(e);
             _gripLabel.MouseUp += (s, e) => OnMouseUp(e);
+        }
+
+        /// <summary>
+        /// Widens the dropdown to its longest entry, and the name to the toolbar's, in the font the
+        /// panel has once placed in the grid.
+        /// </summary>
+        /// <remarks>
+        /// That font follows the application font and the display scaling, while the default sizes
+        /// are in pixels: at 150 % the dropdown cut "Icon size: 24" down to "Icon size:", hiding the
+        /// size it held.
+        /// </remarks>
+        public void FitToText()
+        {
+            int comboWidth = Math.Max(
+                ComboWidth,
+                _iconSizeCombo.Items.Cast<string>().Max(text => TextRenderer.MeasureText(text, _iconSizeCombo.Font).Width)
+                    + SystemInformation.VerticalScrollBarWidth
+                    + DpiUtil.Scale(ComboTextPadding));
+
+            // Measured as a hidden toolbar shows it, in parentheses, so hiding it fits as well.
+            int labelWidth = Math.Max(
+                ToolbarItemWidth - LabelLeft - ComboWidth - ComboMargin,
+                TextRenderer.MeasureText($"({LayoutItem.DisplayName})", _label.Font).Width);
+
+            Width = LabelLeft + labelWidth + comboWidth + ComboMargin;
+            _label.Width = labelWidth;
+            _iconSizeCombo.Width = comboWidth;
+            _iconSizeCombo.Location = new Point(Width - comboWidth - ComboMargin, (Height - _iconSizeCombo.Height) / 2);
         }
 
         public void SetHighlight(bool highlight)
@@ -524,9 +556,14 @@ public partial class FormToolbarsLayout : GitExtensionsForm
                 itemPanel.MouseMove += ItemPanel_MouseMove;
                 itemPanel.MouseUp += ItemPanel_MouseUp;
 
+                // Only in the row does the panel take the font of the window, which sets its width.
                 rowPanel.Controls.Add(itemPanel);
-                xOffset += ToolbarItemWidth + ToolbarItemMargin;
+                itemPanel.FitToText();
+                xOffset += itemPanel.Width + ToolbarItemMargin;
             }
+
+            // Wider panels may not fit the grid any more; the grid scrolls to show a wider row.
+            rowPanel.Width = Math.Max(rowPanel.Width, xOffset);
 
             yOffset += RowHeight + RowMargin;
         }
