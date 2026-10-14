@@ -267,7 +267,6 @@ public partial class FilterToolBar
         // 
         Dock = DockStyle.None;
         GripMargin = new Padding(0);
-        GripEnabled = false;
         ImeMode = ImeMode.NoControl;
         Items.AddRange(new ToolStripItem[] {
         tsbtnAdvancedFilter,

@@ -475,7 +475,6 @@ partial class FormBrowse
                 ClickThrough = true,
                 Dock = DockStyle.None,
                 DrawBorder = false,
-                GripEnabled = false,
                 GripStyle = ToolStripGripStyle.Visible,
                 GripMargin = new System.Windows.Forms.Padding(0),
                 Padding = new System.Windows.Forms.Padding(0),

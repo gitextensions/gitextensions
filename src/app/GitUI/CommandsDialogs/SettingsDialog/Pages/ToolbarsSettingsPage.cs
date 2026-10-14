@@ -682,7 +682,6 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             ClickThrough = true,
             Dock = DockStyle.None,
             DrawBorder = false,
-            GripEnabled = false,
             GripStyle = ToolStripGripStyle.Visible,
             GripMargin = new Padding(0),
             Padding = new Padding(0),
