@@ -39,6 +39,12 @@ partial class FormBrowse
     // layout and the Toolbars settings page can refer it by.
     private readonly Dictionary<string, ToolStripButton> _scriptToolbarItems = new(StringComparer.Ordinal);
 
+    // The script buttons, in the order of the scripts settings.
+    internal IEnumerable<ToolStripItem> ScriptToolbarItems
+        => _scriptsManager.GetScripts()
+            .Select(script => _scriptToolbarItems.GetValueOrDefault(ToolbarItemNames.Script(script.HotkeyCommandIdentifier)))
+            .OfType<ToolStripItem>();
+
     private readonly TranslationString _removeToolbarItemQuestion = new("Remove \"{0}\" from this toolbar?");
     private readonly TranslationString _removeToolbarItemCaption = new("Remove toolbar item");
     private readonly TranslationString _unnamedToolbarItem = new("this item");
@@ -435,7 +441,7 @@ partial class FormBrowse
     // Brings the script buttons in line with the scripts settings, which may have changed since the
     // last repository load: a button for each enabled script, and none for any other. Where a button
     // goes is for the layout to say, so a new one is placed on no toolbar.
-    private void RefreshScriptToolbarItems()
+    internal void RefreshScriptToolbarItems()
     {
         HashSet<string> shownItemNames = new(StringComparer.Ordinal);
 

@@ -77,6 +77,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     private static readonly TranslationString _toolsCategory = new("Tools");
     private static readonly TranslationString _helpCategory = new("Help");
     private static readonly TranslationString _rightClickMenuCategory = new("Right click menu");
+    private static readonly TranslationString _scriptsCategory = new("Scripts");
     private static readonly TranslationString _defaultStandardCategory = new("Default Standard toolbar");
     private static readonly TranslationString _defaultFiltersCategory = new("Default Filters toolbar");
 
@@ -181,6 +182,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             _toolsCategory.Text,
             _helpCategory.Text,
             _rightClickMenuCategory.Text,
+            _scriptsCategory.Text,
             _defaultStandardCategory.Text,
             _defaultFiltersCategory.Text
         });
@@ -253,6 +255,9 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         if (_formBrowse != null)
         {
+            // The scripts settings may have been saved since the main window last read them.
+            _formBrowse.RefreshScriptToolbarItems();
+
             LoadToolbarItems();
             LoadCurrentLayout();
             LoadToolbarVisibility();
@@ -2091,6 +2096,10 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
                 AddRightClickMenuItems(revisionContextMenu, addedItemNames);
             }
         }
+        else if (selectedCategory == _scriptsCategory.Text)
+        {
+            AddScriptItems(addedItemNames);
+        }
         else
         {
             PopulateMenuCategoryItems(mainMenu, selectedCategory, noFilter, addedItemNames);
@@ -2113,6 +2122,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         }
 
         AddToolbarOnlyItems(noFilter, addedItemNames);
+        AddScriptItems(addedItemNames);
 
         ContextMenuStrip? revisionContextMenu = _formBrowse!.RevisionGridControl?.MainContextMenu;
         if (revisionContextMenu != null)
@@ -2392,6 +2402,18 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
                 {
                     AddDropDownSubItems((ToolStripDropDownItem)item, usedItemNames, addedItemNames);
                 }
+            }
+        }
+    }
+
+    // Every enabled user script, whichever toolbar it is on, if any.
+    private void AddScriptItems(HashSet<string> addedItemNames)
+    {
+        foreach (ToolStripItem item in _formBrowse!.ScriptToolbarItems)
+        {
+            if (addedItemNames.Add(item.Name!))
+            {
+                listBoxAvailable.Items.Add(new ToolStripItemWrapper(item));
             }
         }
     }

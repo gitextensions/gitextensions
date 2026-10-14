@@ -10540,6 +10540,10 @@ Useful for finding where a toolbar is located</source>
         <source>Right click menu</source>
         <target />
       </trans-unit>
+      <trans-unit id="_scriptsCategory.Text">
+        <source>Scripts</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_selectBranchDisplayName.Text">
         <source>Select branch</source>
         <target />
