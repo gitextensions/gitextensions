@@ -467,12 +467,21 @@ internal static class ToolbarItemConverter
             // If PerformButtonClick caused the original's dropdown to open (e.g. no
             // superproject available so the handler falls back to ShowDropDown), redirect
             // the opening to the clone so the menu appears beneath the clicked button.
+            // The working directory button opens its dropdown only once the messages already
+            // posted have run (see WorkingDirectoryToolStripSplitButton), so look again then.
+            RedirectDropDownToClone();
+            clone.Owner?.BeginInvoke(RedirectDropDownToClone);
+        };
+
+        void RedirectDropDownToClone()
+        {
             if (splitOriginal.DropDown.Visible)
             {
                 splitOriginal.HideDropDown();
                 clone.ShowDropDown();
             }
-        };
+        }
+
         clone.DropDownOpening += (s, e) =>
         {
             clone.DropDown.Font = GitCommands.AppSettings.MenuFont;
