@@ -516,6 +516,7 @@ internal static class ToolbarItemConverter
         // (e.g. branchSelect_MouseUp -> Checkout branch, WorkingDirectory -> Open repository)
         // also work on the clone. Left-click is already handled via ButtonClick above.
         clone.MouseUp += (s, e) => ForwardRightClickToOriginal(splitOriginal, e, null);
+        clone.TextChanged += (s, e) => LayOutOwnerLater(clone);
 
         return clone;
     }
@@ -577,6 +578,8 @@ internal static class ToolbarItemConverter
                 PopulateDropDownItems(clone.DropDownItems, sourceMenuItem, null);
             }
         };
+        clone.TextChanged += (s, e) => LayOutOwnerLater(clone);
+
         return clone;
     }
 
@@ -630,6 +633,7 @@ internal static class ToolbarItemConverter
         // ToolStripButton carries a MouseUp handler today, but this keeps clones at parity with
         // the original for any future right-click action.
         btnClone.MouseUp += (s, e) => ForwardRightClickToOriginal(btnOriginal, e, null);
+        btnClone.TextChanged += (s, e) => LayOutOwnerLater(btnClone);
 
         return btnClone;
     }
@@ -637,6 +641,29 @@ internal static class ToolbarItemConverter
     // A clone shows its label because its own toolbar asks for it, not because the original does:
     // built-in buttons are mostly icon-only, and copying their style would leave a clone that
     // should show its label without one.
+    // A clone follows its original's text, which may be live data - the working directory path,
+    // the branch name - and change while the toolbar panel's layout is suspended, as it is during a
+    // repository load. The panel then lays out again only the toolbar it heard from last, the
+    // original's: the clone's toolbar keeps its width, and a clone that no longer fits is hidden,
+    // since an item placed on a toolbar never goes to the overflow. Laying out the clone's toolbar
+    // again is too early from here, before the panel resumes; once the messages already posted
+    // have run, it is not.
+    private static void LayOutOwnerLater(ToolStripItem clone)
+    {
+        if (clone.Owner is not { IsHandleCreated: true } owner)
+        {
+            return;
+        }
+
+        owner.BeginInvoke(() =>
+        {
+            if (!owner.IsDisposed)
+            {
+                owner.PerformLayout();
+            }
+        });
+    }
+
     private static ToolStripItemDisplayStyle CloneDisplayStyle(bool wantsText)
         => wantsText ? ToolStripItemDisplayStyle.ImageAndText : ToolStripItemDisplayStyle.Image;
 

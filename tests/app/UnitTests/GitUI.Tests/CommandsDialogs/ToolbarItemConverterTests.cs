@@ -1,4 +1,5 @@
-﻿using GitUI.CommandsDialogs;
+﻿using GitUI;
+using GitUI.CommandsDialogs;
 
 namespace GitUITests.CommandsDialogs;
 
@@ -363,5 +364,40 @@ public class ToolbarItemConverterTests
         clone.Should().BeOfType<ToolStripSplitButton>();
         clone.Name.Should().Be("clone_toolStripSplitButtonWorkingDir");
         clone.Tag.Should().BeSameAs(original);
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    public void CloneItem_should_stay_shown_when_its_original_grows_while_the_toolbar_panel_is_suspended()
+    {
+        // A repository load suspends the toolbar panel while it sets the working directory path on
+        // the original. The panel then lays out again only the original's toolbar, so the clone's
+        // kept its width and the clone, too wide for it, was hidden until something else laid it out.
+        using Form form = new() { Width = 1600, Height = 300 };
+        using ToolStripContainer container = new() { Dock = DockStyle.Fill };
+        form.Controls.Add(container);
+
+        using Bitmap image = new(16, 16);
+        using ToolStripEx standard = new() { Dock = DockStyle.None };
+        using ToolStripSplitButton original = new("WorkingDir") { Name = "_NO_TRANSLATE_WorkingDir", Image = image };
+        standard.Items.Add(original);
+
+        using ToolStripEx custom = new() { Dock = DockStyle.None };
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText: true);
+        clone.Overflow = ToolStripItemOverflow.Never;
+        custom.Items.Add(clone);
+
+        container.TopToolStripPanel.Join(standard, 0);
+        container.TopToolStripPanel.Join(custom, 1);
+        form.Show();
+        Application.DoEvents();
+
+        container.TopToolStripPanel.SuspendLayout();
+        original.Text = @"E:\Some\Rather\Long\Path\To\A\Repository\Of\Mine\";
+        container.TopToolStripPanel.ResumeLayout();
+        Application.DoEvents();
+
+        clone.Text.Should().Be(original.Text);
+        clone.Placement.Should().Be(ToolStripItemPlacement.Main);
     }
 }
