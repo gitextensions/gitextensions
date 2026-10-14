@@ -73,43 +73,10 @@ internal static class ToolbarLayoutValidator
             return false;
         }
 
-        // Toolbar names are the key linking the two metadata lists and the items, so a duplicate
-        // would make the layout ambiguous rather than merely odd.
-        HashSet<string> knownToolbars = new(StringComparer.OrdinalIgnoreCase);
-        foreach (ToolbarBuiltInMetadata? meta in config.ToolbarsVisibility)
+        if (!TryNormalizeBuiltInMetadata(config.ToolbarsVisibility, out HashSet<string> knownToolbars)
+            || !TryNormalizeCustomMetadata(config.CustomToolbars, out HashSet<string> customNames))
         {
-            if (meta is null
-                || !IsValidToolbarName(meta.Name)
-                || !IsInRange(meta.Row, MaxRow)
-                || !IsInRange(meta.OrderInRow, MaxOrderInRow)
-                || !knownToolbars.Add(meta.Name))
-            {
-                return false;
-            }
-
-            meta.IconSize = NormalizeIconSize(meta.IconSize);
-        }
-
-        // Index orders the custom toolbars on load, so two of them claiming the same value leaves
-        // it undecided which comes first. Every writer derives it from a position - in the settings
-        // page's toolbar list, or one past the highest already in use - so a duplicate can only
-        // come from outside this application.
-        HashSet<string> customNames = new(StringComparer.OrdinalIgnoreCase);
-        HashSet<int> customIndices = [];
-        foreach (ToolbarCustomMetadata? meta in config.CustomToolbars)
-        {
-            if (meta is null
-                || !IsValidToolbarName(meta.Name)
-                || !IsInRange(meta.Row, MaxRow)
-                || !IsInRange(meta.OrderInRow, MaxOrderInRow)
-                || !IsInRange(meta.Index, MaxIndex)
-                || !customNames.Add(meta.Name)
-                || !customIndices.Add(meta.Index))
-            {
-                return false;
-            }
-
-            meta.IconSize = NormalizeIconSize(meta.IconSize);
+            return false;
         }
 
         // A custom toolbar must not shadow a built-in one: both would then claim the same key.
@@ -121,14 +88,10 @@ internal static class ToolbarLayoutValidator
         knownToolbars.UnionWith(customNames);
         knownToolbars.UnionWith(ToolbarNames.BuiltIn);
 
-        foreach (ToolbarItemConfig? item in config.Items)
+        // The deserializer may produce a null entry whatever the element type says.
+        if (!config.Items.All(IsValidItem))
         {
-            if (item is null
-                || !IsValidToolbarName(item.ToolbarName)
-                || !IsInRange(item.Order, MaxOrder))
-            {
-                return false;
-            }
+            return false;
         }
 
         // An item is dropped rather than taken as a reason to discard the layout around it, in the
@@ -147,6 +110,60 @@ internal static class ToolbarLayoutValidator
 
         return true;
     }
+
+    // Toolbar names are the key linking the two metadata lists and the items, so a duplicate
+    // would make the layout ambiguous rather than merely odd. names receives every name met.
+    private static bool TryNormalizeBuiltInMetadata(List<ToolbarBuiltInMetadata> toolbars, out HashSet<string> names)
+    {
+        names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (ToolbarBuiltInMetadata? meta in toolbars)
+        {
+            if (meta is null
+                || !IsValidToolbarName(meta.Name)
+                || !IsInRange(meta.Row, MaxRow)
+                || !IsInRange(meta.OrderInRow, MaxOrderInRow)
+                || !names.Add(meta.Name))
+            {
+                return false;
+            }
+
+            meta.IconSize = NormalizeIconSize(meta.IconSize);
+        }
+
+        return true;
+    }
+
+    // Index orders the custom toolbars on load, so two of them claiming the same value leaves
+    // it undecided which comes first. Every writer derives it from a position - in the settings
+    // page's toolbar list, or one past the highest already in use - so a duplicate can only
+    // come from outside this application. names receives every name met.
+    private static bool TryNormalizeCustomMetadata(List<ToolbarCustomMetadata> toolbars, out HashSet<string> names)
+    {
+        names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        HashSet<int> indices = [];
+        foreach (ToolbarCustomMetadata? meta in toolbars)
+        {
+            if (meta is null
+                || !IsValidToolbarName(meta.Name)
+                || !IsInRange(meta.Row, MaxRow)
+                || !IsInRange(meta.OrderInRow, MaxOrderInRow)
+                || !IsInRange(meta.Index, MaxIndex)
+                || !names.Add(meta.Name)
+                || !indices.Add(meta.Index))
+            {
+                return false;
+            }
+
+            meta.IconSize = NormalizeIconSize(meta.IconSize);
+        }
+
+        return true;
+    }
+
+    private static bool IsValidItem([NotNullWhen(true)] ToolbarItemConfig? item)
+        => item is not null
+        && IsValidToolbarName(item.ToolbarName)
+        && IsInRange(item.Order, MaxOrder);
 
     private static bool IsValidToolbarName([NotNullWhen(true)] string? name)
         => !string.IsNullOrWhiteSpace(name)
