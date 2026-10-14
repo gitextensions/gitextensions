@@ -336,13 +336,13 @@ public class ToolbarItemConverterTests
         using ToolStripMenuItem menuItem = new("Commit") { Name = "commitToolStripMenuItem" };
         using ToolStripItem kept = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
         using ToolStripButton designerButton = new("Push") { Name = "toolStripButtonPush" };
-        using ToolStripButton scriptButton = new("Script") { Tag = "userscript" };
+        using ToolStripButton taggedButton = new("Branches") { Tag = "ToolBar_group:Branch filter" };
         bool anyDisposed = false;
         kept.Disposed += (s, e) => anyDisposed = true;
         designerButton.Disposed += (s, e) => anyDisposed = true;
-        scriptButton.Disposed += (s, e) => anyDisposed = true;
+        taggedButton.Disposed += (s, e) => anyDisposed = true;
 
-        ToolbarItemConverter.DisposeDerivedItems([kept, designerButton, scriptButton], kept: new HashSet<ToolStripItem> { kept });
+        ToolbarItemConverter.DisposeDerivedItems([kept, designerButton, taggedButton], kept: new HashSet<ToolStripItem> { kept });
 
         anyDisposed.Should().BeFalse();
     }

@@ -1071,7 +1071,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
             OnActivate();
 
-            LoadUserMenu();
+            RefreshScriptToolbarItems();
             toolStripButtonLevelUp.Image = validBrowseDir && Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
             toolStripButtonLevelUp.Text = toolStripButtonLevelUp.ToolTipText;
 
@@ -1117,49 +1117,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         toolPanel.TopToolStripPanel.ResumeLayout();
         toolPanel.ResumeLayout();
-
-        return;
-
-        void LoadUserMenu()
-        {
-            List<ScriptInfo> scripts = [.. _scriptsManager.GetScripts().Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)];
-
-            for (int i = ToolStripScripts.Items.Count - 1; i >= 0; i--)
-            {
-                if (ToolStripScripts.Items[i].Tag as string == "userscript")
-                {
-                    ToolStripScripts.Items.RemoveAt(i);
-                }
-            }
-
-            if (scripts.Count == 0)
-            {
-                ToolStripScripts.GripStyle = ToolStripGripStyle.Hidden;
-                return;
-            }
-
-            ToolStripScripts.GripStyle = ToolStripGripStyle.Visible;
-            foreach (ScriptInfo script in scripts)
-            {
-                ToolStripButton button = new()
-                {
-                    // store scriptname
-                    Text = script.Name,
-                    Tag = "userscript",
-                    Enabled = true,
-                    Visible = true,
-                    Image = script.GetIcon(),
-                    DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
-                };
-
-                UpdateTooltipWithShortcut(button, (Command)script.HotkeyCommandIdentifier);
-
-                button.Click += (s, e) => ExecuteCommand(script.HotkeyCommandIdentifier);
-
-                // add to toolstrip
-                ToolStripScripts.Items.Add(button);
-            }
-        }
     }
 
     private void SetShortcutKeyDisplayStringsFromHotkeySettings()

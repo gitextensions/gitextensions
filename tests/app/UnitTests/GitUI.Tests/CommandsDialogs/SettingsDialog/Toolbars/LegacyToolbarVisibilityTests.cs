@@ -136,7 +136,7 @@ public class LegacyToolbarVisibilityTests
     [Test]
     public void Apply_should_ignore_an_item_without_a_name()
     {
-        // User script buttons have none; the old code stored nothing usable for them.
+        // The old code stored nothing usable for such an item.
         LegacyToolbarItem[] scripts = [new(Name: "", Group: null, IsSeparator: false), Button("b")];
 
         LegacyToolbarVisibility.Apply(scripts, _ => false, out _).Select(slot => slot.SourceIndex).Should().Equal(0);

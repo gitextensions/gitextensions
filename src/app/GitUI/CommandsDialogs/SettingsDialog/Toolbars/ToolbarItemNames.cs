@@ -5,8 +5,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 
 // The grammar of ToolbarItemConfig.ItemName, which is the only handle the loader has on an item.
 //
-// A name is either the Name of a live ToolStripItem, or one of three placeholders standing for an
-// item that has no live counterpart to point at:
+// A name is either the Name of a live ToolStripItem - a user script's button included, see
+// Script - or one of three placeholders standing for an item that has no live counterpart to
+// point at:
 //
 //   _SEPARATOR_{order}          a separator
 //   _SPACER_{order}             an expanding spacer
@@ -30,6 +31,13 @@ internal static partial class ToolbarItemNames
     // Outer bound on a stored name. A label carries its text URI-escaped, which costs up to twelve
     // characters per non-ASCII one, so this sits well above MaxLabelTextLength.
     private const int MaxLength = 2048;
+
+    /// <summary>
+    /// The Name of the toolbar button of the user script whose hotkey command identifier is
+    /// <paramref name="scriptId"/>. A script is named after that identifier rather than after its
+    /// text, which the user may change: it is the identifier hotkeys are bound to already.
+    /// </summary>
+    public static string Script(int scriptId) => $"userScript_{scriptId}";
 
     public static string Separator(int order) => $"{SeparatorPrefix}{order}";
 

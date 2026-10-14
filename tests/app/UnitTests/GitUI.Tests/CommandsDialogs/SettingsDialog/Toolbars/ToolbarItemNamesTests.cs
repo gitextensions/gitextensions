@@ -42,6 +42,18 @@ public class ToolbarItemNamesTests
         parsed.Should().Be("a_1");
     }
 
+    [Test]
+    public void Script_should_name_a_live_item_the_layout_can_hold()
+    {
+        // A script's button is resolved by name like any designer item, not built from a
+        // placeholder, so its name must pass for a control name.
+        string name = ToolbarItemNames.Script(9001);
+
+        ToolbarItemNames.IsValid(name).Should().BeTrue();
+        ToolbarItemNames.IsPlaceholder(name).Should().BeFalse();
+        name.Should().NotBe(ToolbarItemNames.Script(9002));
+    }
+
     [TestCase("_LABEL_abc", TestName = "no order suffix")]
     [TestCase("_LABEL_abc_", TestName = "empty order suffix")]
     [TestCase("_LABEL_abc_x", TestName = "non-numeric order suffix")]

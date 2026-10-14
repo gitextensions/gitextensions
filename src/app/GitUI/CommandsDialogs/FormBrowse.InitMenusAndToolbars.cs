@@ -5,6 +5,7 @@ using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 using GitUI.Properties;
+using GitUI.ScriptsEngine;
 using GitUI.Shells;
 using GitUI.UserControls;
 using ResourceManager;
@@ -32,6 +33,11 @@ partial class FormBrowse
 
     // The toolbars SubscribeToolbarEvents has already wired.
     private readonly HashSet<ToolStrip> _toolStripsWithEvents = [];
+
+    // The toolbar button of each user script shown in the user menu bar, by its Name. A button is
+    // built once and then kept up to date, rather than rebuilt on every repository load, so that it
+    // has a name the saved layout and the Toolbars settings page can refer it by.
+    private readonly Dictionary<string, ToolStripButton> _scriptToolbarItems = new(StringComparer.Ordinal);
 
     private readonly TranslationString _removeToolbarItemQuestion = new("Remove \"{0}\" from this toolbar?");
     private readonly TranslationString _removeToolbarItemCaption = new("Remove toolbar item");
@@ -114,6 +120,9 @@ partial class FormBrowse
         toolStripButtonPull.DropDownOpening += (_, _) => UpdateFetchAllVisibility();
 
         MigrateLegacyToolbarVisibility();
+
+        // Before the saved layout is applied, so that the layout can place the script buttons.
+        RefreshScriptToolbarItems();
 
         LoadDynamicToolbarsFromConfig();
 
@@ -266,11 +275,9 @@ partial class FormBrowse
             {
                 string itemName = GetItemSerializationName(item, order);
 
-                // A user script button is created without a Name (LoadUserMenu identifies it by its
-                // Tag), so it has nothing to be stored under and nothing to be resolved by. It is
-                // rebuilt from the scripts settings on every repository load anyway, after this
-                // layout has been applied. Persisting it under an empty name would only leave the
-                // layout carrying an item no loader could place.
+                // An item whose name the layout cannot hold - a plugin's, whose name may carry any
+                // character - has nothing to be stored under and nothing to be resolved by.
+                // Persisting it would only leave the layout carrying an item no loader could place.
                 if (!ToolbarItemNames.IsValid(itemName))
                 {
                     order++;
@@ -420,6 +427,76 @@ partial class FormBrowse
         }
     }
 
+    // Brings the script buttons in line with the scripts settings, which may have changed since the
+    // last repository load: a button for each enabled script shown in the user menu bar, put on the
+    // Scripts toolbar unless it already sits on a toolbar, and none for any other script.
+    private void RefreshScriptToolbarItems()
+    {
+        HashSet<string> shownItemNames = new(StringComparer.Ordinal);
+
+        foreach (ScriptInfo script in _scriptsManager.GetScripts().Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar))
+        {
+            int scriptId = script.HotkeyCommandIdentifier;
+            string itemName = ToolbarItemNames.Script(scriptId);
+            if (!shownItemNames.Add(itemName))
+            {
+                continue;
+            }
+
+            if (!_scriptToolbarItems.TryGetValue(itemName, out ToolStripButton? button))
+            {
+                button = new ToolStripButton
+                {
+                    Name = itemName,
+                    DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
+                };
+                button.Click += (_, _) => ExecuteCommand(scriptId);
+
+                _scriptToolbarItems[itemName] = button;
+                _originalToolbarItems[itemName] = button;
+            }
+
+            button.Text = script.Name;
+
+            // A button left without an image would have nothing to show once its label is turned off.
+            button.Image = script.GetIcon() ?? Images.ApplicationBlue;
+            button.ToolTipText = script.Name is null ? string.Empty : script.GetDisplayName();
+            UpdateTooltipWithShortcut(button, (Command)scriptId);
+
+            if (button.Owner is null)
+            {
+                ToolStripScripts.Items.Add(button);
+            }
+        }
+
+        foreach (string itemName in _scriptToolbarItems.Keys.Where(itemName => !shownItemNames.Contains(itemName)).ToList())
+        {
+            RemoveScriptToolbarItem(itemName);
+        }
+
+        ToolStripScripts.GripStyle = ToolStripScripts.Items.Count > 0 ? ToolStripGripStyle.Visible : ToolStripGripStyle.Hidden;
+    }
+
+    // Takes the button of a script that is no longer shown off every toolbar, together with the
+    // clones that act through it, and lets go of it.
+    private void RemoveScriptToolbarItem(string itemName)
+    {
+        ToolStripButton button = _scriptToolbarItems[itemName];
+        _scriptToolbarItems.Remove(itemName);
+        _originalToolbarItems.Remove(itemName);
+
+        foreach (ToolStrip toolStrip in GetAllLayoutToolStrips())
+        {
+            foreach (ToolStripItem item in toolStrip.Items.Cast<ToolStripItem>().Where(item => item == button || item.Tag == button).ToList())
+            {
+                toolStrip.Items.Remove(item);
+                item.Dispose();
+            }
+        }
+
+        button.Dispose();
+    }
+
     // Translates the visibility settings View > Toolbars used to write, before toolbars could be
     // customized, into the saved layout - once, since they are removed afterwards. A layout saved
     // since then supersedes them, so they are only removed in that case.
@@ -472,8 +549,8 @@ partial class FormBrowse
             ToolStripItem? item = slot.SourceIndex is int index ? items[index] : null;
             string itemName = item is not null ? GetItemSerializationName(item, order) : slot.InsertedItemName!;
 
-            // Same rule as PersistCurrentToolbarItemsLayout: an item with no name of its own (a
-            // user script button) is rebuilt from the scripts settings, not from the layout.
+            // Same rule as PersistCurrentToolbarItemsLayout: an item whose name the layout cannot
+            // hold is left out of it.
             if (ToolbarItemNames.IsValid(itemName))
             {
                 config.Items.Add(new ToolbarItemConfig
