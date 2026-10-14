@@ -2115,6 +2115,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         listBoxAvailable.Items.Add(new ToolStripItemWrapper(null, SeparatorDisplayName));
         listBoxAvailable.Items.Add(new ToolStripItemWrapper(null, ExpandingSpacerDisplayName));
         listBoxAvailable.Items.Add(new ToolStripItemWrapper(null, _customLabelDisplayName.Text));
+        int firstAction = listBoxAvailable.Items.Count;
 
         foreach (ToolStripMenuItem menuItem in mainMenu.Items.OfType<ToolStripMenuItem>())
         {
@@ -2136,6 +2137,19 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         {
             AddContextMenuItems(repoObjectsTreeContextMenu, noFilter, addedItemNames);
         }
+
+        // Gathered from every menu and toolbar, the actions are sorted by their label, which is what
+        // an action is looked for by in a list this long. The separators that grouped them by menu
+        // would only cut the sorted list into arbitrary pieces.
+        List<ToolStripItemWrapper> items = [.. listBoxAvailable.Items.Cast<ToolStripItemWrapper>()];
+        listBoxAvailable.Items.Clear();
+        listBoxAvailable.Items.AddRange(
+        [
+            .. items.Take(firstAction),
+            .. items.Skip(firstAction)
+                .Where(wrapper => wrapper.DisplayName != SeparatorDisplayName)
+                .OrderBy(wrapper => wrapper.DisplayName, StringComparer.CurrentCultureIgnoreCase)
+        ]);
     }
 
     private void PopulateMenuCategoryItems(MenuStrip mainMenu, string selectedCategory, HashSet<string> noFilter, HashSet<string> addedItemNames)
