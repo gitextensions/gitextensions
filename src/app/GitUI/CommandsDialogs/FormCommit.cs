@@ -177,6 +177,11 @@ public sealed partial class FormCommit : GitModuleForm
     [GeneratedRegex(@"\{\{(?<pattern>.*?)\}\}(?:\[(?<index>\d+)\])?", RegexOptions.ExplicitCapture)]
     private static partial Regex ReplaceMessageRegex();
 
+    /// <summary>
+    ///  Occurs after a commit has been created by this dialog.
+    /// </summary>
+    public event EventHandler? CommitCreated;
+
     private CommitKind CommitKind
     {
         get => _commitKind;
@@ -1273,6 +1278,8 @@ public sealed partial class FormCommit : GitModuleForm
                 {
                     return;
                 }
+
+                CommitCreated?.Invoke(this, EventArgs.Empty);
 
                 ScriptsRunner.RunEventScripts(ScriptEvent.AfterCommit, this);
 

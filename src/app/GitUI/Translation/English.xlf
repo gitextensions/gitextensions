@@ -9597,6 +9597,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>&amp;Edit commit</source>
         <target />
       </trans-unit>
+      <trans-unit id="editCommitWithFixupToolStripMenuItem.Text">
+        <source>E&amp;dit commit by creating a fixup commit and squash-rebase...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
         <source>Create a &amp;fixup commit...</source>
         <target />
