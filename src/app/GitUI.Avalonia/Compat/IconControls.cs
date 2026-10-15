@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using Point = Avalonia.Point;
@@ -1242,21 +1243,33 @@ internal sealed class NativeToolStripDropDownButtonContent : Panel
     // while this panel still owns the source image/arrow allocation algorithm.
     private sealed class NativeDropDownArrow : Control
     {
+        private static readonly StyledProperty<IBrush?> ArrowBrushProperty =
+            AvaloniaProperty.Register<NativeDropDownArrow, IBrush?>(nameof(ArrowBrush));
         private readonly IconDropDownButton _owner;
+
+        static NativeDropDownArrow() => AffectsRender<NativeDropDownArrow>(ArrowBrushProperty);
 
         public NativeDropDownArrow(IconDropDownButton owner)
         {
             _owner = owner;
             IsHitTestVisible = false;
             Focusable = false;
+            this[!ArrowBrushProperty] = new DynamicResourceExtension("GitExtensionsNativeToolStripArrowBrush");
         }
+
+        private IBrush? ArrowBrush => GetValue(ArrowBrushProperty);
 
         protected override bool BypassFlowDirectionPolicies => true;
 
         public override void Render(DrawingContext context)
         {
             base.Render(context);
-            NativeToolStripArrowPainter.DrawDown(context, _owner.Foreground, 0, 0);
+
+            // ToolStripDropDownButton.OnPaint uses raw SystemColors.ControlText for
+            // its enabled arrow, not the item's ForeColor or a configurable CSS color.
+            // Keep the existing disabled path until its native palette is observed.
+            NativeToolStripArrowPainter.DrawDown(context,
+                _owner.IsEffectivelyEnabled ? ArrowBrush ?? _owner.Foreground : _owner.Foreground, 0, 0);
         }
     }
 }

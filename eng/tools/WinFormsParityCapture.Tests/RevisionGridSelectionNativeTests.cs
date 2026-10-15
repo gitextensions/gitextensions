@@ -307,7 +307,7 @@ public sealed class RevisionGridSelectionNativeTests
             ?? throw new InvalidOperationException($"The original {owner.GetType().FullName}.{name} must be a {typeof(T).FullName}.");
     }
 
-    private static ObjectId[] SeedRepository(string repository)
+    internal static ObjectId[] SeedRepository(string repository)
     {
         RunGit(repository, "init", "--quiet", "-b", "selection");
         RunGit(repository, "config", "user.name", "Native Selection Probe");
@@ -375,7 +375,7 @@ public sealed class RevisionGridSelectionNativeTests
         return output.ToString();
     }
 
-    private static void WithOriginalBrowse(string repository, BrowseArguments arguments, Action<FormBrowse, Func<Exception?>, Action> action)
+    internal static void WithOriginalBrowse(string repository, BrowseArguments arguments, Action<FormBrowse, Func<Exception?>, Action> action)
     {
         FieldInfo managerField = typeof(ThreadHelper).GetField("_taskManager", PrivateStatic)
             ?? throw new MissingFieldException(typeof(ThreadHelper).FullName, "_taskManager");

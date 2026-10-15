@@ -786,10 +786,12 @@ public sealed class FormBrowseTests
             Grid split = form.revisionDiff.FindControl<Grid>("DiffSplitContainer")!;
             split.Bounds.Width.Should().Be(643);
 
-            // The source 573-DIP client leaves 509 after its 27-DIP menu, 25-DIP AutoSize
-            // toolbar and 12-DIP content padding. The proportional split takes floor(209 *
-            // 509 / 502) = 211; its 6-DIP splitter and 30-DIP tab insets leave 262.
-            split.Bounds.Height.Should().Be(262);
+            // Closed overflow gives the source combo hosts their current two-pixel margins,
+            // so the AutoSize row is 27, not its initial 25. The 573-DIP client leaves 507
+            // after its 27-DIP menu, 27-DIP toolbar and 12-DIP content padding. The split
+            // takes floor(209 * 507 / 502) = 211; splitter6 and tab insets30 leave260.
+            form.toolStripFiltersHost.Bounds.Height.Should().Be(27);
+            split.Bounds.Height.Should().Be(260);
             split.ColumnDefinitions[0].ActualWidth.Should().Be(300);
             split.ColumnDefinitions[1].ActualWidth.Should().Be(6);
             split.ColumnDefinitions[2].ActualWidth.Should().BeGreaterThan(300);

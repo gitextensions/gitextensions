@@ -48,6 +48,132 @@ public sealed class FilterToolBarMenuLayoutTests
            }
            select new TestCaseData(name, rightToLeft, systemRenderer, modifiers);
 
+    private static IEnumerable<TestCaseData> ActivationCases
+    {
+        get
+        {
+            foreach (bool rightToLeft in new[] { false, true })
+            {
+                foreach (string name in MenuNames)
+                {
+                    foreach (string route in new[] { "programmatic", "pointer-arrow", "Down", "Up", "F4", "Alt+Down" })
+                    {
+                        yield return new TestCaseData(name, route, rightToLeft);
+                    }
+
+                    if (name != "tsbtnAdvancedFilter")
+                    {
+                        yield return new TestCaseData(name, "Enter", rightToLeft);
+                        yield return new TestCaseData(name, "Space", rightToLeft);
+                    }
+                }
+
+                yield return new TestCaseData("tssbtnShowBranches", "pointer-primary", rightToLeft);
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCaseSource(nameof(ActivationCases))]
+    public void Filter_popup_should_follow_actual_source_activation_selection_and_reopen_routes(
+        string name, string route, bool rightToLeft)
+    {
+        using MenuFixture fixture = new(rightToLeft);
+        (TemplatedControl owner, MenuFlyout menu) = fixture.Menu(name);
+        MenuItem[] rows = menu.Items.OfType<MenuItem>().ToArray();
+        bool opens = route is not ("F4" or "Alt+Down");
+        bool selectsFirst = route is "Down" or "Up"
+            || (owner is DropDownButton && (route is "Enter" or "Space"));
+        for (int cycle = 0; cycle < 2; cycle++)
+        {
+            fixture.Move(fixture.Window);
+            fixture.Activate(owner, menu, route);
+            menu.IsOpen.Should().Be(opens);
+            MenuItem firstEnabled = rows.First(item => item.IsVisible && item.IsEffectivelyEnabled);
+            rows.Where(item => item.IsSelected).Select(item => item.Name)
+                .Should().Equal(selectsFirst ? new[] { firstEnabled.Name } : Array.Empty<string>());
+            if (opens)
+            {
+                menu.ShowMode.Should().Be(selectsFirst ? FlyoutShowMode.Standard : FlyoutShowMode.Transient);
+                fixture.Move(rows.Last(item => item.IsVisible && item.IsEffectivelyEnabled));
+                rows.Last(item => item.IsVisible && item.IsEffectivelyEnabled).IsSelected.Should().BeTrue();
+                menu.Hide();
+                fixture.Settle();
+                rows.Should().OnlyContain(item => !item.IsSelected,
+                    "the real original dropdown closure clears rows before the next activation");
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Filter_programmatic_open_should_keep_actual_focus_and_unselected_rows(bool rightToLeft)
+    {
+        using MenuFixture fixture = new(rightToLeft);
+        (TemplatedControl owner, MenuFlyout menu) = fixture.Menu("tsddbtnBranchFilter");
+        fixture.Move(fixture.Window);
+        fixture.Window.FocusManager.Should().NotBeNull();
+        IInputElement? before = fixture.Window.FocusManager?.GetFocusedElement();
+        menu.ShowAt(owner);
+        fixture.Settle();
+        fixture.Window.FocusManager!.GetFocusedElement().Should().BeSameAs(before);
+        menu.Items.OfType<MenuItem>().Should().OnlyContain(item => !item.IsSelected);
+        menu.Hide();
+        fixture.Settle();
+        fixture.Window.FocusManager!.GetFocusedElement().Should().BeSameAs(before);
+    }
+
+    [AvaloniaTest]
+    [TestCase(FlyoutShowMode.Standard)]
+    [TestCase(FlyoutShowMode.Transient)]
+    public void Filter_activation_scope_should_preserve_authored_show_mode_and_retire_only_its_own_value(FlyoutShowMode authored)
+    {
+        using MenuFixture fixture = new();
+        (TemplatedControl owner, MenuFlyout menu) = fixture.Menu("tsddbtnBranchFilter");
+        menu.ShowMode = authored;
+        menu.ShowAt(owner);
+        fixture.Settle();
+        menu.ShowMode.Should().Be(authored);
+        WinFormsToolStripMenuSizer.ClearToolbarDropDown(menu);
+        fixture.Settle();
+        menu.ShowMode.Should().Be(authored);
+        menu.Hide();
+        menu.ClearValue(PopupFlyoutBase.ShowModeProperty);
+        WinFormsToolStripMenuSizer.ConfigureToolbarDropDown(menu, owner);
+        menu.ShowAt(owner);
+        fixture.Settle();
+        menu.ShowMode.Should().Be(FlyoutShowMode.Transient);
+        WinFormsToolStripMenuSizer.ClearToolbarDropDown(menu);
+        menu.ShowMode.Should().Be(FlyoutShowMode.Standard);
+        menu.Hide();
+        owner.Focus().Should().BeTrue();
+        fixture.Window.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, keySymbol: null);
+        fixture.Settle();
+        menu.IsOpen.Should().BeFalse("retirement must release the source-specific owner-key opener");
+    }
+
+    [AvaloniaTest]
+    public void Filter_activation_scope_should_retire_during_show_mode_publication_without_leaking_its_value()
+    {
+        using MenuFixture fixture = new();
+        (TemplatedControl owner, MenuFlyout menu) = fixture.Menu("tsddbtnBranchFilter");
+        bool retired = false;
+        menu.PropertyChanged += (_, change) =>
+        {
+            if (!retired && change.Property == PopupFlyoutBase.ShowModeProperty && menu.ShowMode == FlyoutShowMode.Transient)
+            {
+                retired = true;
+                WinFormsToolStripMenuSizer.ClearToolbarDropDown(menu);
+            }
+        };
+        menu.ShowAt(owner);
+        fixture.Settle();
+        retired.Should().BeTrue();
+        menu.ShowMode.Should().Be(FlyoutShowMode.Standard);
+        menu.Items.OfType<MenuItem>().Should().OnlyContain(item => !item.Classes.Contains("gitextensions-filter-menu"));
+    }
+
     [AvaloniaTest]
     [Platform(Include = "Win")]
     [TestCase(9, 48, 15, 7, 115, 22)]
@@ -714,6 +840,44 @@ public sealed class FilterToolBarMenuLayoutTests
             Point point = control.TranslatePoint(new Point(control.Bounds.Width / 2, control.Bounds.Height / 2), root)
                 ?? throw new InvalidOperationException("The retained control has no actual input coordinate.");
             root.MouseMove(point);
+            Settle();
+        }
+
+        public void Activate(TemplatedControl owner, MenuFlyout menu, string route)
+        {
+            if (route == "programmatic")
+            {
+                menu.ShowAt(owner);
+            }
+            else if (route.StartsWith("pointer-", StringComparison.Ordinal))
+            {
+                Rect area = owner is NativeToolStripSplitButton split
+                    ? route == "pointer-primary" ? split.ButtonBounds : split.DropDownButtonBounds
+                    : new Rect(owner.Bounds.Size);
+                Point point = owner.TranslatePoint(new Point(area.X + (area.Width / 2), area.Y + (area.Height / 2)), Window)
+                    ?? throw new InvalidOperationException("The actual source owner has no pointer coordinate.");
+                Window.MouseMove(point);
+                Window.MouseDown(point, MouseButton.Left);
+                Window.MouseUp(point, MouseButton.Left);
+            }
+            else
+            {
+                owner.Focus(NavigationMethod.Tab).Should().BeTrue();
+                Key key = route == "Alt+Down" ? Key.Down : Enum.Parse<Key>(route);
+                RawInputModifiers modifiers = route == "Alt+Down" ? RawInputModifiers.Alt : RawInputModifiers.None;
+                PhysicalKey physical = key switch
+                {
+                    Key.Down => PhysicalKey.ArrowDown,
+                    Key.Up => PhysicalKey.ArrowUp,
+                    Key.Enter => PhysicalKey.Enter,
+                    Key.Space => PhysicalKey.Space,
+                    Key.F4 => PhysicalKey.F4,
+                    _ => throw new InvalidOperationException("The source activation probe only declares its bounded menu keys."),
+                };
+                Window.KeyPress(key, modifiers, physical, keySymbol: null);
+                Window.KeyRelease(key, modifiers, physical, keySymbol: null);
+            }
+
             Settle();
         }
 

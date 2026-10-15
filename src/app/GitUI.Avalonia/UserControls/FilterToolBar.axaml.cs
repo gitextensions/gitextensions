@@ -75,6 +75,28 @@ internal sealed partial class FilterToolBar : TranslatedControl
         InitializeComponent();
         _defaultOwnerFont = (innerStackPanel.FontFamily, innerStackPanel.FontSize, innerStackPanel.FontStyle, innerStackPanel.FontWeight);
 
+        innerStackPanel.PreferredSizeChanged += (_, _) =>
+        {
+            // A constrained DesiredSize can stay unchanged when the source preferred size grows.
+            // Relay that change through this wrapper's template caches to its actual owner row.
+            InvalidateMeasure();
+            Control? ancestor = innerStackPanel.GetVisualParent() as Control;
+            while (ancestor is not null && ReferenceEquals(ancestor.TemplatedParent, this))
+            {
+                ancestor.InvalidateMeasure();
+                ancestor = ancestor.GetVisualParent() as Control;
+            }
+
+            if (Parent is Control host)
+            {
+                host.InvalidateMeasure();
+                if (host.Parent is GitUI.Compat.WinFormsControls.ToolStripPanel row)
+                {
+                    row.InvalidateMeasure();
+                }
+            }
+        };
+
         // Select an option until we get a filter bound.
         tsbtnAdvancedFilter.Click += tsbtnAdvancedFilter_ButtonClick;
         tsmiResetPathFilters.Click += tsmiDisablePathFilters_Click;

@@ -1181,7 +1181,7 @@ public sealed class RevisionGridSupportTests
 
             accessor.Revisions.SelectedItems!.Add(revisions[2]);
             RaiseKey(accessor.Revisions, Key.C, KeyModifiers.Control);
-            clipboard.Text.Should().Be(string.Join(Environment.NewLine, revisions[2].ObjectId, revisions[0].ObjectId));
+            clipboard.Text.Should().Be(string.Join(Environment.NewLine, revisions[0].ObjectId, revisions[2].ObjectId));
 
             DragDrop.GetAllowDrop(accessor.Revisions).Should().BeTrue();
             RevisionGridControl.CanDropPatchFiles(["one.patch", "TWO.PATCH"]).Should().BeTrue();

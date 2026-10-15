@@ -392,6 +392,7 @@
           <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorDarkBrush" Color="#BDBDBD" />
           <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorLightBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsNativeToolStripGripDarkBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripArrowBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsNativeToolStripGripLightBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonBackgroundBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonHoverBackgroundBrush" Color="#D8D8D8" />
@@ -592,6 +593,7 @@
           <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorDarkBrush" Color="#404040" />
           <SolidColorBrush x:Key="GitExtensionsToolStripSeparatorLightBrush" Color="#101010" />
           <SolidColorBrush x:Key="GitExtensionsNativeToolStripGripDarkBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripArrowBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsNativeToolStripGripLightBrush" Color="#323232" />
           <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonBackgroundBrush" Color="#333333" />
           <SolidColorBrush x:Key="GitExtensionsNativeFlatButtonHoverBackgroundBrush" Color="#454545" />
@@ -1121,6 +1123,7 @@
         <Grid>
           <!-- The original border is paint, not an inset to the image/arrow layout. -->
           <Border x:Name="RootBorder"
+                  compat:NativeToolStripDropDownMenuItem.UseSystemVisualStyle="{DynamicResource GitExtensionsToolStripSeparatorUseSystemVisualStyle}"
                   Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness}" />
@@ -2134,6 +2137,19 @@
     <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripPointerOverBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
     <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="DropDownButton.gitextensions-native-toolstrip-drop-down-button:native-selected:not(:disabled) /template/ ContentPresenter#PART_ContentPresenter,
+                   DropDownButton.gitextensions-native-toolstrip-drop-down-button:pointerover:not(:disabled) /template/ ContentPresenter#PART_ContentPresenter,
+                   DropDownButton.gitextensions-native-toolstrip-drop-down-button:native-paint-suspended:not(:disabled) /template/ ContentPresenter#PART_ContentPresenter">
+    <!-- The native image/arrow presenter must not cover its paint-only background/frame sibling. -->
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="DropDownButton.gitextensions-native-toolstrip-drop-down-button /template/ Border#RootBorder[(compat|NativeToolStripDropDownMenuItem.UseSystemVisualStyle)=true]">
+    <!-- ToolStripSystemRenderer.RenderItemInternal removes one row from ClientBounds
+         before DrawBorderSimple. Professional paints the full item rectangle. -->
+    <Setter Property="Margin" Value="0,0,0,1" />
   </Style>
   <Style Selector="DropDownButton.gitextensions-native-toolstrip-drop-down-button:native-paint-suspended:not(:native-selected)">
     <Setter Property="Background" Value="Transparent" />

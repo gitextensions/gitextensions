@@ -1,9 +1,14 @@
 ﻿using System.ComponentModel.Design;
 using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
+using Avalonia.Input.Raw;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -18,6 +23,7 @@ using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
 using IHotkeySettingsLoader = ResourceManager.IHotkeySettingsLoader;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -229,6 +235,391 @@ public sealed class RevisionGridSelectionTests
         control.GetSelectedRevisionOrDefault().Should().BeSameAs(last);
         control.LatestSelectedRevision.Should().BeSameAs(last);
         control.GetTestAccessor().Revisions.SelectedItem.Should().BeSameAs(first);
+    }
+
+    [AvaloniaTest]
+    [TestCase(-1)]
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    public void Right_click_should_preserve_only_the_selected_latest_row_and_retain_selection_in_empty_space(int clickedIndex)
+    {
+        GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
+        RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
+        control.GetTestAccessor().SetRevisions(revisions);
+        control.DisableContextMenu();
+        Window window = new() { Width = 900, Height = 240, Content = control };
+        window.Show();
+        try
+        {
+            control.SetSelectedRevision(revisions[0].ObjectId).Should().BeTrue();
+            control.SetSelectedRevision(revisions[2].ObjectId, toggleSelection: true).Should().BeTrue();
+            Settle(window);
+            Point point = clickedIndex < 0
+                ? control.GetTestAccessor().Revisions.TranslatePoint(new Point(100, 180), window)!.Value
+                : RowPoint(control, window, clickedIndex);
+            window.MouseMove(point);
+            window.MouseDown(point, MouseButton.Right);
+            window.MouseUp(point, MouseButton.Right);
+            Settle(window);
+
+            if (clickedIndex == 2)
+            {
+                control.GetSelectedRevisions().Should().Equal(revisions[2], revisions[0]);
+                control.GetTestAccessor().Revisions.SelectedItem.Should().BeSameAs(revisions[0]);
+            }
+            else if (clickedIndex >= 0)
+            {
+                control.GetSelectedRevisions().Should().Equal(revisions[clickedIndex]);
+                control.GetTestAccessor().Revisions.SelectedItem.Should().BeSameAs(revisions[clickedIndex]);
+            }
+            else
+            {
+                control.GetSelectedRevisions().Should().Equal(revisions[2], revisions[0]);
+                control.GetSelectedRevisionOrDefault().Should().BeSameAs(revisions[2]);
+                control.GetTestAccessor().Revisions.SelectedItem.Should().BeSameAs(revisions[0]);
+            }
+
+            control.LatestSelectedRevision.Should().BeSameAs(clickedIndex >= 0 ? revisions[clickedIndex] : null);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Right_click_should_preserve_the_keyboard_caret_when_it_selects_a_different_row()
+    {
+        GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
+        RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
+        control.GetTestAccessor().SetRevisions(revisions);
+        control.DisableContextMenu();
+        Window window = new() { Width = 900, Height = 240, Content = control };
+        window.Show();
+        try
+        {
+            DeselectLatestRow(control, window, revisions);
+            IInputElement? caret = window.FocusManager?.GetFocusedElement();
+            caret.Should().BeSameAs(control.GetTestAccessor().Revisions.ContainerFromIndex(2));
+            Point point = RowPoint(control, window, 0);
+            window.MouseDown(point, MouseButton.Right);
+            window.MouseUp(point, MouseButton.Right);
+            Settle(window);
+
+            control.GetSelectedRevisions().Should().Equal(revisions[0]);
+            window.FocusManager!.GetFocusedElement().Should().BeSameAs(caret);
+            window.KeyPress(Key.Up, RawInputModifiers.None, PhysicalKey.ArrowUp, keySymbol: null);
+            Settle(window);
+
+            control.GetSelectedRevisions().Should().Equal(revisions[1]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Empty_mouse_down_should_cancel_pending_load_selection_without_selecting_a_revision()
+    {
+        GitRevision first = Revision(1);
+        GitRevision requested = Revision(2);
+        RevisionGridControl control = CreatePausedControl(requested.ObjectId, out IGitModule module);
+        control.DisableContextMenu();
+        Window window = new() { Width = 900, Height = 240, Content = control };
+        window.Show();
+        try
+        {
+            StartControlledLoad(control, module);
+            control.GetTestAccessor().ReadRevisions([first]);
+            control.GetTestAccessor().PendingSelectedObjectIds.Should().Equal(requested.ObjectId);
+            Settle(window);
+            Point point = control.GetTestAccessor().Revisions.TranslatePoint(new Point(100, 180), window)!.Value;
+            window.MouseDown(point, MouseButton.Right);
+            window.MouseUp(point, MouseButton.Right);
+            Settle(window);
+
+            control.GetTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
+            control.GetSelectedRevisions().Should().BeEmpty();
+            control.LatestSelectedRevision.Should().BeNull();
+            control.GetTestAccessor().ReadRevisions([requested]);
+            control.GetSelectedRevisions().Should().BeEmpty();
+        }
+        finally
+        {
+            control.CancelBackgroundTasks();
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Keyboard_copy_should_use_restoration_order_while_default_and_copy_menu_keep_latest_selection_first()
+    {
+        WinFormsShims.IClipboard? previousClipboard = null;
+        try
+        {
+            previousClipboard = WinFormsShims.ShimHost.Clipboard;
+        }
+        catch (InvalidOperationException)
+        {
+        }
+
+        WinFormsShims.IClipboard clipboard = Substitute.For<WinFormsShims.IClipboard>();
+        WinFormsShims.ShimHost.Clipboard = clipboard;
+        try
+        {
+            GitRevision first = Revision(1);
+            GitRevision last = Revision(2);
+            RevisionGridControl control = CreatePausedControl(first.ObjectId, out _);
+            control.GetTestAccessor().SetRevisions([first, last]);
+            control.SetSelectedRevision(first.ObjectId).Should().BeTrue();
+            control.SetSelectedRevision(last.ObjectId, toggleSelection: true).Should().BeTrue();
+            control.GetTestAccessor().Revisions.RaiseEvent(new KeyEventArgs
+            {
+                RoutedEvent = InputElement.KeyDownEvent,
+                Key = Key.C,
+                KeyModifiers = KeyModifiers.Control,
+            });
+
+            clipboard.Received(1).SetText(string.Join(Environment.NewLine, first.ObjectId, last.ObjectId));
+            control.GetSelectedRevisions().Should().Equal(last, first);
+            control.GetSelectedRevisionOrDefault().Should().BeSameAs(last);
+            CopyContextMenuItem menu = control.FindControl<CopyContextMenuItem>("copyToClipboardToolStripMenuItem")!;
+            menu.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+            MenuItem hashes = menu.Items.OfType<MenuItem>()
+                .Single(item => item.Header?.ToString()?.Contains("Commit hash", StringComparison.Ordinal) == true);
+            hashes.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            clipboard.Received(1).SetText(last.Guid + "\n" + first.Guid);
+        }
+        finally
+        {
+            WinFormsShims.ShimHost.Clipboard = previousClipboard ?? Substitute.For<WinFormsShims.IClipboard>();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("createTagToolStripMenuItem")]
+    [TestCase("createNewBranchToolStripMenuItem")]
+    [TestCase("checkoutRevisionToolStripMenuItem")]
+    [TestCase("fixupCommitToolStripMenuItem")]
+    [TestCase("squashCommitToolStripMenuItem")]
+    [TestCase("amendCommitToolStripMenuItem")]
+    public void Single_revision_commands_should_target_the_clicked_row_after_Ctrl_deselects_it(string menuName)
+    {
+        GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
+        RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
+        control.GetTestAccessor().SetRevisions(revisions);
+        control.DisableContextMenu();
+        Window window = new() { Width = 900, Height = 240, Content = control };
+        window.Show();
+        try
+        {
+            DeselectLatestRow(control, window, revisions);
+            MenuItem item = control.FindControl<MenuItem>(menuName)!;
+            item.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            switch (menuName)
+            {
+                case "createTagToolStripMenuItem":
+                    control.UICommands.Received(1).StartCreateTagDialog(null, revisions[2]);
+                    break;
+                case "createNewBranchToolStripMenuItem":
+                    control.UICommands.Received(1).StartCreateBranchDialog(null, revisions[2].ObjectId);
+                    break;
+                case "checkoutRevisionToolStripMenuItem":
+                    control.UICommands.Received(1).StartCheckoutRevisionDialog(null, revisions[2].Guid);
+                    break;
+                case "fixupCommitToolStripMenuItem":
+                    control.UICommands.Received(1).StartFixupCommitDialog(null, revisions[2]);
+                    break;
+                case "squashCommitToolStripMenuItem":
+                    control.UICommands.Received(1).StartSquashCommitDialog(null, revisions[2]);
+                    break;
+                case "amendCommitToolStripMenuItem":
+                    control.UICommands.Received(1).StartAmendCommitDialog(null, revisions[2]);
+                    break;
+            }
+
+            control.GetSelectedRevisionOrDefault().Should().BeSameAs(revisions[0]);
+            control.LatestSelectedRevision.Should().BeSameAs(revisions[2]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Parent_and_child_navigation_should_start_from_the_clicked_row_not_the_remaining_selection(bool child)
+    {
+        GitRevision[] revisions = [Revision(1), Revision(2), Revision(3), Revision(4)];
+        revisions[0].ParentIds = [revisions[1].ObjectId];
+        revisions[1].ParentIds = [revisions[2].ObjectId];
+        revisions[2].ParentIds = [revisions[3].ObjectId];
+        RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
+        control.GetTestAccessor().SetRevisions(revisions);
+        control.DisableContextMenu();
+        Window window = new() { Width = 900, Height = 240, Content = control };
+        window.Show();
+        try
+        {
+            DeselectLatestRow(control, window, revisions);
+            control.ExecuteCommand(child ? RevisionGridControl.Command.GoToChild : RevisionGridControl.Command.GoToFirstParent)
+                .Should().BeTrue();
+
+            control.GetSelectedRevisions().Should().Equal(child ? revisions[1] : revisions[3]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Select_as_base_should_keep_the_default_selection_contract_after_Ctrl_deselects_the_clicked_row()
+    {
+        GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
+        RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
+        control.GetTestAccessor().SetRevisions(revisions);
+        control.DisableContextMenu();
+        Window window = new() { Width = 900, Height = 240, Content = control };
+        window.Show();
+        try
+        {
+            DeselectLatestRow(control, window, revisions);
+            control.ExecuteCommand(RevisionGridControl.Command.SelectAsBaseToCompare).Should().BeTrue();
+
+            typeof(RevisionGridControl).GetField("_baseCommitToCompare",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+                .GetValue(control).Should().BeSameAs(revisions[0]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase("all")]
+    [TestCase("filtered")]
+    [TestCase("current")]
+    public void Branch_mode_commands_should_not_refresh_an_already_checked_mode_or_clear_its_selection(string mode)
+    {
+        GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
+        RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
+        control.SuspendRefreshRevisions();
+        try
+        {
+            ApplyMode();
+        }
+        finally
+        {
+            control.ResumeRefreshRevisions();
+        }
+
+        control.GetTestAccessor().SetRevisions(revisions);
+        control.SetSelectedRevision(revisions[0].ObjectId).Should().BeTrue();
+        control.SetSelectedRevision(revisions[2].ObjectId, toggleSelection: true).Should().BeTrue();
+        int filtersChanged = 0;
+        int loadsStarted = 0;
+        control.FilterChanged += (_, _) => filtersChanged++;
+        control.RevisionsLoading += (_, _) => loadsStarted++;
+
+        ApplyMode();
+
+        filtersChanged.Should().Be(0);
+        loadsStarted.Should().Be(0);
+        control.GetSelectedRevisions().Should().Equal(revisions[2], revisions[0]);
+        control.GetTestAccessor().Revisions.SelectedItem.Should().BeSameAs(revisions[0]);
+        return;
+
+        void ApplyMode()
+        {
+            switch (mode)
+            {
+                case "all": control.ShowAllBranches(); break;
+                case "filtered": control.ShowFilteredBranches(); break;
+                case "current": control.ShowCurrentBranchOnly(); break;
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Navigate_history_should_report_a_filtered_target_and_preserve_the_remaining_history(bool forward)
+    {
+        WinFormsShims.IMessageBoxHost? previousHost = null;
+        try
+        {
+            previousHost = WinFormsShims.ShimHost.MessageBoxHost;
+        }
+        catch (InvalidOperationException)
+        {
+        }
+
+        WinFormsShims.IMessageBoxHost host = Substitute.For<WinFormsShims.IMessageBoxHost>();
+        WinFormsShims.ShimHost.MessageBoxHost = host;
+        try
+        {
+            GitRevision[] revisions =
+            [
+                new(ObjectId.Parse(new string('a', 40))),
+                new(ObjectId.Parse(new string('b', 40))),
+                new(ObjectId.Parse(new string('c', 40))),
+            ];
+            RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
+            control.GetTestAccessor().SetRevisions(revisions);
+            foreach (GitRevision revision in revisions)
+            {
+                control.SetSelectedRevision(revision.ObjectId).Should().BeTrue();
+            }
+
+            if (forward)
+            {
+                control.NavigateBackward();
+                control.NavigateBackward();
+            }
+
+            control.GetTestAccessor().SetRevisions([revisions[0], revisions[2]]);
+            if (forward)
+            {
+                control.NavigateForward();
+            }
+            else
+            {
+                control.NavigateBackward();
+            }
+
+            control.GetSelectedRevisions().Should().Equal(forward ? revisions[0] : revisions[2]);
+            host.Received(1).Show(
+                Arg.Any<WinFormsShims.IWin32Window?>(),
+                Arg.Is<string?>(text => text != null && text.Contains(revisions[1].ObjectId.ToShortString())),
+                Arg.Is<string?>(caption => !string.IsNullOrWhiteSpace(caption)),
+                WinFormsShims.MessageBoxButtons.OK,
+                WinFormsShims.MessageBoxIcon.Error,
+                WinFormsShims.MessageBoxDefaultButton.Button1);
+
+            if (forward)
+            {
+                control.NavigateForward();
+            }
+            else
+            {
+                control.NavigateBackward();
+            }
+
+            control.GetSelectedRevisions().Should().Equal(forward ? revisions[2] : revisions[0]);
+            host.ReceivedCalls().Should().ContainSingle();
+        }
+        finally
+        {
+            WinFormsShims.ShimHost.MessageBoxHost = previousHost ?? Substitute.For<WinFormsShims.IMessageBoxHost>();
+        }
     }
 
     [AvaloniaTest]
@@ -599,6 +990,38 @@ public sealed class RevisionGridSelectionTests
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         source.UICommands.Returns(commands);
         return new RevisionGridControl { UICommandsSource = source };
+    }
+
+    private static void DeselectLatestRow(RevisionGridControl control, Window window, IReadOnlyList<GitRevision> revisions)
+    {
+        control.SetSelectedRevision(revisions[0].ObjectId).Should().BeTrue();
+        control.SetSelectedRevision(revisions[2].ObjectId, toggleSelection: true).Should().BeTrue();
+        Settle(window);
+        Point point = RowPoint(control, window, 2);
+        window.MouseMove(point, RawInputModifiers.Control);
+        window.MouseDown(point, MouseButton.Left, RawInputModifiers.Control);
+        window.MouseUp(point, MouseButton.Left, RawInputModifiers.Control);
+        Settle(window);
+
+        control.GetSelectedRevisions().Should().Equal(revisions[0]);
+        control.LatestSelectedRevision.Should().BeSameAs(revisions[2]);
+    }
+
+    private static Point RowPoint(RevisionGridControl control, Window window, int rowIndex)
+    {
+        ListBoxItem row = (ListBoxItem)control.GetTestAccessor().Revisions.ContainerFromIndex(rowIndex)!;
+        Point point = row.TranslatePoint(new Point(100, row.Bounds.Height / 2), window)!.Value;
+        (window.InputHitTest(point) as Visual)?.GetSelfAndVisualAncestors().OfType<ListBoxItem>()
+            .FirstOrDefault().Should().BeSameAs(row);
+        return point;
+    }
+
+    private static void Settle(Window window)
+    {
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        using Avalonia.Media.Imaging.WriteableBitmap? frame = window.CaptureRenderedFrame();
+        frame.Should().NotBeNull();
     }
 
     private static async Task ReloadAsync(

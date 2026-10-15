@@ -200,11 +200,14 @@ internal static class WinFormsToolStripMenuSizer
         private readonly bool _hadPresenterClass;
         private MenuFlyoutPresenter? _presenter;
         private MenuItem? _disabledSelection;
+        private IDisposable? _showModeValue;
+        private Key? _handledOpenKey;
         private (FontFamily Family, double Size, FontStyle Style, FontWeight Weight, FlowDirection Direction)? _font;
         private bool _updating;
         private bool _queued;
         private bool _disposed;
         private bool _trackingPointer;
+        private bool _keyboardOpening;
 
         public ToolbarDropDownScope(MenuFlyout flyout, TemplatedControl owner)
         {
@@ -218,6 +221,8 @@ internal static class WinFormsToolStripMenuSizer
             flyout.Closed += OnClosed;
             flyout.Items.CollectionChanged += OnItemsChanged;
             owner.PropertyChanged += OnOwnerChanged;
+            owner.AddHandler(InputElement.KeyDownEvent, OnOwnerKeyDown, RoutingStrategies.Tunnel);
+            owner.AddHandler(InputElement.KeyUpEvent, OnOwnerKeyUp, RoutingStrategies.Tunnel);
         }
 
         public TemplatedControl Owner => _owner;
@@ -236,6 +241,11 @@ internal static class WinFormsToolStripMenuSizer
             DetachPresenter();
             _flyout.Items.CollectionChanged -= OnItemsChanged;
             _owner.PropertyChanged -= OnOwnerChanged;
+            _owner.RemoveHandler(InputElement.KeyDownEvent, OnOwnerKeyDown);
+            _owner.RemoveHandler(InputElement.KeyUpEvent, OnOwnerKeyUp);
+            _handledOpenKey = null;
+            _showModeValue?.Dispose();
+            _showModeValue = null;
             ItemScope[] scopes = _items.Values.ToArray();
             _items.Clear();
             foreach (ItemScope scope in scopes)
@@ -249,7 +259,29 @@ internal static class WinFormsToolStripMenuSizer
             }
         }
 
-        private void OnOpening(object? sender, EventArgs args) => Apply();
+        private void OnOpening(object? sender, EventArgs args)
+        {
+            Apply();
+            _showModeValue?.Dispose();
+            _showModeValue = null;
+            if (_disposed)
+            {
+                return;
+            }
+
+            // ShowDropDown/MouseDown do not select a row. ToolStripDropDownItem's
+            // keyboard route selects the first enabled row after opening instead.
+            IDisposable? value = _flyout.SetValue(PopupFlyoutBase.ShowModeProperty,
+                _keyboardOpening ? FlyoutShowMode.Standard : FlyoutShowMode.Transient, BindingPriority.Template);
+            if (_disposed)
+            {
+                value?.Dispose();
+            }
+            else
+            {
+                _showModeValue = value;
+            }
+        }
 
         private void OnOpened(object? sender, EventArgs args)
         {
@@ -263,7 +295,89 @@ internal static class WinFormsToolStripMenuSizer
             }
         }
 
-        private void OnClosed(object? sender, EventArgs args) => DetachPresenter();
+        private void OnClosed(object? sender, EventArgs args)
+        {
+            if (_flyout.IsOpen)
+            {
+                return;
+            }
+
+            // Native dropdown closure clears its item selection. Hide() does not call
+            // MenuFlyoutPresenter.Close(), which normally resets Avalonia's selection.
+            if (_presenter is MenuFlyoutPresenter presenter && presenter.SelectedItem is MenuItem selected
+                && _items.ContainsKey(selected))
+            {
+                presenter.SetCurrentValue(SelectingItemsControl.SelectedItemProperty, null);
+                if (!_flyout.IsOpen && selected.IsSelected)
+                {
+                    selected.SetCurrentValue(MenuItem.IsSelectedProperty, false);
+                }
+            }
+
+            if (!_flyout.IsOpen)
+            {
+                DetachPresenter();
+            }
+        }
+
+        private bool OwnsFlyout()
+            => !_disposed && _owner.IsEffectivelyEnabled && _owner switch
+            {
+                SplitButton split => ReferenceEquals(split.Flyout, _flyout),
+                DropDownButton dropDown => ReferenceEquals(dropDown.Flyout, _flyout),
+                _ => false,
+            };
+
+        private void OnOwnerKeyDown(object? sender, KeyEventArgs args)
+        {
+            if (!OwnsFlyout() || args.KeyModifiers != KeyModifiers.None
+                || (args.Key is not (Key.Down or Key.Up)
+                    && !(_owner is DropDownButton && (args.Key is Key.Enter or Key.Space))))
+            {
+                return;
+            }
+
+            args.Handled = true;
+            _handledOpenKey = args.Key;
+            bool wasOpen = _flyout.IsOpen;
+            _keyboardOpening = true;
+            try
+            {
+                _flyout.ShowAt(_owner);
+                if (wasOpen && OwnsFlyout() && _flyout.IsOpen
+                    && _flyout.Popup.Child is MenuFlyoutPresenter presenter && ReferenceEquals(_presenter, presenter))
+                {
+                    _flyout.Items.OfType<MenuItem>().FirstOrDefault(item => item.IsVisible && item.IsEffectivelyEnabled)
+                        ?.Focus(NavigationMethod.Directional);
+                }
+            }
+            finally
+            {
+                _keyboardOpening = false;
+            }
+        }
+
+        private void OnOwnerKeyUp(object? sender, KeyEventArgs args)
+        {
+            if (!OwnsFlyout())
+            {
+                return;
+            }
+
+            if (_handledOpenKey == args.Key)
+            {
+                _handledOpenKey = null;
+                args.Handled = true;
+            }
+            else if (_owner is SplitButton
+                && ((args.Key == Key.F4 && args.KeyModifiers == KeyModifiers.None)
+                    || (args.Key == Key.Down && args.KeyModifiers == KeyModifiers.Alt)))
+            {
+                // The original FormBrowse queued F4/WM_SYSKEY Alt+Down routes do
+                // not open these menus; Fluent's split-button KeyUp openers must not add one.
+                args.Handled = true;
+            }
+        }
 
         private void OnPointerMoved(object? sender, PointerEventArgs args)
         {
