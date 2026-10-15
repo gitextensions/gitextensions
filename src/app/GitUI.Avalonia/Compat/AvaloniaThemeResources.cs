@@ -368,6 +368,7 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsToolStripSeparatorDarkBrush", separatorDark);
         SetBrush(resources, "GitExtensionsToolStripSeparatorLightBrush", ResolveNativeSystemColor(isDark, KnownColor.ButtonHighlight));
         SetBrush(resources, "GitExtensionsNativeToolStripGripDarkBrush", ResolveNativeSystemColor(isDark, KnownColor.ControlText));
+        SetBrush(resources, "GitExtensionsNativeToolStripArrowBrush", ResolveNativeSystemColor(isDark, KnownColor.ControlText));
         SetBrush(resources, "GitExtensionsNativeToolStripGripLightBrush", ResolveNativeSystemColor(isDark, KnownColor.ButtonHighlight));
         DrawingColor nativeWindow = ResolveNativeSystemColor(isDark, KnownColor.Window);
         DrawingColor nativeHighlight = ResolveNativeSystemColor(isDark, KnownColor.Highlight);

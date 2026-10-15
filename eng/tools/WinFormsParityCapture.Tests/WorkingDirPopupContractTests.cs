@@ -739,7 +739,7 @@ public sealed class WorkingDirPopupContractTests
         }
     }
 
-    private static string InitializeLocalCacheWithoutRealConfiguration(string bootstrapDirectory, string workspace)
+    internal static string InitializeLocalCacheWithoutRealConfiguration(string bootstrapDirectory, string workspace)
     {
         // Cold RevisionGrid construction initializes AvatarService, whose persistent
         // cache creates Images even though Browse is never shown. The source's readonly
@@ -779,7 +779,7 @@ public sealed class WorkingDirPopupContractTests
         return localPath;
     }
 
-    private static string FindWorkspaceRoot()
+    internal static string FindWorkspaceRoot()
     {
         for (DirectoryInfo? current = new(TestContext.CurrentContext.TestDirectory); current is not null; current = current.Parent)
         {
@@ -1009,7 +1009,7 @@ public sealed class WorkingDirPopupContractTests
         };
     }
 
-    private sealed class SourceThemeScope : IDisposable
+    internal sealed class SourceThemeScope : IDisposable
     {
         private readonly SystemColorMode _originalMode = Application.ColorMode;
         private readonly ThemeSettings _originalModuleSettings = ThemeModule.Settings;

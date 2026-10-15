@@ -51,7 +51,6 @@ public sealed class NativeToolStrip : Control, IDisposable
     private readonly Dictionary<Control, Size> _preferredSizes = new(ReferenceEqualityComparer.Instance);
     private readonly Dictionary<Control, NativeToolStripItemPlacement> _placements = new(ReferenceEqualityComparer.Instance);
     private readonly Dictionary<Control, IDisposable?[]> _autoSizeValues = new(ReferenceEqualityComparer.Instance);
-    private readonly Dictionary<Control, Thickness> _controlHostMainMargins = new(ReferenceEqualityComparer.Instance);
     private readonly Dictionary<Control, (bool Overflow, IDisposable? Value)> _controlHostMarginValues = new(ReferenceEqualityComparer.Instance);
     private readonly HashSet<Control> _pendingControlHostMargins = new(ReferenceEqualityComparer.Instance);
     private IDisposable?[] _overflowValues = [];
@@ -520,7 +519,11 @@ public sealed class NativeToolStrip : Control, IDisposable
         foreach (Control item in participating.Where(item => GetItemOverflow(item) != NativeToolStripItemOverflow.Always))
         {
             Size itemSize = _preferredSizes[item];
-            Thickness margin = GetMainMargin(item);
+
+            // GetPreferredSizeHorizontal uses the item's current parent margin. A hosted
+            // ComboBox in the overflow therefore contributes its popup margin even while
+            // that popup is closed; the owner row follows those actual preferred dimensions.
+            Thickness margin = item.Margin;
             width += itemSize.Width + margin.Left + margin.Right;
             height = Math.Max(height, itemSize.Height + margin.Top + margin.Bottom);
         }
@@ -549,17 +552,25 @@ public sealed class NativeToolStrip : Control, IDisposable
             Math.Max(0, width - Padding.Left - Padding.Right - gripWidth),
             Math.Max(0, height - Padding.Top - Padding.Bottom));
         CalculatePlacements(display.Width);
+        bool currentParentMarginChanged = false;
         _measuring = true;
         try
         {
             foreach (Control item in Items)
             {
-                ApplyControlHostMargin(item, GetItemPlacement(item) == NativeToolStripItemPlacement.Overflow);
+                currentParentMarginChanged |= ApplyControlHostMargin(item, GetItemPlacement(item) == NativeToolStripItemPlacement.Overflow);
             }
         }
         finally
         {
             _measuring = false;
+        }
+
+        if (currentParentMarginChanged)
+        {
+            // Closed overflow items have no visual parent to propagate Margin's measure
+            // invalidation. The source owner still recalculates its current preferred size.
+            InvalidateMeasure();
         }
 
         Control[] main = Items.Where(item => item.IsVisible && GetItemPlacement(item) == NativeToolStripItemPlacement.Main).ToArray();
@@ -780,42 +791,40 @@ public sealed class NativeToolStrip : Control, IDisposable
         }
     }
 
-    private void ApplyControlHostMargin(Control item, bool overflow)
+    private bool ApplyControlHostMargin(Control item, bool overflow)
     {
         if (!GetItemIsControlHost(item))
         {
-            return;
+            return false;
         }
 
         if (!_controlHostMarginValues.TryGetValue(item, out (bool Overflow, IDisposable? Value) current))
         {
             current = (false, item.SetValue(MarginProperty, ControlHostMainMargin, BindingPriority.StyleTrigger));
-            _controlHostMainMargins[item] = item.Margin;
             _controlHostMarginValues[item] = current;
         }
 
         if (current.Overflow == overflow)
         {
-            return;
+            return false;
         }
 
-        // Source CurrentParent changes even before the overflow is shown. Keep its
-        // public margin current without feeding that popup margin back into owner sizing.
+        // Source CurrentParent changes even before the overflow is shown. Its public
+        // margin also contributes to the owner's next preferred-size measurement.
+        Thickness previousMargin = item.Margin;
         current.Value?.Dispose();
         _controlHostMarginValues[item] = (overflow,
             item.SetValue(MarginProperty, overflow ? ControlHostOverflowMargin : ControlHostMainMargin, BindingPriority.StyleTrigger));
+        return previousMargin != item.Margin;
     }
 
     private void ReleaseControlHostMargin(Control item)
     {
-        _controlHostMainMargins.Remove(item);
         if (_controlHostMarginValues.Remove(item, out (bool Overflow, IDisposable? Value) current))
         {
             current.Value?.Dispose();
         }
     }
-
-    private Thickness GetMainMargin(Control item) => _controlHostMainMargins.GetValueOrDefault(item, item.Margin);
 
     private void Item_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
@@ -981,7 +990,7 @@ public sealed class NativeToolStrip : Control, IDisposable
 
     private double ItemWidth(Control item)
     {
-        Thickness margin = GetMainMargin(item);
+        Thickness margin = item.Margin;
         return _preferredSizes[item].Width + margin.Left + margin.Right;
     }
 }

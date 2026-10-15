@@ -86,7 +86,8 @@ public sealed class FilterToolBarOverflowTests
             toolbar.Width = 50;
             Settle(window);
             strip.OverflowItems.Should().Equal(original);
-            strip.OverflowButton.Bounds.Should().Be(new Rect(rightToLeft ? 0 : 34, 0, 16, 25));
+            strip.PreferredSize.Height.Should().Be(27, "the two23px hosts contribute their current2px top/bottom overflow margins");
+            strip.OverflowButton.Bounds.Should().Be(new Rect(rightToLeft ? 0 : 34, 0, 16, 27));
             strip.ShowOverflow();
             Settle(window);
             strip.OverflowContent.Bounds.Width.Should().BeGreaterThan(100);
@@ -96,6 +97,7 @@ public sealed class FilterToolBarOverflowTests
             Settle(window);
             strip.HasOverflow.Should().BeFalse();
             strip.IsOverflowOpen.Should().BeFalse();
+            strip.PreferredSize.Height.Should().Be(25, "main-parent margins reclaim the source row height on regrowth");
             strip.Items.Should().Equal(original);
             original.Should().OnlyContain(item => strip.GetCurrentParent(item) == strip && item.Parent == strip);
         }

@@ -8,16 +8,22 @@ using Avalonia.Input;
 using Avalonia.Input.Raw;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.Compat;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using NSubstitute;
+using SkiaSharp;
+using DrawingColor = System.Drawing.Color;
+using KnownColor = System.Drawing.KnownColor;
 using Point = Avalonia.Point;
 
 namespace GitExtensionsTests;
@@ -277,6 +283,153 @@ public sealed class FilterToolBarInteractionTests
         fixture.Window.Resources["GitExtensionsNativeMenuSelectedBackgroundBrush"] = new SolidColorBrush(Color.Parse("#354759"));
         fixture.Settle();
         ColorOf(selection.Background).Should().Be(ColorOf(fixture.ResourceBrush(selectedBackground)));
+    }
+
+    [AvaloniaTest]
+    [TestCase("tsddbtnBranchFilter", false, "light")]
+    [TestCase("tsddbtnBranchFilter", true, "light")]
+    [TestCase("tsddbtnRevisionFilter", false, "light")]
+    [TestCase("tsddbtnRevisionFilter", true, "light")]
+    [TestCase("tsddbtnBranchFilter", false, "dark")]
+    [TestCase("tsddbtnBranchFilter", true, "dark")]
+    [TestCase("tsddbtnRevisionFilter", false, "dark")]
+    [TestCase("tsddbtnRevisionFilter", true, "dark")]
+    [TestCase("tsddbtnBranchFilter", false, "custom")]
+    [TestCase("tsddbtnBranchFilter", true, "custom")]
+    [TestCase("tsddbtnRevisionFilter", false, "custom")]
+    [TestCase("tsddbtnRevisionFilter", true, "custom")]
+    public void Filter_dropdown_presenter_should_not_cover_its_native_hover_outline(
+        string name, bool rightToLeft, string theme)
+    {
+        bool systemRenderer = theme == "light";
+        using FilterFixture fixture = new(rightToLeft, dark: !systemRenderer);
+        fixture.Window.Resources["GitExtensionsToolStripSeparatorUseSystemVisualStyle"] = systemRenderer;
+        if (theme == "custom")
+        {
+            fixture.Window.Resources["GitExtensionsPanelBackgroundBrush"] = new SolidColorBrush(Color.Parse("#293847"));
+            fixture.Window.Resources["GitExtensionsWindowTextBrush"] = new SolidColorBrush(Color.Parse("#DFEAF5"));
+        }
+
+        SolidColorBrush underlying = new(Color.Parse("#314253"));
+        fixture.Window.Background = underlying;
+        fixture.Settle();
+        (TemplatedControl owner, MenuFlyout menu) = fixture.Menu(name);
+        Border outline = owner.GetVisualDescendants().OfType<Border>()
+            .Single(part => part.Name == "RootBorder" && ReferenceEquals(part.TemplatedParent, owner));
+        ContentPresenter content = owner.GetVisualDescendants().OfType<ContentPresenter>()
+            .Single(part => part.Name == "PART_ContentPresenter" && ReferenceEquals(part.TemplatedParent, owner));
+        Size size = owner.Bounds.Size;
+        fixture.Move(fixture.Window);
+        ColorOf(outline.BorderBrush).A.Should().Be(0);
+        fixture.AssertPixel(owner, new Point(0, 2), underlying.Color);
+        fixture.Move(owner);
+        owner.IsPointerOver.Should().BeTrue();
+        ColorOf(content.Background).A.Should().Be(0);
+        content.BorderThickness.Should().Be(default(Thickness));
+        outline.Margin.Should().Be(new Thickness(0, 0, 0, systemRenderer ? 1 : 0));
+        Color border = ColorOf(fixture.ResourceBrush("GitExtensionsHighlightBackgroundBrush"));
+        Color fill = ColorOf(fixture.ResourceBrush("GitExtensionsToolStripPointerOverBackgroundBrush"));
+        Control arrow = owner.GetVisualDescendants().OfType<NativeToolStripDropDownButtonContent>().Single().Children.Last();
+        fixture.AssertPixel(arrow, new Point(2, 0), systemRenderer ? Colors.Black : Colors.White);
+        fixture.AssertPixel(owner, new Point(0, 2), border);
+        fixture.AssertPixel(owner, new Point(owner.Bounds.Width - 1, 2), border);
+        fixture.AssertPixel(owner, new Point(10, 0), border);
+        fixture.AssertPixel(owner, new Point(10, owner.Bounds.Height - (systemRenderer ? 2 : 1)), border);
+        fixture.AssertPixel(owner, new Point(1, 2), fill);
+        if (systemRenderer)
+        {
+            fixture.AssertPixel(owner, new Point(10, owner.Bounds.Height - 1), underlying.Color);
+        }
+
+        owner.Bounds.Size.Should().Be(size, "the selected outline is paint, not another source layout inset");
+
+        menu.ShowAt(owner);
+        fixture.Settle();
+        menu.IsOpen.Should().BeTrue();
+        ColorOf(outline.BorderBrush).Should().Be(border, "ToolStripEx freezes the actual pre-open selected owner paint");
+        fixture.AssertPixel(owner, new Point(0, 2), border);
+        menu.Hide();
+        fixture.Settle();
+        owner.IsEnabled = false;
+        fixture.Move(fixture.Window);
+        fixture.Move(owner);
+        fixture.Pixel(owner, new Point(0, 2)).Should().NotBe(border);
+        owner.Bounds.Size.Should().Be(size);
+    }
+
+    [AvaloniaTest]
+    [TestCase("tsddbtnBranchFilter", "light")]
+    [TestCase("tsddbtnRevisionFilter", "light")]
+    [TestCase("tsddbtnBranchFilter", "dark")]
+    [TestCase("tsddbtnRevisionFilter", "dark")]
+    [TestCase("tsddbtnBranchFilter", "custom")]
+    [TestCase("tsddbtnRevisionFilter", "custom")]
+    public void Filter_enabled_dropdown_arrow_should_keep_raw_native_ControlText_separate_from_item_foreground(
+        string name, string theme)
+    {
+        bool dark = theme != "light";
+        using FilterFixture fixture = new(dark: dark);
+        (TemplatedControl owner, _) = fixture.Menu(name);
+        Color expectedArrow = dark ? Colors.White : Colors.Black;
+        ColorOf(owner.Foreground).Should().Be(dark ? Color.Parse("#F0F0F0") : Colors.Black);
+        Control arrow = owner.GetVisualDescendants().OfType<NativeToolStripDropDownButtonContent>().Single().Children.Last();
+        fixture.AssertPixel(arrow, new Point(2, 0), expectedArrow);
+        if (theme == "custom")
+        {
+            fixture.Window.Resources["GitExtensionsKnownColorControlTextBrush"] = Brushes.Magenta;
+            fixture.Window.Resources["GitExtensionsControlForegroundBrush"] = Brushes.Magenta;
+            fixture.Window.Resources["GitExtensionsWindowTextBrush"] = new SolidColorBrush(Color.Parse("#ADCDEF"));
+            fixture.Settle();
+            ColorOf(owner.Foreground).Should().Be(Color.Parse("#ADCDEF"));
+            fixture.AssertPixel(arrow, new Point(2, 0), expectedArrow);
+        }
+
+        owner.Foreground = Brushes.Blue;
+        fixture.Settle();
+        fixture.AssertPixel(arrow, new Point(2, 0), expectedArrow);
+        fixture.Move(owner);
+        fixture.AssertPixel(arrow, new Point(2, 0), expectedArrow);
+        SolidColorBrush replacement = new(Color.Parse("#192B3D"));
+        fixture.Window.Resources["GitExtensionsNativeToolStripArrowBrush"] = replacement;
+        fixture.Settle();
+        fixture.AssertPixel(arrow, new Point(2, 0), replacement.Color);
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Native_toolstrip_arrow_palette_should_not_accept_configurable_CSS_ControlText(bool dark)
+    {
+        Application application = Application.Current!;
+        ThemeVariant variant = dark ? ThemeVariant.Dark : ThemeVariant.Light;
+        bool hadResources = application.Resources.ThemeDictionaries.TryGetValue(variant, out IThemeVariantProvider? originalResources);
+        ThemeSettings originalSettings = ThemeModule.Settings;
+        ResourceDictionary resources = new();
+        application.Resources.ThemeDictionaries[variant] = resources;
+        Theme theme = new(
+            new Dictionary<AppColor, DrawingColor> { [AppColor.PanelBackground] = dark ? DrawingColor.Black : DrawingColor.White },
+            new Dictionary<KnownColor, DrawingColor> { [KnownColor.ControlText] = DrawingColor.Magenta },
+            new ThemeId("native-toolstrip-arrow-custom"));
+        try
+        {
+            AvaloniaThemeResources.Apply(application, new ThemeSettings(theme, Theme.Default, ThemeVariations.None, useSystemVisualStyle: false));
+            ColorOf((IBrush)resources["GitExtensionsNativeToolStripArrowBrush"]!).Should().Be(dark ? Colors.White : Colors.Black);
+            ColorOf((IBrush)resources["GitExtensionsKnownColorControlTextBrush"]!).Should().Be(Colors.Magenta,
+                "the native arrow boundary must not remove the source's separate configurable ControlText role");
+        }
+        finally
+        {
+            if (hadResources)
+            {
+                application.Resources.ThemeDictionaries[variant] = originalResources!;
+            }
+            else
+            {
+                application.Resources.ThemeDictionaries.Remove(variant);
+            }
+
+            GitExtUtils.GitUI.Theming.ColorHelper.ThemeSettings = originalSettings;
+        }
     }
 
     [AvaloniaTest]
@@ -600,6 +753,26 @@ public sealed class FilterToolBarInteractionTests
             Dispatcher.UIThread.RunJobs();
             Window.UpdateLayout();
             Dispatcher.UIThread.RunJobs();
+        }
+
+        public void AssertPixel(Control control, Point point, Color expected)
+            => Pixel(control, point).Should().Be(expected);
+
+        public Color Pixel(Control control, Point point)
+        {
+            TopLevel root = TopLevel.GetTopLevel(control)
+                ?? throw new InvalidOperationException("The retained toolbar owner has no actual frame root.");
+            Point actual = control.TranslatePoint(point, root)
+                ?? throw new InvalidOperationException("The retained owner has no actual frame coordinate.");
+            using WriteableBitmap frame = root.CaptureRenderedFrame()
+                ?? throw new InvalidOperationException("The actual pointer route must produce a rendered frame.");
+            using MemoryStream stream = new();
+            frame.Save(stream, PngBitmapEncoderOptions.Default);
+            stream.Position = 0;
+            using SKBitmap pixels = SKBitmap.Decode(stream)
+                ?? throw new InvalidOperationException("The actual toolbar frame cannot be decoded.");
+            SKColor pixel = pixels.GetPixel((int)actual.X, (int)actual.Y);
+            return Color.FromArgb(pixel.Alpha, pixel.Red, pixel.Green, pixel.Blue);
         }
 
         public void Dispose()

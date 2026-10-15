@@ -613,7 +613,7 @@ public sealed class ToolStripOwnerOverflowTests
         TestContext.Out.WriteLine($"isolated original settings retained: {directory}");
     }
 
-    private static void InitializeAppSettingsWithoutRealConfiguration(string directory)
+    internal static void InitializeAppSettingsWithoutRealConfiguration(string directory)
     {
         Type settingsType = typeof(AppSettings).Assembly.GetType("GitCommands.Properties.Settings", throwOnError: true)
             ?? throw new TypeLoadException("GitCommands.Properties.Settings");

@@ -21,7 +21,7 @@ public sealed class NativeToolStripHostedControlTests
     [TestCase(9, true)]
     [TestCase(11, false)]
     [TestCase(11, true)]
-    public void Control_hosts_should_keep_menu_fonts_main_preferred_size_and_actual_controls_through_width_cycles(int points, bool rightToLeft)
+    public void Control_hosts_should_keep_menu_fonts_current_preferred_size_and_actual_controls_through_width_cycles(int points, bool rightToLeft)
     {
         using NativeToolStrip strip = new()
         {
@@ -62,9 +62,12 @@ public sealed class NativeToolStripHostedControlTests
                 Settle(window);
                 strip.Items.Should().Equal(original);
                 strip.Items.Should().OnlyContain(item => item.Parent == strip);
-                strip.PreferredSize.Should().Be(sourcePreferred,
-                    "popup host margins cannot become the main owner's preferred height or overflow boundary");
                 ToolbarComboBox[] hosts = [branches, revisions];
+                int overflowHostCount = hosts.Count(host => strip.GetItemPlacement(host) == NativeToolStripItemPlacement.Overflow);
+                Size currentPreferred = new(sourcePreferred.Width + (2 * overflowHostCount),
+                    Math.Max(sourcePreferred.Height, overflowHostCount > 0 ? 27 : 25));
+                strip.PreferredSize.Should().Be(currentPreferred,
+                    "native current-parent margins contribute to preferred sizing even when the overflow is closed");
                 foreach (ToolbarComboBox host in hosts)
                 {
                     host.FontFamily.Name.Should().Be("Segoe UI");
@@ -113,7 +116,7 @@ public sealed class NativeToolStripHostedControlTests
                 Settle(window);
                 strip.Items.Should().Equal(original);
                 hosts.Should().OnlyContain(host => host.SelectedIndex == 0 && host.Parent == strip);
-                strip.PreferredSize.Should().Be(sourcePreferred);
+                strip.PreferredSize.Should().Be(currentPreferred);
             }
 
             TextBox regrownEditor = GetEditor(branches);

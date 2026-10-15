@@ -290,6 +290,59 @@ public sealed class MainWindowToolStripLayoutTests
         }
     }
 
+    [AvaloniaTest]
+    [TestCase(9, false)]
+    [TestCase(11, false)]
+    [TestCase(14, false)]
+    [TestCase(9, true)]
+    [TestCase(11, true)]
+    [TestCase(14, true)]
+    public void Closed_overflow_host_margins_should_feed_source_preferred_size_and_reclaim_on_regrowth(int points, bool rightToLeft)
+    {
+        using NativeToolStrip strip = new() { FontSize = points * 96d / 72 };
+        ToolbarComboBox[] hosts = [new() { Width = 100 }, new() { Width = 100 }];
+        foreach (ToolbarComboBox host in hosts)
+        {
+            NativeToolStrip.SetItemIsControlHost(host, true);
+            NativeToolStrip.SetItemAutoSize(host, false);
+            NativeToolStrip.SetItemHeight(host, 23);
+            strip.Items.Add(host);
+        }
+
+        Window window = new()
+        {
+            Width = 800,
+            Height = 120,
+            FlowDirection = rightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
+            Content = strip,
+        };
+        try
+        {
+            window.Show();
+            Settle(window);
+            strip.PreferredSize.Should().Be(new Size(211, 25));
+            hosts.Should().OnlyContain(host => host.Margin == new Thickness(1, 0, 1, 0));
+            strip.Width = 50;
+            Settle(window);
+            strip.IsOverflowOpen.Should().BeFalse();
+            hosts.Should().OnlyContain(host => strip.GetItemPlacement(host) == NativeToolStripItemPlacement.Overflow);
+            hosts.Should().OnlyContain(host => host.Margin == new Thickness(2));
+            strip.PreferredSize.Should().Be(new Size(215, 27),
+                "source GetPreferredSizeHorizontal includes current overflow margins even when the popup is closed");
+            hosts.Should().OnlyContain(host => host.FontSize == 12,
+                "native ComboBox control fonts stay at the default menu font independently of the owner font");
+            strip.Width = double.NaN;
+            Settle(window);
+            strip.PreferredSize.Should().Be(new Size(211, 25));
+            hosts.Should().OnlyContain(host => host.Margin == new Thickness(1, 0, 1, 0));
+            strip.HasOverflow.Should().BeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private static IconSplitButton NewBranch(string source) => new()
     {
         UseNativeToolStripLayout = true,

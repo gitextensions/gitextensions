@@ -5,6 +5,14 @@
              x:Class="GitUI.UserControls.FilterToolBar"
              Foreground="{DynamicResource GitExtensionsWindowTextBrush}">
   <UserControl.Styles>
+    <!-- FormBrowse gives its filter strip WindowText. Framework button/label defaults
+         must not replace that enabled item color with ControlText; retain disabled paint. -->
+    <Style Selector="DropDownButton#tsddbtnBranchFilter:not(:disabled),
+                     DropDownButton#tsddbtnRevisionFilter:not(:disabled),
+                     Label#tslblRevisionFilter:not(:disabled),
+                     ToggleButton#tsmiShowOnlyFirstParent:not(:disabled)">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    </Style>
     <!-- ToolStrip items retain their source margins while their native owner stretches
          AutoSize items and moves the same controls into its overflow. -->
     <Style Selector="ToggleButton.gitextensions-toolbar-button,

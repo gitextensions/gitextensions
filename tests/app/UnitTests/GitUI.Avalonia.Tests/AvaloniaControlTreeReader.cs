@@ -266,10 +266,13 @@ internal sealed class AvaloniaControlTreeReader
                 ?? (comboBox.SelectedItem as ComboBoxItem)?.Content as string;
         }
 
+        // RefreshWorkingDirectory converts dynamic branch captions for AccessText without
+        // opting the non-translated field into the translation converter. Undo that storage
+        // conversion just as for translated captions; the native field contains one underscore.
         string value = text is null
             ? string.Empty
-            : (control is MenuItem or Button or Label || control.Name == "btnRemoteColor")
-              && TranslationCompat.GetConvertMnemonics(control)
+            : (control is MenuItem or Button or SplitButton or Label || control.Name == "btnRemoteColor")
+              && (TranslationCompat.GetConvertMnemonics(control) || control.Name == "branchSelect")
                 ? ToWinFormsMnemonics(text)
                 : text;
         return value.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
@@ -5640,7 +5643,8 @@ internal sealed class AvaloniaControlTreeReader
                or "toolStripButtonLevelUp" or "toolStripButtonPull" or "toolStripSeparator0"
                or "toolStripSeparator1" or "toolStripSeparator17"
                or "toolStripWorktrees"
-               or "tsddbtnRevisionFilter"
+               or "tsddbtnRevisionFilter" or "tsddbtnBranchFilter"
+               or "tslblRevisionFilter" or "tsmiShowOnlyFirstParent"
                || control.Name is "toolStripFileExplorer" or "userShell" or "EditSettings"
                || (control.Name is "toolStripSplitStash" or "toolStripSeparator2"
                    && IsInsideClippedAncestors(control))
@@ -5713,7 +5717,7 @@ internal sealed class AvaloniaControlTreeReader
                && IsSemanticToolStripItem(control))
            || (_root.GetType().FullName == "GitUI.CommandsDialogs.FormBrowse"
            && (control.Name is "toolStripLabel1" or "tsbShowReflog" or "tsbtnAdvancedFilter"
-                or "tsddbtnBranchFilter" or "tslblRevisionFilter" or "tsmiShowOnlyFirstParent"
+                or "tsddbtnBranchFilter" or "tsddbtnRevisionFilter" or "tslblRevisionFilter" or "tsmiShowOnlyFirstParent"
                 or "tssbtnShowBranches"
                 or "toolStripButtonPush" or "toolStripButtonCommit"
                 || control.Name is "toolStripFileExplorer" or "userShell" or "EditSettings"
@@ -6195,10 +6199,13 @@ internal sealed class AvaloniaControlTreeReader
                 ? ResolveResourceArgb("GitExtensionsWindowBackgroundBrush")
                 : ResolveResourceArgb("GitExtensionsKnownColorControlBrush")
                   ?? ResolveResourceArgb("GitExtensionsControlBackgroundBrush");
+        // Filter item ForeColor is an ambient control property. The native dropdown arrow
+        // separately paints SystemColors.ControlText; do not report its color as the item text.
         string? foreground = isSeparator
             ? ResolveResourceArgb("GitExtensionsKnownColorControlDarkBrush")
               ?? ResolveResourceArgb("GitExtensionsControlBorderBrush")
             : control.Name is "btnUnequalChange" or "btnOnlyB" or "btnOnlyA" or "btnSameChange"
+                or "tsddbtnBranchFilter" or "tslblRevisionFilter" or "tsmiShowOnlyFirstParent"
                 ? BrushToArgb(GetPropertyValue(control, "Foreground"))
             : control.Name == "encodingToolStripComboBox"
                 ? ResolveResourceArgb("GitExtensionsMenuForegroundBrush")

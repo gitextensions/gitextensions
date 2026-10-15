@@ -696,7 +696,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     {
         if (_navigationHistory.CanNavigateBackward)
         {
-            SetSelectedRevision(_navigationHistory.NavigateBackward(), updateNavigationHistory: false);
+            ObjectId commitId = _navigationHistory.NavigateBackward();
+            if (!SetSelectedRevision(commitId))
+            {
+                MessageBoxes.RevisionFilteredInGrid(this, commitId);
+            }
         }
     }
 
@@ -704,7 +708,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     {
         if (_navigationHistory.CanNavigateForward)
         {
-            SetSelectedRevision(_navigationHistory.NavigateForward(), updateNavigationHistory: false);
+            ObjectId commitId = _navigationHistory.NavigateForward();
+            if (!SetSelectedRevision(commitId))
+            {
+                MessageBoxes.RevisionFilteredInGrid(this, commitId);
+            }
         }
     }
 
@@ -1605,6 +1613,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             NavigateForward();
             e.Handled = true;
         }
+
+        // If clicking while loading, cancel load-select
+        _pendingSelectedObjectIds = [];
     }
 
     internal bool TryGetSuperProjectInfo([System.Diagnostics.CodeAnalysis.NotNullWhen(returnValue: true)] out SuperProjectInfo? spi)
@@ -1656,7 +1667,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 0)
             {
-                ClipboardUtil.TrySetText(string.Join(Environment.NewLine, selectedRevisions.Select(revision => revision.ObjectId)));
+                ClipboardUtil.TrySetText(string.Join(Environment.NewLine, selectedRevisions.Reverse().Select(revision => revision.ObjectId)));
             }
 
             e.Handled = true;
@@ -1802,12 +1813,24 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 }
             }
 
-            if (properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
+            if (properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed && revision is not null)
             {
+                // DataGridView keeps its current cell on right-click; do not let ListBox move keyboard focus or its caret.
+                e.Handled = true;
                 _rightClickedHitInfo = label;
                 _messageColumnProvider.SetHighlight(messageCell, label);
-                _latestSelectedRowIndex = revision is null ? -1 : GetRevisionIndex(revision);
-                if (revision is not null && _gridView.SelectedItems?.Contains(revision) != true)
+                int rowIndex = GetRevisionIndex(revision);
+                if (_latestSelectedRowIndex == rowIndex
+                    && IsValidRevisionIndex(_latestSelectedRowIndex)
+                    && _gridView.SelectedItems?.Contains(revision) == true)
+                {
+                    return;
+                }
+
+                _latestSelectedRowIndex = rowIndex;
+                _gridView.SelectedItems?.Clear();
+
+                if (IsValidRevisionIndex(_latestSelectedRowIndex))
                 {
                     _gridView.SelectedItem = revision;
                 }
@@ -1849,7 +1872,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void CreateTagToolStripMenuItemClick(object sender, EventArgs e)
     {
-        if (SelectedRevision is GitRevision revision)
+        if (LatestSelectedRevision is GitRevision revision)
         {
             UICommands.StartCreateTagDialog(GetOwner(), revision);
         }
@@ -1857,7 +1880,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void ResetCurrentBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
     {
-        if (SelectedRevision is not GitRevision revision)
+        if (LatestSelectedRevision is not GitRevision revision)
         {
             return;
         }
@@ -1874,7 +1897,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         UICommands.StartResetChangesDialog(
             GetOwner(),
             Module.GetWorkTreeFiles(),
-            onlyWorkTree: SelectedRevision?.ObjectId == ObjectId.WorkTreeId);
+            onlyWorkTree: LatestSelectedRevision?.ObjectId == ObjectId.WorkTreeId);
         ArtificialChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -1887,7 +1910,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void ResetAnotherBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
     {
-        if (SelectedRevision is not GitRevision revision)
+        if (LatestSelectedRevision is not GitRevision revision)
         {
             return;
         }
@@ -1901,7 +1924,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void CreateNewBranchToolStripMenuItemClick(object sender, EventArgs e)
     {
-        if (SelectedRevision is GitRevision revision)
+        if (LatestSelectedRevision is GitRevision revision)
         {
             UICommands.StartCreateBranchDialog(GetOwner(), revision.ObjectId);
         }
@@ -1929,6 +1952,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     /// <inheritdoc />
     public void ShowAllBranches()
     {
+        if (_filterInfo.IsShowAllBranchesChecked)
+        {
+            return;
+        }
+
         _filterInfo.ByBranchFilter = false;
         _filterInfo.ShowCurrentBranchOnly = false;
         RefreshFilteredRevisions();
@@ -1937,6 +1965,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     /// <inheritdoc />
     public void ShowFilteredBranches()
     {
+        if (_filterInfo.IsShowFilteredBranchesChecked)
+        {
+            return;
+        }
+
         // Must be able to set ByBranchFilter without a filter to edit it
         _filterInfo.ByBranchFilter = true;
         _filterInfo.ShowCurrentBranchOnly = false;
@@ -1946,6 +1979,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     /// <inheritdoc />
     public void ShowCurrentBranchOnly()
     {
+        if (_filterInfo.IsShowCurrentBranchOnlyChecked)
+        {
+            return;
+        }
+
         _filterInfo.ByBranchFilter = false;
         _filterInfo.ShowCurrentBranchOnly = true;
         RefreshFilteredRevisions();
@@ -1973,7 +2011,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void UpdateContextMenuItems(Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>>? filterRefs = null)
     {
-        GitRevision? revision = SelectedRevision;
+        GitRevision? revision = LatestSelectedRevision;
         bool hasCommands = TryGetUICommandsDirect(out IGitUICommands? commands);
         bool isBareRepository = hasCommands && commands!.Module.IsBareRepository();
         bool regularRevision = revision is { IsArtificial: false } && hasCommands && !isBareRepository;
@@ -2264,6 +2302,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void ContextMenuOpening(object sender, CancelEventArgs e)
     {
+        if (LatestSelectedRevision is null)
+        {
+            return;
+        }
+
         // If a ref label was right-clicked, show a focused context menu for that ref
         //   If Shift is pressed or AppSettings.AlwaysShowAdvOpt, show the full context menu directly but filter the dropdowns to the clicked ref
         //   If Control is pressed, override Shift and AlwaysShowAdvOpt, e.g. for debug purposes
@@ -2353,7 +2396,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private bool GoToParent(bool firstParent, bool useHistory)
     {
-        if (SelectedRevision is not GitRevision revision)
+        if (LatestSelectedRevision is not GitRevision revision)
         {
             return false;
         }
@@ -2380,7 +2423,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private bool GoToChild()
     {
-        if (SelectedRevision is not GitRevision revision)
+        if (LatestSelectedRevision is not GitRevision revision)
         {
             return false;
         }
@@ -2416,7 +2459,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)
     {
-        if (SelectedRevision is GitRevision revision)
+        if (LatestSelectedRevision is GitRevision revision)
         {
             UICommands.StartCheckoutRevisionDialog(GetOwner(), revision.Guid);
         }
@@ -2518,7 +2561,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void ApplyStashToolStripMenuItemClick(object sender, EventArgs e)
     {
-        if (SelectedRevision is GitRevision revision)
+        if (LatestSelectedRevision is GitRevision revision)
         {
             UICommands.StashApply(GetOwner(), revision.ObjectId.ToString());
             ReloadCurrentView();
@@ -2527,7 +2570,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void PopStashToolStripMenuItemClick(object sender, EventArgs e)
     {
-        string? stashName = SelectedRevision?.ReflogSelector;
+        string? stashName = LatestSelectedRevision?.ReflogSelector;
         if (!string.IsNullOrEmpty(stashName))
         {
             UICommands.StashPop(GetOwner(), stashName);
@@ -2537,7 +2580,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void DropStashToolStripMenuItemClick(object sender, EventArgs e)
     {
-        string? stashName = SelectedRevision?.ReflogSelector;
+        string? stashName = LatestSelectedRevision?.ReflogSelector;
         if (string.IsNullOrEmpty(stashName))
         {
             return;
@@ -2573,7 +2616,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void FixupCommitToolStripMenuItemClick(object sender, EventArgs e)
     {
-        if (SelectedRevision is GitRevision revision)
+        if (LatestSelectedRevision is GitRevision revision)
         {
             UICommands.StartFixupCommitDialog(GetOwner(), revision);
         }
@@ -2581,7 +2624,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void SquashCommitToolStripMenuItemClick(object sender, EventArgs e)
     {
-        if (SelectedRevision is GitRevision revision)
+        if (LatestSelectedRevision is GitRevision revision)
         {
             UICommands.StartSquashCommitDialog(GetOwner(), revision);
         }
@@ -2589,7 +2632,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void AmendCommitToolStripMenuItemClick(object sender, EventArgs e)
     {
-        if (SelectedRevision is GitRevision revision)
+        if (LatestSelectedRevision is GitRevision revision)
         {
             UICommands.StartAmendCommitDialog(GetOwner(), revision);
         }
@@ -2666,7 +2709,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void ContinueBisect(GitBisectOption bisectOption)
     {
-        if (SelectedRevision is not GitRevision revision)
+        if (LatestSelectedRevision is not GitRevision revision)
         {
             return;
         }
@@ -3693,7 +3736,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void LaunchRebase(string command)
     {
-        if (SelectedRevision is not GitRevision revision)
+        if (LatestSelectedRevision is not GitRevision revision)
         {
             return;
         }
