@@ -578,6 +578,7 @@ internal static class WinFormsToolStripMenuSizer
                     if (!_disposed && _flyout.Items.Contains(item))
                     {
                         scope.ApplySize(item, metrics);
+                        scope.ApplyShortcut();
                     }
                 }
             }
@@ -597,6 +598,9 @@ internal static class WinFormsToolStripMenuSizer
             private readonly bool _hadCaptionClass;
             private readonly bool _hadSystemRendererClass;
             private IDisposable? _groupValue;
+            private IDisposable? _shortcutValue;
+            private TextBlock? _shortcutText;
+            private string? _shortcutDisplay;
             private (int Width, int Height)? _size;
             private bool _disposed;
 
@@ -608,7 +612,8 @@ internal static class WinFormsToolStripMenuSizer
                 _hadCaptionClass = item.Classes.Contains(CaptionOnlyClass);
                 _hadSystemRendererClass = item.Classes.Contains(SystemRendererClass);
                 item.Classes.Add(FilterMenuClass);
-                item.PropertyChanged += onChanged;
+                item.PropertyChanged += OnPropertyChanged;
+                item.TemplateApplied += OnTemplateApplied;
             }
 
             public void UpdateCaptionClass()
@@ -635,6 +640,43 @@ internal static class WinFormsToolStripMenuSizer
                 SetValue(item, TemplatedControl.FontStyleProperty, font.Style, _fontValues);
                 SetValue(item, TemplatedControl.FontWeightProperty, font.Weight, _fontValues);
                 SetValue(item, Control.FlowDirectionProperty, font.Direction, _fontValues);
+            }
+
+            public void ApplyShortcut()
+            {
+                if (_disposed)
+                {
+                    return;
+                }
+
+                TextBlock? text = _item.GetVisualDescendants().OfType<TextBlock>()
+                    .FirstOrDefault(part => part.Name == "PART_InputGestureText" && ReferenceEquals(part.TemplatedParent, _item));
+                string? display = GetShortcutDisplayString(_item);
+                if (ReferenceEquals(text, _shortcutText) && display == _shortcutDisplay)
+                {
+                    return;
+                }
+
+                ClearShortcut();
+                if (_disposed || text is null || display is null)
+                {
+                    return;
+                }
+
+                // Fluent formats arrow names differently from the source hotkey formatter.
+                // Keep the measured source caption on its actual text part and release only
+                // this override when the menu leaves the source-shaped adapter.
+                IDisposable? value = text.SetValue(TextBlock.TextProperty, display, BindingPriority.Template);
+                if (_disposed || !ReferenceEquals(text.TemplatedParent, _item))
+                {
+                    value?.Dispose();
+                }
+                else
+                {
+                    _shortcutValue = value;
+                    _shortcutText = text;
+                    _shortcutDisplay = display;
+                }
             }
 
             public void ApplySize(MenuItem item, NativeToolStripDropDownLayout.Group metrics)
@@ -675,7 +717,9 @@ internal static class WinFormsToolStripMenuSizer
                 }
 
                 _disposed = true;
-                _item.PropertyChanged -= _onChanged;
+                _item.PropertyChanged -= OnPropertyChanged;
+                _item.TemplateApplied -= OnTemplateApplied;
+                ClearShortcut();
                 IDisposable? groupValue = _groupValue;
                 _groupValue = null;
                 groupValue?.Dispose();
@@ -695,6 +739,32 @@ internal static class WinFormsToolStripMenuSizer
                 {
                     _item.Classes.Remove(SystemRendererClass);
                 }
+            }
+
+            private void ClearShortcut()
+            {
+                IDisposable? value = _shortcutValue;
+                _shortcutValue = null;
+                _shortcutText = null;
+                _shortcutDisplay = null;
+                value?.Dispose();
+            }
+
+            private void OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs args)
+            {
+                if (args.Property == TemplatedControl.TemplateProperty)
+                {
+                    ClearShortcut();
+                }
+
+                _onChanged(sender, args);
+            }
+
+            private void OnTemplateApplied(object? sender, TemplateAppliedEventArgs args)
+            {
+                // Complete template construction before publishing a value whose callback
+                // may replace that template again or retire this scope synchronously.
+                Dispatcher.UIThread.Post(ApplyShortcut, DispatcherPriority.Loaded);
             }
 
             private void SetValue<T>(MenuItem item, StyledProperty<T> property, T value, List<IDisposable?> values)

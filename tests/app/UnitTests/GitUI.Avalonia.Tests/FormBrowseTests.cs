@@ -3061,6 +3061,135 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FormBrowse_file_tree_should_clear_empty_selection_and_refill_without_retaining_the_previous_file(bool clearWhileHidden)
+    {
+        CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
+        bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            form.Show();
+            try
+            {
+                await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision is not null);
+                GitRevision revision = form.RevisionGrid.GetSelectedRevisions().Single();
+                form.CommitInfoTabControl.SelectedItem = form.TreeTabPage;
+                await WaitUntilAsync(() =>
+                    form.fileTree.DisplayedRevision?.ObjectId == revision.ObjectId
+                    && form.fileTree.FileStatusList.SelectedItem?.Item.Name == "tracked.txt"
+                    && form.fileTree.FileViewer.TextEditor.Text == "content");
+
+                if (clearWhileHidden)
+                {
+                    form.CommitInfoTabControl.SelectedItem = form.CommitInfoTabPage;
+                    Dispatcher.UIThread.RunJobs();
+                }
+
+                ListBox revisions = form.RevisionGrid.GetTestAccessor().Revisions;
+                (revisions.SelectedItems
+                    ?? throw new AssertionException("The actual revision grid must retain its selection collection.")).Clear();
+                form.RevisionGrid.GetSelectedRevisions().Should().BeEmpty();
+                if (clearWhileHidden)
+                {
+                    (form.fileTree.DisplayedRevision?.ObjectId).Should().Be(revision.ObjectId,
+                        "the original defers hidden File tree updates until that tab is selected");
+                    form.CommitInfoTabControl.SelectedItem = form.TreeTabPage;
+                }
+
+                await WaitUntilAsync(() =>
+                    form.fileTree.DisplayedRevision is null
+                    && form.fileTree.FileStatusList.GitItemStatuses.Count == 0
+                    && form.fileTree.FileViewer.TextEditor.Text.Length == 0);
+                form.fileTree.FileStatusList.SelectedItem.Should().BeNull();
+
+                form.RevisionGrid.SetSelectedRevision(revision.ObjectId).Should().BeTrue();
+                await WaitUntilAsync(() =>
+                    form.fileTree.DisplayedRevision?.ObjectId == revision.ObjectId
+                    && form.fileTree.FileStatusList.SelectedItem?.Item.Name == "tracked.txt"
+                    && form.fileTree.FileViewer.TextEditor.Text == "content");
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.CommitInfoPosition = originalPosition;
+            AppSettings.ShowSplitViewLayout = originalShowSplitView;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6i.126")]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FormBrowse_script_file_options_should_follow_the_effective_lower_pane_visibility(bool fileTree)
+    {
+        CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
+        bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            form.Show();
+            try
+            {
+                await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision is not null);
+                RevisionDiffControl pane = fileTree ? form.fileTree : form.revisionDiff;
+                TabItem page = fileTree ? form.TreeTabPage : form.DiffTabPage;
+                form.CommitInfoTabControl.SelectedItem = page;
+                await WaitUntilAsync(() =>
+                    pane.FileStatusList.SelectedItem?.Item.Name == "tracked.txt"
+                    && pane.FileViewer.TextEditor.Text.Length > 0);
+                pane.IsEffectivelyVisible.Should().BeTrue();
+                TopLevel.GetTopLevel(pane).Should().BeSameAs(form);
+                RevisionDiffControl inactivePane = fileTree ? form.revisionDiff : form.fileTree;
+                TopLevel.GetTopLevel(inactivePane).Should().BeNull(
+                    "Avalonia detaches inactive tab contents instead of setting their local visibility false");
+                form.GetScriptOptionsProvider().GetValues("SelectedRelativePaths")
+                    .Should().Equal("tracked.txt".EscapeForCommandLine());
+
+                Button splitToggle = form.FindControl<Button>("toggleSplitViewLayout")
+                    ?? throw new AssertionException("The source split-view command must remain available.");
+                Click(form, splitToggle, MouseButton.Left);
+                Dispatcher.UIThread.RunJobs();
+                AppSettings.ShowSplitViewLayout.Should().BeFalse();
+                form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(page,
+                    "hiding the panel does not change the retained selected tab");
+                pane.IsEffectivelyVisible.Should().BeFalse();
+                (pane.FileStatusList.SelectedItem?.Item.Name).Should().Be("tracked.txt",
+                    "source hidden panes retain their data, but do not contribute script options");
+                form.GetScriptOptionsProvider().Should().BeSameAs(ScriptOptionsProviderBase.Default);
+
+                Click(form, splitToggle, MouseButton.Left);
+                Dispatcher.UIThread.RunJobs();
+                pane.IsEffectivelyVisible.Should().BeTrue();
+                TopLevel.GetTopLevel(pane).Should().BeSameAs(form);
+                form.GetScriptOptionsProvider().GetValues("SelectedRelativePaths")
+                    .Should().Equal("tracked.txt".EscapeForCommandLine());
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.CommitInfoPosition = originalPosition;
+            AppSettings.ShowSplitViewLayout = originalShowSplitView;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormBrowse_diff_should_toggle_blame_in_the_existing_viewer()
     {
         bool originalUseDiffViewerForBlame = AppSettings.UseDiffViewerForBlame.Value;

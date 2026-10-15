@@ -463,7 +463,7 @@ public sealed class RevisionGridColumnProviderTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void Avatar_provider_should_show_the_source_placeholder_while_loading()
+    public async Task Avatar_provider_should_show_the_source_placeholder_while_loading()
     {
         TaskCompletionSource<byte[]?> avatarCompletion = new(TaskCreationOptions.RunContinuationsAsynchronously);
         IAvatarProvider avatarProvider = Substitute.For<IAvatarProvider>();
@@ -471,12 +471,24 @@ public sealed class RevisionGridColumnProviderTests
             .Returns(avatarCompletion.Task);
         RevisionGridControl grid = new();
         AvatarColumnProvider provider = new(grid, avatarProvider, Substitute.For<IAvatarCacheCleaner>());
-        Image cell = (Image)provider.CreateCell();
+        AvatarColumnProvider.AvatarCell cell = (AvatarColumnProvider.AvatarCell)provider.CreateCell();
 
         provider.OnCellPainting(cell, CreateRevision());
 
-        cell.Source.Should().BeSameAs(Images.User80);
-        avatarCompletion.SetResult(null);
+        Task<byte[]?> load = cell.LastLoadTask
+            ?? throw new AssertionException("The pending avatar request must remain owned by its cell.");
+        try
+        {
+            cell.Source.Should().BeSameAs(Images.User80);
+        }
+        finally
+        {
+            // Finish the cell's dispatcher continuation before headless per-test teardown.
+            avatarCompletion.SetResult(null);
+            await load;
+        }
+
+        cell.Source.Should().BeNull();
     }
 
     [AvaloniaTest]

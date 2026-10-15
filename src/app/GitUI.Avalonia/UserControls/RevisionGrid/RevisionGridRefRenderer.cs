@@ -300,15 +300,19 @@ internal static class RevisionGridRefRenderer
 
         protected override Size ArrangeOverride(Size finalSize)
         {
+            // A row's first measure can use only the fill column's minimum before
+            // its viewport is arranged. DesiredSize retains that clipped constraint;
+            // DrawRefEx instead clips its measured text to the current bounds.
             _localLabel.Arrange(new Rect(0, 0,
-                Math.Min(finalSize.Width, _localLabel.DesiredSize.Width), finalSize.Height));
+                Math.Min(finalSize.Width, _localLabel.GetCapsuleWidth(finalSize.Width) + MarginRight), finalSize.Height));
 
             // The source resets offset from the actual clipped branch rectangle,
             // then clips the remote to the remaining cell width, not its ideal width.
             double remoteX = Math.Max(0, _localLabel.CapsuleBounds.Right - PointWidth + RefLabelHighlightWidth);
+            double remainingWidth = Math.Max(0, finalSize.Width - remoteX);
             _remoteLabel.Arrange(new Rect(
                 remoteX, 0,
-                Math.Min(Math.Max(0, finalSize.Width - remoteX), _remoteLabel.DesiredSize.Width),
+                Math.Min(remainingWidth, _remoteLabel.GetCapsuleWidth(remainingWidth) + MarginRight),
                 finalSize.Height));
             _highlightOverlay.Arrange(new Rect(finalSize));
             InvalidateHighlight();
