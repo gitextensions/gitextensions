@@ -275,8 +275,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         DragDrop.AddDropHandler(this, FormBrowse_DragDrop);
         branchSelect.Click += CurrentBranchClick;
         BranchSelectFlyout.Opening += CurrentBranchDropDownOpening;
-        BranchSelectFlyout.Opened += (_, _) =>
-            Dispatcher.UIThread.Post(() => WinFormsToolStripMenuSizer.Apply(BranchSelectFlyout, branchSelect), DispatcherPriority.Loaded);
         branchSelect.AddHandler(
             PointerReleasedEvent,
             branchSelect_MouseUp,
@@ -1100,12 +1098,14 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     public override IScriptOptionsProvider GetScriptOptionsProvider()
     {
-        if (CommitInfoTabControl.SelectedItem == TreeTabPage)
+        // Inactive Avalonia tab content is detached and can retain effective visibility.
+        // Source Control.Visible excludes that page as well as a collapsed parent pane.
+        if (fileTree.IsEffectivelyVisible && TopLevel.GetTopLevel(fileTree) == this)
         {
             return fileTree.ScriptOptionsProvider;
         }
 
-        if (CommitInfoTabControl.SelectedItem == DiffTabPage)
+        if (revisionDiff.IsEffectivelyVisible && TopLevel.GetTopLevel(revisionDiff) == this)
         {
             return revisionDiff.ScriptOptionsProvider;
         }
@@ -1127,10 +1127,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         _selectedRevisionUpdatedTargets |= UpdateTargets.FileTree;
-        if (revision is not null)
-        {
-            fileTree.DisplayDiffTab([revision]);
-        }
+        fileTree.DisplayDiffTab(revision is null ? [] : [revision]);
     }
 
     private void OpenRepository(string path, ObjectId selectedId, ObjectId firstId)
@@ -2041,10 +2038,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             item.Click += (_, _) => QueueBranchCheckout(branch.Name);
             BranchSelectFlyout.Items.Add(item);
         }
-
-        // WinForms measures the whole ToolStripDropDownMenu after dynamic items are added.
-        // Measure before Avalonia places the flyout so the shortcut column is never clipped.
-        WinFormsToolStripMenuSizer.Apply(BranchSelectFlyout, branchSelect);
     }
 
     private void _forkCloneMenuItem_Click(object? sender, EventArgs e)
@@ -2375,8 +2368,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             case Command.OpenWithDifftoolFirstToLocal: OpenWithDifftoolFirstToLocal(); break;
             case Command.OpenWithDifftoolSelectedToLocal: OpenWithDifftoolSelectedToLocal(); break;
             case Command.EditFile: EditFile(); break;
-            case Command.OpenAsTempFile when fileTree.IsEffectivelyVisible: fileTree.ExecuteCommand(RevisionDiffControl.Command.OpenAsTempFile); break;
-            case Command.OpenAsTempFileWith when fileTree.IsEffectivelyVisible: fileTree.ExecuteCommand(RevisionDiffControl.Command.OpenAsTempFileWith); break;
+            case Command.OpenAsTempFile when fileTree.IsEffectivelyVisible && TopLevel.GetTopLevel(fileTree) == this: fileTree.ExecuteCommand(RevisionDiffControl.Command.OpenAsTempFile); break;
+            case Command.OpenAsTempFileWith when fileTree.IsEffectivelyVisible && TopLevel.GetTopLevel(fileTree) == this: fileTree.ExecuteCommand(RevisionDiffControl.Command.OpenAsTempFileWith); break;
             case Command.ToggleBetweenArtificialAndHeadCommits: RevisionGrid.ExecuteCommand(RevisionGridControl.Command.ToggleBetweenArtificialAndHeadCommits); break;
             case Command.GoToChild: RestoreFileStatusListFocus(() => RevisionGrid.ExecuteCommand(RevisionGridControl.Command.GoToChild)); break;
             case Command.GoToParent: RestoreFileStatusListFocus(() => RevisionGrid.ExecuteCommand(RevisionGridControl.Command.GoToParent)); break;
@@ -2396,11 +2389,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         void OpenWithDifftool()
         {
-            if (revisionDiff.IsEffectivelyVisible)
+            if (revisionDiff.IsEffectivelyVisible && TopLevel.GetTopLevel(revisionDiff) == this)
             {
                 revisionDiff.ExecuteCommand(RevisionDiffControl.Command.OpenWithDifftool);
             }
-            else if (fileTree.IsEffectivelyVisible)
+            else if (fileTree.IsEffectivelyVisible && TopLevel.GetTopLevel(fileTree) == this)
             {
                 fileTree.ExecuteCommand(RevisionDiffControl.Command.OpenWithDifftool);
             }
@@ -2408,7 +2401,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         void OpenWithDifftoolFirstToLocal()
         {
-            if (revisionDiff.IsEffectivelyVisible)
+            if (revisionDiff.IsEffectivelyVisible && TopLevel.GetTopLevel(revisionDiff) == this)
             {
                 revisionDiff.ExecuteCommand(RevisionDiffControl.Command.OpenWithDifftoolFirstToLocal);
             }
@@ -2416,7 +2409,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         void OpenWithDifftoolSelectedToLocal()
         {
-            if (revisionDiff.IsEffectivelyVisible)
+            if (revisionDiff.IsEffectivelyVisible && TopLevel.GetTopLevel(revisionDiff) == this)
             {
                 revisionDiff.ExecuteCommand(RevisionDiffControl.Command.OpenWithDifftoolSelectedToLocal);
             }
@@ -2424,11 +2417,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         void EditFile()
         {
-            if (revisionDiff.IsEffectivelyVisible)
+            if (revisionDiff.IsEffectivelyVisible && TopLevel.GetTopLevel(revisionDiff) == this)
             {
                 revisionDiff.ExecuteCommand(RevisionDiffControl.Command.EditFile);
             }
-            else if (fileTree.IsEffectivelyVisible)
+            else if (fileTree.IsEffectivelyVisible && TopLevel.GetTopLevel(fileTree) == this)
             {
                 fileTree.ExecuteCommand(RevisionDiffControl.Command.EditFile);
             }

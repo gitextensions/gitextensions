@@ -70,15 +70,11 @@ partial class FormBrowse
 
         MenuFlyout pullDropDown = (MenuFlyout)toolStripButtonPull.Flyout!;
         pullDropDown.Opening += (_, _) => UpdateFetchAllVisibility();
-        pullDropDown.Opened += (_, _) =>
-        {
-            // Avalonia realizes this toolbar flyout outside ToolStripDropDownItem's
-            // submenu route. Apply the source shortcut text after its row templates exist.
-            WinFormsToolStripMenuSizer.Apply(pullDropDown, pullToolStripMenuItem1);
-            Dispatcher.UIThread.Post(
-                () => WinFormsToolStripMenuSizer.Apply(pullDropDown, pullToolStripMenuItem1),
-                DispatcherPriority.Loaded);
-        };
+
+        // Measure the populated menus through the source ToolStrip layout, including
+        // its paint-only frame and owner font, before the framework places the popup.
+        WinFormsToolStripMenuSizer.ConfigureToolbarDropDown(pullDropDown, toolStripButtonPull);
+        WinFormsToolStripMenuSizer.ConfigureToolbarDropDown(BranchSelectFlyout, branchSelect);
 
         // Layout engine bug (?) which may change the order of toolbars
         // if the 1st one becomes longer than the 2nd toolbar's Location.X

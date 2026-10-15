@@ -10,6 +10,8 @@ namespace GitUI.Compat;
 /// <remarks>
 ///  StackPanel supplies the framework's vertical keyboard navigation while the overrides
 ///  retain the source dropdown's layout instead of its default stacking geometry.
+///  Its ordinary MenuItem children retain framework RTL presentation; canceling that
+///  policy on their panel reflects rows within the extra popup border pixel.
 /// </remarks>
 public sealed class NativeFilterToolStripDropDownPanel : StackPanel
 {
@@ -21,8 +23,6 @@ public sealed class NativeFilterToolStripDropDownPanel : StackPanel
     public NativeFilterToolStripDropDownPanel()
     {
     }
-
-    protected override bool BypassFlowDirectionPolicies => true;
 
     protected override Size MeasureOverride(Size availableSize)
     {

@@ -1237,6 +1237,13 @@
     <Setter Property="Padding" Value="9,5" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsBrowseTabSelectedBackgroundBrush}" />
   </Style>
+  <Style Selector="Window.gitextensions-browse-window TabItem.gitextensions-workspace-tab:not(:disabled)">
+    <!-- Native enabled tab captions retain ControlText independently of selected/hover state. -->
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsSourceControlTextBrush}" />
+  </Style>
+  <Style Selector="Window.gitextensions-browse-window TabItem.gitextensions-workspace-tab:not(:disabled) /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="TextElement.Foreground" Value="{Binding $parent[TabItem].Foreground}" />
+  </Style>
   <!-- RichEdit's automatic link foreground follows the native theme, not Fluent's blue link palette. -->
   <Style Selector="compat|XhtmlTextBlock HyperlinkButton">
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsXhtmlLinkForegroundBrush}" />
@@ -1409,6 +1416,12 @@
     <Setter Property="MinWidth" Value="0" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button:not(:disabled),
+                   DropDownButton.gitextensions-native-toolstrip-drop-down-button:not(:disabled)">
+    <!-- Native ToolStrip items inherit the adapted control text, not Fluent's white text.
+         Local ForeColor overrides still win; disabled paint retains its existing route. -->
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsSourceControlTextBrush}" />
   </Style>
   <Style Selector="SplitButton.gitextensions-native-toolstrip-split-button /template/ Button#PART_PrimaryButton /template/ ContentPresenter#PART_ContentPresenter,
                    SplitButton.gitextensions-native-toolstrip-split-button /template/ Button#PART_SecondaryButton /template/ ContentPresenter#PART_ContentPresenter">

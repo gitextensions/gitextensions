@@ -20,6 +20,8 @@
                SelectionMode="Multiple"
                Focusable="True"
                FocusAdorner="{x:Null}"
+               ScrollViewer.AllowAutoHide="False"
+               ScrollViewer.HorizontalScrollBarVisibility="Auto"
                Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
                Foreground="{DynamicResource GitExtensionsWindowTextBrush}">
       <ListBox.ContextMenu>

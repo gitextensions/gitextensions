@@ -747,6 +747,8 @@ public sealed class FilterToolBarMenuLayoutTests
             Point origin = control.TranslatePoint(default, panel)
                 ?? throw new InvalidOperationException("The actual retained item has no filter-panel coordinate.");
             origin.Y.Should().Be(y);
+            origin.X.Should().Be(control is Separator ? 2 : 0,
+                "native ToolStrip rows keep their leading item origin even for right-to-left content");
             control.Bounds.Height.Should().Be(itemHeight);
             control.Bounds.Width.Should().Be(control is Separator ? metrics.PopupWidth - 4 : metrics.ItemWidth);
             y += itemHeight;

@@ -4125,12 +4125,31 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     {
         private readonly List<(ColumnProvider Provider, Control Cell)> _cells = [];
         private readonly RevisionGridControl _owner;
+        private ScrollContentPresenter? _viewport;
 
         public RevisionRowControl(RevisionGridControl owner)
         {
             _owner = owner;
             Classes.Add("revision-row");
-            AttachedToVisualTree += (_, _) => UpdateColorClasses();
+            AttachedToVisualTree += (_, _) =>
+            {
+                _viewport = this.FindAncestorOfType<ScrollContentPresenter>();
+                if (_viewport is not null)
+                {
+                    _viewport.SizeChanged += OnViewportSizeChanged;
+                }
+
+                InvalidateMeasure();
+                UpdateColorClasses();
+            };
+            DetachedFromVisualTree += (_, _) =>
+            {
+                if (_viewport is not null)
+                {
+                    _viewport.SizeChanged -= OnViewportSizeChanged;
+                    _viewport = null;
+                }
+            };
 
             foreach (ColumnProvider provider in owner._columnProviders)
             {
@@ -4162,8 +4181,26 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 }
             }
 
-            Avalonia.Size measured = base.MeasureOverride(availableSize);
-            return new Avalonia.Size(measured.Width, rowHeight);
+            // DataGridView fills only the visible viewport; horizontal overflow starts at
+            // fixed column widths plus the fill column's minimum, never its caption width.
+            // ScrollViewer measures its horizontal extent with an unbounded constraint.
+            double minimumWidth = ColumnDefinitions.Sum(column => column.Width.IsAbsolute
+                ? Math.Max(column.Width.Value, column.MinWidth)
+                : column.MinWidth);
+            double viewportWidth = double.IsFinite(availableSize.Width)
+                ? availableSize.Width
+                : _viewport?.Bounds.Width ?? 0;
+            double rowWidth = Math.Max(minimumWidth, viewportWidth);
+            base.MeasureOverride(new Avalonia.Size(rowWidth, availableSize.Height));
+            return new Avalonia.Size(rowWidth, rowHeight);
+        }
+
+        private void OnViewportSizeChanged(object? sender, SizeChangedEventArgs e)
+        {
+            if (e.WidthChanged)
+            {
+                InvalidateMeasure();
+            }
         }
 
         protected override void OnDataContextChanged(EventArgs e)
