@@ -124,13 +124,9 @@ public class CustomDiffMergeToolCache
 
             // Ignore (known) tools that must run in a terminal
             ReadOnlySpan<char> toolNameSpan = withoutTabs[splitDestination[0]];
-            switch (toolNameSpan)
+            if (toolNameSpan is "vimdiff" or "vimdiff1" or "vimdiff2" or "vimdiff3")
             {
-                case "vimdiff":
-                case "vimdiff1":
-                case "vimdiff2":
-                case "vimdiff3":
-                    continue;
+                continue;
             }
 
             string toolName = new(toolNameSpan);
