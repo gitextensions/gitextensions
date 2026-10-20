@@ -18,6 +18,17 @@ internal sealed class RemoteBranchTree : BaseRefTree
         _aheadBehindDataProvider = aheadBehindDataProvider;
     }
 
+    private Dictionary<string, Remote> _remoteByName = new();
+
+    protected override async Task PreloadAsync(CancellationToken token)
+    {
+        // Runs on a background thread via BaseRefTree.LoadNodesAsync.
+        // `git remote -v` is fast, but must never run on (or pump) the UI thread.
+        IReadOnlyList<Remote> remotes = await Module.GetRemotesAsync().ConfigureAwait(false);
+        token.ThrowIfCancellationRequested();
+        _remoteByName = remotes.ToDictionary(r => r.Name);
+    }
+
     protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
     {
         // More than one local can point to a single remote branch, pick one of them.
@@ -26,7 +37,7 @@ internal sealed class RemoteBranchTree : BaseRefTree
         IDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData()?.DistinctBy(r => r.Value.RemoteRef).ToDictionary(r => r.Value.RemoteRef, r => r.Value);
 
         List<RemoteRepoNode> enabledRemoteRepoNodes = [];
-        Dictionary<string, Remote> remoteByName = ThreadHelper.JoinableTaskFactory.Run(Module.GetRemotesAsync).ToDictionary(r => r.Name);
+        Dictionary<string, Remote> remoteByName = _remoteByName;
 
         ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
 
