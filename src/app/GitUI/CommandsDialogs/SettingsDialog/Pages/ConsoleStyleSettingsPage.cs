@@ -37,7 +37,7 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
     {
         cboConsoleEmulator.SelectedItem = cboConsoleEmulator.Items
             .OfType<IConsoleEmulator>()
-            .FirstOrDefault(e => string.Equals(e.Name, AppSettings.ConsoleEmulatorName.Value, StringComparison.OrdinalIgnoreCase));
+            .FirstOrDefault(e => string.Equals(e.Name, AppSettings.ConsoleEmulatorName, StringComparison.OrdinalIgnoreCase));
         if (cboConsoleEmulator.SelectedIndex < 0 && cboConsoleEmulator.Items.Count > 0)
         {
             cboConsoleEmulator.SelectedIndex = 0;
@@ -81,7 +81,7 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
 
         _NO_TRANSLATE_cboStyle.Enabled = emulator.AvailableThemes.Count > 0;
 
-        string? saved = AppSettings.ConEmuStyle.Value;
+        string saved = AppSettings.ConEmuStyle;
         int matchIndex = string.IsNullOrEmpty(saved)
             ? 0
             : FindThemeIndex(saved);
