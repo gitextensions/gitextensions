@@ -972,7 +972,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                     : DetachedHeadParser.DetachedBranch
                 : "";
             toolStripButtonLevelUp.Enabled = hasWorkingDir && !bareRepository;
-            UpdateWorktreeToolStripVisibility();
+            toolStripWorktrees.Enabled = validBrowseDir;
             CommitInfoTabControl.Visible = validBrowseDir;
             fileExplorerToolStripMenuItem.Enabled = validBrowseDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validBrowseDir;
