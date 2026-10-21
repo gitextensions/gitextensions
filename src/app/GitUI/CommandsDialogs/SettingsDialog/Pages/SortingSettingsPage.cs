@@ -15,6 +15,10 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
     private readonly TranslationString _prioRemoteNamesTooltip = new("Regex to prioritize remote names in the left panel and commit info.\n" +
         "The remotes matching the pattern will be shown before the others.\n" +
         "Separate the priorities with ';'.");
+    private readonly TranslationString _reservedLanesBranchNamesTooltip = new("Regex for branch names that get reserved lanes in the revision graph.\n" +
+        "The first lane is reserved for a branch matching the priority 1 pattern if there is one, \n" +
+        "the next lane for a priority 2 pattern branch and so on.\n" +
+        "Separate the priorities with ';'.");
 
     public SortingSettingsPage(IServiceProvider serviceProvider)
         : base(serviceProvider)
@@ -43,9 +47,11 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
         ToolTip.SetToolTip(RevisionSortOrderHelp, _revisionSortWarningTooltip.Text);
         ToolTip.SetToolTip(PrioBranchNamesHelp, _prioBranchNamesTooltip.Text);
         ToolTip.SetToolTip(PrioRemoteNamesHelp, _prioRemoteNamesTooltip.Text);
+        ToolTip.SetToolTip(ReservedLanesBranchNamesHelp, _reservedLanesBranchNamesTooltip.Text);
         RevisionSortOrderHelp.Size = DpiUtil.Scale(RevisionSortOrderHelp.Size);
         PrioBranchNamesHelp.Size = DpiUtil.Scale(PrioBranchNamesHelp.Size);
         PrioRemoteNamesHelp.Size = DpiUtil.Scale(PrioRemoteNamesHelp.Size);
+        ReservedLanesBranchNamesHelp.Size = DpiUtil.Scale(ReservedLanesBranchNamesHelp.Size);
 
         if (!IsSettingsLoaded)
         {
@@ -60,6 +66,7 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
         _NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex = (int)AppSettings.RefsSortBy;
         txtPrioBranchNames.Text = AppSettings.PrioritizedBranchNames;
         txtPrioRemoteNames.Text = AppSettings.PrioritizedRemoteNames;
+        txtReservedLanesBranchNames.Text = AppSettings.ReservedLanesBranchNames;
 
         base.SettingsToPage();
     }
@@ -72,6 +79,7 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
         AppSettings.RefsSortBy = (GitRefsSortBy)_NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex;
         AppSettings.PrioritizedBranchNames = txtPrioBranchNames.Text;
         AppSettings.PrioritizedRemoteNames = txtPrioRemoteNames.Text;
+        AppSettings.ReservedLanesBranchNames = txtReservedLanesBranchNames.Text;
 
         ResourceManager.TranslatedStrings.Reinitialize();
         TranslatedStrings.Reinitialize();
@@ -85,6 +93,8 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
         => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "sorting-sort-prioritized-branches"));
     private void PrioRemoteNamesHelp_Click(object sender, EventArgs e)
         => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "sorting-sort-prioritized-remotes"));
+    private void ReservedLanesBranchNamesHelp_Click(object sender, EventArgs e)
+        => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "sorting-sort-reserved-lanes-branches"));
 
     private sealed class ComboBoxItem<T>
     {

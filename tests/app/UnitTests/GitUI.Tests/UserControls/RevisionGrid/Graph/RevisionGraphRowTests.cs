@@ -9,16 +9,31 @@ public class RevisionGraphRowTests
     private RevisionGraphSegment _segment2 = new(parent: new(ObjectId.Random(), guessScore: 0), child: new(ObjectId.Random(), guessScore: 0));
 
     [Test]
-    public void MoveLanesRight_should_do_nothing_if_empty([Values(-1, 0, 1)] int fromLane)
+    public void MoveLanesRight_should_do_nothing_if_after_node_and_segments()
     {
         List<RevisionGraphSegment> segments = [];
         IRevisionGraphRow revisionGraphRow = new RevisionGraphRow(_segment.Child, segments, mergeGraphLanesHavingCommonParent: true);
         revisionGraphRow.GetLaneCount().Should().Be(1);
 
-        revisionGraphRow.MoveLanesRight(fromLane);
+        revisionGraphRow.MoveLanesRight(1);
 
         revisionGraphRow.GetLaneCount().Should().Be(1);
         revisionGraphRow.Segments.Should().BeEmpty();
+    }
+
+    [Test]
+    public void MoveLanesRight_should_move_just_revision_node([Values(-1, 0)] int fromLane)
+    {
+        List<RevisionGraphSegment> segments = [];
+        IRevisionGraphRow revisionGraphRow = new RevisionGraphRow(_segment.Child, segments, mergeGraphLanesHavingCommonParent: true);
+        revisionGraphRow.GetLaneCount().Should().Be(1);
+        revisionGraphRow.GetCurrentRevisionLane().Should().Be(0);
+
+        revisionGraphRow.MoveLanesRight(fromLane);
+
+        revisionGraphRow.GetLaneCount().Should().Be(2);
+        revisionGraphRow.Segments.Should().BeEmpty();
+        revisionGraphRow.GetCurrentRevisionLane().Should().Be(1);
     }
 
     [TestCase(-1, 1)]
