@@ -18,7 +18,7 @@ settings.
 ## What (`GitUI/ScriptsEngine/`)
 
 - **`ScriptEvent`** (enum) — the hook points: `BeforeCommit`, `AfterCommit`, `BeforePull`,
-  `AfterPull`, `ShowInUserMenuBar`, etc. [ScriptEvent.cs](../../../src/app/GitUI/ScriptsEngine/ScriptEvent.cs).
+  `AfterPull`, `ShowInFileList`, etc. [ScriptEvent.cs](../../../src/app/GitUI/ScriptsEngine/ScriptEvent.cs).
 - **`ScriptInfo`** — one script's definition: name, command, arguments, event filter, hotkey, icon.
   [ScriptInfo.cs](../../../src/app/GitUI/ScriptsEngine/ScriptInfo.cs).
 - **`ScriptsManager`** (`IScriptsManager`, `IScriptsRunner`) — loads scripts from settings
@@ -42,7 +42,8 @@ ScriptsRunner.RunEventScripts(ScriptEvent.AfterCommit, this);
 
 - `Before*` scripts can **cancel** the operation (return value gates the flow).
 - Tokens are resolved by `ScriptOptionsParser` against the current revision/selection before run.
-- Scripts marked `ShowInUserMenuBar` appear in the UI; others fire only on their event.
+- Any enabled script can be placed on a toolbar from Settings > Toolbars;
+  the toolbar layout, not the script's event, decides where it goes.
 
 ## Hard rules
 

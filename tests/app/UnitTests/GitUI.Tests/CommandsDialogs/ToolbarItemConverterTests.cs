@@ -1,0 +1,403 @@
+﻿using GitUI;
+using GitUI.CommandsDialogs;
+
+namespace GitUITests.CommandsDialogs;
+
+// ToolbarItemConverter is shared by FormBrowse (startup) and the Toolbars settings page (reload
+// after a change) precisely so the two produce identical buttons, which makes what it guarantees
+// worth pinning down.
+public class ToolbarItemConverterTests
+{
+    private const string CommitText = "Commit";
+    private const string RenamedCommitText = "Commit (2)";
+    private const string CommitToolTip = "Commit changes";
+    private const string CommitButton = "toolStripButtonCommit";
+    private const string CommitMenuItem = "commitToolStripMenuItem";
+    private const string GotoCommitMenuItem = "gotoCommitToolStripMenuItem";
+
+    [Test]
+    public void Convert_should_turn_a_leaf_menu_item_into_a_button()
+    {
+        using ToolStripMenuItem menuItem = new("&Commit") { Name = CommitMenuItem, ToolTipText = CommitToolTip };
+
+        using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+
+        converted.Should().BeOfType<ToolStripButton>();
+        converted.Name.Should().Be("btn_commitToolStripMenuItem");
+        converted.Text.Should().Be("&Commit");
+        converted.ToolTipText.Should().Be(CommitToolTip);
+        converted.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.Image);
+        converted.Tag.Should().BeSameAs(menuItem);
+    }
+
+    [Test]
+    public void Convert_should_fall_back_to_the_menu_text_as_tooltip()
+    {
+        // The ampersand is a mnemonic marker, not part of the tooltip.
+        using ToolStripMenuItem menuItem = new("&Commit") { Name = CommitMenuItem };
+
+        using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+
+        converted.ToolTipText.Should().Be(CommitText);
+    }
+
+    [Test]
+    public void Convert_should_forward_a_click_to_the_menu_item()
+    {
+        using ToolStripMenuItem menuItem = new(CommitText) { Name = CommitMenuItem };
+        int clicks = 0;
+        menuItem.Click += (s, e) => clicks++;
+
+        using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+
+        // The button inherits the menu item's visibility, and a menu item that has never been
+        // displayed reports itself unavailable - which makes PerformClick a no-op. On a real
+        // toolbar the button is available, so make it so here rather than testing nothing.
+        converted.Available = true;
+        converted.PerformClick();
+
+        clicks.Should().Be(1);
+    }
+
+    [Test]
+    public void Convert_should_mirror_a_check_state_changed_elsewhere()
+    {
+        // A toggle can be flipped from the menu bar or a keyboard shortcut, and every button
+        // showing that action has to follow.
+        using ToolStripMenuItem menuItem = new("Show tags") { Name = "showTagsToolStripMenuItem", CheckOnClick = true };
+
+        using ToolStripButton converted = (ToolStripButton)ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+        converted.Checked.Should().BeFalse();
+
+        menuItem.Checked = true;
+
+        converted.Checked.Should().BeTrue();
+    }
+
+    [Test]
+    public void Convert_should_stop_mirroring_once_the_button_is_disposed()
+    {
+        // The button outlives nothing: it is thrown away and rebuilt on every toolbar reload, so a
+        // subscription left behind on the long-lived menu item would accumulate.
+        using ToolStripMenuItem menuItem = new("Show tags") { Name = "showTagsToolStripMenuItem" };
+        ToolStripButton converted = (ToolStripButton)ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+
+        converted.Dispose();
+        menuItem.Checked = true;
+
+        converted.Checked.Should().BeFalse();
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Convert_should_follow_the_enabled_state_of_the_menu_item(bool withChildren)
+    {
+        // Branch and tree actions are enabled or disabled whenever the selection changes, long
+        // after their button was built.
+        using ToolStripMenuItem menuItem = new("Delete branch") { Name = "deleteBranchToolStripMenuItem" };
+        if (withChildren)
+        {
+            menuItem.DropDownItems.Add(new ToolStripMenuItem("Force") { Name = "forceDeleteBranchToolStripMenuItem" });
+        }
+
+        using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+
+        menuItem.Enabled = false;
+        converted.Enabled.Should().BeFalse();
+
+        menuItem.Enabled = true;
+        converted.Enabled.Should().BeTrue();
+    }
+
+    [Test]
+    public void Convert_should_stop_following_the_enabled_state_once_the_button_is_disposed()
+    {
+        using ToolStripMenuItem menuItem = new("Delete branch") { Name = "deleteBranchToolStripMenuItem" };
+        ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+
+        converted.Dispose();
+        menuItem.Enabled = false;
+
+        converted.Enabled.Should().BeTrue();
+    }
+
+    [Test]
+    public void Convert_should_turn_a_menu_item_with_children_into_a_split_button()
+    {
+        using ToolStripMenuItem menuItem = new("Navigate") { Name = "navigateToolStripMenuItem" };
+        menuItem.DropDownItems.Add(new ToolStripMenuItem("Go to commit") { Name = GotoCommitMenuItem });
+        menuItem.DropDownItems.Add(new ToolStripSeparator());
+
+        using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.ImageAndText);
+
+        converted.Should().BeOfType<ToolStripSplitButton>();
+        ToolStripSplitButton splitButton = (ToolStripSplitButton)converted;
+        splitButton.DropDownItems.Cast<ToolStripItem>().Select(i => i.Name).Should().Contain(GotoCommitMenuItem);
+        splitButton.DropDownItems.OfType<ToolStripSeparator>().Should().ContainSingle();
+    }
+
+    [Test]
+    public void Convert_should_forward_a_dropdown_item_click_to_its_source()
+    {
+        using ToolStripMenuItem menuItem = new("Navigate") { Name = "navigateToolStripMenuItem" };
+        using ToolStripMenuItem child = new("Go to commit") { Name = GotoCommitMenuItem };
+        menuItem.DropDownItems.Add(child);
+        int clicks = 0;
+        child.Click += (s, e) => clicks++;
+
+        using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+        ((ToolStripSplitButton)converted).DropDownItems
+            .Cast<ToolStripItem>()
+            .Single(i => i.Name == GotoCommitMenuItem)
+            .PerformClick();
+
+        clicks.Should().Be(1);
+    }
+
+    [Test]
+    public void Convert_should_store_the_button_under_its_own_name()
+    {
+        using ToolStripMenuItem menuItem = new(CommitText) { Name = CommitMenuItem };
+        Dictionary<string, ToolStripItem> store = [];
+
+        using ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image, store);
+
+        store.Should().ContainKey("btn_commitToolStripMenuItem");
+        store["btn_commitToolStripMenuItem"].Should().BeSameAs(converted);
+    }
+
+    [Test]
+    public void CloneItem_should_copy_a_button_and_point_back_at_it()
+    {
+        using ToolStripButton original = new(CommitText) { Name = CommitButton, ToolTipText = CommitToolTip };
+
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original);
+
+        clone.Name.Should().Be("clone_toolStripButtonCommit");
+        clone.ToolTipText.Should().Be(CommitToolTip);
+        clone.Tag.Should().BeSameAs(original);
+    }
+
+    [Test]
+    public void CloneItem_should_forward_a_click_to_the_original()
+    {
+        using ToolStripButton original = new(CommitText) { Name = CommitButton };
+        int clicks = 0;
+        original.Click += (s, e) => clicks++;
+
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original);
+        clone.PerformClick();
+
+        clicks.Should().Be(1);
+    }
+
+    [TestCase(true, ToolStripItemDisplayStyle.Image, ToolStripItemDisplayStyle.ImageAndText)]
+    [TestCase(true, ToolStripItemDisplayStyle.ImageAndText, ToolStripItemDisplayStyle.ImageAndText)]
+    [TestCase(false, ToolStripItemDisplayStyle.Image, ToolStripItemDisplayStyle.Image)]
+    [TestCase(false, ToolStripItemDisplayStyle.ImageAndText, ToolStripItemDisplayStyle.Image)]
+    public void CloneItem_should_honour_its_own_text_preference(bool wantsText, ToolStripItemDisplayStyle originalStyle, ToolStripItemDisplayStyle expected)
+    {
+        // Each toolbar decides on its own whether its copy of an action shows a label. Built-in
+        // buttons are mostly icon-only, which is exactly when a clone asking for its label must
+        // not copy the original's style.
+        using ToolStripButton original = new(CommitText)
+        {
+            Name = CommitButton,
+            DisplayStyle = originalStyle
+        };
+
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText);
+
+        clone.DisplayStyle.Should().Be(expected);
+    }
+
+    [TestCase(true, ToolStripItemDisplayStyle.ImageAndText)]
+    [TestCase(false, ToolStripItemDisplayStyle.Image)]
+    public void CloneItem_should_honour_its_own_text_preference_for_a_split_button(bool wantsText, ToolStripItemDisplayStyle expected)
+    {
+        using ToolStripSplitButton original = new("Working directory")
+        {
+            Name = "toolStripSplitButtonWorkingDir",
+            DisplayStyle = wantsText ? ToolStripItemDisplayStyle.Image : ToolStripItemDisplayStyle.ImageAndText
+        };
+
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText);
+
+        clone.DisplayStyle.Should().Be(expected);
+    }
+
+    [Test]
+    public void CloneItem_should_keep_its_label_when_the_original_text_changes()
+    {
+        // The original's text changes all the time (a count, a branch name); following it used to
+        // put the original's icon-only style back on the clone each time.
+        using ToolStripButton original = new(CommitText) { Name = CommitButton, DisplayStyle = ToolStripItemDisplayStyle.Image };
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText: true);
+
+        original.Text = RenamedCommitText;
+
+        clone.Text.Should().Be(RenamedCommitText);
+        clone.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
+    }
+
+    [Test]
+    public void CloneItem_should_keep_its_own_style_when_the_original_changes_its()
+    {
+        using ToolStripButton original = new(CommitText) { Name = CommitButton, DisplayStyle = ToolStripItemDisplayStyle.Image };
+        using ToolStripItem iconOnly = ToolbarItemConverter.CloneItem(original, wantsText: false);
+        using ToolStripItem labelled = ToolbarItemConverter.CloneItem(original, wantsText: true);
+
+        original.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+        original.DisplayStyle = ToolStripItemDisplayStyle.Text;
+
+        iconOnly.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.Image);
+        labelled.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
+    }
+
+    [Test]
+    public void CloneItem_should_follow_the_original_when_it_changes()
+    {
+        using ToolStripButton original = new(CommitText) { Name = CommitButton };
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText: true);
+
+        original.Text = RenamedCommitText;
+
+        clone.Text.Should().Be(RenamedCommitText);
+    }
+
+    [Test]
+    public void CloneItem_should_mirror_a_check_state()
+    {
+        using ToolStripButton original = new("Show tags") { Name = "toolStripButtonShowTags" };
+        using ToolStripButton clone = (ToolStripButton)ToolbarItemConverter.CloneItem(original);
+
+        original.Checked = true;
+
+        clone.Checked.Should().BeTrue();
+    }
+
+    [Test]
+    public void CloneItem_should_follow_the_enabled_state_of_the_original()
+    {
+        // A clone of a converted button is the last link of the chain menu item - button - clone.
+        using ToolStripButton original = new("Delete branch") { Name = "btn_deleteBranchToolStripMenuItem" };
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original);
+
+        original.Enabled = false;
+        clone.Enabled.Should().BeFalse();
+
+        original.Enabled = true;
+        clone.Enabled.Should().BeTrue();
+    }
+
+    [Test]
+    public void CloneItem_should_stop_following_the_original_once_disposed()
+    {
+        using ToolStripButton original = new(CommitText) { Name = CommitButton };
+        ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText: true);
+
+        clone.Dispose();
+        original.Text = RenamedCommitText;
+
+        clone.Text.Should().Be(CommitText);
+    }
+
+    [Test]
+    public void CloneItem_should_give_a_push_button_its_own_label_state()
+    {
+        // A plain clone would redirect its label state to the original, so both toolbars would
+        // always show or hide the "Push" label together.
+        using ToolStripPushButton original = new() { Name = "toolStripButtonPush" };
+
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText: true);
+
+        clone.Should().NotBeOfType<ToolStripPushButton>();
+        clone.Should().BeAssignableTo<IPushLabelItem>().Which.ShowLabel.Should().BeTrue();
+        original.ShowLabel.Should().BeFalse();
+    }
+
+    [Test]
+    public void DisposeDerivedItems_should_dispose_the_converted_buttons_and_clones_not_kept()
+    {
+        // Merely taken off its toolbar, either would keep following its source for good.
+        using ToolStripMenuItem menuItem = new(CommitText) { Name = CommitMenuItem };
+        using ToolStripButton original = new("Push") { Name = "toolStripButtonPush" };
+        ToolStripItem converted = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+        ToolStripItem clone = ToolbarItemConverter.CloneItem(original);
+        List<ToolStripItem> disposed = [];
+        converted.Disposed += (s, e) => disposed.Add(converted);
+        clone.Disposed += (s, e) => disposed.Add(clone);
+
+        ToolbarItemConverter.DisposeDerivedItems([converted, clone], kept: new HashSet<ToolStripItem>());
+
+        disposed.Should().BeEquivalentTo([converted, clone]);
+        menuItem.Checked = true;
+        ((ToolStripButton)converted).Checked.Should().BeFalse();
+    }
+
+    [Test]
+    public void DisposeDerivedItems_should_leave_kept_items_and_items_derived_from_nothing()
+    {
+        // A kept item may be placed again, and an item derived from nothing belongs to the main
+        // window, which may place it again too.
+        using ToolStripMenuItem menuItem = new(CommitText) { Name = CommitMenuItem };
+        using ToolStripItem kept = ToolbarItemConverter.Convert(menuItem, ToolStripItemDisplayStyle.Image);
+        using ToolStripButton designerButton = new("Push") { Name = "toolStripButtonPush" };
+        using ToolStripButton taggedButton = new("Branches") { Tag = "ToolBar_group:Branch filter" };
+        bool anyDisposed = false;
+        kept.Disposed += (s, e) => anyDisposed = true;
+        designerButton.Disposed += (s, e) => anyDisposed = true;
+        taggedButton.Disposed += (s, e) => anyDisposed = true;
+
+        ToolbarItemConverter.DisposeDerivedItems([kept, designerButton, taggedButton], kept: new HashSet<ToolStripItem> { kept });
+
+        anyDisposed.Should().BeFalse();
+    }
+
+    [Test]
+    public void CloneItem_should_copy_the_dropdown_of_a_split_button()
+    {
+        using ToolStripSplitButton original = new("Working directory") { Name = "toolStripSplitButtonWorkingDir" };
+
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original);
+
+        clone.Should().BeOfType<ToolStripSplitButton>();
+        clone.Name.Should().Be("clone_toolStripSplitButtonWorkingDir");
+        clone.Tag.Should().BeSameAs(original);
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    public void CloneItem_should_stay_shown_when_its_original_grows_while_the_toolbar_panel_is_suspended()
+    {
+        // A repository load suspends the toolbar panel while it sets the working directory path on
+        // the original. The panel then lays out again only the original's toolbar, so the clone's
+        // kept its width and the clone, too wide for it, was hidden until something else laid it out.
+        using Form form = new() { Width = 1600, Height = 300 };
+        using ToolStripContainer container = new() { Dock = DockStyle.Fill };
+        form.Controls.Add(container);
+
+        using Bitmap image = new(16, 16);
+        using ToolStripEx standard = new() { Dock = DockStyle.None };
+        using ToolStripSplitButton original = new("WorkingDir") { Name = "_NO_TRANSLATE_WorkingDir", Image = image };
+        standard.Items.Add(original);
+
+        using ToolStripEx custom = new() { Dock = DockStyle.None };
+        using ToolStripItem clone = ToolbarItemConverter.CloneItem(original, wantsText: true);
+        clone.Overflow = ToolStripItemOverflow.Never;
+        custom.Items.Add(clone);
+
+        container.TopToolStripPanel.Join(standard, 0);
+        container.TopToolStripPanel.Join(custom, 1);
+        form.Show();
+        Application.DoEvents();
+
+        container.TopToolStripPanel.SuspendLayout();
+        original.Text = @"E:\Some\Rather\Long\Path\To\A\Repository\Of\Mine\";
+        container.TopToolStripPanel.ResumeLayout();
+        Application.DoEvents();
+
+        clone.Text.Should().Be(original.Text);
+        clone.Placement.Should().Be(ToolStripItemPlacement.Main);
+    }
+}

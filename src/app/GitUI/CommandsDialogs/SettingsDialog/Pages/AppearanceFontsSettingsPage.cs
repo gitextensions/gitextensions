@@ -9,6 +9,7 @@ public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
     private Font? _applicationFont;
     private Font? _commitFont;
     private Font? _monospaceFont;
+    private Font? _menuFont;
 
     public AppearanceFontsSettingsPage(IServiceProvider serviceProvider)
         : base(serviceProvider)
@@ -23,6 +24,7 @@ public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
         SetCurrentDiffFont(AppSettings.FixedWidthFont);
         SetCurrentCommitFont(AppSettings.CommitFont);
         SetCurrentMonospaceFont(AppSettings.MonospaceFont);
+        SetCurrentMenuFont(AppSettings.MenuFont);
 
         ShowEolMarkerAsGlyph.Checked = AppSettings.ShowEolMarkerAsGlyph;
 
@@ -35,11 +37,13 @@ public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
         Validates.NotNull(_applicationFont);
         Validates.NotNull(_commitFont);
         Validates.NotNull(_monospaceFont);
+        Validates.NotNull(_menuFont);
 
         AppSettings.FixedWidthFont = _diffFont;
         AppSettings.Font = _applicationFont;
         AppSettings.CommitFont = _commitFont;
         AppSettings.MonospaceFont = _monospaceFont;
+        AppSettings.MenuFont = _menuFont;
 
         AppSettings.ShowEolMarkerAsGlyph = ShowEolMarkerAsGlyph.Checked;
 
@@ -123,6 +127,24 @@ public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
     {
         _monospaceFont = newFont;
         SetFontButtonText(newFont, monospaceFontChangeButton);
+    }
+
+    private void menuFontChangeButton_Click(object sender, EventArgs e)
+    {
+        menuFontDialog.Font = _menuFont!;
+        DialogResult result = menuFontDialog.ShowDialog(this);
+
+        if (result is (DialogResult.OK or DialogResult.Yes))
+        {
+            Validates.NotNull(menuFontDialog.Font);
+            SetCurrentMenuFont(menuFontDialog.Font);
+        }
+    }
+
+    private void SetCurrentMenuFont(Font newFont)
+    {
+        _menuFont = newFont;
+        SetFontButtonText(newFont, menuFontChangeButton);
     }
 
     private static void SetFontButtonText(Font font, Button button)
