@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace GitExtensions.Extensibility;
@@ -9,6 +10,8 @@ namespace GitExtensions.Extensibility;
 /// </summary>
 public static class DebugHelpers
 {
+    private const string FailFastEnvironmentVariable = "GITEXTENSIONS_DEBUG_FAIL_FAST";
+
     [Conditional("DEBUG")]
     public static void Assert([DoesNotReturnIf(false)] bool condition, string message)
     {
@@ -21,6 +24,12 @@ public static class DebugHelpers
     [Conditional("DEBUG")]
     public static void Fail(string message)
     {
+        if (string.Equals(Environment.GetEnvironmentVariable(FailFastEnvironmentVariable), "1", StringComparison.Ordinal))
+        {
+            Console.Error.WriteLine($"Debug assertion failed: {message}");
+            throw new InvalidOperationException(message);
+        }
+
         if (Debugger.IsAttached || IsTestRunning)
         {
             Debug.Fail(message);
@@ -53,6 +62,9 @@ public static class DebugHelpers
         }
     }
 
+    // The test host is testhost.exe on Windows but testhost.dll started by the dotnet host
+    // elsewhere, so the process path does not identify it on every platform; the entry
+    // assembly does.
     private static bool IsTestRunning
-        => Application.ExecutablePath.EndsWith("testhost.exe");
+        => string.Equals(Assembly.GetEntryAssembly()?.GetName().Name, "testhost", StringComparison.OrdinalIgnoreCase);
 }

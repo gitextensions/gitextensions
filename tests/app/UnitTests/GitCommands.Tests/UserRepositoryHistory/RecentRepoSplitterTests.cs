@@ -1,14 +1,17 @@
-﻿using GitCommands.UserRepositoryHistory;
+﻿using GitCommands;
+using GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory;
 public class RecentRepoSplitterTests
 {
-    private const string _relativeLongRepoPath = @"this\is\a\very_very_very_very_very_very_very\long\repo_path";
-    private static readonly string repoPathInUserFolder = Path.Combine(Path.GetTempPath(), _relativeLongRepoPath);
-    private static readonly string repoAnchoredInTopPath1 = @"C:\this\is\a\repo_anchored_in_top_path1\";
-    private static readonly string repoAnchoredInTopPath2 = @"C:\this\is\a\repo_anchored_in_top_path2\";
-    private static readonly string repoAnchoredInRecentPath = @"C:\this\is\a\repo_anchored_in_recent_path\";
-    private static readonly string repoNotAnchoredPath = @"C:\this\is\a\repo_not_anchored_path\";
+    private static readonly string _relativeLongRepoPath = Path.Combine("this", "is", "a", "very_very_very_very_very_very_very", "long", "repo_path");
+    private static readonly string _nativeRootPath = Path.GetPathRoot(Path.GetTempPath())
+        ?? throw new InvalidOperationException("The temporary path must have a filesystem root.");
+    private static readonly string repoPathInUserFolder = Path.Combine(PathUtil.UserProfilePath, "AppData", "Local", "Temp", _relativeLongRepoPath);
+    private static readonly string repoAnchoredInTopPath1 = Path.Combine(_nativeRootPath, "this", "is", "a", "repo_anchored_in_top_path1");
+    private static readonly string repoAnchoredInTopPath2 = Path.Combine(_nativeRootPath, "this", "is", "a", "repo_anchored_in_top_path2");
+    private static readonly string repoAnchoredInRecentPath = Path.Combine(_nativeRootPath, "this", "is", "a", "repo_anchored_in_recent_path");
+    private static readonly string repoNotAnchoredPath = Path.Combine(_nativeRootPath, "this", "is", "a", "repo_not_anchored_path");
 
     #region Shortening strategy
     [Test]
@@ -36,6 +39,8 @@ public class RecentRepoSplitterTests
     [Test]
     public void SplitRecentRepos_Should_not_shorten_as_caption()
     {
+        PathUtil.IsInUserProfile(repoAnchoredInTopPath1).Should().BeFalse();
+
         List<Repository> history =
         [
             new Repository(repoAnchoredInTopPath1) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
@@ -55,9 +60,12 @@ public class RecentRepoSplitterTests
         recentRepoList.Should().ContainSingle();
     }
 
+    [Platform(Include = "Win")]
     [Test]
     public void SplitRecentRepos_Should_not_shorten_but_handle_user_folder_as_caption()
     {
+        PathUtil.IsInUserProfile(repoPathInUserFolder).Should().BeTrue();
+
         List<Repository> history =
         [
             new Repository(repoPathInUserFolder) { Anchor = Repository.RepositoryAnchor.AnchoredInTop },
@@ -77,6 +85,7 @@ public class RecentRepoSplitterTests
         recentRepoList.Should().ContainSingle();
     }
 
+    [Platform(Include = "Win")]
     [Test]
     public void SplitRecentRepos_Should_display_middle_dots_in_caption()
     {

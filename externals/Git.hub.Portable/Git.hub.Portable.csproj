@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Build the unchanged Git.hub sources without the external repository's inherited
+         Windows Forms target. A distinct project/assembly identity lets NuGet restore this
+         flavor alongside the pinned Windows-only Git.hub project in one multi-target graph. -->
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+    <RootNamespace>Git.hub</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoWarn>$(NoWarn),1573,1591,1696,1712</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Git.hub\Git.hub\**\*.cs"
+             Exclude="..\Git.hub\Git.hub\bin\**;..\Git.hub\Git.hub\obj\**"
+             LinkBase="Git.hub" />
+    <PackageReference Include="RestSharp" />
+  </ItemGroup>
+
+</Project>

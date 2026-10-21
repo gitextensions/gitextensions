@@ -1,4 +1,5 @@
-﻿using GitExtUtils.GitUI.Theming;
+using System.Drawing;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using NSubstitute;
 
