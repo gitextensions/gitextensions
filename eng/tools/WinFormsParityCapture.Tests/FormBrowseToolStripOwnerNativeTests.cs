@@ -393,6 +393,13 @@ public sealed class FormBrowseToolStripOwnerNativeTests
             Image = new CaptureImage { WidthPx = image.Bitmap.Width, HeightPx = image.Bitmap.Height, CaptureMethod = image.Method, Acquisitions = image.Acquisitions },
             Surfaces = [reader.ReadPrimary(form, image.PrimaryScreenBounds)],
         };
+        CaptureNode topPanel = document.Surfaces[0].Root.Children.Single(child => child.FieldName == "toolPanel")
+            .Children.Single(child => child.Type == "System.Windows.Forms.ToolStripPanel"
+                && child.Children.Any(owner => owner.FieldName == "ToolStripMain"));
+        topPanel.BoundsDip.Height.Should().Be(container.TopToolStripPanel.Height,
+            "the source capture records the live AutoSize panel after each font, visibility and resize transition");
+        topPanel.ClientSizeDip.Height.Should().Be(container.TopToolStripPanel.ClientSize.Height);
+        container.ContentPanel.Top.Should().Be(container.TopToolStripPanel.Height);
         File.WriteAllText(Path.Combine(probe.EvidenceDirectory, name + ".tree.json"), CaptureJson.Serialize(document));
         WriteJson(probe, name, new
         {

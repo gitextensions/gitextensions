@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
@@ -165,6 +165,17 @@ public sealed class FormBrowseTests
     [Category("P8.6i.126")]
     public void Browse_tree_should_report_source_toolbar_colors_and_logical_visibility()
     {
+        foreach ((string ownerType, string designer, string field, string sourceType) in new[]
+        {
+            ("GitUI.CommandsDialogs.FormBrowse", "src/app/GitUI/CommandsDialogs/FormBrowse.Designer.cs", "toolStripSplitStash", "ToolStripSplitButton"),
+            ("GitUI.FileStatusList", "src/app/GitUI/UserControls/FileStatusList.Designer.cs", "sepRefresh", "ToolStripSeparator"),
+        })
+        {
+            WinFormsInputMetadata.SourceByType[ownerType].Single(control => control.FieldName == field).SourceType.Should().Be(sourceType);
+            ReadOriginalDesigner(designer).Should().NotMatchRegex($@"(?m)^\s*(?:this\.)?{field}\.BackColor\s*=",
+                "the shared paint-default mapping requires evidence that the original item has no authored BackColor");
+        }
+
         GitModule module = CreateRepositoryWithInitialCommit();
         using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
         form.Show();
@@ -232,6 +243,30 @@ public sealed class FormBrowseTests
                 stash.Colors.Background.Should().Be(stash.Visible == true ? "#00FFFFFF" : background);
                 stash.Colors.DisabledBackground.Should().Be(stash.Visible == true ? "#00FFFFFF" : background);
                 stash.Colors.Foreground.Should().Be(stash.Visible == true ? sourceForeground : foreground);
+                IconSplitButton actualStash = form.FindControl<IconSplitButton>("toolStripSplitStash")!;
+                IBrush? originalStashPaint = actualStash.Background;
+                try
+                {
+                    foreach (Color authored in new[] { Colors.CornflowerBlue, Color.Parse("#00FFFFFF") })
+                    {
+                        actualStash.Background = new SolidColorBrush(authored);
+                        CaptureNode authoredStash = Flatten(new AvaloniaControlTreeReader(form, renderScale: 1)
+                            .ReadPrimary(form, new PixelSize((int)form.Bounds.Width, (int)form.Bounds.Height)).Root)
+                            .Single(node => node.FieldName == "toolStripSplitStash");
+                        authoredStash.Colors.Background.Should().Be($"#{authored.A:X2}{authored.R:X2}{authored.G:X2}{authored.B:X2}",
+                            "an authored stash BackColor is distinct from its shared renderer-only default brush");
+                        authoredStash.Colors.DisabledBackground.Should().Be(authoredStash.Colors.Background);
+                    }
+                }
+                finally
+                {
+                    actualStash.Background = originalStashPaint;
+                }
+
+                CaptureNode restoredStash = Flatten(new AvaloniaControlTreeReader(form, renderScale: 1)
+                    .ReadPrimary(form, new PixelSize((int)form.Bounds.Width, (int)form.Bounds.Height)).Root)
+                    .Single(node => node.FieldName == "toolStripSplitStash");
+                restoredStash.Colors.Background.Should().Be(restoredStash.Visible == true ? "#00FFFFFF" : background);
                 CaptureNode stashSeparator = nodes.Single(node => node.FieldName == "toolStripSeparator2");
                 stashSeparator.Colors.Background.Should().Be(stashSeparator.Visible == true ? "#00FFFFFF" : background);
                 stashSeparator.Colors.DisabledBackground.Should().Be(stashSeparator.Visible == true ? "#00FFFFFF" : background);
@@ -296,6 +331,19 @@ public sealed class FormBrowseTests
         finally
         {
             form.Close();
+        }
+
+        static string ReadOriginalDesigner(string relativePath)
+        {
+            DirectoryInfo? directory = new(AppContext.BaseDirectory);
+            while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "GitExtensions.Avalonia.slnx")))
+            {
+                directory = directory.Parent;
+            }
+
+            string sourceRoot = directory?.FullName
+                ?? throw new InvalidOperationException("The original Designer source root is unavailable.");
+            return File.ReadAllText(Path.Combine(sourceRoot, relativePath));
         }
 
         static IEnumerable<CaptureNode> Flatten(CaptureNode node)

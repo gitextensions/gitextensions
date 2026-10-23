@@ -60,7 +60,6 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
     {
         BuildStatusTextBlock textBlock = new()
         {
-            Margin = new Thickness(ColumnLeftMargin, 0, 2, 0),
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
         };

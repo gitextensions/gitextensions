@@ -596,6 +596,14 @@ internal sealed class ControlTreeReader
                         continue;
                     }
 
+                    // A child can retain an ancestor as its command source. That reverse
+                    // ownership link is not an authored control/translation field on the form.
+                    if (value is Control referencedControl && owningOwner is Control owningControl
+                        && referencedControl.Contains(owningControl))
+                    {
+                        continue;
+                    }
+
                     if (value is ToolTip toolTip && !_toolTips.Contains(toolTip))
                     {
                         _toolTips.Add(toolTip);

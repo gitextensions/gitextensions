@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -78,7 +78,7 @@ internal sealed class CommitIdColumnProvider : ColumnProvider
             Column.Width = new GridLength(_maxWidth);
         }
 
-        _charCount = GetCharLengthForColumnWidth(Column.Width.Value - ColumnLeftMargin);
+        _charCount = GetCharLengthForColumnWidth(Column.Width.Value);
         _grid.RefreshRealizedRows();
     }
 
@@ -91,7 +91,7 @@ internal sealed class CommitIdColumnProvider : ColumnProvider
         }
         else
         {
-            _charCount ??= GetCharLengthForColumnWidth(Column.Width.Value - ColumnLeftMargin);
+            _charCount ??= GetCharLengthForColumnWidth(Column.Width.Value);
             textBlock.Text = _charCount.Value > 0
                 ? revision.ObjectId.ToShortString(_charCount.Value)
                 : string.Empty;
@@ -103,7 +103,7 @@ internal sealed class CommitIdColumnProvider : ColumnProvider
 
     public override Control CreateCell()
     {
-        TextBlock textBlock = CreateTextBlock(ColumnLeftMargin);
+        TextBlock textBlock = CreateTextBlock();
         textBlock.TextTrimming = TextTrimming.None;
         textBlock.Classes.Add("gitextensions-commit-header");
         textBlock.Classes.Add("revision-object-id-cell");
