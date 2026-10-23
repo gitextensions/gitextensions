@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -10,6 +10,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.VisualTree;
+using AvaloniaToolTip = Avalonia.Controls.ToolTip;
 using Point = Avalonia.Point;
 using Size = Avalonia.Size;
 
@@ -381,6 +382,7 @@ public class NativeToolStripSplitButton : SplitButton
     private NativeToolStripSplitButtonFrame? _systemFrame;
     private IDisposable? _overlayPassThrough;
     private PopupFlyoutBase? _paintFlyout;
+    private NativeToolStripToolTipScope? _toolTipScope;
     private bool _paintSuspended;
     private bool _suspendedSelected;
     private bool _suspendedButtonPressed;
@@ -644,6 +646,7 @@ public class NativeToolStripSplitButton : SplitButton
         }
         else if (change.Property == NativeToolStrip.FreezeDropDownOwnerPaintProperty && !NativeToolStrip.GetFreezeDropDownOwnerPaint(this))
         {
+            ReleaseToolTipScope();
             _paintSuspended = false;
             UpdateNativeStates();
         }
@@ -674,6 +677,11 @@ public class NativeToolStripSplitButton : SplitButton
     protected override void OnFlyoutClosed()
     {
         base.OnFlyoutClosed();
+        if (_paintFlyout?.IsOpen != true)
+        {
+            ReleaseToolTipScope();
+        }
+
         _paintSuspended = false;
         _dropDownButtonPressed = false;
         UpdateNativeStates();
@@ -808,7 +816,28 @@ public class NativeToolStripSplitButton : SplitButton
             _suspendedButtonPressed = ButtonPressed;
             _paintSuspended = true;
             UpdateNativeStates();
+            if (ReferenceEquals(sender, _paintFlyout) && _paintFlyout is PopupFlyoutBase popup)
+            {
+                ReleaseToolTipScope();
+                NativeToolStripToolTipScope scope = new(this, popup);
+                if (ReferenceEquals(sender, _paintFlyout) && NativeToolStrip.GetFreezeDropDownOwnerPaint(this))
+                {
+                    _toolTipScope = scope;
+                    SetCurrentValue(AvaloniaToolTip.IsOpenProperty, false);
+                }
+                else
+                {
+                    scope.Dispose();
+                }
+            }
         }
+    }
+
+    private void ReleaseToolTipScope()
+    {
+        NativeToolStripToolTipScope? scope = _toolTipScope;
+        _toolTipScope = null;
+        scope?.Dispose();
     }
 
     private void ReleasePaintFlyout()
@@ -820,6 +849,7 @@ public class NativeToolStripSplitButton : SplitButton
         }
 
         _paintSuspended = false;
+        ReleaseToolTipScope();
     }
 
     private void NativePointerPressed(object? sender, PointerPressedEventArgs e)
@@ -973,6 +1003,7 @@ public class IconDropDownButton : DropDownButton
     private IDisposable? _nativeContentTemplateValue;
     private IDataTemplate? _nativeContentTemplate;
     private PopupFlyoutBase? _paintFlyout;
+    private NativeToolStripToolTipScope? _toolTipScope;
     private IDisposable? _overlayPassThrough;
     private bool _paintSuspended;
     private bool _suspendedSelected;
@@ -1044,6 +1075,7 @@ public class IconDropDownButton : DropDownButton
         }
         else if (change.Property == NativeToolStrip.FreezeDropDownOwnerPaintProperty && !NativeToolStrip.GetFreezeDropDownOwnerPaint(this))
         {
+            ReleaseToolTipScope();
             _paintSuspended = false;
             UpdateNativeState();
         }
@@ -1101,6 +1133,7 @@ public class IconDropDownButton : DropDownButton
         _overlayPassThrough?.Dispose();
         _overlayPassThrough = null;
         _paintSuspended = false;
+        ReleaseToolTipScope();
     }
 
     private void NativeFlyoutOpening(object? sender, EventArgs e)
@@ -1112,10 +1145,36 @@ public class IconDropDownButton : DropDownButton
         }
 
         UpdateNativeState();
+        if (ReferenceEquals(sender, _paintFlyout) && _paintFlyout is PopupFlyoutBase popup && NativeToolStrip.GetFreezeDropDownOwnerPaint(this))
+        {
+            ReleaseToolTipScope();
+            NativeToolStripToolTipScope scope = new(this, popup);
+            if (ReferenceEquals(sender, _paintFlyout) && NativeToolStrip.GetFreezeDropDownOwnerPaint(this))
+            {
+                _toolTipScope = scope;
+                SetCurrentValue(AvaloniaToolTip.IsOpenProperty, false);
+            }
+            else
+            {
+                scope.Dispose();
+            }
+        }
+    }
+
+    private void ReleaseToolTipScope()
+    {
+        NativeToolStripToolTipScope? scope = _toolTipScope;
+        _toolTipScope = null;
+        scope?.Dispose();
     }
 
     private void NativeFlyoutClosed(object? sender, EventArgs e)
     {
+        if (ReferenceEquals(sender, _paintFlyout) && _paintFlyout?.IsOpen != true)
+        {
+            ReleaseToolTipScope();
+        }
+
         _paintSuspended = false;
         UpdateNativeState();
     }

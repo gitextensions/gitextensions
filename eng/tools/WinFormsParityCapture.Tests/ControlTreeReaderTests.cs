@@ -124,6 +124,23 @@ public sealed class ControlTreeReaderTests
     }
 
     [Test]
+    public void ReadPrimary_should_not_treat_a_child_command_source_as_an_ancestor_translation_field()
+    {
+        using ParentReferenceForm form = new();
+        form.CreateControl();
+
+        CaptureNode root = new ControlTreeReader(form, dpi: 96)
+            .ReadPrimary(form, form.Bounds).Root;
+
+        form.Child.CommandSource.Should().BeSameAs(form);
+        root.FieldName.Should().BeNull();
+        root.FieldAliases.Should().BeEmpty();
+        root.TranslationSource.Should().BeNull();
+        root.Children.Single().FieldName.Should().Be("_child");
+        root.Children.Single().TranslationSource.Should().Be("_child");
+    }
+
+    [Test]
     public void ReadPrimary_should_record_pixels_and_dips()
     {
         using TestForm form = new();
@@ -478,6 +495,55 @@ public sealed class ControlTreeReaderTests
         items.Select(item => item.CheckState).Should().Equal("Checked", "Unchecked");
     }
 
+    [TestCase(false)]
+    [TestCase(true)]
+    [Category("P8_6i")]
+    public void ReadPopup_should_keep_raw_item_and_popup_colors_separate_from_renderer_colors(bool enabled)
+    {
+        using ContextMenuStrip menu = new()
+        {
+            BackColor = Color.FromArgb(255, 78, 89, 90),
+            Renderer = new ToolStripProfessionalRenderer(new DiagnosticColorTable()),
+        };
+        ToolStripMenuItem item = new("Authored foreground")
+        {
+            Name = "authored",
+            ForeColor = Color.Cyan,
+            BackColor = Color.Transparent,
+            Enabled = enabled,
+        };
+        ToolStripSeparator separator = new() { Name = "separator", BackColor = Color.Transparent };
+        menu.Items.Add(item);
+        menu.Items.Add(separator);
+        CaptureNode popup = new ControlTreeReader(menu, dpi: 96).ReadPopup(menu, ordinal: 0).Root;
+
+        popup.Colors.Background.Should().Be("#FF4E595A");
+        popup.Colors.DisabledBackground.Should().Be("#FF4E595A");
+        ((ToolStripProfessionalRenderer)menu.Renderer).ColorTable.ToolStripDropDownBackground.Should().Be(Color.FromArgb(255, 11, 22, 33),
+            "the actual native renderer owns a body color independent of ToolStrip.BackColor");
+        foreach (CaptureNode child in popup.Children)
+        {
+            child.Colors.Background.Should().Be("#00FFFFFF");
+            child.Colors.DisabledBackground.Should().Be("#00FFFFFF");
+            child.Colors.Border.Should().BeNull("ToolStripItem has no raw Border property");
+        }
+
+        popup.Children.Single(child => child.Name == "authored").Colors.Foreground.Should().Be("#FF00FFFF");
+        foreach (ToolStripItem authored in new ToolStripItem[] { item, separator })
+        {
+            authored.BackColor = Color.CornflowerBlue;
+            CaptureNode captured = new ControlTreeReader(menu, dpi: 96).ReadPopup(menu, ordinal: 0).Root.Children
+                .Single(child => child.Name == authored.Name);
+            captured.Colors.Background.Should().Be("#FF6495ED");
+            captured.Colors.DisabledBackground.Should().Be("#FF6495ED");
+            authored.BackColor = Color.Empty;
+            CaptureNode cleared = new ControlTreeReader(menu, dpi: 96).ReadPopup(menu, ordinal: 0).Root.Children
+                .Single(child => child.Name == authored.Name);
+            cleared.Colors.Background.Should().Be($"#{authored.BackColor.ToArgb():X8}",
+                "clearing the local native BackColor returns the property's resolved ambient value");
+        }
+    }
+
     [Test]
     [Category("P8_6h")]
     public void ReadPopup_should_keep_absolute_screen_bounds_and_emit_owner_relative_root_bounds()
@@ -537,6 +603,11 @@ public sealed class ControlTreeReaderTests
                 yield return descendant;
             }
         }
+    }
+
+    private sealed class DiagnosticColorTable : ProfessionalColorTable
+    {
+        public override Color ToolStripDropDownBackground => Color.FromArgb(255, 11, 22, 33);
     }
 
     private sealed class TestForm : Form
@@ -599,5 +670,25 @@ public sealed class ControlTreeReaderTests
     private sealed class ReadOnlyControl : Control
     {
         public bool IsReadOnly { get; set; }
+    }
+
+    private sealed class ParentReferenceForm : Form
+    {
+        private readonly ParentReferenceControl _child;
+
+        public ParentReferenceForm()
+        {
+            _child = new ParentReferenceControl(this);
+            Controls.Add(_child);
+        }
+
+        public ParentReferenceControl Child => _child;
+    }
+
+    private sealed class ParentReferenceControl(Control commandSource) : Control
+    {
+        private readonly Control _uiCommandsSource = commandSource;
+
+        public Control CommandSource => _uiCommandsSource;
     }
 }

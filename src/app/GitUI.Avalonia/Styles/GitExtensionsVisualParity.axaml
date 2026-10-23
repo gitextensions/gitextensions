@@ -2443,6 +2443,7 @@
     <!-- ToolStrip sizes this menu from its item metrics; Fluent's generic flyout
          width cap must not truncate the owned source allocation. -->
     <Setter Property="MaxWidth" Value="Infinity" />
+    <Setter Property="compat:NativeToolStripDropDownMenuItem.UseSystemVisualStyle" Value="{DynamicResource GitExtensionsToolStripSeparatorUseSystemVisualStyle}" />
     <Setter Property="ItemsPanel">
       <ItemsPanelTemplate>
         <compat:NativeToolStripDropDownPanel />
@@ -2468,6 +2469,12 @@
       </ControlTemplate>
     </Setter>
     <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter.gitextensions-working-directory-menu[(compat|NativeToolStripDropDownMenuItem.UseSystemVisualStyle)=true]">
+    <!-- The source ToolStripEx owns a System dropdown in light mode; ThemeFix
+         switches it to Professional for dark/custom themes, independently of BackColor. -->
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
   </Style>
   <Style Selector="MenuItem.gitextensions-working-directory-entry">
     <Setter Property="MinHeight" Value="0" />
@@ -2510,7 +2517,7 @@
                  Placement="RightEdgeAlignedTop"
                  PlacementTarget="{Binding $parent[MenuItem]}"
                  IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}">
-            <Panel Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
+            <Panel Name="PART_DropDownCanvas" Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
               <ScrollViewer Margin="0"
                             HorizontalScrollBarVisibility="Disabled"
                             VerticalScrollBarVisibility="Auto">
@@ -2518,7 +2525,7 @@
                                 ItemsPanel="{TemplateBinding ItemsPanel}"
                                 KeyboardNavigation.TabNavigation="Continue" />
               </ScrollViewer>
-              <Border BorderThickness="1"
+              <Border Name="PART_DropDownBorder" BorderThickness="1"
                       BorderBrush="{DynamicResource GitExtensionsMenuRenderedBorderBrush}"
                       IsHitTestVisible="False" />
             </Panel>
@@ -2526,6 +2533,15 @@
         </Panel>
       </ControlTemplate>
     </Setter>
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:source-system-renderer:not(:pointerover) /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:source-system-renderer /template/ Panel#PART_DropDownCanvas">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-working-directory-entry:source-system-renderer /template/ Border#PART_DropDownBorder">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
   </Style>
   <Style Selector="MenuItem.gitextensions-working-directory-entry:selected,
                    MenuItem.gitextensions-working-directory-entry:pointerover">

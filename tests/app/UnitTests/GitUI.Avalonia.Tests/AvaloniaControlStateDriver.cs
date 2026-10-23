@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -25,6 +25,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
     private readonly Control _root;
     private readonly TopLevel _topLevel;
     private Control? _referencePlacedPopupRoot;
+    private bool _hasPopupFocusOwner;
 
     private AvaloniaControlStateDriver(Control root, TopLevel topLevel)
     {
@@ -35,6 +36,8 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
     public IReadOnlyList<TopLevel> ExternalTopLevels => _externalTopLevels;
 
     public IReadOnlyList<Control> PopupSurfaceRoots => _popupSurfaceRoots;
+
+    public Control? PopupFocusOwner { get; private set; }
 
     public bool RequiresExternalSurfaceCapture => _externalTopLevels.Count > 0;
 
@@ -139,6 +142,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         // These source forms move focus during their asynchronous load. Their settled normal
         // state must retain that product focus rather than restart tab navigation.
         if (_root.GetType().FullName is
+            "GitUI.CommandsDialogs.FormBrowse" or
             "GitUI.CommandsDialogs.FormCommit" or
             "GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard" or
             "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm")
@@ -597,6 +601,14 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
     private void OpenMenu(object target, bool neutralizePointer = true)
     {
+        if (!_hasPopupFocusOwner && _root is FormBrowse)
+        {
+            // Native ToolStrip popups retain the previously focused HWND. Preserve
+            // the observed owner before Avalonia enters a separate popup focus scope.
+            PopupFocusOwner = _topLevel.FocusManager?.GetFocusedElement() as Control;
+            _hasPopupFocusOwner = true;
+        }
+
         if (target is ListBox { Name: "AutoComplete" } && _root is EditNetSpell editNetSpell)
         {
             OpenAutoComplete(editNetSpell);

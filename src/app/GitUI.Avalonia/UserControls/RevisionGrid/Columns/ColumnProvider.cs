@@ -94,7 +94,7 @@ internal abstract class ColumnProvider
         {
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Avalonia.Thickness(leftMargin, 0, 2, 0),
+            Margin = new Avalonia.Thickness(leftMargin, 0, 0, 0),
             Opacity = opacity,
         };
 

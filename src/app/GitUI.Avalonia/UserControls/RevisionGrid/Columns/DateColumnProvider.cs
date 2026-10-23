@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Media;
 using GitCommands;
@@ -42,7 +42,7 @@ internal sealed class DateColumnProvider : ColumnProvider
 
     public override Control CreateCell()
     {
-        TextBlock textBlock = CreateTextBlock(ColumnLeftMargin);
+        TextBlock textBlock = CreateTextBlock();
         textBlock.Classes.Add("revision-date-cell");
         return textBlock;
     }

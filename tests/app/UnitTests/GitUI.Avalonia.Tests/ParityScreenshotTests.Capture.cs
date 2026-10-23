@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -1788,7 +1788,7 @@ public sealed partial class ParityScreenshotTests
                     image.Save(stream, PngBitmapEncoderOptions.Default);
                 }
 
-                AvaloniaControlTreeReader reader = new(view, renderScale, primarySurfaceBounds.Position);
+                AvaloniaControlTreeReader reader = new(view, renderScale, primarySurfaceBounds.Position, driver.PopupFocusOwner);
                 List<CaptureSurface> surfaces = capturedFrames
                     .Select((capturedFrame, index) => reader.ReadSurface(
                         capturedFrame.TreeRoot,

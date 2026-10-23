@@ -14,6 +14,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
@@ -144,6 +145,108 @@ public sealed class BrowseToolbarPopupLayoutTests
         int y = (int)origin.Y;
         pixels.GetPixel(x, y).Should().Be(new SKColor(border.R, border.G, border.B, border.A));
         pixels.GetPixel(x + 1, y + 1).Should().Be(new SKColor(background.R, background.G, background.B, background.A));
+    }
+
+    [AvaloniaTest]
+    [TestCase("branchSelect", false)]
+    [TestCase("branchSelect", true)]
+    [TestCase("toolStripButtonPull", false)]
+    [TestCase("toolStripButtonPull", true)]
+    public void Popup_tree_should_keep_native_raw_color_roles_separate_from_renderer_paint(string name, bool dark)
+    {
+        using PopupFixture fixture = new(name, rightToLeft: false, points: 9, dark: dark);
+        fixture.Form.RequestedThemeVariant = dark ? ThemeVariant.Dark : ThemeVariant.Light;
+        fixture.Window.TryFindResource("GitExtensionsControlForegroundBrush", fixture.Window.ActualThemeVariant, out object? ambientForeground).Should().BeTrue();
+        string expectedForeground = ToArgb(ColorOf((IBrush?)ambientForeground));
+        MenuItem detached = new() { Header = "Detached source item" };
+        TopLevel.GetTopLevel(detached).Should().BeNull();
+        ColorOf(detached.Foreground).Should().Be(Colors.Black,
+            "the detached framework default is not the source's themed ambient ForeColor");
+        ReadDetached().Colors.Foreground.Should().Be(expectedForeground);
+        detached.Foreground = Brushes.Cyan;
+        ReadDetached().Colors.Foreground.Should().Be("#FF00FFFF");
+        detached.ClearValue(TemplatedControl.ForegroundProperty);
+        ReadDetached().Colors.Foreground.Should().Be(expectedForeground);
+        using (detached.SetValue(TemplatedControl.ForegroundProperty, Brushes.Red, BindingPriority.StyleTrigger))
+        {
+            ReadDetached().Colors.Foreground.Should().Be(expectedForeground,
+                "a template or hover style is paint, not an authored raw ForeColor");
+        }
+
+        fixture.Open();
+        fixture.Window.TryFindResource("GitExtensionsControlBackgroundBrush", fixture.Window.ActualThemeVariant, out object? rawBackground).Should().BeTrue();
+
+        // This detached layout fixture loads static styles, not the desktop theme
+        // publisher. Runtime Apply publishes both aliases from the same resolved
+        // SystemColors.Control value; keep that raw role local to this fixture.
+        fixture.Form.Resources["GitExtensionsKnownColorControlBrush"] = rawBackground;
+        string expectedBackground = ToArgb(ColorOf((IBrush?)rawBackground));
+        Color renderedBackground = ColorOf(fixture.Presenter.Background);
+        ToArgb(renderedBackground).Should().NotBe(expectedBackground,
+            "the source's raw popup BackColor differs from its Professional renderer's body color");
+        MenuItem item = fixture.Menu.Items.OfType<MenuItem>().First();
+        item.Foreground = Brushes.Cyan;
+        item.BorderBrush = Brushes.Magenta;
+        fixture.Settle();
+
+        CaptureNode popup = ReadPopup();
+        popup.Colors.Background.Should().Be(expectedBackground);
+        popup.Colors.DisabledBackground.Should().Be(expectedBackground);
+        CaptureNode firstItem = popup.Children.First(child => child.ControlKind == "menuItem");
+        firstItem.Colors.Foreground.Should().Be("#FF00FFFF",
+            "the source reader records the item's explicitly resolved ForeColor, not a generic framework palette");
+        firstItem.Colors.Border.Should().BeNull(
+            "ToolStripItem has no raw border role; selection borders belong to its renderer");
+        ColorOf(item.BorderBrush).Should().Be(Colors.Magenta,
+            "capturing must neither rewrite nor mistake the unused inherited Avalonia brush for native item chrome");
+
+        foreach (Color authored in new[] { Color.Parse("#00FFFFFF"), Colors.CornflowerBlue })
+        {
+            item.Background = new SolidColorBrush(authored);
+            fixture.Settle();
+            CaptureNode authoredItem = ReadPopup().Children.First(child => child.ControlKind == "menuItem");
+            authoredItem.Colors.Background.Should().Be(ToArgb(authored));
+            authoredItem.Colors.DisabledBackground.Should().Be(ToArgb(authored));
+        }
+
+        item.ClearValue(TemplatedControl.BackgroundProperty);
+        fixture.Settle();
+        ReadPopup().Children.First(child => child.ControlKind == "menuItem").Colors.Background.Should().Be(expectedBackground,
+            "clearing an authored BackColor must restore the native ambient role, not the template's renderer paint");
+        using (item.SetValue(TemplatedControl.BackgroundProperty, Brushes.Lime, BindingPriority.StyleTrigger))
+        {
+            fixture.Settle();
+            ColorOf(item.Background).Should().Be(Colors.Lime);
+            ReadPopup().Children.First(child => child.ControlKind == "menuItem").Colors.Background.Should().Be(expectedBackground,
+                "a framework style-trigger background is renderer paint, not an authored native BackColor");
+        }
+
+        fixture.Presenter.Background = Brushes.Orange;
+        fixture.Settle();
+        ReadPopup().Colors.Background.Should().Be(expectedBackground,
+            "changing the rendered surface must not overwrite the separate ambient property role");
+        TopLevel root = TopLevel.GetTopLevel(fixture.Presenter)
+            ?? throw new InvalidOperationException("The actual popup must retain its rendered root.");
+        Point origin = fixture.Presenter.TranslatePoint(default, root)
+            ?? throw new InvalidOperationException("The popup must have an actual frame origin.");
+        using WriteableBitmap frame = root.CaptureRenderedFrame()
+            ?? throw new InvalidOperationException("The opened popup must have an actual rendered frame.");
+        using MemoryStream stream = new();
+        frame.Save(stream, PngBitmapEncoderOptions.Default);
+        stream.Position = 0;
+        using SKBitmap pixels = SKBitmap.Decode(stream)
+            ?? throw new InvalidOperationException("The actual popup frame must decode.");
+        pixels.GetPixel((int)origin.X + 1, (int)origin.Y + 1).Should().Be(new SKColor(255, 165, 0, 255),
+            "the diagnostic paint change remains visible in the independent image even though raw BackColor is unchanged");
+
+        CaptureNode ReadPopup() => new AvaloniaControlTreeReader(fixture.Form, renderScale: 1)
+            .ReadSurface(fixture.Presenter, "popup:0", new PixelRect(0, 0,
+                (int)fixture.Presenter.Bounds.Width, (int)fixture.Presenter.Bounds.Height)).Root;
+
+        CaptureNode ReadDetached() => new AvaloniaControlTreeReader(fixture.Window, renderScale: 1)
+            .ReadPrimary(detached, new PixelSize(40, 22)).Root;
+
+        static string ToArgb(Color color) => $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
     }
 
     [AvaloniaTest]
