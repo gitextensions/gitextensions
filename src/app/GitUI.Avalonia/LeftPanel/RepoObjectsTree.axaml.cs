@@ -468,6 +468,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 },
                 new NativeTreeTextBlock
                 {
+                    // Live Nodes.FillTreeViewNode updates cache the styled HFONT extent;
+                    // the pre-show native item cache is a separate ambient-font route.
+                    UsesNodeFontForMeasurement = isBold || isItalic,
                     UsesAmbientFont = !isBold && !isItalic,
                     FontFamily = new FontFamily(AppSettings.Font.Name),
                     FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),

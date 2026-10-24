@@ -52,20 +52,6 @@ public sealed class NativeToolStripDropDownPresenter : MenuFlyoutPresenter
 }
 
 /// <summary>
-///  Keeps the separator in its source dropdown slot without a second RTL mirror.
-/// </summary>
-public sealed class NativeToolStripDropDownSeparator : Separator
-{
-    public NativeToolStripDropDownSeparator()
-    {
-    }
-
-    protected override Type StyleKeyOverride => typeof(Separator);
-
-    protected override bool BypassFlowDirectionPolicies => true;
-}
-
-/// <summary>
 ///  Keeps MenuItem's interaction implementation while its owned source layout supplies RTL coordinates.
 /// </summary>
 public sealed class NativeToolStripDropDownMenuItem : MenuItem
