@@ -167,6 +167,24 @@ public sealed class WorkingDirectoryPopupPaintNativeTests
                     int y = bounds.Y - frame.ScreenBounds.Y;
                     Color border = frame.Bitmap.GetPixel(x, y);
                     Color background = frame.Bitmap.GetPixel(x + bounds.Width - 2, y + bounds.Height - 2);
+                    List<object> separatorEvidence = [];
+                    foreach (ToolStripSeparator separator in popup.Items.OfType<ToolStripSeparator>())
+                    {
+                        using Bitmap expected = ToolStripSeparatorPaintTests.RenderSeparator(
+                            popup.Renderer, separator, SystemColors.Menu, vertical: false);
+                        for (int row = 0; row < separator.Height; row++)
+                        {
+                            for (int column = 0; column < separator.Width; column++)
+                            {
+                                frame.Bitmap.GetPixel(x + separator.Bounds.X + column, y + separator.Bounds.Y + row).ToArgb()
+                                    .Should().Be(expected.GetPixel(column, row).ToArgb(),
+                                        $"the actual source popup separator must paint its real renderer at {column},{row}");
+                            }
+                        }
+
+                        separatorEvidence.Add(new { separator.Bounds, allPixelsMatchNativeRenderer = true });
+                    }
+
                     File.WriteAllText(Path.Combine(probe.EvidenceDirectory, name + ".json"), JsonSerializer.Serialize(new
                     {
                         acquisition = frame.Method.ToString(),
@@ -178,6 +196,7 @@ public sealed class WorkingDirectoryPopupPaintNativeTests
                         paintedBorder = $"#{border.ToArgb():X8}",
                         menu = $"#{SystemColors.Menu.ToArgb():X8}",
                         controlDark = $"#{SystemColors.ControlDark.ToArgb():X8}",
+                        separators = separatorEvidence,
                     }, new JsonSerializerOptions { WriteIndented = true }));
                     background.ToArgb().Should().Be(SystemColors.Menu.ToArgb());
                     border.ToArgb().Should().Be(SystemColors.ControlDark.ToArgb());

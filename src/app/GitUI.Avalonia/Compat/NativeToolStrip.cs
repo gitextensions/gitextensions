@@ -1,4 +1,5 @@
 using System.Collections.Specialized;
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -7,6 +8,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Metadata;
@@ -53,6 +55,7 @@ public sealed class NativeToolStrip : Control, IDisposable
     private readonly Dictionary<Control, IDisposable?[]> _autoSizeValues = new(ReferenceEqualityComparer.Instance);
     private readonly Dictionary<Control, (bool Overflow, IDisposable? Value)> _controlHostMarginValues = new(ReferenceEqualityComparer.Instance);
     private readonly HashSet<Control> _pendingControlHostMargins = new(ReferenceEqualityComparer.Instance);
+    private readonly Dictionary<Control, ToolTipHoverState> _toolTipHover = new(ReferenceEqualityComparer.Instance);
     private IDisposable?[] _overflowValues = [];
     private Button _overflowButton;
     private bool _measuring;
@@ -94,6 +97,7 @@ public sealed class NativeToolStrip : Control, IDisposable
     {
         AffectsRender<NativeToolStrip>(BackgroundProperty, UseSystemVisualStyleProperty,
             GripVisibleProperty, GripDarkBrushProperty, GripLightBrushProperty, FlowDirectionProperty);
+        InputElement.PointerPressedEvent.AddClassHandler<ToolTip>(ToolTipPointerPressed, RoutingStrategies.Tunnel);
     }
 
     public NativeToolStrip()
@@ -114,6 +118,10 @@ public sealed class NativeToolStrip : Control, IDisposable
             Child = _overflowPresenter,
             Placement = PlacementMode.BottomEdgeAlignedRight,
             IsLightDismissEnabled = true,
+
+            // The source closes its overflow and child menu without swallowing
+            // the outside control's original click.
+            OverlayDismissEventPassThrough = true,
         };
 
         // PopupRoot receives its control theme through the Popup's logical owner.
@@ -363,6 +371,21 @@ public sealed class NativeToolStrip : Control, IDisposable
             NativeToolStripItemPlacement.Overflow => _overflowPresenter,
             _ => null,
         };
+
+    internal TimeSpan GetOverflowToolTipDelay(Control control)
+    {
+        _toolTipHover.TryGetValue(control, out ToolTipHoverState? hover);
+        if (Avalonia.Controls.ToolTip.GetIsOpen(control) || hover?.HasActiveHint == true)
+        {
+            return TimeSpan.Zero;
+        }
+
+        TimeSpan elapsed = hover is not null ? Stopwatch.GetElapsedTime(hover.EnteredAt) : TimeSpan.Zero;
+        return TimeSpan.FromMilliseconds(Math.Max(0, Avalonia.Controls.ToolTip.GetShowDelay(control) - elapsed.TotalMilliseconds));
+    }
+
+    internal long GetToolTipHoverEpoch(Control control)
+        => _toolTipHover.GetValueOrDefault(control)?.EnteredAt ?? 0;
 
     /// <summary>
     ///  Opens the wrapped overflow with the same item instances.
@@ -651,6 +674,17 @@ public sealed class NativeToolStrip : Control, IDisposable
 
     private static double Pixel(double value) => Math.Max(0, Math.Ceiling(value));
 
+    private static void ToolTipPointerPressed(ToolTip tip, PointerPressedEventArgs e)
+    {
+        if (e.GetCurrentPoint(tip).Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonPressed
+            && tip.GetLogicalAncestors().OfType<NativeToolStrip>().FirstOrDefault() is { IsOverflowOpen: true } strip)
+        {
+            // A native hint-covered press dismisses both menus without invoking the
+            // obscured command. Keep the actual hint hit and its event untouched.
+            strip.CloseOverflow();
+        }
+    }
+
     private void AttachOverflowButton(Button button)
     {
         LogicalChildren.Add(button);
@@ -740,6 +774,7 @@ public sealed class NativeToolStrip : Control, IDisposable
         _preferredSizes.Remove(item);
         _placements.Remove(item);
         _pendingControlHostMargins.Remove(item);
+        _toolTipHover.Remove(item);
         ReleaseAutoSize(item);
         ReleaseControlHostMargin(item);
     }
@@ -828,6 +863,33 @@ public sealed class NativeToolStrip : Control, IDisposable
 
     private void Item_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
+        if (sender is Control owner && (owner is NativeToolStripSplitButton or IconDropDownButton))
+        {
+            if (e.Property == IsPointerOverProperty)
+            {
+                if (owner.IsPointerOver)
+                {
+                    _toolTipHover[owner] = new ToolTipHoverState(Stopwatch.GetTimestamp());
+                }
+                else
+                {
+                    _toolTipHover.Remove(owner);
+                }
+            }
+            else if (e.Property == Avalonia.Controls.ToolTip.IsOpenProperty && owner.IsPointerOver && Avalonia.Controls.ToolTip.GetIsOpen(owner))
+            {
+                if (!_toolTipHover.TryGetValue(owner, out ToolTipHoverState? hover))
+                {
+                    hover = new ToolTipHoverState(Stopwatch.GetTimestamp());
+                    _toolTipHover.Add(owner, hover);
+                }
+
+                // Native ToolStrip retains its active tooltip item until mouse leave,
+                // including after the window auto-pops or an explicit Hide request.
+                hover.HasActiveHint = true;
+            }
+        }
+
         if (_measuring || sender is not Control item || e.Property == BoundsProperty)
         {
             return;
@@ -992,6 +1054,13 @@ public sealed class NativeToolStrip : Control, IDisposable
     {
         Thickness margin = item.Margin;
         return _preferredSizes[item].Width + margin.Left + margin.Right;
+    }
+
+    private sealed class ToolTipHoverState(long enteredAt)
+    {
+        internal long EnteredAt { get; } = enteredAt;
+
+        internal bool HasActiveHint { get; set; }
     }
 }
 

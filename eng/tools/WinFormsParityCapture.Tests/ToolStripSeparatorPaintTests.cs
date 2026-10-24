@@ -255,7 +255,7 @@ public sealed class ToolStripSeparatorPaintTests
     private static Bitmap RenderSeparator(ToolStrip strip, ToolStripSeparator separator, Color backdrop)
         => RenderSeparator(strip.Renderer, separator, backdrop);
 
-    private static Bitmap RenderSeparator(ToolStripRenderer renderer, ToolStripSeparator separator, Color backdrop)
+    internal static Bitmap RenderSeparator(ToolStripRenderer renderer, ToolStripSeparator separator, Color backdrop, bool vertical = true)
     {
         Bitmap bitmap = NewBitmap(separator.Size, backdrop);
         try
@@ -264,7 +264,7 @@ public sealed class ToolStripSeparatorPaintTests
             PaintOnInitializedDeviceContext(graphics, separator.Size, backdrop, deviceContext =>
             {
                 using Graphics rendererGraphics = Graphics.FromHdc(deviceContext);
-                renderer.DrawSeparator(new ToolStripSeparatorRenderEventArgs(rendererGraphics, separator, vertical: true));
+                renderer.DrawSeparator(new ToolStripSeparatorRenderEventArgs(rendererGraphics, separator, vertical));
             });
             return bitmap;
         }
@@ -275,7 +275,7 @@ public sealed class ToolStripSeparatorPaintTests
         }
     }
 
-    private static Bitmap NewBitmap(Size size, Color backdrop)
+    internal static Bitmap NewBitmap(Size size, Color backdrop)
     {
         Bitmap bitmap = new(size.Width, size.Height, PixelFormat.Format24bppRgb);
         bitmap.SetResolution(96, 96);
@@ -284,7 +284,7 @@ public sealed class ToolStripSeparatorPaintTests
         return bitmap;
     }
 
-    private static void PaintOnInitializedDeviceContext(Graphics graphics, Size size, Color backdrop, Action<nint> paint)
+    internal static void PaintOnInitializedDeviceContext(Graphics graphics, Size size, Color backdrop, Action<nint> paint)
     {
         nint deviceContext = graphics.GetHdc();
         nint brush = CreateSolidBrush(unchecked((uint)(backdrop.R | (backdrop.G << 8) | (backdrop.B << 16))));
@@ -357,7 +357,7 @@ public sealed class ToolStripSeparatorPaintTests
         ((70 * shadow.G) + (30 * window.G) + 50) / 100,
         ((70 * shadow.B) + (30 * window.B) + 50) / 100);
 
-    private static object QueryNativeTheme(ToolStrip strip, Size size, int state)
+    internal static object QueryNativeTheme(ToolStrip strip, Size size, int state, int separatorPart = SeparatorPart)
     {
         nint theme = OpenThemeData(strip.Handle, ThemeClass);
         theme.Should().NotBe(0);
@@ -369,38 +369,38 @@ public sealed class ToolStripSeparatorPaintTests
             Dictionary<string, object> properties = [];
             foreach (EnumProperty property in new[] { EnumProperty.BackgroundType, EnumProperty.SizingType, EnumProperty.BorderType, EnumProperty.FillType, EnumProperty.ImageLayout })
             {
-                int result = GetThemeEnumValue(theme, SeparatorPart, state, (int)property, out int value);
+                int result = GetThemeEnumValue(theme, separatorPart, state, (int)property, out int value);
                 properties[property.ToString()] = new { hresult = result, value };
             }
 
             foreach (IntegerProperty property in new[] { IntegerProperty.BorderSize, IntegerProperty.ImageCount, IntegerProperty.GradientRatio1, IntegerProperty.GradientRatio2, IntegerProperty.GradientRatio3, IntegerProperty.GradientRatio4, IntegerProperty.GradientRatio5 })
             {
-                int result = GetThemeInt(theme, SeparatorPart, state, (int)property, out int value);
+                int result = GetThemeInt(theme, separatorPart, state, (int)property, out int value);
                 properties[property.ToString()] = new { hresult = result, value };
             }
 
             foreach (ColorProperty property in new[] { ColorProperty.BorderColor, ColorProperty.FillColor, ColorProperty.GradientColor1, ColorProperty.GradientColor2, ColorProperty.GradientColor3, ColorProperty.GradientColor4, ColorProperty.GradientColor5 })
             {
-                int result = GetThemeColor(theme, SeparatorPart, state, (int)property, out uint value);
+                int result = GetThemeColor(theme, separatorPart, state, (int)property, out uint value);
                 properties[property.ToString()] = new { hresult = result, argb = result >= 0 ? Argb(Color.FromArgb((int)(value & 255), (int)((value >> 8) & 255), (int)((value >> 16) & 255))) : null };
             }
 
             foreach (MarginProperty property in new[] { MarginProperty.SizingMargins, MarginProperty.ContentMargins })
             {
-                int result = GetThemeMargins(theme, deviceContext, SeparatorPart, state, (int)property, ref bounds, out NativeMargins margins);
+                int result = GetThemeMargins(theme, deviceContext, separatorPart, state, (int)property, ref bounds, out NativeMargins margins);
                 properties[property.ToString()] = new { hresult = result, left = margins.Left, right = margins.Right, top = margins.Top, bottom = margins.Bottom };
             }
 
             for (int sizing = 0; sizing <= 2; sizing++)
             {
-                int result = GetThemePartSize(theme, deviceContext, SeparatorPart, state, ref bounds, sizing, out NativeSize partSize);
+                int result = GetThemePartSize(theme, deviceContext, separatorPart, state, ref bounds, sizing, out NativeSize partSize);
                 properties[$"PartSize{(ThemeSizeType)sizing}"] = new { hresult = result, width = partSize.Width, height = partSize.Height };
             }
 
-            int contentResult = GetThemeBackgroundContentRect(theme, deviceContext, SeparatorPart, state, ref bounds, out NativeRectangle content);
+            int contentResult = GetThemeBackgroundContentRect(theme, deviceContext, separatorPart, state, ref bounds, out NativeRectangle content);
             properties["BackgroundContentRect"] = new { hresult = contentResult, left = content.Left, top = content.Top, right = content.Right, bottom = content.Bottom };
-            object image = ReadNativeThemeBitmap(theme, deviceContext, state);
-            return new { themeClass = ThemeClass, part = SeparatorPart, state, queryContext = "initializedToolStripWindowHdc", properties, image };
+            object image = ReadNativeThemeBitmap(theme, deviceContext, state, separatorPart);
+            return new { themeClass = ThemeClass, part = separatorPart, state, queryContext = "initializedToolStripWindowHdc", properties, image };
         }
         finally
         {
@@ -409,11 +409,11 @@ public sealed class ToolStripSeparatorPaintTests
         }
     }
 
-    private static object ReadNativeThemeBitmap(nint theme, nint deviceContext, int state)
+    private static object ReadNativeThemeBitmap(nint theme, nint deviceContext, int state, int separatorPart)
     {
         // Property zero selects the native part image; GBF_COPY gives this fixture
         // ownership without changing or deleting the theme service's cached bitmap.
-        int result = GetThemeBitmap(theme, SeparatorPart, state, 0, 2, out nint bitmap);
+        int result = GetThemeBitmap(theme, separatorPart, state, 0, 2, out nint bitmap);
         if (result < 0 || bitmap == 0)
         {
             return new { query = "GetThemeBitmap(property0,GBF_COPY)", hresult = result, available = false };
@@ -484,7 +484,7 @@ public sealed class ToolStripSeparatorPaintTests
         TestContext.Out.WriteLine(JsonSerializer.Serialize(metadata));
     }
 
-    private static void AssertPixels(Bitmap actual, Bitmap expected)
+    internal static void AssertPixels(Bitmap actual, Bitmap expected)
     {
         for (int y = 0; y < actual.Height; y++)
         {

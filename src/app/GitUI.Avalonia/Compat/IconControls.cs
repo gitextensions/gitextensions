@@ -823,7 +823,10 @@ public class NativeToolStripSplitButton : SplitButton
                 if (ReferenceEquals(sender, _paintFlyout) && NativeToolStrip.GetFreezeDropDownOwnerPaint(this))
                 {
                     _toolTipScope = scope;
-                    SetCurrentValue(AvaloniaToolTip.IsOpenProperty, false);
+                    if (scope.SuppressesOwnerHints)
+                    {
+                        SetCurrentValue(AvaloniaToolTip.IsOpenProperty, false);
+                    }
                 }
                 else
                 {
@@ -1152,7 +1155,10 @@ public class IconDropDownButton : DropDownButton
             if (ReferenceEquals(sender, _paintFlyout) && NativeToolStrip.GetFreezeDropDownOwnerPaint(this))
             {
                 _toolTipScope = scope;
-                SetCurrentValue(AvaloniaToolTip.IsOpenProperty, false);
+                if (scope.SuppressesOwnerHints)
+                {
+                    SetCurrentValue(AvaloniaToolTip.IsOpenProperty, false);
+                }
             }
             else
             {

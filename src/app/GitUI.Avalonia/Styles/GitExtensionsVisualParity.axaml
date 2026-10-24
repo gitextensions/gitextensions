@@ -2476,6 +2476,21 @@
     <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
   </Style>
+  <Style Selector="compat|NativeToolStripDropDownSeparator">
+    <Setter Property="Height" Value="6" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="UseSystemVisualStyle" Value="{DynamicResource GitExtensionsToolStripSeparatorUseSystemVisualStyle}" />
+    <Setter Property="DarkBrush" Value="{DynamicResource GitExtensionsToolStripSeparatorDarkBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <!-- The source separator paints directly without filling its raw BackColor. -->
+        <Panel />
+      </ControlTemplate>
+    </Setter>
+  </Style>
   <Style Selector="MenuItem.gitextensions-working-directory-entry">
     <Setter Property="MinHeight" Value="0" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsSourceControlTextBrush}" />

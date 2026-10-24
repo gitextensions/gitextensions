@@ -14,10 +14,16 @@ internal sealed class NativeTreeTextBlock : TextBlock
 
     public NativeTreeTextBlock()
     {
-        // TVM_GETITEMRECT includes two text-slot pixels on each side of the ambient
-        // HFONT advance. NodeFont affects paint, not the native item's cached width.
+        // TVM_GETITEMRECT includes two text-slot pixels on each side. Pre-show native
+        // items cache the ambient HFONT; live source updates can cache the NodeFont.
         Padding = new Thickness(2, 0);
     }
+
+    /// <summary>
+    ///  Gets whether this header was created by the live native node-update route, which
+    ///  selects an existing styled NodeFont before caching the item's text extent.
+    /// </summary>
+    internal bool UsesNodeFontForMeasurement { get; init; }
 
     /// <summary>
     ///  Gets or sets whether the native node has no authored NodeFont and paints with the tree font.
@@ -59,9 +65,10 @@ internal sealed class NativeTreeTextBlock : TextBlock
         _ambientFont.FontSize = tree.FontSize;
         _ambientFont.FontWeight = tree.FontWeight;
         _ambientFont.FontStyle = tree.FontStyle;
-        double width = WinFormsRichEditTextMeasurer.TryGetTextWidth(_ambientFont, Text, out double nativeWidth)
+        TextBlock measurementOwner = UsesNodeFontForMeasurement && !UsesAmbientFont ? this : _ambientFont;
+        double width = WinFormsRichEditTextMeasurer.TryGetTextWidth(measurementOwner, Text, out double nativeWidth)
             ? nativeWidth
-            : WinFormsTextMeasurer.MeasureSize(_ambientFont, Text).Width;
+            : WinFormsTextMeasurer.MeasureSize(measurementOwner, Text).Width;
         return new Size(width + Padding.Left + Padding.Right, measured.Height);
     }
 
