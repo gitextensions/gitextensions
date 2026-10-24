@@ -1,11 +1,15 @@
 ﻿using System.Runtime.CompilerServices;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitUI.UserControls.RevisionGrid;
+using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid;
+
+[Apartment(ApartmentState.STA)]
 public class RevisionGraphTests
 {
     private RevisionGraph _revisionGraph = null!;
@@ -692,6 +696,7 @@ public class RevisionGraphTests
 
         List<GitRevision> commits = [];
         Dictionary<string, GitRevision> commitsById = [];
+        Random random = new(42);
 
         // Parse and create commits
         foreach (string spec in commitSpecs.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
@@ -703,7 +708,7 @@ public class RevisionGraphTests
             {
                 "_w" => ObjectId.WorkTreeId,
                 "_i" => ObjectId.IndexId,
-                _ => ObjectId.Random()
+                _ => ObjectId.Random(random)
             };
             GitRevision commit = new(objectId)
             {
@@ -926,6 +931,8 @@ public class RevisionGraphTests
 
     private static async Task VerifyGraphLayoutAsync(RevisionGraph revisionGraph)
     {
+        await RenderGraph(revisionGraph);
+
         string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
         await Verify(actualGraph);
     }
@@ -933,7 +940,81 @@ public class RevisionGraphTests
     private async Task VerifyGraphLayoutAsync(string commitSpecs, int testCaseIndex = 0, [CallerMemberName] string callerMemberName = null!)
     {
         RevisionGraph revisionGraph = CreateGraphTopDown(commitSpecs);
+        await RenderGraph(revisionGraph);
         string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
         await Verify(actualGraph).UseFileName($"{callerMemberName}.{testCaseIndex}");
+    }
+
+    /// <summary>
+    /// Renders the <paramref name="revisionGraph"/> to verify that no exceptions occur during rendering.
+    /// </summary>
+    /// <param name="revisionGraph">The revision graph to render.</param>
+    /// <param name="showWindow">If true, the graph is also shown in a window for visual verification.</param>
+    private static async Task RenderGraph(RevisionGraph revisionGraph, bool showWindow = false)
+    {
+        // Disable rendering to avoid errors due to concurrent drawing on multiple threads.
+        AppSettings.ShowRevisionGridGraphColumn = false;
+
+        RevisionDataGridView grid = new() { ColumnHeadersVisible = false };
+        RevisionGraphColumnProvider graphColumn = new(revisionGraph, new GitRevisionSummaryBuilder());
+        grid.AddColumn(graphColumn);
+        SubjectAndRefsColumn subjectColumn = new();
+        grid.AddColumn(subjectColumn);
+
+        grid.MarkAsDataLoading();
+        grid.AddRange(revisionGraph.GetTestAccessor().Revisions);
+        grid.LoadingCompleted();
+
+        int rowCount = revisionGraph.Count;
+        graphColumn.GetTestAccessor().RenderGraphToCache(new(0, rowCount), rowCount, grid.RowTemplate.Height);
+
+        if (showWindow)
+        {
+            // Show grid in a window:
+            Form window = new()
+            {
+                Text = "graph",
+            };
+            window.Controls.Add(grid);
+
+            // Size window to fit graph
+            int maxLaneCount = Enumerable.Range(0, revisionGraph.Count)
+                .Max(rowIndex => revisionGraph.GetSegmentsForRow(rowIndex)?.GetLaneCount() ?? 0);
+            window.ClientSize = new((graphColumn.GetTestAccessor().LaneWidth * (maxLaneCount + 1)) + subjectColumn.Column.Width,
+                grid.RowTemplate.Height * (rowCount + 1));
+
+            AppSettings.ShowRevisionGridGraphColumn = true;
+            await window.ShowDialogAsync();
+        }
+    }
+
+    private class SubjectAndRefsColumn : ColumnProvider
+    {
+        private TextFormatFlags _flags =
+            TextFormatFlags.NoPrefix |
+            TextFormatFlags.VerticalCenter |
+            TextFormatFlags.SingleLine;
+
+        public SubjectAndRefsColumn() : base("Subject and revs")
+        {
+            Size size = TextRenderer.MeasureText("1: dev, main ", AppSettings.Font);
+            Column = new DataGridViewTextBoxColumn() { Width = size.Width, SortMode = DataGridViewColumnSortMode.NotSortable };
+        }
+
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
+        {
+            TextRenderer.DrawText(e.Graphics!, e.FormattedValue?.ToString()!, style.NormalFont, e.CellBounds, style.ForeColor, _flags);
+        }
+
+        public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
+        {
+            e.Value = "" + revision.Subject;
+            if (revision.Refs.Any())
+            {
+                e.Value += ": " + string.Join(", ", revision.Refs.Select(r => r.Name));
+            }
+
+            e.FormattingApplied = true;
+        }
     }
 }

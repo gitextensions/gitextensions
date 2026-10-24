@@ -45,11 +45,13 @@ public readonly struct ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>, I
     /// <summary>
     ///  Produces an <see cref="ObjectId"/> populated with random bytes.
     /// </summary>
+    /// <param name="random">The <see cref="Random"/> instance to use. If <see langword="null"/>,
+    ///   the system shared instance is used.</param>
     [Pure]
-    public static ObjectId Random()
+    public static ObjectId Random(Random? random = null)
     {
         Sha1 data = default;
-        System.Random.Shared.NextBytes((Span<byte>)data);
+        (random ?? System.Random.Shared).NextBytes((Span<byte>)data);
         return new ObjectId(data);
     }
 

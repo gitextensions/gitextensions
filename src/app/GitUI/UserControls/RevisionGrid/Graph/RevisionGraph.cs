@@ -1237,6 +1237,8 @@ public class RevisionGraph : IRevisionGraphRowProvider
 
     internal readonly struct TestAccessor(RevisionGraph revisionGraph)
     {
+        public IEnumerable<GitRevision> Revisions => revisionGraph._orderedNodesCache.Select(r => r.GitRevision).Where(r => r != null)!;
+
         /// <summary>
         /// Validate the topo order in brute force.
         /// </summary>
