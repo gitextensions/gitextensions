@@ -125,6 +125,7 @@ internal static class CaptureRunner
             {
                 SchemaVersion = 1,
                 CreatedAtUtc = DateTime.UtcNow,
+                FixtureNowUtc = plan.FixtureNowUtc,
                 ToolVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0",
                 Repository = Path.GetFullPath(repositoryPath),
                 Captures = entries
@@ -190,6 +191,7 @@ internal static class CaptureRunner
         {
             using WinFormsBootstrap bootstrap = WinFormsBootstrap.Create(repositoryPath, profile, theme, isolationRoot);
             using Control root = ComponentFactory.Create(component, bootstrap.Commands, state);
+            using CaptureFixtureClock fixtureClock = CaptureFixtureClock.Apply(EnumerateControls(root), plan.FixtureNowUtc);
             IReadOnlyDictionary<object, ControlTreeReader.FontBaseline> fontBaselines =
                 ControlTreeReader.CaptureFontBaselines(root);
             PrepareControl(root, bootstrap.Commands, component, monitor, scale, dpiMode);

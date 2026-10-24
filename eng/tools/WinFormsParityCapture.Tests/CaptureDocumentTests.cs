@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using AwesomeAssertions;
 using GitExtensions.ParityCapture;
 using NUnit.Framework;
@@ -9,6 +10,15 @@ namespace WinFormsParityCapture.Tests;
 [Category("P0_1")]
 public sealed class CaptureDocumentTests
 {
+    private static readonly DateTime FixtureClockUtc = new DateTime(2026, 10, 24, 12, 34, 56, DateTimeKind.Utc).AddTicks(1234567);
+    private static readonly JsonSerializerOptions MatrixJsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        PropertyNameCaseInsensitive = true,
+        WriteIndented = true,
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+    };
+
     [Test]
     public void Serialize_should_round_trip_byte_identically()
     {
@@ -21,6 +31,7 @@ public sealed class CaptureDocumentTests
         second.Should().Be(first);
         first.Should().NotContain("\"file\"");
         first.Should().NotContain("\"acquisitions\"");
+        first.Should().NotContain("fixtureNowUtc");
         first.ToLowerInvariant().Should().NotContain("createdat");
         actual.Should().BeEquivalentTo(expected);
     }
@@ -118,6 +129,161 @@ public sealed class CaptureDocumentTests
         serialize.Should().Throw<InvalidDataException>();
     }
 
+    [TestCase(false)]
+    [TestCase(true)]
+    public void CapturePlan_should_omit_absent_fixture_clock_and_load_legacy_plans(bool explicitNull)
+    {
+        CapturePlan plan = CreatePlan();
+        string legacy = JsonSerializer.Serialize(new
+        {
+            plan.SchemaVersion,
+            plan.SettingsProfile,
+            plan.Scales,
+            plan.Themes,
+            plan.Components
+        }, MatrixJsonOptions);
+        string json = explicitNull ? SerializeWithFixtureClock(plan, "null") : legacy;
+
+        CapturePlan actual = LoadPlan(json);
+
+        plan.FixtureNowUtc.Should().BeNull();
+        actual.FixtureNowUtc.Should().BeNull();
+        JsonSerializer.Serialize(plan, MatrixJsonOptions).Should().Be(legacy);
+        JsonSerializer.Serialize(actual, MatrixJsonOptions).Should().Be(legacy);
+    }
+
+    [Test]
+    public void CapturePlan_should_load_a_utc_fixture_clock_with_exact_ticks_and_kind()
+    {
+        CapturePlan plan = CreatePlan() with { FixtureNowUtc = FixtureClockUtc };
+        string json = JsonSerializer.Serialize(plan, MatrixJsonOptions);
+
+        CapturePlan actual = LoadPlan(json);
+
+        DateTime clock = actual.FixtureNowUtc ?? throw new InvalidOperationException("The plan fixture clock must round trip.");
+        clock.Ticks.Should().Be(FixtureClockUtc.Ticks);
+        clock.Kind.Should().Be(DateTimeKind.Utc);
+        json.Should().Contain("\"fixtureNowUtc\": \"2026-10-24T12:34:56.1234567Z\"");
+        JsonSerializer.Serialize(actual, MatrixJsonOptions).Should().Be(json);
+    }
+
+    [TestCase("2026-10-24T12:34:56.1234567")]
+    [TestCase("2026-10-24T12:34:56.1234567+00:00")]
+    [TestCase("2026-10-24T12:34:56.1234567+02:00")]
+    [TestCase("2026-10-24T12:34:56.1234567-03:00")]
+    public void CapturePlan_Load_should_reject_non_utc_fixture_clock_json(string timestamp)
+    {
+        string json = SerializeWithFixtureClock(CreatePlan(), JsonSerializer.Serialize(timestamp));
+
+        Action load = () => LoadPlan(json);
+
+        load.Should().Throw<InvalidDataException>().WithMessage("*UTC*");
+    }
+
+    [TestCase("\"not-a-date\"")]
+    [TestCase("\"2026-13-24T12:34:56Z\"")]
+    [TestCase("42")]
+    public void CapturePlan_Load_should_reject_malformed_fixture_clock_json(string clockJson)
+    {
+        string json = SerializeWithFixtureClock(CreatePlan(), clockJson);
+
+        Action load = () => LoadPlan(json);
+
+        load.Should().Throw<JsonException>();
+    }
+
+    [TestCase(DateTimeKind.Local)]
+    [TestCase(DateTimeKind.Unspecified)]
+    public void CapturePlan_should_reject_non_utc_fixture_clock_initializers(DateTimeKind kind)
+    {
+        DateTime clock = DateTime.SpecifyKind(FixtureClockUtc, kind);
+
+        Action create = () => _ = CreatePlan() with { FixtureNowUtc = clock };
+
+        create.Should().Throw<InvalidDataException>().WithMessage("*UTC*");
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void CaptureSetManifest_should_omit_absent_fixture_clock_and_read_legacy_manifests(bool explicitNull)
+    {
+        CaptureSetManifest manifest = CreateManifest();
+        string legacy = JsonSerializer.Serialize(new
+        {
+            manifest.SchemaVersion,
+            manifest.CreatedAtUtc,
+            manifest.ToolVersion,
+            manifest.Repository,
+            manifest.Captures
+        }, MatrixJsonOptions);
+        string json = explicitNull ? SerializeWithFixtureClock(manifest, "null") : legacy;
+
+        CaptureSetManifest actual = JsonSerializer.Deserialize<CaptureSetManifest>(json, MatrixJsonOptions)
+            ?? throw new InvalidOperationException("The legacy manifest must deserialize.");
+
+        manifest.FixtureNowUtc.Should().BeNull();
+        actual.FixtureNowUtc.Should().BeNull();
+        JsonSerializer.Serialize(manifest, MatrixJsonOptions).Should().Be(legacy);
+        JsonSerializer.Serialize(actual, MatrixJsonOptions).Should().Be(legacy);
+        actual.CreatedAtUtc.Ticks.Should().Be(manifest.CreatedAtUtc.Ticks);
+        actual.CreatedAtUtc.Kind.Should().Be(DateTimeKind.Utc);
+    }
+
+    [Test]
+    public void CaptureSetManifest_should_round_trip_a_utc_fixture_clock_without_changing_acquisition_time()
+    {
+        CaptureSetManifest manifest = CreateManifest() with { FixtureNowUtc = FixtureClockUtc };
+        string json = JsonSerializer.Serialize(manifest, MatrixJsonOptions);
+
+        CaptureSetManifest actual = JsonSerializer.Deserialize<CaptureSetManifest>(json, MatrixJsonOptions)
+            ?? throw new InvalidOperationException("The fixture-clock manifest must deserialize.");
+
+        DateTime clock = actual.FixtureNowUtc ?? throw new InvalidOperationException("The manifest fixture clock must round trip.");
+        clock.Ticks.Should().Be(FixtureClockUtc.Ticks);
+        clock.Kind.Should().Be(DateTimeKind.Utc);
+        actual.CreatedAtUtc.Ticks.Should().Be(manifest.CreatedAtUtc.Ticks);
+        actual.CreatedAtUtc.Ticks.Should().NotBe(clock.Ticks);
+        actual.CreatedAtUtc.Kind.Should().Be(DateTimeKind.Utc);
+        json.Should().Contain("\"fixtureNowUtc\": \"2026-10-24T12:34:56.1234567Z\"");
+        JsonSerializer.Serialize(actual, MatrixJsonOptions).Should().Be(json);
+    }
+
+    [TestCase("2026-10-24T12:34:56.1234567")]
+    [TestCase("2026-10-24T12:34:56.1234567+00:00")]
+    [TestCase("2026-10-24T12:34:56.1234567+02:00")]
+    [TestCase("2026-10-24T12:34:56.1234567-03:00")]
+    public void CaptureSetManifest_should_reject_non_utc_fixture_clock_json(string timestamp)
+    {
+        string json = SerializeWithFixtureClock(CreateManifest(), JsonSerializer.Serialize(timestamp));
+
+        Action deserialize = () => JsonSerializer.Deserialize<CaptureSetManifest>(json, MatrixJsonOptions);
+
+        deserialize.Should().Throw<InvalidDataException>().WithMessage("*UTC*");
+    }
+
+    [TestCase("\"not-a-date\"")]
+    [TestCase("\"2026-13-24T12:34:56Z\"")]
+    [TestCase("42")]
+    public void CaptureSetManifest_should_reject_malformed_fixture_clock_json(string clockJson)
+    {
+        string json = SerializeWithFixtureClock(CreateManifest(), clockJson);
+
+        Action deserialize = () => JsonSerializer.Deserialize<CaptureSetManifest>(json, MatrixJsonOptions);
+
+        deserialize.Should().Throw<JsonException>();
+    }
+
+    [TestCase(DateTimeKind.Local)]
+    [TestCase(DateTimeKind.Unspecified)]
+    public void CaptureSetManifest_should_reject_non_utc_fixture_clock_initializers(DateTimeKind kind)
+    {
+        DateTime clock = DateTime.SpecifyKind(FixtureClockUtc, kind);
+
+        Action create = () => _ = CreateManifest() with { FixtureNowUtc = clock };
+
+        create.Should().Throw<InvalidDataException>().WithMessage("*UTC*");
+    }
+
     [Test]
     public void TreeSchema_should_define_a_closed_versioned_contract()
     {
@@ -125,6 +291,8 @@ public sealed class CaptureDocumentTests
         using JsonDocument schema = JsonDocument.Parse(File.ReadAllText(path));
 
         schema.RootElement.GetProperty("additionalProperties").GetBoolean().Should().BeFalse();
+        schema.RootElement.GetProperty("properties").GetProperty("schemaVersion")
+            .GetProperty("const").GetInt32().Should().Be(CaptureDocument.CurrentSchemaVersion);
         JsonElement definitions = schema.RootElement.GetProperty("$defs");
         definitions.GetProperty("node").GetProperty("additionalProperties").GetBoolean().Should().BeFalse();
         definitions.GetProperty("column").GetProperty("additionalProperties").GetBoolean().Should().BeFalse();
@@ -231,10 +399,54 @@ public sealed class CaptureDocumentTests
         };
     }
 
+    private static CaptureSetManifest CreateManifest() =>
+        new()
+        {
+            SchemaVersion = CaptureDocument.CurrentSchemaVersion,
+            CreatedAtUtc = new DateTime(2026, 10, 24, 18, 0, 0, DateTimeKind.Utc),
+            ToolVersion = "Tests",
+            Repository = "fixture",
+            Captures = []
+        };
+
+    private static CapturePlan CreatePlan() =>
+        new()
+        {
+            SchemaVersion = CaptureDocument.CurrentSchemaVersion,
+            SettingsProfile = "fixture",
+            Scales = [100],
+            Themes = [new CaptureThemePlan { Id = "light", Kind = "builtin", File = "light.css", IsBuiltin = true }],
+            Components =
+            [
+                new CaptureComponentPlan
+                {
+                    TypeName = "Tests.Form",
+                    States = [new CaptureStatePlan { Id = "normal", Kind = CaptureStateKind.Normal }]
+                }
+            ]
+        };
+
     private static CaptureThicknessPair CreateThickness() =>
         new()
         {
             Px = new CaptureThickness { Left = 0, Top = 0, Right = 0, Bottom = 0 },
             Dip = new CaptureThicknessF { Left = 0, Top = 0, Right = 0, Bottom = 0 }
         };
+
+    private static CapturePlan LoadPlan(string json)
+    {
+        string path = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllText(path, json);
+            return CapturePlan.Load(path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    private static string SerializeWithFixtureClock<T>(T matrix, string clockJson) =>
+        JsonSerializer.Serialize(matrix, MatrixJsonOptions).Insert(1, $"\"fixtureNowUtc\": {clockJson},");
 }
