@@ -431,6 +431,9 @@ public sealed class CommitInfoParentLayoutTests
     [AvaloniaTest]
     public void Browse_capture_should_report_the_actual_source_anchored_body_client_and_outer_height()
     {
+        // The standalone Browse probe needs the same composition bootstrap as the
+        // capture consumer; another fixture must not supply it through test order.
+        ManagedExtensibility.Initialise();
         CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
         bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
         AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;

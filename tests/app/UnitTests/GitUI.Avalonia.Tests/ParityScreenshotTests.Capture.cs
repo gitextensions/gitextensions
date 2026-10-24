@@ -1377,6 +1377,7 @@ public sealed partial class ParityScreenshotTests
                                 theme,
                                 scalePercent,
                                 state,
+                                plan.FixtureNowUtc,
                                 outputDirectory));
                         }
                     }
@@ -1392,6 +1393,7 @@ public sealed partial class ParityScreenshotTests
         {
             SchemaVersion = CaptureDocument.CurrentSchemaVersion,
             CreatedAtUtc = DateTime.UtcNow,
+            FixtureNowUtc = plan.FixtureNowUtc,
             ToolVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0",
             Repository = context.WorkingDirectory,
             Captures = entries
@@ -1417,6 +1419,7 @@ public sealed partial class ParityScreenshotTests
         CaptureThemePlan theme,
         int scalePercent,
         CaptureStatePlan state,
+        DateTime? fixtureNowUtc,
         string outputRoot)
     {
         Control view = CreateView(context, descriptor.ViewType, state);
@@ -1470,6 +1473,10 @@ public sealed partial class ParityScreenshotTests
 
         try
         {
+            // Install the declared input before preparation or Show can settle the first
+            // queued revision header. Keep acquisition inside the window-close lifetime.
+            using CaptureFixtureClock fixtureClock = CaptureFixtureClock.Apply(
+                new[] { view }.Concat(view.GetLogicalDescendants().OfType<Control>()), fixtureNowUtc);
             await PrepareViewAsync(captureHost, context);
             window.Show();
             // parity-scaffolding: The real application activates FormBrowse before its async

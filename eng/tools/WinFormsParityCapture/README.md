@@ -25,6 +25,21 @@ dotnet run --project eng/tools/WinFormsParityCapture -c Release -- validate `
   --require-resolved-argb
 ```
 
+For paired header-date comparisons, a plan may opt into an explicit UTC formatter input:
+
+```json
+"fixtureNowUtc": "2026-10-23T12:00:00Z"
+```
+
+Both capture consumers use that same input with the existing commit-header date formatter.
+It is not an operating-system clock change or a replacement of captured text. Omit it (or
+use `null`) to retain live formatting. Use the canonical `Z` suffix; offset or unspecified
+values are rejected, including `+00:00`. The manifest
+echoes `fixtureNowUtc`, separately from `createdAtUtc`, which remains the real acquisition
+time. Use the same recorded repository snapshot, culture, time zone and fixture clock on
+both sides. This input controls the header formatter only, not unrelated controls' clocks
+or Date-column sizing, and does not claim complete visual parity.
+
 At 100%, a genuine 96-DPI monitor is mandatory. At 125%, 150%, and 200%, the tool prefers an
 exact native monitor and otherwise drives the complete Per-Monitor-v2 transition that Windows
 sends to the real WinForms window: `WM_DPICHANGED_BEFOREPARENT` traverses the child HWND tree
