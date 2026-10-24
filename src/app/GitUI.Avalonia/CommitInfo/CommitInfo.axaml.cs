@@ -949,6 +949,22 @@ public partial class CommitInfo : GitModuleControl
         double[] heights = GetHeights();
         double height = heights.Sum();
 
+        // WinForms recomputes scrolling from the full client, not a viewport left
+        // reduced by the previous bars. Both text rows already wrap to this finite
+        // column; only the header's minimum width can require horizontal scrolling.
+        // Auto on both axes can alternate reduced viewports when the contents fit
+        // the full client but not the space left beside either scrollbar.
+        if (Content is ScrollViewer scrollViewer)
+        {
+            ScrollBarVisibility horizontalVisibility = width > clientWidth
+                ? ScrollBarVisibility.Auto
+                : ScrollBarVisibility.Disabled;
+            if (scrollViewer.HorizontalScrollBarVisibility != horizontalVisibility)
+            {
+                scrollViewer.SetCurrentValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, horizontalVisibility);
+            }
+        }
+
         // Leave the first row Auto so the header retains its original AutoSize behavior.
         for (int i = 1; i < tableLayout.RowDefinitions.Count; i++)
         {
