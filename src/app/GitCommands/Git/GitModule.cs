@@ -2,6 +2,7 @@
 using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Config;
@@ -42,7 +43,7 @@ public sealed partial class GitModule : IGitModule
     private readonly IGitExecutor _executor;
     private readonly Lock _lock = new();
     private readonly IIndexLockManager _indexLockManager;
-    private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
+    private static readonly GitTreeParser _gitTreeParser = new();
     private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
     private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
     private FrozenDictionary<string, Color>? _remoteColors;
@@ -521,7 +522,7 @@ public sealed partial class GitModule : IGitModule
         return result.ExitedSuccessfully && !string.IsNullOrEmpty(result.StandardOutput);
     }
 
-    public bool HandleConflictSelectSide(string fileName, string side)
+    public bool HandleConflictSelectSide(string fileName, string side, out string errorMessage)
     {
         Directory.SetCurrentDirectory(WorkingDir);
         GitArgumentBuilder args = new("checkout-index")
@@ -531,10 +532,11 @@ public sealed partial class GitModule : IGitModule
             "--",
             fileName.ToPosixPath().QuoteNE()
         };
-        string output = GitExecutable.GetOutput(args);
 
-        if (!string.IsNullOrEmpty(output))
+        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
+        if (IsConflictSelectSideFailure(result))
         {
+            errorMessage = FormatConflictSelectSideError(result);
             return false;
         }
 
@@ -543,8 +545,22 @@ public sealed partial class GitModule : IGitModule
             "--",
             fileName.ToPosixPath().QuoteNE()
         };
-        output = GitExecutable.GetOutput(args);
-        return string.IsNullOrEmpty(output);
+        result = GitExecutable.Execute(args, throwOnErrorExit: false);
+        if (IsConflictSelectSideFailure(result))
+        {
+            errorMessage = FormatConflictSelectSideError(result);
+            return false;
+        }
+
+        errorMessage = string.Empty;
+        return true;
+
+        static string FormatConflictSelectSideError(ExecutionResult result)
+            => $"{result.ExitCodeDisplay}: {result.AllOutput.Trim()}";
+
+        // Both commands are silent on success, so any stdout is treated as a failure, too.
+        static bool IsConflictSelectSideFailure(ExecutionResult result)
+            => !result.ExitedSuccessfully || !string.IsNullOrEmpty(result.StandardOutput);
     }
 
     public bool HandleConflictsSaveSide(string fileName, string saveAsFileName, string side)
@@ -657,14 +673,17 @@ public sealed partial class GitModule : IGitModule
     {
         Directory.SetCurrentDirectory(WorkingDir);
 
-        string? baseFile = CheckoutPart(1, unmergedData.Filename + ".BASE", unmergedData.Base.Filename);
-        string? localFile = CheckoutPart(2, unmergedData.Filename + ".LOCAL", unmergedData.Local.Filename);
-        string? remoteFile = CheckoutPart(3, unmergedData.Filename + ".REMOTE", unmergedData.Remote.Filename);
+        int processId = Environment.ProcessId;
+        string? baseFile = CheckoutPart(1, "BASE", unmergedData.Base.Filename);
+        string? localFile = CheckoutPart(2, "LOCAL", unmergedData.Local.Filename);
+        string? remoteFile = CheckoutPart(3, "REMOTE", unmergedData.Remote.Filename);
 
         return (baseFile, localFile, remoteFile);
 
-        string? CheckoutPart(int part, string fileName, string? unmerged)
+        string? CheckoutPart(int part, string side, string? unmerged)
         {
+            string fileName = GetConflictPartFileName(unmergedData.Filename, side, processId);
+
             if (unmerged is not null)
             {
                 GitArgumentBuilder args = new("checkout-index")
@@ -697,20 +716,37 @@ public sealed partial class GitModule : IGitModule
             return File.Exists(fileName) ? fileName : null;
         }
 
-        string FindAvailableFileName(string basePath)
+        static string FindAvailableFileName(string basePath) => GetAvailableFileName(basePath, File.Exists);
+    }
+
+    /// <summary>
+    ///  Gets the name of the temporary file holding one side of a conflicted file.
+    /// </summary>
+    /// <remarks>
+    ///  Uses the same scheme as git-mergetool ("folder/file_LOCAL_1234.ext"):
+    ///  the extension is kept at the end so that merge tools recognize the file type.
+    /// </remarks>
+    private static string GetConflictPartFileName(string fileName, string side, int processId)
+    {
+        string extension = Path.GetExtension(fileName);
+        return $"{fileName[..^extension.Length]}_{side}_{processId}{extension}";
+    }
+
+    /// <summary>
+    ///  If necessary, inserts an index before the extension of the path until the file does not exist.
+    /// </summary>
+    private static string GetAvailableFileName(string basePath, Func<string, bool> fileExists)
+    {
+        string extension = Path.GetExtension(basePath);
+        string stem = basePath[..^extension.Length];
+        string test = basePath;
+
+        for (int index = 1; fileExists(test) && index < 50; index++)
         {
-            // If necessary, append an index to the base path until the file does not exist
-            int index = 1;
-            string test = basePath;
-
-            while (File.Exists(test) && index < 50)
-            {
-                test = basePath + index;
-                index++;
-            }
-
-            return test;
+            test = $"{stem}_{index}{extension}";
         }
+
+        return test;
     }
 
     public async Task<ConflictData> GetConflictAsync(string? filename)
@@ -735,27 +771,27 @@ public sealed partial class GitModule : IGitModule
         ExecutionResult result = await GitExecutable.ExecuteAsync(args, throwOnErrorExit: false).ConfigureAwait(false);
         string[] unmerged = result.StandardOutput.Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries);
 
-        ConflictedFileData[] item = new ConflictedFileData[3];
+        InlineArray3<ConflictedFileData> item = new();
 
         string? prevItemName = null;
 
         foreach (string line in unmerged)
         {
             int findSecondWhitespace = line.IndexOfAny(_spaceAndTabSearchValues);
-            string fileStage = findSecondWhitespace >= 0 ? line[findSecondWhitespace..].Trim() : "";
+            ReadOnlySpan<char> fileStage = findSecondWhitespace >= 0 ? line.AsSpan(findSecondWhitespace).Trim() : "";
 
             findSecondWhitespace = fileStage.IndexOfAny(_spaceAndTabSearchValues);
 
-            string hash = findSecondWhitespace >= 0 ? fileStage[..findSecondWhitespace].Trim() : "";
+            ReadOnlySpan<char> hash = findSecondWhitespace >= 0 ? fileStage[..findSecondWhitespace].Trim() : "";
             fileStage = findSecondWhitespace >= 0 ? fileStage[findSecondWhitespace..].Trim() : "";
 
-            if (fileStage.Length > 2 && int.TryParse(fileStage[0].ToString(), out int stage) && stage is (>= 1 and <= 3))
+            if (fileStage.Length > 2 && int.TryParse(fileStage[..1], out int stage) && stage is (>= 1 and <= 3))
             {
-                string itemName = fileStage[2..];
+                string itemName = new(fileStage[2..]);
                 if (prevItemName != itemName && prevItemName is not null)
                 {
                     list.Add(new ConflictData(item[0], item[1], item[2]));
-                    item = new ConflictedFileData[3];
+                    item = new InlineArray3<ConflictedFileData>();
                 }
 
                 item[stage - 1] = new ConflictedFileData(ObjectId.Parse(hash), itemName);
@@ -995,11 +1031,10 @@ public sealed partial class GitModule : IGitModule
         {
             $"{objectId}^@".Quote()
         };
-        return GitExecutable.Execute(args, cache: GitCommandCache)
+        return Array.ConvertAll(GitExecutable.Execute(args, cache: GitCommandCache)
             .StandardOutput
-            .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries)
-            .Select(line => ObjectId.Parse(line))
-            .ToList();
+            .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries),
+            id => ObjectId.Parse(id));
     }
 
     public IReadOnlyList<GitRevision> GetParentRevisions(ObjectId objectId)
@@ -1076,7 +1111,7 @@ public sealed partial class GitModule : IGitModule
             $"{objectIdPrefix}^{{commit}}".Quote()
         };
         ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
-        string output = result.StandardOutput.Trim();
+        ReadOnlySpan<char> output = result.StandardOutput.AsSpan().Trim();
 
         if (output.StartsWith(objectIdPrefix) && ObjectId.TryParse(output, out objectId))
         {
@@ -1249,7 +1284,7 @@ public sealed partial class GitModule : IGitModule
             string localPath = match.Groups["path"].Value;
             string branch = match.Groups["branch"].Value;
 
-            if (!ObjectId.TryParse(match.Groups["sha"].Value, out ObjectId currentCommitId))
+            if (!ObjectId.TryParse(match.Groups["sha"].ValueSpan, out ObjectId currentCommitId))
             {
                 info = default;
                 return false;
@@ -2224,7 +2259,7 @@ public sealed partial class GitModule : IGitModule
                 {
                     string fullPath = GetWindowsPath(path);
                     bool isDeleted = !Directory.Exists(fullPath);
-                    worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted));
+                    worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted) { IsMain = worktrees.Count == 0 });
                 }
 
                 path = null;
@@ -2235,7 +2270,7 @@ public sealed partial class GitModule : IGitModule
             }
 
             int spaceIndex = field.IndexOf(' ');
-            string key = spaceIndex >= 0 ? field[..spaceIndex] : field;
+            ReadOnlySpan<char> key = spaceIndex >= 0 ? field.AsSpan(0, spaceIndex) : field;
             string value = spaceIndex >= 0 ? field[(spaceIndex + 1)..] : "";
             switch (key)
             {
@@ -2261,7 +2296,7 @@ public sealed partial class GitModule : IGitModule
         {
             string fullPath = GetWindowsPath(path);
             bool isDeleted = !Directory.Exists(fullPath);
-            worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted));
+            worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted) { IsMain = worktrees.Count == 0 });
         }
 
         return worktrees;
@@ -2452,9 +2487,9 @@ public sealed partial class GitModule : IGitModule
             {
                 "--files-with-matches",
                 "-z",
-                { applyAppSettings, AppSettings.GitGrepUserArguments.Value },
-                { applyAppSettings && AppSettings.GitGrepIgnoreCase.Value, "--ignore-case" },
-                { applyAppSettings && AppSettings.GitGrepMatchWholeWord.Value, "--word-regexp" },
+                { applyAppSettings, AppSettings.GitGrepUserArguments },
+                { applyAppSettings && AppSettings.GitGrepIgnoreCase, "--ignore-case" },
+                { applyAppSettings && AppSettings.GitGrepMatchWholeWord, "--word-regexp" },
                 grepString,
                 !objectId.IsArtificial ? objectId.ToString() : objectId == ObjectId.IndexId ? "--cached" : "",
                 "--"
@@ -2509,9 +2544,9 @@ public sealed partial class GitModule : IGitModule
             { !useGitColoring, "--column" },
             { useGitColoring, "--color=always" },
             extraArgs,
-            AppSettings.GitGrepUserArguments.Value,
-            { AppSettings.GitGrepIgnoreCase.Value, "--ignore-case" },
-            { AppSettings.GitGrepMatchWholeWord.Value, "--word-regexp" },
+            AppSettings.GitGrepUserArguments,
+            { AppSettings.GitGrepIgnoreCase, "--ignore-case" },
+            { AppSettings.GitGrepMatchWholeWord, "--word-regexp" },
             grepString,
             !objectId.IsArtificial ? objectId.ToString() : objectId == ObjectId.IndexId ? "--cached" : "",
             "--",
@@ -3475,7 +3510,7 @@ public sealed partial class GitModule : IGitModule
             }
             else if (line.StartsWith("author-time "))
             {
-                authorTime = DateTimeUtils.ParseUnixTime(line["author-time ".Length..]);
+                authorTime = DateTimeUtils.ParseUnixTime(line.AsSpan("author-time ".Length));
                 hasCommitHeader = true;
             }
             else if (line.StartsWith("author-tz "))
@@ -3495,7 +3530,7 @@ public sealed partial class GitModule : IGitModule
             }
             else if (line.StartsWith("committer-time "))
             {
-                committerTime = DateTimeUtils.ParseUnixTime(line["committer-time ".Length..]);
+                committerTime = DateTimeUtils.ParseUnixTime(line.AsSpan("committer-time ".Length..));
                 hasCommitHeader = true;
             }
             else if (line.StartsWith("committer-tz "))
@@ -4133,5 +4168,11 @@ public sealed partial class GitModule : IGitModule
 
         public StagedStatus GetStagedStatus(ObjectId firstId, ObjectId secondId, ObjectId parentToSecond)
             => GitModule.GetStagedStatus(firstId, secondId, parentToSecond);
+
+        public static string GetConflictPartFileName(string fileName, string side, int processId)
+            => GitModule.GetConflictPartFileName(fileName, side, processId);
+
+        public static string GetAvailableFileName(string basePath, Func<string, bool> fileExists)
+            => GitModule.GetAvailableFileName(basePath, fileExists);
     }
 }

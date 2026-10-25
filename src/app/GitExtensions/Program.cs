@@ -149,7 +149,7 @@ internal static class Program
                 }
 
                 GitUICommands uiCommands = new(_serviceContainer, new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), ""));
-                CommonLogic commonLogic = new(uiCommands.Module);
+                using CommonLogic commonLogic = new(uiCommands.Module);
                 if (AppSettings.CheckSettings)
                 {
                     CheckSettingsLogic checkSettingsLogic = new(commonLogic);

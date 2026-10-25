@@ -560,6 +560,89 @@ public class FormCommitTests
     }
 
     [Test]
+    public void Lists_must_not_select_an_item_when_a_click_gives_the_focus_back([Values] bool byMouse, [Values] bool staged)
+    {
+        bool expectedHasSelection = !byMouse;
+
+        // Modify tracked files rather than adding new ones, so that the list is filled no matter
+        // how the settings of the dialog are left behind by another test.
+        _referenceRepository.CreateCommit("Add the files to modify", "Test", "file1.txt", "Test", "file2.txt");
+        _referenceRepository.CreateRepoFile("file1.txt", "Changed");
+        _referenceRepository.CreateRepoFile("file2.txt", "Changed");
+
+        RunFormTest(async form =>
+        {
+            FormCommit.TestAccessor ta = form.GetTestAccessor();
+
+            if (staged)
+            {
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                ta.StageAllToolItem.PerformClick();
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+            }
+
+            FileStatusList list = staged ? ta.StagedList : ta.UnstagedList;
+            list.AllItemsCount.Should().BeGreaterThan(1, "the list must be able to scroll away from its first item");
+
+            // The state a list is left in as soon as the other one has taken the selection over.
+            // Note that this keeps the focused item, which is the one that would be scrolled to.
+            list.ClearSelected();
+            list.HasSelection.Should().BeFalse();
+            list.FocusedItem.Should().NotBeNull();
+
+            if (staged)
+            {
+                ta.RaiseStagedEnter(byMouse);
+            }
+            else
+            {
+                ta.RaiseUnstagedEnter(byMouse);
+            }
+
+            list.HasSelection.Should().Be(expectedHasSelection,
+                "the click which gives the focus back selects the item it hits by itself");
+        });
+    }
+
+    [Test]
+    public void MainSplitter_remembers_distance_of_a_window_larger_than_its_design_time_size()
+    {
+        // The design time width of the dialog, see FormCommit.Designer.cs. The window has to become
+        // wider than this, because a distance stored for a window of the design time size is valid
+        // whenever it is restored, which would make this test pass without telling anything.
+        const int designTimeWidth = 918;
+
+        int distance = 0;
+
+        RunFormTest(form =>
+        {
+            SplitContainer splitter = form.GetTestAccessor().MainSplitter;
+
+            // FormCommit uses AutoScaleMode.Dpi, so the design time width is scaled by the form's
+            // actual DPI, not just its own 96-DPI pixels.
+            int scaledDesignTimeWidth = (int)(designTimeWidth * form.DeviceDpi / 96f);
+
+            form.WindowState = FormWindowState.Maximized;
+            Application.DoEvents();
+            splitter.Width.Should().BeGreaterThan(scaledDesignTimeWidth, "the screen must offer more than the design time size");
+
+            // Leave the left side wide, as reported: only such a distance is out of the range which
+            // is valid while the form still has its design time size.
+            distance = splitter.Width - splitter.Panel2MinSize - 50;
+            splitter.SplitterDistance = distance;
+            splitter.SplitterDistance.Should().Be(distance, "the distance must fit the enlarged window");
+        });
+
+        RunFormTest(form =>
+        {
+            form.GetTestAccessor().MainSplitter.SplitterDistance.Should().Be(distance);
+
+            // Do not leave a maximized window behind for the other tests of the geometry.
+            form.WindowState = FormWindowState.Normal;
+        });
+    }
+
+    [Test]
     public void SelectedDiff_remembers_geometry()
     {
         RunGeometryMemoryTest(

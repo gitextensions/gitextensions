@@ -143,6 +143,7 @@ public sealed partial class FormCommit : GitModuleForm
     private readonly CancellationTokenSequence _viewChangesSequence = new();
     private readonly SplitterManager _splitterManager = new(new AppSettingsPath("CommitDialog"));
     private readonly Subject<string> _selectionFilterSubject = new();
+    private IDisposable? _selectionFilterSubscription;
     private readonly IFullPathResolver _fullPathResolver;
     private readonly List<string> _formattedLines = [];
 
@@ -325,7 +326,7 @@ public sealed partial class FormCommit : GitModuleForm
         RestorePosition();
 
         // TODO this code is very similar to code in FileStatusList
-        _selectionFilterSubject
+        _selectionFilterSubscription = _selectionFilterSubject
             .Throttle(TimeSpan.FromMilliseconds(250))
             .ObserveOn(SynchronizationContext.Current!)
             .Subscribe(filterText => TaskManager.HandleExceptions(() => Update(filterText), Application.OnThreadException));
@@ -404,6 +405,10 @@ public sealed partial class FormCommit : GitModuleForm
                 UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
             }
 
+            // Stop the throttled filtering: a pending callback would otherwise run after the form was
+            // closed and resurrect the handle of the disposed list view.
+            _selectionFilterSubscription?.Dispose();
+
             _unstagedLoader.Dispose();
             _customDiffToolsSequence.Dispose();
             _interactiveAddSequence.Dispose();
@@ -466,6 +471,15 @@ public sealed partial class FormCommit : GitModuleForm
         MinimizeBox = Owner is null;
 
         base.OnLoad(e);
+
+        // Keep the progress bar within the height of the other status items.
+        toolStripProgressBar1.Height = commitStagedCount.Height - toolStripProgressBar1.Margin.Vertical;
+
+        // The distances which did not fit the design time size of the form are restored only now:
+        // the bounds and window state which RestorePosition() requests in the constructor are
+        // applied when the handle is created, i.e. just before this call, so this is the first
+        // moment the splitters have their final size. This still precedes the first paint.
+        _splitterManager.RestorePendingSplitters();
     }
 
     private void RestoreSplitters()
@@ -1548,17 +1562,23 @@ public sealed partial class FormCommit : GitModuleForm
         _skipUpdate = false;
         if (!Unstaged.HasSelection)
         {
-            if (Unstaged.FocusedItem is null)
+            // The click which is giving the focus back selects an item by itself. Selecting one
+            // here scrolls the list to it beforehand, so that the click misses what it aimed at.
+            if (!e.ByMouse)
             {
-                Unstaged.SelectFirstVisibleItem();
-                if (!Unstaged.HasSelection)
+                if (Unstaged.FocusedItem is null)
                 {
-                    UnstagedSelectionChanged(Unstaged, EventArgs.Empty);
+                    Unstaged.SelectFirstVisibleItem();
+                }
+                else
+                {
+                    Unstaged.SelectedItems = [Unstaged.FocusedItem];
                 }
             }
-            else
+
+            if (!Unstaged.HasSelection)
             {
-                Unstaged.SelectedItems = [Unstaged.FocusedItem];
+                UnstagedSelectionChanged(Unstaged, EventArgs.Empty);
             }
         }
         else
@@ -1655,6 +1675,16 @@ public sealed partial class FormCommit : GitModuleForm
                     }
 
                     item.IsTracked = !item.IsNew || item.IsChanged || item.IsDeleted;
+
+                    if (!item.IsTracked)
+                    {
+                        // The item is reused instead of being re-read from git-status, which reports a
+                        // no longer tracked path as a plain untracked directory, without the submodule
+                        // information it supplies for a staged one. Drop the stale flag, so that the
+                        // item does not offer submodule actions until the next rescan removes them anyway.
+                        item.IsSubmodule = false;
+                    }
+
                     int index = unstagedFiles.FindIndex(i => i.Name == item.Name);
 
                     if (index >= 0)
@@ -1817,26 +1847,31 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void Staged_Enter(object sender, EnterEventArgs e)
     {
-        SelectStaged();
+        SelectStaged(e.ByMouse);
     }
 
-    private void SelectStaged()
+    private void SelectStaged(bool byMouse = false)
     {
         _currentFilesList = Staged;
         _skipUpdate = false;
         if (!Staged.HasSelection)
         {
-            if (Staged.FocusedItem is null)
+            // See Unstaged_Enter
+            if (!byMouse)
             {
-                Staged.SelectFirstVisibleItem();
-                if (!Staged.HasSelection)
+                if (Staged.FocusedItem is null)
                 {
-                    StagedSelectionChanged(Staged, EventArgs.Empty);
+                    Staged.SelectFirstVisibleItem();
+                }
+                else
+                {
+                    Staged.SelectedItems = [Staged.FocusedItem];
                 }
             }
-            else
+
+            if (!Staged.HasSelection)
             {
-                Staged.SelectedItems = [Staged.FocusedItem];
+                StagedSelectionChanged(Staged, EventArgs.Empty);
             }
         }
         else
@@ -2749,7 +2784,7 @@ public sealed partial class FormCommit : GitModuleForm
 
         UpdateButtonStates();
 
-        if (AppSettings.CommitDialogSelectStagedOnEnterMessage.Value)
+        if (AppSettings.CommitDialogSelectStagedOnEnterMessage)
         {
             SelectStaged();
         }
@@ -2786,7 +2821,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void Message_Enter(object sender, EventArgs e)
     {
-        if (AppSettings.CommitDialogSelectStagedOnEnterMessage.Value)
+        if (AppSettings.CommitDialogSelectStagedOnEnterMessage)
         {
             SelectStaged();
         }
@@ -2824,12 +2859,12 @@ public sealed partial class FormCommit : GitModuleForm
     private void Options_DropDownOpening(object sender, EventArgs e)
     {
         refreshDialogOnFormFocusToolStripMenuItem.Checked = AppSettings.RefreshArtificialCommitOnApplicationActivated;
-        tsmiSelectStagedOnEnterMessage.Checked = AppSettings.CommitDialogSelectStagedOnEnterMessage.Value;
+        tsmiSelectStagedOnEnterMessage.Checked = AppSettings.CommitDialogSelectStagedOnEnterMessage;
     }
 
     private void tsmiSelectStagedOnEnterMessage_Click(object sender, EventArgs e)
     {
-        AppSettings.CommitDialogSelectStagedOnEnterMessage.Value = !AppSettings.CommitDialogSelectStagedOnEnterMessage.Value;
+        AppSettings.CommitDialogSelectStagedOnEnterMessage.Value = !AppSettings.CommitDialogSelectStagedOnEnterMessage;
     }
 
     private bool WordWrapCommitMessageLineIfNecessary(int line, int lineLimit)
@@ -2869,6 +2904,10 @@ public sealed partial class FormCommit : GitModuleForm
 
         internal FileStatusList StagedList => _formCommit.Staged;
 
+        internal void RaiseUnstagedEnter(bool byMouse) => _formCommit.Unstaged_Enter(_formCommit.Unstaged, new EnterEventArgs(byMouse));
+
+        internal void RaiseStagedEnter(bool byMouse) => _formCommit.Staged_Enter(_formCommit.Staged, new EnterEventArgs(byMouse));
+
         internal EditNetSpell Message => _formCommit.Message;
 
         internal FileViewer SelectedDiff => _formCommit.SelectedDiff;
@@ -2902,6 +2941,8 @@ public sealed partial class FormCommit : GitModuleForm
         internal Button ResetSoft => _formCommit.ResetSoft;
 
         internal void RescanChanges() => _formCommit.RescanChanges();
+
+        internal void Unstage() => _formCommit.Unstage();
 
         internal (string message, int selectionStart) PrefixOrReplaceKeyword(string keyword)
             => _formCommit.PrefixOrReplaceKeyword(keyword);

@@ -8,9 +8,12 @@ namespace GitCommands.Settings;
 public abstract class FileSettingsCache : SettingsCache
 {
     private const double SaveTime = 2000;
+    private const string BackupFileExtension = ".backup";
+    private const string UnreadableFileExtension = ".unreadable";
     private DateTime? _lastFileRead;
     private DateTime _lastFileModificationDate;
     private DateTime? _lastModificationDate;
+    private bool _lastReadFailed;
     private readonly FileSystemWatcher _fileWatcher = new();
 
     // The FileSystemWatcher is not reporting changes for WSL
@@ -140,10 +143,14 @@ public abstract class FileSettingsCache : SettingsCache
 
             if (File.Exists(SettingsFilePath))
             {
-                string backupName = SettingsFilePath + ".backup";
+                // The file exists but could not be read, so the settings about to be written are only
+                // the ones which were parsed before the error. Keep the unreadable file under its own
+                // name and leave the last backup which could be read alone, so that both remain
+                // available for recovery.
+                string copyName = SettingsFilePath + (_lastReadFailed ? UnreadableFileExtension : BackupFileExtension);
                 try
                 {
-                    File.Copy(SettingsFilePath, backupName, true);
+                    File.Copy(SettingsFilePath, copyName, true);
                 }
                 catch (Exception)
                 {
@@ -171,6 +178,10 @@ public abstract class FileSettingsCache : SettingsCache
 
             FileChanged();
             _lastFileRead = DateTime.UtcNow;
+
+            // The file matches the settings in memory now, so the next save backs it up as usual
+            // instead of preserving it again as unreadable.
+            _lastReadFailed = false;
         }
         catch (IOException ex)
         {
@@ -191,16 +202,22 @@ public abstract class FileSettingsCache : SettingsCache
 
                 ReadSettings(SettingsFilePath);
                 _lastFileRead = DateTime.UtcNow;
+                _lastReadFailed = false;
             }
             catch (Exception e)
             {
                 Trace.WriteLine($"Failed to load {SettingsFilePath}: {e.Message}");
+
+                // Reading may have stopped at a damaged entry, in which case the settings in memory
+                // are only the part which was parsed until then
+                _lastReadFailed = true;
             }
         }
         else
         {
             _lastFileModificationDate = DateTime.UtcNow;
             _lastFileRead = _lastFileModificationDate;
+            _lastReadFailed = false;
         }
     }
 

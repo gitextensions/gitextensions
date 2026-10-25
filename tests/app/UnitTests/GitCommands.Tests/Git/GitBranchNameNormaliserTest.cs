@@ -72,6 +72,9 @@ public sealed class GitBranchNameNormaliserTest
     [TestCase("привет, ё-маё!", "привет,_ё-маё!")]
     [TestCase("Pokémon 195", "Pokémon_195")]
     [TestCase("Anhörung`!@#$%", "Anhörung`!@#$%")]
+    [TestCase("test\"test", "test_test")]
+    [TestCase("test<test>test", "test_test_test")]
+    [TestCase("test|test", "test_test")]
     public void Normalise_rule04(string input, string expected)
     {
         GitBranchNameNormaliser.Rule04(input, _gitBranchNameOptions).Should().Be(expected);

@@ -34,7 +34,7 @@ partial class FormBrowse
         TreeTabPage.ImageKey = nameof(Images.FileTree);
         GpgInfoTabPage.ImageKey = nameof(Images.Key);
 
-        if (!AppSettings.ShowGpgInformation.Value)
+        if (!AppSettings.ShowGpgInformation)
         {
             CommitInfoTabControl.SelectedIndexChanged -= CommitInfoTabControl_SelectedIndexChanged;
             CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);

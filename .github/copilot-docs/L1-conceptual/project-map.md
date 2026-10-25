@@ -24,7 +24,7 @@ a task to the right project before reading code.
 
 Each plugin implements [GitUIPluginInterfaces](../../../src/plugins/GitUIPluginInterfaces/) and is
 discovered/hosted by `GitUI`. Examples:
-`BackgroundFetch`, `AutoCompileSubmodules`, `Bitbucket`, `GitHub3`, `GitFlow`,
+`BackgroundFetch`, `AutoCompileSubmodules`, `Bitbucket`, `GitHub3`,
 `BuildServerIntegration`, `Statistics`, `Gource`, `FindLargeFiles`, `ProxySwitcher`,
 `CreateLocalBranches`, `DeleteUnusedBranches`, `ReleaseNotesGenerator`.
 See [plugin-system](../L2-core-platform/plugin-system.md) for how they load.

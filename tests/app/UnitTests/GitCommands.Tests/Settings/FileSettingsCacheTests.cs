@@ -74,6 +74,77 @@ public class FileSettingsCacheTests
         }
     }
 
+    [TestCase(true, ".unreadable")]
+    [TestCase(false, ".backup")]
+    public void SaveImpl_should_preserve_a_settings_file_which_could_not_be_read(bool readFails, string expectedExtension)
+    {
+        string tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        string settingsFilePath = Path.Combine(tempPath, "GitExtensions.settings");
+        const string existingSettings = "the settings which are already stored";
+        const string existingBackup = "the last backup which could be read";
+
+        try
+        {
+            Directory.CreateDirectory(tempPath);
+            File.WriteAllText(settingsFilePath, existingSettings);
+            File.WriteAllText(settingsFilePath + ".backup", existingBackup);
+
+            ReadableFileSettingsCache cache = new(settingsFilePath, readFails);
+            cache.Load();
+
+            // Loading stores the read time in UTC, so the modification has to be dated accordingly
+            cache.GetTestAccessor().SetLastModificationDate(DateTime.UtcNow.AddMinutes(1));
+
+            cache.GetTestAccessor().SaveImpl();
+
+            File.ReadAllText(settingsFilePath + expectedExtension).Should().Be(existingSettings);
+            File.ReadAllText(settingsFilePath + ".backup").Should()
+                .Be(readFails ? existingBackup : existingSettings,
+                    "a backup which could be read must not be replaced by a file which could not");
+        }
+        finally
+        {
+            if (Directory.Exists(tempPath))
+            {
+                Directory.Delete(tempPath, recursive: true);
+            }
+        }
+    }
+
+    private sealed class ReadableFileSettingsCache : FileSettingsCache
+    {
+        private readonly bool _readFails;
+
+        public ReadableFileSettingsCache(string settingsFilePath, bool readFails)
+            : base(settingsFilePath, autoSave: false)
+        {
+            _readFails = readFails;
+        }
+
+        protected override void ClearImpl()
+        {
+        }
+
+        protected override string? GetValueImpl(string key) => null;
+
+        protected override void ReadSettings(string fileName)
+        {
+            if (_readFails)
+            {
+                throw new InvalidOperationException("the settings file is damaged");
+            }
+        }
+
+        protected override void SetValueImpl(string key, string? value)
+        {
+        }
+
+        protected override void WriteSettings(string fileName)
+        {
+            File.WriteAllText(fileName, "the settings which are written now");
+        }
+    }
+
     private class MockFileSettingsCache : FileSettingsCache
     {
         public MockFileSettingsCache(string settingsFilePath, bool autoSave = true)

@@ -133,7 +133,6 @@ partial class FileStatusList
 
         tsmiShowIgnoredFiles.Visible = canAutoRefresh;
         tsmiShowAssumeUnchangedFiles.Visible = canAutoRefresh;
-        tsmiShowUntrackedFiles.Checked = Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
 
         tsmiStageFile.Font = new Font(tsmiStageFile.Font, FontStyle.Bold);
         tsmiUnstageFile.Font = new Font(tsmiUnstageFile.Font, FontStyle.Bold);
@@ -615,6 +614,11 @@ partial class FileStatusList
         }
     }
 
+    public void InitializeContextMenuAndToolbar()
+    {
+        tsmiShowUntrackedFiles.Checked = Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
+    }
+
     public void InitResetFileToToolStripMenuItem()
     {
         // Multiple parent/child can be selected, only the the first is shown.
@@ -946,13 +950,47 @@ partial class FileStatusList
         ResetSelectedItemsWithConfirmation(resetToParent: sender == tsmiResetFileToParent);
     }
 
+    /// <summary>
+    ///  Checks whether resetting any of the items could delete a file from the working directory,
+    ///  i.e. whether offering the option to delete new files can have any effect.
+    /// </summary>
+    /// <param name="items">The items which are about to be reset.</param>
+    /// <param name="fullPathResolver">Resolves the working directory path of an item.</param>
+    /// <returns><see langword="true"/> if a file which may be deleted exists; otherwise <see langword="false"/>.</returns>
+    internal static bool HasFilesWhichMayBeDeleted(IReadOnlyList<FileStatusItem> items, IFullPathResolver fullPathResolver)
+    {
+        // A changed file is never deleted, and nothing can be deleted for a path which does not exist
+        // in the working directory, e.g. when restoring a file deleted in the selected revision.
+        // The name of a rename is inverted when resetting to the selected revision, so check both names.
+        foreach (FileStatusItem item in items)
+        {
+            if (item.Item.IsChanged)
+            {
+                continue;
+            }
+
+            if (PathExists(item.Item.Name) || (item.Item.OldName is string oldName && PathExists(oldName)))
+            {
+                return true;
+            }
+        }
+
+        return false;
+
+        bool PathExists(string name)
+        {
+            string? path = fullPathResolver.Resolve(name);
+            return File.Exists(path) || Directory.Exists(path);
+        }
+    }
+
     public void ResetSelectedItemsWithConfirmation(bool resetToParent)
     {
         FileStatusItem[] items = [.. SelectedItems];
 
         // The "new" state could change when resetting, allow user to tick the checkbox.
         // If there are only changed files, it is safe to disable the checkboc (also for restting to selected).
-        bool hasNewFiles = !items.All(item => item.Item.IsChanged);
+        bool hasNewFiles = HasFilesWhichMayBeDeleted(items, _fullPathResolver);
         bool hasExistingFiles = items.Any(item => !(item.Item.IsUncommittedAdded || IsRenamedIndexItem(item)));
 
         string revDescription = resetToParent
@@ -1109,7 +1147,7 @@ partial class FileStatusList
     private void ShowFindInCommitFilesGitGrep_Click(object sender, EventArgs e)
     {
         AppSettings.ShowFindInCommitFilesGitGrep.Value = tsmiShowFindInCommitFilesGitGrep.Checked;
-        SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value);
+        SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
     }
 
     private void ShowInFileTree_Click(object sender, EventArgs e)
@@ -1261,7 +1299,7 @@ partial class FileStatusList
         tsmiShowInFileTree.Visible = !_isFileTreeMode && _openInFileTreeTab_AsBlame is not null && _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         tsmiFilterFileInGrid.Enabled = _filterFileInGrid is not null && _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
         tsmiFileHistory.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
-        tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame.Value || _blame is null
+        tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame || _blame is null
             ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
             : _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         if (!tsmiBlame.Enabled)

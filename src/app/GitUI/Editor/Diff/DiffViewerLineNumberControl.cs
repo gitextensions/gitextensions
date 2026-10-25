@@ -84,24 +84,24 @@ public class DiffViewerLineNumberControl : AbstractMargin
             {
                 if (diffLine.LineType is not DiffLineType.PlusRight)
                 {
-                    using Brush leftBrush = new SolidBrush(AppColor.AnsiTerminalRedBackNormal.GetThemeColor());
+                    Brush leftBrush = BrushRegistry.GetBrush(AppColor.AnsiTerminalRedBackNormal.GetThemeColor());
                     g.FillRectangle(leftBrush, new Rectangle(0, backgroundRectangle.Top, backgroundRectangle.Width / 2, backgroundRectangle.Height));
                 }
 
                 if (diffLine.LineType is not DiffLineType.MinusLeft)
                 {
-                    using Brush rightBrush = new SolidBrush(AppColor.AnsiTerminalGreenBackNormal.GetThemeColor());
+                    Brush rightBrush = BrushRegistry.GetBrush(AppColor.AnsiTerminalGreenBackNormal.GetThemeColor());
                     g.FillRectangle(rightBrush, new Rectangle(backgroundRectangle.Width / 2, backgroundRectangle.Top, rightWidth, backgroundRectangle.Height));
                 }
             }
             else if (diffLine.LineType != DiffLineType.Context)
             {
-                using Brush? brush = diffLine.LineType switch
+                Brush? brush = diffLine.LineType switch
                 {
-                    DiffLineType.Plus => new SolidBrush(AppColor.AnsiTerminalGreenBackNormal.GetThemeColor()),
-                    DiffLineType.Minus => new SolidBrush(AppColor.AnsiTerminalRedBackNormal.GetThemeColor()),
-                    DiffLineType.Header => new SolidBrush(AppColor.DiffSection.GetThemeColor()),
-                    DiffLineType.Grep => new SolidBrush(AppColor.AnsiTerminalRedBackNormal.GetThemeColor()),
+                    DiffLineType.Plus => BrushRegistry.GetBrush(AppColor.AnsiTerminalGreenBackNormal.GetThemeColor()),
+                    DiffLineType.Minus => BrushRegistry.GetBrush(AppColor.AnsiTerminalRedBackNormal.GetThemeColor()),
+                    DiffLineType.Header => BrushRegistry.GetBrush(AppColor.DiffSection.GetThemeColor()),
+                    DiffLineType.Grep => BrushRegistry.GetBrush(AppColor.AnsiTerminalRedBackNormal.GetThemeColor()),
                     _ => default(Brush)
                 };
 

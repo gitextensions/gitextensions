@@ -29,7 +29,7 @@ internal sealed class RuntimeSettingTests
         SettingsPath rootSettingsPath = new AppSettingsPath(pathName: "");
         const string name = "SettingX";
 
-        ISetting<Enum> persistentSetting = Setting.Create(rootSettingsPath, name, Enum.HardCodedDefault);
+        EnumSetting<Enum> persistentSetting = new(rootSettingsPath, name, Enum.HardCodedDefault);
         RuntimeSetting<Enum> runtimeSetting = new(persistentSetting);
 
         runtimeSetting.Value.Should().Be(Enum.HardCodedDefault);
