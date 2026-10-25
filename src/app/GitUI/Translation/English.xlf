@@ -8095,40 +8095,44 @@ Context menu for additional operations</source>
         <source>Advanced</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxFetchPrune.Text">
+      <trans-unit id="chkFetchPrune.Text">
         <source>Prune remote branches during fetch</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxPullFfOnly.Text">
+      <trans-unit id="chkMergeAutoStash.Text">
+        <source>Automatically stash before doing a merge</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkPullFfOnly.Text">
         <source>Only allow fast-forward when pulling</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxPullRebase.Text">
+      <trans-unit id="chkPullRebase.Text">
         <source>Rebase local branch when pulling (instead of merge)</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxReReReAutoUpdate.Text">
+      <trans-unit id="chkReReReAutoUpdate.Text">
         <source>Automatically apply recorded resolution of conflicted merges</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxReReReEnabled.Text">
+      <trans-unit id="chkReReReEnabled.Text">
         <source>Reuse recorded resolution of conflicted merges</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxRebaseAutosquash.Text">
+      <trans-unit id="chkRebaseAutosquash.Text">
         <source>Automatically squash commits when doing an interactive rebase</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxRebaseAutostash.Text">
+      <trans-unit id="chkRebaseAutostash.Text">
         <source>Automatically stash before doing a rebase</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxUpdateRefs.Text">
-        <source>Rebase also dependent branches</source>
+      <trans-unit id="chkStatusShowUntrackedFiles.Text">
+        <source>Show untracked files</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkboxMergeAutoStash.Text">
-        <source>Automatically stash before doing a merge</source>
+      <trans-unit id="chkUpdateRefs.Text">
+        <source>Rebase also dependent branches</source>
         <target />
       </trans-unit>
     </body>
