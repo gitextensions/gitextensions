@@ -483,7 +483,7 @@ public class RevisionGraphTests
         // When false, only one may: the one whose destination is most counter-clockwise from B.
         RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:1 4:1 5:3:B 6:2 7:4 8:6,5:A 9:7,5:C");
 
-        await VerifyGraphLayoutAsync(revisionGraph);
+        await VerifyGraphLayoutAsync(revisionGraph, reservedLanes);
     }
 
     private const string graphWithMultiLaneCrossings = "0:C,1,2,3,4,5,6,7,8,9,A,B 1:R 2:R 3:R 4:C 5:C 6:C 7:R 8:C 9:R A:C B:R C:D D:E E:F F:G G:H,K,R H:I,R I:J,R J:R K:R R";
@@ -929,9 +929,10 @@ public class RevisionGraphTests
         }
     }
 
-    private static async Task VerifyGraphLayoutAsync(RevisionGraph revisionGraph)
+    private static async Task VerifyGraphLayoutAsync(RevisionGraph revisionGraph, string? title = null, [CallerMemberName] string callerMemberName = null!)
     {
-        await RenderGraph(revisionGraph);
+        title ??= callerMemberName;
+        await RenderGraph(revisionGraph, title);
 
         string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
         await Verify(actualGraph);
@@ -939,18 +940,20 @@ public class RevisionGraphTests
 
     private async Task VerifyGraphLayoutAsync(string commitSpecs, int testCaseIndex = 0, [CallerMemberName] string callerMemberName = null!)
     {
+        string fileName = $"{callerMemberName}.{testCaseIndex}";
         RevisionGraph revisionGraph = CreateGraphTopDown(commitSpecs);
-        await RenderGraph(revisionGraph);
+        await RenderGraph(revisionGraph, title: fileName);
         string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
-        await Verify(actualGraph).UseFileName($"{callerMemberName}.{testCaseIndex}");
+        await Verify(actualGraph).UseFileName(fileName);
     }
 
     /// <summary>
     /// Renders the <paramref name="revisionGraph"/> to verify that no exceptions occur during rendering.
     /// </summary>
     /// <param name="revisionGraph">The revision graph to render.</param>
+    /// <param name="title">The title of the window to show, if <paramref name="showWindow"/> is true.</param>
     /// <param name="showWindow">If true, the graph is also shown in a window for visual verification.</param>
-    private static async Task RenderGraph(RevisionGraph revisionGraph, bool showWindow = false)
+    private static async Task RenderGraph(RevisionGraph revisionGraph, string? title = null, bool showWindow = false)
     {
         // Disable rendering to avoid errors due to concurrent drawing on multiple threads.
         AppSettings.ShowRevisionGridGraphColumn = false;
@@ -973,7 +976,7 @@ public class RevisionGraphTests
             // Show grid in a window:
             Form window = new()
             {
-                Text = "graph",
+                Text = title ?? "graph",
             };
             window.Controls.Add(grid);
 

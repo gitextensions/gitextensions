@@ -156,7 +156,7 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
                     }
                     else
                     {
-                        laneSharing = SecondarySharing(segment, Revision.Score);
+                        laneSharing = SecondarySharing(segment, null, Revision.Score);
                     }
 
                     return new Lane(_revisionLane, laneSharing);
@@ -189,19 +189,19 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
                         if (lane.Index != _revisionLane && otherSegment.Parent == segment.Parent
                             && (!otherSegment.IsReservedLanePlaceholder || segment.MayUseReservedLane))
                         {
-                            return new Lane(lane.Index, SecondarySharing(segment, Revision.Score));
+                            return new Lane(lane.Index, SecondarySharing(segment, otherSegment, Revision.Score));
                         }
                     }
                 }
                 else if (segment.ReservedLaneIndex < int.MaxValue)
                 {
                     // Merge lane for segments with the same reserved lane index
-                    foreach ((RevisionGraphSegment? otherSegment, Lane lane) in _segmentLanes)
+                    foreach ((RevisionGraphSegment? otherSegment, Lane lane) in _segmentLanes.Reverse())
                     {
                         if (lane.Index != _revisionLane && otherSegment.Parent == segment.Parent
                             && otherSegment.ReservedLaneIndex == segment.ReservedLaneIndex)
                         {
-                            return new Lane(lane.Index, SecondarySharing(segment, Revision.Score));
+                            return new Lane(lane.Index, SecondarySharing(segment, otherSegment, Revision.Score));
                         }
                     }
                 }
@@ -218,8 +218,14 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
 
                 return result;
 
-                static LaneSharing SecondarySharing(RevisionGraphSegment segment, int revisionScore)
+                static LaneSharing SecondarySharing(RevisionGraphSegment segment, RevisionGraphSegment? otherSegment, int revisionScore)
                 {
+                    if (otherSegment?.IsReservedLanePlaceholder == true)
+                    {
+                        // A placeholder cannot be the true primary, so this segment is
+                        return LaneSharing.ExclusiveOrPrimary;
+                    }
+
                     if (revisionScore > segment.IsSecondarySharedLaneAtLeastSinceScore)
                     {
                         return LaneSharing.Entire;
