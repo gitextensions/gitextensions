@@ -287,7 +287,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         };
 
         _toolTipProvider = new RevisionGridToolTipProvider(_gridView);
-        _toolTipProvider.ShowRevisionGridTooltips = AppSettings.ShowRevisionGridTooltips.Value;
+        _toolTipProvider.ShowRevisionGridTooltips = AppSettings.ShowRevisionGridTooltips;
 
         _quickSearchProvider = new QuickSearchProvider(_gridView, () => Module.WorkingDir);
 
@@ -1196,7 +1196,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                         observeRevisions,
                         _filterInfo.GetRevisionFilter(currentCheckout),
                         pathFilter,
-                        AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes,
+                        AppSettings.ShowGitNotesColumn || AppSettings.ShowGitNotes,
                         ResourceManager.TranslatedStrings.Autostash,
                         cancellationToken);
                 },
@@ -2243,17 +2243,17 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             (focused && advanced ? tsmiOtherActions.DropDownItems : mainContextMenu.Items).Add(item);
         }
 
-        IGitRef? clickedRef = _rightClickedHitInfo?.GitRef;
-        string? relatedBranch = clickedRef is NestledVirtualRef
-            ? (clickedRef.IsRemote ? clickedRef.Remote + "/" : "") + clickedRef.MergeWith
-            : null;
+        IGitRef? clickedRef = _rightClickedHitInfo?.GitRef is NestledVirtualRef nestedRef
+            ? nestedRef.TargetRef
+            : _rightClickedHitInfo?.GitRef;
         _rightClickedHitInfo = null;
         Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefs = clickedRef is null
             ? refs => refs
-            : refs => refs.Where(r => r == clickedRef || r.Name == relatedBranch);
-        copyToClipboardToolStripMenuItem.SetFilterRefsFunc(clickedRef is null
-            ? refNames => refNames
-            : refNames => refNames.Where(r => r == clickedRef.Name || r == relatedBranch));
+            : refs => refs.Where(r => r == clickedRef);
+        Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefsByTracking = clickedRef is null
+            ? refs => refs
+            : refs => refs.Where(r => r == clickedRef || r.IsTrackingRemote(clickedRef));
+        copyToClipboardToolStripMenuItem.SetFilterRefsFunc(filterRefs);
 
         bool inTheMiddleOfBisect = Module.InTheMiddleOfBisect();
         SetEnabled(markRevisionAsBadToolStripMenuItem, inTheMiddleOfBisect);
@@ -2289,7 +2289,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         string currentBranchRef = GitRefName.RefsHeadsPrefix + CurrentBranch.Value;
 
         bool currentBranchPointsToRevision = false;
-        foreach (IGitRef head in filterRefs(gitRefListsForRevision.BranchesWithNoIdenticalRemotes))
+        foreach (IGitRef head in filterRefsByTracking(gitRefListsForRevision.BranchesWithNoIdenticalRemotes))
         {
             if (head.CompleteName == currentBranchRef)
             {
@@ -2709,7 +2709,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
                 if (page.Verification.Checked)
                 {
-                    AppSettings.DontConfirmStashDrop = true;
+                    AppSettings.DontConfirmStashDrop.Value = true;
                 }
             }
 
@@ -2862,7 +2862,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void ToggleShowGitNotesColumn()
     {
-        AppSettings.ShowGitNotesColumn.Value = !AppSettings.ShowGitNotesColumn.Value;
+        AppSettings.ShowGitNotesColumn.Value = !AppSettings.ShowGitNotesColumn;
         PerformRefreshRevisions();
     }
 
@@ -3583,6 +3583,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         public bool IsDataLoadComplete =>
             _revisionGridControl._gridView.IsDataLoadComplete;
+
+        public RevisionGridToolTipProvider ToolTipProvider => _revisionGridControl._toolTipProvider;
 
         public void ClearSelection()
         {

@@ -97,8 +97,8 @@ public sealed partial class FileStatusList : GitModuleControl
                 ? [relativePath.Value]
                 : SelectedItems.Select(fsi => fsi.Item.Name));
         tsmiFilterFileInGrid.Text = TranslatedStrings.FilterFileInGrid;
-        tsmiShowFindInCommitFilesGitGrep.Checked = AppSettings.ShowFindInCommitFilesGitGrep.Value;
-        SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value);
+        tsmiShowFindInCommitFilesGitGrep.Checked = AppSettings.ShowFindInCommitFilesGitGrep;
+        SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
 
         CreateTreeContextMenuItems();
         _NO_TRANSLATE_openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
@@ -309,9 +309,13 @@ public sealed partial class FileStatusList : GitModuleControl
         // Show/hide the search box if settings are changed
         void UICommands_PostSettings(object? sender, GitUIPostActionEventArgs? e)
         {
-            if (CanUseFindInCommitFilesGitGrep && Visible)
+            if (Visible)
             {
-                BeginInvoke(() => SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value));
+                BeginInvoke(() =>
+                {
+                    InitializeContextMenuAndToolbar();
+                    SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
+                });
             }
         }
     }
@@ -331,7 +335,7 @@ public sealed partial class FileStatusList : GitModuleControl
         {
             Toolbar.Visible = false;
             lblSplitter.Height = DpiUtil.Scale(1);
-            SetFindInCommitFilesGitGrepVisibilityImpl(AppSettings.ShowFindInCommitFilesGitGrep.Value);
+            SetFindInCommitFilesGitGrepVisibilityImpl(AppSettings.ShowFindInCommitFilesGitGrep);
             _diffCalculator.SetGrep("", fileTreeMode: true);
             GroupByRevision = false;
             FileStatusListView.ShowRootLines = true;
@@ -781,12 +785,21 @@ public sealed partial class FileStatusList : GitModuleControl
 
     public void SelectAll()
     {
-        foreach (TreeNode node in FileStatusListView.Nodes)
+        // Avoid scrolling and repainting between folders while expanding the whole selection.
+        try
         {
-            ExpandAll(node);
-        }
+            FileStatusListView.BeginUpdate();
+            foreach (TreeNode node in FileStatusListView.Nodes)
+            {
+                ExpandAll(node);
+            }
 
-        SelectItems(_ => true);
+            SelectItems(_ => true);
+        }
+        finally
+        {
+            FileStatusListView.EndUpdate();
+        }
     }
 
     public void SelectFirstVisibleItem()
@@ -1246,8 +1259,8 @@ public sealed partial class FileStatusList : GitModuleControl
         bool filesPresent = items.Any(x => x.Statuses.Count > 0);
         bool hasGrepGroup = gitGrepState != GitGrepState.None && (gitGrepState != GitGrepState.Unknown || items.Any(FileStatusDiffCalculator.IsGrepItemStatuses));
         bool showGroupLabel = (filesPresent && (items.Count > 1 || groupByRevision)) || hasGrepGroup;
-        bool mergeSingleItemsWithFolder = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
-        bool showGroupNodes = !flatList || AppSettings.FileStatusShowGroupNodesInFlatList.Value;
+        bool mergeSingleItemsWithFolder = AppSettings.FileStatusMergeSingleItemWithFolder;
+        bool showGroupNodes = !flatList || AppSettings.FileStatusShowGroupNodesInFlatList;
 
         foreach (FileStatusWithDescription i in items)
         {
