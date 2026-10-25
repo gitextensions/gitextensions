@@ -11,6 +11,7 @@ public class RecentRepoInfo
     public DirectoryInfo? DirInfo { get; set; }
     public string? ShortName { get; }
     public string DirName { get; }
+    public string FileSystemLabel { get; set; } = "";
 
     public RecentRepoInfo(Repository repo, bool topRepo, bool anchored)
     {
@@ -71,6 +72,8 @@ public class RecentRepoSplitter
         bool middleDot = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MiddleDots;
         bool signDir = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MostSignDir;
 
+        Dictionary<string, string> fileSystemLabels = signDir ? GetFileSystemLabels(repositories) : [];
+
         int n = Math.Min(MaxTopRepositories, repositories.Count);
 
         // the topRepositories repositories will be added at beginning
@@ -96,6 +99,7 @@ public class RecentRepoSplitter
             }
             else
             {
+                ri.FileSystemLabel = fileSystemLabels.GetValueOrDefault(repository.Path, "");
                 AddToOrderedSignDir(orderedRepos, ri, signDir);
             }
 
@@ -155,6 +159,95 @@ public class RecentRepoSplitter
         }
     }
 
+    private static Dictionary<string, string> GetFileSystemLabels(IEnumerable<Repository> repositories)
+    {
+        Dictionary<string, string> labels = [];
+        foreach (IGrouping<string, Repository> group in repositories.GroupBy(repository => GetRepoPathSuffix(repository.Path)))
+        {
+            Dictionary<string, List<(string Separator, string Name)>> rootsByKey = new(StringComparer.OrdinalIgnoreCase);
+            foreach (Repository repository in group)
+            {
+                List<(string Separator, string Name)> tokens = GetRootTokens(repository.Path);
+                rootsByKey.TryAdd(string.Join('\\', tokens.Select(token => token.Name)), tokens);
+            }
+
+            if (rootsByKey.Count < 2)
+            {
+                continue;
+            }
+
+            List<List<(string Separator, string Name)>> roots = [.. rootsByKey.Values];
+            int minLength = roots.Min(tokens => tokens.Count);
+            int common = 0;
+            while (common < minLength - 1
+                && roots.All(tokens => string.Equals(tokens[common].Name, roots[0][common].Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                common++;
+            }
+
+            int maxLength = roots.Max(tokens => tokens.Count) - common;
+            int length = 1;
+            while (length < maxLength
+                && roots.Select(tokens => BuildLabel(tokens, common, length)).Distinct(StringComparer.OrdinalIgnoreCase).Count() < roots.Count)
+            {
+                length++;
+            }
+
+            foreach (Repository repository in group)
+            {
+                labels[repository.Path] = BuildLabel(GetRootTokens(repository.Path), common, length);
+            }
+        }
+
+        return labels;
+
+        static string BuildLabel(List<(string Separator, string Name)> tokens, int start, int length)
+        {
+            IEnumerable<(string Separator, string Name)> selected = tokens.Skip(start).Take(length);
+            return string.Concat(selected.Select((token, index) => (index == 0 ? "" : token.Separator) + token.Name));
+        }
+    }
+
+    /// <summary>
+    ///  Splits the root of a path into a drive name ("W:") or into the server parts (split at '.') and the share of a UNC path.
+    /// </summary>
+    private static List<(string Separator, string Name)> GetRootTokens(string path)
+    {
+        string root = (Path.GetPathRoot(path.ToNativePath()) ?? "").TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        if (!root.StartsWith(@"\\", StringComparison.Ordinal))
+        {
+            return [("", root)];
+        }
+
+        string[] serverAndShare = root.TrimStart('\\').Split('\\', 2);
+        List<(string Separator, string Name)> tokens = [];
+        string[] serverParts = serverAndShare[0].Split('.');
+        for (int i = 0; i < serverParts.Length; i++)
+        {
+            if (i == 0)
+            {
+                string server = serverParts[0];
+                tokens.Add(("", server.Equals("wsl$", StringComparison.OrdinalIgnoreCase) ? server[..^1] : server));
+                continue;
+            }
+
+            tokens.Add((".", serverParts[i]));
+        }
+
+        if (serverAndShare.Length > 1)
+        {
+            tokens.Add((@"\", serverAndShare[1]));
+        }
+
+        return tokens;
+    }
+
+    private static string GetRepoPathSuffix(string path)
+    {
+        string nativePath = path.ToNativePath();
+        return nativePath[(Path.GetPathRoot(nativePath)?.Length ?? 0)..].Trim(Path.DirectorySeparatorChar);
+    }
+
     private static void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
     {
         // if there is no short name for a repo, then try to find unique caption extending short directory path
@@ -173,7 +266,10 @@ public class RecentRepoSplitter
                 repoInfo.Caption += " (" + s + ")";
             }
 
-            repoInfo.DirInfo = repoInfo.DirInfo.Parent;
+            if (!string.IsNullOrEmpty(repoInfo.FileSystemLabel))
+            {
+                repoInfo.Caption += $" ({repoInfo.FileSystemLabel})";
+            }
         }
         else
         {
@@ -215,6 +311,7 @@ public class RecentRepoSplitter
         // find unique caption for repos with no title
         foreach (RecentRepoInfo r in tmpList)
         {
+            r.DirInfo = r.DirInfo?.Parent;
             AddToOrderedSignDir(orderedRepos, r, shortenPath);
         }
     }
