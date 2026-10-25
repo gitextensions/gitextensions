@@ -133,7 +133,6 @@ partial class FileStatusList
 
         tsmiShowIgnoredFiles.Visible = canAutoRefresh;
         tsmiShowAssumeUnchangedFiles.Visible = canAutoRefresh;
-        tsmiShowUntrackedFiles.Checked = Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
 
         tsmiStageFile.Font = new Font(tsmiStageFile.Font, FontStyle.Bold);
         tsmiUnstageFile.Font = new Font(tsmiUnstageFile.Font, FontStyle.Bold);
@@ -613,6 +612,11 @@ partial class FileStatusList
 
             return (allFilesExist, allDirectoriesExist, allFilesOrUntrackedDirectoriesExist);
         }
+    }
+
+    public void InitializeContextMenuAndToolbar()
+    {
+        tsmiShowUntrackedFiles.Checked = Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
     }
 
     public void InitResetFileToToolStripMenuItem()
