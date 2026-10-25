@@ -720,7 +720,7 @@ public sealed partial class GitModuleTests
 
         _gitModule.GetEffectiveSetting("http.proxy").Should().BeEmpty();
     }
-  
+
     [TestCase("BASE", "1")]
     [TestCase("LOCAL", "2")]
     [TestCase("REMOTE", "3")]
