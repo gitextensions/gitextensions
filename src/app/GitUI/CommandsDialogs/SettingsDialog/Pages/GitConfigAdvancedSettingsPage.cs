@@ -8,7 +8,15 @@ public partial class GitConfigAdvancedSettingsPage : GitConfigBaseSettingsPage
 {
     private const string _gitConfigDocsBaseUrl = "https://git-scm.com/docs/git-config#Documentation/git-config.txt-";
 
-    private record GitSettingUiMapping(string GitSettingKey, CheckBox MappedCheckbox, string CheckedValue = "true", string UncheckedValue = "false");
+    private const string _unsetText = "";
+
+    private record GitSettingUiMapping(string GitSettingKey, Label DescriptionLabel, string[] Values)
+    {
+        public ComboBox MappedComboBox { get; } = new();
+    }
+
+    private readonly string[] _boolValues = ["false", "true"];
+
     private readonly List<GitSettingUiMapping> _gitSettings;
 
     public GitConfigAdvancedSettingsPage(IServiceProvider serviceProvider)
@@ -19,47 +27,54 @@ public partial class GitConfigAdvancedSettingsPage : GitConfigBaseSettingsPage
 
         _gitSettings =
         [
-            new("pull.ff", chkPullFfOnly, CheckedValue: "only"),
-            new("pull.rebase", chkPullRebase),
-            new("fetch.prune", chkFetchPrune),
-            new("merge.autostash", chkMergeAutoStash),
-            new("rebase.autostash", chkRebaseAutostash),
-            new("rebase.autosquash", chkRebaseAutosquash),
-            new("rebase.updaterefs", chkUpdateRefs),
-            new("rerere.enabled", chkReReReEnabled),
-            new("rerere.autoupdate", chkReReReAutoUpdate),
-            new("status.showuntrackedfiles", chkStatusShowUntrackedFiles, UncheckedValue: "no"),
+            new("pull.ff", lblPullFfOnly, [.. _boolValues, "only"]),
+            new("pull.rebase", lblPullRebase, [.. _boolValues, "merges", "interactive"]),
+            new("fetch.prune", lblFetchPrune, _boolValues),
+            new("merge.autostash", lblMergeAutoStash, _boolValues),
+            new("rebase.autostash", lblRebaseAutostash, _boolValues),
+            new("rebase.autosquash", lblRebaseAutosquash, _boolValues),
+            new("rebase.updaterefs", lblUpdateRefs, _boolValues),
+            new("rerere.enabled", lblReReReEnabled, _boolValues),
+            new("rerere.autoupdate", lblReReReAutoUpdate, _boolValues),
+            new("status.showuntrackedfiles", lblStatusShowUntrackedFiles, ["no", "normal", "all"]),
         ];
 
-        chkUpdateRefs.Visible = GitVersion.Current.SupportUpdateRefs;
+        lblUpdateRefs.Visible = GitVersion.Current.SupportUpdateRefs;
 
-        AddHelpColumn();
+        FillColumns();
 
         Load += GitConfigAdvancedSettingsPage_Load;
     }
 
-    private void AddHelpColumn()
+    private void FillColumns()
     {
-        tlpnlMain.ColumnCount += 1;
-        tlpnlMain.ColumnStyles.Add(new ColumnStyle());
-
-        Bitmap questionIcon = new Icon(SystemIcons.Question, SystemInformation.SmallIconSize).ToBitmap();
         foreach (GitSettingUiMapping gitSetting in _gitSettings)
         {
             string gitSettingId = gitSetting.GitSettingKey.Replace(".", "").ToLowerInvariant();
+            bool visible = gitSetting.DescriptionLabel.Visible;
+            int row = tlpnlMain.GetRow(gitSetting.DescriptionLabel);
+
+            ComboBox comboBox = gitSetting.MappedComboBox;
+            comboBox.DropDownStyle = ComboBoxStyle.DropDown;
+            comboBox.Name = "_NO_TRANSLATE_cbx" + gitSettingId;
+            comboBox.Items.Add(_unsetText);
+            comboBox.Items.AddRange(gitSetting.Values);
+            comboBox.Visible = visible;
+            tlpnlMain.Controls.Add(comboBox, column: 1, row);
+
             string url = $"{_gitConfigDocsBaseUrl}{gitSettingId}";
             PictureBox helpIcon = new()
             {
                 Anchor = AnchorStyles.Left,
                 Cursor = Cursors.Hand,
                 Image = Properties.Resources.information,
-                Margin = new Padding(3, 3, 3, 3),
-                Name = "hlp" + gitSettingId,
+                Margin = new Padding(3),
+                Name = "pic" + gitSettingId,
                 Size = new Size(16, 16),
-                Visible = gitSetting.MappedCheckbox.Visible
+                Visible = visible
             };
             helpIcon.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser(url);
-            tlpnlMain.Controls.Add(helpIcon, column: 1, tlpnlMain.GetRow(gitSetting.MappedCheckbox));
+            tlpnlMain.Controls.Add(helpIcon, column: 2, row);
         }
     }
 
@@ -67,7 +82,7 @@ public partial class GitConfigAdvancedSettingsPage : GitConfigBaseSettingsPage
     {
         foreach (GitSettingUiMapping gitSetting in _gitSettings)
         {
-            gitSetting.MappedCheckbox.Text += $" [{gitSetting.GitSettingKey}]";
+            gitSetting.DescriptionLabel.Text += $" [{gitSetting.GitSettingKey}]";
         }
     }
 
@@ -76,18 +91,8 @@ public partial class GitConfigAdvancedSettingsPage : GitConfigBaseSettingsPage
         Validates.NotNull(CurrentSettings);
         foreach (GitSettingUiMapping gitSetting in _gitSettings)
         {
-            string? value = CurrentSettings.GetValue(gitSetting.GitSettingKey);
-            gitSetting.MappedCheckbox.CheckState
-                = value == gitSetting.CheckedValue
-                    ? CheckState.Checked
-                    : value == gitSetting.UncheckedValue
-                        ? CheckState.Unchecked
-                        : value switch
-                            {
-                                "true" or "yes" or "on" or "1" => CheckState.Checked,
-                                "false" or "no" or "off" or "0" or "" => CheckState.Unchecked,
-                                _ => CheckState.Indeterminate
-                            };
+            string value = CurrentSettings.GetValue(gitSetting.GitSettingKey) ?? _unsetText;
+            gitSetting.MappedComboBox.Text = value;
         }
 
         base.SettingsToPage();
@@ -98,8 +103,8 @@ public partial class GitConfigAdvancedSettingsPage : GitConfigBaseSettingsPage
         Validates.NotNull(CurrentSettings);
         foreach (GitSettingUiMapping gitSetting in _gitSettings)
         {
-            string? value = gitSetting.MappedCheckbox.CheckState switch { CheckState.Checked => gitSetting.CheckedValue, CheckState.Unchecked => gitSetting.UncheckedValue, _ => null };
-            CurrentSettings.SetValue(gitSetting.GitSettingKey, value);
+            string value = gitSetting.MappedComboBox.Text;
+            CurrentSettings.SetValue(gitSetting.GitSettingKey, value == _unsetText ? null : value);
         }
 
         base.PageToSettings();

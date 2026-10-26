@@ -29,34 +29,36 @@ partial class GitConfigAdvancedSettingsPage
     private void InitializeComponent()
     {
         tlpnlMain = new TableLayoutPanel();
-        chkPullFfOnly = new CheckBox();
-        chkPullRebase = new CheckBox();
-        chkFetchPrune = new CheckBox();
-        chkMergeAutoStash = new CheckBox();
-        chkRebaseAutostash = new CheckBox();
-        chkRebaseAutosquash = new CheckBox();
-        chkUpdateRefs = new CheckBox();
-        chkReReReEnabled = new CheckBox();
-        chkReReReAutoUpdate = new CheckBox();
-        chkStatusShowUntrackedFiles = new CheckBox();
+        lblPullFfOnly = new Label();
+        lblPullRebase = new Label();
+        lblFetchPrune = new Label();
+        lblMergeAutoStash = new Label();
+        lblRebaseAutostash = new Label();
+        lblRebaseAutosquash = new Label();
+        lblUpdateRefs = new Label();
+        lblReReReEnabled = new Label();
+        lblReReReAutoUpdate = new Label();
+        lblStatusShowUntrackedFiles = new Label();
         tlpnlMain.SuspendLayout();
         SuspendLayout();
         // 
         // tlpnlMain
         // 
         tlpnlMain.AutoSize = true;
-        tlpnlMain.ColumnCount = 1;
+        tlpnlMain.ColumnCount = 3;
         tlpnlMain.ColumnStyles.Add(new ColumnStyle());
-        tlpnlMain.Controls.Add(chkPullFfOnly, 0, 0);
-        tlpnlMain.Controls.Add(chkPullRebase, 0, 1);
-        tlpnlMain.Controls.Add(chkFetchPrune, 0, 2);
-        tlpnlMain.Controls.Add(chkMergeAutoStash, 0, 3);
-        tlpnlMain.Controls.Add(chkRebaseAutostash, 0, 4);
-        tlpnlMain.Controls.Add(chkRebaseAutosquash, 0, 5);
-        tlpnlMain.Controls.Add(chkUpdateRefs, 0, 6);
-        tlpnlMain.Controls.Add(chkReReReEnabled, 0, 7);
-        tlpnlMain.Controls.Add(chkReReReAutoUpdate, 0, 8);
-        tlpnlMain.Controls.Add(chkStatusShowUntrackedFiles, 0, 9);
+        tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+        tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+        tlpnlMain.Controls.Add(lblPullFfOnly, 0, 0);
+        tlpnlMain.Controls.Add(lblPullRebase, 0, 1);
+        tlpnlMain.Controls.Add(lblFetchPrune, 0, 2);
+        tlpnlMain.Controls.Add(lblMergeAutoStash, 0, 3);
+        tlpnlMain.Controls.Add(lblRebaseAutostash, 0, 4);
+        tlpnlMain.Controls.Add(lblRebaseAutosquash, 0, 5);
+        tlpnlMain.Controls.Add(lblUpdateRefs, 0, 6);
+        tlpnlMain.Controls.Add(lblReReReEnabled, 0, 7);
+        tlpnlMain.Controls.Add(lblReReReAutoUpdate, 0, 8);
+        tlpnlMain.Controls.Add(lblStatusShowUntrackedFiles, 0, 9);
         tlpnlMain.Dock = DockStyle.Fill;
         tlpnlMain.Location = new Point(0, 0);
         tlpnlMain.Name = "tlpnlMain";
@@ -75,115 +77,75 @@ partial class GitConfigAdvancedSettingsPage
         tlpnlMain.Size = new Size(1439, 516);
         tlpnlMain.TabIndex = 0;
         // 
-        // chkPullFfOnly
+        // lblPullFfOnly
         // 
-        chkPullFfOnly.AutoSize = true;
-        chkPullFfOnly.Location = new Point(3, 3);
-        chkPullFfOnly.Name = "chkPullFfOnly";
-        chkPullFfOnly.Size = new Size(222, 19);
-        chkPullFfOnly.TabIndex = 9;
-        chkPullFfOnly.Text = "Only allow fast-forward when pulling";
-        chkPullFfOnly.ThreeState = true;
-        chkPullFfOnly.UseVisualStyleBackColor = true;
+        lblPullFfOnly.Anchor = AnchorStyles.Left;
+        lblPullFfOnly.AutoSize = true;
+        lblPullFfOnly.Name = "lblPullFfOnly";
+        lblPullFfOnly.Text = "Only allow fast-forward when pulling";
         // 
-        // chkPullRebase
+        // lblPullRebase
         // 
-        chkPullRebase.AutoSize = true;
-        chkPullRebase.Location = new Point(3, 28);
-        chkPullRebase.Name = "chkPullRebase";
-        chkPullRebase.Size = new Size(303, 19);
-        chkPullRebase.TabIndex = 1;
-        chkPullRebase.Text = "Rebase local branch when pulling (instead of merge)";
-        chkPullRebase.ThreeState = true;
-        chkPullRebase.UseVisualStyleBackColor = true;
+        lblPullRebase.Anchor = AnchorStyles.Left;
+        lblPullRebase.AutoSize = true;
+        lblPullRebase.Name = "lblPullRebase";
+        lblPullRebase.Text = "Rebase local branch when pulling (instead of merge)";
         // 
-        // chkFetchPrune
+        // lblFetchPrune
         // 
-        chkFetchPrune.AutoSize = true;
-        chkFetchPrune.Location = new Point(3, 53);
-        chkFetchPrune.Name = "chkFetchPrune";
-        chkFetchPrune.Size = new Size(217, 19);
-        chkFetchPrune.TabIndex = 2;
-        chkFetchPrune.Text = "Prune remote branches during fetch";
-        chkFetchPrune.ThreeState = true;
-        chkFetchPrune.UseVisualStyleBackColor = true;
+        lblFetchPrune.Anchor = AnchorStyles.Left;
+        lblFetchPrune.AutoSize = true;
+        lblFetchPrune.Name = "lblFetchPrune";
+        lblFetchPrune.Text = "Prune remote branches during fetch";
         // 
-        // chkMergeAutoStash
+        // lblMergeAutoStash
         // 
-        chkMergeAutoStash.AutoSize = true;
-        chkMergeAutoStash.Location = new Point(3, 78);
-        chkMergeAutoStash.Name = "chkMergeAutoStash";
-        chkMergeAutoStash.Size = new Size(247, 19);
-        chkMergeAutoStash.TabIndex = 3;
-        chkMergeAutoStash.Text = "Automatically stash before doing a merge";
-        chkMergeAutoStash.ThreeState = true;
-        chkMergeAutoStash.UseVisualStyleBackColor = true;
+        lblMergeAutoStash.Anchor = AnchorStyles.Left;
+        lblMergeAutoStash.AutoSize = true;
+        lblMergeAutoStash.Name = "lblMergeAutoStash";
+        lblMergeAutoStash.Text = "Automatically stash before doing a merge";
         // 
-        // chkRebaseAutostash
+        // lblRebaseAutostash
         // 
-        chkRebaseAutostash.AutoSize = true;
-        chkRebaseAutostash.Location = new Point(3, 103);
-        chkRebaseAutostash.Name = "chkRebaseAutostash";
-        chkRebaseAutostash.Size = new Size(247, 19);
-        chkRebaseAutostash.TabIndex = 4;
-        chkRebaseAutostash.Text = "Automatically stash before doing a rebase";
-        chkRebaseAutostash.ThreeState = true;
-        chkRebaseAutostash.UseVisualStyleBackColor = true;
+        lblRebaseAutostash.Anchor = AnchorStyles.Left;
+        lblRebaseAutostash.AutoSize = true;
+        lblRebaseAutostash.Name = "lblRebaseAutostash";
+        lblRebaseAutostash.Text = "Automatically stash before doing a rebase";
         // 
-        // chkRebaseAutosquash
+        // lblRebaseAutosquash
         // 
-        chkRebaseAutosquash.AutoSize = true;
-        chkRebaseAutosquash.Location = new Point(3, 128);
-        chkRebaseAutosquash.Name = "chkRebaseAutosquash";
-        chkRebaseAutosquash.Size = new Size(367, 19);
-        chkRebaseAutosquash.TabIndex = 5;
-        chkRebaseAutosquash.Text = "Automatically squash commits when doing an interactive rebase";
-        chkRebaseAutosquash.ThreeState = true;
-        chkRebaseAutosquash.UseVisualStyleBackColor = true;
+        lblRebaseAutosquash.Anchor = AnchorStyles.Left;
+        lblRebaseAutosquash.AutoSize = true;
+        lblRebaseAutosquash.Name = "lblRebaseAutosquash";
+        lblRebaseAutosquash.Text = "Automatically squash commits when doing an interactive rebase";
         // 
-        // chkUpdateRefs
+        // lblUpdateRefs
         // 
-        chkUpdateRefs.AutoSize = true;
-        chkUpdateRefs.Location = new Point(3, 153);
-        chkUpdateRefs.Name = "chkUpdateRefs";
-        chkUpdateRefs.Size = new Size(198, 19);
-        chkUpdateRefs.TabIndex = 6;
-        chkUpdateRefs.Text = "Rebase also dependent branches";
-        chkUpdateRefs.ThreeState = true;
-        chkUpdateRefs.UseVisualStyleBackColor = true;
+        lblUpdateRefs.Anchor = AnchorStyles.Left;
+        lblUpdateRefs.AutoSize = true;
+        lblUpdateRefs.Name = "lblUpdateRefs";
+        lblUpdateRefs.Text = "Rebase also dependent branches";
         // 
-        // chkReReReEnabled
+        // lblReReReEnabled
         // 
-        chkReReReEnabled.AutoSize = true;
-        chkReReReEnabled.Location = new Point(3, 178);
-        chkReReReEnabled.Name = "chkReReReEnabled";
-        chkReReReEnabled.Size = new Size(275, 19);
-        chkReReReEnabled.TabIndex = 7;
-        chkReReReEnabled.Text = "Reuse recorded resolution of conflicted merges";
-        chkReReReEnabled.ThreeState = true;
-        chkReReReEnabled.UseVisualStyleBackColor = true;
+        lblReReReEnabled.Anchor = AnchorStyles.Left;
+        lblReReReEnabled.AutoSize = true;
+        lblReReReEnabled.Name = "lblReReReEnabled";
+        lblReReReEnabled.Text = "Reuse recorded resolution of conflicted merges";
         // 
-        // chkReReReAutoUpdate
+        // lblReReReAutoUpdate
         // 
-        chkReReReAutoUpdate.AutoSize = true;
-        chkReReReAutoUpdate.Location = new Point(3, 203);
-        chkReReReAutoUpdate.Name = "chkReReReAutoUpdate";
-        chkReReReAutoUpdate.Size = new Size(350, 19);
-        chkReReReAutoUpdate.TabIndex = 8;
-        chkReReReAutoUpdate.Text = "Automatically apply recorded resolution of conflicted merges";
-        chkReReReAutoUpdate.ThreeState = true;
-        chkReReReAutoUpdate.UseVisualStyleBackColor = true;
+        lblReReReAutoUpdate.Anchor = AnchorStyles.Left;
+        lblReReReAutoUpdate.AutoSize = true;
+        lblReReReAutoUpdate.Name = "lblReReReAutoUpdate";
+        lblReReReAutoUpdate.Text = "Automatically apply recorded resolution of conflicted merges";
         // 
-        // chkStatusShowUntrackedFiles
+        // lblStatusShowUntrackedFiles
         // 
-        chkStatusShowUntrackedFiles.AutoSize = true;
-        chkStatusShowUntrackedFiles.Location = new Point(3, 228);
-        chkStatusShowUntrackedFiles.Name = "chkStatusShowUntrackedFiles";
-        chkStatusShowUntrackedFiles.Size = new Size(135, 19);
-        chkStatusShowUntrackedFiles.TabIndex = 9;
-        chkStatusShowUntrackedFiles.Text = "Show untracked files";
-        chkStatusShowUntrackedFiles.ThreeState = true;
-        chkStatusShowUntrackedFiles.UseVisualStyleBackColor = true;
+        lblStatusShowUntrackedFiles.Anchor = AnchorStyles.Left;
+        lblStatusShowUntrackedFiles.AutoSize = true;
+        lblStatusShowUntrackedFiles.Name = "lblStatusShowUntrackedFiles";
+        lblStatusShowUntrackedFiles.Text = "Show untracked files";
         // 
         // GitConfigAdvancedSettingsPage
         // 
@@ -202,14 +164,14 @@ partial class GitConfigAdvancedSettingsPage
     #endregion
 
     private TableLayoutPanel tlpnlMain;
-    private CheckBox chkPullFfOnly;
-    private CheckBox chkRebaseAutostash;
-    private CheckBox chkFetchPrune;
-    private CheckBox chkPullRebase;
-    private CheckBox chkRebaseAutosquash;
-    private CheckBox chkUpdateRefs;
-    private CheckBox chkMergeAutoStash;
-    private CheckBox chkReReReEnabled;
-    private CheckBox chkReReReAutoUpdate;
-    private CheckBox chkStatusShowUntrackedFiles;
+    private Label lblPullFfOnly;
+    private Label lblPullRebase;
+    private Label lblFetchPrune;
+    private Label lblMergeAutoStash;
+    private Label lblRebaseAutostash;
+    private Label lblRebaseAutosquash;
+    private Label lblUpdateRefs;
+    private Label lblReReReEnabled;
+    private Label lblReReReAutoUpdate;
+    private Label lblStatusShowUntrackedFiles;
 }

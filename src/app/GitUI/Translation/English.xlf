@@ -8095,43 +8095,43 @@ Context menu for additional operations</source>
         <source>Advanced</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkFetchPrune.Text">
+      <trans-unit id="lblFetchPrune.Text">
         <source>Prune remote branches during fetch</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkMergeAutoStash.Text">
+      <trans-unit id="lblMergeAutoStash.Text">
         <source>Automatically stash before doing a merge</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkPullFfOnly.Text">
+      <trans-unit id="lblPullFfOnly.Text">
         <source>Only allow fast-forward when pulling</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkPullRebase.Text">
+      <trans-unit id="lblPullRebase.Text">
         <source>Rebase local branch when pulling (instead of merge)</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkReReReAutoUpdate.Text">
+      <trans-unit id="lblReReReAutoUpdate.Text">
         <source>Automatically apply recorded resolution of conflicted merges</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkReReReEnabled.Text">
+      <trans-unit id="lblReReReEnabled.Text">
         <source>Reuse recorded resolution of conflicted merges</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkRebaseAutosquash.Text">
+      <trans-unit id="lblRebaseAutosquash.Text">
         <source>Automatically squash commits when doing an interactive rebase</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkRebaseAutostash.Text">
+      <trans-unit id="lblRebaseAutostash.Text">
         <source>Automatically stash before doing a rebase</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkStatusShowUntrackedFiles.Text">
+      <trans-unit id="lblStatusShowUntrackedFiles.Text">
         <source>Show untracked files</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkUpdateRefs.Text">
+      <trans-unit id="lblUpdateRefs.Text">
         <source>Rebase also dependent branches</source>
         <target />
       </trans-unit>
