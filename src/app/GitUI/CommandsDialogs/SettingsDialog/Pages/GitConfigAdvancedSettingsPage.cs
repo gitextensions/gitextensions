@@ -10,7 +10,7 @@ public partial class GitConfigAdvancedSettingsPage : GitConfigBaseSettingsPage
 
     private const string _unsetText = "";
 
-    private record GitSettingUiMapping(string GitSettingKey, Label DescriptionLabel, string[] Values)
+    private sealed record GitSettingUiMapping(string GitSettingKey, Label DescriptionLabel, string[] Values)
     {
         public ComboBox MappedComboBox { get; } = new();
     }
@@ -27,7 +27,7 @@ public partial class GitConfigAdvancedSettingsPage : GitConfigBaseSettingsPage
 
         _gitSettings =
         [
-            new("pull.ff", lblPullFfOnly, [.. _boolValues, "only"]),
+            new("pull.ff", lblPullFF, [.. _boolValues, "only"]),
             new("pull.rebase", lblPullRebase, [.. _boolValues, "merges", "interactive"]),
             new("fetch.prune", lblFetchPrune, _boolValues),
             new("merge.autostash", lblMergeAutoStash, _boolValues),
@@ -55,6 +55,7 @@ public partial class GitConfigAdvancedSettingsPage : GitConfigBaseSettingsPage
             int row = tlpnlMain.GetRow(gitSetting.DescriptionLabel);
 
             ComboBox comboBox = gitSetting.MappedComboBox;
+            comboBox.AccessibleName = gitSetting.DescriptionLabel.Text;
             comboBox.DropDownStyle = ComboBoxStyle.DropDown;
             comboBox.Name = "_NO_TRANSLATE_cbx" + gitSettingId;
             comboBox.Items.Add(_unsetText);

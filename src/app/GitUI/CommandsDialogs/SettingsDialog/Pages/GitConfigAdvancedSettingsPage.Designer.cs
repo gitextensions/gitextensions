@@ -29,7 +29,7 @@ partial class GitConfigAdvancedSettingsPage
     private void InitializeComponent()
     {
         tlpnlMain = new TableLayoutPanel();
-        lblPullFfOnly = new Label();
+        lblPullFF = new Label();
         lblPullRebase = new Label();
         lblFetchPrune = new Label();
         lblMergeAutoStash = new Label();
@@ -49,7 +49,7 @@ partial class GitConfigAdvancedSettingsPage
         tlpnlMain.ColumnStyles.Add(new ColumnStyle());
         tlpnlMain.ColumnStyles.Add(new ColumnStyle());
         tlpnlMain.ColumnStyles.Add(new ColumnStyle());
-        tlpnlMain.Controls.Add(lblPullFfOnly, 0, 0);
+        tlpnlMain.Controls.Add(lblPullFF, 0, 0);
         tlpnlMain.Controls.Add(lblPullRebase, 0, 1);
         tlpnlMain.Controls.Add(lblFetchPrune, 0, 2);
         tlpnlMain.Controls.Add(lblMergeAutoStash, 0, 3);
@@ -77,12 +77,12 @@ partial class GitConfigAdvancedSettingsPage
         tlpnlMain.Size = new Size(1439, 516);
         tlpnlMain.TabIndex = 0;
         // 
-        // lblPullFfOnly
+        // lblPullFF
         // 
-        lblPullFfOnly.Anchor = AnchorStyles.Left;
-        lblPullFfOnly.AutoSize = true;
-        lblPullFfOnly.Name = "lblPullFfOnly";
-        lblPullFfOnly.Text = "Only allow fast-forward when pulling";
+        lblPullFF.Anchor = AnchorStyles.Left;
+        lblPullFF.AutoSize = true;
+        lblPullFF.Name = "lblPullFF";
+        lblPullFF.Text = "Fast-forward behavior when pulling";
         // 
         // lblPullRebase
         // 
@@ -164,7 +164,7 @@ partial class GitConfigAdvancedSettingsPage
     #endregion
 
     private TableLayoutPanel tlpnlMain;
-    private Label lblPullFfOnly;
+    private Label lblPullFF;
     private Label lblPullRebase;
     private Label lblFetchPrune;
     private Label lblMergeAutoStash;

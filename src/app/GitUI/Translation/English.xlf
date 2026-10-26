@@ -8103,8 +8103,8 @@ Context menu for additional operations</source>
         <source>Automatically stash before doing a merge</source>
         <target />
       </trans-unit>
-      <trans-unit id="lblPullFfOnly.Text">
-        <source>Only allow fast-forward when pulling</source>
+      <trans-unit id="lblPullFF.Text">
+        <source>Fast-forward behavior when pulling</source>
         <target />
       </trans-unit>
       <trans-unit id="lblPullRebase.Text">
