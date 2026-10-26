@@ -1,0 +1,17 @@
+Default application for “text/plain”: gitextensions-portal-recorder.desktop
+Registered applications:
+	gitextensions-portal-recorder.desktop
+	vim.desktop
+Recommended applications:
+	gitextensions-portal-recorder.desktop
+	vim.desktop
+Default application for “inode/directory”: gitextensions-portal-recorder.desktop
+Registered applications:
+	gitextensions-portal-recorder.desktop
+Recommended applications:
+	gitextensions-portal-recorder.desktop
+Default application for “x-scheme-handler/https”: gitextensions-portal-recorder.desktop
+Registered applications:
+	gitextensions-portal-recorder.desktop
+Recommended applications:
+	gitextensions-portal-recorder.desktop

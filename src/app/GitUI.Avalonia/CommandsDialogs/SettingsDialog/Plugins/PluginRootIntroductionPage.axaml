@@ -1,0 +1,14 @@
+<settings:SettingsPageBase xmlns="https://github.com/avaloniaui"
+                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                           xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                           x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.PluginRootIntroductionPage"
+                           Text="Plugins Settings">
+  <TextBlock x:Name="label1"
+             Width="284"
+             Height="132"
+             Margin="12,13,0,0"
+             TextWrapping="Wrap"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Top"
+             Text="Select one of the subnodes to view or edit the settings of a Git Extensions Plugin." />
+</settings:SettingsPageBase>

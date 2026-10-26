@@ -36,13 +36,13 @@ public class LocalRepositoryManagerTests
     [Test]
     public async Task AddAsMostRecentAsync_should_add_new_path_as_top_entry()
     {
-        const string repoToAdd = "path to add\\";
+        string repoToAdd = $"path to add{Path.DirectorySeparatorChar}";
         List<Repository> history =
         [
-            new Repository("path1\\"),
-            new Repository("path3\\"),
-            new Repository("path4\\"),
-            new Repository("path5\\"),
+            new Repository($"path1{Path.DirectorySeparatorChar}"),
+            new Repository($"path3{Path.DirectorySeparatorChar}"),
+            new Repository($"path4{Path.DirectorySeparatorChar}"),
+            new Repository($"path5{Path.DirectorySeparatorChar}"),
         ];
         _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 
@@ -55,14 +55,14 @@ public class LocalRepositoryManagerTests
     [Test]
     public async Task AddAsMostRecentAsync_should_move_existing_path_as_top_entry()
     {
-        const string repoToAdd = "path to add\\";
+        string repoToAdd = $"path to add{Path.DirectorySeparatorChar}";
         List<Repository> history =
         [
-            new Repository("path1\\"),
-            new Repository("path3\\"),
-            new Repository("path4\\"),
+            new Repository($"path1{Path.DirectorySeparatorChar}"),
+            new Repository($"path3{Path.DirectorySeparatorChar}"),
+            new Repository($"path4{Path.DirectorySeparatorChar}"),
             new Repository(repoToAdd),
-            new Repository("path5\\"),
+            new Repository($"path5{Path.DirectorySeparatorChar}"),
         ];
         _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 
@@ -75,15 +75,15 @@ public class LocalRepositoryManagerTests
     [Test]
     public async Task AddAsMostRecentAsync_should_move_only_first_existing_path_as_top_entry()
     {
-        const string repoToAdd = "path to add\\";
+        string repoToAdd = $"path to add{Path.DirectorySeparatorChar}";
         List<Repository> history =
         [
-            new Repository("path1\\"),
-            new Repository("path3\\"),
+            new Repository($"path1{Path.DirectorySeparatorChar}"),
+            new Repository($"path3{Path.DirectorySeparatorChar}"),
             new Repository(repoToAdd),
-            new Repository("path4\\"),
+            new Repository($"path4{Path.DirectorySeparatorChar}"),
             new Repository(repoToAdd),
-            new Repository("path5\\"),
+            new Repository($"path5{Path.DirectorySeparatorChar}"),
         ];
         _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 
@@ -97,14 +97,14 @@ public class LocalRepositoryManagerTests
     [Test]
     public async Task AddAsMostRecentAsync_should_not_move_if_path_already_as_top_entry()
     {
-        const string repoToAdd = "path to add\\";
+        string repoToAdd = $"path to add{Path.DirectorySeparatorChar}";
         List<Repository> history =
         [
             new Repository(repoToAdd),
-            new Repository("path1\\"),
-            new Repository("path3\\"),
-            new Repository("path4\\"),
-            new Repository("path5\\"),
+            new Repository($"path1{Path.DirectorySeparatorChar}"),
+            new Repository($"path3{Path.DirectorySeparatorChar}"),
+            new Repository($"path4{Path.DirectorySeparatorChar}"),
+            new Repository($"path5{Path.DirectorySeparatorChar}"),
         ];
         _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 

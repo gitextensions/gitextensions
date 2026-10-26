@@ -2,6 +2,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.Versioning;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Git;
@@ -257,6 +259,12 @@ public static partial class AppSettings
 
     private static bool ReadBoolRegKey(string key, bool defaultValue)
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            // Non-Windows has no registry; store these settings in the settings file like portable installations do.
+            return GetBool(key, defaultValue);
+        }
+
         object? obj = VersionIndependentRegKey.GetValue(key);
         if (obj is not string)
         {
@@ -273,17 +281,37 @@ public static partial class AppSettings
 
     private static void WriteBoolRegKey(string key, bool value)
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            // Non-Windows has no registry; store these settings in the settings file like portable installations do.
+            SetBool(key, value);
+            return;
+        }
+
         VersionIndependentRegKey.SetValue(key, value ? "true" : "false");
     }
 
     [return: NotNullIfNotNull(nameof(defaultValue))]
     private static string? ReadStringRegValue(string key, string? defaultValue)
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            // Non-Windows has no registry; store these settings in the settings file like portable installations do.
+            return GetString(key, defaultValue);
+        }
+
         return (string?)VersionIndependentRegKey.GetValue(key, defaultValue);
     }
 
     private static void WriteStringRegValue(string key, string value)
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            // Non-Windows has no registry; store these settings in the settings file like portable installations do.
+            SetString(key, value);
+            return;
+        }
+
         VersionIndependentRegKey.SetValue(key, value);
     }
 
@@ -1610,8 +1638,17 @@ public static partial class AppSettings
         {
             SettingsContainer.LockedAction(() =>
             {
-                // prepend "Global\" in order to be safe in preparation for non-Windows OS, too
-                _globalMutex ??= new Mutex(initiallyOwned: false, name: @$"Global\Mutex{SettingsFilePath.ToPosixPath()}");
+                // Preserve the legacy Windows name; Unix mutex names must be valid file names.
+                _globalMutex ??= OperatingSystem.IsWindows()
+                    ? new Mutex(initiallyOwned: false, name: @$"Global\Mutex{SettingsFilePath.ToPosixPath()}")
+                    : new Mutex(
+                        initiallyOwned: false,
+                        name: $"GitExtensions.Settings.{Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(Path.GetFullPath(SettingsFilePath))))}",
+                        new NamedWaitHandleOptions
+                        {
+                            CurrentUserOnly = true,
+                            CurrentSessionOnly = false
+                        });
 
                 try
                 {
@@ -1839,8 +1876,9 @@ public static partial class AppSettings
         {
             bool isExpectedExe =
 
-                // The app's entry point is GitExtensions.exe
+                // The app entry points are GitExtensions.exe and its side-by-side Avalonia port.
                 _applicationExecutablePath.EndsWith("GitExtensions.exe", StringComparison.InvariantCultureIgnoreCase) ||
+                _applicationExecutablePath.EndsWith("GitExtensions.Avalonia.exe", StringComparison.InvariantCultureIgnoreCase) ||
 
                 // Tests are run by testhost.exe
                 _applicationExecutablePath.EndsWith("testhost.exe", StringComparison.InvariantCultureIgnoreCase) ||
@@ -1852,7 +1890,7 @@ public static partial class AppSettings
                 // Translations
                 _applicationExecutablePath.EndsWith("TranslationApp.exe", StringComparison.InvariantCultureIgnoreCase);
 
-            DebugHelpers.Assert(isExpectedExe, $"{_applicationExecutablePath} must point to GitExtensions.exe");
+            DebugHelpers.Assert(isExpectedExe, $"{_applicationExecutablePath} must point to a Git Extensions executable");
         }
 #endif
 
@@ -1866,6 +1904,7 @@ public static partial class AppSettings
 
     private static RegistryKey? _versionIndependentRegKey;
 
+    [SupportedOSPlatform("windows")]
     private static RegistryKey VersionIndependentRegKey
     {
         get
@@ -2064,6 +2103,7 @@ public static partial class AppSettings
 
     public static TextSetting UninformativeRepoNameRegex { get; } = new(DetailedSettingsPath, nameof(UninformativeRepoNameRegex), defaultValue: "app|(repo(sitory)?)");
 
+    [SupportedOSPlatform("windows")]
     private static IEnumerable<(string name, string? value)> GetSettingsFromRegistry()
     {
         RegistryKey? oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
@@ -2086,6 +2126,12 @@ public static partial class AppSettings
 
     private static void ImportFromRegistry()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            // Nothing to import: the legacy settings being migrated only ever existed in the Windows registry.
+            return;
+        }
+
         SettingsContainer.SettingsCache.Import(GetSettingsFromRegistry());
     }
 

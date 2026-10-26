@@ -1,0 +1,94 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:cmd="using:GitUI.CommandsDialogs"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormAbout"
+        Width="601" Height="318"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title=" ">
+  <Grid ColumnDefinitions="157,*">
+    <StackPanel x:Name="flowLayoutPanel1"
+                Grid.Column="0"
+                Width="157"
+                Orientation="Vertical">
+      <Image x:Name="logoPictureBox"
+             Width="128" Height="128"
+             Margin="12"
+             HorizontalAlignment="Left"
+             Stretch="Uniform"
+             Source="{x:Static properties:Images.GitExtensionsLogo256}" />
+      <TextBlock x:Name="label2"
+                 Height="30"
+                 MaxWidth="133"
+                 Margin="12,4"
+                 TextWrapping="Wrap"
+                 TextAlignment="Center"
+                 Text="Git Extensions is open source. Get involved!" />
+      <Border x:Name="pictureDonate"
+              Width="145" Height="32"
+              Margin="6,12,6,4"
+              Cursor="Hand">
+        <Image Stretch="Uniform"
+               StretchDirection="DownOnly"
+               Source="{x:Static properties:Images.DonateBadge}" />
+      </Border>
+    </StackPanel>
+
+    <Border x:Name="panel1"
+            Grid.Column="1">
+      <Border Padding="12,24,12,12">
+        <Grid RowDefinitions="19,13,8,15,13,13,139,8,*">
+          <HyperlinkButton x:Name="_NO_TRANSLATE_labelProductName"
+                           Grid.Row="0"
+                           HorizontalAlignment="Stretch"
+                           HorizontalContentAlignment="Center"
+                           Padding="0"
+                           FontFamily="Tahoma"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           Content="Git Extensions" />
+          <TextBlock x:Name="_NO_TRANSLATE_labelProductDescription"
+                     Grid.Row="1"
+                     FontFamily="Tahoma"
+                     FontSize="11"
+                     FontWeight="Bold"
+                     VerticalAlignment="Center"
+                     TextAlignment="Center"
+                     HorizontalAlignment="Stretch"
+                     Text="Visual Studio and Shell Explorer Extensions for Git" />
+          <TextBlock x:Name="_NO_TRANSLATE_labelCopyright"
+                     Grid.Row="3"
+                     VerticalAlignment="Center"
+                     Text="Proudly presented by Git Extensions team" />
+          <HyperlinkButton x:Name="_NO_TRANSLATE_ThanksTo"
+                           Grid.Row="4"
+                           HorizontalAlignment="Stretch"
+                           HorizontalContentAlignment="Left"
+                           Padding="0"
+                           FontFamily="Tahoma"
+                           FontSize="11" />
+          <HyperlinkButton x:Name="linkLabelIcons"
+                           Grid.Row="5"
+                           Width="213"
+                           HorizontalAlignment="Left"
+                           Padding="0"
+                           FontFamily="Tahoma"
+                           FontSize="11"
+                           Content="Some icons by Yusuke Kamiyamane (CCA3)" />
+          <cmd:EnvironmentInfo x:Name="environmentInfo"
+                               Grid.Row="6"
+                               Margin="0"
+                               Padding="0,12,0,4" />
+          <TextBlock x:Name="label1"
+                     Grid.Row="8"
+                     TextWrapping="Wrap"
+                     Foreground="{DynamicResource GitExtensionsKnownColorGrayTextBrush}"
+                     Text="This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE." />
+        </Grid>
+      </Border>
+    </Border>
+  </Grid>
+</Window>

@@ -1,0 +1,203 @@
+<settings:DistributedSettingsPage xmlns="https://github.com/avaloniaui"
+                                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                  xmlns:compat="using:GitUI.Compat"
+                                  xmlns:properties="using:GitUI.Properties"
+                                  xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                  xmlns:usercontrols="using:GitUI.UserControls"
+                                  x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.RevisionLinksSettingsPage"
+                                  MinWidth="620"
+                                  MinHeight="420"
+                                  Text="Revision links">
+  <Grid x:Name="splitContainer1"
+        Margin="4"
+        ColumnDefinitions="192,6,*">
+    <Grid Grid.Column="0"
+          RowDefinitions="Auto,*,25">
+      <TextBlock x:Name="CategoriesLabel"
+                 Margin="2,0,2,4"
+                 Text="Categories" />
+      <ListBox x:Name="_NO_TRANSLATE_Categories"
+               Classes="gitextensions-stretch-items"
+               Grid.Row="1" />
+      <StackPanel x:Name="toolStripManageCategories"
+                  Grid.Row="2"
+                  Height="25"
+                  Margin="0,1,0,0"
+                  Orientation="Horizontal"
+                  Spacing="1">
+        <compat:IconSplitButton x:Name="Add"
+                                Classes="gitextensions-toolbar-button"
+                                Content="Add"
+                                Icon="{x:Static properties:Images.FileStatusAdded}">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout />
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
+        <Border Classes="gitextensions-toolbar-separator" />
+        <compat:IconButton x:Name="Remove"
+                           Classes="gitextensions-toolbar-button"
+                           Content="Remove"
+                           Icon="{x:Static properties:Images.FileStatusRemoved}" />
+      </StackPanel>
+    </Grid>
+
+    <GridSplitter Grid.Column="1"
+                  Width="6"
+                  ResizeDirection="Columns" />
+
+    <Grid x:Name="_NO_TRANSLATE_DetailPanel"
+          Grid.Column="2"
+          Margin="6,0,0,0"
+          RowDefinitions="Auto,Auto,*">
+      <Grid x:Name="flowLayoutPanel2"
+            ColumnDefinitions="Auto,272,Auto,*,Auto"
+            ColumnSpacing="6">
+        <TextBlock x:Name="label1"
+                   VerticalAlignment="Center"
+                   Text="Name" />
+        <TextBox x:Name="_NO_TRANSLATE_Name"
+                 Grid.Column="1" />
+        <CheckBox x:Name="EnabledChx"
+                  Grid.Column="2"
+                  VerticalAlignment="Center"
+                  Content="Enabled" />
+        <usercontrols:GotoUserManualControl x:Name="gotoUserManualControl1"
+                                            Grid.Column="4"
+                                            ManualSectionAnchorName="revision-links"
+                                            ManualSectionSubfolder="settings" />
+      </Grid>
+
+      <StackPanel x:Name="detailPanel"
+                  Grid.Row="1"
+                  Margin="0,4,0,4"
+                  Spacing="4">
+        <GroupBox x:Name="remoteGrp"
+                  Header="Remote data">
+          <Grid x:Name="tableLayoutPanel2"
+                Margin="4"
+                ColumnDefinitions="Auto,*"
+                RowDefinitions="Auto,Auto,Auto"
+                ColumnSpacing="6"
+                RowSpacing="4">
+            <TextBlock x:Name="lblUseRemotes"
+                       VerticalAlignment="Center"
+                       Text="Use remotes" />
+            <StackPanel x:Name="flowLayoutPanel4"
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        Spacing="6">
+              <TextBox x:Name="_NO_TRANSLATE_UseRemotes"
+                       Width="218" />
+              <CheckBox x:Name="chkOnlyFirstRemote"
+                        VerticalAlignment="Center"
+                        Content="Only use the first match" />
+            </StackPanel>
+            <TextBlock x:Name="lblRemoteSearchIn"
+                       Grid.Row="1"
+                       VerticalAlignment="Center"
+                       Text="Search in" />
+            <StackPanel x:Name="flowLayoutPanel1"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        Spacing="6">
+              <CheckBox x:Name="chxURL" Content="URL" />
+              <CheckBox x:Name="chxPushURL" Content="Push URL" />
+            </StackPanel>
+            <TextBlock x:Name="lblSearchRemotePattern"
+                       Grid.Row="2"
+                       VerticalAlignment="Center"
+                       Text="Search pattern" />
+            <TextBox x:Name="_NO_TRANSLATE_RemotePatern"
+                     Grid.Row="2"
+                     Grid.Column="1" />
+          </Grid>
+        </GroupBox>
+
+        <GroupBox x:Name="revisionDataGrp"
+                  Header="Revision data">
+          <Grid x:Name="tableLayoutPanel4"
+                Margin="4"
+                ColumnDefinitions="Auto,*"
+                RowDefinitions="Auto,Auto,Auto"
+                ColumnSpacing="6"
+                RowSpacing="4">
+            <TextBlock x:Name="label5"
+                       VerticalAlignment="Center"
+                       Text="Search in" />
+            <StackPanel x:Name="flowLayoutPanel3"
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        Spacing="6">
+              <CheckBox x:Name="MessageChx" Content="Message" />
+              <CheckBox x:Name="LocalBranchChx" Content="Local branch name" />
+              <CheckBox x:Name="RemoteBranchChx" Content="Remote branch name" />
+            </StackPanel>
+            <TextBlock x:Name="label2"
+                       Grid.Row="1"
+                       VerticalAlignment="Center"
+                       Text="Search pattern" />
+            <TextBox x:Name="_NO_TRANSLATE_SearchPatternEdit"
+                     Grid.Row="1"
+                     Grid.Column="1" />
+            <TextBlock x:Name="nestedPatternLab"
+                       Grid.Row="2"
+                       VerticalAlignment="Center"
+                       Text="Nested pattern" />
+            <TextBox x:Name="_NO_TRANSLATE_NestedPatternEdit"
+                     Grid.Row="2"
+                     Grid.Column="1" />
+          </Grid>
+        </GroupBox>
+      </StackPanel>
+
+      <Grid Grid.Row="2"
+            RowDefinitions="Auto,Auto,*,25">
+        <TextBlock x:Name="label6"
+                   Margin="2,0,2,3"
+                   Text="Links" />
+        <Grid Grid.Row="1"
+              ColumnDefinitions="150,*">
+          <Border x:Name="CaptionCol"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock Text="Caption" FontWeight="SemiBold" />
+          </Border>
+          <Border x:Name="URICol"
+                  Grid.Column="1"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,0,1">
+            <TextBlock Text="URI" FontWeight="SemiBold" />
+          </Border>
+        </Grid>
+        <ListBox x:Name="LinksGrid"
+                 Classes="gitextensions-stretch-items"
+                 Grid.Row="2">
+          <ListBox.Styles>
+            <Style Selector="ListBoxItem">
+              <Setter Property="Padding" Value="2" />
+            </Style>
+          </ListBox.Styles>
+        </ListBox>
+        <StackPanel Grid.Row="3"
+                    Height="25"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    Spacing="1">
+          <Button x:Name="_NO_TRANSLATE_AddLink"
+                  Classes="gitextensions-toolbar-button"
+                  MinWidth="25"
+                  Padding="4,0"
+                  Content="+" />
+          <Button x:Name="_NO_TRANSLATE_RemoveLink"
+                  Classes="gitextensions-toolbar-button"
+                  MinWidth="25"
+                  Padding="4,0"
+                  Content="−" />
+        </StackPanel>
+      </Grid>
+    </Grid>
+  </Grid>
+</settings:DistributedSettingsPage>

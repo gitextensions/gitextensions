@@ -1,0 +1,60 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:compat="using:GitUI.Compat"
+                                 xmlns:properties="using:GitUI.Properties"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.ConsoleStyleSettingsPage"
+                                 Text="Console style">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="8">
+      <GroupBox x:Name="groupBoxConsoleSettings"
+                Header="Console settings (restart required)">
+        <Grid Margin="8,4,8,8"
+              ColumnDefinitions="Auto,262,Auto,*"
+              RowDefinitions="Auto,Auto,Auto"
+              RowSpacing="5">
+          <TextBlock x:Name="lblConsoleEmulator"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Console emulator" />
+          <ComboBox x:Name="cboConsoleEmulator"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch" />
+
+          <TextBlock x:Name="label1"
+                     Grid.Row="1"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Console style" />
+          <ComboBox x:Name="_NO_TRANSLATE_cboStyle"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch" />
+
+          <TextBlock x:Name="lblFontName"
+                     Grid.Row="2"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Font" />
+          <Button x:Name="consoleFontChangeButton"
+                  Grid.Row="2"
+                  Grid.Column="1"
+                  HorizontalAlignment="Stretch"
+                  Content="font name" />
+          <compat:IconButton x:Name="consoleFontResetButton"
+                             Grid.Row="2"
+                             Grid.Column="2"
+                             Width="28"
+                             Height="28"
+                             Margin="4,0,0,0"
+                             Classes="gitextensions-icon-only"
+                             Icon="{x:Static properties:Images.ResetWorkingDirChanges}"
+                             ToolTip.Tip="Reset to default"
+                             compat:TranslationCompat.ToolTipPropertyName="consoleFontToolTip"
+                             IsVisible="False" />
+        </Grid>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>

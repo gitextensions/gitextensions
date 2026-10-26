@@ -1,0 +1,65 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.AppearanceFontsSettingsPage"
+                                 Text="Fonts">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="8">
+      <GroupBox x:Name="gbFonts" Header="Fonts (restart required)">
+        <Grid x:Name="tableLayoutPanel1"
+              Margin="8,4,8,8"
+              ColumnDefinitions="Auto,220,*"
+              RowDefinitions="Auto,Auto,Auto,Auto"
+              RowSpacing="5">
+          <TextBlock x:Name="label56"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Code font" />
+          <Button x:Name="diffFontChangeButton"
+                  Grid.Column="1"
+                  HorizontalAlignment="Stretch"
+                  Content="font name" />
+          <CheckBox x:Name="ShowEolMarkerAsGlyph"
+                    Grid.Column="2"
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    Content="Show end-of-line markers as glyph instead of &quot;\r\n&quot; etc." />
+
+          <TextBlock x:Name="label26"
+                     Grid.Row="1"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Application font" />
+          <Button x:Name="applicationFontChangeButton"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  HorizontalAlignment="Stretch"
+                  Content="font name" />
+
+          <TextBlock x:Name="label34"
+                     Grid.Row="2"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Commit font" />
+          <Button x:Name="commitFontChangeButton"
+                  Grid.Row="2"
+                  Grid.Column="1"
+                  HorizontalAlignment="Stretch"
+                  Content="font name" />
+
+          <TextBlock x:Name="label36"
+                     Grid.Row="3"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Monospace font" />
+          <Button x:Name="monospaceFontChangeButton"
+                  Grid.Row="3"
+                  Grid.Column="1"
+                  HorizontalAlignment="Stretch"
+                  Content="font name" />
+        </Grid>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>

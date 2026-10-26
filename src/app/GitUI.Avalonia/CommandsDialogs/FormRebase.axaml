@@ -1,0 +1,121 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="using:GitUI"
+        xmlns:help="using:GitUI.Help"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormRebase"
+        Width="1034"
+        Height="461"
+        MinWidth="1034"
+        MinHeight="461"
+        WindowStartupLocation="CenterOwner"
+        Title="Rebase">
+  <Grid RowDefinitions="420,41">
+    <wf:Panel x:Name="MainPanel" Padding="9" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
+      <wf:TableLayoutPanel x:Name="MainLayout" ColumnDefinitions="295,*">
+        <help:HelpImageDisplayUserControl x:Name="PanelLeftImage"
+                                          Margin="3"
+                                          Width="289"
+                                          Height="418"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Top"
+                                          IsExpanded="True"
+                                          UniqueIsExpandedSettingsId="Rebase" />
+        <wf:TableLayoutPanel x:Name="PanelMiddle"
+                             Grid.Column="1"
+                             Margin="3"
+                             RowDefinitions="15,25,35,Auto,Auto,8,15,*,Auto">
+          <TextBlock x:Name="lblRebase" Margin="3,0" Height="15" Text="Rebase current branch on top of another branch" />
+          <wf:FlowLayoutPanel x:Name="PanelCurrentBranch" Grid.Row="1" Height="25" Padding="0,5,0,5">
+            <StackPanel Orientation="Horizontal" Height="15">
+              <TextBlock x:Name="lblCurrent" Margin="3,0,0,0" Width="90" Height="15" Text="Current branch:" />
+              <TextBlock x:Name="Currentbranch" Margin="6,0,0,0" Width="34" Height="15" />
+            </StackPanel>
+          </wf:FlowLayoutPanel>
+          <wf:FlowLayoutPanel x:Name="rebasePanel" Grid.Row="2" Margin="3" Height="29">
+            <StackPanel Orientation="Horizontal" Height="29">
+              <Label x:Name="label2" Margin="3,7,3,7" Width="61" Height="15" Padding="0" Content="_Rebase on" Target="{Binding #cboBranches}" />
+              <ComboBox x:Name="cboBranches" Margin="3" Width="270" Height="23" IsEditable="True" />
+              <HyperlinkButton x:Name="llblShowOptions" Margin="3,7" Width="79" Height="15" Padding="0" Content="Show options" />
+            </StackPanel>
+          </wf:FlowLayoutPanel>
+          <wf:FlowLayoutPanel x:Name="flpnlOptionsPanelTop" Grid.Row="3" Margin="3" Height="50" IsVisible="False">
+            <Canvas Height="50">
+              <CheckBox x:Name="chkInteractive" Canvas.Left="3" Canvas.Top="3" Width="121" Height="19" Content="_Interactive Rebase" />
+              <CheckBox x:Name="chkPreserveMerges" Canvas.Left="130" Canvas.Top="3" Width="112" Height="19" Content="_Preserve Merges" />
+              <CheckBox x:Name="chkAutosquash" Canvas.Left="248" Canvas.Top="3" Width="89" Height="19" Content="Autos_quash" IsEnabled="False" />
+              <CheckBox x:Name="chkStash" Canvas.Left="343" Canvas.Top="3" Width="82" Height="19" Content="A_uto stash" IsEnabled="False" />
+              <CheckBox x:Name="chkIgnoreDate"
+                        compat:TranslationCompat.ToolTipPropertyName="toolTip1"
+                        Canvas.Left="431" Canvas.Top="3" Width="86" Height="19" Content="Ignore _date" />
+              <CheckBox x:Name="chkCommitterDateIsAuthorDate"
+                        compat:TranslationCompat.ToolTipPropertyName="toolTip1"
+                        Canvas.Left="3" Canvas.Top="28" Width="185" Height="19" Content="Co_mmitter date is author date" />
+              <CheckBox x:Name="checkBoxUpdateRefs" Canvas.Left="194" Canvas.Top="28" Width="146" Height="19" Content="Update dependent r_efs" />
+            </Canvas>
+          </wf:FlowLayoutPanel>
+          <wf:FlowLayoutPanel x:Name="flpnlOptionsPanelBottom" Grid.Row="4" Margin="3" Height="30" IsVisible="False">
+            <Canvas Height="30">
+              <CheckBox x:Name="chkSpecificRange" Canvas.Left="3" Canvas.Top="5" Width="100" Height="19" Content="Specific ra_nge" />
+              <Label x:Name="lblRangeFrom" Canvas.Left="109" Canvas.Top="7" Width="66" Height="15" Padding="0" Content="_From (exc.)" Target="{Binding #txtFrom}" />
+              <TextBox x:Name="txtFrom" Canvas.Left="181" Canvas.Top="3" Width="80" Height="23" IsEnabled="False" />
+              <compat:IconButton x:Name="btnChooseFromRevision"
+                                 Classes="gitextensions-icon-only"
+                                 Canvas.Left="267" Canvas.Top="3" Width="25" Height="24"
+                                 Icon="{x:Static properties:Images.SelectRevision}"
+                                 IsEnabled="False" />
+              <Label x:Name="lblRangeTo" Canvas.Left="298" Canvas.Top="7" Width="20" Height="15" Padding="0" Content="_To" Target="{Binding #cboTo}" />
+              <ComboBox x:Name="cboTo" Canvas.Left="324" Canvas.Top="3" Width="184" Height="23" IsEditable="True" IsEnabled="False" />
+            </Canvas>
+          </wf:FlowLayoutPanel>
+          <TextBlock x:Name="lblCommitsToReapply" Grid.Row="6" Margin="3,0" Height="15" Text="Commits to re-apply:" />
+          <gitui:PatchGrid x:Name="PatchGrid" Grid.Row="7" Margin="3,2" IsTabStop="True" />
+          <wf:TableLayoutPanel x:Name="tlpnlSecondaryControls" Grid.Row="8" Margin="3" Height="6" ColumnDefinitions="*,*">
+            <wf:FlowLayoutPanel x:Name="flowLayoutPanel1" Margin="3" Height="1" VerticalAlignment="Top">
+              <StackPanel Orientation="Horizontal">
+                <compat:IconButton x:Name="btnAddFiles" Classes="gitextensions-dialog-action" Margin="3" Width="79" Height="25" Icon="{x:Static properties:Images.BulletAdd}" Content="_Add files" IsVisible="False" />
+                <compat:IconButton x:Name="btnCommit" Classes="gitextensions-dialog-action" Margin="3" Width="86" Height="25" Icon="{x:Static properties:Images.RepoStateStaged}" Content="C_ommit..." IsVisible="False" />
+                <compat:IconButton x:Name="btnEditTodo" Classes="gitextensions-dialog-action" Margin="3" Width="90" Height="25" Icon="{x:Static properties:Images.EditFile}" Content="_Edit todo..." IsVisible="False" />
+              </StackPanel>
+            </wf:FlowLayoutPanel>
+            <wf:FlowLayoutPanel x:Name="flowLayoutPanel2" Grid.Column="1" Margin="3" Height="1" VerticalAlignment="Top">
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="btnSkip" Classes="gitextensions-dialog-action" Margin="3" Width="183" Height="25" Content="S_kip currently applying commit" IsVisible="False" />
+              </StackPanel>
+            </wf:FlowLayoutPanel>
+          </wf:TableLayoutPanel>
+        </wf:TableLayoutPanel>
+      </wf:TableLayoutPanel>
+    </wf:Panel>
+    <wf:FlowLayoutPanel x:Name="ControlsPanel" Grid.Row="1">
+      <Grid Width="1034" Height="41" Background="{DynamicResource GitExtensionsDialogControlsBackgroundBrush}">
+        <compat:IconButton x:Name="btnRebase"
+                           Classes="gitextensions-dialog-action"
+                           Margin="919,8,0,0" Width="100" Height="25"
+                           HorizontalAlignment="Left" VerticalAlignment="Top"
+                           Icon="{x:Static properties:Images.Rebase}"
+                           Content="Rebase"
+                           IsDefault="True" />
+        <wf:Panel x:Name="MergeToolPanel" Margin="1023,6,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+          <Button x:Name="btnSolveConflicts" Classes="gitextensions-dialog-action" Width="100" Height="25" Content="_Solve conflicts" IsVisible="False" />
+        </wf:Panel>
+        <Button x:Name="btnContinueRebase" Classes="gitextensions-dialog-action" Margin="837,8,0,0" Width="103" Height="25" HorizontalAlignment="Left" VerticalAlignment="Top" Content="_Continue rebase" IsVisible="False" />
+        <Button x:Name="btnAbort" Classes="gitextensions-dialog-action" Margin="946,8,0,0" Width="75" Height="25" HorizontalAlignment="Left" VerticalAlignment="Top" Content="A_bort" IsVisible="False" />
+      </Grid>
+    </wf:FlowLayoutPanel>
+    <Button x:Name="btnSolveMergeconflicts"
+            Classes="gitextensions-dialog-action"
+            Grid.RowSpan="2"
+            Margin="12,6,0,8"
+            Width="214"
+            Height="27"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Content="There are unresolved merge conflicts&#xA;"
+            Background="{DynamicResource GitExtensionsMergeConflictsBackgroundBrush}"
+            Foreground="{DynamicResource GitExtensionsMergeConflictsForegroundBrush}"
+            IsVisible="False" />
+  </Grid>
+</Window>
