@@ -9369,8 +9369,8 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Show remote &amp;branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="ShowSessionCheckpoints.Text">
-        <source>Show session checkpoints</source>
+      <trans-unit id="ShowSessionRefs.Text">
+        <source>Show agentic sessions</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowStashes.Text">

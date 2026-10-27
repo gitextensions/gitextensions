@@ -333,8 +333,8 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
             },
             new MenuCommand
             {
-                Name = "ShowSessionCheckpoints",
-                Text = "Show session checkpoints",
+                Name = "ShowSessionRefs",
+                Text = "Show agentic sessions",
                 ExecuteAction = () => _revisionGrid.ToggleShowSessionRefs(),
                 IsCheckedFunc = () => AppSettings.ShowSessionRefs
             },
