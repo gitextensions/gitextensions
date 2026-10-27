@@ -3627,7 +3627,7 @@ public sealed partial class GitModule : IGitModule
         OpenWithDifftool(filename: null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: "--dir-diff", customTool: customTool);
     }
 
-    private bool IsWslRepo => PathUtil.IsWslPath(WorkingDir);
+    private bool IsWslRepo => !string.IsNullOrEmpty(_executor.WslDistro);
 
     private IGitCommandRunner GetToolCommandRunner(string? customTool)
     {

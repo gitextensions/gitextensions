@@ -22,13 +22,13 @@ public static partial class WslUtil
 
         // Replace "D:" with "/mnt/d"
         int colonIndex = command.IndexOf(':');
-        if (colonIndex == (command[0] == '"' ? 2 : 1))
+        if (colonIndex == (command[0] is ('"' or '\'') ? 2 : 1))
         {
             int windowsDriveIndex = colonIndex - 1;
             command = $"{command[..windowsDriveIndex]}/mnt/{char.ToLower(command[windowsDriveIndex])}{command[(colonIndex + 1)..]}";
         }
 
-        return DiffMergePlaceholderRegex.Replace(command, @"$(wslpath -aw $&)").ToPosixPath()!;
+        return DiffMergePlaceholderRegex.Replace(command, @"$(wslpath -aw ""$&"")").ToPosixPath()!;
     }
 
     /// <summary>
