@@ -972,15 +972,20 @@ public sealed partial class GitModule : IGitModule
 
         // Use Windows Git if custom tool is selected as the list is native to the application.
         bool isWindowsGit = !string.IsNullOrWhiteSpace(customTool);
-        string gui = (isWindowsGit ? Git.GitVersion.Current : GitVersion).SupportGuiMergeTool ? "--gui" : string.Empty;
+        bool useWslGit = isWindowsGit && IsWslRepo;
+        string gui = (isWindowsGit && !useWslGit ? Git.GitVersion.Current : GitVersion).SupportGuiMergeTool ? "--gui" : string.Empty;
         GitArgumentBuilder args = new("mergetool")
         {
             { string.IsNullOrWhiteSpace(customTool), gui, $"--tool={customTool}" },
             "--",
             fileName.ToPosixPath().QuoteNE()
         };
+        if (useWslGit)
+        {
+            AddWslToolCommand(args, "mergetool", customTool!);
+        }
 
-        using IProcess process = (isWindowsGit ? _executor.GitWindowsExecutable : GitExecutable).Start(args, createWindow: true, throwOnErrorExit: false);
+        using IProcess process = (isWindowsGit && !useWslGit ? _executor.GitWindowsExecutable : GitExecutable).Start(args, createWindow: true, throwOnErrorExit: false);
         await process.WaitForExitAsync();
     }
 
@@ -3637,11 +3642,31 @@ public sealed partial class GitModule : IGitModule
         OpenWithDifftool(filename: null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: "--dir-diff", customTool: customTool);
     }
 
+    private bool IsWslRepo => !string.IsNullOrEmpty(_executor.WslDistro);
+
+    private IGitCommandRunner GetToolCommandRunner(string? customTool)
+    {
+        // Use Windows Git if custom tool is selected as the list is native to the application,
+        // except for WSL repos where the Windows tool command is adapted and run by WSL Git.
+        return string.IsNullOrWhiteSpace(customTool) || IsWslRepo ? GitCommandRunner : _executor.GitWindowsCommandRunner;
+    }
+
+    private void AddWslToolCommand(GitArgumentBuilder args, string toolType, string customTool)
+    {
+        // The Windows config is read on every call as the repo (and thus the need for adaptation) can change.
+        string key = $"{toolType[..^4]}tool.{customTool}.cmd";
+        GitArgumentBuilder getArgs = new("config") { "--get", key.Quote() };
+        ExecutionResult result = _executor.GitWindowsExecutable.Execute(getArgs, throwOnErrorExit: false);
+        string command = result.StandardOutput.Trim();
+        if (result.ExitedSuccessfully && command.Length > 0)
+        {
+            args.Add(new GitConfigItem(key, Utils.WslUtil.AdaptDiffMergeToolCommandToWsl(command).Quote()));
+        }
+    }
+
     public void OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
     {
-        // Use Windows Git if custom tool is selected as the list is native to the application.
-        (string.IsNullOrWhiteSpace(customTool) ? GitCommandRunner : _executor.GitWindowsCommandRunner)
-            .RunDetached(new GitArgumentBuilder("difftool")
+        GitArgumentBuilder args = new("difftool")
         {
             { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
             "--find-renames",
@@ -3649,7 +3674,13 @@ public sealed partial class GitModule : IGitModule
             "--no-prompt",
             extraDiffArguments,
             _revisionDiffProvider.Get(firstRevision, secondRevision, filename, oldFileName, isTracked)
-        });
+        };
+        if (!string.IsNullOrWhiteSpace(customTool) && IsWslRepo)
+        {
+            AddWslToolCommand(args, "difftool", customTool);
+        }
+
+        GetToolCommandRunner(customTool).RunDetached(args);
     }
 
     /// <summary>
@@ -3665,9 +3696,7 @@ public sealed partial class GitModule : IGitModule
             return;
         }
 
-        // Use Windows Git if custom tool is selected as the list is native to the application.
-        (string.IsNullOrWhiteSpace(customTool) ? GitCommandRunner : _executor.GitWindowsCommandRunner)
-            .RunDetached(new GitArgumentBuilder("difftool")
+        GitArgumentBuilder args = new("difftool")
         {
             { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
             "--find-renames",
@@ -3675,7 +3704,13 @@ public sealed partial class GitModule : IGitModule
             "--no-prompt",
             firstGitCommit.QuoteNE(),
             secondGitCommit.QuoteNE()
-        });
+        };
+        if (!string.IsNullOrWhiteSpace(customTool) && IsWslRepo)
+        {
+            AddWslToolCommand(args, "difftool", customTool);
+        }
+
+        GetToolCommandRunner(customTool).RunDetached(args);
     }
 
     public ObjectId RevParse(string? revisionExpression)
