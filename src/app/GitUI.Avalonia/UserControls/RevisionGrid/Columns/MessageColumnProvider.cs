@@ -1002,7 +1002,19 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 double allocation = child is Image && advance > 0
                     ? advance
                     : Math.Min(remainingWidth, advance);
-                child.Arrange(new Rect(offset, 0, allocation, finalSize.Height));
+                if (child is Image image)
+                {
+                    // DrawImage uses integer division; framework centering would
+                    // introduce half-DIP origins for odd-height cells.
+                    image.Arrange(new Rect(offset,
+                        ((int)finalSize.Height - (int)image.Height) / 2,
+                        allocation, image.Height));
+                }
+                else
+                {
+                    child.Arrange(new Rect(offset, 0, allocation, finalSize.Height));
+                }
+
                 offset += advance;
             }
 
@@ -1125,8 +1137,11 @@ internal sealed class MessageColumnProvider : ColumnProvider
             if (_marker.IsVisible)
             {
                 _marker.Clip = offset > 0 ? null : new RectangleGeometry(default(Rect));
-                _marker.Arrange(new Rect(0, 0,
-                    _marker.Width + _marker.Margin.Right, finalSize.Height));
+
+                // DrawImage centers the original bitmap with integer division,
+                // including truncation toward zero when the cell is shorter.
+                _marker.Arrange(new Rect(0, ((int)finalSize.Height - (int)_marker.Height) / 2,
+                    _marker.Width + _marker.Margin.Right, _marker.Height));
             }
 
             double subjectAdvance = GetTextAdvance(_subject);

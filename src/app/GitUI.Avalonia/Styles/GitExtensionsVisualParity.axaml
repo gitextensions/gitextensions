@@ -1981,10 +1981,8 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
-          <Border Height="1"
-                  Margin="28,0,1,0"
-                  VerticalAlignment="Center"
-                  Background="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
+          <compat:NativeMenuSeparatorChrome Margin="28,0,1,0"
+                                           DarkBrush="{DynamicResource GitExtensionsToolStripSeparatorDarkBrush}" />
         </Border>
       </ControlTemplate>
     </Setter>
@@ -1997,10 +1995,8 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
-          <Border Height="1"
-                  Margin="28,0,1,0"
-                  VerticalAlignment="Center"
-                  Background="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
+          <compat:NativeMenuSeparatorChrome Margin="28,0,1,0"
+                                           DarkBrush="{DynamicResource GitExtensionsToolStripSeparatorDarkBrush}" />
         </Border>
       </ControlTemplate>
     </Setter>
@@ -2310,6 +2306,11 @@
     <Setter Property="RenderTransform">
       <TranslateTransform X="5" />
     </Setter>
+  </Style>
+  <!-- Icon content is a logical child of MenuItem, not its template's presenter. -->
+  <Style Selector="MenuItem > Image">
+    <Setter Property="compat:NativeMenuImage.UseDisabledRendering" Value="True" />
+    <Setter Property="compat:NativeMenuImage.IsDarkMode" Value="{DynamicResource GitExtensionsNativeFlatButtonDarkMode}" />
   </Style>
   <Style Selector="MenuItem /template/ ContentPresenter#PART_HeaderPresenter">
     <Setter Property="RenderTransform">
