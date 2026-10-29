@@ -1072,40 +1072,16 @@ public class FilterInfoTests
         }
     }
 
-    public static IEnumerable<TestCaseData> FilterInfo_NotesStash
-    {
-        get
-        {
-            foreach (bool showNotes in new[] { false, true })
-            {
-                foreach (bool showStash in new[] { false, true })
-                {
-                    foreach (bool showSessionRefs in new[] { false, true })
-                    {
-                        foreach (bool showReflog in new[] { false, true })
-                        {
-                            foreach (bool showCurrentBranchOnly in new[] { false, true })
-                            {
-                                foreach (bool isValidCheckout in new[] { false, true })
-                                {
-                                    foreach (bool showFilteredBranches in new[] { false, true })
-                                    {
-                                        foreach (string? branchFilter in new[] { "branch1", "", null })
-                                        {
-                                            yield return new TestCaseData(showNotes, showStash, showSessionRefs, showReflog, showCurrentBranchOnly, isValidCheckout, showFilteredBranches, branchFilter);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    [TestCaseSource(nameof(FilterInfo_NotesStash))]
-    public void FilterInfo_GitNotes_Stashes(bool showGitNotes, bool showStash, bool showSessionRefs, bool showReflog, bool showCurrentBranchOnly, bool isValidCheckout, bool showFilteredBranches, string branchFilter)
+    [Test]
+    public void FilterInfo_GitNotes_Stashes(
+        [Values] bool showGitNotes,
+        [Values] bool showStash,
+        [Values] bool showSessionRefs,
+        [Values] bool showReflog,
+        [Values] bool showCurrentBranchOnly,
+        [Values] bool isValidCheckout,
+        [Values] bool showFilteredBranches,
+        [Values("branch1", "", null)] string? branchFilter)
     {
         bool originalShowGitNotes = AppSettings.ShowGitNotes;
         AppSettings.ShowGitNotes = showGitNotes;
@@ -1118,7 +1094,7 @@ public class FilterInfoTests
             ShowReflogReferences = showReflog,
             ShowCurrentBranchOnly = showCurrentBranchOnly,
             ByBranchFilter = showFilteredBranches,
-            BranchFilter = branchFilter
+            BranchFilter = branchFilter!
         };
         ObjectId objectId = isValidCheckout ? ObjectId.Random() : default;
         string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => objectId));
