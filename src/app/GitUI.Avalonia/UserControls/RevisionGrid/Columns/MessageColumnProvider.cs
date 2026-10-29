@@ -17,6 +17,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Extensions;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
+using GitUI.Compat;
 using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -110,7 +111,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
     {
         MessageCell panel = new(this)
         {
-            Margin = new Thickness(ColumnLeftMargin, 0, 2, 0),
             ClipToBounds = true,
         };
         panel.Classes.Add("revision-message-cell");
@@ -567,7 +567,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             Source = image,
             Width = 16,
             Height = 16,
-            Margin = new Thickness(0, 0, 5, 0),
+            Margin = new Thickness(0, 0, 4, 0),
             VerticalAlignment = VerticalAlignment.Center,
         };
         marker.Classes.Add("revision-bisect-marker");
@@ -584,6 +584,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 || commitTitle.StartsWith(CommitKind.Squash.GetPrefix(), StringComparison.Ordinal)
                 || commitTitle.StartsWith(CommitKind.Amend.GetPrefix(), StringComparison.Ordinal));
         panel.Subject.Text = revision.IsAutostash ? string.Empty : commitTitle;
+        panel.MessagePanel.HasCommitMessage = lines.Length > 0;
         panel.Body.Text = !revision.IsAutostash && lines.Length > 1 && _settings.ShowCommitBodyInRevisionGrid
             ? string.Concat(lines.Skip(1).Select(line => " " + line))
             : string.Empty;
@@ -995,7 +996,13 @@ internal sealed class MessageColumnProvider : ColumnProvider
             {
                 double remainingWidth = Math.Max(0, finalSize.Width - offset);
                 double advance = GetAdvance(child, remainingWidth);
-                child.Arrange(new Rect(offset, 0, Math.Min(remainingWidth, advance), finalSize.Height));
+
+                // DrawImage may fit its pixels while its trailing advance extends
+                // beyond the cell. Do not subtract that margin from a fitted image.
+                double allocation = child is Image && advance > 0
+                    ? advance
+                    : Math.Min(remainingWidth, advance);
+                child.Arrange(new Rect(offset, 0, allocation, finalSize.Height));
                 offset += advance;
             }
 
@@ -1011,12 +1018,23 @@ internal sealed class MessageColumnProvider : ColumnProvider
             {
                 RevisionGridRefRenderer.RefLabelControl label => GetRefAdvance(label, remainingWidth),
                 RevisionGridRefRenderer.NestledRefLabelPanel pair => GetPairAdvance(pair, remainingWidth),
+                Image image => GetImageAdvance(image, remainingWidth),
+                MessageTextPanel => remainingWidth,
                 _ => child.DesiredSize.Width,
             };
 
             // Artificial rows reserve the status-count span independently of the
             // capsule paint bounds. MinWidth would force that capsule past clipping.
             return Math.Max(advance, _minimumAdvances.GetValueOrDefault(child));
+        }
+
+        private static double GetImageAdvance(Image image, double remainingWidth)
+        {
+            // DrawImage requires a strict fit and leaves the original four-pixel
+            // advance only when the image was actually painted.
+            bool fits = image.Width < remainingWidth;
+            image.Clip = fits ? null : new RectangleGeometry(default(Rect));
+            return fits ? image.Width + image.Margin.Right : 0;
         }
 
         private static double GetRefAdvance(RevisionGridRefRenderer.RefLabelControl label, double remainingWidth)
@@ -1043,6 +1061,101 @@ internal sealed class MessageColumnProvider : ColumnProvider
         }
     }
 
+    private sealed class MessageTextPanel : Panel
+    {
+        private readonly Image _marker;
+        private readonly TextBlock _subject;
+        private readonly TextBlock _body;
+
+        public MessageTextPanel(Image marker, TextBlock subject, TextBlock body)
+        {
+            _marker = marker;
+            _subject = subject;
+            _body = body;
+            Children.Add(marker);
+            Children.Add(subject);
+            Children.Add(body);
+        }
+
+        public bool HasCommitMessage { get; set; }
+
+        public bool CanRenderIndicator { get; private set; }
+
+        protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
+        {
+            double offset = GetMarkerAdvance(availableSize.Width);
+            double height = 0;
+            foreach (TextBlock text in new[] { _subject, _body })
+            {
+                double remainingWidth = Math.Max(0, availableSize.Width - offset);
+                Avalonia.Size textConstraint = new(remainingWidth, availableSize.Height);
+
+                // First measurement applies the inherited/style typography before
+                // the native literal advance is read from this retained control.
+                text.Measure(textConstraint);
+                int advance = GetTextAdvance(text);
+
+                // EndEllipsis is decided by the source literal measurement, not
+                // a different portable glyph advance for an otherwise fitting title.
+                TextTrimming trimming = advance <= remainingWidth
+                    ? TextTrimming.None
+                    : TextTrimming.CharacterEllipsis;
+                if (text.TextTrimming != trimming)
+                {
+                    text.TextTrimming = trimming;
+                    text.Measure(textConstraint);
+                }
+
+                offset += advance;
+                height = Math.Max(height, text.DesiredSize.Height);
+            }
+
+            if (_marker.IsVisible)
+            {
+                _marker.Measure(availableSize);
+                height = Math.Max(height, _marker.DesiredSize.Height);
+            }
+
+            return new Avalonia.Size(offset, height);
+        }
+
+        protected override Avalonia.Size ArrangeOverride(Avalonia.Size finalSize)
+        {
+            double offset = GetMarkerAdvance(finalSize.Width);
+            if (_marker.IsVisible)
+            {
+                _marker.Clip = offset > 0 ? null : new RectangleGeometry(default(Rect));
+                _marker.Arrange(new Rect(0, 0,
+                    _marker.Width + _marker.Margin.Right, finalSize.Height));
+            }
+
+            double subjectAdvance = GetTextAdvance(_subject);
+
+            // The source paints into the entire remaining rectangle. Its returned
+            // literal width advances the next painter; it does not clip this one.
+            _subject.Arrange(new Rect(offset, 0,
+                Math.Max(0, finalSize.Width - offset), finalSize.Height));
+            offset += subjectAdvance;
+
+            // DrawCommitMessage returns after an overlong title. Its indicator
+            // remains reserved by MultilineIndicator, but is not painted.
+            CanRenderIndicator = HasCommitMessage && offset <= finalSize.Width;
+            _body.Arrange(new Rect(offset, 0,
+                string.IsNullOrEmpty(_body.Text) ? 0 : Math.Max(0, finalSize.Width - offset), finalSize.Height));
+            return finalSize;
+        }
+
+        private double GetMarkerAdvance(double availableWidth)
+            => _marker.IsVisible && _marker.Width < availableWidth
+                ? _marker.Width + _marker.Margin.Right
+                : 0;
+
+        // The source advances by NoPrefix/SingleLine/NoPadding measurement,
+        // independently of the finite EndEllipsis allocation used to paint.
+        private static int GetTextAdvance(TextBlock text)
+            => (int)Math.Ceiling(WinFormsTextMeasurer.MeasureSize(text, text.Text ?? string.Empty).Width);
+    }
+
     private sealed class MessageCell : DockPanel
     {
         private readonly MessageColumnProvider _provider;
@@ -1059,9 +1172,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
             Subject.Classes.Add("revision-subject");
             Subject.Margin = default;
             Body.Classes.Add("revision-body");
-            MessagePanel.Children.Add(FixupAndSquashMarker);
-            MessagePanel.Children.Add(Subject);
-            MessagePanel.Children.Add(Body);
+            MessagePanel = new MessageTextPanel(FixupAndSquashMarker, Subject, Body);
+            ContentPanel.Margin = new Thickness(provider.ColumnLeftMargin, 0, 0, 0);
             ContentPanel.Children.Add(MessagePanel);
             SetDock(Indicator, Dock.Right);
             Children.Add(Indicator);
@@ -1077,7 +1189,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         public MessageContentPanel ContentPanel { get; } = new();
 
-        public StackPanel MessagePanel { get; } = new() { Orientation = Orientation.Horizontal };
+        public MessageTextPanel MessagePanel { get; }
 
         public Image FixupAndSquashMarker { get; } = new()
         {
@@ -1096,10 +1208,28 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         public GitRevision? Revision { get; set; }
 
+        protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
+        {
+            Indicator.UpdateAvailableWidth(availableSize.Width);
+            return base.MeasureOverride(availableSize);
+        }
+
         protected override Avalonia.Size ArrangeOverride(Avalonia.Size finalSize)
         {
             Indicator.UpdateAvailableWidth(finalSize.Width);
-            return base.ArrangeOverride(finalSize);
+            Avalonia.Size result = base.ArrangeOverride(finalSize);
+            if (Indicator.IsVisible)
+            {
+                // The source centers with integer division rather than the
+                // framework's potentially half-DIP vertical alignment.
+                Indicator.Arrange(new Rect(finalSize.Width - Indicator.Width,
+                    ((int)finalSize.Height - (int)Indicator.Height) / 2,
+                    Indicator.Width, Indicator.Height));
+            }
+
+            Indicator.UpdatePaintVisibility(Revision is { IsArtificial: false, IsAutostash: false }
+                && MessagePanel.CanRenderIndicator);
+            return result;
         }
 
         public void ClearHighlight()

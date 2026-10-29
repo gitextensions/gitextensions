@@ -1,12 +1,17 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using GitCommands;
+using GitExtensions.Extensibility.Git;
+using GitUI;
 using GitUI.Avatars;
 using GitUI.UserControls.RevisionGrid.Columns;
+using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using SkiaSharp;
 using Color = Avalonia.Media.Color;
@@ -23,6 +28,102 @@ public sealed class RevisionGridAvatarPresentationTests
     private const string FirstName = "First Author";
     private const string SecondEmail = "second@example.com";
     private const string SecondName = "Second Author";
+
+    [SetUp]
+    public void SetUp() => ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void AvatarColumnProvider_should_skip_a_missing_email_and_clear_a_recycled_authors_owned_image(bool recycled)
+    {
+        byte[] image = CreateImage(Colors.Red);
+        IAvatarProvider provider = Substitute.For<IAvatarProvider>();
+        provider.GetAvatarAsync(FirstEmail, FirstName, AvatarSize).Returns(Task.FromResult<byte[]?>(image));
+        RevisionGridControl grid = new();
+        AvatarColumnProvider column = new(grid, provider, Substitute.For<IAvatarCacheCleaner>());
+        AvatarColumnProvider.AvatarCell cell = (AvatarColumnProvider.AvatarCell)column.CreateCell();
+        GitRevision revision = new(ObjectId.Parse("1234567890abcdef1234567890abcdef12345678"))
+        {
+            Author = FirstName,
+            AuthorEmail = recycled ? FirstEmail : null,
+        };
+        try
+        {
+            if (recycled)
+            {
+                column.OnCellPainting(cell, revision);
+                cell.Source.Should().BeOfType<Bitmap>();
+                provider.ClearReceivedCalls();
+                revision.AuthorEmail = null;
+            }
+
+            column.OnCellPainting(cell, revision);
+            cell.Source.Should().BeNull("the original avatar column returns without painting when AuthorEmail is null");
+            _ = provider.DidNotReceive().GetAvatarAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<int>());
+        }
+        finally
+        {
+            cell.Clear();
+            grid.CancelBackgroundTasks();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(true, true)]
+    public void AvatarCell_should_fill_the_source_square_with_a_non_square_image_and_preserve_alpha_when_disabled(bool portrait, bool disabled)
+    {
+        int sourceWidth = portrait ? 10 : 40;
+        int sourceHeight = portrait ? 40 : 10;
+        using RenderTargetBitmap original = new(new PixelSize(sourceWidth, sourceHeight), new Vector(96, 96));
+        using (DrawingContext drawing = original.CreateDrawingContext())
+        {
+            drawing.FillRectangle(new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)), new Rect(0, 0, sourceWidth, sourceHeight));
+        }
+
+        byte[] bytes = AvatarImage.Encode(original);
+        IAvatarProvider provider = Substitute.For<IAvatarProvider>();
+        provider.GetAvatarAsync(FirstEmail, FirstName, AvatarSize).Returns(Task.FromResult<byte[]?>(bytes));
+        AvatarColumnProvider.AvatarCell cell = new(provider) { IsEnabled = !disabled };
+        Window window = new()
+        {
+            Width = AvatarSize + 4,
+            Height = AvatarSize + 4,
+            Content = new Border { Padding = new Thickness(2), Background = Brushes.Blue, Child = cell },
+        };
+        window.Show();
+        try
+        {
+            cell.Load(FirstEmail, FirstName, cacheVersion: 0, AvatarSize);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            cell.Stretch.Should().Be(Stretch.Fill);
+            cell.Bounds.Size.Should().Be(new Size(AvatarSize, AvatarSize));
+            Point origin = cell.TranslatePoint(default, window)
+                ?? throw new AssertionException("The non-square provider image must retain its real square row allocation.");
+            using WriteableBitmap frame = window.CaptureRenderedFrame()
+                ?? throw new AssertionException("The actual image must paint in its row backdrop.");
+            using SKBitmap pixels = ReadPixels(frame);
+            SKColor composite = new(128, 0, 127);
+            foreach ((int x, int y) in new[] { (3, 3), (3, 16), (16, 3), (16, 16), (10, 10) })
+            {
+                pixels.GetPixel((int)origin.X + x, (int)origin.Y + y).Should().Be(composite,
+                    "DrawImage(image, rect) stretches the source image and alpha-composites it without a disabled-state dim or letterboxing");
+            }
+
+            pixels.GetPixel((int)origin.X, (int)origin.Y).Should().Be(SKColors.Blue);
+            pixels.GetPixel((int)origin.X - 1, (int)origin.Y + 10).Should().Be(SKColors.Blue);
+            pixels.GetPixel((int)origin.X + AvatarSize, (int)origin.Y + 10).Should().Be(SKColors.Blue);
+        }
+        finally
+        {
+            cell.Clear();
+            window.Close();
+        }
+    }
 
     [AvaloniaTest]
     public async Task AvatarCell_Load_should_present_warm_cache_hits_inline_without_a_placeholder_on_recycled_rows()

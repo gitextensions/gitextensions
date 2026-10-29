@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -6,9 +6,11 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility;
+using GitUI.Compat;
 using Microsoft;
 using DrawingColor = System.Drawing.Color;
 using DrawingColorTranslator = System.Drawing.ColorTranslator;
+using Size = Avalonia.Size;
 
 namespace GitUI.Avatars;
 
@@ -17,6 +19,7 @@ namespace GitUI.Avatars;
 /// </summary>
 public class InitialsAvatarProvider : IAvatarProvider
 {
+    private const float _fontSizeEstimation = 20f;
     private int _unkownCounter;
     private static readonly char[] _emailInitialSeparator = ['.', '-', '_'];
     private FontFamily? _fontFamily;
@@ -202,24 +205,37 @@ public class InitialsAvatarProvider : IAvatarProvider
         Validates.NotNull(_fontFamily);
         text ??= "?";
 
-        double initialFontSize = Math.Max(1, avatarSize * 0.7);
-        FormattedText measuredText = CreateText(initialFontSize);
+        Size measuredSize = InitialsAvatarTextMeasurer.Measure(text, _fontFamily, _fontSizeEstimation, avatarSize);
+        System.Drawing.SizeF estimatedSize = new((float)measuredSize.Width, (float)measuredSize.Height);
 
         // Adjust font size based on the estimated measure of input text
-        double ratio = Math.Min(
-            avatarSize / Math.Max(measuredText.Width, 1),
-            avatarSize / Math.Max(measuredText.Height, 1));
-        FormattedText displayedText = CreateText(initialFontSize * Math.Min(ratio, 1));
+        int squareSize = Math.Max((int)estimatedSize.Width, (int)estimatedSize.Height);
+        float ratio = (float)avatarSize / squareSize;
+        float drawingPoints = _fontSizeEstimation * ratio;
+        FormattedText displayedText = CreateText(drawingPoints * 96.0 / 72.0);
+        System.Drawing.SizeF displayedSize = estimatedSize * ratio;
 
         // centering horizontally and vertically
-        double xOffset = Math.Max((avatarSize - displayedText.Width) / 2, 0);
-        double yOffset = Math.Max((avatarSize - displayedText.Height) / 2, 0);
+        float xOffset = Math.Max((avatarSize - displayedSize.Width) / 2, 0);
+        float yOffset = Math.Max((avatarSize - displayedSize.Height) / 2, 0);
+        Avalonia.Point paintOrigin = new(xOffset, yOffset);
+        if (InitialsAvatarTextMeasurer.TryGetDrawingMetrics(text, _fontFamily.Name, drawingPoints, avatarSize,
+                out InitialsAvatarTextMeasurer.DrawingMetrics metrics))
+        {
+            // DrawString's default format reserves overhang before its character
+            // layout. Skia draws from a typographic origin; convert the actual native
+            // region/ascent rather than adding a captured glyph or pixel offset.
+            paintOrigin += metrics.Origin + new Vector(0, metrics.Ascent - displayedText.Baseline);
+        }
+
+        // Without native GDI+, retain the resolved typeface's own typographic origin
+        // and baseline. This substitute does not establish Windows DrawString raster identity.
 
         using RenderTargetBitmap bitmap = new(new PixelSize(avatarSize, avatarSize), new Vector(96, 96));
         using (DrawingContext context = bitmap.CreateDrawingContext())
         {
             context.FillRectangle(new SolidColorBrush(backColor), new Rect(0, 0, avatarSize, avatarSize));
-            context.DrawText(displayedText, new Avalonia.Point(xOffset, yOffset));
+            context.DrawText(displayedText, paintOrigin);
         }
 
         return AvatarImage.Encode(bitmap);
