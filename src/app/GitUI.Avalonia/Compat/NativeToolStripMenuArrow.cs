@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Point = Avalonia.Point;
 
 namespace GitUI.Compat;
 
@@ -10,6 +9,12 @@ namespace GitUI.Compat;
 /// </summary>
 public sealed class NativeToolStripMenuArrow : Control
 {
+    private const int ArrowHalfWidth = 2;
+    private const int ArrowHalfHeight = 4;
+
+    /// <summary>
+    ///  Identifies the renderer's resolved arrow brush.
+    /// </summary>
     public static readonly StyledProperty<IBrush?> ForegroundProperty =
         AvaloniaProperty.Register<NativeToolStripMenuArrow, IBrush?>(nameof(Foreground));
 
@@ -18,11 +23,19 @@ public sealed class NativeToolStripMenuArrow : Control
         AffectsRender<NativeToolStripMenuArrow>(ForegroundProperty, FlowDirectionProperty);
     }
 
+    /// <summary>
+    ///  Initializes paint-only chrome without introducing an input or focus target.
+    /// </summary>
     public NativeToolStripMenuArrow()
     {
         IsHitTestVisible = false;
+        Focusable = false;
+        RenderOptions.SetEdgeMode(this, EdgeMode.Aliased);
     }
 
+    /// <summary>
+    ///  Gets or sets the original renderer's arrow color independently of caption colors.
+    /// </summary>
     public IBrush? Foreground { get => GetValue(ForegroundProperty); set => SetValue(ForegroundProperty, value); }
 
     protected override bool BypassFlowDirectionPolicies => true;
@@ -30,18 +43,22 @@ public sealed class NativeToolStripMenuArrow : Control
     public override void Render(DrawingContext context)
     {
         base.Render(context);
-        int x = (int)Bounds.Width / 2;
-        int y = (int)Bounds.Height / 2;
-        int direction = FlowDirection == FlowDirection.RightToLeft ? -1 : 1;
-        StreamGeometry geometry = new();
-        using (StreamGeometryContext path = geometry.Open())
+        if (Foreground is null)
         {
-            path.BeginFigure(new Point(x - (2 * direction), y - 4), isFilled: true);
-            path.LineTo(new Point(x - (2 * direction), y + 4));
-            path.LineTo(new Point(x + (2 * direction), y));
-            path.EndFigure(isClosed: true);
+            return;
         }
 
-        context.DrawGeometry(Foreground, null, geometry);
+        int x = (int)Bounds.Width / 2;
+        int y = (int)Bounds.Height / 2;
+
+        // GDI FillPolygon excludes the two zero-width vertex rows and the right
+        // edge. Its integer row runs differ from Skia's antialiased triangle,
+        // including for odd rectangles and the mirrored left-facing arrow.
+        for (int row = 1 - ArrowHalfHeight; row < ArrowHalfHeight; row++)
+        {
+            int width = ArrowHalfHeight - Math.Abs(row);
+            int left = FlowDirection == FlowDirection.RightToLeft ? x + ArrowHalfWidth - width : x - ArrowHalfWidth;
+            context.FillRectangle(Foreground, new Rect(left, y + row, width, 1));
+        }
     }
 }

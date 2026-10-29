@@ -146,11 +146,15 @@ public sealed class FrameworkControlParityTests
                            window,
                            new CaptureStatePlan { Id = "hover", Kind = CaptureStateKind.Hover, TargetField = "btnToolbar" }))
                 {
-                    GetColor(button.Background).Should().Be(GetResourceColor("GitExtensionsToolStripPointerOverBackgroundBrush", themeVariant));
-                    GetColor(button.BorderBrush).Should().Be(GetResourceColor("GitExtensionsHighlightBackgroundBrush", themeVariant));
+                    GetColor(button.Background).Should().Be(Colors.Transparent);
+                    GetColor(button.BorderBrush).Should().Be(Colors.Transparent);
                     button.BorderThickness.Should().Be(new Thickness(1));
                     ContentPresenter presenter = Find<ContentPresenter>(button, "PART_ContentPresenter");
-                    GetColor(presenter.Background).Should().Be(GetResourceColor("GitExtensionsToolStripPointerOverBackgroundBrush", themeVariant));
+                    GetColor(presenter.Background).Should().Be(Colors.Transparent);
+                    NativeToolStripButtonChrome chrome = Find<NativeToolStripButtonChrome>(button, "PART_NativeToolStripButtonChrome");
+                    chrome.IsSelected.Should().BeTrue();
+                    GetColor(chrome.SelectedBrush).Should().Be(GetResourceColor("GitExtensionsNativeToolStripButtonSelectedBrush", themeVariant));
+                    GetColor(chrome.BorderBrush).Should().Be(GetResourceColor("GitExtensionsNativeToolStripButtonBorderBrush", themeVariant));
                 }
 
                 using (AvaloniaControlStateDriver.Apply(
