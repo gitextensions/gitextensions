@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using GitUIPluginInterfaces;
@@ -22,6 +22,7 @@ internal sealed class MultilineIndicator : Control
     private readonly int _indicatorRectWidth;
     private bool _isMultiline;
     private bool _hasAvailableWidth = true;
+    private bool _canPaint = true;
 
     public MultilineIndicator()
     {
@@ -64,7 +65,7 @@ internal sealed class MultilineIndicator : Control
 
     public override void Render(DrawingContext context)
     {
-        if (!IsVisible)
+        if (!IsVisible || !_canPaint)
         {
             return;
         }
@@ -95,4 +96,15 @@ internal sealed class MultilineIndicator : Control
 
     private void UpdateVisibility()
         => IsVisible = _isMultiline && _hasAvailableWidth;
+
+    public void UpdatePaintVisibility(bool canPaint)
+    {
+        if (_canPaint == canPaint)
+        {
+            return;
+        }
+
+        _canPaint = canPaint;
+        InvalidateVisual();
+    }
 }

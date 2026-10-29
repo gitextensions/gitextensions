@@ -61,7 +61,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
     public override void OnCellPainting(Control control, GitRevision revision)
     {
         AvatarCell image = (AvatarCell)control;
-        if (revision.IsArtificial)
+        if (revision.IsArtificial || revision.AuthorEmail is null)
         {
             image.Clear();
         }
@@ -70,7 +70,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
             _email = revision.AuthorEmail;
             _author = revision.Author;
             image.Load(
-                revision.AuthorEmail ?? string.Empty,
+                revision.AuthorEmail,
                 revision.Author,
                 Volatile.Read(ref _cacheVersion),
                 _avatarSize);
@@ -109,7 +109,10 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         {
             _avatarProvider = avatarProvider;
             _placeholderImage = placeholderImage;
-            Stretch = Avalonia.Media.Stretch.Uniform;
+
+            // The original DrawImage(image, rect) fills the square cell destination,
+            // including when a custom provider returns a non-square server image.
+            Stretch = Avalonia.Media.Stretch.Fill;
         }
 
         public AvatarCell(IAvatarProvider avatarProvider)
