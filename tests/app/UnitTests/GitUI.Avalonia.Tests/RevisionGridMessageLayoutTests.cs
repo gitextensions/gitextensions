@@ -241,6 +241,63 @@ public sealed class RevisionGridMessageLayoutTests
     }
 
     [AvaloniaTest]
+    [Combinatorial]
+    public void Markers_should_use_source_integer_centers_through_live_font_and_revision_changes(
+        [Values("good", "bad", "fixup", "squash", "amend")] string kind,
+        [Values("light", "dark", "custom")] string theme,
+        [Values(false, true)] bool selected)
+    {
+        using RowFixture fixture = new(9, "subject", body: null, theme: theme, defaultStarColumn: true);
+        fixture.Grid.GetTestAccessor().Revisions.SelectedIndex = selected ? 0 : -1;
+        fixture.SetMarker(kind);
+        object? itemsSource = fixture.Grid.GetTestAccessor().Revisions.ItemsSource;
+        foreach ((string family, int nativeHeight) in new[] { ("Segoe UI", 26), ("Arial", 23), ("Consolas", 24) })
+        {
+            fixture.SetFont(family);
+            fixture.Provider.Column.Width.IsStar.Should().BeTrue();
+            fixture.Cell.Bounds.Height.Should().Be(OperatingSystem.IsWindows()
+                ? nativeHeight
+                : RevisionGridControl.GetRowHeight(fixture.Grid));
+            fixture.Subject.FontFamily.Name.Should().Be(family);
+            fixture.Grid.GetTestAccessor().Revisions.SelectedIndex.Should().Be(selected ? 0 : -1);
+            fixture.Grid.GetTestAccessor().Revisions.ItemsSource.Should().BeSameAs(itemsSource);
+            fixture.AssertMarkerPlacement();
+
+            fixture.Revision.Body = fixture.Revision.Subject + "\n\nbody loaded on the same revision";
+            fixture.Revision.HasMultiLineMessage = true;
+            fixture.Refresh();
+            fixture.AssertMarkerPlacement();
+            fixture.Revision.Body = null;
+            fixture.Refresh();
+            fixture.AssertMarkerPlacement();
+        }
+
+        fixture.Revision.Subject = "ordinary subject";
+        fixture.Revision.Refs = [];
+        fixture.Refresh();
+        fixture.Cell.GetVisualDescendants().OfType<Image>().Should().NotContain(image => image.IsVisible
+            && (image.Classes.Contains("revision-message-marker") || image.Classes.Contains("revision-bisect-marker")));
+        fixture.SetMarker(kind);
+        fixture.AssertMarkerPlacement();
+    }
+
+    [AvaloniaTest]
+    [Combinatorial]
+    public void Under_height_marker_cells_should_preserve_source_truncation_and_clip_the_original_bitmap(
+        [Values("good", "bad", "fixup", "squash", "amend")] string kind,
+        [Values(13, 14, 15, 16)] int height)
+    {
+        using RowFixture fixture = new(9, "subject", body: null, defaultStarColumn: true);
+        fixture.SetMarker(kind);
+        fixture.Cell.Height = height;
+        fixture.Cell.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
+        fixture.Refresh();
+
+        fixture.Cell.Bounds.Height.Should().Be(height);
+        fixture.AssertMarkerPlacement();
+    }
+
+    [AvaloniaTest]
     [TestCase(9)]
     [TestCase(11)]
     public void Ref_capsules_should_leave_only_their_finite_remaining_span_for_subject_and_body(int points)
@@ -474,6 +531,33 @@ public sealed class RevisionGridMessageLayoutTests
             Layout();
         }
 
+        public void SetFont(string family)
+        {
+            AppSettings.Font = new Font(family, 9);
+            AvaloniaFontSettings.ApplyAppSettings();
+            Refresh();
+        }
+
+        public void SetMarker(string kind)
+        {
+            bool bisect = kind is "good" or "bad";
+            Revision.Subject = bisect ? "subject" : kind + "! subject";
+            if (bisect)
+            {
+                IGitRef gitRef = CreateRef("refs/bisect/" + kind);
+                gitRef.IsBisect.Returns(true);
+                gitRef.IsBisectGood.Returns(kind == "good");
+                gitRef.IsBisectBad.Returns(kind == "bad");
+                Revision.Refs = [gitRef];
+            }
+            else
+            {
+                Revision.Refs = [];
+            }
+
+            Refresh();
+        }
+
         public void SetWidth(int width)
         {
             Provider.Column.Width = new GridLength(width);
@@ -644,6 +728,137 @@ public sealed class RevisionGridMessageLayoutTests
             }
 
             hasInk.Should().BeTrue("the actual attached marker must paint its source image, not only keep a layout slot");
+        }
+
+        public void AssertMarkerPlacement()
+        {
+            Image marker = Cell.GetVisualDescendants().OfType<Image>().Single(image => image.IsVisible
+                && (image.Classes.Contains("revision-message-marker") || image.Classes.Contains("revision-bisect-marker")));
+            AssertMarkerPixels(marker);
+            marker.Bounds.Size.Should().Be(new Size(16, 16));
+            marker.Clip.Should().BeNull();
+            Cell.ClipToBounds.Should().BeTrue();
+            Point origin = Origin(marker, Cell);
+            origin.X.Should().Be(6);
+            origin.Y.Should().Be(((int)Cell.Bounds.Height - (int)marker.Height) / 2,
+                "DrawImage uses integer division, including truncation toward zero for a bitmap taller than the cell");
+            Origin(Subject, Cell).X.Should().Be(6 + 16 + 4);
+        }
+
+        private void AssertMarkerPixels(Image marker)
+        {
+            using SKBitmap actual = Capture();
+            Point cellOrigin = Origin(Cell, Window);
+            Point imageOrigin = Origin(marker, Window);
+            int left = (int)Math.Floor(imageOrigin.X) - 1;
+            int top = (int)Math.Floor(Math.Min(cellOrigin.Y, imageOrigin.Y)) - 1;
+            int width = (int)marker.Width + 2;
+            int height = (int)Math.Ceiling(Math.Max(cellOrigin.Y + Cell.Bounds.Height,
+                imageOrigin.Y + marker.Height)) - top + 1;
+            using RenderTargetBitmap expectedFrame = new(new PixelSize(width, height), new Vector(96, 96));
+            using (DrawingContext context = expectedFrame.CreateDrawingContext())
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    SKColor backdrop = actual.GetPixel(left - 1, top + y);
+                    context.FillRectangle(new SolidColorBrush(Color.FromArgb(backdrop.Alpha,
+                        backdrop.Red, backdrop.Green, backdrop.Blue)), new Rect(0, y, width, 1));
+                }
+
+                using (context.PushClip(new Rect(cellOrigin.X - left, cellOrigin.Y - top,
+                    Cell.Bounds.Width, Cell.Bounds.Height)))
+                {
+                    // This independent paint uses the source bitmap, cell clip and integer
+                    // formula, preserving alpha without accepting framework half-DIP placement.
+                    context.DrawImage(marker.Source ?? throw new AssertionException("The marker must retain its source bitmap."),
+                        new Rect(cellOrigin.X + 6 - left,
+                            cellOrigin.Y + (((int)Cell.Bounds.Height - (int)marker.Height) / 2) - top,
+                            marker.Width, marker.Height));
+                }
+            }
+
+            using MemoryStream stream = new();
+            expectedFrame.Save(stream, PngBitmapEncoderOptions.Default);
+            stream.Position = 0;
+            using SKBitmap expected = SKBitmap.Decode(stream)
+                ?? throw new AssertionException("The independent source-shaped marker paint must decode.");
+            int differences = 0;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    differences += actual.GetPixel(left + x, top + y) == expected.GetPixel(x, y) ? 0 : 1;
+                }
+            }
+
+            TestContext.Out.WriteLine($"marker={marker.Classes}; cell={Cell.Bounds}; local={Origin(marker, Cell)}; "
+                + $"window={imageOrigin}; family={Subject.FontFamily}; differingPixels={differences}");
+            Point localOrigin = Origin(marker, Cell);
+            bool sourceGeometry = marker.Bounds.Size == new Size(16, 16) && marker.Clip is null && Cell.ClipToBounds
+                && localOrigin.X == 6 && localOrigin.Y == ((int)Cell.Bounds.Height - (int)marker.Height) / 2
+                && Origin(Subject, Cell).X == 6 + 16 + 4;
+            SaveMarkerDiagnostic(actual, expected, marker, new Rect(left, top, width, height), differences, sourceGeometry);
+            differences.Should().Be(0,
+                "the attached image must preserve every source alpha pixel and the source cell clip at its integer center");
+        }
+
+        private void SaveMarkerDiagnostic(SKBitmap actual, SKBitmap expected, Image marker, Rect expectedRegion,
+            int differences, bool sourceGeometry)
+        {
+            string? requestedRoot = Environment.GetEnvironmentVariable("GITEXT_MENU_PAINT_EVIDENCE");
+            if (string.IsNullOrEmpty(requestedRoot) && differences == 0 && sourceGeometry)
+            {
+                return;
+            }
+
+            string directory = Path.Combine(requestedRoot ?? Path.Combine(TestContext.CurrentContext.WorkDirectory,
+                "RevisionGridMessageLayoutProbe"), "markers", TestContext.CurrentContext.Test.ID + "-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(directory);
+            string actualPath = Path.Combine(directory, "actual-window.png");
+            using (SKData image = actual.Encode(SKEncodedImageFormat.Png, 100))
+            using (FileStream stream = File.Create(actualPath))
+            {
+                image.SaveTo(stream);
+            }
+
+            using (SKData image = expected.Encode(SKEncodedImageFormat.Png, 100))
+            using (FileStream stream = File.Create(Path.Combine(directory, "expected-marker-region.png")))
+            {
+                image.SaveTo(stream);
+            }
+
+            Bitmap source = marker.Source as Bitmap
+                ?? throw new AssertionException("The marker diagnostic must retain the actual shared source bitmap.");
+            source.Save(Path.Combine(directory, "source-bitmap.png"), PngBitmapEncoderOptions.Default);
+            object diagnostic = new
+            {
+                test = TestContext.CurrentContext.Test.Name,
+                theme = Window.ActualThemeVariant?.ToString(),
+                family = Subject.FontFamily.Name,
+                Subject.FontSize,
+                Grid.GetTestAccessor().Revisions.SelectedIndex,
+                Revision.Subject,
+                refs = Revision.Refs.Select(gitRef => gitRef.CompleteName),
+                cellBounds = Cell.Bounds.ToString(),
+                cellOriginInWindow = Origin(Cell, Window).ToString(),
+                markerBounds = marker.Bounds.ToString(),
+                markerOriginInCell = Origin(marker, Cell).ToString(),
+                markerOriginInWindow = Origin(marker, Window).ToString(),
+                Cell.ClipToBounds,
+                clip = marker.Clip?.Bounds.ToString(),
+                sourcePixelSize = source.PixelSize.ToString(),
+                sourceDpi = source.Dpi.ToString(),
+                expectedRegionInActualWindow = new { expectedRegion.X, expectedRegion.Y, expectedRegion.Width, expectedRegion.Height },
+                differences,
+                sourceGeometry,
+                captureMethod = "actualHeadlessWindowAndIndependentDrawingContextSourceBitmapIntegerCenterWithCellClip",
+                scope = "Exact same-backend marker placement/alpha/clip check; not GDI-versus-Skia raster parity or desktop evidence.",
+            };
+            string diagnosticPath = Path.Combine(directory, "marker.json");
+            File.WriteAllText(diagnosticPath, JsonSerializer.Serialize(diagnostic, new JsonSerializerOptions { WriteIndented = true }));
+            TestContext.AddTestAttachment(actualPath);
+            TestContext.AddTestAttachment(diagnosticPath);
+            TestContext.Out.WriteLine("Actual marker diagnostic: " + diagnosticPath);
         }
 
         private void Layout()

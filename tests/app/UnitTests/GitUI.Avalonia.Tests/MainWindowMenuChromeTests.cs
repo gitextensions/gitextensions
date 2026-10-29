@@ -24,6 +24,7 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Theming;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using SkiaSharp;
@@ -309,6 +310,9 @@ public sealed class MainWindowMenuChromeTests
         ThreadHelper.JoinableTaskContext = context;
         try
         {
+            // Headless fixtures do not run the desktop composition bootstrap. This
+            // Browse consumer must not rely on another fixture to initialize its catalog.
+            ManagedExtensibility.Initialise();
             using MenuFixture palette = new("light");
             using ServiceContainer services = new();
             GitExtUtils.ServiceContainerRegistry.RegisterServices(services);
