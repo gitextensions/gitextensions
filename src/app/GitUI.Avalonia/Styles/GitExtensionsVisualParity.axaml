@@ -375,10 +375,10 @@
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#FDFDFD" />
           <x:Boolean x:Key="GitExtensionsNativeFlatButtonDarkMode">False</x:Boolean>
           <x:Boolean x:Key="GitExtensionsNativeToolStripSplitUseSystemVisualStyle">True</x:Boolean>
-          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalSelectedBrush" Color="#B3D7F3" />
-          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalPressedBrush" Color="#80BCEB" />
-          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalBorderBrush" Color="#0078D7" />
-          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalSplitterBrush" Color="#0078D7" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalSelectedBrush" Color="#B3D7F2" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalPressedBrush" Color="#80BCEA" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalBorderBrush" Color="#0078D4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalSplitterBrush" Color="#0078D4" />
           <LinearGradientBrush x:Key="GitExtensionsNativeToolStripSplitProfessionalOpenBrush" StartPoint="0%,0%" EndPoint="0%,100%">
             <GradientStop Offset="0" Color="#FCFCFC" />
             <GradientStop Offset="1" Color="#F8F8F8" />
@@ -424,8 +424,8 @@
           <SolidColorBrush x:Key="GitExtensionsMenuBackgroundBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#FDFDFD" />
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBorderBrush" Color="#808080" />
-          <SolidColorBrush x:Key="GitExtensionsNativeMenuSelectedBackgroundBrush" Color="#B3D7F3" />
-          <SolidColorBrush x:Key="GitExtensionsNativeMenuSelectedBorderBrush" Color="#0078D7" />
+          <SolidColorBrush x:Key="GitExtensionsNativeMenuSelectedBackgroundBrush" Color="#B3D7F2" />
+          <SolidColorBrush x:Key="GitExtensionsNativeMenuSelectedBorderBrush" Color="#0078D4" />
           <LinearGradientBrush x:Key="GitExtensionsNativeMenuOpenBackgroundBrush" StartPoint="0%,0%" EndPoint="0%,100%">
             <GradientStop Color="#FCFCFC" Offset="0" />
             <GradientStop Color="#F8F8F8" Offset="1" />
@@ -439,6 +439,16 @@
           <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#E3E3E3" />
           <SolidColorBrush x:Key="GitExtensionsToolStripPointerOverBackgroundBrush" Color="#E5F3FF" />
           <SolidColorBrush x:Key="GitExtensionsToolStripCheckedBackgroundBrush" Color="#CCE8FF" />
+          <x:Boolean x:Key="GitExtensionsNativeToolStripButtonUseSystemVisualStyle">True</x:Boolean>
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonBorderBrush" Color="#0078D4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonSelectedBrush" Color="#E5F3FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonPressedBrush" Color="#CCE8FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonSelectedCornerBrush" Color="#D5ECFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonSelectedAdjacentBrush" Color="#E3F2FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonPressedCornerBrush" Color="#AAD9FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonPressedAdjacentBrush" Color="#C8E6FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeMenuDisabledArrowBrush" Color="#A0A0A0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeMenuSelectedArrowBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsControlPressedBackgroundBrush" Color="#A0A0A0" />
           <SolidColorBrush x:Key="GitExtensionsDisabledForegroundBrush" Color="#6D6D6D" />
           <SolidColorBrush x:Key="GitExtensionsHighlightBackgroundBrush" Color="#0078D7" />
@@ -639,7 +649,17 @@
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#4A4A4A" />
           <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#2E2E2E" />
           <SolidColorBrush x:Key="GitExtensionsToolStripPointerOverBackgroundBrush" Color="#2F4159" />
-          <SolidColorBrush x:Key="GitExtensionsToolStripCheckedBackgroundBrush" Color="#28445B" />
+          <SolidColorBrush x:Key="GitExtensionsToolStripCheckedBackgroundBrush" Color="#00000000" />
+          <x:Boolean x:Key="GitExtensionsNativeToolStripButtonUseSystemVisualStyle">False</x:Boolean>
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonBorderBrush" Color="#2864B4" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonSelectedBrush" Color="#2F4159" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonPressedBrush" Color="#2D4B73" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonSelectedCornerBrush" Color="#D5ECFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonSelectedAdjacentBrush" Color="#E3F2FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonPressedCornerBrush" Color="#AAD9FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeToolStripButtonPressedAdjacentBrush" Color="#C8E6FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeMenuDisabledArrowBrush" Color="#4A4A4A" />
+          <SolidColorBrush x:Key="GitExtensionsNativeMenuSelectedArrowBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsControlPressedBackgroundBrush" Color="#4A4A4A" />
           <SolidColorBrush x:Key="GitExtensionsDisabledForegroundBrush" Color="#969696" />
           <SolidColorBrush x:Key="GitExtensionsHighlightBackgroundBrush" Color="#2864B4" />
@@ -1903,16 +1923,24 @@
                          Text="{TemplateBinding InputGesture, Converter={StaticResource GitExtensionsMenuKeyGestureConverter}}"
                          HorizontalAlignment="Right"
                          VerticalAlignment="Center" />
-              <Path Name="PART_ChevronPath"
-                    Width="8"
-                    Height="16"
-                    Stretch="Uniform"
-                    Data="{StaticResource MenuItemChevronPathData}"
-                    Margin="{DynamicResource MenuFlyoutItemChevronMargin}"
-                    VerticalAlignment="Center"
-                    Grid.Column="4" />
+              <!-- Retain the existing caption/shortcut column allocation. Native
+                   ToolStrip paints its separate ArrowRectangle outside that layout. -->
+              <Border Name="PART_ChevronSlot"
+                      Width="4"
+                      Margin="{DynamicResource MenuFlyoutItemChevronMargin}"
+                      IsHitTestVisible="False"
+                      Grid.Column="4" />
             </Grid>
           </Border>
+          <!-- ToolStripDropDownMenu reserves ArrowSize=10 and right padding=8;
+               item layout vertically centers its source twenty-pixel rectangle. -->
+          <compat:NativeToolStripMenuArrow Name="PART_ChevronPath"
+                                          Classes="gitextensions-generic-menu-arrow"
+                                          Width="10"
+                                          Margin="0,1,8,1"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Stretch"
+                                          Foreground="{DynamicResource GitExtensionsNativeToolStripArrowBrush}" />
           <Popup Name="PART_Popup"
                  WindowManagerAddShadowHint="False"
                  Placement="RightEdgeAlignedTop"
@@ -1923,7 +1951,6 @@
                     BorderBrush="{DynamicResource GitExtensionsMenuRenderedBorderBrush}"
                     BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"
                     Padding="{DynamicResource MenuFlyoutPresenterThemePadding}"
-                    MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
                     MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
                     HorizontalAlignment="Stretch"
                     CornerRadius="{DynamicResource OverlayCornerRadius}">
@@ -2234,19 +2261,54 @@
     <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeFlatButtonDisabledBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeFlatButtonDisabledBorderBrush}" />
   </Style>
-  <!-- Fluent paints ToggleButton's checked surface on its inner presenter. Override both
-       layers so ToolStrip buttons never inherit the host platform accent. -->
-  <Style Selector="Button.gitextensions-toolbar-button.checked,
-                   ToggleButton.gitextensions-toolbar-button:checked">
-    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripCheckedBackgroundBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  <!-- Ordinary ToolStripButton paint is separate from its image/text layout. Both Button
+       checked classes and ToggleButton states use the original renderer precedence. -->
+  <Style Selector="Button.gitextensions-toolbar-button:not(.gitextensions-native-flat-button),
+                   ToggleButton.gitextensions-toolbar-button">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid Background="{TemplateBinding Background}">
+          <compat:NativeToolStripButtonChrome x:Name="PART_NativeToolStripButtonChrome"
+                                              UseSystemVisualStyle="{DynamicResource GitExtensionsNativeToolStripButtonUseSystemVisualStyle}"
+                                              CheckedBrush="{DynamicResource GitExtensionsToolStripCheckedBackgroundBrush}"
+                                              SelectedBrush="{DynamicResource GitExtensionsNativeToolStripButtonSelectedBrush}"
+                                              PressedBrush="{DynamicResource GitExtensionsNativeToolStripButtonPressedBrush}"
+                                              BorderBrush="{DynamicResource GitExtensionsNativeToolStripButtonBorderBrush}"
+                                              SelectedCornerBrush="{DynamicResource GitExtensionsNativeToolStripButtonSelectedCornerBrush}"
+                                              SelectedAdjacentBrush="{DynamicResource GitExtensionsNativeToolStripButtonSelectedAdjacentBrush}"
+                                              PressedCornerBrush="{DynamicResource GitExtensionsNativeToolStripButtonPressedCornerBrush}"
+                                              PressedAdjacentBrush="{DynamicResource GitExtensionsNativeToolStripButtonPressedAdjacentBrush}" />
+          <ContentPresenter x:Name="PART_ContentPresenter"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            RecognizesAccessKey="True" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
   </Style>
-  <Style Selector="Button.gitextensions-toolbar-button.checked /template/ ContentPresenter#PART_ContentPresenter,
-                   ToggleButton.gitextensions-toolbar-button:checked /template/ ContentPresenter#PART_ContentPresenter">
-    <Setter Property="Background" Value="{DynamicResource GitExtensionsToolStripCheckedBackgroundBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
-    <Setter Property="BorderThickness" Value="1" />
+  <Style Selector="Button.gitextensions-toolbar-button:not(.gitextensions-native-flat-button) /template/ ContentPresenter#PART_ContentPresenter,
+                   ToggleButton.gitextensions-toolbar-button /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+  </Style>
+  <Style Selector="Button.gitextensions-toolbar-button.checked /template/ compat|NativeToolStripButtonChrome#PART_NativeToolStripButtonChrome,
+                   ToggleButton.gitextensions-toolbar-button:checked /template/ compat|NativeToolStripButtonChrome#PART_NativeToolStripButtonChrome,
+                   ToggleButton.gitextensions-toolbar-button:indeterminate /template/ compat|NativeToolStripButtonChrome#PART_NativeToolStripButtonChrome">
+    <Setter Property="IsChecked" Value="True" />
+  </Style>
+  <Style Selector="Button.gitextensions-toolbar-button:pressed /template/ compat|NativeToolStripButtonChrome#PART_NativeToolStripButtonChrome,
+                   ToggleButton.gitextensions-toolbar-button:pressed /template/ compat|NativeToolStripButtonChrome#PART_NativeToolStripButtonChrome">
+    <Setter Property="IsPressed" Value="True" />
   </Style>
   <Style Selector="Button.gitextensions-command-link">
     <Setter Property="Padding" Value="8,5" />
@@ -2326,20 +2388,22 @@
       <TranslateTransform X="-10" Y="-1" />
     </Setter>
   </Style>
-  <Style Selector="MenuItem:not(:disabled) /template/ Path#PART_ChevronPath,
-                   MenuItem:disabled /template/ Path#PART_ChevronPath">
-    <!-- ToolStripRenderer.DrawArrow uses a filled right-facing triangle, not Fluent's
-         open chevron. An active state selector is needed to override Fluent's template
-         Width=8 allocation; an ordinary style changes the transform but not that width. -->
-    <Setter Property="Data" Value="M 0,0 L 4,4 L 0,8 Z" />
-    <Setter Property="Width" Value="4" />
-    <Setter Property="Height" Value="8" />
-    <Setter Property="Stretch" Value="Fill" />
-    <Setter Property="Fill" Value="{Binding $parent[MenuItem].Foreground}" />
-    <Setter Property="StrokeThickness" Value="0" />
-    <Setter Property="RenderTransform">
-      <TranslateTransform X="-7" />
-    </Setter>
+  <Style Selector="MenuItem:empty /template/ compat|NativeToolStripMenuArrow.gitextensions-generic-menu-arrow,
+                   Menu > MenuItem /template/ compat|NativeToolStripMenuArrow.gitextensions-generic-menu-arrow">
+    <!-- The native layout reserves the arrow slot even for rows without children.
+         Keep the framework's live :empty state without collapsing the shared column. -->
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-filter-menu.gitextensions-filter-menu-system-renderer:not(:disabled):selected /template/ compat|NativeToolStripMenuArrow.gitextensions-generic-menu-arrow,
+                   MenuItem.gitextensions-filter-menu.gitextensions-filter-menu-system-renderer:not(:disabled):pressed /template/ compat|NativeToolStripMenuArrow.gitextensions-generic-menu-arrow,
+                   MenuItem.gitextensions-filter-menu.gitextensions-filter-menu-system-renderer:not(:disabled):open /template/ compat|NativeToolStripMenuArrow.gitextensions-generic-menu-arrow,
+                   MenuItem.gitextensions-filter-menu.gitextensions-filter-menu-system-renderer:not(:disabled):pointerover /template/ compat|NativeToolStripMenuArrow.gitextensions-generic-menu-arrow">
+    <!-- System retains the caller's HighlightText; Professional replaces it with
+         ControlText for dropdown items, including selected and pressed items. -->
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsNativeMenuSelectedArrowBrush}" />
+  </Style>
+  <Style Selector="MenuItem:disabled /template/ compat|NativeToolStripMenuArrow.gitextensions-generic-menu-arrow">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsNativeMenuDisabledArrowBrush}" />
   </Style>
   <Style Selector="MenuItem:disabled">
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
@@ -2355,6 +2419,9 @@
     <Setter Property="Opacity" Value="0.7" />
   </Style>
   <Style Selector="ContextMenu">
+    <!-- ToolStripDropDownMenu's default MaximumSize is empty: source item metrics
+         own the width, while the popup positioner still constrains it to the screen. -->
+    <Setter Property="MaxWidth" Value="Infinity" />
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
     <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
@@ -2380,6 +2447,7 @@
     <Setter Property="Margin" Value="-1,1,0,1" />
   </Style>
   <Style Selector="MenuFlyoutPresenter">
+    <Setter Property="MaxWidth" Value="Infinity" />
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
     <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
@@ -2689,7 +2757,6 @@
                       BorderBrush="{DynamicResource GitExtensionsMenuRenderedBorderBrush}"
                       BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"
                       Padding="{DynamicResource MenuFlyoutPresenterThemePadding}"
-                      MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
                       MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
                       HorizontalAlignment="Stretch"
                       CornerRadius="{DynamicResource OverlayCornerRadius}">

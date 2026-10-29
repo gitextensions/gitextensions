@@ -168,9 +168,6 @@ internal static class AvaloniaThemeResources
             : DrawingColor.FromArgb(229, 229, 229);
         DrawingColor nativeTabSelectedBackground = isDark ? control : window;
         DrawingColor nativeTabPageBackground = isDark ? control : DrawingColor.Transparent;
-        DrawingColor nativeListSelectionBackground = isDark
-            ? DrawingColor.FromArgb(40, 68, 91)
-            : DrawingColor.FromArgb(204, 232, 255);
         DrawingColor highlight = ResolveSystemColor(settings, KnownColor.Highlight);
         DrawingColor highlightText = ResolveSystemColor(settings, KnownColor.HighlightText);
         DrawingColor dataGridViewSelectionBackground = highlight;
@@ -359,7 +356,11 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionCornerBrush", treeInactiveSelection.Corner);
         SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionAdjacentEdgeBrush", treeInactiveSelection.AdjacentEdge);
         SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionInnerCornerBrush", treeInactiveSelection.InnerCorner);
-        SetBrush(resources, "GitExtensionsToolStripCheckedBackgroundBrush", nativeListSelectionBackground);
+
+        // The Professional checked gradient is Color.Empty at both ends, preserving
+        // the owner's actual backdrop. It is not Explorer/ListView selection paint.
+        SetBrush(resources, "GitExtensionsToolStripCheckedBackgroundBrush", settings.UseSystemVisualStyle
+            ? DrawingColor.FromArgb(204, 232, 255) : DrawingColor.FromArgb(0, 0, 0, 0));
 
         // The original ProfessionalColorTable consumes the application's native
         // SystemColors, not CSS pane borders or configurable editor-selection colors.
@@ -369,9 +370,21 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsToolStripSeparatorLightBrush", ResolveNativeSystemColor(isDark, KnownColor.ButtonHighlight));
         SetBrush(resources, "GitExtensionsNativeToolStripGripDarkBrush", ResolveNativeSystemColor(isDark, KnownColor.ControlText));
         SetBrush(resources, "GitExtensionsNativeToolStripArrowBrush", ResolveNativeSystemColor(isDark, KnownColor.ControlText));
+        SetBrush(resources, "GitExtensionsNativeMenuDisabledArrowBrush", ResolveNativeSystemColor(isDark, KnownColor.ControlDark));
+        SetBrush(resources, "GitExtensionsNativeMenuSelectedArrowBrush", ResolveNativeSystemColor(isDark, KnownColor.HighlightText));
         SetBrush(resources, "GitExtensionsNativeToolStripGripLightBrush", ResolveNativeSystemColor(isDark, KnownColor.ButtonHighlight));
         DrawingColor nativeWindow = ResolveNativeSystemColor(isDark, KnownColor.Window);
         DrawingColor nativeHighlight = ResolveNativeSystemColor(isDark, KnownColor.Highlight);
+        resources["GitExtensionsNativeToolStripButtonUseSystemVisualStyle"] = settings.UseSystemVisualStyle;
+        SetBrush(resources, "GitExtensionsNativeToolStripButtonBorderBrush", nativeHighlight);
+        SetBrush(resources, "GitExtensionsNativeToolStripButtonSelectedBrush", settings.UseSystemVisualStyle
+            ? DrawingColor.FromArgb(229, 243, 255) : BlendNativeColors(nativeWindow, nativeHighlight, 30));
+        SetBrush(resources, "GitExtensionsNativeToolStripButtonPressedBrush", settings.UseSystemVisualStyle
+            ? DrawingColor.FromArgb(204, 232, 255) : BlendNativeColors(nativeWindow, nativeHighlight, 50));
+        SetBrush(resources, "GitExtensionsNativeToolStripButtonSelectedCornerBrush", DrawingColor.FromArgb(213, 236, 255));
+        SetBrush(resources, "GitExtensionsNativeToolStripButtonSelectedAdjacentBrush", DrawingColor.FromArgb(227, 242, 255));
+        SetBrush(resources, "GitExtensionsNativeToolStripButtonPressedCornerBrush", DrawingColor.FromArgb(170, 217, 255));
+        SetBrush(resources, "GitExtensionsNativeToolStripButtonPressedAdjacentBrush", DrawingColor.FromArgb(200, 230, 255));
 
         // ProfessionalColorTable's non-gradient selected and pressed branches mix
         // native Window/Highlight at 70/30 and 50/50, rounding the result to nearest.
@@ -524,8 +537,11 @@ internal static class AvaloniaThemeResources
             settings.UseSystemVisualStyle);
     }
 
+    // The native96 TOOLBAR reference's raw Highlight is #0078D4, not invariant.css's #0078D7.
+    // Do not change the separately configurable CSS/KnownColor fallback table.
     internal static DrawingColor ResolveNativeSystemColor(bool isDark, KnownColor name)
-        => isDark && TryGetDarkSystemColor(name, out DrawingColor dark)
+        => !isDark && name == KnownColor.Highlight ? DrawingColor.FromArgb(0, 120, 212)
+            : isDark && TryGetDarkSystemColor(name, out DrawingColor dark)
             ? dark
             : TryGetLightSystemColor(name, out DrawingColor light)
                 ? light

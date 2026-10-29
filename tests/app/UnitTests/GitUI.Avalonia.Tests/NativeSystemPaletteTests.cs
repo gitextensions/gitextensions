@@ -52,13 +52,13 @@ public sealed class NativeSystemPaletteTests
             ((ISolidColorBrush)resources["GitExtensionsWindowBackgroundBrush"]!).Color.Should().Be(Colors.Lime,
                 "the raw source boundary does not disable configurable control colors");
             ((ISolidColorBrush)resources["GitExtensionsNativeToolStripSplitProfessionalSelectedBrush"]!).Color.Should()
-                .Be(Color.Parse(dark ? "#2F4159" : "#B3D7F3"));
+                .Be(Color.Parse(dark ? "#2F4159" : "#B3D7F2"));
             ((ISolidColorBrush)resources["GitExtensionsNativeToolStripSplitProfessionalPressedBrush"]!).Color.Should()
-                .Be(Color.Parse(dark ? "#2D4B73" : "#80BCEB"));
+                .Be(Color.Parse(dark ? "#2D4B73" : "#80BCEA"));
             ((ISolidColorBrush)resources["GitExtensionsNativeToolStripSplitProfessionalBorderBrush"]!).Color.Should()
-                .Be(Color.Parse(dark ? "#2864B4" : "#0078D7"));
+                .Be(Color.Parse(dark ? "#2864B4" : "#0078D4"));
             ((ISolidColorBrush)resources["GitExtensionsNativeToolStripSplitProfessionalSplitterBrush"]!).Color.Should()
-                .Be(dark ? Colors.Silver : Color.Parse("#0078D7"));
+                .Be(dark ? Colors.Silver : Color.Parse("#0078D4"));
             LinearGradientBrush open = (LinearGradientBrush)resources["GitExtensionsNativeToolStripSplitProfessionalOpenBrush"]!;
             open.GradientStops.Select(stop => stop.Color).Should()
                 .Equal(Color.Parse(dark ? "#2E2E2E" : "#FCFCFC"), Color.Parse(dark ? "#292929" : "#F8F8F8"));

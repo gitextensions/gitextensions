@@ -216,7 +216,7 @@ public sealed class MainWindowMenuChromeTests
         GetColor(caption.Foreground).Should().Be(foreground);
         caption.Bounds.Should().Be(allocation);
         Color background = fixture.ResourceColor("GitExtensionsNativeMenuSelectedBackgroundBrush");
-        background.Should().Be(theme == "dark" ? Color.Parse("#2F4159") : Color.Parse("#B3D7F3"),
+        background.Should().Be(theme == "dark" ? Color.Parse("#2F4159") : Color.Parse("#B3D7F2"),
             "ProfessionalColorTable uses the native system Window/Highlight blend, not CSS Highlight");
         menu.Close();
     }

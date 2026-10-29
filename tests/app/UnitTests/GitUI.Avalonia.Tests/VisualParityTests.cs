@@ -1362,7 +1362,11 @@ public sealed class VisualParityTests
 
             graphCell.Margin.Left.Should().Be(6);
             revisionRow.ColumnDefinitions[0].Width.Value.Should().Be(22);
-            messageCell.Margin.Left.Should().Be(6);
+            messageCell.Margin.Left.Should().Be(0,
+                "the original hit target is the full cell; ColumnLeftMargin offsets its painters only");
+            Panel messageContent = messageCell.Children.OfType<Panel>().Should().ContainSingle().Which;
+            messageContent.Margin.Left.Should().Be(6);
+            messageContent.TranslatePoint(default, messageCell)!.Value.X.Should().Be(6);
             RevisionGridControl.CalculateGraphColumnWidth(visibleLaneCount: 3).Should().Be(54);
         }
         finally
@@ -1819,16 +1823,28 @@ public sealed class VisualParityTests
             .Should().BeOfType<TranslateTransform>().Subject;
         gestureOffset.X.Should().Be(-10);
         gestureOffset.Y.Should().Be(-1);
-        TranslateTransform chevronOffset = chevron.RenderTransform
-            .Should().BeOfType<TranslateTransform>().Subject;
-        chevronOffset.X.Should().Be(-7);
-        chevronOffset.Y.Should().Be(0);
-        Avalonia.Controls.Shapes.Path arrow = chevron.Should().BeOfType<Avalonia.Controls.Shapes.Path>().Subject;
-        arrow.Width.Should().Be(4);
-        arrow.Height.Should().Be(8);
-        arrow.StrokeThickness.Should().Be(0);
-        arrow.Fill.Should().Be(item.Foreground);
-        arrow.Data!.Bounds.Should().Be(new Rect(0, 0, 4, 8));
+        NativeToolStripMenuArrow arrow = chevron.Should().BeOfType<NativeToolStripMenuArrow>().Subject;
+        arrow.RenderTransform.Should().BeNull();
+        arrow.Width.Should().Be(10);
+        arrow.Margin.Should().Be(new Thickness(0, 1, 8, 1));
+        arrow.IsVisible.Should().Be(item.HasSubMenu);
+        arrow.IsHitTestVisible.Should().BeFalse();
+        arrow.Focusable.Should().BeFalse();
+        if (item.HasSubMenu)
+        {
+            TopLevel root = TopLevel.GetTopLevel(item)
+                ?? throw new AssertionException("The source arrow must belong to the actual open popup.");
+            Point first = item.TranslatePoint(default, root)
+                ?? throw new AssertionException("The menu item must have an actual popup coordinate.");
+            Point last = item.TranslatePoint(new Point(item.Bounds.Width, 0), root)
+                ?? throw new AssertionException("The complete item width must belong to the popup.");
+            double arrowX = item.FlowDirection == FlowDirection.RightToLeft ? 8 : item.Bounds.Width - 18;
+            arrow.TranslatePoint(default, root).Should().Be(new Point(Math.Min(first.X, last.X) + arrowX, first.Y + 1));
+            arrow.Bounds.Size.Should().Be(new Size(10, 20));
+        }
+
+        arrow.Foreground.Should().Be(GetThemeResource<IBrush>(Application.Current!, item.IsEnabled
+            ? "GitExtensionsNativeToolStripArrowBrush" : "GitExtensionsNativeMenuDisabledArrowBrush"));
     }
 
     [AvaloniaTest]
@@ -1879,12 +1895,15 @@ public sealed class VisualParityTests
     private static void AssertRenderedSeparatorPalette(Separator separator)
     {
         Border[] borders = [.. separator.GetVisualDescendants().OfType<Border>()];
-        borders.Should().HaveCount(2);
+        borders.Should().HaveCount(1);
         borders[0].Background.Should().Be(
             GetThemeResource<IBrush>(Application.Current!, "GitExtensionsMenuRenderedBackgroundBrush"));
-        borders[1].Background.Should().Be(
-            GetThemeResource<IBrush>(Application.Current!, "GitExtensionsMenuRenderedBorderBrush"));
-        borders[1].Margin.Should().Be(new Thickness(28, 0, 1, 0));
+        NativeMenuSeparatorChrome chrome = separator.GetVisualDescendants()
+            .OfType<NativeMenuSeparatorChrome>().Should().ContainSingle().Which;
+        chrome.DarkBrush.Should().Be(
+            GetThemeResource<IBrush>(Application.Current!, "GitExtensionsToolStripSeparatorDarkBrush"));
+        chrome.Margin.Should().Be(new Thickness(28, 0, 1, 0));
+        chrome.Bounds.Height.Should().Be(6);
     }
 
     private static void AssertRefLabelRendering(
@@ -2069,7 +2088,7 @@ public sealed class VisualParityTests
                 settings,
                 System.Drawing.KnownColor.HighlightText)));
         GetResourceBrushColor(application, "GitExtensionsToolStripCheckedBackgroundBrush", themeVariant)
-            .Should().Be(Color.Parse(isDark ? "#28445B" : "#CCE8FF"));
+            .Should().Be(settings.UseSystemVisualStyle ? Color.Parse("#CCE8FF") : Color.Parse("#00000000"));
         GetResourceBrushColor(application, "GitExtensionsNativeTabBorderBrush", themeVariant)
             .Should().Be(Color.Parse(isDark ? "#3B3B3B" : "#E5E5E5"));
         GetResourceBrushColor(application, "GitExtensionsBrowseTabUnselectedBackgroundBrush", themeVariant)
