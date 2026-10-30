@@ -1580,6 +1580,8 @@ public sealed class VisualParityTests
         ThemeId originalTheme = AppSettings.ThemeId;
         string[] originalThemeVariations = AppSettings.ThemeVariations;
         ThemeVariant? originalVariant = application.RequestedThemeVariant;
+        System.Drawing.Color firstUseGraphNonRelativeColor = RevisionGraphLaneColor.NonRelativeColor;
+        IBrush firstUseGraphNonRelativeBrush = RevisionGraphLaneColor.NonRelativeBrush;
         try
         {
             AppSettings.ThemeVariations = ThemeVariations.None;
@@ -1594,8 +1596,8 @@ public sealed class VisualParityTests
             GetResourceBrushColor(application, "GitExtensionsSelectionBackgroundBrush", ThemeVariant.Light).Should().Be(Color.Parse("#C3C3FF"));
             AssertPublishedThemeColors(application, ThemeVariant.Light);
             AssertDerivedThemeColors(application, ThemeVariant.Light);
-            RevisionGraphLaneColor.NonRelativeColor.ToArgb().Should().Be(
-                System.Drawing.ColorTranslator.FromHtml("#D3D3D3").ToArgb());
+            RevisionGraphLaneColor.NonRelativeColor.Should().Be(firstUseGraphNonRelativeColor);
+            RevisionGraphLaneColor.NonRelativeBrush.Should().BeSameAs(firstUseGraphNonRelativeBrush);
 
             AppSettings.ThemeId = ThemeId.DefaultDark;
             AvaloniaThemeSettings.ApplyAppSettings();
@@ -1612,8 +1614,9 @@ public sealed class VisualParityTests
             GetResourceBrushColor(application, "GitExtensionsSelectionBackgroundBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#00009B"));
             AssertPublishedThemeColors(application, ThemeVariant.Dark);
             AssertDerivedThemeColors(application, ThemeVariant.Dark);
-            RevisionGraphLaneColor.NonRelativeColor.ToArgb().Should().Be(
-                System.Drawing.ColorTranslator.FromHtml("#707070").ToArgb());
+            RevisionGraphLaneColor.NonRelativeColor.Should().Be(firstUseGraphNonRelativeColor,
+                "the source graph palette is cached at first use even when other theme resources reload");
+            RevisionGraphLaneColor.NonRelativeBrush.Should().BeSameAs(firstUseGraphNonRelativeBrush);
 
             AppSettings.ThemeId = ThemeId.WindowsAppColorModeId;
             AvaloniaThemeSettings.ApplyAppSettings();

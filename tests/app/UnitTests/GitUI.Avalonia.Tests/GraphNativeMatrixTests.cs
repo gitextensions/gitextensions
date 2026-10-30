@@ -241,7 +241,7 @@ public sealed class GraphNativeMatrixTests
     {
         foreach (string theme in new[] { "light", "dark", "custom" })
         {
-            foreach (string colorRole in new[] { "low-gray", "asymmetric-low", "source-first-lane" })
+            foreach (string colorRole in new[] { "low-gray", "asymmetric-low", "configured-first-lane" })
             {
                 foreach (bool head in new[] { false, true })
                 {
@@ -263,12 +263,12 @@ public sealed class GraphNativeMatrixTests
             {
                 "low-gray" => DrawingColor.FromArgb(2, 2, 2),
                 "asymmetric-low" => DrawingColor.FromArgb(1, 17, 239),
-                "source-first-lane" => BrushColor(RevisionGraphLaneColor.GetBrushForLane(0)),
+                "configured-first-lane" => GetFirstConfiguredLaneColor(),
                 _ => throw new ArgumentOutOfRangeException(nameof(colorRole)),
             };
-            RevisionGraphRevision upper = new(Id(1), guessScore: 1) { GitRevision = new GitRevision(Id(1)) { Refs = [] } };
-            RevisionGraphRevision current = new(Id(2), guessScore: 2) { GitRevision = new GitRevision(Id(2)) { Refs = [] } };
-            RevisionGraphRevision lower = new(Id(3), guessScore: 3) { GitRevision = new GitRevision(Id(3)) { Refs = [] } };
+            RevisionGraphRevision upper = new(Id(1), guessScore: 1) { IsRelative = true, GitRevision = new GitRevision(Id(1)) { Refs = [] } };
+            RevisionGraphRevision current = new(Id(2), guessScore: 2) { IsRelative = true, GitRevision = new GitRevision(Id(2)) { Refs = [] } };
+            RevisionGraphRevision lower = new(Id(3), guessScore: 3) { IsRelative = true, GitRevision = new GitRevision(Id(3)) { Refs = [] } };
             RevisionGraphSegment incoming = new(current, upper);
             incoming.LaneInfo = new LaneInfo(incoming, segmentToTheLeft: null);
             RevisionGraphSegment outgoing = new(lower, current);
@@ -279,14 +279,20 @@ public sealed class GraphNativeMatrixTests
                 new RevisionGraphRow(current, [incoming, outgoing], mergeGraphLanesHavingCommonParent: false),
                 new RevisionGraphRow(lower, [outgoing], mergeGraphLanesHavingCommonParent: false),
             ];
-            FieldInfo brushField = typeof(RevisionGraphLaneColor).GetField("_nonRelativeBrush", BindingFlags.Static | BindingFlags.NonPublic)
-                ?? throw new AssertionException("The actual portable non-relative input is missing.");
-            object originalBrush = brushField.GetValue(null) ?? throw new AssertionException("The actual portable input brush is missing.");
+            List<IBrush> palette = RevisionGraphLaneColor.PresetGraphBrushes;
+            IBrush[] originalPalette = [.. palette];
+            IBrush originalNonRelativeBrush = RevisionGraphLaneColor.NonRelativeBrush;
+            originalPalette.Should().NotBeEmpty();
             try
             {
-                // The portable cached brush is immutable. Scope only its controlled input and
-                // restore its exact reference; never reset the palette or the source's cache.
-                brushField.SetValue(null, new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(controlledFill)).ToImmutable());
+                // The source retains a mutable lane list but a readonly non-relative brush.
+                // Use relative lanes to scope controlled paint without changing cached fields.
+                IBrush brush = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(controlledFill)).ToImmutable();
+                for (int index = 0; index < palette.Count; index++)
+                {
+                    palette[index] = brush;
+                }
+
                 RevisionGraphConfig config = new RevisionGraph().Config;
                 LayeredGraphControl control = new(config, rows, head ? current.Objectid : OtherId);
                 using RenderTargetBitmap frame = Render(control, new PixelSize(24, 24));
@@ -298,9 +304,9 @@ public sealed class GraphNativeMatrixTests
                     sourceFillArgb = Argb(controlledFill), sourceLaneArgb = Argb(controlledFill),
                     sourceOutlineArgb = Argb(NativeRevisionGraphNodeRaster.GetOutlineColor()),
                     rowHeight = 24, origin = new { X = 0, Y = 0 }, clip = new PixelRect(0, 0, 24, 24), nodeBounds = new PixelRect(3, 7, 10, 10),
-                    style = RevisionGraphDrawStyle.DrawNonRelativesGray.ToString(),
+                    style = RevisionGraphDrawStyle.Normal.ToString(),
                     primitiveOrder = new[] { "outgoing vertical lane", "incoming vertical lane", "circle fill", head ? "raw WindowText HEAD outline" : "no HEAD outline" },
-                    rawPixelHash, sourceContext = DescribeContext(theme), actual = DescribeBitmap(frame, pixels),
+                    rawPixelHash, sourceContext = DescribeContext(theme, originalPalette), actual = DescribeBitmap(frame, pixels),
                 });
                 rawPixelHash.Should().Be(NativeLayeredHash(theme, colorRole, head),
                     "the complete actual middle-row BGRA frame must match the recorded original sequence over its incoming and outgoing lane");
@@ -316,15 +322,35 @@ public sealed class GraphNativeMatrixTests
             }
             finally
             {
-                brushField.SetValue(null, originalBrush);
+                palette.Clear();
+                palette.AddRange(originalPalette);
             }
 
-            ReferenceEquals(brushField.GetValue(null), originalBrush).Should().BeTrue();
+            ReferenceEquals(RevisionGraphLaneColor.PresetGraphBrushes, palette).Should().BeTrue();
+            palette.Count.Should().Be(originalPalette.Length);
+            for (int index = 0; index < palette.Count; index++)
+            {
+                ReferenceEquals(palette[index], originalPalette[index]).Should().BeTrue();
+            }
+
+            ReferenceEquals(RevisionGraphLaneColor.NonRelativeBrush, originalNonRelativeBrush).Should().BeTrue();
         });
     }
 
+    private static DrawingColor GetFirstConfiguredLaneColor()
+    {
+        DrawingColor[] branchColors = [.. Enum.GetNames<AppColor>()
+            .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1]))
+            .Select(name => Enum.Parse<AppColor>(name).GetThemeColor())
+            .Where(color => !color.IsEmpty)
+            .Distinct()];
+        const int minBranchColors = 4;
+        return branchColors.Length < minBranchColors ? DrawingColor.Cyan : branchColors[0];
+    }
+
     // Original DrawItem native96 AA/HQ raw24x24 BGRA frames, 2026-10-30, including actual
-    // incoming/outgoing segments. The custom first-lane input F06595 differs from dark DB5B93.
+    // incoming/outgoing segments. Configured first-lane inputs do not depend on the cached
+    // process palette; custom F06595 differs from dark DB5B93.
     private static string NativeLayeredHash(string theme, string role, bool head) => (role, head, theme) switch
     {
         ("low-gray", false, _) => "9FDA2909A106A3D0877D794359B19902B8E755DC929F732831A390894C600BAC",
@@ -333,12 +359,12 @@ public sealed class GraphNativeMatrixTests
         ("low-gray", true, _) => "85B13667C03FC5B997E14F30748C3BD7C9CBF3FE19AABC708965B7FD680DB35D",
         ("asymmetric-low", true, "light") => "230660ED7E09B111D292D5F52D0C9CCB2750A0D70AAD85005C309B55BE0D66BB",
         ("asymmetric-low", true, _) => "13F906A7E30BC184138B13F5A1EEF6DCE3B3F295078BE78E5DF2EE5EDD21214C",
-        ("source-first-lane", false, "light") => "1D16A62EC47E3E020FBEC5A683FEE03BC276293943A2A6EC28DDFF38E1C9D759",
-        ("source-first-lane", true, "light") => "4902A4891936084753777ED806DA274D6BD2871F44AE68D6453DCBFB6D55068E",
-        ("source-first-lane", false, "dark") => "10CEA1977A330BBAA5D5121BD8DAC3876EBAF6C49398BE14D98486348B76A1C9",
-        ("source-first-lane", true, "dark") => "91F60F042A5D02873953E411ED627BDC33F62F2045368B14919471689C89DA8F",
-        ("source-first-lane", false, "custom") => "5FC891103250EF507C704579709D42211B83066547056B78BAC006BA0D29BD6B",
-        ("source-first-lane", true, "custom") => "C0A126BAF94DE4BF40CF4F16530E1BC5E75E1E5AB2300D4E9F54D9B85780E68C",
+        ("configured-first-lane", false, "light") => "1D16A62EC47E3E020FBEC5A683FEE03BC276293943A2A6EC28DDFF38E1C9D759",
+        ("configured-first-lane", true, "light") => "4902A4891936084753777ED806DA274D6BD2871F44AE68D6453DCBFB6D55068E",
+        ("configured-first-lane", false, "dark") => "10CEA1977A330BBAA5D5121BD8DAC3876EBAF6C49398BE14D98486348B76A1C9",
+        ("configured-first-lane", true, "dark") => "91F60F042A5D02873953E411ED627BDC33F62F2045368B14919471689C89DA8F",
+        ("configured-first-lane", false, "custom") => "5FC891103250EF507C704579709D42211B83066547056B78BAC006BA0D29BD6B",
+        ("configured-first-lane", true, "custom") => "C0A126BAF94DE4BF40CF4F16530E1BC5E75E1E5AB2300D4E9F54D9B85780E68C",
         _ => throw new ArgumentOutOfRangeException(nameof(role)),
     };
 
@@ -458,7 +484,7 @@ public sealed class GraphNativeMatrixTests
             {
                 GraphRenderer.DrawItem(config, context, index: 1, rowHeight: 24,
                     index => index >= 0 && index < rows.Length ? rows[index] : null,
-                    RevisionGraphDrawStyle.DrawNonRelativesGray, head);
+                    RevisionGraphDrawStyle.Normal, head);
             }
         }
     }
@@ -525,11 +551,15 @@ public sealed class GraphNativeMatrixTests
         config.StraightenGraphDiagonals, config.StraightenGraphSegmentsLimit,
     };
 
-    private static object DescribeContext(string theme) => new
+    private static object DescribeContext(string theme, IReadOnlyList<IBrush>? originalPalette = null) => new
     {
         theme, bitmapFormat = "Bgra8888 Premul", dpi = 96, dpiMode = "ownedHeadlessBitmap",
+        themeInput = "current ThemeSettings, not a fresh graph-palette process",
+        paletteLifetime = "processFirstUse",
+        paletteInput = originalPalette is null ? "unchangedCachedEntries" : "scopedControlledRelativeLaneEntries",
         palette = Enumerable.Range(0, RevisionGraphLaneColor.PresetGraphBrushes.Count)
             .Select(index => Argb(BrushColor(RevisionGraphLaneColor.GetBrushForLane(index)))).ToArray(),
+        unmodifiedProcessPalette = originalPalette?.Select(brush => Argb(BrushColor(brush))).ToArray(),
         nonRelative = Argb(RevisionGraphLaneColor.NonRelativeColor),
         windowText = Argb(NativeRevisionGraphNodeRaster.GetOutlineColor()),
     };
@@ -619,7 +649,7 @@ public sealed class GraphNativeMatrixTests
         {
             test = TestContext.CurrentContext.Test.FullName,
             captureMethod = "actualAvaloniaGraphRendererOwnedHeadlessBitmap",
-            scope = "Native-identical model/theme/configuration/origin/clip inputs. Metamorphic tests do not assert GDI/Skia antialiased pixel identity.",
+            scope = "Actual model/configuration/origin/clip inputs under the requested current theme. The process-first-use graph palette and any scoped controlled lane inputs are recorded, not recreated per theme. Metamorphic tests do not assert GDI/Skia antialiased pixel identity.",
             report,
         }, new JsonSerializerOptions { WriteIndented = true }));
     }
@@ -706,7 +736,6 @@ public sealed class GraphNativeMatrixTests
             ThemeSettings settings = new(theme, Theme.CreateDefaultTheme(), [], useSystemVisualStyle: name == "light");
             ModuleSettings.SetValue(null, settings);
             ColorHelper.ThemeSettings = settings;
-            _ = RevisionGraphLaneColor.NonRelativeColor;
         }
 
         public void Dispose()

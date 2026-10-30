@@ -577,7 +577,7 @@ public sealed class GraphRenderingTests
 
     private static IEnumerable<TestCaseData> LayeredCases()
     {
-        foreach (string colorRole in new[] { "low-gray", "asymmetric-low", "source-first-lane" })
+        foreach (string colorRole in new[] { "low-gray", "asymmetric-low", "configured-first-lane" })
         {
             foreach (bool head in new[] { false, true })
             {
@@ -595,19 +595,24 @@ public sealed class GraphRenderingTests
         WithIsolatedSettings(() =>
         {
             Configure(diagonals: false, merged: false);
-            SolidBrush sourceBrush = typeof(RevisionGraphLaneColor).GetProperty("NonRelativeBrush", PrivateStatic)?.GetValue(null) as SolidBrush
-                ?? throw new MissingMemberException(typeof(RevisionGraphLaneColor).FullName, "NonRelativeBrush");
-            Color previousBrushColor = sourceBrush.Color;
+            List<Brush> palette = ReadPalette();
+            Brush[] previousBrushes = [.. palette];
+            Color[] previousColors = [.. previousBrushes.Select(BrushColor)];
+            Brush nonRelativeBrush = ReadNonRelativeBrush();
+            Color nonRelativeColor = BrushColor(nonRelativeBrush);
             Color controlledFill = colorRole switch
             {
                 "low-gray" => Color.FromArgb(2, 2, 2),
                 "asymmetric-low" => Color.FromArgb(1, 17, 239),
-                "source-first-lane" => BrushColor(ReadPalette()[0]),
+                "configured-first-lane" => Enum.GetNames<AppColor>()
+                    .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1], StringComparison.Ordinal))
+                    .Select(name => Enum.Parse<AppColor>(name).GetThemeColor())
+                    .First(color => !color.IsEmpty),
                 _ => throw new ArgumentOutOfRangeException(nameof(colorRole)),
             };
-            RevisionGraphRevision upper = new(Id(1), guessScore: 1) { GitRevision = new GitRevision(Id(1)) { Refs = [] } };
-            RevisionGraphRevision current = new(Id(2), guessScore: 2) { GitRevision = new GitRevision(Id(2)) { Refs = [] } };
-            RevisionGraphRevision lower = new(Id(3), guessScore: 3) { GitRevision = new GitRevision(Id(3)) { Refs = [] } };
+            RevisionGraphRevision upper = new(Id(1), guessScore: 1) { IsRelative = true, GitRevision = new GitRevision(Id(1)) { Refs = [] } };
+            RevisionGraphRevision current = new(Id(2), guessScore: 2) { IsRelative = true, GitRevision = new GitRevision(Id(2)) { Refs = [] } };
+            RevisionGraphRevision lower = new(Id(3), guessScore: 3) { IsRelative = true, GitRevision = new GitRevision(Id(3)) { Refs = [] } };
             RevisionGraphSegment incoming = new(current, upper);
             incoming.LaneInfo = new LaneInfo(incoming, segmentToTheLeft: null);
             RevisionGraphSegment outgoing = new(lower, current);
@@ -623,14 +628,19 @@ public sealed class GraphRenderingTests
             using Bitmap actual = CreateSourceBitmap(new Size(24, 24));
             using Bitmap expected = CreateSourceBitmap(new Size(24, 24));
             using Bitmap precomposed = CreateSourceBitmap(new Size(24, 24));
+            using SolidBrush controlledBrush = new(controlledFill);
             try
             {
-                sourceBrush.Color = controlledFill;
+                for (int index = 0; index < palette.Count; index++)
+                {
+                    palette[index] = controlledBrush;
+                }
+
                 using (Graphics graphics = CreateSourceGraphics(actual))
                 {
                     graphics.SetClip(new Rectangle(Point.Empty, actual.Size));
                     graphics.RenderingOrigin = Point.Empty;
-                    InvokeOriginal(config, graphics, 1, 24, getRow, RevisionGraphDrawStyle.DrawNonRelativesGray, head ? current.Objectid : OtherId, null);
+                    InvokeOriginal(config, graphics, 1, 24, getRow, RevisionGraphDrawStyle.Normal, head ? current.Objectid : OtherId, null);
                 }
 
                 using (Graphics graphics = CreateSourceGraphics(expected))
@@ -673,7 +683,10 @@ public sealed class GraphRenderingTests
             }
             finally
             {
-                sourceBrush.Color = previousBrushColor;
+                for (int index = 0; index < previousBrushes.Length; index++)
+                {
+                    palette[index] = previousBrushes[index];
+                }
             }
 
             string directory = BitmapPaintProbe.CreateDirectory();
@@ -689,13 +702,19 @@ public sealed class GraphRenderingTests
                 sourceFillArgb = BitmapPaintProbe.Argb(controlledFill),
                 sourceLaneArgb = BitmapPaintProbe.Argb(controlledFill),
                 sourceOutlineArgb = BitmapPaintProbe.Argb(SystemColors.WindowText),
-                originalCachedBrushArgb = BitmapPaintProbe.Argb(previousBrushColor),
-                restoredCachedBrushArgb = BitmapPaintProbe.Argb(sourceBrush.Color),
+                originalPaletteArgb = previousColors.Select(BitmapPaintProbe.Argb).ToArray(),
+                restoredPaletteArgb = palette.Select(BrushColor).Select(BitmapPaintProbe.Argb).ToArray(),
+                paletteListReferenceRetained = ReferenceEquals(ReadPalette(), palette),
+                paletteBrushReferencesRestored = palette.Select((brush, index) => ReferenceEquals(brush, previousBrushes[index])).ToArray(),
+                originalNonRelativeArgb = BitmapPaintProbe.Argb(nonRelativeColor),
+                restoredNonRelativeArgb = BitmapPaintProbe.Argb(BrushColor(ReadNonRelativeBrush())),
+                nonRelativeBrushReferenceRetained = ReferenceEquals(ReadNonRelativeBrush(), nonRelativeBrush),
                 rowHeight = 24,
                 origin = Point.Empty,
                 clip = new Rectangle(0, 0, 24, 24),
                 nodeBounds = new Rectangle(3, 7, 10, 10),
-                style = RevisionGraphDrawStyle.DrawNonRelativesGray.ToString(),
+                style = RevisionGraphDrawStyle.Normal.ToString(),
+                relativeRows = rows.Select(row => row.Revision.IsRelative).ToArray(),
                 primitiveOrder = new[] { "outgoing vertical lane", "incoming vertical lane", "circle fill", head ? "raw WindowText HEAD outline" : "no HEAD outline" },
                 actual = DescribeBitmap(actual),
                 expected = DescribeBitmapSummary(expected),
@@ -709,15 +728,226 @@ public sealed class GraphRenderingTests
                 },
                 sourceContext = DescribeContext(),
                 captureMethod = "originalGraphRendererOwnedPArgbBitmap",
-                scope = "actual original middle-row DrawItem over its incoming/outgoing segments and independent original GDI primitive order; controlled existing non-relative brush under DrawNonRelativesGray, never a replaced palette/cache or a native window",
+                scope = "actual original relative middle-row DrawItem under Normal style and independent original GDI primitive order; owned controlled solid brush temporarily occupies existing palette slots, with every exact original slot reference restored; non-relative brush is never mutated; no static cache reset or native window",
             });
             BitmapPaintProbe.AssertPixels(actual, expected);
-            sourceBrush.Color.ToArgb().Should().Be(previousBrushColor.ToArgb());
+            ReadPalette().Should().BeSameAs(palette);
+            palette.Should().HaveCount(previousBrushes.Length);
+            palette.Select((brush, index) => ReferenceEquals(brush, previousBrushes[index])).Should().OnlyContain(same => same);
+            palette.Select(BrushColor).Select(color => color.ToArgb()).Should().Equal(previousColors.Select(color => color.ToArgb()));
+            ReadNonRelativeBrush().Should().BeSameAs(nonRelativeBrush);
+            BrushColor(nonRelativeBrush).ToArgb().Should().Be(nonRelativeColor.ToArgb());
             if (_themeName == "light" && colorRole == "low-gray" && head)
             {
                 actual.GetPixel(7, 7).ToArgb().Should().Be(Color.FromArgb(2, 2, 2).ToArgb());
                 precomposed.GetPixel(7, 7).ToArgb().Should().Be(Color.FromArgb(1, 1, 1).ToArgb(),
                     "precomposing the source fill and outline changes integer rounding over an existing lane");
+            }
+        });
+    }
+
+    /// <summary>
+    ///  Retains first-use graph brushes and a real cached lane when later theme settings expose a smaller palette.
+    /// </summary>
+    [TestCase(false)]
+    [TestCase(true)]
+    public void DrawItem_should_retain_first_use_palette_and_cached_lane_across_later_theme_changes(bool square)
+    {
+        WithIsolatedSettings(() =>
+        {
+            Configure(diagonals: false, merged: false);
+            ThemeSettings previous = ThemeModule.Settings;
+            SystemColorMode mode = Application.ColorMode;
+            Color rawOutline = SystemColors.WindowText;
+            List<Brush> palette = ReadPalette();
+            Brush[] previousBrushes = [.. palette];
+            Color[] previousColors = [.. previousBrushes.Select(BrushColor)];
+            Brush nonRelativeBrush = ReadNonRelativeBrush();
+            Color nonRelativeColor = RevisionGraphLaneColor.NonRelativeColor;
+            Color nonRelativeBrushColor = BrushColor(nonRelativeBrush);
+            int retainedIndex = palette.Count - 1;
+            retainedIndex.Should().BeGreaterThanOrEqualTo(3);
+            int[] seeds = [-1024, -17, -1, 0, 1, 17, 1024, int.MaxValue, retainedIndex, retainedIndex + palette.Count];
+            int[] initialIndices = [.. seeds.Select(RevisionGraphLaneColor.GetColorForLane)];
+            ObjectId retainedId = ObjectId.Parse(Convert.ToHexString(BitConverter.GetBytes(retainedIndex)) + new string('0', 32));
+            RevisionGraphRevision upper = new(Id(1), guessScore: 1) { IsRelative = true, GitRevision = new GitRevision(Id(1)) { Refs = [] } };
+            RevisionGraphRevision current = new(retainedId, guessScore: 2)
+            {
+                IsRelative = true,
+                GitRevision = new GitRevision(retainedId) { Refs = square ? [Substitute.For<IGitRef>()] : [] },
+            };
+            RevisionGraphRevision lower = new(Id(3), guessScore: 3) { IsRelative = true, GitRevision = new GitRevision(Id(3)) { Refs = [] } };
+            RevisionGraphSegment incoming = new(current, upper);
+            LaneInfo retainedLane = new(incoming, segmentToTheLeft: null);
+            retainedLane.Color.Should().Be(retainedIndex, "the actual source LaneInfo must retain an index beyond the later configured palette");
+            incoming.LaneInfo = retainedLane;
+            RevisionGraphSegment outgoing = new(lower, current) { LaneInfo = retainedLane };
+            IRevisionGraphRow[] rows =
+            [
+                new RevisionGraphRow(upper, [incoming], mergeGraphLanesHavingCommonParent: false),
+                new RevisionGraphRow(current, [incoming, outgoing], mergeGraphLanesHavingCommonParent: false),
+                new RevisionGraphRow(lower, [outgoing], mergeGraphLanesHavingCommonParent: false),
+            ];
+            foreach (IRevisionGraphRow row in rows)
+            {
+                row.GetCurrentRevisionLane().Should().Be(0);
+            }
+
+            RevisionGraphRevision detached = new(NodeId, guessScore: 1)
+            {
+                GitRevision = new GitRevision(NodeId) { Refs = square ? [Substitute.For<IGitRef>()] : [] },
+            };
+            RevisionGraphRow detachedRow = new(detached, [], mergeGraphLanesHavingCommonParent: false);
+            object config = ReadConfig(new RevisionGraph());
+            string directory = BitmapPaintProbe.CreateDirectory();
+            List<object> states = [];
+            using Bitmap initialRelative = Paint(relative: true);
+            using Bitmap initialNonRelative = Paint(relative: false);
+            AppColor[] branchRoles = [.. Enum.GetNames<AppColor>()
+                .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1], StringComparison.Ordinal))
+                .Select(name => Enum.Parse<AppColor>(name))];
+            IThemeSerializationData sourceTheme = previous.Theme;
+            Dictionary<AppColor, Color> laterValues = new(sourceTheme.AppColorValues);
+            Color replacementFirst = Color.FromArgb(1, 2, 3);
+            Color replacementSecond = Color.FromArgb(5, 7, 11);
+            Color replacementNonRelative = Color.FromArgb(13, 17, 19);
+            Color inPlaceBranch = Color.FromArgb(37, 41, 43);
+            Color inPlaceNonRelative = Color.FromArgb(53, 59, 61);
+            previousColors.Select(color => color.ToArgb()).Should().NotContain(new[]
+            {
+                replacementFirst.ToArgb(), replacementSecond.ToArgb(), inPlaceBranch.ToArgb(),
+            });
+            replacementNonRelative.ToArgb().Should().NotBe(nonRelativeColor.ToArgb());
+            inPlaceNonRelative.ToArgb().Should().NotBe(nonRelativeColor.ToArgb());
+            Theme laterTheme = new(laterValues, new Dictionary<KnownColor, Color>(sourceTheme.SysColorValues), previous.Theme.Id);
+            ThemeSettings laterSettings = new(laterTheme, previous.InvariantTheme, previous.Variations, previous.UseSystemVisualStyle);
+            try
+            {
+                RetainState("before", initialRelative, initialNonRelative);
+                foreach (string state in new[] { "replacement", "in-place" })
+                {
+                    for (int index = 0; index < branchRoles.Length; index++)
+                    {
+                        laterValues[branchRoles[index]] = state == "in-place" ? inPlaceBranch : index % 2 == 0 ? replacementFirst : replacementSecond;
+                    }
+
+                    laterValues[AppColor.GraphNonRelativeBranch] = state == "in-place" ? inPlaceNonRelative : replacementNonRelative;
+                    if (state == "replacement")
+                    {
+                        SetThemeSettings(laterSettings);
+                    }
+
+                    ReferenceEquals(ThemeModule.Settings, laterSettings).Should().BeTrue();
+                    Color[] publishedColors = [.. branchRoles.Select(role => role.GetThemeColor()).Where(color => !color.IsEmpty).Distinct()];
+                    publishedColors.Should().HaveCount(state == "replacement" ? 2 : 1);
+                    publishedColors.Length.Should().BeLessThan(previousBrushes.Length);
+                    AppColor.GraphNonRelativeBranch.GetThemeColor().ToArgb().Should().Be(laterValues[AppColor.GraphNonRelativeBranch].ToArgb());
+                    using Bitmap relative = Paint(relative: true);
+                    using Bitmap nonRelative = Paint(relative: false);
+                    RetainState(state, relative, nonRelative);
+                    ReadRawPremultiplied(relative).Should().Equal(ReadRawPremultiplied(initialRelative));
+                    ReadRawPremultiplied(nonRelative).Should().Equal(ReadRawPremultiplied(initialNonRelative));
+                }
+            }
+            finally
+            {
+                SetThemeSettings(previous);
+            }
+
+            BitmapPaintProbe.WriteReport(directory, new
+            {
+                kind = "graph-palette-lifetime",
+                theme = _themeName,
+                square,
+                head = true,
+                rowHeight = 24,
+                origin = Point.Empty,
+                clip = new Rectangle(0, 0, 24, 24),
+                nodeBounds = new Rectangle(3, 7, 10, 10),
+                style = RevisionGraphDrawStyle.Normal.ToString(),
+                initialPaletteArgb = previousColors.Select(BitmapPaintProbe.Argb).ToArray(),
+                retainedLane = new
+                {
+                    colorIndex = retainedLane.Color,
+                    startRevision = retainedLane.StartRevision.Objectid.ToString(),
+                    segmentChildRevision = incoming.Child.Objectid.ToString(),
+                    segmentParentRevision = incoming.Parent.Objectid.ToString(),
+                    brushArgb = BitmapPaintProbe.Argb(BrushColor(RevisionGraphLaneColor.GetBrushForLane(retainedLane.Color))),
+                },
+                seeds,
+                initialIndices,
+                replacementBranchArgb = new[] { replacementFirst, replacementSecond }.Select(BitmapPaintProbe.Argb).ToArray(),
+                replacementNonRelativeArgb = BitmapPaintProbe.Argb(replacementNonRelative),
+                inPlaceBranchArgb = BitmapPaintProbe.Argb(inPlaceBranch),
+                inPlaceNonRelativeArgb = BitmapPaintProbe.Argb(inPlaceNonRelative),
+                states,
+                themeSettingsReferenceRestored = ReferenceEquals(ThemeModule.Settings, previous),
+                sourceContext = DescribeContext(),
+                captureMethod = "originalGraphRendererOwnedPArgbBitmap",
+                scope = "actual original first-use source palette and retained real high-index LaneInfo across a new smaller-palette ThemeSettings and an in-place mutation of that owned later theme dictionary; original theme dictionaries and all cached brushes stay untouched; actual relative-lane and detached non-relative HEAD pixels are compared raw before/after; no palette reset, theme-reload UI, Control or native window",
+            });
+            ReferenceEquals(ThemeModule.Settings, previous).Should().BeTrue();
+
+            Bitmap Paint(bool relative)
+            {
+                Bitmap bitmap = CreateSourceBitmap(new Size(24, 24));
+                try
+                {
+                    using Graphics graphics = CreateSourceGraphics(bitmap);
+                    graphics.SetClip(new Rectangle(Point.Empty, bitmap.Size));
+                    graphics.RenderingOrigin = Point.Empty;
+                    InvokeOriginal(config, graphics, relative ? 1 : 0, 24,
+                        relative ? index => index >= 0 && index < rows.Length ? rows[index] : null : index => index == 0 ? detachedRow : null,
+                        RevisionGraphDrawStyle.Normal, relative ? current.Objectid : detached.Objectid, null);
+                    return bitmap;
+                }
+                catch
+                {
+                    bitmap.Dispose();
+                    throw;
+                }
+            }
+
+            void RetainState(string name, Bitmap relative, Bitmap nonRelative)
+            {
+                relative.Save(Path.Combine(directory, $"original-relative-{name}.png"), ImageFormat.Png);
+                nonRelative.Save(Path.Combine(directory, $"original-non-relative-{name}.png"), ImageFormat.Png);
+                List<Brush> currentPalette = ReadPalette();
+                bool[] sameBrushes = [.. currentPalette.Select((brush, index) => ReferenceEquals(brush, previousBrushes[index]))];
+                states.Add(new
+                {
+                    name,
+                    publishedPaletteArgb = branchRoles.Select(role => role.GetThemeColor()).Where(color => !color.IsEmpty).Distinct().Select(BitmapPaintProbe.Argb).ToArray(),
+                    publishedNonRelativeArgb = BitmapPaintProbe.Argb(AppColor.GraphNonRelativeBranch.GetThemeColor()),
+                    cachedPaletteArgb = currentPalette.Select(BrushColor).Select(BitmapPaintProbe.Argb).ToArray(),
+                    paletteListReferenceRetained = ReferenceEquals(currentPalette, palette),
+                    paletteBrushReferencesRetained = sameBrushes,
+                    retainedLaneColorIndex = retainedLane.Color,
+                    retainedLaneBrushReferenceRetained = ReferenceEquals(RevisionGraphLaneColor.GetBrushForLane(retainedLane.Color), previousBrushes[retainedIndex]),
+                    currentIndices = seeds.Select(RevisionGraphLaneColor.GetColorForLane).ToArray(),
+                    cachedNonRelativeArgb = BitmapPaintProbe.Argb(RevisionGraphLaneColor.NonRelativeColor),
+                    cachedNonRelativeBrushArgb = BitmapPaintProbe.Argb(BrushColor(ReadNonRelativeBrush())),
+                    nonRelativeBrushReferenceRetained = ReferenceEquals(ReadNonRelativeBrush(), nonRelativeBrush),
+                    rawSystemWindowTextArgb = BitmapPaintProbe.Argb(SystemColors.WindowText),
+                    sourceColorMode = Application.ColorMode.ToString(),
+                    relative = DescribeBitmap(relative),
+                    nonRelative = DescribeBitmap(nonRelative),
+                });
+                currentPalette.Should().BeSameAs(palette);
+                currentPalette.Should().HaveCount(previousBrushes.Length);
+                sameBrushes.Should().OnlyContain(same => same);
+                currentPalette.Select(BrushColor).Select(color => color.ToArgb()).Should().Equal(previousColors.Select(color => color.ToArgb()));
+                seeds.Select(RevisionGraphLaneColor.GetColorForLane).Should().Equal(initialIndices);
+                retainedLane.Color.Should().Be(retainedIndex);
+                retainedLane.StartRevision.Should().BeSameAs(incoming.Child);
+                incoming.Child.Should().BeSameAs(upper);
+                incoming.Parent.Should().BeSameAs(current);
+                RevisionGraphLaneColor.GetBrushForLane(retainedLane.Color).Should().BeSameAs(previousBrushes[retainedIndex]);
+                RevisionGraphLaneColor.NonRelativeColor.ToArgb().Should().Be(nonRelativeColor.ToArgb());
+                ReadNonRelativeBrush().Should().BeSameAs(nonRelativeBrush);
+                BrushColor(nonRelativeBrush).ToArgb().Should().Be(nonRelativeBrushColor.ToArgb());
+                Application.ColorMode.Should().Be(mode);
+                SystemColors.WindowText.ToArgb().Should().Be(rawOutline.ToArgb());
             }
         });
     }
@@ -902,6 +1132,9 @@ public sealed class GraphRenderingTests
 
     private static List<Brush> ReadPalette() => typeof(RevisionGraphLaneColor).GetField("PresetGraphBrushes", PrivateStatic)?.GetValue(null) as List<Brush>
         ?? throw new MissingFieldException(typeof(RevisionGraphLaneColor).FullName, "PresetGraphBrushes");
+
+    private static Brush ReadNonRelativeBrush() => typeof(RevisionGraphLaneColor).GetProperty("NonRelativeBrush", PrivateStatic)?.GetValue(null) as Brush
+        ?? throw new MissingMemberException(typeof(RevisionGraphLaneColor).FullName, "NonRelativeBrush");
 
     private static Color BrushColor(Brush brush) => brush is SolidBrush solid ? solid.Color : throw new AssertionException("The original source lane palette must use solid brushes.");
 

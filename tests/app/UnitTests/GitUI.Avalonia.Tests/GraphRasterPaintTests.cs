@@ -111,11 +111,13 @@ public sealed class GraphRasterPaintTests
     }
 
     [AvaloniaTest]
-    public void DrawItem_should_repaint_its_actual_row_with_live_theme_colors_without_changing_the_lane_or_clip()
+    public void DrawItem_should_keep_its_first_use_palette_when_the_theme_changes_without_changing_the_lane_or_clip()
     {
         RevisionGraphRow row = CreateRow(square: true, lane: 2);
         NodeControl control = new(row, rowHeight: 26, head: true);
-        List<Color> fills = [];
+        Color fill = AvaloniaThemeResources.ToMediaColor(RevisionGraphLaneColor.NonRelativeColor);
+        IBrush nonRelativeBrush = RevisionGraphLaneColor.NonRelativeBrush;
+        IBrush[] palette = [.. RevisionGraphLaneColor.PresetGraphBrushes];
         List<Color> outlines = [];
         foreach (string name in new[] { "light", "dark", "custom" })
         {
@@ -123,18 +125,24 @@ public sealed class GraphRasterPaintTests
             control.InvalidateVisual();
             using RenderTargetBitmap frame = Render(control, new PixelSize(Width, 26));
             using SKBitmap pixels = Decode(frame);
-            Color fill = AvaloniaThemeResources.ToMediaColor(RevisionGraphLaneColor.NonRelativeColor);
             Color outline = AvaloniaThemeResources.ToMediaColor(NativeRevisionGraphNodeRaster.GetOutlineColor());
+            AvaloniaThemeResources.ToMediaColor(RevisionGraphLaneColor.NonRelativeColor).Should().Be(fill,
+                "the source resolves its graph palette once, rather than following a later theme replacement");
+            RevisionGraphLaneColor.NonRelativeBrush.Should().BeSameAs(nonRelativeBrush);
+            RevisionGraphLaneColor.PresetGraphBrushes.Should().HaveCount(palette.Length);
+            for (int index = 0; index < palette.Length; index++)
+            {
+                RevisionGraphLaneColor.GetBrushForLane(index).Should().BeSameAs(palette[index]);
+            }
+
             int centerX = (2 * GraphRenderer.LaneWidth) + (GraphRenderer.LaneWidth / 2);
             pixels.GetPixel(centerX, 13).Should().Be(Pixel(fill));
             pixels.GetPixel(centerX - (GraphRenderer.NodeDimension / 2) - 2, 13).Should().Be(Pixel(outline));
             row.GetCurrentRevisionLane().Should().Be(2);
-            fills.Add(fill);
             outlines.Add(outline);
             Retain(frame, new { theme = name, square = true, head = true, nodeLane = 2, rowHeight = 26, fill = fill.ToString(), outline = outline.ToString() });
         }
 
-        fills.Should().OnlyHaveUniqueItems();
         outlines.Should().Equal(Colors.Black, Color.FromRgb(240, 240, 240), Color.FromRgb(240, 240, 240));
     }
 
