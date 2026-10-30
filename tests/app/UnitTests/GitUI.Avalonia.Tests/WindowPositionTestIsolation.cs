@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
 using GitUI;
+using GitUIPluginInterfaces;
 
 [SetUpFixture]
 public sealed class WindowPositionTestIsolation
@@ -47,6 +48,9 @@ public sealed class WindowPositionTestIsolation
             AppSettings.GetString("Detailed.ShowSplitViewLayout", null).Should().BeNull(
                 "the assembly must start with its own fresh profile, not inherit a previous interactive or test session");
             AppSettings.ShowSplitViewLayout.Should().BeTrue();
+            // The headless lifetime skips desktop composition setup. Initialize the base
+            // catalog after settings isolation, before any Browse consumer can load plugins.
+            ManagedExtensibility.Initialise();
             TestContext.Progress.WriteLine($"Isolated settings: {settingsPath}");
             TestContext.Progress.WriteLine($"Preserved profile: {_originalSettingsPath}; SHA256={_originalSettingsHash ?? "<absent>"}");
         }

@@ -4,7 +4,6 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitUI.Compat;
-using GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft;
 using AvaloniaRect = Avalonia.Rect;
@@ -13,7 +12,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering;
 
 // The lane/segment logic is kept identical to upstream; the GDI Graphics parameter is
 // replaced by Avalonia's DrawingContext drawing into a per-row cell whose origin is (0,0)
-// (GDI's RenderingOrigin). SmoothingMode switches do not apply and are dropped.
+// (GDI's RenderingOrigin). Primitive-specific render options preserve the source smoothing.
 internal static class GraphRenderer
 {
     internal const int MaxLanes = RevisionGraph.MaxLanes;
@@ -108,6 +107,18 @@ internal static class GraphRenderer
 
                 bool? isNodeHoverHighlighted = hoverHighlightedIds?.Contains(currentRow.Revision.Objectid);
                 IBrush brush = GetBrushForLaneInfo(currentRowRevisionLaneInfo, currentRow.Revision.IsRelative, revisionGraphDrawStyle, isNodeHoverHighlighted);
+
+                // GDI+ and Skia use different ellipse coverage. Keep the source node geometry;
+                // the bounded native96 adapter preserves the original pixels and owns its fallback.
+                if (!square && NativeRevisionGraphNodeRaster.TryDraw(g, brush, ToAvalonia(nodeRect), hasOutline))
+                {
+                    return;
+                }
+
+                using DrawingContext.PushedState smoothing = g.PushRenderOptions(new RenderOptions
+                {
+                    EdgeMode = square ? EdgeMode.Aliased : EdgeMode.Antialias,
+                });
                 if (square)
                 {
                     g.DrawRectangle(brush, pen: null, ToAvalonia(nodeRect));
@@ -121,10 +132,8 @@ internal static class GraphRenderer
                 {
                     nodeRect.Inflate(1, 1);
 
-                    // Avalonia resolves the original SystemColors.WindowText semantic through the shared theme boundary.
-                    System.Drawing.Color outlineColor = AvaloniaThemeResources.ResolveSystemColor(
-                        ThemeModule.Settings,
-                        System.Drawing.KnownColor.WindowText);
+                    // The source pen uses raw native WindowText, not the configurable CSS role.
+                    System.Drawing.Color outlineColor = NativeRevisionGraphNodeRaster.GetOutlineColor();
                     Pen pen = new(new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(outlineColor)), 2);
                     if (square)
                     {

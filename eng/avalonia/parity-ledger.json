@@ -42243,22 +42243,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "gap",
+          "verifiedOn": "2026-10-30",
+          "commit": "8fab88d12bb9f8f439b3fa76d2254102e81b2fea",
+          "evidence": [
+            "eng/avalonia/parity-evidence/main-window-graph-raster-2026-10-30/native-gate-light-final4.json",
+            "eng/avalonia/parity-evidence/main-window-graph-raster-2026-10-30/native-gate-dark-final4.json",
+            "eng/avalonia/parity-evidence/main-window-graph-raster-2026-10-30/native-gate-custom-final4.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Corrected applicability: this helper emits colored graph pixels despite declaring no controls. Native96 owned-bitmap API evidence is bounded to recorded inputs; zero here means no separately enumerated helper-level finding total, not visual/theming parity. Consuming RevisionGrid findings remain open and are not double-counted. Working-tree basis is the recorded parent. Curve/compositing residuals, full-scene comparison, physical interaction, live source-cache/theme behavior, higher DPI and platform runtime coverage remain open."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "gap",
+          "verifiedOn": "2026-10-30",
+          "commit": "8fab88d12bb9f8f439b3fa76d2254102e81b2fea",
+          "evidence": [
+            "eng/avalonia/parity-evidence/main-window-graph-raster-2026-10-30/native-gate-light-final4.json",
+            "eng/avalonia/parity-evidence/main-window-graph-raster-2026-10-30/native-gate-dark-final4.json",
+            "eng/avalonia/parity-evidence/main-window-graph-raster-2026-10-30/native-gate-custom-final4.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Corrected applicability: this helper emits colored graph pixels despite declaring no controls. Native96 owned-bitmap API evidence is bounded to recorded inputs; zero here means no separately enumerated helper-level finding total, not visual/theming parity. Consuming RevisionGrid findings remain open and are not double-counted. Working-tree basis is the recorded parent. Curve/compositing residuals, full-scene comparison, physical interaction, live source-cache/theme behavior, higher DPI and platform runtime coverage remain open."
         },
         "behavioralState": {
           "status": "unverified",
@@ -42308,22 +42316,30 @@
           "note": "This mapping is outside the class-oriented P0.4 inventory."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "gap",
+          "verifiedOn": "2026-10-30",
+          "commit": "8fab88d12bb9f8f439b3fa76d2254102e81b2fea",
+          "evidence": [
+            "eng/avalonia/parity-evidence/main-window-graph-raster-2026-10-30/native-gate-light-final4.json",
+            "eng/avalonia/parity-evidence/main-window-graph-raster-2026-10-30/native-gate-dark-final4.json",
+            "eng/avalonia/parity-evidence/main-window-graph-raster-2026-10-30/native-gate-custom-final4.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Corrected applicability: this helper emits colored graph pixels despite declaring no controls. Native96 owned-bitmap API evidence is bounded to recorded inputs; zero here means no separately enumerated helper-level finding total, not visual/theming parity. Consuming RevisionGrid findings remain open and are not double-counted. Working-tree basis is the recorded parent. Curve/compositing residuals, full-scene comparison, physical interaction, live source-cache/theme behavior, higher DPI and platform runtime coverage remain open."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "gap",
+          "verifiedOn": "2026-10-30",
+          "commit": "8fab88d12bb9f8f439b3fa76d2254102e81b2fea",
+          "evidence": [
+            "eng/avalonia/parity-evidence/main-window-graph-raster-2026-10-30/native-gate-light-final4.json",
+            "eng/avalonia/parity-evidence/main-window-graph-raster-2026-10-30/native-gate-dark-final4.json",
+            "eng/avalonia/parity-evidence/main-window-graph-raster-2026-10-30/native-gate-custom-final4.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Corrected applicability: this helper emits colored graph pixels despite declaring no controls. Native96 owned-bitmap API evidence is bounded to recorded inputs; zero here means no separately enumerated helper-level finding total, not visual/theming parity. Consuming RevisionGrid findings remain open and are not double-counted. Working-tree basis is the recorded parent. Curve/compositing residuals, full-scene comparison, physical interaction, live source-cache/theme behavior, higher DPI and platform runtime coverage remain open."
         },
         "behavioralState": {
           "status": "unverified",
