@@ -1575,6 +1575,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         LoadHotkeys(HotkeySettingsName);
         RevisionGrid.ReloadHotkeys();
+        RevisionGrid.ReloadTranslation();
         RevisionInfo.ReloadHotkeys();
         fileTree.ReloadHotkeys();
         revisionDiff.ReloadHotkeys();
@@ -1605,6 +1606,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             revisionDiff.LoadCustomDifftools();
             RevisionGrid.LoadCustomDifftools();
         });
+
+        _dashboard?.RefreshContent();
 
         RevisionGrid.ApplyColumnSettings();
         RevisionGrid.RefreshRealizedRows();

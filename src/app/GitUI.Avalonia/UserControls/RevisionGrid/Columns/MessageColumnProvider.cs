@@ -376,7 +376,18 @@ internal sealed class MessageColumnProvider : ColumnProvider
         if (highlightRef is not null)
         {
             toolTip = GetRefToolTip(highlightRef);
-            return toolTip is not null;
+            if (toolTip is null)
+            {
+                return false;
+            }
+
+            if (_settings.ShowRevisionGridTooltips && TryGetToolTip(revision, out string? summary))
+            {
+                // The source appends the ordinary commit summary after its ref details.
+                toolTip += Environment.NewLine + Environment.NewLine + summary;
+            }
+
+            return true;
         }
 
         return base.TryGetToolTip(revision, highlightRef, out toolTip);
@@ -1195,10 +1206,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
             Children.Add(ContentPanel);
             PointerMoved += OnPointerMoved;
             PointerExited += provider._grid.OnGridViewCellMouseLeave;
-            PointerExited += (_, _) =>
-            {
-                ToolTip.SetTip(this, _provider._settings.ShowRevisionGridTooltips ? Revision?.Subject : null);
-            };
             DoubleTapped += OnDoubleTapped;
         }
 
@@ -1266,16 +1273,9 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         private void OnPointerMoved(object? sender, PointerEventArgs e)
         {
+            // Keep hover/cursor state here; the central provider owns truncated-cell tooltip text.
             RevisionGridRefRenderer.RefLabelControl? label = HitTest(e.GetPosition);
             _provider.SetHighlight(this, label);
-
-            string? toolTip = null;
-            if (Revision is not null)
-            {
-                _provider.TryGetToolTip(Revision, label?.GitRef, out toolTip);
-            }
-
-            ToolTip.SetTip(this, toolTip);
         }
 
         private void OnDoubleTapped(object? sender, TappedEventArgs e)
