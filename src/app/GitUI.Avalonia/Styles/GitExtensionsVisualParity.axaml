@@ -2729,7 +2729,7 @@
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Panel>
+        <Panel Background="Transparent">
           <!-- The source paints item borders over the canvas. Reserve one fixed
                content allocation independently of hover/open stroke thickness. -->
           <Border Name="PART_LayoutRoot"
