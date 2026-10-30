@@ -45,6 +45,13 @@ internal abstract class Tree : NodeBase, IDisposable
         Attached();
     }
 
+    public virtual void Dispose()
+    {
+        Detached();
+        SetUICommandsSource(null);
+        _reloadTaskRunner.Dispose();
+    }
+
     public RepoTreeKind Kind { get; }
 
     internal RepoObjectsTree OwnerControl => Owner;
@@ -74,12 +81,6 @@ internal abstract class Tree : NodeBase, IDisposable
     {
         get => Owner.GetTreeVisibility(Kind);
         set => Owner.SetTreeVisibility(Kind, value);
-    }
-
-    public virtual void Dispose()
-    {
-        Detached();
-        _reloadTaskRunner.Dispose();
     }
 
     public void Attached()
@@ -131,12 +132,22 @@ internal abstract class Tree : NodeBase, IDisposable
             return;
         }
 
+        // Portable ref refresh replaces root owners; a disposed generation must not
+        // remain alive through the command source's module-change notification.
+        if (_uiCommandsSource is not null)
+        {
+            _uiCommandsSource.UICommandsChanged -= UICommandsSource_UICommandsChanged;
+        }
+
         _uiCommandsSource = uiCommands;
         if (uiCommands is not null)
         {
-            uiCommands.UICommandsChanged += (_, _) => OnModuleChanged();
+            uiCommands.UICommandsChanged += UICommandsSource_UICommandsChanged;
         }
     }
+
+    private void UICommandsSource_UICommandsChanged(object? sender, GitUICommandsChangedEventArgs e)
+        => OnModuleChanged();
 
     // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
     // input async function that should populate Nodes, then fills the tree view with its contents,
