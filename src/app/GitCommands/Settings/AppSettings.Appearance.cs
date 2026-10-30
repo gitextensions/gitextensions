@@ -4,8 +4,6 @@ namespace GitCommands;
 
 public static partial class AppSettings
 {
-    private static readonly SettingsPath AppearanceSettingsPath = new AppSettingsPath("Appearance");
-
     /// <summary>
     ///  Additional refs filters to be applied when listing refs for the revision grid in dependency on <see cref="ShowSessionRefs"/>.
     /// </summary>

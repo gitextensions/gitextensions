@@ -36,17 +36,6 @@ public static partial class AppSettings
 
     public static DistributedSettings SettingsContainer { get; private set; }
 
-    private static readonly SettingsPath ConfirmationsSettingsPath = new AppSettingsPath("Confirmations");
-    private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
-    private static readonly SettingsPath DialogSettingsPath = new AppSettingsPath("Dialogs");
-    private static readonly SettingsPath ExperimentalSettingsPath = new AppSettingsPath(DetailedSettingsPath, "Experimental");
-    private static readonly SettingsPath FileStatusSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "FileStatus");
-    private static readonly SettingsPath RevisionGraphSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "RevisionGraph");
-    private static readonly SettingsPath RecentRepositories = new AppSettingsPath("RecentRepositories");
-    private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
-    private static readonly SettingsPath HiddenSettingsPath = new AppSettingsPath("Hidden");
-    private static readonly SettingsPath MigrationSettingsPath = new AppSettingsPath(HiddenSettingsPath, "Migration");
-
     private static Mutex? _globalMutex;
 
     [GeneratedRegex(@"^(?<major>\d+)\.(?<minor>\d+)", RegexOptions.ExplicitCapture)]
