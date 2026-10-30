@@ -43,6 +43,130 @@ namespace GitExtensionsTests;
 public sealed class MainWindowMenuChromeTests
 {
     [AvaloniaTest]
+    [TestCaseSource(nameof(TitlePaddingCases))]
+    public void Top_title_padded_allocation_should_receive_actual_pointer_hover_and_native_chrome(string theme, string region)
+    {
+        using MenuFixture fixture = new(theme);
+        fixture.RenderPointerFrame();
+        Rect allocation = fixture.Title.Bounds;
+        Point point = fixture.TitleInputPoint(fixture.Title, region);
+        fixture.Window.MouseMove(new Point(300, 100));
+        fixture.Window.MouseMove(point);
+        fixture.Layout();
+        fixture.RetainTitleHover(theme, region);
+
+        fixture.AssertTitleHit(fixture.Title, point);
+        fixture.Title.IsPointerOver.Should().BeTrue("the complete allocated title must receive pointer input at {0}", region);
+        fixture.Title.IsSubMenuOpen.Should().BeFalse();
+        fixture.AssertHoveredTitleChrome(fixture.Title);
+        fixture.AssertTitleText();
+        fixture.Title.Bounds.Should().Be(allocation);
+
+        fixture.Window.MouseMove(new Point(300, 100));
+        fixture.Layout();
+        fixture.Title.IsPointerOver.Should().BeFalse();
+        fixture.Title.IsSubMenuOpen.Should().BeFalse();
+        GetColor(fixture.TitleChrome.Background).A.Should().Be(0);
+        fixture.Title.Bounds.Should().Be(allocation);
+    }
+
+    [AvaloniaTest]
+    [TestCaseSource(nameof(TitlePaddingCases))]
+    public void Top_title_padded_allocation_should_open_its_popup_on_actual_pointer_press(string theme, string region)
+    {
+        using MenuFixture fixture = new(theme);
+        fixture.RenderPointerFrame();
+        Point point = fixture.TitleInputPoint(fixture.Title, region);
+        fixture.Window.MouseMove(point);
+        fixture.Layout();
+        fixture.AssertTitleHit(fixture.Title, point);
+        fixture.Title.IsPointerOver.Should().BeTrue();
+        fixture.Window.MouseDown(point, MouseButton.Left);
+        bool openedOnPress = fixture.Title.IsSubMenuOpen;
+        fixture.Window.MouseUp(point, MouseButton.Left);
+        fixture.Layout();
+
+        openedOnPress.Should().BeTrue("the actual pointer press must open the title at {0}, not only over caption ink", region);
+        fixture.Title.IsPointerOver.Should().Be(!fixture.PopupBounds(fixture.Title).Contains(point),
+            "the actual popup owns the connected bottom seam after opening");
+        fixture.Title.IsSubMenuOpen.Should().BeTrue();
+        fixture.AssertOpenTitleChrome();
+        fixture.AssertTitleText();
+        TopLevel.GetTopLevel(fixture.PopupItem).Should().NotBeNull("the press must open the actual child popup");
+    }
+
+    [AvaloniaTest]
+    [TestCaseSource(nameof(TitlePaddingCases))]
+    public void Top_title_padded_siblings_should_follow_closed_hover_and_switch_the_open_menu(string theme, string region)
+    {
+        using MenuFixture fixture = new(theme, includeSiblingTitles: true);
+        fixture.RenderPointerFrame();
+        Point point = fixture.TitleInputPoint(fixture.SiblingTitle, region);
+        fixture.Window.MouseMove(point);
+        fixture.Layout();
+        fixture.AssertTitleHit(fixture.SiblingTitle, point);
+
+        fixture.Title.IsPointerOver.Should().BeFalse();
+        fixture.SiblingTitle.IsPointerOver.Should().BeTrue();
+        fixture.Title.IsSubMenuOpen.Should().BeFalse();
+        fixture.SiblingTitle.IsSubMenuOpen.Should().BeFalse();
+        fixture.AssertHoveredTitleChrome(fixture.SiblingTitle);
+
+        fixture.ClickTitle();
+        fixture.Title.IsSubMenuOpen.Should().BeTrue();
+        fixture.PopupBounds(fixture.Title).Contains(point).Should().BeFalse(
+            "the fixture's first popup must not cover the sibling padding that is being tested");
+        fixture.Window.MouseMove(point);
+        fixture.Layout();
+
+        fixture.Title.IsPointerOver.Should().BeFalse();
+        fixture.Title.IsSubMenuOpen.Should().BeFalse();
+        fixture.SiblingTitle.IsSubMenuOpen.Should().BeTrue("an open menu must switch across the whole sibling allocation at {0}", region);
+        fixture.SiblingTitle.IsPointerOver.Should().Be(!fixture.PopupBounds(fixture.SiblingTitle).Contains(point),
+            "the newly opened sibling popup owns its actual connected bottom seam");
+        Border chrome = fixture.GetTitleChrome(fixture.SiblingTitle);
+        fixture.Window.TryFindResource("GitExtensionsNativeMenuOpenBackgroundBrush", fixture.Window.ActualThemeVariant, out object? background)
+            .Should().BeTrue();
+        chrome.Background.Should().BeSameAs(background);
+        GetColor(chrome.BorderBrush).Should().Be(fixture.ResourceColor("GitExtensionsNativeMenuOpenBorderBrush"));
+        chrome.BorderThickness.Should().Be(new Thickness(1, 1, 1, 0));
+
+        Point outside = new(300, 100);
+        fixture.Window.MouseMove(outside);
+        fixture.Window.MouseDown(outside, MouseButton.Left);
+        fixture.Window.MouseUp(outside, MouseButton.Left);
+        fixture.Layout();
+        fixture.Title.IsSubMenuOpen.Should().BeFalse();
+        fixture.SiblingTitle.IsSubMenuOpen.Should().BeFalse();
+        fixture.Title.IsPointerOver.Should().BeFalse();
+        fixture.SiblingTitle.IsPointerOver.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
+    [TestCase("light")]
+    [TestCase("dark")]
+    [TestCase("custom")]
+    public void Top_title_padded_disabled_item_should_not_open_or_paint_hover_chrome(string theme)
+    {
+        using MenuFixture fixture = new(theme, includeSiblingTitles: true);
+        fixture.RenderPointerFrame();
+        foreach (string region in new[] { "left", "right", "top", "bottom", "text" })
+        {
+            fixture.Window.MouseMove(new Point(300, 100));
+            Point point = fixture.TitleInputPoint(fixture.DisabledTitle, region);
+            fixture.Window.MouseMove(point);
+            fixture.Window.MouseDown(point, MouseButton.Left);
+            fixture.Window.MouseUp(point, MouseButton.Left);
+            fixture.Layout();
+
+            fixture.DisabledTitle.IsSubMenuOpen.Should().BeFalse();
+            fixture.Title.IsSubMenuOpen.Should().BeFalse();
+            fixture.SiblingTitle.IsSubMenuOpen.Should().BeFalse();
+            GetColor(fixture.GetTitleChrome(fixture.DisabledTitle).Background).A.Should().Be(0);
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase("light")]
     [TestCase("dark")]
     [TestCase("custom")]
@@ -401,6 +525,17 @@ public sealed class MainWindowMenuChromeTests
         }
     }
 
+    private static IEnumerable<TestCaseData> TitlePaddingCases()
+    {
+        foreach (string theme in new[] { "light", "dark", "custom" })
+        {
+            foreach (string region in new[] { "left", "right", "top", "bottom", "text" })
+            {
+                yield return new TestCaseData(theme, region);
+            }
+        }
+    }
+
     private static Color GetColor(IBrush? brush)
         => brush is ISolidColorBrush solid
             ? solid.Color
@@ -414,7 +549,7 @@ public sealed class MainWindowMenuChromeTests
         private readonly ThemeSettings _originalSettings;
         private readonly Dictionary<ThemeVariant, IThemeVariantProvider?> _originalResources = [];
 
-        public MenuFixture(string themeName)
+        public MenuFixture(string themeName, bool includeSiblingTitles = false)
         {
             _application = Application.Current
                 ?? throw new AssertionException("The actual Avalonia test application must be initialized.");
@@ -444,9 +579,26 @@ public sealed class MainWindowMenuChromeTests
             Theme theme = new(appColors, systemColors, new ThemeId($"main-window-menu-{themeName}"));
             AvaloniaThemeResources.Apply(_application,
                 new ThemeSettings(theme, Theme.Default, ThemeVariations.None, useSystemVisualStyle: true));
-            PopupItem = new SourceControls.ToolStripMenuItem { Header = "_Child command" };
+            PopupItem = new SourceControls.ToolStripMenuItem { Header = includeSiblingTitles ? "_Child" : "_Child command" };
             Title = new SourceControls.ToolStripMenuItem { Header = "_Commands", Items = { PopupItem } };
             SourceControls.MenuStripEx menu = new() { Items = { Title }, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top };
+            SiblingTitle = new SourceControls.ToolStripMenuItem
+            {
+                Header = "_Repository",
+                Items = { new SourceControls.ToolStripMenuItem { Header = "_Sibling command" } },
+            };
+            DisabledTitle = new SourceControls.ToolStripMenuItem
+            {
+                Header = "_Disabled",
+                IsEnabled = false,
+                Items = { new SourceControls.ToolStripMenuItem { Header = "_Disabled command" } },
+            };
+            if (includeSiblingTitles)
+            {
+                menu.Items.Add(SiblingTitle);
+                menu.Items.Add(DisabledTitle);
+            }
+
             SplitPopupItem = new MenuItem { Header = "_Branch command" };
             SplitFlyout = new MenuFlyout { Items = { SplitPopupItem } };
             Split = new NativeToolStripSplitButton
@@ -480,6 +632,10 @@ public sealed class MainWindowMenuChromeTests
 
         public SourceControls.ToolStripMenuItem PopupItem { get; }
 
+        public SourceControls.ToolStripMenuItem SiblingTitle { get; }
+
+        public SourceControls.ToolStripMenuItem DisabledTitle { get; }
+
         public NativeToolStripSplitButton Split { get; }
 
         public MenuFlyout SplitFlyout { get; }
@@ -508,6 +664,56 @@ public sealed class MainWindowMenuChromeTests
             => Window.TryFindResource(key, Window.ActualThemeVariant, out object? resource)
                 ? GetColor(resource as IBrush)
                 : throw new AssertionException($"The actual runtime palette must expose {key}.");
+
+        public Point TitleInputPoint(MenuItem item, string region)
+        {
+            const double edgeInset = 0.5;
+            Point origin = item.TranslatePoint(default, Window)
+                ?? throw new AssertionException("The padded title must have an actual window input coordinate.");
+            ContentPresenter caption = item.GetVisualDescendants().OfType<ContentPresenter>()
+                .Single(part => part.Name == "PART_HeaderPresenter");
+            Point captionOrigin = caption.TranslatePoint(default, Window)
+                ?? throw new AssertionException("The actual caption must belong to the title input owner.");
+            Rect captionBounds = new(captionOrigin, caption.Bounds.Size);
+            Point point = region switch
+            {
+                "left" => origin + new Point(edgeInset, item.Bounds.Height / 2),
+                "right" => origin + new Point(item.Bounds.Width - edgeInset, item.Bounds.Height / 2),
+                "top" => origin + new Point(item.Bounds.Width / 2, edgeInset),
+                "bottom" => origin + new Point(item.Bounds.Width / 2, item.Bounds.Height - edgeInset),
+                "text" => captionBounds.Center,
+                _ => throw new AssertionException($"Unknown title input region {region}."),
+            };
+            new Rect(origin, item.Bounds.Size).Contains(point).Should().BeTrue("the pointer must remain inside the actual title allocation");
+            captionBounds.Contains(point).Should().Be(region == "text", "the padding probes must not accidentally target the caption");
+            return point;
+        }
+
+        public void AssertTitleHit(MenuItem item, Point point)
+        {
+            Visual? hit = Window.InputHitTest(point) as Visual;
+            MenuItem? owner = hit?.GetSelfAndVisualAncestors().OfType<MenuItem>().FirstOrDefault();
+            owner.Should().BeSameAs(item, "the actual input hit at {0} must belong to the complete padded menu title, not {1}", point, hit?.GetType().Name);
+        }
+
+        public Border GetTitleChrome(MenuItem item) => item.GetVisualDescendants().OfType<Border>()
+            .Single(border => border.Name == "PART_LayoutRoot");
+
+        public Rect PopupBounds(MenuItem item)
+        {
+            MenuItem command = item.Items.OfType<MenuItem>().Single();
+            NativeToolStripMenuPopupBorder border = command.GetVisualAncestors().OfType<NativeToolStripMenuPopupBorder>().Single();
+            Point origin = Window.PointToClient(border.PointToScreen(default));
+            return new Rect(origin, border.Bounds.Size);
+        }
+
+        public void AssertHoveredTitleChrome(MenuItem item)
+        {
+            Border chrome = GetTitleChrome(item);
+            GetColor(chrome.Background).Should().Be(ResourceColor("GitExtensionsNativeMenuSelectedBackgroundBrush"));
+            GetColor(chrome.BorderBrush).Should().Be(ResourceColor("GitExtensionsNativeMenuSelectedBorderBrush"));
+            chrome.BorderThickness.Should().Be(new Thickness(1));
+        }
 
         public void AssertTitleText()
         {
@@ -552,6 +758,14 @@ public sealed class MainWindowMenuChromeTests
             Window.UpdateLayout();
         }
 
+        public void RenderPointerFrame()
+        {
+            Layout();
+            // A layout pass does not commit the headless renderer's hit-test scene.
+            using WriteableBitmap frame = Window.CaptureRenderedFrame()
+                ?? throw new AssertionException("Pointer probes require the actual initial rendered scene.");
+        }
+
         public SKRectI CaptureTitleInkBounds()
         {
             using SKBitmap pixels = CaptureOwner();
@@ -582,6 +796,23 @@ public sealed class MainWindowMenuChromeTests
 
         public SKBitmap CaptureOwner() => Capture(Window);
 
+        public void RetainTitleHover(string theme, string region)
+        {
+            string? evidenceRoot = Environment.GetEnvironmentVariable("GITEXT_MENU_HOVER_EVIDENCE");
+            if (string.IsNullOrWhiteSpace(evidenceRoot))
+            {
+                return;
+            }
+
+            string directory = Path.GetFullPath(evidenceRoot);
+            Directory.CreateDirectory(directory);
+            string fileName = string.Concat($"top-title-{theme}-{region}".Select(character =>
+                char.IsAsciiLetterOrDigit(character) || character == '-' ? character : '_')) + ".png";
+            using WriteableBitmap frame = Window.CaptureRenderedFrame()
+                ?? throw new AssertionException("The actual padded-title pointer state must render before its assertions.");
+            frame.Save(Path.Combine(directory, fileName), PngBitmapEncoderOptions.Default);
+        }
+
         public SKBitmap Capture(TopLevel root)
         {
             using WriteableBitmap frame = root.CaptureRenderedFrame()
@@ -596,6 +827,8 @@ public sealed class MainWindowMenuChromeTests
         public void Dispose()
         {
             Title.IsSubMenuOpen = false;
+            SiblingTitle.IsSubMenuOpen = false;
+            DisabledTitle.IsSubMenuOpen = false;
             SplitFlyout.Hide();
             Window.Close();
             foreach ((ThemeVariant variant, IThemeVariantProvider? resources) in _originalResources)
