@@ -4301,9 +4301,15 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 && !_owner._revisionGraph.IsRowRelative(rowIndex);
             foreach (TextBlock textBlock in this.GetVisualDescendants().OfType<TextBlock>()
                          .Where(textBlock => textBlock.Classes.Contains("revision-subject")
-                             || textBlock.Classes.Contains("revision-body")))
+                             || textBlock.Classes.Contains("revision-body")
+                             || textBlock.Classes.Contains("revision-author-cell")
+                             || textBlock.Classes.Contains("revision-date-cell")
+                             || textBlock.Classes.Contains("revision-object-id-cell")
+                             || textBlock.Classes.Contains("revision-notes-cell")))
             {
-                string resourceKey = textBlock.Classes.Contains("revision-subject")
+                // The source passes the same CellStyle.ForeColor to subject and metadata
+                // painters; inheriting the ListBox foreground misses non-relative rows.
+                string resourceKey = !textBlock.Classes.Contains("revision-body")
                     ? isNonRelativeGray
                         ? isSelectedAndFocused
                             ? "GitExtensionsRevisionNonRelativeSelectedSubjectBrush"

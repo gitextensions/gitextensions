@@ -178,7 +178,14 @@ partial class FormBrowse
                 clonedToolStripMenuItem,
                 toolTipText.UpdateSuffix(command.HasValue ? GetShortcutKeyTooltipString(command.Value) : null!));
 
-            clonedToolStripMenuItem.Click += (_, _) => toolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            clonedToolStripMenuItem.Click += (_, _) =>
+            {
+                // Avalonia's routed event does not enforce PerformClick's Enabled/Available gate.
+                if (toolStripMenuItem.IsEffectivelyEnabled && toolStripMenuItem.IsVisible)
+                {
+                    toolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+                }
+            };
             return clonedToolStripMenuItem;
         }
     }

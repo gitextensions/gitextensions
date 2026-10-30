@@ -84,7 +84,11 @@ public sealed class CustomDiffMergeToolProvider
 
         if (joinableTaskFactory is null)
         {
-            await Dispatcher.UIThread.InvokeAsync(() => PopulateMenus(menus, tools, isDiff));
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                PopulateMenus(menus, tools, isDiff);
+            });
         }
         else
         {
