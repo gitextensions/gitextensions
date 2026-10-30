@@ -1,11 +1,12 @@
 using Avalonia.Media;
+using GitUI.Compat;
 using AvaloniaPoint = Avalonia.Point;
 
 namespace GitUI.UserControls.RevisionGrid.Graph.Rendering;
 
 // The geometry math is kept identical to upstream (System.Drawing primitives); only the
-// draw calls target Avalonia's DrawingContext. GDI's SmoothingMode switches and its
-// anti-alias offset compensation do not apply to Avalonia and are dropped.
+// draw calls and per-primitive smoothing target Avalonia's DrawingContext. GDI's PixelOffsetMode
+// compensation is not a layout shift and is not transplanted into Skia's coordinates.
 internal ref struct SegmentRenderer
 {
     public readonly int RowHeight => _context.CellSize.Height;
@@ -48,8 +49,8 @@ internal ref struct SegmentRenderer
 
         if (fromPoint.X == toPoint.X)
         {
-            // Direct line
-            DrawLine(fromPoint, toPoint);
+            // Direct line without anti-aliasing
+            RevisionGraphPrimitiveDrawing.DrawLine(g, pen, ToAvalonia(fromPoint), ToAvalonia(toPoint), antialias: false);
             return;
         }
 
@@ -63,7 +64,7 @@ internal ref struct SegmentRenderer
 
         if (!fromPerpendicularly && !toPerpendicularly && singleLane)
         {
-            // Direct line
+            // Direct line with anti-aliasing
             DrawLine(e0, e1);
             return;
         }
@@ -148,20 +149,14 @@ internal ref struct SegmentRenderer
 
         void DrawBezier(in PointF e0, in PointF c0, in PointF c1, in PointF e1)
         {
-            StreamGeometry geometry = new();
-            using (StreamGeometryContext geometryContext = geometry.Open())
-            {
-                geometryContext.BeginFigure(ToAvalonia(e0), isFilled: false);
-                geometryContext.CubicBezierTo(ToAvalonia(c0), ToAvalonia(c1), ToAvalonia(e1));
-                geometryContext.EndFigure(isClosed: false);
-            }
-
-            g.DrawGeometry(brush: null, pen, geometry);
+            // Parent edge options override nested options in Avalonia; the boundary sets the
+            // source primitive's smoothing directly and widens its stroke before the row clip.
+            RevisionGraphPrimitiveDrawing.DrawBezier(g, pen, ToAvalonia(e0), ToAvalonia(c0), ToAvalonia(c1), ToAvalonia(e1));
         }
 
         void DrawLine(in PointF from, in PointF to)
         {
-            g.DrawLine(pen, ToAvalonia(from), ToAvalonia(to));
+            RevisionGraphPrimitiveDrawing.DrawLine(g, pen, ToAvalonia(from), ToAvalonia(to), antialias: true);
         }
 
         void MoveDrawDiagonallyFrom(ref PointF start, out PointF bezierCenter, in float fractionOfCell)

@@ -2269,6 +2269,9 @@
     <Setter Property="BorderBrush" Value="Transparent" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <!-- ToolStrip changes state paint without Fluent's timed press scaling. -->
+    <Setter Property="Transitions" Value="{x:Null}" />
+    <Setter Property="RenderTransform" Value="none" />
     <Setter Property="Template">
       <ControlTemplate>
         <Grid Background="{TemplateBinding Background}">
@@ -2295,6 +2298,10 @@
         </Grid>
       </ControlTemplate>
     </Setter>
+  </Style>
+  <Style Selector="Button.gitextensions-toolbar-button:not(.gitextensions-native-flat-button):pressed,
+                   ToggleButton.gitextensions-toolbar-button:pressed">
+    <Setter Property="RenderTransform" Value="none" />
   </Style>
   <Style Selector="Button.gitextensions-toolbar-button:not(.gitextensions-native-flat-button) /template/ ContentPresenter#PART_ContentPresenter,
                    ToggleButton.gitextensions-toolbar-button /template/ ContentPresenter#PART_ContentPresenter">

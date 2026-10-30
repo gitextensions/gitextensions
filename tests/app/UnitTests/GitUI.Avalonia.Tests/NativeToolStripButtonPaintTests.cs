@@ -111,6 +111,7 @@ public sealed class NativeToolStripButtonPaintTests
     {
         using PaintFixture fixture = new(context, toggle: toggle);
         Button button = fixture.Button ?? throw new AssertionException("A real toolbar button is required.");
+        AssertNoFluentMotion(button);
         int clicks = 0;
         button.Click += (_, _) => clicks++;
         Rect allocation = button.Bounds;
@@ -123,19 +124,23 @@ public sealed class NativeToolStripButtonPaintTests
         fixture.Chrome.IsSelected.Should().BeTrue();
         AssertTemplate(fixture, context, "selected");
         fixture.Window.MouseDown(new Point(11, 11), MouseButton.Left);
+        AssertNoFluentMotion(button);
         fixture.Layout();
         fixture.Chrome.IsPressed.Should().BeTrue();
         AssertTemplate(fixture, context, "pressed");
         fixture.Window.MouseUp(new Point(11, 11), MouseButton.Left);
+        AssertNoFluentMotion(button);
         fixture.Layout();
         clicks.Should().Be(1, "the noninteractive chrome must leave the original button click route intact");
         SetChecked(button, true);
         fixture.Layout();
         AssertTemplate(fixture, context, "checked-selected");
         fixture.Window.MouseDown(new Point(11, 11), MouseButton.Left);
+        AssertNoFluentMotion(button);
         fixture.Layout();
         AssertTemplate(fixture, context, "checked-pressed");
         fixture.Window.MouseUp(new Point(11, 11), MouseButton.Left);
+        AssertNoFluentMotion(button);
         fixture.Layout();
         clicks.Should().Be(2);
         SetChecked(button, true);
@@ -492,6 +497,13 @@ public sealed class NativeToolStripButtonPaintTests
         ((ISolidColorBrush)presenter.Background!).Color.Should().Be(Colors.Transparent);
         using WriteableBitmap frame = Capture(fixture.Window);
         AssertRaster(frame, default, 23, 22, NativeRows(context, state, 23, 22, Color.Parse("#2B2D3A")));
+    }
+
+    private static void AssertNoFluentMotion(Button button)
+    {
+        button.Transitions.Should().BeNull("native ToolStrip state changes do not animate the item transform");
+        (button.RenderTransform?.Value ?? Matrix.Identity).Should().Be(Matrix.Identity,
+            "pressing or releasing the source item changes paint without scaling its chrome or content");
     }
 
     private static void SetChecked(Button button, bool value)
