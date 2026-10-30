@@ -211,11 +211,13 @@ internal sealed class RevisionGridToolTipProvider
             // Its next hover must not reuse the previous commit's cached tooltip/highlight.
             ToolTip.SetIsOpen(cell, false);
             ToolTip.SetTip(cell, null);
-            _previousRowIndex = -1;
-            _previousColumnIndex = -1;
-            _previousHighlight = null;
         }
 
+        // Portable column painters refresh each cell's tooltip, unlike the source's
+        // shared ToolTip. Even an unchanged row needs its next hover regenerated.
+        _previousRowIndex = -1;
+        _previousColumnIndex = -1;
+        _previousHighlight = null;
         _cellStates[cell] = new CellState(columnIndex, rowIndex, revision);
         TextBlock? textBlock = cell as TextBlock ?? cell.GetVisualDescendants().OfType<TextBlock>().FirstOrDefault();
         SetTruncation(columnIndex, rowIndex, IsTruncated(textBlock));
