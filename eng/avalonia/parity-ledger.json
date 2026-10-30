@@ -42387,7 +42387,7 @@
           ],
           "platforms": [],
           "findingCount": 20,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences. 2026-10-30 first-use palette repair preserves the original process-lifetime brush/list identities and retained LaneInfo.Color indexes when ThemeSettings changes, instead of rebuilding a shorter or different palette. Bounded native and portable lifecycle/controlled-lane regressions are prepared against parent 0f76385386c77081c8e134faafd08a5f02355e6d. Evidence: eng/avalonia/parity-evidence/main-window-graph-palette-2026-10-30/. Verification outcomes must be read from separately retained receipts in that evidence root; this note does not assert a test pass, promote any axis or claim fresh per-theme processes, desktop coverage or complete parity."
         },
         "visual": {
           "status": "notApplicable",
@@ -42405,7 +42405,7 @@
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "This source mapping does not declare UI chrome. 2026-10-30 source-specific palette lifetime and retained-index behavior are under bounded correction; the current theme is distinct from the process-first-use graph palette. Historical status, dates, counts and evidence are retained without a verification or parity promotion."
         },
         "behavioralState": {
           "status": "unverified",

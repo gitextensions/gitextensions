@@ -9,85 +9,51 @@ namespace GitUI.UserControls.RevisionGrid.Graph;
 // Avalonia brushes replace GDI brushes; keep lane-color selection aligned with the original.
 public static class RevisionGraphLaneColor
 {
-    private static readonly object ThemeLock = new();
-    private static ThemeSettings? _loadedThemeSettings;
-    private static Color _nonRelativeColor;
-    private static IBrush _nonRelativeBrush = Brushes.LightGray;
-
     public static int GetColorForLane(int seed)
     {
-        EnsureThemeColors();
         return Math.Abs(seed) % PresetGraphBrushes.Count;
     }
 
-    public static Color NonRelativeColor
-    {
-        get
-        {
-            EnsureThemeColors();
-            return _nonRelativeColor;
-        }
-    }
+    public static Color NonRelativeColor { get; } = AppColor.GraphNonRelativeBranch.GetThemeColor();
 
-    internal static IBrush NonRelativeBrush
-    {
-        get
-        {
-            EnsureThemeColors();
-            return _nonRelativeBrush;
-        }
-    }
+    internal static IBrush NonRelativeBrush { get; }
 
     internal static readonly List<IBrush> PresetGraphBrushes = [];
 
-    public static IBrush GetBrushForLane(int laneColor)
+    static RevisionGraphLaneColor()
     {
-        EnsureThemeColors();
-        return PresetGraphBrushes[laneColor];
+        // The original freezes its palette at first use. Existing LaneInfo.Color values
+        // keep indexing that same palette until the process restarts.
+        Color[] branchColors = [.. Enum.GetNames<AppColor>()
+            .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1]))
+            .Select(name => Enum.Parse<AppColor>(name).GetThemeColor())
+            .Where(color => !color.IsEmpty)
+            .Distinct()];
+
+        const int minBranchColors = 4;
+        if (branchColors.Length < minBranchColors)
+        {
+            Trace.WriteLine(@"At least {minBranchColors} different graph colors must be configured - using crying fallback");
+            branchColors = [Color.Cyan, Color.Magenta, Color.Yellow, Color.Lime];
+        }
+
+        foreach (Color color in branchColors)
+        {
+            PresetGraphBrushes.Add(CreateBrush(color));
+        }
+
+        NonRelativeBrush = CreateBrush(NonRelativeColor);
     }
 
-    private static void EnsureThemeColors()
+    public static IBrush GetBrushForLane(int laneColor)
     {
-        ThemeSettings settings = ThemeModule.Settings;
-        if (ReferenceEquals(_loadedThemeSettings, settings))
-        {
-            return;
-        }
-
-        lock (ThemeLock)
-        {
-            if (ReferenceEquals(_loadedThemeSettings, settings))
-            {
-                return;
-            }
-
-            Color[] branchColors = [.. Enum.GetNames<AppColor>()
-                .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1]))
-                .Select(name => Enum.Parse<AppColor>(name).GetThemeColor())
-                .Where(color => !color.IsEmpty)
-                .Distinct()];
-
-            const int minBranchColors = 4;
-            if (branchColors.Length < minBranchColors)
-            {
-                Trace.WriteLine(@"At least {minBranchColors} different graph colors must be configured - using crying fallback");
-                branchColors = [Color.Cyan, Color.Magenta, Color.Yellow, Color.Lime];
-            }
-
-            PresetGraphBrushes.Clear();
-            foreach (Color color in branchColors)
-            {
-                PresetGraphBrushes.Add(CreateBrush(color));
-            }
-
-            _nonRelativeColor = AppColor.GraphNonRelativeBranch.GetThemeColor();
-            _nonRelativeBrush = CreateBrush(_nonRelativeColor);
-            _loadedThemeSettings = settings;
-        }
+        return PresetGraphBrushes[laneColor];
     }
 
     private static IBrush CreateBrush(Color color)
     {
+        // Graph construction can initialize this cache on a worker; immutable snapshots
+        // remain readable when the same palette is later consumed on the UI thread.
         SolidColorBrush brush = new(Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B));
         return brush.ToImmutable();
     }

@@ -299,10 +299,16 @@ public sealed class GraphHistoryRenderingTests
         }
         finally
         {
-            window?.Close();
             grid?.CancelBackgroundTasks();
+
+            // Retire the painted rows before draining detail-loading callbacks, while
+            // their repository and joinable context are still available.
+            grid?.GetTestAccessor().SetRevisions([]);
+            window?.Close();
+            Dispatcher.UIThread.RunJobs();
             using CancellationTokenSource cancellation = new(TimeSpan.FromSeconds(10));
             await ThreadHelper.JoinPendingOperationsAsync(cancellation.Token);
+            Dispatcher.UIThread.RunJobs();
             Trace.Listeners.Remove(trace);
             AppSettings.RevisionGraphShowArtificialCommits = previousArtificial;
             AppSettings.RenderGraphWithDiagonals.Value = previousDiagonals;
