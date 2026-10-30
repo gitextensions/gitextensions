@@ -203,9 +203,9 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
         /*
             VIEW menu
             ═════════════
-                    KLQZ
-                !   Highlight selected branch (until refresh)
-                !   Set advanced filter
+                !   Highlight selected branch (until refresh)  Shift+Ctrl+B
+                !   Set advanced filter                        Ctrl+I
+                !   Show artificial commits
                 !   Show commit message body
                 !   Show stashes
                 -   Show SHA-1 column
@@ -219,9 +219,13 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
                 H   Show author avatar column
                 I   Show build status icon
                 J   Show superproject remote branches
+                K
+                L
+                M
                 N   Show git notes
                 O   Show artificial commits
                 P   Show superproject tags
+                Q   Show session checkpoints
                 R   Show reflog references
                 S   Sort commits by author date
                 T   Show tags
@@ -230,6 +234,7 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
                 W   Show author date
                 X   Show build status text
                 Y   Draw non relatives gray
+                Z
         */
 
         return new[]
@@ -334,7 +339,7 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
             new MenuCommand
             {
                 Name = "ShowSessionRefs",
-                Text = "Show agentic sessions",
+                Text = "Show agentic sessions (&Q)",
                 ExecuteAction = () => _revisionGrid.ToggleShowSessionRefs(),
                 IsCheckedFunc = () => AppSettings.ShowSessionRefs
             },
