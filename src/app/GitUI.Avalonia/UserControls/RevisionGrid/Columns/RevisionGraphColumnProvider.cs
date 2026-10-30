@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using GitCommands;
@@ -16,8 +15,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 {
-    private static readonly Cursor HandCursor = new(StandardCursorType.Hand);
-
     private readonly RevisionGridControl _grid;
     private readonly LaneInfoProvider _laneInfoProvider;
     private readonly RevisionGraph _revisionGraph;
@@ -289,7 +286,6 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         public GraphCellControl(RevisionGraphColumnProvider provider)
         {
             _provider = provider;
-            PointerMoved += OnPointerMoved;
             PointerExited += (_, _) =>
             {
                 ToolTip.SetTip(this, null);
@@ -309,24 +305,13 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
         public override void Render(DrawingContext context)
         {
+            // DataGridView hit-tests the entire cell, while the retained lane operations
+            // intentionally expose no input geometry of their own.
+            context.FillRectangle(Brushes.Transparent, new Rect(Bounds.Size));
             if (_revision is not null)
             {
                 _provider.DrawGraph(context, _revision, Bounds.Height);
             }
-        }
-
-        private void OnPointerMoved(object? sender, PointerEventArgs e)
-        {
-            string? toolTip = null;
-            if (_revision is not null)
-            {
-                _provider.TryGetToolTip(_revision, e.GetPosition(this).X, out toolTip);
-            }
-
-            ToolTip.SetTip(this, toolTip);
-            Cursor = toolTip is null
-                ? null
-                : HandCursor;
         }
     }
 }

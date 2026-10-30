@@ -43,6 +43,13 @@ internal sealed class SubmoduleTree : Tree
         }
 
         _currentSubmoduleInfo = e;
+
+        // Native hidden roots are detached; the portable owner retains them but excludes their visible items.
+        if (!IsAttached || !IsEnabled)
+        {
+            return;
+        }
+
         if (Dispatcher.UIThread.CheckAccess())
         {
             OnStatusUpdated(e);
@@ -55,7 +62,7 @@ internal sealed class SubmoduleTree : Tree
 
     private void OnStatusUpdated(SubmoduleStatusEventArgs e)
     {
-        if (e.Token.IsCancellationRequested || !ReferenceEquals(_currentSubmoduleInfo, e))
+        if (e.Token.IsCancellationRequested || !ReferenceEquals(_currentSubmoduleInfo, e) || !IsAttached || !IsEnabled)
         {
             return;
         }
@@ -92,7 +99,7 @@ internal sealed class SubmoduleTree : Tree
         [
             .. DescendantsAndSelf()
                 .Where(node => node.TreeViewNode.IsExpanded)
-                .Select(node => $"{node.GetType().Name}:{node.SearchText}"),
+                .Select(RepoObjectsTree.GetNodeIdentity),
         ];
         TreeSelectionState selected = OwnerControl.CaptureSelectionState(this);
         bool firstLoad = TreeViewNode.Items.Count == 0;
@@ -107,7 +114,7 @@ internal sealed class SubmoduleTree : Tree
         foreach (NodeBase node in DescendantsAndSelf())
         {
             node.TreeViewNode.IsExpanded = firstLoad
-                || expanded.Contains($"{node.GetType().Name}:{node.SearchText}");
+                || expanded.Contains(RepoObjectsTree.GetNodeIdentity(node));
         }
 
         OwnerControl.RestoreSelectionState(this, selected);

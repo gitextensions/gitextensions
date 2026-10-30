@@ -418,8 +418,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             _currentWorkingDirectory);
     }
 
+    // Native tree state uses the stable node name/path, not its changing branch/status text.
     internal static string GetNodeIdentity(NodeBase node)
-        => $"{node.GetType().Name}:{node.SearchText}";
+        => $"{node.GetType().Name}:{(node is SubmoduleNode submodule ? submodule.Info.Path : node.SearchText)}";
 
     internal TreeSelectionState CaptureSelectionState(NodeBase root)
     {

@@ -2,6 +2,7 @@
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -1046,11 +1047,11 @@ public sealed class FormBrowseTests
             new TreeViewItem { Header = new string('W', 80) },
         };
 
-        foreach ((ThemeVariant theme, string tab, string overflow, string scrollThumb, string toolStripChecked) in
+        foreach ((ThemeVariant theme, string tab, string overflow, string scrollThumb) in
                  new[]
                  {
-                     (ThemeVariant.Light, "#FFF3F3F3", "#FFFFFFFF", "#33000000", "#FFCCE8FF"),
-                     (ThemeVariant.Dark, "#FF202020", "#FF232323", "#33FFFFFF", "#FF28445B"),
+                     (ThemeVariant.Light, "#FFF3F3F3", "#FFFFFFFF", "#33000000"),
+                     (ThemeVariant.Dark, "#FF202020", "#FF232323", "#33FFFFFF"),
                  })
         {
             form.RequestedThemeVariant = theme;
@@ -1093,6 +1094,14 @@ public sealed class FormBrowseTests
                 line.UseSystemVisualStyle.Should().Be(theme == ThemeVariant.Light);
             }
 
+            Button toggleLeftPanel = form.FindControl<Button>("toggleLeftPanel")!;
+            toggleLeftPanel.Classes.Should().Contain("checked");
+            Avalonia.Controls.Primitives.ToggleButton showSubmodules =
+                form.repoObjectsTree.FindControl<Avalonia.Controls.Primitives.ToggleButton>("tsbShowSubmodules")!;
+            showSubmodules.IsChecked = true;
+            form.MouseMove(new Avalonia.Point(form.ClientSize.Width - 1, form.ClientSize.Height - 1));
+            Dispatcher.UIThread.RunJobs();
+
             using (WriteableBitmap frame = form.CaptureRenderedFrame()
                        ?? throw new InvalidOperationException("The Browse toolbar frame is unavailable."))
             {
@@ -1100,6 +1109,17 @@ public sealed class FormBrowseTests
                 frame.Save(stream, PngBitmapEncoderOptions.Default);
                 stream.Position = 0;
                 using SKBitmap bitmap = SKBitmap.Decode(stream);
+                string? evidence = Environment.GetEnvironmentVariable("GITEXT_TOOLBAR_STATE_EVIDENCE");
+                string? evidencePath = null;
+                if (!string.IsNullOrWhiteSpace(evidence))
+                {
+                    string directory = Path.Combine(evidence, TestContext.CurrentContext.Test.ID);
+                    Directory.CreateDirectory(directory);
+                    evidencePath = Path.Combine(directory, theme.ToString().ToLowerInvariant());
+                    File.Exists(evidencePath + ".png").Should().BeFalse("a retained toolbar frame must not overwrite another run");
+                    frame.Save(evidencePath + ".png", PngBitmapEncoderOptions.Default);
+                }
+
                 Border separator = form.FindControl<Border>("toolStripSeparator0")!;
                 Avalonia.Point origin = separator.TranslatePoint(default, form)!.Value;
                 Color backdrop = GetColor(form.Background);
@@ -1116,20 +1136,72 @@ public sealed class FormBrowseTests
                             $"the actual named toolbar owner paints source chrome at {x},{y} in {theme}");
                     }
                 }
+
+                List<(string Name, Avalonia.Point Origin, int Row, SKColor[] Actual, SKColor[] Expected)> rows = [];
+                foreach (Button owner in new Button[] { toggleLeftPanel, showSubmodules })
+                {
+                    // The original renderer paints state separately from the content presenter.
+                    GetColor(owner.Background).Should().Be(Colors.Transparent);
+                    GetColor(GetPresenter(owner).Background).Should().Be(Colors.Transparent);
+                    NativeToolStripButtonChrome chrome = owner.GetVisualDescendants().OfType<NativeToolStripButtonChrome>().Single();
+                    chrome.IsChecked.Should().BeTrue();
+                    chrome.IsSelected.Should().BeFalse();
+                    chrome.IsPressed.Should().BeFalse();
+                    chrome.UseSystemVisualStyle.Should().Be(theme == ThemeVariant.Light);
+                    GetColor(chrome.CheckedBrush).Should().Be(Color.Parse(theme == ThemeVariant.Light ? "#CCE8FF" : "#00000000"));
+                    chrome.Bounds.Size.Should().Be(owner.Bounds.Size);
+                    Image icon = owner.GetVisualDescendants().OfType<Image>().Single();
+                    icon.TranslatePoint(default, chrome)!.Value.Y.Should().BeGreaterThanOrEqualTo(2,
+                        "the sampled source chrome rows must not include the actual icon");
+                    Avalonia.Point chromeOrigin = chrome.TranslatePoint(default, form)!.Value;
+                    int width = (int)chrome.Bounds.Width;
+                    Color border = Color.Parse(theme == ThemeVariant.Light ? "#0078D4" : "#2864B4");
+                    Color fill = theme == ThemeVariant.Light ? Color.Parse("#CCE8FF") : GetAmbientBackdrop(owner);
+                    for (int y = 0; y <= 1; y++)
+                    {
+                        SKColor[] actual = new SKColor[width];
+                        SKColor[] expected = new SKColor[width];
+                        for (int x = 0; x < width; x++)
+                        {
+                            Color color = y == 0 || x == 0 || x == width - 1 ? border
+                                : theme != ThemeVariant.Light ? fill
+                                : x == 1 || x == width - 2 ? Color.Parse("#AAD9FF")
+                                : x == 2 || x == width - 3 ? Color.Parse("#C8E6FF") : fill;
+                            actual[x] = bitmap.GetPixel((int)chromeOrigin.X + x, (int)chromeOrigin.Y + y);
+                            expected[x] = new SKColor(color.R, color.G, color.B, color.A);
+                        }
+
+                        rows.Add((owner.Name!, chromeOrigin, y, actual, expected));
+                    }
+                }
+
+                if (evidencePath is not null)
+                {
+                    File.WriteAllText(evidencePath + ".json", JsonSerializer.Serialize(new
+                    {
+                        test = TestContext.CurrentContext.Test.FullName,
+                        theme = theme.ToString(),
+                        captureMethod = "actualAvaloniaHeadlessFormBrowseToolbarFrame",
+                        PixelSize = new { bitmap.Width, bitmap.Height },
+                        rows = rows.Select(row => new
+                        {
+                            row.Name,
+                            row.Origin,
+                            width = row.Actual.Length,
+                            row.Row,
+                            actual = row.Actual.Select(color => color.ToString()).ToArray(),
+                            expected = row.Expected.Select(color => color.ToString()).ToArray(),
+                        }),
+                        scope = "Source-backed checked chrome regression; not a new paired native or full-parity claim.",
+                    }, new JsonSerializerOptions { WriteIndented = true }));
+                }
+
+                foreach ((string name, Avalonia.Point _, int row, SKColor[] actual, SKColor[] expected) in rows)
+                {
+                    actual.Should().Equal(expected,
+                        $"{name} must paint original checked chrome at row {row} in {theme}, without a platform accent");
+                }
             }
-
-            Button toggleLeftPanel = form.FindControl<Button>("toggleLeftPanel")!;
-            toggleLeftPanel.Classes.Should().Contain("checked");
-            GetColor(toggleLeftPanel.Background).Should().Be(Color.Parse(toolStripChecked));
-            GetColor(GetPresenter(toggleLeftPanel).Background).Should().Be(Color.Parse(toolStripChecked));
-
-            Avalonia.Controls.Primitives.ToggleButton showSubmodules =
-                form.repoObjectsTree.FindControl<Avalonia.Controls.Primitives.ToggleButton>("tsbShowSubmodules")!;
-            showSubmodules.IsChecked = true;
-            Dispatcher.UIThread.RunJobs();
-            GetColor(showSubmodules.Background).Should().Be(Color.Parse(toolStripChecked));
-            GetColor(GetPresenter(showSubmodules).Background).Should().Be(Color.Parse(toolStripChecked),
-                "the rendered toggle surface must not inherit Fluent's purple platform accent");
         }
 
         static Avalonia.Controls.Presenters.ContentPresenter GetPresenter(Control control)
@@ -1139,6 +1211,36 @@ public sealed class FormBrowseTests
 
         static Color GetColor(IBrush? brush)
             => brush.Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+
+        static Color GetAmbientBackdrop(Control owner)
+        {
+            foreach (Control ancestor in owner.GetVisualAncestors().OfType<Control>())
+            {
+                IBrush? background = ancestor switch
+                {
+                    Border border => border.Background,
+                    Panel panel => panel.Background,
+                    Avalonia.Controls.Primitives.TemplatedControl templated => templated.Background,
+                    _ => null,
+                };
+                if (background is null || background.Opacity == 0)
+                {
+                    continue;
+                }
+
+                Color color = GetColor(background);
+                if (color.A == 0)
+                {
+                    continue;
+                }
+
+                background.Opacity.Should().Be(1, "this source backdrop is an opaque ancestor, not another state overlay");
+                color.A.Should().Be(byte.MaxValue);
+                return color;
+            }
+
+            throw new AssertionException("The actual toolbar must have an opaque background owner.");
+        }
     }
 
     [AvaloniaTest]
