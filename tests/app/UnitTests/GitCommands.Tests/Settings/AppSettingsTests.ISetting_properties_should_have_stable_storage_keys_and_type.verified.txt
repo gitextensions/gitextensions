@@ -38,6 +38,7 @@ BooleanSetting RememberDiffDisplayAppearance = Appearance.RememberDiffDisplayApp
 BooleanSetting RenderGraphWithDiagonals = Appearance.RevisionGraph.RenderGraphWithDiagonals
 BooleanSetting ReverseGitColoring = Appearance.ReverseGitColoring
 EnumRuntimeSetting`1<RevisionSortOrder> RevisionSortOrder = RevisionSortOrder
+TextSetting SessionRefsFilters = Appearance.SessionRefsFilters
 BooleanSetting ShowConEmuTab = Detailed.ShowConEmuTab
 BoolRuntimeSetting ShowCurrentBranchOnly = ShowCurrentBranchOnly
 BoolRuntimeSetting ShowEntireFile = ShowEntireFile

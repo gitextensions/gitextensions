@@ -223,23 +223,25 @@ public partial class CommandsTests
                         sortConditionRef = $@" --sort=""{order}*{derefSortKey}""";
                     }
 
+                    const string exclusions = " --exclude=refs/notes/commits --exclude=refs/agents/** --exclude=refs/sessions/** --exclude=refs/*/checkpoints/** --exclude=refs/copilot/** --exclude=refs/jj/keep/**";
+
                     yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
-                        /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
+                        /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Tags, /* noLocks */ false, sortBy, sortOrder, 0,
-                        /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/tags/");
+                        /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/tags/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder, 0,
-                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/heads/");
+                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/heads/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder, 100,
-                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} --count=100 refs/heads/");
+                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} --count=100 refs/heads/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ true, sortBy, sortOrder, 0,
-                        /* expected */ $@"--no-optional-locks for-each-ref{sortCondition}{formatNoTag} refs/heads/");
+                        /* expected */ $@"--no-optional-locks for-each-ref{sortCondition}{formatNoTag} refs/heads/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
-                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/remotes/");
+                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/remotes/{exclusions}");
 
                     yield return new TestCaseData(RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder, 0,
-                        /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format}");
+                        /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format}{exclusions}");
                     yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder, 0,
-                        /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
+                        /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/{exclusions}");
                 }
             }
         }
