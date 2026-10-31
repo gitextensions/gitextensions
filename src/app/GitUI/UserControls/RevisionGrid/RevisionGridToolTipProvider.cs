@@ -19,9 +19,20 @@ internal sealed class RevisionGridToolTipProvider
     private int _previousColumnIndex = -1;
     private IGitRef? _previousHighlight = null;
 
+    /// <summary>
+    ///  Whether the tooltip is displayed. <see cref="ToolTip.Active"/> cannot tell because it only enables the tooltip.
+    /// </summary>
+    private bool _isShown;
+
     public RevisionGridToolTipProvider(RevisionDataGridView gridView)
     {
         _gridView = gridView;
+
+        _toolTip.Popup += (_, _) => _isShown = true;
+
+        // Windows hides the tooltip on its own in these cases
+        _gridView.MouseDown += (_, _) => _isShown = false;
+        _gridView.MouseLeave += (_, _) => _isShown = false;
     }
 
     public bool ShowRevisionGridTooltips { get; set; }
@@ -29,12 +40,13 @@ internal sealed class RevisionGridToolTipProvider
     /// <summary>
     /// Hides the tooltip.
     /// </summary>
-    /// <returns>Returns <cref>true</cref> if the tooltip was active.</returns>
+    /// <returns>Returns <cref>true</cref> if the tooltip was shown.</returns>
     public bool Hide()
     {
-        bool wasActive = _toolTip.Active;
+        bool wasShown = _isShown;
+        _isShown = false;
         _toolTip.Active = false;
-        return wasActive;
+        return wasShown;
     }
 
     public void OnCellMouseMove(DataGridViewCellMouseEventArgs e, RefLabelHitInfo? hitInfo)
@@ -57,6 +69,7 @@ internal sealed class RevisionGridToolTipProvider
         if (!ShowRevisionGridTooltips)
         {
             _toolTip.SetToolTip(_gridView, null);
+            _isShown = false;
             return;
         }
 
@@ -89,6 +102,7 @@ internal sealed class RevisionGridToolTipProvider
                 // graph column builds its text for every hovered pixel, that delay would restart with
                 // nearly every mouse move. Windows updates the text of a displayed tooltip in place.
                 _toolTip.SetToolTip(_gridView, newText);
+                _isShown &= newText.Length > 0;
             }
 
             if (!_toolTip.Active)

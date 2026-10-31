@@ -97,12 +97,15 @@ internal sealed class QuickSearchProvider
         }
     }
 
-    public void OnPreviewKeyDown(PreviewKeyDownEventArgs e)
+    /// <summary>
+    ///  Cancels the quick search.
+    /// </summary>
+    /// <returns><see langword="true"/> if the quick search was active.</returns>
+    public bool Cancel()
     {
-        if (e.KeyCode == Keys.Escape)
-        {
-            HideQuickSearchString();
-        }
+        bool wasActive = _label.Visible;
+        HideQuickSearchString();
+        return wasActive;
     }
 
     public void NextResult(bool down)
