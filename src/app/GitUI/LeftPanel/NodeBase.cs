@@ -5,13 +5,32 @@ namespace GitUI.LeftPanel;
 /// <summary>A common base class for both <see cref="Node"/> and <see cref="Tree"/>.</summary>
 internal abstract class NodeBase
 {
+    /// <summary>
+    ///  Initializes a new instance of the <see cref="NodeBase"/> class for <see cref="Tree"/> nodes.
+    /// </summary>
+    public NodeBase(TreeNode treeNode)
+    {
+        Nodes = new Nodes((Tree)this);
+        TreeViewNode = treeNode;
+        treeNode.Tag = this;
+    }
+
+    /// <summary>
+    ///  Initializes a new instance of the <see cref="NodeBase"/> class for non-<see cref="Tree"/> nodes.
+    /// </summary>
+    public NodeBase(Tree? tree)
+    {
+        Nodes = new Nodes(tree);
+        TreeViewNode = null!;
+    }
+
     /// <summary>The child nodes.</summary>
-    protected internal Nodes Nodes { get; protected set; } = null!;
+    protected internal Nodes Nodes { get; protected set; }
 
     internal bool HasChildren => Nodes.Count > 0;
 
     /// <summary>The corresponding tree node.</summary>
-    protected internal virtual TreeNode TreeViewNode { get; set; } = null!;
+    protected internal virtual TreeNode TreeViewNode { get => field ?? throw new NotImplementedException();  set; }
 
     /// <summary>
     /// Marks this node to be included in multi-selection. See <see cref="Select(bool, bool)"/>.
@@ -76,7 +95,7 @@ internal abstract class NodeBase
 
     private void ResetFont()
     {
-        TreeViewNode.NodeFont!.Dispose();
+        TreeViewNode.NodeFont?.Dispose();
         TreeViewNode.NodeFont = null;
     }
     #endregion
