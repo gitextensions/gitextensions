@@ -9,6 +9,10 @@ namespace GitUI.UserControls;
 /// </summary>
 public class MultiSelectTreeView : NativeTreeView
 {
+    private TreeNode? _dragSelectionAnchorNode = null;
+    private HashSet<TreeNode> _dragSelectionBaseNodes = [];
+    private TreeNode? _dragSelectionMouseDownNode = null;
+    private HashSet<TreeNode> _dragSelectionMouseDownNodes = [];
     private bool _mouseClickHandled = false;
     private TreeNode? _multiselectionStartNode = null;
     private HashSet<TreeNode> _selectedNodes = [];
@@ -227,7 +231,32 @@ public class MultiSelectTreeView : NativeTreeView
             return;
         }
 
+        // Dragging from here selects the range from the anchor to the node under the mouse cursor (added to the previous selection if Ctrl is pressed).
+        // Dragging an already selected node is not handled here, it starts a drag-and-drop operation instead.
+        _dragSelectionAnchorNode = modifierKeys.HasFlag(Keys.Shift) ? _multiselectionStartNode ?? newFocusedNode : newFocusedNode;
+        _dragSelectionBaseNodes = modifierKeys.HasFlag(Keys.Control) ? [.. _selectedNodes] : [];
+
         UpdateSelection(newFocusedNode, replace: !modifierKeys.HasFlag(Keys.Control), addRange: modifierKeys.HasFlag(Keys.Shift));
+
+        _dragSelectionMouseDownNode = newFocusedNode;
+        _dragSelectionMouseDownNodes = [.. _selectedNodes];
+    }
+
+    protected override void OnMouseMove(MouseEventArgs e)
+    {
+        if (_dragSelectionMouseDownNode is not null)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                UpdateDragSelection(e.Location);
+            }
+            else
+            {
+                EndDragSelection();
+            }
+        }
+
+        base.OnMouseMove(e);
     }
 
     protected override void OnMouseUp(MouseEventArgs e)
@@ -284,7 +313,99 @@ public class MultiSelectTreeView : NativeTreeView
         finally
         {
             _mouseClickHandled = false;
+            EndDragSelection();
         }
+    }
+
+    private void EndDragSelection()
+    {
+        if (_dragSelectionMouseDownNode is null)
+        {
+            return;
+        }
+
+        _dragSelectionAnchorNode = null;
+        _dragSelectionBaseNodes = [];
+        _dragSelectionMouseDownNode = null;
+        _dragSelectionMouseDownNodes = [];
+    }
+
+    private IEnumerable<TreeNode> GetRange(TreeNode firstNode, TreeNode lastNode)
+    {
+        bool foundFirstNode = false;
+        foreach (TreeNode node in this.Items())
+        {
+            if (!foundFirstNode)
+            {
+                if (node == firstNode)
+                {
+                    foundFirstNode = true;
+                }
+                else if (node == lastNode)
+                {
+                    foundFirstNode = true;
+                    lastNode = firstNode;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            yield return node;
+
+            if (node == lastNode)
+            {
+                yield break;
+            }
+        }
+    }
+
+    private void UpdateDragSelection(Point location)
+    {
+        Validates.NotNull(_dragSelectionAnchorNode);
+        Validates.NotNull(_dragSelectionMouseDownNode);
+
+        // Keep receiving the mouse events while the mouse cursor is outside of the control.
+        // The capture is released by TreeView on WM_LBUTTONUP.
+        if (!Capture)
+        {
+            Capture = true;
+        }
+
+        TreeNode? node;
+        bool scroll = true;
+        int x = Math.Clamp(location.X, 0, Math.Max(0, ClientSize.Width - 1));
+        if (location.Y < 0)
+        {
+            node = TopNode?.PrevVisibleNode ?? TopNode;
+        }
+        else if (location.Y >= ClientSize.Height)
+        {
+            node = HitTest(x, ClientSize.Height - 1).Node is TreeNode bottomNode ? bottomNode.NextVisibleNode ?? bottomNode : null;
+        }
+        else
+        {
+            node = HitTest(x, location.Y).Node;
+            scroll = false;
+        }
+
+        if (node is null || node == FocusedNode)
+        {
+            return;
+        }
+
+        if (scroll)
+        {
+            node.EnsureVisible();
+        }
+
+        _selectedNodes = node == _dragSelectionMouseDownNode
+            ? [.. _dragSelectionMouseDownNodes]
+            : [.. _dragSelectionBaseNodes, .. GetRange(_dragSelectionAnchorNode, node)];
+        _multiselectionStartNode = _dragSelectionAnchorNode;
+        FocusedNode = node;
+        Invalidate();
     }
 
     private void OnSelectionChanged()
@@ -329,34 +450,7 @@ public class MultiSelectTreeView : NativeTreeView
         {
             changed = true;
             _multiselectionStartNode ??= newFocusedNode;
-            TreeNode? lastNode = _multiselectionStartNode;
-            bool foundFirstNode = false;
-            foreach (TreeNode node in this.Items())
-            {
-                if (!foundFirstNode)
-                {
-                    if (node == newFocusedNode)
-                    {
-                        foundFirstNode = true;
-                    }
-                    else if (node == lastNode)
-                    {
-                        foundFirstNode = true;
-                        lastNode = newFocusedNode;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-
-                _selectedNodes.Add(node);
-
-                if (node == lastNode)
-                {
-                    break;
-                }
-            }
+            _selectedNodes.UnionWith(GetRange(newFocusedNode, _multiselectionStartNode));
         }
 
         if (FocusedNode != newFocusedNode)
