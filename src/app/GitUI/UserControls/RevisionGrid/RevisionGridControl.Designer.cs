@@ -79,6 +79,7 @@ partial class RevisionGridControl
         tsmiOtherActions = new ToolStripMenuItem();
         getHelpOnHowToUseTheseFeaturesToolStripMenuItem = new ToolStripMenuItem();
         editCommitToolStripMenuItem = new ToolStripMenuItem();
+        editCommitWithFixupToolStripMenuItem = new ToolStripMenuItem();
         rebaseToolStripMenuItem = new ToolStripMenuItem();
         rebaseInteractivelyToolStripMenuItem = new ToolStripMenuItem();
         sepRebase = new ToolStripSeparator();
@@ -482,6 +483,7 @@ partial class RevisionGridControl
         manipulateCommitToolStripMenuItem.Image = Properties.Images.Advanced;
         manipulateCommitToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
         editCommitToolStripMenuItem,
+        editCommitWithFixupToolStripMenuItem,
         rewordCommitToolStripMenuItem,
         fixupCommitToolStripMenuItem,
         squashCommitToolStripMenuItem,
@@ -582,6 +584,13 @@ partial class RevisionGridControl
         editCommitToolStripMenuItem.Text = "&Edit commit";
         editCommitToolStripMenuItem.Click += editCommitToolStripMenuItem_Click;
         // 
+        // editCommitWithFixupToolStripMenuItem
+        // 
+        editCommitWithFixupToolStripMenuItem.Name = "editCommitWithFixupToolStripMenuItem";
+        editCommitWithFixupToolStripMenuItem.Size = new Size(180, 24);
+        editCommitWithFixupToolStripMenuItem.Text = "E&dit commit by creating a fixup commit and squash-rebase...";
+        editCommitWithFixupToolStripMenuItem.Click += EditCommitWithFixupToolStripMenuItemClick;
+        // 
         // rewordCommitToolStripMenuItem
         //
         rewordCommitToolStripMenuItem.Name = "rewordCommitToolStripMenuItem";
@@ -669,6 +678,7 @@ partial class RevisionGridControl
     private ToolStripMenuItem openBuildReportToolStripMenuItem;
     private ToolStripMenuItem openPullRequestPageStripMenuItem;
     private ToolStripMenuItem editCommitToolStripMenuItem;
+    private ToolStripMenuItem editCommitWithFixupToolStripMenuItem;
     private ToolStripMenuItem rebaseWithAdvOptionsToolStripMenuItem;
     private ToolStripMenuItem createTagToolStripMenuItem;
     private ToolStripMenuItem createNewBranchToolStripMenuItem;
