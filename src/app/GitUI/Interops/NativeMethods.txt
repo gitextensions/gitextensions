@@ -23,6 +23,12 @@ PostMessage
 SendMessageTimeout
 EnumWindows
 GetClassName
+SetWindowsHookEx
+UnhookWindowsHookEx
+CallNextHookEx
+GetGUIThreadInfo
+GetKeyState
+KBDLLHOOKSTRUCT
 VIRTUAL_KEY
 WINDOW_STYLE
 WINDOW_EX_STYLE

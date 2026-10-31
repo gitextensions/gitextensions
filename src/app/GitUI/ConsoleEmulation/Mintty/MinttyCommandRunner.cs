@@ -44,7 +44,7 @@ internal sealed partial class MinttyCommandRunner : IConsoleCommandRunner
     {
         MinttyControl? oldTerminal = _terminal;
 
-        _terminal = new MinttyControl { Dock = DockStyle.Fill };
+        _terminal = new MinttyControl(interceptTabPress: true) { Dock = DockStyle.Fill };
 
         if (oldTerminal is not null)
         {
