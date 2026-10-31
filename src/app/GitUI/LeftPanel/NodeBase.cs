@@ -8,7 +8,7 @@ internal abstract class NodeBase
     /// <summary>
     ///  Initializes a new instance of the <see cref="NodeBase"/> class for <see cref="Tree"/> nodes.
     /// </summary>
-    public NodeBase(TreeNode treeNode)
+    protected NodeBase(TreeNode treeNode)
     {
         Nodes = new Nodes((Tree)this);
         TreeViewNode = treeNode;
@@ -18,7 +18,7 @@ internal abstract class NodeBase
     /// <summary>
     ///  Initializes a new instance of the <see cref="NodeBase"/> class for non-<see cref="Tree"/> nodes.
     /// </summary>
-    public NodeBase(Tree? tree)
+    protected NodeBase(Tree? tree)
     {
         Nodes = new Nodes(tree);
         TreeViewNode = null!;
