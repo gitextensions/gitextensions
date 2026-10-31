@@ -45,6 +45,12 @@ internal abstract class Node : NodeBase, INode
         }
     }
 
+    /// <summary>
+    ///  Gets the tree view that shows this node, also while the subtree containing the node is still being built
+    ///  and its <see cref="TreeNode"/> is not yet attached (see <see cref="Nodes.FillTreeViewNode(TreeNode)"/>).
+    /// </summary>
+    protected TreeView? OwnerTreeView => TreeViewNode.TreeView ?? Nodes.Tree?.TreeViewNode.TreeView;
+
     protected IWin32Window? ParentWindow()
     {
         return TreeViewNode.TreeView?.FindForm();

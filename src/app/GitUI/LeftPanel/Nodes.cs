@@ -87,31 +87,47 @@ internal sealed class Nodes(Tree? tree) : IReadOnlyCollection<Node>
 
         foreach (Node node in this)
         {
-            TreeNode treeNode;
-
             if (oldNodeIdx < treeViewNode.Nodes.Count)
             {
-                treeNode = treeViewNode.Nodes[oldNodeIdx];
+                TreeNode treeNode = treeViewNode.Nodes[oldNodeIdx];
                 Node oldNode = Node.GetNode(treeNode);
 
                 if (!oldNode.Equals(node) && !prevNodes.Contains(node))
                 {
-                    treeNode = treeViewNode.Nodes.Insert(oldNodeIdx, string.Empty);
+                    treeViewNode.Nodes.Insert(oldNodeIdx, CreateTreeNode(node));
+                }
+                else
+                {
+                    node.TreeViewNode = treeNode;
+                    node.Nodes.FillTreeViewNode(treeNode);
                 }
             }
             else
             {
-                treeNode = treeViewNode.Nodes.Add(string.Empty);
+                treeViewNode.Nodes.Add(CreateTreeNode(node));
             }
 
-            node.TreeViewNode = treeNode;
-            node.Nodes.FillTreeViewNode(treeNode);
             oldNodeIdx++;
         }
 
         while (oldNodeIdx < treeViewNode.Nodes.Count)
         {
             treeViewNode.Nodes.RemoveAt(oldNodeIdx);
+        }
+
+        return;
+
+        static TreeNode CreateTreeNode(Node node)
+        {
+            // Build the whole new subtree before it is attached to the tree view. As soon as a TreeNode belongs to
+            // a TreeView with a window handle, adding it, setting its text, image or colour is each a message to the
+            // native control (and an invalidation), which is very slow for thousands of refs. A detached TreeNode
+            // only stores the values, and adding the finished subtree sends a single insert per node.
+            TreeNode treeNode = new(string.Empty);
+            node.TreeViewNode = treeNode;
+            node.Nodes.FillTreeViewNode(treeNode);
+
+            return treeNode;
         }
     }
 
