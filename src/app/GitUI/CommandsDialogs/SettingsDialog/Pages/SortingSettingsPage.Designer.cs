@@ -1,4 +1,4 @@
-namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
+﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 partial class SortingSettingsPage
 {
@@ -34,20 +34,24 @@ partial class SortingSettingsPage
         _NO_TRANSLATE_cmbBranchesOrder = new ComboBox();
         _NO_TRANSLATE_cmbBranchesSortBy = new ComboBox();
         _NO_TRANSLATE_cmbRevisionsSortBy = new ComboBox();
+        txtReservedLanesBranchNames = new TextBox();
         txtPrioBranchNames = new TextBox();
         txtPrioRemoteNames = new TextBox();
         RevisionSortOrderHelp = new PictureBox();
+        ReservedLanesBranchNamesHelp = new PictureBox();
         PrioBranchNamesHelp = new PictureBox();
         PrioRemoteNamesHelp = new PictureBox();
         lblBranchesOrder = new Label();
         lblBranchesSortBy = new Label();
         lblRevisionsSortBy = new Label();
+        lblReservedLanesBranchNames = new Label();
         lblPrioBranchNames = new Label();
         lblPrioRemoteNames = new Label();
         tlpnlMain.SuspendLayout();
         gbGeneral.SuspendLayout();
         tlpnlGeneral.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)RevisionSortOrderHelp).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)ReservedLanesBranchNamesHelp).BeginInit();
         ((System.ComponentModel.ISupportInitialize)PrioBranchNamesHelp).BeginInit();
         ((System.ComponentModel.ISupportInitialize)PrioRemoteNamesHelp).BeginInit();
         SuspendLayout();
@@ -64,7 +68,7 @@ partial class SortingSettingsPage
         tlpnlMain.RowStyles.Add(new RowStyle());
         tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 10F));
-        tlpnlMain.Size = new Size(1511, 669);
+        tlpnlMain.Size = new Size(1511, 698);
         // 
         // gbGeneral
         // 
@@ -75,7 +79,7 @@ partial class SortingSettingsPage
         gbGeneral.Location = new Point(3, 3);
         gbGeneral.Name = "gbGeneral";
         gbGeneral.Padding = new Padding(8);
-        gbGeneral.Size = new Size(1505, 197);
+        gbGeneral.Size = new Size(1505, 226);
         gbGeneral.TabStop = false;
         gbGeneral.Text = "Sorting";
         // 
@@ -92,18 +96,22 @@ partial class SortingSettingsPage
         tlpnlGeneral.Controls.Add(_NO_TRANSLATE_cmbRevisionsSortBy, 1, 0);
         tlpnlGeneral.Controls.Add(txtPrioBranchNames, 1, 3);
         tlpnlGeneral.Controls.Add(txtPrioRemoteNames, 1, 4);
+        tlpnlGeneral.Controls.Add(txtReservedLanesBranchNames, 1, 5);
         tlpnlGeneral.Controls.Add(RevisionSortOrderHelp, 2, 0);
         tlpnlGeneral.Controls.Add(PrioBranchNamesHelp, 2, 3);
         tlpnlGeneral.Controls.Add(PrioRemoteNamesHelp, 2, 4);
+        tlpnlGeneral.Controls.Add(ReservedLanesBranchNamesHelp, 2, 5);
         tlpnlGeneral.Controls.Add(lblBranchesOrder, 0, 2);
         tlpnlGeneral.Controls.Add(lblBranchesSortBy, 0, 1);
         tlpnlGeneral.Controls.Add(lblRevisionsSortBy, 0, 0);
         tlpnlGeneral.Controls.Add(lblPrioBranchNames, 0, 3);
         tlpnlGeneral.Controls.Add(lblPrioRemoteNames, 0, 4);
+        tlpnlGeneral.Controls.Add(lblReservedLanesBranchNames, 0, 5);
         tlpnlGeneral.Dock = DockStyle.Fill;
         tlpnlGeneral.Location = new Point(8, 24);
         tlpnlGeneral.Name = "tlpnlGeneral";
-        tlpnlGeneral.RowCount = 8;
+        tlpnlGeneral.RowCount = 9;
+        tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
@@ -112,7 +120,7 @@ partial class SortingSettingsPage
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.Size = new Size(1489, 165);
+        tlpnlGeneral.Size = new Size(1489, 194);
         // 
         // _NO_TRANSLATE_cmbBranchesOrder
         // 
@@ -158,6 +166,13 @@ partial class SortingSettingsPage
         txtPrioRemoteNames.Name = "txtPrioRemoteNames";
         txtPrioRemoteNames.Size = new Size(322, 23);
         // 
+        // txtReservedLanesBranchNames
+        // 
+        txtReservedLanesBranchNames.Dock = DockStyle.Fill;
+        txtReservedLanesBranchNames.Location = new Point(120, 148);
+        txtReservedLanesBranchNames.Name = "txtReservedLanesBranchNames";
+        txtReservedLanesBranchNames.Size = new Size(322, 23);
+        // 
         // RevisionSortOrderHelp
         // 
         RevisionSortOrderHelp.Cursor = Cursors.Hand;
@@ -193,6 +208,18 @@ partial class SortingSettingsPage
         PrioRemoteNamesHelp.SizeMode = PictureBoxSizeMode.AutoSize;
         PrioRemoteNamesHelp.TabStop = false;
         PrioRemoteNamesHelp.Click += PrioRemoteNamesHelp_Click;
+        // 
+        // ReservedLanesBranchNamesHelp
+        // 
+        ReservedLanesBranchNamesHelp.Cursor = Cursors.Hand;
+        ReservedLanesBranchNamesHelp.Image = Properties.Resources.information;
+        ReservedLanesBranchNamesHelp.Location = new Point(448, 150);
+        ReservedLanesBranchNamesHelp.Margin = new Padding(3, 5, 3, 3);
+        ReservedLanesBranchNamesHelp.Name = "ReservedLanesBranchNamesHelp";
+        ReservedLanesBranchNamesHelp.Size = new Size(16, 16);
+        ReservedLanesBranchNamesHelp.SizeMode = PictureBoxSizeMode.AutoSize;
+        ReservedLanesBranchNamesHelp.TabStop = false;
+        ReservedLanesBranchNamesHelp.Click += ReservedLanesBranchNamesHelp_Click;
         // 
         // lblBranchesOrder
         // 
@@ -246,15 +273,26 @@ partial class SortingSettingsPage
         lblPrioRemoteNames.Text = "Prioritized remotes";
         lblPrioRemoteNames.TextAlign = ContentAlignment.MiddleLeft;
         // 
+        // lblReservedLanesBranchNames
+        // 
+        lblReservedLanesBranchNames.AutoSize = true;
+        lblReservedLanesBranchNames.Dock = DockStyle.Fill;
+        lblReservedLanesBranchNames.Location = new Point(3, 145);
+        lblReservedLanesBranchNames.Name = "lblReservedLanesBranchNames";
+        lblReservedLanesBranchNames.Padding = new Padding(0, 0, 0, 2);
+        lblReservedLanesBranchNames.Size = new Size(111, 29);
+        lblReservedLanesBranchNames.Text = "Reserve lane for branches";
+        lblReservedLanesBranchNames.TextAlign = ContentAlignment.MiddleLeft;
+        // 
         // SortingSettingsPage
         // 
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         Controls.Add(tlpnlMain);
-        MinimumSize = new Size(258, 255);
+        MinimumSize = new Size(258, 284);
         Name = "SortingSettingsPage";
         Padding = new Padding(8);
-        Size = new Size(1527, 685);
+        Size = new Size(1527, 714);
         Text = "Sorting";
         tlpnlMain.ResumeLayout(false);
         tlpnlMain.PerformLayout();
@@ -265,6 +303,7 @@ partial class SortingSettingsPage
         ((System.ComponentModel.ISupportInitialize)RevisionSortOrderHelp).EndInit();
         ((System.ComponentModel.ISupportInitialize)PrioBranchNamesHelp).EndInit();
         ((System.ComponentModel.ISupportInitialize)PrioRemoteNamesHelp).EndInit();
+        ((System.ComponentModel.ISupportInitialize)ReservedLanesBranchNamesHelp).EndInit();
         ResumeLayout(false);
     }
 
@@ -277,13 +316,16 @@ partial class SortingSettingsPage
     private Label lblBranchesOrder;
     private Label lblPrioBranchNames;
     private Label lblPrioRemoteNames;
+    private Label lblReservedLanesBranchNames;
     private ComboBox _NO_TRANSLATE_cmbRevisionsSortBy;
     private ComboBox _NO_TRANSLATE_cmbBranchesSortBy;
     private ComboBox _NO_TRANSLATE_cmbBranchesOrder;
     private TextBox txtPrioBranchNames;
     private TextBox txtPrioRemoteNames;
+    private TextBox txtReservedLanesBranchNames;
     private PictureBox RevisionSortOrderHelp;
     private PictureBox PrioBranchNamesHelp;
     private PictureBox PrioRemoteNamesHelp;
+    private PictureBox ReservedLanesBranchNamesHelp;
     private TableLayoutPanel tlpnlMain;
 }
