@@ -1134,6 +1134,7 @@ public sealed partial class FileStatusList : GitModuleControl
 
         FileStatusListView.BeginUpdate();
         ClearSelected();
+        RememberExpansionStates();
         FileStatusListView.Nodes.Clear();
         FileStatusListView.EndUpdate();
 
@@ -1168,6 +1169,7 @@ public sealed partial class FileStatusList : GitModuleControl
         {
             FileStatusListView.BeginUpdate();
 
+            RememberExpansionStates();
             FileStatusListView.Nodes.Clear();
 
             foreach ((TreeNode node, ExpandCollapseState state) in nodes)
@@ -1193,6 +1195,8 @@ public sealed partial class FileStatusList : GitModuleControl
                         break;
                 }
             }
+
+            RestoreExpansionStates();
 
             switch (FileStatusListView.Nodes.Count)
             {
