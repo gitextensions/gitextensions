@@ -1128,7 +1128,9 @@ public class FilterInfoTests
             {
                 @"(^|\s)--exclude=refs/agents/\*\*($|\s)",
                 @"(^|\s)--exclude=refs/sessions/\*\*($|\s)",
-                @"(^|\s)--exclude=refs/copilot/checkpoints/\*\*($|\s)"
+                @"(^|\s)--exclude=refs/\*/checkpoints/\*\*($|\s)",
+                @"(^|\s)--exclude=refs/copilot/\*\*($|\s)",
+                @"(^|\s)--exclude=refs/jj/keep/\*\*($|\s)"
             };
 
             foreach (string sessionRefExclusion in sessionRefExclusions)
