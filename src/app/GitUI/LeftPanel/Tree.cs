@@ -13,11 +13,9 @@ internal abstract class Tree : NodeBase, IDisposable
     protected TaskCompletionSource LoadingCompleted = new();
 
     protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
+        : base(treeNode)
     {
-        Nodes = new Nodes(this);
         _uiCommandsSource = uiCommands;
-        TreeViewNode = treeNode;
-        treeNode.Tag = this;
 
         uiCommands.UICommandsChanged += (a, e) =>
         {
