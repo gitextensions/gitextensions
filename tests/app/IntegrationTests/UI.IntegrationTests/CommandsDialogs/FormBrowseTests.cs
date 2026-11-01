@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using CommonTestUtils;
 using GitCommands;
+using GitCommands.Logging;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -370,6 +371,39 @@ public class FormBrowseTests
                 },
                 commandsA);
         }
+    }
+
+    [Test]
+    public void OnLoad_should_not_run_git_commands_for_the_repository_state_on_the_UI_thread()
+    {
+        _referenceRepository.CreateCommit("Commit1", "Commit1");
+        CommandLog.Clear();
+
+        RunFormTest(
+            async form =>
+            {
+                WaitForRevisionsToBeLoaded(form);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+            });
+
+        CommandLog.Commands.Should().Contain(entry => !entry.IsOnMainThread && entry.Arguments.Contains("log "), "the commands of the form must have been logged");
+        string[] repositoryStateCommandsOnUIThread =
+        [
+            .. CommandLog.Commands
+                .Where(entry => entry.IsOnMainThread)
+                .Select(entry => CommandLogEntry.GetGitArgumentsWithoutConfiguration(entry.Arguments))
+                .Where(IsRepositoryStateCommand)
+        ];
+
+        // Each of these delays showing the window, they are run in the background
+        repositoryStateCommandsOnUIThread.Should().BeEmpty();
+
+        return;
+
+        static bool IsRepositoryStateCommand(string arguments)
+            => arguments is "remote" or "rev-parse --git-common-dir" or "ls-files -z --unmerged"
+            || arguments.StartsWith("config list ", StringComparison.Ordinal)
+            || arguments.StartsWith("stash list ", StringComparison.Ordinal);
     }
 
     private static void CreateCommitWithSubject(GitModuleTestHelper helper, string subject)

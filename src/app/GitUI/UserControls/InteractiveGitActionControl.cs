@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using GitCommands.Git;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -28,6 +29,8 @@ public partial class InteractiveGitActionControl : GitModuleControl
         Merge,
         Patch
     }
+
+    private readonly CancellationTokenSequence _refreshGitActionSequence = new();
 
     private GitAction _action;
     private bool _hasConflicts;
@@ -68,49 +71,70 @@ public partial class InteractiveGitActionControl : GitModuleControl
 
     /// <summary>
     /// Refresh the banner in the revision grid after reactivation.
+    /// The banner is updated when the state of the repo is known, which requires a Git command.
     /// </summary>
     /// <param name="checkForConflicts">Allow running Git command to check for conflicts.</param>
     public void RefreshGitAction(bool checkForConflicts)
     {
         // get the current state of the repo
 
-        if (!Module.IsValidGitWorkingDir())
+        IGitModule module = Module;
+        if (!module.IsValidGitWorkingDir())
         {
             return;
         }
 
-        bool hasConflicts;
-        try
+        // The Git command must not block the UI thread, e.g. while the window is shown for the first time.
+        // The results of requests overtaking each other must not be applied in the wrong order.
+        CancellationToken cancellationToken = _refreshGitActionSequence.Next();
+        ThreadHelper.FileAndForget(async () =>
         {
-            // This command can be executed seemingly in the background (selecting Browse),
-            // do not notify the user (this can occur if Git is upgraded).
-            // Running Git commands async when restoring may fail.
-            hasConflicts = checkForConflicts && Module.InTheMiddleOfConflictedMerge(throwOnErrorExit: false);
-        }
-        catch (Win32Exception)
-        {
-            hasConflicts = false;
-        }
+            (GitAction action, bool hasConflicts) = GetGitAction(module, checkForConflicts);
 
-        if (Module.InTheMiddleOfRebase())
-        {
-            SetGitAction(GitAction.Rebase, hasConflicts);
-            return;
-        }
+            await this.SwitchToMainThreadAsync(cancellationToken);
+            SetGitAction(action, hasConflicts);
+        });
 
-        if (Module.InTheMiddleOfMerge())
-        {
-            SetGitAction(GitAction.Merge, hasConflicts);
-            return;
-        }
+        return;
 
-        if (Module.InTheMiddleOfPatch())
+        static (GitAction Action, bool HasConflicts) GetGitAction(IGitModule module, bool checkForConflicts)
         {
-            SetGitAction(GitAction.Patch, hasConflicts);
-            return;
-        }
+            bool hasConflicts;
+            try
+            {
+                // This command can be executed seemingly in the background (selecting Browse),
+                // do not notify the user (this can occur if Git is upgraded).
+                // Running Git commands async when restoring may fail.
+                hasConflicts = checkForConflicts && module.InTheMiddleOfConflictedMerge(throwOnErrorExit: false);
+            }
+            catch (Win32Exception)
+            {
+                hasConflicts = false;
+            }
 
-        SetGitAction(GitAction.None, hasConflicts);
+            if (module.InTheMiddleOfRebase())
+            {
+                return (GitAction.Rebase, hasConflicts);
+            }
+
+            if (module.InTheMiddleOfMerge())
+            {
+                return (GitAction.Merge, hasConflicts);
+            }
+
+            if (module.InTheMiddleOfPatch())
+            {
+                return (GitAction.Patch, hasConflicts);
+            }
+
+            return (GitAction.None, hasConflicts);
+        }
+    }
+
+    protected override void DisposeCustomResources()
+    {
+        _refreshGitActionSequence.Dispose();
+        base.DisposeCustomResources();
     }
 
     private void SetGitAction(GitAction action, bool hasConflicts)
