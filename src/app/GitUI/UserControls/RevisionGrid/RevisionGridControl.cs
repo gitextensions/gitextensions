@@ -1107,10 +1107,19 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
                 try
                 {
-                    _gridView.RemoteColors = await getRemoteColors;
+                    FrozenDictionary<string, Color> remoteColors = await getRemoteColors;
+
+                    // Loading the colors cannot be cancelled. If this refresh has been replaced meanwhile
+                    // (e.g. after the revision reader failed), its colors must not overwrite those of the new one.
+                    cancellationToken.ThrowIfCancellationRequested();
+                    _gridView.RemoteColors = remoteColors;
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
+                    // A refresh which has been replaced meanwhile must not report the failure
+                    // nor cancel the refresh which replaced it
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     // The revisions are not added to the grid without the colors, do not wait for them forever
                     OnRevisionReaderError(ex);
                     return;
