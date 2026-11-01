@@ -1,11 +1,14 @@
 <!-- L2 CORE PLATFORM. Agentic doc: TL;DR at top, Why→What→How, code pointers not code, ~100 lines. -->
 # Settings System (L2)
 
-**TL;DR:** Git Extensions has **three** settings worlds. (1) **Global app settings** — single XML file,
-static `AppSettings` facade, no per-repo override. (2) **Layered app settings** — same XML format spread
-across Local / Distributed / Global files so settings can be overridden per-repo or committed alongside
-source code; accessed via `StringSetting` / `BoolSetting` / `NumberSetting<T>` and `DistributedSettings`.
-(3) **Git config** — real `git config` keys (system/global/local), read via `IGitModule`.
+**TL;DR:** Git Extensions stores settings in two ways: (1) **Global app settings** — single XML file,
+static `AppSettings` facade, no per-repo override. (2) **Layered app settings** —
+same XML format spread across local / distributed / global files so settings can be overridden per cloned repo
+or committed alongside source code; accessed via `DistributedSettings` and `StringSetting` / `BoolSetting` /
+`NumberSetting<T>`.
+Separately, **Git config** stores real `git config` keys (system/global/local) read via `IGitModule`;
+Git Extensions has UI pages to configure some git config at different scopes, but does not store
+Git Extensions-specific settings there.
 Choose the world before adding any setting.
 
 **Related:** [git-module](git-module.md) · [L0 primer](../L0-foundations/gitextensions-primer.md) · master [docs-index](../docs-index.md)
