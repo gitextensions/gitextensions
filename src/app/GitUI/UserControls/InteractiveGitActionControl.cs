@@ -32,6 +32,8 @@ public partial class InteractiveGitActionControl : GitModuleControl
 
     private readonly CancellationTokenSequence _refreshGitActionSequence = new();
 
+    // The repo which the banner has been shown for
+    private IGitModule? _actionModule;
     private GitAction _action;
     private bool _hasConflicts;
 
@@ -72,6 +74,7 @@ public partial class InteractiveGitActionControl : GitModuleControl
     /// <summary>
     /// Refresh the banner in the revision grid after reactivation.
     /// The banner is updated when the state of the repo is known, which requires a Git command.
+    /// The banner of another repo is hidden until then.
     /// </summary>
     /// <param name="checkForConflicts">Allow running Git command to check for conflicts.</param>
     public void RefreshGitAction(bool checkForConflicts)
@@ -81,12 +84,23 @@ public partial class InteractiveGitActionControl : GitModuleControl
         IGitModule module = Module;
         if (!module.IsValidGitWorkingDir())
         {
+            // The result of a request which is still running must not be applied anymore
+            _refreshGitActionSequence.CancelCurrent();
             return;
         }
 
         // The Git command must not block the UI thread, e.g. while the window is shown for the first time.
         // The results of requests overtaking each other must not be applied in the wrong order.
         CancellationToken cancellationToken = _refreshGitActionSequence.Next();
+
+        if (!ReferenceEquals(module, _actionModule))
+        {
+            // The buttons act on the repo which is open now, so the banner of the previous repo
+            // must not stay usable until the Git command for this repo has finished.
+            _actionModule = module;
+            SetGitAction(GitAction.None, hasConflicts: false);
+        }
+
         ThreadHelper.FileAndForget(async () =>
         {
             (GitAction action, bool hasConflicts) = GetGitAction(module, checkForConflicts);

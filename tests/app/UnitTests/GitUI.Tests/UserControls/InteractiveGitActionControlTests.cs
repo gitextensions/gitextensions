@@ -11,12 +11,18 @@ public class InteractiveGitActionControlTests
 {
     private InteractiveGitActionControl _control = null!;
     private InteractiveGitActionControl.TestAccessor _accessor;
+    private IGitUICommands _uiCommands = null!;
 
     [SetUp]
     public void SetUp()
     {
         _control = new InteractiveGitActionControl();
         _accessor = _control.GetTestAccessor();
+
+        _uiCommands = Substitute.For<IGitUICommands>();
+        IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
+        uiCommandsSource.UICommands.Returns(_uiCommands);
+        _control.UICommandsSource = uiCommandsSource;
     }
 
     [TearDown]
@@ -113,6 +119,98 @@ public class InteractiveGitActionControlTests
         _accessor.HasConflicts.Should().BeFalse();
     }
 
+    [Test]
+    public async Task RefreshGitAction_should_cancel_the_pending_check_if_the_working_directory_is_not_valid_anymore()
+    {
+        TaskCompletionSource checkStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using ManualResetEventSlim releaseCheck = new();
+        IGitModule module = CreateModule();
+        module.InTheMiddleOfConflictedMerge(throwOnErrorExit: false).Returns(_ =>
+        {
+            checkStarted.SetResult();
+            releaseCheck.Wait(AsyncTestHelper.UnexpectedTimeout);
+            return true;
+        });
+        module.InTheMiddleOfMerge().Returns(true);
+        SetModule(module);
+
+        _control.RefreshGitAction(checkForConflicts: true);
+        await checkStarted.Task;
+        module.IsValidGitWorkingDir().Returns(false);
+        _control.RefreshGitAction(checkForConflicts: true);
+
+        releaseCheck.Set();
+        await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
+        _accessor.Visible.Should().BeFalse();
+        _accessor.Controls.Count.Should().Be(0);
+    }
+
+    [Test]
+    public async Task RefreshGitAction_should_hide_the_banner_of_the_previous_repo_until_the_new_repo_is_checked()
+    {
+        IGitModule previousModule = CreateModule();
+        previousModule.InTheMiddleOfMerge().Returns(true);
+        SetModule(previousModule);
+        _control.RefreshGitAction(checkForConflicts: false);
+        await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+        _accessor.Controls.Contains(_accessor.AbortButton).Should().BeTrue();
+
+        TaskCompletionSource checkStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using ManualResetEventSlim releaseCheck = new();
+        IGitModule module = CreateModule();
+        module.InTheMiddleOfRebase().Returns(_ =>
+        {
+            checkStarted.SetResult();
+            releaseCheck.Wait(AsyncTestHelper.UnexpectedTimeout);
+            return true;
+        });
+        SetModule(module);
+
+        _control.RefreshGitAction(checkForConflicts: false);
+        await checkStarted.Task;
+
+        // The buttons act on the repo which is open now
+        _accessor.Visible.Should().BeFalse();
+        _accessor.Controls.Count.Should().Be(0);
+
+        releaseCheck.Set();
+        await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
+        _accessor.Action.Should().Be(InteractiveGitActionControl.GitAction.Rebase);
+        _accessor.Visible.Should().BeTrue();
+    }
+
+    [Test]
+    public async Task RefreshGitAction_should_keep_the_banner_of_the_same_repo_until_it_is_checked_again()
+    {
+        IGitModule module = CreateModule();
+        module.InTheMiddleOfMerge().Returns(true);
+        SetModule(module);
+        _control.RefreshGitAction(checkForConflicts: false);
+        await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
+        TaskCompletionSource checkStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using ManualResetEventSlim releaseCheck = new();
+        module.InTheMiddleOfRebase().Returns(_ =>
+        {
+            checkStarted.SetResult();
+            releaseCheck.Wait(AsyncTestHelper.UnexpectedTimeout);
+            return false;
+        });
+
+        _control.RefreshGitAction(checkForConflicts: false);
+        await checkStarted.Task;
+
+        _accessor.Visible.Should().BeTrue();
+        _accessor.Controls.Contains(_accessor.AbortButton).Should().BeTrue();
+
+        releaseCheck.Set();
+        await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
+        _accessor.Action.Should().Be(InteractiveGitActionControl.GitAction.Merge);
+    }
+
     [TestCase(InteractiveGitActionControl.GitAction.Rebase, true)]
     [TestCase(InteractiveGitActionControl.GitAction.Merge, true)]
     [TestCase(InteractiveGitActionControl.GitAction.Bisect, false)]
@@ -180,11 +278,5 @@ public class InteractiveGitActionControlTests
     }
 
     private void SetModule(IGitModule module)
-    {
-        IGitUICommands uiCommands = Substitute.For<IGitUICommands>();
-        uiCommands.Module.Returns(module);
-        IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
-        uiCommandsSource.UICommands.Returns(uiCommands);
-        _control.UICommandsSource = uiCommandsSource;
-    }
+        => _uiCommands.Module.Returns(module);
 }
