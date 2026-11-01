@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Frozen;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Concurrency;
@@ -985,8 +986,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                   ? Module.GetSelectedBranch(emptyIfDetached: true)
                   : "");
 
-        _gridView.RemoteColors = Module.GetRemoteColors();
-
         // Revision info is read in three parallel steps:
         // 1. Read current commit, refs, prepare grid etc.
         // 2. Read stashes (if enabled).
@@ -1052,8 +1051,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 .ObserveOn(ThreadPoolScheduler.Instance)
                 .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
 
-            IndexWatcher.Reset();
-
             // Selected is null: Update to trigger reset the tabs etc.
             _selectionTimer.Stop();
             _selectionTimer.Start();
@@ -1076,6 +1073,13 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             ThreadHelper.FileAndForget(async () =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
+
+                // The git commands for the remote colors and the watchers must not delay painting the window.
+                // The colors are loaded in parallel to reading the refs, they are required when the first revisions are painted.
+                Task<FrozenDictionary<string, Color>> getRemoteColors = Task.Run(capturedModule.GetRemoteColors, cancellationToken);
+
+                // Watch for changes before the refs are read, so that none is missed
+                IndexWatcher.Reset();
 
                 // If the current checkout (HEAD) is changed, don't get the currently selected rows,
                 // select the new current checkout instead.
@@ -1101,6 +1105,17 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 _gridView._revisionGraph.OnlyFirstParent = _filterInfo.ShowOnlyFirstParent;
                 _gridView._revisionGraph.HeadId = CurrentCheckout;
 
+                try
+                {
+                    _gridView.RemoteColors = await getRemoteColors;
+                }
+                catch (Exception ex) when (ex is not OperationCanceledException)
+                {
+                    // The revisions are not added to the grid without the colors, do not wait for them forever
+                    OnRevisionReaderError(ex);
+                    return;
+                }
+
                 // Allow add revisions to the grid
                 semaphoreUpdateGrid.Release();
 
@@ -1116,7 +1131,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             // Apply settings early, adapt column widths, etc.
             Refresh();
 
-            if (!showStashes || getStashRevs.Value.Count == 0)
+            if (!showStashes)
             {
                 semaphoreUpdateGrid.Release();
             }
@@ -1126,6 +1141,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 {
                     try
                     {
+                        // The stashes are listed by a git command, which must not delay painting the window
+                        if (getStashRevs.Value.Count == 0)
+                        {
+                            return;
+                        }
+
                         stashesById = getStashRevs.Value.ToDictionary(r => r.ObjectId);
 
                         // Git stores stashes in 2 or 3 commits. The (first) "stash" commit is listed by git-stash-list,

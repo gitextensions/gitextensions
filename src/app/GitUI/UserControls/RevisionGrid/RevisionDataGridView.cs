@@ -261,7 +261,7 @@ public sealed partial class RevisionDataGridView : DataGridView
         }
     }
 
-    internal FrozenDictionary<string, Color> RemoteColors { get; set; }
+    internal FrozenDictionary<string, Color> RemoteColors { get; set; } = FrozenDictionary<string, Color>.Empty;
 
     internal void AddColumn(ColumnProvider columnProvider)
     {
