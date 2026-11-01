@@ -2731,6 +2731,40 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         UICommands.StartFixupCommitDialog(ParentForm, LatestSelectedRevision);
     }
 
+    private void EditCommitWithFixupToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        if (LatestSelectedRevision is not { } revision || GetActualRevision(revision)?.FirstParentId is not { IsZero: false } parentRevision)
+        {
+            return;
+        }
+
+        using FormCommit form = new(UICommands, CommitKind.Fixup, revision);
+        form.CommitCreated += OnFixupCommitCreated;
+        form.ShowDialog(ParentForm);
+
+        return;
+
+        void OnFixupCommitCreated(object? sender, EventArgs e)
+        {
+            form.CommitCreated -= OnFixupCommitCreated;
+
+            string rebaseCmd = Commands.Rebase(new Commands.RebaseOptions()
+            {
+                BranchName = parentRevision.ToString(),
+                Interactive = true,
+                AutoSquash = true,
+                AutoStash = true,
+                SupportRebaseMerges = Module.GitVersion.SupportRebaseMerges
+            });
+
+            using FormProcess formProcess = new(UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+
+            formProcess.ShowDialog(form);
+            PerformRefreshRevisions();
+            ArtificialChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
     private void SquashCommitToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (LatestSelectedRevision is null)
