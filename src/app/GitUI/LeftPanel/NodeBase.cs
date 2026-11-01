@@ -21,7 +21,6 @@ internal abstract class NodeBase
     protected NodeBase(Tree? tree)
     {
         Nodes = new Nodes(tree);
-        TreeViewNode = null!;
     }
 
     /// <summary>The child nodes.</summary>
