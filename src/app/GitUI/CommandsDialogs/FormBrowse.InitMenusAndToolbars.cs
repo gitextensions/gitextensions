@@ -311,6 +311,10 @@ partial class FormBrowse
     ///  Hides "Fetch all" item when there is only one remote,
     ///  since it is redundant with the single-remote "Fetch" command.
     /// </summary>
+    /// <remarks>
+    ///  Lists the remotes with a git command. Therefore it is called when the items are about to be shown,
+    ///  and neither while a repository is loaded, nor on each refresh.
+    /// </remarks>
     private void UpdateFetchAllVisibility()
     {
         bool hasMultipleRemotes = Module.IsValidGitWorkingDir() && Module.GetRemoteNames().Count > 1;
