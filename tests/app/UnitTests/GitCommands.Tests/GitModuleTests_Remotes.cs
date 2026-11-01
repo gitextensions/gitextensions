@@ -1,8 +1,10 @@
 ﻿using System.Collections.Frozen;
+using System.Text;
 using CommonTestUtils;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
 
 namespace GitCommandsTests;
 
@@ -280,6 +282,60 @@ partial class GitModuleTests
             _gitModule.ResetRemoteColors();
 
             _gitModule.GetTestAccessor().RemoteColors.Should().BeNull();
+        }
+    }
+
+    [Test]
+    public void GetRemoteColors_should_not_cache_colors_which_were_reset_while_loading()
+    {
+        const string origin = nameof(origin);
+        const string fork = nameof(fork);
+        const string remotes = $"{origin}\n{fork}";
+        const string settings = $"remote.{fork}.color\n#cccccc";
+
+        GitModule gitModule = null!;
+        gitModule = GetGitModuleWithExecutable(new CallbackExecutable(_executable, arguments =>
+        {
+            if (arguments == "remote")
+            {
+                gitModule.ResetRemoteColors();
+            }
+        }));
+
+        // Mock IGitModule.GetRemoteNames() call
+        using (_executable.StageOutput("remote", remotes))
+        {
+            using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
+            using IDisposable configListEffective = _executable.StageOutput("config list --includes --null", settings);
+            using IDisposable configListLocal = _executable.StageOutput("config list --local --includes --null", settings);
+            GitVersion.ResetVersion();
+
+            FrozenDictionary<string, Color> colors = gitModule.GetRemoteColors();
+
+            colors.Count.Should().Be(1);
+            gitModule.GetTestAccessor().RemoteColors.Should().BeNull();
+        }
+    }
+
+    private sealed class CallbackExecutable(IExecutable executable, Action<string> onStart) : IExecutable
+    {
+        public string WorkingDir => executable.WorkingDir;
+        public string Command => executable.Command;
+        public string PrefixArguments => executable.PrefixArguments;
+
+        public IProcess Start(
+            ArgumentString arguments = default,
+            bool createWindow = false,
+            bool redirectInput = false,
+            bool redirectOutput = false,
+            Encoding? outputEncoding = null,
+            bool useShellExecute = false,
+            bool throwOnErrorExit = true,
+            CancellationToken cancellationToken = default)
+        {
+            onStart(arguments.ToString());
+
+            return executable.Start(arguments, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit, cancellationToken);
         }
     }
 }
