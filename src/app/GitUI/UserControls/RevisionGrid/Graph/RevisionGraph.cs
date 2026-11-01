@@ -19,6 +19,8 @@ internal interface IRevisionGraphRowProvider
 // The RevisionGraph contains all the basic structures needed to render the graph.
 public class RevisionGraph : IRevisionGraphRowProvider
 {
+    private static string _avoidBumpOption = "C";
+
     internal const int MaxLanes = 40;
     private const int _orderSegmentsLookAhead = 50;
     private const int _straightenLanesLookAhead = 20;
@@ -688,6 +690,12 @@ public class RevisionGraph : IRevisionGraphRowProvider
             int straightenDiagonalsLastIndex = loadingCompleted ? lastToCacheRowIndex - 1 : lastToCacheRowIndex - _straightenLanesLookAhead - straightenDiagonalsLookAhead;
             StraightenDiagonals(straightenDiagonalsStartIndex, straightenDiagonalsLastIndex, lastLookAheadIndex: lastToCacheRowIndex, straightenDiagonalsLookAhead,
                 _orderedRowCache, Config.StraightenGraphSegmentsLimit);
+
+            if (_avoidBumpOption == "A")
+            {
+                // Option A: straighten lanes again after diagonal straightening
+                StraightenLanes(straightenLanesStartIndex, straightenLanesLastIndex, lastLookAheadIndex: lastToCacheRowIndex, _orderedRowCache, Config.StraightenGraphSegmentsLimit, firstIndexForReservedLane);
+            }
         }
 
         return;
@@ -959,10 +967,27 @@ public class RevisionGraph : IRevisionGraphRowProvider
                         if (nextLane >= 0 && Math.Sign(deltaNext) == Math.Sign(deltaPrev) && Math.Abs(deltaNext + deltaPrev) >= 3 && !IsPrevLaneDiagonal(Math.Sign(deltaPrev)) && !IsNextLaneDiagonal())
                         {
                             int moveBy = deltaNext < 0 ? -deltaNext : deltaPrev;
-                            currentRow.MoveLanesRight(currentLane, moveBy);
-                            currentLane += moveBy;
-                            moved = true;
-                            break; // from for revisionGraphSegment
+
+                            bool doMove = true;
+                            if (_avoidBumpOption == "B")
+                            {
+                                // Option B: don't move if another segment is pushed as well
+                                doMove = currentRow.LanesAreFree(currentLane + 1, moveBy - 1);
+                            }
+
+                            if (_avoidBumpOption == "C")
+                            {
+                                // Option C: don't move if another segment is pushed farther right than it is in the adjacent rows
+                                doMove = !MoveAddsBump(previousRow, currentRow, nextRow, currentLane, moveBy);
+                            }
+
+                            if (doMove)
+                            {
+                                currentRow.MoveLanesRight(currentLane, moveBy);
+                                currentLane += moveBy;
+                                moved = true;
+                                break; // from for revisionGraphSegment
+                            }
                         }
 
                         bool IsNextLaneDiagonal()
@@ -1169,6 +1194,24 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 }
             }
         }
+    }
+
+    private static bool MoveAddsBump(IRevisionGraphRow previousRow, RevisionGraphRow currentRow, IRevisionGraphRow nextRow, int moveFromLane, int moveBy)
+    {
+        for (int pushedLane = moveFromLane + 1; pushedLane <= moveFromLane + moveBy; ++pushedLane)
+        {
+            int newLane = pushedLane + moveBy - currentRow.GapCount(moveFromLane + 1, pushedLane);
+
+            foreach (RevisionGraphSegment pushedSegment in currentRow.GetSegmentsForIndex(pushedLane))
+            {
+                if (previousRow.GetLaneForSegment(pushedSegment).Index <= newLane && nextRow.GetLaneForSegment(pushedSegment).Index <= newLane)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /// <summary>

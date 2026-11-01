@@ -486,6 +486,21 @@ public class RevisionGraphTests
         await VerifyGraphLayoutAsync(revisionGraph, reservedLanes);
     }
 
+    [Test]
+    public async Task DiagonalStraighteningDoesNotAddABump([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        // Previously, diagonal straightening at rev 7 would cause a new bump in segments 6-9 and 5-b
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1:dev 3:1 3a:3 3b:3,3a 4:1 5:1 6:3b 7:1,6 8:7,4 9:6 " +
+            "a:8,9 b:5 c:9 d:a,2 e:d,c f:e,b:main");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+
+        Assert.Inconclusive("This change and the consequences should be reviewed.");
+    }
+
     private const string graphWithMultiLaneCrossings = "0:C,1,2,3,4,5,6,7,8,9,A,B 1:R 2:R 3:R 4:C 5:C 6:C 7:R 8:C 9:R A:C B:R C:D D:E E:F F:G G:H,K,R H:I,R I:J,R J:R K:R R";
 
     [Test]

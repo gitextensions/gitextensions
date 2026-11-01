@@ -360,4 +360,44 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
 
         return Segments.FirstOrDefault(s => s.Child == Revision, defaultValue: segment);
     }
+
+    internal bool LanesAreFree(int fromLane, int count)
+    {
+        bool x = false;
+
+        if (x)
+        {
+            return true;
+        }
+
+        if (fromLane >= _laneCount)
+        {
+            return true;
+        }
+
+        if (_gaps is null)
+        {
+            return false;
+        }
+
+        for (int lane = fromLane; lane < fromLane + count && lane < _laneCount; ++lane)
+        {
+            if (_gaps.Contains(lane))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    internal int GapCount(int laneBegin, int laneEnd)
+    {
+        if (_gaps is null)
+        {
+            return 0;
+        }
+
+        return _gaps.Count(lane => lane >= laneBegin && lane < laneEnd);
+    }
 }
