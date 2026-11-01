@@ -225,7 +225,7 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
                 N   Show git notes
                 O   Show artificial commits
                 P   Show superproject tags
-                Q   Show session checkpoints
+                Q   Show agentic sessions
                 R   Show reflog references
                 S   Sort commits by author date
                 T   Show tags
