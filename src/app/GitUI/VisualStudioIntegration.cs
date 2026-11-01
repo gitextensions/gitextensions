@@ -48,6 +48,7 @@ internal static class VisualStudioIntegration
         Form form = Form.ActiveForm ?? Application.OpenForms.Cast<Form>().First();
         form.InvokeAndForget(async () =>
         {
+            bool firstAttempt = true;
             while (true)
             {
                 try
@@ -62,10 +63,12 @@ internal static class VisualStudioIntegration
                 catch (COMException exception) when ((uint)exception.HResult == RPC_E_CALL_REJECTED)
                 {
                     Trace.WriteLine(exception);
-                    if (!MessageBoxes.ConfirmRetryOpenVisualStudio(form))
+                    if (!firstAttempt && !MessageBoxes.ConfirmRetryOpenVisualStudio(form))
                     {
                         return;
                     }
+
+                    firstAttempt = false;
                 }
             }
 
