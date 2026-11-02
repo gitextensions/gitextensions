@@ -29,7 +29,7 @@ internal abstract class NodeBase
     internal bool HasChildren => Nodes.Count > 0;
 
     /// <summary>The corresponding tree node.</summary>
-    protected internal virtual TreeNode TreeViewNode { get => field ?? throw new NotImplementedException();  set; }
+    protected internal virtual TreeNode TreeViewNode { get => field ?? throw new NotImplementedException(); set; }
 
     /// <summary>
     /// Marks this node to be included in multi-selection. See <see cref="Select(bool, bool)"/>.
