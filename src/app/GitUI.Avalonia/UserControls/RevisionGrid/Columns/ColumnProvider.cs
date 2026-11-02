@@ -4,6 +4,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitUI.Compat;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns;
@@ -89,8 +90,9 @@ internal abstract class ColumnProvider
         return false;
     }
 
+    // TextRenderer.SingleLine retains CR glyph advances without creating paragraphs.
     protected static TextBlock CreateTextBlock(double leftMargin = 0, double opacity = 1)
-        => new()
+        => new WinFormsSingleLineTextBlock()
         {
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = VerticalAlignment.Center,

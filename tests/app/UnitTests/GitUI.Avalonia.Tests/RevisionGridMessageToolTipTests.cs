@@ -71,17 +71,13 @@ public sealed class RevisionGridMessageToolTipTests
     ///  Repeated moves and refreshes preserve truncated messages, bodies and ref details without stealing the cursor.
     /// </summary>
     [AvaloniaTest]
-    [TestCase("light", false)]
-    [TestCase("light", true)]
-    [TestCase("dark", false)]
-    [TestCase("dark", true)]
-    [TestCase("custom", false)]
-    [TestCase("custom", true)]
-    public async Task Message_tooltips_should_survive_pointer_reentry_and_real_row_refresh(string theme, bool tooltips)
+    [TestCaseSource(nameof(MessageCases))]
+    public async Task Message_tooltips_should_survive_pointer_reentry_and_real_row_refresh(
+        string theme, bool tooltips, bool separateNotes, string lineEndings)
     {
         using ThemeScope themeScope = new(theme);
-        using SettingsScope settings = new(tooltips);
-        GridFixture fixture = new();
+        using SettingsScope settings = new(tooltips, separateNotes);
+        GridFixture fixture = new(separateNotes, lineEndings);
         List<PointerObservation> observations = [];
         NotesContentObservation? notesContent = null;
         bool completed = false;
@@ -101,7 +97,7 @@ public sealed class RevisionGridMessageToolTipTests
             fixture.Grid.RefreshRealizedRows();
             MoveSubject(fixture.Plain, "plain-after-refresh", plainTip, alternate: true);
 
-            string? bodyTip = tooltips ? SourceSummary(fixture.Multiline) : null;
+            string? bodyTip = tooltips ? SourceSummary(fixture.Multiline, includeNotes: !separateNotes) : null;
             MoveSubject(fixture.Multiline, "multiline-first", bodyTip);
             MoveSubject(fixture.Multiline, "multiline-repeat", bodyTip, alternate: true);
             fixture.Grid.RefreshRealizedRows();
@@ -109,7 +105,7 @@ public sealed class RevisionGridMessageToolTipTests
 
             string? refTip = tooltips
                 ? "[main]" + Environment.NewLine + GitUI.TranslatedStrings.IsLocalBranch
-                    + Environment.NewLine + Environment.NewLine + SourceSummary(fixture.Referenced)
+                    + Environment.NewLine + Environment.NewLine + SourceSummary(fixture.Referenced, includeNotes: !separateNotes)
                 : null;
             if (refTip is not null)
             {
@@ -124,8 +120,6 @@ public sealed class RevisionGridMessageToolTipTests
             MoveRef("ref-after-refresh", refTip, alternate: true);
             MoveSubject(fixture.Plain, "plain-after-ref", plainTip);
 
-            // Keep pointer routes in the existing separate-notes mode: inline CR text
-            // has an independent SingleLine paint mismatch. Its tooltip content is still covered.
             GitExtSettingsCache cache = AppSettings.SettingsContainer.SettingsCache;
             string key = AppSettings.ShowGitNotesColumn.FullPath;
             string? originalMode = cache.TryGetValue(key, out string? raw) ? raw : null;
@@ -205,6 +199,18 @@ public sealed class RevisionGridMessageToolTipTests
         void Move(GitRevision revision, string phase, Point point, string? expected, bool hand)
         {
             Control cell = fixture.Message(revision);
+            Control row = cell.GetVisualAncestors().OfType<Control>().Single(control => control.Classes.Contains("revision-row"));
+            cell.Bounds.Height.Should().BeLessThanOrEqualTo(row.Bounds.Height,
+                "retained carriage returns must not create extra paragraphs inside the fixed source row");
+            foreach (TextBlock text in cell.GetVisualDescendants().OfType<TextBlock>()
+                .Where(text => text.Classes.Contains("revision-subject") || text.Classes.Contains("revision-body")))
+            {
+                if (!string.IsNullOrEmpty(text.Text))
+                {
+                    text.TextLayout.TextLines.Should().ContainSingle("the actual subject/body painter has the source SingleLine contract");
+                }
+            }
+
             IInputElement? rawHit = fixture.Window.InputHitTest(point);
             bool ownsCell = rawHit is Visual visual && visual.GetSelfAndVisualAncestors().Contains(cell);
             fixture.Window.MouseMove(point);
@@ -218,6 +224,23 @@ public sealed class RevisionGridMessageToolTipTests
             ownsCell.Should().BeTrue("the input must traverse the actual realized message cell");
             actual.Should().Be(expected, phase + " must retain the source's tooltip content through the complete pointer route");
             expectedCursor.Should().BeTrue("only actionable ref labels use the original hand cursor");
+        }
+    }
+
+    private static IEnumerable<TestCaseData> MessageCases()
+    {
+        foreach (string theme in new[] { "light", "dark", "custom" })
+        {
+            foreach (bool tooltips in new[] { false, true })
+            {
+                foreach (bool separateNotes in new[] { false, true })
+                {
+                    foreach (string lineEndings in new[] { "lf", "crlf" })
+                    {
+                        yield return new TestCaseData(theme, tooltips, separateNotes, lineEndings);
+                    }
+                }
+            }
         }
     }
 
@@ -261,8 +284,19 @@ public sealed class RevisionGridMessageToolTipTests
 
     private sealed class GridFixture : IDisposable
     {
-        public GridFixture()
+        private readonly bool _separateNotes;
+        private readonly string _lineEndings;
+
+        public GridFixture(bool separateNotes, string lineEndings)
         {
+            _separateNotes = separateNotes;
+            _lineEndings = lineEndings;
+            if (lineEndings == "crlf")
+            {
+                Multiline.Body = Multiline.Body!.Replace("\n", "\r\n");
+                Referenced.Body = Referenced.Body!.Replace("\n", "\r\n");
+            }
+
             IGitModule module = Substitute.For<IGitModule>();
             IGitUICommands commands = Substitute.For<IGitUICommands>();
             commands.Module.Returns(module);
@@ -344,7 +378,8 @@ public sealed class RevisionGridMessageToolTipTests
                 frame.PixelSize,
                 Window.RenderScaling,
                 observations,
-                pointerNotesMode = "separateColumn",
+                pointerNotesMode = _separateNotes ? "separateColumn" : "inline",
+                lineEndings = _lineEndings,
                 notesContent,
                 messageLayout = new[] { Plain, Multiline, Referenced }.Select(revision =>
                 {
@@ -420,7 +455,7 @@ public sealed class RevisionGridMessageToolTipTests
         private readonly GitExtSettingsCache _cache = AppSettings.SettingsContainer.SettingsCache;
         private readonly Dictionary<string, string?> _original;
 
-        public SettingsScope(bool tooltips)
+        public SettingsScope(bool tooltips, bool separateNotes)
         {
             AppSettings.SettingsContainer.LowerPriority.Should().BeNull("the headless assembly owns a single-level isolated settings cache");
             string[] keys =
@@ -438,7 +473,7 @@ public sealed class RevisionGridMessageToolTipTests
             _original = keys.ToDictionary(key => key,
                 key => _cache.TryGetValue(key, out string? value) ? value : null, StringComparer.Ordinal);
             AppSettings.ShowRevisionGridTooltips.Value = tooltips;
-            AppSettings.ShowGitNotesColumn.Value = true;
+            AppSettings.ShowGitNotesColumn.Value = separateNotes;
             AppSettings.ShowCommitBodyInRevisionGrid = true;
             AppSettings.ShowGitNotes = true;
             AppSettings.ShowRevisionGridGraphColumn = false;
