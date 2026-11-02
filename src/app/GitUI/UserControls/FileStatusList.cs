@@ -311,7 +311,7 @@ public sealed partial class FileStatusList : GitModuleControl
         {
             if (Visible)
             {
-                BeginInvoke(() =>
+                this.InvokeAndForget(() =>
                 {
                     InitializeContextMenuAndToolbar();
                     SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
