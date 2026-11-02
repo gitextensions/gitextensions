@@ -2023,7 +2023,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         SetVisible(stopBisectToolStripMenuItem, inTheMiddleOfBisect);
         sepBisect.IsVisible = inTheMiddleOfBisect;
         SetVisible(copyToClipboardToolStripMenuItem, revision is { IsArtificial: false });
-        SetVisible(applyStashToolStripMenuItem, regularRevision && revision!.IsAutostash);
+        SetVisible(applyStashToolStripMenuItem, regularRevision && (revision!.IsStash || revision.IsAutostash));
         SetVisible(popStashToolStripMenuItem, regularRevision && revision!.IsStash);
         SetVisible(dropStashToolStripMenuItem, regularRevision && revision!.IsStash);
         sepStash.IsVisible = applyStashToolStripMenuItem.IsVisible
@@ -2040,26 +2040,26 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         tsmiSelectInLeftPanel.Tag = null;
         _rebaseOnTopOf = null;
 
-        if (regularRevision)
+        if (revision is { IsArtificial: false } && hasCommands)
         {
             PopulateRefMenus(revision!, commands!, filterRefs ?? (refs => refs));
         }
 
-        SetVisible(checkoutBranchToolStripMenuItem, checkoutBranchToolStripMenuItem.Items.Count > 0);
-        SetVisible(tsmiPushBranch, tsmiPushBranch.Items.Count > 0);
-        SetVisible(mergeBranchToolStripMenuItem, mergeBranchToolStripMenuItem.Items.Count > 0);
+        SetVisible(checkoutBranchToolStripMenuItem, regularRevision && checkoutBranchToolStripMenuItem.Items.Count > 0);
+        SetVisible(tsmiPushBranch, regularRevision && tsmiPushBranch.Items.Count > 0);
+        SetVisible(mergeBranchToolStripMenuItem, regularRevision && mergeBranchToolStripMenuItem.Items.Count > 0);
         SetVisible(rebaseOnToolStripMenuItem, regularRevision);
         SetVisible(resetCurrentBranchToHereToolStripMenuItem, regularRevision);
-        SetVisible(tsmiSelectInLeftPanel, regularRevision && SelectInLeftPanel is not null && tsmiSelectInLeftPanel.Tag is string);
+        SetVisible(tsmiSelectInLeftPanel, hasCommands && SelectInLeftPanel is not null && tsmiSelectInLeftPanel.Tag is string);
         SetVisible(resetChangesToolStripMenuItem, revision is { IsArtificial: true } && hasCommands && !isBareRepository);
         SetVisible(commitToolStripMenuItem, revision is { IsArtificial: true } && hasCommands && !isBareRepository);
         SetVisible(createNewBranchToolStripMenuItem, regularRevision);
         SetVisible(resetAnotherBranchToHereToolStripMenuItem, regularRevision);
         SetVisible(renameBranchToolStripMenuItem, renameBranchToolStripMenuItem.Items.Count > 0);
-        bool isHeadOfCurrentBranch = regularRevision
+        bool isHeadOfCurrentBranch = revision is { IsArtificial: false } && hasCommands
             && revision!.Refs.Any(gitRef =>
                 gitRef.CompleteName == GitRefName.RefsHeadsPrefix + commands!.Module.GetSelectedBranch());
-        deleteBranchToolStripMenuItem.IsVisible = deleteBranchToolStripMenuItem.Items.Count > 0 || isHeadOfCurrentBranch;
+        deleteBranchToolStripMenuItem.IsVisible = (!isBareRepository && deleteBranchToolStripMenuItem.Items.Count > 0) || isHeadOfCurrentBranch;
         deleteBranchToolStripMenuItem.IsEnabled = deleteBranchToolStripMenuItem.Items.Count > 0 && !isBareRepository;
         SetVisible(createTagToolStripMenuItem, revision is { IsArtificial: false } && hasCommands);
         SetVisible(deleteTagToolStripMenuItem, deleteTagToolStripMenuItem.Items.Count > 0);
@@ -2296,7 +2296,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                         : Properties.Images.BranchLocal,
             },
         };
-        item.Click += delegate { action(); };
+        item.Click += (_, e) =>
+        {
+            // Native menu children do not bubble a second command through their parent.
+            e.Handled = true;
+            action();
+        };
         parent.Items.Add(item);
     }
 
@@ -3285,16 +3290,23 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void diffSelectedCommitsMenuItem_Click(object? sender, EventArgs e)
     {
-        DiffSelectedCommitsWithDifftool();
+        MenuItem? item = sender as MenuItem;
+        if (item is not null)
+        {
+            // "main menu" clicked, cancel dropdown manually, invoke default difftool
+            item.IsSubMenuOpen = false;
+        }
+
+        string? toolName = item?.Tag as string;
+        DiffSelectedCommitsWithDifftool(toolName);
     }
 
     public void DiffSelectedCommitsWithDifftool(string? customTool = null)
     {
-        IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
-        if (selectedRevisions.Count > 0)
+        (ObjectId first, GitRevision? selected) = GetFirstAndSelected();
+        if (selected is not null)
         {
-            string? first = selectedRevisions.Count > 1 ? selectedRevisions[1].ObjectId.ToString() : null;
-            Module.OpenWithDifftoolDirDiff(first, selectedRevisions[0].ObjectId.ToString(), customTool: customTool);
+            Module.OpenWithDifftoolDirDiff(first.IsZero ? null : first.ToString(), selected.ObjectId.ToString(), customTool: customTool);
         }
     }
 
