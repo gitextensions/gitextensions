@@ -36,18 +36,6 @@ public static partial class AppSettings
 
     public static DistributedSettings SettingsContainer { get; private set; }
 
-    private static readonly SettingsPath AppearanceSettingsPath = new AppSettingsPath("Appearance");
-    private static readonly SettingsPath ConfirmationsSettingsPath = new AppSettingsPath("Confirmations");
-    private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
-    private static readonly SettingsPath DialogSettingsPath = new AppSettingsPath("Dialogs");
-    private static readonly SettingsPath ExperimentalSettingsPath = new AppSettingsPath(DetailedSettingsPath, "Experimental");
-    private static readonly SettingsPath FileStatusSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "FileStatus");
-    private static readonly SettingsPath RevisionGraphSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "RevisionGraph");
-    private static readonly SettingsPath RecentRepositories = new AppSettingsPath("RecentRepositories");
-    private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
-    private static readonly SettingsPath HiddenSettingsPath = new AppSettingsPath("Hidden");
-    private static readonly SettingsPath MigrationSettingsPath = new AppSettingsPath(HiddenSettingsPath, "Migration");
-
     private static Mutex? _globalMutex;
 
     [GeneratedRegex(@"^(?<major>\d+)\.(?<minor>\d+)", RegexOptions.ExplicitCapture)]
@@ -419,16 +407,6 @@ public static partial class AppSettings
         get => GetBool("usepatiencediffalgorithm", false);
         set => SetBool("usepatiencediffalgorithm", value);
     }
-
-    /// <summary>
-    /// Use Git coloring for selected commands
-    /// </summary>
-    public static BooleanSetting UseGitColoring { get; } = new(AppearanceSettingsPath, nameof(UseGitColoring), defaultValue: true);
-
-    /// <summary>
-    /// Color the background at changes (invert colors).
-    /// </summary>
-    public static BooleanSetting ReverseGitColoring { get; } = new(AppearanceSettingsPath, nameof(ReverseGitColoring), defaultValue: true);
 
     public static bool ShowErrorsWhenStagingFiles
     {
@@ -1187,8 +1165,6 @@ public static partial class AppSettings
         set => SetBool("showSessionRefs", value);
     }
 
-    public static BooleanSetting ShowGitNotesColumn { get; } = new(AppearanceSettingsPath, nameof(ShowGitNotesColumn), defaultValue: false);
-
     public static bool ShowAnnotatedTagsMessages
     {
         get => GetBool("showannotatedtagsmessages", true);
@@ -1337,9 +1313,6 @@ public static partial class AppSettings
         get => GetBool("showdiffforallparents", true);
         set => SetBool("showdiffforallparents", value);
     }
-
-    public static BooleanSetting ShowFindInCommitFilesGitGrep { get; } = new(AppearanceSettingsPath, nameof(ShowFindInCommitFilesGitGrep), defaultValue: false);
-    public static BooleanSetting ShowRevisionGridTooltips { get; } = new(AppearanceSettingsPath, nameof(ShowRevisionGridTooltips), defaultValue: true);
 
     public static bool ShowAvailableDiffTools
     {
@@ -1562,11 +1535,6 @@ public static partial class AppSettings
     /// Diff appearance, alternatives to "patch" viewer.
     /// </summary>
     public static EnumRuntimeSetting<DiffDisplayAppearance> DiffDisplayAppearance { get; } = new(RootSettingsPath, nameof(DiffDisplayAppearance), Settings.DiffDisplayAppearance.Patch);
-
-    /// <summary>
-    /// Gets or sets whether to remember the preference for diff appearance.
-    /// </summary>
-    public static BooleanSetting RememberDiffDisplayAppearance { get; } = new(AppearanceSettingsPath, nameof(RememberDiffDisplayAppearance), defaultValue: false);
 
     public static int NumberOfContextLines
     {

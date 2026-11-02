@@ -33,15 +33,6 @@ public static class GitRefName
     /// <summary>"refs/notes/commits".</summary>
     public static string RefsNotesPrefix { get; } = "refs/notes/commits";
 
-    /// <summary>"refs/agents/".</summary>
-    public static string RefsAgentsPrefix { get; } = "refs/agents/";
-
-    /// <summary>"refs/sessions/".</summary>
-    public static string RefsSessionsPrefix { get; } = "refs/sessions/";
-
-    /// <summary>"refs/copilot/checkpoints/".</summary>
-    public static string RefsCopilotCheckpointsPrefix { get; } = "refs/copilot/checkpoints/";
-
     /// <summary>"^{}".</summary>
     public static string TagDereferenceSuffix { get; } = "^{}";
 

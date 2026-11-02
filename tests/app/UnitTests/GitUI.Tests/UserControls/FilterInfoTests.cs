@@ -1093,7 +1093,7 @@ public class FilterInfoTests
         AppSettings.ShowReflogReferences.Value = showReflogReferences;
         bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
         AppSettings.ShowCurrentBranchOnly.Value = showCurrentBranchOnly;
-        bool orginalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
+        bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
         AppSettings.BranchFilterEnabled.Value = branchFilterEnabled;
         FilterInfo filterInfo = new()
         {
@@ -1128,7 +1128,9 @@ public class FilterInfoTests
             {
                 @"(^|\s)--exclude=refs/agents/\*\*($|\s)",
                 @"(^|\s)--exclude=refs/sessions/\*\*($|\s)",
-                @"(^|\s)--exclude=refs/copilot/checkpoints/\*\*($|\s)"
+                @"(^|\s)--exclude=refs/\*/checkpoints/\*\*($|\s)",
+                @"(^|\s)--exclude=refs/copilot/\*\*($|\s)",
+                @"(^|\s)--exclude=refs/jj/keep/\*\*($|\s)"
             };
 
             foreach (string sessionRefExclusion in sessionRefExclusions)
@@ -1167,7 +1169,7 @@ public class FilterInfoTests
             AppSettings.ShowSessionRefs = originalShowSessionRefs;
             AppSettings.ShowReflogReferences.Value = originalShowReflogReferences;
             AppSettings.ShowCurrentBranchOnly.Value = originalShowCurrentBranchOnly;
-            AppSettings.BranchFilterEnabled.Value = orginalBranchFilterEnabled;
+            AppSettings.BranchFilterEnabled.Value = originalBranchFilterEnabled;
         }
 
         return;
