@@ -18,11 +18,9 @@ internal abstract class Node : NodeBase, INode
     protected IGitUICommands UICommands => Tree.UICommands;
 
     protected Node(Tree? tree)
+        : base(tree)
     {
-        Nodes = new Nodes(tree);
     }
-
-    private TreeNode? _treeViewNode;
 
     /// <summary>
     /// The tree node representing this node.
@@ -33,13 +31,14 @@ internal abstract class Node : NodeBase, INode
     {
         get
         {
-            Validates.NotNull(_treeViewNode);
-            return _treeViewNode;
+            Validates.NotNull(field);
+            return field;
         }
         set
         {
-            _treeViewNode = value;
-            _treeViewNode.Tag = this;
+            Validates.NotNull(value);
+            field = value;
+            field.Tag = this;
             ApplyText();
             ApplyStyle();
         }
@@ -69,15 +68,13 @@ internal abstract class Node : NodeBase, INode
 
     protected void ApplyText()
     {
-        Validates.NotNull(_treeViewNode);
-
-        _treeViewNode.Name = NodeName();
+        TreeViewNode.Name = NodeName();
 
         // Check before if value has changed because that's a costly operation
         string updatedText = DisplayText();
-        if (updatedText != _treeViewNode.Text)
+        if (updatedText != TreeViewNode.Text)
         {
-            _treeViewNode.Text = updatedText;
+            TreeViewNode.Text = updatedText;
         }
     }
 
