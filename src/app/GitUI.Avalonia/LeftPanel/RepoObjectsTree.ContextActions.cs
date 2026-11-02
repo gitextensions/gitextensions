@@ -78,7 +78,7 @@ partial class RepoObjectsTree : IMenuItemFactory
         SetAction(RepoAction.FetchBranch, isSingleRemoteBranchSelected, canRunCommands);
         SetAction(RepoAction.FetchMerge, isSingleRemoteBranchSelected, canChangeWorkingTree);
         SetAction(RepoAction.FetchCheckout, isSingleRemoteBranchSelected, canChangeWorkingTree);
-        SetAction(RepoAction.FetchCreate, isSingleRemoteBranchSelected, canChangeWorkingTree);
+        SetAction(RepoAction.FetchCreate, isSingleRemoteBranchSelected, canRunCommands);
         SetAction(RepoAction.FetchRebase, isSingleRemoteBranchSelected, canChangeWorkingTree);
     }
 
@@ -303,7 +303,6 @@ partial class RepoObjectsTree : IMenuItemFactory
         bool hasSingleSelection = selectedNodes.Length == 1;
         NodeBase? selectedNode = SelectedNode;
         bool canRunCommands = TryGetUICommandsDirect(out IGitUICommands? commands);
-        bool canChangeWorkingTree = canRunCommands && !commands!.Module.IsBareRepository();
 
         bool canCopy = hasSingleSelection && (selectedNode is BaseBranchLeafNode or StashNode) && selectedNode.Visible;
         copyContextMenuItem.Enable(canCopy);
@@ -340,8 +339,8 @@ partial class RepoObjectsTree : IMenuItemFactory
         EnableSubmoduleContextMenu(hasSingleSelection, selectedNode);
         EnableWorktreeContextMenu(hasSingleSelection, selectedNode);
         EnableMenuItems(hasSingleSelection && selectedNode is WorktreeTree && canRunCommands, mnubtnCreateWorktreeFromRootNode, mnubtnPruneWorktreesFromRootNode, mnubtnManageWorktreesFromRootNode);
-        SetAction(RepoAction.CreateInFolder, hasSingleSelection && selectedNode is BranchPathNode, canChangeWorkingTree);
-        SetAction(RepoAction.DeleteFolderBranches, hasSingleSelection && selectedNode is BranchPathNode, canChangeWorkingTree);
+        SetAction(RepoAction.CreateInFolder, hasSingleSelection && selectedNode is BranchPathNode, canRunCommands);
+        SetAction(RepoAction.DeleteFolderBranches, hasSingleSelection && selectedNode is BranchPathNode, canRunCommands);
         EnableExpandCollapseContextMenu(selectedNodes);
         EnableMoveTreeUpDownContexMenu(hasSingleSelection, selectedNode);
         EnableSortContextMenu(hasSingleSelection, selectedNode);

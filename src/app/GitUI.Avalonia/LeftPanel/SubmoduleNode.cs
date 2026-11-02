@@ -142,6 +142,9 @@ internal sealed class SubmoduleNode : Node
     {
         // NOTE: Copied and adapted from FormBrowse.GetSubmoduleItemImage
         SetHeader(DisplayText(), GetSubmoduleItemImage(Info.Detailed), IsCurrent);
+
+        // Avalonia replaces the header for its native image wrapper, so reapply the retained node style.
+        base.ApplyStyle();
         ToolTip.SetTip(TreeViewNode, DisplayText());
     }
 

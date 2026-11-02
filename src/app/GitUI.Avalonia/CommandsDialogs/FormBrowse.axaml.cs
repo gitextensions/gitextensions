@@ -120,6 +120,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private bool _fileBlameHistoryLeftPanelStartupState;
     private TabItem? _consoleTabPage;
     private OutputHistoryControllerBase? _outputHistoryController;
+    private KeyModifiers _pushActivationModifiers;
 
     private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
@@ -285,6 +286,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         InitializeToolbarOverflow();
         toolStripButtonPull.Click += ToolStripButtonPullClick;
         toolStripButtonPush.Click += ToolStripButtonPushClick;
+        InitializePushActivationModifiers();
         toolStripButtonCommit.Click += CommitToolStripMenuItemClick;
         toolStripSplitStash.Click += ToolStripSplitStashButtonClick;
         toolStripFileExplorer.Click += FileExplorerToolStripMenuItemClick;
@@ -1262,7 +1264,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         Lazy<IReadOnlyCollection<GitRevision>> getStashRevs,
         bool forceRefresh)
     {
-        ToolStripFilters.RefreshRevisionFunction(getRefs);
         IGitModule module = Module;
         string workingDirectory = module.WorkingDir;
         CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
@@ -1397,8 +1398,48 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void PushToolStripMenuItemClick(object? sender, EventArgs e)
     {
-        UICommands.StartPushDialog(this, pushOnShow: false);
+        KeyModifiers modifiers = _pushActivationModifiers;
+        _pushActivationModifiers = KeyModifiers.None;
+        UICommands.StartPushDialog(this, pushOnShow: modifiers.HasFlag(KeyModifiers.Shift));
     }
+
+    private void InitializePushActivationModifiers()
+    {
+        // WinForms reads the current modifiers at Click. Capture only this activation's
+        // input, including popup events and Space's release, before framework dispatch.
+        foreach (InputElement target in new InputElement[] { pushToolStripMenuItem, toolStripButtonPush })
+        {
+            target.AddHandler(PointerReleasedEvent, CapturePushPointerModifiers, RoutingStrategies.Tunnel);
+            target.AddHandler(KeyDownEvent, CapturePushKeyModifiers, RoutingStrategies.Tunnel);
+            target.AddHandler(KeyUpEvent, CapturePushKeyModifiers, RoutingStrategies.Tunnel);
+        }
+
+        AddHandler(PointerReleasedEvent, ClearPushActivationModifiers, RoutingStrategies.Bubble, handledEventsToo: true);
+        AddHandler(KeyDownEvent, ClearPushActivationModifiers, RoutingStrategies.Bubble, handledEventsToo: true);
+        AddHandler(KeyUpEvent, ClearPushActivationModifiers, RoutingStrategies.Bubble, handledEventsToo: true);
+        mainMenuStrip.Loaded += (_, _) =>
+        {
+            // The menu attaches its interaction handler with the visual tree. Register
+            // cleanup afterwards so it cannot clear modifiers before the menu's Click.
+            mainMenuStrip.RemoveHandler(PointerReleasedEvent, ClearPushActivationModifiers);
+            mainMenuStrip.RemoveHandler(KeyDownEvent, ClearPushActivationModifiers);
+            mainMenuStrip.RemoveHandler(KeyUpEvent, ClearPushActivationModifiers);
+            mainMenuStrip.AddHandler(PointerReleasedEvent, ClearPushActivationModifiers, RoutingStrategies.Bubble, handledEventsToo: true);
+            mainMenuStrip.AddHandler(KeyDownEvent, ClearPushActivationModifiers, RoutingStrategies.Bubble, handledEventsToo: true);
+            mainMenuStrip.AddHandler(KeyUpEvent, ClearPushActivationModifiers, RoutingStrategies.Bubble, handledEventsToo: true);
+        };
+        mainMenuStrip.Closed += ClearPushActivationModifiers;
+        Deactivated += (_, _) => _pushActivationModifiers = KeyModifiers.None;
+    }
+
+    private void CapturePushPointerModifiers(object? sender, PointerReleasedEventArgs e)
+        => _pushActivationModifiers = e.KeyModifiers;
+
+    private void CapturePushKeyModifiers(object? sender, KeyEventArgs e)
+        => _pushActivationModifiers = e.KeyModifiers;
+
+    private void ClearPushActivationModifiers(object? sender, RoutedEventArgs e)
+        => _pushActivationModifiers = KeyModifiers.None;
 
     private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
     {
@@ -2299,9 +2340,18 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         // generic handling of this form's hotkeys (upstream)
-        if (base.ProcessHotkey(keyData))
+        KeyModifiers previousModifiers = _pushActivationModifiers;
+        _pushActivationModifiers = KeysMapper.ToKeyGesture(keyData)?.KeyModifiers ?? KeyModifiers.None;
+        try
         {
-            return true;
+            if (base.ProcessHotkey(keyData))
+            {
+                return true;
+            }
+        }
+        finally
+        {
+            _pushActivationModifiers = previousModifiers;
         }
 
         object? focused = FocusManager?.GetFocusedElement();
@@ -2410,7 +2460,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             case Command.GoToChild: RestoreFileStatusListFocus(() => RevisionGrid.ExecuteCommand(RevisionGridControl.Command.GoToChild)); break;
             case Command.GoToParent: RestoreFileStatusListFocus(() => RevisionGrid.ExecuteCommand(RevisionGridControl.Command.GoToParent)); break;
             case Command.PullOrFetch: PullToolStripMenuItemClick(this, EventArgs.Empty); break;
-            case Command.Push: UICommands.StartPushDialog(this, pushOnShow: false); break;
+            case Command.Push: PushToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.CreateBranch: CreateBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.MergeBranches: MergeBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.CreateTag: TagToolStripMenuItemClick(this, EventArgs.Empty); break;
@@ -2639,7 +2689,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private void PullToolStripMenuItemClick(object? sender, EventArgs e)
     {
         // "Pull/Fetch..." menu item always opens the dialog
-        UICommands.StartPullDialog(this);
+        DoPull(pullAction: AppSettings.FormPullAction, isSilent: false);
     }
 
     private void ToolStripButtonPullClick(object sender, EventArgs e)

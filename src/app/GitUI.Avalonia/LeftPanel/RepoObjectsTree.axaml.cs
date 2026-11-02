@@ -912,8 +912,20 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             case RepoAction.ResetSubmodule: _submoduleTree.ResetSubmodule(this, (SubmoduleNode)SelectedNode!); break;
             case RepoAction.StashSubmodule: _submoduleTree.StashSubmodule(this, (SubmoduleNode)SelectedNode!); break;
             case RepoAction.CommitSubmodule: _submoduleTree.CommitSubmodule(this, (SubmoduleNode)SelectedNode!); break;
-            case RepoAction.Collapse: SetExpanded(SelectedNode!.TreeViewNode, expanded: false, recursive: true); break;
-            case RepoAction.Expand: SetExpanded(SelectedNode!.TreeViewNode, expanded: true, recursive: true); break;
+            case RepoAction.Collapse:
+                foreach (NodeBase node in GetSelectedNodes().HavingChildren().Collapsible())
+                {
+                    SetExpanded(node.TreeViewNode, expanded: false, recursive: true);
+                }
+
+                break;
+            case RepoAction.Expand:
+                foreach (NodeBase node in GetSelectedNodes().HavingChildren().Expandable())
+                {
+                    SetExpanded(node.TreeViewNode, expanded: true, recursive: true);
+                }
+
+                break;
             case RepoAction.MoveUp: ReorderTreeNode(SelectedNode!.TreeViewNode, up: true); break;
             case RepoAction.MoveDown: ReorderTreeNode(SelectedNode!.TreeViewNode, up: false); break;
             default: throw new ArgumentOutOfRangeException(nameof(action));
