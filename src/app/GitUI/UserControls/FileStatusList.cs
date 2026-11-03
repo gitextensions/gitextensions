@@ -1430,6 +1430,11 @@ public sealed partial class FileStatusList : GitModuleControl
                     // Image without evaluating added/removed etc
                     imageKey = GetSubmoduleItemImageKey(gitItemStatus);
                 }
+                else if (gitItemStatus.Name.EndsWith(PathUtil.PosixDirectorySeparatorChar))
+                {
+                    // An empty directory, in file tree mode
+                    imageKey = nameof(Images.FolderClosed);
+                }
                 else if (Path.GetExtension(gitItemStatus.Name) is string extension && _imageListData.StateImageIndexMap.TryGetValue(extension, out int imageIndex))
                 {
                     // The extension is cached

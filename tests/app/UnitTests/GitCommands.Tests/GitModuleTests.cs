@@ -51,6 +51,33 @@ public sealed partial class GitModuleTests
     }
 
     [Test]
+    public void GetTreeFiles_should_include_empty_directories_only_if_requested()
+    {
+        using GitModuleTestHelper helper = new();
+        GitModule module = helper.Module;
+
+        // Git porcelain cannot record empty directories, build the trees like an import from another VCS would
+        helper.CreateRepoFile("src", "file.txt", "content");
+        Run("add .");
+        string srcTreeId = Run("write-tree").Trim();
+        string srcEntry = Run($"ls-tree {srcTreeId} src").TrimEnd('\n');
+        string emptyTreeId = Run("mktree", "").Trim();
+        string emptyParentTreeId = Run("mktree", $"040000 tree {emptyTreeId}\tempty\n").Trim();
+        string rootTreeId = Run("mktree", $"{srcEntry}\n040000 tree {emptyParentTreeId}\tempty_parent\n040000 tree {emptyTreeId}\tz\n").Trim();
+        ObjectId commitId = ObjectId.Parse(Run($"commit-tree {rootTreeId} -m import").Trim());
+
+        module.GetTreeFiles(commitId, full: true, includeEmptyDirectories: true).Select(item => item.Name)
+            .Should().Equal("empty_parent/empty/", "src/file.txt", "z/");
+        module.GetTreeFiles(commitId, full: true).Select(item => item.Name)
+            .Should().Equal("src/file.txt");
+
+        return;
+
+        string Run(string arguments, string? input = null)
+            => module.GitExecutable.GetOutput(arguments, input is null ? null : Encoding.UTF8.GetBytes(input));
+    }
+
+    [Test]
     public async Task CheckoutConflictedFiles_should_write_sides_next_to_file_with_extension_kept()
     {
         string originalDirectory = Directory.GetCurrentDirectory();

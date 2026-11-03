@@ -2706,8 +2706,23 @@ public sealed partial class GitModule : IGitModule
     }
 
     public IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId commitId, bool full, CancellationToken cancellationToken = default)
-        => GetTree(commitId, full, cancellationToken: cancellationToken)
-            .Select(file => new GitItemStatus(file.Name)
+        => GetTreeFiles(commitId, full, includeEmptyDirectories: false, cancellationToken);
+
+    public IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId commitId, bool full, bool includeEmptyDirectories, CancellationToken cancellationToken = default)
+    {
+        // Git porcelain never records empty trees, but imports from other VCS can.
+        // "ls-tree -r" only lists blobs and gitlinks, so query the trees too and keep the empty ones
+        // (presented with a trailing slash like untracked directories).
+        bool showEmptyTrees = includeEmptyDirectories && full && !commitId.IsArtificial;
+        IEnumerable<IObjectGitItem> items = showEmptyTrees
+            ? GitTreeParser.GetEmptyTreesAndNonTrees(GetTree(commitId, full, fileName: "", includeTrees: true, cancellationToken))
+            : GetTree(commitId, full, cancellationToken: cancellationToken);
+        return ToGitItemStatuses(items, showEmptyTrees);
+    }
+
+    private static IReadOnlyList<GitItemStatus> ToGitItemStatuses(IEnumerable<IObjectGitItem> items, bool markTrees)
+        => items
+            .Select(file => new GitItemStatus(markTrees && file.ObjectType == GitObjectType.Tree ? file.Name + PathUtil.PosixDirectorySeparatorChar : file.Name)
             {
                 // IsTracked is always true, only tracked are reported
                 // (all with TreeId are tracked)
@@ -3263,6 +3278,9 @@ public sealed partial class GitModule : IGitModule
     }
 
     public IEnumerable<IObjectGitItem> GetTree(ObjectId commitId, bool full, string fileName = "", CancellationToken cancellationToken = default)
+        => GetTree(commitId, full, fileName, includeTrees: false, cancellationToken);
+
+    private IEnumerable<IObjectGitItem> GetTree(ObjectId commitId, bool full, string fileName, bool includeTrees, CancellationToken cancellationToken)
     {
         bool isArtificial = commitId.IsArtificial;
         if (isArtificial && !full)
@@ -3290,6 +3308,7 @@ public sealed partial class GitModule : IGitModule
                 // optimized codepath, default is "--format={_gitTreeParser.GitTreeFormat}"
                 "-z",
                 { full, "-r" },
+                { full && includeTrees, "-t" },
                 { commitId.IsZero ? "HEAD" : commitId.ToString() },
                 "--",
                 fileName.QuoteNE()

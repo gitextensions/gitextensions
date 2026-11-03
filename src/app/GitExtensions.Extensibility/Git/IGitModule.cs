@@ -366,6 +366,21 @@ public interface IGitModule
     (int? First, int? Second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId);
     IReadOnlyList<GitItemStatus> GetCombinedDiffFileList(ObjectId mergeCommitObjectId);
     IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId treeId, bool full, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///  Gets the files in a tree, optionally including empty directories.
+    /// </summary>
+    /// <param name="treeId">The tree or commit to list.</param>
+    /// <param name="full">List the tree recursively.</param>
+    /// <param name="includeEmptyDirectories">
+    ///  Also report empty trees (only if <paramref name="full"/> and not an artificial commit).
+    ///  Git porcelain commands never create them, but they occur in repositories imported from other VCS.
+    ///  The names of these items end with a slash.
+    /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The items in the tree.</returns>
+    IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId treeId, bool full, bool includeEmptyDirectories, CancellationToken cancellationToken = default);
+
     IReadOnlyList<string> GetFullTree(string id);
 
     /// <summary>

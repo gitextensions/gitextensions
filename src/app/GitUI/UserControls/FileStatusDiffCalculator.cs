@@ -332,7 +332,7 @@ public sealed partial class FileStatusDiffCalculator
 
         IGitModule module = GetModule();
         IReadOnlyList<GitItemStatus> statuses = string.IsNullOrEmpty(_fileStatusDiffCalculatorInfo.GrepArguments)
-            ? module.GetTreeFiles(selectedRev.ObjectId, full: true, cancellationToken)
+            ? module.GetTreeFiles(selectedRev.ObjectId, full: true, includeEmptyDirectories: true, cancellationToken)
             : module.GetGrepFilesStatus(selectedRev.ObjectId, _fileStatusDiffCalculatorInfo.GrepArguments, applyAppSettings: true, cancellationToken);
 
         return new FileStatusWithDescription(

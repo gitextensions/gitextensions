@@ -68,6 +68,48 @@ public sealed partial class GitTreeParser : IGitTreeParser
         }
     }
 
+    /// <summary>
+    ///  Filters the output of "git ls-tree -r -t" to the blobs and gitlinks plus the trees without any entries.
+    /// </summary>
+    /// <remarks>
+    ///  "ls-tree -t" lists a tree directly before its entries, so a tree is empty if the next item is not inside it.
+    ///  This does not depend on the object id of the empty tree, which differs between SHA-1 and SHA-256 repositories.
+    /// </remarks>
+    /// <param name="items">The items in the order reported by "git ls-tree -r -t".</param>
+    /// <returns>The non-tree items and the empty trees, in the original order.</returns>
+    public static IEnumerable<T> GetEmptyTreesAndNonTrees<T>(IEnumerable<T> items)
+        where T : IObjectGitItem
+    {
+        T? pendingTree = default;
+        foreach (T item in items)
+        {
+            if (pendingTree is not null && !IsInside(item, pendingTree))
+            {
+                yield return pendingTree;
+            }
+
+            pendingTree = default;
+
+            if (item.ObjectType == GitObjectType.Tree)
+            {
+                pendingTree = item;
+                continue;
+            }
+
+            yield return item;
+        }
+
+        if (pendingTree is not null)
+        {
+            yield return pendingTree;
+        }
+
+        static bool IsInside(T item, T tree)
+            => item.Name.Length > tree.Name.Length
+                && item.Name[tree.Name.Length] == '/'
+                && item.Name.StartsWith(tree.Name, StringComparison.Ordinal);
+    }
+
     public GitItem? ParseSingle(string? rawItem)
     {
         if (rawItem is null)

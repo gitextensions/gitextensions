@@ -73,6 +73,37 @@ public class GitTreeParserTests
         item.ObjectType.Should().Be(GitObjectType.Blob);
     }
 
+    [Test]
+    public void GetEmptyTreesAndNonTrees_should_keep_only_empty_trees()
+    {
+        // git ls-tree -r -t: a tree is listed directly before its entries
+        string lsTreeOutput = string.Concat(
+            "040000 tree 5fca4900ec399628f29f794a647d3aba44d98cad\tempty_parent", "\0",
+            "040000 tree 4b825dc642cb6eb9a060e54bf8d69288fbee4904\tempty_parent/empty", "\0",
+            "040000 tree 93185d6bd18327f5a23bc34e7eb75e66ec0ef2d1\tsrc", "\0",
+            "100644 blob 25d7b5d771e84982a3dfd8bd537531d8fb45d491\tsrc/file.cs", "\0",
+            "040000 tree 4b825dc642cb6eb9a060e54bf8d69288fbee4904\tsrc/sub", "\0",
+            "160000 commit ec097fc11ec61f502d5fced60e27d54b5fe326c0\tsubm", "\0",
+            "040000 tree 4b825dc642cb6eb9a060e54bf8d69288fbee4904\tsubmarine", "\0",
+            "040000 tree 4b825dc642cb6eb9a060e54bf8d69288fbee4904\tz");
+
+        List<GitItem> items = [.. GitTreeParser.GetEmptyTreesAndNonTrees(_parser.Parse(lsTreeOutput))];
+
+        items.Select(item => item.Name).Should().Equal("empty_parent/empty", "src/file.cs", "src/sub", "subm", "submarine", "z");
+    }
+
+    [Test]
+    public void GetEmptyTreesAndNonTrees_should_not_treat_name_prefix_as_parent()
+    {
+        string lsTreeOutput = string.Concat(
+            "040000 tree 4b825dc642cb6eb9a060e54bf8d69288fbee4904\ta", "\0",
+            "100644 blob 25d7b5d771e84982a3dfd8bd537531d8fb45d491\ta.txt");
+
+        List<GitItem> items = [.. GitTreeParser.GetEmptyTreesAndNonTrees(_parser.Parse(lsTreeOutput))];
+
+        items.Select(item => item.Name).Should().Equal("a", "a.txt");
+    }
+
     private static string GetLsTreeOutput()
     {
         return string.Concat(

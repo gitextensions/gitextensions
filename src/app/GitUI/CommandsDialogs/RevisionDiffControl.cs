@@ -435,8 +435,10 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
     /// <returns>a task</returns>
     private async Task ShowSelectedFileBlameAsync(bool ensureNoSwitchToFilter, int? line)
     {
-        if (DiffFiles.SelectedItem is null)
+        if (DiffFiles.SelectedItem is null
+            || (DiffFiles.SelectedItem.Item is { IsSubmodule: false } item && item.Name.EndsWith(PathUtil.PosixDirectorySeparatorChar)))
         {
+            // Directories cannot be blamed
             await ShowSelectedFileDiffAsync(ensureNoSwitchToFilter, line);
             return;
         }

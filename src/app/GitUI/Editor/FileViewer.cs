@@ -27,6 +27,8 @@ namespace GitUI.Editor;
 [DefaultEvent("SelectedLineChanged")]
 public partial class FileViewer : GitModuleControl
 {
+    private const string _directoryPrefix = "Directory: ";
+
     /// <summary>
     /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
     /// </summary>
@@ -721,6 +723,12 @@ public partial class FileViewer : GitModuleControl
         // treeId (blobId) is only recalculated if required.
         ObjectId blobId = GetUpdateTreeId(file, objectId, cancellationToken);
 
+        if (!blobId.IsZero && !file.IsSubmodule && file.Name.EndsWith(PathUtil.PosixDirectorySeparatorChar))
+        {
+            // An empty tree (directory) in a commit, there is no content to show
+            return ViewTextAsync(file.Name, _directoryPrefix + file.Name, cancellationToken: cancellationToken);
+        }
+
         return blobId.IsZero
             ? ViewFileAsync(file.Name, file.IsSubmodule, item, line, openWithDifftool, cancellationToken)
             : ViewItemAsync(
@@ -795,7 +803,7 @@ public partial class FileViewer : GitModuleControl
         {
             if (!GitModule.IsValidGitWorkingDir(fullPath))
             {
-                return ViewTextAsync(fileName, "Directory: " + fileName, cancellationToken: cancellationToken);
+                return ViewTextAsync(fileName, _directoryPrefix + fileName, cancellationToken: cancellationToken);
             }
 
             isSubmodule = true;
