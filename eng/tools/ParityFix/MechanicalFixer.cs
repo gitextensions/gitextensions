@@ -169,6 +169,18 @@ internal static class MechanicalFixer
 
         MemberDeclarationSyntax[] candidates = twinType.DescendantNodes().OfType<MemberDeclarationSyntax>()
             .Where(member => SourceInventoryReader.GetCommentAnchor(twinType, member) == entry.Anchor).ToArray();
+        if (candidates.Length == 0)
+        {
+            string relaxed = RelaxAnchor(entry.Anchor);
+            candidates = twinType.DescendantNodes().OfType<MemberDeclarationSyntax>()
+                .Where(member => RelaxAnchor(SourceInventoryReader.GetCommentAnchor(twinType, member)) == relaxed).ToArray();
+            if (originalType.DescendantNodes().OfType<MemberDeclarationSyntax>()
+                    .Count(member => RelaxAnchor(SourceInventoryReader.GetCommentAnchor(originalType, member)) == relaxed) != 1)
+            {
+                return false;
+            }
+        }
+
         if (candidates.Length != 1)
         {
             return false;
@@ -188,33 +200,37 @@ internal static class MechanicalFixer
             return false;
         }
 
-        SyntaxNode sourceBoundary = sourceMember;
-        SyntaxNode targetBoundary = target;
-        if (!unchangedMember)
+        SyntaxToken sourceToken;
+        SyntaxToken targetToken;
+        bool after = false;
+        if (entry.Placement == "leading")
+        {
+            sourceToken = sourceMember.GetFirstToken();
+            targetToken = target.GetFirstToken();
+        }
+        else if (unchangedMember)
+        {
+            SyntaxToken[] sourceTokens = sourceMember.DescendantTokens().ToArray();
+            int next = Array.FindIndex(sourceTokens, token => token.SpanStart >= source.FullSpan.End);
+            if (next < 0)
+            {
+                return false;
+            }
+
+            sourceToken = sourceTokens[next];
+            targetToken = target.DescendantTokens().ElementAt(next);
+        }
+        else
         {
             if (entry.Placement != "body" || finding.Code == "comment.changed")
             {
                 return false;
             }
 
-            SyntaxToken nextToken = sourceMember.DescendantTokens().FirstOrDefault(token => token.SpanStart >= source.FullSpan.End);
-            StatementSyntax? statement = nextToken.Parent?.AncestorsAndSelf().TakeWhile(node => node != sourceMember)
-                .OfType<StatementSyntax>().LastOrDefault(node => node is not BlockSyntax);
-            if (statement is null || !sourceMember.Span.Contains(statement.Span))
+            if (!TryStatementAnchor(source, sourceMember, target, out sourceToken, out targetToken, out after))
             {
                 return false;
             }
-
-            StatementSyntax[] matchingStatements = TopLevelStatements(target)
-                .Where(node => SyntaxFactory.AreEquivalent(statement, node)).ToArray();
-            if (matchingStatements.Length != 1 || TopLevelStatements(sourceMember)
-                    .Count(node => SyntaxFactory.AreEquivalent(statement, node)) != 1)
-            {
-                return false;
-            }
-
-            sourceBoundary = statement;
-            targetBoundary = matchingStatements[0];
         }
 
         SyntaxTrivia? removed = null;
@@ -257,30 +273,40 @@ internal static class MechanicalFixer
             return false;
         }
 
-        SyntaxToken[] sourceTokens = sourceBoundary.DescendantTokens().ToArray();
-        SyntaxToken[] targetTokens = targetBoundary.DescendantTokens().ToArray();
-        int next = Array.FindIndex(sourceTokens, token => token.SpanStart >= source.FullSpan.End);
-        if (next < 0 || next >= targetTokens.Length || !Standalone(originalText, source.FullSpan.Start))
+        if (!Standalone(originalText, source.FullSpan.Start))
         {
             return false;
         }
 
-        SyntaxToken targetToken = targetTokens[next];
-        SyntaxTrivia[] sourceGroup = sourceTokens[next].LeadingTrivia.Where(SourceInventoryReader.IsComment).ToArray();
-        SyntaxTrivia[] targetGroup = targetToken.LeadingTrivia.Where(SourceInventoryReader.IsComment).ToArray();
+        SyntaxTrivia[] sourceGroup = after ? [] : sourceToken.LeadingTrivia.Where(SourceInventoryReader.IsComment).ToArray();
+        SyntaxTrivia[] targetGroup = after ? [] : targetToken.LeadingTrivia.Where(SourceInventoryReader.IsComment).ToArray();
         if (targetGroup.Any(comment => !sourceGroup.Any(candidate =>
                 SourceInventoryReader.NormalizeCommentText(candidate) == SourceInventoryReader.NormalizeCommentText(comment))))
         {
             return false;
         }
 
-        int position = LineStart(twinText, targetToken.SpanStart);
-        if (!Standalone(twinText, targetToken.SpanStart))
+        int indentPosition = after
+            ? targetToken.Parent!.AncestorsAndSelf().OfType<StatementSyntax>().First().GetFirstToken().SpanStart
+            : targetToken.SpanStart;
+        int position = LineStart(twinText, indentPosition);
+        if (!Standalone(twinText, indentPosition))
         {
             return false;
         }
 
-        string indent = twinText[position..targetToken.SpanStart];
+        string indent = twinText[position..indentPosition];
+        if (after)
+        {
+            int newline = twinText.IndexOf('\n', targetToken.Span.End);
+            if (newline < 0 || !twinText[targetToken.Span.End..newline].All(char.IsWhiteSpace))
+            {
+                return false;
+            }
+
+            position = newline + 1;
+        }
+
         foreach (SyntaxTrivia following in sourceGroup.Where(comment => comment.FullSpan.Start > source.FullSpan.Start))
         {
             SyntaxTrivia[] matching = targetGroup.Where(comment =>
@@ -302,7 +328,7 @@ internal static class MechanicalFixer
             }
         }
 
-        string text = Reindent(source.ToFullString(), originalText, source.FullSpan.Start, twinText, targetToken.SpanStart).TrimEnd('\r', '\n');
+        string text = Reindent(source.ToFullString(), originalText, source.FullSpan.Start, twinText, indentPosition).TrimEnd('\r', '\n');
         if (removed is { } drifted)
         {
             if (!Standalone(twinText, drifted.FullSpan.Start))
@@ -341,9 +367,67 @@ internal static class MechanicalFixer
     private static MemberDeclarationSyntax? Owner(SyntaxTrivia trivia, TypeDeclarationSyntax type) =>
         trivia.Token.Parent?.AncestorsAndSelf().OfType<MemberDeclarationSyntax>().FirstOrDefault(member => member != type);
 
-    private static IEnumerable<StatementSyntax> TopLevelStatements(MemberDeclarationSyntax member) =>
-        member.DescendantNodes().OfType<StatementSyntax>().Where(node => node is not BlockSyntax
-            && !node.Ancestors().TakeWhile(ancestor => ancestor != member).OfType<StatementSyntax>().Any(ancestor => ancestor is not BlockSyntax));
+    private static bool TryStatementAnchor(SyntaxTrivia comment, MemberDeclarationSyntax sourceMember,
+        MemberDeclarationSyntax targetMember, out SyntaxToken sourceToken, out SyntaxToken targetToken, out bool after)
+    {
+        sourceToken = default;
+        targetToken = default;
+        after = false;
+        StatementSyntax[] sourceStatements = Statements(sourceMember);
+        StatementSyntax[] targetStatements = Statements(targetMember);
+        string[] commentContext = comment.Token.Parent?.AncestorsAndSelf().TakeWhile(node => node != sourceMember)
+            .Where(node => node.Span.Contains(comment.Span) && IsContext(node)).Select(ContextKey).ToArray() ?? [];
+        foreach (StatementSyntax statement in sourceStatements
+                     .OrderBy(node => node.Span.Contains(comment.Span) ? 0 : Math.Min(Math.Abs(node.SpanStart - comment.FullSpan.End), Math.Abs(node.Span.End - comment.FullSpan.Start)))
+                     .ThenBy(node => node.Span.Length))
+        {
+            StatementSyntax[] matches = targetStatements.Where(node => SyntaxFactory.AreEquivalent(statement, node)).ToArray();
+            if (matches.Length != 1 || sourceStatements.Count(node => SyntaxFactory.AreEquivalent(statement, node)) != 1
+                || (!statement.Span.Contains(comment.Span) && !commentContext.SequenceEqual(StatementContext(statement, sourceMember)))
+                || !StatementContext(statement, sourceMember).SequenceEqual(StatementContext(matches[0], targetMember)))
+            {
+                continue;
+            }
+
+            after = statement.Span.End <= comment.FullSpan.Start;
+            if (after)
+            {
+                sourceToken = statement.GetLastToken();
+                targetToken = matches[0].GetLastToken();
+                return true;
+            }
+
+            SyntaxToken[] tokens = statement.DescendantTokens().ToArray();
+            int next = Array.FindIndex(tokens, token => token.SpanStart >= comment.FullSpan.End);
+            if (next >= 0)
+            {
+                sourceToken = tokens[next];
+                targetToken = matches[0].DescendantTokens().ElementAt(next);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static StatementSyntax[] Statements(MemberDeclarationSyntax member) => member.DescendantNodes()
+        .OfType<StatementSyntax>().Where(node => node is not BlockSyntax
+            && !node.Ancestors().TakeWhile(ancestor => ancestor != member).OfType<MemberDeclarationSyntax>().Any()).ToArray();
+
+    private static IEnumerable<string> StatementContext(StatementSyntax statement, MemberDeclarationSyntax member) =>
+        statement.Ancestors().TakeWhile(node => node != member).Where(IsContext).Select(ContextKey);
+
+    private static bool IsContext(SyntaxNode node) => node is StatementSyntax and not BlockSyntax
+        or ElseClauseSyntax or CatchClauseSyntax or FinallyClauseSyntax or SwitchSectionSyntax or AnonymousFunctionExpressionSyntax;
+
+    private static string ContextKey(SyntaxNode node) => node.RawKind + ":"
+        + (node is LocalFunctionStatementSyntax local ? local.Identifier.ValueText : string.Empty)
+        + string.Concat(node.ChildNodes()
+            .Where(child => child is not (StatementSyntax or ElseClauseSyntax or CatchClauseSyntax or FinallyClauseSyntax or SwitchSectionSyntax))
+            .SelectMany(child => child.DescendantTokens()).Select(token => token.Text));
+
+    private static string RelaxAnchor(string anchor) => string.Join('/', anchor.Split('/').Select(segment =>
+        segment.Contains('(') ? segment[..segment.IndexOf('(')] : segment));
 
     private static TypeDeclarationSyntax? FindType(SyntaxNode root, string name) =>
         root.DescendantNodes().OfType<TypeDeclarationSyntax>().SingleOrDefault(type => SourceInventoryReader.GetTypeName(type) == name);

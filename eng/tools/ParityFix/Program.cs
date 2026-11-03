@@ -4,10 +4,11 @@ using GitExtensions.ParityFix;
 // parity-scaffolding: Explicit apply is separate from the default reviewable mechanical-fix preview.
 try
 {
-    HashSet<string> switches = ["--apply", "--allow-initializers"];
-    HashSet<string> values = ["--inventory", "--ownership", "--owner", "--report", "--twin-root"];
+    bool prove = args.FirstOrDefault() == "prove";
+    HashSet<string> switches = prove ? [] : ["--apply", "--allow-initializers"];
+    HashSet<string> values = prove ? ["--report", "--twin-root"] : ["--inventory", "--ownership", "--owner", "--report", "--twin-root"];
     Dictionary<string, string> options = new(StringComparer.Ordinal);
-    for (int index = 0; index < args.Length; index++)
+    for (int index = prove ? 1 : 0; index < args.Length; index++)
     {
         string key = args[index];
         if (!switches.Contains(key) && !values.Contains(key))
@@ -23,6 +24,25 @@ try
     }
 
     string Required(string key) => options.GetValueOrDefault(key) ?? throw new ArgumentException($"Required: {key}");
+
+    if (prove)
+    {
+        ProofReport proof = await WorktreeProof.ProveAsync(Directory.GetCurrentDirectory(), options.GetValueOrDefault("--twin-root") ?? "src/app/GitUI.Avalonia");
+        if (options.TryGetValue("--report", out string? output))
+        {
+            string path = Path.GetFullPath(output);
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            File.WriteAllText(path, JsonSerializer.Serialize(proof, new JsonSerializerOptions { WriteIndented = true }));
+        }
+
+        Console.WriteLine($"HEAD {proof.Head}: {proof.Files.Count(file => file.Passed)} of {proof.Files.Count} changed twin files proved equivalent with unchanged directives.");
+        foreach (FileProof file in proof.Files.Where(file => !file.Passed))
+        {
+            Console.Error.WriteLine($"{file.Path}: {file.Error}");
+        }
+
+        return proof.Passed ? 0 : 1;
+    }
 
     using JsonDocument ownership = JsonDocument.Parse(File.ReadAllText(Required("--ownership")));
     string owner = Required("--owner");

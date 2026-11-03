@@ -766,6 +766,8 @@ public partial class UserRepositoriesList : TranslatedControl
             return;
         }
 
+        // address a bug in context menu implementation
+
         // Avalonia menu items share their owning context menu instead of WinForms SourceControl.
         // Keep the clicked container so nested category actions resolve the same repository.
     }

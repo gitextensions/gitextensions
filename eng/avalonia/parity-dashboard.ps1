@@ -20,6 +20,10 @@ param(
     [string]$Ownership,
     [string]$Output,
 
+    [string]$History,
+
+    [string]$LedgerPath,
+
     # Do not append this measurement to the trend history.
     [switch]$NoHistory
 )
@@ -31,7 +35,8 @@ $evidence = Join-Path $repo 'eng\avalonia\parity-evidence'
 if (-not $Inventory) { $Inventory = Join-Path $evidence 'gates\latest-inventory\current-inventory.json' }
 if (-not $Ownership) { $Ownership = Join-Path $evidence 'P8.6i\application-shell-126\closure-ownership.json' }
 if (-not $Output) { $Output = Join-Path $evidence 'dashboard.md' }
-$historyPath = Join-Path $evidence 'dashboard-history.jsonl'
+$historyPath = if ($History) { $History } else { Join-Path $evidence 'dashboard-history.jsonl' }
+if (-not $LedgerPath) { $LedgerPath = Join-Path $repo 'eng/avalonia/parity-ledger.json' }
 
 $mechanicalCodes = 'comment.missing', 'comment.changed', 'comment.drifted', 'member.order'
 $behaviorCodes = 'member.missing', 'event.wiring.missing', 'event.handler.missing', 'setting.missing', 'setting.extra',
@@ -78,7 +83,7 @@ $areaLines = foreach ($owner in $areaNames.Keys) {
 $actionable = $totals.Mechanical + $totals.Behavior + $totals.Structural
 if ($actionable -ne $current.summary.findingCount) { throw "type reports hold $actionable findings but the summary says $($current.summary.findingCount)." }
 
-$ledger = Get-Content -LiteralPath (Join-Path $repo 'eng\avalonia\parity-ledger.json') -Raw | ConvertFrom-Json
+$ledger = Get-Content -LiteralPath $LedgerPath -Raw | ConvertFrom-Json
 $statusNames = 'verified', 'partial', 'gap', 'unverified', 'notApplicable'
 $axisCounts = [ordered]@{}
 foreach ($axis in $ledger.axisOrder) { $axisCounts[$axis] = @{} }
@@ -112,9 +117,16 @@ $measurement = [ordered]@{
 }
 
 $previous = $null
+$lastMeasurement = $null
 if (Test-Path -LiteralPath $historyPath) {
-    $last = Get-Content -LiteralPath $historyPath -Tail 1
-    if ($last) { $previous = $last | ConvertFrom-Json }
+    $historyRows = @(Get-Content -LiteralPath $historyPath | Where-Object { $_.Trim() } | ForEach-Object { $_ | ConvertFrom-Json })
+    if ($historyRows.Count) { $lastMeasurement = $historyRows[-1] }
+    for ($index = $historyRows.Count - 1; $index -ge 0; $index--) {
+        if ($historyRows[$index].commit -ne $measurement.commit) {
+            $previous = $historyRows[$index]
+            break
+        }
+    }
 }
 $change = if ($previous) { ' (change since {0}: {1:+0;-0;0})' -f $previous.commit.Substring(0, 9), ($actionable - $previous.actionable) } else { '' }
 
@@ -142,7 +154,16 @@ $lines.Add('')
 $lines.Add('Components with platform evidence: ' + (($platforms.GetEnumerator() | Sort-Object Value -Descending | ForEach-Object { "$($_.Key) $($_.Value)" }) -join ', ') + ', macos 0.')
 
 Set-Content -LiteralPath $Output -Value $lines -Encoding utf8
-if (-not $NoHistory -and (-not $previous -or $previous.commit -ne $measurement.commit -or $previous.actionable -ne $actionable)) {
+$measurementChanged = -not $lastMeasurement
+if ($lastMeasurement) {
+    foreach ($property in 'commit', 'actionable', 'mechanical', 'behavior', 'structural', 'dependent', 'complete', 'allButMacOs') {
+        if ($lastMeasurement.$property -ne $measurement[$property]) {
+            $measurementChanged = $true
+            break
+        }
+    }
+}
+if (-not $NoHistory -and $measurementChanged) {
     Add-Content -LiteralPath $historyPath -Value ([pscustomobject]$measurement | ConvertTo-Json -Compress) -Encoding utf8
 }
 $lines

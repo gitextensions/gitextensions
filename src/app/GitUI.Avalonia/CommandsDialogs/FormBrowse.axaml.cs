@@ -573,6 +573,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         base.OnLoad(e);
 
+        // All app init is done, make all repo related similar to switching repos
+
         CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
         _loadOperations.FileAndForget(async () =>
         {
@@ -3056,6 +3058,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private List<MenuItem> PopulateToolbar(SubmoduleInfoResult result)
     {
+        // Second task: Populate submodule toolbar menu on UI thread.
         RemoveSubmoduleButtons();
         List<MenuItem> newItems = [.. result.OurSubmodules.Select(submodule => CreateSubmoduleMenuItem(submodule))];
 

@@ -3028,6 +3028,10 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     {
         List<ObjectId> revisions = [.. GetSelectedRevisions().Select(revision => revision.ObjectId).Where(id => !id.IsArtificial)];
         bool hasArtificial = GetSelectedRevisions().Any(revision => revision.IsArtificial);
+
+        // Artificial commits are replaced with HEAD
+        // If only one revision is selected, compare to HEAD
+        // => Fill with HEAD to if less than two normal revisions (it is OK to compare HEAD HEAD)
         ObjectId headId = Module.RevParse("HEAD");
         if (headId.IsZero || (revisions.Count == 0 && !hasArtificial))
         {
