@@ -38,8 +38,8 @@ internal abstract class NodeBase
 
     /// <summary>
     /// Marks this node to be included in multi-selection. See <see cref="Select(bool, bool)"/>.
-    /// This flag is independent of the tree's single highlighted node, so keyboard
-    /// navigation does not change which references participate in multi-selection.
+    /// This is remembered here instead of relying on the status of <see cref="TreeViewNode"/>
+    /// because Avalonia's tree highlights a single node independently of multi-selection.
     /// </summary>
     protected internal bool IsSelected { get; set; }
 
@@ -118,6 +118,7 @@ internal abstract class NodeBase
 
         if (style == WinFormsShims.FontStyle.Regular)
         {
+            // For regular, reset to use the NativeTreeView font
             ResetFont();
             return;
         }

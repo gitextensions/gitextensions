@@ -170,6 +170,7 @@ public partial class FormRevisionFilter : GitExtensionsDialog
 
     private void OkClick(object? sender, EventArgs e)
     {
+        // Note: There is no validation that information (like branch filters) are valid
         SaveFilters();
         DialogResult = WinFormsShims.DialogResult.OK;
     }

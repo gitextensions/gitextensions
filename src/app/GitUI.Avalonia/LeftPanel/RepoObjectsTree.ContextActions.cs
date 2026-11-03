@@ -213,13 +213,13 @@ partial class RepoObjectsTree : IMenuItemFactory
         // git refs (tag, local & remote branch) menu items (rename, delete, merge, etc)
         _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
 
-        // RemoteBranchNode
         _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
         _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
         menuMain.InsertItems(_tagNodeMenuItems.Select(s => s.Item).Prepend(new Separator()), after: _actionItems[RepoAction.Filter]);
         menuMain.InsertItems(_remoteBranchMenuItems.Select(s => s.Item).Prepend(new Separator()), after: _actionItems[RepoAction.Filter]);
         menuMain.InsertItems(_localBranchMenuItems.Select(s => s.Item).Prepend(new Separator()), after: _actionItems[RepoAction.Filter]);
 
+        // RemoteBranchNode
         RegisterAction(RepoAction.FetchBranch, mnubtnFetchOneBranch);
         RegisterAction(RepoAction.FetchMerge, mnubtnPullFromRemoteBranch);
         RegisterAction(RepoAction.FetchCheckout, mnubtnRemoteBranchFetchAndCheckout);

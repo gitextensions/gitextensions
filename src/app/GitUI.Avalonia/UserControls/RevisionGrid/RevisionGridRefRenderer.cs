@@ -33,7 +33,7 @@ internal static class RevisionGridRefRenderer
 
     private static int PaddingTopBottom => 2;
 
-    // Diameter of the source AddArc corner rectangles; the circular radius is half this value.
+    // Pixel radius for the rounded corners of ref label capsules.
     private static int RefLabelCornerRadius => 5;
 
     // Pixel width of the highlight frame drawn around a hovered ref label,
@@ -119,7 +119,10 @@ internal static class RevisionGridRefRenderer
             path.BeginFigure(new Point(left, midY), isFilled: true); // tip → top-left corner
             path.LineTo(new Point(left + pointWidth, top));
             path.LineTo(new Point(right - arcRadius, top));
-            AddRight(path, right, top, bottom, arcRadius); // top-right arc, bottom-right arc
+
+            // top-right arc
+            // bottom-right arc
+            AddRight(path, right, top, bottom, arcRadius);
             path.LineTo(new Point(left + pointWidth, bottom)); // bottom-left corner → tip
         });
     }
@@ -403,8 +406,9 @@ internal static class RevisionGridRefRenderer
         };
 
     /// <summary>
-    ///  Draws a ref label and returns the retained label in the same coordinate space as its row.
+    ///  Draws a ref label and returns the retained label.
     /// </summary>
+    /// <returns>The drawn ref label.</returns>
     public static RefLabelControl DrawRef(
         bool isRowSelected,
         IGitRef gitRef,
@@ -432,8 +436,9 @@ internal static class RevisionGridRefRenderer
     ///  Draws a ref label with the specified edge shape and returns the label and an optional deferred highlight action.
     /// </summary>
     /// <returns>
-    ///  The retained label and a deferred action that paints the highlight frame — or <see langword="null"/>
-    ///  when <paramref name="highlight"/> is <see langword="false"/>.
+    ///  The drawn label,
+    ///  and a deferred action that paints the highlight frame — or <see langword="null"/> when <paramref name="highlight"/> is <see langword="false"/>.
+    ///  The caller is responsible for invoking the action at the appropriate time (typically after all adjacent labels are drawn).
     /// </returns>
     public static (RefLabelControl Label, Action? DrawHighlight) DrawRefEx(
         bool isRowSelected,
@@ -656,8 +661,8 @@ internal static class RevisionGridRefRenderer
     ///  size for Notch and Point shapes.
     /// </summary>
     /// <remarks>
-    ///  Computes the capsule's ideal height given the same font as <see cref="DrawRef"/> and
-    ///  <see cref="DrawRefEx"/>. Does not account for clipping to available cell width.
+    ///  Computes the capsule's ideal height given the same font as <see cref="DrawRef"/> and <see cref="DrawRefEx"/>.
+    ///  Does not account for clipping to available cell width.
     /// </remarks>
     public static int GetPointWidth(TemplatedControl owner)
     {
@@ -828,6 +833,9 @@ internal static class RevisionGridRefRenderer
             int rowHeight = (int)RevisionGridControl.GetRowHeight(this);
             RefLabelIcon effectiveIcon = GetEffectiveIcon(Icon);
             int iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : rowHeight / 2;
+
+            // For notch/point the rect must include the full/half notch/point area
+            // so text can be positioned within the visible portion, matching the symmetric padding of other shapes.
             int extraWidth = Shape switch
             {
                 RefLabelShape.NotchLeft or RefLabelShape.NotchRight => PointWidth,
@@ -885,11 +893,18 @@ internal static class RevisionGridRefRenderer
                 : IsRowSelected || this.FindAncestorOfType<ListBoxItem>()?.IsSelected == true
                     ? CapsuleBackgroundBrush
                     : null;
+
+            // frame
             Pen outline = new(OutlineBrush, RefLabelHighlightWidth, IsDashed ? DashedLine : null);
             context.DrawGeometry(background, outline, geometry);
+
+            // For NotchLeft and PointLeft the point/notch occupies the left portion of the rect,
+            // so the icon and text must be shifted right by pointWidth.
             int iconXOffset = Shape is RefLabelShape.NotchLeft or RefLabelShape.PointLeft
                 ? PointWidth
                 : 0;
+
+            // arrow if the head is the current branch
             if (effectiveIcon != RefLabelIcon.None)
             {
                 DrawArrow(context, refBrush, capsuleBounds, iconXOffset, effectiveIcon == RefLabelIcon.Head);
@@ -897,6 +912,8 @@ internal static class RevisionGridRefRenderer
 
             int iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : (int)Bounds.Height / 2;
             int paddingLeftRight = PaddingLeftRight(Label);
+
+            // For PointLeft, offset by half pointWidth so text starts inside the point.
             int textX = iconXOffset
                 + iconWidth
                 + paddingLeftRight

@@ -106,6 +106,7 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
     // Native DrawColumnText uses SingleLine for provider descriptions as well as messages.
     internal sealed class BuildStatusTextBlock : WinFormsSingleLineTextBlock
     {
+        // Increase contrast to selected rows (adapted to theme at use)
         private static readonly DrawingColor LightBlue = DrawingColor.FromArgb(130, 180, 240);
         private ListBoxItem? _row;
         private BuildStatus? _status;

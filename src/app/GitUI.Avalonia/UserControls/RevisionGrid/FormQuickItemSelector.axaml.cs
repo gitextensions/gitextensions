@@ -56,19 +56,22 @@ internal partial class FormQuickItemSelector : GitExtensionsForm
 
         lbxRefs.ItemsSource = rows;
 
+        // Framework constraint: Avalonia uses explicit row heights; this describes the original IntegralHeight workaround.
         // What is this magic number "MaxVisibleItemsWithoutScroll + 0.5"?
+        //
         // We are limiting number of visible items in the listbox before enabling vscroll, this is to reduce the risk of not fitting on user's screen.
         // When listbox.IntegralHeight=true, the listbox automatically calculates its size and only show full items (i.e. you can't render it
         // at 20px high if the ItemHeight=13px, it can only be 13, 26, 39 etc (NB: slightly more if you account for the furniture)).
         // listbox.PreferredHeight returns the height of the listbox showing all items.
+        //
         // For some strange reason, MaxVisibleItemsWithoutScroll*listbox.ItemHeight renders the listbox showing MaxVisibleItemsWithoutScroll-1 items.
         //
         // To fix this, trick the listbox and set its height to show MaxVisibleItemsWithoutScroll+0.5
         // this internally forces it to re-calculates its bounds and then to calculate its preferred height.
-        //
         lbxRefs.Height = Math.Min(items.Count, MaxVisibleItemsWithoutScroll) * 24;
 
         // resize the form to look nice
+        // constrain the listbox min width, otherwise the button may not have enough space
         lbxRefs.Width = Math.Max(150, Math.Min(700, (longestLabelLength * 7) + 28));
         if (selectedIndex >= 0 && selectedIndex < rows.Count)
         {

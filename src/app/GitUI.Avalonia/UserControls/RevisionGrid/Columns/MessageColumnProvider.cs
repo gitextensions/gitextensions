@@ -307,7 +307,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
     public override void OnCellFormatting(Control control, GitRevision revision)
     {
-        // Set the grid cell's accessibility text.
+        // Set the grid cell's accessibility text
         AutomationProperties.SetName(control, revision.Subject.Trim());
     }
 
@@ -419,6 +419,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
     private IReadOnlyList<Control> CreateArtificialStatusControls(ObjectId objectId)
     {
+        // Summary of changes
         if (!_settings.ShowGitStatusForArtificialCommits
             || _grid.GetChangeCount(objectId) is not ArtificialCommitChangeCount changeCount)
         {
@@ -719,7 +720,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
     /// <summary>
     ///  Performs a hit test to find which ref label (if any) contains the given point in the specified row.
     /// </summary>
-    /// <returns>The matching retained ref label, or <see langword="null"/> if no ref label was hit.</returns>
+    /// <returns>The matching <see cref="RevisionGridRefRenderer.RefLabelControl"/>, or <see langword="null"/> if no ref label was hit.</returns>
     public RevisionGridRefRenderer.RefLabelControl? HitTest(int rowIndex, Avalonia.Point gridClientPoint)
     {
         if (!_refLabelHitInfoByRow.TryGetValue(rowIndex, out WeakReference<MessageCell>? reference)
@@ -1062,6 +1063,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         private static double GetRefAdvance(RevisionGridRefRenderer.RefLabelControl label, double remainingWidth)
         {
+            // Stop drawing refs if we run out of room
             int width = label.GetCapsuleWidth(remainingWidth);
             return width > 0 ? width + RefMarginRight : 0;
         }
