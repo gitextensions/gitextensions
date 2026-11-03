@@ -3436,6 +3436,7 @@
           "verifiedOn": "2026-10-03",
           "commit": "35ad54d54995000e243a4c2455a56faedebff8b8",
           "evidence": [
+            "eng/avalonia/parity-evidence/tier1-fix-pilot/applied.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/windows-browse-accepted-final.trx",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-67/tests/linux-product-final.trx",
@@ -7140,6 +7141,7 @@
           "verifiedOn": "2026-10-04",
           "commit": "075c58fe1ab9d167369640ef267b2e6225aa6c64",
           "evidence": [
+            "eng/avalonia/parity-evidence/tier1-fix-pilot/applied.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-79/verification.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-64/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-68/extraction-proof.json",
@@ -43185,6 +43187,7 @@
           "verifiedOn": "2026-10-04",
           "commit": "075c58fe1ab9d167369640ef267b2e6225aa6c64",
           "evidence": [
+            "eng/avalonia/parity-evidence/tier1-fix-pilot/applied.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.RevisionGridControl.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.RevisionGridControl.functional-findings.json",
             "eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-76/verification.json",

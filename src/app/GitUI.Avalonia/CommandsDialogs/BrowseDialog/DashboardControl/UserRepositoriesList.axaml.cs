@@ -676,6 +676,15 @@ public partial class UserRepositoriesList : TranslatedControl
         return new Size(Math.Ceiling(width + 50), Math.Ceiling(Math.Max(height, 50)));
     }
 
+    private void RepositoryContextAction(Action<SelectedRepositoryItem> action)
+    {
+        SelectedRepositoryItem? selected = GetSelectedRepositoryItem();
+        if (selected is not null)
+        {
+            action(selected);
+        }
+    }
+
     private static string ShortenText(string text, Font font, float maxWidth)
     {
         const char ellipsis = '…';
@@ -698,15 +707,6 @@ public partial class UserRepositoriesList : TranslatedControl
         }
 
         return text + ellipsis;
-    }
-
-    private void RepositoryContextAction(Action<SelectedRepositoryItem> action)
-    {
-        SelectedRepositoryItem? selected = GetSelectedRepositoryItem();
-        if (selected is not null)
-        {
-            action(selected);
-        }
     }
 
     private bool PromptCategoryName(List<string> categories, string? originalName, [NotNullWhen(returnValue: true)] out string? name)

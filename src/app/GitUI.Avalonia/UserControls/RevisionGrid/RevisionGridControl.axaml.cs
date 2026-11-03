@@ -1345,6 +1345,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         GitArgumentBuilder args = new("log")
         {
+            // --name-only will list each filename on a separate line, ending with an empty line
             $"--format=\"{_objectIdPrefix}%H\"",
             "--name-only",
             "--follow",
@@ -3042,6 +3043,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         };
 
         ExecutionResult result = Module.GitExecutable.Execute(args, throwOnErrorExit: false);
+
+        // Not related histories: https://git-scm.com/docs/git-merge-base#Documentation/git-merge-base.txt---is-ancestor
         const int NoCommonAncestorsExitCode = 1;
         if (result.ExitCode == NoCommonAncestorsExitCode)
         {
