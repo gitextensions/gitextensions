@@ -46,17 +46,41 @@ public class MultiSelectTreeViewTests
         mouseDownEvents.Should().Be(startsDragAndDrop ? 1 : 0);
     }
 
+    [Test]
+    public void Dragging_the_mouse_should_not_select_the_nodes_in_collapsed_folders()
+    {
+        using Form form = new() { ClientSize = new Size(300, 300) };
+        using ImageList imageList = new() { ImageSize = new Size(16, 16) };
+        using TestTreeView treeView = new() { Dock = DockStyle.Fill, FullRowSelect = true, ImageList = imageList, ShowRootLines = false };
+        form.Controls.Add(treeView);
+        TreeNode firstFile = treeView.Nodes.Add("file0.txt");
+        TreeNode collapsedFolder = treeView.Nodes.Add("folder1");
+        collapsedFolder.Nodes.Add("file1a.txt");
+        collapsedFolder.Nodes.Add("file1b.txt");
+        TreeNode lastFile = treeView.Nodes.Add("file2.txt");
+        _ = treeView.Handle;
+
+        treeView.MouseDownOn(firstFile);
+        treeView.MouseMoveTo(lastFile);
+
+        treeView.SelectedNodes.Should().BeEquivalentTo([firstFile, collapsedFolder, lastFile]);
+    }
+
     private sealed class TestTreeView : MultiSelectTreeView
     {
-        public void MouseDownOn(int index)
-            => OnMouseDown(new MouseEventArgs(MouseButtons.Left, clicks: 1, x: ClientSize.Width / 2, y: GetY(index), delta: 0));
+        public void MouseDownOn(int index) => MouseDownOn(Nodes[index]);
 
-        public void MouseMoveTo(int index)
-            => OnMouseMove(new MouseEventArgs(MouseButtons.Left, clicks: 0, x: ClientSize.Width / 2, y: GetY(index), delta: 0));
+        public void MouseDownOn(TreeNode node)
+            => OnMouseDown(new MouseEventArgs(MouseButtons.Left, clicks: 1, x: ClientSize.Width / 2, y: GetY(node), delta: 0));
 
-        private int GetY(int index)
+        public void MouseMoveTo(int index) => MouseMoveTo(Nodes[index]);
+
+        public void MouseMoveTo(TreeNode node)
+            => OnMouseMove(new MouseEventArgs(MouseButtons.Left, clicks: 0, x: ClientSize.Width / 2, y: GetY(node), delta: 0));
+
+        private static int GetY(TreeNode node)
         {
-            Rectangle bounds = Nodes[index].Bounds;
+            Rectangle bounds = node.Bounds;
             return bounds.Top + (bounds.Height / 2);
         }
     }

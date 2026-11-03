@@ -361,6 +361,28 @@ public class MultiSelectTreeView : NativeTreeView
         }
     }
 
+    /// <summary>
+    ///  Returns whether the node is in the tree and not hidden in a collapsed folder.
+    /// </summary>
+    private static bool IsShown(TreeNode node)
+    {
+        if (node.TreeView is null)
+        {
+            // an actual node behind a placeholder
+            return false;
+        }
+
+        for (TreeNode? parent = node.Parent; parent is not null; parent = parent.Parent)
+        {
+            if (!parent.IsExpanded)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private void UpdateDragSelection(Point location)
     {
         Validates.NotNull(_dragSelectionAnchorNode);
@@ -402,7 +424,7 @@ public class MultiSelectTreeView : NativeTreeView
 
         _selectedNodes = node == _dragSelectionMouseDownNode
             ? [.. _dragSelectionMouseDownNodes]
-            : [.. _dragSelectionBaseNodes, .. GetRange(_dragSelectionAnchorNode, node)];
+            : [.. _dragSelectionBaseNodes, .. GetRange(_dragSelectionAnchorNode, node).Where(IsShown)];
         _multiselectionStartNode = _dragSelectionAnchorNode;
         FocusedNode = node;
         Invalidate();
