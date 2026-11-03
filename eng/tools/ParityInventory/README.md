@@ -109,7 +109,8 @@ has no twin part or destination fields; a surviving stray comment is still pinne
 `codeMoved` requires the actual twin part and exact comment anchor as `targetMember`. It also
 requires one live comment there matching `originalValue`, or optional `targetText` when a minimum wording
 adaptation is necessary. If the code moved to another type, add its exact `targetTypeName`; the named
-type must exist in the pinned C# `twinPart` inside the twin root, and its destination comment is checked
+type must exist in the pinned C# `twinPart` inside the twin root or a directory already containing a
+mapped part of that twin (such as the sibling Avalonia application), and its destination comment is checked
 there. Optional `targetCommentOrder` pins the zero-based comment order within that member's placement
 group. An empty `//` separator can be accepted only as `codeMoved`, with an explicit destination order
 and an unchanged empty target text; empty absent/adapted pins remain invalid. A changed order, type,
