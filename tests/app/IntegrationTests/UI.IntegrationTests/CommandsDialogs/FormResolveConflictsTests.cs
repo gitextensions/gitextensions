@@ -98,8 +98,9 @@ public class FormResolveConflictsTests
                 await Task.Delay(100);
             }
 
-            File.ReadAllText(diffedBase).Should().Be(_baseContent);
-            File.ReadAllText(diffedModified).Should().Be(_modifiedContent);
+            // The versions are extracted by git, so core.autocrlf applies (e.g. CRLF on CI)
+            File.ReadAllText(diffedBase).ReplaceLineEndings("\n").Should().Be(_baseContent);
+            File.ReadAllText(diffedModified).ReplaceLineEndings("\n").Should().Be(_modifiedContent);
             (await _referenceRepository.Module.GetConflictAsync(_fileName)).Filename.Should().Be(_fileName);
         });
     }
