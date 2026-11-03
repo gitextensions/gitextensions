@@ -113,6 +113,12 @@ build_solution()
 run_tests()
 {
     local filter=$1
+    local -a results=()
+
+    # eng/avalonia/gate.ps1 reads these results back through the Windows mount.
+    if [[ -n "${GITEXTENSIONS_GATE_RESULTS:-}" ]]; then
+        results=(--logger "trx;LogFileName=linux-focused.trx" --results-directory "$GITEXTENSIONS_GATE_RESULTS")
+    fi
 
     cd "$mirror_root"
     dotnet test tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj \
@@ -120,7 +126,9 @@ run_tests()
         --filter "$filter" \
         -m:1 \
         --no-restore \
-        -v:minimal
+        -v:minimal \
+        "${results[@]}" \
+        -- NUnit.AssemblySelectLimit=100000
 }
 
 run_runtime_smokes()

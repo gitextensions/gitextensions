@@ -65,6 +65,25 @@ missing proof cannot be mistaken for parity.
 
 ## Cross-platform development gate
 
+`gate.ps1` is the single entry point for routine verification. It runs its legs one at a time,
+reuses a leg when nothing it depends on has changed, and writes one receipt per run under the
+local evidence folder. `parity-dashboard.ps1` summarizes the latest inventory and proof ledger.
+
+```powershell
+pwsh eng/avalonia/gate.ps1 -Level Edit -Filter 'FullyQualifiedName~FormBrowseTests'
+pwsh eng/avalonia/gate.ps1 -Level Batch -Filter 'FullyQualifiedName~FormBrowseTests'
+pwsh eng/avalonia/gate.ps1 -PlanOnly -Level Batch -Filter 'FullyQualifiedName~FormBrowseTests'
+pwsh eng/avalonia/gate.ps1 -Verify
+```
+
+`Edit` is for use while implementing. `Batch` is what a commit needs: the Avalonia solution,
+focused and construction tests, inventory tests and sweep, and the Linux build and focused tests,
+plus the WinForms solution only when a changed path can affect it. `Exit` forces everything and
+adds the whole test assembly, the Linux inventory comparison and the runtime smokes. A receipt
+names what it did not cover, such as native captures, Flatpak and macOS.
+
+The commands below are the underlying steps, useful when one leg needs direct attention.
+
 P0.6 keeps the Windows checkout authoritative while building and testing from a native-ext4
 WSL mirror. Invoke the committed helper through Ubuntu, not from the mirror and not through a
 container:
