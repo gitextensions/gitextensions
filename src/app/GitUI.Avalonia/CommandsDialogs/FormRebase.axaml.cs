@@ -137,6 +137,7 @@ public partial class FormRebase : GitExtensionsDialog
         string selectedHead = Module.GetSelectedBranch();
         Currentbranch.Text = selectedHead;
 
+        // Offer rebase on refs also for tags (but not stash, notes etc)
         IReadOnlyList<IGitRef> refs = _startRebaseImmediately
             ? []
             : Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.Tags);
@@ -153,6 +154,8 @@ public partial class FormRebase : GitExtensionsDialog
         chkStash.IsChecked = AppSettings.RebaseAutoStash;
         chkStash.IsEnabled = !Module.InTheMiddleOfRebase() && Module.IsDirtyDir();
         chkPreserveMerges.IsEnabled = Module.GitVersion.SupportRebaseMerges;
+
+        // Honor the rebase.autosquash configuration.
         chkAutosquash.IsChecked = Module.GetEffectiveSetting<bool>("rebase.autosquash") is true;
         if (Module.GetEffectiveSetting<bool>("rebase.updaterefs") is bool updateRefs)
         {
@@ -581,7 +584,7 @@ public partial class FormRebase : GitExtensionsDialog
                 }
                 catch (Exception)
                 {
-                    // If the target cannot be resolved, show the unfiltered current branch.
+                    // if an exception occurs, display whole history
                 }
             }
 

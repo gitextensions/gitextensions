@@ -33,6 +33,8 @@ public sealed partial class FormDeleteTag : GitModuleForm
         : base(commands, enablePositionRestore: false)
     {
         _remoteProcessRunner = remoteProcessRunner;
+
+        // scale up for hi DPI
         InitializeComponent();
         remotesComboboxControl1.UICommandsSource = this;
         WireControls();

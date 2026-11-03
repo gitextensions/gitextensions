@@ -215,6 +215,9 @@ public sealed partial class FormClone : GitExtensionsDialog
         LoadSSHKey.IsVisible = OperatingSystem.IsWindows() && GitSshHelpers.IsPlink;
     }
 
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
     protected override void OnClosed(EventArgs e)
     {
         Cursor = null;

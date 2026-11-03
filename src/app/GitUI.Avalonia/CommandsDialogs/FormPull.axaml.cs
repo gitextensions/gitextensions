@@ -325,6 +325,7 @@ public sealed partial class FormPull : GitExtensionsDialog
 
             string selected = Branches.Text ?? string.Empty;
             Branches.Items.Clear();
+            ////_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
             Branches.Items.Add(string.Empty);
             foreach (string head in _heads.Select(head => head.LocalName).Distinct(StringComparer.Ordinal).OrderBy(head => head, StringComparer.Ordinal))
             {

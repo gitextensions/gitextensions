@@ -560,6 +560,10 @@ public sealed partial class BlameControl : GitModuleControl
         bool showAuthorAvatar = AppSettings.BlameShowAuthorAvatar;
         List<GitBlameEntry> gitBlameDisplays = showAuthorAvatar ? CalculateBlameGutterData(_blame.Lines) : [];
 
+        // NOTE EOL white-space supports highlight on mouse-over.
+        // Highlighting is done via text background colour.
+        // If it could be done with a solid rectangle around the text,
+        // the extra spaces added here could be omitted.
         string dateTimeFormat = AppSettings.BlameShowAuthorTime
             ? CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " +
               CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern

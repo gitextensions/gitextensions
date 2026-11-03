@@ -158,6 +158,8 @@ public sealed partial class FormVerify : GitModuleForm
     {
         Warnings.ItemTemplate = new FuncDataTemplate<LostObject>(CreateLostObjectRow, supportsRecycling: false);
         Warnings.SelectionChanged += Warnings_SelectionChanged;
+
+        // ignore double click by header, user just wants to change sorting order
         Warnings.DoubleTapped += Warnings_CellMouseDoubleClick;
         Warnings.KeyDown += Warnings_KeyDown;
         Warnings.AddHandler(PointerPressedEvent, Warnings_PointerPressed, Avalonia.Interactivity.RoutingStrategies.Tunnel);
@@ -197,6 +199,9 @@ public sealed partial class FormVerify : GitModuleForm
         }
     }
 
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
     protected override void OnClosed(EventArgs e)
     {
         _typeDetectionSequence.CancelCurrent();
@@ -215,6 +220,7 @@ public sealed partial class FormVerify : GitModuleForm
 
         CheckBox selected = new()
         {
+            // TODO this property is not on the bound type
             IsChecked = _selectedObjectIds.Contains(lostObject.ObjectId),
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
@@ -415,6 +421,7 @@ public sealed partial class FormVerify : GitModuleForm
         }
     }
 
+    // NOTE: hack to select row under cursor on right click and context menu open
     private void Warnings_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         PointerPoint point = e.GetCurrentPoint(Warnings);
@@ -529,6 +536,8 @@ public sealed partial class FormVerify : GitModuleForm
 
         LostObject[] commits = [.. lostObjects.Where(item => item.ObjectType == LostObjectType.Commit)];
         List<string> metadata = new(commits.Length);
+
+        // Based on process max command line length and hash length (with a margin)
         int batchSize = 30_000 / (ObjectId.Sha1CharCount + 1);
         for (int currentBatch = 0; currentBatch * batchSize < commits.Length; currentBatch++)
         {
@@ -550,6 +559,7 @@ public sealed partial class FormVerify : GitModuleForm
         LostObject? selectedItem = CurrentItem;
         _filteredLostObjects.Clear();
         _filteredLostObjects.AddRange(_lostObjects.Where(IsMatchToFilter));
+        ////Warnings.DataSource = filteredLostObjects;
         ApplySort();
         UpdateColumnLayout();
         RefreshRows(selectedItem);

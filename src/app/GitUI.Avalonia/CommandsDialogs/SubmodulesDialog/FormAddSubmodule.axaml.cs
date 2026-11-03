@@ -119,12 +119,10 @@ public sealed partial class FormAddSubmodule : GitModuleForm
     /// <summary>
     /// Returns the branches of a remote repository as strings; ignores git errors and warnings.
     /// </summary>
-    /// <remarks>
-    /// <c>git ls-remote --heads "URL"</c> is completely independent from a local repo clone,
-    /// so there is no need for a GitModule.
-    /// </remarks>
-    /// <param name="gitExecutable">The git executable.</param>
-    /// <param name="url">The repo URL; can also be a local path.</param>
+    /// 'git ls-remotes --heads "URL"' is completely independent from a local repo clone.
+    /// Hence there is no need for a GitModule.
+    /// <param name="gitExecutable">the git executable.</param>
+    /// <param name="url">the repo URL; can also be a local path.</param>
     private static IEnumerable<string> LoadRemoteRepoBranches(IExecutable gitExecutable, string url)
     {
         if (string.IsNullOrWhiteSpace(url))

@@ -50,7 +50,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
         Branches.BranchesToSelect = Module.GetRefs(RefsFilter.Heads).ToList();
         if (AppSettings.DontConfirmDeleteUnmergedBranch.Value)
         {
-            // No need to fill _mergedBranches.
+            // no need to fill _mergedBranches
             _currentBranch = Module.GetSelectedBranch();
         }
         else
@@ -107,7 +107,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
             HashSet<string> mergedBranches = _mergedBranches
                 ?? throw new InvalidOperationException($"{nameof(FormDeleteBranch)} was not loaded.");
 
-            // Always treat branches as unmerged if there is no current branch (HEAD is detached).
+            // always treat branches as unmerged if there is no current branch (HEAD is detached)
             bool hasUnmergedBranches = _currentBranch is null
                 || DetachedHeadParser.IsDetachedHead(_currentBranch)
                 || selectedBranches.Any(branch => !mergedBranches.Contains(branch.Name));

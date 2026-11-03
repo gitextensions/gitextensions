@@ -189,6 +189,9 @@ public sealed partial class FormArchive : GitModuleForm
     private string GetSuggestedFileName()
     {
         string? revision = SelectedRevision?.Guid;
+
+        // TODO (feature): if there is a tag on the revision use the tag name as suggestion
+        // TODO (feature): let user decide via GUI
         string filenameSuggestion = string.Format("{0}_{1}", new DirectoryInfo(Module.WorkingDir).Name, revision);
         string[] paths = GetPathLines();
         if (checkBoxPathFilter.IsChecked == true && paths.Length == 1 && !string.IsNullOrWhiteSpace(paths[0]))
@@ -214,6 +217,9 @@ public sealed partial class FormArchive : GitModuleForm
     {
         if (checkBoxPathFilter.IsChecked == true)
         {
+            // 1. get all lines (paths) from text box
+            // 2. wrap lines that are not empty with ""
+            // 3. join together with space as separator
             return string.Join(" ", GetPathLines().Select(path => path.QuoteNE()));
         }
 
@@ -275,6 +281,8 @@ public sealed partial class FormArchive : GitModuleForm
 
     private void checkboxRevisionFilter_CheckedChanged(object? sender, EventArgs e)
     {
+        ////commitSummaryUserControl2.Enabled = checkboxRevisionFilter.Checked;
+        ////lblChooseDiffRevision.Enabled = checkboxRevisionFilter.Checked;
         if (checkboxRevisionFilter.IsChecked == true)
         {
             checkBoxPathFilter.IsChecked = false;

@@ -150,6 +150,9 @@ public partial class PatchGrid : GitModuleControl
             {
                 Action = parts[0],
                 ObjectId = objectId,
+
+                // During a rebase, "Patch" subject is filled with commit **body** to display it
+                // packed in the grid
                 Subject = data?.Body ?? string.Join(' ', parts.Skip(2)),
                 Author = data?.Author,
                 Date = data?.CommitDate.LocalDateTime.ToString(),
@@ -287,6 +290,7 @@ public partial class PatchGrid : GitModuleControl
             }
             else if (string.IsNullOrWhiteSpace(line) || match.Success)
             {
+                // decode QuotedPrintable text using .NET internal decoder
                 value = Attachment.CreateAttachmentFromString(string.Empty, value).Name!;
                 switch (key)
                 {

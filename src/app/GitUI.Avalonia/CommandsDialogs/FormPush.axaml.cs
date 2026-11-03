@@ -370,6 +370,7 @@ public sealed partial class FormPush : GitModuleForm
             return Commands.PushTag(destination, pushAllTags ? string.Empty : tag, pushAllTags, GetForcePushOption());
         }
 
+        // Push Multiple Branches Tab selected
         List<GitPushAction> pushActions = CreateMultiplePushActions();
         return pushActions.Count == 0 ? "" : Commands.PushMultiple(destination, pushActions);
     }
@@ -420,6 +421,7 @@ public sealed partial class FormPush : GitModuleForm
         }
         else
         {
+            /* PushToRemote.IsChecked */
             if (!CheckIfRemoteExist() || _NO_TRANSLATE_Remotes.SelectedItem is not string selectedRemoteName)
             {
                 ErrorOccurred = true;
@@ -444,6 +446,7 @@ public sealed partial class FormPush : GitModuleForm
             return false;
         }
 
+        // controls can be accessed only from UI thread
         string localBranch = GetSelectedBranchName();
         string remoteBranch = RemoteBranch.Text?.Trim() ?? string.Empty;
         if (TabControlTagBranch.SelectedItem == BranchTab
@@ -536,7 +539,7 @@ public sealed partial class FormPush : GitModuleForm
 
     private ForcePushOptions GetForcePushOption()
     {
-        // tags cannot be pushed using --force-with-lease
+        /* tags cannot be pushed using --force-with-lease */
         if (ForcePushBranches.IsChecked == true
             || (TabControlTagBranch.SelectedItem == TagTab && ForcePushTags.IsChecked == true))
         {
@@ -1013,6 +1016,7 @@ public sealed partial class FormPush : GitModuleForm
         }
         else
         {
+            // use remote branches from git's local database if there were problems with receiving branches from the remote server
             remoteHeads = [.. Module.GetRemoteBranches().Where(reference => reference.Remote == remote)];
         }
 
@@ -1451,6 +1455,8 @@ public sealed partial class FormPush : GitModuleForm
             _changed = changed;
             local.TextChanged += (_, _) => LocalBranch = local.Text ?? string.Empty;
             remote.TextChanged += (_, _) => RemoteBranch = remote.Text ?? string.Empty;
+
+            // Push grid checkbox changes immediately into the underlying row.
             push.IsCheckedChanged += (_, _) => SetPush(push.IsChecked == true);
             force.IsCheckedChanged += (_, _) => SetForce(force.IsChecked == true);
             delete.IsCheckedChanged += (_, _) => SetDelete(delete.IsChecked == true);

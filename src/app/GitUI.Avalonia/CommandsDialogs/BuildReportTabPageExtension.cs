@@ -18,7 +18,7 @@ public class BuildReportTabPageExtension
     private string? _url;
     private readonly HyperlinkButton _openReportLink;
 
-    public Control? Control { get; private set; }
+    public Control? Control { get; private set; } // for focusing
 
     public BuildReportTabPageExtension(Func<IGitModule> getModule, TabControl tabControl, string caption)
     {

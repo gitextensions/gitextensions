@@ -164,6 +164,9 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         LoadCustomDifftools();
     }
 
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
     protected override void OnClosed(EventArgs e)
     {
         RevisionGrid.CancelBackgroundTasks();
@@ -259,6 +262,9 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
             + (isFolder || fileAvailable ? string.Empty : string.Format(_fileNotFound.Text, fileName.Quote()));
 
         CommitInfoTabPage.IsVisible = !revision.IsArtificial;
+
+        // Note that artificial commits for object type tree (folder) will be handled here too,
+        // i.e. no tab at all is visible
         DiffTab.IsVisible = fileAvailable;
         ViewTab.IsVisible = !revision.IsArtificial && fileAvailable;
         BlameTab.IsVisible = !revision.IsArtificial && fileAvailable && toolStripBlameOptions.IsVisible;
@@ -328,6 +334,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
 
     private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object? sender)
     {
+        // "main menu" clicked, dropdown closes automatically, invoke default mergetool
         string? toolName = (sender as MenuItem)?.Tag as string;
         IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
         string? oldFileName = selectedRevisions.Count > 0 ? GetFileNameForRevision(selectedRevisions[0]) : null;
