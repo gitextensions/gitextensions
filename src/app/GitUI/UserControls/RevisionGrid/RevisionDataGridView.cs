@@ -584,6 +584,12 @@ public sealed partial class RevisionDataGridView : DataGridView
 
                 // Wait for background thread to load grid rows
                 await Task.Delay(BackgroundThreadUpdatePeriod);
+
+                if (dataLoadId != _dataLoadId)
+                {
+                    // Superseded while waiting, the rows belong to the newer load
+                    return;
+                }
             }
             while (_loadedToBeSelectedRevisionsCount > 0);
 

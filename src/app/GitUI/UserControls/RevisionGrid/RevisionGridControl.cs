@@ -1009,7 +1009,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         if (_isRefreshingRevisions)
         {
-            Trace.WriteLine("Forcing refresh, cancelling the running RefreshRevisions().");
             CancelRefreshRevisions();
         }
 
