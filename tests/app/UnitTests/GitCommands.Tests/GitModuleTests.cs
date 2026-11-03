@@ -409,7 +409,7 @@ public sealed partial class GitModuleTests
     }
 
     [Test]
-    public void GetSubmodulesInfo_should_not_throw_nor_return_partial_output_if_gitmodules_entry_lacks_path()
+    public void GetSubmodulesInfo_should_not_throw_but_return_listed_submodules_if_gitmodules_entry_lacks_path()
     {
         using GitModuleTestHelper parentHelper = new("parent");
         using GitModuleTestHelper validSubmoduleHelper = new("valid");
@@ -425,7 +425,7 @@ public sealed partial class GitModuleTests
         File.WriteAllLines(gitmodulesPath, File.ReadAllLines(gitmodulesPath).Where(line => line.Trim() != "path = sub"));
         File.ReadAllText(gitmodulesPath).Should().Contain("path = a").And.NotContain("path = sub");
 
-        parentHelper.Module.GetSubmodulesInfo().Should().BeEmpty();
+        parentHelper.Module.GetSubmodulesInfo().Select(info => info?.LocalPath).Should().Equal(["a"]);
     }
 
     [Test]
