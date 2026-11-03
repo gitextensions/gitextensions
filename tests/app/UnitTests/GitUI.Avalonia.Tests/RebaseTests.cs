@@ -141,6 +141,7 @@ public sealed class RebaseTests
     {
         const string ignoreDateTip = "Sets the author date to the current date (same as\r\ncommit date), ignoring the original author date.";
         const string committerDateTip = "Sets the commit date to the original author date\r\n(instead of the current date).";
+        using TranslationTestScope translationScope = new();
         string? currentTranslation = AppSettings.CurrentTranslation;
         AppSettings.CurrentTranslation = "";
         try

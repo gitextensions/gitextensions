@@ -180,6 +180,7 @@ public partial class UserRepositoriesList : TranslatedControl
         DragDrop.AddDragOverHandler(this, OnDragEnter);
         DragDrop.AddDropHandler(this, OnDragDrop);
         textBoxSearch.PlaceholderText = textBoxSearch.IsFocused ? null : _repositorySearchPlaceholder.Text;
+        Avalonia.Automation.AutomationProperties.SetName(this, _groupRecentRepositories.Text);
     }
 
     [Category("Appearance")]
@@ -315,6 +316,7 @@ public partial class UserRepositoriesList : TranslatedControl
     public override void TranslateItems(ITranslation translation)
     {
         base.TranslateItems(translation);
+        Avalonia.Automation.AutomationProperties.SetName(this, _groupRecentRepositories.Text);
         textBoxSearch.PlaceholderText = textBoxSearch.IsFocused ? null : _repositorySearchPlaceholder.Text;
         ShowRecentRepositories(reloadData: false);
     }

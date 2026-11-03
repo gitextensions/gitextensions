@@ -241,6 +241,7 @@ public sealed class CloneAndInitTests
             "The default Git behavior is to download all historical revisions.\n" +
             "If you turn this off, we'll only download the latest revision for all branches.\n\n" +
             "Actual command line (if unchecked): --depth 1 --no-single-branch";
+        using TranslationTestScope translationScope = new();
         string? currentTranslation = AppSettings.CurrentTranslation;
         AppSettings.CurrentTranslation = "";
         try

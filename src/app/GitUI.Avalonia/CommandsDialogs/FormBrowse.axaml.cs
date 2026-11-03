@@ -685,7 +685,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         translation.AddTranslationItem(nameof(FormBrowse), nameof(ToolStripMain), "Text", "");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(ToolStripFilters), "Text", "");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(ToolStripScripts), "Text", "");
-        translation.AddTranslationItem(nameof(FormBrowse), nameof(_NO_TRANSLATE_WorkingDir), "Text", "");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toolsToolStripMenuItem), "Text", "");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(RefreshButton), "ToolTipText", "Refresh");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toggleLeftPanel), "ToolTipText", "Toggle left panel");

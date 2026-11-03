@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="using:GitUI.SpellChecker"
              xmlns:wf="using:GitUI.Compat.WinFormsControls"
+             xmlns:compat="using:GitUI.Compat"
              x:Class="GitUI.SpellChecker.EditNetSpell"
              d:DesignWidth="386"
              d:DesignHeight="336">
@@ -51,6 +52,7 @@
   <!-- Avalonia has no ambient UserControl size, so preserve the original Designer surface dimensions. -->
   <Grid>
     <TextBox x:Name="TextBox"
+             compat:TranslationCompat.TranslateText="False"
              AcceptsReturn="True"
              AcceptsTab="True"
              BorderBrush="{StaticResource GitExtensionsTransparentBrush}"

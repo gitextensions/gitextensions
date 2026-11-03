@@ -1,5 +1,6 @@
 using System.ComponentModel.Design;
 using System.Text;
+using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
 using GitCommands;
@@ -150,14 +151,32 @@ public sealed class FormEditorTests
     }
 
     [AvaloniaTest]
-    public void GitUICommands_should_report_invalid_or_unported_command_lines_explicitly()
+    public void GitUICommands_should_report_a_missing_fileeditor_filename()
     {
         _commands.RunCommand(["GitExtensions.Avalonia", "fileeditor"]).Should().BeFalse();
-        _commands.RunCommand(["GitExtensions.Avalonia", "about"]).Should().BeFalse();
 
-        _stubMessageBoxHost.Messages.Should().ContainInOrder(
-            "Cannot open file editor, there is no file selected.",
-            "The command \"about\" is not available in the Avalonia port yet.");
+        _stubMessageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Be("Cannot open file editor, there is no file selected.");
+    }
+
+    [AvaloniaTest]
+    public void GitUICommands_should_open_the_about_dialog_for_the_about_command()
+    {
+        UserEnvironmentInformation.Initialise(new string('0', 40), isDirty: false);
+        FormAbout? openedAbout = null;
+        using IDisposable subscription = Window.WindowOpenedEvent.AddClassHandler<Window>((window, _) =>
+        {
+            if (window is FormAbout about)
+            {
+                openedAbout = about;
+                Dispatcher.UIThread.Post(about.Close);
+            }
+        });
+
+        _commands.RunCommand(["GitExtensions.Avalonia", "about"]).Should().BeTrue();
+
+        openedAbout.Should().NotBeNull();
+        _stubMessageBoxHost.Messages.Should().BeEmpty();
     }
 
     private static async Task WaitUntilAsync(Func<bool> condition)

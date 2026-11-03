@@ -203,6 +203,10 @@ public abstract class DiffHighlightService : TextHighlightService
         {
             HighlightAddedAndDeletedLines(_textMarkers);
         }
+
+        // Avalonia paints overlapping markers last; the original selects the first matching marker.
+        _renderTextMarkers.Clear();
+        AddTextMarkers(_textMarkers.AsEnumerable().Reverse());
     }
 
     /// <summary>

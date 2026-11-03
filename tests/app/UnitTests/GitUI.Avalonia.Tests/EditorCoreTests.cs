@@ -15,6 +15,19 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class EditorCoreTests
 {
+    [AvaloniaTest]
+    public void Patch_renderer_should_receive_original_inline_markers_in_paint_order()
+    {
+        string text = "@@ -1 +1 @@\n-old name\n+new name\n";
+        PatchHighlightService service = new(ref text, useGitColoring: false);
+
+        service.TextMarkers.Should().HaveCount(4);
+        service.TextMarkers.Should().Contain(marker => marker.Offset == 16 && marker.Length == 5);
+        service.TextMarkers.Should().Contain(marker => marker.Offset == 26 && marker.Length == 5);
+        service.TextMarkers.ToList().FindIndex(marker => marker.Offset == 16)
+            .Should().BeGreaterThan(service.TextMarkers.ToList().FindIndex(marker => marker.Offset == 12));
+    }
+
     [Test]
     public void Ansi_escape_parser_should_resolve_true_color_and_remove_control_sequences()
     {

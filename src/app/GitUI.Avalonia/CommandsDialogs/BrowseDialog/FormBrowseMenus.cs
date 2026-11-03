@@ -432,6 +432,10 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
             Name = "toolbarsMenuItem",
             Header = "_Toolbars",
         };
+        foreach (MenuItem menuItem in new MenuItem[] { _navigateToolStripMenuItem, _viewToolStripMenuItem, _toolbarsMenuItem })
+        {
+            InputAccessibility.Apply(menuItem);
+        }
     }
 
     private IEnumerable<(string name, object item)> GetAdditionalMainMenuItemsForTranslation()

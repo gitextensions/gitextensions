@@ -58,6 +58,7 @@ public sealed class DeleteBranchTests
     [AvaloniaTest]
     public void FormDeleteBranch_should_use_existing_translation_keys_once()
     {
+        using TranslationTestScope translationScope = new("");
         FormDeleteBranch form = new();
         ITranslation translation = Substitute.For<ITranslation>();
 
@@ -71,12 +72,12 @@ public sealed class DeleteBranchTests
             nameof(FormDeleteBranch),
             "_branchUsedByWorktreeQuestion",
             "Text",
-            "The following branches are checked out in worktrees and cannot be deleted directly:\r\n\r\n{0}\r\n\r\nDo you want to delete the worktrees and branches together?");
+            "The following branches are checked out in worktrees and cannot be deleted directly:\n\n{0}\n\nDo you want to delete the worktrees and branches together?");
         translation.Received(1).AddTranslationItem(
             nameof(FormDeleteBranch),
             "_cannotDeleteBranchInMainWorktree",
             "Text",
-            "The branch “{0}” cannot be deleted because it is checked out in the main worktree at:\r\n{1}");
+            "The branch “{0}” cannot be deleted because it is checked out in the main worktree at:\n{1}");
         translation.Received(1).AddTranslationItem(
             nameof(FormDeleteBranch),
             "_cannotDeleteCurrentBranchMessage",

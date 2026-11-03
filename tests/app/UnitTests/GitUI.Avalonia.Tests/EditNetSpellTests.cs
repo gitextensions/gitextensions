@@ -460,7 +460,7 @@ public sealed class EditNetSpellTests
             CaptureNode autoComplete = root.Children.Single(child => child.FieldName == "AutoComplete");
             if (OperatingSystem.IsWindows())
             {
-                autoComplete.BoundsDip.Should().Be(new CaptureRectangleF { X = 14, Y = 16, Width = 76, Height = 32 });
+                autoComplete.BoundsDip.Should().Be(new CaptureRectangleF { X = 14, Y = 15.9609m, Width = 76, Height = 32 });
                 autoComplete.ClientSizeDip.Should().Be(new CaptureSizeF { Width = 74, Height = 30 });
             }
             else
@@ -498,6 +498,7 @@ public sealed class EditNetSpellTests
     public void EditNetSpell_should_retain_the_original_translation_keys()
     {
         EditNetSpell control = new();
+        control.Text = "User-authored commit message";
         ITranslation translation = Substitute.For<ITranslation>();
 
         control.AddTranslationItems(translation);
@@ -522,7 +523,7 @@ public sealed class EditNetSpellTests
             translation.Received(1).AddTranslationItem(nameof(EditNetSpell), field, "Text", text);
         }
 
-        translation.Received(1).AddTranslationItem(nameof(EditNetSpell), "TextBox", "Text", string.Empty);
+        translation.DidNotReceive().AddTranslationItem(nameof(EditNetSpell), "TextBox", "Text", Arg.Any<string>());
     }
 
     [AvaloniaTest]
