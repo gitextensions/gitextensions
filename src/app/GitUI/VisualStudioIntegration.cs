@@ -45,13 +45,15 @@ internal static class VisualStudioIntegration
 
     public static void OpenFile(string filePath, int lineNumber = 0)
     {
-        ThreadHelper.FileAndForget(async () =>
+        Form form = Form.ActiveForm ?? Application.OpenForms.Cast<Form>().First();
+        form.InvokeAndForget(async () =>
         {
+            bool firstAttempt = true;
             while (true)
             {
                 try
                 {
-                    if (await TryOpenFileInRunningInstanceAsync(filePath, lineNumber))
+                    if (TryOpenFileInRunningInstance(filePath, lineNumber))
                     {
                         return;
                     }
@@ -61,14 +63,12 @@ internal static class VisualStudioIntegration
                 catch (COMException exception) when ((uint)exception.HResult == RPC_E_CALL_REJECTED)
                 {
                     Trace.WriteLine(exception);
-                    Form? activeForm = Form.ActiveForm;
-                    await activeForm!.SwitchToMainThreadAsync();
-                    if (!MessageBoxes.ConfirmRetryOpenVisualStudio(activeForm))
+                    if (!firstAttempt && !MessageBoxes.ConfirmRetryOpenVisualStudio(form))
                     {
                         return;
                     }
 
-                    await TaskScheduler.Default;
+                    firstAttempt = false;
                 }
             }
 
@@ -79,7 +79,7 @@ internal static class VisualStudioIntegration
         });
     }
 
-    public static async Task<bool> TryOpenFileInRunningInstanceAsync(string filePath, int lineNumber = 0)
+    private static bool TryOpenFileInRunningInstance(string filePath, int lineNumber = 0)
     {
         if (!File.Exists(filePath))
         {
@@ -87,8 +87,6 @@ internal static class VisualStudioIntegration
             // So, we should not experience this situation in practice (barring some exotic race conditions).
             return false;
         }
-
-        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
         foreach (DTE dte in GetVisualStudioInstances())
         {
