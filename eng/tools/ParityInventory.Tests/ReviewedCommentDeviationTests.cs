@@ -8,6 +8,49 @@ namespace GitExtensions.ParityInventory.Tests;
 [TestFixture]
 public sealed class ReviewedCommentDeviationTests
 {
+    [TestCase("mapped")]
+    [TestCase("unmapped")]
+    [TestCase("source")]
+    [TestCase("partCase")]
+    public void Run_should_bound_external_destinations_to_mapped_twin_part_directories(string change)
+    {
+        using InventoryFixture fixture = new();
+        Dictionary<string, object?> pin = Prepare(fixture, "codeMoved");
+        fixture.WriteTwin("../Portable/Widget.cs", Twin(""));
+        const string target = "namespace Sample; class Destination { void Target() {\n// Keep the WinForms operation rationale. https://example.invalid/42\nWork(); } }";
+        fixture.WriteTwin("../Portable/Destination.cs", target);
+        fixture.WriteTwin("../Unmapped/Destination.cs", target);
+        fixture.WriteOriginal("Destination.cs", target);
+        SourceInventory original = fixture.Run().Original;
+        SourceInventory twin = SourceInventoryReader.ReadFiles(
+            fixture.TwinRoot, "Sample.Widget", new HashSet<string>(), isTwin: true,
+            [Path.Combine(fixture.TwinRoot, "../Portable/Widget.cs")]);
+        InventoryComparison comparison = InventoryComparer.Compare(original, twin);
+        FunctionalFinding finding = comparison.Findings.Single(item => item.Category == "comments");
+        pin["code"] = finding.Code;
+        pin["twinValue"] = finding.TwinValue;
+        pin["twinPart"] = change switch
+        {
+            "unmapped" => "../Unmapped/Destination.cs",
+            "source" => "../original/Destination.cs",
+            "partCase" => "../Portable/destination.cs",
+            _ => "../Portable/Destination.cs"
+        };
+        pin["targetTypeName"] = "Sample.Destination";
+        WritePin(fixture, pin);
+        ReviewedFrameworkDeviationManifest manifest = ReviewedFrameworkDeviationManifest.Read(fixture.FrameworkAdaptationsFile);
+        if (change != "mapped")
+        {
+            Action action = () => manifest.Apply("Sample.Widget", original, twin, comparison);
+            action.Should().Throw<InvalidDataException>();
+            return;
+        }
+
+        InventoryComparison accepted = manifest.Apply("Sample.Widget", original, twin, comparison);
+        accepted.Findings.Should().NotContain(item => item.Category == "comments");
+        accepted.AcceptedFrameworkDeviations.Should().ContainSingle().Subject.TwinPart.Should().Be("../Portable/Destination.cs");
+    }
+
     [TestCase("valid")]
     [TestCase("nested")]
     [TestCase("type")]

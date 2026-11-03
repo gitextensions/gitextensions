@@ -261,11 +261,18 @@ internal sealed class ReviewedFrameworkDeviationManifest
             string part = entry.TwinPart ?? throw new InvalidDataException($"Reviewed comment adaptation '{entry.Identity}' has no destination part.");
             string root = Path.GetFullPath(twin.Root);
             string file = Path.GetFullPath(Path.Combine(root, part));
-            string relative = Path.GetRelativePath(root, file);
-            if (Path.IsPathRooted(relative) || relative.Split(Path.DirectorySeparatorChar).Contains("..")
-                || !file.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)
-                || !Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories)
-                    .Any(candidate => Path.GetRelativePath(root, candidate).Replace('\\', '/') == part))
+            IEnumerable<string> destinationRoots = twin.Parts
+                .Select(sourcePart => Path.GetDirectoryName(Path.GetFullPath(Path.Combine(root, sourcePart.Path)))!)
+                .Prepend(root)
+                .Distinct(StringComparer.Ordinal);
+            if (!file.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)
+                || !destinationRoots.Any(destinationRoot =>
+                {
+                    string relative = Path.GetRelativePath(destinationRoot, file);
+                    return !Path.IsPathRooted(relative) && !relative.Split(Path.DirectorySeparatorChar).Contains("..")
+                        && Directory.EnumerateFiles(destinationRoot, "*", SearchOption.AllDirectories)
+                            .Any(candidate => Path.GetRelativePath(root, candidate).Replace('\\', '/') == part);
+                }))
             {
                 throw new InvalidDataException($"Reviewed comment adaptation '{entry.Identity}' has an invalid destination part.");
             }
