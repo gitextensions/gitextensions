@@ -60,4 +60,18 @@ public sealed record CaptureManifestEntry
     public string? ImageFile { get; init; }
 
     public string? TreeFile { get; init; }
+
+    /// <summary>
+    ///  Gets optional live factory-bracket observations, independently of the fixture formatter clock.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public CaptureConstructionObservation? ConstructionObservation
+    {
+        get;
+        init
+        {
+            value?.Validate();
+            field = value;
+        }
+    }
 }
