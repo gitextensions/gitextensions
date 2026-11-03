@@ -169,6 +169,8 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
         CheckBox check = new() { Content = Globalized.Strings.RefreshWorkingCopyUsingTheCurrentSettingsAndRules.Text, IsChecked = sparse.IsRefreshWorkingCopyOnSave, Width = 598, Height = 23, MinHeight = 0, HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center };
         KeyboardNavigation.SetTabIndex(check, 0);
         check.IsCheckedChanged += delegate { sparse.IsRefreshWorkingCopyOnSave = check.IsChecked == true; };
+
+        // Tooltips support for the form
         ToolTip.SetTip(check, string.Format(Globalized.Strings.RefreshWorkingCopyCheckboxHint.Text, FormSparseWorkingCopyViewModel.RefreshWorkingCopyCommandName));
         Grid.SetColumn(check, 0);
         tableFooterButtons.Children.Add(check);

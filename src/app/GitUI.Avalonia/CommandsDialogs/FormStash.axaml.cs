@@ -48,6 +48,8 @@ public sealed partial class FormStash : GitModuleForm
         View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(this, EventArgs.Empty); };
         View.TopScrollReached += FileViewer_TopScrollReached;
         View.BottomScrollReached += FileViewer_BottomScrollReached;
+
+        // Close Stash form with escape button while pointer focus is in FileViewer(diff view)
         View.EscapePressed += () => DialogResult = WinFormsShims.DialogResult.Cancel;
         Stashes.SelectionChanged += StashesSelectedIndexChanged;
         Stashes.DropDownOpened += Stashes_DropDown;
@@ -77,8 +79,8 @@ public sealed partial class FormStash : GitModuleForm
 
     private void SetMinimumStashPanelWidth()
     {
-        // The buttons and the check boxes above them have to fit even when the accessibility
-        // text size enlarges the system font without changing the DPI.
+        // The buttons and the check boxes above them have to fit even when the Windows accessibility
+        // text size enlarges the system font without changing the DPI, which DpiUtil cannot see.
         // Keep the source width as a lower bound, so that the layout tuned for high DPI is preserved.
         // Avalonia's equal star columns need each child's intrinsic width, not the old arranged client width.
         double preferredWidth = 0;
@@ -110,6 +112,7 @@ public sealed partial class FormStash : GitModuleForm
                 DialogResult = WinFormsShims.DialogResult.Cancel;
             }
 
+            // do not let the modal form react itself on this preview of the Escape key press
             e.Handled = true;
         }
 
@@ -123,6 +126,7 @@ public sealed partial class FormStash : GitModuleForm
     {
         if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
         {
+            // do not let the modal form react itself on this preview of the Escape key press
             e.Handled = true;
         }
 
@@ -132,6 +136,9 @@ public sealed partial class FormStash : GitModuleForm
         }
     }
 
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
     protected override void OnClosed(EventArgs e)
     {
         FormStashFormClosing(this, e);
@@ -186,6 +193,7 @@ public sealed partial class FormStash : GitModuleForm
         else if (ManageStashes && stashedItems.Count > 1)
         {
             // more than just the default ("Current working directory changes")
+            // -> auto-select first non-default
             Stashes.SelectedIndex = 1;
 
             // First load done, show worktree on next refresh
@@ -211,13 +219,21 @@ public sealed partial class FormStash : GitModuleForm
         {
             StashMessage.IsReadOnly = false;
             _ = _asyncLoader.LoadAsync(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
+
+            // disallow Drop  (of current working directory)
             Clear.IsEnabled = false;
+
+            // disallow Apply (of current working directory)
             Apply.IsEnabled = false;
         }
         else if (gitStash is not null)
         {
             _ = _asyncLoader.LoadAsync(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
+
+            // allow Drop
             Clear.IsEnabled = true;
+
+            // allow Apply
             Apply.IsEnabled = true;
         }
     }

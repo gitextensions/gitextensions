@@ -28,8 +28,8 @@ public partial class RevisionGpgInfoControl : GitModuleControl
         {
             commitSignPicture.IsVisible = false;
             txtCommitGpgInfo.Text = _commitNotSigned.Text;
-            /* TAG section */
             tagSignPicture.IsVisible = false;
+            /* This hides the Tag row in ApplyLayout */
             txtTagGpgInfo.IsVisible = false;
         }
         else
@@ -51,6 +51,7 @@ public partial class RevisionGpgInfoControl : GitModuleControl
 
     private void DisplayCommitSignatureStatus(CommitStatus commitStatus)
     {
+        /* COMMIT section */
         commitSignPicture.Source = commitStatus switch
         {
             CommitStatus.GoodSignature => Images.CommitSignatureOk,
@@ -63,6 +64,7 @@ public partial class RevisionGpgInfoControl : GitModuleControl
 
     private void DisplayTagSignatureStatus(TagStatus tagStatus)
     {
+        /* TAG section */
         tagSignPicture.Source = tagStatus switch
         {
             TagStatus.OneGood => Images.TagOk,
@@ -72,6 +74,7 @@ public partial class RevisionGpgInfoControl : GitModuleControl
             _ => null,
         };
         tagSignPicture.IsVisible = tagSignPicture.Source is not null;
+        /* This shows the Tag row in ApplyLayout */
         txtTagGpgInfo.IsVisible = tagStatus != TagStatus.NoTag;
     }
 

@@ -3,7 +3,7 @@ using Avalonia.Controls;
 namespace GitUI.CommandsDialogs;
 
 /// <summary>
-/// Tab control used by the repository browser whose content meets the surrounding pane borders.
+/// Subclass of <see cref="TabControl"/> whose tab items have no gaps with the border.
 /// </summary>
 public sealed class FullBleedTabControl : TabControl
 {

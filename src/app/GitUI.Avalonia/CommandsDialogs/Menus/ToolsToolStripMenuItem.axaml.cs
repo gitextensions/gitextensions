@@ -111,6 +111,7 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
         SettingsChanged?.Invoke(sender, new(translation, commitInfoPosition));
     }
 
+    // Cross-platform constraint: a confined app cannot execute a host terminal.
     private void gitBashToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         try
@@ -119,7 +120,6 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
         }
         catch (PlatformNotSupportedException exception) when (FlatpakEnvironment.IsFlatpak())
         {
-            // Cross-platform constraint: a confined app cannot execute a host terminal.
             MessageBoxes.FailedToRunShell(OwnerForm, "Git bash", exception);
         }
         catch (Exception exception)

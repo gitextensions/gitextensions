@@ -4,6 +4,9 @@ using GitUI.Compat;
 
 namespace GitUI.CommandsDialogs;
 
+/// <summary>
+///  Represents an interface for removing invalid repositories.
+/// </summary>
 public interface IInvalidRepositoryRemover
 {
     /// <summary>

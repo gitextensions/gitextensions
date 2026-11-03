@@ -4,6 +4,9 @@ using GitExtensions.Extensibility.Git;
 
 namespace GitUI;
 
+/// <summary>
+///  Provides the name of the currently checked out branch in a repository.
+/// </summary>
 public interface IRepositoryCurrentBranchNameProvider
 {
     /// <summary>

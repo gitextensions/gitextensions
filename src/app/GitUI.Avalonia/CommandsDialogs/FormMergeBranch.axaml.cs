@@ -83,6 +83,8 @@ public partial class FormMergeBranch : GitModuleForm
 
         string selectedHead = Module.GetSelectedBranch();
         currentBranchLabel.Text = selectedHead;
+
+        // Offer rebase on refs also for tags (but not stash, notes etc)
         Branches.BranchesToSelect = Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.Tags);
 
         if (_defaultBranch is not null)
@@ -145,6 +147,7 @@ public partial class FormMergeBranch : GitModuleForm
             string? mergeMessagePath = null;
             if (addMergeMessage.IsChecked == true)
             {
+                // [!] Do not reset the last commit message stored in AppSettings.LastCommitMessage
                 await _commitMessageManager.WriteCommitMessageToFileAsync(
                     mergeMessage.Text ?? string.Empty,
                     CommitMessageType.Merge,

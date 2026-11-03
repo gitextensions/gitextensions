@@ -183,6 +183,7 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
 
     private void chkCreateOrphan_CheckedChanged(object? sender, EventArgs e)
     {
+        // auto-checkout for orphan
         bool isOrphan = chkCreateOrphan.IsChecked == true;
         chkClearOrphan.IsEnabled = isOrphan;
         chkCheckoutAfterCreate.IsEnabled = !isOrphan;

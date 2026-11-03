@@ -12,7 +12,7 @@ namespace GitUI;
 public sealed class CustomDiffMergeToolProvider
 {
     /// <summary>
-    /// Time to wait before loading custom diff tools in FormBrowse.
+    /// Time to wait before loading custom diff tools in FormBrowse
     /// Avoid loading while git-log and git-diff run.
     /// </summary>
     internal const int FormBrowseToolDelay = 8000;
@@ -33,7 +33,14 @@ public sealed class CustomDiffMergeToolProvider
         }
     }
 
-    /// <summary>Load the available diff/merge tools and apply them to the menus.</summary>
+    /// <summary>
+    /// Load the available  DiffMerge tools and apply to the menus.
+    /// </summary>
+    /// <param name="module">The Git module.</param>
+    /// <param name="menus">The menus to update.</param>
+    /// <remarks>The calling Form cancellation token stops pending work.</remarks>
+    /// <param name="isDiff">True if diff, false if merge.</param>
+    /// <param name="delay">The delay before starting the operation.</param>
     public void LoadCustomDiffMergeTools(
         IGitModule module,
         IList<CustomDiffMergeTool> menus,
@@ -74,9 +81,12 @@ public sealed class CustomDiffMergeToolProvider
         JoinableTaskFactory? joinableTaskFactory,
         CancellationToken cancellationToken)
     {
+        // get the tools, possibly with a delay as requesting requires considerable time
+        // cache is shared
         List<string> tools = [.. await (isDiff ? CustomDiffMergeToolCache.DiffToolCache : CustomDiffMergeToolCache.MergeToolCache)
             .GetToolsAsync(module, delay, cancellationToken)];
 
+        // No need to show the menu
         if (tools.Count <= 1)
         {
             return;
@@ -123,6 +133,7 @@ public sealed class CustomDiffMergeToolProvider
                 menu.MenuItem.Items.Add(item);
             }
 
+            // Allow disabling for difftools
             if (isDiff)
             {
                 menu.MenuItem.Items.Add(new Separator());
@@ -134,6 +145,10 @@ public sealed class CustomDiffMergeToolProvider
                 disableItem.Click += (_, e) =>
                 {
                     e.Handled = true;
+
+                    // Disables the dropdown in the current form only
+                    // RevDiff will not be affected from other forms, requires a restart
+                    // To overcome this limitation other forms would require a reference to RevDiff
                     AppSettings.ShowAvailableDiffTools = false;
                     InitMenus(menus);
                 };

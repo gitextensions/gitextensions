@@ -4,6 +4,10 @@ using GitExtensions.Extensibility.Git;
 
 namespace GitUI;
 
+/// <summary>
+///  Wraps <see cref="IRepositoryCurrentBranchNameProvider"/> with a shared in-memory cache so that
+///  multiple UI surfaces (menu bar, Dashboard list) avoid redundant git reads for the same path.
+/// </summary>
 public interface IRepositoryCurrentBranchNameCache : IRepositoryCurrentBranchNameProvider
 {
     /// <summary>

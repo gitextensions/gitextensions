@@ -141,13 +141,12 @@ public partial class FormResolveConflicts : GitModuleForm
         _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
     }
 
+    // The single visible WinForms grid column becomes the list item template
     public FormResolveConflicts(IGitUICommands commands, bool offerCommit = true)
         : base(commands, true)
     {
         InitializeComponent();
 
-        // The single visible WinForms grid column becomes the list item template
-        // (the hidden Author column had no data source upstream: see its TODO there).
         ConflictedFiles.ItemTemplate = new FuncDataTemplate<object>(
             (item, _) => new TextBlock { Text = item is ConflictData conflict ? conflict.Filename : string.Empty },
             supportsRecycling: false);
@@ -252,13 +251,12 @@ public partial class FormResolveConflicts : GitModuleForm
                 oldSelectedRow = Math.Max(0, ConflictedFiles.ItemCount - 1);
             }
 
-            // as part of the databinding event, the fist row is selected automatically
+            // as part of replacing the items source, the selection is cleared
             // if previously another row was selected, we need to reset the selection,
             // and select the desired row
             if (ConflictedFiles.ItemCount > oldSelectedRow)
             {
-                // Replacing the items source clears the selection; reselect the desired
-                // row (WinForms got the first row for free from the data binding).
+                // select the desired row
                 ConflictedFiles.SelectedIndex = oldSelectedRow;
                 ConflictedFiles.ScrollIntoView(oldSelectedRow);
             }

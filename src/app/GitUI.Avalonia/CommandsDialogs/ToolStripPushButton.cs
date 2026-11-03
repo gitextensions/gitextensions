@@ -44,7 +44,7 @@ public sealed class ToolStripPushButton : IconButton
     }
 
     /// <summary>
-    ///  Clears stale branch information while preserving the toolbar button's place.
+    /// Reset the contents keeping the size the same, to avoid toolbar resizing.
     /// </summary>
     public void ResetBeforeUpdate()
     {

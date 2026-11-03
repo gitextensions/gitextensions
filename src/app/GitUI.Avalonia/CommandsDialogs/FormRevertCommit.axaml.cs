@@ -169,8 +169,8 @@ public partial class FormRevertCommit : GitExtensionsDialog
         string existingCommitMessage = ThreadHelper.JoinableTaskFactory.Run(
             () => commitMessageManager.GetMergeOrCommitMessageAsync());
 
-        // Do not verify success: a failed revert commonly means conflicts that the existing
-        // conflict handler must inspect and offer to resolve.
+        // Don't verify whether the command is successful.
+        // If it fails, likely there is a conflict that needs to be resolved.
         FormProcess.ShowDialog(this, UICommands, arguments: command.Value, Module.WorkingDir, input: null, useDialogSettings: true);
 
         if (!string.IsNullOrWhiteSpace(existingCommitMessage))

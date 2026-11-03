@@ -68,6 +68,7 @@ internal sealed class TerminalLauncher : ITerminalLauncher
 
     private ProcessStartInfo CreateStartInfo(string workingDirectory)
     {
+        // throwOnErrorExit would redirect the output
         ProcessStartInfo startInfo = new()
         {
             UseShellExecute = false,
