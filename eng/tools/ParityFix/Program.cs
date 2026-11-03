@@ -6,7 +6,7 @@ try
 {
     bool prove = args.FirstOrDefault() == "prove";
     HashSet<string> switches = prove ? [] : ["--apply", "--allow-initializers"];
-    HashSet<string> values = prove ? ["--report", "--twin-root"] : ["--inventory", "--ownership", "--owner", "--report", "--twin-root"];
+    HashSet<string> values = prove ? ["--report"] : ["--inventory", "--ownership", "--owner", "--report", "--twin-root"];
     Dictionary<string, string> options = new(StringComparer.Ordinal);
     for (int index = prove ? 1 : 0; index < args.Length; index++)
     {
@@ -27,7 +27,7 @@ try
 
     if (prove)
     {
-        ProofReport proof = await WorktreeProof.ProveAsync(Directory.GetCurrentDirectory(), options.GetValueOrDefault("--twin-root") ?? "src/app/GitUI.Avalonia");
+        ProofReport proof = await WorktreeProof.ProveAsync(Directory.GetCurrentDirectory());
         if (options.TryGetValue("--report", out string? output))
         {
             string path = Path.GetFullPath(output);
@@ -35,7 +35,7 @@ try
             File.WriteAllText(path, JsonSerializer.Serialize(proof, new JsonSerializerOptions { WriteIndented = true }));
         }
 
-        Console.WriteLine($"HEAD {proof.Head}: {proof.Files.Count(file => file.Passed)} of {proof.Files.Count} changed twin files proved equivalent with unchanged directives.");
+        Console.WriteLine($"HEAD {proof.Head}: {proof.Files.Count(file => file.Passed)} of {proof.Files.Count} changed repository files proved equivalent with unchanged directives and disabled text; {proof.ExemptPaths.Count} metadata paths exempt.");
         foreach (FileProof file in proof.Files.Where(file => !file.Passed))
         {
             Console.Error.WriteLine($"{file.Path}: {file.Error}");

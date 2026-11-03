@@ -48,8 +48,15 @@ internal sealed class ReviewedFrameworkDeviationManifest
                 Optional(element, "twinAccessibility"),
                 Optional(element, "twinSignature"),
                 Optional(element, "twinValue"),
+                Optional(element, "reason"),
+                Optional(element, "targetMember"),
+                Optional(element, "targetText"),
                 Require(element, "rationale"));
-            if (entry.IsMemberDeviation)
+            if (entry.IsCommentDeviation)
+            {
+                ValidateCommentEntry(entry);
+            }
+            else if (entry.IsMemberDeviation)
             {
                 ValidateMemberEntry(entry);
             }
@@ -82,6 +89,12 @@ internal sealed class ReviewedFrameworkDeviationManifest
         List<AcceptedFrameworkDeviation> deviations = [.. comparison.AcceptedFrameworkDeviations];
         foreach (ReviewedFrameworkDeviationEntry entry in _entries.Where(entry => entry.TypeName == typeName))
         {
+            if (entry.IsCommentDeviation)
+            {
+                ApplyCommentFinding(entry, original, twin, findings, deviations, appliedEntries);
+                continue;
+            }
+
             if (!entry.IsMemberDeviation)
             {
                 ApplyExactFinding(entry, original, findings, deviations, appliedEntries);
@@ -183,6 +196,73 @@ internal sealed class ReviewedFrameworkDeviationManifest
                 .ThenBy(deviation => deviation.Path, StringComparer.Ordinal)
                 .ToArray()
         };
+    }
+
+    private static void ValidateCommentEntry(ReviewedFrameworkDeviationEntry entry)
+    {
+        bool isComment = entry.Category == "comments"
+            && entry.Code is "comment.missing" or "comment.drifted"
+            && entry.Path.StartsWith("comment/", StringComparison.Ordinal)
+            && !string.IsNullOrWhiteSpace(entry.OriginalPart)
+            && !string.IsNullOrWhiteSpace(entry.OriginalValue)
+            && entry.OriginalAccessibility is null && entry.OriginalSignature is null
+            && entry.TwinAccessibility is null && entry.TwinSignature is null;
+        bool isAbsent = entry.Reason == "codeAbsent"
+            && entry.TwinPart is null
+            && (entry.Code == "comment.missing" ? entry.TwinValue is null : entry.TwinValue == entry.OriginalValue)
+            && entry.TargetMember is null && entry.TargetText is null;
+        bool isMoved = entry.Reason == "codeMoved"
+            && !string.IsNullOrWhiteSpace(entry.TwinPart)
+            && !string.IsNullOrWhiteSpace(entry.TargetMember) && entry.TargetMember != "$type"
+            && (entry.TargetText is null || !string.IsNullOrWhiteSpace(entry.TargetText))
+            && (entry.Code == "comment.missing" ? entry.TwinValue is null : entry.TwinValue == entry.OriginalValue);
+        if (!isComment || (!isAbsent && !isMoved))
+        {
+            throw new InvalidDataException(
+                $"Reviewed comment adaptation '{entry.Identity}' must pin an exact handwritten comment with reason codeAbsent or codeMoved and its destination.");
+        }
+    }
+
+    private static void ApplyCommentFinding(
+        ReviewedFrameworkDeviationEntry entry,
+        SourceInventory original,
+        SourceInventory twin,
+        List<FunctionalFinding> findings,
+        List<AcceptedFrameworkDeviation> deviations,
+        ISet<string>? appliedEntries)
+    {
+        FunctionalFinding[] matches = findings.Where(finding => finding.Category == entry.Category
+            && finding.Code == entry.Code && finding.Path == entry.Path
+            && finding.OriginalValue == entry.OriginalValue && finding.TwinValue == entry.TwinValue).ToArray();
+        CommentEntry[] sourceComments = original.Comments.Where(comment => comment.Part == entry.OriginalPart
+            && CommentInventoryComparer.GetPath(comment) == entry.Path && comment.Text == entry.OriginalValue).ToArray();
+        if (matches.Length != 1 || sourceComments.Length != 1)
+        {
+            throw new InvalidDataException($"Reviewed comment adaptation '{entry.Identity}' is stale or drifted: expected one exact live finding and source comment.");
+        }
+
+        if (entry.Reason == "codeMoved" && twin.Comments.Count(comment => comment.Part == entry.TwinPart
+                && comment.Anchor == entry.TargetMember && comment.Text == (entry.TargetText ?? entry.OriginalValue)) != 1)
+        {
+            throw new InvalidDataException($"Reviewed comment adaptation '{entry.Identity}' target member, part or comment drifted.");
+        }
+
+        findings.Remove(matches[0]);
+        deviations.Add(new AcceptedFrameworkDeviation
+        {
+            Category = entry.Category!,
+            Code = entry.Code,
+            Path = entry.Path,
+            OriginalPart = entry.OriginalPart!,
+            TwinPart = entry.TwinPart ?? "(code absent from twin type)",
+            OriginalValue = entry.OriginalValue,
+            TwinValue = entry.TwinValue,
+            Rationale = entry.Rationale,
+            Reason = entry.Reason,
+            TargetMember = entry.TargetMember,
+            TargetText = entry.Reason == "codeMoved" ? entry.TargetText ?? entry.OriginalValue : null
+        });
+        appliedEntries?.Add(entry.Identity);
     }
 
     private static void ValidateMemberEntry(ReviewedFrameworkDeviationEntry entry)
@@ -365,10 +445,15 @@ internal sealed class ReviewedFrameworkDeviationManifest
         string? TwinAccessibility,
         string? TwinSignature,
         string? TwinValue,
+        string? Reason,
+        string? TargetMember,
+        string? TargetText,
         string Rationale)
     {
         public string Identity => $"{TypeName}/{Code}/{Path}";
 
         public bool IsMemberDeviation => Code is "member.missing" or "member.extra" or "member.signature" or "member.partial";
+
+        public bool IsCommentDeviation => Reason is not null || TargetMember is not null || TargetText is not null;
     }
 }

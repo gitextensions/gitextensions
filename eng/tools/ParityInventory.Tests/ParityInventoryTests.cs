@@ -1018,7 +1018,7 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
-    public void Run_should_reject_a_reviewed_handwritten_comment_adaptation()
+    public void Run_should_reject_a_handwritten_comment_adaptation_without_an_absent_or_moved_reason()
     {
         using InventoryFixture fixture = new();
         fixture.WriteOriginal("Widget.cs", """
@@ -1043,7 +1043,7 @@ public sealed class ParityInventoryTests
                   "originalPart": "Widget.cs",
                   "originalValue": {{System.Text.Json.JsonSerializer.Serialize(finding.OriginalValue)}},
                   "twinPart": "Widget.cs",
-                  "rationale": "Handwritten comments must not be accepted."
+                  "rationale": "Handwritten comments require an exact absent or moved reason."
                 }
               ]
             }

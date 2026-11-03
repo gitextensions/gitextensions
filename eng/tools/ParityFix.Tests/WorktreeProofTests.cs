@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace GitExtensions.ParityFix.Tests;
 
-// parity-scaffolding: Uses throwaway repositories to prove the entire staged and unstaged twin delta.
+// parity-scaffolding: Uses throwaway repositories to prove the entire staged and unstaged repository delta.
 [TestFixture]
 public sealed class WorktreeProofTests
 {
@@ -17,6 +17,24 @@ public sealed class WorktreeProofTests
     }
 
     [Test]
+    public void AreCommentOnlyEquivalent_should_reject_changes_to_disabled_code()
+    {
+        const string original = "class Widget {\n#if DEBUG\nint Value() => 1;\n#endif\n}";
+        WorktreeProof.AreCommentOnlyEquivalent(original, original.Replace("=> 1", "=> 2", StringComparison.Ordinal)).Should().BeFalse();
+    }
+
+    [TestCase("1", "2", false)]
+    [TestCase("// Reason.", "// Changed reason.", false)]
+    [TestCase("1", "1", true)]
+    public void AreCommentOnlyEquivalent_should_compare_nested_disabled_text(string before, string after, bool expected)
+    {
+        const string code = "#if RELEASE\n#if DEBUG\nVALUE\n#endif\n#endif\nclass Widget { }\n";
+        WorktreeProof.AreCommentOnlyEquivalent(code.Replace("VALUE", before, StringComparison.Ordinal),
+            ("// Active comment.\n" + code.Replace("VALUE", after, StringComparison.Ordinal)).Replace("\n", "\r\n", StringComparison.Ordinal))
+            .Should().Be(expected);
+    }
+
+    [Test]
     public void AreCommentOnlyEquivalent_should_normalize_git_line_endings_without_changing_directives()
     {
         const string original = "#nullable enable\nclass Widget { int Value() => 1; }\n";
@@ -24,19 +42,19 @@ public sealed class WorktreeProofTests
     }
 
     [Test]
-    public async Task ProveAsync_should_include_staged_and_unstaged_edits_and_ignore_files_outside_the_twin_Async()
+    public async Task ProveAsync_should_include_staged_and_unstaged_edits_across_the_repository_Async()
     {
         using Repository fixture = new();
         await fixture.InitializeAsync();
         File.WriteAllText(fixture.FilePath, "// Staged.\nclass Widget { int Value() => 1; }");
         await WorktreeProof.GitAsync(fixture.Root, "add", ".");
         File.AppendAllText(fixture.FilePath, "\n// Unstaged.");
-        File.WriteAllText(Path.Combine(fixture.Root, "outside.cs"), "This is not C#.");
+        File.AppendAllText(Path.Combine(fixture.Root, "outside.cs"), "\n// Outside the twin.");
 
-        ProofReport proof = await WorktreeProof.ProveAsync(fixture.Root, "twin");
+        ProofReport proof = await WorktreeProof.ProveAsync(Path.Combine(fixture.Root, "twin"));
 
         proof.Passed.Should().BeTrue();
-        proof.Files.Should().ContainSingle().Which.Path.Should().Be("twin/Widget space.cs");
+        proof.Files.Select(file => file.Path).Should().Equal("outside.cs", "twin/Widget space.cs");
         proof.Head.Should().Be((await WorktreeProof.GitAsync(fixture.Root, "rev-parse", "HEAD")).Trim());
     }
 
@@ -46,7 +64,11 @@ public sealed class WorktreeProofTests
     [TestCase("add")]
     [TestCase("markup")]
     [TestCase("order")]
-    public async Task ProveAsync_should_fail_for_every_unproved_twin_change_Async(string change)
+    [TestCase("outside-code")]
+    [TestCase("outside-json")]
+    [TestCase("mode")]
+    [TestCase("adaptations")]
+    public async Task ProveAsync_should_fail_for_every_unproved_repository_change_Async(string change)
     {
         using Repository fixture = new();
         await fixture.InitializeAsync();
@@ -67,6 +89,19 @@ public sealed class WorktreeProofTests
             case "markup":
                 File.WriteAllText(Path.Combine(fixture.Root, "twin", "New.axaml"), "<Window />");
                 break;
+            case "outside-code":
+                File.WriteAllText(Path.Combine(fixture.Root, "outside.cs"), "class Outside { int Value() => 2; }");
+                break;
+            case "outside-json":
+                File.WriteAllText(Path.Combine(fixture.Root, "portmap.json"), "{}");
+                break;
+            case "adaptations":
+                Directory.CreateDirectory(Path.Combine(fixture.Root, "eng", "avalonia"));
+                File.WriteAllText(Path.Combine(fixture.Root, "eng", "avalonia", "framework-adaptations.json"), "{}");
+                break;
+            case "mode":
+                await WorktreeProof.GitAsync(fixture.Root, "update-index", "--chmod=+x", "twin/Widget space.cs");
+                break;
             case "order":
                 File.WriteAllText(fixture.FilePath, "class Widget { void Extra() { } int Value() => 1; }");
                 await WorktreeProof.GitAsync(fixture.Root, "add", ".");
@@ -75,10 +110,28 @@ public sealed class WorktreeProofTests
                 break;
         }
 
-        ProofReport proof = await WorktreeProof.ProveAsync(fixture.Root, "twin");
+        ProofReport proof = await WorktreeProof.ProveAsync(fixture.Root);
 
         proof.Passed.Should().BeFalse();
         proof.Files.Should().ContainSingle(file => !file.Passed);
+    }
+
+    [Test]
+    public async Task ProveAsync_should_exempt_only_the_two_exact_metadata_paths_Async()
+    {
+        using Repository fixture = new();
+        await fixture.InitializeAsync();
+        string metadata = Path.Combine(fixture.Root, "eng", "avalonia");
+        Directory.CreateDirectory(metadata);
+        File.WriteAllText(Path.Combine(metadata, "portmap.json"), "{}");
+        File.WriteAllText(Path.Combine(metadata, "parity-ledger.json"), "{}");
+        await WorktreeProof.GitAsync(fixture.Root, "add", ".");
+
+        ProofReport proof = await WorktreeProof.ProveAsync(fixture.Root);
+
+        proof.Passed.Should().BeTrue();
+        proof.Files.Should().BeEmpty();
+        proof.ExemptPaths.Should().Equal("eng/avalonia/parity-ledger.json", "eng/avalonia/portmap.json");
     }
 
     [Test]
@@ -86,7 +139,7 @@ public sealed class WorktreeProofTests
     {
         using Repository fixture = new();
         await fixture.InitializeAsync();
-        ProofReport proof = await WorktreeProof.ProveAsync(fixture.Root, "twin");
+        ProofReport proof = await WorktreeProof.ProveAsync(fixture.Root);
         proof.Files.Should().BeEmpty();
         proof.Passed.Should().BeTrue();
     }
@@ -103,7 +156,9 @@ public sealed class WorktreeProofTests
             await WorktreeProof.GitAsync(Root, "init", "-q");
             await WorktreeProof.GitAsync(Root, "config", "user.name", "nikola.begovic");
             await WorktreeProof.GitAsync(Root, "config", "user.email", "begota98@gmail.com");
+            await WorktreeProof.GitAsync(Root, "config", "core.filemode", "false");
             File.WriteAllText(FilePath, "class Widget { int Value() => 1; }");
+            File.WriteAllText(Path.Combine(Root, "outside.cs"), "class Outside { int Value() => 1; }");
             await WorktreeProof.GitAsync(Root, "add", ".");
             await WorktreeProof.GitAsync(Root, "commit", "-qm", "test: establish comment proof fixture");
         }

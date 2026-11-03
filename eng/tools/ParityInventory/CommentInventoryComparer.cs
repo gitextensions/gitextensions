@@ -310,7 +310,7 @@ internal static class CommentInventoryComparer
             TwinValue = twin.Text
         };
 
-    private static string GetPath(CommentEntry comment) =>
+    internal static string GetPath(CommentEntry comment) =>
         $"comment/{comment.Part}/{comment.Anchor}/{comment.Placement}/{comment.Order}";
 
     private static string GetComparablePart(

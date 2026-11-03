@@ -15,6 +15,7 @@ public sealed class ParityDashboardTests
     [TestCase("same-only", "", 2)]
     [TestCase("new", "change since bbbbbbbbb: 0", 3)]
     [TestCase("ledger", "change since aaaaaaaaa: -5", 4)]
+    [TestCase("accepted", "change since aaaaaaaaa: -5", 4)]
     public async Task Dashboard_should_compare_the_last_different_commit_and_deduplicate_history_Async(string scenario, string expected, int expectedRows)
     {
         string root = Path.Combine(Path.GetTempPath(), "ParityDashboard-" + Guid.NewGuid().ToString("N"));
@@ -42,6 +43,7 @@ public sealed class ParityDashboardTests
                     behavior = 0,
                     structural = 0,
                     dependent = 0,
+                    acceptedComments = 0,
                     complete = 0,
                     allButMacOs = scenario == "ledger" && index == rows.Length - 1 ? 1 : 0
                 });
@@ -55,6 +57,16 @@ public sealed class ParityDashboardTests
             {
                 typeName = "Fixture",
                 dependentFindings = Array.Empty<object>(),
+                acceptedFrameworkDeviations = scenario == "accepted"
+                    ? new[]
+                    {
+                        new { category = "comments", reason = "codeAbsent" },
+                        new { category = "comments", reason = "codeMoved" },
+                        new { category = "comments", reason = "codeMoved" },
+                        new { category = "comments", reason = "generatedDesigner" },
+                        new { category = "members", reason = "codeAbsent" }
+                    }
+                    : Array.Empty<object>(),
                 findings = Enumerable.Range(0, 95).Select(index => new { code = "comment.missing", path = index.ToString() })
             }));
             File.WriteAllText(Path.Combine(root, "ownership.json"), "{\"types\":[]}");
@@ -83,6 +95,9 @@ public sealed class ParityDashboardTests
                 process.ExitCode.Should().Be(0, diagnostics);
                 string dashboard = await File.ReadAllTextAsync(Path.Combine(root, "dashboard.md"));
                 dashboard.Should().Contain("Components complete: 0 of 0.");
+                dashboard.Should().Contain(scenario == "accepted"
+                    ? "Accepted handwritten comment findings: 3** (codeAbsent 1, codeMoved 2); accepted deviations, not closed."
+                    : "Accepted handwritten comment findings: 0**");
                 if (expected.Length == 0)
                 {
                     dashboard.Should().NotContain("change since");
@@ -93,6 +108,8 @@ public sealed class ParityDashboardTests
                 }
 
                 File.ReadAllLines(Path.Combine(root, "history.jsonl")).Should().HaveCount(expectedRows);
+                using JsonDocument last = JsonDocument.Parse(File.ReadAllLines(Path.Combine(root, "history.jsonl"))[^1]);
+                last.RootElement.GetProperty("acceptedComments").GetInt32().Should().Be(scenario == "accepted" ? 3 : 0);
             }
         }
         finally
