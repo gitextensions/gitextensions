@@ -164,6 +164,8 @@ public partial class FileStatusList : GitModuleControl
         cboFindInCommitFilesGitGrep.SizeChanged += cboFindInCommitFilesGitGrep_SizeChanged;
         DeleteFilterButton.Click += DeleteFilterButton_Click;
         DeleteSearchButton.Click += DeleteSearchButton_Click;
+
+        // TODO this code is very similar to code in FormCommit
         _filterTimer.Tick += FilterTimer_Tick;
         _selectedIndexChangeTimer.Tick += SelectedIndexChangeTimer_Tick;
         KeyDown += FileStatusListView_KeyDown;
@@ -193,8 +195,12 @@ public partial class FileStatusList : GitModuleControl
         };
         DetachedFromLogicalTree += (_, _) =>
         {
+            // Stop the throttled filtering: a pending callback would otherwise run after the form was
+            // closed and access the detached list view.
             _filterTimer.Stop();
             _selectedIndexChangeTimer.Stop();
+
+            // cleanup the previous subscription if it exists.
             if (_isSortSubscriptionActive)
             {
                 DiffListSortService.Instance.DiffListSortingChanged -= DiffListSortingChanged;
@@ -387,24 +393,23 @@ public partial class FileStatusList : GitModuleControl
         SetFileStatusListVisibility(
             showNoFiles: _gitItemFilteredStatuses.Count == 0 && (!ShowDiffTree || tvDiffFiles.ItemCount == 0));
 
-        // Avalonia adjusts sizes automatically when visibility changes.
+        // Sizes are automatically changed by visibility
     }
 
+    // Framework constraint: collapsing the Avalonia host row reproduces WinForms Control.Visible layout.
     private void SetFileStatusListVisibility(bool showNoFiles)
     {
         LoadingFiles.IsVisible = false;
 
-        // Adjust layout. LoadingFiles shares the list area and visibility must be updated each time.
+        // Adjust visibility
         // Use variable to prevent bad value retrieved from `Visible` property
         bool showFilesFilter = !showNoFiles || FindInCommitFilesGitGrepActive;
 
-        // Framework constraint: collapsing the Avalonia host row reproduces WinForms Control.Visible layout.
         ((Control)(cboFilterComboBox.Parent
             ?? throw new InvalidOperationException("The file filter is not attached to its layout row."))).IsVisible = showFilesFilter;
         cboFilterComboBox.IsVisible = showFilesFilter;
         NoFiles.IsVisible = showNoFiles;
 
-        // Avalonia stacking is stable at startup, so the native empty label only needs visibility.
         lstFiles.IsVisible = !_isFileTreeMode && !ShowDiffTree;
         tvDiffFiles.IsVisible = ShowDiffTree;
         tvFiles.IsVisible = _isFileTreeMode;
@@ -955,6 +960,7 @@ public partial class FileStatusList : GitModuleControl
             return Images.DiffR;
         }
 
+        // Image without evaluating added/removed etc
         if (!string.IsNullOrWhiteSpace(item.GrepString))
         {
             return Images.File;
@@ -1191,8 +1197,7 @@ public partial class FileStatusList : GitModuleControl
         _formFindInCommitFilesGitGrep.SetShowFindInCommitFilesGitGrep(FindInCommitFilesGitGrepVisible);
         if (!_formFindInCommitFilesGitGrep.IsVisible)
         {
-            // Avalonia lets the compositor position the owned window instead of applying WinForms' few-pixel offset from FindAndReplaceForm.
-            _formFindInCommitFilesGitGrep.Show(owner);
+                _formFindInCommitFilesGitGrep.Show(owner);
         }
 
         _formFindInCommitFilesGitGrep.Activate();
@@ -1233,7 +1238,7 @@ public partial class FileStatusList : GitModuleControl
 
         if (e.Key == Key.Multiply)
         {
-            // Avalonia does not produce WinForms' TreeView ding, so this route can be handled after expanding the focused node.
+            // Set e.Handled = true; Avalonia has no TreeView Ding sound
             object? focusedNode = (_isFileTreeMode ? tvFiles : tvDiffFiles).SelectedItem;
             if (focusedNode is not null)
             {
@@ -1418,7 +1423,6 @@ public partial class FileStatusList : GitModuleControl
             }
         }
 
-        // Avalonia's editable ComboBox does not auto-select a matching history prefix, so no selection workaround is required.
         _filterTimer.Stop();
         _filterTimer.Start();
     }
@@ -1435,7 +1439,7 @@ public partial class FileStatusList : GitModuleControl
 
     private void FilterComboBox_SizeChanged(object? sender, EventArgs e)
     {
-        // Avalonia redraws resized controls automatically; invalidation preserves the original explicit refresh boundary.
+        // it invalidates itself on resize so its look does not become distorted
         cboFilterComboBox.InvalidateVisual();
     }
 
@@ -2222,8 +2226,11 @@ public partial class FileStatusList : GitModuleControl
                 continue;
             }
 
+            // Expand grep results with fewer than 100 visible files
             bool defaultExpanded = hasGrepGroup
                 ? FileStatusDiffCalculator.IsGrepItemStatuses(group) && visibleItems.Length < 100
+
+                // Collapse some groups for diffs with common BASE
                 : ((group.Statuses.Count <= 7 && group.IconName == nameof(Images.Diff))
                    || groups.Count < 3
                    || groupIndex == 0)
@@ -2234,6 +2241,7 @@ public partial class FileStatusList : GitModuleControl
 
             if (showDiffGroups)
             {
+                // Show shown and total number of files only if different; avoid showing "1/0" for "- No changes -"
                 string shownDisplay = visibleItems.Length >= group.Statuses.Count ? string.Empty : $"{visibleItems.Length}/";
                 DiffTreeNode header = new(
                     $"({shownDisplay}{group.Statuses.Count}) {group.Summary}",
@@ -2251,6 +2259,7 @@ public partial class FileStatusList : GitModuleControl
             }
             else
             {
+                // Add nodes of single group as root nodes
                 roots.AddRange(BuildDiffPathTree(visibleItems, parent: null, expanded, sortType));
             }
         }
@@ -2317,6 +2326,7 @@ public partial class FileStatusList : GitModuleControl
 
         return roots;
 
+        // Note: The order of status keys also affects sorting by file status as second key after DiffBranchStatus
         static string GetStatusGroupKey(GitItemStatus status)
         {
             string primaryStatus = status switch
@@ -2499,11 +2509,14 @@ public partial class FileStatusList : GitModuleControl
     {
         TextBlock text = new()
         {
+            // Also set .Text in order to provide accessibility information
             Text = node.Item is null ? node.Text : AppendItemSubmoduleStatus(node.Text, node.Item.Item),
             FontWeight = FontWeight.Normal,
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
         };
+
+        // Scale image size and images scale automatically
         Image image = new()
         {
             Width = 16,
@@ -2672,6 +2685,7 @@ public partial class FileStatusList : GitModuleControl
         ThreadHelper.FileAndForget(async () =>
         {
 #pragma warning disable VSTHRD003 // GitItemStatus owns and starts the cached status task.
+            // Avoid awaiting foreign Tasks
             GitSubmoduleStatus? status = await task.ConfigureAwait(false);
 #pragma warning restore VSTHRD003
             await Dispatcher.UIThread.InvokeAsync(() =>

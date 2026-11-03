@@ -269,6 +269,7 @@ public sealed partial class FormCommit : GitModuleForm
         toolAuthor.LostFocus += toolAuthor_Leave;
         toolAuthorLabelItem.Click += toolAuthorLabelItem_Click;
         commitAuthorStatus.Click += commitCommitter_Click;
+        /* If not changed, by default show "no sign commit" */
         gpgSignCommitToolStripComboBox.SelectionChanged += gpgSignCommitChanged;
         closeDialogAfterEachCommitToolStripMenuItem.Click += closeDialogAfterEachCommitToolStripMenuItem_Click;
         closeDialogAfterAllFilesCommittedToolStripMenuItem.Click += closeDialogAfterAllFilesCommittedToolStripMenuItem_Click;
@@ -302,6 +303,8 @@ public sealed partial class FormCommit : GitModuleForm
         selectionFilter.ItemsSource = _selectionFilterHistory;
         selectionFilter.PropertyChanged += OnSelectionFilterTextChanged;
         selectionFilter.SelectionChanged += OnSelectionFilterIndexChanged;
+
+        // TODO this code is very similar to code in FileStatusList
         _selectionFilterSubscription = _selectionFilterSubject
             .Throttle(TimeSpan.FromMilliseconds(250))
             .ObserveOn(SynchronizationContext.Current!)
@@ -457,7 +460,7 @@ public sealed partial class FormCommit : GitModuleForm
         if (!_messageEditedByUser)
         {
             _assigningInitialMessage = true;
-            Message.Text = message;
+            Message.Text = message; // initial assignment
             _assigningInitialMessage = false;
         }
 
@@ -517,6 +520,8 @@ public sealed partial class FormCommit : GitModuleForm
 
         IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(CancellationToken cancellationToken)
         {
+            // Dirty submodules need to be kept in unstaged, update the status
+            // if this is a submodule, update the status, may be dirty
             return Module.GetAllChangedFilesWithSubmodulesStatus(
                 excludeIgnoredFiles,
                 excludeAssumeUnchangedFiles,
@@ -1209,7 +1214,10 @@ public sealed partial class FormCommit : GitModuleForm
             return;
         }
 
+        // Staged.SelectedGitItems is needed only once, so we can safely retain the list here
         IReadOnlyList<GitItemStatus> items = Staged.SelectedGitItems;
+
+        // We can optimize a little bit here by querying only once for staged count
         if (canUseUnstageAll && items.Count > 10 && items.Count == Staged.GitItemStatuses.Count)
         {
             UnstageAllFiles();
@@ -1274,14 +1282,17 @@ public sealed partial class FormCommit : GitModuleForm
             ToolTip.SetTip(selectionFilter, string.Format(_selectionFilterErrorToolTip.Text, exception.Message));
         }
 
+        // Item is not already in the list
         if (matchCount > 0 && filterText.Length > 0 && !_selectionFilterHistory.Contains(filterText))
         {
             const int SelectionFilterMaxLength = 10;
             while (_selectionFilterHistory.Count >= SelectionFilterMaxLength)
             {
+                // Remove the last item
                 _selectionFilterHistory.RemoveAt(SelectionFilterMaxLength - 1);
             }
 
+            // Insert the next term at the start of the filter control
             _selectionFilterHistory.Insert(0, filterText);
         }
     }
@@ -1545,6 +1556,7 @@ public sealed partial class FormCommit : GitModuleForm
 
         async Task UpdateAuthorInfoAsync()
         {
+            // Do not cache results in order to update the info on FormActivate
             string userName = Module.GetEffectiveSetting(SettingKeyString.UserName, defaultValue: string.Empty);
             string userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail, defaultValue: string.Empty);
             string committer = $"{_commitCommitterInfo.Text} {userName} <{userEmail}>";
@@ -1604,6 +1616,8 @@ public sealed partial class FormCommit : GitModuleForm
         bool allowEmpty = createAmendCommit;
         bool pushForced = PushForced;
 
+        // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
+        // commit, because amend may be used just to change the commit message or timestamp.
         if (createAmendCommit
             && !MessageBoxes.ConfirmSuppressible(this, _amendCommit.Text, _amendCommitCaption.Text, AppSettings.DontConfirmAmend, icon: TaskDialogIcon.Warning))
         {
@@ -1614,6 +1628,8 @@ public sealed partial class FormCommit : GitModuleForm
         {
             if (_isMergeCommit)
             {
+                // it is a merge commit, so user can commit just for merging two branches even the changeset is empty,
+                // but also user may forget to add files, so only ask for confirmation that user really wants to commit an empty changeset
                 if (MessageBoxes.Show(this, _noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, WinFormsShims.MessageBoxButtons.YesNo, WinFormsShims.MessageBoxIcon.Question) != WinFormsShims.DialogResult.Yes)
                 {
                     return;
@@ -1633,6 +1649,8 @@ public sealed partial class FormCommit : GitModuleForm
                     SizeToContent = true,
                 };
                 page.Buttons.Add(TaskDialogButton.Cancel);
+
+                // Option 1: there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
                 if (Unstaged.GitItemFilteredStatuses.Any(CanStage))
                 {
                     string stageText = Unstaged.IsFilterActive
@@ -1643,6 +1661,7 @@ public sealed partial class FormCommit : GitModuleForm
                     page.Buttons.Add(stageButton);
                 }
 
+                // Option 2: the user just wants to make an empty commit
                 page.Buttons.Add(new TaskDialogCommandLinkButton(_noFilesStagedMakeEmptyCommitOption.Text));
                 if (TaskDialog.ShowDialog(this, page) == TaskDialogButton.Cancel)
                 {
@@ -1661,6 +1680,8 @@ public sealed partial class FormCommit : GitModuleForm
                     if (!success)
                     {
                         FormStatus.ShowErrorDialog(this, UICommands, Text ?? string.Empty, output);
+
+                        // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
                         ReloadChanges();
                         return;
                     }
@@ -1702,6 +1723,7 @@ public sealed partial class FormCommit : GitModuleForm
         {
             if (AppSettings.UseFormCommitMessage)
             {
+                // Save last commit message in settings. This way it can be used in multiple repositories.
                 AppSettings.LastCommitMessage = message;
                 await _commitMessageManager.WriteCommitMessageToFileAsync(
                     message,
@@ -1734,6 +1756,7 @@ public sealed partial class FormCommit : GitModuleForm
 
             ScriptsRunner.RunEventScripts(ScriptEvent.AfterCommit, this);
 
+            // Message.Text has been used and stored
             await _commitMessageManager.ResetCommitMessageAsync();
             _commitTemplate = null;
             CommitKind = CommitKind.Normal;
@@ -2071,11 +2094,14 @@ public sealed partial class FormCommit : GitModuleForm
         string lastMessage = AppSettings.LastCommitMessage;
         if (!string.IsNullOrWhiteSpace(lastMessage) && !messages.Contains(lastMessage))
         {
+            // If the list is already full
             if (messages.Count == maxCount && maxCount > 0)
             {
+                // Remove the last item
                 messages.RemoveAt(maxCount - 1);
             }
 
+            // Insert the last commit message as the first entry
             messages.Insert(0, lastMessage);
         }
 
@@ -2111,8 +2137,13 @@ public sealed partial class FormCommit : GitModuleForm
         _alreadyLoadedTemplatesCount = registeredTemplatesCount;
         MenuFlyout flyout = (MenuFlyout)commitTemplatesToolStripMenuItem.Flyout!;
         flyout.Items.Clear();
+
+        // Add registered templates
         bool addedTemplate = false;
-        foreach (CommitTemplateItem template in _commitTemplateManager.RegisteredTemplates.Concat(CommitTemplateItem.LoadFromSettings() ?? []))
+        foreach (CommitTemplateItem template in _commitTemplateManager.RegisteredTemplates
+
+            // Add templates from settings
+            .Concat(CommitTemplateItem.LoadFromSettings() ?? []))
         {
             if (string.IsNullOrEmpty(template.Name))
             {
@@ -2214,6 +2245,7 @@ public sealed partial class FormCommit : GitModuleForm
         int titlePosition = keyword.Length + (scope.Length / 2) + 2;
         string currentTitle = string.IsNullOrWhiteSpace(Message.Text) ? string.Empty : Message.Line(0);
 
+        // Replacing current keyword
         foreach (string key in _headerCommitTypes)
         {
             if (!currentTitle.StartsWith(key, StringComparison.Ordinal))
@@ -2251,6 +2283,7 @@ public sealed partial class FormCommit : GitModuleForm
             }
         }
 
+        // Append current keyword
         return ($"{keyword}{scope}: {currentTitle}", _insertScopeParentheses ? scopePosition : titlePosition + currentPosition);
     }
 
@@ -2494,6 +2527,9 @@ public sealed partial class FormCommit : GitModuleForm
         _interactiveAddSequence.Dispose();
         _commitSequence.Dispose();
         _unstagedLoader.Dispose();
+
+        // Stop the throttled filtering: a pending callback would otherwise run after the form was
+        // closed and access the detached list view.
         _selectionFilterSubscription?.Dispose();
         _selectionFilterSubject.Dispose();
         _splitterManager.SaveSplitters();
@@ -2504,6 +2540,8 @@ public sealed partial class FormCommit : GitModuleForm
             return true;
         });
 
+        // Do not remember commit message of fixup or squash commits, since they have
+        // a special meaning, and can be dangerous if used inappropriately.
         if (!_messageConsumed
             && !_commitInProgress
             && _commitMessageManager is not null
@@ -2511,6 +2549,8 @@ public sealed partial class FormCommit : GitModuleForm
         {
             string message = Message.Text ?? string.Empty;
             bool amend = Amend.IsChecked == true;
+
+            // Run async as we're closing the form
             _closePersistenceTask = PersistCommitMessageAsync();
 #pragma warning disable VSTHRD003 // The persistence task is created immediately above on this context and retained until it completes.
             ThreadHelper.FileAndForget(() => _closePersistenceTask);

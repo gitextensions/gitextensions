@@ -31,11 +31,11 @@ partial class FileStatusList
     }
 
     /// <summary>
-    ///  Replaces possible placeholders with the actual children.
+    ///  Expands the actual children.
     /// </summary>
     /// <param name="nodes">The nodes which are prepared for expansion.</param>
-    /// <param name="afterAction">An optional action which is performed before exiting Begin/EndUpdate.</param>
-    /// <param name="delayExpansion">If <c>true</c>, the subchildren are replaced with placeholders.</param>
+    /// <param name="afterAction">An optional action which is performed after preparing the nodes.</param>
+    /// <param name="delayExpansion">If <c>true</c>, the subchildren are collapsed.</param>
     private static void RestoreChildrenOfFolderNodes(IEnumerable<DiffTreeNode> nodes, Action? afterAction = null, bool delayExpansion = false)
     {
         // Avalonia keeps data children attached and lazily creates their TreeView containers instead of using placeholder nodes.

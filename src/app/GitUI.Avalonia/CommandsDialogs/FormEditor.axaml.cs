@@ -99,6 +99,7 @@ public sealed partial class FormEditor : GitModuleForm
 
     private bool ConfirmClose()
     {
+        // only offer to save if there's something to save.
         if (!HasChanges)
         {
             SetDialogResultOnClose(WinFormsShims.DialogResult.OK);
