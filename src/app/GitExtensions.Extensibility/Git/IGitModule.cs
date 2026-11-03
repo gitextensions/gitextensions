@@ -66,6 +66,15 @@ public interface IGitModule
     void SetSetting(string setting, string value, bool append = false);
     void UnsetSetting(string setting);
 
+    /// <summary>
+    ///  Sets or unsets a git config setting at the given level and invalidates the cached settings.
+    /// </summary>
+    /// <param name="settingLevel">The scope for the config (must not be <see cref="GitSettingLevel.Effective"/>).</param>
+    /// <param name="setting">The name of the setting (may contain dots, e.g. "core.autocrlf").</param>
+    /// <param name="value">The value of the setting or <see langword="null"/> for removing the setting.</param>
+    /// <param name="append">Whether to add the value to a multi-value setting instead of replacing it.</param>
+    void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value, bool append = false);
+
     Encoding CommitEncoding { get; }
 
     Encoding FilesEncoding { get; }
@@ -452,7 +461,14 @@ public interface IGitModule
 
     void RunMergeTool(string? fileName = "", string? customTool = null);
 
-    bool HandleConflictSelectSide(string fileName, string side);
+    /// <summary>
+    ///  Resolves a merge conflict for <paramref name="fileName"/> by checking out and staging the given <paramref name="side"/>.
+    /// </summary>
+    /// <param name="fileName">The conflicted file, relative to the working directory.</param>
+    /// <param name="side">The side to keep, e.g. "BASE", "LOCAL" or "REMOTE".</param>
+    /// <param name="errorMessage">On failure, git's error detail (exit code and stderr/stdout); otherwise <see cref="string.Empty"/>.</param>
+    /// <returns><see langword="true"/> if the conflict was resolved; otherwise, <see langword="false"/>.</returns>
+    bool HandleConflictSelectSide(string fileName, string side, out string errorMessage);
 
     void Reset(ResetMode mode, string? file = null);
 
