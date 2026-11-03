@@ -48,6 +48,8 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
     {
         _threshold = threshold;
         _commands = commands;
+
+        // To accommodate the translation app
         _gitModule = commands?.Module;
 
         InitializeComponent();
@@ -186,6 +188,8 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
             foreach (string objectData in objects)
             {
                 cancellationToken.ThrowIfCancellationRequested();
+
+                // "100644 blob b17a497cdc6140aa3b9a681344522f44768165ac 2120195\tBin/Dictionaries/de-DE.dic"
                 int pathSeparator = objectData.IndexOf('\t');
                 if (pathSeparator < 0)
                 {

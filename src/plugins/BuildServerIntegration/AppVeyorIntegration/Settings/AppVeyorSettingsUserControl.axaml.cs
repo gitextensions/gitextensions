@@ -36,6 +36,8 @@ public partial class AppVeyorSettingsUserControl : GitExtensionsControl, IBuildS
         buildServerConfig.SetString("AppVeyorProjectName", AppVeyorProjectName.Text.NullIfEmpty());
         buildServerConfig.SetString("AppVeyorAccountName", AppVeyorAccountName.Text.NullIfEmpty());
         buildServerConfig.SetString("AppVeyorAccountToken", AppVeyorAccountToken.Text.NullIfEmpty());
+
+        // if the setting is empty, do not set any value (as this could override lower priority levels)
         buildServerConfig.SetBool("AppVeyorLoadTestsResults", cbLoadTestResults.IsChecked);
     }
 }

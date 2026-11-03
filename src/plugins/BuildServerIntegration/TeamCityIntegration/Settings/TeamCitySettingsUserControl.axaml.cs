@@ -67,6 +67,8 @@ public partial class TeamCitySettingsUserControl : GitExtensionsControl, IBuildS
         buildServerConfig.SetString("BuildServerUrl", TeamCityServerUrl.Text.NullIfEmpty());
         buildServerConfig.SetString("ProjectName", TeamCityProjectName.Text.NullIfEmpty());
         buildServerConfig.SetString("BuildIdFilter", TeamCityBuildIdFilter.Text.NullIfEmpty());
+
+        // if the setting is empty, do not set any value (as this could override lower priority levels)
         buildServerConfig.SetBool("LogAsGuest", CheckBoxLogAsGuest.IsChecked);
     }
 
