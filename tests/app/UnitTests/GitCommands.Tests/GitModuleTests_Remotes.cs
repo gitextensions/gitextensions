@@ -293,12 +293,12 @@ partial class GitModuleTests
         const string remotes = $"{origin}\n{fork}";
         const string settings = $"remote.{fork}.color\n#cccccc";
 
-        GitModule gitModule = null!;
+        GitModule? gitModule = null;
         gitModule = GetGitModuleWithExecutable(new CallbackExecutable(_executable, arguments =>
         {
             if (arguments == "remote")
             {
-                gitModule.ResetRemoteColors();
+                gitModule?.ResetRemoteColors();
             }
         }));
 

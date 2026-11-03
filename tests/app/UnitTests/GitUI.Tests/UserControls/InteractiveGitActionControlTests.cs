@@ -11,7 +11,6 @@ public class InteractiveGitActionControlTests
 {
     private InteractiveGitActionControl _control = null!;
     private InteractiveGitActionControl.TestAccessor _accessor;
-    private IGitUICommands _uiCommands = null!;
 
     [SetUp]
     public void SetUp()
@@ -19,9 +18,9 @@ public class InteractiveGitActionControlTests
         _control = new InteractiveGitActionControl();
         _accessor = _control.GetTestAccessor();
 
-        _uiCommands = Substitute.For<IGitUICommands>();
+        IGitUICommands uiCommands = Substitute.For<IGitUICommands>();
         IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
-        uiCommandsSource.UICommands.Returns(_uiCommands);
+        uiCommandsSource.UICommands.Returns(uiCommands);
         _control.UICommandsSource = uiCommandsSource;
     }
 
@@ -278,5 +277,5 @@ public class InteractiveGitActionControlTests
     }
 
     private void SetModule(IGitModule module)
-        => _uiCommands.Module.Returns(module);
+        => _control.UICommandsSource.UICommands.Module.Returns(module);
 }
