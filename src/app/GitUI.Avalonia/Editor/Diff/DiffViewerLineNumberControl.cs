@@ -73,6 +73,8 @@ public class DiffViewerLineNumberControl : AbstractMargin
         // The source measures an integer WideSpaceWidth for one space and one 'x'
         // before multiplying by the digits and their trailing spaces.
         int columnCount = _showLeftColumn ? 2 : 1;
+
+        // add a space behind each number
         int width = (int)_textHorizontalMargin + (columnCount * wideSpaceWidth * (digits + 1));
         return new Avalonia.Size(width, 0);
     }

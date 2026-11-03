@@ -23,6 +23,7 @@ partial class FileStatusList
             string extension = Path.GetExtension(fileName);
             if (!_fileIconsByExtension.TryGetValue(extension, out IImage? icon))
             {
+                // placeholder, to be added to _fileIconsByExtension
                 image.Source = Images.File;
                 if (_missingFileIconsByExtension.TryGetValue(extension, out MissingIcon? missingIcon))
                 {
@@ -53,6 +54,7 @@ partial class FileStatusList
                 continue;
             }
 
+            // The extension is cached
             image.Source = icon;
         }
     }

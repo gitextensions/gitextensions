@@ -286,6 +286,8 @@ public partial class FileViewer : GitModuleControl
         _runtimeStateApplied = true;
     }
 
+    // Public properties
+
     /// <summary>
     ///  Gets the preamble detected while reading the current working-tree file.
     /// </summary>
@@ -494,6 +496,8 @@ public partial class FileViewer : GitModuleControl
             { IgnoreWhitespace == IgnoreWhitespaceKind.Change, "--ignore-space-change" },
             { IgnoreWhitespace == IgnoreWhitespaceKind.Eol, "--ignore-space-at-eol" },
             { ShowEntireFile, "--inter-hunk-context=9000 --unified=9000", $"--unified={NumberOfContextLines}" },
+
+            // Handle zero context as showing no file changes, to get the summary only
             { isRangeDiff && NumberOfContextLines == 0, "--no-patch" },
             { TreatAllFilesAsText, "--text" },
             { !isCombinedDiff && AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.GitWordDiff, "--word-diff=color" },
@@ -739,6 +743,8 @@ public partial class FileViewer : GitModuleControl
             ref parsedText,
             internalFileViewer.LineNumbersControl,
             out int rightColumnStart);
+
+        // Difftastic set the position (0 to hide)
         VRulerPosition = rightColumnStart;
         SetDiffText(parsedText, highlightService, showLeftColumn: true);
         internalFileViewer.GoToFirstChange(NumberOfContextLines);
@@ -882,9 +888,14 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
-    ///  Loads a file from the working tree using the same image/text/binary decisions as the
-    ///  original viewer.
+    /// Get contents in the file system async if not too big, otherwise ask user.
     /// </summary>
+    /// <param name="fileName">The file/submodule path.</param>
+    /// <param name="isSubmodule">If submodule.</param>
+    /// <param name="item">Metadata for line patching and presentation.</param>
+    /// <param name="line">The line to display.</param>
+    /// <param name="openWithDifftool">Diff action.</param>
+    /// <returns>Task.</returns>
     public Task ViewFileAsync(
         string fileName,
         bool isSubmodule = false,
@@ -940,6 +951,7 @@ public partial class FileViewer : GitModuleControl
     /// <summary>Applies every displayed change from a revision or stash to the worktree/index.</summary>
     public void CherryPickAllChanges()
     {
+        // Ignore hotkeys executed when menu is disabled
         if (SupportLinePatching)
         {
             ApplySelectedLines(allFile: true, reverse: false);
@@ -1073,6 +1085,13 @@ public partial class FileViewer : GitModuleControl
         UpdateDiffOptionState();
     }
 
+    /// <summary>
+    /// Reset internal status for the new file.
+    /// </summary>
+    /// <param name="viewMode">Requested mode to view.</param>
+    /// <param name="fileName">Filename to present, for highlighting etc.</param>
+    /// <param name="item">Metadata for linepatching.</param>
+    /// <param name="text">Metadata for linepatching.</param>
     private void ResetView(
         ViewMode viewMode,
         string? fileName,
@@ -1088,6 +1107,8 @@ public partial class FileViewer : GitModuleControl
         _deferShowFunc = null;
         _NO_TRANSLATE_lblShowPreview.IsVisible = false;
         fileviewerToolbar.IsVisible = false;
+
+        // Override the set view mode
         if (_viewMode == ViewMode.Text
             && !string.IsNullOrEmpty(fileName)
             && (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
@@ -1099,6 +1120,8 @@ public partial class FileViewer : GitModuleControl
         bool hasModule = TryGetUICommandsDirect(out _);
         string? fullPath = hasModule ? _fullPathResolver.Resolve(fileName) : null;
         SupportLinePatching =
+
+            // Diffs, currently requires that the file to update exists
             ((_viewMode.IsNormalDiffView()
                     && (text?.Contains("@@", StringComparison.Ordinal) ?? false)
                     && AppSettings.DiffDisplayAppearance.Value != DiffDisplayAppearance.GitWordDiff
@@ -1109,6 +1132,8 @@ public partial class FileViewer : GitModuleControl
                 || (item?.Item.IsAdded is true
                     && (item.Item.Staged is StagedStatus.WorkTree or StagedStatus.Index
                         || !File.Exists(fullPath))))
+
+            // No patching allowed if no worktree
             && hasModule
             && !Module.IsBareRepository();
         AllowLinePatching = SupportLinePatching;
@@ -1481,7 +1506,10 @@ public partial class FileViewer : GitModuleControl
         return true;
     }
 
-    /// <summary>Stages worktree lines or unstages index lines.</summary>
+    /// <summary>
+    /// Stage lines in WorkTree or Unstage lines in Index.
+    /// </summary>
+    /// <param fileName="stage"><see langword="true"/> if current commit is worktree and the lines are to be staged, <see langword="false"/> otherwise.</param>
     public void StageSelectedLines(bool stage)
     {
         if (!AllowLinePatching || _viewItem is null)
@@ -1534,13 +1562,17 @@ public partial class FileViewer : GitModuleControl
         ProcessApplyOutput(args, patch, patchUpdateDiff: true);
     }
 
-    /// <summary>Resets selected worktree or index lines after confirmation.</summary>
+    /// <summary>
+    /// Reset lines in Index or Worktree.
+    /// </summary>
     public void ResetNoncommittedSelectedLines()
     {
+        // reload not completed
         if (!AllowLinePatching || _viewItem is null
+
+            // Reset only on an explicit confirmation, so that cancelling declines the destructive action
             || TaskDialog.ShowDialog(GetOwner(), _NO_TRANSLATE_resetSelectedLinesConfirmationDialog) != TaskDialogButton.Yes)
         {
-            // reload not completed
             return;
         }
 
@@ -1872,6 +1904,7 @@ public partial class FileViewer : GitModuleControl
         IgnoreAllWhitespace = 15,
     }
 
+    // Protected
     protected override bool ExecuteCommand(int command)
     {
         switch ((Command)command)
@@ -2094,6 +2127,7 @@ public partial class FileViewer : GitModuleControl
         ViewPatchCore(text, useGitColoring, isCombinedDiff, isGitWordDiff);
     }
 
+    // Private methods
     private void ViewPatchCore(
         string? text,
         bool useGitColoring,
@@ -2105,6 +2139,8 @@ public partial class FileViewer : GitModuleControl
     {
         ResetView(isCombinedDiff ? ViewMode.CombinedDiff : ViewMode.Diff, fileName, item, openWithDifftool, text);
         string parsedText = text ?? string.Empty;
+
+        // Get the highlight service, possibly clean escape sequences in the text and create highlight.
         DiffHighlightService highlightService = isCombinedDiff
             ? new CombinedDiffHighlightService(ref parsedText, useGitColoring)
             : new PatchHighlightService(ref parsedText, useGitColoring, isGitWordDiff);
@@ -2201,6 +2237,11 @@ public partial class FileViewer : GitModuleControl
         string? fullPath = _fullPathResolver.Resolve(fileName);
         ArgumentNullException.ThrowIfNull(fullPath);
 
+        // Do not evaluate GetUpdateTreeId() to get isSubmodule if not set.
+        // For ViewGitItemAsync() this is already attempted, for other calls (where item is null)
+        // a file should be provided
+        // Especially, if GE is invoked as git-config core.editor when rebasing,
+        // another Git command must not be called (will fail the rebase).
         if (!isSubmodule
             && (item is null || item.Item.TreeId.IsZero)
             && (fileName.EndsWith('/') || Directory.Exists(fullPath)))
@@ -2266,6 +2307,9 @@ public partial class FileViewer : GitModuleControl
         CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
+
+        // Check for binary file. Using gitattributes could be misleading for a changed file,
+        // but not much else can be done
         bool isBinary = (checkGitAttributes && FileHelper.IsBinaryFileName(Module, fileName))
                         || FileHelper.IsBinaryFileAccordingToContent(text);
 
@@ -2283,6 +2327,8 @@ public partial class FileViewer : GitModuleControl
                     SetText(string.Format(_binaryFileDetected.Text, fileName));
                 }
             }
+
+            // If the file seem to be a diff, color with escape sequences if they exist
             else if (_viewMode == ViewMode.FixedDiff)
             {
                 string parsedText = text;
@@ -2346,6 +2392,8 @@ public partial class FileViewer : GitModuleControl
 
     private async Task<string> LoadBlobTextAsync(string fileName, ObjectId blobId, CancellationToken cancellationToken)
     {
+        // If the file blob seem to be a diff file, get also escape sequences, that possibly are stored in the diff
+        // _viewMode is not set yet, similar check there
         bool stripAnsiEscapeCodes = string.IsNullOrEmpty(fileName)
             || (!fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
                 && !fileName.EndsWith(".patch", StringComparison.OrdinalIgnoreCase));
@@ -2409,6 +2457,8 @@ public partial class FileViewer : GitModuleControl
     {
         try
         {
+            // If the file does not exist, it doesn't matter what size we
+            // return as nothing will be shown anyway.
             return File.Exists(fullPath) ? new FileInfo(fullPath).Length : 0;
         }
         catch
@@ -2553,6 +2603,9 @@ public partial class FileViewer : GitModuleControl
         }
     }
 
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
     private void ClearImage()
     {
         ImagePreview.Source = null;
@@ -2782,6 +2835,7 @@ public partial class FileViewer : GitModuleControl
 
     private void ShowFileViewerToolbar()
     {
+        // toolbar
         fileviewerToolbar.IsVisible = true;
         if (TryGetUICommandsDirect(out _))
         {
