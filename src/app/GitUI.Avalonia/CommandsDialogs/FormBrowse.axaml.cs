@@ -500,6 +500,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 hotkeys.FirstOrDefault(hotkey => hotkey.Name == script.GetDisplayName())?.KeyData);
             ToolTip.SetTip(button, gesture is null ? script.Name : $"{script.Name} ({gesture})");
             button.Click += (_, _) => ExecuteCommand(script.HotkeyCommandIdentifier);
+
+            // add to toolstrip
             ToolStripScripts.Children.Add(button);
         }
 
@@ -610,7 +612,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void OnFormClosing(WindowClosingEventArgs e)
     {
-        // File-history mode temporarily hides the left panel without persisting that forced state.
+        // Restore state at startup if file history mode, ignore the forced setting
         if (_isFileHistoryMode && _fileBlameHistoryLeftPanelStartupState && !leftPanel.IsVisible)
         {
             MainSplitContainer.ColumnDefinitions[0].Width = _leftPanelWidth.Value > 0
@@ -1052,9 +1054,13 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         WinFormsToolStripMenuSizer.SetShortcutDisplayString(
             refreshDashboardToolStripMenuItem,
             isValidWorkingDir ? string.Empty : "F5");
+
+        // repositoryToolStripMenuItem.Visible
         repositoryToolStripMenuItem.IsVisible = isValidWorkingDir;
         dashboardToolStripMenuItem.IsVisible = !isValidWorkingDir;
         _formBrowseMenus?.SetVisible(isValidWorkingDir);
+
+        // commandsToolStripMenuItem.Visible
         commandsToolStripMenuItem.IsVisible = isValidWorkingDir;
         fileExplorerToolStripMenuItem.IsEnabled = isValidWorkingDir;
         manageRemoteRepositoriesToolStripMenuItem1.IsEnabled = isValidWorkingDir;
@@ -1119,6 +1125,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         if (isValidWorkingDir)
         {
             HideDashboard();
+
+            // add Navigate and View menu
             _formBrowseMenus?.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
             _NO_TRANSLATE_WorkingDir.RefreshContent();
             _aheadBehindDataProvider?.ResetCache();
@@ -1810,6 +1818,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _gpgInfoLoaded = false;
         revisionGpgInfo1.DisplayVerificationPending();
 
+        // Don't show the "GPG" tab for artificial commits
         bool showGpgInfoTab = revision?.IsArtificial is false && AppSettings.ShowGpgInformation.Value;
         GpgInfoTabPage.IsVisible = showGpgInfoTab;
         if (!showGpgInfoTab)
@@ -1930,6 +1939,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
         _loadOperations.FileAndForget(async () =>
         {
+            // Always query only current branch here
+            // because, due to race condition with left panel async refresh:
+            // * when there are a lot of branches, we end up here 1st (and so, we want only the current branch data
+            // because getting ahead - behind data for all branches will be (very ?) long
+            // * when there are few branches, we will end up here not in 1st
+            // and the data will be taken from cache (so what we pass as argument is kind of useless)
             IReadOnlyDictionary<string, AheadBehindData>? aheadBehindData = await Task.Run(
                 () => _aheadBehindDataProvider.GetData(branchName),
                 cancellationToken);
@@ -1994,6 +2009,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         else if (CommitInfoTabControl.SelectedItem == DiffTabPage)
         {
             revisionDiff.ReloadHotkeys();
+
+            // workaround to avoid focusing the "filter files" combobox
             revisionDiff.SwitchFocus(alreadyContainedFocus: false);
         }
         else if (selectingGpgInfo)
@@ -3176,14 +3193,13 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     }
 
     /// <summary>
-    ///  Adds a tab with a console interface over the current working copy. Recreates the
-    ///  terminal when the tab is activated again after the shell exits.
+    /// Adds a tab with console interface to Git over the current working copy. Recreates the terminal on tab activation if user exits the shell.
+    /// Uses the configured console emulator (portable shell).
     /// </summary>
     private void FillTerminalTab()
     {
-        // If terminal control already exists, just focus it
+        // Tab page already created
         // Check if there are available console emulators
-        // Delay-create the terminal window when the tab is first selected
         if (!AppSettings.ShowConEmuTab.Value
             || _consoleEmulatorsRegistry is null
             || _consoleEmulatorsRegistry.AvailableConsoleEmulators.Count == 0
@@ -3192,7 +3208,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
-        // We have to set ImageKey after it's added to the tab control
         _consoleTabPage = new TabItem
         {
             Header = _consoleTabCaption.Text,
@@ -3210,6 +3225,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
+        // Delay-create the terminal window when the tab is first selected
         _terminal ??= _consoleEmulatorsRegistry.CreateShellRunner();
         if (_terminal is null)
         {
@@ -3226,6 +3242,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             _terminal.StartShell(Module.WorkingDir);
         }
 
+        // If terminal control already exists, just focus it
         _terminal.FocusTerminal();
     }
 
