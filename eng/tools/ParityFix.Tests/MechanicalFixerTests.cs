@@ -21,6 +21,72 @@ public sealed class MechanicalFixerTests
         SyntaxFactory.AreEquivalent(CSharpSyntaxTree.ParseText(fixture.Twin).GetRoot(), CSharpSyntaxTree.ParseText(result.Text).GetRoot()).Should().BeTrue();
     }
 
+    [TestCase("// Retain the reason.")]
+    [TestCase("/* Retain the reason. */")]
+    [TestCase("/// <summary>Retain the reason.</summary>")]
+    public void Fix_should_restore_leading_comments_at_a_unique_anchor_with_a_changed_body(string comment)
+    {
+        using Fixture fixture = new($"{comment}\n    void A() {{ Windows(); }}", "void A() { Portable(); }");
+        FileFix result = fixture.Fix();
+        result.CommentsRestored.Should().Be(1);
+        result.Text.Should().Contain(comment).And.Contain("Portable();");
+    }
+
+    [Test]
+    public void Fix_should_match_a_unique_leading_member_after_framework_parameter_changes()
+    {
+        using Fixture fixture = new("// Keep handler reasoning.\n    void A(EventArgs e) { Windows(); }", "void A(RoutedEventArgs e) { Portable(); }");
+        fixture.Fix().CommentsRestored.Should().Be(1);
+    }
+
+    [Test]
+    public void Fix_should_not_guess_between_changed_overload_anchors()
+    {
+        using Fixture fixture = new("// Keep handler reasoning.\n    void A(EventArgs e) { Windows(); }", "void A(RoutedEventArgs e) { Portable(); }\n    void A(int e) { }");
+        fixture.Fix().CommentsRestored.Should().Be(0);
+    }
+
+    [Test]
+    public void Fix_should_anchor_on_a_nested_next_statement_when_the_outer_statement_changes()
+    {
+        using Fixture fixture = new("void A()\n    {\n        if (flag)\n        {\n            Windows();\n            // Keep increment rationale.\n            count++;\n        }\n    }", "void A()\n    {\n        if (flag)\n        {\n            Portable();\n            count++;\n        }\n    }");
+        FileFix result = fixture.Fix();
+        result.CommentsRestored.Should().Be(1);
+        result.Text.Should().Contain("// Keep increment rationale.\r\n            count++;");
+    }
+
+    [Test]
+    public void Fix_should_anchor_after_the_previous_unique_statement_when_the_next_statement_changes()
+    {
+        using Fixture fixture = new("void A()\n    {\n        Done();\n        // Completion before platform follow-up.\n        Windows();\n    }", "void A()\n    {\n        Done();\n        Portable();\n    }");
+        FileFix result = fixture.Fix();
+        result.CommentsRestored.Should().Be(1);
+        result.Text.Should().Contain("Done();\r\n        // Completion before platform follow-up.\r\n        Portable();");
+    }
+
+    [Test]
+    public void Fix_should_not_cross_the_comments_control_flow_context_to_find_a_remote_anchor()
+    {
+        using Fixture fixture = new("void A()\n    {\n        Shared();\n        if (flag)\n        {\n            Windows();\n            // Missing operation rationale.\n            Missing();\n        }\n    }", "void A()\n    {\n        Shared();\n        if (flag)\n        {\n            Portable();\n        }\n    }");
+        fixture.Fix().CommentsRestored.Should().Be(0);
+    }
+
+    [Test]
+    public void Fix_should_find_the_nearest_equivalent_unique_statement_in_either_direction()
+    {
+        using Fixture fixture = new("void A()\n    {\n        Shared();\n        Windows();\n        // Shared state remains available.\n        Missing();\n    }", "void A()\n    {\n        Shared();\n        Portable();\n    }");
+        FileFix result = fixture.Fix();
+        result.CommentsRestored.Should().Be(1);
+        result.Text.Should().Contain("Shared();\r\n        // Shared state remains available.");
+    }
+
+    [Test]
+    public void Fix_should_not_cross_local_function_contexts()
+    {
+        using Fixture fixture = new("void A()\n    {\n        void First()\n        {\n            // First operation rationale.\n            Shared();\n        }\n    }", "void A()\n    {\n        void Second()\n        {\n            Shared();\n        }\n    }");
+        fixture.Fix().CommentsRestored.Should().Be(0);
+    }
+
     [Test]
     public void Fix_should_restore_body_comments_at_the_same_token_boundary()
     {
