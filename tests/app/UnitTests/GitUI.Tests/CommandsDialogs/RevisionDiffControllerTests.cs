@@ -489,5 +489,18 @@ public class RevisionDiffControllerTests
         _controller.ShouldShowSubmoduleMenus(selectionInfo).Should().Be(expected);
     }
 
+    [TestCase(1, true, false, true)]
+    [TestCase(1, true, true, true)]
+    [TestCase(1, false, false, false)]
+    [TestCase(1, false, true, false)]
+    [TestCase(2, true, false, false)]
+    [TestCase(2, true, true, false)]
+    public void ShouldShowMenuStopTracking_should_include_submodules(int selectedGitItemCount, bool isAnyTracked, bool isAnySubmodule, bool expected)
+    {
+        GitRevision rev = new(ObjectId.WorkTreeId);
+        ContextMenuSelectionInfo selectionInfo = CreateContextMenuSelectionInfo(rev, selectedGitItemCount: selectedGitItemCount, isAnyTracked: isAnyTracked, isAnySubmodule: isAnySubmodule);
+        _controller.ShouldShowMenuStopTracking(selectionInfo).Should().Be(expected);
+    }
+
     #endregion
 }

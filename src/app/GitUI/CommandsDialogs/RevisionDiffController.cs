@@ -22,6 +22,7 @@ internal interface IRevisionDiffController
     bool ShouldShowMenuShowInFolder(ContextMenuSelectionInfo selectionInfo);
     bool ShouldShowMenuShowInFileTree(ContextMenuSelectionInfo selectionInfo);
     bool ShouldShowMenuStage(ContextMenuSelectionInfo selectionInfo);
+    bool ShouldShowMenuStopTracking(ContextMenuSelectionInfo selectionInfo);
     bool ShouldShowMenuUnstage(ContextMenuSelectionInfo selectionInfo);
     bool ShouldShowSubmoduleMenus(ContextMenuSelectionInfo selectionInfo);
     bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo);
@@ -221,6 +222,13 @@ internal sealed class RevisionDiffController(Func<IGitModule> getModule, IFullPa
     public bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo)
     {
         return ShouldShowMenuFileHistory(selectionInfo) && !selectionInfo.IsAnySubmodule && selectionInfo.SelectedFolder is null;
+    }
+
+    public bool ShouldShowMenuStopTracking(ContextMenuSelectionInfo selectionInfo)
+    {
+        // Submodules are included: `git rm --cached` is also how a gitlink is dropped from the index,
+        // and once its .gitmodules entry is gone, no other command in the UI can remove it.
+        return selectionInfo.SelectedGitItemCount == 1 && selectionInfo.IsAnyTracked;
     }
     #endregion
 
