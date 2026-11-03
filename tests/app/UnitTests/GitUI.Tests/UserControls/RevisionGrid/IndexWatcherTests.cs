@@ -29,5 +29,13 @@ public sealed class IndexWatcherTests
         File.SetLastWriteTimeUtc(refPath, DateTime.UtcNow.AddMinutes(1));
         accessor.RaiseChanged(refPath);
         indexWatcher.IndexChanged.Should().BeTrue();
+
+        // A change made just after Reset can get an older time stamp because the file system clock is coarse
+        DateTime beforeReset = DateTime.UtcNow;
+        indexWatcher.Reset();
+        indexWatcher.IndexChanged.Should().BeFalse();
+        File.SetLastWriteTimeUtc(refPath, beforeReset);
+        accessor.RaiseChanged(refPath);
+        indexWatcher.IndexChanged.Should().BeTrue();
     }
 }

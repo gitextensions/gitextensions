@@ -109,6 +109,8 @@ public sealed class IndexWatcher : IDisposable
 
     private bool _enabled;
     private string? _gitDirPath;
+    private static readonly TimeSpan _fileTimeGranularity = TimeSpan.FromMilliseconds(20);
+    private readonly Lock _resetLock = new();
     private DateTime _lastResetUtc;
     private FileSystemWatcher GitIndexWatcher { get; }
     private FileSystemWatcher RefsWatcher { get; }
@@ -118,12 +120,18 @@ public sealed class IndexWatcher : IDisposable
         // The notifications are raised asynchronously on the thread pool and can arrive after Reset()
         // for changes made before it, e.g. by the fetch that triggered the refresh.
         // (The time of a no longer existing file, e.g. a renamed *.lock file, is 1601-01-01.)
-        if (File.GetLastWriteTimeUtc(e.FullPath) < _lastResetUtc)
-        {
-            return;
-        }
+        DateTime lastWriteTimeUtc = File.GetLastWriteTimeUtc(e.FullPath);
 
-        IndexChanged = true;
+        // Compare and set atomically with Reset(), else a stale notification can set the state after Reset() cleared it.
+        lock (_resetLock)
+        {
+            if (lastWriteTimeUtc < _lastResetUtc)
+            {
+                return;
+            }
+
+            IndexChanged = true;
+        }
     }
 
     /// <summary>
@@ -131,9 +139,14 @@ public sealed class IndexWatcher : IDisposable
     /// </summary>
     public void Reset()
     {
-        _lastResetUtc = DateTime.UtcNow;
-        RefreshWatcher();
-        IndexChanged = false;
+        lock (_resetLock)
+        {
+            // File times are set with the coarse system clock tick (15.6 ms by default), DateTime.UtcNow is precise.
+            // Do not ignore changes made just after the reset.
+            _lastResetUtc = DateTime.UtcNow - _fileTimeGranularity;
+            RefreshWatcher();
+            IndexChanged = false;
+        }
     }
 
     /// <summary>
