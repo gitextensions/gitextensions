@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using ConEmu.WinForms;
 using GitCommands;
 using GitUI.ConsoleEmulation;
@@ -29,7 +29,7 @@ internal sealed class ConEmuConsoleShellRunner(IShellProvider shellProvider, Con
             return;
         }
 
-        string? shellType = AppSettings.ConEmuTerminal.Value;
+        string? shellType = AppSettings.ConEmuTerminal;
         IShellDescriptor shell = shellProvider.GetShell(shellType);
         string command = shell.GetChangeDirCommand(path);
         if (string.IsNullOrWhiteSpace(command))
@@ -81,7 +81,7 @@ internal sealed class ConEmuConsoleShellRunner(IShellProvider shellProvider, Con
             WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator
         };
 
-        string? shellType = AppSettings.ConEmuTerminal.Value;
+        string? shellType = AppSettings.ConEmuTerminal;
         startInfo.ConsoleProcessCommandLine = shellProvider.GetShellCommandLine(shellType);
 
         if (!string.IsNullOrEmpty(AppSettings.GitCommandValue))
