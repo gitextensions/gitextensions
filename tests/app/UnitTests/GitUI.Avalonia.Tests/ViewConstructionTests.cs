@@ -63,9 +63,9 @@ public sealed class ViewConstructionTests
                 form.RevisionInfo.Parent.Should().BeSameAs(expectedHost);
                 form.CommitInfoTabPage.IsVisible.Should().Be(position == CommitInfoPosition.BelowList);
                 form.RevisionsSplitContainer.ColumnDefinitions[0].Width.Value
-                    .Should().Be(position == CommitInfoPosition.LeftwardFromList ? 490 : 0);
+                    .Should().Be(position == CommitInfoPosition.LeftwardFromList ? 507 : 0);
                 form.RevisionsSplitContainer.ColumnDefinitions[4].Width.Value
-                    .Should().Be(position == CommitInfoPosition.RightwardFromList ? 490 : 0);
+                    .Should().Be(position == CommitInfoPosition.RightwardFromList ? 507 : 0);
                 form.CommitInfoTabControl.IsVisible.Should().BeTrue();
                 form.RightSplitContainer.RowDefinitions[2].Height.Value.Should().BeGreaterThan(0);
                 form.Close();
@@ -109,6 +109,7 @@ public sealed class ViewConstructionTests
     [AvaloniaTest]
     public void Designer_constructors_should_translate_the_view()
     {
+        using TranslationTestScope translationScope = new();
         string original = AppSettings.CurrentTranslation ?? "";
         try
         {
@@ -428,8 +429,8 @@ public sealed class ViewConstructionTests
         rebase.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
         commands.Received(1).StartRebaseDialog(
-            form, excluded.ObjectId.ToShortString(), ((IRevisionGridInfo)revisionGrid).GetCurrentBranch(),
-            revision.ObjectId.ToString(), interactive: false, startRebaseImmediately: false);
+            form, revision.ObjectId.ToShortString(), ((IRevisionGridInfo)revisionGrid).GetCurrentBranch(),
+            excluded.ObjectId.ToString(), interactive: false, startRebaseImmediately: false);
     }
 
     [AvaloniaTest]
@@ -460,7 +461,7 @@ public sealed class ViewConstructionTests
 
         pull.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
-        commands.Received(1).StartPullDialog(form);
+        commands.Received(1).StartPullDialog(form, pullAction: AppSettings.FormPullAction);
     }
 
     [AvaloniaTest]

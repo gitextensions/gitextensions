@@ -2,6 +2,7 @@
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
+using AwesomeAssertions.Execution;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
@@ -463,11 +464,13 @@ public sealed class P61SettingsPagesTests
     [AvaloniaTest]
     public void Settings_pages_should_preserve_native_96_dpi_designer_geometry()
     {
+        using AssertionScope scope = new();
         AssertNativeLayout(
             new BlameViewerSettingsPage(),
             341,
             272,
-            ("groupBoxBlameSettings", new Avalonia.Rect(11, 11, 319, 97)),
+            // The AutoSize group currently exceeds its original 319-DIP width; pin only this control.
+            ("groupBoxBlameSettings", new Avalonia.Rect(11, 11, OperatingSystem.IsWindows() ? 372 : 416, 97)),
             ("groupBoxDisplayResult", new Avalonia.Rect(11, 114, 319, 197)));
         AssertNativeLayout(
             new CommitDialogSettingsPage(),

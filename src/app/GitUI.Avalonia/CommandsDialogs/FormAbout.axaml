@@ -86,7 +86,7 @@
                      Grid.Row="8"
                      TextWrapping="Wrap"
                      Foreground="{DynamicResource GitExtensionsKnownColorGrayTextBrush}"
-                     Text="This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE." />
+                     Text="This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE." />
         </Grid>
       </Border>
     </Border>

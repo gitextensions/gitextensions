@@ -162,12 +162,6 @@ public partial class EditNetSpell : GitModuleControl, IDisposable
         InitializeComplete();
     }
 
-    public override void AddTranslationItems(GitExtensions.Extensibility.Translations.ITranslation translation)
-    {
-        base.AddTranslationItems(translation);
-        translation.AddTranslationItem(nameof(EditNetSpell), nameof(TextBox), "Text", string.Empty);
-    }
-
     [AllowNull]
     public string Text
     {

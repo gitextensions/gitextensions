@@ -94,6 +94,7 @@ public sealed class AboutDialogsTests
     [AvaloniaTest]
     public void FormAbout_should_construct_and_emit_its_translation_keys()
     {
+        using TranslationTestScope translationScope = new("");
         FormAbout form = new();
         ITranslation translation = Substitute.For<ITranslation>();
 
@@ -121,17 +122,33 @@ public sealed class AboutDialogsTests
             form.ClientSize.Should().Be(new Size(601, 318));
             form.FindControl<StackPanel>("flowLayoutPanel1")!.Bounds.Should().Be(new Rect(0, 0, 157, 318));
             form.FindControl<Image>("logoPictureBox")!.Bounds.Should().Be(new Rect(12, 12, 128, 128));
-            form.FindControl<TextBlock>("label2")!.Bounds.Should().Be(new Rect(12, 156, 133, 30));
+            AssertTextBounds(form.FindControl<TextBlock>("label2")!.Bounds, new Rect(12, 156, 133, 30));
             form.FindControl<Border>("pictureDonate")!.Bounds.Should().Be(new Rect(6, 202, 145, 32));
             form.FindControl<Border>("panel1")!.Bounds.Should().Be(new Rect(157, 0, 444, 318));
             Border tableLayoutPanel1 = (Border)form.FindControl<Border>("panel1")!.Child!;
             tableLayoutPanel1.Bounds.Should().Be(new Rect(0, 0, 444, 318));
-            GetBoundsInTable(form.FindControl<HyperlinkButton>("_NO_TRANSLATE_labelProductName")!).Should().Be(new Rect(12, 24, 420, 19));
-            GetBoundsInTable(form.FindControl<TextBlock>("_NO_TRANSLATE_labelProductDescription")!).Should().Be(new Rect(12, 43, 420, 13));
-            GetBoundsInTable(form.FindControl<HyperlinkButton>("_NO_TRANSLATE_ThanksTo")!).Should().Be(new Rect(12, 79, 420, 13));
-            GetBoundsInTable(form.FindControl<HyperlinkButton>("linkLabelIcons")!).Should().Be(new Rect(12, 92, 213, 13));
+            AssertTextBounds(GetBoundsInTable(form.FindControl<HyperlinkButton>("_NO_TRANSLATE_labelProductName")!), new Rect(12, 24, 420, 19));
+            AssertTextBounds(GetBoundsInTable(form.FindControl<TextBlock>("_NO_TRANSLATE_labelProductDescription")!), new Rect(12, 43, 420, 13));
+            AssertTextBounds(GetBoundsInTable(form.FindControl<HyperlinkButton>("_NO_TRANSLATE_ThanksTo")!), new Rect(12, 79, 420, 13));
+            AssertTextBounds(GetBoundsInTable(form.FindControl<HyperlinkButton>("linkLabelIcons")!), new Rect(12, 92, 213, 13));
             GetBoundsInTable(form.FindControl<EnvironmentInfo>("environmentInfo")!).Should().Be(new Rect(12, 105, 420, 139));
-            GetBoundsInTable(form.FindControl<TextBlock>("label1")!).Should().Be(new Rect(12, 252, 420, 54));
+            AssertTextBounds(GetBoundsInTable(form.FindControl<TextBlock>("label1")!), new Rect(12, 252, 420, 54));
+
+            static void AssertTextBounds(Rect actual, Rect expected)
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    actual.Should().Be(expected);
+                }
+                else
+                {
+                    // Font metrics can change the height and vertical centering of text within its row.
+                    actual.X.Should().Be(expected.X);
+                    actual.Width.Should().Be(expected.Width);
+                    actual.Y.Should().BeApproximately(expected.Y, 1);
+                    actual.Height.Should().BeApproximately(expected.Height, 1);
+                }
+            }
 
             Rect GetBoundsInTable(Control control)
                 => new(control.TranslatePoint(default, tableLayoutPanel1)!.Value, control.Bounds.Size);

@@ -16,6 +16,7 @@ public sealed class WindowPositionTestIsolation
     private GitExtSettingsCache? _isolatedSettingsCache;
     private string _originalSettingsPath = null!;
     private string? _originalSettingsHash;
+    private Microsoft.VisualStudio.Threading.JoinableTaskContext? _compositionContext;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
@@ -48,9 +49,18 @@ public sealed class WindowPositionTestIsolation
             AppSettings.GetString("Detailed.ShowSplitViewLayout", null).Should().BeNull(
                 "the assembly must start with its own fresh profile, not inherit a previous interactive or test session");
             AppSettings.ShowSplitViewLayout.Should().BeTrue();
-            // The headless lifetime skips desktop composition setup. Initialize the base
-            // catalog after settings isolation, before any Browse consumer can load plugins.
-            ManagedExtensibility.Initialise();
+            // Compose all test plugins before any consumer materializes the cached provider.
+            _compositionContext = new Microsoft.VisualStudio.Threading.JoinableTaskContext();
+            ThreadHelper.JoinableTaskContext = _compositionContext;
+            ManagedExtensibility.Initialise(
+            [
+                typeof(AppVeyorIntegration.AppVeyorIntegrationMetadata).Assembly,
+                typeof(AzureDevOpsIntegration.AzureDevOpsIntegrationMetadata).Assembly,
+                typeof(GitExtensions.Plugins.GitHubActionsIntegration.GitHubActionsIntegrationMetadataAttribute).Assembly,
+                typeof(GitExtensions.Plugins.GitlabIntegration.GitlabIntegrationMetadataAttribute).Assembly,
+                typeof(JenkinsIntegration.JenkinsIntegrationMetadata).Assembly,
+                typeof(TeamCityIntegration.TeamCityIntegrationMetadataAttribute).Assembly,
+            ]);
             TestContext.Progress.WriteLine($"Isolated settings: {settingsPath}");
             TestContext.Progress.WriteLine($"Preserved profile: {_originalSettingsPath}; SHA256={_originalSettingsHash ?? "<absent>"}");
         }
@@ -95,6 +105,7 @@ public sealed class WindowPositionTestIsolation
         finally
         {
             _isolatedSettingsCache?.Dispose();
+            _compositionContext?.Dispose();
             if (Directory.Exists(_settingsDirectory))
             {
                 Directory.Delete(_settingsDirectory, recursive: true);

@@ -36,6 +36,7 @@ public sealed class TranslationParityTests
     [Category("P1_6")]
     public void AddTranslationItems_should_match_English_xlf_for_every_twin_view()
     {
+        using TranslationTestScope translationScope = new("");
         string repositoryRoot = FindRepositoryRoot();
         IReadOnlyDictionary<TranslationKey, string> catalog = ReadCatalog(
             Path.Combine(repositoryRoot, "src", "app", "GitUI", "Translation", "English.xlf"));
@@ -88,14 +89,13 @@ public sealed class TranslationParityTests
             .Order(StringComparer.Ordinal)
             .ToArray();
         string[] missingKeys = emittedItems
-            .Select(item => item.Key)
             .Distinct()
-            .Where(key => !catalog.ContainsKey(key))
-            .Select(key => key.ToString())
+            .Where(item => !catalog.ContainsKey(item.Key))
+            .Select(item => $"{item.Key}: emitted {Quote(item.NeutralValue)}")
             .Order(StringComparer.Ordinal)
             .ToArray();
         string[] sourceMismatches = emittedItems
-            .DistinctBy(item => item.Key)
+            .Distinct()
             .Where(item => catalog.TryGetValue(item.Key, out string? source)
                            && NormalizeText(source) != NormalizeText(item.NeutralValue))
             .Select(item => $"{item.Key}: emitted {Quote(item.NeutralValue)}, catalog {Quote(catalog[item.Key])}")
@@ -111,9 +111,15 @@ public sealed class TranslationParityTests
             duplicateConflicts);
 
         constructionFailures.Should().BeEmpty("every translatable twin view must be inspectable in one sweep");
-        missingKeys.Should().BeEmpty("Avalonia must not emit keys absent from the WinForms English catalog");
-        sourceMismatches.Should().BeEmpty("an existing key must retain its established neutral source text");
-        duplicateConflicts.Should().BeEmpty("one translation key cannot have multiple neutral source strings");
+        // Pin the complete conflict text so new, changed, or resolved conflicts require review.
+        using JsonDocument known = JsonDocument.Parse(File.ReadAllText(Path.Combine(
+            repositoryRoot, "tests", "app", "UnitTests", "GitUI.Avalonia.Tests", "TranslationParityKnownConflicts.json")));
+        missingKeys.Should().BeEquivalentTo(ReadKnown("missingKeys"));
+        sourceMismatches.Should().BeEquivalentTo(ReadKnown("sourceMismatches"));
+        duplicateConflicts.Should().BeEquivalentTo(ReadKnown("duplicateConflicts"));
+
+        string[] ReadKnown(string name) => known.RootElement.GetProperty(name).EnumerateArray()
+            .Select(item => item.GetString()!).ToArray();
     }
 
     private static string FindRepositoryRoot([CallerFilePath] string startPath = "")

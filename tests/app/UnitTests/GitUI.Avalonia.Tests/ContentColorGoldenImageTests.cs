@@ -56,7 +56,7 @@ public sealed class ContentColorGoldenImageTests
             },
         };
 
-        GoldenImageVerifier.Verify(labels, 360, 100, "content-refs");
+        GoldenImageVerifier.Verify(new Border { Background = Brushes.White, Child = labels }, 360, 100, "content-refs");
     }
 
     [AvaloniaTest]
@@ -82,6 +82,7 @@ public sealed class ContentColorGoldenImageTests
             Text = "first line\ncontinuation\nolder line\ncontinuation\n",
         };
         editor.TextArea.LeftMargins.Insert(0, margin);
+        editor.Options.AllowScrollBelowDocument = false;
 
         GoldenImageVerifier.Verify(editor, 480, 104, "content-blame");
     }
@@ -126,6 +127,9 @@ public sealed class ContentColorGoldenImageTests
         gitRef.MergeWith.Returns(mergeWith);
         gitRef.Remote.Returns(remote);
         gitRef.TrackingRemote.Returns(trackingRemote);
+        gitRef.IsTrackingRemote(Arg.Any<IGitRef>()).Returns(call =>
+            call.Arg<IGitRef>() is { } candidate && isHead && candidate.IsRemote
+            && mergeWith == candidate.LocalName && trackingRemote == candidate.Remote);
         return gitRef;
     }
 

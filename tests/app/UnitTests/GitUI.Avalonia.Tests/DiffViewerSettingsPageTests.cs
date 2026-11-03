@@ -40,6 +40,7 @@ public sealed class DiffViewerSettingsPageTests
         detailedNode.Items
             .OfType<TreeViewItem>()
             .Select(node => node.Tag)
+            .OfType<DiffViewerSettingsPage>()
             .Should().ContainSingle().Which.Should().BeSameAs(diffViewer);
 
         form.GotoPage(DiffViewerSettingsPage.GetPageReference());

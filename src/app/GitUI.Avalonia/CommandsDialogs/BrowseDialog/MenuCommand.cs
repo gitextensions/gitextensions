@@ -52,6 +52,7 @@ internal sealed class MenuCommand
                 IsEnabled = false,
             };
             UserControls.RevisionGrid.MenuUtil.SetAsCaptionMenuItem(headerToolStripMenuItem);
+            InputAccessibility.Apply(headerToolStripMenuItem);
 
             return headerToolStripMenuItem;
         }
@@ -87,6 +88,7 @@ internal sealed class MenuCommand
             }
         };
 
+        InputAccessibility.Apply(toolStripMenuItem);
         return toolStripMenuItem;
     }
 

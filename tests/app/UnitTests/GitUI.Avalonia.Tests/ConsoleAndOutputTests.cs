@@ -266,6 +266,7 @@ public sealed class ConsoleAndOutputTests
         try
         {
             form.Show();
+            Dispatcher.UIThread.RunJobs();
             TabItem consoleTab = form.CommitInfoTabControl.Items
                 .OfType<TabItem>()
                 .Single(tab => Equals(tab.Header, "Console"));

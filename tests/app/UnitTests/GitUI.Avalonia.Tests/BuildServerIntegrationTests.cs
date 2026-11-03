@@ -44,21 +44,6 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class BuildServerIntegrationTests
 {
-    [OneTimeSetUp]
-    public void OneTimeSetUp()
-    {
-        GitUI.ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
-        ManagedExtensibility.Initialise(
-        [
-            typeof(AppVeyorIntegrationMetadata).Assembly,
-            typeof(AzureDevOpsIntegrationMetadata).Assembly,
-            typeof(GitHubActionsIntegrationMetadataAttribute).Assembly,
-            typeof(GitlabIntegrationMetadataAttribute).Assembly,
-            typeof(JenkinsIntegrationMetadata).Assembly,
-            typeof(TeamCityIntegrationMetadataAttribute).Assembly,
-        ]);
-    }
-
     [SetUp]
     public void SetUp()
     {

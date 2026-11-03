@@ -24,10 +24,12 @@ public sealed class ReflogTests
 {
     private ServiceContainer _serviceContainer = null!;
     private string _workingDirectory = null!;
+    private TranslationTestScope _translationScope = null!;
 
     [SetUp]
     public void SetUp()
     {
+        _translationScope = new TranslationTestScope("");
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
@@ -45,6 +47,7 @@ public sealed class ReflogTests
     [TearDown]
     public void TearDown()
     {
+        _translationScope.Dispose();
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
     }
@@ -125,7 +128,7 @@ public sealed class ReflogTests
         accessor.Reset.IsEnabled.Should().BeTrue();
         accessor.ResetType.Should().Be(FormResetCurrentBranch.ResetType.Soft);
         messageBoxes.Messages.Should().ContainSingle().Which.Should().Be(
-            "You have changes in your working directory that could be lost.\r\n\r\nDo you want to continue?");
+            "You have changes in your working directory that could be lost.\n\nDo you want to continue?");
         commands.DidNotReceive().DoActionOnRepo(Arg.Any<Func<bool>>());
     }
 
@@ -186,7 +189,7 @@ public sealed class ReflogTests
             nameof(FormReflog),
             "_continueResetCurrentBranchEvenWithChangesText",
             "Text",
-            "You have changes in your working directory that could be lost.\r\n\r\nDo you want to continue?");
+            "You have changes in your working directory that could be lost.\n\nDo you want to continue?");
         translation.Received(1).AddTranslationItem(nameof(FormReflog), "copySha1ToolStripMenuItem", "Text", "Copy SHA-1");
         translation.Received(1).AddTranslationItem(nameof(FormReflog), "createABranchOnThisCommitToolStripMenuItem", "Text", "Create a branch on this commit...");
         translation.Received(1).AddTranslationItem(nameof(FormReflog), "label1", "Text", "Display reflog for:");

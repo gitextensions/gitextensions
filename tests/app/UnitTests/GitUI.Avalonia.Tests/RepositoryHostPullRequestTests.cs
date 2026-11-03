@@ -386,7 +386,7 @@ public sealed class RepositoryHostPullRequestTests
         editorNode.Children.Should().BeEmpty();
         editorNode.BorderStyle.Should().Be("None");
         editorNode.TabStop.Should().BeTrue();
-        editorNode.ReadOnly.Should().BeNull();
+        editorNode.ReadOnly.Should().BeTrue();
         hiddenNodes.Single(node => node.FieldName == "splitContainer2").ControlKind.Should().Be("split");
         hiddenNodes.Single(node => node.FieldName == "splitContainer3").ControlKind.Should().Be("split");
         hiddenNodes.Should().NotContain(

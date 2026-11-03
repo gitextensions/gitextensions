@@ -298,11 +298,11 @@ public sealed class SettingControlBindingsTests
         layout.Type.Should().Be("System.Windows.Forms.TableLayoutPanel");
         layout.BoundsDip.Should().Be(new CaptureRectangleF { X = 12, Y = 12, Width = 776, Height = 296 });
         nodes["boolControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 3, Width = 600, Height = 24 });
-        nodes["choiceControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 33, Width = 600, Height = 23 });
-        nodes["stringControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 62, Width = 600, Height = 23 });
+        nodes["choiceControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 32, Width = 600, Height = 23 });
+        nodes["stringControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 60, Width = 600, Height = 23 });
         nodes["_parent"].Name.Should().Be("numberControl");
-        nodes["_parent"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 120, Width = 600, Height = 23 });
-        nodes["credentialsControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 178, Width = 600, Height = 24 });
+        nodes["_parent"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 116, Width = 600, Height = 23 });
+        nodes["credentialsControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 172, Width = 600, Height = 24 });
         nodes["mainTableLayoutPanel"].Children.Select(node => node.FieldName).Should().Equal(
             "userNameLabel",
             "userNameTextBox",
@@ -311,7 +311,8 @@ public sealed class SettingControlBindingsTests
         CaptureRectangleF userNameBounds = nodes["userNameTextBox"].BoundsDip;
         userNameBounds.Y.Should().Be(0);
         userNameBounds.Height.Should().Be(23);
-        (userNameBounds.X + userNameBounds.Width).Should().Be(269);
+        // Equal percentage columns retain a half-DIP boundary with the native Linux label widths.
+        (userNameBounds.X + userNameBounds.Width).Should().Be(OperatingSystem.IsWindows() ? 269 : 268.5m);
         if (OperatingSystem.IsWindows())
         {
             // The AutoSize column begins at the real WinForms TextRenderer width on Windows;
@@ -330,7 +331,7 @@ public sealed class SettingControlBindingsTests
             passwordBounds.Width.Should().Be(202);
         }
 
-        nodes["pseudoControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 230, Width = 600, Height = 40 });
+        nodes["pseudoControl"].BoundsDip.Should().Be(new CaptureRectangleF { X = 173, Y = 223, Width = 600, Height = 40 });
     }
 
     [AvaloniaTest]

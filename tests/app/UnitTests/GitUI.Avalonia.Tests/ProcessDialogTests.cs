@@ -110,6 +110,7 @@ public sealed class ProcessDialogTests
     [AvaloniaTest]
     public void FormStatus_should_be_translated_by_the_designer_constructor()
     {
+        using TranslationTestScope translationScope = new();
         string original = AppSettings.CurrentTranslation ?? "";
         try
         {
