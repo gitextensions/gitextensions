@@ -289,13 +289,13 @@ internal static class SourceInventoryReader
         }
     }
 
-    private static bool IsComment(SyntaxTrivia trivia) =>
+    internal static bool IsComment(SyntaxTrivia trivia) =>
         trivia.IsKind(SyntaxKind.SingleLineCommentTrivia)
         || trivia.IsKind(SyntaxKind.MultiLineCommentTrivia)
         || trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia)
         || trivia.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia);
 
-    private static string GetCommentAnchor(
+    internal static string GetCommentAnchor(
         TypeDeclarationSyntax declaration,
         MemberDeclarationSyntax member)
     {
@@ -308,7 +308,7 @@ internal static class SourceInventoryReader
                 .Select(GetMemberAnchor));
     }
 
-    private static string GetMemberAnchor(MemberDeclarationSyntax member) =>
+    internal static string GetMemberAnchor(MemberDeclarationSyntax member) =>
         member switch
         {
             FieldDeclarationSyntax field => $"field:{string.Join(",", field.Declaration.Variables.Select(variable => variable.Identifier.ValueText))}",
@@ -344,7 +344,7 @@ internal static class SourceInventoryReader
             _ => throw new InvalidOperationException($"Trivia '{trivia.Kind()}' is not a comment.")
         };
 
-    private static string NormalizeCommentText(SyntaxTrivia trivia)
+    internal static string NormalizeCommentText(SyntaxTrivia trivia)
     {
         string text = trivia.ToFullString().Replace("\r\n", "\n", StringComparison.Ordinal);
         string[] lines = text.Split('\n');
@@ -379,7 +379,7 @@ internal static class SourceInventoryReader
     private static bool IsSupportedTypeDeclaration(TypeDeclarationSyntax declaration) =>
         declaration is ClassDeclarationSyntax or StructDeclarationSyntax or InterfaceDeclarationSyntax;
 
-    private static string GetTypeName(TypeDeclarationSyntax declaration)
+    internal static string GetTypeName(TypeDeclarationSyntax declaration)
     {
         string namespaceName = string.Join(
             ".",

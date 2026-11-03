@@ -38,11 +38,14 @@ param(
     # When positive, a focused leg must execute exactly this many cases.
     [int]$ExpectedCases = 0,
 
+    # Standalone tooling is in neither solution. Build and test these projects on both systems.
+    [string[]]$ToolTestProject = @(),
+
     # Changes since this ref decide whether the WinForms solution can be affected.
     [string]$Base = 'HEAD',
 
     # Run only these legs. Such a run never satisfies -Verify.
-    [ValidateSet('winforms', 'edit-build', 'avalonia-build', 'focused', 'construction', 'inventory', 'linux', 'linux-inventory', 'windows-smoke', 'linux-runtime')]
+    [ValidateSet('winforms', 'edit-build', 'avalonia-build', 'focused', 'construction', 'tool-tests', 'linux-tool-tests', 'inventory', 'linux', 'linux-inventory', 'windows-smoke', 'linux-runtime')]
     [string[]]$Only,
 
     # Print the legs and why, and run nothing.
@@ -77,16 +80,25 @@ $adapterArguments = @('--', 'NUnit.AssemblySelectLimit=100000')
 
 # Paths that can never reach the WinForms solution. Anything else, unknown paths included, builds it.
 $cannotAffectWinForms = '^(src/app/GitUI\.Avalonia/|src/app/GitExtensions\.Avalonia/|src/app/GitExtensions\.Shims\.WinForms/|tests/app/UnitTests/GitUI\.Avalonia\.Tests/|eng/avalonia/|eng/tools/|GitExtensions\.Avalonia\.slnx$)'
-# Paths that cannot change what the Avalonia build and its tests do.
-$cannotAffectProduct = '^eng/avalonia/(portmap\.json|parity-ledger\.json|[^/]+\.(md|ps1))$'
+# Paths that cannot change what the Avalonia build and its tests do. These standalone tools have no product consumers.
+$cannotAffectProduct = '^eng/avalonia/(portmap\.json|parity-ledger\.json|[^/]+\.(md|ps1))$|^eng/tools/(?:ParityFix|ParityInventory)(?:\.Tests)?/'
 # Paths that cannot change the source inventory. The portmap, ledger and adaptations can.
-$cannotAffectInventory = '^eng/avalonia/[^/]+\.(md|ps1)$'
+$cannotAffectInventory = '^eng/avalonia/[^/]+\.(md|ps1)$|^eng/tools/ParityFix(?:\.Tests)?/'
 $readOnlyOriginals = '^(src/app/GitUI/|src/app/GitExtensions/|src/app/BugReporter/|externals/(?!Git\.hub\.Portable/|Directory\.Build\.))'
 $anyPath = '^$'
 $warnBelowGb = 15
 # A Linux build alone grew the Windows pagefile by 3.9 GB on a 15 GB machine, on top of its output.
 $refuseBelowGb = 6
 $keepPassingLogs = 5
+
+foreach ($project in $ToolTestProject) {
+    if ($project -notmatch '^eng/tools/[A-Za-z0-9_./-]+\.csproj$' -or $project.Split('/') -contains '..' -or -not (Test-Path -LiteralPath $project)) {
+        throw "-ToolTestProject needs an existing repository-relative eng/tools/*.csproj path: $project"
+    }
+}
+if (@($Only | Where-Object { $_ -in 'tool-tests', 'linux-tool-tests' }).Count -and -not $ToolTestProject.Count) {
+    throw 'Tool test legs require -ToolTestProject.'
+}
 
 function Get-FreeGb {
     return [math]::Round((Get-PSDrive -Name $repo.Substring(0, 1)).Free / 1GB, 1)
@@ -210,6 +222,28 @@ $legActions = @{
         # Its own process: another fixture's initialized services can hide a constructor's bootstrap dependency.
         Invoke-WindowsTests 'construction' $testProject $constructionFilter -Avalonia
     }
+    'tool-tests' = {
+        $results = foreach ($project in $ToolTestProject) {
+            $name = 'tool-' + [IO.Path]::GetFileNameWithoutExtension($project)
+            $log = Join-Path $runDirectory "$name-build.log"
+            Assert-CleanBuild $log (Invoke-Dotnet $log (@('build', $project) + $buildArguments))
+            Invoke-WindowsTests $name $project 'FullyQualifiedName~.'
+        }
+        [pscustomobject]@{ total = ($results.total | Measure-Object -Sum).Sum; passed = ($results.passed | Measure-Object -Sum).Sum; skipped = ($results.skipped | Measure-Object -Sum).Sum; failed = 0 }
+    }
+    'linux-tool-tests' = {
+        $results = foreach ($project in $ToolTestProject) {
+            $name = 'linux-tool-' + [IO.Path]::GetFileNameWithoutExtension($project)
+            $exitCode = Invoke-WslScript $name @"
+bash '$(ConvertTo-WslPath $repo)/eng/avalonia/wsl-gate.sh' run dotnet test '$project' -m:1 -v:minimal --logger 'trx;LogFileName=$name.trx' --results-directory '$(ConvertTo-WslPath $runDirectory)' -- NUnit.AssemblySelectLimit=100000
+"@
+            Assert-CleanBuild (Join-Path $runDirectory "$name.log") $exitCode
+            $result = Read-Trx (Join-Path $runDirectory "$name.trx") $exitCode
+            Assert-Tests $result $exitCode 0
+            $result
+        }
+        [pscustomobject]@{ total = ($results.total | Measure-Object -Sum).Sum; passed = ($results.passed | Measure-Object -Sum).Sum; skipped = ($results.skipped | Measure-Object -Sum).Sum; failed = 0 }
+    }
     'inventory' = {
         $log = Join-Path $runDirectory 'inventory-build.log'
         Assert-CleanBuild $log (Invoke-Dotnet $log (@('build', $inventoryProject) + $buildArguments))
@@ -308,6 +342,7 @@ $legs = switch ($Level) {
     'Edit' {
         @{ Name = 'edit-build'; Ignored = $anyPath }
         @{ Name = 'focused'; Ignored = $cannotAffectProduct; TestFilter = $focusedFilter }
+        if ($ToolTestProject.Count) { @{ Name = 'tool-tests'; Ignored = $anyPath; TestFilter = ($ToolTestProject -join '|') } }
     }
     default {
         $skipWinForms = if ($Level -eq 'Batch' -and -not $winFormsReasons.Count) { "none of the $($changedSinceBase.Count) changed paths can affect it" } else { $null }
@@ -315,8 +350,10 @@ $legs = switch ($Level) {
         @{ Name = 'avalonia-build'; Ignored = $cannotAffectProduct }
         @{ Name = 'focused'; Ignored = $cannotAffectProduct; TestFilter = $focusedFilter }
         @{ Name = 'construction'; Ignored = $cannotAffectProduct }
+        if ($ToolTestProject.Count) { @{ Name = 'tool-tests'; Ignored = $anyPath; TestFilter = ($ToolTestProject -join '|') } }
         @{ Name = 'inventory'; Ignored = $cannotAffectInventory }
         @{ Name = 'linux'; Ignored = $cannotAffectProduct; TestFilter = $focusedFilter }
+        if ($ToolTestProject.Count) { @{ Name = 'linux-tool-tests'; Ignored = $anyPath; TestFilter = ($ToolTestProject -join '|') } }
         if ($Level -eq 'Exit') {
             @{ Name = 'linux-inventory'; Ignored = $anyPath }
             @{ Name = 'windows-smoke'; Ignored = $anyPath }
@@ -463,6 +500,7 @@ if ($Level -ne 'Exit') { $notRun += @('runtime smokes', 'whole test assembly', '
     tree = $tree
     base = $Base
     filter = $Filter
+    toolTestProjects = $ToolTestProject
     changedPaths = $changedSinceBase.Count
     startedUtc = $started.ToUniversalTime().ToString('o')
     seconds = [math]::Round(((Get-Date) - $started).TotalSeconds)
