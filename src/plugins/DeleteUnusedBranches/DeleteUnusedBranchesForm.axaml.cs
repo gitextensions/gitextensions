@@ -155,6 +155,8 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
             VerticalAlignment = VerticalAlignment.Center,
             IsChecked = branch.Delete,
         };
+
+        // track only “Deleted” column, ignoring the checkbox header
         delete.IsCheckedChanged += (_, _) =>
         {
             branch.Delete = delete.IsChecked == true;
@@ -291,6 +293,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
         await TaskScheduler.Default.SwitchTo(alwaysYield: true);
         try
         {
+            // Delete branches one by one, because it is possible one fails
             foreach (Branch remoteBranch in remoteBranches)
             {
                 int remoteBranchNameOffset = remoteBranchPrefix.Length;
@@ -302,6 +305,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
                 gitCommands.GitExecutable.GetOutput(args);
             }
 
+            // Delete branches one by one, because it is possible one fails
             foreach (Branch localBranch in localBranches)
             {
                 GitArgumentBuilder args = new("branch")

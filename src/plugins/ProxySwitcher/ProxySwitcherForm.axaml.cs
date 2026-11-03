@@ -25,9 +25,9 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
     private static partial Regex PasswordRegex { get; }
 
     /// <summary>
-    /// Default constructor added to register all strings to be translated.
+    /// Default constructor added to register all strings to be translated
     /// Use the other constructor:
-    /// ProxySwitcherForm(ProxySwitcherPlugin plugin, SettingsSource settings, GitUIEventArgs gitUiCommands).
+    /// ProxySwitcherForm(ProxySwitcherPlugin plugin, SettingsSource settings, GitUIEventArgs gitUiCommands)
     /// </summary>
     public ProxySwitcherForm()
     {

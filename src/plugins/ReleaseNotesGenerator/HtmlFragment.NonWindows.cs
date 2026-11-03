@@ -32,7 +32,7 @@ internal partial class HtmlFragment
     /// Get a HTML fragment from the clipboard.
     /// </summary>
     /// <example>
-    ///    string html = "&lt;b&gt;Hello!&lt;/b&gt;";
+    ///    string html = "<b>Hello!</b>";
     ///    HtmlFragment.CopyToClipboard(html);
     ///    HtmlFragment html2 = HtmlFragment.FromClipboard();
     ///    DebugHelpers.Assert(html2.Fragment == html);

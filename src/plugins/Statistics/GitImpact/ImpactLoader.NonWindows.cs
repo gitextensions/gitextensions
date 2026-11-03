@@ -210,20 +210,29 @@ public sealed class ImpactLoader : IDisposable
             cancellationToken: token);
         List<string> lines = [.. result.StandardOutput.Split('\n', StringSplitOptions.RemoveEmptyEntries)];
 
+        // chosen by fair dice roll, guaranted to be random ;) ( https://xkcd.com/221/ )
         const int linePerCommitEstimationInGitLogOutput = 6;
         int estimatedCommitCount = lines.Count / linePerCommitEstimationInGitLogOutput;
         List<Commit> commitsBatch = new(estimatedCommitCount);
 
+        // Analyze commit listing
+        // Reached the end ?
         for (int lineIndex = 0; lineIndex < lines.Count && !token.IsCancellationRequested; lineIndex++)
         {
+            // Read line
             if (!TryParseCommitHeader(lines[lineIndex], out string author, out DateOnly date))
             {
                 continue;
             }
 
+            // Calculate first day of the commit week
             DateOnly week = date.AddDays(_firstDayOfWeek - (int)date.DayOfWeek);
+
+            // Reset commit data
             int added = 0;
             int deleted = 0;
+
+            // Parse commit lines
             while (lineIndex + 1 < lines.Count
                    && !lines[lineIndex + 1].StartsWith("--- ", StringComparison.Ordinal)
                    && !token.IsCancellationRequested)
@@ -245,18 +254,25 @@ public sealed class ImpactLoader : IDisposable
     {
         author = string.Empty;
         date = default;
+
+        // Look for commit delimiters
         if (!line.StartsWith("--- ", StringComparison.Ordinal))
         {
             return false;
         }
 
+        // Strip "--- "
+        // Split date and author
         string[] header = line[4..].Split([" --- "], 2, StringSplitOptions.RemoveEmptyEntries);
         if (header.Length != 2
+
+            // Parse commit date
             || !DateOnly.TryParse(header[0], CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
         {
             return false;
         }
 
+        // Save author in variable
         author = header[1].TrimEnd('\r');
         return true;
     }
@@ -264,6 +280,8 @@ public sealed class ImpactLoader : IDisposable
     private static void AccumulateFileStats(string line, ref int added, ref int deleted)
     {
         string[] fileLine = line.TrimEnd('\r').Split(Delimiters.Tab);
+
+        // Skip empty line
         if (fileLine.Length < 2)
         {
             return;

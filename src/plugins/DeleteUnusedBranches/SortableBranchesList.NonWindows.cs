@@ -1,7 +1,7 @@
 namespace GitExtensions.Plugins.DeleteUnusedBranches;
 
 /// <summary>
-///  Portable sortable branch collection used by <see cref="DeleteUnusedBranchesForm"/>.
+/// Custom sortable branches list, use for support user-defined sorting in <see cref="DeleteUnusedBranchesForm"/>.
 /// </summary>
 internal sealed class SortableBranchesList : List<Branch>
 {

@@ -10,7 +10,7 @@ using Size = Avalonia.Size;
 namespace GitExtensions.Plugins.GitStatistics.PieChart;
 
 /// <summary>
-/// Native Avalonia renderer for the plugin's three-dimensional pie chart.
+///   Object representing a pie chart.
 /// </summary>
 public sealed class PieChart3D
 {
@@ -19,11 +19,35 @@ public sealed class PieChart3D
     private const double DegreesToRadians = Math.PI / HalfCircle;
 
     private readonly Rect _bounds;
+
+    /// <summary>
+    ///   Array of colors used for rendering.
+    /// </summary>
     private readonly Color[] _sliceColors;
+
+    /// <summary>
+    ///   Slice relative height.
+    /// </summary>
     private readonly double _sliceRelativeHeight;
+
+    /// <summary>
+    ///   Array of values to be presented by the chart.
+    /// </summary>
     private readonly decimal[] _values;
+
+    /// <summary>
+    ///   Initial angle from which chart is drawn.
+    /// </summary>
     private double _initialAngle;
+
+    /// <summary>
+    ///   Array of relative displacements from the common center.
+    /// </summary>
     private double[] _relativeSliceDisplacements = [0];
+
+    /// <summary>
+    ///   List of pie slices constituting the chart, in value order.
+    /// </summary>
     private IReadOnlyList<Slice> _slices = [];
 
     /// <summary>
@@ -64,8 +88,14 @@ public sealed class PieChart3D
         double sliceRelativeHeight)
     {
         _bounds = new Rect(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect);
+
+        // Sets values to be displayed on the chart.
         _values = values;
+
+        // Sets colors used for individual pie slices.
         _sliceColors = sliceColors;
+
+        // Sets slice height, relative to the top ellipse semi-axis. Must be less than or equal to 0.5.
         _sliceRelativeHeight = Math.Max(0, sliceRelativeHeight);
         RebuildSlices();
     }
@@ -130,6 +160,9 @@ public sealed class PieChart3D
     /// </param>
     public void Draw(DrawingContext drawingContext)
     {
+        /* Draws outer peripheries of all slices.
+         * drawingContext: DrawingContext used for drawing.
+         */
         foreach (Slice slice in _slices)
         {
             DrawOuterSide(drawingContext, slice);
@@ -143,6 +176,9 @@ public sealed class PieChart3D
 
         foreach (Slice slice in _slices)
         {
+            /* Draws top sides of all pie slices.
+             * drawingContext: DrawingContext used for drawing.
+             */
             Color color = slice.Index == HighlightedIndex
                 ? AdjustLightness(slice.Color, 0.3)
                 : slice.Color;
@@ -165,9 +201,8 @@ public sealed class PieChart3D
     ///   Index of the corresponding pie slice, or -1 if none is found.
     /// </returns>
     public int FindPieSliceUnderPoint(Point point)
-
-    // finally search for bottom sides
     {
+        // first check tops
         for (int index = _slices.Count - 1; index >= 0; index--)
         {
             Slice slice = _slices[index];
@@ -180,10 +215,6 @@ public sealed class PieChart3D
 
             double angle = NormalizeAngle(Math.Atan2(y, x) / DegreesToRadians);
 
-            // first check tops
-            // check for start/stop sides, starting from the foremost
-            // if not found yet, check end sides from the foremost to the right
-            // side
             if (ContainsAngle(slice.StartAngle, slice.SweepAngle, angle))
             {
                 return slice.Index;
@@ -202,8 +233,16 @@ public sealed class PieChart3D
             slice.Center.Y + (Math.Sin(angle) * slice.RadiusY * 0.55));
     }
 
+    /// <summary>
+    ///   Initializes pies.
+    /// </summary>
+    /// Creates a list of pies in value order. The pie that is crossing the
+    /// 270 degrees boundary, i.e. "backmost" pie, always has to be
+    /// drawn first to ensure correct surface overlapping.
     private void RebuildSlices()
     {
+        // calculates the sum of values required to evaluate sweep angles
+        // for individual pies
         decimal positiveTotal = _values.Where(value => value > 0).Sum();
         if (positiveTotal <= 0 || _bounds.Width <= 0 || _bounds.Height <= 0)
         {
@@ -211,6 +250,7 @@ public sealed class PieChart3D
             return;
         }
 
+        // some values and indices that will be used in the loop
         double depth = _bounds.Height * _sliceRelativeHeight / (1 + _sliceRelativeHeight);
         double ellipseHeight = _bounds.Height - depth;
         double radiusX = _bounds.Width / 2;
@@ -234,11 +274,17 @@ public sealed class PieChart3D
 
             double sweepAngle = (double)(value / positiveTotal) * FullCircle;
             double middleAngle = (startAngle + (sweepAngle / 2)) * DegreesToRadians;
+
+            // displacement from the center of the ellipse
             double displacement = GetRelativeDisplacement(index) * Math.Min(radiusX, radiusY);
             Point center = new(
                 baseCenter.X + (Math.Cos(middleAngle) * displacement),
                 baseCenter.Y + (Math.Sin(middleAngle) * displacement));
+
+            // if all colors have been exhausted, reset color index
             Color sliceColor = AdaptBackColor(_sliceColors[index % _sliceColors.Length]);
+
+            // Collection of pie slices mapped to original order.
             slices.Add(new Slice(
                 index,
                 startAngle,
@@ -248,6 +294,8 @@ public sealed class PieChart3D
                 radiusY,
                 depth,
                 sliceColor));
+
+            // prepare for the next pie slice
             startAngle += sweepAngle;
         }
 
@@ -263,6 +311,9 @@ public sealed class PieChart3D
 
     private void DrawOuterSide(DrawingContext drawingContext, Slice slice)
     {
+        // if a slice spreads across 180 and 360 degrees boundaries it
+        // will appear on both left and right edge so its periphery has to be
+        // drawn twice
         foreach ((double start, double sweep) in GetFrontSegments(slice.StartAngle, slice.SweepAngle))
         {
             StreamGeometry geometry = new();

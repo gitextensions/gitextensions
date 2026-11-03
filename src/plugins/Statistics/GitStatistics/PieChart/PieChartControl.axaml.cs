@@ -10,7 +10,7 @@ using AvaloniaToolTip = Avalonia.Controls.ToolTip;
 namespace GitExtensions.Plugins.GitStatistics.PieChart;
 
 /// <summary>
-/// A pie-chart control for showing statistics.
+///   A PieChartControl for showing statistics.
 /// </summary>
 public partial class PieChartControl : UserControl
 {
@@ -198,9 +198,19 @@ public partial class PieChartControl : UserControl
 
     public event EventHandler<SliceSelectedArgs>? SliceSelected;
 
+    /// <summary>
+    ///   Handles <c>Render</c> event.
+    /// </summary>
+    /// <param name = "context">
+    ///   <c>DrawingContext</c> object.
+    /// </param>
     public override void Render(DrawingContext context)
     {
         base.Render(context);
+
+        /* Sets values for the chart and draws them.
+         * context: DrawingContext object used for drawing.
+         */
         _pieChart = CreateChart();
         _pieChart?.Draw(context);
     }
@@ -243,8 +253,11 @@ public partial class PieChartControl : UserControl
             return null;
         }
 
+        // Handles size changes.
         double availableWidth = Bounds.Width - _leftMargin - _rightMargin;
         double availableHeight = Bounds.Height - _topMargin - _bottomMargin;
+
+        // if the width or height if <=0 an exception would be thrown -> exit method..
         if (availableWidth <= 0 || availableHeight <= 0)
         {
             return null;

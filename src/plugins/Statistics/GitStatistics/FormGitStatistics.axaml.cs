@@ -182,7 +182,10 @@ public partial class FormGitStatistics : GitExtensionsFormBase
             cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
 
+        // Sync rest to UI thread
         await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
+        // Send UI update when done
         UpdateUI(statistics);
     }
 
@@ -206,6 +209,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
             }
         }
 
+        // Must do this synchronously because lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
         return new LineStatistics(
             _lineCounter.CommentLineCount,
             _lineCounter.TotalLineCount,
