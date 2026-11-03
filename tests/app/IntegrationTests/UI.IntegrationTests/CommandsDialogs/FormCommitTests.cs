@@ -582,6 +582,9 @@ public class FormCommitTests
             }
 
             FileStatusList list = staged ? ta.StagedList : ta.UnstagedList;
+
+            // The initial status load may not have populated the list yet (seen on CI)
+            UITest.ProcessUntil("loading the changed files", () => list.AllItemsCount > 1, maxMilliseconds: 10_000);
             list.AllItemsCount.Should().BeGreaterThan(1, "the list must be able to scroll away from its first item");
 
             // The state a list is left in as soon as the other one has taken the selection over.
