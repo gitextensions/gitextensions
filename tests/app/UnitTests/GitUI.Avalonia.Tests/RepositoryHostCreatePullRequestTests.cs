@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -147,7 +147,7 @@ public sealed class RepositoryHostCreatePullRequestTests
 
     [AvaloniaTest]
     [TestCaseSource(nameof(NativeChromeThemeCases))]
-    public void CreatePullRequestForm_should_use_native_input_group_and_button_chrome(
+    public async Task CreatePullRequestForm_should_use_native_input_group_and_button_chrome(
         ThemeVariant themeVariant,
         string inputBackground,
         string buttonBackground,
@@ -155,64 +155,72 @@ public sealed class RepositoryHostCreatePullRequestTests
         string flatStyle)
     {
         using CreatePullRequestForm form = CreateForm(CreateFixture(), chooseRemote: null, chooseBranch: null);
-        form.RequestedThemeVariant = themeVariant;
-        form.Show();
-        Dispatcher.UIThread.RunJobs();
-
-        TextBox title = form.FindControl<TextBox>("_titleTB")!;
-        HeaderedContentControl group = form.FindControl<HeaderedContentControl>("groupBox1")!;
-        Button create = form.FindControl<Button>("_createBtn")!;
-        Border groupFrame = group.GetVisualDescendants()
-            .OfType<Border>()
-            .Single(border => border.Name == "PART_GroupBoxFrame");
-        Border chrome = create.GetVisualDescendants()
-            .OfType<Border>()
-            .Single(border => border.Name == "PART_NativeButtonChrome");
-        CaptureNode[] nodes = [.. Flatten(
-            new AvaloniaControlTreeReader(form, renderScale: 1)
-                .ReadPrimary(form, new PixelSize(546, 323)).Root)];
-        CaptureNode node = nodes.Single(candidate => candidate.FieldName == "_createBtn");
-        CaptureNode targetRepository = nodes.Single(candidate => candidate.FieldName == "_pullReqTargetsCB");
-        CaptureNode sourceBranch = nodes.Single(candidate => candidate.FieldName == "_yourBranchesCB");
-        CaptureNode body = nodes.Single(candidate => candidate.FieldName == "_bodyTB");
-        CaptureNode bodyEditorNode = nodes.Single(candidate => candidate.FieldName == "TextBox");
-        TextBox bodyEditor = form.FindControl<GitUI.SpellChecker.EditNetSpell>("_bodyTB")!
-            .FindControl<TextBox>("TextBox")!;
-        title.Background.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse(inputBackground));
-        group.Classes.Should().Contain("gitextensions-native-group-border");
-        groupFrame.BorderBrush.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse("#DCDCDC"));
-        create.Classes.Should().Contain("gitextensions-native-dialog-action");
-        chrome.Background.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse(buttonBackground));
-        chrome.BorderBrush.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse(buttonBorder));
-        chrome.CornerRadius.Should().Be(new CornerRadius(4));
-        node.FlatStyle.Should().Be(flatStyle);
-        node.Padding.Dip.Should().Be(new CaptureThicknessF { Left = 0, Top = 0, Right = 0, Bottom = 0 });
-        node.Margin.Dip.Should().Be(new CaptureThicknessF { Left = 3, Top = 3, Right = 3, Bottom = 3 });
-        node.BorderWidthDip.Should().BeNull();
-        node.Dock.Should().Be("None");
-        node.AutoSize.Should().BeFalse();
-        node.Alignment.Should().Be("MiddleCenter");
-        node.Colors.Background.Should().Be(themeVariant == ThemeVariant.Dark ? "#FF202020" : "#FFF0F0F0");
-        node.Colors.Border.Should().BeNull();
-        targetRepository.Selected.Should().BeFalse();
-        targetRepository.BorderWidthDip.Should().BeNull();
-        body.TabStop.Should().BeTrue();
-        bodyEditor.Classes.Should().Contain("winforms-watermark");
-        bodyEditor.FontStyle.Should().Be(FontStyle.Italic);
-        bodyEditorNode.Font!.Style.Should().Equal("Italic");
-        if (themeVariant == ThemeVariant.Light)
+        try
         {
-            bodyEditorNode.Colors.Foreground.Should().Be("#FF6D6D6D");
+            form.RequestedThemeVariant = themeVariant;
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
+            await form.GetTestAccessor().JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            Dispatcher.UIThread.RunJobs();
+
+            TextBox title = form.FindControl<TextBox>("_titleTB")!;
+            HeaderedContentControl group = form.FindControl<HeaderedContentControl>("groupBox1")!;
+            Button create = form.FindControl<Button>("_createBtn")!;
+            Border groupFrame = group.GetVisualDescendants()
+                .OfType<Border>()
+                .Single(border => border.Name == "PART_GroupBoxFrame");
+            Border chrome = create.GetVisualDescendants()
+                .OfType<Border>()
+                .Single(border => border.Name == "PART_NativeButtonChrome");
+            CaptureNode[] nodes = [.. Flatten(
+                new AvaloniaControlTreeReader(form, renderScale: 1)
+                    .ReadPrimary(form, new PixelSize(546, 323)).Root)];
+            CaptureNode node = nodes.Single(candidate => candidate.FieldName == "_createBtn");
+            CaptureNode targetRepository = nodes.Single(candidate => candidate.FieldName == "_pullReqTargetsCB");
+            CaptureNode sourceBranch = nodes.Single(candidate => candidate.FieldName == "_yourBranchesCB");
+            CaptureNode body = nodes.Single(candidate => candidate.FieldName == "_bodyTB");
+            CaptureNode bodyEditorNode = nodes.Single(candidate => candidate.FieldName == "TextBox");
+            TextBox bodyEditor = form.FindControl<GitUI.SpellChecker.EditNetSpell>("_bodyTB")!
+                .FindControl<TextBox>("TextBox")!;
+            title.Background.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse(inputBackground));
+            group.Classes.Should().Contain("gitextensions-native-group-border");
+            groupFrame.BorderBrush.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse("#DCDCDC"));
+            create.IsEnabled.Should().BeTrue();
+            create.Classes.Should().Contain("gitextensions-native-dialog-action");
+            chrome.Background.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse(buttonBackground));
+            chrome.BorderBrush.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse(buttonBorder));
+            chrome.CornerRadius.Should().Be(new CornerRadius(4));
+            node.FlatStyle.Should().Be(flatStyle);
+            node.Padding.Dip.Should().Be(new CaptureThicknessF { Left = 0, Top = 0, Right = 0, Bottom = 0 });
+            node.Margin.Dip.Should().Be(new CaptureThicknessF { Left = 3, Top = 3, Right = 3, Bottom = 3 });
+            node.BorderWidthDip.Should().BeNull();
+            node.Dock.Should().Be("None");
+            node.AutoSize.Should().BeFalse();
+            node.Alignment.Should().Be("MiddleCenter");
+            node.Colors.Background.Should().Be(themeVariant == ThemeVariant.Dark ? "#FF202020" : "#FFF0F0F0");
+            node.Colors.Border.Should().BeNull();
+            targetRepository.Selected.Should().BeFalse();
+            targetRepository.BorderWidthDip.Should().BeNull();
+            body.TabStop.Should().BeTrue();
+            bodyEditor.Classes.Should().Contain("winforms-watermark");
+            bodyEditor.FontStyle.Should().Be(FontStyle.Italic);
+            bodyEditorNode.Font!.Style.Should().Equal("Italic");
+            if (themeVariant == ThemeVariant.Light)
+            {
+                bodyEditorNode.Colors.Foreground.Should().Be("#FF6D6D6D");
+            }
+
+            nodes.Where(candidate => candidate != nodes[0]
+                                     && candidate.FieldName is null
+                                     && candidate.Name is null)
+                .Should().BeEmpty("unnamed Avalonia layout panels are not WinForms product controls");
+            targetRepository.Text.Should().Be("project/repository");
+            sourceBranch.Focused.Should().BeTrue();
         }
-
-        nodes.Where(candidate => candidate != nodes[0]
-                                 && candidate.FieldName is null
-                                 && candidate.Name is null)
-            .Should().BeEmpty("unnamed Avalonia layout panels are not WinForms product controls");
-        targetRepository.Text.Should().Be("project/repository");
-        sourceBranch.Focused.Should().BeTrue();
-
-        form.Close();
+        finally
+        {
+            form.Close();
+        }
     }
 
     private static IEnumerable<TestCaseData> NativeChromeThemeCases()
