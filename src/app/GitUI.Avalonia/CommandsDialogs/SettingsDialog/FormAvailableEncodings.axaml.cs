@@ -53,10 +53,14 @@ public sealed partial class FormAvailableEncodings : GitExtensionsFormBase
 
         IEnumerable<Encoding> selectableEncodings = Encoding.GetEncodings()
             .Select(info => info.GetEncoding())
+
+            // If exists utf-8, then replace to utf-8 without BOM
             .Select(encoding => encoding.GetType() == typeof(UTF8Encoding)
                 ? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)
                 : encoding)
 #pragma warning disable SYSLIB0001
+            // Type or member is obsolete
+            // UTF-7 is no longer supported, see: https://github.com/dotnet/docs/issues/19274
             .Where(encoding => encoding != Encoding.UTF7)
 #pragma warning restore SYSLIB0001
             .Where(encoding => !AppSettings.AvailableEncodings.ContainsKey(encoding.WebName))
@@ -116,6 +120,9 @@ public sealed partial class FormAvailableEncodings : GitExtensionsFormBase
     private void UpdateActions()
     {
         ToLeft.IsEnabled = ListAvailableEncodings.SelectedItem is Encoding;
+
+        // Get selected encoding
+        // If selected encoding and encoding not default list
         ToRight.IsEnabled = ListIncludedEncodings.SelectedItem is Encoding encoding && !IsRequiredEncoding(encoding);
     }
 
@@ -133,6 +140,7 @@ public sealed partial class FormAvailableEncodings : GitExtensionsFormBase
 
     private static bool IsRequiredEncoding(Encoding encoding)
     {
+        // Get type if exists
         Type encodingType = encoding.GetType();
         return encodingType == typeof(ASCIIEncoding)
             || encodingType == typeof(UnicodeEncoding)

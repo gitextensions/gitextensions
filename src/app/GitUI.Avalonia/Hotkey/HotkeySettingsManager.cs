@@ -99,7 +99,7 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
         }
         catch
         {
-            // Preserve the original best-effort settings-save boundary.
+            // ignore
         }
     }
 
@@ -379,6 +379,11 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
 
         HotkeyCommand[] LoadScriptHotkeys()
         {
+            /* define unusable int for identifying a shortcut for a custom script is pressed
+             * all integers above 9000 represent a script hotkey
+             * these integers are never matched in the 'switch' routine on a form and
+             * therefore execute the 'default' action
+             */
             return scriptsManager is null
                 ? []
                 : [.. scriptsManager.GetScripts()

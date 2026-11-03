@@ -33,6 +33,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
     public FormBrowseRepoSettingsPage(IServiceProvider serviceProvider)
         : base(serviceProvider)
     {
+        // align 1st columns across all tables
         InitializeComponent();
         cboTerminal.SelectionChanged += cboTerminal_SelectionChangeCommitted;
         cboTerminal.GotFocus += cboTerminal_Enter;
@@ -53,9 +54,6 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
     protected override void OnRuntimeLoad()
     {
         base.OnRuntimeLoad();
-
-        // Avalonia Grid shares the first-column definition across every row in each table.
-        // The two grids use the same Auto-sized label/control vocabulary and need no imperative width adjustment.
     }
 
     protected override void PageToSettings()

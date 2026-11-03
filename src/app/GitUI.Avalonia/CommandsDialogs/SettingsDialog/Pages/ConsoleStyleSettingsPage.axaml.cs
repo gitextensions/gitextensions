@@ -110,7 +110,7 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
 
         int FindThemeIndex(string theme)
         {
-            int index = 1;
+            int index = 1; // skip "Default"
             foreach (string available in emulator.AvailableThemes)
             {
                 if (string.Equals(available, theme, StringComparison.OrdinalIgnoreCase))

@@ -143,6 +143,8 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         }
 
         _pagesInitialized = true;
+
+        // Git Extensions settings
         GitExtensionsSettingsGroup root = new();
         settingsTreeView.AddSettingsPage(root, parentPageReference: null, Images.GitExtensionsLogo16);
         IServiceProvider serviceProvider = TryGetUICommands(out IGitUICommands? commands)
@@ -159,6 +161,8 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             SettingsPageBase.Create<GeneralSettingsPage>(this, serviceProvider),
             GitExtensionsSettingsGroup.GetPageReference(),
             Images.GeneralSettings);
+
+        // >> Appearance
         settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<AppearanceSettingsPage>(this, serviceProvider),
             GitExtensionsSettingsGroup.GetPageReference(),
@@ -203,6 +207,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
                 Images.ShellExtensions);
         }
 
+        // >> Advanced
         settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<AdvancedSettingsPage>(this, serviceProvider),
             GitExtensionsSettingsGroup.GetPageReference(),
@@ -211,6 +216,8 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             SettingsPageBase.Create<ConfirmationsSettingsPage>(this, serviceProvider),
             AdvancedSettingsPage.GetPageReference(),
             Images.BisectGood);
+
+        // >> Detailed
         settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<DetailedSettingsPage>(this, serviceProvider),
             GitExtensionsSettingsGroup.GetPageReference(),
@@ -239,6 +246,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             Images.Key);
         checklistSettingsPage.SshSettingsPage = sshSettingsPage;
 
+        // Git settings
         GitSettingsGroup gitSettingsGroup = new();
         settingsTreeView.AddSettingsPage(gitSettingsGroup, parentPageReference: null, Images.GitLogo16);
         settingsTreeView.AddSettingsPage(
@@ -259,6 +267,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             icon: null,
             asRoot: true);
 
+        // Plugins settings
         PluginsSettingsGroup pluginsSettingsGroup = new();
         settingsTreeView.AddSettingsPage(pluginsSettingsGroup, parentPageReference: null, Images.Plugin);
         SettingsPageReference pluginsPageReference = PluginsSettingsGroup.GetPageReference();

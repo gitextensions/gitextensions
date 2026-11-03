@@ -48,7 +48,6 @@ public sealed partial class FormFixHome : GitExtensionsFormBase
         }
 
         // Check presence of XDG config directory
-        // Consider alternative Git config file
         string xdgConfigDirectory = Path.Join(path, ".config");
         if (!Directory.Exists(xdgConfigDirectory))
         {
@@ -61,6 +60,8 @@ public sealed partial class FormFixHome : GitExtensionsFormBase
         // Make issues with casing a "user problem" (case-insensitive equality would depend on file system type)
         string? xdgConfigHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
         return (string.IsNullOrEmpty(xdgConfigHome) || xdgConfigHome == xdgConfigDirectory)
+
+            // Consider alternative Git config file
             && CanReadFile(Path.Join(xdgConfigDirectory, "git", "config"));
 
         static bool CanReadFile(string fileName)

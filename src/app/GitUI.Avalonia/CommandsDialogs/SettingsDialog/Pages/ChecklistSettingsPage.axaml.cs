@@ -538,7 +538,7 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         => PageHost.GotoPage(GitConfigSettingsPage.GetPageReference());
 
     private void UserNameSet_Click(object? sender, EventArgs e)
-        => PageHost.GotoPage(GitConfigSettingsPage.GetPageReference());
+        => PageHost.GotoPage(GitConfigSettingsPage.GetPageReference()); // nice-to-have: jump directly to correct text box
 
     private void GitFound_Click(object? sender, EventArgs e)
     {
@@ -652,6 +652,13 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         return checkAtStartup;
     }
 
+    /// <summary>
+    /// The Git Credential Manager for Windows (GCM) provides secure Git credential storage for Windows.
+    /// It's the successor to the Windows Credential Store for Git (git-credential-winstore), which is no longer maintained.
+    /// Check whether the user has an outdated setting pointing to git-credential-winstore and, if so,
+    /// notify the user and point to our GitHub thread with more information.
+    /// </summary>
+    /// <seealso href="https://github.com/gitextensions/gitextensions/issues/3511#issuecomment-313633897"/>
     private bool CheckGitCredentialWinStore()
     {
         string setting = GetGlobalSetting(SettingKeyString.CredentialHelper) ?? string.Empty;
@@ -819,6 +826,7 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         ShellExtensionsRegistered.IsVisible = true;
         if (!ShellExtensionManager.IsRegistered())
         {
+            // Check if shell extensions are installed
             if (!ShellExtensionManager.FilesExist())
             {
                 RenderSettingSet(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix, _shellExtNoInstalled.Text);
@@ -868,6 +876,9 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         return true;
     }
 
+    /// <summary>
+    /// Renders settings as configured or not depending on the supplied condition.
+    /// </summary>
     private static bool RenderSettingSetUnset(
         Func<bool> condition,
         Button settingButton,

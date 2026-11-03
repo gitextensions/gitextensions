@@ -80,6 +80,9 @@ Diff selection:
 {ColumnNumber}");
 
     private readonly BindingList<ScriptInfoProxy> _scripts = [];
+
+    // settings maybe loaded before page is shown or after
+    // we load images before we bind the list
     private readonly IReadOnlyList<IconChoice> _iconChoices;
     private readonly IScriptsManager _scriptsManager;
     private SimpleHelpDisplayDialog? _argumentsCheatSheet;
@@ -323,6 +326,9 @@ Diff selection:
         btnMoveUp.IsEnabled = index > 0;
         btnMoveDown.IsEnabled = index >= 0 && index < _scripts.Count - 1;
 
+        // Reassigning the same object would make the editor commit any pending edit (e.g. an open Icon drop-down list).
+        // This handler runs synchronously within control updates in SetSelectedScript, so the commit would re-enter
+        // BindScripts, which clears the items while the outer call is still selecting one of them.
         _updatingEditor = true;
         try
         {
@@ -331,6 +337,8 @@ Diff selection:
             txtCommand.Text = script?.Command;
             txtArguments.Text = script?.Arguments;
             cbxOnEvent.SelectedItem = script?.OnEvent ?? ScriptEvent.None;
+
+            // script.Icon must match in case because assembly resources are case-sensitive
             cbxIcon.SelectedItem = _iconChoices.FirstOrDefault(choice => string.Equals(choice.Key, script?.Icon, StringComparison.Ordinal))
                 ?? _iconChoices[0];
             txtIconFilePath.Text = script?.IconFilePath;

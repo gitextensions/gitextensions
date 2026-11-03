@@ -86,6 +86,8 @@ public sealed partial class SshSettingsPage : SettingsPageWithHeader
             ? string.Empty
             : Putty.IsChecked == true
                 ? PlinkPath.Text ?? string.Empty
+
+                // Other.IsChecked
                 : OtherSsh.Text ?? string.Empty;
 
         // Set persistent settings as well as the env var used by Git

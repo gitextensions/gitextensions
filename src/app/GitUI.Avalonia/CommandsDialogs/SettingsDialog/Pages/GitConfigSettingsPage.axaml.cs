@@ -200,7 +200,11 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         }
 
         Validates.NotNull(_diffMergeToolConfigurationManager);
+
+        // TODO: why use GUI???
         SaveTool(DiffMergeToolType.Diff, _NO_TRANSLATE_cboDiffTool.Text, txtDiffToolPath.Text, txtDiffToolCommand.Text);
+
+        // TODO: merge.guitool???
         SaveTool(DiffMergeToolType.Merge, _NO_TRANSLATE_cboMergeTool.Text, txtMergeToolPath.Text, txtMergeToolCommand.Text);
 
         AutoCRLFType? autoCrlf = globalAutoCrlfFalse.IsChecked == true ? AutoCRLFType.@false
@@ -369,6 +373,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
 
     private void txtMergeToolPath_TextChanged(object? sender, EventArgs e)
     {
+        // we only want to suggest command for known built-in tool types
         if (!IsLoadingSettings && txtMergeToolPath.IsFocused && IsRegisteredTool(_NO_TRANSLATE_cboMergeTool.Text, DiffMergeToolType.Merge))
         {
             SuggestMergeToolCommand();
@@ -377,6 +382,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
 
     private void txtDiffToolPath_TextChanged(object? sender, EventArgs e)
     {
+        // we only want to suggest command for known built-in tool types
         if (!IsLoadingSettings && txtDiffToolPath.IsFocused && IsRegisteredTool(_NO_TRANSLATE_cboDiffTool.Text, DiffMergeToolType.Diff))
         {
             SuggestDiffToolCommand();

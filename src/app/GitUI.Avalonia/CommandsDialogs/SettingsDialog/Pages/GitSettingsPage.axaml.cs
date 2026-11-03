@@ -182,6 +182,15 @@ public sealed partial class GitSettingsPage : SettingsPageWithHeader
         using FormFixHome form = new();
         form.ShowDialog((TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window)!);
         PageHost.LoadAll();
+
+        // TODO?: rescan
+        // original:
+        ////            throw new NotImplementedException(@"
+        ////            Save();
+        ////            using (FormFixHome frm = new()) frm.ShowDialog(this);
+        ////            LoadSettings();
+        ////            Rescan_Click(null, null);
+        ////            ");
     }
 
     private static string FormatEnvironmentName(string name)
