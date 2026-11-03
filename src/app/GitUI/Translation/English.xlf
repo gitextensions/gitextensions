@@ -7092,6 +7092,10 @@ Is the merge conflict solved?</source>
         <source>Choose base file failed.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_chooseFileFailedDetailFormat.Text">
+        <source>File: {0}</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_chooseLocalButtonText.Text">
         <source>Choose local</source>
         <target />
@@ -8095,36 +8099,44 @@ Context menu for additional operations</source>
         <source>Advanced</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxFetchPrune.Text">
+      <trans-unit id="lblFetchPrune.Text">
         <source>Prune remote branches during fetch</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxPullRebase.Text">
+      <trans-unit id="lblMergeAutoStash.Text">
+        <source>Automatically stash before doing a merge</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblPullFF.Text">
+        <source>Fast-forward behavior when pulling</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblPullRebase.Text">
         <source>Rebase local branch when pulling (instead of merge)</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxReReReAutoUpdate.Text">
+      <trans-unit id="lblReReReAutoUpdate.Text">
         <source>Automatically apply recorded resolution of conflicted merges</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxReReReEnabled.Text">
+      <trans-unit id="lblReReReEnabled.Text">
         <source>Reuse recorded resolution of conflicted merges</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxRebaseAutosquash.Text">
+      <trans-unit id="lblRebaseAutosquash.Text">
         <source>Automatically squash commits when doing an interactive rebase</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxRebaseAutostash.Text">
+      <trans-unit id="lblRebaseAutostash.Text">
         <source>Automatically stash before doing a rebase</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxUpdateRefs.Text">
-        <source>Rebase also dependent branches</source>
+      <trans-unit id="lblStatusShowUntrackedFiles.Text">
+        <source>Show untracked files</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkboxMergeAutoStash.Text">
-        <source>Automatically stash before doing a merge</source>
+      <trans-unit id="lblUpdateRefs.Text">
+        <source>Rebase also dependent branches</source>
         <target />
       </trans-unit>
     </body>
@@ -9365,8 +9377,8 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Show remote &amp;branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="ShowSessionCheckpoints.Text">
-        <source>Show session checkpoints</source>
+      <trans-unit id="ShowSessionRefs.Text">
+        <source>Show agentic sessions (&amp;Q)</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowStashes.Text">
@@ -9595,6 +9607,10 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="editCommitToolStripMenuItem.Text">
         <source>&amp;Edit commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="editCommitWithFixupToolStripMenuItem.Text">
+        <source>E&amp;dit commit by creating a fixup commit and squash-rebase...</source>
         <target />
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">

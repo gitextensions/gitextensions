@@ -28,131 +28,150 @@ partial class GitConfigAdvancedSettingsPage
     /// </summary>
     private void InitializeComponent()
     {
-        checkBoxRebaseAutostash = new CheckBox();
-        checkBoxFetchPrune = new CheckBox();
-        checkBoxPullRebase = new CheckBox();
-        checkBoxRebaseAutosquash = new CheckBox();
-        checkBoxUpdateRefs = new CheckBox();
-        checkboxMergeAutoStash = new CheckBox();
-        checkBoxReReReEnabled = new CheckBox();
-        checkBoxReReReAutoUpdate = new CheckBox();
+        tlpnlMain = new TableLayoutPanel();
+        lblPullFF = new Label();
+        lblPullRebase = new Label();
+        lblFetchPrune = new Label();
+        lblMergeAutoStash = new Label();
+        lblRebaseAutostash = new Label();
+        lblRebaseAutosquash = new Label();
+        lblUpdateRefs = new Label();
+        lblReReReEnabled = new Label();
+        lblReReReAutoUpdate = new Label();
+        lblStatusShowUntrackedFiles = new Label();
+        tlpnlMain.SuspendLayout();
         SuspendLayout();
         // 
-        // checkBoxRebaseAutostash
+        // tlpnlMain
         // 
-        checkBoxRebaseAutostash.AutoSize = true;
-        checkBoxRebaseAutostash.Location = new Point(19, 89);
-        checkBoxRebaseAutostash.Name = "checkBoxRebaseAutostash";
-        checkBoxRebaseAutostash.Size = new Size(247, 19);
-        checkBoxRebaseAutostash.TabIndex = 4;
-        checkBoxRebaseAutostash.Text = "Automatically stash before doing a rebase";
-        checkBoxRebaseAutostash.ThreeState = true;
-        checkBoxRebaseAutostash.UseVisualStyleBackColor = true;
+        tlpnlMain.AutoSize = true;
+        tlpnlMain.ColumnCount = 3;
+        tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+        tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+        tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+        tlpnlMain.Controls.Add(lblPullFF, 0, 0);
+        tlpnlMain.Controls.Add(lblPullRebase, 0, 1);
+        tlpnlMain.Controls.Add(lblFetchPrune, 0, 2);
+        tlpnlMain.Controls.Add(lblMergeAutoStash, 0, 3);
+        tlpnlMain.Controls.Add(lblRebaseAutostash, 0, 4);
+        tlpnlMain.Controls.Add(lblRebaseAutosquash, 0, 5);
+        tlpnlMain.Controls.Add(lblUpdateRefs, 0, 6);
+        tlpnlMain.Controls.Add(lblReReReEnabled, 0, 7);
+        tlpnlMain.Controls.Add(lblReReReAutoUpdate, 0, 8);
+        tlpnlMain.Controls.Add(lblStatusShowUntrackedFiles, 0, 9);
+        tlpnlMain.Dock = DockStyle.Fill;
+        tlpnlMain.Location = new Point(0, 0);
+        tlpnlMain.Name = "tlpnlMain";
+        tlpnlMain.RowCount = 11;
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        tlpnlMain.Size = new Size(1439, 516);
+        tlpnlMain.TabIndex = 0;
         // 
-        // checkBoxFetchPrune
+        // lblPullFF
         // 
-        checkBoxFetchPrune.AutoSize = true;
-        checkBoxFetchPrune.Location = new Point(19, 39);
-        checkBoxFetchPrune.Name = "checkBoxFetchPrune";
-        checkBoxFetchPrune.Size = new Size(217, 19);
-        checkBoxFetchPrune.TabIndex = 2;
-        checkBoxFetchPrune.Text = "Prune remote branches during fetch";
-        checkBoxFetchPrune.ThreeState = true;
-        checkBoxFetchPrune.UseVisualStyleBackColor = true;
+        lblPullFF.Anchor = AnchorStyles.Left;
+        lblPullFF.AutoSize = true;
+        lblPullFF.Name = "lblPullFF";
+        lblPullFF.Text = "Fast-forward behavior when pulling";
         // 
-        // checkBoxPullRebase
+        // lblPullRebase
         // 
-        checkBoxPullRebase.AutoSize = true;
-        checkBoxPullRebase.Location = new Point(19, 14);
-        checkBoxPullRebase.Name = "checkBoxPullRebase";
-        checkBoxPullRebase.Size = new Size(303, 19);
-        checkBoxPullRebase.TabIndex = 1;
-        checkBoxPullRebase.Text = "Rebase local branch when pulling (instead of merge)";
-        checkBoxPullRebase.ThreeState = true;
-        checkBoxPullRebase.UseVisualStyleBackColor = true;
+        lblPullRebase.Anchor = AnchorStyles.Left;
+        lblPullRebase.AutoSize = true;
+        lblPullRebase.Name = "lblPullRebase";
+        lblPullRebase.Text = "Rebase local branch when pulling (instead of merge)";
         // 
-        // checkBoxRebaseAutosquash
+        // lblFetchPrune
         // 
-        checkBoxRebaseAutosquash.AutoSize = true;
-        checkBoxRebaseAutosquash.Location = new Point(19, 114);
-        checkBoxRebaseAutosquash.Name = "checkBoxRebaseAutosquash";
-        checkBoxRebaseAutosquash.Size = new Size(367, 19);
-        checkBoxRebaseAutosquash.TabIndex = 5;
-        checkBoxRebaseAutosquash.Text = "Automatically squash commits when doing an interactive rebase";
-        checkBoxRebaseAutosquash.ThreeState = true;
-        checkBoxRebaseAutosquash.UseVisualStyleBackColor = true;
+        lblFetchPrune.Anchor = AnchorStyles.Left;
+        lblFetchPrune.AutoSize = true;
+        lblFetchPrune.Name = "lblFetchPrune";
+        lblFetchPrune.Text = "Prune remote branches during fetch";
         // 
-        // checkBoxUpdateRefs
+        // lblMergeAutoStash
         // 
-        checkBoxUpdateRefs.AutoSize = true;
-        checkBoxUpdateRefs.Location = new Point(19, 139);
-        checkBoxUpdateRefs.Name = "checkBoxUpdateRefs";
-        checkBoxUpdateRefs.Size = new Size(198, 19);
-        checkBoxUpdateRefs.TabIndex = 6;
-        checkBoxUpdateRefs.Text = "Rebase also dependent branches";
-        checkBoxUpdateRefs.ThreeState = true;
-        checkBoxUpdateRefs.UseVisualStyleBackColor = true;
+        lblMergeAutoStash.Anchor = AnchorStyles.Left;
+        lblMergeAutoStash.AutoSize = true;
+        lblMergeAutoStash.Name = "lblMergeAutoStash";
+        lblMergeAutoStash.Text = "Automatically stash before doing a merge";
         // 
-        // checkboxMergeAutoStash
+        // lblRebaseAutostash
         // 
-        checkboxMergeAutoStash.AutoSize = true;
-        checkboxMergeAutoStash.Location = new Point(19, 64);
-        checkboxMergeAutoStash.Name = "checkboxMergeAutoStash";
-        checkboxMergeAutoStash.Size = new Size(247, 19);
-        checkboxMergeAutoStash.TabIndex = 3;
-        checkboxMergeAutoStash.Text = "Automatically stash before doing a merge";
-        checkboxMergeAutoStash.ThreeState = true;
-        checkboxMergeAutoStash.UseVisualStyleBackColor = true;
+        lblRebaseAutostash.Anchor = AnchorStyles.Left;
+        lblRebaseAutostash.AutoSize = true;
+        lblRebaseAutostash.Name = "lblRebaseAutostash";
+        lblRebaseAutostash.Text = "Automatically stash before doing a rebase";
         // 
-        // checkBoxReReReEnabled
+        // lblRebaseAutosquash
         // 
-        checkBoxReReReEnabled.AutoSize = true;
-        checkBoxReReReEnabled.Location = new Point(19, 164);
-        checkBoxReReReEnabled.Name = "checkBoxReReReEnabled";
-        checkBoxReReReEnabled.Size = new Size(275, 19);
-        checkBoxReReReEnabled.TabIndex = 7;
-        checkBoxReReReEnabled.Text = "Reuse recorded resolution of conflicted merges";
-        checkBoxReReReEnabled.ThreeState = true;
-        checkBoxReReReEnabled.UseVisualStyleBackColor = true;
+        lblRebaseAutosquash.Anchor = AnchorStyles.Left;
+        lblRebaseAutosquash.AutoSize = true;
+        lblRebaseAutosquash.Name = "lblRebaseAutosquash";
+        lblRebaseAutosquash.Text = "Automatically squash commits when doing an interactive rebase";
         // 
-        // checkBoxReReReAutoUpdate
+        // lblUpdateRefs
         // 
-        checkBoxReReReAutoUpdate.AutoSize = true;
-        checkBoxReReReAutoUpdate.Location = new Point(19, 189);
-        checkBoxReReReAutoUpdate.Name = "checkBoxReReReAutoUpdate";
-        checkBoxReReReAutoUpdate.Size = new Size(350, 19);
-        checkBoxReReReAutoUpdate.TabIndex = 8;
-        checkBoxReReReAutoUpdate.Text = "Automatically apply recorded resolution of conflicted merges";
-        checkBoxReReReAutoUpdate.ThreeState = true;
-        checkBoxReReReAutoUpdate.UseVisualStyleBackColor = true;
+        lblUpdateRefs.Anchor = AnchorStyles.Left;
+        lblUpdateRefs.AutoSize = true;
+        lblUpdateRefs.Name = "lblUpdateRefs";
+        lblUpdateRefs.Text = "Rebase also dependent branches";
+        // 
+        // lblReReReEnabled
+        // 
+        lblReReReEnabled.Anchor = AnchorStyles.Left;
+        lblReReReEnabled.AutoSize = true;
+        lblReReReEnabled.Name = "lblReReReEnabled";
+        lblReReReEnabled.Text = "Reuse recorded resolution of conflicted merges";
+        // 
+        // lblReReReAutoUpdate
+        // 
+        lblReReReAutoUpdate.Anchor = AnchorStyles.Left;
+        lblReReReAutoUpdate.AutoSize = true;
+        lblReReReAutoUpdate.Name = "lblReReReAutoUpdate";
+        lblReReReAutoUpdate.Text = "Automatically apply recorded resolution of conflicted merges";
+        // 
+        // lblStatusShowUntrackedFiles
+        // 
+        lblStatusShowUntrackedFiles.Anchor = AnchorStyles.Left;
+        lblStatusShowUntrackedFiles.AutoSize = true;
+        lblStatusShowUntrackedFiles.Name = "lblStatusShowUntrackedFiles";
+        lblStatusShowUntrackedFiles.Text = "Show untracked files";
         // 
         // GitConfigAdvancedSettingsPage
         // 
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
-        Controls.Add(checkBoxReReReAutoUpdate);
-        Controls.Add(checkBoxReReReEnabled);
-        Controls.Add(checkboxMergeAutoStash);
-        Controls.Add(checkBoxRebaseAutostash);
-        Controls.Add(checkBoxFetchPrune);
-        Controls.Add(checkBoxPullRebase);
-        Controls.Add(checkBoxUpdateRefs);
-        Controls.Add(checkBoxRebaseAutosquash);
+        Controls.Add(tlpnlMain);
         Name = "GitConfigAdvancedSettingsPage";
         Size = new Size(1439, 516);
         Text = "Advanced";
+        tlpnlMain.ResumeLayout(false);
+        tlpnlMain.PerformLayout();
         ResumeLayout(false);
         PerformLayout();
     }
 
     #endregion
 
-    private CheckBox checkBoxRebaseAutostash;
-    private CheckBox checkBoxFetchPrune;
-    private CheckBox checkBoxPullRebase;
-    private CheckBox checkBoxRebaseAutosquash;
-    private CheckBox checkBoxUpdateRefs;
-    private CheckBox checkboxMergeAutoStash;
-    private CheckBox checkBoxReReReEnabled;
-    private CheckBox checkBoxReReReAutoUpdate;
+    private TableLayoutPanel tlpnlMain;
+    private Label lblPullFF;
+    private Label lblPullRebase;
+    private Label lblFetchPrune;
+    private Label lblMergeAutoStash;
+    private Label lblRebaseAutostash;
+    private Label lblRebaseAutosquash;
+    private Label lblUpdateRefs;
+    private Label lblReReReEnabled;
+    private Label lblReReReAutoUpdate;
+    private Label lblStatusShowUntrackedFiles;
 }
