@@ -91,6 +91,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private readonly TranslationString _chooseBaseFileFailedText = new("Choose base file failed.");
     private readonly TranslationString _chooseLocalFileFailedText = new("Choose local file failed.");
     private readonly TranslationString _chooseRemoteFileFailedText = new("Choose remote file failed.");
+    private readonly TranslationString _chooseFileFailedDetailFormat = new("File: {0}");
 
     private readonly TranslationString _currentFormatFilter =
         new("Current format (*.{0})");
@@ -885,6 +886,10 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
+            // Each context-menu action is a fresh batch: an "apply to all" choice left ticked by a
+            // previous, unrelated action (e.g. choose local) must not silently carry over here.
+            _solveMergeConflictApplyToAll = false;
+
             foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForBaseRevision(conflictItem))
@@ -902,9 +907,9 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void ChooseBaseOnConflict(string fileName)
     {
-        if (!Module.HandleConflictSelectSide(fileName, "BASE"))
+        if (!Module.HandleConflictSelectSide(fileName, "BASE", out string errorMessage))
         {
-            MessageBoxes.Show(this, _chooseBaseFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, $"{_chooseBaseFileFailedText.Text}{Environment.NewLine}{Environment.NewLine}{string.Format(_chooseFileFailedDetailFormat.Text, fileName)}{Environment.NewLine}{errorMessage}", TranslatedStrings.Error);
         }
     }
 
@@ -912,6 +917,10 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
+            // Each context-menu action is a fresh batch: an "apply to all" choice left ticked by a
+            // previous, unrelated action (e.g. choose base) must not silently carry over here.
+            _solveMergeConflictApplyToAll = false;
+
             foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForLocalRevision(conflictItem))
@@ -929,9 +938,9 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void ChooseLocalOnConflict(string fileName)
     {
-        if (!Module.HandleConflictSelectSide(fileName, "LOCAL"))
+        if (!Module.HandleConflictSelectSide(fileName, "LOCAL", out string errorMessage))
         {
-            MessageBoxes.Show(this, _chooseLocalFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, $"{_chooseLocalFileFailedText.Text}{Environment.NewLine}{Environment.NewLine}{string.Format(_chooseFileFailedDetailFormat.Text, fileName)}{Environment.NewLine}{errorMessage}", TranslatedStrings.Error);
         }
     }
 
@@ -939,6 +948,10 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
+            // Each context-menu action is a fresh batch: an "apply to all" choice left ticked by a
+            // previous, unrelated action (e.g. choose local) must not silently carry over here.
+            _solveMergeConflictApplyToAll = false;
+
             foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForRemoteRevision(conflictItem))
@@ -956,9 +969,9 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void ChooseRemoteOnConflict(string fileName)
     {
-        if (!Module.HandleConflictSelectSide(fileName, "REMOTE"))
+        if (!Module.HandleConflictSelectSide(fileName, "REMOTE", out string errorMessage))
         {
-            MessageBoxes.Show(this, _chooseRemoteFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, $"{_chooseRemoteFileFailedText.Text}{Environment.NewLine}{Environment.NewLine}{string.Format(_chooseFileFailedDetailFormat.Text, fileName)}{Environment.NewLine}{errorMessage}", TranslatedStrings.Error);
         }
     }
 
@@ -1031,7 +1044,16 @@ public partial class FormResolveConflicts : GitModuleForm
             TaskDialogPage page = CreateSolveMergeConflictTaskDialogPage(dialogText, dialogInstructionText, dialogCaption, dialogFooterCheckboxText,
                 keepLocalButtonText, keepRemoteButtonText, keepBaseButtonText, diff);
 
-            TaskDialog.ShowDialog(Handle, page);
+            TaskDialogButton answer = TaskDialog.ShowDialog(Handle, page);
+
+            // Dismissing the dialog (Cancel/Esc) is not an answer, so it must not be remembered as
+            // one, and the previously selected action (from _solveMergeConflictDialogResult) must
+            // not be silently (re-)applied to this file.
+            if (answer == TaskDialogButton.Cancel)
+            {
+                return;
+            }
+
             _solveMergeConflictApplyToAll = page.Verification?.Checked ?? false;
         }
 

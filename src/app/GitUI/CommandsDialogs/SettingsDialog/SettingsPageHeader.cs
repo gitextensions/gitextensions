@@ -1,4 +1,4 @@
-namespace GitUI.CommandsDialogs.SettingsDialog;
+﻿namespace GitUI.CommandsDialogs.SettingsDialog;
 
 public interface IGlobalSettingsPage : ISettingsPage
 {
@@ -24,6 +24,8 @@ public interface IGitConfigSettingsPage : ILocalSettingsPage
 
 public partial class SettingsPageHeader
 {
+    private static readonly Dictionary<Type, string> _lastSelectedLayerByPageType = [];
+
     private readonly SettingsPageWithHeader? _page;
 
     public SettingsPageHeader(SettingsPageWithHeader? page, bool canSaveInsideRepo)
@@ -129,6 +131,29 @@ public partial class SettingsPageHeader
                 {
                     configFileSettingsPage.SetSystemSettings();
                     ReadOnly = true;
+                }
+            };
+        }
+
+        Type pageType = localSettingsPage.GetType();
+        RadioButton[] layerButtons = [EffectiveRB, LocalRB, DistributedRB, GlobalRB, SystemRB];
+
+        if (_lastSelectedLayerByPageType.TryGetValue(pageType, out string? lastLayerName))
+        {
+            RadioButton? lastLayer = layerButtons.FirstOrDefault(rb => rb.Visible && rb.Name == lastLayerName);
+            if (lastLayer is not null)
+            {
+                lastLayer.Checked = true;
+            }
+        }
+
+        foreach (RadioButton layerButton in layerButtons)
+        {
+            layerButton.CheckedChanged += (s, e) =>
+            {
+                if (layerButton.Checked)
+                {
+                    _lastSelectedLayerByPageType[pageType] = layerButton.Name;
                 }
             };
         }
