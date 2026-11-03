@@ -5,8 +5,9 @@ using GitUI.Compat;
 
 namespace ResourceManager;
 
-// Provides XLF translation for Avalonia controls. Translation category and item keys remain
-// the WinForms type and field names, so the existing language files apply unchanged.
+/// <summary>
+///  Provides translation for Git Extensions <see cref="UserControl"/>s.
+/// </summary>
 public class TranslatedControl : UserControl, ITranslate
 {
     protected virtual void OnRuntimeLoad()
@@ -14,7 +15,13 @@ public class TranslatedControl : UserControl, ITranslate
     }
 
     /// <summary>Performs post-initialisation tasks such as translation.</summary>
-    /// <remarks>Subclasses must ensure this method is called in their constructor, ideally as the final statement.</remarks>
+    /// <remarks>
+    /// <para>Subclasses must ensure this method is called in their constructor, ideally as the final statement.</para>
+    /// <para>Requiring this extra life-cycle event allows preparing the UI after any call to <c>InitializeComponent</c>,
+    /// but before it is show. The WinForms <c>UserControl.Load</c> event occurs too late for operations that effect layout.</para>
+    /// </remarks>
+    // Provides XLF translation for Avalonia controls. Translation category and item keys remain
+    // the WinForms type and field names, so the existing language files apply unchanged.
     protected void InitializeComplete()
     {
         Translator.Translate(this, AppSettings.CurrentTranslation);

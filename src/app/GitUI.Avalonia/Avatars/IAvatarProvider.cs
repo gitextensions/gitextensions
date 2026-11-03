@@ -1,12 +1,12 @@
 ﻿namespace GitUI.Avatars;
 
 /// <summary>
-/// A source and cache agnostic provider for encoded avatar images.
+/// A source and cache agnostic provider for avatar images.
 /// </summary>
 public interface IAvatarProvider
 {
     /// <summary>
-    /// Provides encoded avatar image bytes for the associated email at the requested size.
+    /// Provides the avatar image for the associated email at the requested size.
     /// </summary>
     Task<byte[]?> GetAvatarAsync(string email, string? name, int imageSize);
 

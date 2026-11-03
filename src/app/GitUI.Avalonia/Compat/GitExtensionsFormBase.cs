@@ -303,6 +303,7 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
     /// <summary>Controls the shared Escape-to-close behavior; the repository browser opts out.</summary>
     protected virtual bool CloseOnEscape => true;
 
+    /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
     protected override void OnKeyDown(KeyEventArgs e)
     {
         WinFormsShims.Keys keyData = KeysMapper.ToKeys(e);

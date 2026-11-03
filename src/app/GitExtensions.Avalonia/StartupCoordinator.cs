@@ -37,6 +37,9 @@ internal sealed class StartupCoordinator
 
     internal bool EnsurePrerequisites(IGitUICommands commands, IReadOnlyList<string> args)
     {
+        // Ensure we can find the git command to execute,
+        // unless we are being instructed to uninstall,
+        // and run the full checks only if AppSettings.CheckSettings is true.
         if (args.Count >= 2 && args[1] == "uninstall")
         {
             return true;

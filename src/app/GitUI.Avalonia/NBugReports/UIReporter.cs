@@ -260,7 +260,7 @@ internal sealed class UIReporter : IBugReporter
         static void InvokeRestartGE()
         {
             // Use the Avalonia dispatcher to queue the restart on the message loop to avoid deadlocks
-            // when the new process initializes the platform theme and broadcasts system events.
+            // as in the original Application.SetColorMode() call which broadcasts system events
             RestartScheduler(RestartApplication);
         }
     }

@@ -8,34 +8,52 @@ using ResourceManager;
 
 namespace GitUI;
 
-/// <summary>Base control that obtains Git UI commands from its containing form.</summary>
+/// <summary>
+/// Base class for a <see cref="UserControl"/> requiring <see cref="IGitModule"/> and <see cref="GitUICommands"/>.
+/// </summary>
 public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32Window
 {
     private IGitUICommandsSource? _uiCommandsSource;
 
-    /// <summary>Occurs after <see cref="UICommandsSource"/> is set.</summary>
+    /// <summary>
+    /// Occurs after the <see cref="UICommandsSource"/> is set.
+    /// Will only occur once, as the source cannot change after being set.
+    /// </summary>
     public event EventHandler<GitUICommandsSourceEventArgs>? UICommandsSourceSet;
 
     protected override IServiceProvider ServiceProvider => UICommands;
 
-    /// <summary>Gets the commands exposed by <see cref="UICommandsSource"/>.</summary>
+    /// <summary>
+    ///  Gets the <see cref="UICommandsSource"/>'s <see cref="GitUICommands"/> reference.
+    /// </summary>
     public IGitUICommands UICommands => UICommandsSource.UICommands;
 
-    /// <summary>Gets or sets the command source for this control.</summary>
+    // Avalonia controls are accessed on their dispatcher thread. Use the setter,
+    // as the original does, so lazy discovery also initializes subscriptions.
+
+    /// <summary>
+    /// Gets a <see cref="IGitUICommandsSource"/> for this control.
+    /// </summary>
+    /// <remarks>
+    /// If the commands source has not yet been initialised, this property's getter attempts
+    /// to find a control-tree ancestor of type <see cref="IGitUICommandsSource"/>.
+    /// </remarks>
+    /// <exception cref="InvalidOperationException">Unable to initialise the source as
+    /// no ancestor of type <see cref="IGitUICommandsSource"/> was found.</exception>
     public IGitUICommandsSource UICommandsSource
     {
         get
         {
             if (_uiCommandsSource is null)
             {
-                // Avalonia controls are accessed on their dispatcher thread. Use the setter,
-                // as the original does, so lazy discovery also initializes subscriptions.
+                // Search ancestors for an implementation of IGitUICommandsSource
                 UICommandsSource = this.GetLogicalAncestors()
                     .OfType<IGitUICommandsSource>()
                     .FirstOrDefault()
                     ?? throw new InvalidOperationException("The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?");
             }
 
+            // ReSharper disable once AssignNullToNotNullAttribute
             return _uiCommandsSource!;
         }
         set
@@ -68,7 +86,7 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32W
 
     nint IWin32Window.Handle => TopLevel.GetTopLevel(this)?.TryGetPlatformHandle()?.Handle ?? 0;
 
-    /// <summary>Gets the current Git module.</summary>
+    /// <summary>Gets the <see cref="UICommands"/>' <see cref="IGitModule"/> reference.</summary>
     public IGitModule Module => UICommands.Module;
 
     protected override bool ExecuteCommand(int command)

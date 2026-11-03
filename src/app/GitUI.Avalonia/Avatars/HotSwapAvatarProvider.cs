@@ -5,6 +5,10 @@ namespace GitUI.Avatars;
 /// <summary>
 /// A helper provider that wraps another avatar provider.
 /// </summary>
+/// <remarks>
+/// The wrapper is used to support hot swapping (changing a provider without changing the reference of the root provider)
+/// It also catches and logs exceptions and works as a simple NullProvider if <see cref="Provider"/> is not set (set to null).
+/// </remarks>
 public sealed class HotSwapAvatarProvider : IAvatarProvider
 {
     /// <summary>

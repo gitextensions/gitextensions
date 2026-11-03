@@ -75,6 +75,7 @@ public sealed class FileSystemAvatarCache : IAvatarProvider, IAvatarCacheCleaner
 
         if (AppSettings.AvatarProvider == AvatarProvider.None)
         {
+            // No need to refresh because the image returned is always the same.
             return false;
         }
 
@@ -101,6 +102,7 @@ public sealed class FileSystemAvatarCache : IAvatarProvider, IAvatarCacheCleaner
         }
         catch
         {
+            // ignore
             return null;
         }
     }
@@ -113,6 +115,7 @@ public sealed class FileSystemAvatarCache : IAvatarProvider, IAvatarCacheCleaner
         }
         catch
         {
+            // ignore
         }
     }
 

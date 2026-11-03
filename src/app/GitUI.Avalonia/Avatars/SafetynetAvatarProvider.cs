@@ -8,6 +8,12 @@ namespace GitUI.Avatars;
 /// <summary>
 /// A provider proxy that makes sure that the requested image size is reasonable.
 /// </summary>
+/// <remarks>
+/// If the image size is less than one it will be set to a default value (64px)
+/// and the upper size is limited to 512px to prevent unreasonable avatar sizes.
+///
+/// If the inner provider crashes or returns null an "emergency fallback" is provided.
+/// </remarks>
 public sealed class SafetynetAvatarProvider : IAvatarProvider
 {
     private const int _upperSizeLimit = 512;

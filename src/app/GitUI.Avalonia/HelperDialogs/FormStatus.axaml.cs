@@ -135,6 +135,9 @@ public partial class FormStatus : GitExtensionsDialog
         form.ShowDialog(owner);
     }
 
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
     protected override void OnClosed(EventArgs e)
     {
         (ConsoleCommandRunner as IDisposable)?.Dispose();

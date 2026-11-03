@@ -12,6 +12,8 @@ public sealed class GravatarProvider : IAvatarProvider, IDisposable
 
     private readonly IAvatarDownloader _downloader;
     private readonly string _queryString;
+
+    // Hash specified at http://en.gravatar.com/site/implement/hash/
     private readonly SHA256 _sha256 = SHA256.Create();
 
     public GravatarProvider(

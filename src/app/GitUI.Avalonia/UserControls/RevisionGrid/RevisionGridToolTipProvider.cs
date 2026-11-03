@@ -124,6 +124,11 @@ internal sealed class RevisionGridToolTipProvider
         {
             string newText = GetToolTipText(highlightToolTip, highlightRef);
             object? tip = string.IsNullOrEmpty(newText) ? null : newText;
+
+            // Do not deactivate the tooltip to force it to be shown again: deactivating resets its
+            // state, so the new text would only appear once the initial delay elapsed - and as the
+            // graph column builds its text for every hovered pixel, that delay would restart with
+            // nearly every mouse move. Windows updates the text of a displayed tooltip in place.
             if (!Equals(ToolTip.GetTip(cell), tip))
             {
                 ToolTip.SetTip(cell, tip);
@@ -187,6 +192,9 @@ internal sealed class RevisionGridToolTipProvider
 
         _cellStates.Clear();
         _isTruncatedByCellPos.Clear();
+
+        // A row index no longer identifies the same revision, so the memorized cell must not
+        // suppress the update of the tooltip for the cell the pointer is resting on.
         _previousRowIndex = -1;
         _previousColumnIndex = -1;
         _previousHighlight = null;

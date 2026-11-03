@@ -354,6 +354,9 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         HideAndClearSearch();
     }
 
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
     private void FindAndReplaceForm_Closed(object? sender, EventArgs e)
     {
         _search.Dispose();
@@ -406,6 +409,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
                     break;
                 }
 
+                // Replace
                 count++;
                 InsertText(txtReplaceWith.Text ?? string.Empty);
             }
@@ -835,7 +839,8 @@ public sealed class TextEditorSearcher : IDisposable
     }
 }
 
-/// <summary>Owns the highlighted search-result ranges for one editor.</summary>
+/// <summary>Bundles a group of markers together so that they can be cleared
+/// together.</summary>
 public sealed class HighlightGroup : IDisposable
 {
     private readonly TextEditor _editor;

@@ -7,6 +7,7 @@ namespace GitExtensions.Compat;
 // parity-scaffolding: records product process-tree cancellation inside the release-shaped Flatpak.
 internal static class FlatpakConformanceProbe
 {
+    // parity-scaffolding: exercises product process-tree cancellation inside the release-shaped Flatpak.
     internal const string ReportPathEnvironmentVariable = "GITEXTENSIONS_FLATPAK_CONFORMANCE_REPORT";
 
     public static async Task<int?> RunIfRequestedAsync()

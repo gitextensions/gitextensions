@@ -49,7 +49,7 @@ public static class SettingControlBindingsProvider
     ///  Creates a control binding for the given <see cref="CredentialsSetting"/>.
     /// </summary>
     /// <param name="setting">The setting to bind.</param>
-    /// <param name="control">An optional pre-existing control model to bind to.</param>
+    /// <param name="control">An optional pre-existing control to bind to.</param>
     public static PluginSettingBinding CreateControlBinding(CredentialsSetting setting, CredentialsControl? control)
         => new CredentialsSettingControlBinding(setting, control);
 

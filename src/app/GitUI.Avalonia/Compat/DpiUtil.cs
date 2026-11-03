@@ -4,9 +4,7 @@ using Application = Avalonia.Application;
 namespace GitExtUtils.GitUI;
 
 /// <summary>
-///  Provides the WinForms-shaped <c>DpiUtil</c> surface used by ported code. Avalonia lays out
-///  and renders in device-independent pixels and applies the display scale itself, so scaling
-///  here is the identity function.
+/// Utility class related to DPI settings, primarily used for device-independent dimensions on high-DPI displays.
 /// </summary>
 public static class DpiUtil
 {
@@ -18,10 +16,24 @@ public static class DpiUtil
 
     public static float ScaleY => (float)GetDesktopScale();
 
+    /// <summary>
+    /// Returns a copy of measurement <paramref name="value"/> which has
+    /// equivalent length on screen at the current DPI as the original would
+    /// at 96 DPI.
+    /// </summary>
+    /// <param name="value">The value to scale.</param>
     public static int Scale(int value) => value;
 
+    /// <summary>
+    /// Returns a copy of <paramref name="value"/> which takes equivalent
+    /// screen space at the current DPI as the original would at 96 DPI.
+    /// </summary>
     public static Size Scale(Size value) => value;
 
+    /// <summary>
+    /// Returns <paramref name="value"/> in device-independent units so that it has equivalent physical
+    /// screen position at the current DPI as the original value would at 96 DPI.
+    /// </summary>
     public static Point Scale(Point value) => value;
 
     private static double GetDesktopScale()

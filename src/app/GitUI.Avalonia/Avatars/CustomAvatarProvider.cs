@@ -7,6 +7,9 @@ namespace GitUI.Avatars;
 /// The custom avatar provider allows the user to define one or more custom providers that
 /// are queried in order until an avatar image is found.
 /// </summary>
+/// <remarks>
+/// Details about the usage and syntax of the custom avatar provider can be found in the gitextensions wiki.
+/// </remarks>
 public sealed partial class CustomAvatarProvider : IAvatarProvider
 {
     private readonly IAvatarDownloader _downloader;

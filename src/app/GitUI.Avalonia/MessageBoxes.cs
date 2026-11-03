@@ -220,6 +220,10 @@ public class MessageBoxes : Translate
         WinFormsShims.MessageBoxDefaultButton defaultButton = WinFormsShims.MessageBoxDefaultButton.Button1)
         => GitExtensions.Extensibility.MessageBoxes.Show(owner, text, caption, buttons, icon, defaultButton);
 
+    /// <summary>
+    ///  Shows a message box without specifying an icon.
+    /// </summary>
+    /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
     public static WinFormsShims.DialogResult Show(
         WinFormsShims.IWin32Window? owner,
         string text,

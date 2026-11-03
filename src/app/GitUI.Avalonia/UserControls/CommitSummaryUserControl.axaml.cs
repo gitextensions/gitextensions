@@ -11,8 +11,7 @@ namespace GitUI.UserControls;
 
 /// <summary>
 /// TODO: replace with some better looking RTF control (similar to Commit Tab in main window)
-///       Avalonia replaces the RichTextBox experiment with native TextBlocks because the
-///       WinForms control displayed plain text without formatting.
+///       Tried RichTextBox: strangely it does not show any formatting, just plain text.
 /// </summary>
 public partial class CommitSummaryUserControl : GitExtensionsControl
 {
