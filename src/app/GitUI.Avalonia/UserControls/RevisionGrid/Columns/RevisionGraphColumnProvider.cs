@@ -180,6 +180,8 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     public async Task SetHoverHighlightAsync(IGitRef? gitRef, int rowIndex = -1)
     {
         await _hoverHighlight.SetAsync(gitRef, rowIndex);
+
+        // Hover state changed since last render. Invalidate so all rows re-render with new highlight.
         foreach (GraphCellControl graph in _grid.GetVisualDescendants().OfType<GraphCellControl>())
         {
             graph.InvalidateVisual();

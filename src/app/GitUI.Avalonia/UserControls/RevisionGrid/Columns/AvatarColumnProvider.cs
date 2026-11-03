@@ -153,6 +153,8 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         public void Load(string email, string? name, int cacheVersion, int imageSize = 20)
         {
             bool identityChanged = _email != email || _name != name || _imageSize != imageSize;
+
+            // Manage exceptional case where cached image have been cleaned by user
             if (!identityChanged && _cacheVersion == cacheVersion)
             {
                 LastLoadTask = null;
@@ -172,6 +174,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
             Task<byte[]?> imageTask = _avatarProvider.GetAvatarAsync(email, name, imageSize);
             if (identityChanged && !imageTask.IsCompletedSuccessfully)
             {
+                // draw the placeholder
                 ReplaceSource(_placeholderImage);
             }
 
@@ -200,13 +203,14 @@ internal sealed class AvatarColumnProvider : ColumnProvider
                 return;
             }
 
+            // Once the image has loaded, invalidate only the avatar area for repaint
             ReplaceSource(bitmap);
         }
 
         private static StreamGeometry CreateCornerClip(Size size, double scale)
         {
-            // The source covers each corner with two perpendicular pixel blocks,
-            // independent of DPI. Clipping leaves the actual row background visible.
+            // Clip around avatar image to round the corners
+            // Algorithm not dependent of dpi scaling (because working with physical pixels)
             const int CornerWidth = 2;
             double pixel = 1 / scale;
             double corner = CornerWidth * pixel;
@@ -215,17 +219,24 @@ internal sealed class AvatarColumnProvider : ColumnProvider
             StreamGeometry geometry = new();
             using (StreamGeometryContext path = geometry.Open())
             {
+                // Top left corner
                 path.BeginFigure(new Point(corner, 0), isFilled: true);
+
+                // Top right corner
                 path.LineTo(new Point(right - corner, 0));
                 path.LineTo(new Point(right - corner, pixel));
                 path.LineTo(new Point(right - pixel, pixel));
                 path.LineTo(new Point(right - pixel, corner));
                 path.LineTo(new Point(right, corner));
+
+                // Bottom right corner
                 path.LineTo(new Point(right, bottom - corner));
                 path.LineTo(new Point(right - pixel, bottom - corner));
                 path.LineTo(new Point(right - pixel, bottom - pixel));
                 path.LineTo(new Point(right - corner, bottom - pixel));
                 path.LineTo(new Point(right - corner, bottom));
+
+                // Bottom left corner
                 path.LineTo(new Point(corner, bottom));
                 path.LineTo(new Point(corner, bottom - pixel));
                 path.LineTo(new Point(pixel, bottom - pixel));

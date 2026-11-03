@@ -14,6 +14,9 @@ internal static class MenuUtil
         menuItem.Tag = _captionTag;
         menuItem.IsEnabled = false;
         menuItem.Focusable = false;
+
+        // no mouse over effect for disabled menu items, if the Tag is "caption".
+        // Only render the background for non-caption menu items
         menuItem.IsHitTestVisible = false;
         menuItem.Classes.Add("gitextensions-menu-caption");
     }
@@ -23,8 +26,6 @@ internal static class MenuUtil
     /// </summary>
     public static void SetAsCaptionMenuItem(MenuItem menuItem, ItemsControl menu)
     {
-        // No mouse over effect for disabled menu items whose Tag is "caption".
-        // Avalonia renders the background only for non-caption menu items because the caption class disables hit testing.
         SetAsCaptionMenuItem(menuItem);
     }
 }

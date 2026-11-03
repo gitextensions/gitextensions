@@ -183,6 +183,9 @@ public partial class CommitInfo : GitModuleControl
         _contextMenuRoot?.AddHandler(PointerExitedEvent, ContextMenuPointerExited, RoutingStrategies.Direct, handledEventsToo: true);
     }
 
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         _contextMenuRoot?.RemoveHandler(PointerMovedEvent, ContextMenuPointerMoved);
@@ -898,8 +901,7 @@ public partial class CommitInfo : GitModuleControl
     {
         _commitMessageHeight = contentsHeight;
 
-        // The source's additional 150%-only workaround is not a native100 height rule.
-        // Avalonia supplies its actual wrapped contents; higher-DPI equivalence is separate.
+        //
         InvalidateMeasure();
     }
 
@@ -965,7 +967,7 @@ public partial class CommitInfo : GitModuleControl
             }
         }
 
-        // Leave the first row Auto so the header retains its original AutoSize behavior.
+        // leave 1st row Height = Auto to let CommitInfoHeader.DesiredSize be correctly applied
         for (int i = 1; i < tableLayout.RowDefinitions.Count; i++)
         {
             tableLayout.RowDefinitions[i].Height = new GridLength(heights[i]);

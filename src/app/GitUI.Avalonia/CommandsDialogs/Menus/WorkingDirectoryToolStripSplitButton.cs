@@ -131,6 +131,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         }
     }
 
+    // This is used to mark controls which are to be excluded from the filtering considerations.
     private readonly HashSet<MenuItem> _fixedItems = [];
     private readonly Dictionary<MenuItem, string> _repositoryItemTexts = [];
     private readonly MenuItem _filterHost;
@@ -150,6 +151,10 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private KeyModifiers _repositoryActivationModifiers;
     private Action? _closeRepository;
     private Action? _configure;
+
+    /// <summary>
+    ///  Gets the current instance of the UI commands.
+    /// </summary>
     private Func<IGitUICommands>? _getUICommands;
     private IRepositoryHistoryUIService? _repositoryHistoryUIService;
     private Action<string>? _launchRepository;
@@ -229,12 +234,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     /// <summary>
     ///  Initializes the menu item.
     /// </summary>
-    /// <param name="getUICommands">The method that returns the current UI commands.</param>
-    /// <param name="setWorkingDirectory">Changes the repository in the current window.</param>
-    /// <param name="launchRepository">Opens a repository in a new application instance.</param>
-    /// <param name="openRepository">Opens the repository folder picker.</param>
-    /// <param name="closeRepository">Closes the repository in the current window.</param>
-    /// <param name="configure">Opens the recent-repository settings dialog.</param>
+    /// <param name="getUICommands">The method that returns the current instance of UI commands.</param>
     public void Initialize(
         Func<IGitUICommands> getUICommands,
         IRepositoryHistoryUIService repositoryHistoryUIService,
@@ -265,6 +265,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     /// <summary>Updates the text shown on the combo button itself.</summary>
     public void RefreshContent()
+
+        // If the component is not initialized, no point doing anything.
         => _implementation?.RefreshContent();
 
     private void RefreshContent(string path, IList<Repository> recentRepositoryHistory)
@@ -333,6 +335,15 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         ApplySourceDropDownWidth();
     }
 
+    // Default items include:
+    //  1. filter
+    //  2. separator
+    //  3. favourite items
+    //      ... recent items
+    //  4. "Open repo..."
+    //  5. "Close repo..."
+    //  6. separator
+    //  7. "Configure menu"
     private void ResetDropDown()
     {
         _dropDownLayout.Clear();
@@ -344,6 +355,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         _fixedItems.Clear();
         _repositoryItemTexts.Clear();
         _tsmiCategorisedRepos?.Items.Clear();
+
+        // We are clearing the textbox while opening the dropdown
         _txtFilter.Text = string.Empty;
         _txtFilter.PlaceholderText = _repositorySearchPlaceholder.Text;
         _menu.Items.Add(new NativeToolStripDropDownSeparator());
@@ -351,6 +364,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     private void AddFixedItems()
     {
+        // Initialize toolstip menu items
+        // ----------------------------------------
         _menu.Items.Add(new NativeToolStripDropDownSeparator());
         _tsmiOpenLocalRepository ??= CreateFixedItem(
             _openRepositoryText,

@@ -222,6 +222,8 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
+    // Avalonia's Ctrl-click toggles its caret even in single-selection mode. Native
+    // TreeView keeps that caret independent of the source's underlined logical flags.
     public RepoObjectsTree()
     {
         InitializeComponent();
@@ -242,8 +244,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _explorerNavigationDecorator = new NativeTreeViewExplorerNavigationDecorator(treeMain);
         _explorerNavigationDecorator.AfterSelect += OnNodeSelected;
 
-        // Avalonia's Ctrl-click toggles its caret even in single-selection mode. Native
-        // TreeView keeps that caret independent of the source's underlined logical flags.
         treeMain.AddHandler(InputElement.PointerPressedEvent, OnNodeClick, RoutingStrategies.Tunnel, handledEventsToo: true);
         treeMain.AddHandler(InputElement.DoubleTappedEvent, OnNodeDoubleClick, RoutingStrategies.Bubble, handledEventsToo: true);
         menuMain.Opening += contextMenu_Opening;

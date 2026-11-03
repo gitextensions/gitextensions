@@ -219,6 +219,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     // The source adds SystemInformation.VerticalScrollBarWidth (17 pixels at 96 DPI) to its
     // 490-pixel content width. Avalonia DIPs are the same 96-DPI design units.
+    // enough to fit CommitInfoHeader in most cases, when the width is (avatar + commit hash)
     private GridLength _commitInfoWidth = new(490 + VerticalScrollBarWidthAt96Dpi);
     private GpgInfo? _gpgInfo;
     private GitRevision? _gpgInfoLoadingRevision;
@@ -277,8 +278,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     /// <param name="args">The start up arguments.</param>
     public FormBrowse(IGitUICommands commands, BrowseArguments args)
         : this(commands, args, gpgInfoProvider: null)
-
-    // Type or member is obsolete
     {
     }
 
@@ -426,8 +425,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         manageStashesToolStripMenuItem.Click += ManageStashesToolStripMenuItemClick;
         createAStashToolStripMenuItem.Click += CreateStashToolStripMenuItemClick;
 
-        // The toolstrip and menu items must be initialised after InitializeComplete
-        // which invokes the translation logic and applies the current language to the components.
         _NO_TRANSLATE_WorkingDir.Initialize(
             () => UICommands,
             _repositoryHistoryUIService
@@ -458,9 +455,15 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             .LoadHotkeys(RevisionGridControl.HotkeySettingsName);
         ToolStripFilters.RefreshRevisionGridShortcutKeys(revisionGridHotkeys);
         RevisionGrid.RefreshMenuShortcutKeys(revisionGridHotkeys);
+
+        // The toolstrip and menu items must be initialised after InitializeComplete
+        // which invokes the translation logic and applies the current language to the components.
         InitMenusAndToolbars(args.RevFilter, args.PathFilter.ToPosixPath());
         InitializeToolbarsMenus();
         LoadUserMenu();
+
+        // Application is init, the repo related operations are triggered in InternalInitialize()
+        // "Repo" related methods, creates _dashboard
         InternalInitialize();
     }
 
@@ -599,8 +602,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void OnActivated(EventArgs e)
     {
-        // WinForms posts this work after activation so the native window is fully displayed.
-        // Avalonia's dispatcher provides the equivalent application-independent boundary.
+        // wait for windows to really be displayed, which isn't necessarily the case in OnLoad()
         Dispatcher.UIThread.Post(OnActivate);
     }
 
@@ -907,9 +909,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private void UpdateRepositoryHostsMenu()
     {
         IRepositoryHostPlugin? firstHost = PluginRegistry.GitHosters.FirstOrDefault();
+
+        // Show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
         _repositoryHostsToolStripMenuItem.IsVisible = firstHost is not null;
         if (firstHost is not null)
         {
+            // TODO: support more than one Git hosting provider plugin (ADO, GitLab,...)
             _repositoryHostsToolStripMenuItem.Header = firstHost.Name;
         }
     }
@@ -1043,6 +1048,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         bool enableWorkingTreeCommands = isValidWorkingDir && !isBareRepository;
         string branchName = isValidWorkingDir ? module.GetSelectedBranch() : string.Empty;
 
+        // Explicit call: Title is normally updated on RevisionGrid filter change
         Title = _appTitleGenerator!.Generate(module.WorkingDir, isValidWorkingDir, branchName);
 
         refreshToolStripMenuItem.IsEnabled = isValidWorkingDir;
@@ -1594,6 +1600,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UICommands.StartApplyPatchDialog(this);
     }
 
+    // Cross-platform constraint: a confined app cannot execute a host terminal.
     private void userShell_Click(object? sender, EventArgs e)
     {
         if (OperatingSystem.IsWindows()
@@ -1618,7 +1625,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
         catch (PlatformNotSupportedException exception) when (FlatpakEnvironment.IsFlatpak())
         {
-            // Cross-platform constraint: a confined app cannot execute a host terminal.
             MessageBoxes.FailedToRunShell(this, "Git bash", exception);
         }
         catch (Exception exception)
@@ -1911,6 +1917,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
+        // fall back to operation without info in the button
         UpdateCommitButtonAndGetBrush(status: null, showCount: false);
         RevisionGrid.UpdateArtificialCommitCount(status: null);
     }
@@ -2390,11 +2397,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         GoToChild = 37,
         GoToParent = 38,
 
-        /* deprecated: RotateApplicationIcon = 14, */
-
         // WinForms routes F5 through ToolStripItem.ShortcutKeys. Avalonia has no ToolStrip,
         // so refresh joins the same command dispatcher without changing persisted upstream IDs.
         Refresh = 50,
+
+        /* deprecated: RotateApplicationIcon = 14, */
     }
 
     private void AddNotes()
@@ -3091,6 +3098,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         if (result.SuperProject is not null)
         {
             SubmoduleFlyout.Items.Add(new Separator());
+
+            // Show top project only if it's not our super project
             if (result.TopProject is not null && result.TopProject != result.SuperProject)
             {
                 MenuItem topProjectItem = CreateSubmoduleMenuItem(result.TopProject, _topProjectModuleFormat.Text);

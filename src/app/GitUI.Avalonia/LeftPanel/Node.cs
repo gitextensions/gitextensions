@@ -21,7 +21,8 @@ internal abstract class Node : NodeBase, INode
 
     /// <summary>
     /// The tree node representing this node.
-    /// Avalonia retains one native item per model node rather than recycling it for another node.
+    /// Note that it may not always be set; which <see cref="Node"/> it represents does not change because
+    /// <see cref="Nodes.FillTreeViewNode(TreeViewItem)"/> reuses each node's own <see cref="TreeViewItem"/>.
     /// </summary>
     protected internal override TreeViewItem TreeViewNode
     {

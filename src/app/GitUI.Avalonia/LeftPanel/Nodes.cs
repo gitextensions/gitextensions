@@ -73,8 +73,8 @@ internal sealed class Nodes(Tree? tree) : IReadOnlyCollection<Node>
 
     /// <summary>
     /// This function is responsible for building the TreeViewItem structure that matches this Nodes's
-    /// structure, recursively. Avalonia model nodes own their TreeViewItems, so the existing items are
-    /// reordered and reused instead of assigning a recycled item to a different model node.
+    /// structure, recursively. To avoid needlessly recreating TreeViewItems, it reuses existing ones
+    /// owned by each Node.
     /// </summary>
     internal void FillTreeViewNode(TreeViewItem treeViewNode)
     {
