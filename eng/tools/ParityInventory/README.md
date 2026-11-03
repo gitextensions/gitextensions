@@ -14,7 +14,7 @@ dotnet run --project eng/tools/ParityInventory -- compare `
   --output eng/avalonia/parity-evidence/P0.4/functional-findings.json
 ```
 
-The report schema version is `4`. It contains:
+The report schema version is `5`. It contains:
 
 - deterministic original and twin inventories: source partials, members and lexical order,
   event handlers/wiring, menu trees, hotkey command IDs, settings reads/writes,
@@ -65,6 +65,53 @@ XML documentation, single-line comments, block comments, TODO/HACK/NOTE text, an
 are all included. Whitespace and comment delimiters are normalized; text is not otherwise
 discarded. AXAML comments are not treated as substitutes for C# reasoning because they cannot
 be anchored to an original code member.
+
+Reviewed handwritten comments use the existing schema-4 manifest with additional exact fields. Read
+the original and twin methods first. If the code exists, place its comment verbatim, changing only
+what would otherwise be false. If it moved, place the comment beside that code and pin `codeMoved`.
+Use `codeAbsent` only after checking the whole twin type, including every partial. These entries are
+accepted differences, never closed findings or proof of behavior parity.
+
+```json
+{
+  "schemaVersion": 4,
+  "deviations": [
+    {
+      "typeName": "Sample.Widget",
+      "category": "comments",
+      "code": "comment.missing",
+      "path": "comment/Widget.cs/method:Render()/body/0",
+      "originalPart": "Widget.cs",
+      "originalValue": "Preserve the native rendering workaround.",
+      "reason": "codeAbsent",
+      "rationale": "Reviewed every partial: the native rendering operation is absent."
+    },
+    {
+      "typeName": "Sample.Widget",
+      "category": "comments",
+      "code": "comment.drifted",
+      "path": "comment/Widget.cs/method:Update()/body/0",
+      "originalPart": "Widget.cs",
+      "originalValue": "Save before refreshing.",
+      "twinValue": "Save before refreshing.",
+      "twinPart": "Widget.cs",
+      "reason": "codeMoved",
+      "targetMember": "method:Refresh()",
+      "rationale": "The save operation and its comment now live in Refresh."
+    }
+  ]
+}
+```
+
+Copy the exact finding code/path/value and original part from a fresh report. Both reasons accept
+`comment.missing` or `comment.drifted`, including handwritten comments in Designer files. `codeAbsent`
+has no twin part or destination fields; a surviving stray comment is still pinned by `twinValue`.
+`codeMoved` requires the actual twin part and exact comment anchor as `targetMember`. It also
+requires one live comment there matching `originalValue`, or optional `targetText` when a minimum wording
+adaptation is necessary. `twinValue` still pins the finding itself: absent for missing, the original text
+for drifted. Source text, part, finding or destination drift fails the run; removed findings and unused
+pins fail as before. Unreasoned handwritten comments and `comment.changed` cannot be accepted this way.
+The dashboard reports these separately by reason and stores their accepted count in measurement history.
 
 The analyzer is deliberately syntax based. It enumerates top-level classes, structs, and
 interfaces. Facts that cannot be represented safely become findings rather than

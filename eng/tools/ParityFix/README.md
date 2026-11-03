@@ -40,13 +40,16 @@ dotnet artifacts/Debug/bin/ParityFix/net10.0/ParityFix.dll prove `
   --report eng/avalonia/parity-evidence/comment-proof.json
 ```
 
-`prove` independently compares the complete working-tree delta with HEAD under the twin root, including
-staged and unstaged edits and untracked files. Every changed file must be an existing C# twin with
-equivalent syntax and unchanged directives; additions, deletions, other formats and declaration order
-changes fail. Git LF and working-copy CRLF are normalized for comparison. It writes nothing unless a
-report is requested, and exits nonzero for any failed file. `--twin-root` selects an explicit directory
-inside the repository. This proof supports comments placed by hand without an inventory report; it
-does not prove comment meaning or any complete parity axis.
+`prove` independently compares the complete repository working-tree delta with HEAD, including staged
+and unstaged edits and nonignored untracked paths, even when invoked from a subdirectory. Only the exact
+paths `eng/avalonia/portmap.json` and `eng/avalonia/parity-ledger.json` are exempt and listed separately
+in the report. Every other changed path must be an existing regular C# file with equivalent syntax,
+unchanged directives, unchanged disabled preprocessor text and unchanged file mode. Additions, deletions,
+other formats and declaration order changes fail. Inactive `#if` blocks are compared as text, including
+their comments. Git LF and working-copy CRLF are normalized for comparison. There is no directory option
+for `prove`; `--twin-root` applies only to placement. A report should go to an ignored evidence directory
+or outside the repository. This proof supports comments placed by hand without an inventory report;
+it exits nonzero for any unproved path and does not prove comment meaning or any complete parity axis.
 
 Member order changes stay inside a partial and cannot cross directive-bearing members. Unknown members
 keep their slots; overloads and other ambiguous declarations remain in place. The full member multiset,

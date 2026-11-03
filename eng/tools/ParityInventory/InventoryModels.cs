@@ -169,7 +169,7 @@ internal sealed record CommentAdaptation
     public required string TwinText { get; init; }
 }
 
-// parity-scaffolding: Records one source fact represented by framework-generated AXAML/lifecycle code.
+// parity-scaffolding: Retains exact reviewed source differences, including accepted absent or relocated comments.
 internal sealed record AcceptedFrameworkDeviation
 {
     public required string Category { get; init; }
@@ -189,6 +189,15 @@ internal sealed record AcceptedFrameworkDeviation
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? TwinValue { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Reason { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? TargetMember { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? TargetText { get; init; }
 }
 
 // parity-scaffolding: Carries both parity gaps and legitimate comment adaptations.
