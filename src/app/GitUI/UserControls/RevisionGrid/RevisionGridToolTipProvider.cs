@@ -30,9 +30,8 @@ internal sealed class RevisionGridToolTipProvider
 
         _toolTip.Popup += (_, _) => _isShown = true;
 
-        // Windows hides the tooltip on its own in these cases
-        _gridView.MouseDown += (_, _) => _isShown = false;
-        _gridView.MouseLeave += (_, _) => _isShown = false;
+        // Also covers Windows hiding the tooltip on its own, e.g. on MouseDown, MouseLeave or after AutoPopDelay
+        _gridView.ToolTipHiding += (_, _) => _isShown = false;
     }
 
     public bool ShowRevisionGridTooltips { get; set; }
@@ -40,7 +39,7 @@ internal sealed class RevisionGridToolTipProvider
     /// <summary>
     /// Hides the tooltip.
     /// </summary>
-    /// <returns>Returns <cref>true</cref> if the tooltip was shown.</returns>
+    /// <returns><see langword="true"/> if the tooltip was shown.</returns>
     public bool Hide()
     {
         bool wasShown = _isShown;
@@ -160,6 +159,8 @@ internal sealed class RevisionGridToolTipProvider
     internal readonly struct TestAccessor(RevisionGridToolTipProvider provider)
     {
         public ToolTip ToolTip => provider._toolTip;
+        public bool IsShown => provider._isShown;
+        public RevisionDataGridView GridView => provider._gridView;
         public int PreviousRowIndex => provider._previousRowIndex;
         public string? GetToolTipText() => provider._toolTip.GetToolTip(provider._gridView);
     }
