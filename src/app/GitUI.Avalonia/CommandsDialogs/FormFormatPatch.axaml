@@ -28,7 +28,7 @@
              Padding="3,5,4,0"
              TabIndex="0"
              VerticalAlignment="Top"
-             Content="_Patch:"
+             Content="Patch:"
              Target="{Binding #OutputPath}" />
       <TextBox x:Name="OutputPath"
                Grid.Column="1"

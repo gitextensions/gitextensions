@@ -74,15 +74,9 @@
                       FlowDirection="RightToLeft"
                       Content="Enable regex"
                       TabIndex="8"
-                      compat:TranslationCompat.ToolTipPropertyName="toolTipRegex">
-              <ToolTip.Tip><![CDATA[Use {{regex}}[regex group number] to extract branch name part
-Group number is optional, default is 1
+                      compat:TranslationCompat.ToolTipPropertyName="toolTipRegex"
+                      ToolTip.Tip="Use {{regex}}[regex group number] to extract branch name part&#10;Group number is optional, default is 1&#10;&#10;Examples on branch name: &quot;feature/ABC-4587-commitMessageRegex&quot;&#10;&quot;Commit from: {{^feature/(.*)$}} branch&quot; -&gt; &quot;Commit from: ABC-4587-commitMessageRegex branch&quot;&#10;&quot;{{([A-Z]+-\d+)}}: My message is&quot; -&gt; &quot;ABC-4587: My message is &quot;&#10;&quot;Name: {{([A-Z]+-\d+)-(.*)}}[2], issue: {{([A-Z]+-\d+)-(.*)}}[1]&quot; -&gt; &quot;Name: commitMessageRegex, issue: ABC-4587&quot;" />
 
-Examples on branch name: "feature/ABC-4587-commitMessageRegex"
-"Commit from: {{^feature/(.*)$}} branch" -> "Commit from: ABC-4587-commitMessageRegex branch"
-"{{([A-Z]+-\d+)}}: My message is" -> "ABC-4587: My message is "
-"Name: {{([A-Z]+-\d+)-(.*)}}[2], issue: {{([A-Z]+-\d+)-(.*)}}[1]" -> "Name: commitMessageRegex, issue: ABC-4587"]]></ToolTip.Tip>
-            </CheckBox>
           </Grid>
         </TabItem>
 

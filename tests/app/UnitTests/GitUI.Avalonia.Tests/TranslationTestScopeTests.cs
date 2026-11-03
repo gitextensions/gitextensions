@@ -9,6 +9,32 @@ namespace GitExtensionsTests;
 public sealed class TranslationTestScopeTests
 {
     [Test]
+    public void Scope_should_not_initialize_the_callers_lazy_shared_strings_in_another_language()
+    {
+        Type stringsType = typeof(GitUI.CommandsDialogs.FormBrowse).Assembly.GetType("GitUI.TranslatedStrings", throwOnError: true)!;
+        FieldInfo sharedStrings = stringsType.GetField("_instance", BindingFlags.Static | BindingFlags.NonPublic)!;
+        object? previous = sharedStrings.GetValue(null);
+        try
+        {
+            object uninitialized = Activator.CreateInstance(sharedStrings.FieldType)!;
+            sharedStrings.SetValue(null, uninitialized);
+            using (TranslationTestScope scope = new("German"))
+            {
+                stringsType.GetProperty("SortBy", BindingFlags.Public | BindingFlags.Static)!.GetValue(null)
+                    .Should().BeOfType<string>().Which.Should().NotBeEmpty();
+            }
+
+            sharedStrings.GetValue(null).Should().BeSameAs(uninitialized);
+            sharedStrings.FieldType.GetProperty("IsValueCreated")!.GetValue(uninitialized).Should().Be(false,
+                "using another language must not populate the caller's deferred shared-string cache");
+        }
+        finally
+        {
+            sharedStrings.SetValue(null, previous);
+        }
+    }
+
+    [Test]
     public void Scope_should_restore_an_unset_override_and_the_cached_translation()
     {
         using TranslationTestScope originalState = new();

@@ -2,10 +2,21 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Xml.Linq;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Media.TextFormatting;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
+using AwesomeAssertions.Execution;
 using GitExtensions.Extensibility.Translations;
+using GitUI;
+using GitUI.CommandsDialogs;
 using GitUI.Compat;
+using GitUI.Editor;
+using GitUI.LeftPanel;
 using NSubstitute;
 
 namespace GitExtensionsTests;
@@ -16,6 +27,93 @@ namespace GitExtensionsTests;
 public sealed class TranslationParityTests
 {
     private const string EvidencePathEnvironmentVariable = "GITEXT_TRANSLATION_PARITY_REPORT";
+
+    [AvaloniaTest]
+    public void Original_tooltip_and_column_keys_should_receive_existing_German_translations()
+    {
+        using TranslationTestScope translationScope = new("German");
+        using FileViewer viewer = new();
+        using FormPush form = new();
+
+        object? toolTip = ToolTip.GetTip(viewer.FindControl<Control>("nextChangeButton")!);
+        (toolTip is TextBlock text ? text.Text : toolTip as string).Should().Be("Nächste Änderung");
+        form.FindControl<GitUI.Compat.WinFormsControls.ColumnHeader>("ForceColumn")!
+            .Header.Should().Be("Erzwingen");
+    }
+
+    [AvaloniaTest]
+    [TestCase("")]
+    [TestCase("English")]
+    public void Context_menu_captions_should_render_original_mnemonics_and_literal_ampersands(string language)
+    {
+        using TranslationTestScope translationScope = new(language);
+        using RepoObjectsTree tree = new();
+        using FileStatusList files = new();
+        Dictionary<string, object> fields = TranslationUtils.GetObjFields(tree, "$this")
+            .ToDictionary(item => item.Name, item => item.Item);
+        (MenuItem Item, string Expected)[] captions =
+        [
+            ((MenuItem)fields["copyContextMenuItem"], "Copy to clipboard"),
+            ((MenuItem)fields["_sortByContextMenuItem"], "Sort by"),
+            ((MenuItem)fields["_sortOrderContextMenuItem"], "Sort order"),
+            ((MenuItem)fields["mnubtnFetchCreateBranch"], "Fetch & Create Branch"),
+            ((MenuItem)fields["mnubtnFetchRebase"], "Fetch & Rebase"),
+            ((MenuItem)fields["mnubtnPullFromRemoteBranch"], "Fetch & Merge (Pull)"),
+            ((MenuItem)fields["mnubtnRemoteBranchFetchAndCheckout"], "Fetch & Checkout"),
+            (files.GetTestAccessor().SortByContextMenuItem, "Sort and group by"),
+        ];
+        Button owner = new() { Content = "Menu" };
+        Window window = new() { Width = 400, Height = 300, Content = owner };
+        MenuFlyout flyout = new();
+        List<object> evidence = [];
+        List<(string Actual, string Expected)> rendered = [];
+        try
+        {
+            foreach ((MenuItem item, _) in captions)
+            {
+                if (item.Parent is ItemsControl parent)
+                {
+                    parent.Items.Remove(item);
+                }
+
+                item.IsVisible = true;
+                flyout.Items.Add(item);
+            }
+
+            window.Show();
+            flyout.ShowAt(owner);
+            Dispatcher.UIThread.RunJobs();
+            window.CaptureRenderedFrame()?.Dispose();
+            flyout.IsOpen.Should().BeTrue();
+            foreach ((MenuItem item, string expected) in captions)
+            {
+                AccessText? text = item.GetVisualDescendants().OfType<AccessText>().SingleOrDefault();
+                text?.Measure(Size.Infinity);
+                string actual = text is null ? "<not rendered>" : string.Concat(text.TextLayout.TextLines.SelectMany(line => line.TextRuns)
+                    .OfType<ShapedTextRun>().Select(run => run.Text.ToString()));
+                rendered.Add((actual, expected));
+                evidence.Add(new { header = item.Header, actual, expected });
+            }
+
+            string? report = Environment.GetEnvironmentVariable("GITEXT_MNEMONIC_REPORT");
+            if (!string.IsNullOrEmpty(report))
+            {
+                File.WriteAllText(report + (language.Length == 0 ? ".neutral.json" : ".English.json"),
+                    JsonSerializer.Serialize(evidence, new JsonSerializerOptions { WriteIndented = true }));
+            }
+
+            using AssertionScope scope = new();
+            foreach ((string actual, string expected) in rendered)
+            {
+                actual.Should().Be(expected, "the opened menu must render the original caption in {0}", language);
+            }
+        }
+        finally
+        {
+            flyout.Hide();
+            window.Close();
+        }
+    }
 
     [Test]
     public void Nested_control_root_should_not_publish_the_owner_window_title_key()

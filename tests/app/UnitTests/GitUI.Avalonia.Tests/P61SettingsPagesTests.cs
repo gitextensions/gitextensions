@@ -2,6 +2,7 @@
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using AwesomeAssertions.Execution;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
@@ -469,8 +470,7 @@ public sealed class P61SettingsPagesTests
             new BlameViewerSettingsPage(),
             341,
             272,
-            // The AutoSize group currently exceeds its original 319-DIP width; pin only this control.
-            ("groupBoxBlameSettings", new Avalonia.Rect(11, 11, OperatingSystem.IsWindows() ? 372 : 416, 97)),
+            ("groupBoxBlameSettings", new Avalonia.Rect(11, 11, 319, 97)),
             ("groupBoxDisplayResult", new Avalonia.Rect(11, 114, 319, 197)));
         AssertNativeLayout(
             new CommitDialogSettingsPage(),
@@ -500,6 +500,56 @@ public sealed class P61SettingsPagesTests
             ("label1", new Avalonia.Rect(12, 9, 126, 15)),
             ("label2", new Avalonia.Rect(12, 33, 338, 15)),
             ("lvTranslations", new Avalonia.Rect(12, 51, 776, 476)));
+    }
+
+    [AvaloniaTest]
+    public void Blame_groups_should_follow_page_edges_and_keep_longest_caption_visible()
+    {
+        BlameViewerSettingsPage page = new();
+        Window window = new() { Content = page, Width = 341, Height = 400 };
+        try
+        {
+            window.Show();
+            foreach (double width in new double[] { 341, 700 })
+            {
+                window.Width = width;
+                Dispatcher.UIThread.RunJobs();
+                foreach (string name in new[] { "groupBoxBlameSettings", "groupBoxDisplayResult" })
+                {
+                    Control group = page.FindControl<Control>(name)!;
+                    Avalonia.VisualExtensions.TranslatePoint(group, default, page)!.Value.X.Should().Be(11);
+                    group.Bounds.Width.Should().Be(width - 22);
+                }
+            }
+        }
+        finally
+        {
+            window.Close();
+            (page as IDisposable)?.Dispose();
+        }
+
+        using FormSettings form = new();
+        form.GetTestAccessor().InitializePages();
+        try
+        {
+            form.Show();
+            form.GotoPage(BlameViewerSettingsPage.GetPageReference());
+            Dispatcher.UIThread.RunJobs();
+            SettingsPageHeader header = (SettingsPageHeader)form.GetTestAccessor().CurrentPage!;
+            BlameViewerSettingsPage normalPage = (BlameViewerSettingsPage)header.GetTestAccessor().Page!;
+            GitUI.UserControls.Settings.SettingsCheckBox longest = normalPage.FindControl<GitUI.UserControls.Settings.SettingsCheckBox>("cbDetectMoveAndCopyInAllFiles")!;
+            TextBlock caption = longest.GetVisualDescendants().OfType<TextBlock>()
+                .Single(text => text.Text == longest.Text);
+            caption.Measure(Avalonia.Size.Infinity);
+            caption.Bounds.Width.Should().BeGreaterThanOrEqualTo(caption.DesiredSize.Width,
+                "the complete original checkbox caption must fit at the normal settings-dialog width");
+            Avalonia.Point origin = Avalonia.VisualExtensions.TranslatePoint(caption, default, normalPage)!.Value;
+            (origin.X + caption.Bounds.Width).Should().BeLessThanOrEqualTo(normalPage.Bounds.Width - 11);
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]

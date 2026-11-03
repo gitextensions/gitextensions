@@ -684,10 +684,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     public override void AddTranslationItems(ITranslation translation)
     {
         base.AddTranslationItems(translation);
-        translation.AddTranslationItem(nameof(FormBrowse), nameof(ToolStripMain), "Text", "");
-        translation.AddTranslationItem(nameof(FormBrowse), nameof(ToolStripFilters), "Text", "");
-        translation.AddTranslationItem(nameof(FormBrowse), nameof(ToolStripScripts), "Text", "");
-        translation.AddTranslationItem(nameof(FormBrowse), nameof(toolsToolStripMenuItem), "Text", "");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(ToolStripMain), "Text", "Standard");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(ToolStripFilters), "Text", "Filters");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(ToolStripScripts), "Text", "Scripts");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(toolsToolStripMenuItem), "Text", "&Tools");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(RefreshButton), "ToolTipText", "Refresh");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toggleLeftPanel), "ToolTipText", "Toggle left panel");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toggleSplitViewLayout), "ToolTipText", "Toggle split view layout");

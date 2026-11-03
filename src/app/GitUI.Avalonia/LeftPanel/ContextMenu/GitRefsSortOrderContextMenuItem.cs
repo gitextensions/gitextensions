@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using GitCommands;
 using GitCommands.Utils;
+using GitUI.Compat;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 
@@ -11,12 +12,15 @@ internal sealed class GitRefsSortOrderContextMenuItem : MenuItem
     internal const string MenuItemName = "GitRefsSortOrderContextMenuItem";
     private readonly Action _onSortOrderChanged;
 
+    // Avalonia resolves themes by concrete type; retain the original menu-item presentation.
+    protected override Type StyleKeyOverride => typeof(MenuItem);
+
     public GitRefsSortOrderContextMenuItem(Action onSortOrderChanged)
     {
         _onSortOrderChanged = onSortOrderChanged;
 
         Icon = new Image { Source = Images.SortBy };
-        Header = TranslatedStrings.SortOrder;
+        Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(TranslatedStrings.SortOrder);
         Name = MenuItemName;
 
         foreach ((string text, GitRefsSortOrder value) option in EnumHelper.GetValues<GitRefsSortOrder>().Select(e => (Text: e.GetDescription(), Value: e)))

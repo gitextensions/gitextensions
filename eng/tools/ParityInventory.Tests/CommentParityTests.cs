@@ -9,6 +9,100 @@ namespace GitExtensions.ParityInventory.Tests;
 public sealed class CommentParityTests
 {
     [Test]
+    public void Run_should_match_a_minimal_rewrite_before_removed_neighbors()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                private void Work()
+                {
+                    // For regular, set to null to use the NativeTreeView font
+                    // If current font doesn't have the input style, get rid of it
+                    // If non-null, our font is already valid, otherwise create a new one
+                }
+            }
+            """);
+        fixture.WriteTwin("Widget.axaml.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                private void Work()
+                {
+                    // For regular, reset to use the NativeTreeView font
+                }
+            }
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        FunctionalFinding changed = report.Findings.Should()
+            .ContainSingle(item => item.Code == "comment.changed").Subject;
+        changed.OriginalValue.Should().Be("For regular, set to null to use the NativeTreeView font");
+        report.Findings.Where(item => item.Code == "comment.missing")
+            .Select(item => item.OriginalValue).Should().BeEquivalentTo(new[]
+            {
+                "If current font doesn't have the input style, get rid of it",
+                "If non-null, our font is already valid, otherwise create a new one"
+            });
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public void Run_should_reserve_exact_relocations_before_pairing_changed_comments(bool keepFirstComment)
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                private void First()
+                {
+                    // Preserve the first operation's rationale.
+                }
+
+                private void Second()
+                {
+                    // Preserve the second operation's rationale.
+                }
+            }
+            """);
+        string firstComment = keepFirstComment ? "// Preserve the first operation's rationale." : string.Empty;
+        fixture.WriteTwin("Widget.axaml.cs", $$"""
+            namespace Sample;
+            public partial class Widget
+            {
+                private void First()
+                {
+                    // Preserve the second operation's rationale.
+                }
+
+                private void Second()
+                {
+                    {{firstComment}}
+                }
+            }
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        FunctionalFinding[] findings = report.Findings.Where(item => item.Category == "comments").ToArray();
+        findings.Should().HaveCount(2).And.NotContain(item => item.Code == "comment.changed");
+        if (keepFirstComment)
+        {
+            findings.Should().OnlyContain(item => item.Code == "comment.drifted");
+        }
+        else
+        {
+            findings.Should().ContainSingle(item => item.Code == "comment.missing")
+                .Which.OriginalValue.Should().Be("Preserve the first operation's rationale.");
+            findings.Should().ContainSingle(item => item.Code == "comment.drifted")
+                .Which.OriginalValue.Should().Be("Preserve the second operation's rationale.");
+        }
+    }
+
+    [Test]
     public void Run_should_inventory_xml_inline_todo_and_issue_comments()
     {
         const string code = """

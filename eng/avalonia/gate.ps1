@@ -182,6 +182,18 @@ function Invoke-WindowsTests([string]$Name, [string]$Project, [string]$TestFilte
     return $result
 }
 
+function Test-AssemblyCompleted([string]$Trx) {
+    if (-not (Test-Path -LiteralPath $Trx)) { return $false }
+    try {
+        $run = [xml][IO.File]::ReadAllText($Trx)
+        $summary = $run.SelectSingleNode('//*[local-name()="ResultSummary"]')
+        $runErrors = @($run.SelectNodes('//*[local-name()="RunInfo"]') | Where-Object outcome -in 'Error', 'Aborted')
+        return $null -ne $summary -and $summary.outcome -in 'Passed', 'Completed', 'Failed' -and
+            $null -eq $summary.SelectSingleNode('./*[local-name()="ErrorInfo"]') -and $runErrors.Count -eq 0
+    }
+    catch { return $false }
+}
+
 # Multiline commands reach WSL as an owned LF script: Windows argument reparsing corrupts them otherwise.
 function Invoke-WslScript([string]$Name, [string]$Body) {
     $script = Join-Path $runDirectory "$Name.sh"
@@ -489,7 +501,15 @@ finally {
 }
 
 $notRun = @('native captures and paired comparison', 'manual side-by-side walk', 'IDE preview', 'macOS', 'Flatpak (run eng/avalonia/wsl-gate.sh flatpak when the batch can affect it)')
-if ($Level -ne 'Exit') { $notRun += @('runtime smokes', 'whole test assembly', 'Linux inventory comparison') }
+if ($Level -ne 'Exit') { $notRun += @('runtime smokes', 'Linux inventory comparison') }
+foreach ($assemblyLeg in @(@{ Name = 'focused'; Platform = 'Windows'; Trx = 'focused.trx' }, @{ Name = 'linux'; Platform = 'Linux'; Trx = 'linux-focused.trx' })) {
+    $wholeAssemblyRan = @($records | Where-Object {
+        $_.name -eq $assemblyLeg.Name -and $_.filter -eq $wholeAssemblyFilter -and
+            ($_.status -eq 'passed' -or
+                ($_.status -eq 'failed' -and (Test-AssemblyCompleted (Join-Path $runDirectory $assemblyLeg.Trx))))
+    }).Count -gt 0
+    if (-not $wholeAssemblyRan) { $notRun += "$($assemblyLeg.Platform) whole test assembly" }
+}
 [pscustomobject]@{
     schema = 1
     id = $id

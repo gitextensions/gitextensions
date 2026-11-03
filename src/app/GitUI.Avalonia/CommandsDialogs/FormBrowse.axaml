@@ -370,15 +370,18 @@
                 <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullRebase}" /></MenuItem.Icon>
               </wf:ToolStripMenuItem>
               <wf:ToolStripMenuItem x:Name="fetchToolStripMenuItem"
+                                    compat:TranslationCompat.UseToolTipText="True"
                                     Header="_Fetch"
                                     ToolTip.Tip="Fetch branches and tags">
                 <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetch}" /></MenuItem.Icon>
               </wf:ToolStripMenuItem>
-              <wf:ToolStripMenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all">
+              <wf:ToolStripMenuItem x:Name="fetchAllToolStripMenuItem"
+compat:TranslationCompat.UseToolTipText="True" Header="Fetch _all">
                 <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetchAll}" /></MenuItem.Icon>
                 <ToolTip.Tip>Fetch branches and tags from all remote repositories</ToolTip.Tip>
               </wf:ToolStripMenuItem>
               <wf:ToolStripMenuItem x:Name="fetchPruneAllToolStripMenuItem"
+                                    compat:TranslationCompat.UseToolTipText="True"
                                     Header="F_etch and prune all"
                                     ToolTip.Tip="Fetch branches and tags from all remote repositories also prune deleted branches">
                 <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetchPruneAll}" /></MenuItem.Icon>
@@ -412,11 +415,15 @@
                                 ToolTip.Tip="Manage stashes">
           <compat:IconSplitButton.Flyout>
             <MenuFlyout>
-              <wf:ToolStripMenuItem x:Name="stashChangesToolStripMenuItem" Header="_Stash" ToolTip.Tip="Stash changes" />
-              <wf:ToolStripMenuItem x:Name="stashStagedToolStripMenuItem" Header="S_tash staged" ToolTip.Tip="Stash staged changes" />
-              <wf:ToolStripMenuItem x:Name="stashPopToolStripMenuItem" Header="Stash _pop" ToolTip.Tip="Apply and drop single stash" />
+              <wf:ToolStripMenuItem x:Name="stashChangesToolStripMenuItem"
+compat:TranslationCompat.UseToolTipText="True" Header="_Stash" ToolTip.Tip="Stash changes" />
+              <wf:ToolStripMenuItem x:Name="stashStagedToolStripMenuItem"
+compat:TranslationCompat.UseToolTipText="True" Header="S_tash staged" ToolTip.Tip="Stash staged changes" />
+              <wf:ToolStripMenuItem x:Name="stashPopToolStripMenuItem"
+compat:TranslationCompat.UseToolTipText="True" Header="Stash _pop" ToolTip.Tip="Apply and drop single stash" />
               <wf:ToolStripSeparator x:Name="toolStripSeparator9" />
-              <wf:ToolStripMenuItem x:Name="manageStashesToolStripMenuItem" Header="_Manage stashes..." ToolTip.Tip="Manage stashes" />
+              <wf:ToolStripMenuItem x:Name="manageStashesToolStripMenuItem"
+compat:TranslationCompat.UseToolTipText="True" Header="_Manage stashes..." ToolTip.Tip="Manage stashes" />
               <wf:ToolStripMenuItem x:Name="createAStashToolStripMenuItem" Header="_Create a stash..." />
             </MenuFlyout>
           </compat:IconSplitButton.Flyout>
