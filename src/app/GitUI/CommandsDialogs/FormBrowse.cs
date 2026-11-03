@@ -1183,6 +1183,14 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         // check if we are in the middle of an action (merge/rebase/etc.)
         notificationBarGitActionInProgress.RefreshGitAction(
             checkForConflicts: AppSettings.GitAsyncWhenMinimized || (WindowState != FormWindowState.Minimized));
+
+        // Only mark the refresh button dirty, an automatic reload of the revisions would be too expensive
+        IndexWatcher indexWatcher = RevisionGrid.IndexWatcher;
+        ThreadHelper.FileAndForget(async () =>
+        {
+            await TaskScheduler.Default;
+            indexWatcher.DetectUnreportedChanges();
+        });
     }
 
     private void UpdateStashCount()

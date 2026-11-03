@@ -132,11 +132,61 @@ public sealed class IndexWatcher : IDisposable
         IndexChanged = false;
     }
 
+    private DateTime _watchedSinceUtc;
+
     private void RefreshWatcher()
     {
         if (_gitDirPath != Module.WorkingDirGitDir || _enabled != AppSettings.ShowGitStatusInBrowseToolbar)
         {
             SetFileSystemWatcher();
+        }
+
+        _watchedSinceUtc = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// Marks the index as changed if the index or a ref has been modified since the last <see cref="Reset"/>
+    /// in a WSL repo, where the <see cref="FileSystemWatcher"/>s may not report changes
+    /// (https://github.com/microsoft/WSL/issues/4581).
+    /// </summary>
+    /// <remarks>
+    /// Only file and directory times are compared, no git command is run and the revisions are not reloaded.
+    /// Performs file system I/O, so call it from a background thread.
+    /// </remarks>
+    public void DetectUnreportedChanges()
+    {
+        if (!_enabled || _indexChanged || _gitDirPath is null || !PathUtil.IsWslPath(_gitDirPath))
+        {
+            return;
+        }
+
+        if (HasChangedSince(_gitDirPath, Module.GitCommonDirectory, _watchedSinceUtc))
+        {
+            IndexChanged = true;
+        }
+    }
+
+    internal static bool HasChangedSince(string gitDirPath, string gitCommonDirPath, DateTime sinceUtc)
+    {
+        try
+        {
+            if (File.GetLastWriteTimeUtc(Path.Join(gitDirPath, "index")) > sinceUtc
+                || File.GetLastWriteTimeUtc(Path.Join(gitDirPath, "HEAD")) > sinceUtc
+                || File.GetLastWriteTimeUtc(Path.Join(gitCommonDirPath, "packed-refs")) > sinceUtc)
+            {
+                return true;
+            }
+
+            // Git updates a loose ref by renaming "<ref>.lock" over it, which updates the time of the containing directory,
+            // so the directories need to be checked only, not the probably many ref files.
+            string refsPath = Path.Join(gitCommonDirPath, "refs");
+            return Directory.GetLastWriteTimeUtc(refsPath) > sinceUtc
+                || Directory.EnumerateDirectories(refsPath, "*", SearchOption.AllDirectories)
+                    .Any(directory => Directory.GetLastWriteTimeUtc(directory) > sinceUtc);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return false;
         }
     }
 
