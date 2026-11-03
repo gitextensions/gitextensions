@@ -7092,6 +7092,10 @@ Is the merge conflict solved?</source>
         <source>Choose base file failed.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_chooseFileFailedDetailFormat.Text">
+        <source>File: {0}</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_chooseLocalButtonText.Text">
         <source>Choose local</source>
         <target />
@@ -7185,6 +7189,10 @@ Choose the file you want to keep, merge the files or delete the file?</source>
 The file has been deleted locally ({1}) but modified remotely ({2}).
 
 Choose to delete the file or keep the modified version.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_fileDeletedLocallyAndRemotely.Text">
+        <source>The file has been deleted both locally ({0}) and remotely ({1}).</source>
         <target />
       </trans-unit>
       <trans-unit id="_fileIsBinary.Text">
@@ -7819,6 +7827,10 @@ nodes.
 </source>
         <target />
       </trans-unit>
+      <trans-unit id="_lostObjectUnreadable.Text">
+        <source>Object could not be read. It may be corrupted or no longer available.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_removeDanglingObjectsCaption.Text">
         <source>Remove</source>
         <target />
@@ -8087,36 +8099,44 @@ Context menu for additional operations</source>
         <source>Advanced</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxFetchPrune.Text">
+      <trans-unit id="lblFetchPrune.Text">
         <source>Prune remote branches during fetch</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxPullRebase.Text">
+      <trans-unit id="lblMergeAutoStash.Text">
+        <source>Automatically stash before doing a merge</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblPullFF.Text">
+        <source>Fast-forward behavior when pulling</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblPullRebase.Text">
         <source>Rebase local branch when pulling (instead of merge)</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxReReReAutoUpdate.Text">
+      <trans-unit id="lblReReReAutoUpdate.Text">
         <source>Automatically apply recorded resolution of conflicted merges</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxReReReEnabled.Text">
+      <trans-unit id="lblReReReEnabled.Text">
         <source>Reuse recorded resolution of conflicted merges</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxRebaseAutosquash.Text">
+      <trans-unit id="lblRebaseAutosquash.Text">
         <source>Automatically squash commits when doing an interactive rebase</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxRebaseAutostash.Text">
+      <trans-unit id="lblRebaseAutostash.Text">
         <source>Automatically stash before doing a rebase</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxUpdateRefs.Text">
-        <source>Rebase also dependent branches</source>
+      <trans-unit id="lblStatusShowUntrackedFiles.Text">
+        <source>Show untracked files</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkboxMergeAutoStash.Text">
-        <source>Automatically stash before doing a merge</source>
+      <trans-unit id="lblUpdateRefs.Text">
+        <source>Rebase also dependent branches</source>
         <target />
       </trans-unit>
     </body>
@@ -9234,7 +9254,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="txtCommitGpgInfo.Text">
-        <source>Commit is not signed</source>
+        <source>Loading data...</source>
         <target />
       </trans-unit>
     </body>
@@ -9357,8 +9377,8 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Show remote &amp;branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="ShowSessionCheckpoints.Text">
-        <source>Show session checkpoints</source>
+      <trans-unit id="ShowSessionRefs.Text">
+        <source>Show agentic sessions (&amp;Q)</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowStashes.Text">
@@ -9587,6 +9607,10 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="editCommitToolStripMenuItem.Text">
         <source>&amp;Edit commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="editCommitWithFixupToolStripMenuItem.Text">
+        <source>E&amp;dit commit by creating a fixup commit and squash-rebase...</source>
         <target />
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
@@ -10300,6 +10324,12 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_deleteFile.Text">
         <source>{0:Delete file|Delete files}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteMainWorktreeRefused.Text">
+        <source>{0} is the main worktree of the repository.
+
+Deleting it would delete the repository itself, with all of its branches and stashes, so git refuses to remove it as well.</source>
         <target />
       </trans-unit>
       <trans-unit id="_deleteWorktreeCaption.Text">

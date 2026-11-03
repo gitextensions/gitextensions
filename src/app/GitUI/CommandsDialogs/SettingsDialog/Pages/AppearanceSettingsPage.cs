@@ -152,7 +152,13 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
 
         if (shouldClearCache)
         {
-            new AvatarControl().ClearCache();
+            // Clear the cache directly instead of through a throwaway control, which would never be
+            // disposed and would keep listening to the cache
+            ThreadHelper.FileAndForget(async () =>
+                {
+                    AvatarService.UpdateAvatarProvider();
+                    await AvatarService.CacheCleaner.ClearCacheAsync();
+                });
         }
 
         AppSettings.Dictionary = Dictionary.SelectedIndex == 0 ? "none" : Dictionary.Text;

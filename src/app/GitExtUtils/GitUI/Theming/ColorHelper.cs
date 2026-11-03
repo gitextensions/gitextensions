@@ -104,7 +104,12 @@ public static class ColorHelper
             return original;
         }
 
-        Bitmap clone = (Bitmap)original.Clone();
+        // Not Bitmap.Clone(): that is a shallow GDI+ clone which inherits the lazy stream backing of
+        // its source. Icon.ToBitmap() returns a bitmap over a MemoryStream it has already disposed
+        // when the selected icon frame is PNG compressed, and locking the bits of such a clone fails
+        // with "A generic error occurred in GDI+.". The copy constructor rasterises eagerly into a
+        // fresh Format32bppArgb bitmap, which is the format the transformation asks for anyway.
+        Bitmap clone = new(original);
         new LightnessCorrection(clone).Execute();
         return clone;
     }

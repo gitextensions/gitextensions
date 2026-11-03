@@ -44,7 +44,11 @@ public sealed partial class FormStash : GitModuleForm
     {
         KeyPreview = true;
         View.EscapePressed += () => DialogResult = DialogResult.Cancel;
-        splitContainer1.SplitterDistance = DpiUtil.Scale(280);
+
+        // The buttons and the check boxes above them have to fit even when the Windows accessibility
+        // text size enlarges the system font without changing the DPI, which DpiUtil cannot see.
+        // Keep the scaled width as a lower bound, so that the layout tuned for high DPI is preserved.
+        splitContainer1.SplitterDistance = Math.Max(DpiUtil.Scale(280), tableLayoutPanel1.GetPreferredSize(Size.Empty).Width);
         InitializeComplete();
     }
 
@@ -331,41 +335,10 @@ public sealed partial class FormStash : GitModuleForm
     {
         using (new WaitCursorScope())
         {
-            string stashName = GetStashName();
-            if (!AppSettings.DontConfirmStashDrop)
-            {
-                TaskDialogPage page = new()
-                {
-                    Text = TranslatedStrings.AreYouSure,
-                    Caption = TranslatedStrings.StashDropConfirmTitle,
-                    Heading = TranslatedStrings.CannotBeUndone,
-                    Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
-                    Icon = TaskDialogIcon.Information,
-                    Verification = new TaskDialogVerificationCheckBox
-                    {
-                        Text = TranslatedStrings.DontShowAgain
-                    },
-                    SizeToContent = true
-                };
-
-                TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
-
-                if (result == TaskDialogButton.Yes)
-                {
-                    _lastSelectedStashIndex = Stashes.SelectedIndex;
-                    UICommands.StashDrop(this, stashName);
-                    Initialize();
-                }
-
-                if (page.Verification.Checked)
-                {
-                    AppSettings.DontConfirmStashDrop = true;
-                }
-            }
-            else
+            if (MessageBoxes.ConfirmSuppressible(this, TranslatedStrings.AreYouSure, TranslatedStrings.StashDropConfirmTitle, AppSettings.DontConfirmStashDrop, heading: TranslatedStrings.CannotBeUndone, icon: TaskDialogIcon.Information))
             {
                 _lastSelectedStashIndex = Stashes.SelectedIndex;
-                UICommands.StashDrop(this, stashName);
+                UICommands.StashDrop(this, GetStashName());
                 Initialize();
             }
         }

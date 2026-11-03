@@ -148,6 +148,7 @@ the last selected commit.");
     private readonly TranslationString _deleteWorktreeConfirmation = new("Are you sure you want to delete the worktree at {0}?");
     private readonly TranslationString _deleteWorktreeCaption = new("Delete worktree");
     private readonly TranslationString _deleteWorktreeFailed = new("Failed to delete worktree: {0}");
+    private readonly TranslationString _deleteMainWorktreeRefused = new("{0} is the main worktree of the repository.\n\nDeleting it would delete the repository itself, with all of its branches and stashes, so git refuses to remove it as well.");
 
     private readonly TranslationString _createWorktree = new("Create worktree...");
     private readonly TranslationString _pruneWorktrees = new("Prune worktrees");
@@ -373,6 +374,7 @@ Copy error details to clipboard?");
     public static string DeleteWorktreeConfirmation => _instance.Value._deleteWorktreeConfirmation.Text;
     public static string DeleteWorktreeCaption => _instance.Value._deleteWorktreeCaption.Text;
     public static string DeleteWorktreeFailed => _instance.Value._deleteWorktreeFailed.Text;
+    public static string DeleteMainWorktreeRefused => _instance.Value._deleteMainWorktreeRefused.Text;
 
     public static string CreateWorktree => _instance.Value._createWorktree.Text;
     public static string PruneWorktrees => _instance.Value._pruneWorktrees.Text;

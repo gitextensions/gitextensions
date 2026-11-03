@@ -18,11 +18,9 @@ internal abstract class Node : NodeBase, INode
     protected IGitUICommands UICommands => Tree.UICommands;
 
     protected Node(Tree? tree)
+        : base(tree)
     {
-        Nodes = new Nodes(tree);
     }
-
-    private TreeNode? _treeViewNode;
 
     /// <summary>
     /// The tree node representing this node.
@@ -33,17 +31,24 @@ internal abstract class Node : NodeBase, INode
     {
         get
         {
-            Validates.NotNull(_treeViewNode);
-            return _treeViewNode;
+            Validates.NotNull(field);
+            return field;
         }
         set
         {
-            _treeViewNode = value;
-            _treeViewNode.Tag = this;
+            Validates.NotNull(value);
+            field = value;
+            field.Tag = this;
             ApplyText();
             ApplyStyle();
         }
     }
+
+    /// <summary>
+    ///  Gets the tree view that shows this node, also while the subtree containing the node is still being built
+    ///  and its <see cref="TreeNode"/> is not yet attached (see <see cref="Nodes.FillTreeViewNode(TreeNode)"/>).
+    /// </summary>
+    protected TreeView? OwnerTreeView => TreeViewNode.TreeView ?? Nodes.Tree?.TreeViewNode.TreeView;
 
     protected IWin32Window? ParentWindow()
     {
@@ -63,15 +68,13 @@ internal abstract class Node : NodeBase, INode
 
     protected void ApplyText()
     {
-        Validates.NotNull(_treeViewNode);
-
-        _treeViewNode.Name = NodeName();
+        TreeViewNode.Name = NodeName();
 
         // Check before if value has changed because that's a costly operation
         string updatedText = DisplayText();
-        if (updatedText != _treeViewNode.Text)
+        if (updatedText != TreeViewNode.Text)
         {
-            _treeViewNode.Text = updatedText;
+            TreeViewNode.Text = updatedText;
         }
     }
 

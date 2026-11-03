@@ -347,5 +347,17 @@ public sealed partial class FileStatusDiffCalculator
         => DescribeRevision is not null ? DescribeRevision(objectId) : objectId.ToShortString();
 
     private IGitModule GetModule()
-        => _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+    {
+        IGitModule module = _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+
+        if (!module.IsValidGitWorkingDir())
+        {
+            // The repository may have been closed or switched while this calculation was queued: the
+            // module is resolved when the work runs, not when it was requested. Give up rather than
+            // run git in a directory which is not a repository any more.
+            throw new OperationCanceledException();
+        }
+
+        return module;
+    }
 }

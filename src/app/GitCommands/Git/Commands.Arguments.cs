@@ -8,6 +8,26 @@ namespace GitCommands.Git;
 
 public static partial class Commands
 {
+    public static ArgumentBuilder AddOptionalRefsFilters(this ArgumentBuilder args)
+    {
+        if (!AppSettings.ShowGitNotes)
+        {
+            args.Add($"--exclude={GitRefName.RefsNotesPrefix}");
+        }
+
+        if (!AppSettings.ShowStashes)
+        {
+            args.Add($"--exclude={GitRefName.RefsStashPrefix}");
+        }
+
+        if (!AppSettings.ShowSessionRefs)
+        {
+            args.Add(AppSettings.SessionRefsFilters);
+        }
+
+        return args;
+    }
+
     public static ArgumentString Abort()
     {
         return new GitArgumentBuilder("am")
@@ -302,8 +322,7 @@ public static partial class Commands
             { count > 0, $"--count={count}" },
             GitRefsPattern(getRef)
         };
-
-        return cmd;
+        return cmd.AddOptionalRefsFilters();
 
         static ArgumentString SortCriteria(bool needTags, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder)
         {
@@ -379,7 +398,9 @@ public static partial class Commands
     {
         return new GitArgumentBuilder("merge")
         {
-            { !allowFastForward, "--no-ff" },
+            // Always explicit: the dialog offers the choice, so merge.ff from the configuration
+            // must not decide it
+            { allowFastForward, "--ff", "--no-ff" },
             { !string.IsNullOrEmpty(strategy), $"--strategy={strategy}" },
             { squash, "--squash" },
             { noCommit, "--no-commit" },

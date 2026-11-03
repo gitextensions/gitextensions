@@ -20,6 +20,10 @@ public class PathUtilTest
     [TestCase('~', false)]
     [TestCase('^', false)]
     [TestCase(':', false)]
+    [TestCase('"', false)]
+    [TestCase('<', false)]
+    [TestCase('>', false)]
+    [TestCase('|', false)]
     [TestCase('\0', false)]
     [TestCase('\t', false)]
     [TestCase('\n', false)]
@@ -478,6 +482,71 @@ public class PathUtilTest
         // The method should handle all these gracefully without throwing.
         bool result = PathUtil.TryFindShellPath("nonexistent_shell_1234567890.exe", out string? shellPath);
         result.Should().BeFalse();
+        shellPath.Should().BeNull();
+    }
+
+    [TestCase("", "git-bash.exe")]
+    [TestCase("bin", "sh.exe")]
+    [TestCase("usr/bin", "bash.exe")]
+    public void TryFindShellInGitDir_should_find_a_shell_shipped_with_git(string subDirectory, string shell)
+    {
+        string gitDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        string shellDir = Path.Combine(gitDir, subDirectory.Replace('/', Path.DirectorySeparatorChar));
+
+        try
+        {
+            Directory.CreateDirectory(shellDir);
+            string expected = Path.Combine(shellDir, shell);
+            File.WriteAllText(expected, "");
+
+            PathUtil.TryFindShellInGitDir(gitDir, shell, out string? shellPath).Should().BeTrue();
+            shellPath.Should().Be(expected);
+        }
+        finally
+        {
+            if (Directory.Exists(gitDir))
+            {
+                Directory.Delete(gitDir, recursive: true);
+            }
+        }
+    }
+
+    [Test]
+    public void TryFindShellInGitDir_should_prefer_usr_bin_over_bin_for_the_same_shell_name()
+    {
+        // "bin\bash.exe" is a thin compatibility wrapper around the real MSYS2 bash shipped in
+        // "usr\bin\bash.exe"; running mintty against the wrapper breaks its detection of when an
+        // interactive git command has finished. Regression test for #13312.
+        string gitDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        string binDir = Path.Combine(gitDir, "bin");
+        string usrBinDir = Path.Combine(gitDir, "usr", "bin");
+
+        try
+        {
+            Directory.CreateDirectory(binDir);
+            Directory.CreateDirectory(usrBinDir);
+            File.WriteAllText(Path.Combine(binDir, "bash.exe"), "");
+            string expected = Path.Combine(usrBinDir, "bash.exe");
+            File.WriteAllText(expected, "");
+
+            PathUtil.TryFindShellInGitDir(gitDir, "bash.exe", out string? shellPath).Should().BeTrue();
+            shellPath.Should().Be(expected);
+        }
+        finally
+        {
+            if (Directory.Exists(gitDir))
+            {
+                Directory.Delete(gitDir, recursive: true);
+            }
+        }
+    }
+
+    [Test]
+    public void TryFindShellInGitDir_should_not_find_a_shell_which_is_not_there()
+    {
+        string gitDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+        PathUtil.TryFindShellInGitDir(gitDir, "sh.exe", out string? shellPath).Should().BeFalse();
         shellPath.Should().BeNull();
     }
 

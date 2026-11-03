@@ -48,7 +48,7 @@ registration list to edit.
 
 ### Built-in plugins (`src/plugins/*`)
 
-`BackgroundFetch`, `AutoCompileSubmodules`, `Bitbucket`, `GitHub3`, `GitFlow`,
+`BackgroundFetch`, `AutoCompileSubmodules`, `Bitbucket`, `GitHub3`,
 `BuildServerIntegration`, `Statistics`, `Gource`, `FindLargeFiles`, `ProxySwitcher`,
 `CreateLocalBranches`, `DeleteUnusedBranches`, `ReleaseNotesGenerator`.
 
