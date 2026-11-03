@@ -172,6 +172,10 @@ Click this info icon for more details.</source>
         <source>Auto scale user interface when high DPI is used</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkShowBranchFirstInAppTitle.Text">
+        <source>Show branch name before repository name in the window title</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkShowCurrentBranchInVisualStudio.Text">
         <source>Show current branch in Visual Studio</source>
         <target />

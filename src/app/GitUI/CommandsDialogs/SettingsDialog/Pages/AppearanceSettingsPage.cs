@@ -70,6 +70,7 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         chkShowRelativeDate.Checked = AppSettings.RelativeDate;
         chkShowRepoCurrentBranch.Checked = AppSettings.ShowRepoCurrentBranch;
         chkShowCurrentBranchInVisualStudio.Checked = AppSettings.ShowCurrentBranchInVisualStudio;
+        chkShowBranchFirstInAppTitle.Checked = AppSettings.ShowBranchFirstInAppTitle;
         chkEnableAutoScale.Checked = AppSettings.EnableAutoScale;
         truncatePathMethod.SelectedIndex = GetTruncatePathMethodIndex(AppSettings.TruncatePathMethod);
 
@@ -126,6 +127,7 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         AppSettings.RelativeDate = chkShowRelativeDate.Checked;
         AppSettings.ShowRepoCurrentBranch = chkShowRepoCurrentBranch.Checked;
         AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
+        AppSettings.ShowBranchFirstInAppTitle = chkShowBranchFirstInAppTitle.Checked;
         AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
         AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
 

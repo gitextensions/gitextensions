@@ -61,6 +61,24 @@ public class AppTitleGeneratorTests
     }
 
     [Test]
+    public void Generate_should_put_branch_before_repository_if_ShowBranchFirstInAppTitle()
+    {
+        string branchName = "feature/my_(test)_branch";
+        string pathName = "folder/folder/file";
+        bool original = AppSettings.ShowBranchFirstInAppTitle;
+        try
+        {
+            AppSettings.ShowBranchFirstInAppTitle = true;
+            string title = _appTitleGenerator.Generate("a", true, branchName: branchName, pathName: pathName);
+            title.Should().StartWith($@"""file"" {branchName} ({ShortName}) - {AppSettings.ApplicationName}");
+        }
+        finally
+        {
+            AppSettings.ShowBranchFirstInAppTitle = original;
+        }
+    }
+
+    [Test]
     public void Generate_should_not_quote_already_quoted_pathname()
     {
         string pathName = @"""folder/folder/file""";
