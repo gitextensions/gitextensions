@@ -22,7 +22,7 @@ public static partial class CaptureJson
             document = document with { Image = document.Image with { Acquisitions = null } };
         }
 
-        return JsonSerializer.Serialize(document, Options) + Environment.NewLine;
+        return JsonSerializer.Serialize(document, Options) + "\r\n";
     }
 
     /// <summary>
@@ -86,10 +86,12 @@ public static partial class CaptureJson
 
     private static JsonSerializerOptions CreateOptions()
     {
+        // Keep canonical trees byte-identical across operating systems.
         JsonSerializerOptions options = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = true
+            WriteIndented = true,
+            NewLine = "\r\n"
         };
         options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
         return options;

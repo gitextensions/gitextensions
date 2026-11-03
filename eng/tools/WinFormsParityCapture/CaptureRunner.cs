@@ -187,10 +187,27 @@ internal static class CaptureRunner
 
         List<CaptureManifestEntry> entries = [];
         CaptureStatePlan state = component.States.Single(item => item.Id == stateId);
+        CaptureConstructionClockSample? beforeFactory = null;
+        CaptureConstructionClockSample? afterFactory = null;
+        CaptureConstructionObservation? constructionObservation = null;
         try
         {
             using WinFormsBootstrap bootstrap = WinFormsBootstrap.Create(repositoryPath, profile, theme, isolationRoot);
-            using Control root = ComponentFactory.Create(component, bootstrap.Commands, state);
+            beforeFactory = NativeCaptureConstructionObservation.Sample();
+            Control createdRoot;
+            try
+            {
+                createdRoot = ComponentFactory.Create(component, bootstrap.Commands, state);
+            }
+            finally
+            {
+                afterFactory = NativeCaptureConstructionObservation.Sample();
+            }
+
+            using Control root = createdRoot;
+            constructionObservation = CaptureConstructionClock.Create(
+                beforeFactory, afterFactory ?? throw new InvalidOperationException("The root factory has no completed endpoint sample."),
+                NativeCaptureConstructionObservation.ReadDateColumns(root), []);
             using CaptureFixtureClock fixtureClock = CaptureFixtureClock.Apply(EnumerateControls(root), plan.FixtureNowUtc);
             IReadOnlyDictionary<object, ControlTreeReader.FontBaseline> fontBaselines =
                 ControlTreeReader.CaptureFontBaselines(root);
@@ -198,25 +215,37 @@ internal static class CaptureRunner
             PumpUntilReady(root);
             int actualDpi = root.DeviceDpi;
             entries.Add(actualDpi != scale * 96 / 100
-                ? Unsupported(componentType, theme.Id, scale, state.Id, $"The WinForms DPI-change path reported {actualDpi} DPI instead of {scale * 96 / 100} DPI.")
-                : CaptureState(bootstrap, root, component, theme, scale, dpiMode, state, outputPath, fontBaselines));
+                ? Unsupported(componentType, theme.Id, scale, state.Id, $"The WinForms DPI-change path reported {actualDpi} DPI instead of {scale * 96 / 100} DPI.") with { ConstructionObservation = constructionObservation }
+                : CaptureState(bootstrap, root, component, theme, scale, dpiMode, state, outputPath, fontBaselines, constructionObservation));
             Application.DoEvents();
             bootstrap.ThrowIfThreadException();
             ComponentFactory.CleanupBeforeDispose(root);
         }
         catch (CaptureStateUnsupportedException exception)
         {
-            entries.Add(Unsupported(componentType, theme.Id, scale, state.Id, exception.Message));
+            entries.Add(Unsupported(componentType, theme.Id, scale, state.Id, exception.Message) with
+            {
+                ConstructionObservation = constructionObservation ?? AvailableConstructionObservation(beforeFactory, afterFactory),
+            });
         }
         catch (Exception exception)
         {
-            entries.Add(Failed(componentType, theme.Id, scale, state.Id, dpiMode, exception));
+            entries.Add(Failed(componentType, theme.Id, scale, state.Id, dpiMode, exception) with
+            {
+                ConstructionObservation = constructionObservation ?? AvailableConstructionObservation(beforeFactory, afterFactory),
+            });
         }
 
         CaptureWorkerResult result = new() { Captures = entries };
         File.WriteAllText(workerResultPath, JsonSerializer.Serialize(result, ManifestJsonOptions) + Environment.NewLine);
         return entries.Any(entry => entry.Status == CaptureStateStatus.Failed) ? 1 : 0;
     }
+
+    private static CaptureConstructionObservation? AvailableConstructionObservation(
+        CaptureConstructionClockSample? beforeFactory, CaptureConstructionClockSample? afterFactory)
+        => beforeFactory is not null && afterFactory is not null
+            ? CaptureConstructionClock.Create(beforeFactory, afterFactory, [], [])
+            : null;
 
     public static int Validate(CaptureOptions options)
     {
@@ -338,7 +367,8 @@ internal static class CaptureRunner
         CaptureDpiMode dpiMode,
         CaptureStatePlan state,
         string outputRoot,
-        IReadOnlyDictionary<object, ControlTreeReader.FontBaseline>? fontBaselines = null)
+        IReadOnlyDictionary<object, ControlTreeReader.FontBaseline>? fontBaselines = null,
+        CaptureConstructionObservation? constructionObservation = null)
     {
         string componentType = component.TypeName;
         try
@@ -354,6 +384,13 @@ internal static class CaptureRunner
             // the plan's deterministic text remains authoritative at the capture boundary.
             ComponentFactory.ApplyTextValues(root, component);
             bootstrap.ThrowIfThreadException();
+            if (constructionObservation is not null)
+            {
+                constructionObservation = CaptureConstructionClock.Create(
+                    constructionObservation.BeforeFactory, constructionObservation.AfterFactory,
+                    constructionObservation.AfterFactoryDateColumns, NativeCaptureConstructionObservation.ReadDateColumns(root));
+            }
+
             using CaptureImageResult image = ImageCapture.Capture(root, driver.Popups, driver.ComboBoxPopups);
             string relativeDirectory = Path.Combine(Sanitize(componentType), Sanitize(theme.Id), scale.ToString(CultureInfo.InvariantCulture));
             string absoluteDirectory = Path.Combine(outputRoot, relativeDirectory);
@@ -427,12 +464,13 @@ internal static class CaptureRunner
                 DpiMode = dpiMode,
                 CaptureMethod = image.Method,
                 ImageFile = relativeImagePath,
-                TreeFile = Path.GetRelativePath(outputRoot, treePath).Replace('\\', '/')
+                TreeFile = Path.GetRelativePath(outputRoot, treePath).Replace('\\', '/'),
+                ConstructionObservation = constructionObservation,
             };
         }
         catch (CaptureStateUnsupportedException exception)
         {
-            return Unsupported(componentType, theme.Id, scale, state.Id, exception.Message);
+            return Unsupported(componentType, theme.Id, scale, state.Id, exception.Message) with { ConstructionObservation = constructionObservation };
         }
         catch (Exception exception)
         {
@@ -447,7 +485,8 @@ internal static class CaptureRunner
                 DpiMode = dpiMode,
                 CaptureMethod = CaptureMethod.Unsupported,
                 ImageFile = null,
-                TreeFile = null
+                TreeFile = null,
+                ConstructionObservation = constructionObservation,
             };
         }
     }

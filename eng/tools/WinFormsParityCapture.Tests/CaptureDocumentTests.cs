@@ -37,6 +37,27 @@ public sealed class CaptureDocumentTests
     }
 
     [Test]
+    public void Serialize_should_use_canonical_CRLF_and_canonicalize_legacy_LF_without_changing_values()
+    {
+        CaptureDocument expected = CreateDocument("#FF010203");
+        CaptureSurface surface = expected.Surfaces[0];
+        expected = expected with
+        {
+            Surfaces = [surface with { Root = surface.Root with { Text = "first\nsecond\r\nthird\rfourth" } }]
+        };
+
+        string canonical = CaptureJson.Serialize(expected);
+
+        canonical.Should().StartWith("{\r\n").And.EndWith("}\r\n");
+        canonical.Replace("\r\n", string.Empty, StringComparison.Ordinal).Should().NotContain("\r").And.NotContain("\n");
+        string legacy = canonical.Replace("\r\n", "\n", StringComparison.Ordinal);
+        legacy.Should().NotContain("\r").And.EndWith("}\n");
+        CaptureDocument actual = CaptureJson.Deserialize(legacy);
+        actual.Should().BeEquivalentTo(expected);
+        CaptureJson.Serialize(actual).Should().Be(canonical);
+    }
+
+    [Test]
     public void Serialize_should_reject_symbolic_colors()
     {
         CaptureDocument document = CreateDocument("SystemColors.Control");
