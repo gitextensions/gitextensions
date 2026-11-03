@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using AwesomeAssertions;
 using NUnit.Framework;
 
@@ -8,6 +8,112 @@ namespace GitExtensions.ParityInventory.Tests;
 [TestFixture]
 public sealed class ReviewedCommentDeviationTests
 {
+    [TestCase("valid")]
+    [TestCase("nested")]
+    [TestCase("type")]
+    [TestCase("part")]
+    [TestCase("partCase")]
+    [TestCase("member")]
+    [TestCase("text")]
+    [TestCase("source")]
+    [TestCase("outside")]
+    [TestCase("order")]
+    [TestCase("typeFormat")]
+    public void Run_should_prove_the_exact_destination_when_code_moves_to_another_type(string change)
+    {
+        using InventoryFixture fixture = new();
+        Dictionary<string, object?> pin = Prepare(fixture, "codeMoved");
+        fixture.WriteTwin("Widget.cs", Twin(""));
+        string target = "namespace Sample; class Destination { void Target() {\n// " + pin["originalValue"] + "\nWork(); } }";
+        fixture.WriteTwin("Destination.cs", target);
+        FunctionalFinding finding = fixture.Run().Findings.Single(item => item.Category == "comments");
+        pin["code"] = finding.Code;
+        pin["twinValue"] = finding.TwinValue;
+        pin["twinPart"] = "Destination.cs";
+        pin["targetTypeName"] = "Sample.Destination";
+        switch (change)
+        {
+            case "nested":
+                fixture.WriteTwin("Destination.cs", target.Replace("void Target()", "class Nested { void Target()", StringComparison.Ordinal) + "}");
+                pin["targetMember"] = "class:Nested/method:Target()";
+                break;
+            case "type": pin["targetTypeName"] = "Sample.Other"; break;
+            case "part": pin["twinPart"] = "Widget.cs"; break;
+            case "partCase": pin["twinPart"] = "destination.cs"; break;
+            case "member": pin["targetMember"] = "method:Other()"; break;
+            case "text": fixture.WriteTwin("Destination.cs", target.Replace("WinForms", "changed", StringComparison.Ordinal)); break;
+            case "source": fixture.WriteOriginal("Widget.cs", Original.Replace("WinForms", "changed", StringComparison.Ordinal)); break;
+            case "outside": pin["twinPart"] = "../Outside.cs"; break;
+            case "order": pin["targetCommentOrder"] = 1; break;
+            case "typeFormat": pin["targetTypeName"] = 12; break;
+        }
+
+        WritePin(fixture, pin);
+        if (change is not ("valid" or "nested"))
+        {
+            Action action = () => fixture.Run(useFrameworkAdaptations: true);
+            action.Should().Throw<InvalidDataException>();
+            return;
+        }
+
+        InventoryReport report = fixture.Run(useFrameworkAdaptations: true);
+        report.Findings.Should().NotContain(item => item.Category == "comments");
+        AcceptedFrameworkDeviation accepted = report.AcceptedFrameworkDeviations.Should().ContainSingle().Subject;
+        accepted.TargetTypeName.Should().Be("Sample.Destination");
+        accepted.TwinPart.Should().Be("Destination.cs");
+    }
+
+    [TestCase("first")]
+    [TestCase("second")]
+    [TestCase("missingOrder")]
+    [TestCase("negativeOrder")]
+    [TestCase("wrongOrder")]
+    [TestCase("orderFormat")]
+    [TestCase("reordered")]
+    [TestCase("absent")]
+    public void Run_should_pin_empty_moved_comment_separators_by_exact_destination_order(string change)
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; class Widget { void Original() {\n//\nWork(); } }");
+        const string twin = "namespace Sample; class Widget { void Original() { } void Target() {\n//\n//\nWork(); } }";
+        fixture.WriteTwin("Widget.cs", twin);
+        FunctionalFinding finding = fixture.Run().Findings.Single(item => item.Category == "comments");
+        Dictionary<string, object?> pin = new()
+        {
+            ["typeName"] = "Sample.Widget", ["category"] = "comments", ["code"] = finding.Code,
+            ["path"] = finding.Path, ["originalPart"] = "Widget.cs", ["originalValue"] = finding.OriginalValue,
+            ["twinValue"] = finding.TwinValue, ["reason"] = "codeMoved", ["twinPart"] = "Widget.cs",
+            ["targetMember"] = "method:Target()", ["targetCommentOrder"] = change == "second" ? 1 : 0,
+            ["rationale"] = "The separator stays with the moved comment block and its exact member/order."
+        };
+        switch (change)
+        {
+            case "missingOrder": pin.Remove("targetCommentOrder"); break;
+            case "negativeOrder": pin["targetCommentOrder"] = -1; break;
+            case "wrongOrder": pin["targetCommentOrder"] = 2; break;
+            case "orderFormat": pin["targetCommentOrder"] = "0"; break;
+            case "reordered": fixture.WriteTwin("Widget.cs", twin.Replace("//\n//", "// Changed.\n//", StringComparison.Ordinal)); break;
+            case "absent":
+                pin["reason"] = "codeAbsent";
+                pin.Remove("twinPart");
+                pin.Remove("targetMember");
+                pin.Remove("targetCommentOrder");
+                break;
+        }
+
+        WritePin(fixture, pin);
+        if (change is not ("first" or "second"))
+        {
+            Action action = () => fixture.Run(useFrameworkAdaptations: true);
+            action.Should().Throw<InvalidDataException>();
+            return;
+        }
+
+        InventoryReport report = fixture.Run(useFrameworkAdaptations: true);
+        report.Findings.Should().NotContain(item => item.Category == "comments");
+        report.AcceptedFrameworkDeviations.Should().ContainSingle().Subject.TargetCommentOrder.Should().Be(change == "second" ? 1 : 0);
+    }
+
     [TestCase("valid")]
     [TestCase("sourceText")]
     [TestCase("twinText")]
@@ -138,6 +244,7 @@ public sealed class ReviewedCommentDeviationTests
     [TestCase("missingOriginalText")]
     [TestCase("missingTarget")]
     [TestCase("missingTargetPart")]
+    [TestCase("emptyTargetText")]
     [TestCase("typeTarget")]
     [TestCase("absentTarget")]
     [TestCase("absentTwinValue")]
@@ -155,6 +262,7 @@ public sealed class ReviewedCommentDeviationTests
             case "missingOriginalText": pin.Remove("originalValue"); break;
             case "missingTarget": pin.Remove("targetMember"); break;
             case "missingTargetPart": pin.Remove("twinPart"); break;
+            case "emptyTargetText": pin["targetText"] = ""; break;
             case "typeTarget": pin["targetMember"] = "$type"; break;
             case "absentTarget": pin["reason"] = "codeAbsent"; break;
             case "absentTwinValue":

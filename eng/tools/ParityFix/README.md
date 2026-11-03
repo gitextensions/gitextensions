@@ -49,7 +49,19 @@ entry must remain present and unchanged. Additions must be exact `comment.missin
 `adaptedMinimal` holding both the original and twin text and part. New member/event pins, edited or removed
 entries, other manifest-property changes, duplicate identities/properties and malformed JSON fail with
 a diagnostic identifying the rejected change. The inventory gate still verifies live source/destination
-facts. Run proof last, after placements and pins, so it covers the final tree.
+facts. Finish every placement and pin before proof, so it covers the final tree.
+
+```powershell
+pwsh eng/avalonia/gate.ps1 -Level Batch -CommentOnly
+pwsh eng/avalonia/gate.ps1 -Verify
+```
+
+Comment-only Batch mode runs this proof first and refuses any unproved path before product builds or
+inventory. It then builds the Windows Avalonia solution (including XML documentation checks) and runs
+the reviewed inventory without inventory tests. All test and Linux legs are skipped with explicit
+receipt reasons. Proof, build and inventory are never reused in this mode; Verify accepts its passing
+receipt only for that exact tree. An ordinary Batch cannot reuse a comment-only receipt's legs.
+Product or test code changes require the ordinary gate and the whole test assembly on both platforms.
 
 Every other changed path must be an existing regular C# file with equivalent syntax,
 unchanged directives, unchanged disabled preprocessor text and unchanged file mode. Additions, deletions,

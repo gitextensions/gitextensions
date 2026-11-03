@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace GitExtensions.ParityInventory;
 
@@ -198,6 +198,12 @@ internal sealed record AcceptedFrameworkDeviation
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? TargetText { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? TargetTypeName { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public int? TargetCommentOrder { get; init; }
 }
 
 // parity-scaffolding: Carries both parity gaps and legitimate comment adaptations.
