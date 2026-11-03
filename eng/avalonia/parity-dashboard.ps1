@@ -61,7 +61,7 @@ if (Test-Path -LiteralPath $Ownership) {
 $current = Get-Content -LiteralPath $Inventory -Raw | ConvertFrom-Json
 $counts = @{}
 $dependent = 0
-$acceptedComments = @{ codeAbsent = 0; codeMoved = 0 }
+$acceptedComments = @{ codeAbsent = 0; codeMoved = 0; adaptedMinimal = 0 }
 foreach ($file in Get-ChildItem -LiteralPath (Join-Path (Split-Path -Parent $Inventory) 'types') -Filter '*.json') {
     $report = Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json
     $owner = if ($owners.ContainsKey($report.typeName)) { $owners[$report.typeName] } else { 'unowned' }
@@ -69,7 +69,7 @@ foreach ($file in Get-ChildItem -LiteralPath (Join-Path (Split-Path -Parent $Inv
     if (-not $counts.ContainsKey($owner)) { $counts[$owner] = @{ Mechanical = 0; Behavior = 0; Structural = 0 } }
     $dependent += @($report.dependentFindings).Count
     foreach ($deviation in $report.acceptedFrameworkDeviations) {
-        if ($deviation.category -eq 'comments' -and $deviation.reason -in 'codeAbsent', 'codeMoved') {
+        if ($deviation.category -eq 'comments' -and $deviation.reason -in 'codeAbsent', 'codeMoved', 'adaptedMinimal') {
             $acceptedComments[$deviation.reason]++
         }
     }
@@ -118,7 +118,8 @@ $measurement = [ordered]@{
     behavior = $totals.Behavior
     structural = $totals.Structural
     dependent = $dependent
-    acceptedComments = $acceptedComments.codeAbsent + $acceptedComments.codeMoved
+    acceptedComments = $acceptedComments.codeAbsent + $acceptedComments.codeMoved + $acceptedComments.adaptedMinimal
+    acceptedAdaptedMinimal = $acceptedComments.adaptedMinimal
     complete = $complete
     allButMacOs = $allButMacOs
 }
@@ -143,7 +144,7 @@ $lines.Add('')
 $lines.Add("Measured $($measurement.measuredUtc) at $($current.analyzedCommit), $($current.summary.mappingCount) mappings and $($current.summary.analyzedTypeCount) types.")
 $lines.Add('')
 $lines.Add("**Actionable source findings: $actionable**$change, plus $dependent dependent.")
-$lines.Add("**Accepted handwritten comment findings: $($measurement.acceptedComments)** (codeAbsent $($acceptedComments.codeAbsent), codeMoved $($acceptedComments.codeMoved)); accepted deviations, not closed.")
+$lines.Add("**Accepted handwritten comment findings: $($measurement.acceptedComments)** (codeAbsent $($acceptedComments.codeAbsent), codeMoved $($acceptedComments.codeMoved), adaptedMinimal $($acceptedComments.adaptedMinimal)); accepted deviations, not closed.")
 $lines.Add('Source findings are one measure only; capture and state coverage are tracked separately.')
 $lines.Add('')
 $lines.Add('| Area | Mechanical | Missing behavior | Structural | Actionable |')
@@ -164,7 +165,7 @@ $lines.Add('Components with platform evidence: ' + (($platforms.GetEnumerator() 
 Set-Content -LiteralPath $Output -Value $lines -Encoding utf8
 $measurementChanged = -not $lastMeasurement
 if ($lastMeasurement) {
-    foreach ($property in 'commit', 'actionable', 'mechanical', 'behavior', 'structural', 'dependent', 'acceptedComments', 'complete', 'allButMacOs') {
+    foreach ($property in 'commit', 'actionable', 'mechanical', 'behavior', 'structural', 'dependent', 'acceptedComments', 'acceptedAdaptedMinimal', 'complete', 'allButMacOs') {
         if ($lastMeasurement.$property -ne $measurement[$property]) {
             $measurementChanged = $true
             break

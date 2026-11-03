@@ -130,6 +130,9 @@ public sealed class WorktreeProofTests
     [TestCase("duplicate", false, "duplicate framework-adaptation identity")]
     [TestCase("duplicateProperty", false, "Duplicate JSON property 'schemaVersion'")]
     [TestCase("incomplete", false, "must pin an exact handwritten comment")]
+    [TestCase("adapted", true, null)]
+    [TestCase("adaptedMissingText", false, "must pin an exact handwritten comment")]
+    [TestCase("wrongPair", false, "not an absent or moved comment pin")]
     public async Task ProveAsync_should_prove_only_additive_exact_comment_pins_Async(string change, bool expected, string? diagnostic)
     {
         using Repository fixture = new();
@@ -157,6 +160,18 @@ public sealed class WorktreeProofTests
         entries.Add(pin);
         switch (change)
         {
+            case "adapted":
+            case "adaptedMissingText":
+            case "wrongPair":
+                pin["code"] = "comment.changed";
+                pin["reason"] = change == "wrongPair" ? "codeMoved" : "adaptedMinimal";
+                pin["twinPart"] = "Widget.cs";
+                if (change != "adaptedMissingText")
+                {
+                    pin["twinValue"] = "The framework-specific fact changed.";
+                }
+
+                break;
             case "moved":
                 pin["code"] = "comment.drifted";
                 pin["reason"] = "codeMoved";

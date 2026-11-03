@@ -110,8 +110,13 @@ has no twin part or destination fields; a surviving stray comment is still pinne
 requires one live comment there matching `originalValue`, or optional `targetText` when a minimum wording
 adaptation is necessary. `twinValue` still pins the finding itself: absent for missing, the original text
 for drifted. Source text, part, finding or destination drift fails the run; removed findings and unused
-pins fail as before. Unreasoned handwritten comments and `comment.changed` cannot be accepted this way.
-The dashboard reports these separately by reason and stores their accepted count in measurement history.
+pins fail as before. A `comment.changed` finding can instead be pinned with reason `adaptedMinimal`:
+include exact `originalValue`, `originalPart`, `twinValue` and `twinPart`, with a rationale explaining
+the minimum wording change required to keep the original sentence true for the twin. Do not supply
+destination fields for this reason. Both texts must differ; any text or paired-part drift, including
+a matching comment found only in another partial, fails. Unreasoned handwritten comments cannot be accepted.
+The dashboard reports all three reasons separately and stores their accepted count in measurement history;
+these are accepted adaptations, never closed findings.
 
 The analyzer is deliberately syntax based. It enumerates top-level classes, structs, and
 interfaces. Facts that cannot be represented safely become findings rather than

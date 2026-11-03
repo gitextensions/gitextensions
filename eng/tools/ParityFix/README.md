@@ -44,8 +44,9 @@ dotnet artifacts/Debug/bin/ParityFix/net10.0/ParityFix.dll prove `
 and unstaged edits and nonignored untracked paths, even when invoked from a subdirectory. Only the exact
 paths `eng/avalonia/portmap.json` and `eng/avalonia/parity-ledger.json` are exempt and listed separately
 in the report. The existing `eng/avalonia/framework-adaptations.json` is proved separately: every HEAD
-entry must remain present and unchanged, and additions must be exact `comment.missing` or
-`comment.drifted` pins with reason `codeAbsent` or `codeMoved`. New member/event pins, edited or removed
+entry must remain present and unchanged. Additions must be exact `comment.missing` or
+`comment.drifted` pins with reason `codeAbsent` or `codeMoved`, or `comment.changed` pins with reason
+`adaptedMinimal` holding both the original and twin text and part. New member/event pins, edited or removed
 entries, other manifest-property changes, duplicate identities/properties and malformed JSON fail with
 a diagnostic identifying the rejected change. The inventory gate still verifies live source/destination
 facts. Run proof last, after placements and pins, so it covers the final tree.
