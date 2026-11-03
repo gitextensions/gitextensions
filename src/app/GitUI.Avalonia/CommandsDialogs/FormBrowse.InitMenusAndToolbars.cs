@@ -297,6 +297,8 @@ partial class FormBrowse
             }
         }
 
+        // a user may have a specific shell configured in settings, but the shell is no longer available
+        // set the first available shell as default
         if (selectedDefaultShell?.Tag is IShellDescriptor selectedShell)
         {
             userShell.Icon = selectedShell.Icon;
