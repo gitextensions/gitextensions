@@ -7145,7 +7145,7 @@ Is the merge conflict solved?</source>
         <target />
       </trans-unit>
       <trans-unit id="_diffBaseWithModifiedButtonDescription.Text">
-        <source>Opens the difftool. This dialog stays open, so choose afterwards.</source>
+        <source>Opens the difftool. This dialog stays open, so solve conflict afterwards.</source>
         <target />
       </trans-unit>
       <trans-unit id="_diffBaseWithModifiedButtonText.Text">

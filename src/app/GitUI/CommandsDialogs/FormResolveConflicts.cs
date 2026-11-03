@@ -61,7 +61,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private readonly TranslationString _keepModifiedButtonText = new("Keep modified");
     private readonly TranslationString _keepBaseButtonText = new("Keep base file");
     private readonly TranslationString _diffBaseWithModifiedButtonText = new("Diff base with modified");
-    private readonly TranslationString _diffBaseWithModifiedButtonDescription = new("Opens the difftool. This dialog stays open, so choose afterwards.");
+    private readonly TranslationString _diffBaseWithModifiedButtonDescription = new("Opens the difftool. This dialog stays open, so solve conflict afterwards.");
 
     private readonly TranslationString _solveMergeConflictApplyToAllCheckBoxText = new("Apply to '{0}' and {1} other file(s)");
     private readonly TranslationString _solveMergeConflictDialogCaption = new("Solve merge conflict");
@@ -1263,7 +1263,7 @@ public partial class FormResolveConflicts : GitModuleForm
     /// <returns><see langword="null"/> if there is no base to diff with.</returns>
     private (string Text, Action Show)? GetDiffBaseWithModified(ConflictData item, ConflictedFileData modified, int stage, string modifiedSide)
     {
-        if (item.Base.Filename is not string baseFileName || modified.Filename is not string modifiedFileName)
+        if (item.Base.Filename is not string itemBaseFileName || modified.Filename is not string modifiedFileName)
         {
             return null;
         }
@@ -1271,7 +1271,7 @@ public partial class FormResolveConflicts : GitModuleForm
         // Diff the index stages (1 = base, 2 = local, 3 = remote) rather than their blobs,
         // so that the difftool gets file names with the extension of the conflicted file.
         return (string.Format(_diffBaseWithModifiedButtonText.Text + " ({0})", modifiedSide),
-            () => Module.OpenFilesWithDifftool($":1:{baseFileName}", $":{stage}:{modifiedFileName}", customTool: null));
+            () => Module.OpenFilesWithDifftool($":1:{itemBaseFileName}", $":{stage}:{modifiedFileName}", customTool: null));
     }
 
     private void OpenMergeTool()
