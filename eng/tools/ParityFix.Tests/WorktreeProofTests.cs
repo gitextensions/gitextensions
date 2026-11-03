@@ -1,4 +1,5 @@
-﻿using AwesomeAssertions;
+﻿using System.Text.Json.Nodes;
+using AwesomeAssertions;
 using NUnit.Framework;
 
 namespace GitExtensions.ParityFix.Tests;
@@ -114,6 +115,93 @@ public sealed class WorktreeProofTests
 
         proof.Passed.Should().BeFalse();
         proof.Files.Should().ContainSingle(file => !file.Passed);
+    }
+
+    [TestCase("missing", true, null)]
+    [TestCase("moved", true, null)]
+    [TestCase("format", true, null)]
+    [TestCase("member", false, "not an absent or moved comment pin")]
+    [TestCase("event", false, "not an absent or moved comment pin")]
+    [TestCase("edited", false, "Edited existing framework adaptation 'Widget/member.extra/member/field:value'")]
+    [TestCase("removed", false, "Removed existing framework adaptation 'Widget/member.extra/member/field:value'")]
+    [TestCase("malformed", false, "Invalid framework-adaptation manifest")]
+    [TestCase("schema", false, "property 'schemaVersion' changed")]
+    [TestCase("root", false, "property 'unreviewed' was added")]
+    [TestCase("duplicate", false, "duplicate framework-adaptation identity")]
+    [TestCase("duplicateProperty", false, "Duplicate JSON property 'schemaVersion'")]
+    [TestCase("incomplete", false, "must pin an exact handwritten comment")]
+    public async Task ProveAsync_should_prove_only_additive_exact_comment_pins_Async(string change, bool expected, string? diagnostic)
+    {
+        using Repository fixture = new();
+        await fixture.InitializeAsync();
+        string directory = Path.Combine(fixture.Root, "eng", "avalonia");
+        Directory.CreateDirectory(directory);
+        string path = Path.Combine(directory, "framework-adaptations.json");
+        const string baseline = """
+            { "schemaVersion": 4, "deviations": [
+              { "typeName": "Widget", "code": "member.extra", "path": "member/field:value",
+                "twinPart": "Widget.cs", "twinAccessibility": "private", "twinSignature": "int value", "rationale": "Framework state." }
+            ] }
+            """;
+        File.WriteAllText(path, baseline);
+        await WorktreeProof.GitAsync(fixture.Root, "add", ".");
+        await WorktreeProof.GitAsync(fixture.Root, "commit", "-qm", "test: establish adaptation manifest");
+        JsonObject root = JsonNode.Parse(baseline)!.AsObject();
+        JsonArray entries = root["deviations"]!.AsArray();
+        JsonObject pin = new()
+        {
+            ["typeName"] = "Widget", ["category"] = "comments", ["code"] = "comment.missing",
+            ["path"] = "comment/Widget.cs/method:Before()/body/0", ["originalPart"] = "Widget.cs",
+            ["originalValue"] = "Reason.", ["reason"] = "codeAbsent", ["rationale"] = "Reviewed the whole type."
+        };
+        entries.Add(pin);
+        switch (change)
+        {
+            case "moved":
+                pin["code"] = "comment.drifted";
+                pin["reason"] = "codeMoved";
+                pin["twinValue"] = "Reason.";
+                pin["twinPart"] = "Widget.cs";
+                pin["targetMember"] = "method:After()";
+                break;
+            case "member":
+                pin["code"] = "member.missing";
+                pin["path"] = "member/method:InitializeComponent";
+                break;
+            case "event": pin["code"] = "event.wiring.missing"; break;
+            case "edited": entries[0]!["rationale"] = "Changed state."; break;
+            case "removed": entries.RemoveAt(0); break;
+            case "schema": root["schemaVersion"] = 5; break;
+            case "root": root["unreviewed"] = true; break;
+            case "duplicate": entries.Add(pin.DeepClone()); break;
+            case "incomplete": pin.Remove("originalPart"); break;
+            case "format": entries.Clear(); entries.Add(JsonNode.Parse(baseline)!["deviations"]![0]!.DeepClone()); break;
+        }
+
+        string working = root.ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+        if (change == "malformed")
+        {
+            working = "{ broken";
+        }
+        else if (change == "duplicateProperty")
+        {
+            working = working.Replace("\"schemaVersion\": 4", "\"schemaVersion\": 4, \"schemaVersion\": 4", StringComparison.Ordinal);
+        }
+
+        File.WriteAllText(path, working);
+        File.AppendAllText(fixture.FilePath, "\n// Comment accompanying pins.");
+
+        ProofReport proof = await WorktreeProof.ProveAsync(fixture.Root);
+
+        proof.Passed.Should().Be(expected);
+        FileProof manifest = proof.Files.Single(file => file.Path == "eng/avalonia/framework-adaptations.json");
+        manifest.Passed.Should().Be(expected);
+        proof.ExemptPaths.Should().BeEmpty();
+        proof.Files.Single(file => file.Path == "twin/Widget space.cs").Passed.Should().BeTrue();
+        if (diagnostic is not null)
+        {
+            manifest.Error.Should().Contain(diagnostic);
+        }
     }
 
     [Test]

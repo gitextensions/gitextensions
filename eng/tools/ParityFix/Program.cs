@@ -35,7 +35,7 @@ try
             File.WriteAllText(path, JsonSerializer.Serialize(proof, new JsonSerializerOptions { WriteIndented = true }));
         }
 
-        Console.WriteLine($"HEAD {proof.Head}: {proof.Files.Count(file => file.Passed)} of {proof.Files.Count} changed repository files proved equivalent with unchanged directives and disabled text; {proof.ExemptPaths.Count} metadata paths exempt.");
+        Console.WriteLine($"HEAD {proof.Head}: {proof.Files.Count(file => file.Passed)} of {proof.Files.Count} changed repository files proved comment-only or additive comment pins; {proof.ExemptPaths.Count} metadata paths exempt.");
         foreach (FileProof file in proof.Files.Where(file => !file.Passed))
         {
             Console.Error.WriteLine($"{file.Path}: {file.Error}");

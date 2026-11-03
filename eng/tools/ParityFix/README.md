@@ -43,7 +43,14 @@ dotnet artifacts/Debug/bin/ParityFix/net10.0/ParityFix.dll prove `
 `prove` independently compares the complete repository working-tree delta with HEAD, including staged
 and unstaged edits and nonignored untracked paths, even when invoked from a subdirectory. Only the exact
 paths `eng/avalonia/portmap.json` and `eng/avalonia/parity-ledger.json` are exempt and listed separately
-in the report. Every other changed path must be an existing regular C# file with equivalent syntax,
+in the report. The existing `eng/avalonia/framework-adaptations.json` is proved separately: every HEAD
+entry must remain present and unchanged, and additions must be exact `comment.missing` or
+`comment.drifted` pins with reason `codeAbsent` or `codeMoved`. New member/event pins, edited or removed
+entries, other manifest-property changes, duplicate identities/properties and malformed JSON fail with
+a diagnostic identifying the rejected change. The inventory gate still verifies live source/destination
+facts. Run proof last, after placements and pins, so it covers the final tree.
+
+Every other changed path must be an existing regular C# file with equivalent syntax,
 unchanged directives, unchanged disabled preprocessor text and unchanged file mode. Additions, deletions,
 other formats and declaration order changes fail. Inactive `#if` blocks are compared as text, including
 their comments. Git LF and working-copy CRLF are normalized for comparison. There is no directory option
