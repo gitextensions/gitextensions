@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Nodes;
+using System.Text.Json.Nodes;
 using AwesomeAssertions;
 using NUnit.Framework;
 
@@ -119,6 +119,8 @@ public sealed class WorktreeProofTests
 
     [TestCase("missing", true, null)]
     [TestCase("moved", true, null)]
+    [TestCase("crossTypeMoved", true, null)]
+    [TestCase("emptyMoved", true, null)]
     [TestCase("format", true, null)]
     [TestCase("member", false, "not an absent or moved comment pin")]
     [TestCase("event", false, "not an absent or moved comment pin")]
@@ -173,11 +175,24 @@ public sealed class WorktreeProofTests
 
                 break;
             case "moved":
+            case "crossTypeMoved":
+            case "emptyMoved":
                 pin["code"] = "comment.drifted";
                 pin["reason"] = "codeMoved";
                 pin["twinValue"] = "Reason.";
                 pin["twinPart"] = "Widget.cs";
                 pin["targetMember"] = "method:After()";
+                if (change == "crossTypeMoved")
+                {
+                    pin["targetTypeName"] = "Sample.Destination";
+                }
+                else if (change == "emptyMoved")
+                {
+                    pin["originalValue"] = "";
+                    pin["twinValue"] = "";
+                    pin["targetCommentOrder"] = 0;
+                }
+
                 break;
             case "member":
                 pin["code"] = "member.missing";

@@ -12,6 +12,8 @@
            reviewed sweep, then the native-ext4 Linux build and focused tests.
     Exit   Everything forced with nothing reused: the whole test assembly on both systems, the
            Linux inventory compared with Windows, and the runtime smokes.
+    CommentOnly (Batch) proves the complete HEAD delta before building Windows and running the
+           reviewed inventory. All tests and Linux are skipped with reasons in the receipt.
 
     Legs run one at a time because the solutions share intermediate paths. A Batch leg is reused
     when no path it depends on changed since it last passed with the same filter, so a retry costs
@@ -26,6 +28,9 @@
 
 .EXAMPLE
     pwsh eng/avalonia/gate.ps1 -Verify
+
+.EXAMPLE
+    pwsh eng/avalonia/gate.ps1 -Level Batch -CommentOnly
 #>
 [CmdletBinding()]
 param(
@@ -34,6 +39,9 @@ param(
 
     # dotnet test filter for the focused tests. Required unless only other legs run.
     [string]$Filter,
+
+    # Prove the complete HEAD delta first, then build Windows and measure inventory without tests.
+    [switch]$CommentOnly,
 
     # When positive, a focused leg must execute exactly this many cases.
     [int]$ExpectedCases = 0,
@@ -65,6 +73,10 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+
+if ($CommentOnly -and ($Level -ne 'Batch' -or $Only -or $ToolTestProject.Count -or $Filter)) {
+    throw '-CommentOnly requires Batch with no -Only, -ToolTestProject or -Filter.'
+}
 
 $repo = (git -C $PSScriptRoot rev-parse --show-toplevel).Trim().Replace('/', '\')
 Set-Location -LiteralPath $repo
@@ -149,6 +161,27 @@ function Invoke-Dotnet([string]$Log, [string[]]$Arguments) {
     return $LASTEXITCODE
 }
 
+function Assert-CommentOnlyProof([string]$Log, [string]$Report) {
+    $exitCode = Invoke-Dotnet $Log @($proofDll, 'prove', '--report', $Report)
+    if ($exitCode -ne 0) { throw "comment-only proof failed (exit $exitCode); see $Log" }
+    $proof = Get-Content -LiteralPath $Report -Raw | ConvertFrom-Json
+    if (-not $proof.Passed) { throw "comment-only proof refused the working tree; see $Report" }
+}
+
+function Get-CommentOnlyLegs {
+    $reason = 'comment-only: repository-wide proof replaces test and Linux legs'
+    @{ Name = 'comment-proof'; Ignored = $anyPath }
+    @{ Name = 'winforms'; Ignored = $cannotAffectWinForms; Skip = $skipWinForms }
+    @{ Name = 'avalonia-build'; Ignored = $cannotAffectProduct }
+    foreach ($name in 'focused', 'construction', 'tool-tests', 'inventory-tests') {
+        @{ Name = $name; Ignored = $anyPath; Skip = $reason }
+    }
+    @{ Name = 'inventory'; Ignored = $cannotAffectInventory }
+    foreach ($name in 'linux', 'linux-tool-tests') {
+        @{ Name = $name; Ignored = $anyPath; Skip = $reason }
+    }
+}
+
 function Read-Trx([string]$Path, [int]$ExitCode) {
     if (-not (Test-Path -LiteralPath $Path)) { throw "no test results (exit $ExitCode); expected $Path" }
     $results = @(([xml](Get-Content -LiteralPath $Path -Raw)).TestRun.Results.UnitTestResult | Where-Object { $_ })
@@ -214,6 +247,12 @@ function Read-InventorySummary([string]$Inventory) {
 }
 
 $legActions = @{
+    'comment-proof' = {
+        $log = Join-Path $runDirectory 'comment-proof-build.log'
+        Assert-CleanBuild $log (Invoke-Dotnet $log (@('build', 'eng/tools/ParityFix/ParityFix.csproj') + $buildArguments))
+        $proofDll = 'artifacts/Debug/bin/ParityFix/net10.0/ParityFix.dll'
+        Assert-CommentOnlyProof (Join-Path $runDirectory 'comment-proof.log') (Join-Path $runDirectory 'comment-proof.json')
+    }
     'winforms' = {
         $log = Join-Path $runDirectory 'winforms.log'
         Assert-CleanBuild $log (Invoke-Dotnet $log (@('build', 'GitExtensions.slnx') + $buildArguments))
@@ -258,8 +297,11 @@ bash '$(ConvertTo-WslPath $repo)/eng/avalonia/wsl-gate.sh' run dotnet test '$pro
     }
     'inventory' = {
         $log = Join-Path $runDirectory 'inventory-build.log'
-        Assert-CleanBuild $log (Invoke-Dotnet $log (@('build', $inventoryProject) + $buildArguments))
-        $tests = Invoke-WindowsTests 'inventory-tests' $inventoryProject 'FullyQualifiedName~GitExtensions.ParityInventory.Tests'
+        $project = if ($CommentOnly) { 'eng/tools/ParityInventory/ParityInventory.csproj' } else { $inventoryProject }
+        Assert-CleanBuild $log (Invoke-Dotnet $log (@('build', $project) + $buildArguments))
+        $tests = if ($CommentOnly) { [pscustomobject]@{} } else {
+            Invoke-WindowsTests 'inventory-tests' $inventoryProject 'FullyQualifiedName~GitExtensions.ParityInventory.Tests'
+        }
         $latest = Join-Path $gateRoot 'latest-inventory'
         if (Test-Path -LiteralPath $latest) { Remove-Item -LiteralPath $latest -Recurse }
         $null = New-Item -ItemType Directory -Path $latest
@@ -327,12 +369,16 @@ $tree = Get-WorkTree
 $head = (git rev-parse HEAD).Trim()
 
 if ($Verify) {
-    foreach ($run in Get-PriorRuns) {
-        if ($run.status -ne 'passed' -or $run.level -notin 'Batch', 'Exit' -or $run.partial) { continue }
-        if ($run.tree -eq $tree) {
-            "verified: $($run.level) run $($run.id) passed for this exact tree ($tree)"
-            exit 0
-        }
+    $passing = @(Get-PriorRuns | Where-Object {
+        $_.status -eq 'passed' -and $_.level -in 'Batch', 'Exit' -and -not $_.partial -and
+            (-not $_.commentOnly -or @($_.legs | Where-Object { $_.name -eq 'comment-proof' -and $_.status -eq 'passed' -and -not $_.reusedFrom }).Count -eq 1)
+    })
+    $exact = @($passing | Where-Object tree -EQ $tree)
+    if ($exact.Count) {
+        "verified: $($exact[0].level) run $($exact[0].id) passed for this exact tree ($tree)"
+        exit 0
+    }
+    foreach ($run in $passing) {
         $changed = Get-ChangedPaths $run.tree $tree
         if ($null -ne $changed) {
             "NOT VERIFIED: the latest passing run $($run.id) covers another tree. Changed since then:"
@@ -350,14 +396,14 @@ if ($null -eq $changedSinceBase) { throw "cannot compare against -Base $Base" }
 $winFormsReasons = @($changedSinceBase | Where-Object { $_ -notmatch $cannotAffectWinForms })
 
 $focusedFilter = if ($Level -eq 'Exit') { $wholeAssemblyFilter } else { $Filter }
-$legs = switch ($Level) {
+$skipWinForms = if ($Level -eq 'Batch' -and -not $winFormsReasons.Count) { "none of the $($changedSinceBase.Count) changed paths can affect it" } else { $null }
+$legs = if ($CommentOnly) { Get-CommentOnlyLegs } else { switch ($Level) {
     'Edit' {
         @{ Name = 'edit-build'; Ignored = $anyPath }
         @{ Name = 'focused'; Ignored = $cannotAffectProduct; TestFilter = $focusedFilter }
         if ($ToolTestProject.Count) { @{ Name = 'tool-tests'; Ignored = $anyPath; TestFilter = ($ToolTestProject -join '|') } }
     }
     default {
-        $skipWinForms = if ($Level -eq 'Batch' -and -not $winFormsReasons.Count) { "none of the $($changedSinceBase.Count) changed paths can affect it" } else { $null }
         @{ Name = 'winforms'; Ignored = $cannotAffectWinForms; Skip = $skipWinForms }
         @{ Name = 'avalonia-build'; Ignored = $cannotAffectProduct }
         @{ Name = 'focused'; Ignored = $cannotAffectProduct; TestFilter = $focusedFilter }
@@ -372,7 +418,7 @@ $legs = switch ($Level) {
             @{ Name = 'linux-runtime'; Ignored = $anyPath }
         }
     }
-}
+} }
 $legs = @($legs | ForEach-Object { [pscustomobject]$_ })
 if ($Only) {
     $legs = @($Only | Select-Object -Unique | ForEach-Object {
@@ -382,7 +428,7 @@ if ($Only) {
         else { [pscustomobject]@{ Name = $name; Ignored = $anyPath; TestFilter = if ($name -in 'focused', 'linux') { $focusedFilter } else { $null }; Skip = $null } }
     })
 }
-$needsFilter = @($legs | Where-Object { $_.Name -in 'focused', 'linux' }).Count -gt 0
+$needsFilter = @($legs | Where-Object { $_.Name -in 'focused', 'linux' -and -not $_.Skip }).Count -gt 0
 if ($needsFilter -and [string]::IsNullOrWhiteSpace($focusedFilter)) { throw 'This level needs -Filter with a focused dotnet test filter.' }
 
 # Marks each leg to run, skip or reuse.
@@ -391,8 +437,9 @@ foreach ($leg in $legs) {
     $leg | Add-Member -NotePropertyName Reused -NotePropertyValue $null -Force
     if (-not $leg.PSObject.Properties['Skip']) { $leg | Add-Member -NotePropertyName Skip -NotePropertyValue $null -Force }
     if (-not $leg.PSObject.Properties['TestFilter']) { $leg | Add-Member -NotePropertyName TestFilter -NotePropertyValue $null -Force }
-    if ($leg.Skip -or $NoReuse -or $Only -or $Level -ne 'Batch') { continue }
+    if ($leg.Skip -or $CommentOnly -or $NoReuse -or $Only -or $Level -ne 'Batch') { continue }
     foreach ($run in $priorRuns) {
+        if ($run.commentOnly) { continue }
         $prior = @($run.legs | Where-Object { $_.name -eq $leg.Name -and $_.status -eq 'passed' -and $_.filter -eq $leg.TestFilter })
         if (-not $prior.Count) { continue }
         $changed = Get-ChangedPaths $run.tree $tree
@@ -476,8 +523,8 @@ try {
                 $result = & $legActions[$leg.Name] | Select-Object -Last 1
                 if ($result -and $result.PSObject.Properties['total']) {
                     foreach ($key in 'total', 'passed', 'skipped', 'failed') { $record[$key] = $result.$key }
-                    if ($result.PSObject.Properties['inventory']) { $record.inventory = $result.inventory }
                 }
+                if ($result -and $result.PSObject.Properties['inventory']) { $record.inventory = $result.inventory }
                 $record.status = 'passed'
             }
             catch {
@@ -501,6 +548,7 @@ finally {
 }
 
 $notRun = @('native captures and paired comparison', 'manual side-by-side walk', 'IDE preview', 'macOS', 'Flatpak (run eng/avalonia/wsl-gate.sh flatpak when the batch can affect it)')
+if ($CommentOnly) { $notRun += 'all test legs and Linux: comment-only mode requires proof, Windows build and inventory instead' }
 if ($Level -ne 'Exit') { $notRun += @('runtime smokes', 'Linux inventory comparison') }
 foreach ($assemblyLeg in @(@{ Name = 'focused'; Platform = 'Windows'; Trx = 'focused.trx' }, @{ Name = 'linux'; Platform = 'Linux'; Trx = 'linux-focused.trx' })) {
     $wholeAssemblyRan = @($records | Where-Object {
@@ -510,10 +558,15 @@ foreach ($assemblyLeg in @(@{ Name = 'focused'; Platform = 'Windows'; Trx = 'foc
     }).Count -gt 0
     if (-not $wholeAssemblyRan) { $notRun += "$($assemblyLeg.Platform) whole test assembly" }
 }
+if ((Get-WorkTree) -ne $tree) {
+    $status = 'failed'
+    Write-Warning 'The working tree changed during the gate; this receipt cannot verify the final tree.'
+}
 [pscustomobject]@{
     schema = 1
     id = $id
     level = $Level
+    commentOnly = [bool]$CommentOnly
     partial = [bool]$Only
     status = $status
     head = $head

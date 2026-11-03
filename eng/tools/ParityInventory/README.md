@@ -108,7 +108,12 @@ Copy the exact finding code/path/value and original part from a fresh report. Bo
 has no twin part or destination fields; a surviving stray comment is still pinned by `twinValue`.
 `codeMoved` requires the actual twin part and exact comment anchor as `targetMember`. It also
 requires one live comment there matching `originalValue`, or optional `targetText` when a minimum wording
-adaptation is necessary. `twinValue` still pins the finding itself: absent for missing, the original text
+adaptation is necessary. If the code moved to another type, add its exact `targetTypeName`; the named
+type must exist in the pinned C# `twinPart` inside the twin root, and its destination comment is checked
+there. Optional `targetCommentOrder` pins the zero-based comment order within that member's placement
+group. An empty `//` separator can be accepted only as `codeMoved`, with an explicit destination order
+and an unchanged empty target text; empty absent/adapted pins remain invalid. A changed order, type,
+part or text fails validation. `twinValue` still pins the finding itself: absent for missing, the original text
 for drifted. Source text, part, finding or destination drift fails the run; removed findings and unused
 pins fail as before. A `comment.changed` finding can instead be pinned with reason `adaptedMinimal`:
 include exact `originalValue`, `originalPart`, `twinValue` and `twinPart`, with a rationale explaining

@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 
 namespace GitExtensions.ParityInventory;
 
@@ -51,6 +51,8 @@ internal sealed class ReviewedFrameworkDeviationManifest
                 Optional(element, "reason"),
                 Optional(element, "targetMember"),
                 Optional(element, "targetText"),
+                Optional(element, "targetTypeName"),
+                OptionalInt(element, "targetCommentOrder"),
                 Require(element, "rationale"));
             if (entry.IsCommentDeviation)
             {
@@ -204,21 +206,30 @@ internal sealed class ReviewedFrameworkDeviationManifest
             && entry.Code is "comment.missing" or "comment.drifted" or "comment.changed"
             && entry.Path.StartsWith("comment/", StringComparison.Ordinal)
             && !string.IsNullOrWhiteSpace(entry.OriginalPart)
-            && !string.IsNullOrWhiteSpace(entry.OriginalValue)
+            && entry.OriginalValue is not null
+            && (entry.OriginalValue.Length == 0 || !string.IsNullOrWhiteSpace(entry.OriginalValue))
             && entry.OriginalAccessibility is null && entry.OriginalSignature is null
             && entry.TwinAccessibility is null && entry.TwinSignature is null;
         bool isAbsent = entry.Code is "comment.missing" or "comment.drifted" && entry.Reason == "codeAbsent"
+            && !string.IsNullOrWhiteSpace(entry.OriginalValue)
             && entry.TwinPart is null
             && (entry.Code == "comment.missing" ? entry.TwinValue is null : entry.TwinValue == entry.OriginalValue)
-            && entry.TargetMember is null && entry.TargetText is null;
+            && entry.TargetMember is null && entry.TargetText is null
+            && entry.TargetTypeName is null && entry.TargetCommentOrder is null;
         bool isMoved = entry.Code is "comment.missing" or "comment.drifted" && entry.Reason == "codeMoved"
             && !string.IsNullOrWhiteSpace(entry.TwinPart)
             && !string.IsNullOrWhiteSpace(entry.TargetMember) && entry.TargetMember != "$type"
-            && (entry.TargetText is null || !string.IsNullOrWhiteSpace(entry.TargetText))
+            && (entry.TargetText is null || !string.IsNullOrWhiteSpace(entry.TargetText)
+                || (entry.OriginalValue == "" && entry.TargetText == ""))
+            && (entry.TargetTypeName is null || !string.IsNullOrWhiteSpace(entry.TargetTypeName))
+            && (entry.TargetCommentOrder is null || entry.TargetCommentOrder >= 0)
+            && (entry.OriginalValue?.Length != 0 || (entry.TargetCommentOrder is not null && entry.TargetText is null or ""))
             && (entry.Code == "comment.missing" ? entry.TwinValue is null : entry.TwinValue == entry.OriginalValue);
         bool isAdapted = entry.Reason == "adaptedMinimal" && entry.Code == "comment.changed"
+            && !string.IsNullOrWhiteSpace(entry.OriginalValue)
             && !string.IsNullOrWhiteSpace(entry.TwinPart) && !string.IsNullOrWhiteSpace(entry.TwinValue)
-            && entry.TwinValue != entry.OriginalValue && entry.TargetMember is null && entry.TargetText is null;
+            && entry.TwinValue != entry.OriginalValue && entry.TargetMember is null && entry.TargetText is null
+            && entry.TargetTypeName is null && entry.TargetCommentOrder is null;
         if (!isComment || (!isAbsent && !isMoved && !isAdapted))
         {
             throw new InvalidDataException(
@@ -244,8 +255,34 @@ internal sealed class ReviewedFrameworkDeviationManifest
             throw new InvalidDataException($"Reviewed comment adaptation '{entry.Identity}' is stale or drifted: expected one exact live finding and source comment.");
         }
 
-        if (entry.Reason == "codeMoved" && twin.Comments.Count(comment => comment.Part == entry.TwinPart
-                && comment.Anchor == entry.TargetMember && comment.Text == (entry.TargetText ?? entry.OriginalValue)) != 1)
+        SourceInventory destination = twin;
+        if (entry.Reason == "codeMoved" && entry.TargetTypeName is string targetType)
+        {
+            string part = entry.TwinPart ?? throw new InvalidDataException($"Reviewed comment adaptation '{entry.Identity}' has no destination part.");
+            string root = Path.GetFullPath(twin.Root);
+            string file = Path.GetFullPath(Path.Combine(root, part));
+            string relative = Path.GetRelativePath(root, file);
+            if (Path.IsPathRooted(relative) || relative.Split(Path.DirectorySeparatorChar).Contains("..")
+                || !file.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)
+                || !Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories)
+                    .Any(candidate => Path.GetRelativePath(root, candidate).Replace('\\', '/') == part))
+            {
+                throw new InvalidDataException($"Reviewed comment adaptation '{entry.Identity}' has an invalid destination part.");
+            }
+
+            try
+            {
+                destination = SourceInventoryReader.ReadFiles(root, targetType, new HashSet<string>(), isTwin: true, [file]);
+            }
+            catch (InvalidDataException exception)
+            {
+                throw new InvalidDataException($"Reviewed comment adaptation '{entry.Identity}' destination type '{targetType}' or part '{part}' drifted.", exception);
+            }
+        }
+
+        if (entry.Reason == "codeMoved" && destination.Comments.Count(comment => comment.Part == entry.TwinPart
+                && comment.Anchor == entry.TargetMember && comment.Text == (entry.TargetText ?? entry.OriginalValue)
+                && (entry.TargetCommentOrder is null || comment.Order == entry.TargetCommentOrder)) != 1)
         {
             throw new InvalidDataException($"Reviewed comment adaptation '{entry.Identity}' target member, part or comment drifted.");
         }
@@ -268,6 +305,8 @@ internal sealed class ReviewedFrameworkDeviationManifest
             Rationale = entry.Rationale,
             Reason = entry.Reason,
             TargetMember = entry.TargetMember,
+            TargetTypeName = entry.TargetTypeName,
+            TargetCommentOrder = entry.TargetCommentOrder,
             TargetText = entry.Reason == "codeMoved" ? entry.TargetText ?? entry.OriginalValue : null
         });
         appliedEntries?.Add(entry.Identity);
@@ -435,10 +474,29 @@ internal sealed class ReviewedFrameworkDeviationManifest
             : throw new InvalidDataException($"Framework-adaptation property '{propertyName}' is required.");
     }
 
-    private static string? Optional(JsonElement element, string propertyName) =>
-        element.TryGetProperty(propertyName, out JsonElement property) && property.ValueKind == JsonValueKind.String
+    private static string? Optional(JsonElement element, string propertyName)
+    {
+        if (!element.TryGetProperty(propertyName, out JsonElement property) || property.ValueKind == JsonValueKind.Null)
+        {
+            return null;
+        }
+
+        return property.ValueKind == JsonValueKind.String
             ? property.GetString()
-            : null;
+            : throw new InvalidDataException($"Framework-adaptation property '{propertyName}' must be a string.");
+    }
+
+    private static int? OptionalInt(JsonElement element, string propertyName)
+    {
+        if (!element.TryGetProperty(propertyName, out JsonElement property))
+        {
+            return null;
+        }
+
+        return property.ValueKind == JsonValueKind.Number && property.TryGetInt32(out int value)
+            ? value
+            : throw new InvalidDataException($"Framework-adaptation property '{propertyName}' must be an integer.");
+    }
 
     private sealed record ReviewedFrameworkDeviationEntry(
         string TypeName,
@@ -456,12 +514,15 @@ internal sealed class ReviewedFrameworkDeviationManifest
         string? Reason,
         string? TargetMember,
         string? TargetText,
+        string? TargetTypeName,
+        int? TargetCommentOrder,
         string Rationale)
     {
         public string Identity => $"{TypeName}/{Code}/{Path}";
 
         public bool IsMemberDeviation => Code is "member.missing" or "member.extra" or "member.signature" or "member.partial";
 
-        public bool IsCommentDeviation => Reason is not null || TargetMember is not null || TargetText is not null;
+        public bool IsCommentDeviation => Reason is not null || TargetMember is not null || TargetText is not null
+            || TargetTypeName is not null || TargetCommentOrder is not null;
     }
 }
