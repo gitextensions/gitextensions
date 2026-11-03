@@ -12,6 +12,7 @@ partial class FileStatusList
     /// </summary>
     private Dictionary<string, bool> _rememberedExpansionStates = [];
     private string? _rememberedExpansionStatesWorkingDir;
+    private string? _displayedNodesWorkingDir;
     private bool _isExpansionStateOfDisplayedNodesRemembered;
 
     private bool IsExpansionStateRemembered => _filter is null && !FindInCommitFilesGitGrepActive;
@@ -33,19 +34,18 @@ partial class FileStatusList
         Dictionary<string, bool> expansionStates = [];
         AddExpansionStates(FileStatusListView.Nodes, parentKey: "");
         _rememberedExpansionStates = expansionStates;
-        _rememberedExpansionStatesWorkingDir = GetWorkingDir();
+
+        // Not the current working dir, which already is the new one if the repo has just been switched
+        _rememberedExpansionStatesWorkingDir = _displayedNodesWorkingDir;
 
         return;
 
         void AddExpansionStates(TreeNodeCollection nodes, string parentKey)
         {
-            foreach (TreeNode node in nodes)
+            foreach ((TreeNode node, string key) in GetExpandableNodes(nodes, parentKey))
             {
-                if (node.Nodes.Count > 0 && GetExpansionKey(node, parentKey) is string key)
-                {
-                    expansionStates[key] = node.IsExpanded;
-                    AddExpansionStates(node.Nodes, key);
-                }
+                expansionStates[key] = node.IsExpanded;
+                AddExpansionStates(node.Nodes, key);
             }
         }
     }
@@ -56,13 +56,14 @@ partial class FileStatusList
     /// </summary>
     private void RestoreExpansionStates()
     {
+        _displayedNodesWorkingDir = GetWorkingDir();
         _isExpansionStateOfDisplayedNodesRemembered = IsExpansionStateRemembered;
         if (!_isExpansionStateOfDisplayedNodesRemembered || _rememberedExpansionStates.Count == 0)
         {
             return;
         }
 
-        if (_rememberedExpansionStatesWorkingDir != GetWorkingDir())
+        if (_rememberedExpansionStatesWorkingDir != _displayedNodesWorkingDir)
         {
             _rememberedExpansionStates = [];
             return;
@@ -74,13 +75,8 @@ partial class FileStatusList
 
         void RestoreExpansionStates(TreeNodeCollection nodes, string parentKey)
         {
-            foreach (TreeNode node in nodes)
+            foreach ((TreeNode node, string key) in GetExpandableNodes(nodes, parentKey))
             {
-                if (node.Nodes.Count == 0 || GetExpansionKey(node, parentKey) is not string key)
-                {
-                    continue;
-                }
-
                 if (_rememberedExpansionStates.TryGetValue(key, out bool isExpanded) && isExpanded != node.IsExpanded)
                 {
                     if (isExpanded)
@@ -101,17 +97,33 @@ partial class FileStatusList
 
     private string? GetWorkingDir() => TryGetUICommandsDirect(out IGitUICommands? commands) ? commands.Module.WorkingDir : null;
 
-    private static string? GetExpansionKey(TreeNode node, string parentKey)
+    /// <summary>
+    ///  Gets the nodes with children and their keys.
+    ///  Siblings with the same tag, e.g. the diff groups "BASE to A" and "BASE to B", are distinguished by their order.
+    /// </summary>
+    private static IEnumerable<(TreeNode Node, string Key)> GetExpandableNodes(TreeNodeCollection nodes, string parentKey)
     {
-        string? key = node.Tag switch
+        Dictionary<string, int> occurrences = [];
+        foreach (TreeNode node in nodes)
         {
-            RelativePath path => $"/{path.Value}",
-            GroupKey groupKey => $":{groupKey.Value}",
-            GitRevision revision => $"@{revision.ObjectId}",
-            null => "@",
-            _ => null
-        };
+            string? key = node.Nodes.Count == 0
+                ? null
+                : node.Tag switch
+                {
+                    RelativePath path => $"/{path.Value}",
+                    GroupKey groupKey => $":{groupKey.Value}",
+                    GitRevision revision => $"@{revision.ObjectId}",
+                    null => "@",
+                    _ => null
+                };
+            if (key is null)
+            {
+                continue;
+            }
 
-        return key is null ? null : $"{parentKey}|{key}";
+            int occurrence = occurrences.GetValueOrDefault(key);
+            occurrences[key] = occurrence + 1;
+            yield return (node, occurrence == 0 ? $"{parentKey}|{key}" : $"{parentKey}|{key}#{occurrence}");
+        }
     }
 }

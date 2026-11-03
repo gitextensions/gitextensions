@@ -13,15 +13,17 @@ public class FileStatusListTests
     // Created once for each test
     private Form _form = null!;
     private FileStatusList _fileStatusList = null!;
+    private Func<IGitModule, GitUICommands> _createCommands = null!;
+    private GitUICommands _commands = null!;
 
     [SetUp]
     public void SetUp()
     {
         ServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
-        IGitModule module = Substitute.For<IGitModule>();
-        GitUICommands commands = new(serviceContainer, module);
+        _createCommands = module => new(serviceContainer, module);
+        _commands = _createCommands(Substitute.For<IGitModule>());
         IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
-        uiCommandsSource.UICommands.Returns(x => commands);
+        uiCommandsSource.UICommands.Returns(x => _commands);
 
         _form = new Form();
         _fileStatusList = new FileStatusList
@@ -340,7 +342,30 @@ public class FileStatusListTests
         GetFolder("b").IsExpanded.Should().BeFalse();
         GetFolder("c").IsExpanded.Should().BeTrue();
 
+        return;
+
         TreeNode GetFolder(string path) => treeView.Nodes.Cast<TreeNode>().Single(node => node.Tag is RelativePath folder && folder.Value == path);
+    }
+
+    [Test]
+    public void SetDiffs_should_not_apply_the_expanded_state_of_the_folders_to_another_repo()
+    {
+        MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;
+        GitRevision firstRev = new(ObjectId.Random());
+        GitRevision secondRev = new(ObjectId.Random());
+        GitItemStatus[] items = [new("a/1"), new("a/2"), new("b/3"), new("b/4")];
+        _commands.Module.WorkingDir.Returns("repo1");
+
+        _fileStatusList.SetDiffs(firstRev, secondRev, items);
+        treeView.Nodes[1].Collapse();
+
+        // UICommands are replaced before the list is refreshed for the other repo
+        IGitModule otherModule = Substitute.For<IGitModule>();
+        otherModule.WorkingDir.Returns("repo2");
+        _commands = _createCommands(otherModule);
+        _fileStatusList.SetDiffs(firstRev, secondRev, items);
+
+        treeView.Nodes.Cast<TreeNode>().Should().OnlyContain(node => node.IsExpanded);
     }
 
     private static void CheckStoreFilter(Color expectedColor, string expectedRegex, FileStatusList.TestAccessor accessor)
