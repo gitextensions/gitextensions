@@ -293,6 +293,7 @@ internal static class CommentInventoryComparer
         {
             Category = "comments",
             Code = "comment.changed",
+            TwinPart = twin.Part,
             Path = GetPath(original),
             Message = $"Comment at {original.Part}:{original.Line} was altered at {twin.Part}:{twin.Line}.",
             OriginalValue = original.Text,

@@ -8,6 +8,65 @@ namespace GitExtensions.ParityInventory.Tests;
 [TestFixture]
 public sealed class ReviewedCommentDeviationTests
 {
+    [TestCase("valid")]
+    [TestCase("sourceText")]
+    [TestCase("twinText")]
+    [TestCase("sourcePart")]
+    [TestCase("twinPart")]
+    [TestCase("restored")]
+    [TestCase("missingTwinText")]
+    [TestCase("missingOriginalText")]
+    [TestCase("wrongReason")]
+    [TestCase("decoyPart")]
+    public void Run_should_exactly_pin_minimally_adapted_comments(string change)
+    {
+        using InventoryFixture fixture = new();
+        const string original = "namespace Sample; class Widget { void Work() {\n// The WinForms control owns the native handle.\nSave(); } }";
+        const string adapted = "The Avalonia control owns the visual.";
+        fixture.WriteOriginal("Widget.cs", original);
+        fixture.WriteTwin("Widget.cs", original.Replace("The WinForms control owns the native handle.", adapted, StringComparison.Ordinal));
+        FunctionalFinding finding = fixture.Run().Findings.Single(item => item.Code == "comment.changed");
+        Dictionary<string, object?> pin = new()
+        {
+            ["typeName"] = "Sample.Widget", ["category"] = "comments", ["code"] = finding.Code,
+            ["path"] = finding.Path, ["originalPart"] = "Widget.cs", ["originalValue"] = finding.OriginalValue,
+            ["twinPart"] = "Widget.cs", ["twinValue"] = finding.TwinValue,
+            ["reason"] = "adaptedMinimal", ["rationale"] = "Only the false framework ownership facts change."
+        };
+        switch (change)
+        {
+            case "sourceText": pin["originalValue"] = "Changed original."; break;
+            case "twinText": pin["twinValue"] = "Changed twin."; break;
+            case "sourcePart": pin["originalPart"] = "Other.cs"; break;
+            case "twinPart": pin["twinPart"] = "Other.cs"; break;
+            case "restored": fixture.WriteTwin("Widget.cs", original); break;
+            case "missingTwinText": pin.Remove("twinValue"); break;
+            case "missingOriginalText": pin.Remove("originalValue"); break;
+            case "wrongReason": pin["reason"] = "codeAbsent"; break;
+            case "decoyPart":
+                fixture.WriteTwin("Other.cs", "namespace Sample; partial class Widget { void Other() {\n// " + adapted + "\n} }");
+                pin["twinPart"] = "Other.cs";
+                break;
+        }
+
+        WritePin(fixture, pin);
+        if (change != "valid")
+        {
+            Action action = () => fixture.Run(useFrameworkAdaptations: true);
+            action.Should().Throw<InvalidDataException>();
+            return;
+        }
+
+        InventoryReport report = fixture.Run(useFrameworkAdaptations: true);
+        report.Findings.Should().NotContain(item => item.Code == "comment.changed");
+        AcceptedFrameworkDeviation accepted = report.AcceptedFrameworkDeviations.Should().ContainSingle().Subject;
+        accepted.Reason.Should().Be("adaptedMinimal");
+        accepted.OriginalValue.Should().Be(finding.OriginalValue);
+        accepted.TwinValue.Should().Be(adapted);
+        accepted.OriginalPart.Should().Be("Widget.cs");
+        accepted.TwinPart.Should().Be("Widget.cs");
+    }
+
     [TestCase("codeAbsent")]
     [TestCase("codeMoved")]
     [TestCase("adaptedMoved")]

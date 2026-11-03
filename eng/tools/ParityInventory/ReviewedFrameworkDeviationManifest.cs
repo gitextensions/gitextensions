@@ -201,25 +201,28 @@ internal sealed class ReviewedFrameworkDeviationManifest
     private static void ValidateCommentEntry(ReviewedFrameworkDeviationEntry entry)
     {
         bool isComment = entry.Category == "comments"
-            && entry.Code is "comment.missing" or "comment.drifted"
+            && entry.Code is "comment.missing" or "comment.drifted" or "comment.changed"
             && entry.Path.StartsWith("comment/", StringComparison.Ordinal)
             && !string.IsNullOrWhiteSpace(entry.OriginalPart)
             && !string.IsNullOrWhiteSpace(entry.OriginalValue)
             && entry.OriginalAccessibility is null && entry.OriginalSignature is null
             && entry.TwinAccessibility is null && entry.TwinSignature is null;
-        bool isAbsent = entry.Reason == "codeAbsent"
+        bool isAbsent = entry.Code is "comment.missing" or "comment.drifted" && entry.Reason == "codeAbsent"
             && entry.TwinPart is null
             && (entry.Code == "comment.missing" ? entry.TwinValue is null : entry.TwinValue == entry.OriginalValue)
             && entry.TargetMember is null && entry.TargetText is null;
-        bool isMoved = entry.Reason == "codeMoved"
+        bool isMoved = entry.Code is "comment.missing" or "comment.drifted" && entry.Reason == "codeMoved"
             && !string.IsNullOrWhiteSpace(entry.TwinPart)
             && !string.IsNullOrWhiteSpace(entry.TargetMember) && entry.TargetMember != "$type"
             && (entry.TargetText is null || !string.IsNullOrWhiteSpace(entry.TargetText))
             && (entry.Code == "comment.missing" ? entry.TwinValue is null : entry.TwinValue == entry.OriginalValue);
-        if (!isComment || (!isAbsent && !isMoved))
+        bool isAdapted = entry.Reason == "adaptedMinimal" && entry.Code == "comment.changed"
+            && !string.IsNullOrWhiteSpace(entry.TwinPart) && !string.IsNullOrWhiteSpace(entry.TwinValue)
+            && entry.TwinValue != entry.OriginalValue && entry.TargetMember is null && entry.TargetText is null;
+        if (!isComment || (!isAbsent && !isMoved && !isAdapted))
         {
             throw new InvalidDataException(
-                $"Reviewed comment adaptation '{entry.Identity}' must pin an exact handwritten comment with reason codeAbsent or codeMoved and its destination.");
+                $"Reviewed comment adaptation '{entry.Identity}' must pin an exact handwritten comment: codeAbsent/codeMoved with its destination, or comment.changed/adaptedMinimal with both texts and parts.");
         }
     }
 
@@ -245,6 +248,11 @@ internal sealed class ReviewedFrameworkDeviationManifest
                 && comment.Anchor == entry.TargetMember && comment.Text == (entry.TargetText ?? entry.OriginalValue)) != 1)
         {
             throw new InvalidDataException($"Reviewed comment adaptation '{entry.Identity}' target member, part or comment drifted.");
+        }
+
+        if (entry.Reason == "adaptedMinimal" && matches[0].TwinPart != entry.TwinPart)
+        {
+            throw new InvalidDataException($"Reviewed comment adaptation '{entry.Identity}' twin part drifted.");
         }
 
         findings.Remove(matches[0]);

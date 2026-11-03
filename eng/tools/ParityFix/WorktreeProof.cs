@@ -93,11 +93,13 @@ internal static class WorktreeProof
 
             foreach ((string identity, JsonElement entry) in newEntries.Where(pair => !oldEntries.ContainsKey(pair.Key)))
             {
+                bool relocated = GetString(entry, "code") is "comment.missing" or "comment.drifted"
+                    && GetString(entry, "reason") is "codeAbsent" or "codeMoved";
+                bool adapted = GetString(entry, "code") == "comment.changed" && GetString(entry, "reason") == "adaptedMinimal";
                 if (GetString(entry, "category") != "comments"
-                    || GetString(entry, "code") is not ("comment.missing" or "comment.drifted")
-                    || GetString(entry, "reason") is not ("codeAbsent" or "codeMoved"))
+                    || (!relocated && !adapted))
                 {
-                    return $"New framework adaptation '{identity}' is not an absent or moved comment pin.";
+                    return $"New framework adaptation '{identity}' is not an absent or moved comment pin or an exact adaptedMinimal comment.changed pin.";
                 }
             }
 

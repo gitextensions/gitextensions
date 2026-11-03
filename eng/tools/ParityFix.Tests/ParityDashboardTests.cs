@@ -44,6 +44,7 @@ public sealed class ParityDashboardTests
                     structural = 0,
                     dependent = 0,
                     acceptedComments = 0,
+                    acceptedAdaptedMinimal = 0,
                     complete = 0,
                     allButMacOs = scenario == "ledger" && index == rows.Length - 1 ? 1 : 0
                 });
@@ -63,6 +64,7 @@ public sealed class ParityDashboardTests
                         new { category = "comments", reason = "codeAbsent" },
                         new { category = "comments", reason = "codeMoved" },
                         new { category = "comments", reason = "codeMoved" },
+                        new { category = "comments", reason = "adaptedMinimal" },
                         new { category = "comments", reason = "generatedDesigner" },
                         new { category = "members", reason = "codeAbsent" }
                     }
@@ -96,7 +98,7 @@ public sealed class ParityDashboardTests
                 string dashboard = await File.ReadAllTextAsync(Path.Combine(root, "dashboard.md"));
                 dashboard.Should().Contain("Components complete: 0 of 0.");
                 dashboard.Should().Contain(scenario == "accepted"
-                    ? "Accepted handwritten comment findings: 3** (codeAbsent 1, codeMoved 2); accepted deviations, not closed."
+                    ? "Accepted handwritten comment findings: 4** (codeAbsent 1, codeMoved 2, adaptedMinimal 1); accepted deviations, not closed."
                     : "Accepted handwritten comment findings: 0**");
                 if (expected.Length == 0)
                 {
@@ -109,7 +111,8 @@ public sealed class ParityDashboardTests
 
                 File.ReadAllLines(Path.Combine(root, "history.jsonl")).Should().HaveCount(expectedRows);
                 using JsonDocument last = JsonDocument.Parse(File.ReadAllLines(Path.Combine(root, "history.jsonl"))[^1]);
-                last.RootElement.GetProperty("acceptedComments").GetInt32().Should().Be(scenario == "accepted" ? 3 : 0);
+                last.RootElement.GetProperty("acceptedComments").GetInt32().Should().Be(scenario == "accepted" ? 4 : 0);
+                last.RootElement.GetProperty("acceptedAdaptedMinimal").GetInt32().Should().Be(scenario == "accepted" ? 1 : 0);
             }
         }
         finally

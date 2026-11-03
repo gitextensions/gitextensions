@@ -231,6 +231,9 @@ internal sealed record InventorySummary
 // parity-scaffolding: Describes one concrete functional gap between original and twin.
 internal sealed record FunctionalFinding
 {
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? TwinPart { get; init; }
+
     public required string Category { get; init; }
 
     public required string Code { get; init; }
