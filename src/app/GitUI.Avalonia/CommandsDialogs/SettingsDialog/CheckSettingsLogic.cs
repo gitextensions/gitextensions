@@ -110,7 +110,7 @@ public class CheckSettingsLogic(CommonLogic commonLogic)
             }
             catch (Exception)
             {
-                // Finding Git is deliberately best-effort.
+                // Ignore exception, we are trying to find a way to execute git
             }
         }
 

@@ -202,6 +202,8 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
 
         if (shouldClearCache)
         {
+            // Clear the cache directly instead of through a throwaway control, which would never be
+            // disposed and would keep listening to the cache
             AvatarService.UpdateAvatarProvider();
             ThreadHelper.FileAndForget(AvatarService.CacheCleaner.ClearCacheAsync);
         }
