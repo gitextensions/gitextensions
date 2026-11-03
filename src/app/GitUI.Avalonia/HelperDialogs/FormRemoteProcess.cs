@@ -4,8 +4,6 @@ using GitExtensions.Shims.WinForms;
 
 namespace GitUI.HelperDialogs;
 
-// OpenSSH handles host-key confirmation and authentication through the existing process input;
-// PuTTY-only registry and key-agent recovery is not part of the cross-platform application.
 public class FormRemoteProcess : FormProcess
 {
     public FormRemoteProcess(IGitUICommands commands, ArgumentString arguments)
@@ -13,6 +11,7 @@ public class FormRemoteProcess : FormProcess
     {
     }
 
+    // OpenSSH handles host-key confirmation and authentication through the existing process input.
     internal FormRemoteProcess(IGitUICommands commands, ArgumentString arguments, bool useDialogSettings)
         : base(commands, arguments, commands.Module.WorkingDir, input: null, useDialogSettings)
     {

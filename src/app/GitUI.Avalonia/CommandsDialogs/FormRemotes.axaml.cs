@@ -134,6 +134,7 @@ Inactive remote is completely invisible to git.");
 
     private void ApplySourceAutoSize()
     {
+        // Set the minimum height of the color button after initialization
         WinFormsAutoSizeContentControl.Attach(btnRemoteColor, 14, 25);
         WinFormsAutoSizeContentControl.Attach(btnRemoteColorReset, 14, 25);
     }
@@ -439,7 +440,7 @@ Inactive remote is completely invisible to git.");
 
     private void application_Idle(object? sender, EventArgs e)
     {
-        // Avalonia's one-shot runtime-load hook is the Application.Idle unwire equivalent.
+        // we need this event only once, so use the runtime-load hook
 
         // make sure only single load option is given
         if (PreselectRemoteOnLoad is not null && PreselectLocalOnLoad is not null)

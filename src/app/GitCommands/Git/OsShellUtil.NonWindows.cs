@@ -18,24 +18,24 @@ public static class OsShellUtil
         => Launch(filePath, OsShellLaunchKind.Open);
 
     /// <summary>
-    ///  Let the user choose an application to open a file.
+    ///  Let the user chose an application to open a file on Linux; use the associated application elsewhere.
     /// </summary>
     /// <param name="filePath">Pathname of the file to open.</param>
     public static void OpenAs(string filePath)
-        => Launch(filePath, OsShellLaunchKind.OpenAs);
+        => Launch(filePath, OsShellLaunchKind.OpenAs); // filePath must not be quoted
 
     /// <summary>
-    ///  Opens the directory containing the specified file.
+    ///  Opens the directory containing the specified file in the platform file manager.
     /// </summary>
-    /// <param name="filePath">The full path of the file to reveal.</param>
+    /// <param name="filePath">The full path of the file.</param>
     public static void SelectPathInFileExplorer(string filePath)
         => Launch(filePath, OsShellLaunchKind.ShowInDirectory);
 
     /// <summary>
-    ///  Opens the platform file manager at the specified directory.
+    ///  Opens the platform file manager with the specified path.
     /// </summary>
-    /// <param name="arguments">The directory to open.</param>
-    /// <param name="quote">Retained for source compatibility; portable launchers receive paths without command-line quoting.</param>
+    /// <param name="arguments">The path to pass to the platform file manager.</param>
+    /// <param name="quote">Whether to quote the <paramref name="arguments"/> (ignored by the portable launcher).</param>
     public static void OpenWithFileExplorer(string arguments, bool quote = true)
         => Launch(arguments, OsShellLaunchKind.OpenDirectory);
 
