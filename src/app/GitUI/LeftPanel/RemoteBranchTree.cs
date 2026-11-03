@@ -11,11 +11,19 @@ namespace GitUI.LeftPanel;
 internal sealed class RemoteBranchTree : BaseRefTree
 {
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
+    private Dictionary<string, Remote> _remoteByName = [];
 
     public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, IAheadBehindDataProvider? aheadBehindDataProvider, ICheckRefs refsSource)
         : base(treeNode, uiCommands, refsSource, RefsFilter.Remotes)
     {
         _aheadBehindDataProvider = aheadBehindDataProvider;
+    }
+
+    protected override async Task PreloadAsync(CancellationToken token)
+    {
+        IReadOnlyList<Remote> remotes = await Module.GetRemotesAsync();
+        token.ThrowIfCancellationRequested();
+        _remoteByName = remotes.ToDictionary(r => r.Name);
     }
 
     protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
@@ -26,7 +34,7 @@ internal sealed class RemoteBranchTree : BaseRefTree
         IDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData()?.DistinctBy(r => r.Value.RemoteRef).ToDictionary(r => r.Value.RemoteRef, r => r.Value);
 
         List<RemoteRepoNode> enabledRemoteRepoNodes = [];
-        Dictionary<string, Remote> remoteByName = ThreadHelper.JoinableTaskFactory.Run(Module.GetRemotesAsync).ToDictionary(r => r.Name);
+        Dictionary<string, Remote> remoteByName = _remoteByName;
 
         ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
 

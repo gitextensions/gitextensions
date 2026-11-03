@@ -1,5 +1,4 @@
 ﻿using GitCommands.Config;
-using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using Microsoft.VisualStudio.Threading;
 
@@ -98,9 +97,12 @@ public class CustomDiffMergeToolCache
 
         // The sections to parse in the text has a 'header', then break parsing at first non match
 
-        foreach (string l in output.LazySplit('\n'))
+        ReadOnlySpan<char> outputAsSpan = output.AsSpan();
+        Span<Range> splitDestination = stackalloc Range[2];
+        foreach (Range range in outputAsSpan.Split('\n'))
         {
-            if (l == "The following tools are valid, but not currently available:")
+            ReadOnlySpan<char> l = outputAsSpan[range];
+            if (l is "The following tools are valid, but not currently available:")
             {
                 // No more usable tools
                 break;
@@ -113,17 +115,22 @@ public class CustomDiffMergeToolCache
 
             // two tabs, then tool name, cmd (if split in 3) in second
             // cmd is unreliable for diff and not needed but could be used for mergetool special handling
-            string[] delimit = [" ", ".cmd"];
-            string[] tool = l[2..].Split(delimit, 2, StringSplitOptions.None);
-            if (tool.Length == 0)
+            ReadOnlySpan<char> withoutTabs = l[2..];
+            int rangesWritten = withoutTabs.SplitAny(splitDestination, [" ", ".cmd"], StringSplitOptions.RemoveEmptyEntries);
+            if (rangesWritten == 0)
             {
                 continue;
             }
 
             // Ignore (known) tools that must run in a terminal
-            string[] ignoredTools = ["vimdiff", "vimdiff1", "vimdiff2", "vimdiff3"];
-            string toolName = tool[0];
-            if (!string.IsNullOrWhiteSpace(toolName) && !tools.Contains(toolName) && !ignoredTools.Contains(toolName))
+            ReadOnlySpan<char> toolNameSpan = withoutTabs[splitDestination[0]];
+            if (toolNameSpan is "vimdiff" or "vimdiff1" or "vimdiff2" or "vimdiff3")
+            {
+                continue;
+            }
+
+            string toolName = new(toolNameSpan);
+            if (!tools.Contains(toolName))
             {
                 tools.Add(toolName);
             }
