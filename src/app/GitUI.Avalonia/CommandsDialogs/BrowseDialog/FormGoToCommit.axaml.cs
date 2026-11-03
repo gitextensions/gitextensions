@@ -55,6 +55,11 @@ public sealed partial class FormGoToCommit : GitModuleForm
         base.OnClosed(e);
     }
 
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="sender">The control whose managed resources should be disposed.</param>
+    /// <param name="e">Event data.</param>
     private void FormGoToCommit_Closed(object sender, EventArgs e)
     {
         _branchesLoader.Cancel();
@@ -163,9 +168,9 @@ public sealed partial class FormGoToCommit : GitModuleForm
     ///  Updates <see cref="_selectedRevision"/> from the control which supplies the revision to go to.
     /// </summary>
     /// <param name="enteredControl">
-    ///  The control raising the focus event. Editable Avalonia combo boxes can route the event from
-    ///  a child, so recognise the revision-supplying control explicitly rather than moving focus
-    ///  away from it below. Pass <see langword="null"/> outside of that event.
+    ///  The control raising <see cref="InputElement.GotFocus"/>. Such a control may report focus through
+    ///  a child, so it has to be recognised explicitly; otherwise the focus
+    ///  would be moved away from it below. Pass <see langword="null"/> outside of that event.
     /// </param>
     private void SetSelectedRevisionByFocusedControl(Avalonia.Controls.Control? enteredControl = null)
     {

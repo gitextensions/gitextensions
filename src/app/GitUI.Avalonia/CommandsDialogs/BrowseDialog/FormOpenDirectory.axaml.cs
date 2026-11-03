@@ -54,6 +54,7 @@ public partial class FormOpenDirectory : GitExtensionsForm
     {
         base.OnRuntimeLoad(e);
 
+        // scale up for hi DPI
         // WinForms records whole-window minimum/maximum sizes. Avalonia sizes the client area,
         // so the AXAML bounds retain the corresponding 434..784 by 77 logical-DIP range.
         MinWidth = 434;

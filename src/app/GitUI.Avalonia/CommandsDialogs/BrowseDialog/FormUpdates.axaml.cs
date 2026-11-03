@@ -101,7 +101,7 @@ public sealed partial class FormUpdates : GitExtensionsDialog
 
     private bool ProcessCmdKey(WinFormsShims.Keys keyData)
     {
-        // We need to override ProcessCmdKey as mnemonics on labels do not behave the same as buttons.
+        // We need to override ProcessCmdKey as mnemonics on labels do not behave the same as buttons
         if (keyData == (WinFormsShims.Keys.Alt | WinFormsShims.Keys.L))
         {
             LaunchUrl(LaunchType.ChangeLog);
@@ -132,10 +132,15 @@ public sealed partial class FormUpdates : GitExtensionsDialog
             }
             catch (OperationCanceledException)
             {
+                // OperationCanceledException is thrown
+                // if a UI component gets disposed or the UI thread EXITs while a 'check for updates' thread
+                // is in the middle of its run... Ignore it, likely the user has closed the app
             }
             catch (HttpRequestException exception)
                 when (exception.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.TooManyRequests)
             {
+                // GitHub rate limiting - suppress the exception and do not show it to the user.
+                // Nothing we can do here, ignore it.
                 await DisplayFailureAsync(exception, suppressMessage: true, cancellationToken);
             }
             catch (Exception exception)

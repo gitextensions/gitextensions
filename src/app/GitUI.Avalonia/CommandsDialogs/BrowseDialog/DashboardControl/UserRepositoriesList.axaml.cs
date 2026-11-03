@@ -586,6 +586,7 @@ public partial class UserRepositoriesList : TranslatedControl
                     FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(_secondaryFont.Size),
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 },
+                //// NB: we can add a 3rd row as well: { repository.Repository.Repo.Category, Brushes.Gray, Background, _secondaryFont }
             },
         };
         row.Children.Add(text);
@@ -765,11 +766,6 @@ public partial class UserRepositoriesList : TranslatedControl
             e.Cancel = true;
             return;
         }
-
-        // address a bug in context menu implementation
-
-        // Avalonia menu items share their owning context menu instead of WinForms SourceControl.
-        // Keep the clicked container so nested category actions resolve the same repository.
     }
 
     private Control listView1_DrawItem(object? item)
@@ -811,6 +807,12 @@ public partial class UserRepositoriesList : TranslatedControl
         listView1.SelectedItem = item;
         if (e.GetCurrentPoint(container).Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
         {
+            // address a bug in context menu implementation
+            // nested toolstrip items can't get source control
+            // http://stackoverflow.com/questions/30534417/
+
+            // Avalonia menu items share their owning context menu instead of WinForms SourceControl.
+            // Keep the clicked container so nested category actions resolve the same repository.
             _rightClickedItem = container;
         }
     }
