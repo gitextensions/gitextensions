@@ -189,14 +189,15 @@ public sealed class CommitMessageManager : ICommitMessageManager
     ///  Gets the comment prefix configured via "core.commentString" or "core.commentChar".
     /// </summary>
     /// <remarks>
-    ///  Both settings are aliases in Git 2.45+ where the last one in the config wins, while older Git versions only know "core.commentChar".
+    ///  Both settings are aliases in Git 2.45+ where the last one in the config wins.
     ///  The effective settings do not tell which one comes last, so "core.commentString" takes precedence.
+    ///  Older Git versions ignore "core.commentString", so it is only read if the Git version of the module supports it.
     ///  "auto" lets git pick a character which does not occur in the message, which cannot be reproduced here, so it is treated as not set.
     /// </remarks>
     /// <returns>The configured comment prefix; <see langword="null"/> if not set or "auto".</returns>
     public static string? GetConfiguredCommentString(IGitModule module)
     {
-        string commentString = module.GetEffectiveSetting("core.commentstring");
+        string? commentString = module.GitVersion.SupportCommentString ? module.GetEffectiveSetting("core.commentstring") : null;
         if (string.IsNullOrEmpty(commentString))
         {
             commentString = module.GetEffectiveSetting("core.commentchar");

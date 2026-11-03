@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using System.Text;
 using CommonTestUtils;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests;
@@ -421,26 +422,53 @@ public class CommitMessageManagerTests
     }
 
     // null: not configured - the git config of the machine is not queried in order to be independent from it
-    [TestCase(null, "# comment", false)]
-    [TestCase(null, "#", false)]
-    [TestCase(null, "#123 issue", true)]
-    [TestCase("auto", "#comment", false)]
-    [TestCase("auto", "#123 issue", true)]
-    [TestCase(";", "; comment", false)]
-    [TestCase(";", "#123 issue", true)]
-    [TestCase(";", "# no comment", true)]
-    public void FormatCommitMessage_should_skip_template_comments_per_core_commentChar(string? commentChar, string line, bool expectedKept)
+    [TestCase(null, null, "# comment", false)]
+    [TestCase(null, null, "#", false)]
+    [TestCase(null, null, "#123 issue", true)]
+    [TestCase("auto", null, "#comment", false)]
+    [TestCase("auto", null, "#123 issue", true)]
+    [TestCase(";", null, "; comment", false)]
+    [TestCase(";", null, "#123 issue", true)]
+    [TestCase(";", null, "# no comment", true)]
+    [TestCase(null, "//", "// comment", false)]
+    [TestCase(null, "//", "# no comment", true)]
+    [TestCase(";", "//", "; no comment", true)]
+    public void FormatCommitMessage_should_skip_template_comments_per_core_commentChar(string? commentChar, string? commentStringSetting, string line, bool expectedKept)
     {
-        string? commentString = null;
+        if (commentStringSetting is not null && !_referenceRepository.Module.GitVersion.SupportCommentString)
+        {
+            Assert.Ignore("core.commentString requires Git 2.45");
+        }
+
         if (commentChar is not null)
         {
             _referenceRepository.Module.SetSetting("core.commentchar", commentChar);
-            commentString = CommitMessageManager.GetConfiguredCommentString(_referenceRepository.Module);
         }
+
+        if (commentStringSetting is not null)
+        {
+            _referenceRepository.Module.SetSetting("core.commentstring", commentStringSetting);
+        }
+
+        string? commentString = commentChar is null && commentStringSetting is null
+            ? null
+            : CommitMessageManager.GetConfiguredCommentString(_referenceRepository.Module);
 
         string nl = Environment.NewLine;
         CommitMessageManager.FormatCommitMessage($"subject\n{line}", usingCommitTemplate: true, ensureCommitMessageSecondLineEmpty: false, commentString)
             .Should().Be(expectedKept ? $"subject{nl}{line}{nl}" : $"subject{nl}");
+    }
+
+    [TestCase(true, "//")]
+    [TestCase(false, ";")]
+    public void GetConfiguredCommentString_should_ignore_core_commentString_if_git_does_not_support_it(bool supportCommentString, string expected)
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GitVersion.SupportCommentString.Returns(supportCommentString);
+        module.GetEffectiveSetting("core.commentstring").Returns("//");
+        module.GetEffectiveSetting("core.commentchar").Returns(";");
+
+        CommitMessageManager.GetConfiguredCommentString(module).Should().Be(expected);
     }
 
     public class FormatCommitMessageTestData
