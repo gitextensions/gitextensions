@@ -26,7 +26,8 @@ public sealed class ChainedAvatarProvider : IAvatarProvider
     public bool PerformsIo => _avatarProviders.Length != 0 && _avatarProviders.Any(p => p.PerformsIo);
 
     /// <summary>
-    /// Gets an avatar image from multiple avatar providers and returns the first hit.
+    /// Gets an avatar images from multiple avatar providers and returns the first hit.
+    /// The providers are queried in the same order that was given during construction.
     /// </summary>
     public async Task<byte[]?> GetAvatarAsync(string email, string? name, int imageSize)
     {
@@ -40,6 +41,7 @@ public sealed class ChainedAvatarProvider : IAvatarProvider
             }
             catch
             {
+                // ignore and continue with next provider
             }
 
             if (avatar is not null)

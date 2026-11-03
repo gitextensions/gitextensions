@@ -152,6 +152,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
                 credentials = new BuildServerCredentials { BuildServerCredentialsType = BuildServerCredentialsType.Guest };
             }
 
+            // Continue to the prompt so the user can reset the credentials.
             IBuildServerCredentials? enteredCredentials = ThreadHelper.JoinableTaskFactory.Run(
                 () => ShowBuildServerCredentialsFormAsync(buildServerAdapter.UniqueKey, credentials));
             if (enteredCredentials is null)
@@ -291,6 +292,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         }
         catch (InvalidOperationException ex)
         {
+            // Invalid arguments, do not return a build server adapter
             Debug.Write(ex);
             return null;
         }

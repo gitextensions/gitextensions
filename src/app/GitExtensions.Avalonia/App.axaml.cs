@@ -32,10 +32,16 @@ public partial class App : Application
         {
             // The JoinableTaskContext must capture Avalonia's UI SynchronizationContext,
             // which is established here by installing the context before constructing it.
+            // This context installed to obtain UI synchronization context only
             AvaloniaSynchronizationContext.InstallIfNeeded();
+
+            // Store the shared JoinableTaskContext
             ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
             ShimServices.Install(desktop);
+
+            // If you want to suppress the BugReportInvoker when debugging and exit quickly, uncomment the condition:
+            ////if (!Debugger.IsAttached)
             AppDomain.CurrentDomain.UnhandledException += (_, e) => ReportUnhandledException(
                 e.ExceptionObject as Exception ?? new InvalidOperationException($"Unhandled object: {e.ExceptionObject}"),
                 e.IsTerminating);
@@ -60,6 +66,10 @@ public partial class App : Application
                 BugReportInvoker.IgnoreFailedToLoadAnAssembly = true;
                 AppSettings.SaveSettings();
             };
+
+            // NOTE we perform the rest of the application's startup in another method to defer
+            // the JIT processing more types than required to configure native bug reporting.
+            // In this way, there's more chance we can handle startup exceptions correctly.
             Dispatcher.UIThread.Post(() => RunStartup(desktop, commands, args));
         }
 
@@ -92,6 +102,7 @@ public partial class App : Application
             }
             else
             {
+                // if we are here args.Length > 1
                 RunCommand(desktop, commands, args);
             }
 
@@ -106,6 +117,7 @@ public partial class App : Application
         }
         catch (Exception exception)
         {
+            // TODO: remove catch-all
             ReportUnhandledException(exception, isTerminating: false);
             desktop.Shutdown(-1);
         }
@@ -113,6 +125,8 @@ public partial class App : Application
 
     private static void RunCommand(IClassicDesktopStyleApplicationLifetime desktop, GitUICommands commands, string[] args)
     {
+        // Avoid replacing the ExitCode eventually set while parsing arguments,
+        // i.e. assume -1 and afterwards, only set it to 0 if no error is indicated.
         int exitCode = -1;
         try
         {
@@ -173,6 +187,11 @@ public partial class App : Application
                 {
                     workingDir = Path.GetFullPath(workingDir);
                 }
+
+                // Do not add this working directory to the recent repositories. It is a nice feature, but it
+                // also increases the startup time
+                ////if (Module.ValidWorkingDir())
+                ////   Repositories.RepositoryHistory.AddMostRecentRepository(Module.WorkingDir);
             }
         }
 

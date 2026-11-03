@@ -86,6 +86,7 @@ public sealed partial class AvatarControl : GitExtensionsControl
         // Avalonia controls have no Dispose boundary; do not retain detached controls in the shared cache.
         lock (_cancellationTokenSequence)
         {
+            // The cache may also be cleared by another control, e.g. from the settings dialog
             _avatarCacheCleaner.CacheCleared += OnCacheCleared;
             _isCacheClearSubscriptionActive = true;
         }
@@ -96,6 +97,9 @@ public sealed partial class AvatarControl : GitExtensionsControl
         }
     }
 
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         lock (_cancellationTokenSequence)

@@ -11,7 +11,7 @@ namespace GitUI.NBugReports;
 
 /// <summary>
 ///  Provides methods for reporting unhandled exceptions to the user
-///  via native UI dialogs or through the platform bug-reporting boundary.
+///  via UI dialogs or through the native report form.
 /// </summary>
 public static class BugReportInvoker
 {
@@ -85,6 +85,8 @@ public static class BugReportInvoker
     /// </summary>
     /// <param name="exception">The exception to report.</param>
     /// <param name="isTerminating">Indicates whether the exception is terminating the application.</param>
+    // The native Avalonia report flow avoids the original external process and its inefficient XML round trip.
+    // GetExceptionInfo() remains available to the report UI instead of being lost during serialization.
     public static void Report(Exception exception, bool isTerminating)
     {
         if (AppSettings.WriteErrorLog)
@@ -121,8 +123,6 @@ public static class BugReportInvoker
 
         if (isTerminating)
         {
-            // The native Avalonia report flow avoids the original external process and its inefficient XML round trip.
-            // GetExceptionInfo() remains available to the report UI instead of being lost during serialization.
         }
 
         bool isUserExternalOperation

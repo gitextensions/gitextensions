@@ -6,10 +6,13 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace ResourceManager;
 
-// Avalonia routes ProcessKeyDown through its containing form, so this class retains the
-// control-level hotkey table and exposes ProcessHotkey for that form to call.
+/// <summary>
+///  Provides hotkey plumbing for Git Extensions <see cref="UserControl"/>s.
+/// </summary>
 public class GitExtensionsControl : TranslatedControl
 {
+    // Avalonia routes ProcessKeyDown through its containing form, so this class retains the
+    // control-level hotkey table and exposes ProcessHotkey for that form to call.
     private IReadOnlyList<HotkeyCommand> _hotkeys = [];
 
     /// <summary>
@@ -37,6 +40,7 @@ public class GitExtensionsControl : TranslatedControl
         /// </summary>
     public virtual bool ProcessHotkey(WinFormsShims.Keys keyData)
     {
+        // Checks if a hotkey wants to handle the key so the containing form can propagate an unhandled key.
         // Avalonia maps modifier-only and unsupported key events to None; None is not an assignable hotkey.
         if (!HotkeysEnabled || keyData == WinFormsShims.Keys.None)
         {
@@ -55,11 +59,15 @@ public class GitExtensionsControl : TranslatedControl
     protected bool HotkeysEnabled { get; set; }
 
     /// <summary>
-        ///  Loads hotkeys for the specified configuration setting.
-        /// </summary>
-        /// <param name="hotkeySettingsName">The setting name.</param>
+    ///  Loads hotkeys for the specified configuration setting.
+    /// </summary>
+    /// <param name="hotkeySettingsName">The setting name.</param>
     protected void LoadHotkeys(string hotkeySettingsName)
     {
+        /* Get hotkeys for the specified configuration setting.
+         * hotkeySettingsName: The setting name.
+         */
+        // Hotkeys shall be loaded by all controls in OnRuntimeLoad
         _hotkeys = HotkeysEnabled
             ? ServiceProvider.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName) ?? []
             : [];
@@ -97,6 +105,7 @@ public class GitExtensionsControl : TranslatedControl
         /// <param name="multiLine">Should be set to true for multi-line input controls to match keys for vertical movement, too.</param>
     public static bool IsTextEditKey(WinFormsShims.Keys keys, bool multiLine = false)
     {
+        // ignore the SHIFT key as modifier
         keys &= ~WinFormsShims.Keys.Shift;
         switch (keys)
         {
@@ -109,6 +118,7 @@ public class GitExtensionsControl : TranslatedControl
                 return true;
         }
 
+        // ignore the CONTROL key as modifier
         keys &= ~WinFormsShims.Keys.Control;
         switch (keys)
         {

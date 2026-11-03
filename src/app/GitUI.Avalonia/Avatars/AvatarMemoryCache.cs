@@ -3,7 +3,7 @@
 namespace GitUI.Avatars;
 
 /// <summary>
-/// Caches most-recently-used encoded images.
+/// Caches most-recently-used images.
 /// </summary>
 /// <remarks>
 /// <para>Decorates an inner cache, delegating to it as needed.</para>
@@ -61,6 +61,7 @@ public sealed class AvatarMemoryCache : IAvatarProvider, IAvatarCacheCleaner
                     break;
                 }
 
+                // Approximative time to read from disk to not slow down the grid scrolling
                 await Task.Delay(5);
             }
         }
@@ -106,6 +107,10 @@ public sealed class AvatarMemoryCache : IAvatarProvider, IAvatarCacheCleaner
     {
         lock (_cacheLock)
         {
+            // The cached image bytes must not be invalidated here: GetAvatarAsync hands out the cached
+            // instance itself, so a consumer may still be decoding it - the image control of an
+            // AvatarControl, the avatar column of the revision grid or the blame author margin.
+            // They do not keep their file open either, so nothing here has to be released eagerly.
             _cache.Clear();
         }
 

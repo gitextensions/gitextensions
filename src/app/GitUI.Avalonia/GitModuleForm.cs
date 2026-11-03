@@ -9,7 +9,7 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI;
 
-/// <summary>Base window that provides access to the module and <see cref="IGitUICommands"/>.</summary>
+/// <summary>Base <see cref="Avalonia.Controls.Window"/> that provides access to <see cref="GitCommands.GitModule"/> and <see cref="IGitUICommands"/>.</summary>
 public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceManager.IGitModuleForm, IScriptOptionsForm
 {
     private bool _isReactivation;
@@ -30,6 +30,8 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
     protected GitModuleForm(IGitUICommands? commands, bool enablePositionRestore)
         : base(enablePositionRestore)
     {
+        // In some cases we may want to initialise a form without a module,
+        // e.g. a process dialog that executes a git command which is completely self contained.
         if (commands is not null)
         {
             UICommands = commands;
@@ -45,6 +47,11 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
     /// <inheritdoc />
     public IGitUICommands UICommands
     {
+        // If this exception is seen, it might be because the parameterless constructor was called.
+        // That constructor is only for use by the Avalonia previewer, and translation unit tests.
+        // Using it at run time is an error.
+        // If no IGitUICommands instance has been passed to the protected ctor on purpose,
+        // the properties UICommands and Module must not be accessed.
         get => _uiCommands
             ?? throw new InvalidOperationException($"{nameof(UICommands)} is null. {GetType().FullName} was constructed incorrectly.");
         protected set
@@ -59,7 +66,9 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
         }
     }
 
-    /// <summary>Gets the module of the currently set <see cref="UICommands"/>.</summary>
+    /// <summary>
+    ///  Gets the current instance of the git module.
+    /// </summary>
     public IGitModule Module => UICommands.Module;
 
     protected override bool ExecuteCommand(int command)

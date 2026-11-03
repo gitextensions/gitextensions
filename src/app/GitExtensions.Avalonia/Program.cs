@@ -10,6 +10,9 @@ internal static class Program
 {
     internal static readonly ServiceContainer ServiceContainer = new();
 
+    /// <summary>
+    /// The main entry point for the application.
+    /// </summary>
     [STAThread]
     private static async Task<int> Main(string[] args)
     {
@@ -17,9 +20,12 @@ internal static class Program
 
         AppSettings.SetDocumentationBaseUrl(AppSettings.ProductVersion);
         AppTitleGenerator.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.Branch);
+
+        // If an error happens before we had a chance to init the environment information
+        // the call to GetInformation() from UIReporter.ShowNBug() will fail.
+        // There's no perf hit calling Initialise() multiple times.
         UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
 
-        // parity-scaffolding: exercises product process-tree cancellation inside the release-shaped Flatpak.
         if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(FlatpakConformanceProbe.ReportPathEnvironmentVariable)))
         {
             int? flatpakConformanceExitCode = await FlatpakConformanceProbe.RunIfRequestedAsync();

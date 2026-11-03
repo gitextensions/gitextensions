@@ -169,8 +169,6 @@ partial class ScriptsManager
             {
                 OsShellUtil.OpenUrlInDefaultBrowser(argument);
 
-                // 'RunPowerShell' always runs the script detached (yet).
-                // Hence currently, it does not make sense to trigger the 'RepoChangedNotifier' if '!scriptInfo.RunInBackground'.
                 return true;
             }
 
@@ -178,6 +176,9 @@ partial class ScriptsManager
             if (script.IsPowerShell)
             {
                 PowerShellHelper.RunPowerShell(command, argument, uiCommands.Module.WorkingDir, script.RunInBackground);
+
+                // 'RunPowerShell' always runs the script detached (yet).
+                // Hence currently, it does not make sense to trigger the 'RepoChangedNotifier' if '!scriptInfo.RunInBackground'.
                 return true;
             }
 

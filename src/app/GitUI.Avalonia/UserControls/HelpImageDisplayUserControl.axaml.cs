@@ -13,6 +13,7 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
     private Bitmap? _image2;
     private bool _isExpanded;
     private double _hostContributionWidth = 40;
+
     ////public const string fastForwardHoverText = "Hover to see scenario when fast forward is possible.";
     private bool _isLoaded;
 
@@ -60,6 +61,9 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
     private void UpdateIsExpandedState()
     {
         linkLabelHide.IsVisible = _isExpanded;
+
+        //// linkLabelShowHelp.IsVisible = false; // Why use button instead of label? Because button has constant width independent of language!
+        ////linkLabelShowHelp.IsVisible = true;
         buttonShowHelp.IsVisible = !_isExpanded;
         pictureBox1.IsVisible = _isExpanded;
         labelHoverText.IsVisible = _isExpanded && IsOnHoverShowImage2;
@@ -103,6 +107,8 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
         set
         {
             _showImage2OnHover = value;
+
+            ////labelHoverText.Visible = value; // NOTE: would trigger OnLoad in WinForms
             UpdateIsExpandedState();
             UpdateImageDisplay();
         }
@@ -119,6 +125,9 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
 
     private bool _isHover;
 
+    /// <summary>
+    /// NOTE: in WinForms, will also be called if designer code calls "this.helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;".
+    /// </summary>
     private void LoadSettings()
     {
         if (_isLoaded)
@@ -136,25 +145,29 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
 
     private string GetId() => UniqueIsExpandedSettingsId ?? "MUST_BE_SET";
 
+    // The Designer may have assigned Width after IsExpanded: use that actual source baseline.
+    // WinForms TopLevelControl finds its Form before showing; Avalonia's visual root may not yet exist.
+    // The control already contributes this width when it is first attached. Remember
+    // that pre-attachment state so loading an expanded preference does not add the
+    // same width to the host window a second time.
     private void UpdateControlSize()
     {
+        // default size
         double width = IsExpanded
             ? Math.Max(Image1?.PixelSize.Width ?? 40, Image2?.PixelSize.Width ?? 40)
+
+            // width for "show help" button
             : 30;
 
-        // The Designer may have assigned Width after IsExpanded: use that actual source baseline.
         double widthDelta = width - (double.IsNaN(Width) ? _hostContributionWidth : Width);
 
+        // apply size to control
         Width = width;
         MinWidth = width;
 
-        // WinForms TopLevelControl finds its Form before showing; Avalonia's visual root may not yet exist.
         Window? form = TopLevel.GetTopLevel(this) as Window ?? this.FindLogicalAncestorOfType<Window>();
         if (form is null)
         {
-            // The control already contributes this width when it is first attached. Remember
-            // that pre-attachment state so loading an expanded preference does not add the
-            // same width to the host window a second time.
             _hostContributionWidth = width;
             return;
         }

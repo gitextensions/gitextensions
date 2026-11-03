@@ -14,6 +14,7 @@ internal sealed partial class FormFilePrompt : GitExtensionsForm, IUserInputProm
 
     public FormFilePrompt()
     {
+        // let Avalonia scale up for hi DPI
         InitializeComponent();
         AcceptButton = btnOk;
         btnBrowse.Click += btnBrowse_Click;

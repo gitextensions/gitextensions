@@ -2,12 +2,13 @@
 
 namespace GitUI;
 
-// Avalonia windows do not inherit visual trees, so each dialog's .axaml declares the
-// MainPanel/ControlsPanel chrome supplied by the WinForms base Designer.
-
-/// <summary>Base class for a Git Extensions dialog.</summary>
+/// <summary>Base class for a Git Extensions <see cref="Avalonia.Controls.Window"/>.</summary>
+/// <remarks>Includes support for font, hotkey, icon, translation, and position restore.</remarks>
 public class GitExtensionsDialog : GitModuleForm
 {
+    // Avalonia windows do not inherit visual trees, so each dialog's .axaml declares the
+    // MainPanel/ControlsPanel chrome supplied by the WinForms base Designer.
+
     /// <summary>For the visual designer and construction tests only, like WinForms.</summary>
     protected GitExtensionsDialog()
     {

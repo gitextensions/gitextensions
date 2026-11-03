@@ -98,12 +98,14 @@ public partial class ScriptInfo
             return null;
         }
 
+        // Get all resources
         PropertyInfo? property = typeof(Images).GetProperty(Icon, BindingFlags.Public | BindingFlags.Static);
         if (property?.PropertyType == typeof(Bitmap))
         {
             return _icon = (Bitmap?)property.GetValue(obj: null);
         }
 
+        // Discard the invalid name in order to not search for it again, which takes long
         Trace.WriteLine(@$"The icon ""{Icon}"" for user script ""{GetDisplayName()}"" does not exist.");
         Icon = null;
         return null;

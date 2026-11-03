@@ -63,7 +63,7 @@ internal sealed class QuickSearchProvider
 
     public void OnKeyPress(TextInputEventArgs e)
     {
-        // Avalonia reports Ctrl+A to Ctrl+Z as modified keys instead of character codes.
+        // Ctrl+A to Ctrl+Z are modified keys with Ctrl+V being Control and Key.V
         if (string.IsNullOrEmpty(e.Text) || e.Text.Any(char.IsControl))
         {
             HideQuickSearchString();

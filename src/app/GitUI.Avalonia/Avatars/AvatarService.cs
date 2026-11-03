@@ -33,8 +33,10 @@ public static class AvatarService
     }
 
     /// <summary>
-    /// Creates an avatar provider based on the given provider and fallback options.
+    /// Creates an <see cref="IAvatarProvider"/> based on the given
+    /// <see cref="AvatarProvider"/> and <see cref="AvatarFallbackType"/> enum options.
     /// </summary>
+    /// <returns>Returns an avatar provider that can be used to resolve user avatars.</returns>
     public static IAvatarProvider? CreateAvatarProvider(
         AvatarProvider provider,
         AvatarFallbackType? fallbackType,
@@ -60,6 +62,7 @@ public static class AvatarService
             _ => new ChainedAvatarProvider(providers),
         };
 
+        // Local methods to build requested main and fallback providers:
         // 1. query GitHub (with non-reply and regular email addresses)
         //    GitHub might internally fall back to Gravatar, so only need a single request in most cases.
         // 2. resolve via Gravatar (for users that don't have a GitHub account)
@@ -73,14 +76,18 @@ public static class AvatarService
         {
             return fallbackType switch
             {
+                // Local fallback provider
                 AvatarFallbackType.AuthorInitials => InitialsAvatarProvider,
                 null => InitialsAvatarProvider,
+
+                // Use Gravatar as fallback provider
                 AvatarFallbackType type when GravatarProvider.IsFallbackSupportedByGravatar(type) => new GravatarProvider(lazyDownloader.Value, type, true),
+
+                // Use author initials for unknown types
                 _ => InitialsAvatarProvider,
             };
         }
 
-        // Local methods to build requested main and fallback providers:
         IAvatarProvider? BuildMainProvider()
         {
             return provider switch

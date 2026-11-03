@@ -5,19 +5,27 @@ using Avalonia.Input;
 namespace GitUI;
 
 /// <summary>
-/// Sets the mouse cursor to a wait cursor to indicate UI activity over some lexical scope.
+/// Sets the mouse cursor to <see cref="StandardCursorType.Wait"/> to indicate UI activity over some lexical scope.
 /// </summary>
 /// <remarks>
-/// WinForms tracks one global <c>Cursor.Current</c>; Avalonia only has per-control cursors, so
-/// this scope swaps the cursor of every open window and restores the captured values on dispose.
-/// Nesting works like the original:
-/// an inner scope captures the outer scope's wait cursor and restores back to it, and
-/// only the top-most scope fully restores the original cursors.
+/// Usage is:
+/// <code>
+/// using (WaitCursorScope.Enter())
+/// {
+///     // perform UI activity
+/// }
+/// </code>
+/// This pattern ensures:
+/// <list type="bullet">
+/// <item>The cursor is always restored when the block exits, whether by fall-through, return or exception.</item>
+/// <item>Nested scopes work properly. That is, an inner scope doesn't reset the mouse when it exits.
+/// Only the top-most scope will fully restore the mouse cursor.</item>
+/// </list>
 /// </remarks>
 public readonly struct WaitCursorScope : IDisposable
 {
     /// <summary>
-    /// Starts a new scope, recording each open window's cursor and setting a wait cursor.
+    /// Starts a new scope, recording window cursors and setting the mouse cursor to <see cref="StandardCursorType.Wait"/>.
     /// </summary>
     public static WaitCursorScope Enter(Cursor? cursor = null)
         => Enter(cursor, requiredWindow: null);
@@ -54,7 +62,7 @@ public readonly struct WaitCursorScope : IDisposable
     }
 
     /// <summary>
-    /// Restores the window cursors to the values captured in the constructor.
+    /// Restores window cursors to the values captured in the constructor.
     /// </summary>
     public void Dispose()
     {
