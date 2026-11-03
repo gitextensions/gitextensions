@@ -6,13 +6,13 @@
                                  MinWidth="341"
                                  MinHeight="272"
                                  Text="Blame viewer">
-  <Canvas Margin="11">
+  <Grid Margin="11" RowDefinitions="97,6,197">
       <GroupBox x:Name="groupBoxDisplayResult"
-                Canvas.Top="103"
+                Grid.Row="2"
                 MinWidth="319"
                 Height="197"
                 Padding="-3"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Stretch"
                 Header="Display result settings">
         <Grid x:Name="tableLayoutPanelDisplayResult"
               MinWidth="313"
@@ -64,7 +64,7 @@
                 MinWidth="319"
                 Height="97"
                 Padding="-3"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Stretch"
                 Header="Blame settings">
         <Grid x:Name="tableLayoutPanelBlameSettings"
               MinWidth="313"
@@ -88,5 +88,5 @@
                                              Text="Detect moved or copied lines from all files in same commit" />
         </Grid>
       </GroupBox>
-  </Canvas>
+  </Grid>
 </settings:SettingsPageWithHeader>

@@ -202,6 +202,7 @@
                                Content="Commit &amp; _push"
                                IsEnabled="False" />
             <CheckBox x:Name="StageInSuperproject"
+                      compat:TranslationCompat.ToolTipPropertyName="fileTooltip"
                       Width="130"
                       Height="19"
                       Margin="0,3"
@@ -225,6 +226,7 @@
                         VerticalContentAlignment="Center"
                         Content="R_eset author" />
               <compat:IconButton x:Name="ResetSoft"
+                                 compat:TranslationCompat.ToolTipPropertyName="fileTooltip"
                                  Width="159"
                                  Height="26"
                                  Margin="0,3"
@@ -237,7 +239,7 @@
                                Height="26"
                                Margin="0,3"
                                Icon="{x:Static properties:Images.Stash}"
-                               Content="_Stash staged"
+                               Content="Stas_h staged changes"
                                IsVisible="False" />
             <compat:IconButton x:Name="btnResetAllChanges"
                                Width="171"
@@ -368,6 +370,7 @@
                         Orientation="Horizontal"
                         ClipToBounds="True">
               <compat:IconDropDownButton x:Name="commitTemplatesToolStripMenuItem"
+                                         compat:TranslationCompat.UseToolTipText="True"
                                          Width="135"
                                          Height="23"
                                          Classes="gitextensions-toolbar-button"
@@ -380,6 +383,7 @@
               </compat:IconDropDownButton>
 
               <compat:IconButton x:Name="createBranchToolStripButton"
+                                 compat:TranslationCompat.UseToolTipText="True"
                                  Width="101"
                                  Height="23"
                                  Classes="gitextensions-toolbar-button"

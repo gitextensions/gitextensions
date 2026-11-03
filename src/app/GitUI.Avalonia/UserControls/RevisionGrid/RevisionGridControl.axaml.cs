@@ -130,8 +130,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private readonly TranslationString _rebaseBranch = new("Rebase branch.");
     private readonly TranslationString _rebaseBranchInteractive = new("Rebase branch interactively.");
     private readonly TranslationString _areYouSureRebase = new("Are you sure you want to rebase? This action will rewrite commit history.");
-    private readonly TranslationString _noMergeBaseCommit = new("There is no merge base for the selected revisions.");
-    private readonly TranslationString _invalidDiffContainsFilter = new("The diff contains filter is invalid.");
+    private readonly TranslationString _noMergeBaseCommit = new("There is no common ancestor for the selected commits.");
+    private readonly TranslationString _invalidDiffContainsFilter = new("Filter text '{0}' not valid for \"Diff contains\" filter.");
 
     private readonly IReadOnlyList<(Control Item, bool Advanced)> _contextMenuItems;
     private readonly FilterInfo _filterInfo = new();

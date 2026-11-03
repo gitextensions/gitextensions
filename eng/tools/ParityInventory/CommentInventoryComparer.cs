@@ -5,6 +5,8 @@ namespace GitExtensions.ParityInventory;
 // parity-scaffolding: Classifies anchored comment preservation separately from other source facts.
 internal static class CommentInventoryComparer
 {
+    private const int AlignmentUnit = 1000;
+
     public static InventoryComparison Compare(SourceInventory original, SourceInventory twin)
     {
         IReadOnlyDictionary<string, string> originalPartMap = original.Parts.ToDictionary(
@@ -59,8 +61,7 @@ internal static class CommentInventoryComparer
                         adaptations.Add(NewAdaptation(step.Original!.Entry, step.Twin.Entry));
                         break;
                     case AlignmentKind.Changed:
-                        usedTwin.Add(step.Twin!.Index);
-                        changed.Add(new CommentPair(step.Original!, step.Twin));
+                        changed.Add(new CommentPair(step.Original!, step.Twin!));
                         break;
                     case AlignmentKind.Deleted:
                         unmatchedOriginal.Add(step.Original!);
@@ -74,33 +75,30 @@ internal static class CommentInventoryComparer
         }
 
         List<FunctionalFinding> findings = [];
-        foreach (CommentPair pair in changed)
+        HashSet<int> driftedOriginal = [];
+        foreach (IndexedComment originalComment in changed.Select(pair => pair.Original)
+                     .Concat(unmatchedOriginal).OrderBy(comment => comment.Index))
         {
-            IndexedComment? drifted = FindUnusedExact(pair.Original, twinComments, usedTwin);
-            if (drifted is not null)
-            {
-                usedTwin.Remove(pair.Twin.Index);
-                usedTwin.Add(drifted.Index);
-                findings.Add(NewDriftedFinding(pair.Original.Entry, drifted.Entry));
-            }
-            else
-            {
-                findings.Add(NewChangedFinding(pair.Original.Entry, pair.Twin.Entry));
-            }
-        }
-
-        foreach (IndexedComment originalComment in unmatchedOriginal)
-        {
+            // An inexact alignment must not consume a comment that survives verbatim elsewhere.
             IndexedComment? drifted = FindUnusedExact(originalComment, twinComments, usedTwin);
             if (drifted is not null)
             {
                 usedTwin.Add(drifted.Index);
+                driftedOriginal.Add(originalComment.Index);
                 findings.Add(NewDriftedFinding(originalComment.Entry, drifted.Entry));
             }
-            else
-            {
-                findings.Add(NewMissingFinding(originalComment.Entry));
-            }
+        }
+
+        foreach (CommentPair pair in changed.Where(pair => !driftedOriginal.Contains(pair.Original.Index)))
+        {
+            findings.Add(usedTwin.Contains(pair.Twin.Index)
+                ? NewMissingFinding(pair.Original.Entry)
+                : NewChangedFinding(pair.Original.Entry, pair.Twin.Entry));
+        }
+
+        foreach (IndexedComment originalComment in unmatchedOriginal.Where(comment => !driftedOriginal.Contains(comment.Index)))
+        {
+            findings.Add(NewMissingFinding(originalComment.Entry));
         }
 
         return new InventoryComparison
@@ -127,13 +125,13 @@ internal static class CommentInventoryComparer
         AlignmentKind[,] operations = new AlignmentKind[original.Count + 1, twin.Count + 1];
         for (int originalIndex = 1; originalIndex <= original.Count; originalIndex++)
         {
-            costs[originalIndex, 0] = originalIndex * 2;
+            costs[originalIndex, 0] = originalIndex * 2 * AlignmentUnit;
             operations[originalIndex, 0] = AlignmentKind.Deleted;
         }
 
         for (int twinIndex = 1; twinIndex <= twin.Count; twinIndex++)
         {
-            costs[0, twinIndex] = twinIndex * 2;
+            costs[0, twinIndex] = twinIndex * 2 * AlignmentUnit;
             operations[0, twinIndex] = AlignmentKind.Inserted;
         }
 
@@ -144,9 +142,10 @@ internal static class CommentInventoryComparer
                 AlignmentKind diagonalKind = Classify(
                     original[originalIndex - 1].Entry,
                     twin[twinIndex - 1].Entry);
-                int diagonalCost = costs[originalIndex - 1, twinIndex - 1] + GetCost(diagonalKind);
-                int deletedCost = costs[originalIndex - 1, twinIndex] + 2;
-                int insertedCost = costs[originalIndex, twinIndex - 1] + 2;
+                int diagonalCost = costs[originalIndex - 1, twinIndex - 1]
+                    + GetCost(diagonalKind, original[originalIndex - 1], twin[twinIndex - 1]);
+                int deletedCost = costs[originalIndex - 1, twinIndex] + (2 * AlignmentUnit);
+                int insertedCost = costs[originalIndex, twinIndex - 1] + (2 * AlignmentUnit);
                 if (diagonalCost <= deletedCost && diagonalCost <= insertedCost)
                 {
                     costs[originalIndex, twinIndex] = diagonalCost;
@@ -216,14 +215,23 @@ internal static class CommentInventoryComparer
             : AlignmentKind.Changed;
     }
 
-    private static int GetCost(AlignmentKind kind) =>
+    private static int GetCost(AlignmentKind kind, IndexedComment original, IndexedComment twin) =>
         kind switch
         {
             AlignmentKind.Exact => 0,
-            AlignmentKind.Adapted => 1,
-            AlignmentKind.Changed => 3,
+            AlignmentKind.Adapted => AlignmentUnit,
+            AlignmentKind.Changed => (3 * AlignmentUnit) + GetTextDifferencePenalty(original, twin),
             _ => throw new ArgumentOutOfRangeException(nameof(kind))
         };
+
+    private static int GetTextDifferencePenalty(IndexedComment original, IndexedComment twin)
+    {
+        int wordCount = original.Words.Count + twin.Words.Count;
+        int sharedWords = original.Words.Count(twin.Words.Contains);
+        return wordCount == 0
+            ? AlignmentUnit - 1
+            : (AlignmentUnit - 1) * (wordCount - (2 * sharedWords)) / wordCount;
+    }
 
     private static IndexedComment? FindUnusedExact(
         IndexedComment original,
@@ -390,7 +398,11 @@ internal static class CommentInventoryComparer
         Inserted
     }
 
-    private sealed record IndexedComment(int Index, CommentEntry Entry);
+    private sealed record IndexedComment(int Index, CommentEntry Entry)
+    {
+        public IReadOnlySet<string> Words { get; } = Regex.Matches(Entry.Text, @"\w+", RegexOptions.CultureInvariant)
+            .Select(match => match.Value).ToHashSet(StringComparer.OrdinalIgnoreCase);
+    }
 
     private sealed record CommentGroupKey(string Part, string Anchor, string Placement);
 

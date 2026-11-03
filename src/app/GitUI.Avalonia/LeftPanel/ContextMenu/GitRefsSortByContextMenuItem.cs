@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using GitCommands;
 using GitCommands.Utils;
+using GitUI.Compat;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 
@@ -10,12 +11,15 @@ internal sealed class GitRefsSortByContextMenuItem : MenuItem
 {
     private readonly Action _onSortByChanged;
 
+    // Avalonia resolves themes by concrete type; retain the original menu-item presentation.
+    protected override Type StyleKeyOverride => typeof(MenuItem);
+
     public GitRefsSortByContextMenuItem(Action onSortByChanged)
     {
         _onSortByChanged = onSortByChanged;
 
         Icon = new Image { Source = Images.SortBy };
-        Header = TranslatedStrings.SortBy;
+        Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(TranslatedStrings.SortBy);
 
         foreach ((string text, GitRefsSortBy value) option in EnumHelper.GetValues<GitRefsSortBy>().Select(e => (Text: e.GetDescription(), Value: e)))
         {

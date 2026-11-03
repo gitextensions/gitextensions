@@ -3202,7 +3202,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML restores the original integer 96-DPI page and outer-group coordinates with every same-named checkbox. P8.6i progress 28 removes the non-source scroll host and records real 100% light/dark/custom pairs; higher-scale embedded-page references, exact rendering, and measured residual diagnostics remain open. P8.6i progress 65 restores original comments only where the owning declaration and following statement already match, and records exact unavoidable WinForms/Avalonia native-control field signature substitutions as visible reviewed deviations; all retained gaps remain measured. P8.6i progress 66 moves exact WinForms Designer-generated comments, nullable event-handler annotations, and paired framework event-wiring facts into drift-checked visible reviewed deviations; handwritten comments and unmatched behavior remain measured gaps. P8.6i progress 67 classifies exact WinForms Designer-generated lifecycle omissions, required Avalonia-only seams, and approved framework signature substitutions through schema-4 drift-checked deviations, and restores 18 original handler identities where Avalonia permits them; all remaining differences stay measured."
+    "notes": "Native AXAML restores the original integer 96-DPI page and outer-group coordinates with every same-named checkbox. P8.6i progress 28 removes the non-source scroll host and records real 100% light/dark/custom pairs; higher-scale embedded-page references, exact rendering, and measured residual diagnostics remain open. P8.6i progress 65 restores original comments only where the owning declaration and following statement already match, and records exact unavoidable WinForms/Avalonia native-control field signature substitutions as visible reviewed deviations; all retained gaps remain measured. P8.6i progress 66 moves exact WinForms Designer-generated comments, nullable event-handler annotations, and paired framework event-wiring facts into drift-checked visible reviewed deviations; handwritten comments and unmatched behavior remain measured gaps. P8.6i progress 67 classifies exact WinForms Designer-generated lifecycle omissions, required Avalonia-only seams, and approved framework signature substitutions through schema-4 drift-checked deviations, and restores 18 original handler identities where Avalonia permits them; all remaining differences stay measured. Both original left/right group anchors now use a stretching Grid with 11 DIP page margins instead of a Canvas. Regression coverage checks narrow and resized widths and the longest caption in the normal Settings dialog."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.axaml.cs",
@@ -3734,13 +3734,13 @@
     "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/GitRefsSortByContextMenuItem.cs",
     "status": "functional",
     "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
-    "notes": "Same settings-backed sort-by radio submenu and refresh callback over native Avalonia MenuItems."
+    "notes": "Same settings-backed sort-by radio submenu and refresh callback over native Avalonia MenuItems. Avalonia requires the exact MenuItem style-key override for this derived control to render. Original mnemonic text uses the shared adapter; opened popup captions are checked in neutral and English."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/GitRefsSortOrderContextMenuItem.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/GitRefsSortOrderContextMenuItem.cs",
     "status": "functional",
     "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
-    "notes": "Same settings-backed sort-order radio submenu, stable menu name, and refresh callback over native Avalonia MenuItems."
+    "notes": "Same settings-backed sort-order radio submenu, stable menu name, and refresh callback over native Avalonia MenuItems. Avalonia requires the exact MenuItem style-key override for this derived control to render. Original mnemonic text uses the shared adapter; opened popup captions are checked in neutral and English."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/IMenuItemFactory.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/IMenuItemFactory.cs",

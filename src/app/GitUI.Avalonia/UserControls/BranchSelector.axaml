@@ -33,7 +33,7 @@
            TabIndex="7"
            HorizontalAlignment="Right"
            VerticalAlignment="Center"
-           Content="_Select branch"
+           Content="Select branch"
            Target="{Binding #Branches}" />
     <ComboBox x:Name="Branches"
               Grid.Row="1"

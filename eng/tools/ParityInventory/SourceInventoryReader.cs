@@ -901,7 +901,8 @@ internal static class SourceInventoryReader
             SeparatedSyntaxList<ArgumentSyntax> arguments = invocation.ArgumentList.Arguments;
             if (invokedName != "AddTranslationItem"
                 || arguments.Count < 4
-                || !IsExplicitEmptyTranslationSource(arguments[3].Expression))
+                || GetStaticTranslationName(arguments[0].Expression) != className
+                || !IsExplicitTranslationSource(arguments[3].Expression))
             {
                 continue;
             }
@@ -943,11 +944,10 @@ internal static class SourceInventoryReader
         return null;
     }
 
-    private static bool IsExplicitEmptyTranslationSource(ExpressionSyntax expression)
+    private static bool IsExplicitTranslationSource(ExpressionSyntax expression)
     {
         if (expression is LiteralExpressionSyntax literal
-            && literal.IsKind(SyntaxKind.StringLiteralExpression)
-            && literal.Token.ValueText.Length == 0)
+            && literal.IsKind(SyntaxKind.StringLiteralExpression))
         {
             return true;
         }

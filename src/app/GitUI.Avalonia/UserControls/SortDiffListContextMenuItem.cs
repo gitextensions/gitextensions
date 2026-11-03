@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using GitCommands;
+using GitUI.Compat;
 using GitUI.Properties;
 using ResourceManager;
 
@@ -22,7 +23,7 @@ public class SortDiffListContextMenuItem : MenuItem
     public SortDiffListContextMenuItem(IDiffListSortService sortService)
     {
         _sortService = sortService ?? throw new ArgumentNullException(nameof(sortService));
-        Header = TranslatedStrings.SortGroupBy;
+        Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(TranslatedStrings.SortGroupBy);
         Icon = new Image { Source = Images.SortBy };
 
         _allItems =

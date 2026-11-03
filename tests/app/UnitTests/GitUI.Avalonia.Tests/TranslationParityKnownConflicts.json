@@ -1,59 +1,10 @@
 {
   "missingKeys": [
-    "FileViewer/decreaseNumberOfLines.toolTip: emitted \"Decrease the number of lines of context\"",
-    "FileViewer/ignoreAllWhitespaces.toolTip: emitted \"Ignore all whitespace changes\"",
-    "FileViewer/ignoreWhiteSpaces.toolTip: emitted \"Ignore changes in amount of whitespace\"",
-    "FileViewer/ignoreWhitespaceAtEol.toolTip: emitted \"Ignore whitespace changes at end of line\"",
-    "FileViewer/increaseNumberOfLines.toolTip: emitted \"Increase the number of lines of context\"",
-    "FileViewer/nextChangeButton.toolTip: emitted \"Next change\"",
-    "FileViewer/previousChangeButton.toolTip: emitted \"Previous change\"",
-    "FileViewer/settingsButton.toolTip: emitted \"Settings\"",
-    "FileViewer/showEntireFileButton.toolTip: emitted \"Show entire file\"",
-    "FileViewer/showNonPrintChars.toolTip: emitted \"Show nonprinting characters\"",
-    "FileViewer/showSyntaxHighlighting.toolTip: emitted \"Show syntax highlighting\"",
-    "FormBrowse/fetchAllToolStripMenuItem.toolTip: emitted \"Fetch branches and tags from all remote repositories\"",
-    "FormBrowse/fetchPruneAllToolStripMenuItem.toolTip: emitted \"Fetch branches and tags from all remote repositories also prune deleted branches\"",
-    "FormBrowse/fetchToolStripMenuItem.toolTip: emitted \"Fetch branches and tags\"",
-    "FormBrowse/manageStashesToolStripMenuItem.toolTip: emitted \"Manage stashes\"",
-    "FormBrowse/stashChangesToolStripMenuItem.toolTip: emitted \"Stash changes\"",
-    "FormBrowse/stashPopToolStripMenuItem.toolTip: emitted \"Apply and drop single stash\"",
-    "FormBrowse/stashStagedToolStripMenuItem.toolTip: emitted \"Stash staged changes\"",
-    "FormCommit/ResetSoft.toolTip: emitted \"Perform a soft reset to the previous commit; leaves working directory and index untouched\"",
-    "FormCommit/StageInSuperproject.toolTip: emitted \"Stage current submodule in superproject after commit\"",
-    "FormCommit/commitTemplatesToolStripMenuItem.toolTip: emitted \"Commit templates\"",
-    "FormCommit/createBranchToolStripButton.toolTip: emitted \"Create branch\"",
-    "FormFileHistory/toolStripBlameOptions.ToolTipText: emitted \"Blame options\"",
-    "FormPush/DeleteColumn.Text: emitted \"Delete Remote Branch\"",
-    "FormPush/ForceColumn.Text: emitted \"Force\"",
-    "FormPush/LocalColumn.Text: emitted \"Local Branch\"",
-    "FormPush/NewColumn.Text: emitted \"Ahead/Behind\"",
-    "FormPush/PushColumn.Text: emitted \"Push\"",
-    "FormPush/RemoteColumn.Text: emitted \"Remote Branch\"",
-    "FormRemotes/BranchName.Text: emitted \"Local branch name\"",
-    "FormRemotes/MergeWith.Text: emitted \"Default merge with\"",
-    "FormRemotes/RemoteCombo.Text: emitted \"Remote repository\""
+    "FormFileHistory/toolStripBlameOptions.ToolTipText: emitted \"Blame options\""
   ],
-  "sourceMismatches": [
-    "BranchSelector/label1.Text: emitted \"\\u0026Select branch\", catalog \"Select branch\"",
-    "FileStatusList/_sortByContextMenu.Text: emitted \"\\u0026\\u0026Sort and group by\", catalog \"\\u0026Sort and group by\"",
-    "FormBrowse/ToolStripFilters.Text: emitted \"\", catalog \"Filters\"",
-    "FormBrowse/ToolStripMain.Text: emitted \"\", catalog \"Standard\"",
-    "FormBrowse/ToolStripScripts.Text: emitted \"\", catalog \"Scripts\"",
-    "FormBrowse/toolsToolStripMenuItem.Text: emitted \"\", catalog \"\\u0026Tools\"",
-    "FormCommit/StashStaged.Text: emitted \"\\u0026Stash staged\", catalog \"Stas\\u0026h staged changes\"",
-    "FormCommitTemplateSettings/checkBoxRegexEnabled.toolTipRegex: emitted \"Use {{regex}}[regex group number] to extract branch name part Group number is optional, default is 1 Examples on branch name: \\u0022feature/ABC-4587-commitMessageRegex\\u0022 \\u0022Commit from: {{^feature/(.*)$}} branch\\u0022 -\\u003E \\u0022Commit from: ABC-4587-commitMessageRegex branch\\u0022 \\u0022{{([A-Z]\\u002B-\\\\d\\u002B)}}: My message is\\u0022 -\\u003E \\u0022ABC-4587: My message is \\u0022 \\u0022Name: {{([A-Z]\\u002B-\\\\d\\u002B)-(.*)}}[2], issue: {{([A-Z]\\u002B-\\\\d\\u002B)-(.*)}}[1]\\u0022 -\\u003E \\u0022Name: commitMessageRegex, issue: ABC-4587\\u0022\", catalog \"Use {{regex}}[regex group number] to extract branch name part\\nGroup number is optional, default is 1\\n\\nExamples on branch name: \\u0022feature/ABC-4587-commitMessageRegex\\u0022\\n\\u0022Commit from: {{^feature/(.*)$}} branch\\u0022 -\\u003E \\u0022Commit from: ABC-4587-commitMessageRegex branch\\u0022\\n\\u0022{{([A-Z]\\u002B-\\\\d\\u002B)}}: My message is\\u0022 -\\u003E \\u0022ABC-4587: My message is \\u0022\\n\\u0022Name: {{([A-Z]\\u002B-\\\\d\\u002B)-(.*)}}[2], issue: {{([A-Z]\\u002B-\\\\d\\u002B)-(.*)}}[1]\\u0022 -\\u003E \\u0022Name: commitMessageRegex, issue: ABC-4587\\u0022\"",
-    "FormFormatPatch/lblPatches.Text: emitted \"\\u0026Patch:\", catalog \"Patch:\"",
-    "RepoObjectsTree/_sortByContextMenuItem.Text: emitted \"\\u0026\\u0026Sort by\", catalog \"\\u0026Sort by\"",
-    "RepoObjectsTree/_sortOrderContextMenuItem.Text: emitted \"\\u0026\\u0026Sort order\", catalog \"\\u0026Sort order\"",
-    "RepoObjectsTree/copyContextMenuItem.Text: emitted \"\\u0026\\u0026Copy to clipboard\", catalog \"\\u0026Copy to clipboard\"",
-    "RepoObjectsTree/mnubtnFetchCreateBranch.Text: emitted \"Fetc\\u0026h \\u0026\\u0026\\u0026\\u0026 Create Branch\", catalog \"Fetc\\u0026h \\u0026\\u0026 Create Branch\"",
-    "RepoObjectsTree/mnubtnFetchRebase.Text: emitted \"Fetch \\u0026\\u0026\\u0026\\u0026 Re\\u0026base\", catalog \"Fetch \\u0026\\u0026 Re\\u0026base\"",
-    "RepoObjectsTree/mnubtnPullFromRemoteBranch.Text: emitted \"Fetch \\u0026\\u0026\\u0026\\u0026 Merge (\\u0026Pull)\", catalog \"Fetch \\u0026\\u0026 Merge (\\u0026Pull)\"",
-    "RepoObjectsTree/mnubtnRemoteBranchFetchAndCheckout.Text: emitted \"\\u0026Fetch \\u0026\\u0026\\u0026\\u0026 Checkout\", catalog \"\\u0026Fetch \\u0026\\u0026 Checkout\"",
-    "RevisionGridControl/_invalidDiffContainsFilter.Text: emitted \"The diff contains filter is invalid.\", catalog \"Filter text \\u0027{0}\\u0027 not valid for \\u0022Diff contains\\u0022 filter.\"",
-    "RevisionGridControl/_noMergeBaseCommit.Text: emitted \"There is no merge base for the selected revisions.\", catalog \"There is no common ancestor for the selected commits.\""
-  ],
-  "duplicateConflicts": [
-    "FormBrowse/toolsToolStripMenuItem.Text: \"\" | \"\\u0026Tools\""
-  ]
+  "sourceMismatches": [],
+  "duplicateConflicts": [],
+  "rationales": {
+    "FormFileHistory/toolStripBlameOptions.ToolTipText": "Original FormFileHistory.Designer.cs:400-401 explicitly assigns Text and ToolTipText to Blame options. TranslationBody.AddTranslationItemIfNotExist deliberately omits a ToolTipText entry when its source equals Text. The raw emitter agrees with the original; the catalog absence is the original generator deduplication contract."
+  }
 }

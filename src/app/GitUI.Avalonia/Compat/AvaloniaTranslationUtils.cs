@@ -232,6 +232,10 @@ internal static class AvaloniaTranslationUtils
         convertMnemonics = true;
         switch (item)
         {
+            // Grid-column owners retain the original HeaderText path; ListView columns use Text.
+            case WinFormsControls.DataGridViewTextBoxColumn or WinFormsControls.DataGridViewCheckBoxColumn:
+                text = null;
+                return true;
             case Window window:
                 text = window.Title;
                 convertMnemonics = false;

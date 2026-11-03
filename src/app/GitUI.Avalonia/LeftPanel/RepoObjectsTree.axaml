@@ -96,7 +96,7 @@
               ScrollViewer.AllowAutoHide="False">
       <TreeView.ContextMenu>
         <wf:ContextMenuStrip x:Name="menuMain">
-          <revisiongrid:CopyContextMenuItem x:Name="copyContextMenuItem" Header="&amp;Copy to clipboard" />
+          <revisiongrid:CopyContextMenuItem x:Name="copyContextMenuItem" Header="_Copy to clipboard" />
           <wf:ToolStripMenuItem x:Name="filterForSelectedRefsMenuItem" Header="_Filter for selected">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ShowThisBranchOnly}" /></MenuItem.Icon>
           </wf:ToolStripMenuItem>
@@ -158,16 +158,16 @@
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RepoStateDirtySubmodules}" /></MenuItem.Icon>
           </wf:ToolStripMenuItem>
           <wf:ToolStripSeparator x:Name="toolStripSeparator8" />
-          <wf:ToolStripMenuItem x:Name="mnubtnRemoteBranchFetchAndCheckout" Header="_Fetch &amp;&amp; Checkout">
+          <wf:ToolStripMenuItem x:Name="mnubtnRemoteBranchFetchAndCheckout" Header="_Fetch &amp; Checkout">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchCheckout}" /></MenuItem.Icon>
           </wf:ToolStripMenuItem>
-          <wf:ToolStripMenuItem x:Name="mnubtnPullFromRemoteBranch" Header="Fetch &amp;&amp; Merge (_Pull)">
+          <wf:ToolStripMenuItem x:Name="mnubtnPullFromRemoteBranch" Header="Fetch &amp; Merge (_Pull)">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Pull}" /></MenuItem.Icon>
           </wf:ToolStripMenuItem>
-          <wf:ToolStripMenuItem x:Name="mnubtnFetchRebase" Header="Fetch &amp;&amp; Re_base">
+          <wf:ToolStripMenuItem x:Name="mnubtnFetchRebase" Header="Fetch &amp; Re_base">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Rebase}" /></MenuItem.Icon>
           </wf:ToolStripMenuItem>
-          <wf:ToolStripMenuItem x:Name="mnubtnFetchCreateBranch" Header="Fetc_h &amp;&amp; Create Branch">
+          <wf:ToolStripMenuItem x:Name="mnubtnFetchCreateBranch" Header="Fetc_h &amp; Create Branch">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Branch}" /></MenuItem.Icon>
           </wf:ToolStripMenuItem>
           <wf:ToolStripMenuItem x:Name="mnubtnFetchOneBranch" Header="Fe_tch">
