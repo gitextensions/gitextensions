@@ -1210,7 +1210,7 @@
     },
     {
       "source": "src/app/GitUI/Avatars/CustomAvatarProvider.UriTemplateData.cs",
-      "twin": "src/app/GitUI.Avalonia/Avatars/CustomAvatarProvider.UriTemplateData.cs",
+      "twin": "src/app/GitUI/Avatars/CustomAvatarProvider.UriTemplateData.cs",
       "complete": false,
       "axes": {
         "structural": {

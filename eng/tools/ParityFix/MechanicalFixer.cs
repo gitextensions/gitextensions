@@ -1,4 +1,4 @@
-﻿using GitExtensions.ParityInventory;
+using GitExtensions.ParityInventory;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -81,18 +81,20 @@ internal static class MechanicalFixer
             HashSet<string> unique = members.GroupBy(OrderKey, StringComparer.Ordinal)
                 .Where(group => group.Count() == 1).Select(group => group.Key).ToHashSet(StringComparer.Ordinal);
 
-            // A directive-bearing member is a barrier: regions and preprocessor branches must stay in place.
+            HashSet<SyntaxTrivia> movableWarnings = MovableWarningDirectives(commented, commentedType);
+
+            // Regions, conditional branches and warning scopes outside a member remain barriers.
             int start = 0;
             while (start < members.Length)
             {
-                if (members[start].ContainsDirectives)
+                if (HasOrderBarrier(members[start], movableWarnings))
                 {
                     start++;
                     continue;
                 }
 
                 int end = start;
-                while (end < members.Length && !members[end].ContainsDirectives)
+                while (end < members.Length && !HasOrderBarrier(members[end], movableWarnings))
                 {
                     end++;
                 }
@@ -142,10 +144,58 @@ internal static class MechanicalFixer
         TypeDeclarationSyntax? left = FindType(before, typeName);
         TypeDeclarationSyntax? right = FindType(after, typeName);
         return left is not null && right is not null
-            && DirectiveTexts(before).SequenceEqual(DirectiveTexts(after))
+            && OrderDirectiveTexts(before, left).SequenceEqual(OrderDirectiveTexts(after, right))
             && left.Members.Select(member => member.ToFullString()).Order(StringComparer.Ordinal)
                 .SequenceEqual(right.Members.Select(member => member.ToFullString()).Order(StringComparer.Ordinal))
             && SyntaxFactory.AreEquivalent(before.ReplaceNode(left, left.WithMembers(default)), after.ReplaceNode(right, right.WithMembers(default)));
+    }
+
+    private static bool HasOrderBarrier(MemberDeclarationSyntax member, HashSet<SyntaxTrivia> movableWarnings) =>
+        member.DescendantTrivia().Any(trivia => trivia.IsDirective && !movableWarnings.Contains(trivia));
+
+    private static IEnumerable<string> OrderDirectiveTexts(SyntaxNode root, TypeDeclarationSyntax type)
+    {
+        HashSet<SyntaxTrivia> movableWarnings = MovableWarningDirectives(root, type);
+        return root.DescendantTrivia().Where(trivia => trivia.IsDirective && !movableWarnings.Contains(trivia))
+            .Select(trivia => trivia.ToFullString());
+    }
+
+    private static HashSet<SyntaxTrivia> MovableWarningDirectives(SyntaxNode root, TypeDeclarationSyntax type)
+    {
+        HashSet<SyntaxTrivia> movable = [];
+        foreach (MemberDeclarationSyntax member in type.Members)
+        {
+            SyntaxTrivia[] directives = member.DescendantTrivia().Where(trivia => trivia.IsDirective).ToArray();
+            if (member is not BaseMethodDeclarationSyntax || directives.Length == 0 || directives.Length % 2 != 0
+                || directives.Any(trivia => !member.Span.Contains(trivia.Span)))
+            {
+                continue;
+            }
+
+            bool balanced = true;
+            for (int index = 0; index < directives.Length; index += 2)
+            {
+                if (directives[index].GetStructure() is not PragmaWarningDirectiveTriviaSyntax disable
+                    || directives[index + 1].GetStructure() is not PragmaWarningDirectiveTriviaSyntax restore
+                    || !disable.DisableOrRestoreKeyword.IsKind(SyntaxKind.DisableKeyword)
+                    || !restore.DisableOrRestoreKeyword.IsKind(SyntaxKind.RestoreKeyword)
+                    || disable.ErrorCodes.Count == 0
+                    || !disable.ErrorCodes.Select(code => code.ToString()).SequenceEqual(restore.ErrorCodes.Select(code => code.ToString())))
+                {
+                    balanced = false;
+                    break;
+                }
+            }
+
+            if (balanced)
+            {
+                movable.UnionWith(directives);
+            }
+        }
+
+        // An ambient warning directive could make a local restore change the following member's scope.
+        return root.DescendantTrivia().Any(trivia => trivia.GetStructure() is PragmaWarningDirectiveTriviaSyntax && !movable.Contains(trivia))
+            ? [] : movable;
     }
 
     private static bool TryComment(CommentEntry entry, FunctionalFinding finding,

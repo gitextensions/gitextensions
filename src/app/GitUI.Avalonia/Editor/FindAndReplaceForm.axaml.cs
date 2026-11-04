@@ -554,7 +554,10 @@ public sealed class TextEditorSearcher : IDisposable
     public bool MatchCase;
     public bool MatchWholeWordOnly;
     private TextEditor? _editor;
+    private TextDocument? _document;
     private string? _lookFor2; // uppercase in case-insensitive mode
+    private int? _scanOffset;
+    private int _scanLength;
 
     // I would have used the TextAnchor class to represent the beginning and
     // end of the region to scan while automatically adjusting to changes in
@@ -566,9 +569,6 @@ public sealed class TextEditorSearcher : IDisposable
     // to the TextEditor. After adding the renderer to the view, we
     // must remember to remove it when it is no longer needed.
     private ScanRegionRenderer? _region;
-    private int? _scanOffset;
-    private int _scanLength;
-    private TextDocument? _document;
 
     /// <summary>Gets or sets the document to search.</summary>
     public TextDocument? Document
@@ -703,6 +703,9 @@ public sealed class TextEditorSearcher : IDisposable
         return result;
     }
 
+    private static bool MatchFirstCh(char a, char b, bool matchCase)
+        => matchCase ? a == b : char.ToUpperInvariant(a) == char.ToUpperInvariant(b);
+
     private TextRange? FindNextIn(int offset1, int offset2, bool searchBackward)
     {
         string lookFor = LookFor ?? throw new InvalidOperationException("No search text was specified.");
@@ -735,9 +738,6 @@ public sealed class TextEditorSearcher : IDisposable
 
         return null;
     }
-
-    private static bool MatchFirstCh(char a, char b, bool matchCase)
-        => matchCase ? a == b : char.ToUpperInvariant(a) == char.ToUpperInvariant(b);
 
     private bool IsWholeWordMatch(int offset)
         => IsWordBoundary(offset) && IsWordBoundary(offset + (LookFor?.Length ?? 0));

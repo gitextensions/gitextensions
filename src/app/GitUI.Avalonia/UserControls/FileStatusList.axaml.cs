@@ -1439,7 +1439,7 @@ public partial class FileStatusList : GitModuleControl
 
     private void FilterComboBox_SizeChanged(object? sender, EventArgs e)
     {
-        // it invalidates itself on resize so its look does not become distorted
+        // invalidate it on resize so its look does not become distorted
         cboFilterComboBox.InvalidateVisual();
     }
 

@@ -1,4 +1,4 @@
-﻿using AwesomeAssertions;
+using AwesomeAssertions;
 using GitExtensions.ParityInventory;
 using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
@@ -280,6 +280,27 @@ public sealed class MechanicalFixerTests
     public void Fix_should_not_cross_directive_barriers()
     {
         using Fixture fixture = new("void A() { }\n    void B() { }", "#region B\n    void B() { }\n    #endregion\n    void A() { }");
+        fixture.Fix().Text.Should().Be(fixture.Twin);
+    }
+
+    [Test]
+    public void Fix_should_move_methods_with_balanced_internal_warning_pragmas()
+    {
+        using Fixture fixture = new("void A() { }\n    void B() { }", "void B() {\n#pragma warning disable CS0168\nint unused;\n#pragma warning restore CS0168\n}\n    void A() { }");
+        FileFix result = fixture.Fix();
+        result.OrderChanged.Should().BeTrue();
+        result.Text.IndexOf("void A()", StringComparison.Ordinal).Should().BeLessThan(result.Text.IndexOf("void B()", StringComparison.Ordinal));
+        MechanicalFixer.MemberMultisetEquivalent(CSharpSyntaxTree.ParseText(fixture.Twin).GetRoot(), CSharpSyntaxTree.ParseText(result.Text).GetRoot(), "Sample.Widget").Should().BeTrue();
+    }
+
+    [TestCase("#pragma warning disable CS0168\n", "#pragma warning restore CS0168\n", "#pragma warning disable CS0168\n")]
+    [TestCase("#pragma warning disable CS0168\n", "", "")]
+    [TestCase("#pragma warning disable CS0168\n", "#pragma warning restore CS0219\n", "")]
+    [TestCase("#pragma warning disable\n", "#pragma warning restore\n", "")]
+    [TestCase("#if DEBUG\n", "#endif\n", "")]
+    public void Fix_should_keep_warning_scope_and_other_directive_barriers(string start, string end, string ambient)
+    {
+        using Fixture fixture = new("void A() { }\n    void B() { }", ambient + "void B() {\n" + start + "int unused;\n" + end + "}\n    void A() { }");
         fixture.Fix().Text.Should().Be(fixture.Twin);
     }
 

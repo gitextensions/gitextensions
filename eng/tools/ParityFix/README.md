@@ -71,7 +71,10 @@ for `prove`; `--twin-root` applies only to placement. A report should go to an i
 or outside the repository. This proof supports comments placed by hand without an inventory report;
 it exits nonzero for any unproved path and does not prove comment meaning or any complete parity axis.
 
-Member order changes stay inside a partial and cannot cross directive-bearing members. Unknown members
+Member order changes stay inside a partial and cannot cross directive-bearing members, except methods
+whose only directives are internal adjacent warning-disable/restore pairs for the same explicit codes.
+These pairs can move with their complete member only when the file has no ambient warning directives;
+their exact text remains protected by the member-multiset proof. Regions and conditional scopes stay barriers. Unknown members
 keep their slots; overloads and other ambiguous declarations remain in place. The full member multiset,
 including trivia, and syntax outside the type must be unchanged after reordering and reparsing. Moved
 fields, events and properties with initializers are listed and block that file's order changes by default.
