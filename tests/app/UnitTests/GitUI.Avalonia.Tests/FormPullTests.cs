@@ -57,7 +57,7 @@ public sealed class FormPullTests
         _closeProcessDialog = AppSettings.CloseProcessDialog;
         _dontConfirmFetchAndPruneAll = AppSettings.DontConfirmFetchAndPruneAll.Value;
         _dontConfirmResolveConflicts = AppSettings.DontConfirmResolveConflicts.Value;
-        _dontConfirmUpdateSubmodulesOnCheckout = AppSettings.DontConfirmUpdateSubmodulesOnCheckout;
+        _dontConfirmUpdateSubmodulesOnCheckout = AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value;
         _formPullAction = AppSettings.FormPullAction;
         _updateSubmodulesOnCheckout = AppSettings.UpdateSubmodulesOnCheckout;
         _messageBoxes = new StubMessageBoxHost { Result = WinFormsShims.DialogResult.No };
@@ -92,7 +92,7 @@ public sealed class FormPullTests
         AppSettings.CloseProcessDialog = _closeProcessDialog;
         AppSettings.DontConfirmFetchAndPruneAll.Value = _dontConfirmFetchAndPruneAll;
         AppSettings.DontConfirmResolveConflicts.Value = _dontConfirmResolveConflicts;
-        AppSettings.DontConfirmUpdateSubmodulesOnCheckout = _dontConfirmUpdateSubmodulesOnCheckout;
+        AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value = _dontConfirmUpdateSubmodulesOnCheckout;
         AppSettings.FormPullAction = _formPullAction;
         AppSettings.UpdateSubmodulesOnCheckout = _updateSubmodulesOnCheckout;
         _serviceContainer.Dispose();

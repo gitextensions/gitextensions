@@ -2,6 +2,7 @@
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -16,6 +17,36 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class SmallControlParityTests
 {
+    [AvaloniaTest]
+    public void Interactive_action_buttons_should_fit_enlarged_fonts_and_long_captions()
+    {
+        GitExtensions.Shims.WinForms.Font originalFont = AppSettings.Font;
+        Window? window = null;
+        try
+        {
+            AppSettings.Font = new GitExtensions.Shims.WinForms.Font("Arial", 18);
+            InteractiveGitActionControl control = new();
+            InteractiveGitActionControl.TestAccessor accessor = control.GetTestAccessor();
+            accessor.SetGitAction(InteractiveGitActionControl.GitAction.Merge, conflicts: false);
+            accessor.ContinueButton.Content = "Continue with the operation";
+            window = new Window { Content = control, Width = 1000, SizeToContent = SizeToContent.Height };
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            foreach (Button button in accessor.Controls.OfType<Button>())
+            {
+                button.Measure(Avalonia.Size.Infinity);
+                button.Bounds.Height.Should().BeGreaterThanOrEqualTo(button.DesiredSize.Height - button.Margin.Top - button.Margin.Bottom);
+                button.Bounds.Width.Should().BeGreaterThanOrEqualTo(button.DesiredSize.Width - button.Margin.Left - button.Margin.Right);
+            }
+        }
+        finally
+        {
+            window?.Close();
+            AppSettings.Font = originalFont;
+        }
+    }
+
     [AvaloniaTest]
     public void BranchSelector_should_preserve_named_fields_and_local_default()
     {

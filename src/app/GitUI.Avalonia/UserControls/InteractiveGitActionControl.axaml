@@ -6,7 +6,7 @@
              x:Class="GitUI.UserControls.InteractiveGitActionControl"
              d:DesignWidth="424"
              d:DesignHeight="34"
-             Height="34"
+             MinHeight="34"
              Background="{DynamicResource GitExtensionsInteractiveActionBackgroundBrush}">
   <UserControl.Styles>
     <Style Selector="UserControl.conflict">
@@ -30,15 +30,15 @@
                VerticalAlignment="Center"
                Foreground="{DynamicResource GitExtensionsInteractiveActionForegroundBrush}" />
     <StackPanel x:Name="ButtonContainer"
-                Height="34"
+                MinHeight="34"
                 Focusable="True"
                 HorizontalAlignment="Right"
                 Orientation="Horizontal"
                 Spacing="0">
-      <Button x:Name="ResolveButton" Width="75" Height="23" Margin="3,5,3,6" VerticalAlignment="Top" Content="Resolve..." />
-      <Button x:Name="ContinueButton" Width="75" Height="23" Margin="3,5,3,6" VerticalAlignment="Top" Content="Continue" />
-      <Button x:Name="AbortButton" Width="75" Height="23" Margin="3,5,3,6" VerticalAlignment="Top" Content="Abort" />
-      <Button x:Name="MoreButton" Width="75" Height="23" Margin="3,5,3,6" VerticalAlignment="Top" Content="M_ore..." />
+      <Button x:Name="ResolveButton" MinWidth="75" MinHeight="23" Padding="3,0" Margin="3,5,3,6" VerticalAlignment="Top" Content="Resolve..." />
+      <Button x:Name="ContinueButton" MinWidth="75" MinHeight="23" Padding="3,0" Margin="3,5,3,6" VerticalAlignment="Top" Content="Continue" />
+      <Button x:Name="AbortButton" MinWidth="75" MinHeight="23" Padding="3,0" Margin="3,5,3,6" VerticalAlignment="Top" Content="Abort" />
+      <Button x:Name="MoreButton" MinWidth="75" MinHeight="23" Padding="3,0" Margin="3,5,3,6" VerticalAlignment="Top" Content="M_ore..." />
     </StackPanel>
   </Grid>
 </UserControl>

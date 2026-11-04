@@ -224,6 +224,7 @@ public sealed class RevisionGridViewportTests
             AppSettings.ShowTags = true;
             GitRevision revision = CreateRevisions(1).Single();
             IGitModule module = Substitute.For<IGitModule>();
+            module.GetRemoteColors().Returns(System.Collections.Frozen.FrozenDictionary<string, System.Drawing.Color>.Empty);
             IGitRef local = CreateRef(module, revision.ObjectId, "main", remote: false);
             IGitRef remote = CreateRef(module, revision.ObjectId, "origin/main", remote: true);
             local.IsTrackingRemote(remote).Returns(true);

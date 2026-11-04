@@ -180,10 +180,10 @@ partial class FileStatusList
 
     private void FindInFilesGitGrep_DropDownOpening(object sender, EventArgs e)
     {
-        tsmiFindUsingMatchCase.IsChecked = !AppSettings.GitGrepIgnoreCase.Value;
-        tsmiFindUsingWholeWord.IsChecked = AppSettings.GitGrepMatchWholeWord.Value;
+        tsmiFindUsingMatchCase.IsChecked = !AppSettings.GitGrepIgnoreCase;
+        tsmiFindUsingWholeWord.IsChecked = AppSettings.GitGrepMatchWholeWord;
         _findUsingOptionsPrefix ??= tsmiFindUsingOptions.Header + ": ";
-        tsmiFindUsingOptions.Header = _findUsingOptionsPrefix + AppSettings.GitGrepUserArguments.Value;
+        tsmiFindUsingOptions.Header = _findUsingOptionsPrefix + AppSettings.GitGrepUserArguments;
     }
 
     private void ShowAssumeUnchangedFiles_Click(object sender, EventArgs e)
@@ -236,9 +236,9 @@ partial class FileStatusList
         }
 
         tsmiDenseTree.IsEnabled = !flatList;
-        tsmiDenseTree.IsChecked = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
+        tsmiDenseTree.IsChecked = AppSettings.FileStatusMergeSingleItemWithFolder;
         tsmiShowGroupNodesInFlatList.IsEnabled = flatList;
-        tsmiShowGroupNodesInFlatList.IsChecked = AppSettings.FileStatusShowGroupNodesInFlatList.Value;
+        tsmiShowGroupNodesInFlatList.IsChecked = AppSettings.FileStatusShowGroupNodesInFlatList;
         bool filterByDiffStatus = GitItemStatusesWithDescription.Any(group => group.IconName is nameof(Images.DiffA) or nameof(Images.DiffB));
         sepFilter.IsVisible = filterByDiffStatus;
         btnUnequalChange.IsVisible = filterByDiffStatus;

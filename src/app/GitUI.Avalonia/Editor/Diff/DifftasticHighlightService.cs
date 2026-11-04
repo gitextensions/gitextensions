@@ -34,7 +34,7 @@ public partial class DifftasticHighlightService : DiffHighlightService
         int halfColumn = column / 2;
         bool nextIsHeader = true;
         bool debugPrinted = false;
-        bool reverseGitColoring = AppSettings.ReverseGitColoring.Value;
+        bool reverseGitColoring = AppSettings.ReverseGitColoring;
 
         foreach (string rawLine in text.LazySplit('\n'))
         {

@@ -391,7 +391,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             .FirstOrDefault(column => column.Resizable && column.Width.IsStar);
 
         _toolTipProvider = new RevisionGridToolTipProvider(this);
-        _toolTipProvider.ShowRevisionGridTooltips = AppSettings.ShowRevisionGridTooltips.Value;
+        _toolTipProvider.ShowRevisionGridTooltips = AppSettings.ShowRevisionGridTooltips;
         _quickSearchProvider = new QuickSearchProvider(_gridView, pnlRevisionGrid, () => Module.WorkingDir);
         _gridView.ItemsSource = _revisions;
         ApplyColumnSettings();
@@ -504,6 +504,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         stopBisectToolStripMenuItem.Click += StopBisectToolStripMenuItemClick;
         tsmiSelectInLeftPanel.Click += SelectInLeftPanel_Click;
         fixupCommitToolStripMenuItem.Click += FixupCommitToolStripMenuItemClick;
+        editCommitWithFixupToolStripMenuItem.Click += EditCommitWithFixupToolStripMenuItemClick;
         squashCommitToolStripMenuItem.Click += SquashCommitToolStripMenuItemClick;
         amendCommitToolStripMenuItem.Click += AmendCommitToolStripMenuItemClick;
         editCommitToolStripMenuItem.Click += editCommitToolStripMenuItem_Click;
@@ -1198,7 +1199,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             observer.InitializeStashes(capturedModule, stashes.Value);
 
             RevisionReader reader = new(capturedModule);
-            bool hasNotes = AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes;
+            bool hasNotes = AppSettings.ShowGitNotesColumn || AppSettings.ShowGitNotes;
             string effectivePathFilter = BuildPathFilter(pathFilter);
 
             // Allow add revisions to the grid
@@ -2033,7 +2034,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    private void UpdateContextMenuItems(Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>>? filterRefs = null)
+    private void UpdateContextMenuItems(Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>>? filterRefs = null, Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>>? filterRefsByTracking = null)
     {
         GitRevision? revision = LatestSelectedRevision;
         bool hasCommands = TryGetUICommandsDirect(out IGitUICommands? commands);
@@ -2066,7 +2067,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         if (revision is { IsArtificial: false } && hasCommands)
         {
-            PopulateRefMenus(revision!, commands!, filterRefs ?? (refs => refs));
+            PopulateRefMenus(revision!, commands!, filterRefs ?? (refs => refs), filterRefsByTracking ?? filterRefs ?? (refs => refs));
         }
 
         SetVisible(checkoutBranchToolStripMenuItem, regularRevision && checkoutBranchToolStripMenuItem.Items.Count > 0);
@@ -2110,6 +2111,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         SetVisible(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision?.BuildStatus?.PullRequestUrl));
         SetVisible(manipulateCommitToolStripMenuItem, regularRevision);
         fixupCommitToolStripMenuItem.IsEnabled = regularRevision;
+        editCommitWithFixupToolStripMenuItem.IsEnabled = regularRevision;
         squashCommitToolStripMenuItem.IsEnabled = regularRevision;
         amendCommitToolStripMenuItem.IsEnabled = regularRevision && commands!.Module.GitVersion.SupportAmendCommits;
         editCommitToolStripMenuItem.IsEnabled = regularRevision;
@@ -2166,7 +2168,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    private void PopulateRefMenus(GitRevision revision, IGitUICommands commands, Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefs)
+    private void PopulateRefMenus(GitRevision revision, IGitUICommands commands, Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefs, Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefsByTracking)
     {
         GitRefListsForRevision refLists = new(revision);
         string currentBranchRef = GitRefName.RefsHeadsPrefix + commands.Module.GetSelectedBranch();
@@ -2277,7 +2279,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         bool currentBranchPointsToRevision = allBranches.Any(branch => branch.CompleteName == currentBranchRef);
 
         // For now there is no action that could be done on currentBranch
-        IEnumerable<IGitRef> mergeRefs = filterRefs(refLists.AllTags.Concat(refLists.BranchesWithNoIdenticalRemotes))
+        IEnumerable<IGitRef> mergeRefs = filterRefs(refLists.AllTags).Concat(filterRefsByTracking(refLists.BranchesWithNoIdenticalRemotes))
             .Where(gitRef => gitRef.CompleteName != currentBranchRef);
         foreach (IGitRef gitRef in mergeRefs)
         {
@@ -2349,16 +2351,16 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         bool focused = _rightClickedHitInfo is not null
             && (_contextMenuModifiers.HasFlag(KeyModifiers.Control)
                 || !(_contextMenuModifiers.HasFlag(KeyModifiers.Shift) || AppSettings.AlwaysShowAdvOpt));
-        IGitRef? clickedRef = _rightClickedHitInfo?.GitRef;
-        string? relatedBranch = clickedRef is NestledVirtualRef
-            ? (clickedRef.IsRemote ? clickedRef.Remote + "/" : "") + clickedRef.MergeWith
-            : null;
+        IGitRef? clickedRef = _rightClickedHitInfo?.GitRef is NestledVirtualRef nestedRef
+            ? nestedRef.TargetRef
+            : _rightClickedHitInfo?.GitRef;
         Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefs = clickedRef is null
             ? refs => refs
-            : refs => refs.Where(r => r == clickedRef || r.Name == relatedBranch);
-        copyToClipboardToolStripMenuItem.SetFilterRefsFunc(clickedRef is null
-            ? refNames => refNames
-            : refNames => refNames.Where(r => r == clickedRef.Name || r == relatedBranch));
+            : refs => refs.Where(r => r == clickedRef);
+        Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefsByTracking = clickedRef is null
+            ? refs => refs
+            : refs => refs.Where(r => r == clickedRef || r.IsTrackingRemote(clickedRef));
+        copyToClipboardToolStripMenuItem.SetFilterRefsFunc(filterRefs);
 
         mainContextMenu.RemoveUserScripts(runScriptToolStripMenuItem);
         tsmiOtherActions.Items.Clear();
@@ -2368,7 +2370,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             (focused && advanced ? tsmiOtherActions.Items : mainContextMenu.Items).Add(item);
         }
 
-        UpdateContextMenuItems(filterRefs);
+        UpdateContextMenuItems(filterRefs, filterRefsByTracking);
         tsmiOtherActions.IsVisible = focused;
         mainContextMenu.InvalidateMeasure();
     }
@@ -2638,7 +2640,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             TaskDialogButton result = TaskDialog.ShowDialog(GetOwner(), page);
             if (page.Verification.Checked)
             {
-                AppSettings.DontConfirmStashDrop = true;
+                AppSettings.DontConfirmStashDrop.Value = true;
             }
 
             if (result != TaskDialogButton.Yes)
@@ -2656,6 +2658,40 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         if (LatestSelectedRevision is GitRevision revision)
         {
             UICommands.StartFixupCommitDialog(GetOwner(), revision);
+        }
+    }
+
+    private void EditCommitWithFixupToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        if (LatestSelectedRevision is not { } revision || GetActualRevision(revision)?.FirstParentId is not { IsZero: false } parentRevision)
+        {
+            return;
+        }
+
+        using FormCommit form = new(UICommands, CommitKind.Fixup, revision);
+        form.CommitCreated += OnFixupCommitCreated;
+        form.ShowDialog(GetOwner());
+
+        return;
+
+        void OnFixupCommitCreated(object? sender, EventArgs e)
+        {
+            form.CommitCreated -= OnFixupCommitCreated;
+
+            string rebaseCmd = Commands.Rebase(new Commands.RebaseOptions()
+            {
+                BranchName = parentRevision.ToString(),
+                Interactive = true,
+                AutoSquash = true,
+                AutoStash = true,
+                SupportRebaseMerges = Module.GitVersion.SupportRebaseMerges
+            });
+
+            using FormProcess formProcess = new(UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+
+            formProcess.ShowDialog(form);
+            PerformRefreshRevisions();
+            ArtificialChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -2777,7 +2813,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void ToggleShowGitNotesColumn()
     {
-        AppSettings.ShowGitNotesColumn.Value = !AppSettings.ShowGitNotesColumn.Value;
+        AppSettings.ShowGitNotesColumn.Value = !AppSettings.ShowGitNotesColumn;
         ReloadCurrentView();
     }
 
@@ -3119,7 +3155,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         ShowAuthorDateMenuItem.IsChecked = AppSettings.ShowAuthorDate;
         ShowRelativeDateMenuItem.IsChecked = AppSettings.RelativeDate;
         ShowRevisionGraphColumnMenuItem.IsChecked = AppSettings.ShowRevisionGridGraphColumn;
-        ShowGitNotesColumnMenuItem.IsChecked = AppSettings.ShowGitNotesColumn.Value;
+        ShowGitNotesColumnMenuItem.IsChecked = AppSettings.ShowGitNotesColumn;
         ShowAuthorNameColumnMenuItem.IsChecked = AppSettings.ShowAuthorNameColumn;
         ShowDateColumnMenuItem.IsChecked = AppSettings.ShowDateColumn;
         ShowIdColumnMenuItem.IsChecked = AppSettings.ShowObjectIdColumn;

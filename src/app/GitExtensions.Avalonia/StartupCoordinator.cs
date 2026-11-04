@@ -54,7 +54,7 @@ internal sealed class StartupCoordinator
             }
         }
 
-        CommonLogic commonLogic = new(commands.Module);
+        using CommonLogic commonLogic = new(commands.Module);
         if (!AppSettings.CheckSettings)
         {
             CheckSettingsLogic.SolveEditor(commonLogic);

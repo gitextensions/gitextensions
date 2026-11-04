@@ -53,10 +53,10 @@ public sealed class WorktreeDialogTests
     [AvaloniaTest]
     public void FormCreateWorktree_should_normalise_a_new_branch_before_creation()
     {
-        bool originalAutoNormalise = AppSettings.AutoNormaliseBranchName;
+        bool originalAutoNormalise = AppSettings.AutoNormaliseBranchName.Value;
         try
         {
-            AppSettings.AutoNormaliseBranchName = true;
+            AppSettings.AutoNormaliseBranchName.Value = true;
             string mainPath = Path.Combine(Path.GetTempPath(), $"gitextensions-worktree-{Guid.NewGuid():N}");
             IGitModule module = Substitute.For<IGitModule>();
             IGitBranchNameNormaliser normaliser = Substitute.For<IGitBranchNameNormaliser>();
@@ -75,7 +75,7 @@ public sealed class WorktreeDialogTests
         }
         finally
         {
-            AppSettings.AutoNormaliseBranchName = originalAutoNormalise;
+            AppSettings.AutoNormaliseBranchName.Value = originalAutoNormalise;
         }
     }
 

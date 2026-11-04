@@ -24,6 +24,7 @@ internal abstract class BaseRevisionTree : Tree
             return;
         }
 
+        // Batch style updates to avoid per-node TreeView invalidation on large ref sets.
         foreach (BaseRevisionNode node in Nodes.DepthEnumerator<BaseRevisionNode>())
         {
             if (node.ObjectId.IsZero)

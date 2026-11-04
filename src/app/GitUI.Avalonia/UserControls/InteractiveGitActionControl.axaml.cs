@@ -44,6 +44,13 @@ public partial class InteractiveGitActionControl : GitModuleControl
         AbortButton.Click += AbortButton_Click;
         MoreButton.Click += MoreButton_Click;
         InitializeComplete();
+
+        // The buttons are laid out by the docked ButtonContainer, which is as high as this control
+        // and no higher, so the captions would be cut off unless the height the buttons need is
+        // reserved here. Measuring covers an enlarged system font as well, which the DPI scaling
+        // of the designer values does not see.
+        ButtonContainer.Measure(Avalonia.Size.Infinity);
+        MinHeight = ButtonContainer.DesiredSize.Height;
     }
 
     // It is possible for a repo to be in a middle of a bisect operation and

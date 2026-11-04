@@ -290,9 +290,9 @@
 
         <Grid x:Name="panelDetails"
               Grid.Row="1"
-              Margin="0,10,0,0"
-              ColumnDefinitions="Auto,*,Auto"
-              RowDefinitions="Auto,Auto,Auto"
+              Margin="33,5,50,8"
+              ColumnDefinitions="Auto,*"
+              RowDefinitions="Auto,Auto,Auto,Auto"
               ColumnSpacing="8" RowSpacing="6">
           <Label x:Name="label4"
                  Padding="0"
@@ -330,9 +330,10 @@
 
           <compat:IconButton x:Name="SaveDefaultPushPull"
                              Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
-                             Grid.Row="2" Grid.Column="2"
-                             MinWidth="120"
-                             VerticalAlignment="Bottom"
+                             Grid.Row="3" Grid.Column="1"
+                             MinWidth="130" MinHeight="25"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Center"
                              Icon="{x:Static properties:Images.Save}"
                              Content="_Save changes" />
         </Grid>

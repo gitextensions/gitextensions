@@ -242,6 +242,24 @@ public sealed class RevisionGridContextSourceActionTests
         fixture.Module.Received(1).OpenWithDifftoolDirDiff(null, fixture.Revisions[0].Guid, customTool: "meld");
     }
 
+    [AvaloniaTest]
+    public void Edit_by_fixup_should_keep_the_original_menu_order_and_ignore_a_root_commit()
+    {
+        using GridFixture fixture = new(bare: false, kind: "commit");
+        fixture.Revisions[0].ParentIds = [];
+        fixture.OpenContextMenu();
+        fixture.Item("manipulateCommitToolStripMenuItem").Items.OfType<MenuItem>()
+            .Take(4).Select(item => item.Name).Should().Equal(
+                "editCommitToolStripMenuItem", "editCommitWithFixupToolStripMenuItem",
+                "rewordCommitToolStripMenuItem", "fixupCommitToolStripMenuItem");
+        int openedWindows = 0;
+        using IDisposable subscription = Window.WindowOpenedEvent.AddClassHandler<Window>((_, _) => openedWindows++);
+
+        fixture.Item("editCommitWithFixupToolStripMenuItem").RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        openedWindows.Should().Be(0);
+    }
+
     private sealed class GridFixture : IDisposable
     {
         private readonly Dictionary<string, string?> _settings;

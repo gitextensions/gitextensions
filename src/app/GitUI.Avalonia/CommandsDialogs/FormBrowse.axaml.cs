@@ -1146,7 +1146,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             ShowDashboard();
             _worktrees = [];
-            toolStripWorktrees.IsVisible = false;
+            toolStripWorktrees.IsEnabled = false;
             _NO_TRANSLATE_WorkingDir.RefreshContent();
             lblRepoPath.Text = "No git repository";
             lblStatus.Text = "Start the app inside a repository or pass one on the command line: GitExtensions.Avalonia browse <path>";
@@ -1416,6 +1416,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             ConfigFileRemoteSettingsManager remotesManager = new(() => module);
             IReadOnlyList<Remote> disabledRemotes = remotesManager.GetDisabledRemotes();
             cancellationToken.ThrowIfCancellationRequested();
+            await GitUI.LeftPanel.Tree.WaitForIdleAsync(cancellationToken);
             await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             if (!ReferenceEquals(Module, module))
             {
@@ -1423,7 +1424,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             }
 
             _worktrees = worktrees;
-            toolStripWorktrees.IsVisible = worktrees.Count > 1;
+            toolStripWorktrees.IsEnabled = true;
             repoObjectsTree.SetRefs(
                 refs,
                 stashes,
@@ -1825,7 +1826,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         revisionGpgInfo1.DisplayVerificationPending();
 
         // Don't show the "GPG" tab for artificial commits
-        bool showGpgInfoTab = revision?.IsArtificial is false && AppSettings.ShowGpgInformation.Value;
+        bool showGpgInfoTab = revision?.IsArtificial is false && AppSettings.ShowGpgInformation;
         GpgInfoTabPage.IsVisible = showGpgInfoTab;
         if (!showGpgInfoTab)
         {
@@ -2163,6 +2164,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             RevisionGrid.ResetAllFilters();
             ToolStripFilters.ClearQuickFilters();
             revisionDiff.RepositoryChanged();
+
+            _selectedRevisionUpdatedTargets = UpdateTargets.None;
         }
 
         InternalInitialize();
@@ -3209,7 +3212,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         // Tab page already created
         // Check if there are available console emulators
-        if (!AppSettings.ShowConEmuTab.Value
+        if (!AppSettings.ShowConEmuTab
             || _consoleEmulatorsRegistry is null
             || _consoleEmulatorsRegistry.AvailableConsoleEmulators.Count == 0
             || _consoleTabPage is not null)
@@ -3263,7 +3266,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         OutputHistoryControl outputHistoryControl = new();
-        _outputHistoryController = AppSettings.ShowOutputHistoryAsTab.Value
+        _outputHistoryController = AppSettings.ShowOutputHistoryAsTab
             ? new OutputHistoryTabController(
                 outputHistoryProvider,
                 outputHistoryControl,
@@ -3275,7 +3278,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 mainContentGrid,
                 outputHistorySplitter,
                 outputHistoryPanelHost,
-                AppSettings.OutputHistoryPanelVisible.Value);
+                AppSettings.OutputHistoryPanelVisible);
     }
 
     public void ChangeTerminalActiveFolder(string path)

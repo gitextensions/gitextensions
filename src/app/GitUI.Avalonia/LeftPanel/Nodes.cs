@@ -79,16 +79,22 @@ internal sealed class Nodes(Tree? tree) : IReadOnlyCollection<Node>
     internal void FillTreeViewNode(TreeViewItem treeViewNode)
     {
         // Avalonia requires each model node to retain its own TreeViewItem because handlers are attached to it.
-        TreeViewItem[] desiredItems = [.. _nodesList.Select(node => node.TreeViewNode)];
         treeViewNode.Items.Clear();
-        foreach (TreeViewItem item in desiredItems)
-        {
-            treeViewNode.Items.Add(item);
-        }
-
         foreach (Node node in _nodesList)
         {
+            treeViewNode.Items.Add(CreateTreeNode(node));
+        }
+
+        return;
+
+        static TreeViewItem CreateTreeNode(Node node)
+        {
+            // Build the whole new subtree before it is attached to the tree view. As soon as a TreeViewItem belongs to
+            // a visible TreeView, adding it, setting its text, image or colour each invalidates the
+            // control, which is very slow for thousands of refs. A detached TreeViewItem
+            // only stores the values, and adding the finished subtree inserts each node once.
             node.Nodes.FillTreeViewNode(node.TreeViewNode);
+            return node.TreeViewNode;
         }
     }
 

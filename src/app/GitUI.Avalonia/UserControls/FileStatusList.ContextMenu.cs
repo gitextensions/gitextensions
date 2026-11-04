@@ -587,6 +587,11 @@ partial class FileStatusList
         }
     }
 
+    public void InitializeContextMenuAndToolbar()
+    {
+        tsmiShowUntrackedFiles.IsChecked = Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
+    }
+
     public void InitResetFileToToolStripMenuItem()
     {
         // Multiple parent/child can be selected, only the the first is shown.
@@ -1230,7 +1235,7 @@ partial class FileStatusList
         tsmiFilterFileInGrid.IsVisible = _filterFileInGrid is not null;
         tsmiFilterFileInGrid.IsEnabled = _filterFileInGrid is not null && _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
         tsmiFileHistory.IsEnabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
-        tsmiBlame.IsEnabled = AppSettings.UseDiffViewerForBlame.Value || _blame is null
+        tsmiBlame.IsEnabled = AppSettings.UseDiffViewerForBlame || _blame is null
             ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
             : _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         if (!tsmiBlame.IsEnabled)

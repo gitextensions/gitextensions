@@ -144,7 +144,7 @@ public static partial class GitUIExtensions
                 fileViewer.Encoding,
                 out string diffOfConflict,
                 useGitColoring: patchUseGitColoring,
-                commandConfiguration: CombinedDiffHighlightService.GetGitCommandConfiguration(fileViewer.Module, AppSettings.UseGitColoring.Value),
+                commandConfiguration: CombinedDiffHighlightService.GetGitCommandConfiguration(fileViewer.Module, AppSettings.UseGitColoring),
                 cancellationToken);
 
             if (!result)
@@ -182,7 +182,7 @@ public static partial class GitUIExtensions
             return;
         }
 
-        if (AppSettings.DiffDisplayAppearance.Value == GitCommands.Settings.DiffDisplayAppearance.Difftastic && fileViewer.IsDifftasticEnabled.Value)
+        if (AppSettings.DiffDisplayAppearance == GitCommands.Settings.DiffDisplayAppearance.Difftastic && fileViewer.IsDifftasticEnabled.Value)
         {
             bool isTracked = item.Item.IsTracked || (!item.Item.TreeId.IsZero && !item.SecondRevision.ObjectId.IsZero);
             (ArgumentString diffArgs, string extraCacheKey) = fileViewer.GetDifftasticArguments();

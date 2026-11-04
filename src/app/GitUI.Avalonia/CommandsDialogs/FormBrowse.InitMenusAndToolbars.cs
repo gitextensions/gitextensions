@@ -110,27 +110,6 @@ partial class FormBrowse
         }
     }
 
-    private void UpdateWorktreeToolStripVisibility()
-    {
-        if (!Module.IsValidGitWorkingDir())
-        {
-            toolStripWorktrees.IsVisible = false;
-            return;
-        }
-
-        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
-        _loadOperations.FileAndForget(async () =>
-        {
-            await TaskScheduler.Default;
-            IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
-
-            await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-
-            _worktrees = worktrees;
-            toolStripWorktrees.IsVisible = worktrees.Count > 1;
-        });
-    }
-
     private void UpdateTooltipWithShortcut(Control button, Command command)
         => UpdateTooltipWithShortcut(button, GetShortcutKeyTooltipString(command));
 

@@ -308,10 +308,10 @@ public sealed class FormPushTests
     {
         bool closeProcessDialog = AppSettings.CloseProcessDialog;
         bool dontConfirmNewBranch = AppSettings.DontConfirmPushNewBranch.Value;
-        bool dontConfirmTracking = AppSettings.DontConfirmAddTrackingRef;
+        bool dontConfirmTracking = AppSettings.DontConfirmAddTrackingRef.Value;
         AppSettings.CloseProcessDialog = true;
         AppSettings.DontConfirmPushNewBranch.Value = true;
-        AppSettings.DontConfirmAddTrackingRef = true;
+        AppSettings.DontConfirmAddTrackingRef.Value = true;
         try
         {
             GitModule module = CreateRepositoryAndRemote();
@@ -342,7 +342,7 @@ public sealed class FormPushTests
         {
             AppSettings.CloseProcessDialog = closeProcessDialog;
             AppSettings.DontConfirmPushNewBranch.Value = dontConfirmNewBranch;
-            AppSettings.DontConfirmAddTrackingRef = dontConfirmTracking;
+            AppSettings.DontConfirmAddTrackingRef.Value = dontConfirmTracking;
         }
     }
 
@@ -418,13 +418,13 @@ public sealed class FormPushTests
         GitPullAction? autoPull = AppSettings.AutoPullOnPushRejectedAction;
         GitPullAction defaultPull = AppSettings.DefaultPullAction;
         bool dontConfirmNewBranch = AppSettings.DontConfirmPushNewBranch.Value;
-        bool dontConfirmTracking = AppSettings.DontConfirmAddTrackingRef;
+        bool dontConfirmTracking = AppSettings.DontConfirmAddTrackingRef.Value;
         string updaterDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.PushUpdater-{Guid.NewGuid():N}");
         AppSettings.CloseProcessDialog = true;
         AppSettings.AutoPullOnPushRejectedAction = GitPullAction.Merge;
         AppSettings.DefaultPullAction = GitPullAction.Merge;
         AppSettings.DontConfirmPushNewBranch.Value = true;
-        AppSettings.DontConfirmAddTrackingRef = true;
+        AppSettings.DontConfirmAddTrackingRef.Value = true;
         try
         {
             GitModule module = CreateRepositoryAndRemote();
@@ -471,7 +471,7 @@ public sealed class FormPushTests
             AppSettings.AutoPullOnPushRejectedAction = autoPull;
             AppSettings.DefaultPullAction = defaultPull;
             AppSettings.DontConfirmPushNewBranch.Value = dontConfirmNewBranch;
-            AppSettings.DontConfirmAddTrackingRef = dontConfirmTracking;
+            AppSettings.DontConfirmAddTrackingRef.Value = dontConfirmTracking;
             if (Directory.Exists(updaterDirectory))
             {
                 TestDirectory.Delete(updaterDirectory);

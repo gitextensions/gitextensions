@@ -10,6 +10,12 @@ namespace GitUI.LeftPanel;
 /// <summary>A common base class for both <see cref="Node"/> and <see cref="Tree"/>.</summary>
 internal abstract class NodeBase
 {
+    /// <summary>
+    ///  Initializes a new instance of the <see cref="NodeBase"/> class for <see cref="Tree"/> nodes.
+    /// </summary>
+    /// <remarks>
+    ///  Initializes a new instance of the <see cref="NodeBase"/> class for non-<see cref="Tree"/> nodes.
+    /// </remarks>
     protected NodeBase(RepoObjectsTree owner, NodeBase? parent, string caption, IImage icon, bool isBold = false, bool isItalic = false)
     {
         Owner = owner;

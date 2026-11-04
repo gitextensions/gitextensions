@@ -55,7 +55,7 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
             return false;
         }
 
-        bool show = !AppSettings.OutputHistoryPanelVisible.Value;
+        bool show = !AppSettings.OutputHistoryPanelVisible;
         AppSettings.OutputHistoryPanelVisible.Value = show;
         SetVisible(show);
         if (show)

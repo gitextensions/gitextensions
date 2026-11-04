@@ -11,6 +11,7 @@ namespace GitUI.LeftPanel;
 internal sealed class RemoteBranchTree : BaseRefTree
 {
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
+    private Dictionary<string, Remote> _remoteByName = [];
     private readonly IReadOnlyList<Remote> _disabledRemotes;
     private readonly IReadOnlyList<Remote>? _enabledRemotes;
     private readonly IConfigFileRemoteSettingsManager? _remotesManager;
@@ -28,9 +29,17 @@ internal sealed class RemoteBranchTree : BaseRefTree
         _aheadBehindDataProvider = aheadBehindDataProvider;
         _disabledRemotes = disabledRemotes ?? [];
         _enabledRemotes = enabledRemotes;
+        _remoteByName = (_enabledRemotes ?? []).ToDictionary(remote => remote.Name, StringComparer.Ordinal);
         _remotesManager = remotesManager;
         FillTree(branches, CancellationToken.None);
         Complete(TranslatedStrings.Remotes, Images.BranchRemoteRoot, expanded: true);
+    }
+
+    protected override async Task PreloadAsync(CancellationToken token)
+    {
+        IReadOnlyList<Remote> remotes = await Module.GetRemotesAsync();
+        token.ThrowIfCancellationRequested();
+        _remoteByName = remotes.ToDictionary(r => r.Name);
     }
 
     protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
@@ -39,7 +48,7 @@ internal sealed class RemoteBranchTree : BaseRefTree
         IDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData()?
             .DistinctBy(pair => pair.Value.RemoteRef)
             .ToDictionary(pair => pair.Value.RemoteRef, pair => pair.Value);
-        Dictionary<string, Remote> enabledByName = (_enabledRemotes ?? []).ToDictionary(remote => remote.Name, StringComparer.Ordinal);
+        Dictionary<string, Remote> enabledByName = _remoteByName;
 
         // Create nodes for enabled remotes with branches
         FillNested(

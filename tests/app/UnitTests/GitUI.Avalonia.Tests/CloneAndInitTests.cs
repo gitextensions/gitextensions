@@ -173,6 +173,40 @@ public sealed class CloneAndInitTests
     }
 
     [AvaloniaTest]
+    public void FormClone_should_measure_its_banner_and_content_with_an_enlarged_font()
+    {
+        WinFormsShims.Font originalFont = AppSettings.Font;
+        FormClone? form = null;
+        try
+        {
+            AppSettings.Font = new WinFormsShims.Font("Arial", 18);
+            form = new(CreateCommands().Commands, url: null, openedFromProtocolHandler: false, gitModuleChanged: null);
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            TextBlock info = form.FindControl<TextBlock>("Info")!;
+            info.Bounds.Height.Should().BeGreaterThanOrEqualTo(info.FontSize * 2);
+            form.MinHeight.Should().Be(form.MaxHeight);
+            form.CanResize.Should().BeTrue();
+            foreach (string name in new[] { "Ok", "LoadSSHKey", "FromBrowse", "ToBrowse" })
+            {
+                Button button = form.FindControl<Button>(name)!;
+                button.Measure(Avalonia.Size.Infinity);
+                button.Bounds.Height.Should().BeGreaterThanOrEqualTo(button.DesiredSize.Height - button.Margin.Top - button.Margin.Bottom);
+                button.Bounds.Width.Should().BeGreaterThanOrEqualTo(button.DesiredSize.Width - button.Margin.Left - button.Margin.Right);
+            }
+
+            Control repositoryType = form.FindControl<Control>("flpnlRepositoryType")!;
+            repositoryType.Bounds.Bottom.Should().BeLessThanOrEqualTo(((Control)repositoryType.Parent!).Bounds.Height);
+        }
+        finally
+        {
+            form?.Close();
+            AppSettings.Font = originalFont;
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase(true)]
     [TestCase(false)]
     public void FormClone_should_restore_the_initialize_submodules_preference(bool initializeSubmodules)

@@ -59,7 +59,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
 
         InitializeComplete();
 
-        cbxCheckoutBranch.IsChecked = AppSettings.CheckoutOtherBranchAfterReset.Value;
+        cbxCheckoutBranch.IsChecked = AppSettings.CheckoutOtherBranchAfterReset;
         cbxCheckoutBranch.IsCheckedChanged += (s, e) => AppSettings.CheckoutOtherBranchAfterReset.Value = cbxCheckoutBranch.IsChecked == true;
 
         Ok.IsEnabled = false;

@@ -135,6 +135,12 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         base.OnClosing(e);
     }
 
+    protected override void OnClosed(EventArgs e)
+    {
+        _commonLogic?.Dispose(); // null when the form was constructed for translation only
+        base.OnClosed(e);
+    }
+
     private void InitializeSettingsPages()
     {
         if (_pagesInitialized)

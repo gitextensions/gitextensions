@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Automation;
@@ -528,6 +529,12 @@ public sealed class RevisionGridColumnProviderTests
             GitRevision revision = CreateRevision();
             IGitModule module = Substitute.For<IGitModule>();
             module.GetEffectiveSetting("remote.upstream.prefix", string.Empty).Returns("prefix/");
+            module.GetAllLocalSettings().Returns([("remote.origin.url", "first"), ("remote.upstream.url", "second")]);
+            module.GetRemoteColors().Returns(new Dictionary<string, System.Drawing.Color>
+            {
+                ["origin"] = System.Drawing.Color.Blue,
+                ["upstream"] = System.Drawing.Color.Red,
+            }.ToFrozenDictionary());
             IGitRef local = CreateRef(module, revision.ObjectId, "main", "refs/heads/main", isHead: true);
             IGitRef tracked = CreateRef(module, revision.ObjectId, "origin/main", "refs/remotes/origin/main", isRemote: true);
             tracked.Remote.Returns("origin");
@@ -544,7 +551,8 @@ public sealed class RevisionGridColumnProviderTests
             RevisionGridRefRenderer.RefLabelControl label = cell.GetVisualDescendants()
                 .OfType<RevisionGridRefRenderer.RefLabelControl>()
                 .Single(item => ReferenceEquals(item.GitRef, matchingRemote));
-            label.Label.Should().Be("upstream");
+            label.Label.Should().BeEmpty();
+            label.Icon.Should().Be(RefLabelIcon.RemoteForced);
 
             label.IsHighlighted = true;
 
@@ -725,6 +733,53 @@ public sealed class RevisionGridColumnProviderTests
         gitRef.IsRemote.Returns(isRemote);
         gitRef.IsTag.Returns(isTag);
         return gitRef;
+    }
+
+    [AvaloniaTest]
+    [TestCase("upstream", true, true)]
+    [TestCase("upstream", false, false)]
+    [TestCase("i", true, false)]
+    public void Message_provider_should_replace_only_unambiguous_remote_names_without_growing_labels(
+        string remote, bool uniqueColor, bool expectIcon)
+    {
+        bool originalShowRemoteBranches = AppSettings.ShowRemoteBranches;
+        try
+        {
+            AppSettings.ShowRemoteBranches = true;
+            RevisionGridControl grid = new();
+            MessageColumnProvider provider = grid.ColumnProviders.OfType<MessageColumnProvider>().Single();
+            provider.ApplySettings();
+            IGitModule module = Substitute.For<IGitModule>();
+            module.GetAllLocalSettings().Returns([($"remote.{remote}.url", "first"), ("remote.other.url", "second")]);
+            module.GetRemoteColors().Returns(new Dictionary<string, System.Drawing.Color>
+            {
+                [remote] = System.Drawing.Color.Red,
+                ["other"] = uniqueColor ? System.Drawing.Color.Blue : System.Drawing.Color.Red,
+            }.ToFrozenDictionary());
+            GitRevision revision = CreateRevision();
+            IGitRef branch = CreateRef(module, revision.ObjectId, $"{remote}/main", $"refs/remotes/{remote}/main", isRemote: true);
+            branch.Remote.Returns(remote);
+            revision.Refs = [branch];
+            Control cell = provider.CreateCell();
+
+            provider.UpdateCell(cell, revision);
+
+            RevisionGridRefRenderer.RefLabelControl label = cell.GetVisualDescendants()
+                .OfType<RevisionGridRefRenderer.RefLabelControl>().Single();
+            label.Icon.Should().Be(expectIcon ? RefLabelIcon.RemoteForced : RefLabelIcon.None);
+            label.Label.Should().Be(expectIcon ? "main" : $"{remote}/main");
+            label.Measure(Size.Infinity);
+            double normalWidth = label.DesiredSize.Width;
+            label.IsHighlighted = true;
+            label.Label.Should().Be($"{remote}/main");
+            label.Icon.Should().Be(RefLabelIcon.None);
+            label.Measure(Size.Infinity);
+            label.DesiredSize.Width.Should().BeGreaterThanOrEqualTo(normalWidth);
+        }
+        finally
+        {
+            AppSettings.ShowRemoteBranches = originalShowRemoteBranches;
+        }
     }
 
     private sealed class RecordingColumnProvider : ColumnProvider

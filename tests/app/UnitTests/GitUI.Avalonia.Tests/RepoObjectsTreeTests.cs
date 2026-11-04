@@ -1418,11 +1418,11 @@ public sealed class RepoObjectsTreeTests
     public void Stash_context_actions_should_route_to_the_existing_commands()
     {
         bool originalShowStashes = AppSettings.RepoObjectsTreeShowStashes;
-        bool originalDontConfirmDrop = AppSettings.DontConfirmStashDrop;
+        bool originalDontConfirmDrop = AppSettings.DontConfirmStashDrop.Value;
         try
         {
             AppSettings.RepoObjectsTreeShowStashes = true;
-            AppSettings.DontConfirmStashDrop = true;
+            AppSettings.DontConfirmStashDrop.Value = true;
             IGitModule module = Substitute.For<IGitModule>();
             module.IsBareRepository().Returns(false);
             IGitUICommands commands = Substitute.For<IGitUICommands>();
@@ -1469,7 +1469,7 @@ public sealed class RepoObjectsTreeTests
         finally
         {
             AppSettings.RepoObjectsTreeShowStashes = originalShowStashes;
-            AppSettings.DontConfirmStashDrop = originalDontConfirmDrop;
+            AppSettings.DontConfirmStashDrop.Value = originalDontConfirmDrop;
         }
     }
 

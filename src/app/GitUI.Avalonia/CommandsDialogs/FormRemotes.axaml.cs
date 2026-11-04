@@ -1006,6 +1006,8 @@ Inactive remote is completely invisible to git.");
             .OfType<RemoteListItem>()
             .Where(item => item.Header is not null)
             .Select(item => item.Header!)];
+        public Grid PullBehaviourDetails => _form.panelDetails;
+        public Button SaveDefaultPushPull => _form.SaveDefaultPushPull;
         public Button Save => _form.Save;
         public TabControl TabControl => _form.tabControl1;
         public Button ToggleState => _form.btnToggleState;

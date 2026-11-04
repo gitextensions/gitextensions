@@ -527,7 +527,7 @@ public sealed partial class FormPull : GitExtensionsDialog
         }
 
         bool shouldInitialize = AppSettings.UpdateSubmodulesOnCheckout
-            ?? AppSettings.DontConfirmUpdateSubmodulesOnCheckout
+            ?? AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value
             ?? MessageBoxes.Show(
                 owner,
                 _questionInitSubmodules.Text,

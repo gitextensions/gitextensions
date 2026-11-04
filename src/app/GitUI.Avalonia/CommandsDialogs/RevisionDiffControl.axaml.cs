@@ -745,7 +745,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
             return;
         }
 
-        if (IsFileTreeMode || AppSettings.UseDiffViewerForBlame.Value)
+        if (IsFileTreeMode || AppSettings.UseDiffViewerForBlame)
         {
             int line = BlameControl.IsVisible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine;
             _showBlame = !_showBlame;

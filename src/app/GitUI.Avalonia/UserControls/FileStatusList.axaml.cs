@@ -190,7 +190,7 @@ public partial class FileStatusList : GitModuleControl
                 BindCommands(commands);
                 ReloadHotkeys();
                 LoadCustomDifftools();
-                SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value);
+                SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
             }
         };
         DetachedFromLogicalTree += (_, _) =>
@@ -255,10 +255,15 @@ public partial class FileStatusList : GitModuleControl
         // Show/hide the search box if settings are changed
         void UICommands_PostSettings(object? sender, GitUIPostActionEventArgs? e)
         {
-            if (CanUseFindInCommitFilesGitGrep && IsVisible)
+            // Framework constraint: command discovery can run on the diff worker; read visibility on the UI thread.
+            this.InvokeAndForget(() =>
             {
-                Dispatcher.UIThread.Post(() => SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value));
-            }
+                if (IsVisible)
+                {
+                    InitializeContextMenuAndToolbar();
+                    SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
+                }
+            });
         }
     }
 
@@ -1847,7 +1852,7 @@ public partial class FileStatusList : GitModuleControl
         tvFiles.IsVisible = isFileTreeMode;
         if (isFileTreeMode)
         {
-            SetFindInCommitFilesGitGrepVisibilityImpl(AppSettings.ShowFindInCommitFilesGitGrep.Value);
+            SetFindInCommitFilesGitGrepVisibilityImpl(AppSettings.ShowFindInCommitFilesGitGrep);
             GroupByRevision = false;
         }
     }
@@ -2297,7 +2302,7 @@ public partial class FileStatusList : GitModuleControl
         {
             FileStatusItem[] groupItems = [.. group];
             IReadOnlyList<DiffTreeNode> children = BuildPathNodes(groupItems, parent: null, expanded, flat);
-            bool showGroupNode = !flat || AppSettings.FileStatusShowGroupNodesInFlatList.Value;
+            bool showGroupNode = !flat || AppSettings.FileStatusShowGroupNodesInFlatList;
             if (!showGroupNode || (children.Count == 1 && children[0].Children.Count == 0))
             {
                 roots.AddRange(BuildPathNodes(groupItems, parent, expanded, flat));
@@ -2361,7 +2366,7 @@ public partial class FileStatusList : GitModuleControl
         StatusNode statusRoot = _sorter.CreateTreeSortedByPath(
             items.Select(item => item.Item),
             flat,
-            AppSettings.FileStatusMergeSingleItemWithFolder.Value,
+            AppSettings.FileStatusMergeSingleItemWithFolder,
             status =>
             {
                 FileStatusItem item = itemsByStatus[status];
@@ -2430,7 +2435,7 @@ public partial class FileStatusList : GitModuleControl
         StatusNode statusRoot = _sorter.CreateTreeSortedByPath(
             items.Select(item => item.Item),
             flat: false,
-            AppSettings.FileStatusMergeSingleItemWithFolder.Value,
+            AppSettings.FileStatusMergeSingleItemWithFolder,
             status =>
             {
                 string oldName = status.OldName is null ? string.Empty : $" ({status.OldName})";

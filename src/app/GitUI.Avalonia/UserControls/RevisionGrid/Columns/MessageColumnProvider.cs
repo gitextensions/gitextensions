@@ -16,9 +16,11 @@ using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Extensions;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Properties;
+using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
@@ -59,6 +61,12 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
     // Caches the configured push prefix per remote name to avoid repeated git-config reads during painting.
     private readonly Dictionary<string, string> _remotePrefixCache = [];
+
+    // Caches whether the label color of a remote is unique among all remotes.
+    private readonly Dictionary<string, bool> _remoteColorIsUniqueCache = [];
+
+    // Caches the names of the configured remotes to avoid repeated git-config reads during painting.
+    private IReadOnlyList<string>? _remoteNames;
     private IReadOnlyDictionary<string, AheadBehindData>? _aheadBehindDataByLocalBranch;
     private IReadOnlyDictionary<string, AheadBehindData>? _aheadBehindDataByRemoteBranch;
     private IAheadBehindDataProvider? _aheadBehindDataProvider;
@@ -97,13 +105,13 @@ internal sealed class MessageColumnProvider : ColumnProvider
         Column.IsVisible = true;
         _settings = new Settings(
             AppSettings.FillRefLabels,
-            AppSettings.ShowGitNotesColumn.Value,
+            AppSettings.ShowGitNotesColumn,
             AppSettings.ShowAnnotatedTagsMessages,
             AppSettings.ShowCommitBodyInRevisionGrid,
             AppSettings.ShowGitNotes,
             AppSettings.ShowRemoteBranches,
             AppSettings.ShowGitStatusForArtificialCommits,
-            AppSettings.ShowRevisionGridTooltips.Value,
+            AppSettings.ShowRevisionGridTooltips,
             AppSettings.ShowTags);
     }
 
@@ -221,6 +229,10 @@ internal sealed class MessageColumnProvider : ColumnProvider
             }
 
             DrawRef(panel, label);
+            foreach (RevisionGridRefRenderer.RefLabelControl remoteLabel in label.GetSelfAndVisualDescendants().OfType<RevisionGridRefRenderer.RefLabelControl>())
+            {
+                TryReplaceRemoteNameWithIcon(remoteLabel);
+            }
         }
 
         (string Label, string? HighlightedLabel) GetLabel(IGitRef gitRef)
@@ -717,6 +729,62 @@ internal sealed class MessageColumnProvider : ColumnProvider
         return prefix;
     }
 
+    private static System.Drawing.Color GetRefColor(IGitRef gitRef, IReadOnlyDictionary<string, System.Drawing.Color> remoteColors)
+        => remoteColors.TryGetValue(gitRef.Remote, out System.Drawing.Color color) ? color : RevisionGridRefRenderer.GetHeadColor(gitRef);
+
+    private IReadOnlyList<string> GetRemoteNames(IGitModule module)
+    {
+        return _remoteNames ??= module.GetAllLocalSettings()
+            .Where(s => s.Setting.StartsWith(SettingKeyString.RemoteKeyPrefix, StringComparison.Ordinal) && s.Setting.EndsWith(SettingKeyString.RemoteUrlSuffix, StringComparison.Ordinal))
+            .Select(s => s.Setting[SettingKeyString.RemoteKeyPrefix.Length..^SettingKeyString.RemoteUrlSuffix.Length])
+            .Distinct()
+            .ToList();
+    }
+
+    // The remote name can be replaced with an icon without ambiguity only if the label color identifies the remote.
+    private bool IsRemoteColorUnique(IGitRef remoteRef)
+    {
+        if (!_remoteColorIsUniqueCache.TryGetValue(remoteRef.Remote, out bool isUnique))
+        {
+            System.Drawing.Color defaultColor = RevisionGridRefRenderer.GetHeadColor(remoteRef);
+            IReadOnlyDictionary<string, System.Drawing.Color> colors = remoteRef.Module.GetRemoteColors();
+            System.Drawing.Color remoteColor = GetRefColor(remoteRef, colors);
+            isUnique = GetRemoteNames(remoteRef.Module)
+                .Count(remote => (colors.TryGetValue(remote, out System.Drawing.Color color) ? color : defaultColor) == remoteColor) == 1;
+            _remoteColorIsUniqueCache[remoteRef.Remote] = isUnique;
+        }
+
+        return isUnique;
+    }
+
+    // The icon is used only if it does not take more space than the remote name, so that the label does not shrink when highlighted.
+    private bool TryReplaceRemoteNameWithIcon(RevisionGridRefRenderer.RefLabelControl label)
+    {
+        if (label.GitRef is not { IsRemote: true } remoteRef || remoteRef is NestledVirtualRef || label.Icon != RefLabelIcon.None)
+        {
+            return false;
+        }
+
+        string name = label.Label;
+        string remote = remoteRef.Remote;
+        if (!name.StartsWith(remote, StringComparison.Ordinal)
+            || (name.Length > remote.Length && name[remote.Length] != '/')
+            || !IsRemoteColorUnique(remoteRef))
+        {
+            return false;
+        }
+
+        string shortName = name.Length == remote.Length ? "" : name[(remote.Length + 1)..];
+        if (RevisionGridRefRenderer.GetContentWidth(label, shortName, RefLabelIcon.RemoteForced)
+            > RevisionGridRefRenderer.GetContentWidth(label, name, RefLabelIcon.None))
+        {
+            return false;
+        }
+
+        label.ReplaceRemoteNameWithIcon(shortName);
+        return true;
+    }
+
     /// <summary>
     ///  Performs a hit test to find which ref label (if any) contains the given point in the specified row.
     /// </summary>
@@ -797,6 +865,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
         _aheadBehindDataByLocalBranch = null;
         _aheadBehindDataByRemoteBranch = null;
         _remotePrefixCache.Clear();
+        _remoteNames = null;
+        _remoteColorIsUniqueCache.Clear();
         _refLabelHitInfoByRow.Clear();
     }
 

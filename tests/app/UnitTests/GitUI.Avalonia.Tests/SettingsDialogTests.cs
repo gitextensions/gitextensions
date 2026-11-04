@@ -514,16 +514,20 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
-    public void Git_settings_should_load_save_and_hide_windows_only_tools_on_native_unix()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Git_settings_should_load_save_and_hide_windows_only_tools_on_native_unix(bool overrideGlobalConfig)
     {
         string originalGitCommand = AppSettings.GitCommandValue;
         string originalLinuxToolsDirectory = AppSettings.LinuxToolsDir;
         string? originalPath = Environment.GetEnvironmentVariable("PATH");
+        string? originalGlobalConfig = Environment.GetEnvironmentVariable("GIT_CONFIG_GLOBAL");
         string temporaryDirectory = Path.Combine(Path.GetTempPath(), $"gitext-git-settings-{Guid.NewGuid():N}");
         Directory.CreateDirectory(temporaryDirectory);
         File.WriteAllText(Path.Join(temporaryDirectory, OperatingSystem.IsWindows() ? "sh.exe" : "sh"), string.Empty);
         try
         {
+            Environment.SetEnvironmentVariable("GIT_CONFIG_GLOBAL", overrideGlobalConfig ? Path.Join(temporaryDirectory, "config") : null);
             string gitExecutableName = OperatingSystem.IsWindows() ? "git.exe" : "git";
             PathUtil.TryFindFullPath(gitExecutableName, out string? gitPath).Should().BeTrue();
             AppSettings.GitCommandValue = gitPath!;
@@ -540,7 +544,8 @@ public sealed class SettingsDialogTests
 
             GitSettingsPage.TestAccessor accessor = page.GetTestAccessor();
             accessor.GitPath.Text.Should().Be(gitPath);
-            accessor.EnvironmentStatus.Text.Should().Contain(OperatingSystem.IsWindows() ? "%HOME%" : "$HOME");
+            string environmentName = overrideGlobalConfig ? "GIT_CONFIG_GLOBAL" : "HOME";
+            accessor.EnvironmentStatus.Text.Should().Contain(OperatingSystem.IsWindows() ? $"%{environmentName}%" : $"${environmentName}");
             accessor.LinuxToolsDir.IsVisible.Should().Be(OperatingSystem.IsWindows());
             accessor.LinuxToolsLabel.IsVisible.Should().Be(OperatingSystem.IsWindows());
             accessor.DownloadGit.IsVisible.Should().Be(OperatingSystem.IsWindows());
@@ -563,6 +568,7 @@ public sealed class SettingsDialogTests
             AppSettings.GitCommandValue = originalGitCommand;
             AppSettings.LinuxToolsDir = originalLinuxToolsDirectory;
             Environment.SetEnvironmentVariable("PATH", originalPath);
+            Environment.SetEnvironmentVariable("GIT_CONFIG_GLOBAL", originalGlobalConfig);
             Directory.Delete(temporaryDirectory, recursive: true);
         }
     }
@@ -673,9 +679,12 @@ public sealed class SettingsDialogTests
         config.MergeTool.Items.Should().NotBeEmpty();
         config.DiffTool.Items.Should().NotBeEmpty();
 
-        IReadOnlyList<CheckBox> advancedSettings = advancedPage.GetTestAccessor().Settings;
-        advancedSettings.Should().HaveCount(8);
-        advancedSettings.Should().OnlyContain(checkBox => checkBox.IsThreeState);
+        IReadOnlyList<ComboBox> advancedSettings = advancedPage.GetTestAccessor().Settings;
+        advancedSettings.Should().HaveCount(10);
+        advancedSettings.Should().OnlyContain(comboBox => comboBox.IsEditable);
+        advancedSettings[0].Items.Cast<string>().Should().Equal("", "false", "true", "only");
+        advancedSettings[1].Items.Cast<string>().Should().Equal("", "false", "true", "merges", "interactive");
+        advancedSettings[9].Items.Cast<string>().Should().Equal("", "no", "normal", "all");
     }
 
     [AvaloniaTest]
@@ -734,7 +743,7 @@ public sealed class SettingsDialogTests
         translation.Received(1).AddTranslationItem(
             nameof(GitConfigSettingsPage), "globalAutoCrlfNotSet", "Text", "Not set");
         translation.Received(1).AddTranslationItem(
-            nameof(GitConfigAdvancedSettingsPage), "checkBoxPullRebase", "Text", "Rebase local branch when pulling (instead of merge)");
+            nameof(GitConfigAdvancedSettingsPage), "lblPullRebase", "Text", "Rebase local branch when pulling (instead of merge)");
         translation.Received(1).AddTranslationItem(
             nameof(FormAvailableEncodings), "lAvaolableEncodings", "Text", "Available:");
     }
@@ -1808,7 +1817,7 @@ public sealed class SettingsDialogTests
         bool originalCheckForUpdates = AppSettings.CheckForUpdates;
         bool originalCheckForReleaseCandidates = AppSettings.CheckForReleaseCandidates;
         bool originalConsoleEmulator = AppSettings.UseConsoleEmulatorForCommands.Value;
-        bool originalAutoNormalise = AppSettings.AutoNormaliseBranchName;
+        bool originalAutoNormalise = AppSettings.AutoNormaliseBranchName.Value;
         string originalAutoNormaliseSymbol = AppSettings.AutoNormaliseSymbol;
         bool originalForcedPush = AppSettings.CommitAndPushForcedWhenAmend;
         try
@@ -1820,7 +1829,7 @@ public sealed class SettingsDialogTests
             AppSettings.CheckForUpdates = true;
             AppSettings.CheckForReleaseCandidates = false;
             AppSettings.UseConsoleEmulatorForCommands.Value = true;
-            AppSettings.AutoNormaliseBranchName = false;
+            AppSettings.AutoNormaliseBranchName.Value = false;
             AppSettings.AutoNormaliseSymbol = "-";
             AppSettings.CommitAndPushForcedWhenAmend = false;
 
@@ -1857,7 +1866,7 @@ public sealed class SettingsDialogTests
             AppSettings.UseDefaultCheckoutBranchAction.Should().BeTrue();
             AppSettings.DontShowHelpImages.Should().BeFalse();
             AppSettings.AlwaysShowAdvOpt.Should().BeTrue();
-            AppSettings.AutoNormaliseBranchName.Should().BeTrue();
+            AppSettings.AutoNormaliseBranchName.Value.Should().BeTrue();
             AppSettings.AutoNormaliseSymbol.Should().BeEmpty();
             AppSettings.CommitAndPushForcedWhenAmend.Should().BeTrue();
             AppSettings.CheckForUpdates.Should().BeTrue();
@@ -1873,7 +1882,7 @@ public sealed class SettingsDialogTests
             AppSettings.CheckForUpdates = originalCheckForUpdates;
             AppSettings.CheckForReleaseCandidates = originalCheckForReleaseCandidates;
             AppSettings.UseConsoleEmulatorForCommands.Value = originalConsoleEmulator;
-            AppSettings.AutoNormaliseBranchName = originalAutoNormalise;
+            AppSettings.AutoNormaliseBranchName.Value = originalAutoNormalise;
             AppSettings.AutoNormaliseSymbol = originalAutoNormaliseSymbol;
             AppSettings.CommitAndPushForcedWhenAmend = originalForcedPush;
         }
@@ -1884,39 +1893,39 @@ public sealed class SettingsDialogTests
     {
         bool originalAmend = AppSettings.DontConfirmAmend.Value;
         bool originalUndo = AppSettings.DontConfirmUndoLastCommit.Value;
-        bool originalCommitIfNoBranch = AppSettings.DontConfirmCommitIfNoBranch;
+        bool originalCommitIfNoBranch = AppSettings.DontConfirmCommitIfNoBranch.Value;
         bool originalRebase = AppSettings.DontConfirmRebase.Value;
         bool originalFetchAndPrune = AppSettings.DontConfirmFetchAndPruneAll.Value;
         bool originalPushNewBranch = AppSettings.DontConfirmPushNewBranch.Value;
-        bool originalAddTrackingRef = AppSettings.DontConfirmAddTrackingRef;
+        bool originalAddTrackingRef = AppSettings.DontConfirmAddTrackingRef.Value;
         bool originalDeleteUnmerged = AppSettings.DontConfirmDeleteUnmergedBranch.Value;
         bool originalBranchCheckout = AppSettings.ConfirmBranchCheckout.Value;
         bool? originalAutoPopAfterPull = AppSettings.AutoPopStashAfterPull;
         bool? originalAutoPopAfterCheckout = AppSettings.AutoPopStashAfterCheckoutBranch;
-        bool originalStashDrop = AppSettings.DontConfirmStashDrop;
+        bool originalStashDrop = AppSettings.DontConfirmStashDrop.Value;
         bool originalResolveConflicts = AppSettings.DontConfirmResolveConflicts.Value;
         bool originalCommitAfterConflicts = AppSettings.DontConfirmCommitAfterConflictsResolved.Value;
         bool originalSecondAbort = AppSettings.DontConfirmSecondAbortConfirmation.Value;
-        bool? originalUpdateSubmodules = AppSettings.DontConfirmUpdateSubmodulesOnCheckout;
+        bool? originalUpdateSubmodules = AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value;
         bool originalSwitchWorktree = AppSettings.DontConfirmSwitchWorktree.Value;
         try
         {
             AppSettings.DontConfirmAmend.Value = false;
             AppSettings.DontConfirmUndoLastCommit.Value = true;
-            AppSettings.DontConfirmCommitIfNoBranch = false;
+            AppSettings.DontConfirmCommitIfNoBranch.Value = false;
             AppSettings.DontConfirmRebase.Value = true;
             AppSettings.DontConfirmFetchAndPruneAll.Value = false;
             AppSettings.DontConfirmPushNewBranch.Value = true;
-            AppSettings.DontConfirmAddTrackingRef = false;
+            AppSettings.DontConfirmAddTrackingRef.Value = false;
             AppSettings.DontConfirmDeleteUnmergedBranch.Value = true;
             AppSettings.ConfirmBranchCheckout.Value = true;
             AppSettings.AutoPopStashAfterPull = null;
             AppSettings.AutoPopStashAfterCheckoutBranch = true;
-            AppSettings.DontConfirmStashDrop = false;
+            AppSettings.DontConfirmStashDrop.Value = false;
             AppSettings.DontConfirmResolveConflicts.Value = true;
             AppSettings.DontConfirmCommitAfterConflictsResolved.Value = false;
             AppSettings.DontConfirmSecondAbortConfirmation.Value = true;
-            AppSettings.DontConfirmUpdateSubmodulesOnCheckout = null;
+            AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value = null;
             AppSettings.DontConfirmSwitchWorktree.Value = false;
 
             ConfirmationsSettingsPage page = new();
@@ -1962,40 +1971,40 @@ public sealed class SettingsDialogTests
 
             AppSettings.DontConfirmAmend.Value.Should().BeTrue();
             AppSettings.DontConfirmUndoLastCommit.Value.Should().BeTrue();
-            AppSettings.DontConfirmCommitIfNoBranch.Should().BeTrue();
+            AppSettings.DontConfirmCommitIfNoBranch.Value.Should().BeTrue();
             AppSettings.DontConfirmRebase.Value.Should().BeFalse();
             AppSettings.DontConfirmFetchAndPruneAll.Value.Should().BeTrue();
             AppSettings.DontConfirmPushNewBranch.Value.Should().BeFalse();
-            AppSettings.DontConfirmAddTrackingRef.Should().BeTrue();
+            AppSettings.DontConfirmAddTrackingRef.Value.Should().BeTrue();
             AppSettings.DontConfirmDeleteUnmergedBranch.Value.Should().BeFalse();
             AppSettings.ConfirmBranchCheckout.Value.Should().BeFalse();
             AppSettings.AutoPopStashAfterPull.Should().BeFalse();
             AppSettings.AutoPopStashAfterCheckoutBranch.Should().BeNull();
-            AppSettings.DontConfirmStashDrop.Should().BeTrue();
+            AppSettings.DontConfirmStashDrop.Value.Should().BeTrue();
             AppSettings.DontConfirmResolveConflicts.Value.Should().BeFalse();
             AppSettings.DontConfirmCommitAfterConflictsResolved.Value.Should().BeTrue();
             AppSettings.DontConfirmSecondAbortConfirmation.Value.Should().BeFalse();
-            AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Should().BeTrue();
+            AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value.Should().BeTrue();
             AppSettings.DontConfirmSwitchWorktree.Value.Should().BeTrue();
         }
         finally
         {
             AppSettings.DontConfirmAmend.Value = originalAmend;
             AppSettings.DontConfirmUndoLastCommit.Value = originalUndo;
-            AppSettings.DontConfirmCommitIfNoBranch = originalCommitIfNoBranch;
+            AppSettings.DontConfirmCommitIfNoBranch.Value = originalCommitIfNoBranch;
             AppSettings.DontConfirmRebase.Value = originalRebase;
             AppSettings.DontConfirmFetchAndPruneAll.Value = originalFetchAndPrune;
             AppSettings.DontConfirmPushNewBranch.Value = originalPushNewBranch;
-            AppSettings.DontConfirmAddTrackingRef = originalAddTrackingRef;
+            AppSettings.DontConfirmAddTrackingRef.Value = originalAddTrackingRef;
             AppSettings.DontConfirmDeleteUnmergedBranch.Value = originalDeleteUnmerged;
             AppSettings.ConfirmBranchCheckout.Value = originalBranchCheckout;
             AppSettings.AutoPopStashAfterPull = originalAutoPopAfterPull;
             AppSettings.AutoPopStashAfterCheckoutBranch = originalAutoPopAfterCheckout;
-            AppSettings.DontConfirmStashDrop = originalStashDrop;
+            AppSettings.DontConfirmStashDrop.Value = originalStashDrop;
             AppSettings.DontConfirmResolveConflicts.Value = originalResolveConflicts;
             AppSettings.DontConfirmCommitAfterConflictsResolved.Value = originalCommitAfterConflicts;
             AppSettings.DontConfirmSecondAbortConfirmation.Value = originalSecondAbort;
-            AppSettings.DontConfirmUpdateSubmodulesOnCheckout = originalUpdateSubmodules;
+            AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value = originalUpdateSubmodules;
             AppSettings.DontConfirmSwitchWorktree.Value = originalSwitchWorktree;
         }
     }

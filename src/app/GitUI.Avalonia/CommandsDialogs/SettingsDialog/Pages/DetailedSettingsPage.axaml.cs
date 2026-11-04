@@ -28,9 +28,9 @@ public partial class DetailedSettingsPage : DistributedSettingsPage
         SettingsSource currentSettings = GetCurrentSettings();
         gbRevisionGraph.IsEnabled = currentSettings.SettingLevel == SettingLevel.Global;
 
-        chkMergeGraphLanesHavingCommonParent.IsChecked = AppSettings.MergeGraphLanesHavingCommonParent.Value;
-        chkRenderGraphWithDiagonals.IsChecked = AppSettings.RenderGraphWithDiagonals.Value;
-        chkStraightenGraphDiagonals.IsChecked = AppSettings.StraightenGraphDiagonals.Value;
+        chkMergeGraphLanesHavingCommonParent.IsChecked = AppSettings.MergeGraphLanesHavingCommonParent;
+        chkRenderGraphWithDiagonals.IsChecked = AppSettings.RenderGraphWithDiagonals;
+        chkStraightenGraphDiagonals.IsChecked = AppSettings.StraightenGraphDiagonals;
         chkRemotesFromServer.IsChecked = DetailedSettings.GetRemoteBranchesDirectlyFromRemote.ValueOrDefault(currentSettings);
         addLogMessages.IsChecked = DetailedSettings.AddMergeLogMessages.ValueOrDefault(currentSettings);
         nbMessages.Text = DetailedSettings.MergeLogMessagesCount.ValueOrDefault(currentSettings).ToString(CultureInfo.InvariantCulture);

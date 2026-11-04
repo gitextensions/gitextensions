@@ -751,6 +751,13 @@ public sealed class FormCommitTests
         ObjectId initialCommit = module.GetCurrentCheckout();
         GitUICommands commands = new(_serviceContainer, module);
         FormCommit form = new(commands);
+        int commitsCreated = 0;
+        form.CommitCreated += (_, _) =>
+        {
+            commitsCreated++;
+            form.GetTestAccessor().Message.Text.Should().Be("Commit from Avalonia");
+            scriptEvents.Events.Should().Equal(ScriptEvent.BeforeCommit);
+        };
         try
         {
             form.Show();
@@ -779,6 +786,7 @@ public sealed class FormCommitTests
             await WaitUntilAsync(() => !form.IsVisible && module.GetCurrentCheckout() != initialCommit);
 
             GitRevision revision = module.GetRevision(module.GetCurrentCheckout(), shortFormat: true, loadRefs: false);
+            commitsCreated.Should().Be(1);
             revision.Subject.Should().Be("Commit from Avalonia");
             module.GetAllChangedFilesWithSubmodulesStatus().Should().BeEmpty();
             File.Exists(Path.Combine(module.WorkingDirGitDir, "COMMITMESSAGE")).Should().BeFalse();

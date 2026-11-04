@@ -227,8 +227,11 @@ public sealed class RevisionGridRefHitInfoTests
 
         label.Icon.Should().Be(expectedIcon);
         highlight.Should().BeNull();
-        label.DesiredSize.Width.Should().Be(withoutIcon.DesiredSize.Width
-            + (expectedIcon == RefLabelIcon.None ? 0 : (int)RevisionGridControl.GetRowHeight(label) / 2));
+        int capsuleHeight = (int)Math.Ceiling(WinFormsTextMeasurer.MeasureTextRendererNoPadding(label, "main").Height) + 3;
+        // The arrow has three-pixel vertical insets; six pixels of icon padding and a one-pixel
+        // text nudge replace the four-pixel leading text padding used without an icon.
+        int iconExtraWidth = expectedIcon == RefLabelIcon.None ? 0 : (Math.Max(0, capsuleHeight - 6) / 2) + 3;
+        label.DesiredSize.Width.Should().Be(withoutIcon.DesiredSize.Width + iconExtraWidth);
     }
 
     [AvaloniaTest]
@@ -239,6 +242,7 @@ public sealed class RevisionGridRefHitInfoTests
     {
         using SettingsScope settings = new();
         IGitModule module = Substitute.For<IGitModule>();
+        module.GetRemoteColors().Returns(System.Collections.Frozen.FrozenDictionary<string, System.Drawing.Color>.Empty);
         ObjectId objectId = ObjectId.Random();
         IGitRef local = CreateRef(module, objectId, "long-local-branch-name-for-source-clipping", isRemote: false);
         IGitRef remote = CreateRef(module, objectId, "origin/main", isRemote: true);
@@ -586,6 +590,7 @@ public sealed class RevisionGridRefHitInfoTests
             bool additionalTag = false)
         {
             IGitModule module = Substitute.For<IGitModule>();
+            module.GetRemoteColors().Returns(System.Collections.Frozen.FrozenDictionary<string, System.Drawing.Color>.Empty);
             module.GitVersion.Returns(Substitute.For<IGitVersion>());
             module.GetSelectedBranch().Returns("current");
             Commands = Substitute.For<IGitUICommands>();

@@ -588,7 +588,8 @@ public sealed class VisualParityTests
                     .Where(button => button.IsVisible
                                      && button.Classes.Contains("gitextensions-toolbar-button"))
                     .ToArray();
-                splitButtons.Should().HaveCount(9);
+                splitButtons.Should().HaveCount(10);
+                splitButtons.Select(button => button.Name).Should().Contain("toolStripWorktrees");
                 splitButtons.Select(button => button.Name).Should().Contain(nameof(form.toolStripButtonLevelUp));
                 splitButtons.Select(button => button.Name).Should().Contain(nameof(form.userShell));
                 foreach (SplitButton splitButton in splitButtons)

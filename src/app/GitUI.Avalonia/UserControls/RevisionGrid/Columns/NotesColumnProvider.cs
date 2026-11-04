@@ -19,7 +19,7 @@ internal sealed class NotesColumnProvider : ColumnProvider
 
     public override void ApplySettings()
     {
-        Column.IsVisible = AppSettings.ShowGitNotesColumn.Value;
+        Column.IsVisible = AppSettings.ShowGitNotesColumn;
     }
 
     public override Control CreateCell()

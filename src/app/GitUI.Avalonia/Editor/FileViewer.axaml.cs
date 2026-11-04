@@ -236,7 +236,7 @@ public partial class FileViewer : GitModuleControl
             reload: !AppSettings.RememberShowNonPrintingCharsPreference);
         ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff.GetValue(
             reload: !AppSettings.RememberShowSyntaxHighlightingInDiff);
-        _ = AppSettings.DiffDisplayAppearance.GetValue(reload: !AppSettings.RememberDiffDisplayAppearance.Value);
+        _ = AppSettings.DiffDisplayAppearance.GetValue(reload: !AppSettings.RememberDiffDisplayAppearance);
         TreatAllFilesAsText = false;
         automaticContinuousScrollToolStripMenuItem.IsChecked = AppSettings.AutomaticContinuousScroll;
         automaticContinuousScrollToolStripMenuItem.Header = TranslatedStrings.ContScrollToNextFileOnlyWithAlt;
@@ -362,7 +362,7 @@ public partial class FileViewer : GitModuleControl
         set => internalFileViewer.VScrollPosition = value;
     }
 
-    public bool PatchUseGitColoring => showGitWordColoringToolStripMenuItem.IsChecked == true || AppSettings.UseGitColoring.Value;
+    public bool PatchUseGitColoring => showGitWordColoringToolStripMenuItem.IsChecked == true || AppSettings.UseGitColoring;
 
     public Lazy<bool> IsDifftasticEnabled
     {
@@ -500,7 +500,7 @@ public partial class FileViewer : GitModuleControl
             // Handle zero context as showing no file changes, to get the summary only
             { isRangeDiff && NumberOfContextLines == 0, "--no-patch" },
             { TreatAllFilesAsText, "--text" },
-            { !isCombinedDiff && AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.GitWordDiff, "--word-diff=color" },
+            { !isCombinedDiff && AppSettings.DiffDisplayAppearance == DiffDisplayAppearance.GitWordDiff, "--word-diff=color" },
         };
     }
 
@@ -509,7 +509,7 @@ public partial class FileViewer : GitModuleControl
         EnvironmentAbstraction env = new();
         StringBuilder extraCacheKey = new();
 
-        // Difftastic coloring is always used (AppSettings.UseGitColoring.Value is not used).
+        // Difftastic coloring is always used (AppSettings.UseGitColoring is not used).
         // Allow user to override with difftool command line options.
         SetEnvironmentVariable("DFT_COLOR", "always");
 
@@ -664,7 +664,7 @@ public partial class FileViewer : GitModuleControl
                 text,
                 PatchUseGitColoring,
                 isCombinedDiff: false,
-                isGitWordDiff: AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.GitWordDiff,
+                isGitWordDiff: AppSettings.DiffDisplayAppearance == DiffDisplayAppearance.GitWordDiff,
                 item.Item.Name,
                 item,
                 openWithDifftool);
@@ -685,7 +685,7 @@ public partial class FileViewer : GitModuleControl
         cancellationToken.ThrowIfCancellationRequested();
         await InvokeOnOwnerMainThreadAsync(() =>
         {
-            ViewPatchCore(text, AppSettings.UseGitColoring.Value, isCombinedDiff: true, isGitWordDiff: false, item.Item.Name, item, openWithDifftool);
+            ViewPatchCore(text, AppSettings.UseGitColoring, isCombinedDiff: true, isGitWordDiff: false, item.Item.Name, item, openWithDifftool);
             if (line is not null)
             {
                 GoToLine(line.Value);
@@ -989,7 +989,7 @@ public partial class FileViewer : GitModuleControl
 
         // RangeDiff patch is undefined, could be new/old commit or to parents
         bool canCopyVersions = viewMode.IsNormalDiffView()
-                               && AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.Patch;
+                               && AppSettings.DiffDisplayAppearance == DiffDisplayAppearance.Patch;
         copyPatchToolStripMenuItem.IsVisible = canCopyVersions;
         copyNewVersionToolStripMenuItem.IsVisible = canCopyVersions;
         copyOldVersionToolStripMenuItem.IsVisible = canCopyVersions;
@@ -1124,7 +1124,7 @@ public partial class FileViewer : GitModuleControl
             // Diffs, currently requires that the file to update exists
             ((_viewMode.IsNormalDiffView()
                     && (text?.Contains("@@", StringComparison.Ordinal) ?? false)
-                    && AppSettings.DiffDisplayAppearance.Value != DiffDisplayAppearance.GitWordDiff
+                    && AppSettings.DiffDisplayAppearance != DiffDisplayAppearance.GitWordDiff
                     && File.Exists(fullPath))
 
                 // Added files, i.e. new or copied ones: patching only applies for an artificial
@@ -1320,7 +1320,7 @@ public partial class FileViewer : GitModuleControl
 
     private void ToggleGitWordColoringToolStripMenuItemClick(object? sender, EventArgs e)
     {
-        AppSettings.DiffDisplayAppearance.Value = AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.GitWordDiff
+        AppSettings.DiffDisplayAppearance.Value = AppSettings.DiffDisplayAppearance == DiffDisplayAppearance.GitWordDiff
             ? DiffDisplayAppearance.Patch
             : DiffDisplayAppearance.GitWordDiff;
         UpdateDiffOptionState();
@@ -1329,7 +1329,7 @@ public partial class FileViewer : GitModuleControl
 
     private void ToggleDifftasticToolStripMenuItemClick(object? sender, EventArgs e)
     {
-        AppSettings.DiffDisplayAppearance.Value = AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.Difftastic
+        AppSettings.DiffDisplayAppearance.Value = AppSettings.DiffDisplayAppearance == DiffDisplayAppearance.Difftastic
             ? DiffDisplayAppearance.Patch
             : DiffDisplayAppearance.Difftastic;
         UpdateDiffOptionState();
@@ -1439,16 +1439,23 @@ public partial class FileViewer : GitModuleControl
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        IObjectGitItem[] items = [.. Module.GetTree(commitId, full: true, file.Name, cancellationToken)];
-        if (items.Length == 1)
+        using IEnumerator<IObjectGitItem> enumerator = Module.GetTree(commitId, full: true, file.Name, cancellationToken).GetEnumerator();
+        if (!enumerator.MoveNext())
         {
-            IObjectGitItem gitItem = items[0];
-            file.IsSubmodule = gitItem.ObjectType == GitObjectType.Commit;
-            file.TreeId = gitItem.ObjectId;
-            return commitId == ObjectId.WorkTreeId ? default : file.TreeId;
+            // file not found in tree
+            return default;
         }
 
-        return default;
+        IObjectGitItem gitItem = enumerator.Current;
+        if (enumerator.MoveNext())
+        {
+            // more than one item found
+            return default;
+        }
+
+        file.IsSubmodule = gitItem.ObjectType == GitObjectType.Commit;
+        file.TreeId = gitItem.ObjectId;
+        return commitId == ObjectId.WorkTreeId ? default : file.TreeId;
     }
 
     /// <summary>
@@ -2568,8 +2575,8 @@ public partial class FileViewer : GitModuleControl
         SetToolbarChecked(ignoreWhitespaceAtEol, ignoreEol);
         SetToolbarChecked(ignoreWhiteSpaces, ignoreChanges);
         SetToolbarChecked(ignoreAllWhitespaces, ignoreAll);
-        showGitWordColoringToolStripMenuItem.IsChecked = AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.GitWordDiff;
-        showDifftasticToolStripMenuItem.IsChecked = AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.Difftastic;
+        showGitWordColoringToolStripMenuItem.IsChecked = AppSettings.DiffDisplayAppearance == DiffDisplayAppearance.GitWordDiff;
+        showDifftasticToolStripMenuItem.IsChecked = AppSettings.DiffDisplayAppearance == DiffDisplayAppearance.Difftastic;
         showPatchToolStripMenuItem.IsChecked = showGitWordColoringToolStripMenuItem.IsChecked != true
                                               && showDifftasticToolStripMenuItem.IsChecked != true;
         treatAllFilesAsTextToolStripMenuItem.IsChecked = TreatAllFilesAsText;
