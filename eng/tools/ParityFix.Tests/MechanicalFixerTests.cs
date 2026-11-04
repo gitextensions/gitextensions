@@ -354,6 +354,77 @@ public sealed class MechanicalFixerTests
         File.ReadAllText(fixture.TwinPath).Should().Be(fixture.Twin);
     }
 
+    [TestCase(true)]
+    [TestCase(false)]
+    public void Run_should_require_all_mapped_twin_parts_inside_an_explicit_root(bool containsAll)
+    {
+        using Fixture fixture = new("void A() { }\n    void B() { }", "void B() { }\n    void A() { }");
+        string originalPath = Path.Combine(fixture.Root, "original", "Widget.cs");
+        string extraOriginal = Path.Combine(fixture.Root, "original", "Widget.Extra.cs");
+        string extraDirectory = containsAll ? Path.Combine(fixture.TwinRoot, "nested") : Path.Combine(fixture.Root, "other");
+        Directory.CreateDirectory(extraDirectory);
+        string extraTwin = Path.Combine(extraDirectory, "Widget.Extra.cs");
+        const string extraText = "namespace Sample; partial class Widget { void C() { } }";
+        File.WriteAllText(extraOriginal, extraText);
+        File.WriteAllText(extraTwin, extraText);
+        SourceInventory source = SourceInventoryReader.ReadFiles(Path.GetDirectoryName(originalPath)!, "Sample.Widget", new HashSet<string>(), false, [originalPath, extraOriginal]);
+        InventoryReport report = fixture.Report();
+        report = report with
+        {
+            Twin = SourceInventoryReader.ReadFiles(fixture.Root, "Sample.Widget", new HashSet<string>(), true, [fixture.TwinPath, extraTwin]),
+            Original = source with
+            {
+                Parts = source.Parts.Select(part => part with
+                {
+                    ExpectedTwinPath = part.Path == "Widget.cs" ? "twin/Widget.cs" : Path.GetRelativePath(fixture.Root, extraTwin).Replace('\\', '/')
+                }).ToArray()
+            }
+        };
+        string inventory = Path.Combine(fixture.Root, "inventory");
+        Directory.CreateDirectory(inventory);
+        File.WriteAllText(Path.Combine(inventory, "Widget.json"), InventoryJson.Serialize(report));
+        byte[] original = File.ReadAllBytes(originalPath);
+        Action apply = () => FixRunner.Run(inventory, new HashSet<string> { "Sample.Widget" }, fixture.TwinRoot, apply: true);
+        if (containsAll)
+        {
+            apply.Should().NotThrow();
+            string text = File.ReadAllText(fixture.TwinPath);
+            text.IndexOf("void A()", StringComparison.Ordinal).Should().BeLessThan(text.IndexOf("void B()", StringComparison.Ordinal));
+        }
+        else
+        {
+            apply.Should().Throw<InvalidDataException>().WithMessage("*twin root*");
+            File.ReadAllText(fixture.TwinPath).Should().Be(fixture.Twin);
+        }
+
+        File.ReadAllBytes(originalPath).Should().Equal(original);
+        File.ReadAllText(extraOriginal).Should().Be(extraText);
+        File.ReadAllText(extraTwin).Should().Be(extraText);
+    }
+
+    [Test]
+    public void Run_should_reject_a_linked_original_inside_an_explicit_root()
+    {
+        using Fixture fixture = new("void A() { }\n    void B() { }", "void B() { }\n    void A() { }");
+        string originalPath = Path.Combine(fixture.Root, "original", "Widget.cs");
+        InventoryReport report = fixture.Report();
+        report = report with
+        {
+            Twin = SourceInventoryReader.ReadFiles(fixture.Root, "Sample.Widget", new HashSet<string>(), true, [originalPath]),
+            Original = report.Original with
+            {
+                Parts = report.Original.Parts.Select(part => part with { ExpectedTwinPath = "original/Widget.cs" }).ToArray()
+            }
+        };
+        string inventory = Path.Combine(fixture.Root, "inventory");
+        Directory.CreateDirectory(inventory);
+        File.WriteAllText(Path.Combine(inventory, "Widget.json"), InventoryJson.Serialize(report));
+        byte[] original = File.ReadAllBytes(originalPath);
+        Action apply = () => FixRunner.Run(inventory, new HashSet<string> { "Sample.Widget" }, Path.GetDirectoryName(originalPath)!, apply: true);
+        apply.Should().Throw<InvalidDataException>().WithMessage("*original file*");
+        File.ReadAllBytes(originalPath).Should().Equal(original);
+    }
+
     [TestCase("../original/Widget.cs", false)]
     [TestCase("Widget.cs", true)]
     [TestCase("child/Widget.cs", true)]

@@ -121,6 +121,11 @@ public partial class ImpactControl : UserControl, IDisposable
         }
     }
 
+    public void Stop()
+    {
+        _impactLoader?.Stop();
+    }
+
     private void ImpactControl_MouseWheel(object? sender, PointerWheelEventArgs e)
     {
         _scrollBar.Value = Math.Min(
@@ -130,11 +135,6 @@ public partial class ImpactControl : UserControl, IDisposable
         // Redraw when we've scrolled
         InvalidateVisual();
         e.Handled = true;
-    }
-
-    public void Stop()
-    {
-        _impactLoader?.Stop();
     }
 
     private void OnImpactUpdate(IList<ImpactLoader.Commit> commits)
@@ -314,13 +314,6 @@ public partial class ImpactControl : UserControl, IDisposable
         }
     }
 
-    private void OnResize(object? sender, SizeChangedEventArgs e)
-    {
-        UpdatePathsAndLabels();
-        UpdateScrollbar();
-        InvalidateVisual();
-    }
-
     private void UpdateScrollbar()
     {
         double rightValue = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - _scrollBar.Value);
@@ -334,6 +327,13 @@ public partial class ImpactControl : UserControl, IDisposable
             _scrollBar.Maximum - _scrollBar.LargeChange - rightValue,
             _scrollBar.Minimum,
             _scrollBar.Maximum);
+    }
+
+    private void OnResize(object? sender, SizeChangedEventArgs e)
+    {
+        UpdatePathsAndLabels();
+        UpdateScrollbar();
+        InvalidateVisual();
     }
 
     private static StreamGeometry CreateAuthorPath(List<(Rect rectangle, int changeCount)> points)

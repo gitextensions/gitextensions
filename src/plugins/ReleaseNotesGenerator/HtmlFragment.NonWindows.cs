@@ -196,6 +196,33 @@ internal partial class HtmlFragment
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Clears clipboard and copy a HTML fragment to the clipboard, providing additional meta-information.
+    /// </summary>
+    /// <param name="htmlFragment">a html fragment</param>
+    /// <param name="sourceUri">optional Source URL of the HTML document, for resolving relative links (can be null)</param>
+    public static void CopyToClipboard(string htmlFragment, Uri? sourceUri = null)
+    {
+        Avalonia.Input.Platform.IClipboard clipboard = GetClipboard();
+        using DataTransfer data = CreateHtmlFormatClipboardDataObject(htmlFragment, sourceUri);
+        ThreadHelper.JoinableTaskFactory.Run(() => clipboard.SetDataAsync(data));
+
+        // now the clipboard can be pasted as text (HTML code) to text editor
+        // or as table to MS Word or LibreOffice Writer
+    }
+
+    public static async Task CopyToClipboardAsync(TopLevel owner, string htmlFragment, Uri? sourceUri = null)
+    {
+        Avalonia.Input.Platform.IClipboard? clipboard = TopLevel.GetTopLevel(owner)?.Clipboard;
+        if (clipboard is null)
+        {
+            return;
+        }
+
+        using DataTransfer data = CreateHtmlFormatClipboardDataObject(htmlFragment, sourceUri);
+        await clipboard.SetDataAsync(data);
+    }
+
     internal static DataTransfer CreateHtmlFormatClipboardDataObject(string htmlFragment, Uri? sourceUri = null)
     {
         // Builds the CF_HTML header. See format specification here:
@@ -228,33 +255,6 @@ internal partial class HtmlFragment
         DataTransfer data = new();
         data.Add(item);
         return data;
-    }
-
-    public static async Task CopyToClipboardAsync(TopLevel owner, string htmlFragment, Uri? sourceUri = null)
-    {
-        Avalonia.Input.Platform.IClipboard? clipboard = TopLevel.GetTopLevel(owner)?.Clipboard;
-        if (clipboard is null)
-        {
-            return;
-        }
-
-        using DataTransfer data = CreateHtmlFormatClipboardDataObject(htmlFragment, sourceUri);
-        await clipboard.SetDataAsync(data);
-    }
-
-    /// <summary>
-    /// Clears clipboard and copy a HTML fragment to the clipboard, providing additional meta-information.
-    /// </summary>
-    /// <param name="htmlFragment">a html fragment</param>
-    /// <param name="sourceUri">optional Source URL of the HTML document, for resolving relative links (can be null)</param>
-    public static void CopyToClipboard(string htmlFragment, Uri? sourceUri = null)
-    {
-        Avalonia.Input.Platform.IClipboard clipboard = GetClipboard();
-        using DataTransfer data = CreateHtmlFormatClipboardDataObject(htmlFragment, sourceUri);
-        ThreadHelper.JoinableTaskFactory.Run(() => clipboard.SetDataAsync(data));
-
-        // now the clipboard can be pasted as text (HTML code) to text editor
-        // or as table to MS Word or LibreOffice Writer
     }
 
     private static Avalonia.Input.Platform.IClipboard GetClipboard()

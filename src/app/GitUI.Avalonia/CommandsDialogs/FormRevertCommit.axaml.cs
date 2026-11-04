@@ -221,13 +221,13 @@ public partial class FormRevertCommit : GitExtensionsDialog
         return Commands.Revert(Revision.ObjectId, AutoCommit.IsChecked == true, parentIndex);
     }
 
+    private void lvParentsList_Resize(object? sender, EventArgs e)
+        => lvParentsList.InvalidateMeasure();
+
     private void btnAbort_Click(object? sender, EventArgs e)
     {
         DialogResult = WinFormsShims.DialogResult.Cancel;
     }
-
-    private void lvParentsList_Resize(object? sender, EventArgs e)
-        => lvParentsList.InvalidateMeasure();
 
     internal TestAccessor GetTestAccessor() => new(this);
 

@@ -277,6 +277,12 @@ public sealed partial class FormReflog : GitModuleForm
         }
     }
 
+    private ObjectId GetShaOfRefLine()
+        => GetSelectedRefLine()?.Sha ?? default;
+
+    private FormResetCurrentBranch.ResetType GetResetType()
+        => _isDirtyDir ? FormResetCurrentBranch.ResetType.Soft : FormResetCurrentBranch.ResetType.Hard;
+
     private void resetCurrentBranchOnThisCommitToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         if (_isDirtyDir
@@ -304,9 +310,6 @@ public sealed partial class FormReflog : GitModuleForm
             return form.ShowDialog(this) == WinFormsShims.DialogResult.OK;
         });
     }
-
-    private FormResetCurrentBranch.ResetType GetResetType()
-        => _isDirtyDir ? FormResetCurrentBranch.ResetType.Soft : FormResetCurrentBranch.ResetType.Hard;
 
     private void copySha1ToolStripMenuItem_Click(object? sender, EventArgs e)
     {
@@ -352,6 +355,8 @@ public sealed partial class FormReflog : GitModuleForm
         }
     }
 
+    private RefLine? GetSelectedRefLine() => gridReflog.SelectedItem as RefLine;
+
     private void gridReflog_MouseClick(object? sender, PointerPressedEventArgs e)
     {
         PointerPoint point = e.GetCurrentPoint(gridReflog);
@@ -366,11 +371,6 @@ public sealed partial class FormReflog : GitModuleForm
             gridReflog.SelectedItem = refLine;
         }
     }
-
-    private RefLine? GetSelectedRefLine() => gridReflog.SelectedItem as RefLine;
-
-    private ObjectId GetShaOfRefLine()
-        => GetSelectedRefLine()?.Sha ?? default;
 
     private void UpdateActionState()
     {

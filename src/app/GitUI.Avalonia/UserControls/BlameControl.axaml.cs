@@ -48,11 +48,11 @@ public sealed partial class BlameControl : GitModuleControl
     private string? _fileName;
     private Encoding? _encoding;
     private GitBlameCommit? _tooltipCommit;
+    private bool _changingScrollPosition;
     private static readonly TranslationString _blameActualPreviousRevision = new("&Blame previous revision");
     private static readonly TranslationString _blameVisiblePreviousRevision = new("&Blame previous visible revision");
     private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
     private readonly IGitBlameParser _gitBlameParser;
-    private bool _changingScrollPosition;
     private bool _loading;
 
     public BlameControl()
@@ -360,35 +360,6 @@ public sealed partial class BlameControl : GitModuleControl
         HighlightLinesForCommit(blameCommit);
     }
 
-    private void BlameAuthor_HScrollPositionChanged(object? sender, EventArgs e)
-    {
-        BlameAuthor.HScrollPosition = 0;
-    }
-
-    private void BlameAuthor_VScrollPositionChanged(object? sender, EventArgs e)
-    {
-        if (_changingScrollPosition)
-        {
-            return;
-        }
-
-        _changingScrollPosition = true;
-        BlameFile.VScrollPosition = BlameAuthor.VScrollPosition;
-        _changingScrollPosition = false;
-    }
-
-    private void BlameFile_VScrollPositionChanged(object? sender, EventArgs e)
-    {
-        if (_changingScrollPosition)
-        {
-            return;
-        }
-
-        _changingScrollPosition = true;
-        BlameAuthor.VScrollPosition = BlameFile.VScrollPosition;
-        _changingScrollPosition = false;
-    }
-
     private void HighlightLinesForCommit(GitBlameCommit? commit)
     {
         if (commit == _highlightedCommit)
@@ -461,6 +432,35 @@ public sealed partial class BlameControl : GitModuleControl
         _lastBlameLine = newBlameLine;
         ObjectId objectId = _lastBlameLine.Commit.ObjectId;
         CommitInfo.Revision = _revisionGridInfo is null ? Module.GetRevision(objectId) : _revisionGridInfo.GetActualRevision(objectId);
+    }
+
+    private void BlameAuthor_HScrollPositionChanged(object? sender, EventArgs e)
+    {
+        BlameAuthor.HScrollPosition = 0;
+    }
+
+    private void BlameAuthor_VScrollPositionChanged(object? sender, EventArgs e)
+    {
+        if (_changingScrollPosition)
+        {
+            return;
+        }
+
+        _changingScrollPosition = true;
+        BlameFile.VScrollPosition = BlameAuthor.VScrollPosition;
+        _changingScrollPosition = false;
+    }
+
+    private void BlameFile_VScrollPositionChanged(object? sender, EventArgs e)
+    {
+        if (_changingScrollPosition)
+        {
+            return;
+        }
+
+        _changingScrollPosition = true;
+        BlameAuthor.VScrollPosition = BlameFile.VScrollPosition;
+        _changingScrollPosition = false;
     }
 
     private async Task ProcessBlameAsync(

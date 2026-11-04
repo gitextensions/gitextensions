@@ -14,7 +14,9 @@ dotnet artifacts/Debug/bin/ParityFix/net10.0/ParityFix.dll `
 
 The default command previews changes. Add `--apply` to write proved candidate files. Original files,
 linked sources outside the twin root, AXAML, cross-part moves and non-mechanical findings are excluded.
-`--twin-root` can select another explicit twin project; it must match every selected report's root.
+`--twin-root` can select another explicit twin project or mapped plugin directory. It must match each
+selected report root or contain every twin part in that report. Snapshot paths retain their recorded
+root for validation; only writes use the explicit boundary. Linked unchanged originals remain protected.
 
 Before processing, the tool checks the live member and comment facts against every selected report.
 Stale facts or an unsupported schema fail before any writes. These inventories do not contain whole-file
