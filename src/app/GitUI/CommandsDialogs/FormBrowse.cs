@@ -1184,7 +1184,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         notificationBarGitActionInProgress.RefreshGitAction(
             checkForConflicts: AppSettings.GitAsyncWhenMinimized || (WindowState != FormWindowState.Minimized));
 
-        // Only mark the refresh button dirty, an automatic reload of the revisions would be too expensive
         IndexWatcher indexWatcher = RevisionGrid.IndexWatcher;
         ThreadHelper.FileAndForget(async () =>
         {
