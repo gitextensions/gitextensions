@@ -1,4 +1,3 @@
-using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -28,10 +27,17 @@ internal static class RevisionGridRefRenderer
 {
     private const int MarginRight = 5;
     private static readonly double[] _dashPattern = [4, 4];
-    private static readonly Point[] _arrowPoints = new Point[4];
     private static readonly DashStyle DashedLine = new(_dashPattern, 0);
 
+    // Cache for GetTextAscent, which is only invalidated by a font change.
+    private static (FontFamily Family, FontStyle Style, FontWeight Weight, double Size)? _ascentFont;
+    private static int _ascentTextHeight;
+    private static int _ascent;
+
     private static int PaddingTopBottom => 2;
+
+    // Uniform horizontal padding applied on both sides of any ref label icon.
+    private static int IconPaddingLeftRight => 3;
 
     // Pixel radius for the rounded corners of ref label capsules.
     private static int RefLabelCornerRadius => 5;
@@ -624,35 +630,63 @@ internal static class RevisionGridRefRenderer
         path.LineTo(new Point(left, top + radius));
     }
 
-    private static void DrawArrow(
-        DrawingContext context,
-        IBrush brush,
-        Rect bounds,
-        double xOffset,
-        bool filled)
+    /// <summary>
+    ///  Computes the width of the text and icon of a ref label including their padding, excluding the shape-specific extra width.
+    /// </summary>
+    public static int GetContentWidth(TemplatedControl owner, string name, RefLabelIcon icon)
     {
-        double x = bounds.X + xOffset + 4;
-        double y = bounds.Y + 3;
-        double height = bounds.Height - 6;
-        double width = height / 2;
-        _arrowPoints[0] = new Point(x, y);
-        _arrowPoints[1] = new Point(x + width, y + (height / 2));
-        _arrowPoints[2] = new Point(x, y + height);
-        _arrowPoints[3] = new Point(x, y);
-        StreamGeometry arrow = new();
-        using (StreamGeometryContext path = arrow.Open())
+        (Size textSize, _, _, _, int iconAreaWidth) = MeasureContent(owner, name, icon);
+        return (int)textSize.Width + iconAreaWidth + (2 * PaddingLeftRight(name));
+    }
+
+    private static (Size TextSize, int BackgroundHeight, int TextOffsetY, RefLabelIconRenderer? IconRenderer, int IconAreaWidth) MeasureContent(
+        TemplatedControl owner,
+        string name,
+        RefLabelIcon icon)
+    {
+        int paddingTopBottom = PaddingTopBottom;
+
+        Size measuredText = WinFormsTextMeasurer.MeasureTextRendererNoPadding(owner, string.IsNullOrEmpty(name) ? " " : name);
+        Size textSize = new(string.IsNullOrEmpty(name) ? 0 : Math.Ceiling(measuredText.Width), Math.Ceiling(measuredText.Height));
+
+        int backgroundHeight = (int)textSize.Height + paddingTopBottom + paddingTopBottom - 1;
+        int textOffsetY = paddingTopBottom - 1;
+
+        // The metrics are relative to the capsule and therefore constant, so the icon renderers are cached and shared.
+        RefLabelIconRenderer? iconRenderer = RefLabelIconRenderer.Get(
+            icon,
+            new RefLabelIconMetrics(backgroundHeight, (int)textSize.Height, textOffsetY + GetTextAscent(owner, (int)textSize.Height)));
+        int iconAreaWidth = iconRenderer is null ? 0 : iconRenderer.Width + (2 * IconPaddingLeftRight);
+
+        return (textSize, backgroundHeight, textOffsetY, iconRenderer, iconAreaWidth);
+    }
+
+    /// <summary>
+    ///  Computes the distance from the top of the text to its baseline.
+    /// </summary>
+    /// <remarks>
+    ///  The measured text height corresponds to the line spacing of the font, so the ascent can be scaled by the same ratio.
+    ///  The result is cached because it only changes when the font changes.
+    /// </remarks>
+    private static int GetTextAscent(TemplatedControl owner, int textHeight)
+    {
+        var font = (owner.FontFamily, owner.FontStyle, owner.FontWeight, owner.FontSize);
+        if (_ascentFont == font && textHeight == _ascentTextHeight)
         {
-            path.BeginFigure(_arrowPoints[0], isFilled: filled);
-            path.LineTo(_arrowPoints[1]);
-            path.LineTo(_arrowPoints[2]);
-            path.EndFigure(isClosed: true);
+            return _ascent;
         }
 
-        context.DrawGeometry(filled ? brush : null, filled ? null : new Pen(brush, 1), arrow);
+        // Framework constraint: the native text line supplies the baseline instead of GDI font metrics.
+        using TextLayout text = new(" ", new Typeface(owner.FontFamily, owner.FontStyle, owner.FontWeight), owner.FontSize, Brushes.Black);
+        _ascent = text.TextLines.Count > 0 ? (int)Math.Round(text.TextLines[0].Baseline) : textHeight;
+        _ascentFont = font;
+        _ascentTextHeight = textHeight;
+
+        return _ascent;
     }
 
     private static RefLabelIcon GetEffectiveIcon(RefLabelIcon icon)
-        => icon is RefLabelIcon.Head or RefLabelIcon.HeadMergeSource
+        => icon is RefLabelIcon.Head or RefLabelIcon.HeadMergeSource or RefLabelIcon.RemoteForced
             ? icon
             : RefLabelIcon.None;
 
@@ -678,7 +712,8 @@ internal static class RevisionGridRefRenderer
     internal sealed class RefLabelControl : TemplatedControl
     {
         private readonly string _brushResourceKey;
-        private readonly string? _highlightedLabel;
+        private string? _highlightedLabel;
+        private RefLabelIcon _icon;
         private readonly IBrush? _refBrush;
         private string _normalLabel;
         private int _backgroundHeight;
@@ -686,8 +721,10 @@ internal static class RevisionGridRefRenderer
         private bool _isHighlighted;
         private int _labelWidth;
         private double _literalTextWidth;
-        private FormattedText? _formattedText;
         private Size _textSize;
+        private int _textOffsetY;
+        private RefLabelIconRenderer? _iconRenderer;
+        private int _iconAreaWidth;
 
         public RefLabelControl(
             IGitRef? gitRef,
@@ -706,7 +743,7 @@ internal static class RevisionGridRefRenderer
             Label = _normalLabel;
             _brushResourceKey = brushResourceKey;
             _refBrush = refBrush;
-            Icon = icon;
+            _icon = icon;
             Shape = shape;
             Fill = fill;
             IsDashed = dashed;
@@ -738,7 +775,17 @@ internal static class RevisionGridRefRenderer
             InvalidateHighlight();
         }
 
-        public RefLabelIcon Icon { get; }
+        public RefLabelIcon Icon => _isHighlighted && _icon == RefLabelIcon.RemoteForced ? RefLabelIcon.None : _icon;
+
+        internal void ReplaceRemoteNameWithIcon(string name)
+        {
+            _highlightedLabel ??= _normalLabel;
+            _normalLabel = name;
+            Label = _isHighlighted ? _highlightedLabel : _normalLabel;
+            _icon = RefLabelIcon.RemoteForced;
+            InvalidateMeasure();
+            InvalidateVisual();
+        }
 
         public RefLabelShape Shape { get; }
 
@@ -815,24 +862,16 @@ internal static class RevisionGridRefRenderer
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            _formattedText = CreateFormattedText(Brushes.Black);
-
             // The source measures prefixes with NoPadding but paints the literal caption
             // with NoPrefix. Empty labels retain the font's space height and zero width.
-            Size measuredText = WinFormsTextMeasurer.MeasureTextRendererNoPadding(this,
-                string.IsNullOrEmpty(Label) ? " " : Label);
-            _textSize = new Size(string.IsNullOrEmpty(Label) ? 0 : Math.Ceiling(measuredText.Width),
-                Math.Ceiling(measuredText.Height));
+            (_textSize, _backgroundHeight, _textOffsetY, _iconRenderer, _iconAreaWidth) = MeasureContent(this, Label, GetEffectiveIcon(Icon));
             _literalTextWidth = WinFormsTextMeasurer.MeasureSize(FontFamily, FontStyle, FontWeight,
                 FontSize, Label, singleLine: false, useTextRendererPadding: false).Width;
 
             // Nestled hits share the first font's space height, not a multiline
             // caption's height. Cache it with layout rather than querying GDI per move.
             _fontPointWidth = GetPointWidth(this);
-            _backgroundHeight = (int)_textSize.Height + (PaddingTopBottom * 2) - 1;
             int rowHeight = (int)RevisionGridControl.GetRowHeight(this);
-            RefLabelIcon effectiveIcon = GetEffectiveIcon(Icon);
-            int iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : rowHeight / 2;
 
             // For notch/point the rect must include the full/half notch/point area
             // so text can be positioned within the visible portion, matching the symmetric padding of other shapes.
@@ -843,9 +882,13 @@ internal static class RevisionGridRefRenderer
                 _ => 0,
             };
 
+            // When an icon is present, its own right-side padding (part of iconAreaWidth) already provides most of the gap
+            // before the text, so only a small extra nudge (instead of a second full paddingLeftRight) is added.
+            int leadingPadding = _iconRenderer is null ? PaddingLeftRight(Label) : 1;
+
             _labelWidth = (int)_textSize.Width
-                + iconWidth
-                + (PaddingLeftRight(Label) * 2)
+                + _iconAreaWidth
+                + leadingPadding + PaddingLeftRight(Label)
                 + extraWidth
                 - 1;
 
@@ -855,7 +898,7 @@ internal static class RevisionGridRefRenderer
 
         public override void Render(DrawingContext context)
         {
-            if (_formattedText is null || _labelWidth <= 0 || _backgroundHeight <= 0)
+            if (_labelWidth <= 0 || _backgroundHeight <= 0)
             {
                 return;
             }
@@ -902,26 +945,24 @@ internal static class RevisionGridRefRenderer
             // so the icon and text must be shifted right by pointWidth.
             int iconXOffset = Shape is RefLabelShape.NotchLeft or RefLabelShape.PointLeft
                 ? PointWidth
-                : 0;
+                : effectiveIcon == RefLabelIcon.None ? 0 : 1;
 
-            // arrow if the head is the current branch
-            if (effectiveIcon != RefLabelIcon.None)
-            {
-                DrawArrow(context, refBrush, capsuleBounds, iconXOffset, effectiveIcon == RefLabelIcon.Head);
-            }
-
-            int iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : (int)Bounds.Height / 2;
+            _iconRenderer?.Draw(context,
+                (int)capsuleBounds.X + iconXOffset + IconPaddingLeftRight,
+                (int)capsuleBounds.Y,
+                (refBrush as ISolidColorBrush)?.Color ?? Colors.Gray);
             int paddingLeftRight = PaddingLeftRight(Label);
 
             // For PointLeft, offset by half pointWidth so text starts inside the point.
+            int leadingPadding = _iconRenderer is null ? paddingLeftRight : 1;
             int textX = iconXOffset
-                + iconWidth
-                + paddingLeftRight
+                + _iconAreaWidth
+                + leadingPadding
                 - (Shape == RefLabelShape.PointLeft ? PointWidth / 2 : 0);
             int availableWidth = Math.Max(0, (int)Bounds.Width);
             int textWidth = Math.Clamp(Math.Min(availableWidth - paddingLeftRight - paddingLeftRight, (int)_textSize.Width),
                 0, Math.Max(0, availableWidth - textX));
-            Rect textBounds = new(textX, capsuleBounds.Y + PaddingTopBottom - 1, textWidth, _textSize.Height);
+            Rect textBounds = new(textX, capsuleBounds.Y + _textOffsetY, textWidth, _textSize.Height);
             if (textWidth > 0 && _textSize.Height > 0)
             {
                 // NoPrefix keeps the raw caption; EndEllipsis does not introduce word
@@ -998,15 +1039,6 @@ internal static class RevisionGridRefRenderer
                 InvalidateHighlight();
             }
         }
-
-        private FormattedText CreateFormattedText(IBrush foreground)
-            => new(
-                Label,
-                CultureInfo.CurrentUICulture,
-                FlowDirection.LeftToRight,
-                new Typeface(FontFamily, FontStyle, FontWeight),
-                FontSize,
-                foreground);
 
         private IBrush GetResourceBrush(string resourceKey, IBrush fallback)
             => Application.Current?.TryGetResource(

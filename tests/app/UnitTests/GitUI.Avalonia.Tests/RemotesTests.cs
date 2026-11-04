@@ -76,6 +76,11 @@ public sealed class RemotesTests
         remoteBranches.Columns.Select(column => column.Name).Should().Equal("BranchName", "RemoteCombo", "MergeWith");
         form.FindControl<TextBox>("PuttySshKey").Should().NotBeNull();
         form.FindControl<Control>("pnlMgtPuttySsh")!.IsVisible.Should().BeFalse("the runtime SSH backend has not been evaluated");
+        Button saveDefault = form.FindControl<Button>("SaveDefaultPushPull")!;
+        saveDefault.MinWidth.Should().Be(130);
+        saveDefault.MinHeight.Should().Be(25);
+        saveDefault.HorizontalAlignment.Should().Be(Avalonia.Layout.HorizontalAlignment.Right);
+        double.IsNaN(saveDefault.Width).Should().BeTrue();
     }
 
     [AvaloniaTest]

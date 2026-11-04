@@ -1,6 +1,8 @@
+﻿using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
@@ -25,6 +27,78 @@ public sealed class ResolveConflictsTests
         // The "no mergetool configured" warning (and similar) must not block the test run.
         _messageBoxes = new StubMessageBoxHost();
         WinFormsShims.ShimHost.MessageBoxHost = _messageBoxes;
+    }
+
+    [AvaloniaTest]
+    public void Canceling_a_binary_conflict_should_not_reapply_the_previous_answer_or_remember_apply_to_all()
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        using FormResolveConflicts form = new(commands);
+        const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+        FieldInfo resultField = typeof(FormResolveConflicts).GetField("_solveMergeConflictDialogResult", flags)!;
+        resultField.SetValue(form, Enum.Parse(resultField.FieldType, "KeepLocal"));
+        typeof(FormResolveConflicts).GetField("_solveMergeConflictDialogCheckboxText", flags)!
+            .SetValue(form, "Apply to all");
+        using UpstreamTaskDialogObserver observer = new(window =>
+        {
+            window.GetVisualDescendants().OfType<CheckBox>().Single().IsChecked = true;
+            window.Close();
+        });
+
+        typeof(FormResolveConflicts).GetMethod("BinaryFilesChooseLocalBaseRemote", flags)!
+            .Invoke(form, [CreateConflict("binary.dat", hasBase: true, hasLocal: true, hasRemote: true)]);
+
+        observer.Failure.Should().BeNull();
+        observer.Count.Should().Be(1);
+        module.DidNotReceive().HandleConflictSelectSide(Arg.Any<string>(), Arg.Any<string>(), out Arg.Any<string>());
+        typeof(FormResolveConflicts).GetField("_solveMergeConflictApplyToAll", flags)!.GetValue(form).Should().Be(false);
+    }
+
+    [AvaloniaTest]
+    [TestCase("ContextChooseBase_Click")]
+    [TestCase("ContextChooseLocal_Click")]
+    [TestCase("ContextChooseRemote_Click")]
+    public void Each_conflict_context_action_should_start_a_fresh_apply_to_all_batch(string handler)
+    {
+        (IGitUICommands commands, _) = CreateCommands();
+        using FormResolveConflicts form = new(commands);
+        const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+        FieldInfo applyToAll = typeof(FormResolveConflicts).GetField("_solveMergeConflictApplyToAll", flags)!;
+        applyToAll.SetValue(form, true);
+
+        typeof(FormResolveConflicts).GetMethod(handler, flags)!.Invoke(form, [form, EventArgs.Empty]);
+
+        applyToAll.GetValue(form).Should().Be(false);
+    }
+
+    [AvaloniaTest]
+    [TestCase("ChooseBaseOnConflict", "BASE", false)]
+    [TestCase("ChooseBaseOnConflict", "BASE", true)]
+    [TestCase("ChooseLocalOnConflict", "LOCAL", false)]
+    [TestCase("ChooseLocalOnConflict", "LOCAL", true)]
+    [TestCase("ChooseRemoteOnConflict", "REMOTE", false)]
+    [TestCase("ChooseRemoteOnConflict", "REMOTE", true)]
+    public void Choosing_a_conflict_side_should_report_the_failed_file_and_git_error(string handler, string side, bool success)
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        module.HandleConflictSelectSide("a.txt", side, out Arg.Any<string>()).Returns(call =>
+        {
+            call[2] = "fatal: checkout failed";
+            return success;
+        });
+        using FormResolveConflicts form = new(commands);
+
+        typeof(FormResolveConflicts).GetMethod(handler, BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(form, ["a.txt"]);
+
+        if (success)
+        {
+            _messageBoxes.Messages.Should().BeEmpty();
+        }
+        else
+        {
+            _messageBoxes.Messages.Should().ContainSingle().Which.Should().Contain("a.txt").And.Contain("fatal: checkout failed");
+        }
     }
 
     [AvaloniaTest]

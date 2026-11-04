@@ -17,7 +17,7 @@ partial class FormBrowse
         TreeTabPage.Icon = Images.FileTree;
         GpgInfoTabPage.Icon = Images.Key;
 
-        if (!AppSettings.ShowGpgInformation.Value)
+        if (!AppSettings.ShowGpgInformation)
         {
             GpgInfoTabPage.IsVisible = false;
         }

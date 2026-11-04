@@ -110,9 +110,9 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
     {
         base.OnShown(e);
 
-        txtOptions.Text = AppSettings.GitGrepUserArguments.Value;
-        chkMatchCase.IsChecked = !AppSettings.GitGrepIgnoreCase.Value;
-        chkMatchWholeWord.IsChecked = AppSettings.GitGrepMatchWholeWord.Value;
+        txtOptions.Text = AppSettings.GitGrepUserArguments;
+        chkMatchCase.IsChecked = !AppSettings.GitGrepIgnoreCase;
+        chkMatchWholeWord.IsChecked = AppSettings.GitGrepMatchWholeWord;
         cboFindInCommitFilesGitGrep.Focus();
         _hasLoaded = true;
     }

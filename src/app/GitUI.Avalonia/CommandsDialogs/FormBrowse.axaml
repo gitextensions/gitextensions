@@ -328,7 +328,6 @@
                                 compat:TranslationCompat.UseToolTipText="True"
                                 Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                 Icon="{x:Static properties:Images.WorkTree}"
-                                IsVisible="False"
                                 ToolTip.Tip="Worktrees">
           <compat:IconSplitButton.Flyout>
             <MenuFlyout />
@@ -518,11 +517,9 @@ compat:TranslationCompat.UseToolTipText="True" Header="_Manage stashes..." ToolT
             <Grid RowDefinitions="Auto,Auto,*">
               <controls:InteractiveGitActionControl x:Name="notificationBarGitActionInProgress"
                                                     Grid.Row="0"
-                                                    MinHeight="33"
                                                     IsVisible="False" />
               <controls:InteractiveGitActionControl x:Name="notificationBarBisectInProgress"
                                                     Grid.Row="1"
-                                                    MinHeight="33"
                                                     IsVisible="False" />
               <gitui:RevisionGridControl x:Name="RevisionGrid" Grid.Row="2" />
             </Grid>

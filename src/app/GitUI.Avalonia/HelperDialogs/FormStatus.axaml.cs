@@ -69,7 +69,7 @@ public partial class FormStatus : GitExtensionsDialog
 
         pnlOutput.Children.Add(ConsoleCommandRunner.Control);
 
-        ShowPassword.IsChecked = AppSettings.ShowProcessDialogPasswordInput.Value;
+        ShowPassword.IsChecked = AppSettings.ShowProcessDialogPasswordInput;
 
         if (_useDialogSettings)
         {

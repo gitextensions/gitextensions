@@ -141,7 +141,7 @@ public partial class EditNetSpell : GitModuleControl, IDisposable
         AutoComplete.ItemTemplate = new FuncDataTemplate<AutoCompleteWord>((word, _) =>
             new TextBlock { Text = word?.Word ?? string.Empty });
 
-        TextBox.TextWrapping = AppSettings.MessageEditorWordWrap.Value
+        TextBox.TextWrapping = AppSettings.MessageEditorWordWrap
             ? TextWrapping.Wrap
             : TextWrapping.NoWrap;
         TextBox.KeyDown += TextBox_KeyDown;

@@ -42,7 +42,7 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
         chkRememberIgnoreWhiteSpacePreference.IsChecked = AppSettings.RememberIgnoreWhiteSpacePreference;
         chkOmitUninterestingDiff.IsChecked = AppSettings.OmitUninterestingDiff;
         chkRememberShowEntireFilePreference.IsChecked = AppSettings.RememberShowEntireFilePreference;
-        chkRememberDiffAppearancePreference.IsChecked = AppSettings.RememberDiffDisplayAppearance.Value;
+        chkRememberDiffAppearancePreference.IsChecked = AppSettings.RememberDiffDisplayAppearance;
         chkRememberShowNonPrintingCharsPreference.IsChecked = AppSettings.RememberShowNonPrintingCharsPreference;
         chkRememberNumberOfContextLines.IsChecked = AppSettings.RememberNumberOfContextLines;
         chkRememberShowSyntaxHighlightingInDiff.IsChecked = AppSettings.RememberShowSyntaxHighlightingInDiff;
@@ -51,8 +51,8 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
         chkShowDiffForAllParents.IsChecked = AppSettings.ShowDiffForAllParents;
         chkShowAllCustomDiffTools.IsChecked = AppSettings.ShowAvailableDiffTools;
         VerticalRulerPosition.Value = AppSettings.DiffVerticalRulerPosition;
-        chkUseGitColoring.IsChecked = AppSettings.UseGitColoring.Value;
-        chkUseGEThemeGitColoring.IsChecked = AppSettings.ReverseGitColoring.Value;
+        chkUseGitColoring.IsChecked = AppSettings.UseGitColoring;
+        chkUseGEThemeGitColoring.IsChecked = AppSettings.ReverseGitColoring;
         chkUseGEThemeGitColoring.IsEnabled = chkUseGitColoring.IsChecked == true;
 
         base.SettingsToPage();

@@ -115,6 +115,7 @@
           <wf:ToolStripMenuItem x:Name="manipulateCommitToolStripMenuItem" Header="_Advanced">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Advanced}" /></MenuItem.Icon>
             <wf:ToolStripMenuItem x:Name="editCommitToolStripMenuItem" Header="_Edit commit" />
+            <wf:ToolStripMenuItem x:Name="editCommitWithFixupToolStripMenuItem" Header="E_dit commit by creating a fixup commit and squash-rebase..." />
             <wf:ToolStripMenuItem x:Name="rewordCommitToolStripMenuItem" Header="_Reword commit" />
             <wf:ToolStripMenuItem x:Name="fixupCommitToolStripMenuItem" Header="Create a _fixup commit..." />
             <wf:ToolStripMenuItem x:Name="squashCommitToolStripMenuItem" Header="Create a _squash commit..." />

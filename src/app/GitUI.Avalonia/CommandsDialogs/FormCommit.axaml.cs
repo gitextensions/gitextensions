@@ -166,6 +166,11 @@ public sealed partial class FormCommit : GitModuleForm
     [GeneratedRegex(@"\{\{(?<pattern>.*?)\}\}(?:\[(?<index>\d+)\])?", RegexOptions.ExplicitCapture)]
     private static partial Regex ReplaceMessageRegex();
 
+    /// <summary>
+    ///  Occurs after a commit has been created by this dialog.
+    /// </summary>
+    public event EventHandler? CommitCreated;
+
     private CommitKind CommitKind
     {
         get => _commitKind;
@@ -1769,6 +1774,8 @@ public sealed partial class FormCommit : GitModuleForm
                 return;
             }
 
+            CommitCreated?.Invoke(this, EventArgs.Empty);
+
             ScriptsRunner.RunEventScripts(ScriptEvent.AfterCommit, this);
 
             // Message.Text has been used and stored
@@ -2436,7 +2443,7 @@ public sealed partial class FormCommit : GitModuleForm
         ResetSoft.IsEnabled = amend && !Module.RevParse(_resetSoftRevision).IsZero;
         UpdateStageButtons();
 
-        if (AppSettings.CommitDialogSelectStagedOnEnterMessage.Value)
+        if (AppSettings.CommitDialogSelectStagedOnEnterMessage)
         {
             SelectStaged();
         }
@@ -2467,7 +2474,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void Message_Enter(object? sender, EventArgs e)
     {
-        if (AppSettings.CommitDialogSelectStagedOnEnterMessage.Value)
+        if (AppSettings.CommitDialogSelectStagedOnEnterMessage)
         {
             SelectStaged();
         }
@@ -2503,7 +2510,7 @@ public sealed partial class FormCommit : GitModuleForm
     {
         _skipUpdate = true;
         refreshDialogOnFormFocusToolStripMenuItem.IsChecked = AppSettings.RefreshArtificialCommitOnApplicationActivated;
-        tsmiSelectStagedOnEnterMessage.IsChecked = AppSettings.CommitDialogSelectStagedOnEnterMessage.Value;
+        tsmiSelectStagedOnEnterMessage.IsChecked = AppSettings.CommitDialogSelectStagedOnEnterMessage;
         _skipUpdate = false;
     }
 

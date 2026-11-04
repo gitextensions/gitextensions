@@ -59,12 +59,12 @@ public abstract class DiffHighlightService : TextHighlightService
         SetIfUnsetInGit(key: "diff.colormoved", value: "dimmed-zebra");
 
         // Use reverse color to follow GE theme
-        string reverse = AppSettings.ReverseGitColoring.Value ? "reverse" : "";
+        string reverse = AppSettings.ReverseGitColoring ? "reverse" : "";
 
         SetIfUnsetInGit(key: "color.diff.old", value: $"red {reverse}");
         SetIfUnsetInGit(key: "color.diff.new", value: $"green {reverse}");
 
-        if (AppSettings.ReverseGitColoring.Value)
+        if (AppSettings.ReverseGitColoring)
         {
             // Fix: Force black foreground to avoid that foreground is calculated to white
             GitVersion supportsBrightColors = new("2.26.0.0");
@@ -125,7 +125,7 @@ public abstract class DiffHighlightService : TextHighlightService
     internal bool UseGitColoring => _useGitColoring;
 
     internal bool UseBackgroundColoring
-        => !_useGitColoring || AppSettings.ReverseGitColoring.Value;
+        => !_useGitColoring || AppSettings.ReverseGitColoring;
 
     protected void AddTextMarkers(IEnumerable<TextMarker> markers)
     {
@@ -188,7 +188,7 @@ public abstract class DiffHighlightService : TextHighlightService
     internal void SetHighlighting(string text)
     {
         // Apply GE word highlighting for Patch display (may apply to Difftastic setting, if not available for a repo)
-        if (!_useGitColoring || AppSettings.DiffDisplayAppearance.Value != GitCommands.Settings.DiffDisplayAppearance.GitWordDiff)
+        if (!_useGitColoring || AppSettings.DiffDisplayAppearance != GitCommands.Settings.DiffDisplayAppearance.GitWordDiff)
         {
             List<TextMarker> markers = _useGitColoring ? [] : _textMarkers;
             AddInlineDifferenceMarkers(markers, text);
@@ -240,7 +240,7 @@ public abstract class DiffHighlightService : TextHighlightService
         int index = 0;
         DiffLineInfo[] diffLines = [.. _diffLinesInfo.DiffLines.Values.OrderBy(l => l.LineNumInDiff)];
         const int diffContentOffset = 1; // in order to skip the prefixes '-' / '+' (this is only for normal patch format)
-        bool dimBackground = !_useGitColoring || AppSettings.ReverseGitColoring.Value;
+        bool dimBackground = !_useGitColoring || AppSettings.ReverseGitColoring;
 
         // Process the next blocks of removed / added diffLines and mark in-line differences
         while (index < diffLines.Length)

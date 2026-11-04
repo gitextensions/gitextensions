@@ -51,7 +51,7 @@ public sealed class InputAccessibilityTests
                 Path.Combine(repositoryRoot, "src", "plugins", "Gource")),
         ]));
         WinFormsInputMetadata.ByType.Should().HaveCount(142);
-        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1531);
+        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1525);
         WinFormsInputMetadata.SourceByType.Should().ContainKey("GitUI.CommandsDialogs.FormBrowse");
         WinFormsInputMetadata.SourceByType["GitUI.CommandsDialogs.FormBrowse"]
             .Single(item => item.FieldName == "toolStripButtonPull")

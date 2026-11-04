@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "075c58fe1ab9d167369640ef267b2e6225aa6c64",
+  "analyzedCommit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
   "axisOrder": [
     "structural",
     "functional",
@@ -21127,7 +21127,7 @@
           "note": "P8.6i progress 69 groups 8 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 20 actionable and 28 total differences for this mapping; every structural difference stays open. 2026-10-03 batch75: Copy-link context targets are resolved freshly from the originating text surface rather than retained URI state from another panel. Source nearest-character semantics and non-text origins are bounded by native probes and product regressions. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-03 batch76: Wrapped body and refs use configured native RichEdit font line metrics and actual TextLayout visual lines, including empty/trailing paragraphs and runtime font changes. Header width/selection and source margins are unchanged. Native parent-row integration, exact wrapping breakpoints and glyph raster remain open. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-03 batch77: Source cached ContentsResized handlers and finite parent row/column sizing are restored. Authored table/child rectangles and source anchor/minimum rules derive the body client allocation while public Margin8 remains intact; no captured font fudge is used. Native constructor integration is measured at two families/four sizes. Rendered Browse-header equivalence, exact wrapping/glyph raster and original Rx100ms transient cadence remain open. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed. 2026-10-04 batch78: Source-opted body/refs preserve native LF caret positions and selectable wrapped URI captions, correct pointer allocation through the authored anchors/Margin, and run the original unconditional Ctrl+C handler before framework selection handling. Composite copy retains source Environment.NewLine block separators and excludes refs. Actual native helper surrogate duplication remains explicit Unicode equivalence debt, not silently replicated. Exact native wrapping, physical smart drag, raster and Rx100ms timing remain open. Actual test counts, paired images, platform evidence and unresolved coverage are in verification.json; complete axes and existing finding counts are not promoted by bounded tests. Actual gate counts/limitations are in verification.json; existing axis status and finding counts are preserved, not claimed closed."
         },
         "functional": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-10-04",
           "commit": "3161bc55b6bcb2f5e7b91504824c79544ff3fbe7",
           "evidence": [
@@ -22778,7 +22778,7 @@
       "complete": false,
       "axes": {
         "structural": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-27",
           "commit": "1c1fe80f6436123fc2403d2cafc85cf0ea955d31",
           "evidence": [
@@ -22790,7 +22790,7 @@
           "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 0 ordinary findings for this mapping; every remaining structural difference stays open."
         },
         "functional": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-11",
           "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
@@ -22848,7 +22848,7 @@
       "complete": false,
       "axes": {
         "structural": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-27",
           "commit": "1c1fe80f6436123fc2403d2cafc85cf0ea955d31",
           "evidence": [
@@ -22860,7 +22860,7 @@
           "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 0 ordinary findings for this mapping; every remaining structural difference stays open."
         },
         "functional": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-11",
           "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
@@ -33754,7 +33754,7 @@
           "note": "P8.6i progress 69 groups 31 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 93 actionable and 124 total differences for this mapping; every structural difference stays open. 2026-10-02 batch68 working-tree evidence based on 03cea46cf1b98dda17993dbf7d6ddb23a4241773: shared declaration extraction is pixel-neutral across 45 cells; not source parity or full-axis closure. Verification counts/platform limitations: verification.json. Existing finding counts/statuses remain open."
         },
         "functional": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-10-02",
           "commit": "03cea46cf1b98dda17993dbf7d6ddb23a4241773",
           "evidence": [
@@ -33907,7 +33907,7 @@
       "complete": false,
       "axes": {
         "structural": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-05",
           "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
           "evidence": [
@@ -33918,7 +33918,7 @@
           "note": "The exact original source is compiled into the twin through an MSBuild Link."
         },
         "functional": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-05",
           "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
           "evidence": [
@@ -39302,7 +39302,7 @@
           "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 1 ordinary findings for this mapping; every remaining structural difference stays open."
         },
         "functional": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-12",
           "commit": "ab01219e064eec58120bff13fe02067cf576c1e4",
           "evidence": [
@@ -39342,7 +39342,7 @@
           "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 1 ordinary findings for this mapping; every remaining structural difference stays open."
         },
         "functional": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-12",
           "commit": "ab01219e064eec58120bff13fe02067cf576c1e4",
           "evidence": [
@@ -40997,7 +40997,7 @@
       "complete": false,
       "axes": {
         "structural": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-30",
           "commit": "cb08b179de63e0c9c23eff33c52634b31c89062a",
           "evidence": [
@@ -41008,7 +41008,7 @@
           "note": "The exact framework-neutral upstream source is compiled into the Avalonia twin through an MSBuild Link."
         },
         "functional": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-30",
           "commit": "cb08b179de63e0c9c23eff33c52634b31c89062a",
           "evidence": [
@@ -41211,7 +41211,7 @@
           "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 3 ordinary findings for this mapping; every remaining structural difference stays open."
         },
         "functional": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-27",
           "commit": "7a1fa0a0ea569c5cd0738496a8643a8366e4aae9",
           "evidence": [
@@ -42094,7 +42094,7 @@
       "complete": false,
       "axes": {
         "structural": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-05",
           "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
           "evidence": [
@@ -42105,7 +42105,7 @@
           "note": "The exact original source is compiled into the twin through an MSBuild Link."
         },
         "functional": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-05",
           "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
           "evidence": [
@@ -42896,11 +42896,11 @@
     },
     {
       "source": "src/app/GitUI/UserControls/RevisionGrid/RefLabelIcon.cs",
-      "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RefLabelIcon.cs",
+      "twin": "src/app/GitUI/UserControls/RevisionGrid/RefLabelIcon.cs",
       "complete": false,
       "axes": {
         "structural": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-05",
           "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
           "evidence": [
@@ -42911,7 +42911,7 @@
           "note": "The exact original source is compiled into the twin through an MSBuild Link."
         },
         "functional": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-05",
           "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
           "evidence": [
@@ -43376,7 +43376,7 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "verified",
+          "status": "unverified",
           "verifiedOn": "2026-08-12",
           "commit": "d7e5f25166841a7c379c5b1f67dc4b99f03e4b2a",
           "evidence": [
@@ -49605,6 +49605,128 @@
           "platforms": [],
           "findingCount": 0,
           "note": "2026-10-04 batch80: Source96 ref-label consumer probes cover six original fonts, prefix measurement versus literal painting,35 label states and four nestled pairs per font, circular path points, clipping and integer hit maps. Candidate adopts source integer capsule sizing, unshrunk circular paths, deferred pair highlights, and one ordered source hit contract for hover/tooltip/double-click/context routes. Exact completed counts, hashes, platform limits and remaining raster/state debt are in batch80/verification.json. Parent ced3016e2bba2b7537b82f73542f17edf0466ac1 identifies the verified working-tree basis, not a self-containing commit. No complete axis is claimed."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/RefLabelIconRenderer.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RefLabelIconRenderer.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-04",
+          "commit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-04",
+          "commit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-04",
+          "commit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-04",
+          "commit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-04",
+          "commit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-04",
+          "commit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/RefLabelIconMetrics.cs",
+      "twin": "src/app/GitUI/UserControls/RevisionGrid/RefLabelIconMetrics.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-04",
+          "commit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-04",
+          "commit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-04",
+          "commit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-04",
+          "commit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-04",
+          "commit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-04",
+          "commit": "17f62c4a4c75c2b78122257e895a4eda1802f8fb",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
         }
       }
     }

@@ -91,7 +91,6 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
         ProxySwitcherPlugin plugin = GetPlugin();
         SettingsSource settings = GetSettings();
         StringBuilder sb = new();
-        sb.Append('"');
         string username = plugin.Username.ValueOrDefault(settings);
         if (!string.IsNullOrEmpty(username))
         {
@@ -114,39 +113,27 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
             sb.Append(port);
         }
 
-        sb.Append('"');
+        // Not quoted: SetGitSetting quotes the value.
         return sb.ToString();
     }
 
     private void SetProxy_Button_Click(object? sender, EventArgs e)
     {
-        string httpProxy = BuildHttpProxy();
-
-        GitArgumentBuilder args = new("config")
-        {
-            { ApplyGlobally_CheckBox.IsChecked == true, "--global" },
-            "http.proxy",
-            httpProxy
-        };
-        IGitModule gitCommands = GetGitCommands();
-        gitCommands.GitExecutable.GetOutput(args);
-        gitCommands.InvalidateGitSettings();
-
+        GetGitCommands().SetGitSetting(SelectedSettingLevel, "http.proxy", BuildHttpProxy());
+        GetGitCommands().InvalidateGitSettings();
         RefreshProxy();
     }
 
     private void UnsetProxy_Button_Click(object? sender, EventArgs e)
     {
-        string arguments = ApplyGlobally_CheckBox.IsChecked == true
-            ? "config --global --unset http.proxy"
-            : "config --unset http.proxy";
-
-        IGitModule gitCommands = GetGitCommands();
-        gitCommands.GitExecutable.GetOutput(arguments);
-        gitCommands.InvalidateGitSettings();
-
+        // Git exits with code 5 when the setting does not exist at the level it is unset at, which
+        // SetGitSetting tolerates - unlike a bare "git config --unset".
+        GetGitCommands().SetGitSetting(SelectedSettingLevel, "http.proxy", value: null);
+        GetGitCommands().InvalidateGitSettings();
         RefreshProxy();
     }
+
+    private GitSettingLevel SelectedSettingLevel => ApplyGlobally_CheckBox.IsChecked == true ? GitSettingLevel.Global : GitSettingLevel.Local;
 
     private ProxySwitcherPlugin GetPlugin()
         => _plugin ?? throw new InvalidOperationException($"{nameof(ProxySwitcherForm)} was constructed incorrectly.");

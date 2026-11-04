@@ -67,6 +67,7 @@ public partial class CommitInfo : GitModuleControl
     private readonly IConfigFileRemoteSettingsManager _remotesManager;
     private readonly GitDescribeProvider _gitDescribeProvider;
     private readonly CancellationTokenSequence _asyncLoadCancellation = new();
+    private bool _hasSubscribedToUICommandsChanged;
 
     private GitRevision? _revision;
     private IReadOnlyList<ObjectId>? _children;
@@ -222,20 +223,71 @@ public partial class CommitInfo : GitModuleControl
 
         if (source is null)
         {
+            UnsubscribeFromUICommandsChanged();
             _linkFactory = null;
             _commitDataBodyRenderer = null;
             _refsFormatter = null;
         }
         else
         {
-            _linkFactory = source.UICommands.GetRequiredService<ILinkFactory>();
-            _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
-            _refsFormatter = new RefsFormatter(_linkFactory);
+            EnsureRenderersInitialized(source.UICommands);
 
-            source.UICommandsChanged += delegate { RefreshSortedTags(); };
+            if (!_hasSubscribedToUICommandsChanged)
+            {
+                source.UICommandsChanged += OnUICommandsChanged;
+                _hasSubscribedToUICommandsChanged = true;
+                if (source is Window window)
+                {
+                    // Framework constraint: final owner close replaces WinForms control disposal; layout detachment remains reusable.
+                    window.Closed += (_, _) => UnsubscribeFromUICommandsChanged();
+                }
+            }
 
             // call this event handler also now (necessary for "Contained in branches/tags")
-            RefreshSortedTags();
+            TriggerRefreshSortedTags();
+        }
+    }
+
+    private void UnsubscribeFromUICommandsChanged()
+    {
+        if (!_hasSubscribedToUICommandsChanged)
+        {
+            return;
+        }
+
+        UICommandsSource.UICommandsChanged -= OnUICommandsChanged;
+        _hasSubscribedToUICommandsChanged = false;
+    }
+
+    private void EnsureRenderersInitialized(IServiceProvider serviceProvider)
+    {
+        if (_linkFactory is not null)
+        {
+            return;
+        }
+
+        _linkFactory = serviceProvider.GetRequiredService<ILinkFactory>();
+        _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
+        _refsFormatter = new RefsFormatter(_linkFactory);
+    }
+
+    private void OnUICommandsChanged(object? sender, GitUICommandsChangedEventArgs e)
+    {
+        if (sender is not IGitUICommandsSource)
+        {
+            return;
+        }
+
+        // Cancel unconditionally: any in-flight load belongs to the previous repository.
+        CancellationToken cancellationToken = _asyncLoadCancellation.Next();
+        TriggerRefreshSortedTags();
+
+        ClearRevisionDetailsDisplay();
+        UpdateRevisionInfo();
+
+        if (_revision is not null && tableLayout.IsVisible)
+        {
+            ReloadCommitInfo(cancellationToken);
         }
     }
 
@@ -248,8 +300,10 @@ public partial class CommitInfo : GitModuleControl
             Hotkeys.FirstOrDefault(hotkey => hotkey.CommandCode == (int)FormBrowse.Command.AddNotes)?.KeyData);
     }
 
-    private void RefreshSortedTags()
+    private void TriggerRefreshSortedTags()
     {
+        _tagsOrderDict = null;
+
         if (!Module.IsValidGitWorkingDir())
         {
             return;
@@ -289,6 +343,7 @@ public partial class CommitInfo : GitModuleControl
         if (revision is null)
         {
             tableLayout.IsVisible = false;
+            ClearRevisionDetailsDisplay();
             return;
         }
 
@@ -399,11 +454,7 @@ public partial class CommitInfo : GitModuleControl
         _tags = null;
         _annotatedTagsMessages = null;
 
-        _annotatedTagsInfo = "";
-        _linksInfo = "";
-        _branchInfo = "";
-        _tagInfo = "";
-        _gitDescribeInfo = "";
+        ClearRevisionDetailsDisplay();
 
         if (_revision is not null && !_revision.IsArtificial && !_revision.IsAutostash)
         {
@@ -419,7 +470,6 @@ public partial class CommitInfo : GitModuleControl
         else
         {
             rtbxCommitMessage.SetXHTMLText(GetFixCommitMessage());
-            RevisionInfo.Clear();
         }
 
         return;
@@ -439,7 +489,7 @@ public partial class CommitInfo : GitModuleControl
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (_revision!.Body is null || (_revision.Notes is null && (AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes)))
+            if (_revision!.Body is null || (_revision.Notes is null && (AppSettings.ShowGitNotesColumn || AppSettings.ShowGitNotes)))
             {
                 _commitDataManager.UpdateBodyAndNotes(_revision);
             }
@@ -676,6 +726,16 @@ public partial class CommitInfo : GitModuleControl
                 }
             }
         }
+    }
+
+    private void ClearRevisionDetailsDisplay()
+    {
+        _annotatedTagsInfo = "";
+        _linksInfo = "";
+        _branchInfo = "";
+        _tagInfo = "";
+        _gitDescribeInfo = "";
+        RevisionInfo.Clear();
     }
 
     private void UpdateRevisionInfo()

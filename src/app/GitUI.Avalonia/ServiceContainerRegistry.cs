@@ -22,7 +22,7 @@ public static class ServiceContainerRegistry
     public static void RegisterServices(ServiceContainer serviceContainer)
     {
         ScriptsManager scriptsManager = new();
-        OutputHistoryModel outputHistoryModel = new(AppSettings.OutputHistoryDepth.Value);
+        OutputHistoryModel outputHistoryModel = new(AppSettings.OutputHistoryDepth);
         serviceContainer.GetRequiredService<ISubscribableTraceListener>().TraceReceived += (in string message) =>
         {
             // In release builds, all Trace.Write* output is recorded.

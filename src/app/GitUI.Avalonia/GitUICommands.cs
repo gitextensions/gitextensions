@@ -1243,7 +1243,7 @@ public sealed class GitUICommands : IGitUICommands
             return;
         }
 
-        bool updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? (AppSettings.DontConfirmUpdateSubmodulesOnCheckout ?? MessageBoxes.ConfirmUpdateSubmodules(owner));
+        bool updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? (AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value ?? MessageBoxes.ConfirmUpdateSubmodules(owner));
 
         if (updateSubmodules)
         {
@@ -1296,7 +1296,7 @@ public sealed class GitUICommands : IGitUICommands
     {
         DoActionOnRepo(owner, action: () =>
         {
-            if (AppSettings.UseBrowseForFileHistory.Value)
+            if (AppSettings.UseBrowseForFileHistory)
             {
                 return StartBrowseDialog(owner, new BrowseArguments
                 {
@@ -1993,7 +1993,7 @@ public sealed class GitUICommands : IGitUICommands
         }
 
         // Similar to StartFileHistoryDialog()
-        if (AppSettings.UseBrowseForFileHistory.Value)
+        if (AppSettings.UseBrowseForFileHistory)
         {
             // NOTE: fileHistoryFileName doesn't need to be quoted, as it the filter will get quoted
             // when the filter gets set.

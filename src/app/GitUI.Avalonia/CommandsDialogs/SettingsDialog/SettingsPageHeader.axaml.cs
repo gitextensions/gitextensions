@@ -27,6 +27,8 @@ public interface IGitConfigSettingsPage : ILocalSettingsPage
 
 public sealed partial class SettingsPageHeader : TranslatedControl
 {
+    private static readonly Dictionary<Type, string> _lastSelectedLayerByPageType = [];
+
     private readonly SettingsPageWithHeader? _page;
 
     public SettingsPageHeader()
@@ -97,6 +99,29 @@ public sealed partial class SettingsPageHeader : TranslatedControl
 
         EffectiveRB.IsChecked = true;
         ReadOnly = true;
+
+        Type pageType = localSettingsPage.GetType();
+        RadioButton[] layerButtons = [EffectiveRB, LocalRB, DistributedRB, GlobalRB, SystemRB];
+
+        if (_lastSelectedLayerByPageType.TryGetValue(pageType, out string? lastLayerName))
+        {
+            RadioButton? lastLayer = layerButtons.FirstOrDefault(rb => rb.IsVisible && rb.Name == lastLayerName);
+            if (lastLayer is not null)
+            {
+                lastLayer.IsChecked = true;
+            }
+        }
+
+        foreach (RadioButton layerButton in layerButtons)
+        {
+            layerButton.IsCheckedChanged += (s, e) =>
+            {
+                if (layerButton.IsChecked == true)
+                {
+                    _lastSelectedLayerByPageType[pageType] = layerButton.Name!;
+                }
+            };
+        }
     }
 
     private void WireLocalSettingsEvents(ILocalSettingsPage localSettingsPage)

@@ -131,10 +131,10 @@ public sealed class RenameBranchTests
     {
         (IGitUICommands commands, _) = CreateCommands();
 
-        bool originalAutoNormalise = AppSettings.AutoNormaliseBranchName;
+        bool originalAutoNormalise = AppSettings.AutoNormaliseBranchName.Value;
         try
         {
-            AppSettings.AutoNormaliseBranchName = true;
+            AppSettings.AutoNormaliseBranchName.Value = true;
 
             FormRenameBranch form = new(commands, "feature");
             form.Show();
@@ -158,7 +158,7 @@ public sealed class RenameBranchTests
         }
         finally
         {
-            AppSettings.AutoNormaliseBranchName = originalAutoNormalise;
+            AppSettings.AutoNormaliseBranchName.Value = originalAutoNormalise;
         }
     }
 

@@ -5,23 +5,23 @@
         xmlns:wf="using:GitUI.Compat.WinFormsControls"
         x:Class="GitUI.CommandsDialogs.FormClone"
         Width="647" SizeToContent="Height"
-        MinWidth="434" MaxWidth="934" CanResize="False"
+        MinWidth="434" MaxWidth="934" CanResize="True"
         WindowStartupLocation="CenterOwner"
         Title="Clone">
-  <Grid RowDefinitions="331,41">
+  <Grid RowDefinitions="Auto,Auto">
     <wf:Panel x:Name="MainPanel"
               Padding="12"
               Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
     <wf:TableLayoutPanel x:Name="tpnlMain"
-          RowDefinitions="125,55,98,29">
+          RowDefinitions="Auto,Auto,Auto,Auto">
       <wf:TableLayoutPanel x:Name="tableLayoutPanel1"
-          ColumnDefinitions="132,*,100"
-          RowDefinitions="31,31,31,32"
+          ColumnDefinitions="Auto,*,Auto"
+          RowDefinitions="Auto,Auto,Auto,Auto"
           Margin="0">
       <Label x:Name="repositoryLabel"
              Margin="3,0"
-             Width="112"
-             Height="31"
+             MinWidth="112"
+             MinHeight="31"
              Padding="0"
              HorizontalAlignment="Left"
              VerticalAlignment="Top"
@@ -36,8 +36,7 @@
       <compat:IconButton x:Name="FromBrowse"
                          Grid.Column="2"
                          Margin="3"
-                         Width="94"
-                         Height="24"
+                         MinWidth="94" MinHeight="25"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Top"
                          HorizontalContentAlignment="Center"
@@ -48,7 +47,7 @@
              Grid.Row="1"
              Margin="3,0"
              Width="70"
-             Height="31"
+             MinHeight="31"
              Padding="0"
              HorizontalAlignment="Left"
              VerticalAlignment="Top"
@@ -63,8 +62,7 @@
       <compat:IconButton x:Name="ToBrowse"
                          Grid.Row="1" Grid.Column="2"
                          Margin="3"
-                         Width="94"
-                         Height="24"
+                         MinWidth="94" MinHeight="25"
                          HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Center"
                          Icon="{x:Static properties:Images.BrowseFileExplorer}"
@@ -74,7 +72,7 @@
              Grid.Row="2"
              Margin="3,0"
              Width="126"
-             Height="31"
+             MinHeight="31"
              Padding="0"
              HorizontalAlignment="Left"
              VerticalAlignment="Top"
@@ -91,7 +89,7 @@
              Grid.Row="3"
              Margin="3,0"
              Width="47"
-             Height="32"
+             MinHeight="32"
              Padding="0"
              HorizontalAlignment="Left"
              VerticalAlignment="Top"
@@ -118,29 +116,21 @@
                             Classes="gitextensions-group-box"
                             Grid.Row="2"
                             Margin="3,4,3,6"
-                            Height="88"
                             Header="Repository type">
-      <Canvas>
-        <RadioButton x:Name="PersonalRepository"
-                     Canvas.Left="12"
-                     Canvas.Top="1"
-                     Width="126"
-                     Height="19"
+      <StackPanel x:Name="flpnlRepositoryType" Margin="9,4"><RadioButton x:Name="PersonalRepository"
+                     MinHeight="19" Padding="0"
                      Content="_Personal repository"
                      IsChecked="True" />
         <RadioButton x:Name="CentralRepository"
-                     Canvas.Left="12"
-                     Canvas.Top="24"
-                     Width="277"
-                     Height="19"
+                     MinHeight="19" Padding="0"
                      Content="P_ublic repository, no working directory  (--bare)" />
-      </Canvas>
+      </StackPanel>
     </HeaderedContentControl>
 
     <wf:FlowLayoutPanel x:Name="optionsPanel"
                 Grid.Row="3"
                 Margin="0,7,0,0"
-                Height="25"
+                MinHeight="25"
                 HorizontalAlignment="Stretch">
       <StackPanel Orientation="Horizontal">
       <CheckBox x:Name="cbIntializeAllSubmodules"
@@ -160,22 +150,21 @@
     </wf:Panel>
 
     <wf:FlowLayoutPanel x:Name="ControlsPanel" Grid.Row="1">
-      <Grid Width="647"
-            Height="41"
+      <Grid ColumnDefinitions="*,Auto,Auto"
+            MinHeight="41"
             Background="{DynamicResource GitExtensionsDialogControlsBackgroundBrush}">
-      <Button x:Name="Ok"
+      <Button x:Name="Ok" Grid.Column="2"
               Classes="gitextensions-dialog-action"
               Margin="0,8,13,8"
-              Width="75"
-              Height="25"
+              MinWidth="75"
+              MinHeight="25"
               HorizontalAlignment="Right"
               Content="Clone"
               IsDefault="True" />
-      <compat:IconButton x:Name="LoadSSHKey"
-                         Margin="0,8,94,8"
+      <compat:IconButton x:Name="LoadSSHKey" Grid.Column="1"
+                         Margin="0,8,6,8"
                          MinWidth="120"
-                         Width="120"
-                         Height="25"
+                         MinHeight="25"
                          TabIndex="1"
                          Padding="8,0"
                          HorizontalAlignment="Right"

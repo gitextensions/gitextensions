@@ -15,7 +15,7 @@ public partial class DiffLineNumAnalyzer
     public static DiffLinesInfo Analyze(string text, IReadOnlyList<TextMarker> allTextMarkers, bool isCombinedDiff, bool isGitWordDiff = false)
     {
         DiffLinesInfo result = new();
-        bool reverseGitColoring = AppSettings.ReverseGitColoring.Value;
+        bool reverseGitColoring = AppSettings.ReverseGitColoring;
         int leftLineNumber = DiffLineInfo.NotApplicableLineNum;
         int rightLineNumber = DiffLineInfo.NotApplicableLineNum;
         bool foundHunk = false;

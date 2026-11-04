@@ -219,7 +219,7 @@ public sealed partial class FormReflog : GitModuleForm
                into match
                where match.Success
                select new RefLine(
-                   ObjectId.Parse(match.Groups["sha"].Value),
+                   ObjectId.Parse(match.Groups["sha"].ValueSpan),
                    match.Groups["ref"].Value,
                    match.Groups["action"].Value),
         ];

@@ -37,7 +37,7 @@ public partial class AdvancedSettingsPage : SettingsPageWithHeader
         chkAlwaysShowAdvOpt.IsChecked = AppSettings.AlwaysShowAdvOpt;
         chkCheckForUpdates.IsChecked = AppSettings.CheckForUpdates;
         chkCheckForRCVersions.IsChecked = AppSettings.CheckForReleaseCandidates;
-        chkConsoleEmulator.IsChecked = AppSettings.UseConsoleEmulatorForCommands.Value;
+        chkConsoleEmulator.IsChecked = AppSettings.UseConsoleEmulatorForCommands;
         chkAutoNormaliseBranchName.IsChecked = AppSettings.AutoNormaliseBranchName;
         cboAutoNormaliseSymbol.IsEnabled = chkAutoNormaliseBranchName.IsChecked == true;
         cboAutoNormaliseSymbol.SelectedItem = _autoNormaliseSymbols
@@ -57,7 +57,7 @@ public partial class AdvancedSettingsPage : SettingsPageWithHeader
         AppSettings.CheckForUpdates = chkCheckForUpdates.IsChecked == true;
         AppSettings.CheckForReleaseCandidates = chkCheckForRCVersions.IsChecked == true;
         AppSettings.UseConsoleEmulatorForCommands.Value = chkConsoleEmulator.IsChecked == true;
-        AppSettings.AutoNormaliseBranchName = chkAutoNormaliseBranchName.IsChecked == true;
+        AppSettings.AutoNormaliseBranchName.Value = chkAutoNormaliseBranchName.IsChecked == true;
         AppSettings.AutoNormaliseSymbol =
             (cboAutoNormaliseSymbol.SelectedItem as AutoNormaliseSymbolItem)?.Value ?? "_";
         AppSettings.CommitAndPushForcedWhenAmend = chkCommitAndPushForcedWhenAmend.IsChecked == true;

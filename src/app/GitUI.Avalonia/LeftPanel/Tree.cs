@@ -171,6 +171,11 @@ internal abstract class Tree : NodeBase, IDisposable
                     ? await loadNodesTask(getRefs, cancellationToken)
                     : new Nodes(tree: null);
 
+                // The nodes are added to the tree view in one go, which can take seconds for thousands of refs.
+                // Posted messages, like the continuation of this task, are handled before painting, so wait for
+                // the UI thread to be idle to let the rest of the window (e.g. the revision grid) be painted first.
+                await WaitForIdleAsync(cancellationToken);
+
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -203,6 +208,21 @@ internal abstract class Tree : NodeBase, IDisposable
                 LoadingCompleted.TrySetResult();
             }
         });
+
+    /// <summary>
+    ///  Completes when the UI thread has no more messages to handle, i.e. after the pending painting is done.
+    /// </summary>
+    /// <param name="cancellationToken">The token to cancel waiting.</param>
+    internal static async Task WaitForIdleAsync(CancellationToken cancellationToken)
+    {
+        // The idle priority is not processed without a message loop, like in unit tests.
+        if (Avalonia.Application.Current?.ApplicationLifetime is not Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime)
+        {
+            return;
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle, cancellationToken);
+    }
 
     private void FillTreeViewNode(string? originalSelectedNodeFullNamePath, bool firstTime)
     {

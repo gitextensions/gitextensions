@@ -82,7 +82,7 @@ internal abstract class ColumnProvider
         IGitRef? highlightRef,
         [NotNullWhen(returnValue: true)] out string? toolTip)
     {
-        if (AppSettings.ShowRevisionGridTooltips.Value)
+        if (AppSettings.ShowRevisionGridTooltips)
         {
             return TryGetToolTip(revision, out toolTip);
         }
@@ -105,7 +105,7 @@ internal abstract class ColumnProvider
     {
         ToolTip.SetTip(
             control,
-            AppSettings.ShowRevisionGridTooltips.Value
+            AppSettings.ShowRevisionGridTooltips
                 && TryGetToolTip(revision, out string? toolTip)
                     ? toolTip
                     : null);

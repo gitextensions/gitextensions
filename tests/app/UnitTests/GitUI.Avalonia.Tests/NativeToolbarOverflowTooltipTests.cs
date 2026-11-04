@@ -206,6 +206,8 @@ public sealed class NativeToolbarOverflowTooltipTests
     }
 
     [AvaloniaTest]
+    [TestCase(false, "unchanged")]
+    [TestCase(true, "unchanged")]
     [TestCase(false, "cancel")]
     [TestCase(true, "cancel")]
     [TestCase(false, "disable")]
@@ -219,6 +221,18 @@ public sealed class NativeToolbarOverflowTooltipTests
         using OverflowFixture fixture = new(split, false);
         fixture.NarrowAndOpenOverflow();
         ToolTip.SetShowDelay(fixture.Owner, 150);
+        if (change is "disable" or "unchanged")
+        {
+            // Menu layout can outlast the hover delay; keep this a pending-refresh test.
+            // Subscribe during Opening, after the owner installs its Opened refresh handler.
+            fixture.Menu.Opening += (_, _) =>
+            {
+                ToolTip.SetIsOpen(fixture.Owner, false);
+                fixture.Menu.Opened += (_, _) => Dispatcher.UIThread.Post(
+                    () => ToolTip.SetServiceEnabled(fixture.Owner, change == "unchanged"), DispatcherPriority.Send);
+            };
+        }
+
         EventHandler<CancelRoutedEventArgs> cancellation = (_, args) => args.Cancel = true;
         if (change == "cancel")
         {
@@ -231,9 +245,6 @@ public sealed class NativeToolbarOverflowTooltipTests
             fixture.OpenOwnerByPointer();
             switch (change)
             {
-                case "disable":
-                    ToolTip.SetServiceEnabled(fixture.Owner, false);
-                    break;
                 case "clear":
                     ToolTip.SetTip(fixture.Owner, null);
                     break;
@@ -244,7 +255,15 @@ public sealed class NativeToolbarOverflowTooltipTests
 
             await Task.Delay(250);
             fixture.Settle();
-            ToolTip.GetIsOpen(fixture.Owner).Should().BeFalse();
+            if (change == "unchanged")
+            {
+                ToolTip.GetIsOpen(fixture.Owner).Should().BeTrue("the unchanged pending refresh must still run; lifetime trace: {0}", fixture.LifetimeTrace);
+            }
+            else
+            {
+                ToolTip.GetIsOpen(fixture.Owner).Should().BeFalse("the pending hint must honor the caller state; lifetime trace: {0}", fixture.LifetimeTrace);
+            }
+
             if (change == "remove")
             {
                 fixture.Owner.Parent.Should().BeNull();
@@ -706,6 +725,8 @@ public sealed class NativeToolbarOverflowTooltipTests
         internal int OutsideClicks { get; private set; }
 
         internal Window Window { get; }
+
+        internal string LifetimeTrace => _trace.ToString();
 
         public void Dispose()
         {

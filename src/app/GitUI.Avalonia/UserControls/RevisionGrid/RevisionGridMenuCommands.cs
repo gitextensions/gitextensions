@@ -204,9 +204,9 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
         /*
             VIEW menu
             ═════════════
-                    KLQZ
-                !   Highlight selected branch (until refresh)
-                !   Set advanced filter
+                !   Highlight selected branch (until refresh)  Shift+Ctrl+B
+                !   Set advanced filter                        Ctrl+I
+                !   Show artificial commits
                 !   Show commit message body
                 !   Show stashes
                 -   Show SHA-1 column
@@ -220,9 +220,13 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
                 H   Show author avatar column
                 I   Show build status icon
                 J   Show superproject remote branches
+                K
+                L
+                M
                 N   Show git notes
                 O   Show artificial commits
                 P   Show superproject tags
+                Q   Show agentic sessions
                 R   Show reflog references
                 S   Sort commits by author date
                 T   Show tags
@@ -231,6 +235,7 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
                 W   Show author date
                 X   Show build status text
                 Y   Draw non relatives gray
+                Z
         */
 
         return new[]
@@ -334,8 +339,8 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
             },
             new MenuCommand
             {
-                Name = "ShowSessionCheckpoints",
-                Text = "Show session checkpoints",
+                Name = "ShowSessionRefs",
+                Text = "Show agentic sessions (&Q)",
                 ExecuteAction = () => _revisionGrid.ToggleShowSessionRefs(),
                 IsCheckedFunc = () => AppSettings.ShowSessionRefs
             },
@@ -435,7 +440,7 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
                 Name = "showGitNotesColumnToolStripMenuItem",
                 Text = "Show Git &notes column",
                 ExecuteAction = () => _revisionGrid.ToggleShowGitNotesColumn(),
-                IsCheckedFunc = () => AppSettings.ShowGitNotesColumn.Value
+                IsCheckedFunc = () => AppSettings.ShowGitNotesColumn
             },
             new MenuCommand
             {

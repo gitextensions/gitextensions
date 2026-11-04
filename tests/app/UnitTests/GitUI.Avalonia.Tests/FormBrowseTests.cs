@@ -58,6 +58,28 @@ public sealed class FormBrowseTests
     private string _workingDirectory = null!;
     private bool _revisionGraphShowArtificialCommits;
 
+    [AvaloniaTest]
+    public void FormBrowse_notification_bars_should_preserve_the_height_needed_by_enlarged_buttons()
+    {
+        WinFormsShims.Font originalFont = AppSettings.Font;
+        try
+        {
+            AppSettings.Font = new WinFormsShims.Font("Arial", 18);
+            using FormBrowse form = new();
+            InteractiveGitActionControl standalone = new();
+            foreach (string name in new[] { "notificationBarGitActionInProgress", "notificationBarBisectInProgress" })
+            {
+                InteractiveGitActionControl bar = form.FindControl<InteractiveGitActionControl>(name)!;
+                bar.MinHeight.Should().Be(standalone.MinHeight);
+                bar.MinHeight.Should().BeGreaterThan(33);
+            }
+        }
+        finally
+        {
+            AppSettings.Font = originalFont;
+        }
+    }
+
     [SetUp]
     public void SetUp()
     {
@@ -1657,7 +1679,9 @@ public sealed class FormBrowseTests
             RepoObjectsTree.TestAccessor accessor = repoObjectsTree.GetTestAccessor();
             IconSplitButton worktreeButton = form.FindControl<IconSplitButton>("toolStripWorktrees")!;
 
-            await WaitUntilAsync(() => worktreeButton.IsVisible);
+            await WaitUntilAsync(() => accessor.Tree.Items.OfType<TreeViewItem>()
+                .Any(item => HeaderText(item).StartsWith("Worktrees", StringComparison.Ordinal) && item.Items.Count == 2));
+            worktreeButton.IsVisible.Should().BeTrue();
 
             TreeViewItem root = accessor.Tree.Items.Cast<TreeViewItem>()
                 .Single(item => HeaderText(item).StartsWith("Worktrees", StringComparison.Ordinal));
@@ -2163,7 +2187,7 @@ public sealed class FormBrowseTests
             "ShowArtificialCommits",
             "ShowStashes",
             "showGitNotesToolStripMenuItem",
-            "ShowSessionCheckpoints",
+            "ShowSessionRefs",
             "|",
             "Grid_labelsToolStripMenuItem",
             "ShowRemoteBranches",

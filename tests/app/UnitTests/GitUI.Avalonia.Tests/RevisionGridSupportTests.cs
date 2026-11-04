@@ -546,6 +546,7 @@ public sealed class RevisionGridSupportTests
             "rebaseWithAdvOptionsToolStripMenuItem");
         control.FindControl<MenuItem>("manipulateCommitToolStripMenuItem")!.Items.OfType<Control>().Select(item => item.Name).Should().Equal(
             "editCommitToolStripMenuItem",
+            "editCommitWithFixupToolStripMenuItem",
             "rewordCommitToolStripMenuItem",
             "fixupCommitToolStripMenuItem",
             "squashCommitToolStripMenuItem",
@@ -595,7 +596,7 @@ public sealed class RevisionGridSupportTests
             "ShowArtificialCommits",
             "ShowStashes",
             "showGitNotesToolStripMenuItem",
-            "ShowSessionCheckpoints",
+            "ShowSessionRefs",
             "Grid_labelsToolStripMenuItem",
             "ShowRemoteBranches",
             "showTagsToolStripMenuItem",
@@ -717,7 +718,7 @@ public sealed class RevisionGridSupportTests
         second.AuthorUnixTime = 1_700_001_000;
         second.CommitUnixTime = 1_700_001_100;
         CopyContextMenuItem item = new();
-        item.SetFilterRefsFunc(refs => refs.Where(name => name != "hidden"));
+        item.SetFilterRefsFunc(refs => refs.Where(gitRef => gitRef.Name != "hidden"));
         item.SetRevisionFunc(() => [first, second]);
         RecordingClipboard clipboard = new();
         GitExtensions.Shims.WinForms.IClipboard? originalClipboard = TryGetClipboard();

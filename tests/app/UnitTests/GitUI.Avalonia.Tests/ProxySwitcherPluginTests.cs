@@ -129,7 +129,7 @@ public sealed class ProxySwitcherPluginTests
 
         using ProxySwitcherForm form = new(plugin, settings, eventArgs);
         ProxySwitcherForm.TestAccessor accessor = form.GetTestAccessor();
-        accessor.BuildHttpProxy().Should().Be("\"alice:secret@proxy.example:8081\"");
+        accessor.BuildHttpProxy().Should().Be("alice:secret@proxy.example:8081");
 
         accessor.ApplyGlobally.IsChecked = false;
         accessor.SetProxy();

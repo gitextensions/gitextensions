@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.Versioning;
+using Avalonia.Controls.ApplicationLifetimes;
 using EnvDTE;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -42,13 +43,19 @@ internal static class VisualStudioIntegration
 
     public static void OpenFile(string filePath, int lineNumber = 0)
     {
-        ThreadHelper.FileAndForget(async () =>
+        // Avalonia's desktop lifetime supplies the active form and its fallback owner.
+        IClassicDesktopStyleApplicationLifetime desktop = Avalonia.Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
+            ?? throw new InvalidOperationException("A desktop window is required to open Visual Studio.");
+        Avalonia.Controls.Window form = desktop.Windows.FirstOrDefault(window => window.IsActive) ?? desktop.Windows.First();
+        form.InvokeAndForget(async () =>
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            bool firstAttempt = true;
             while (true)
             {
                 try
                 {
-                    if (await TryOpenFileInRunningInstanceAsync(filePath, lineNumber))
+                    if (TryOpenFileInRunningInstance(filePath, lineNumber))
                     {
                         return;
                     }
@@ -59,14 +66,12 @@ internal static class VisualStudioIntegration
                 {
                     Trace.WriteLine(exception);
 
-                    // Avalonia has no global active Form; the shared dialog host resolves its current owner.
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    if (!MessageBoxes.ConfirmRetryOpenVisualStudio())
+                    if (!firstAttempt && !MessageBoxes.ConfirmRetryOpenVisualStudio(form as GitExtensions.Shims.WinForms.IWin32Window))
                     {
                         return;
                     }
 
-                    await TaskScheduler.Default;
+                    firstAttempt = false;
                 }
             }
 
@@ -77,7 +82,7 @@ internal static class VisualStudioIntegration
         });
     }
 
-    public static async Task<bool> TryOpenFileInRunningInstanceAsync(string filePath, int lineNumber = 0)
+    private static bool TryOpenFileInRunningInstance(string filePath, int lineNumber = 0)
     {
         if (!File.Exists(filePath))
         {
@@ -85,8 +90,6 @@ internal static class VisualStudioIntegration
             // So, we should not experience this situation in practice (barring some exotic race conditions).
             return false;
         }
-
-        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
         foreach (DTE dte in GetVisualStudioInstances())
         {

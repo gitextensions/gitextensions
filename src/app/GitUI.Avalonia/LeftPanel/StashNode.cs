@@ -82,7 +82,7 @@ internal sealed class StashNode : BaseRevisionNode
 
                 if (page.Verification.Checked)
                 {
-                    AppSettings.DontConfirmStashDrop = true;
+                    AppSettings.DontConfirmStashDrop.Value = true;
                 }
             }
 
