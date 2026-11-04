@@ -2163,8 +2163,7 @@ public sealed partial class GitModule : IGitModule
 
     public FrozenDictionary<string, Color> GetRemoteColors()
     {
-        FrozenDictionary<string, Color>? remoteColors = _remoteColors;
-        if (remoteColors is not null)
+        if (_remoteColors is { } remoteColors)
         {
             return remoteColors;
         }
@@ -2180,9 +2179,12 @@ public sealed partial class GitModule : IGitModule
         lock (_lock)
         {
             // The colors may be outdated if they have been reset while they were loaded
-            return version == _remoteColorsVersion
-                ? _remoteColors ??= remoteColors
-                : remoteColors;
+            if (version == _remoteColorsVersion)
+            {
+                _remoteColors = remoteColors;
+            }
+
+            return remoteColors;
         }
     }
 

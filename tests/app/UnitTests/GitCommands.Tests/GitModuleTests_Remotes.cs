@@ -317,6 +317,48 @@ partial class GitModuleTests
         }
     }
 
+    [Test]
+    public void GetRemoteColors_should_cache_the_colors_which_were_loaded_last()
+    {
+        const string origin = nameof(origin);
+        const string fork = nameof(fork);
+        const string remotes = $"{origin}\n{fork}";
+        const string settings1 = $"remote.{fork}.color\n#cccccc";
+        const string settings2 = $"{settings1}\0remote.{origin}.color\n#efefef";
+
+        List<IDisposable> stagedForFirstCaller = [];
+        bool anotherCallerLoaded = false;
+        GitModule? gitModule = null;
+        gitModule = GetGitModuleWithExecutable(new CallbackExecutable(_executable, arguments =>
+        {
+            if (arguments == "remote" && !anotherCallerLoaded)
+            {
+                // Another caller loads and caches the colors while the first caller is loading them
+                anotherCallerLoaded = true;
+                gitModule?.GetRemoteColors();
+
+                // The settings are changed afterwards, the first caller reads the changed ones
+                stagedForFirstCaller.Add(_executable.StageOutput("remote", remotes));
+                stagedForFirstCaller.Add(_executable.StageOutput("config list --includes --null", settings2));
+                stagedForFirstCaller.Add(_executable.StageOutput("config list --local --includes --null", settings2));
+                gitModule?.InvalidateGitSettings();
+            }
+        }));
+
+        // Mock IGitModule.GetRemoteNames() call of the other caller
+        using IDisposable remoteNames = _executable.StageOutput("remote", remotes);
+        using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
+        using IDisposable configListEffective = _executable.StageOutput("config list --includes --null", settings1);
+        using IDisposable configListLocal = _executable.StageOutput("config list --local --includes --null", settings1);
+        GitVersion.ResetVersion();
+
+        FrozenDictionary<string, Color> colors = gitModule.GetRemoteColors();
+
+        colors.Count.Should().Be(2);
+        gitModule.GetTestAccessor().RemoteColors.Should().BeSameAs(colors);
+        stagedForFirstCaller.ForEach(staged => staged.Dispose());
+    }
+
     private sealed class CallbackExecutable(IExecutable executable, Action<string> onStart) : IExecutable
     {
         public string WorkingDir => executable.WorkingDir;

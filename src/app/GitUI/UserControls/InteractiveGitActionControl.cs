@@ -74,6 +74,7 @@ public partial class InteractiveGitActionControl : GitModuleControl
     /// <summary>
     /// Refresh the banner in the revision grid after reactivation.
     /// The banner is updated when the state of the repo is known, which requires a Git command.
+    /// The command is run in the background, so that it does not block the UI thread, e.g. while the window is shown for the first time.
     /// The banner of another repo is hidden until then.
     /// </summary>
     /// <param name="checkForConflicts">Allow running Git command to check for conflicts.</param>
@@ -84,13 +85,10 @@ public partial class InteractiveGitActionControl : GitModuleControl
         IGitModule module = Module;
         if (!module.IsValidGitWorkingDir())
         {
-            // The result of a request which is still running must not be applied anymore
             _refreshGitActionSequence.CancelCurrent();
             return;
         }
 
-        // The Git command must not block the UI thread, e.g. while the window is shown for the first time.
-        // The results of requests overtaking each other must not be applied in the wrong order.
         CancellationToken cancellationToken = _refreshGitActionSequence.Next();
 
         if (!ReferenceEquals(module, _actionModule))
