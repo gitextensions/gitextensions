@@ -27,8 +27,10 @@ internal static class FixRunner
         // Validate every snapshot before proposing or applying any file, including files shared by types.
         foreach (InventoryReport report in reports)
         {
+            bool withinExplicitRoot = report.Twin.Parts.Count > 0 && report.Twin.Parts.All(part =>
+                IsWithin(twinRoot, Path.GetFullPath(Path.Combine(report.Twin.Root, part.Path))));
             if (report.SchemaVersion != InventoryReport.CurrentSchemaVersion
-                || Path.GetFullPath(report.Twin.Root) != twinRoot)
+                || (Path.GetFullPath(report.Twin.Root) != twinRoot && !withinExplicitRoot))
             {
                 throw new InvalidDataException($"Unsupported schema or twin root for {report.TypeName}.");
             }
