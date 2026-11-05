@@ -346,7 +346,7 @@ if [[ ! -s "$font_report" ]] \
     sed -n '1,160p' "$stderr_log" >&2
     exit 1
 fi
-if grep -Eiq 'Unhandled exception|fatal error|JIT debugger|Avalonia.*error' "$stdout_log" "$stderr_log"; then
+if grep -Eiq 'Unhandled exception|fatal error|JIT debugger|Avalonia.*error|^([[:alpha:]_][[:alnum:]_]*\.)+[[:alnum:]_]*Exception:' "$stdout_log" "$stderr_log"; then
     echo "error: runtime logs contain a failure signature" >&2
     sed -n '1,160p' "$stderr_log" >&2
     exit 1

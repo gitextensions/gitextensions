@@ -229,6 +229,8 @@ function Test-AssemblyCompleted([string]$Trx) {
 
 # Multiline commands reach WSL as an owned LF script: Windows argument reparsing corrupts them otherwise.
 function Invoke-WslScript([string]$Name, [string]$Body) {
+    # A CR after a Bash export becomes part of its value, so normalize generated wrappers.
+    $Body = $Body.Replace("`r`n", "`n")
     $script = Join-Path $runDirectory "$Name.sh"
     [IO.File]::WriteAllText($script, "#!/usr/bin/env bash`nset -euo pipefail`n$Body`n", [Text.UTF8Encoding]::new($false))
     # A login shell, because dotnet is only on PATH through the user's profile.
@@ -345,11 +347,23 @@ bash '$(ConvertTo-WslPath $repo)/eng/avalonia/wsl-gate.sh' run bash -c 'dotnet b
         if ($difference.Count) { throw "Linux and Windows inventories differ in $($difference.Count) file entries" }
     }
     'windows-smoke' = {
-        & (Join-Path $PSScriptRoot 'windows-runtime-smoke.ps1') -BrowseWindow -EvidenceDirectory (Join-Path $runDirectory 'windows-smoke') *> (Join-Path $runDirectory 'windows-smoke.log')
+        & (Join-Path $PSScriptRoot 'windows-runtime-smoke.ps1') -BrowseWindow -CheckPlugins -EvidenceDirectory (Join-Path $runDirectory 'windows-smoke') *> (Join-Path $runDirectory 'windows-smoke.log')
     }
     'linux-runtime' = {
-        $exitCode = Invoke-WslScript 'linux-runtime' "bash '$(ConvertTo-WslPath $repo)/eng/avalonia/wsl-gate.sh' runtime"
+        $runtimeEvidence = ConvertTo-WslPath (Join-Path $runDirectory 'linux-runtime')
+        $exitCode = Invoke-WslScript 'linux-runtime' @"
+export GITEXTENSIONS_RUNTIME_EVIDENCE='$runtimeEvidence'
+bash '$(ConvertTo-WslPath $repo)/eng/avalonia/wsl-gate.sh' runtime
+"@
         if ($exitCode -ne 0) { throw "Linux runtime smoke failed (exit $exitCode)" }
+        foreach ($backend in 'wayland', 'x11') {
+            $manifestPath = Join-Path $runDirectory "linux-runtime/$backend/smoke.json"
+            if (-not (Test-Path -LiteralPath $manifestPath)) { throw "Linux runtime evidence is missing: $manifestPath" }
+            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+            if ($manifest.backend -ne $backend -or $manifest.screenshotSha256 -cnotmatch '^[0-9a-f]{64}$') {
+                throw "Invalid Linux $backend runtime manifest: $manifestPath"
+            }
+        }
     }
 }
 

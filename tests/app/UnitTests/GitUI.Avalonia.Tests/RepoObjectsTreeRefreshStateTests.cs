@@ -14,6 +14,7 @@ using GitUI.LeftPanel;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -47,6 +48,38 @@ public sealed class RepoObjectsTreeRefreshStateTests
         {
             ThreadHelper.JoinableTaskContext = _previousContext!;
             _context.Dispose();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Selection_before_the_first_ref_refresh_should_not_report_an_exception()
+    {
+        IGitModule module = CreateModule(Path.GetTempPath());
+        GitRevision revision = new(ObjectId.Parse("1234567890abcdef1234567890abcdef12345678"));
+        module.GetMergedBranchesAsync(true, true, revision.Guid, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Array.Empty<string>()));
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(commands);
+        RepoObjectsTree control = new() { UICommandsSource = source };
+        List<Exception> exceptions = [];
+        void OnThreadException(object? sender, ThreadExceptionEventArgs e) => exceptions.Add(e.Exception);
+        WinFormsShims.Application.ThreadException += OnThreadException;
+        try
+        {
+            control.GetTestAccessor().TreeView.Items.Should().BeEmpty();
+            control.SelectionChanged([revision]);
+            using CancellationTokenSource cancellation = new(TimeSpan.FromSeconds(10));
+            await ThreadHelper.JoinPendingOperationsAsync(cancellation.Token);
+
+            cancellation.IsCancellationRequested.Should().BeFalse();
+            await module.Received(1).GetMergedBranchesAsync(true, true, revision.Guid, Arg.Any<CancellationToken>());
+            exceptions.Should().BeEmpty("revision selection can precede the first ref refresh");
+        }
+        finally
+        {
+            WinFormsShims.Application.ThreadException -= OnThreadException;
         }
     }
 
