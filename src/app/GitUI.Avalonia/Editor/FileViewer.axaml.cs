@@ -2038,69 +2038,69 @@ public partial class FileViewer : GitModuleControl
 
     internal readonly struct TestAccessor
     {
-        private readonly FileViewer _control;
+        private readonly FileViewer _fileViewer;
 
-        public TestAccessor(FileViewer control)
+        public TestAccessor(FileViewer fileViewer)
         {
-            _control = control;
+            _fileViewer = fileViewer;
         }
 
-        public bool IsFindAndReplaceFormCreated => _control.internalFileViewer.GetTestAccessor().IsFindAndReplaceFormCreated;
+        public bool IsFindAndReplaceFormCreated => _fileViewer.internalFileViewer.GetTestAccessor().IsFindAndReplaceFormCreated;
 
-        public FindAndReplaceForm FindAndReplaceForm => _control.internalFileViewer.GetTestAccessor().FindAndReplaceForm;
+        public FindAndReplaceForm FindAndReplaceForm => _fileViewer.internalFileViewer.GetTestAccessor().FindAndReplaceForm;
 
-        public ComboBox EncodingToolStripComboBox => _control.encodingToolStripComboBox;
+        public ComboBox EncodingToolStripComboBox => _fileViewer.encodingToolStripComboBox;
 
-        public Border FileViewerToolbar => _control.fileviewerToolbar;
+        public Border FileViewerToolbar => _fileViewer.fileviewerToolbar;
 
-        public Separator ContextLinesSeparator => _control.toolStripSeparator4;
+        public Separator ContextLinesSeparator => _fileViewer.toolStripSeparator4;
 
-        public MenuItem ShowNonprintingCharactersMenuItem => _control.showNonprintableCharactersToolStripMenuItem;
+        public MenuItem ShowNonprintingCharactersMenuItem => _fileViewer.showNonprintableCharactersToolStripMenuItem;
 
-        public Button ShowNonprintingCharactersButton => _control.showNonPrintChars;
+        public Button ShowNonprintingCharactersButton => _fileViewer.showNonPrintChars;
 
-        public MenuItem ShowSyntaxHighlightingMenuItem => _control.showSyntaxHighlightingToolStripMenuItem;
+        public MenuItem ShowSyntaxHighlightingMenuItem => _fileViewer.showSyntaxHighlightingToolStripMenuItem;
 
-        public Button ShowSyntaxHighlightingButton => _control.showSyntaxHighlighting;
+        public Button ShowSyntaxHighlightingButton => _fileViewer.showSyntaxHighlighting;
 
-        public bool ShowSyntaxHighlightingInDiff => _control.ShowSyntaxHighlightingInDiff;
+        public bool ShowSyntaxHighlightingInDiff => _fileViewer.ShowSyntaxHighlightingInDiff;
 
-        public MenuItem DiffAppearanceMenuItem => _control.diffAppearanceToolStripMenuItem;
+        public MenuItem DiffAppearanceMenuItem => _fileViewer.diffAppearanceToolStripMenuItem;
 
-        public MenuItem ShowPatchMenuItem => _control.showPatchToolStripMenuItem;
+        public MenuItem ShowPatchMenuItem => _fileViewer.showPatchToolStripMenuItem;
 
-        public MenuItem ShowGitWordColoringMenuItem => _control.showGitWordColoringToolStripMenuItem;
+        public MenuItem ShowGitWordColoringMenuItem => _fileViewer.showGitWordColoringToolStripMenuItem;
 
-        public MenuItem ShowDifftasticMenuItem => _control.showDifftasticToolStripMenuItem;
+        public MenuItem ShowDifftasticMenuItem => _fileViewer.showDifftasticToolStripMenuItem;
 
-        public MenuItem TreatAllFilesAsTextMenuItem => _control.treatAllFilesAsTextToolStripMenuItem;
+        public MenuItem TreatAllFilesAsTextMenuItem => _fileViewer.treatAllFilesAsTextToolStripMenuItem;
 
-        public MenuItem AutomaticContinuousScrollMenuItem => _control.automaticContinuousScrollToolStripMenuItem;
+        public MenuItem AutomaticContinuousScrollMenuItem => _fileViewer.automaticContinuousScrollToolStripMenuItem;
 
-        public Button SettingsButton => _control.settingsButton;
+        public Button SettingsButton => _fileViewer.settingsButton;
 
-        public Button NextChangeButton => _control.nextChangeButton;
+        public Button NextChangeButton => _fileViewer.nextChangeButton;
 
-        public MenuItem FindMenuItem => _control.findToolStripMenuItem;
+        public MenuItem FindMenuItem => _fileViewer.findToolStripMenuItem;
 
-        public int VRulerPosition => _control.VRulerPosition;
+        public int VRulerPosition => _fileViewer.VRulerPosition;
 
-        public bool HasDiffHighlighting => _control.internalFileViewer.DiffHighlightService is not null;
+        public bool HasDiffHighlighting => _fileViewer.internalFileViewer.DiffHighlightService is not null;
 
-        public HyperlinkButton ShowPreviewLink => _control._NO_TRANSLATE_lblShowPreview;
+        public HyperlinkButton ShowPreviewLink => _fileViewer._NO_TRANSLATE_lblShowPreview;
 
-        public Image ImagePreview => _control.ImagePreview;
+        public Image ImagePreview => _fileViewer.ImagePreview;
 
-        public Border PictureBox => _control.PictureBox;
+        public Border PictureBox => _fileViewer.PictureBox;
 
-        public ViewMode ViewMode => _control._viewMode;
+        public ViewMode ViewMode => _fileViewer._viewMode;
 
-        public FileStatusItem? ViewItem => _control._viewItem;
+        public FileStatusItem? ViewItem => _fileViewer._viewItem;
 
-        public Action? OpenWithDifftool => _control._openWithDifftool;
+        public Action? OpenWithDifftool => _fileViewer._openWithDifftool;
 
         public bool RaiseContinuousScroll(double delta, KeyModifiers keyModifiers)
-            => _control.RaiseContinuousScroll(delta, keyModifiers);
+            => _fileViewer.RaiseContinuousScroll(delta, keyModifiers);
     }
 
     internal ThemeAwareTextEditor TextEditor => internalFileViewer.Editor;

@@ -2623,36 +2623,44 @@ public sealed partial class FormCommit : GitModuleForm
         return true;
     }
 
-    internal readonly struct TestAccessor(FormCommit form)
+    internal readonly struct TestAccessor
     {
-        internal SpellChecker.EditNetSpell Message => form.Message;
-        internal CheckBox Amend => form.Amend;
-        internal FileStatusList CurrentFilesList => form._currentFilesList;
-        internal FileStatusList Unstaged => form.Unstaged;
-        internal MenuFlyout CommitMessageFlyout => (MenuFlyout)form.commitMessageToolStripMenuItem.Flyout!;
-        internal MenuFlyout CommitTemplatesFlyout => (MenuFlyout)form.commitTemplatesToolStripMenuItem.Flyout!;
-        internal Task ClosePersistenceTask => form._closePersistenceTask;
-        internal ComboBox SelectionFilter => form.selectionFilter;
-        internal bool SelectionFilterVisible => form.toolbarSelectionFilter.IsVisible;
+        private readonly FormCommit _formCommit;
 
-        internal void RaiseUnstagedEnter(bool byMouse) => form.Unstaged_Enter(form.Unstaged, new EnterEventArgs(byMouse));
-        internal void RaiseStagedEnter(bool byMouse) => form.Staged_Enter(form.Staged, new EnterEventArgs(byMouse));
+        internal TestAccessor(FormCommit formCommit)
+        {
+            _formCommit = formCommit;
+        }
+
+        internal FileStatusList UnstagedList => _formCommit.Unstaged;
+
+        internal void RaiseUnstagedEnter(bool byMouse) => _formCommit.Unstaged_Enter(_formCommit.Unstaged, new EnterEventArgs(byMouse));
+        internal FileStatusList CurrentFilesList => _formCommit._currentFilesList;
+        internal void RaiseStagedEnter(bool byMouse) => _formCommit.Staged_Enter(_formCommit.Staged, new EnterEventArgs(byMouse));
+        internal MenuFlyout CommitMessageFlyout => (MenuFlyout)_formCommit.commitMessageToolStripMenuItem.Flyout!;
+        internal MenuFlyout CommitTemplatesFlyout => (MenuFlyout)_formCommit.commitTemplatesToolStripMenuItem.Flyout!;
+        internal Task ClosePersistenceTask => _formCommit._closePersistenceTask;
+        internal ComboBox SelectionFilter => _formCommit.selectionFilter;
+        internal bool SelectionFilterVisible => _formCommit.toolbarSelectionFilter.IsVisible;
+
+        internal SpellChecker.EditNetSpell Message => _formCommit.Message;
+        internal CheckBox Amend => _formCommit.Amend;
 
         internal ArgumentString CreateCommitArguments(bool amend, bool allowEmpty)
-            => form.CreateCommitArguments(amend, allowEmpty);
+            => _formCommit.CreateCommitArguments(amend, allowEmpty);
 
-        internal void ApplySelectionFilter() => form.ApplySelectionFilter(form.selectionFilter.Text ?? string.Empty);
-        internal bool ExecuteCommand(Command command) => form.ExecuteCommand((int)command);
-        internal bool IsCommitMessageValid(string message) => form.IsCommitMessageValid(message);
-        internal void PopulateCommitMessageHistory() => form.CommitMessageToolStripMenuItemDropDownOpening(form.commitMessageToolStripMenuItem, EventArgs.Empty);
-        internal void PopulateCommitTemplates() => form.commitTemplatesToolStripMenuItem_DropDownOpening(form.commitTemplatesToolStripMenuItem, EventArgs.Empty);
-        internal (string message, int selectionStart) PrefixOrReplaceKeyword(string keyword) => form.PrefixOrReplaceKeyword(keyword);
-        internal bool IncludeFeatureParentheses { set => form._insertScopeParentheses = value; }
+        internal void ApplySelectionFilter() => _formCommit.ApplySelectionFilter(_formCommit.selectionFilter.Text ?? string.Empty);
+        internal bool ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
+        internal bool IsCommitMessageValid(string message) => _formCommit.IsCommitMessageValid(message);
+        internal void PopulateCommitMessageHistory() => _formCommit.CommitMessageToolStripMenuItemDropDownOpening(_formCommit.commitMessageToolStripMenuItem, EventArgs.Empty);
+        internal void PopulateCommitTemplates() => _formCommit.commitTemplatesToolStripMenuItem_DropDownOpening(_formCommit.commitTemplatesToolStripMenuItem, EventArgs.Empty);
+        internal (string message, int selectionStart) PrefixOrReplaceKeyword(string keyword) => _formCommit.PrefixOrReplaceKeyword(keyword);
+        internal bool IncludeFeatureParentheses { set => _formCommit._insertScopeParentheses = value; }
 
         internal void SetMessageState(string text, int position)
         {
-            form.Message.Text = text;
-            form.Message.SelectionStart = position;
+            _formCommit.Message.Text = text;
+            _formCommit.Message.SelectionStart = position;
         }
     }
 }

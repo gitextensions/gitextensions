@@ -190,26 +190,33 @@ public sealed partial class FormEditor : GitModuleForm
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal readonly struct TestAccessor(FormEditor form)
+    internal readonly struct TestAccessor
     {
-        public FileViewer FileViewer => form.fileViewer;
+        private readonly FormEditor _formEditor;
 
-        public bool HasChanges => form.HasChanges;
+        public TestAccessor(FormEditor formEditor)
+        {
+            _formEditor = formEditor;
+        }
 
-        public bool IsSaveEnabled => form.toolStripSaveButton.IsEnabled;
+        public FileViewer FileViewer => _formEditor.fileViewer;
 
-        public bool IsWarningVisible => form.panelMessage.IsVisible;
+        public bool HasChanges => _formEditor.HasChanges;
 
-        public bool ConfirmClose() => form.ConfirmClose();
+        public bool IsSaveEnabled => _formEditor.toolStripSaveButton.IsEnabled;
 
-        public void SaveChanges() => form.SaveChanges();
+        public bool IsWarningVisible => _formEditor.panelMessage.IsVisible;
+
+        public bool ConfirmClose() => _formEditor.ConfirmClose();
+
+        public void SaveChanges() => _formEditor.SaveChanges();
 
         public void LoadText(string fileName, string text, bool hasChanges)
         {
-            form.Text = fileName;
-            form.fileViewer.ViewText(fileName, text);
-            form.fileViewer.IsReadOnly = false;
-            form.HasChanges = hasChanges;
+            _formEditor.Text = fileName;
+            _formEditor.fileViewer.ViewText(fileName, text);
+            _formEditor.fileViewer.IsReadOnly = false;
+            _formEditor.HasChanges = hasChanges;
         }
     }
 }
