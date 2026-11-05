@@ -1078,8 +1078,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 // The colors are loaded in parallel to reading the refs, they are required when the first revisions are painted.
                 Task<FrozenDictionary<string, Color>> getRemoteColors = Task.Run(capturedModule.GetRemoteColors, cancellationToken);
 
-                // Watch for changes before the refs are read, so that none is missed
-                IndexWatcher.Reset();
+                ThreadHelper.FileAndForget(() => IndexWatcher.ResetAsync(capturedModule, cancellationToken));
 
                 // If the current checkout (HEAD) is changed, don't get the currently selected rows,
                 // select the new current checkout instead.
