@@ -14,7 +14,16 @@ dotnet run --project eng/tools/ParityInventory -- compare `
   --output eng/avalonia/parity-evidence/P0.4/functional-findings.json
 ```
 
-The report schema version is `5`. It contains:
+The report schema version is `6` (aggregate sweep schema `5`). It contains:
+
+- recursive declared-member coverage of nested classes, structs, interfaces and records. A
+  primary constructor and positional record properties are included; class primary parameters
+  never become invented fields or properties. Explicit record properties are counted once. A
+  member's optional `containingType` is relative to the enclosing reported type; nested finding
+  keys use `member/Inner.Deep/field:name`. Names shared by different containers never collide,
+  and order is compared within each containing type and original partial. Existing comment
+  anchors and exact reviewed pins retain their identities. Original/twin nested-type counts
+  are reported separately from TestAccessor types and their nested test-support types;
 
 - deterministic original and twin inventories: source partials, members and lexical order,
   event handlers/wiring, menu trees, hotkey command IDs, settings reads/writes,

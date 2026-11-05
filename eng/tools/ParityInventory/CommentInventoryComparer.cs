@@ -345,12 +345,13 @@ internal static class CommentInventoryComparer
         SourceInventory original,
         SourceInventory twin)
     {
-        HashSet<string> uniqueOriginal = original.Members
+        // Nested comments keep their complete anchors; extra member coverage must not relax existing pins.
+        HashSet<string> uniqueOriginal = original.Members.Where(member => member.ContainingType is null)
             .GroupBy(GetRelaxedMemberAnchor, StringComparer.Ordinal)
             .Where(group => group.Count() == 1)
             .Select(group => group.Key)
             .ToHashSet(StringComparer.Ordinal);
-        HashSet<string> uniqueTwin = twin.Members
+        HashSet<string> uniqueTwin = twin.Members.Where(member => member.ContainingType is null)
             .GroupBy(GetRelaxedMemberAnchor, StringComparer.Ordinal)
             .Where(group => group.Count() == 1)
             .Select(group => group.Key)

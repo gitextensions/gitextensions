@@ -1,11 +1,11 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace GitExtensions.ParityInventory;
 
 // parity-scaffolding: Supplies the stable interchange contract consumed by later parity tooling.
 internal sealed record InventoryReport
 {
-    public const int CurrentSchemaVersion = 5;
+    public const int CurrentSchemaVersion = 6;
 
     public required int SchemaVersion { get; init; }
 
@@ -64,6 +64,9 @@ internal sealed record SourcePart
 // parity-scaffolding: Records a declared class member in lexical order.
 internal sealed record MemberEntry
 {
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? ContainingType { get; init; }
+
     public required string Part { get; init; }
 
     public required int Order { get; init; }
@@ -221,6 +224,14 @@ internal sealed record InventoryComparison
 // parity-scaffolding: Summarizes a deterministic inventory comparison.
 internal sealed record InventorySummary
 {
+    public int OriginalNestedTypeCount { get; init; }
+
+    public int TwinNestedTypeCount { get; init; }
+
+    public int OriginalTestAccessorTypeCount { get; init; }
+
+    public int TwinTestAccessorTypeCount { get; init; }
+
     public required int FindingCount { get; init; }
 
     public required int DependentFindingCount { get; init; }

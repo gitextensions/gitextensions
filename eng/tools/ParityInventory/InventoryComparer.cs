@@ -83,6 +83,20 @@ internal static class InventoryComparer
         SourceInventory twin,
         List<FunctionalFinding> findings)
     {
+        foreach (string? scope in original.Members.Select(member => member.ContainingType).Distinct(StringComparer.Ordinal))
+        {
+            CompareMemberOrderWithinType(
+                original with { Members = original.Members.Where(member => member.ContainingType == scope).ToArray() },
+                twin with { Members = twin.Members.Where(member => member.ContainingType == scope).ToArray() },
+                findings);
+        }
+    }
+
+    private static void CompareMemberOrderWithinType(
+        SourceInventory original,
+        SourceInventory twin,
+        List<FunctionalFinding> findings)
+    {
         HashSet<string> uniqueOriginalKeys = original.Members
             .Where(member => !IsGeneratedMarkupField(member))
             .GroupBy(MemberKey, StringComparer.Ordinal)
@@ -369,7 +383,8 @@ internal static class InventoryComparer
             TwinValue = twinValue
         };
 
-    private static string MemberKey(MemberEntry item) => $"{item.Kind}:{item.Name}";
+    internal static string MemberKey(MemberEntry item) => item.ContainingType is null
+        ? $"{item.Kind}:{item.Name}" : $"{item.ContainingType}/{item.Kind}:{item.Name}";
 
     private static bool IsGeneratedMarkupField(MemberEntry item) =>
         item.Kind == "field" && item.Part.EndsWith(".axaml", StringComparison.Ordinal);

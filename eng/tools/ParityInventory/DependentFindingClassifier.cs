@@ -46,9 +46,24 @@ internal static class DependentFindingClassifier
     {
         if (finding.Code == "comment.missing" && comments.TryGetValue(finding.Path, out CommentEntry? comment))
         {
-            return comment.Anchor.Split('/').Reverse()
-                .Select(GetMemberKey)
-                .FirstOrDefault(missingMembers.ContainsKey);
+            string[] anchors = comment.Anchor.Split('/');
+            for (int index = anchors.Length - 1; index >= 0; index--)
+            {
+                string scope = string.Join(".", anchors.Take(index).Select(GetMemberKey)
+                    .Where(anchor => anchor.StartsWith("class:", StringComparison.Ordinal)
+                        || anchor.StartsWith("struct:", StringComparison.Ordinal)
+                        || anchor.StartsWith("interface:", StringComparison.Ordinal)
+                        || anchor.StartsWith("record:", StringComparison.Ordinal))
+                    .Select(anchor => anchor[(anchor.IndexOf(':') + 1)..]));
+                string key = GetMemberKey(anchors[index]);
+                string scopedKey = scope.Length == 0 ? key : $"{scope}/{key}";
+                if (missingMembers.ContainsKey(scopedKey))
+                {
+                    return scopedKey;
+                }
+            }
+
+            return null;
         }
 
         if (finding.Code == "event.handler.missing")

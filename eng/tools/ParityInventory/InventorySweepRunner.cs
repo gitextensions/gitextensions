@@ -99,7 +99,7 @@ internal static class InventorySweepRunner
                     AcceptedFrameworkDeviationCount = comparison.AcceptedFrameworkDeviations.Count
                 });
             }
-            catch (InvalidDataException)
+            catch (InvalidDataException exception) when (!exception.Message.StartsWith("Reviewed ", StringComparison.Ordinal))
             {
                 // The per-mapping result below records this type as unsupported.
             }
@@ -150,6 +150,10 @@ internal static class InventorySweepRunner
                 FormerParityCount = mappings.Count(mapping => mapping.Status == "parity"),
                 LinkedExactCount = mappingResults.Count(mapping => mapping.AnalysisStatus == "linkedExact"),
                 AnalyzedTypeCount = typeResults.Count,
+                OriginalNestedTypeCount = reports.Values.Sum(report => report.Summary.OriginalNestedTypeCount),
+                TwinNestedTypeCount = reports.Values.Sum(report => report.Summary.TwinNestedTypeCount),
+                OriginalTestAccessorTypeCount = reports.Values.Sum(report => report.Summary.OriginalTestAccessorTypeCount),
+                TwinTestAccessorTypeCount = reports.Values.Sum(report => report.Summary.TwinTestAccessorTypeCount),
                 UnsupportedMappingCount = mappingResults.Count(mapping => mapping.AnalysisStatus == "unsupported"),
                 FindingCount = allFindings.Length,
                 DependentFindingCount = allDependentFindings.Length,
@@ -215,6 +219,10 @@ internal static class InventorySweepRunner
             Twin = twin,
             Summary = new InventorySummary
             {
+                OriginalNestedTypeCount = NestedTypeStatistics.Count(original, testAccessors: false),
+                TwinNestedTypeCount = NestedTypeStatistics.Count(twin, testAccessors: false),
+                OriginalTestAccessorTypeCount = NestedTypeStatistics.Count(original, testAccessors: true),
+                TwinTestAccessorTypeCount = NestedTypeStatistics.Count(twin, testAccessors: true),
                 FindingCount = comparison.Findings.Count,
                 DependentFindingCount = comparison.DependentFindings.Count,
                 TotalDifferenceCount = comparison.Findings.Count + comparison.DependentFindings.Count,

@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -386,15 +386,19 @@ internal static class SourceInventoryReader
             declaration.Ancestors().OfType<BaseNamespaceDeclarationSyntax>()
                 .Reverse()
                 .Select(item => item.Name.ToString()));
+        string containingNames = string.Join(".", declaration.AncestorsAndSelf()
+            .OfType<TypeDeclarationSyntax>().Reverse().Select(type => type.Identifier.ValueText));
         string candidate = string.IsNullOrEmpty(namespaceName)
-            ? declaration.Identifier.ValueText
-            : $"{namespaceName}.{declaration.Identifier.ValueText}";
+            ? containingNames
+            : $"{namespaceName}.{containingNames}";
         return candidate;
     }
 
-    private static void ExtractMembers(TypeDeclarationSyntax declaration, MutablePart part)
+    private static void ExtractMembers(TypeDeclarationSyntax declaration, MutablePart part, string? containingType = null)
     {
-        int order = 0;
+        IReadOnlyList<MemberEntry> primaryMembers = GetPrimaryMembers(declaration, part.Path, containingType);
+        part.Members.AddRange(primaryMembers);
+        int order = primaryMembers.Count;
         foreach (MemberDeclarationSyntax member in declaration.Members)
         {
             string accessibility = GetAccessibility(member.Modifiers);
@@ -404,7 +408,7 @@ internal static class SourceInventoryReader
                     foreach (VariableDeclaratorSyntax variable in field.Declaration.Variables)
                     {
                         part.Members.Add(NewMember(part.Path, order++, "field", variable.Identifier.ValueText,
-                            accessibility, $"{field.Declaration.Type} {variable.Identifier.ValueText}"));
+                            accessibility, $"{field.Declaration.Type} {variable.Identifier.ValueText}", containingType));
                     }
 
                     break;
@@ -412,32 +416,85 @@ internal static class SourceInventoryReader
                     foreach (VariableDeclaratorSyntax variable in eventField.Declaration.Variables)
                     {
                         part.Members.Add(NewMember(part.Path, order++, "event", variable.Identifier.ValueText,
-                            accessibility, $"{eventField.Declaration.Type} {variable.Identifier.ValueText}"));
+                            accessibility, $"{eventField.Declaration.Type} {variable.Identifier.ValueText}", containingType));
                     }
 
                     break;
                 case PropertyDeclarationSyntax property:
                     part.Members.Add(NewMember(part.Path, order++, "property", property.Identifier.ValueText,
-                        accessibility, $"{property.Type} {property.Identifier.ValueText}"));
+                        accessibility, $"{property.Type} {property.Identifier.ValueText}", containingType));
                     break;
                 case MethodDeclarationSyntax method:
                     part.Members.Add(NewMember(part.Path, order++, "method", method.Identifier.ValueText,
-                        accessibility, $"{method.ReturnType} {method.Identifier}{Normalize(method.ParameterList)}"));
+                        accessibility, $"{method.ReturnType} {method.Identifier}{Normalize(method.ParameterList)}", containingType));
                     break;
                 case ConstructorDeclarationSyntax constructor:
                     part.Members.Add(NewMember(part.Path, order++, "constructor", constructor.Identifier.ValueText,
-                        accessibility, $"{constructor.Identifier}{Normalize(constructor.ParameterList)}"));
+                        accessibility, $"{constructor.Identifier}{Normalize(constructor.ParameterList)}", containingType));
                     break;
                 case EnumDeclarationSyntax enumDeclaration:
                     part.Members.Add(NewMember(part.Path, order++, "enum", enumDeclaration.Identifier.ValueText,
-                        accessibility, enumDeclaration.Identifier.ValueText));
+                        accessibility, enumDeclaration.Identifier.ValueText, containingType));
                     break;
                 case ClassDeclarationSyntax nestedClass:
                     part.Members.Add(NewMember(part.Path, order++, "class", nestedClass.Identifier.ValueText,
-                        accessibility, nestedClass.Identifier.ValueText));
+                        accessibility, nestedClass.Identifier.ValueText, containingType));
+                    break;
+                case StructDeclarationSyntax nestedStruct:
+                    part.Members.Add(NewMember(part.Path, order++, "struct", nestedStruct.Identifier.ValueText,
+                        accessibility, nestedStruct.Identifier.ValueText, containingType));
+                    break;
+                case InterfaceDeclarationSyntax nestedInterface:
+                    part.Members.Add(NewMember(part.Path, order++, "interface", nestedInterface.Identifier.ValueText,
+                        accessibility, nestedInterface.Identifier.ValueText, containingType));
+                    break;
+                case RecordDeclarationSyntax nestedRecord:
+                    part.Members.Add(NewMember(part.Path, order++, "record", nestedRecord.Identifier.ValueText,
+                        accessibility, nestedRecord.Identifier.ValueText, containingType));
                     break;
             }
+
+            if (member is TypeDeclarationSyntax nestedType)
+            {
+                string nestedName = containingType is null
+                    ? nestedType.Identifier.ValueText : $"{containingType}.{nestedType.Identifier.ValueText}";
+                ExtractMembers(nestedType, part, nestedName);
+            }
         }
+    }
+
+    internal static IReadOnlyList<MemberEntry> GetPrimaryMembers(
+        TypeDeclarationSyntax declaration,
+        string part = "",
+        string? containingType = null)
+    {
+        if (declaration.ParameterList is not ParameterListSyntax parameters)
+        {
+            return [];
+        }
+
+        List<MemberEntry> members =
+        [
+            NewMember(part, 0, "constructor", declaration.Identifier.ValueText,
+                declaration.Modifiers.Any(SyntaxKind.AbstractKeyword) ? "protected" : "public",
+                $"{declaration.Identifier}{Normalize(parameters)}", containingType)
+        ];
+        if (declaration is RecordDeclarationSyntax)
+        {
+            HashSet<string> explicitNames = declaration.Members.OfType<PropertyDeclarationSyntax>()
+                .Select(property => property.Identifier.ValueText)
+                .Concat(declaration.Members.OfType<FieldDeclarationSyntax>()
+                    .SelectMany(field => field.Declaration.Variables.Select(variable => variable.Identifier.ValueText)))
+                .ToHashSet(StringComparer.Ordinal);
+            foreach (ParameterSyntax parameter in parameters.Parameters.Where(parameter =>
+                         !explicitNames.Contains(parameter.Identifier.ValueText)))
+            {
+                members.Add(NewMember(part, members.Count, "property", parameter.Identifier.ValueText,
+                    "public", $"{parameter.Type} {parameter.Identifier.ValueText}", containingType));
+            }
+        }
+
+        return members;
     }
 
     private static MemberEntry NewMember(
@@ -446,10 +503,12 @@ internal static class SourceInventoryReader
         string kind,
         string name,
         string accessibility,
-        string signature) =>
+        string signature,
+        string? containingType = null) =>
         new()
         {
             Part = part,
+            ContainingType = containingType,
             Order = order,
             Kind = kind,
             Name = name,
