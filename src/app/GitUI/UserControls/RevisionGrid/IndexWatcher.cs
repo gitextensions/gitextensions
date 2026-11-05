@@ -119,8 +119,11 @@ public sealed class IndexWatcher : IDisposable
     {
         // The notifications are raised asynchronously on the thread pool and can arrive after Reset()
         // for changes made before it, e.g. by the fetch that triggered the refresh.
-        // (The time of a no longer existing file, e.g. a renamed *.lock file, is 1601-01-01.)
-        DateTime lastWriteTimeUtc = File.GetLastWriteTimeUtc(e.FullPath);
+        // A no longer existing file, e.g. a *.lock file renamed to the ref, has the time 1601-01-01.
+        // Use the time of its directory instead, which is updated by the rename.
+        DateTime lastWriteTimeUtc = Path.Exists(e.FullPath)
+            ? File.GetLastWriteTimeUtc(e.FullPath)
+            : Directory.GetLastWriteTimeUtc(Path.GetDirectoryName(e.FullPath)!);
 
         // Compare and set atomically with Reset(), else a stale notification can set the state after Reset() cleared it.
         lock (_resetLock)
@@ -182,6 +185,8 @@ public sealed class IndexWatcher : IDisposable
 
     internal readonly struct TestAccessor(IndexWatcher indexWatcher)
     {
+        public DateTime LastResetUtc => indexWatcher._lastResetUtc;
+
         public void RaiseChanged(string fullPath)
             => indexWatcher.fileSystemWatcher_Changed(indexWatcher, new FileSystemEventArgs(WatcherChangeTypes.Changed, Path.GetDirectoryName(fullPath)!, Path.GetFileName(fullPath)));
     }
