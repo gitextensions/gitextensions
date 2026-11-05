@@ -877,25 +877,25 @@ internal sealed partial class FilterToolBar : TranslatedControl
             _control = control;
         }
 
-        public MenuItem BranchLocal => _control.tsmiBranchLocal;
-        public MenuItem BranchRemote => _control.tsmiBranchRemote;
-        public MenuItem BranchTag => _control.tsmiBranchTag;
-        public MenuItem CommitFilter => _control.tsmiCommitFilter;
-        public MenuItem CommitterFilter => _control.tsmiCommitterFilter;
-        public MenuItem AuthorFilter => _control.tsmiAuthorFilter;
-        public MenuItem DiffContainsFilter => _control.tsmiDiffContainsFilter;
+        public MenuItem tsmiBranchLocal => _control.tsmiBranchLocal;
+        public MenuItem tsmiBranchRemote => _control.tsmiBranchRemote;
+        public MenuItem tsmiBranchTag => _control.tsmiBranchTag;
+        public MenuItem tsmiCommitFilter => _control.tsmiCommitFilter;
+        public MenuItem tsmiCommitterFilter => _control.tsmiCommitterFilter;
+        public MenuItem tsmiAuthorFilter => _control.tsmiAuthorFilter;
+        public MenuItem tsmiDiffContainsFilter => _control.tsmiDiffContainsFilter;
         public NativeToolStrip Strip => _control.innerStackPanel;
-        public ToggleButton ShowOnlyFirstParent => _control.tsmiShowOnlyFirstParent;
-        public ToggleButton ShowReflog => _control.tsbShowReflog;
-        public ToolbarComboBox RevisionFilter => _control.tstxtRevisionFilter;
-        public Label RevisionFilterLabel => _control.tslblRevisionFilter;
-        public IconSplitButton AdvancedFilter => _control.tsbtnAdvancedFilter;
+        public ToggleButton tsmiShowOnlyFirstParent => _control.tsmiShowOnlyFirstParent;
+        public ToggleButton tsbShowReflog => _control.tsbShowReflog;
+        public ToolbarComboBox tstxtRevisionFilter => _control.tstxtRevisionFilter;
+        public Label tslblRevisionFilter => _control.tslblRevisionFilter;
+        public IconSplitButton tsbtnAdvancedFilter => _control.tsbtnAdvancedFilter;
         public MenuItem AdvancedFilterMenuItem => _control.tsmiAdvancedFilter;
         public MenuItem ResetPathFilters => _control.tsmiResetPathFilters;
         public MenuItem ResetAllFilters => _control.tsmiResetAllFilters;
-        public ToolbarComboBox BranchFilter => _control.tscboBranchFilter;
-        public bool IsApplyingFilter => _control._isApplyingFilter;
-        public bool FilterBeingChanged => _control._filterBeingChanged;
+        public ToolbarComboBox tscboBranchFilter => _control.tscboBranchFilter;
+        public bool _isApplyingFilter => _control._isApplyingFilter;
+        public bool _filterBeingChanged => _control._filterBeingChanged;
         public IReadOnlyList<string> RevisionFilters => _control._revisionFilters;
 
         public void ApplyCustomBranchFilter(bool checkBranch)

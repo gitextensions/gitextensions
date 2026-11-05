@@ -1283,7 +1283,7 @@ public sealed class FormBrowseTests
         form.Width = form.ToolStripMain.PreferredSize.Width + form.ToolStripFilters.Strip.PreferredSize.Width + 100;
         form.UpdateLayout();
         Dispatcher.UIThread.RunJobs();
-        ComboBox revisionFilter = form.ToolStripFilters.GetTestAccessor().RevisionFilter;
+        ComboBox revisionFilter = form.ToolStripFilters.GetTestAccessor().tstxtRevisionFilter;
         form.ToolStripFilters.Strip.GetItemPlacement(revisionFilter).Should().Be(NativeToolStripItemPlacement.Main,
             "the actual source focus route does not open closed overflow controls");
         form.ToolStripFilters.SetFocus();

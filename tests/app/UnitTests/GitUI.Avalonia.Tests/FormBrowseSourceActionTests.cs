@@ -403,10 +403,10 @@ public sealed class FormBrowseSourceActionTests
             FilterToolBar.TestAccessor filter = form.GetTestAccessor().ToolStripFilters.GetTestAccessor();
             List<string> invalid = [];
             filter.SetInvalidReferenceHandler(invalid.Add);
-            filter.BranchFilter.Text = "only-first";
-            filter.BranchFilter.Focus();
-            GetRoot(filter.BranchFilter).KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, keySymbol: null);
-            GetRoot(filter.BranchFilter).KeyRelease(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, keySymbol: null);
+            filter.tscboBranchFilter.Text = "only-first";
+            filter.tscboBranchFilter.Focus();
+            GetRoot(filter.tscboBranchFilter).KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, keySymbol: null);
+            GetRoot(filter.tscboBranchFilter).KeyRelease(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, keySymbol: null);
 
             invalid.Should().Equal("only-first");
             form.RevisionGrid.CurrentFilter.BranchFilter.Should().BeEmpty();
@@ -485,12 +485,12 @@ public sealed class FormBrowseSourceActionTests
     private static string[] ShowBranchSuggestions(FormBrowse form)
     {
         FilterToolBar.TestAccessor filter = form.GetTestAccessor().ToolStripFilters.GetTestAccessor();
-        filter.BranchFilter.IsDropDownOpen = false;
-        filter.BranchFilter.Text = string.Empty;
-        filter.BranchFilter.IsDropDownOpen = true;
+        filter.tscboBranchFilter.IsDropDownOpen = false;
+        filter.tscboBranchFilter.Text = string.Empty;
+        filter.tscboBranchFilter.IsDropDownOpen = true;
         Dispatcher.UIThread.RunJobs();
-        string[] suggestions = filter.BranchFilter.Items.OfType<string>().ToArray();
-        filter.BranchFilter.IsDropDownOpen = false;
+        string[] suggestions = filter.tscboBranchFilter.Items.OfType<string>().ToArray();
+        filter.tscboBranchFilter.IsDropDownOpen = false;
         return suggestions;
     }
 

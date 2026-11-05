@@ -54,8 +54,15 @@ public sealed class WatermarkComboBox : ComboBox
     // parity-scaffolding: Exposes the original observable watermark boundary to focused tests.
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal readonly struct TestAccessor(WatermarkComboBox comboBox)
+    internal readonly struct TestAccessor
     {
-        internal string BaseText => comboBox.BaseText;
+        private readonly WatermarkComboBox _comboBox;
+
+        internal TestAccessor(WatermarkComboBox comboBox)
+        {
+            _comboBox = comboBox;
+        }
+
+        internal string BaseText => _comboBox.BaseText;
     }
 }
