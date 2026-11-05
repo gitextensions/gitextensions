@@ -58,6 +58,7 @@ internal sealed class TerminalLauncher : ITerminalLauncher
             throw new PlatformNotSupportedException("A shell executable cannot open a graphical terminal on this platform.");
         }
 
+        // throwOnErrorExit would redirect the output
         _startProcess(new ProcessStartInfo
         {
             FileName = executablePath,
@@ -68,7 +69,6 @@ internal sealed class TerminalLauncher : ITerminalLauncher
 
     private ProcessStartInfo CreateStartInfo(string workingDirectory)
     {
-        // throwOnErrorExit would redirect the output
         ProcessStartInfo startInfo = new()
         {
             UseShellExecute = false,
