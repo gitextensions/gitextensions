@@ -1237,23 +1237,30 @@ public sealed partial class FormPull : GitExtensionsDialog
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal readonly struct TestAccessor(FormPull form)
+    internal readonly struct TestAccessor
     {
-        internal string Title => form.Title ?? string.Empty;
-        internal string FetchTitleText => form._formTitleFetch.Text;
-        internal string PullTitleText => form._formTitlePull.Text;
-        internal RadioButton Merge => form.Merge;
-        internal RadioButton Rebase => form.Rebase;
-        internal RadioButton Fetch => form.Fetch;
-        internal CheckBox AutoStash => form.AutoStash;
-        internal CheckBox Prune => form.Prune;
-        internal CheckBox PruneTags => form.PruneTags;
-        internal ComboBox Remotes => form._NO_TRANSLATE_Remotes;
-        internal TextBox LocalBranch => form.localBranch;
+        private readonly FormPull _form;
+
+        public TestAccessor(FormPull form)
+        {
+            _form = form;
+        }
+
+        internal string Title => _form.Title ?? string.Empty;
+        internal string FetchTitleText => _form._formTitleFetch.Text;
+        internal string PullTitleText => _form._formTitlePull.Text;
+        internal RadioButton Merge => _form.Merge;
+        internal RadioButton Rebase => _form.Rebase;
+        internal RadioButton Fetch => _form.Fetch;
+        internal CheckBox AutoStash => _form.AutoStash;
+        internal CheckBox Prune => _form.Prune;
+        internal CheckBox PruneTags => _form.PruneTags;
+        internal ComboBox Remotes => _form._NO_TRANSLATE_Remotes;
+        internal TextBox LocalBranch => _form.localBranch;
         internal FormProcess CreateFormProcess(string source, string? localBranch, string? remoteBranch)
-            => form.CreateFormProcess(source, localBranch, remoteBranch);
+            => _form.CreateFormProcess(source, localBranch, remoteBranch);
         internal bool CheckMergeConflictsOnError(WinFormsShims.IWin32Window? owner)
-            => form.CheckMergeConflictsOnError(owner);
-        internal void UpdateSettingsDuringPull() => form.UpdateSettingsDuringPull();
+            => _form.CheckMergeConflictsOnError(owner);
+        internal void UpdateSettingsDuringPull() => _form.UpdateSettingsDuringPull();
     }
 }

@@ -602,6 +602,6 @@ public sealed partial class FormClone : GitExtensionsDialog
 
         public void LoadBranches() => _form.LoadBranches();
 
-        public bool TryExtractUrlForTesting(string text, out string url) => FormClone.TryExtractUrl(text, out url);
+        public bool TryExtractUrl(string text, out string url) => FormClone.TryExtractUrl(text, out url);
     }
 }

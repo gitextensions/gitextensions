@@ -119,7 +119,7 @@ public sealed class CloneAndInitTests
         try
         {
             form.GetTestAccessor().DirectoryCombo.Text = "relative/path";
-            form.GetTestAccessor().IsRootedDirectoryPathForTesting("relative/path").Should().BeFalse();
+            form.GetTestAccessor().IsRootedDirectoryPath("relative/path").Should().BeFalse();
 
             form.FindControl<Button>("Init")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
@@ -314,13 +314,13 @@ public sealed class CloneAndInitTests
         FormClone form = new();
         FormClone.TestAccessor accessor = form.GetTestAccessor();
 
-        accessor.TryExtractUrlForTesting("https://github.com/gitextensions/gitextensions.git", out string url).Should().BeTrue();
+        accessor.TryExtractUrl("https://github.com/gitextensions/gitextensions.git", out string url).Should().BeTrue();
         url.Should().Be("https://github.com/gitextensions/gitextensions.git");
 
-        accessor.TryExtractUrlForTesting("clone https://example.com/repo.git now", out url).Should().BeTrue();
+        accessor.TryExtractUrl("clone https://example.com/repo.git now", out url).Should().BeTrue();
         url.Should().Be("https://example.com/repo.git");
 
-        accessor.TryExtractUrlForTesting("no url here", out _).Should().BeFalse();
+        accessor.TryExtractUrl("no url here", out _).Should().BeFalse();
     }
 
     [AvaloniaTest]

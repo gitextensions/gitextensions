@@ -139,7 +139,7 @@ public sealed partial class FormInit : GitExtensionsDialog
 
         public Avalonia.Controls.ComboBox DirectoryCombo => _form._NO_TRANSLATE_Directory;
 
-        public bool IsRootedDirectoryPathForTesting(string path)
+        public bool IsRootedDirectoryPath(string path)
         {
             return FormInit.IsRootedDirectoryPath(path);
         }
