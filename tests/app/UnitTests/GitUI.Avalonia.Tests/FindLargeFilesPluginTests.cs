@@ -125,8 +125,8 @@ public sealed class FindLargeFilesPluginTests
                 Delete = true,
             };
 
-            string windowsCommand = accessor.GenerateCommandForTesting([gitObject], useWindowsBatch: true);
-            string posixCommand = accessor.GenerateCommandForTesting([gitObject], useWindowsBatch: false);
+            string windowsCommand = accessor.GenerateCommand([gitObject], useWindowsBatch: true);
+            string posixCommand = accessor.GenerateCommand([gitObject], useWindowsBatch: false);
 
             windowsCommand.Should().StartWith("SET gitexe=\"/opt/Git Tools/git\"");
             windowsCommand.Should().Contain("%gitexe% filter-branch");

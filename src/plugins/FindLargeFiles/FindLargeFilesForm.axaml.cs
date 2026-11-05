@@ -478,7 +478,7 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
         public Task<IReadOnlyList<GitObject>> FindLargeFilesAsync(CancellationToken cancellationToken = default)
             => form.FindLargeFilesAsync(cancellationToken);
 
-        public string GenerateCommandForTesting(IEnumerable<GitObject> gitObjects, bool useWindowsBatch)
+        public string GenerateCommand(IEnumerable<GitObject> gitObjects, bool useWindowsBatch)
             => FindLargeFilesForm.GenerateCommand(gitObjects, useWindowsBatch);
 
         public string QuoteForPosixShellForTesting(string value)
