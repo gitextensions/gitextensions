@@ -611,10 +611,10 @@ public sealed class NativeTreeKeyboardAdapterTests
             window.Content = control;
             window.Show();
             window.UpdateLayout();
-            accessor.Tree.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = key });
+            accessor.TreeView.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = key });
 
             accessor.LogicalSelection.Should().BeEquivalentTo(logical);
-            accessor.Tree.SelectedItems.Cast<object>().Should().ContainSingle();
+            accessor.TreeView.SelectedItems.Cast<object>().Should().ContainSingle();
             foreach (TreeViewItem item in logical)
             {
                 ((StackPanel)item.Header!).Children.OfType<TextBlock>().First().TextDecorations

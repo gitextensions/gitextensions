@@ -97,7 +97,7 @@ public sealed class RepoObjectsTreeLifetimeTests
                 new GitRef(module, ObjectId.Parse(new string('3', ObjectId.Sha1CharCount)), "refs/tags/v1"),
             ];
             control.SetRefs(refs, [], "main");
-            TreeView tree = control.GetTestAccessor().Tree;
+            TreeView tree = control.GetTestAccessor().TreeView;
             window = new Window { Width = 300, Height = 350, Content = control };
             window.Show();
             tree.Focus().Should().BeTrue();

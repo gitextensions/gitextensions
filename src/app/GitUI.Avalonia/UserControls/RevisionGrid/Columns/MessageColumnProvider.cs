@@ -28,14 +28,14 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class MessageColumnProvider : ColumnProvider
 {
-    private record struct Settings(
-        bool FillRefLabels,
+    private record struct Settings
+        (bool FillRefLabels,
         bool NotesInSeparateColumn,
         bool ShowAnnotatedTagsMessages,
         bool ShowCommitBodyInRevisionGrid,
         bool ShowGitNotes,
-        bool ShowRemoteBranches,
         bool ShowGitStatusForArtificialCommits,
+        bool ShowRemoteBranches,
         bool ShowRevisionGridTooltips,
         bool ShowTags);
 
@@ -104,15 +104,15 @@ internal sealed class MessageColumnProvider : ColumnProvider
     {
         Column.IsVisible = true;
         _settings = new Settings(
-            AppSettings.FillRefLabels,
-            AppSettings.ShowGitNotesColumn,
-            AppSettings.ShowAnnotatedTagsMessages,
-            AppSettings.ShowCommitBodyInRevisionGrid,
-            AppSettings.ShowGitNotes,
-            AppSettings.ShowRemoteBranches,
-            AppSettings.ShowGitStatusForArtificialCommits,
-            AppSettings.ShowRevisionGridTooltips,
-            AppSettings.ShowTags);
+            FillRefLabels: AppSettings.FillRefLabels,
+            NotesInSeparateColumn: AppSettings.ShowGitNotesColumn,
+            ShowAnnotatedTagsMessages: AppSettings.ShowAnnotatedTagsMessages,
+            ShowCommitBodyInRevisionGrid: AppSettings.ShowCommitBodyInRevisionGrid,
+            ShowGitNotes: AppSettings.ShowGitNotes,
+            ShowGitStatusForArtificialCommits: AppSettings.ShowGitStatusForArtificialCommits,
+            ShowRemoteBranches: AppSettings.ShowRemoteBranches,
+            ShowRevisionGridTooltips: AppSettings.ShowRevisionGridTooltips,
+            ShowTags: AppSettings.ShowTags);
     }
 
     public override Control CreateCell()

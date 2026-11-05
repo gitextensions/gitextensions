@@ -130,7 +130,7 @@ public sealed class NativeTreeScrollAdapterTests
             control.SelectGitRef(target);
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
-            ScrollViewer scroll = GetScroll(accessor.Tree);
+            ScrollViewer scroll = GetScroll(accessor.TreeView);
             scroll.Extent.Width.Should().BeGreaterThan(scroll.Viewport.Width);
             scroll.Offset = new Vector(100, scroll.Offset.Y);
             if (search)
@@ -146,7 +146,7 @@ public sealed class NativeTreeScrollAdapterTests
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
             scroll.Offset.X.Should().Be(0);
-            ((NodeBase)((TreeViewItem)accessor.Tree.SelectedItem!).Tag!).SearchText.Should().Be(target);
+            ((NodeBase)((TreeViewItem)accessor.TreeView.SelectedItem!).Tag!).SearchText.Should().Be(target);
         }
         finally
         {

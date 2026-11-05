@@ -66,7 +66,7 @@ public sealed class RepoObjectsTreeSourceActionTests
                     [CreateRef("refs/heads/alpha/one"), CreateRef("refs/heads/alpha/nested/two"),
                      CreateRef("refs/heads/beta/one"), CreateRef("refs/heads/beta/nested/two"), CreateRef("refs/heads/untouched/one")], []);
                 RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
-                TreeViewItem branches = accessor.Tree.Items.Cast<TreeViewItem>().Single(item => item.Tag is LocalBranchTree);
+                TreeViewItem branches = accessor.TreeView.Items.Cast<TreeViewItem>().Single(item => item.Tag is LocalBranchTree);
                 TreeViewItem alpha = Child(branches, "alpha");
                 TreeViewItem beta = Child(branches, "beta");
                 TreeViewItem untouched = Child(branches, "untouched");
@@ -75,7 +75,7 @@ public sealed class RepoObjectsTreeSourceActionTests
                 accessor.SelectNode<BranchPathNode>([HeaderText(branches), "alpha"]);
                 accessor.SelectNode<BranchPathNode>([HeaderText(branches), "beta"], multiple: true);
                 TreeViewItem caret = independentLeafCaret ? Child(untouched, "one") : beta;
-                accessor.Tree.SelectedItem = caret;
+                accessor.TreeView.SelectedItem = caret;
                 foreach (TreeViewItem item in new[] { alpha, beta, alphaNested, betaNested, untouched })
                 {
                     item.IsExpanded = !expand;
@@ -83,7 +83,7 @@ public sealed class RepoObjectsTreeSourceActionTests
 
                 TreeViewItem[] selection = [.. accessor.LogicalSelection];
                 selection.Should().BeEquivalentTo([alpha, beta]);
-                accessor.UpdateContextMenu().Should().BeTrue();
+                accessor.OpenContextMenu().Should().BeTrue();
                 MenuItem action = accessor.GetActionMenuItem(expand ? "Expand" : "Collapse");
                 action.IsVisible.Should().BeTrue();
                 action.IsEnabled.Should().BeTrue();
@@ -96,7 +96,7 @@ public sealed class RepoObjectsTreeSourceActionTests
 
                 untouched.IsExpanded.Should().Be(!expand, "an unselected parent must not participate in the action");
                 accessor.LogicalSelection.Should().BeEquivalentTo(selection);
-                accessor.Tree.SelectedItem.Should().BeSameAs(caret);
+                accessor.TreeView.SelectedItem.Should().BeSameAs(caret);
             }
             finally
             {
@@ -118,9 +118,9 @@ public sealed class RepoObjectsTreeSourceActionTests
             {
                 control.SetRefs([CreateRef("refs/heads/features/one"), CreateRef("refs/heads/features/two"), CreateRef("refs/heads/other")], []);
                 RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
-                TreeViewItem branches = accessor.Tree.Items.Cast<TreeViewItem>().Single(item => item.Tag is LocalBranchTree);
+                TreeViewItem branches = accessor.TreeView.Items.Cast<TreeViewItem>().Single(item => item.Tag is LocalBranchTree);
                 accessor.SelectNode<BranchPathNode>([HeaderText(branches), "features"]);
-                accessor.UpdateContextMenu().Should().BeTrue();
+                accessor.OpenContextMenu().Should().BeTrue();
                 MenuItem create = accessor.GetActionMenuItem("CreateInFolder");
                 MenuItem delete = accessor.GetActionMenuItem("DeleteFolderBranches");
                 create.IsVisible.Should().BeTrue();
@@ -164,9 +164,9 @@ public sealed class RepoObjectsTreeSourceActionTests
                     });
                 control.SetRefs([CreateRef("refs/remotes/origin/topic", "origin")], []);
                 RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
-                TreeViewItem remotes = accessor.Tree.Items.Cast<TreeViewItem>().Single(item => item.Tag is RemoteBranchTree);
+                TreeViewItem remotes = accessor.TreeView.Items.Cast<TreeViewItem>().Single(item => item.Tag is RemoteBranchTree);
                 accessor.SelectNode<RemoteBranchNode>([HeaderText(remotes), "origin", "topic"]);
-                accessor.UpdateContextMenu().Should().BeTrue();
+                accessor.OpenContextMenu().Should().BeTrue();
                 MenuItem create = accessor.GetActionMenuItem("FetchCreate");
                 create.IsVisible.Should().BeTrue();
                 create.IsEnabled.Should().BeTrue();

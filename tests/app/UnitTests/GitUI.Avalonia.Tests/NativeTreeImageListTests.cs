@@ -204,7 +204,7 @@ public sealed class NativeTreeImageListTests
     {
         RepoObjectsTree control = new();
         control.SetRefs([]);
-        TreeView tree = control.GetTestAccessor().Tree;
+        TreeView tree = control.GetTestAccessor().TreeView;
         TreeViewItem item = tree.Items.Cast<TreeViewItem>().First();
         Button other = new() { Content = "Other" };
         Window window = new() { Width = 360, Height = 250, Content = new StackPanel { Children = { control, other } } };

@@ -98,15 +98,15 @@ public sealed class SubmoduleNodeStyleStateTests
                     control.SetRefs([], []);
                     RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
                     accessor.SetSubmodules(result);
-                    TreeViewItem root = accessor.Tree.Items.Cast<TreeViewItem>().Single(item => item.Tag is SubmoduleTree);
+                    TreeViewItem root = accessor.TreeView.Items.Cast<TreeViewItem>().Single(item => item.Tag is SubmoduleTree);
                     SubmoduleNode node = ((SubmoduleTree)root.Tag!).DescendantsAndSelf().OfType<SubmoduleNode>()
                         .Single(item => item.IsCurrent == current);
                     TreeViewItem item = node.TreeViewNode;
                     SubmoduleInfo originalInfo = node.Info;
                     window.Show();
                     RunLayout(window);
-                    accessor.Tree.Focus().Should().BeTrue();
-                    accessor.Tree.SelectedItem = item;
+                    accessor.TreeView.Focus().Should().BeTrue();
+                    accessor.TreeView.SelectedItem = item;
                     node.Select(true);
                     AssertStyle(window, accessor, node, item, selected: true, "Consolas", 13);
                     Record(window, theme, "selected", node);
@@ -130,7 +130,7 @@ public sealed class SubmoduleNodeStyleStateTests
 
                     node.Select(false);
                     AssertStyle(window, accessor, node, item, selected: false, "Arial", 15);
-                    accessor.Tree.SelectedItem.Should().BeSameAs(item, "logical deselection does not move the highlighted caret");
+                    accessor.TreeView.SelectedItem.Should().BeSameAs(item, "logical deselection does not move the highlighted caret");
                     Record(window, theme, "deselected", node);
                 }
                 finally

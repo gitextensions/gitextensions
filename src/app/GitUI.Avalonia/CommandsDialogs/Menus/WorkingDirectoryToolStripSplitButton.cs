@@ -33,22 +33,30 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         Right click starts the "Open repository" dialog.
         """);
 
-    private sealed class Implementation(WorkingDirectoryToolStripSplitButton button)
+    private sealed class Implementation
     {
         /// <summary>
         ///  Gets the current instance of the git module.
         /// </summary>
-        private IGitModule? Module => button._getUICommands?.Invoke().Module;
+        private IGitModule? Module => _button._getUICommands?.Invoke().Module;
 
         /// <summary>
         ///  The current instance of the <see cref="RepositoryHistoryUIService"/>.
         /// </summary>
-        private IRepositoryHistoryUIService? RepositoryHistoryUIService => button._repositoryHistoryUIService;
+        private IRepositoryHistoryUIService? RepositoryHistoryUIService => _button._repositoryHistoryUIService;
+
+        // Avalonia retains its native split-button owner for flyout updates.
+        private readonly WorkingDirectoryToolStripSplitButton _button;
+
+        internal Implementation(WorkingDirectoryToolStripSplitButton button)
+        {
+            _button = button;
+        }
 
         internal void FillDropDown()
         {
             // Do not rebuild while the dropdown is open — Clear() would close it.
-            if (button._menu.IsOpen)
+            if (_button._menu.IsOpen)
             {
                 return;
             }
@@ -56,7 +64,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             if (RepositoryHistoryUIService is not null)
             {
                 RepositoryHistorySnapshot snapshot = RepositoryHistoryUIService.LoadSnapshot();
-                button.FillDropDown(snapshot);
+                _button.FillDropDown(snapshot);
                 return;
             }
 
@@ -64,13 +72,13 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
                 RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
             IList<Repository> recent = ThreadHelper.JoinableTaskFactory.Run(
                 RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
-            button.FillDropDown(favourites, recent);
+            _button.FillDropDown(favourites, recent);
         }
 
         internal void RefreshContent()
         {
-            Window? owner = TopLevel.GetTopLevel(button) as Window
-                ?? button.GetLogicalAncestors().OfType<Window>().FirstOrDefault(window => window.IsVisible);
+            Window? owner = TopLevel.GetTopLevel(_button) as Window
+                ?? _button.GetLogicalAncestors().OfType<Window>().FirstOrDefault(window => window.IsVisible);
             if (owner is null)
             {
                 // The component is unparented, no point doing anything.
@@ -87,46 +95,46 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
             // A successful explicit refresh already crossed the source open-form boundary.
             // Its first overflow attachment must not repeat repository-history writes.
-            button._contentOwner = owner;
+            _button._contentOwner = owner;
             string path = module.WorkingDir;
 
             // It appears at times Module.WorkingDir path is an empty string,
             // this caused issues like https://github.com/gitextensions/gitextensions/issues/4874.
             if (string.IsNullOrWhiteSpace(path))
             {
-                button.Content = _noWorkingFolderText.Text;
+                _button.Content = _noWorkingFolderText.Text;
                 return;
             }
 
             IList<Repository> recentRepositoryHistory = RepositoryHistoryUIService?.AddAsMostRecent(path)
                 ?? ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
-            button.RefreshContent(path, recentRepositoryHistory);
+            _button.RefreshContent(path, recentRepositoryHistory);
         }
 
         internal void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
         {
-            button._openRepositoryShortcutDisplay = hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenRepo);
-            button._closeRepositoryShortcutDisplay = hotkeys.GetShortcutDisplay(FormBrowse.Command.CloseRepository);
-            button._openRepositoryGesture = KeysMapper.ToKeyGesture(
+            _button._openRepositoryShortcutDisplay = hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenRepo);
+            _button._closeRepositoryShortcutDisplay = hotkeys.GetShortcutDisplay(FormBrowse.Command.CloseRepository);
+            _button._openRepositoryGesture = KeysMapper.ToKeyGesture(
                 hotkeys?.FirstOrDefault(command => command.CommandCode == (int)FormBrowse.Command.OpenRepo)?.KeyData);
-            button._closeRepositoryGesture = KeysMapper.ToKeyGesture(
+            _button._closeRepositoryGesture = KeysMapper.ToKeyGesture(
                 hotkeys?.FirstOrDefault(command => command.CommandCode == (int)FormBrowse.Command.CloseRepository)?.KeyData);
 
-            if (button._tsmiOpenLocalRepository is MenuItem open)
+            if (_button._tsmiOpenLocalRepository is MenuItem open)
             {
-                open.InputGesture = button._openRepositoryGesture;
-                WinFormsToolStripMenuSizer.SetShortcutDisplayString(open, button._openRepositoryShortcutDisplay);
+                open.InputGesture = _button._openRepositoryGesture;
+                WinFormsToolStripMenuSizer.SetShortcutDisplayString(open, _button._openRepositoryShortcutDisplay);
             }
 
-            if (button._tsmiCloseRepo is MenuItem close)
+            if (_button._tsmiCloseRepo is MenuItem close)
             {
-                close.InputGesture = button._closeRepositoryGesture;
-                WinFormsToolStripMenuSizer.SetShortcutDisplayString(close, button._closeRepositoryShortcutDisplay);
+                close.InputGesture = _button._closeRepositoryGesture;
+                WinFormsToolStripMenuSizer.SetShortcutDisplayString(close, _button._closeRepositoryShortcutDisplay);
             }
 
-            if (button._menu.IsOpen)
+            if (_button._menu.IsOpen)
             {
-                button.ApplySourceShortcutText();
+                _button.ApplySourceShortcutText();
             }
         }
     }

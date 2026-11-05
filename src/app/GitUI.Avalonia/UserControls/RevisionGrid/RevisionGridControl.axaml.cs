@@ -4435,51 +4435,58 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    internal readonly struct TestAccessor(RevisionGridControl control)
+    internal readonly struct TestAccessor
     {
-        public Control? CurrentPage => control.revisionPage.Content as Control;
+        private readonly RevisionGridControl _revisionGridControl;
 
-        public Window? OwnerWindow => control._ownerWindow;
+        public TestAccessor(RevisionGridControl revisionGridControl)
+        {
+            _revisionGridControl = revisionGridControl;
+        }
 
-        public ListBox Revisions => control._gridView;
+        public Control? CurrentPage => _revisionGridControl.revisionPage.Content as Control;
 
-        public ObjectId PendingSelectedObjectId => control._pendingSelectedObjectIds.FirstOrDefault();
+        public Window? OwnerWindow => _revisionGridControl._ownerWindow;
 
-        public IReadOnlyList<ObjectId> PendingSelectedObjectIds => control._pendingSelectedObjectIds;
+        public ListBox Revisions => _revisionGridControl._gridView;
+
+        public ObjectId PendingSelectedObjectId => _revisionGridControl._pendingSelectedObjectIds.FirstOrDefault();
+
+        public IReadOnlyList<ObjectId> PendingSelectedObjectIds => _revisionGridControl._pendingSelectedObjectIds;
 
         public void RaiseOwnerWindowDeactivated()
-            => control.OnOwnerWindowDeactivated(control._ownerWindow, EventArgs.Empty);
+            => _revisionGridControl.OnOwnerWindowDeactivated(_revisionGridControl._ownerWindow, EventArgs.Empty);
 
         public void SetRevisions(IEnumerable<GitRevision> revisions)
         {
-            control.ApplyFinalRevisionOrder([.. revisions]);
-            control.SetPage(control._gridView);
-            control.FocusRevisionGridWhenShown();
+            _revisionGridControl.ApplyFinalRevisionOrder([.. revisions]);
+            _revisionGridControl.SetPage(_revisionGridControl._gridView);
+            _revisionGridControl.FocusRevisionGridWhenShown();
         }
 
         public void AppendRevisions(IEnumerable<GitRevision> revisions)
-            => control.AppendRevisions([.. revisions], cancellationToken: default);
+            => _revisionGridControl.AppendRevisions([.. revisions], cancellationToken: default);
 
         public void ReadRevisions(IEnumerable<GitRevision> revisions, CancellationToken cancellationToken = default)
         {
             GitRevision[] batch = [.. revisions];
-            control.AddToGraph(batch, cancellationToken);
-            control.AppendRevisions(batch, cancellationToken);
+            _revisionGridControl.AddToGraph(batch, cancellationToken);
+            _revisionGridControl.AppendRevisions(batch, cancellationToken);
         }
 
         public void CompleteLoading(CancellationToken cancellationToken = default)
-            => control.OnLoadingCompleted(cancellationToken);
+            => _revisionGridControl.OnLoadingCompleted(cancellationToken);
 
         public IObserver<IReadOnlyList<GitRevision>> CreateRevisionObserver(CancellationToken cancellationToken)
-            => new RevisionObserver(control, cancellationToken, new RevisionLoadEventArgs(
-                control,
-                control.UICommands,
+            => new RevisionObserver(_revisionGridControl, cancellationToken, new RevisionLoadEventArgs(
+                _revisionGridControl,
+                _revisionGridControl.UICommands,
                 new Lazy<IReadOnlyList<IGitRef>>(() => []),
                 new Lazy<IReadOnlyCollection<GitRevision>>(() => []),
                 forceRefresh: false));
 
         public bool HasGraphParent(ObjectId childId, ObjectId parentId)
-            => control._revisionGraph.TryGetNode(childId, out RevisionGraphRevision? child)
+            => _revisionGridControl._revisionGraph.TryGetNode(childId, out RevisionGraphRevision? child)
                 && child.Parents.Any(parent => parent.Objectid == parentId);
     }
 
