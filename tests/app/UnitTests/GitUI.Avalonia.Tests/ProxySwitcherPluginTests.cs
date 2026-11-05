@@ -51,6 +51,7 @@ public sealed class ProxySwitcherPluginTests
         string testId = Guid.NewGuid().ToString("N");
         _workingDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.ProxySwitcherTests-{testId}");
         _globalConfigPath = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.ProxySwitcherTests-{testId}.gitconfig");
+        File.WriteAllText(_globalConfigPath, string.Empty);
         Directory.CreateDirectory(_workingDirectory);
 
         _originalGlobalConfig = Environment.GetEnvironmentVariable("GIT_CONFIG_GLOBAL");
