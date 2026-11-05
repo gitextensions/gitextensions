@@ -127,6 +127,176 @@ public sealed class FileViewerSearchTests
         secondLooped.Should().BeTrue();
     }
 
+    [Test]
+    [TestCase(0, 0, "XX", 4, 3)]
+    [TestCase(2, 0, "X", 3, 3)]
+    [TestCase(3, 0, "X", 2, 4)]
+    [TestCase(5, 0, "X", 2, 3)]
+    [TestCase(3, 1, "XX", 2, 4)]
+    [TestCase(0, 1, "", 1, 3)]
+    [TestCase(1, 2, "", 1, 2)]
+    public void TextEditorSearcher_should_track_scan_region_through_original_marker_edits(int offset, int removedLength, string insertedText, int expectedOffset, int expectedLength)
+    {
+        TextDocument document = new("abfoo-cd");
+        using TextEditorSearcher searcher = new() { Document = document };
+        searcher.SetScanRegion(2, 3);
+
+        document.Replace(offset, removedLength, insertedText);
+
+        searcher.HasScanRegion.Should().BeTrue();
+        searcher.BeginOffset.Should().Be(expectedOffset);
+        searcher.EndOffset.Should().Be(expectedOffset + expectedLength);
+    }
+
+    [Test]
+    [TestCase("")]
+    [TestCase("X")]
+    public void TextEditorSearcher_should_keep_removed_scan_region_bounds_until_document_reset(string replacement)
+    {
+        TextDocument document = new("abfoo-cd");
+        using TextEditorSearcher searcher = new() { Document = document };
+        searcher.SetScanRegion(2, 3);
+
+        document.Replace(2, 3, replacement);
+        document.Insert(0, "!");
+
+        searcher.HasScanRegion.Should().BeTrue("the original retains its marker reference after removing it from the document's marker list");
+        searcher.BeginOffset.Should().Be(2);
+        searcher.EndOffset.Should().Be(5);
+
+        document.Text = "replacement document";
+
+        searcher.HasScanRegion.Should().BeFalse();
+    }
+
+    [Test]
+    public void TextEditorSearcher_should_clear_scan_region_on_whole_document_reset()
+    {
+        TextDocument document = new("abfoo-cd");
+        using TextEditorSearcher searcher = new() { Document = document };
+        searcher.SetScanRegion(2, 3);
+
+        document.Text = "replacement document";
+
+        searcher.HasScanRegion.Should().BeFalse();
+        searcher.BeginOffset.Should().Be(0);
+        searcher.EndOffset.Should().Be(document.TextLength);
+    }
+
+    [Test]
+    public void TextEditorSearcher_should_detach_scan_region_tracking_from_the_previous_document()
+    {
+        TextDocument previous = new("abfoo-cd");
+        TextDocument current = new("abfoo-cd");
+        using TextEditorSearcher searcher = new() { Document = previous };
+        searcher.SetScanRegion(2, 3);
+        searcher.Document = current;
+        searcher.HasScanRegion.Should().BeFalse();
+        searcher.SetScanRegion(2, 3);
+
+        previous.Insert(0, "XX");
+        previous.Text = "replacement document";
+
+        searcher.HasScanRegion.Should().BeTrue();
+        searcher.BeginOffset.Should().Be(2);
+        searcher.EndOffset.Should().Be(5);
+
+        current.Insert(0, "X");
+
+        searcher.BeginOffset.Should().Be(3);
+        searcher.EndOffset.Should().Be(6);
+    }
+
+    [AvaloniaTest]
+    public async Task FindAndReplaceForm_should_keep_scan_region_rendering_during_edits()
+    {
+        FileViewer viewer = new();
+        await viewer.ViewTextAsync("sample.txt", "first\nselected text\nlast");
+        FindAndReplaceForm form = viewer.GetTestAccessor().FindAndReplaceForm;
+        FindAndReplaceForm.TestAccessor accessor = form.GetTestAccessor();
+        try
+        {
+            accessor.SetEditor(viewer.TextEditor);
+            accessor.Search.SetScanRegion(6, 13);
+
+            viewer.TextEditor.Document.Insert(0, "X");
+
+            accessor.Search.HasScanRegion.Should().BeTrue();
+            accessor.Search.BeginOffset.Should().Be(7);
+            accessor.Search.EndOffset.Should().Be(20);
+            accessor.HasScanRegionRenderer.Should().BeTrue();
+            viewer.TextEditor.TextArea.TextView.BackgroundRenderers.Count(renderer => renderer.GetType().Name == "ScanRegionRenderer").Should().Be(1);
+
+            viewer.TextEditor.Document.Remove(7, 13);
+
+            accessor.Search.HasScanRegion.Should().BeTrue();
+            accessor.HasScanRegionRenderer.Should().BeFalse();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FindAndReplaceForm_should_keep_replacement_inside_scan_region_after_an_ordinary_edit()
+    {
+        FileViewer viewer = new();
+        viewer.TextEditor.IsReadOnly = false;
+        await viewer.ViewTextAsync("sample.txt", "cat\ncat cat\ncat");
+        FindAndReplaceForm form = viewer.GetTestAccessor().FindAndReplaceForm;
+        FindAndReplaceForm.TestAccessor accessor = form.GetTestAccessor();
+        try
+        {
+            accessor.SetEditor(viewer.TextEditor);
+            accessor.TxtLookFor.Text = "cat";
+            accessor.TxtReplaceWith.Text = "dog";
+            accessor.Search.SetScanRegion(4, 7);
+            viewer.TextEditor.Document.Insert(0, "prefix\n");
+
+            TextRange? match = await form.FindNextAsync(viaF3: false, searchBackward: false, messageIfNotFound: null);
+
+            match.Should().NotBeNull();
+            match!.Offset.Should().Be(11);
+
+            await accessor.ReplaceAsync();
+
+            viewer.TextEditor.Text.Should().Be("prefix\ncat\ndog cat\ncat");
+            viewer.TextEditor.SelectionStart.Should().Be(15);
+            viewer.TextEditor.SelectedText.Should().Be("cat");
+            accessor.Search.BeginOffset.Should().Be(11);
+            accessor.Search.EndOffset.Should().Be(18);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task TextEditorSearcher_should_accept_the_editor_selection_as_scan_region()
+    {
+        FileViewer viewer = new();
+        await viewer.ViewTextAsync("sample.txt", "abfoo-cd");
+        FindAndReplaceForm form = viewer.GetTestAccessor().FindAndReplaceForm;
+        FindAndReplaceForm.TestAccessor accessor = form.GetTestAccessor();
+        try
+        {
+            accessor.SetEditor(viewer.TextEditor);
+            viewer.TextEditor.Select(2, 3);
+
+            accessor.Search.SetScanRegion(viewer.TextEditor.TextArea.Selection);
+
+            accessor.Search.BeginOffset.Should().Be(2);
+            accessor.Search.EndOffset.Should().Be(5);
+            accessor.HasScanRegionRenderer.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
     [AvaloniaTest]
     public async Task FindAndReplaceForm_should_select_forward_and_backward_matches_in_FileViewer()
     {

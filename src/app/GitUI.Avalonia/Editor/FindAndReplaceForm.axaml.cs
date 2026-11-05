@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using AvaloniaEdit;
 using AvaloniaEdit.Document;
+using AvaloniaEdit.Editing;
 using AvaloniaEdit.Rendering;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
@@ -113,7 +114,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
             }
             else
             {
-                _search.SetScanRegion(editor.SelectionStart, editor.SelectionLength);
+                _search.SetScanRegion(editor.TextArea.Selection);
             }
         }
         else
@@ -436,6 +437,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         }
     }
 
+    // Framework constraint: capture the range before a replacement can raise the full-buffer reset event.
     private void InsertText(string text)
     {
         TextEditor editor = _editor ?? throw new InvalidOperationException("The search window has no text editor.");
@@ -443,7 +445,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         bool hasScanRegion = _search.HasScanRegion;
         int beginOffset = _search.BeginOffset;
 
-        // EndOffset actually is a LastOffset
+        // EndOffset actually is an exclusive offset
         int selectionLength = _search.EndOffset - beginOffset;
 
         editor.SelectedText = text;
@@ -558,6 +560,7 @@ public sealed class TextEditorSearcher : IDisposable
     private string? _lookFor2; // uppercase in case-insensitive mode
     private int? _scanOffset;
     private int _scanLength;
+    private bool _scanRegionTracked;
 
     // I would have used the TextAnchor class to represent the beginning and
     // end of the region to scan while automatically adjusting to changes in
@@ -625,19 +628,27 @@ public sealed class TextEditorSearcher : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>Sets the region to search. The region is cleared
+    /// <summary>Sets the region to search. The region is updated
+    /// automatically as the document changes.</summary>
+    public void SetScanRegion(Selection sel)
+    {
+        SetScanRegion(sel.SurroundingSegment.Offset, sel.SurroundingSegment.Length);
+    }
+
+    /// <summary>Sets the region to search. The region is updated
     /// automatically as the document changes.</summary>
     public void SetScanRegion(int offset, int length)
     {
         TextDocument document = _document ?? throw new InvalidOperationException("The searcher has no document.");
         if (_scanOffset is not null)
         {
-            document.TextChanged -= DocumentOnTextContentChanged;
+            document.Changed -= DocumentChanged;
         }
 
         _scanOffset = offset;
         _scanLength = length;
-        document.TextChanged += DocumentOnTextContentChanged;
+        _scanRegionTracked = true;
+        document.Changed += DocumentChanged;
         UpdateRegionRenderer();
         ScanRegionChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -652,11 +663,12 @@ public sealed class TextEditorSearcher : IDisposable
 
         if (_document is not null)
         {
-            _document.TextChanged -= DocumentOnTextContentChanged;
+            _document.Changed -= DocumentChanged;
         }
 
         _scanOffset = null;
         _scanLength = 0;
+        _scanRegionTracked = false;
         RemoveRegionRenderer();
         ScanRegionChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -779,6 +791,56 @@ public sealed class TextEditorSearcher : IDisposable
         return true;
     }
 
+    // Framework constraint: AvaloniaEdit has no document marker strategy; track its per-edit changes here.
+    private void DocumentChanged(object? sender, DocumentChangeEventArgs e)
+    {
+        TextDocument document = _document ?? throw new InvalidOperationException("The searcher has no document.");
+        int previousTextLength = document.TextLength - e.InsertionLength + e.RemovalLength;
+        if (e.Offset == 0 && e.RemovalLength == previousTextLength)
+        {
+            // Framework constraint: assigning Text and replacing the entire buffer raise the same change event.
+            DocumentOnTextContentChanged(sender, EventArgs.Empty);
+            return;
+        }
+
+        if (_scanOffset is not int segmentStart || !_scanRegionTracked)
+        {
+            return;
+        }
+
+        int segmentEnd = segmentStart + _scanLength;
+        if (e.Offset <= segmentStart)
+        {
+            segmentStart = Math.Max(e.Offset, segmentStart - e.RemovalLength);
+        }
+
+        if (e.Offset < segmentEnd)
+        {
+            segmentEnd = Math.Max(e.Offset, segmentEnd - e.RemovalLength);
+        }
+
+        if (segmentStart == segmentEnd)
+        {
+            _scanRegionTracked = false;
+            RemoveRegionRenderer();
+            return;
+        }
+
+        if (e.Offset <= segmentStart)
+        {
+            segmentStart += e.InsertionLength;
+        }
+
+        if (e.Offset < segmentEnd)
+        {
+            segmentEnd += e.InsertionLength;
+        }
+
+        _scanOffset = segmentStart;
+        _scanLength = segmentEnd - segmentStart;
+        UpdateRegionRenderer();
+    }
+
     private void DocumentOnTextContentChanged(object? sender, EventArgs e)
     {
         ClearScanRegion();
@@ -786,7 +848,7 @@ public sealed class TextEditorSearcher : IDisposable
 
     private void UpdateRegionRenderer()
     {
-        if (_editor is null || _scanOffset is null)
+        if (_editor is null || _scanOffset is null || !_scanRegionTracked)
         {
             return;
         }
