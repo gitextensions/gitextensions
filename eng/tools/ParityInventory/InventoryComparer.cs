@@ -40,7 +40,7 @@ internal static class InventoryComparer
                 entry.Origin));
         }
 
-        return new InventoryComparison
+        return FindingAudienceClassifier.Classify(original, twin, new InventoryComparison
         {
             Findings = findings
                 .OrderBy(finding => finding.Category, StringComparer.Ordinal)
@@ -52,7 +52,7 @@ internal static class InventoryComparer
             DependentFindings = [],
             AdaptedComments = commentComparison.AdaptedComments,
             AcceptedFrameworkDeviations = frameworkInputs.Deviations
-        };
+        });
     }
 
     private static void CompareParts(

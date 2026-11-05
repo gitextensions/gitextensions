@@ -66,7 +66,7 @@ foreach ($file in Get-ChildItem -LiteralPath (Join-Path (Split-Path -Parent $Inv
     $report = Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json
     $owner = if ($owners.ContainsKey($report.typeName)) { $owners[$report.typeName] } else { 'unowned' }
     if (-not $areaNames.Contains($owner)) { $owner = 'unowned' }
-    if (-not $counts.ContainsKey($owner)) { $counts[$owner] = @{ Mechanical = 0; Behavior = 0; Structural = 0 } }
+    if (-not $counts.ContainsKey($owner)) { $counts[$owner] = @{ Mechanical = 0; Behavior = 0; Structural = 0; Product = 0; TestOnly = 0 } }
     $dependent += @($report.dependentFindings).Count
     foreach ($deviation in $report.acceptedFrameworkDeviations) {
         if ($deviation.category -eq 'comments' -and $deviation.reason -in 'codeAbsent', 'codeMoved', 'adaptedMinimal') {
@@ -76,18 +76,22 @@ foreach ($file in Get-ChildItem -LiteralPath (Join-Path (Split-Path -Parent $Inv
     foreach ($finding in $report.findings) {
         $class = if ($finding.code -in $mechanicalCodes) { 'Mechanical' } elseif ($finding.code -in $behaviorCodes) { 'Behavior' } else { 'Structural' }
         $counts[$owner][$class]++
+        if ($null -eq $finding.isTestOnly) { throw "Inventory findings lack product/test-only metadata; run a fresh inventory sweep." }
+        $audience = if ($finding.isTestOnly) { 'TestOnly' } else { 'Product' }
+        $counts[$owner][$audience]++
     }
 }
 
-$totals = @{ Mechanical = 0; Behavior = 0; Structural = 0 }
+$totals = @{ Mechanical = 0; Behavior = 0; Structural = 0; Product = 0; TestOnly = 0 }
 $areaLines = foreach ($owner in $areaNames.Keys) {
     if (-not $counts.ContainsKey($owner)) { continue }
     $row = $counts[$owner]
-    foreach ($key in 'Mechanical', 'Behavior', 'Structural') { $totals[$key] += $row[$key] }
-    '| {0} | {1} | {2} | {3} | {4} |' -f $areaNames[$owner], $row.Mechanical, $row.Behavior, $row.Structural, ($row.Mechanical + $row.Behavior + $row.Structural)
+    foreach ($key in 'Mechanical', 'Behavior', 'Structural', 'Product', 'TestOnly') { $totals[$key] += $row[$key] }
+    '| {0} | {1} | {2} | {3} | {4} | {5} | {6} |' -f $areaNames[$owner], $row.Mechanical, $row.Behavior, $row.Structural, ($row.Mechanical + $row.Behavior + $row.Structural), $row.Product, $row.TestOnly
 }
 $actionable = $totals.Mechanical + $totals.Behavior + $totals.Structural
 if ($actionable -ne $current.summary.findingCount) { throw "type reports hold $actionable findings but the summary says $($current.summary.findingCount)." }
+if ($totals.Product -ne $current.summary.productFindingCount -or $totals.TestOnly -ne $current.summary.testOnlyFindingCount) { throw "The product/test-only counts differ from the inventory summary; run a fresh inventory sweep." }
 
 $ledger = Get-Content -LiteralPath $LedgerPath -Raw | ConvertFrom-Json
 $statusNames = 'verified', 'partial', 'gap', 'unverified', 'notApplicable'
@@ -114,6 +118,8 @@ $measurement = [ordered]@{
     measuredUtc = (Get-Date).ToUniversalTime().ToString('o')
     commit = $current.analyzedCommit
     actionable = $actionable
+    productActionable = $totals.Product
+    testOnlyActionable = $totals.TestOnly
     mechanical = $totals.Mechanical
     behavior = $totals.Behavior
     structural = $totals.Structural
@@ -146,12 +152,13 @@ $lines.Add("Nested types (original/twin): $($current.summary.originalNestedTypeC
 $lines.Add('')
 $lines.Add("**Actionable source findings: $actionable**$change, plus $dependent dependent.")
 $lines.Add("**Accepted handwritten comment findings: $($measurement.acceptedComments)** (codeAbsent $($acceptedComments.codeAbsent), codeMoved $($acceptedComments.codeMoved), adaptedMinimal $($acceptedComments.adaptedMinimal)); accepted deviations, not closed.")
+$lines.Add('Test-only includes TestAccessor declarations, their nested support, and GetTestAccessor entry points returning TestAccessor; both partitions remain actionable.')
 $lines.Add('Source findings are one measure only; capture and state coverage are tracked separately.')
 $lines.Add('')
-$lines.Add('| Area | Mechanical | Missing behavior | Structural | Actionable |')
-$lines.Add('| --- | ---: | ---: | ---: | ---: |')
+$lines.Add('| Area | Mechanical | Missing behavior | Structural | Actionable | Product | Test-only |')
+$lines.Add('| --- | ---: | ---: | ---: | ---: | ---: | ---: |')
 $areaLines | ForEach-Object { $lines.Add($_) }
-$lines.Add("| **Total** | **$($totals.Mechanical)** | **$($totals.Behavior)** | **$($totals.Structural)** | **$actionable** |")
+$lines.Add("| **Total** | **$($totals.Mechanical)** | **$($totals.Behavior)** | **$($totals.Structural)** | **$actionable** | **$($totals.Product)** | **$($totals.TestOnly)** |")
 $lines.Add('')
 $lines.Add("**Components complete: $complete of $(@($ledger.components).Count).** Complete except macOS: $allButMacOs.")
 $lines.Add('')
@@ -166,7 +173,7 @@ $lines.Add('Components with platform evidence: ' + (($platforms.GetEnumerator() 
 Set-Content -LiteralPath $Output -Value $lines -Encoding utf8
 $measurementChanged = -not $lastMeasurement
 if ($lastMeasurement) {
-    foreach ($property in 'commit', 'actionable', 'mechanical', 'behavior', 'structural', 'dependent', 'acceptedComments', 'acceptedAdaptedMinimal', 'complete', 'allButMacOs') {
+    foreach ($property in 'commit', 'actionable', 'productActionable', 'testOnlyActionable', 'mechanical', 'behavior', 'structural', 'dependent', 'acceptedComments', 'acceptedAdaptedMinimal', 'complete', 'allButMacOs') {
         if ($lastMeasurement.$property -ne $measurement[$property]) {
             $measurementChanged = $true
             break
