@@ -14,7 +14,7 @@ dotnet run --project eng/tools/ParityInventory -- compare `
   --output eng/avalonia/parity-evidence/P0.4/functional-findings.json
 ```
 
-The report schema version is `6` (aggregate sweep schema `5`). It contains:
+The report schema version is `7` (aggregate sweep schema `6`). It contains:
 
 - recursive declared-member coverage of nested classes, structs, interfaces and records. A
   primary constructor and positional record properties are included; class primary parameters
@@ -24,6 +24,12 @@ The report schema version is `6` (aggregate sweep schema `5`). It contains:
   and order is compared within each containing type and original partial. Existing comment
   anchors and exact reviewed pins retain their identities. Original/twin nested-type counts
   are reported separately from TestAccessor types and their nested test-support types;
+- actionable findings retain their existing totals and carry `isTestOnly`. Per-type and sweep
+  summaries expose `productFindingCount` and `testOnlyFindingCount`; the dashboard shows both
+  partitions per area and in total. Test-only means exact TestAccessor declarations, members
+  within their nested scopes, their comments, and GetTestAccessor methods returning TestAccessor.
+  Similarly named product members and unrecognized shapes remain product findings. Neither
+  partition is suppressed or treated as accepted; dependent and accepted counts stay separate;
 
 - deterministic original and twin inventories: source partials, members and lexical order,
   event handlers/wiring, menu trees, hotkey command IDs, settings reads/writes,

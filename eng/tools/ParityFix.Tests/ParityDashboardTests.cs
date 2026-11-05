@@ -39,6 +39,8 @@ public sealed class ParityDashboardTests
                 {
                     commit = value.GetProperty("commit").GetString(),
                     actionable = value.GetProperty("actionable").GetInt32(),
+                    productActionable = value.GetProperty("actionable").GetInt32() - 20,
+                    testOnlyActionable = 20,
                     mechanical = value.GetProperty("actionable").GetInt32(),
                     behavior = 0,
                     structural = 0,
@@ -52,7 +54,7 @@ public sealed class ParityDashboardTests
             File.WriteAllText(Path.Combine(root, "inventory.json"), JsonSerializer.Serialize(new
             {
                 analyzedCommit = scenario == "new" ? c : b,
-                summary = new { findingCount = 95, mappingCount = 1, analyzedTypeCount = 1 }
+                summary = new { findingCount = 95, productFindingCount = 75, testOnlyFindingCount = 20, mappingCount = 1, analyzedTypeCount = 1 }
             }));
             File.WriteAllText(Path.Combine(root, "types", "Fixture.json"), JsonSerializer.Serialize(new
             {
@@ -69,9 +71,12 @@ public sealed class ParityDashboardTests
                         new { category = "members", reason = "codeAbsent" }
                     }
                     : Array.Empty<object>(),
-                findings = Enumerable.Range(0, 95).Select(index => new { code = "comment.missing", path = index.ToString() })
+                findings = Enumerable.Range(0, 95).Select(index => new { code = "comment.missing", path = index.ToString(), isTestOnly = index < 20 })
             }));
-            File.WriteAllText(Path.Combine(root, "ownership.json"), "{\"types\":[]}");
+            File.WriteAllText(Path.Combine(root, "ownership.json"), JsonSerializer.Serialize(new
+            {
+                types = new[] { new { typeName = "Fixture", owner = "progress132" } }
+            }));
             File.WriteAllText(Path.Combine(root, "ledger.json"), "{\"axisOrder\":[\"structural\"],\"components\":[]}");
 
             for (int attempt = 0; attempt < 2; attempt++)
@@ -97,6 +102,8 @@ public sealed class ParityDashboardTests
                 process.ExitCode.Should().Be(0, diagnostics);
                 string dashboard = await File.ReadAllTextAsync(Path.Combine(root, "dashboard.md"));
                 dashboard.Should().Contain("Components complete: 0 of 0.");
+                dashboard.Should().Contain("| 132 Shared core and compat | 95 | 0 | 0 | 95 | 75 | 20 |");
+                dashboard.Should().Contain("| **Total** | **95** | **0** | **0** | **95** | **75** | **20** |");
                 dashboard.Should().Contain(scenario == "accepted"
                     ? "Accepted handwritten comment findings: 4** (codeAbsent 1, codeMoved 2, adaptedMinimal 1); accepted deviations, not closed."
                     : "Accepted handwritten comment findings: 0**");
@@ -111,6 +118,8 @@ public sealed class ParityDashboardTests
 
                 File.ReadAllLines(Path.Combine(root, "history.jsonl")).Should().HaveCount(expectedRows);
                 using JsonDocument last = JsonDocument.Parse(File.ReadAllLines(Path.Combine(root, "history.jsonl"))[^1]);
+                last.RootElement.GetProperty("productActionable").GetInt32().Should().Be(75);
+                last.RootElement.GetProperty("testOnlyActionable").GetInt32().Should().Be(20);
                 last.RootElement.GetProperty("acceptedComments").GetInt32().Should().Be(scenario == "accepted" ? 4 : 0);
                 last.RootElement.GetProperty("acceptedAdaptedMinimal").GetInt32().Should().Be(scenario == "accepted" ? 1 : 0);
             }

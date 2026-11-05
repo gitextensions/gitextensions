@@ -5,7 +5,7 @@ namespace GitExtensions.ParityInventory;
 // parity-scaffolding: Supplies the stable interchange contract consumed by later parity tooling.
 internal sealed record InventoryReport
 {
-    public const int CurrentSchemaVersion = 6;
+    public const int CurrentSchemaVersion = 7;
 
     public required int SchemaVersion { get; init; }
 
@@ -232,6 +232,10 @@ internal sealed record InventorySummary
 
     public int TwinTestAccessorTypeCount { get; init; }
 
+    public int ProductFindingCount { get; init; }
+
+    public int TestOnlyFindingCount { get; init; }
+
     public required int FindingCount { get; init; }
 
     public required int DependentFindingCount { get; init; }
@@ -248,6 +252,8 @@ internal sealed record InventorySummary
 // parity-scaffolding: Describes one concrete functional gap between original and twin.
 internal sealed record FunctionalFinding
 {
+    public bool IsTestOnly { get; init; }
+
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? TwinPart { get; init; }
 
