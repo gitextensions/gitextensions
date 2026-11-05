@@ -215,7 +215,7 @@ public sealed class RemoteBranchTreeConfigurationTests
     }
 
     private static RemoteBranchTree GetRemotes(RepoObjectsTree control)
-        => control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>()
+        => control.GetTestAccessor().TreeView.Items.Cast<TreeViewItem>()
             .Select(item => item.Tag).OfType<RemoteBranchTree>().Single();
 
     private static async Task PublishSnapshotAsync(RepoObjectsTree control, GitModule module)

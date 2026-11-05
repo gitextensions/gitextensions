@@ -106,14 +106,13 @@ internal partial class FormQuickItemSelector : GitExtensionsForm
 
     internal sealed class ItemData
     {
+        public string Label { get; }
+        public object Item { get; }
+
         public ItemData(string label, object item)
         {
             Label = label;
             Item = item;
         }
-
-        public string Label { get; }
-
-        public object Item { get; }
     }
 }

@@ -595,11 +595,11 @@ public sealed class HotkeyTests
             RepoObjectsTree tree = form.FindControl<RepoObjectsTree>("repoObjectsTree")!;
             tree.SetRefs([new GitRef(commands.Module, ObjectId.Random(), "refs/heads/feature")], [], "main");
             RepoObjectsTree.TestAccessor accessor = tree.GetTestAccessor();
-            TreeViewItem branch = accessor.Tree.Items.Cast<TreeViewItem>().First().Items.Cast<TreeViewItem>().Single();
-            accessor.Tree.SelectedItem = branch;
+            TreeViewItem branch = accessor.TreeView.Items.Cast<TreeViewItem>().First().Items.Cast<TreeViewItem>().Single();
+            accessor.TreeView.SelectedItem = branch;
             Dispatcher.UIThread.RunJobs();
-            accessor.Tree.Focusable = true;
-            accessor.Tree.Focus(NavigationMethod.Tab, KeyModifiers.None);
+            accessor.TreeView.Focusable = true;
+            accessor.TreeView.Focus(NavigationMethod.Tab, KeyModifiers.None);
             Dispatcher.UIThread.RunJobs();
             tree.IsKeyboardFocusWithin.Should().BeTrue();
 

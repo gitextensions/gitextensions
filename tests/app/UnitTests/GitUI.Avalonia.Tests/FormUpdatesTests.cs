@@ -49,7 +49,7 @@ public sealed class FormUpdatesTests
         accessor.UpdateUrl.Should().Contain("GitExtensions-");
         accessor.UpdateNow.IsVisible.Should().Be(
             FormUpdates.TestAccessor.CanInstall(OperatingSystem.IsWindows(), AppSettings.IsPortable()));
-        accessor.RequiredNetRuntime.IsVisible.Should().Be(OperatingSystem.IsWindows());
+        accessor.linkRequiredNetRuntime.IsVisible.Should().Be(OperatingSystem.IsWindows());
         if (OperatingSystem.IsWindows())
         {
             accessor.NetRuntimeDownloadUrl.Should().MatchRegex("[?&]arch=[a-z0-9]+&rid=win-[a-z0-9]+(?:&|$)");

@@ -120,7 +120,7 @@ public sealed class NativeTreePaintTests
     {
         RepoObjectsTree control = new();
         control.SetRefs([]);
-        TreeView tree = control.GetTestAccessor().Tree;
+        TreeView tree = control.GetTestAccessor().TreeView;
         TreeViewItem item = tree.Items.Cast<TreeViewItem>().First();
         NodeBase node = (NodeBase)item.Tag!;
         NativeTreeTextBlock text = ((StackPanel)item.Header!).Children.OfType<NativeTreeTextBlock>().Single();
@@ -253,7 +253,7 @@ public sealed class NativeTreePaintTests
         application.Resources.ThemeDictionaries[ThemeVariant.Light] = new ResourceDictionary();
         RepoObjectsTree control = new();
         control.SetRefs([]);
-        TreeView tree = control.GetTestAccessor().Tree;
+        TreeView tree = control.GetTestAccessor().TreeView;
         TreeViewItem item = tree.Items.Cast<TreeViewItem>().First();
         tree.SelectedItem = item;
         Window window = new() { Width = 360, Height = 560, RequestedThemeVariant = ThemeVariant.Light, Content = control };
@@ -321,7 +321,7 @@ public sealed class NativeTreePaintTests
         ThemeVariant variant = dark ? ThemeVariant.Dark : ThemeVariant.Light;
         RepoObjectsTree control = new();
         control.SetRefs([]);
-        TreeView tree = control.GetTestAccessor().Tree;
+        TreeView tree = control.GetTestAccessor().TreeView;
         if (!hideSelection)
         {
             tree.Classes.Remove("gitextensions-hide-tree-selection");

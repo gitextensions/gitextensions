@@ -1578,12 +1578,12 @@ public sealed class FormBrowseTests
             RepoObjectsTree.TestAccessor accessor = repoObjectsTree.GetTestAccessor();
             RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")!;
 
-            await WaitUntilAsync(() => accessor.Tree.Items.Count == 6);
-            TreeViewItem stashRoot = accessor.Tree.Items.Cast<TreeViewItem>().Last();
+            await WaitUntilAsync(() => accessor.TreeView.Items.Count == 6);
+            TreeViewItem stashRoot = accessor.TreeView.Items.Cast<TreeViewItem>().Last();
             await WaitUntilAsync(() => stashRoot.Items.Count == 2);
             TreeViewItem stashItem = stashRoot.Items.Cast<TreeViewItem>().Last();
 
-            accessor.Tree.SelectedItem = stashItem;
+            accessor.TreeView.SelectedItem = stashItem;
 
             await WaitUntilAsync(() => revisionGrid.SelectedRevision?.ObjectId == olderStash.ObjectId);
             repoObjectsTree.SelectedRevisionObjectId.Should().Be(olderStash.ObjectId);
@@ -1679,11 +1679,11 @@ public sealed class FormBrowseTests
             RepoObjectsTree.TestAccessor accessor = repoObjectsTree.GetTestAccessor();
             IconSplitButton worktreeButton = form.FindControl<IconSplitButton>("toolStripWorktrees")!;
 
-            await WaitUntilAsync(() => accessor.Tree.Items.OfType<TreeViewItem>()
+            await WaitUntilAsync(() => accessor.TreeView.Items.OfType<TreeViewItem>()
                 .Any(item => HeaderText(item).StartsWith("Worktrees", StringComparison.Ordinal) && item.Items.Count == 2));
             worktreeButton.IsVisible.Should().BeTrue();
 
-            TreeViewItem root = accessor.Tree.Items.Cast<TreeViewItem>()
+            TreeViewItem root = accessor.TreeView.Items.Cast<TreeViewItem>()
                 .Single(item => HeaderText(item).StartsWith("Worktrees", StringComparison.Ordinal));
             HeaderText(root).Should().Be("Worktrees");
             root.Items.Cast<TreeViewItem>().Should().HaveCount(2);
@@ -1753,7 +1753,7 @@ public sealed class FormBrowseTests
             new SubmoduleStatusEventArgs(result, structureUpdated: true, CancellationToken.None));
         Dispatcher.UIThread.RunJobs();
 
-        SubmoduleTree submoduleTree = form.repoObjectsTree.GetTestAccessor().Tree.Items
+        SubmoduleTree submoduleTree = form.repoObjectsTree.GetTestAccessor().TreeView.Items
             .Cast<TreeViewItem>()
             .Select(item => item.Tag)
             .OfType<SubmoduleTree>()
@@ -3022,7 +3022,7 @@ public sealed class FormBrowseTests
             leftPanel.IsVisible.Should().BeTrue();
             leftToggle.Classes.Should().Contain("checked");
             RepoObjectsTree tree = form.FindControl<RepoObjectsTree>("repoObjectsTree")!;
-            await WaitUntilAsync(() => tree.GetTestAccessor().Tree.Items
+            await WaitUntilAsync(() => tree.GetTestAccessor().TreeView.Items
                 .Cast<TreeViewItem>()
                 .Where(item => HeaderText(item).StartsWith("Branches", StringComparison.Ordinal))
                 .SelectMany(item => item.Items.Cast<TreeViewItem>())

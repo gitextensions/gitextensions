@@ -208,7 +208,7 @@ public sealed partial class ParityScreenshotTests
         using CaptureContext context = new();
         using RepoObjectsTree tree = new() { UICommandsSource = context };
         await SeedStandaloneControlAsync(tree, context);
-        TreeView nativeTree = tree.GetTestAccessor().Tree;
+        TreeView nativeTree = tree.GetTestAccessor().TreeView;
         TreeViewItem branches = nativeTree.Items.Cast<TreeViewItem>().First();
         branches.Tag.Should().BeOfType<LocalBranchTree>();
         branches.IsExpanded.Should().BeTrue();
@@ -346,36 +346,36 @@ public sealed partial class ParityScreenshotTests
                 RepoObjectsTree.TestAccessor accessor = repoObjectsTree.GetTestAccessor();
                 if (Environment.GetEnvironmentVariable(CaptureRepoTreeContextEnvironmentVariable) == "submodule")
                 {
-                    SubmoduleTree submoduleTree = accessor.Tree.Items.Cast<TreeViewItem>()
+                    SubmoduleTree submoduleTree = accessor.TreeView.Items.Cast<TreeViewItem>()
                         .Select(item => item.Tag)
                         .OfType<SubmoduleTree>()
                         .Single();
                     SubmoduleNode submodule = submoduleTree.DescendantsAndSelf()
                         .OfType<SubmoduleNode>()
                         .First(node => !node.IsCurrent);
-                    accessor.Tree.SelectedItem = submodule.TreeViewNode;
+                    accessor.TreeView.SelectedItem = submodule.TreeViewNode;
                 }
                 else if (Environment.GetEnvironmentVariable(CaptureRepoTreeContextEnvironmentVariable) == "worktree")
                 {
-                    WorktreeTree worktreeTree = accessor.Tree.Items.Cast<TreeViewItem>()
+                    WorktreeTree worktreeTree = accessor.TreeView.Items.Cast<TreeViewItem>()
                         .Select(item => item.Tag)
                         .OfType<WorktreeTree>()
                         .Single();
                     WorktreeNode worktree = worktreeTree.DescendantsAndSelf()
                         .OfType<WorktreeNode>()
                         .First(node => !node.IsCurrent && !node.Worktree.IsDeleted);
-                    accessor.Tree.SelectedItem = worktree.TreeViewNode;
+                    accessor.TreeView.SelectedItem = worktree.TreeViewNode;
                 }
                 else
                 {
-                    TreeViewItem stashRoot = accessor.Tree.Items.Cast<TreeViewItem>().Last();
+                    TreeViewItem stashRoot = accessor.TreeView.Items.Cast<TreeViewItem>().Last();
                     stashRoot.IsExpanded = true;
                     TreeViewItem stashItem = stashRoot.Items.Cast<TreeViewItem>().Single();
-                    accessor.Tree.SelectedItem = stashItem;
+                    accessor.TreeView.SelectedItem = stashItem;
                 }
 
-                accessor.UpdateContextMenu();
-                accessor.ContextMenu.Open(accessor.Tree);
+                accessor.OpenContextMenu();
+                accessor.ContextMenu.Open(accessor.TreeView);
                 Dispatcher.UIThread.RunJobs();
             }
 
@@ -1483,7 +1483,7 @@ public sealed partial class ParityScreenshotTests
             repositoryTree.Initialize(aheadBehindDataProvider: null, _ => { }, refsSource, revisionGridInfo);
             repositoryTree.RefreshRevisionsLoading(context.Module.GetRefs, new Lazy<IReadOnlyCollection<GitRevision>>(() => []), forceRefresh: true);
             repositoryTree.RefreshRevisionsLoaded();
-            TreeView tree = repositoryTree.GetTestAccessor().Tree;
+            TreeView tree = repositoryTree.GetTestAccessor().TreeView;
             foreach (TreeViewItem rootNode in tree.Items.Cast<TreeViewItem>())
             {
                 rootNode.IsExpanded = rootNode.Tag is RemoteBranchTree;
@@ -2138,7 +2138,7 @@ public sealed partial class ParityScreenshotTests
             if (submodulePaths.Count > 0)
             {
                 RepoObjectsTree.TestAccessor repoTree = formBrowse.repoObjectsTree.GetTestAccessor();
-                SubmoduleTree submoduleTree = repoTree.Tree.Items.Cast<TreeViewItem>()
+                SubmoduleTree submoduleTree = repoTree.TreeView.Items.Cast<TreeViewItem>()
                     .Select(item => item.Tag)
                     .OfType<SubmoduleTree>()
                     .Single();

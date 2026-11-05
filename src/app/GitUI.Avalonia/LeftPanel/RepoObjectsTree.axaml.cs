@@ -1144,83 +1144,90 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         MoveDown,
     }
 
-    internal readonly struct TestAccessor(RepoObjectsTree control)
+    internal readonly struct TestAccessor
     {
-        internal TreeView Tree => control.treeMain;
+        private readonly RepoObjectsTree _repoObjectsTree;
+
+        public TestAccessor(RepoObjectsTree repoObjectsTree)
+        {
+            _repoObjectsTree = repoObjectsTree;
+        }
+
+        internal Avalonia.Controls.ContextMenu ContextMenu => _repoObjectsTree.menuMain;
 
         internal IEnumerable<TreeViewItem> LogicalSelection
-            => control.GetSelectedNodes().Select(node => node.TreeViewNode);
+            => _repoObjectsTree.GetSelectedNodes().Select(node => node.TreeViewNode);
 
-        internal Avalonia.Controls.ContextMenu ContextMenu => control.menuMain;
+        internal TreeView TreeView => _repoObjectsTree.treeMain;
 
-        internal SearchControl<string> SearchBox => control._txtBranchCriterion;
+        internal SearchControl<string> SearchBox => _repoObjectsTree._txtBranchCriterion;
 
-        internal Button SearchButton => control.btnSearch;
+        internal Button SearchButton => _repoObjectsTree.btnSearch;
 
-        internal ToggleButton ShowBranchesButton => control.tsbShowBranches;
+        internal ToggleButton ShowBranchesButton => _repoObjectsTree.tsbShowBranches;
 
-        internal ToggleButton ShowRemotesButton => control.tsbShowRemotes;
+        internal ToggleButton ShowRemotesButton => _repoObjectsTree.tsbShowRemotes;
 
-        internal ToggleButton ShowWorktreesButton => control.tsbShowWorktrees;
+        internal ToggleButton ShowWorktreesButton => _repoObjectsTree.tsbShowWorktrees;
 
-        internal ToggleButton ShowTagsButton => control.tsbShowTags;
+        internal ToggleButton ShowTagsButton => _repoObjectsTree.tsbShowTags;
 
-        internal ToggleButton ShowSubmodulesButton => control.tsbShowSubmodules;
+        internal ToggleButton ShowSubmodulesButton => _repoObjectsTree.tsbShowSubmodules;
 
-        internal ToggleButton ShowStashesButton => control.tsbShowStashes;
+        internal ToggleButton ShowStashesButton => _repoObjectsTree.tsbShowStashes;
 
-        internal MenuItem StashAllMenuItem => control.mnubtnStashAllFromRootNode;
+        internal MenuItem StashAllMenuItem => _repoObjectsTree.mnubtnStashAllFromRootNode;
 
-        internal MenuItem StashStagedMenuItem => control.mnubtnStashStagedFromRootNode;
+        internal MenuItem StashStagedMenuItem => _repoObjectsTree.mnubtnStashStagedFromRootNode;
 
-        internal MenuItem ManageStashesMenuItem => control.mnubtnManageStashFromRootNode;
+        internal MenuItem ManageStashesMenuItem => _repoObjectsTree.mnubtnManageStashFromRootNode;
 
-        internal MenuItem OpenStashMenuItem => control.mnubtnOpenStash;
+        internal MenuItem OpenStashMenuItem => _repoObjectsTree.mnubtnOpenStash;
 
-        internal MenuItem ApplyStashMenuItem => control.mnubtnApplyStash;
+        internal MenuItem ApplyStashMenuItem => _repoObjectsTree.mnubtnApplyStash;
 
-        internal MenuItem PopStashMenuItem => control.mnubtnPopStash;
+        internal MenuItem PopStashMenuItem => _repoObjectsTree.mnubtnPopStash;
 
-        internal MenuItem DropStashMenuItem => control.mnubtnDropStash;
+        internal MenuItem DropStashMenuItem => _repoObjectsTree.mnubtnDropStash;
 
-        internal MenuItem CreateWorktreeMenuItem => control.mnubtnCreateWorktreeFromRootNode;
+        internal MenuItem CreateWorktreeMenuItem => _repoObjectsTree.mnubtnCreateWorktreeFromRootNode;
 
-        internal MenuItem PruneWorktreesMenuItem => control.mnubtnPruneWorktreesFromRootNode;
+        internal MenuItem PruneWorktreesMenuItem => _repoObjectsTree.mnubtnPruneWorktreesFromRootNode;
 
-        internal MenuItem ManageWorktreesMenuItem => control.mnubtnManageWorktreesFromRootNode;
+        internal MenuItem ManageWorktreesMenuItem => _repoObjectsTree.mnubtnManageWorktreesFromRootNode;
 
-        internal MenuItem OpenWorktreeMenuItem => control.mnubtnOpenWorktree;
+        internal MenuItem OpenWorktreeMenuItem => _repoObjectsTree.mnubtnOpenWorktree;
 
-        internal MenuItem DeleteWorktreeMenuItem => control.mnubtnDeleteWorktree;
+        internal MenuItem DeleteWorktreeMenuItem => _repoObjectsTree.mnubtnDeleteWorktree;
 
-        internal MenuItem CopyWorktreePathMenuItem => control.mnubtnCopyWorktreePath;
+        internal MenuItem CopyWorktreePathMenuItem => _repoObjectsTree.mnubtnCopyWorktreePath;
 
-        internal MenuItem ShowWorktreeInFolderMenuItem => control.mnubtnShowWorktreeInFolder;
+        internal MenuItem ShowWorktreeInFolderMenuItem => _repoObjectsTree.mnubtnShowWorktreeInFolder;
 
         internal MenuItem GetActionMenuItem(string action)
-            => control.GetActionMenuItem(action);
+            => _repoObjectsTree.GetActionMenuItem(action);
 
         internal Nodes GetNodes(TreeViewItem item)
             => ((NodeBase)item.Tag!).Nodes;
 
-        internal bool UpdateContextMenu()
+        internal bool OpenContextMenu()
         {
             System.ComponentModel.CancelEventArgs eventArgs = new();
-            control.contextMenu_Opening(control.menuMain, eventArgs);
+            _repoObjectsTree.contextMenu_Opening(_repoObjectsTree.menuMain, eventArgs);
             return !eventArgs.Cancel;
         }
 
         internal void Search()
-            => control.DoSearch();
+            => _repoObjectsTree.DoSearch();
 
         internal void SetSubmodules(SubmoduleInfoResult result)
-            => control._submoduleTree.Load(result);
+            => _repoObjectsTree._submoduleTree.Load(result);
 
         internal void SetWorktrees(IReadOnlyList<GitWorktree> worktrees, string currentWorkingDirectory)
-            => control._worktreeTree.Load(worktrees, currentWorkingDirectory);
+            => _repoObjectsTree._worktreeTree.Load(worktrees, currentWorkingDirectory);
 
         internal void SetSelectionModifiers(KeyModifiers modifiers)
-            => control._selectionModifiers = modifiers;
+            => _repoObjectsTree._selectionModifiers = modifiers;
 
         /// <summary>Simulates a left click on the <see cref="TreeNode"/> in <see cref="TreeView"/>
         /// identified by the path of <paramref name="nodeTexts"/> for UI tests.</summary>
@@ -1234,7 +1241,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         internal void SelectNode<TExpected>(string[] nodeTexts, bool multiple = false, bool includingDescendants = false)
             where TExpected : NodeBase
         {
-            IEnumerable<TreeViewItem> nodes = control.treeMain.Items.Cast<TreeViewItem>();
+            IEnumerable<TreeViewItem> nodes = _repoObjectsTree.treeMain.Items.Cast<TreeViewItem>();
             TreeViewItem? item = null;
 
             foreach (string text in nodeTexts)
@@ -1252,8 +1259,8 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 throw new ArgumentException($"The selected node is of type {item?.Tag?.GetType()} instead of the expected type {typeof(TExpected)}.", nameof(TExpected));
             }
 
-            control.treeMain.SelectedItem = item;
-            control.SelectNode((NodeBase)item.Tag, multiple, includingDescendants);
+            _repoObjectsTree.treeMain.SelectedItem = item;
+            _repoObjectsTree.SelectNode((NodeBase)item.Tag, multiple, includingDescendants);
 
             // simulates a node click well enough for UI tests
 

@@ -82,7 +82,7 @@ public sealed class RepoObjectsTreeRefreshStateTests
                 TreeViewItem nested = FindSubmodule(before, Path.Combine(submodulePath, "nested", "child"));
                 before.IsExpanded = true;
                 nested.IsExpanded = false;
-                accessor.Tree.SelectedItem = before;
+                accessor.TreeView.SelectedItem = before;
                 string identity = RepoObjectsTree.GetNodeIdentity((NodeBase)before.Tag!);
                 int changes = 0;
                 control.NodeSelectionChanged += (_, _) => changes++;
@@ -104,7 +104,7 @@ public sealed class RepoObjectsTreeRefreshStateTests
                 RepoObjectsTree.GetNodeIdentity((NodeBase)after.Tag!).Should().Be(identity);
                 ((SubmoduleNode)after.Tag!).Info.Text.Should().Contain("(new)");
                 ((TextBlock)((StackPanel)after.Header!).Children[1]).Text.Should().Be("foo (new)");
-                accessor.Tree.SelectedItem.Should().BeSameAs(after);
+                accessor.TreeView.SelectedItem.Should().BeSameAs(after);
                 after.IsExpanded.Should().BeTrue();
                 FindSubmodule(after, Path.Combine(submodulePath, "nested", "child")).IsExpanded.Should().BeFalse();
                 changes.Should().Be(0, "restoring source state is not a new user selection or activation");
@@ -177,12 +177,12 @@ public sealed class RepoObjectsTreeRefreshStateTests
                 }
 
                 Dispatcher.UIThread.RunJobs();
-                accessor.Tree.Items.Cast<TreeViewItem>().Should().NotContain(root);
+                accessor.TreeView.Items.Cast<TreeViewItem>().Should().NotContain(root);
                 root.Items.Cast<TreeViewItem>().Should().Equal(before);
 
                 SetVisible(accessor, visible: true);
                 Dispatcher.UIThread.RunJobs();
-                accessor.Tree.Items.Cast<TreeViewItem>().Should().Contain(root);
+                accessor.TreeView.Items.Cast<TreeViewItem>().Should().Contain(root);
                 root.Items.Cast<TreeViewItem>().Should().Equal(before, "the original has no OnAttached replay of cached status");
 
                 Notify(provider, CreateResult(module, topPath, "visible"));

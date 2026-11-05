@@ -593,7 +593,7 @@ public sealed partial class FormUpdates : GitExtensionsDialog
 
         public HyperlinkButton DirectDownload => _form.linkDirectDownload;
 
-        public SettingsLinkLabel RequiredNetRuntime => _form.linkRequiredDotNetRuntime;
+        public SettingsLinkLabel linkRequiredNetRuntime => _form.linkRequiredDotNetRuntime;
 
         public TextBlock UpdateText => _form.UpdateLabel;
 
