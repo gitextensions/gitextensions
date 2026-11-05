@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Avalonia.Controls;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -142,6 +143,19 @@ public partial class FormStatus : GitExtensionsDialog
     {
         (ConsoleCommandRunner as IDisposable)?.Dispose();
         base.OnClosed(e);
+    }
+
+    // Framework constraint: Avalonia supplies a closing veto rather than CP_NOCLOSE_BUTTON.
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        // disable the control box close action
+        if (e.CloseReason == WindowCloseReason.WindowClosing && !e.IsProgrammatic)
+        {
+            e.Cancel = true;
+            return;
+        }
+
+        base.OnClosing(e);
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
