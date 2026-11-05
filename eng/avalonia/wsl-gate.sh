@@ -8,7 +8,7 @@ source_root="$(git -C "$script_dir" rev-parse --show-toplevel)"
 mirror_parent="${GITEXTENSIONS_WSL_MIRROR_PARENT:-$HOME/src}"
 mirror_root="${GITEXTENSIONS_WSL_MIRROR:-$mirror_parent/gitextensions-wsl}"
 marker_name="gitextensions-wsl-mirror-source"
-evidence_root="$source_root/eng/avalonia/parity-evidence/P0.6"
+evidence_root="${GITEXTENSIONS_RUNTIME_EVIDENCE:-$source_root/eng/avalonia/parity-evidence/P0.6}"
 
 usage()
 {

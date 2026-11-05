@@ -638,10 +638,10 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                _branchesTree.DescendantsAndSelf()
+                _branchesTree?.DescendantsAndSelf()
                     .OfType<BaseBranchLeafNode>()
                     .ForEach(node => node.IsMerged = mergedBranches.Contains(GitRefName.RefsHeadsPrefix + node.FullPath));
-                _remotesTree.DescendantsAndSelf()
+                _remotesTree?.DescendantsAndSelf()
                     .OfType<BaseBranchLeafNode>()
                     .ForEach(node => node.IsMerged = mergedBranches.Contains(GitRefName.RefsRemotesPrefix + node.FullPath));
             });

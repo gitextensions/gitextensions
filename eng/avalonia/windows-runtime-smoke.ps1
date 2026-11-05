@@ -3,13 +3,19 @@ param(
 
     [switch]$BrowseWindow,
 
-    [switch]$OpenViewMenu
+    [switch]$OpenViewMenu,
+
+    [switch]$CheckPlugins
 )
 
 $ErrorActionPreference = "Stop"
-if ($OpenViewMenu -and -not $BrowseWindow)
+if (($OpenViewMenu -or $CheckPlugins) -and -not $BrowseWindow)
 {
-    throw "The View menu can only be inspected on a Browse window."
+    throw "Menus can only be inspected on a Browse window."
+}
+if ($OpenViewMenu -and $CheckPlugins)
+{
+    throw "Inspect one menu per smoke run."
 }
 
 # parity-scaffolding: records a real Windows runtime window until the parity gate closes.
@@ -189,6 +195,10 @@ try
         $captureArguments.CaptureMethod = "Screen"
         $captureArguments.OpenViewMenu = $true
     }
+    if ($CheckPlugins)
+    {
+        $captureArguments.CheckPlugins = $true
+    }
 
     $captureOutput = & $captureScript @captureArguments
     $captureOutput | Set-Content -LiteralPath $captureLog
@@ -225,7 +235,7 @@ try
     [IO.File]::WriteAllText($stdoutLog, $stdout)
     [IO.File]::WriteAllText($stderrLog, $stderr)
     $outputCaptured = $true
-    if ("$stdout`n$stderr" -match "Unhandled exception|fatal error|JIT debugger|Avalonia.*error")
+    if ("$stdout`n$stderr" -match "(?m)Unhandled exception|fatal error|JIT debugger|Avalonia.*error|^([A-Za-z_][A-Za-z0-9_]*\.)+[A-Za-z0-9_]*Exception:")
     {
         throw "The Windows runtime logs contain a failure signature."
     }
@@ -236,7 +246,8 @@ try
         platform = "windows"
         command = "browse <temporary-repository>"
         observedSurface = if ($BrowseWindow) { "browse" } else { "prerequisiteChecklist" }
-        requestedInteraction = if ($OpenViewMenu) { "openViewMenu" } else { $null }
+        requestedInteraction = if ($OpenViewMenu) { "openViewMenu" } elseif ($CheckPlugins) { "inspectPluginsMenu" } else { $null }
+        pluginEvidence = if ($CheckPlugins) { 'window.plugins.json' } else { $null }
         captureMethod = $captureMethod
         prerequisiteScreenshot = if ([IO.File]::Exists($prerequisiteScreenshot)) { "prerequisite.png" } else { $null }
         settingsFileIsolation = "disposablePortableRuntime"
