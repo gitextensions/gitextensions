@@ -49,9 +49,9 @@ public sealed class SplitterManager
 
     internal sealed class SplitterData
     {
-        private readonly int? _defaultDistance;
-        private readonly string _settingName;
         private readonly IPersistedSplitter _splitter;
+        private readonly string _settingName;
+        private readonly int? _defaultDistance;
 
         public SplitterData(IPersistedSplitter splitter, string settingName, int? defaultDistance)
         {

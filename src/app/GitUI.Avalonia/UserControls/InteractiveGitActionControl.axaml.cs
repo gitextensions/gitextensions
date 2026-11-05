@@ -275,20 +275,27 @@ public partial class InteractiveGitActionControl : GitModuleControl
     internal TestAccessor GetTestAccessor()
         => new(this);
 
-    internal readonly struct TestAccessor(InteractiveGitActionControl control)
+    internal readonly struct TestAccessor
     {
-        internal GitAction Action => control._action;
-        internal bool HasConflicts => control._hasConflicts;
-        internal bool Visible => control.IsVisible;
-        internal Controls Controls => control.ButtonContainer.Children;
-        internal Button ResolveButton => control.ResolveButton;
-        internal Button ContinueButton => control.ContinueButton;
-        internal Button AbortButton => control.AbortButton;
-        internal Button MoreButton => control.MoreButton;
-        internal IImage? Icon => control.IconBox.Source;
-        internal double IconWidth => control.IconBox.Width;
-        internal double IconHeight => control.IconBox.Height;
-        internal TextBlock TextLabel => control.TextLabel;
-        internal void SetGitAction(GitAction action, bool conflicts) => control.SetGitAction(action, conflicts);
+        private readonly InteractiveGitActionControl _interactiveGitActionControl;
+
+        internal TestAccessor(InteractiveGitActionControl interactiveGitActionControl)
+        {
+            _interactiveGitActionControl = interactiveGitActionControl;
+        }
+
+        internal GitAction Action => _interactiveGitActionControl._action;
+        internal bool HasConflicts => _interactiveGitActionControl._hasConflicts;
+        internal bool Visible => _interactiveGitActionControl.IsVisible;
+        internal Controls Controls => _interactiveGitActionControl.ButtonContainer.Children;
+        internal Button ResolveButton => _interactiveGitActionControl.ResolveButton;
+        internal Button ContinueButton => _interactiveGitActionControl.ContinueButton;
+        internal Button AbortButton => _interactiveGitActionControl.AbortButton;
+        internal Button MoreButton => _interactiveGitActionControl.MoreButton;
+        internal IImage? Icon => _interactiveGitActionControl.IconBox.Source;
+        internal double IconWidth => _interactiveGitActionControl.IconBox.Width;
+        internal double IconHeight => _interactiveGitActionControl.IconBox.Height;
+        internal TextBlock TextLabel => _interactiveGitActionControl.TextLabel;
+        internal void SetGitAction(GitAction action, bool conflicts) => _interactiveGitActionControl.SetGitAction(action, conflicts);
     }
 }

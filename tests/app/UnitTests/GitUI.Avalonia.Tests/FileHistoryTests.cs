@@ -162,10 +162,10 @@ public sealed class FileHistoryTests
         GitUI.UserControls.FilterToolBar toolbar = new();
         GitUI.UserControls.FilterToolBar.TestAccessor controls = toolbar.GetTestAccessor();
 
-        ToolTip.GetTip(controls.ShowReflog).Should().BeNull();
-        ToolTip.GetTip(controls.ShowOnlyFirstParent).Should().BeNull();
-        controls.BranchFilter.Margin.Should().Be(new Avalonia.Thickness(1, 0, 1, 0));
-        controls.RevisionFilter.Margin.Should().Be(new Avalonia.Thickness(1, 0, 1, 0));
+        ToolTip.GetTip(controls.tsbShowReflog).Should().BeNull();
+        ToolTip.GetTip(controls.tsmiShowOnlyFirstParent).Should().BeNull();
+        controls.tscboBranchFilter.Margin.Should().Be(new Avalonia.Thickness(1, 0, 1, 0));
+        controls.tstxtRevisionFilter.Margin.Should().Be(new Avalonia.Thickness(1, 0, 1, 0));
     }
 
     [AvaloniaTest]

@@ -88,8 +88,8 @@ public sealed class RevisionFilterTests
 
         accessor.RevisionFilters[0].Should().Be("new message");
         AppSettings.RevisionFilterDropdowns[0].Should().Be("new message");
-        accessor.RevisionFilter.Text.Should().Be("new message");
-        accessor.CommitFilter.IsChecked.Should().BeTrue();
+        accessor.tstxtRevisionFilter.Text.Should().Be("new message");
+        accessor.tsmiCommitFilter.IsChecked.Should().BeTrue();
     }
 
     [AvaloniaTest]
@@ -104,16 +104,16 @@ public sealed class RevisionFilterTests
         ];
         toolbar.RefreshRevisionFunction(_ => refs);
 
-        accessor.BranchFilter.Text = "filter";
+        accessor.tscboBranchFilter.Text = "filter";
         accessor.UpdateBranchFilterItems();
 
-        accessor.BranchFilter.ItemsSource!.Cast<string>().Should().Equal("feature/filters");
+        accessor.tscboBranchFilter.ItemsSource!.Cast<string>().Should().Equal("feature/filters");
 
-        accessor.BranchFilter.Text = "absent";
+        accessor.tscboBranchFilter.Text = "absent";
         accessor.UpdateBranchFilterItems();
 
-        accessor.BranchFilter.ItemsSource!.Cast<string>().Should().Equal(TranslatedStrings.NoResultsFound);
-        accessor.BranchFilter.Text.Should().Be("absent");
+        accessor.tscboBranchFilter.ItemsSource!.Cast<string>().Should().Equal(TranslatedStrings.NoResultsFound);
+        accessor.tscboBranchFilter.Text.Should().Be("absent");
     }
 
     [AvaloniaTest]
@@ -128,13 +128,13 @@ public sealed class RevisionFilterTests
         toolbar.RefreshRevisionFunction(_ => refs);
         List<string> invalidReferences = [];
         accessor.SetInvalidReferenceHandler(invalidReferences.Add);
-        accessor.BranchFilter.Text = "main missing feature/* --first-parent main..topic";
+        accessor.tscboBranchFilter.Text = "main missing feature/* --first-parent main..topic";
 
         accessor.ApplyCustomBranchFilter(checkBranch: true);
 
         invalidReferences.Should().Equal("missing");
         revisionGridFilter.Received(1).SetAndApplyBranchFilter("main feature/* --first-parent main..topic");
-        accessor.IsApplyingFilter.Should().BeFalse();
+        accessor._isApplyingFilter.Should().BeFalse();
     }
 
     [AvaloniaTest]
@@ -142,7 +142,7 @@ public sealed class RevisionFilterTests
     {
         FilterToolBar toolbar = CreateToolbar(out IRevisionGridFilter revisionGridFilter, out _);
 
-        toolbar.GetTestAccessor().AdvancedFilter.RaiseEvent(new RoutedEventArgs(SplitButton.ClickEvent));
+        toolbar.GetTestAccessor().tsbtnAdvancedFilter.RaiseEvent(new RoutedEventArgs(SplitButton.ClickEvent));
 
         revisionGridFilter.Received(1).ShowRevisionFilterDialog();
     }

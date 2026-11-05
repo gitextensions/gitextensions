@@ -19,14 +19,14 @@ public sealed partial class CustomAvatarProvider
     {
         private readonly Func<UriTemplateData, string> _templateResolver;
 
+        public bool PerformsIo => false;
+
         public UriTemplateResolver(string uriTemplate)
         {
             // create a formatter, so we only have to parse the template once
             // and reuse the formatter for a lot of inputs / user.
             _templateResolver = BuildResolver(uriTemplate);
         }
-
-        public bool PerformsIo => false;
 
         public Task<byte[]?> GetAvatarAsync(string email, string? name, int imageSize)
         {

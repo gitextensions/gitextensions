@@ -111,7 +111,7 @@ public sealed class FilterToolBarInteractionTests
     public void Branch_completion_should_survive_the_actual_opening_release_and_editor_input(bool editorClick)
     {
         using FilterFixture fixture = new();
-        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().BranchFilter;
+        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().tscboBranchFilter;
         TextBox editor = Editor(combo);
         int opened = 0;
         int closed = 0;
@@ -142,7 +142,7 @@ public sealed class FilterToolBarInteractionTests
     public void Selecting_an_actual_completion_row_should_close_the_popup_without_the_owner_reopening_it()
     {
         using FilterFixture fixture = new();
-        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().BranchFilter;
+        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().tscboBranchFilter;
         fixture.Click(combo, new Point(combo.Bounds.Width - 4, combo.Bounds.Height / 2));
         combo.IsDropDownOpen.Should().BeTrue();
         ComboBoxItem row = combo.ContainerFromIndex(0) as ComboBoxItem
@@ -160,7 +160,7 @@ public sealed class FilterToolBarInteractionTests
     public void Branch_completion_should_keep_framework_Escape_and_outside_pointer_dismissal(bool escape)
     {
         using FilterFixture fixture = new();
-        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().BranchFilter;
+        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().tscboBranchFilter;
         fixture.Click(combo, new Point(combo.Bounds.Width - 4, combo.Bounds.Height / 2));
         combo.IsDropDownOpen.Should().BeTrue();
         if (escape)
@@ -481,7 +481,7 @@ public sealed class FilterToolBarInteractionTests
     public void Source_combo_width_should_use_Graphics_metrics_and_the_original_bounds_without_widening_the_editor(string caption)
     {
         using FilterFixture fixture = new();
-        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().RevisionFilter;
+        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().tstxtRevisionFilter;
         combo.ItemsSource = new[] { caption };
         combo.ResizeDropDownWidth();
         fixture.Settle();
@@ -507,8 +507,8 @@ public sealed class FilterToolBarInteractionTests
         fixture.Settle();
         ToolbarComboBox[] hosts =
         [
-            fixture.Toolbar.GetTestAccessor().BranchFilter,
-            fixture.Toolbar.GetTestAccessor().RevisionFilter,
+            fixture.Toolbar.GetTestAccessor().tscboBranchFilter,
+            fixture.Toolbar.GetTestAccessor().tstxtRevisionFilter,
         ];
         IBrush sourceWindow = fixture.ResourceBrush("GitExtensionsWindowBackgroundBrush");
         foreach (ToolbarComboBox host in hosts)
@@ -531,7 +531,7 @@ public sealed class FilterToolBarInteractionTests
     public void Resized_combo_should_remeasure_after_actual_control_host_typography_changes()
     {
         using FilterFixture fixture = new();
-        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().RevisionFilter;
+        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().tstxtRevisionFilter;
         const string caption = "feature/actual-source-font-allocation-for-completion";
         combo.ItemsSource = new[] { caption };
         combo.ResizeDropDownWidth();
@@ -550,7 +550,7 @@ public sealed class FilterToolBarInteractionTests
     public void Opened_combo_should_include_its_actual_vertical_scrollbar_in_the_source_width_calculation()
     {
         using FilterFixture fixture = new();
-        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().RevisionFilter;
+        ToolbarComboBox combo = fixture.Toolbar.GetTestAccessor().tstxtRevisionFilter;
         string[] captions = Enumerable.Range(0, 40).Select(index => $"feature/scrollable-source-completion-{index}").ToArray();
         combo.ItemsSource = captions;
         combo.MaxDropDownHeight = 80;
@@ -777,8 +777,8 @@ public sealed class FilterToolBarInteractionTests
 
         public void Dispose()
         {
-            Toolbar.GetTestAccessor().BranchFilter.IsDropDownOpen = false;
-            Toolbar.GetTestAccessor().RevisionFilter.IsDropDownOpen = false;
+            Toolbar.GetTestAccessor().tscboBranchFilter.IsDropDownOpen = false;
+            Toolbar.GetTestAccessor().tstxtRevisionFilter.IsDropDownOpen = false;
             foreach (TemplatedControl owner in Toolbar.Strip.Items.OfType<TemplatedControl>())
             {
                 if (owner is SplitButton split)

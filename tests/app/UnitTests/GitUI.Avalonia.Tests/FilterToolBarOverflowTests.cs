@@ -62,8 +62,8 @@ public sealed class FilterToolBarOverflowTests
             strip.HasOverflow.Should().BeFalse();
             original.Should().OnlyContain(item => strip.GetCurrentParent(item) == strip);
             original[0].Bounds.X.Should().Be(rightToLeft ? 800 - 5 - 32 : 5);
-            toolbar.GetTestAccessor().BranchFilter.Bounds.Size.Should().Be(new Size(100, 23));
-            toolbar.GetTestAccessor().RevisionFilter.Bounds.Size.Should().Be(new Size(100, 23));
+            toolbar.GetTestAccessor().tscboBranchFilter.Bounds.Size.Should().Be(new Size(100, 23));
+            toolbar.GetTestAccessor().tstxtRevisionFilter.Bounds.Size.Should().Be(new Size(100, 23));
 
             toolbar.Width = 339;
             Settle(window);
@@ -134,10 +134,10 @@ public sealed class FilterToolBarOverflowTests
                 strip.PreferredSize.Height.Should().Be(points == 9 ? 25 : 27);
             }
 
-            toolbar.GetTestAccessor().BranchFilter.FontSize.Should().Be(12);
-            toolbar.GetTestAccessor().RevisionFilter.FontSize.Should().Be(12);
-            toolbar.GetTestAccessor().BranchFilter.Bounds.Height.Should().Be(23);
-            toolbar.GetTestAccessor().RevisionFilter.Bounds.Height.Should().Be(23);
+            toolbar.GetTestAccessor().tscboBranchFilter.FontSize.Should().Be(12);
+            toolbar.GetTestAccessor().tstxtRevisionFilter.FontSize.Should().Be(12);
+            toolbar.GetTestAccessor().tscboBranchFilter.Bounds.Height.Should().Be(23);
+            toolbar.GetTestAccessor().tstxtRevisionFilter.Bounds.Height.Should().Be(23);
             toolbar.ClearValue(TemplatedControl.FontSizeProperty);
             Settle(window);
             strip.FontSize.Should().Be(12);
@@ -210,7 +210,7 @@ public sealed class FilterToolBarOverflowTests
     {
         FilterToolBar toolbar = NewToolbar(out IRevisionGridFilter revisionGridFilter);
         NativeToolStrip strip = toolbar.Strip;
-        ToolbarComboBox revision = toolbar.GetTestAccessor().RevisionFilter;
+        ToolbarComboBox revision = toolbar.GetTestAccessor().tstxtRevisionFilter;
         revision.Text = "retained revision";
         Window window = NewWindow(toolbar, rightToLeft, 800, 11);
         try
@@ -269,7 +269,7 @@ public sealed class FilterToolBarOverflowTests
         FilterToolBar toolbar = NewToolbar(out IRevisionGridFilter revisionGridFilter);
         FilterToolBar.TestAccessor accessor = toolbar.GetTestAccessor();
         NativeToolStrip strip = toolbar.Strip;
-        IconSplitButton advanced = accessor.AdvancedFilter;
+        IconSplitButton advanced = accessor.tsbtnAdvancedFilter;
         IconSplitButton branches = (IconSplitButton)strip.Items[2];
         FlyoutBase advancedFlyout = advanced.Flyout ?? throw new InvalidOperationException("The source advanced-filter flyout must exist.");
         FlyoutBase branchesFlyout = branches.Flyout ?? throw new InvalidOperationException("The source branch-mode flyout must exist.");
@@ -304,8 +304,8 @@ public sealed class FilterToolBarOverflowTests
             revisionGridFilter.Received(1).ShowCurrentBranchOnly();
             branchesFlyout.Hide();
             Settle(window);
-            accessor.ShowOnlyFirstParent.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            accessor.ShowReflog.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            accessor.tsmiShowOnlyFirstParent.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            accessor.tsbShowReflog.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             revisionGridFilter.Received(1).ToggleShowOnlyFirstParent();
             revisionGridFilter.Received(1).ToggleShowReflogReferences();
             strip.CloseOverflow();
@@ -343,10 +343,10 @@ public sealed class FilterToolBarOverflowTests
             Settle(window);
             strip.ShowOverflow();
             Settle(window);
-            toolbar.GetTestAccessor().AdvancedFilter.Foreground.Should().BeSameAs(Brushes.Magenta);
+            toolbar.GetTestAccessor().tsbtnAdvancedFilter.Foreground.Should().BeSameAs(Brushes.Magenta);
             window.Resources["GitExtensionsWindowTextBrush"] = Brushes.Lime;
             Settle(window);
-            toolbar.GetTestAccessor().AdvancedFilter.Foreground.Should().BeSameAs(Brushes.Lime);
+            toolbar.GetTestAccessor().tsbtnAdvancedFilter.Foreground.Should().BeSameAs(Brushes.Lime);
             strip.FlowDirection.Should().Be(rightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight);
             strip.Items.Should().Equal(original);
             original.Should().OnlyContain(item => item.Parent == strip);
