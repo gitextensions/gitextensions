@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Settings;
@@ -14,6 +15,7 @@ using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
+using GitUI.ConsoleEmulation;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
@@ -123,6 +125,123 @@ public sealed class ProcessDialogTests
         {
             AppSettings.CurrentTranslation = original;
         }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void FormStatus_should_refuse_title_bar_close_without_disposing_the_command_runner(bool completed)
+    {
+        IConsoleCommandRunner runner = Substitute.For<IConsoleCommandRunner, IDisposable>();
+        runner.Control.Returns(new UserControl());
+        IConsoleEmulatorsRegistry registry = Substitute.For<IConsoleEmulatorsRegistry>();
+        registry.CreateCommandController().Returns(runner);
+        using FormStatus form = new(CreateCommands(Path.GetTempPath()), registry, useDialogSettings: false);
+        int aborts = 0;
+        SetFormStatusCallback(form, "ProcessCallback", _ => { });
+        SetFormStatusCallback(form, "AbortCallback", _ => aborts++);
+        try
+        {
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
+            runner.Received(1).ResetConsole();
+            if (completed)
+            {
+                InvokeFormStatusMethod(form, "Done", true);
+            }
+
+            bool cancelled = RequestNativeClose(form, WindowCloseReason.WindowClosing);
+
+            cancelled.Should().BeTrue("the original disables the control-box close command");
+            form.IsVisible.Should().BeTrue();
+            aborts.Should().Be(0);
+            ((IDisposable)runner).DidNotReceive().Dispose();
+            runner.DidNotReceive().KillCommandProcess();
+            form.GetOutputString().Should().NotContain("Aborted");
+
+            form.Close();
+
+            form.IsVisible.Should().BeFalse("programmatic completion must still be able to close the dialog");
+            ((IDisposable)runner).Received(1).Dispose();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormStatus_should_keep_the_explicit_abort_callback_and_result()
+    {
+        IConsoleCommandRunner runner = Substitute.For<IConsoleCommandRunner, IDisposable>();
+        runner.Control.Returns(new UserControl());
+        IConsoleEmulatorsRegistry registry = Substitute.For<IConsoleEmulatorsRegistry>();
+        registry.CreateCommandController().Returns(runner);
+        using FormStatus form = new(CreateCommands(Path.GetTempPath()), registry, useDialogSettings: false);
+        int aborts = 0;
+        SetFormStatusCallback(form, "ProcessCallback", _ => { });
+        SetFormStatusCallback(form, "AbortCallback", _ => aborts++);
+        try
+        {
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
+            form.Abort.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+            aborts.Should().Be(1);
+            form.ErrorOccurred().Should().BeTrue();
+            form.GetOutputString().Should().Contain("Aborted");
+            form.DialogResult.Should().Be(GitExtensions.Shims.WinForms.DialogResult.Abort);
+            form.Ok.IsEnabled.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(WindowCloseReason.OwnerWindowClosing)]
+    [TestCase(WindowCloseReason.ApplicationShutdown)]
+    [TestCase(WindowCloseReason.OSShutdown)]
+    public void FormStatus_should_allow_owner_and_application_shutdown(WindowCloseReason reason)
+    {
+        IConsoleCommandRunner runner = Substitute.For<IConsoleCommandRunner, IDisposable>();
+        runner.Control.Returns(new UserControl());
+        IConsoleEmulatorsRegistry registry = Substitute.For<IConsoleEmulatorsRegistry>();
+        registry.CreateCommandController().Returns(runner);
+        using FormStatus form = new(CreateCommands(Path.GetTempPath()), registry, useDialogSettings: false);
+        SetFormStatusCallback(form, "ProcessCallback", _ => { });
+        try
+        {
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            RequestNativeClose(form, reason).Should().BeFalse();
+            form.Close();
+
+            form.IsVisible.Should().BeFalse();
+            ((IDisposable)runner).Received(1).Dispose();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    private static bool RequestNativeClose(Window form, WindowCloseReason reason)
+    {
+        PropertyInfo closing = typeof(Avalonia.Platform.IWindowImpl).GetProperty("Closing", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("The platform close callback could not be found.");
+        Func<WindowCloseReason, bool> requestClose = (Func<WindowCloseReason, bool>?)closing.GetValue(form.PlatformImpl)
+            ?? throw new InvalidOperationException("The window has no platform close callback.");
+        return requestClose(reason);
+    }
+
+    private static void SetFormStatusCallback(FormStatus form, string name, Action<FormStatus> callback)
+    {
+        FieldInfo field = typeof(FormStatus).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException($"FormStatus.{name} could not be found.");
+        field.SetValue(form, callback);
     }
 
     private static void InvokeFormStatusMethod(FormStatus form, string name, params object[] arguments)
