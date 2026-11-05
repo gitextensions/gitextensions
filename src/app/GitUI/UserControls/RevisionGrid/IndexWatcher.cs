@@ -118,8 +118,12 @@ public sealed class IndexWatcher : IDisposable
     /// </summary>
     public void Reset()
     {
-        RefreshWatcher();
-        IndexChanged = false;
+        lock (_syncRoot)
+        {
+            ++_generation;
+            RefreshWatcher();
+            IndexChanged = false;
+        }
     }
 
     /// <summary>
@@ -127,11 +131,17 @@ public sealed class IndexWatcher : IDisposable
     /// </summary>
     public void Clear()
     {
-        GitIndexWatcher.EnableRaisingEvents = false;
-        RefsWatcher.EnableRaisingEvents = false;
-        IndexChanged = false;
+        lock (_syncRoot)
+        {
+            ++_generation;
+            GitIndexWatcher.EnableRaisingEvents = false;
+            RefsWatcher.EnableRaisingEvents = false;
+            IndexChanged = false;
+        }
     }
 
+    private readonly object _syncRoot = new();
+    private int _generation;
     private DateTime _watchedSinceUtc;
 
     private void RefreshWatcher()
@@ -145,28 +155,48 @@ public sealed class IndexWatcher : IDisposable
     }
 
     /// <summary>
-    /// Marks the index as changed if the index or a ref has been modified since the last <see cref="Reset"/>
-    /// in a WSL repo, where the <see cref="FileSystemWatcher"/>s may not report changes
-    /// (https://github.com/microsoft/WSL/issues/4581).
+    ///  Marks the index as changed if the index or a ref has been modified since the last <see cref="Reset"/>
+    ///  in a WSL repo, where the <see cref="FileSystemWatcher"/>s may not report changes
+    ///  (https://github.com/microsoft/WSL/issues/4581).
     /// </summary>
     /// <remarks>
-    /// Only file and directory times are compared, no git command is run and the revisions are not reloaded.
-    /// Performs file system I/O, so call it from a background thread.
+    ///  Only file and directory times are compared, no git command is run and the revisions are not reloaded.
+    ///  Performs file system I/O, so call it from a background thread.
     /// </remarks>
-    public void DetectUnreportedChanges()
+    public void DetectUnreportedChangesInWsl()
     {
-        if (!_enabled || _indexChanged || _gitDirPath is null || !PathUtil.IsWslPath(_gitDirPath))
+        string gitDirPath;
+        DateTime watchedSinceUtc;
+        int generation;
+        lock (_syncRoot)
+        {
+            if (!_enabled || _indexChanged || _gitDirPath is null || !PathUtil.IsWslPath(_gitDirPath))
+            {
+                return;
+            }
+
+            gitDirPath = _gitDirPath;
+            watchedSinceUtc = _watchedSinceUtc;
+            generation = _generation;
+        }
+
+        if (!HasChangedSince(gitDirPath, Module.GitCommonDirectory, watchedSinceUtc))
         {
             return;
         }
 
-        if (HasChangedSince(_gitDirPath, Module.GitCommonDirectory, _watchedSinceUtc))
+        lock (_syncRoot)
         {
-            IndexChanged = true;
+            // The scan runs concurrently with the UI thread. Discard its result if the watcher has been reset, cleared or disposed meanwhile,
+            // otherwise a change which has already been handled by a refresh would mark the index as changed again.
+            if (_enabled && generation == _generation)
+            {
+                IndexChanged = true;
+            }
         }
     }
 
-    internal static bool HasChangedSince(string gitDirPath, string gitCommonDirPath, DateTime sinceUtc)
+    private static bool HasChangedSince(string gitDirPath, string gitCommonDirPath, DateTime sinceUtc)
     {
         try
         {
@@ -192,12 +222,22 @@ public sealed class IndexWatcher : IDisposable
 
     public void Dispose()
     {
-        _enabled = false;
+        lock (_syncRoot)
+        {
+            _enabled = false;
+        }
+
         GitIndexWatcher.EnableRaisingEvents = false;
         RefsWatcher.EnableRaisingEvents = false;
         GitIndexWatcher.Changed -= fileSystemWatcher_Changed;
         RefsWatcher.Changed -= fileSystemWatcher_Changed;
         GitIndexWatcher.Dispose();
         RefsWatcher.Dispose();
+    }
+
+    internal static class TestAccessor
+    {
+        public static bool HasChangedSince(string gitDirPath, string gitCommonDirPath, DateTime sinceUtc)
+            => IndexWatcher.HasChangedSince(gitDirPath, gitCommonDirPath, sinceUtc);
     }
 }

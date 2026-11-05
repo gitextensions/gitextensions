@@ -39,7 +39,7 @@ public sealed class IndexWatcherUnreportedChangesTests
     [Test]
     public void HasChangedSince_should_return_false_if_nothing_changed()
     {
-        IndexWatcher.HasChangedSince(_gitDir, _gitDir, _past.AddMinutes(1)).Should().BeFalse();
+        IndexWatcher.TestAccessor.HasChangedSince(_gitDir, _gitDir, _past.AddMinutes(1)).Should().BeFalse();
     }
 
     [TestCase("index")]
@@ -49,7 +49,7 @@ public sealed class IndexWatcherUnreportedChangesTests
     {
         File.SetLastWriteTimeUtc(Path.Join(_gitDir, fileName), _past.AddMinutes(2));
 
-        IndexWatcher.HasChangedSince(_gitDir, _gitDir, _past.AddMinutes(1)).Should().BeTrue();
+        IndexWatcher.TestAccessor.HasChangedSince(_gitDir, _gitDir, _past.AddMinutes(1)).Should().BeTrue();
     }
 
     [TestCase("refs")]
@@ -59,7 +59,7 @@ public sealed class IndexWatcherUnreportedChangesTests
     {
         Directory.SetLastWriteTimeUtc(Path.Join(_gitDir, directory), _past.AddMinutes(2));
 
-        IndexWatcher.HasChangedSince(_gitDir, _gitDir, _past.AddMinutes(1)).Should().BeTrue();
+        IndexWatcher.TestAccessor.HasChangedSince(_gitDir, _gitDir, _past.AddMinutes(1)).Should().BeTrue();
     }
 
     [Test]
@@ -69,7 +69,7 @@ public sealed class IndexWatcherUnreportedChangesTests
         File.WriteAllText($"{refPath}.lock", "");
         File.Move($"{refPath}.lock", refPath, overwrite: true);
 
-        IndexWatcher.HasChangedSince(_gitDir, _gitDir, _past.AddMinutes(1)).Should().BeTrue();
+        IndexWatcher.TestAccessor.HasChangedSince(_gitDir, _gitDir, _past.AddMinutes(1)).Should().BeTrue();
     }
 
     [Test]
@@ -77,6 +77,6 @@ public sealed class IndexWatcherUnreportedChangesTests
     {
         Directory.Delete(Path.Join(_gitDir, "refs"), recursive: true);
 
-        IndexWatcher.HasChangedSince(_gitDir, _gitDir, _past.AddMinutes(1)).Should().BeFalse();
+        IndexWatcher.TestAccessor.HasChangedSince(_gitDir, _gitDir, _past.AddMinutes(1)).Should().BeFalse();
     }
 }

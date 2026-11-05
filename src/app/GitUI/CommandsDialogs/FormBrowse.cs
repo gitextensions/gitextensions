@@ -1185,11 +1185,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             checkForConflicts: AppSettings.GitAsyncWhenMinimized || (WindowState != FormWindowState.Minimized));
 
         IndexWatcher indexWatcher = RevisionGrid.IndexWatcher;
-        ThreadHelper.FileAndForget(async () =>
-        {
-            await TaskScheduler.Default;
-            indexWatcher.DetectUnreportedChanges();
-        });
+        ThreadHelper.FileAndForget(indexWatcher.DetectUnreportedChangesInWsl);
     }
 
     private void UpdateStashCount()
