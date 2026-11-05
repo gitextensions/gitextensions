@@ -75,11 +75,18 @@ public class SortDiffListContextMenuItem : MenuItem
     internal TestAccessor GetTestAccessor()
         => new(this);
 
-    internal readonly struct TestAccessor(SortDiffListContextMenuItem contextMenuItem)
+    internal readonly struct TestAccessor
     {
-        public void RaiseDropDownOpening()
-            => contextMenuItem.RequerySortingMethod();
+        private readonly SortDiffListContextMenuItem _contextMenuItem;
 
-        public IReadOnlyList<MenuItem> Items => contextMenuItem.AllItems();
+        public TestAccessor(SortDiffListContextMenuItem menuitem)
+        {
+            _contextMenuItem = menuitem;
+        }
+
+        public void RaiseDropDownOpening()
+            => _contextMenuItem.RequerySortingMethod();
+
+        public IReadOnlyList<MenuItem> Items => _contextMenuItem.AllItems();
     }
 }

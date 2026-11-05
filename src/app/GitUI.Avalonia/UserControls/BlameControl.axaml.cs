@@ -944,7 +944,7 @@ public sealed partial class BlameControl : GitModuleControl
 
         public DateTime ArtificialOldBoundary => _control.ArtificialOldBoundary;
 
-        public void BuildAuthorLineForTesting(GitBlameLine line, StringBuilder lineBuilder, int lineLength, string dateTimeFormat, string filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
+        public void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, int lineLength, string dateTimeFormat, string filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
             => BlameControl.BuildAuthorLine(line, lineBuilder, lineLength, dateTimeFormat, filename, showAuthor, showAuthorDate, showOriginalFilePath, displayAuthorFirst);
 
         public (string gutter, string body, List<GitBlameEntry> gitBlameDisplays) BuildBlameContents(string filename) => _control.BuildBlameContents(filename);

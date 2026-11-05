@@ -153,7 +153,7 @@ public sealed class BlameControlTests
         {
             StringBuilder line = new();
 
-            accessor.BuildAuthorLineForTesting(_gitBlameLine, line, expectedResult.Length + 10, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+            accessor.BuildAuthorLine(_gitBlameLine, line, expectedResult.Length + 10, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
                 "fileName_different.txt", showAuthor, showAuthorDate, showFilePath, displayAuthorFirst);
 
             line.ToString().Should().StartWith(expectedResult);
@@ -165,7 +165,7 @@ public sealed class BlameControlTests
     {
         StringBuilder line = new();
 
-        new BlameControl().GetTestAccessor().BuildAuthorLineForTesting(_gitBlameLine, line, 50, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+        new BlameControl().GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, 50, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
             "fileName.txt", true, true, true, false);
 
         line.ToString().Should().StartWith("3/22/2010 - author1");

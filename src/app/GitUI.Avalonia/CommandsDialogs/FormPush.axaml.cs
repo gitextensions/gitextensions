@@ -1414,13 +1414,20 @@ public sealed partial class FormPush : GitModuleForm
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal readonly struct TestAccessor(FormPush form)
+    internal readonly struct TestAccessor
     {
-        internal IReadOnlyList<BranchPushRow> BranchRows => form._branchRows;
-        internal ArgumentString CreatePushArguments(string destination, bool track = false) => form.CreatePushArguments(destination, track);
-        internal ForcePushOptions GetForcePushOption() => form.GetForcePushOption();
-        internal void StartPullRequestAfterPush(WinFormsShims.IWin32Window? owner = null) => form.StartPullRequestAfterPush(owner);
-        internal void UpdateMultiBranchView() => form.UpdateMultiBranchView();
+        private readonly FormPush _form;
+
+        public TestAccessor(FormPush form)
+        {
+            _form = form;
+        }
+
+        internal IReadOnlyList<BranchPushRow> BranchRows => _form._branchRows;
+        internal ArgumentString CreatePushArguments(string destination, bool track = false) => _form.CreatePushArguments(destination, track);
+        internal ForcePushOptions GetForcePushOption() => _form.GetForcePushOption();
+        internal void StartPullRequestAfterPush(WinFormsShims.IWin32Window? owner = null) => _form.StartPullRequestAfterPush(owner);
+        internal void UpdateMultiBranchView() => _form.UpdateMultiBranchView();
     }
 
     internal sealed class BranchPushRow
