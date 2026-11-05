@@ -348,6 +348,28 @@ public class FileStatusListTests
     }
 
     [Test]
+    public void SetDiffs_should_keep_the_expanded_state_of_a_folder_if_its_parent_folders_change()
+    {
+        MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;
+        GitRevision firstRev = new(ObjectId.Random());
+        GitRevision secondRev = new(ObjectId.Random());
+
+        _fileStatusList.SetDiffs(firstRev, secondRev, [new("a/1"), new("a/2"), new("b/c/3"), new("b/c/4")]);
+        GetFolder("b/c").Collapse();
+
+        // The sibling folder b/d inserts the common parent folder b
+        _fileStatusList.SetDiffs(firstRev, secondRev, [new("a/1"), new("a/2"), new("b/c/3"), new("b/c/4"), new("b/d/5"), new("b/d/6")]);
+
+        GetFolder("b").IsExpanded.Should().BeTrue();
+        GetFolder("b/c").IsExpanded.Should().BeFalse();
+        GetFolder("b/d").IsExpanded.Should().BeTrue();
+
+        return;
+
+        TreeNode GetFolder(string path) => treeView.Items().Single(node => node.Tag is RelativePath folder && folder.Value == path);
+    }
+
+    [Test]
     public void SetDiffs_should_not_apply_the_expanded_state_of_the_folders_to_another_repo()
     {
         MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;

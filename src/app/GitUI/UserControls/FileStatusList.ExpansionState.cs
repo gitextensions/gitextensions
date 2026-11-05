@@ -42,10 +42,10 @@ partial class FileStatusList
 
         void AddExpansionStates(TreeNodeCollection nodes, string parentKey)
         {
-            foreach ((TreeNode node, string key) in GetExpandableNodes(nodes, parentKey))
+            foreach ((TreeNode node, string key, string childrenParentKey) in GetExpandableNodes(nodes, parentKey))
             {
                 expansionStates[key] = node.IsExpanded;
-                AddExpansionStates(node.Nodes, key);
+                AddExpansionStates(node.Nodes, childrenParentKey);
             }
         }
     }
@@ -75,7 +75,7 @@ partial class FileStatusList
 
         void RestoreExpansionStates(TreeNodeCollection nodes, string parentKey)
         {
-            foreach ((TreeNode node, string key) in GetExpandableNodes(nodes, parentKey))
+            foreach ((TreeNode node, string key, string childrenParentKey) in GetExpandableNodes(nodes, parentKey))
             {
                 if (_rememberedExpansionStates.TryGetValue(key, out bool isExpanded) && isExpanded != node.IsExpanded)
                 {
@@ -90,7 +90,7 @@ partial class FileStatusList
                     }
                 }
 
-                RestoreExpansionStates(node.Nodes, key);
+                RestoreExpansionStates(node.Nodes, childrenParentKey);
             }
         }
     }
@@ -98,10 +98,12 @@ partial class FileStatusList
     private string? GetWorkingDir() => TryGetUICommandsDirect(out IGitUICommands? commands) ? commands.Module.WorkingDir : null;
 
     /// <summary>
-    ///  Gets the nodes with children and their keys.
+    ///  Gets the nodes with children, their keys and the parent key for their children.
     ///  Siblings with the same tag, e.g. the diff groups "BASE to A" and "BASE to B", are distinguished by their order.
+    ///  Folders are keyed by their full path within their group, i.e. independently of their parent folders,
+    ///  because the compacted parent folders change if files are added or removed in sibling folders.
     /// </summary>
-    private static IEnumerable<(TreeNode Node, string Key)> GetExpandableNodes(TreeNodeCollection nodes, string parentKey)
+    private static IEnumerable<(TreeNode Node, string Key, string ChildrenParentKey)> GetExpandableNodes(TreeNodeCollection nodes, string parentKey)
     {
         Dictionary<string, int> occurrences = [];
         foreach (TreeNode node in nodes)
@@ -123,7 +125,8 @@ partial class FileStatusList
 
             int occurrence = occurrences.GetValueOrDefault(key);
             occurrences[key] = occurrence + 1;
-            yield return (node, occurrence == 0 ? $"{parentKey}|{key}" : $"{parentKey}|{key}#{occurrence}");
+            string nodeKey = occurrence == 0 ? $"{parentKey}|{key}" : $"{parentKey}|{key}#{occurrence}";
+            yield return (node, nodeKey, node.Tag is RelativePath ? parentKey : nodeKey);
         }
     }
 }
