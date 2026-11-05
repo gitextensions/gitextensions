@@ -273,7 +273,17 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    private sealed record ComboBoxItem<T>(string Text, T Value);
+    private sealed class ComboBoxItem<T>
+    {
+        public string Text { get; }
+        public T Value { get; }
+
+        public ComboBoxItem(string text, T value)
+        {
+            Text = text;
+            Value = value;
+        }
+    }
 
     internal readonly struct TestAccessor(AppearanceSettingsPage page)
     {

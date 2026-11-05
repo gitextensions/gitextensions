@@ -595,7 +595,7 @@ public sealed class SettingsDialogTests
             AppSettings.CustomHomeDir.Should().Be(temporaryDirectory);
             AppSettings.UserProfileHomeDir.Should().BeFalse();
             EnvironmentConfiguration.GetHomeDir().Should().Be(temporaryDirectory);
-            FormFixHome.TestAccessor.HasGlobalGitConfigForTesting(temporaryDirectory).Should().BeTrue();
+            FormFixHome.TestAccessor.HasGlobalGitConfig(temporaryDirectory).Should().BeTrue();
         }
         finally
         {
