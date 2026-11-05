@@ -999,15 +999,15 @@ Inactive remote is completely invisible to git.");
         public Button Delete => _form.Delete;
         public ColorPicker RemoteColor => _form.btnRemoteColor;
         public Button RemoteColorReset => _form.btnRemoteColorReset;
-        public TextBox RemoteName => _form.RemoteName;
-        public TextBox RemotePrefix => _form.txtRemotePrefix;
+        public Grid PullBehaviourDetails => _form.panelDetails;
+        public Button SaveDefaultPushPull => _form.SaveDefaultPushPull;
         public int RemoteCount => _form.Remotes.Items.OfType<RemoteListItem>().Count(item => item.Remote is not null);
         public IReadOnlyList<string> RemoteGroupHeaders => [.. _form.Remotes.Items
             .OfType<RemoteListItem>()
             .Where(item => item.Header is not null)
             .Select(item => item.Header!)];
-        public Grid PullBehaviourDetails => _form.panelDetails;
-        public Button SaveDefaultPushPull => _form.SaveDefaultPushPull;
+        public TextBox RemoteName => _form.RemoteName;
+        public TextBox RemotePrefix => _form.txtRemotePrefix;
         public Button Save => _form.Save;
         public TabControl TabControl => _form.tabControl1;
         public Button ToggleState => _form.btnToggleState;
