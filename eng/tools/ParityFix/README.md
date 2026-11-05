@@ -1,6 +1,6 @@
 # ParityFix
 
-Temporary source-parity tooling for reviewed `ParityInventory` schema 5 `types/*.json` reports.
+Temporary source-parity tooling for reviewed `ParityInventory` schema 6 `types/*.json` reports.
 Targets plain `net10.0`; belongs to neither application solution. Run from the repository root.
 
 ```powershell
@@ -14,6 +14,9 @@ dotnet artifacts/Debug/bin/ParityFix/net10.0/ParityFix.dll `
 
 The default command previews changes. Add `--apply` to write proved candidate files. Original files,
 linked sources outside the twin root, AXAML, cross-part moves and non-mechanical findings are excluded.
+Nested declarations are reordered within their own bodies and original partials. Primary constructors
+and positional record properties supply the same ordering anchors as explicit members. The recursive
+member-content proof retains every nested member body and checks unchanged directives.
 `--twin-root` can select another explicit twin project or mapped plugin directory. It must match each
 selected report root or contain every twin part in that report. Snapshot paths retain their recorded
 root for validation; only writes use the explicit boundary. Linked unchanged originals remain protected.

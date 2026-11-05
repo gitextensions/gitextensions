@@ -36,11 +36,11 @@ internal static class FrameworkDeviationClassifier
         }
 
         MemberEntry? originalDispose = original.Members.FirstOrDefault(member =>
-            member.Kind == "method"
+            member.ContainingType is null && member.Kind == "method"
             && member.Name == "Dispose"
             && member.Signature.Contains("bool disposing", StringComparison.Ordinal));
         MemberEntry? twinOnClosed = twin.Members.FirstOrDefault(member =>
-            member.Kind == "method"
+            member.ContainingType is null && member.Kind == "method"
             && member.Name == "OnClosed"
             && member.Signature.Contains("EventArgs e", StringComparison.Ordinal));
         if (originalDispose is not null && twinOnClosed is not null)
@@ -59,7 +59,7 @@ internal static class FrameworkDeviationClassifier
         }
 
         HashSet<string> originalFields = original.Members
-            .Where(member => member.Kind == "field")
+            .Where(member => member.ContainingType is null && member.Kind == "field")
             .Select(member => member.Name)
             .ToHashSet(StringComparer.Ordinal);
         foreach (CommentEntry comment in original.Comments.Where(comment =>
@@ -94,7 +94,7 @@ internal static class FrameworkDeviationClassifier
                 .ToArray());
     }
 
-    private static bool IsGeneratedDesignerMember(MemberEntry member) =>
+    private static bool IsGeneratedDesignerMember(MemberEntry member) => member.ContainingType is null &&
         member.Part.EndsWith(".Designer.cs", StringComparison.Ordinal)
         && ((member.Kind == "field" && member.Name == "components")
             || (member.Kind == "method" && member.Name == "InitializeComponent"));

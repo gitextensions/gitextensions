@@ -122,7 +122,7 @@ internal sealed class ReviewedFrameworkDeviationManifest
 
             SourceInventory memberInventory = entry.Code == "member.missing" ? original : twin;
             MemberEntry[] members = memberInventory.Members
-                .Where(member => $"{member.Kind}:{member.Name}" == memberKey)
+                .Where(member => InventoryComparer.MemberKey(member) == memberKey)
                 .ToArray();
             if (members.Length != 1)
             {
@@ -154,7 +154,7 @@ internal sealed class ReviewedFrameworkDeviationManifest
             if (entry.Code is "member.signature" or "member.partial")
             {
                 MemberEntry[] originalMembers = original.Members
-                    .Where(candidate => $"{candidate.Kind}:{candidate.Name}" == memberKey)
+                    .Where(candidate => InventoryComparer.MemberKey(candidate) == memberKey)
                     .ToArray();
                 if (originalMembers.Length != 1)
                 {
