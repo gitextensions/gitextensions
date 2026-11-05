@@ -95,7 +95,7 @@ public class CustomDiffMergeToolCache
             int result = (x != defaultTool).CompareTo(y != defaultTool);
             if (result == 0)
             {
-                result = string.Compare(x, y, StringComparison.CurrentCulture);
+                result = string.Compare(x, y, StringComparison.InvariantCulture);
             }
 
             return result != 0 ? result : string.CompareOrdinal(x, y);
@@ -145,18 +145,9 @@ public class CustomDiffMergeToolCache
         return tools;
     }
 
-    internal TestAccessor GetTestAccessor() => new(this);
-
-    internal readonly struct TestAccessor
+    internal static class TestAccessor
     {
-        private readonly CustomDiffMergeToolCache _cache;
-
-        public TestAccessor(CustomDiffMergeToolCache cache)
-        {
-            _cache = cache;
-        }
-
-        public SortedSet<string> ParseCustomDiffMergeTool(string output, string defaultTool)
+        public static SortedSet<string> ParseCustomDiffMergeTool(string output, string defaultTool)
             => CustomDiffMergeToolCache.ParseCustomDiffMergeTool(output, defaultTool);
     }
 }
