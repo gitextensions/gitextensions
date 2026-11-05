@@ -358,7 +358,7 @@ public sealed class FormCommitTests
             form.Show();
             await WaitUntilAsync(() => accessor.Amend.IsFocused);
 
-            accessor.CurrentFilesList.Should().BeSameAs(accessor.Unstaged);
+            accessor.CurrentFilesList.Should().BeSameAs(accessor.UnstagedList);
             accessor.Message.IsFocused.Should().BeFalse();
 
             using (AvaloniaControlStateDriver.Apply(
@@ -366,7 +366,7 @@ public sealed class FormCommitTests
                        new CaptureStatePlan { Id = "normal", Kind = CaptureStateKind.Normal }))
             {
                 accessor.Amend.IsFocused.Should().BeTrue();
-                accessor.CurrentFilesList.Should().BeSameAs(accessor.Unstaged);
+                accessor.CurrentFilesList.Should().BeSameAs(accessor.UnstagedList);
             }
         }
         finally
@@ -995,10 +995,12 @@ public sealed class FormCommitTests
             unstaged.SelectedItem.Should().NotBeNull();
             staged.SelectedItem.Should().BeNull("the unstaged list is selected first, matching the upstream dialog");
 
-            staged.SelectedGitItems = [staged.GitItemStatuses[0]];
+            // Enter makes the staged list current before its selection drives the preview.
+            form.GetTestAccessor().RaiseStagedEnter(byMouse: false);
             await WaitUntilAsync(() =>
                 diffEditor.Document?.Text.Contains("staged line", StringComparison.Ordinal) == true
-                && diffEditor.Document.Text.Contains("unstaged line", StringComparison.Ordinal) == false);
+                && diffEditor.Document.Text.Contains("unstaged line", StringComparison.Ordinal) == false,
+                () => $"staged current={ReferenceEquals(form.GetTestAccessor().CurrentFilesList, staged)}; selected={staged.SelectedItem}; diff={diffEditor.Document?.Text}");
             staged.SelectedItem.Should().NotBeNull();
             unstaged.SelectedItem.Should().BeNull();
             selectedDiff.GetTestAccessor().OpenWithDifftool.Should().NotBeNull(

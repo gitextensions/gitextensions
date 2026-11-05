@@ -832,15 +832,22 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
     internal TestAccessor GetTestAccessor()
         => new(this);
 
-    internal readonly struct TestAccessor(RevisionDiffControl control)
+    internal readonly struct TestAccessor
     {
-        public FileStatusList DiffFiles => control.DiffFiles;
-        public Editor.FileViewer DiffText => control.DiffText;
-        public Grid DiffSplitContainer => control.DiffSplitContainer;
-        public Blame.BlameControl BlameControl => control.BlameControl;
-        public TaskManager TaskManager => control._taskManager;
+        private readonly RevisionDiffControl _control;
+
+        public TestAccessor(RevisionDiffControl control)
+        {
+            _control = control;
+        }
+
+        public FileStatusList DiffFiles => _control.DiffFiles;
+        public Editor.FileViewer DiffText => _control.DiffText;
+        public Grid DiffSplitContainer => _control.DiffSplitContainer;
+        public Blame.BlameControl BlameControl => _control.BlameControl;
+        public TaskManager TaskManager => _control._taskManager;
 
         public void ShowSelectedFile(bool ensureNoSwitchToFilter = false, int? line = null)
-            => control.ShowSelectedFile(ensureNoSwitchToFilter, line);
+            => _control.ShowSelectedFile(ensureNoSwitchToFilter, line);
     }
 }

@@ -1526,109 +1526,116 @@ public partial class FileStatusList : GitModuleControl
     internal TestAccessor GetTestAccessor()
         => new(this);
 
-    internal readonly struct TestAccessor(FileStatusList control)
+    internal readonly struct TestAccessor
     {
-        internal WatermarkComboBox FilterComboBox => control.cboFilterComboBox;
-        internal Control FilterRow => (Control)control.cboFilterComboBox.Parent!;
-        internal TextBlock NoFilesLabel => control.NoFiles;
-        internal ListBox List => control.lstFiles;
-        internal TreeView DiffTree => control.tvDiffFiles;
-        internal TreeView Tree => control.tvFiles;
-        internal ContextMenu ContextMenu => control.ItemContextMenu;
-        internal StackPanel Toolbar => control.Toolbar;
-        internal MenuItem StageMenuItem => control.tsmiStageFile;
-        internal MenuItem UnstageMenuItem => control.tsmiUnstageFile;
-        internal MenuItem CherryPickMenuItem => control.tsmiCherryPickChanges;
-        internal MenuItem OpenWithDifftoolMenuItem => control.tsmiOpenWithDifftool;
-        internal MenuItem OpenSubmoduleMenuItem => control._NO_TRANSLATE_openSubmoduleMenuItem;
-        internal MenuItem CopyPathsMenuItem => control.tsmiCopyPaths;
-        internal SortDiffListContextMenuItem SortByContextMenuItem => control._sortByContextMenu;
-        internal Separator SortBySeparator => control._sortBySeparator;
-        internal MenuItem ResetChunkMenuItem => control.tsmiResetChunkOfFile;
-        internal MenuItem InteractiveAddMenuItem => control.tsmiInteractiveAdd;
-        internal MenuItem ResetToMenuItem => control.tsmiResetFileTo;
-        internal MenuItem ResetToSelectedMenuItem => control.tsmiResetFileToSelected;
-        internal MenuItem ResetToParentMenuItem => control.tsmiResetFileToParent;
-        internal MenuItem AddToGitIgnoreMenuItem => control.tsmiAddFileToGitIgnore;
-        internal MenuItem AddToGitInfoExcludeMenuItem => control.tsmiAddFileToGitInfoExclude;
-        internal MenuItem OpenInVisualStudioMenuItem => control.tsmiOpenInVisualStudio;
-        internal MenuItem SelectAllMenuItem => control._selectAll;
-        internal MenuItem CollapseAllMenuItem => control._collapseAll;
-        internal MenuItem ExpandAllMenuItem => control._expandAll;
-        internal MenuItem CollapseRootFoldersMenuItem => control._collapseRootFolders;
-        internal MenuItem SkipWorktreeMenuItem => control.tsmiSkipWorktree;
-        internal MenuItem AssumeUnchangedMenuItem => control.tsmiAssumeUnchanged;
-        internal MenuItem StopTrackingMenuItem => control.tsmiStopTracking;
-        internal ToggleButton ByPathButton => control.btnByPath;
-        internal ToggleButton ByExtensionButton => control.btnByExtension;
-        internal ToggleButton ByStatusButton => control.btnByStatus;
-        internal Button RefreshButton => control.btnRefresh;
-        internal Button CollapseGroupsButton => control.btnCollapseGroups;
-        internal MenuItem RefreshOnFormFocusMenuItem => control.tsmiRefreshOnFormFocus;
-        internal Separator ToolbarSeparator => control.sepToolbar;
-        internal IconSplitButton FindInFilesButton => control.btnFindInFilesGitGrep;
-        internal MenuItem FindUsingMatchCaseMenuItem => control.tsmiFindUsingMatchCase;
-        internal MenuItem FindUsingWholeWordMenuItem => control.tsmiFindUsingWholeWord;
-        internal MenuItem FindUsingOptionsMenuItem => control.tsmiFindUsingOptions;
-        internal MenuItem FindUsingBasicMenuItem => control._NO_TRANSLATE_tsmiFindUsingBasic;
-        internal MenuItem FindUsingInputBoxMenuItem => control.tsmiFindUsingInputBox;
-        internal MenuItem ShowDiffForAllParentsMenuItem => control.tsmiShowDiffForAllParents;
-        internal MenuItem ToolbarMenuItem => control.tsmiToolbar;
-        internal Grid FindInFilesPanel => control.FindInCommitFilesGitGrepPanel;
-        internal TextBlock Splitter => control.lblSplitter;
-        internal int FilteredItemsCount => control._gitItemFilteredStatuses.Count;
+        private readonly FileStatusList _fileStatusList;
+
+        internal TestAccessor(FileStatusList fileStatusList)
+        {
+            _fileStatusList = fileStatusList;
+        }
+
+        internal WatermarkComboBox FilterComboBox => _fileStatusList.cboFilterComboBox;
+        internal Control FilterRow => (Control)_fileStatusList.cboFilterComboBox.Parent!;
+        internal TextBlock NoFilesLabel => _fileStatusList.NoFiles;
+        internal ListBox List => _fileStatusList.lstFiles;
+        internal TreeView DiffTree => _fileStatusList.tvDiffFiles;
+        internal TreeView Tree => _fileStatusList.tvFiles;
+        internal ContextMenu ContextMenu => _fileStatusList.ItemContextMenu;
+        internal StackPanel Toolbar => _fileStatusList.Toolbar;
+        internal MenuItem StageMenuItem => _fileStatusList.tsmiStageFile;
+        internal MenuItem UnstageMenuItem => _fileStatusList.tsmiUnstageFile;
+        internal MenuItem CherryPickMenuItem => _fileStatusList.tsmiCherryPickChanges;
+        internal MenuItem OpenWithDifftoolMenuItem => _fileStatusList.tsmiOpenWithDifftool;
+        internal MenuItem OpenSubmoduleMenuItem => _fileStatusList._NO_TRANSLATE_openSubmoduleMenuItem;
+        internal MenuItem CopyPathsMenuItem => _fileStatusList.tsmiCopyPaths;
+        internal SortDiffListContextMenuItem SortByContextMenuItem => _fileStatusList._sortByContextMenu;
+        internal Separator SortBySeparator => _fileStatusList._sortBySeparator;
+        internal MenuItem ResetChunkMenuItem => _fileStatusList.tsmiResetChunkOfFile;
+        internal MenuItem InteractiveAddMenuItem => _fileStatusList.tsmiInteractiveAdd;
+        internal MenuItem ResetToMenuItem => _fileStatusList.tsmiResetFileTo;
+        internal MenuItem ResetToSelectedMenuItem => _fileStatusList.tsmiResetFileToSelected;
+        internal MenuItem ResetToParentMenuItem => _fileStatusList.tsmiResetFileToParent;
+        internal MenuItem AddToGitIgnoreMenuItem => _fileStatusList.tsmiAddFileToGitIgnore;
+        internal MenuItem AddToGitInfoExcludeMenuItem => _fileStatusList.tsmiAddFileToGitInfoExclude;
+        internal MenuItem OpenInVisualStudioMenuItem => _fileStatusList.tsmiOpenInVisualStudio;
+        internal MenuItem SelectAllMenuItem => _fileStatusList._selectAll;
+        internal MenuItem CollapseAllMenuItem => _fileStatusList._collapseAll;
+        internal MenuItem ExpandAllMenuItem => _fileStatusList._expandAll;
+        internal MenuItem CollapseRootFoldersMenuItem => _fileStatusList._collapseRootFolders;
+        internal MenuItem SkipWorktreeMenuItem => _fileStatusList.tsmiSkipWorktree;
+        internal MenuItem AssumeUnchangedMenuItem => _fileStatusList.tsmiAssumeUnchanged;
+        internal MenuItem StopTrackingMenuItem => _fileStatusList.tsmiStopTracking;
+        internal ToggleButton ByPathButton => _fileStatusList.btnByPath;
+        internal ToggleButton ByExtensionButton => _fileStatusList.btnByExtension;
+        internal ToggleButton ByStatusButton => _fileStatusList.btnByStatus;
+        internal Button RefreshButton => _fileStatusList.btnRefresh;
+        internal Button CollapseGroupsButton => _fileStatusList.btnCollapseGroups;
+        internal MenuItem RefreshOnFormFocusMenuItem => _fileStatusList.tsmiRefreshOnFormFocus;
+        internal Separator ToolbarSeparator => _fileStatusList.sepToolbar;
+        internal IconSplitButton FindInFilesButton => _fileStatusList.btnFindInFilesGitGrep;
+        internal MenuItem FindUsingMatchCaseMenuItem => _fileStatusList.tsmiFindUsingMatchCase;
+        internal MenuItem FindUsingWholeWordMenuItem => _fileStatusList.tsmiFindUsingWholeWord;
+        internal MenuItem FindUsingOptionsMenuItem => _fileStatusList.tsmiFindUsingOptions;
+        internal MenuItem FindUsingBasicMenuItem => _fileStatusList._NO_TRANSLATE_tsmiFindUsingBasic;
+        internal MenuItem FindUsingInputBoxMenuItem => _fileStatusList.tsmiFindUsingInputBox;
+        internal MenuItem ShowDiffForAllParentsMenuItem => _fileStatusList.tsmiShowDiffForAllParents;
+        internal MenuItem ToolbarMenuItem => _fileStatusList.tsmiToolbar;
+        internal Grid FindInFilesPanel => _fileStatusList.FindInCommitFilesGitGrepPanel;
+        internal TextBlock Splitter => _fileStatusList.lblSplitter;
+        internal int FilteredItemsCount => _fileStatusList._gitItemFilteredStatuses.Count;
 
         internal bool UpdateContextMenu()
         {
             CancelEventArgs eventArgs = new();
-            control.ItemContextMenu_Opening(control.ItemContextMenu, eventArgs);
+            _fileStatusList.ItemContextMenu_Opening(_fileStatusList.ItemContextMenu, eventArgs);
             return eventArgs.Cancel;
         }
 
-        internal bool FirstTreeRootExpanded => ((FileTreeNode)control.tvFiles.Items[0]!).IsExpanded;
+        internal bool FirstTreeRootExpanded => ((FileTreeNode)_fileStatusList.tvFiles.Items[0]!).IsExpanded;
 
         internal void SelectFirstTreeRoot()
-            => control.tvFiles.SelectedItem = control.tvFiles.Items[0];
+            => _fileStatusList.tvFiles.SelectedItem = _fileStatusList.tvFiles.Items[0];
 
         internal void SelectFirstTreeLeaf()
-            => control.tvFiles.SelectedItem = control.tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).First(node => node.Item is not null);
+            => _fileStatusList.tvFiles.SelectedItem = _fileStatusList.tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).First(node => node.Item is not null);
 
         internal void DoubleClick()
-            => control.FileStatusListView_DoubleClick(control, EventArgs.Empty);
+            => _fileStatusList.FileStatusListView_DoubleClick(_fileStatusList, EventArgs.Empty);
 
         internal void SetSort(DiffListSortType sortType)
         {
             DiffListSortService.Instance.DiffListSorting = sortType;
-            control.UpdateToolbar();
+            _fileStatusList.UpdateToolbar();
         }
 
         internal void UpdateToolbar()
-            => control.UpdateToolbar();
+            => _fileStatusList.UpdateToolbar();
 
         internal void OpenFindInFilesMenu()
-            => control.FindInFilesGitGrep_DropDownOpening(control.btnFindInFilesGitGrep, EventArgs.Empty);
+            => _fileStatusList.FindInFilesGitGrep_DropDownOpening(_fileStatusList.btnFindInFilesGitGrep, EventArgs.Empty);
 
         internal void ToggleFindInFiles()
-            => control.FindInFilesGitGrep_ButtonClick(control.btnFindInFilesGitGrep, EventArgs.Empty);
+            => _fileStatusList.FindInFilesGitGrep_ButtonClick(_fileStatusList.btnFindInFilesGitGrep, EventArgs.Empty);
 
         internal void OpenSettingsMenu()
-            => control.Settings_DropDownOpening(control.btnSettings, EventArgs.Empty);
+            => _fileStatusList.Settings_DropDownOpening(_fileStatusList.btnSettings, EventArgs.Empty);
 
         internal void EnableShowDiffForAllParents()
-            => control._enableDisablingShowDiffForAllParents = true;
+            => _fileStatusList._enableDisablingShowDiffForAllParents = true;
 
         internal void SetDiffStatusVisible(DiffBranchStatus status, bool visible)
         {
             ToggleButton button = status switch
             {
-                DiffBranchStatus.OnlyAChange => control.btnOnlyA,
-                DiffBranchStatus.OnlyBChange => control.btnOnlyB,
-                DiffBranchStatus.SameChange => control.btnSameChange,
-                DiffBranchStatus.UnequalChange => control.btnUnequalChange,
+                DiffBranchStatus.OnlyAChange => _fileStatusList.btnOnlyA,
+                DiffBranchStatus.OnlyBChange => _fileStatusList.btnOnlyB,
+                DiffBranchStatus.SameChange => _fileStatusList.btnSameChange,
+                DiffBranchStatus.UnequalChange => _fileStatusList.btnUnequalChange,
                 _ => throw new ArgumentOutOfRangeException(nameof(status)),
             };
             button.IsChecked = visible;
-            control.ApplyFilter(selectFirstItem: false);
+            _fileStatusList.ApplyFilter(selectFirstItem: false);
         }
 
         internal static IImage GetItemImageForTesting(GitItemStatus item)
@@ -1636,11 +1643,11 @@ public partial class FileStatusList : GitModuleControl
 
         // parity-scaffolding: verifies the WinForms delayed-expansion contract against Avalonia's lazy containers.
         internal void RestoreDiffTreeChildrenForTesting(bool delayExpansion, Action? afterAction = null)
-            => RestoreChildrenOfFolderNodes(control.tvDiffFiles.Items.Cast<DiffTreeNode>(), afterAction, delayExpansion);
+            => RestoreChildrenOfFolderNodes(_fileStatusList.tvDiffFiles.Items.Cast<DiffTreeNode>(), afterAction, delayExpansion);
 
         internal (int descendants, bool allExpanded) GetDiffTreeExpansionForTesting()
         {
-            DiffTreeNode[] nodes = [.. control.tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten)];
+            DiffTreeNode[] nodes = [.. _fileStatusList.tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten)];
             return (nodes.Length, nodes.All(node => node.IsExpanded));
         }
 
