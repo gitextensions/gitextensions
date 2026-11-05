@@ -118,9 +118,10 @@ public sealed class IndexWatcher : IDisposable
     {
         // Git writes "index.lock" and renames it over "index", which raises no Changed event for "index".
         // The Filter also matches renames away from "index", which are not index updates.
+        // Handle it like a change, so that the same filtering of notifications applies.
         if (e.Name == "index")
         {
-            IndexChanged = true;
+            fileSystemWatcher_Changed(sender, e);
         }
     }
 
