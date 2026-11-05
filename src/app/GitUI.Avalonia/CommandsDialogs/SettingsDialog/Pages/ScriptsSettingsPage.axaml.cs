@@ -508,7 +508,7 @@ Diff selection:
         public IReadOnlyList<ScriptInfo> GetScripts()
             => page._scripts.Select(script => (ScriptInfo)script).ToArray();
 
-        public ListBox List => page.lvScripts;
+        public ListBox lvScripts => page.lvScripts;
 
         public TextBox Name => page.txtName;
 

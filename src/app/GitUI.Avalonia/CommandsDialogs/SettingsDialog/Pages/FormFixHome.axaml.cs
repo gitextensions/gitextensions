@@ -232,6 +232,6 @@ public sealed partial class FormFixHome : GitExtensionsFormBase
 
         public bool ApplySettings() => form.ApplySettings();
 
-        public static bool HasGlobalGitConfigForTesting(string path) => FormFixHome.HasGlobalGitConfig(path);
+        public static bool HasGlobalGitConfig(string path) => FormFixHome.HasGlobalGitConfig(path);
     }
 }

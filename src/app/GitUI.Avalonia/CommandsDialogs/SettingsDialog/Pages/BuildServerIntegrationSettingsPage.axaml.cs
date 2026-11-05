@@ -172,12 +172,19 @@ public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPag
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal readonly struct TestAccessor(BuildServerIntegrationSettingsPage page)
+    internal readonly struct TestAccessor
     {
-        public ContentControl buildServerSettingsPanel => page.buildServerSettingsPanel;
-        public ComboBox BuildServerType => page.BuildServerType;
-        public CheckBox checkBoxEnableBuildServerIntegration => page.checkBoxEnableBuildServerIntegration;
-        public CheckBox checkBoxShowBuildResultPage => page.checkBoxShowBuildResultPage;
-        public JoinableTask<string[]>? PopulateBuildServerTypeTask => page._populateBuildServerTypeTask;
+        private readonly BuildServerIntegrationSettingsPage _form;
+
+        public TestAccessor(BuildServerIntegrationSettingsPage form)
+        {
+            _form = form;
+        }
+
+        public ContentControl buildServerSettingsPanel => _form.buildServerSettingsPanel;
+        public ComboBox BuildServerType => _form.BuildServerType;
+        public CheckBox checkBoxEnableBuildServerIntegration => _form.checkBoxEnableBuildServerIntegration;
+        public CheckBox checkBoxShowBuildResultPage => _form.checkBoxShowBuildResultPage;
+        public JoinableTask<string[]>? PopulateBuildServerTypeTask => _form._populateBuildServerTypeTask;
     }
 }

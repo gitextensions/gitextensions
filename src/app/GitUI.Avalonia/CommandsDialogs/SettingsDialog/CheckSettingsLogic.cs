@@ -4,9 +4,14 @@ using GitCommands.Git;
 namespace GitUI.CommandsDialogs.SettingsDialog;
 
 /// <summary>Portable settings validation used by settings pages as they are ported.</summary>
-public class CheckSettingsLogic(CommonLogic commonLogic)
+public class CheckSettingsLogic
 {
-    public readonly CommonLogic CommonLogic = commonLogic;
+    public readonly CommonLogic CommonLogic;
+
+    public CheckSettingsLogic(CommonLogic commonLogic)
+    {
+        CommonLogic = commonLogic;
+    }
 
     public bool AutoSolveAllSettings()
     {
