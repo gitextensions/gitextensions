@@ -12,9 +12,11 @@ using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.Menus;
 using GitUI.Compat;
+using GitUI.Shells;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -183,6 +185,9 @@ public sealed class TerminalLauncherTests
         captured!.FileName.Should().EndWith("powershell.exe");
         captured.WorkingDirectory.Should().Be("C:\\work\\repository");
         captured.UseShellExecute.Should().BeFalse();
+        captured.CreateNoWindow.Should().BeFalse();
+        captured.RedirectStandardOutput.Should().BeFalse();
+        captured.RedirectStandardError.Should().BeFalse();
     }
 
     [Test]
@@ -239,6 +244,119 @@ public sealed class TerminalLauncherTests
         form.toolsToolStripMenuItem.GetTestAccessor().GitBashMenuItem.Header.Should().Be("Translated Git bash menu");
     }
 
+    [AvaloniaTest]
+    public void Tools_terminal_menu_should_launch_the_selected_shell_in_the_repository()
+    {
+        RecordingTerminalLauncher launcher = new();
+        ToolsToolStripMenuItem menu = CreateToolsMenu(launcher);
+        MenuItem item = menu.GetTestAccessor().GitBashMenuItem;
+        IShellDescriptor shell = Substitute.For<IShellDescriptor>();
+        shell.Name.Returns("Configured shell");
+        shell.ExecutablePath.Returns("C:\\portable\\selected-shell.exe");
+        item.Tag = shell;
+
+        item.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        launcher.WorkingDirectory.Should().Be("/work/repository");
+        if (OperatingSystem.IsWindows())
+        {
+            launcher.ShellLaunches.Should().Be(1);
+            launcher.GenericLaunches.Should().Be(0);
+            launcher.ExecutablePath.Should().Be(shell.ExecutablePath);
+        }
+        else
+        {
+            launcher.GenericLaunches.Should().Be(1);
+            launcher.ShellLaunches.Should().Be(0);
+            launcher.ExecutablePath.Should().BeNull();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Tools_terminal_menu_should_preserve_the_platform_route_when_no_shell_is_configured()
+    {
+        RecordingTerminalLauncher launcher = new();
+        ToolsToolStripMenuItem menu = CreateToolsMenu(launcher);
+        MenuItem item = menu.GetTestAccessor().GitBashMenuItem;
+        item.Tag = null;
+
+        item.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        launcher.ShellLaunches.Should().Be(0);
+        if (OperatingSystem.IsWindows())
+        {
+            launcher.GenericLaunches.Should().Be(0);
+            launcher.WorkingDirectory.Should().BeNull();
+        }
+        else
+        {
+            launcher.GenericLaunches.Should().Be(1);
+            launcher.WorkingDirectory.Should().Be("/work/repository");
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Tools_terminal_menu_should_name_the_selected_shell_when_it_cannot_launch(bool missingExecutable)
+    {
+        RecordingTerminalLauncher launcher = new() { Failure = new InvalidOperationException("synthetic launch failure") };
+        ToolsToolStripMenuItem menu = CreateToolsMenu(launcher);
+        MenuItem item = menu.GetTestAccessor().GitBashMenuItem;
+        IShellDescriptor shell = Substitute.For<IShellDescriptor>();
+        shell.Name.Returns("Configured shell");
+        shell.ExecutablePath.Returns(missingExecutable ? null : "C:\\portable\\selected-shell.exe");
+        item.Tag = shell;
+        WinFormsShims.IMessageBoxHost? previous;
+        try
+        {
+            previous = WinFormsShims.ShimHost.MessageBoxHost;
+        }
+        catch (InvalidOperationException)
+        {
+            previous = null;
+        }
+
+        WinFormsShims.IMessageBoxHost messageBoxes = Substitute.For<WinFormsShims.IMessageBoxHost>();
+        string? message = null;
+        messageBoxes.Show(Arg.Any<WinFormsShims.IWin32Window?>(), Arg.Do<string?>(value => message = value), Arg.Any<string?>(),
+            Arg.Any<WinFormsShims.MessageBoxButtons>(), Arg.Any<WinFormsShims.MessageBoxIcon>(), Arg.Any<WinFormsShims.MessageBoxDefaultButton>())
+            .Returns(WinFormsShims.DialogResult.OK);
+        WinFormsShims.ShimHost.MessageBoxHost = messageBoxes;
+        try
+        {
+            item.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            message.Should().Contain(OperatingSystem.IsWindows() ? shell.Name : "Git bash");
+            if (OperatingSystem.IsWindows() && missingExecutable)
+            {
+                launcher.ShellLaunches.Should().Be(0);
+                launcher.GenericLaunches.Should().Be(0);
+            }
+            else
+            {
+                message.Should().Contain("synthetic launch failure");
+            }
+        }
+        finally
+        {
+            WinFormsShims.ShimHost.MessageBoxHost = previous!;
+        }
+    }
+
+    private static ToolsToolStripMenuItem CreateToolsMenu(ITerminalLauncher launcher)
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns("/work/repository");
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.GetService(typeof(ITerminalLauncher)).Returns(launcher);
+        ToolsToolStripMenuItem menu = new();
+        menu.Initialize(() => commands);
+        return menu;
+    }
+
     private static FormBrowse CreateBrowseForm(ITerminalLauncher launcher)
     {
         IGitModule module = Substitute.For<IGitModule>();
@@ -268,15 +386,30 @@ public sealed class TerminalLauncherTests
     private sealed class RecordingTerminalLauncher : ITerminalLauncher
     {
         public string? WorkingDirectory { get; private set; }
+        public string? ExecutablePath { get; private set; }
+        public int GenericLaunches { get; private set; }
+        public int ShellLaunches { get; private set; }
+        public Exception? Failure { get; init; }
 
         public void Launch(string workingDirectory)
         {
             WorkingDirectory = workingDirectory;
+            GenericLaunches++;
+            if (Failure is not null)
+            {
+                throw Failure;
+            }
         }
 
         public void LaunchShell(string workingDirectory, string executablePath)
         {
             WorkingDirectory = workingDirectory;
+            ExecutablePath = executablePath;
+            ShellLaunches++;
+            if (Failure is not null)
+            {
+                throw Failure;
+            }
         }
     }
 }

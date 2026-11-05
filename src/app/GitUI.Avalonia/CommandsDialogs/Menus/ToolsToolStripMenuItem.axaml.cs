@@ -6,6 +6,8 @@ using GitExtUtils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Compat;
 using GitUI.Infrastructure;
+using GitUI.Shells;
+using Microsoft;
 using ResourceManager;
 using ResourceManager.Hotkey;
 
@@ -114,6 +116,27 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
     // Cross-platform constraint: a confined app cannot execute a host terminal.
     private void gitBashToolStripMenuItem_Click(object? sender, EventArgs e)
     {
+        if (OperatingSystem.IsWindows())
+        {
+            if (gitBashToolStripMenuItem.Tag is not IShellDescriptor shell)
+            {
+                return;
+            }
+
+            try
+            {
+                Validates.NotNull(shell.ExecutablePath);
+
+                UICommands.GetRequiredService<ITerminalLauncher>().LaunchShell(UICommands.Module.WorkingDir, shell.ExecutablePath);
+            }
+            catch (Exception exception)
+            {
+                MessageBoxes.FailedToRunShell(OwnerForm, shell.Name, exception);
+            }
+
+            return;
+        }
+
         try
         {
             UICommands.GetRequiredService<ITerminalLauncher>().Launch(UICommands.Module.WorkingDir);
