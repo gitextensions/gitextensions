@@ -110,6 +110,7 @@ public sealed class IndexWatcher : IDisposable
     private bool _enabled;
     private string? _gitDirPath;
     private static readonly TimeSpan _fileTimeGranularity = TimeSpan.FromMilliseconds(20);
+    private static readonly DateTime _missingFileTimeUtc = DateTime.FromFileTimeUtc(0);
     private readonly Lock _resetLock = new();
     private DateTime _lastResetUtc;
     private FileSystemWatcher GitIndexWatcher { get; }
@@ -121,9 +122,12 @@ public sealed class IndexWatcher : IDisposable
         // for changes made before it, e.g. by the fetch that triggered the refresh.
         // A no longer existing file, e.g. a *.lock file renamed to the ref, has the time 1601-01-01.
         // Use the time of its directory instead, which is updated by the rename.
-        DateTime lastWriteTimeUtc = Path.Exists(e.FullPath)
-            ? File.GetLastWriteTimeUtc(e.FullPath)
-            : Directory.GetLastWriteTimeUtc(Path.GetDirectoryName(e.FullPath)!);
+        // (Check the time read instead of the existence before, else the file can vanish in between.)
+        DateTime lastWriteTimeUtc = File.GetLastWriteTimeUtc(e.FullPath);
+        if (lastWriteTimeUtc == _missingFileTimeUtc)
+        {
+            lastWriteTimeUtc = Directory.GetLastWriteTimeUtc(Path.GetDirectoryName(e.FullPath)!);
+        }
 
         // Compare and set atomically with Reset(), else a stale notification can set the state after Reset() cleared it.
         lock (_resetLock)
