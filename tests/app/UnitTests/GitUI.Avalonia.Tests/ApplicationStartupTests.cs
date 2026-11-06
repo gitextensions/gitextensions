@@ -14,6 +14,14 @@ namespace GitExtensionsTests;
 [NonParallelizable]
 public sealed class ApplicationStartupTests
 {
+    [Test]
+    public void Entry_point_should_supply_the_original_STA_apartment_for_the_Windows_clipboard()
+    {
+        typeof(Program).Assembly.EntryPoint.Should().NotBeNull();
+        typeof(Program).Assembly.EntryPoint!.IsDefined(typeof(STAThreadAttribute), inherit: false)
+            .Should().BeTrue("the CLR uses the compiled entry point, not an async Main method's attributes, to initialize Windows OLE");
+    }
+
     [TestCase(true, "wayland-0", true)]
     [TestCase(true, null, false)]
     [TestCase(true, "", false)]

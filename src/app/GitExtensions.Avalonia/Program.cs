@@ -6,6 +6,7 @@ using GitUI;
 
 namespace GitExtensions;
 
+// Framework constraint: the CLR entry point stays synchronous for STA; the Flatpak-only probe finishes before UI startup.
 internal static class Program
 {
     internal static readonly ServiceContainer ServiceContainer = new();
@@ -14,7 +15,7 @@ internal static class Program
     /// The main entry point for the application.
     /// </summary>
     [STAThread]
-    private static async Task<int> Main(string[] args)
+    private static int Main(string[] args)
     {
         ServiceContainerRegistry.RegisterServices(ServiceContainer);
 
@@ -28,7 +29,9 @@ internal static class Program
 
         if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(FlatpakConformanceProbe.ReportPathEnvironmentVariable)))
         {
-            int? flatpakConformanceExitCode = await FlatpakConformanceProbe.RunIfRequestedAsync();
+#pragma warning disable VSTHRD002
+            int? flatpakConformanceExitCode = FlatpakConformanceProbe.RunIfRequestedAsync().GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002
             return flatpakConformanceExitCode!.Value;
         }
 
