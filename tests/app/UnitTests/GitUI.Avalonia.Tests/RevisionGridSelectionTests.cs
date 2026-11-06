@@ -671,6 +671,38 @@ public sealed class RevisionGridSelectionTests
     }
 
     [AvaloniaTest]
+    public async Task Filtered_HEAD_should_place_artificial_rows_before_its_displayed_ancestor_not_an_unrelated_first_row()
+    {
+        GitModule module = CreateRepository();
+        ObjectId initial = module.GetCurrentCheckout();
+        AddCommit(module, "visible-ancestor");
+        ObjectId ancestor = module.GetCurrentCheckout();
+        AddCommit(module, "excluded-HEAD");
+        ObjectId head = module.GetCurrentCheckout();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("checkout") { "--quiet", "-b", "unrelated", initial }).Should().BeTrue();
+        Thread.Sleep(1_100);
+        AddCommit(module, "visible-unrelated");
+        ObjectId unrelated = module.GetCurrentCheckout();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("checkout") { "--quiet", "selection" }).Should().BeTrue();
+        File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "dirty");
+        RevisionGridControl control = CreateControl(module);
+        try
+        {
+            await ReloadAsync(control, module, revisionFilter: "--all --grep=visible --date-order");
+
+            control.CurrentCheckout.Should().Be(head);
+            ObjectId[] rows = control.GetTestAccessor().Revisions.Items.OfType<GitRevision>()
+                .Select(revision => revision.ObjectId).ToArray();
+            rows.Should().Equal(unrelated, ObjectId.WorkTreeId, ObjectId.IndexId, ancestor);
+            control.GetTestAccessor().HasGraphParent(ObjectId.WorkTreeId, ObjectId.IndexId).Should().BeTrue();
+        }
+        finally
+        {
+            control.CancelBackgroundTasks();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task ReloadRevisions_should_fall_back_to_the_first_real_row_when_no_requested_ancestor_is_available()
     {
         GitModule module = CreateRepository();
