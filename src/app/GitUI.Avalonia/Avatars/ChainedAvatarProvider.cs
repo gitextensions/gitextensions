@@ -7,6 +7,8 @@ public sealed class ChainedAvatarProvider : IAvatarProvider
 {
     private readonly IAvatarProvider[] _avatarProviders;
 
+    public bool PerformsIo => _avatarProviders.Length != 0 && _avatarProviders.Any(p => p.PerformsIo);
+
     public ChainedAvatarProvider(params IAvatarProvider[] avatarProviders)
     {
         _avatarProviders = avatarProviders ?? throw new ArgumentNullException(nameof(avatarProviders));
@@ -22,8 +24,6 @@ public sealed class ChainedAvatarProvider : IAvatarProvider
         ArgumentNullException.ThrowIfNull(avatarProviders);
         _avatarProviders = [.. avatarProviders];
     }
-
-    public bool PerformsIo => _avatarProviders.Length != 0 && _avatarProviders.Any(p => p.PerformsIo);
 
     /// <summary>
     /// Gets an avatar images from multiple avatar providers and returns the first hit.

@@ -23,11 +23,6 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32W
 
     protected override IServiceProvider ServiceProvider => UICommands;
 
-    /// <summary>
-    ///  Gets the <see cref="UICommandsSource"/>'s <see cref="GitUICommands"/> reference.
-    /// </summary>
-    public IGitUICommands UICommands => UICommandsSource.UICommands;
-
     // Avalonia controls are accessed on their dispatcher thread. Use the setter,
     // as the original does, so lazy discovery also initializes subscriptions.
 
@@ -68,6 +63,11 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32W
             OnUICommandsSourceSet(value);
         }
     }
+
+    /// <summary>
+    ///  Gets the <see cref="UICommandsSource"/>'s <see cref="GitUICommands"/> reference.
+    /// </summary>
+    public IGitUICommands UICommands => UICommandsSource.UICommands;
 
     /// <summary>
     /// Gets the UI commands, if they've initialised.
