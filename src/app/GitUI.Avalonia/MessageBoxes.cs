@@ -72,12 +72,6 @@ public class MessageBoxes : Translate
     public static void NotValidGitDirectory(WinFormsShims.IWin32Window? owner)
         => ShowError(owner, Instance._notValidGitDirectory.Text);
 
-    public static void SubmoduleDirectoryDoesNotExist(WinFormsShims.IWin32Window? owner, string directory, string submoduleName)
-        => ShowError(owner, string.Format(Instance._submoduleDirectoryDoesNotExist.Text, directory, submoduleName), Instance._cannotOpenSubmoduleCaption.Text);
-
-    public static void SubmoduleDirectoryDoesNotExist(WinFormsShims.IWin32Window? owner, string directory)
-        => ShowError(owner, string.Format(Instance._directoryDoesNotExist.Text, directory), Instance._cannotOpenSubmoduleCaption.Text);
-
     public static void ShowGitConfigurationExceptionMessage(WinFormsShims.IWin32Window? owner, GitConfigurationException exception)
         => Show(
             owner,
@@ -98,6 +92,12 @@ public class MessageBoxes : Translate
 
     public static void SelectOnlyOneOrTwoRevisions(WinFormsShims.IWin32Window? owner)
         => ShowError(owner, Instance._selectOnlyOneOrTwoRevisions.Text, Instance._archiveRevisionCaption.Text);
+
+    public static void SubmoduleDirectoryDoesNotExist(WinFormsShims.IWin32Window? owner, string directory, string submoduleName)
+        => ShowError(owner, string.Format(Instance._submoduleDirectoryDoesNotExist.Text, directory, submoduleName), Instance._cannotOpenSubmoduleCaption.Text);
+
+    public static void SubmoduleDirectoryDoesNotExist(WinFormsShims.IWin32Window? owner, string directory)
+        => ShowError(owner, string.Format(Instance._directoryDoesNotExist.Text, directory), Instance._cannotOpenSubmoduleCaption.Text);
 
     public static void GitExtensionsDirectoryDoesNotExist(WinFormsShims.IWin32Window? owner, string directory)
         => ShowError(owner, string.Format(Instance._directoryDoesNotExist.Text, directory), Instance._cannotOpenGitExtensionsCaption.Text);

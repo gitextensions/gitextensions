@@ -22,22 +22,6 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
     /// <inheritdoc />
     public event EventHandler<GitUICommandsChangedEventArgs>? UICommandsChanged;
 
-    /// <summary>For the visual designer and construction tests only, like WinForms.</summary>
-    protected GitModuleForm()
-    {
-    }
-
-    protected GitModuleForm(IGitUICommands? commands, bool enablePositionRestore)
-        : base(enablePositionRestore)
-    {
-        // In some cases we may want to initialise a form without a module,
-        // e.g. a process dialog that executes a git command which is completely self contained.
-        if (commands is not null)
-        {
-            UICommands = commands;
-        }
-    }
-
     public IHotkeySettingsLoader HotkeySettingsReader
         => _hotkeySettingsLoader ??= UICommands.GetRequiredService<IHotkeySettingsLoader>();
 
@@ -70,6 +54,22 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
     ///  Gets the current instance of the git module.
     /// </summary>
     public IGitModule Module => UICommands.Module;
+
+    /// <summary>For the visual designer and construction tests only, like WinForms.</summary>
+    protected GitModuleForm()
+    {
+    }
+
+    protected GitModuleForm(IGitUICommands? commands, bool enablePositionRestore)
+        : base(enablePositionRestore)
+    {
+        // In some cases we may want to initialise a form without a module,
+        // e.g. a process dialog that executes a git command which is completely self contained.
+        if (commands is not null)
+        {
+            UICommands = commands;
+        }
+    }
 
     protected override bool ExecuteCommand(int command)
     {
