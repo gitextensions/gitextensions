@@ -66,8 +66,32 @@ public class MultiSelectTreeViewTests
         treeView.SelectedNodes.Should().BeEquivalentTo([firstFile, collapsedFolder, lastFile]);
     }
 
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Dragging_the_mouse_below_the_last_row_should_select_up_to_the_last_shown_node(bool beyondBottomEdge)
+    {
+        using Form form = new() { ClientSize = new Size(300, 300) };
+        using ImageList imageList = new() { ImageSize = new Size(16, 16) };
+        using TestTreeView treeView = new() { Dock = DockStyle.Fill, FullRowSelect = true, ImageList = imageList, ShowRootLines = false };
+        form.Controls.Add(treeView);
+        TreeNode firstFile = treeView.Nodes.Add("file0.txt");
+        TreeNode secondFile = treeView.Nodes.Add("file1.txt");
+        TreeNode collapsedFolder = treeView.Nodes.Add("folder2");
+        collapsedFolder.Nodes.Add("file2a.txt");
+        _ = treeView.Handle;
+
+        treeView.MouseDownOn(firstFile);
+        treeView.MouseMoveToY(beyondBottomEdge ? treeView.ClientSize.Height + 10 : treeView.ClientSize.Height - 5);
+
+        treeView.SelectedNodes.Should().BeEquivalentTo([firstFile, secondFile, collapsedFolder]);
+        treeView.FocusedNode.Should().Be(collapsedFolder);
+    }
+
     private sealed class TestTreeView : MultiSelectTreeView
     {
+        public void MouseMoveToY(int y)
+            => OnMouseMove(new MouseEventArgs(MouseButtons.Left, clicks: 0, x: ClientSize.Width / 2, y: y, delta: 0));
+
         public void MouseDownOn(int index) => MouseDownOn(Nodes[index]);
 
         public void MouseDownOn(TreeNode node)

@@ -383,6 +383,20 @@ public class MultiSelectTreeView : NativeTreeView
         return true;
     }
 
+    /// <summary>
+    ///  Returns the bottommost node which is not hidden in a collapsed folder.
+    /// </summary>
+    private TreeNode? GetLastShownNode()
+    {
+        TreeNode? node = Nodes.Count > 0 ? Nodes[Nodes.Count - 1] : null;
+        while (node is { IsExpanded: true, LastNode: TreeNode lastChild })
+        {
+            node = lastChild;
+        }
+
+        return node;
+    }
+
     private void UpdateDragSelection(Point location)
     {
         Validates.NotNull(_dragSelectionAnchorNode);
@@ -412,6 +426,12 @@ public class MultiSelectTreeView : NativeTreeView
             scroll = false;
         }
 
+        // Below the last row, the drag selects up to the last shown node
+        if (node is null && GetLastShownNode() is TreeNode lastNode && location.Y >= lastNode.Bounds.Bottom)
+        {
+            node = lastNode;
+        }
+
         if (node is null || node == FocusedNode)
         {
             return;
@@ -419,7 +439,8 @@ public class MultiSelectTreeView : NativeTreeView
 
         if (scroll)
         {
-            node.EnsureVisible();
+            // FocusedNode does not scroll while _mouseClickHandled is set
+            node.EnsureVerticallyVisible();
         }
 
         _selectedNodes = node == _dragSelectionMouseDownNode
