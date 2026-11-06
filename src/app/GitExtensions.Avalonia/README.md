@@ -59,7 +59,7 @@ unconfined toolkit dialog or invoke `xdg-open` directly.
 ## Requirements
 
 - [.NET SDK](https://dotnet.microsoft.com/download) 10.0 or later
-- [Git](https://git-scm.com/) available on `PATH`
+- [Git](https://git-scm.com/) available on `PATH` or a configured Windows installation
 - On Linux, `setsid` from util-linux for reliable process-tree cleanup (included by standard
   desktop distributions; descendant traversal remains available when it is absent)
 - On Linux, `xdg-desktop-portal` and a desktop-appropriate backend such as
@@ -71,6 +71,10 @@ unconfined toolkit dialog or invoke `xdg-open` directly.
   - Windows 10 or later
   - Linux with an X11 or Wayland session (standard desktop distributions work out of the box)
   - macOS 11 or later on Apple Silicon
+
+On Windows, automatic Git discovery also checks `GITEXT_GIT` (an installation directory
+ending in a path separator), the Git installer registry, standard and per-user installations,
+and legacy locations. An explicitly selected executable keeps priority.
 
 ## Building
 

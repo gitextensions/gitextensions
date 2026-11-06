@@ -1,5 +1,7 @@
+using System.Runtime.Versioning;
 using GitCommands;
 using GitCommands.Git;
+using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog;
 
@@ -79,6 +81,54 @@ public class CheckSettingsLogic
                 && (File.Exists(Path.Join(path, "sh.exe")) || File.Exists(Path.Join(path, "sh")));
     }
 
+    [SupportedOSPlatform("windows")]
+    private static IEnumerable<string> GetGitLocations()
+    {
+        string? envVariable = Environment.GetEnvironmentVariable("GITEXT_GIT");
+        if (!string.IsNullOrEmpty(envVariable))
+        {
+            yield return envVariable;
+        }
+
+        yield return
+            CommonLogic.GetRegistryValue(Registry.LocalMachine,
+                             "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
+        string? programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
+        string? programFilesX86 = null;
+        if (IntPtr.Size == 8
+            || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
+        {
+            programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+        }
+
+        if (programFiles is not null)
+        {
+            yield return programFiles + @"\Git\";
+        }
+
+        if (programFilesX86 is not null)
+        {
+            yield return programFilesX86 + @"\Git\";
+        }
+
+        if (programFiles is not null)
+        {
+            yield return programFiles + @"\msysgit\";
+        }
+
+        if (programFilesX86 is not null)
+        {
+            yield return programFilesX86 + @"\msysgit\";
+        }
+
+        yield return @"C:\msysgit\";
+
+        // cygwin has old git version on windows and bash has a lot of bugs
+        yield return @"C:\cygwin\";
+        yield return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Programs", "Git\\");
+    }
+
     public static bool SolveGitExtensionsDir()
     {
         string directory = Path.TrimEndingDirectorySeparator(AppContext.BaseDirectory);
@@ -128,6 +178,7 @@ public class CheckSettingsLogic
     public bool CanFindGitCmd()
         => !string.IsNullOrEmpty(CommonLogic.Module.GitExecutable.GetOutput(arguments: "--version"));
 
+    [SupportedOSPlatform("windows")]
     private static IEnumerable<string> GetWindowsCommandLocations(string? possibleNewPath)
     {
         if (File.Exists(possibleNewPath))
@@ -140,12 +191,21 @@ public class CheckSettingsLogic
             yield return AppSettings.GitCommandValue;
         }
 
-        string? programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-        string? programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
-        foreach (string root in new[] { programFiles, programFilesX86 }.Where(path => !string.IsNullOrWhiteSpace(path)))
+        foreach (string path in GetGitLocations())
         {
-            yield return Path.Combine(root!, "Git", "cmd", "git.exe");
-            yield return Path.Combine(root!, "Git", "bin", "git.exe");
+            if (Directory.Exists(path + @"bin\"))
+            {
+                yield return path + @"bin\git.exe";
+            }
+        }
+
+        foreach (string path in GetGitLocations())
+        {
+            if (Directory.Exists(path + @"cmd\"))
+            {
+                yield return path + @"cmd\git.exe";
+                yield return path + @"cmd\git.cmd";
+            }
         }
 
         yield return "git";
