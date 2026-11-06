@@ -29,6 +29,7 @@ follow-up, and conflict recovery remain deferred with the remaining dialogs. Bro
 use the same persisted `Keys` values and XML settings as the Windows Forms application: F5
 refreshes, the currently implemented configurable Browse commands are dispatched through
 their upstream command IDs, and Escape closes dialogs without closing the repository browser.
+Dashboard loads repository-host actions before the remaining plugins, then refreshes its host links.
 Splitter settings retain the container size, logical DPI, font size and collapsed states as
 well as the distance. Restoring a layout follows its ratio or fixed pane; distances rejected
 during opening are retried after layout. Earlier native handle-sized records are converted
