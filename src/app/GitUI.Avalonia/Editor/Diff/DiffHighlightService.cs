@@ -275,6 +275,60 @@ public abstract class DiffHighlightService : TextHighlightService
             .Select(l => l.Value.LineSegment!)
             ?? [];
 
+    /// <summary>
+    /// Get next block of diffLines following beginline
+    /// </summary>
+    /// <param name="diffLines">The parsed diffLines for the document.</param>
+    /// <param name="diffLineType">The type of diffLines to find (e.g. added/removed).</param>
+    /// <param name="index">The index in diffLines to start with.</param>
+    /// <param name="found">If a lineInDiff was found. This is also used to get the added diffLines just after the removed.</param>
+    /// <returns>The block of segments.</returns>
+    private static List<ISegment> GetBlockOfLines(DiffLineInfo[] diffLines,
+        DiffLineType diffLineType,
+        ref int index,
+        bool found)
+    {
+        List<ISegment> result = [];
+        int gapLines = 0;
+        for (; index < diffLines.Length; ++index)
+        {
+            DiffLineInfo diffLine = diffLines[index];
+            if (diffLine.LineType != diffLineType)
+            {
+                if (!found)
+                {
+                    // Start of block not found yet
+                    continue;
+                }
+
+                const int maxGapLines = 5;
+                if (diffLine.LineType == DiffLineType.Context && gapLines < maxGapLines)
+                {
+                    // A gap context diffLines, the block can be extended
+                    ++gapLines;
+                    continue;
+                }
+
+                // Block ended, no more to add (next start search here)
+                break;
+            }
+
+            ArgumentNullException.ThrowIfNull(diffLine.LineSegment);
+            gapLines = 0;
+            if (diffLine.IsMovedLine)
+            {
+                // Ignore this line, seem to be moved
+                continue;
+            }
+
+            // In block, continue to add
+            found = true;
+            result.Add(diffLine.LineSegment);
+        }
+
+        return result;
+    }
+
     internal void AddDifferenceMarkers(List<TextMarker> markers, Func<ISegment, string> getText, ISegment lineRemoved, ISegment lineAdded, int beginOffset, bool dimBackground)
     {
         const int maxLength = 2000;
@@ -420,60 +474,6 @@ public abstract class DiffHighlightService : TextHighlightService
         }
 
         return (identicalAtStart, identicalAtEnd);
-    }
-
-    /// <summary>
-    /// Get next block of diffLines following beginline
-    /// </summary>
-    /// <param name="diffLines">The parsed diffLines for the document.</param>
-    /// <param name="diffLineType">The type of diffLines to find (e.g. added/removed).</param>
-    /// <param name="index">The index in diffLines to start with.</param>
-    /// <param name="found">If a lineInDiff was found. This is also used to get the added diffLines just after the removed.</param>
-    /// <returns>The block of segments.</returns>
-    private static List<ISegment> GetBlockOfLines(DiffLineInfo[] diffLines,
-        DiffLineType diffLineType,
-        ref int index,
-        bool found)
-    {
-        List<ISegment> result = [];
-        int gapLines = 0;
-        for (; index < diffLines.Length; ++index)
-        {
-            DiffLineInfo diffLine = diffLines[index];
-            if (diffLine.LineType != diffLineType)
-            {
-                if (!found)
-                {
-                    // Start of block not found yet
-                    continue;
-                }
-
-                const int maxGapLines = 5;
-                if (diffLine.LineType == DiffLineType.Context && gapLines < maxGapLines)
-                {
-                    // A gap context diffLines, the block can be extended
-                    ++gapLines;
-                    continue;
-                }
-
-                // Block ended, no more to add (next start search here)
-                break;
-            }
-
-            ArgumentNullException.ThrowIfNull(diffLine.LineSegment);
-            gapLines = 0;
-            if (diffLine.IsMovedLine)
-            {
-                // Ignore this line, seem to be moved
-                continue;
-            }
-
-            // In block, continue to add
-            found = true;
-            result.Add(diffLine.LineSegment);
-        }
-
-        return result;
     }
 
     private static TextMarker CreateAnchorMarker(int offset, Color color)

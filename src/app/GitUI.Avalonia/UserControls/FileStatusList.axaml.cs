@@ -279,6 +279,28 @@ public partial class FileStatusList : GitModuleControl
         }
     }
 
+    public void Bind(
+        Action refreshArtificial,
+        bool canAutoRefresh = false,
+        Func<ObjectId, string>? describeRevision = null,
+        Func<GitRevision, GitRevision>? getActualRevision = null,
+        bool isFileTreeMode = false)
+    {
+        Bind(refreshArtificial);
+        btnRefresh.IsVisible = true;
+        tsmiRefreshOnFormFocus.IsVisible = canAutoRefresh;
+        sepToolbar.IsVisible = canAutoRefresh;
+        DescribeRevision = describeRevision;
+        _diffCalculator.DescribeRevision = describeRevision;
+        _diffCalculator.GetActualRevision = getActualRevision;
+        SetFileTreeMode(isFileTreeMode);
+        lblSplitter.Height = isFileTreeMode ? 1 : 0;
+        if (!isFileTreeMode)
+        {
+            UpdateToolbar();
+        }
+    }
+
     /// <summary>
     ///  Selects the tree node matching the passed relative path.
     /// </summary>
@@ -742,16 +764,6 @@ public partial class FileStatusList : GitModuleControl
         }
     }
 
-    public void SelectStoredNextItem(bool orSelectFirst = false)
-    {
-        SelectedGitItem = _nextItemToSelect;
-        _nextItemToSelect = null;
-        if (orSelectFirst && SelectedItem is null)
-        {
-            SelectFirstVisibleItem();
-        }
-    }
-
     /// <summary>
     ///  Shows the given diff items.
     /// </summary>
@@ -764,6 +776,33 @@ public partial class FileStatusList : GitModuleControl
         _allListItems = [.. items.Cast<object>()];
         _allTreeItems = [];
         ApplyFilter(selectFirstItem: SelectFirstItemOnSetItems);
+    }
+
+    public void SelectStoredNextItem(bool orSelectFirst = false)
+    {
+        SelectedGitItem = _nextItemToSelect;
+        _nextItemToSelect = null;
+        if (orSelectFirst && SelectedItem is null)
+        {
+            SelectFirstVisibleItem();
+        }
+    }
+
+    /// <summary>
+    ///  Calculates and shows files changed by the given revisions.
+    /// </summary>
+    public void SetDiffs(IReadOnlyList<GitRevision> revisions)
+    {
+        FileStatusListLoading();
+        UpdateToolbar(revisions);
+        _enableDisablingShowDiffForAllParents = true;
+        _diffCalculator.SetDiff(revisions, headId: default, allowMultiDiff: false);
+        IReadOnlyList<FileStatusWithDescription> groups = _diffCalculator.Calculate(
+            prevList: [],
+            refreshDiff: true,
+            refreshGrep: false,
+            CancellationToken.None);
+        SetDiffs(groups, isFileTreeMode: false);
     }
 
     public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId headId, CancellationToken cancellationToken)
@@ -842,20 +881,21 @@ public partial class FileStatusList : GitModuleControl
     }
 
     /// <summary>
-    ///  Calculates and shows files changed by the given revisions.
+    ///  Shows files changed between two revisions.
     /// </summary>
-    public void SetDiffs(IReadOnlyList<GitRevision> revisions)
+    public void SetDiffs(GitRevision? firstRev, GitRevision secondRev, IReadOnlyList<GitItemStatus> items)
     {
         FileStatusListLoading();
-        UpdateToolbar(revisions);
-        _enableDisablingShowDiffForAllParents = true;
-        _diffCalculator.SetDiff(revisions, headId: default, allowMultiDiff: false);
-        IReadOnlyList<FileStatusWithDescription> groups = _diffCalculator.Calculate(
-            prevList: [],
-            refreshDiff: true,
-            refreshGrep: false,
-            CancellationToken.None);
-        SetDiffs(groups, isFileTreeMode: false);
+        UpdateToolbar([secondRev]);
+        SetDiffs(
+        [
+            new(
+                firstRev: firstRev,
+                secondRev: secondRev,
+                summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev?.ObjectId ?? default(ObjectId)),
+                statuses: items),
+        ],
+        isFileTreeMode: false);
     }
 
     /// <summary>
@@ -1523,8 +1563,129 @@ public partial class FileStatusList : GitModuleControl
         SetFilterState(value.Length == 0 ? FilterState.Empty : FilterState.Valid, toolTip: null);
     }
 
+    // Avalonia uses separate list and tree renderers, so renderer selection stays distinct from the source's revision-group flag.
+    private bool ShowDiffTree
+        => !_isFileTreeMode
+           && GitItemStatusesWithDescription.Count > 0
+           && (_showDiffGroups
+               || DiffListSortService.Instance.DiffListSorting is not (DiffListSortType.FilePathFlat
+                   or DiffListSortType.FileExtensionFlat
+                   or DiffListSortType.FileStatusFlat));
+
+    public override void AddTranslationItems(ITranslation translation)
+    {
+        base.AddTranslationItems(translation);
+        translation.AddTranslationItem(nameof(FileStatusList), "columnHeader", "Text", "Files");
+        tsmiCopyPaths.AddControlTranslationItems(translation);
+    }
+
+    public override void TranslateItems(ITranslation translation)
+    {
+        base.TranslateItems(translation);
+        tsmiCopyPaths.TranslateControlItems(translation);
+        ToolTip.SetTip(btnSettings, btnSettings.Content);
+    }
+
+    private IEnumerable<string?> GetSelectedFilePaths()
+        => SelectedFolder is RelativePath folder
+            ? [folder.Value]
+            : SelectedGitItems.Select(item => item.Name);
+
+    public delegate void EnterEventHandler(object? sender, EnterEventArgs e);
+
+    /// <summary>
+    ///  Gets the selected revision-aware item, or <see langword="null"/>.
+    /// </summary>
+    public FileStatusItem? SelectedFileStatusItem => _isFileTreeMode
+        ? (tvFiles.SelectedItem as FileTreeNode)?.Item
+        : ShowDiffTree
+            ? (tvDiffFiles.SelectedItem as DiffTreeNode)?.Item
+            : GetFileStatusItem(lstFiles.SelectedItem);
+
+    /// <summary>
+    ///  Gets the selected file or folder path.
+    /// </summary>
+    public RelativePath? SelectedRelativePath
+        => _isFileTreeMode && tvFiles.SelectedItem is FileTreeNode node
+            ? RelativePath.From(node.FullPath)
+            : ShowDiffTree && tvDiffFiles.SelectedItem is DiffTreeNode diffNode
+                ? diffNode.Item is not null
+                    ? RelativePath.From(diffNode.Item.Item.Name)
+                    : diffNode.FolderPath
+            : SelectedItem is FileStatusItem item
+                ? RelativePath.From(item.Item.Name)
+                : null;
+
+    /// <summary>
+    ///  Gets or sets the selection mode of the underlying list.
+    /// </summary>
+    public SelectionMode SelectionMode
+    {
+        get => lstFiles.SelectionMode;
+        set
+        {
+            lstFiles.SelectionMode = value;
+            tvDiffFiles.SelectionMode = value;
+            tvFiles.SelectionMode = value;
+        }
+    }
+
     internal TestAccessor GetTestAccessor()
         => new(this);
+
+    /// <summary>
+    ///  Shows calculated revision groups as either the ordinary diff list or a repository tree.
+    /// </summary>
+    public void SetDiffs(IReadOnlyList<FileStatusWithDescription> groups, bool isFileTreeMode)
+    {
+        SetFileTreeMode(isFileTreeMode);
+        GitItemStatusesWithDescription = isFileTreeMode ? [] : groups;
+        _showDiffGroups = !isFileTreeMode
+                          && (groups.Count > 1
+                              || (GroupByRevision && !(groups.Count == 1 && groups[0].Statuses.Count == 0)));
+        if (isFileTreeMode)
+        {
+            FileStatusItem[] items =
+            [
+                .. groups.SelectMany(group => group.Statuses.Select(
+                    item => new FileStatusItem(group.FirstRev, group.SecondRev, item, group.BaseA, group.BaseB))),
+            ];
+            SetTreeEntries(items);
+            return;
+        }
+
+        List<FileStatusEntry> entries = [];
+        foreach (FileStatusWithDescription group in groups)
+        {
+            foreach (GitItemStatus status in group.Statuses)
+            {
+                entries.Add(new FileStatusEntry(
+                    new FileStatusItem(group.FirstRev, group.SecondRev, status, group.BaseA, group.BaseB)));
+            }
+        }
+
+        _gitItemStatuses = entries.Select(entry => entry.Item.Item).ToList();
+        _allListItems = [.. entries.Cast<object>()];
+        _allTreeItems = [];
+        ApplyFilter(selectFirstItem: SelectFirstItemOnSetItems);
+    }
+
+    public void Clear()
+    {
+        ClearSelected();
+        UpdateToolbar([]);
+        _allListItems = [];
+        GitItemStatusesWithDescription = [];
+        _allTreeItems = [];
+        _gitItemFilteredStatuses = [];
+        _gitItemStatuses = [];
+        _showDiffGroups = false;
+        lstFiles.ItemsSource = null;
+        tvDiffFiles.ItemsSource = null;
+        tvFiles.ItemsSource = null;
+        SetFileStatusListVisibility(showNoFiles: true);
+        UpdateToolbar();
+    }
 
     internal readonly struct TestAccessor
     {
@@ -1653,167 +1814,6 @@ public partial class FileStatusList : GitModuleControl
 
         internal static IImage GetSubmoduleImageForTesting(GitItemStatus item, GitSubmoduleStatus? status)
             => FileStatusList.GetSubmoduleItemImageKey(item, status);
-    }
-
-    // Avalonia uses separate list and tree renderers, so renderer selection stays distinct from the source's revision-group flag.
-    private bool ShowDiffTree
-        => !_isFileTreeMode
-           && GitItemStatusesWithDescription.Count > 0
-           && (_showDiffGroups
-               || DiffListSortService.Instance.DiffListSorting is not (DiffListSortType.FilePathFlat
-                   or DiffListSortType.FileExtensionFlat
-                   or DiffListSortType.FileStatusFlat));
-
-    public override void AddTranslationItems(ITranslation translation)
-    {
-        base.AddTranslationItems(translation);
-        translation.AddTranslationItem(nameof(FileStatusList), "columnHeader", "Text", "Files");
-        tsmiCopyPaths.AddControlTranslationItems(translation);
-    }
-
-    public override void TranslateItems(ITranslation translation)
-    {
-        base.TranslateItems(translation);
-        tsmiCopyPaths.TranslateControlItems(translation);
-        ToolTip.SetTip(btnSettings, btnSettings.Content);
-    }
-
-    private IEnumerable<string?> GetSelectedFilePaths()
-        => SelectedFolder is RelativePath folder
-            ? [folder.Value]
-            : SelectedGitItems.Select(item => item.Name);
-
-    public delegate void EnterEventHandler(object? sender, EnterEventArgs e);
-
-    /// <summary>
-    ///  Gets the selected revision-aware item, or <see langword="null"/>.
-    /// </summary>
-    public FileStatusItem? SelectedFileStatusItem => _isFileTreeMode
-        ? (tvFiles.SelectedItem as FileTreeNode)?.Item
-        : ShowDiffTree
-            ? (tvDiffFiles.SelectedItem as DiffTreeNode)?.Item
-            : GetFileStatusItem(lstFiles.SelectedItem);
-
-    /// <summary>
-    ///  Gets the selected file or folder path.
-    /// </summary>
-    public RelativePath? SelectedRelativePath
-        => _isFileTreeMode && tvFiles.SelectedItem is FileTreeNode node
-            ? RelativePath.From(node.FullPath)
-            : ShowDiffTree && tvDiffFiles.SelectedItem is DiffTreeNode diffNode
-                ? diffNode.Item is not null
-                    ? RelativePath.From(diffNode.Item.Item.Name)
-                    : diffNode.FolderPath
-            : SelectedItem is FileStatusItem item
-                ? RelativePath.From(item.Item.Name)
-                : null;
-
-    /// <summary>
-    ///  Gets or sets the selection mode of the underlying list.
-    /// </summary>
-    public SelectionMode SelectionMode
-    {
-        get => lstFiles.SelectionMode;
-        set
-        {
-            lstFiles.SelectionMode = value;
-            tvDiffFiles.SelectionMode = value;
-            tvFiles.SelectionMode = value;
-        }
-    }
-
-    /// <summary>
-    ///  Shows files changed between two revisions.
-    /// </summary>
-    public void SetDiffs(GitRevision? firstRev, GitRevision secondRev, IReadOnlyList<GitItemStatus> items)
-    {
-        FileStatusListLoading();
-        UpdateToolbar([secondRev]);
-        SetDiffs(
-        [
-            new(
-                firstRev: firstRev,
-                secondRev: secondRev,
-                summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev?.ObjectId ?? default(ObjectId)),
-                statuses: items),
-        ],
-        isFileTreeMode: false);
-    }
-
-    /// <summary>
-    ///  Shows calculated revision groups as either the ordinary diff list or a repository tree.
-    /// </summary>
-    public void SetDiffs(IReadOnlyList<FileStatusWithDescription> groups, bool isFileTreeMode)
-    {
-        SetFileTreeMode(isFileTreeMode);
-        GitItemStatusesWithDescription = isFileTreeMode ? [] : groups;
-        _showDiffGroups = !isFileTreeMode
-                          && (groups.Count > 1
-                              || (GroupByRevision && !(groups.Count == 1 && groups[0].Statuses.Count == 0)));
-        if (isFileTreeMode)
-        {
-            FileStatusItem[] items =
-            [
-                .. groups.SelectMany(group => group.Statuses.Select(
-                    item => new FileStatusItem(group.FirstRev, group.SecondRev, item, group.BaseA, group.BaseB))),
-            ];
-            SetTreeEntries(items);
-            return;
-        }
-
-        List<FileStatusEntry> entries = [];
-        foreach (FileStatusWithDescription group in groups)
-        {
-            foreach (GitItemStatus status in group.Statuses)
-            {
-                entries.Add(new FileStatusEntry(
-                    new FileStatusItem(group.FirstRev, group.SecondRev, status, group.BaseA, group.BaseB)));
-            }
-        }
-
-        _gitItemStatuses = entries.Select(entry => entry.Item.Item).ToList();
-        _allListItems = [.. entries.Cast<object>()];
-        _allTreeItems = [];
-        ApplyFilter(selectFirstItem: SelectFirstItemOnSetItems);
-    }
-
-    public void Clear()
-    {
-        ClearSelected();
-        UpdateToolbar([]);
-        _allListItems = [];
-        GitItemStatusesWithDescription = [];
-        _allTreeItems = [];
-        _gitItemFilteredStatuses = [];
-        _gitItemStatuses = [];
-        _showDiffGroups = false;
-        lstFiles.ItemsSource = null;
-        tvDiffFiles.ItemsSource = null;
-        tvFiles.ItemsSource = null;
-        SetFileStatusListVisibility(showNoFiles: true);
-        UpdateToolbar();
-    }
-
-    public void Bind(
-        Action refreshArtificial,
-        bool canAutoRefresh = false,
-        Func<ObjectId, string>? describeRevision = null,
-        Func<GitRevision, GitRevision>? getActualRevision = null,
-        bool isFileTreeMode = false)
-    {
-        Bind(refreshArtificial);
-        btnRefresh.IsVisible = true;
-        tsmiRefreshOnFormFocus.IsVisible = canAutoRefresh;
-        sepToolbar.IsVisible = canAutoRefresh;
-        DescribeRevision = describeRevision;
-        _diffCalculator.DescribeRevision = describeRevision;
-        _diffCalculator.GetActualRevision = getActualRevision;
-        SetFileTreeMode(isFileTreeMode);
-        lblSplitter.Height = isFileTreeMode ? 1 : 0;
-        if (!isFileTreeMode)
-        {
-            UpdateToolbar();
-        }
     }
 
     private IEnumerable<FileStatusItem> GetVisibleFileStatusItems()
