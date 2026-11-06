@@ -1,0 +1,53 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:editor="using:GitUI.Editor"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormEditor"
+        Width="659"
+        Height="543"
+        MinWidth="420"
+        MinHeight="280"
+        WindowStartupLocation="CenterOwner"
+        Title="Editor">
+  <Grid x:Name="tableLayoutPanel1" RowDefinitions="25,Auto,*">
+    <Border x:Name="toolStrip1" Grid.Row="0">
+      <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <compat:IconButton x:Name="toolStripSaveButton"
+                           Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                           IsEnabled="False"
+                           Icon="{x:Static properties:Images.Save}"
+                           ToolTip.Tip="Save"
+                           compat:TranslationCompat.UseToolTipText="True" />
+      </StackPanel>
+    </Border>
+
+    <Border x:Name="panelMessage"
+            Grid.Row="1"
+            Margin="3"
+            Padding="5"
+            IsVisible="False"
+            Background="{DynamicResource GitExtensionsWarningPanelBackgroundBrush}">
+      <StackPanel x:Name="flowLayoutPanel1"
+                  MinHeight="50"
+                  Orientation="Horizontal"
+                  Spacing="6">
+        <Image x:Name="label1"
+               Width="22"
+               Height="22"
+               Margin="3,0,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Center"
+               Source="{x:Static properties:Images.Warning}"
+               Stretch="Uniform" />
+        <TextBlock x:Name="labelWarning"
+                   VerticalAlignment="Center"
+                   Foreground="{DynamicResource GitExtensionsWarningPanelForegroundBrush}"
+                   Text="Here be dragons!"
+                   TextWrapping="Wrap" />
+      </StackPanel>
+    </Border>
+
+    <editor:FileViewer x:Name="fileViewer" Grid.Row="2" />
+  </Grid>
+</Window>

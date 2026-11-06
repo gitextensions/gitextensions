@@ -71,7 +71,14 @@ public sealed class AsyncLoaderTests
 
         loadThread!.IsThreadPoolThread.Should().BeTrue();
         callerThread.Should().NotBeSameAs(loadThread);
-        continuationThread.Should().NotBeSameAs(loadThread);
+#if WINDOWS
+        // The Windows flavor's assembly fixture installs a WinForms UI context before constructing JoinableTaskContext.
+        continuationThread.Should().BeSameAs(callerThread);
+#else
+        // The portable fixture's shim Form installs no UI context; the documented JTF switch is a no-op.
+        // NUnit's later async-test synchronization context is not the context captured by that fixture.
+        continuationThread.Should().BeSameAs(loadThread);
+#endif
     }
 
     [Test]

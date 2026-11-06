@@ -1,0 +1,51 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions.Avalonia", "..\..\src\app\GitExtensions.Avalonia\GitExtensions.Avalonia.csproj", "{45B48612-8AAC-4599-91BB-E13864FD0B59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUI.Avalonia", "..\..\src\app\GitUI.Avalonia\GitUI.Avalonia.csproj", "{7F1ADD5E-8231-4F73-AB48-6F8D37C57662}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions.Plugins.DeleteUnusedBranches", "..\..\src\plugins\DeleteUnusedBranches\GitExtensions.Plugins.DeleteUnusedBranches.csproj", "{B65D1D1D-49D2-483A-80B4-E9036C7BF935}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions.Plugins.FindLargeFiles", "..\..\src\plugins\FindLargeFiles\GitExtensions.Plugins.FindLargeFiles.csproj", "{6619BE38-BF1E-49F7-913A-E3BD954ECEB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions.Plugins.ReleaseNotesGenerator", "..\..\src\plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.csproj", "{57CFF6D1-F866-4AAF-ABEB-DBD097B90A8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions.Plugins.GitStatistics", "..\..\src\plugins\Statistics\GitStatistics\GitExtensions.Plugins.GitStatistics.csproj", "{2DB174B8-7D81-486D-955B-DD95D22BF164}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{45B48612-8AAC-4599-91BB-E13864FD0B59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45B48612-8AAC-4599-91BB-E13864FD0B59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45B48612-8AAC-4599-91BB-E13864FD0B59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45B48612-8AAC-4599-91BB-E13864FD0B59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F1ADD5E-8231-4F73-AB48-6F8D37C57662}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F1ADD5E-8231-4F73-AB48-6F8D37C57662}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F1ADD5E-8231-4F73-AB48-6F8D37C57662}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F1ADD5E-8231-4F73-AB48-6F8D37C57662}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B65D1D1D-49D2-483A-80B4-E9036C7BF935}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B65D1D1D-49D2-483A-80B4-E9036C7BF935}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B65D1D1D-49D2-483A-80B4-E9036C7BF935}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B65D1D1D-49D2-483A-80B4-E9036C7BF935}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6619BE38-BF1E-49F7-913A-E3BD954ECEB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6619BE38-BF1E-49F7-913A-E3BD954ECEB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6619BE38-BF1E-49F7-913A-E3BD954ECEB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6619BE38-BF1E-49F7-913A-E3BD954ECEB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57CFF6D1-F866-4AAF-ABEB-DBD097B90A8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57CFF6D1-F866-4AAF-ABEB-DBD097B90A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57CFF6D1-F866-4AAF-ABEB-DBD097B90A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57CFF6D1-F866-4AAF-ABEB-DBD097B90A8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DB174B8-7D81-486D-955B-DD95D22BF164}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DB174B8-7D81-486D-955B-DD95D22BF164}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DB174B8-7D81-486D-955B-DD95D22BF164}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DB174B8-7D81-486D-955B-DD95D22BF164}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

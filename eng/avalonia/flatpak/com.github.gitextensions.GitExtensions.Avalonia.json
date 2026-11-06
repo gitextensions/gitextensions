@@ -1,0 +1,81 @@
+{
+  "id": "com.github.gitextensions.GitExtensions.Avalonia",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "25.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "GitExtensions.Avalonia",
+  "finish-args": [
+    "--share=ipc",
+    "--share=network",
+    "--socket=wayland",
+    "--socket=ssh-auth",
+    "--device=dri",
+    "--filesystem=host"
+  ],
+  "modules": [
+    {
+      "name": "openssh",
+      "buildsystem": "simple",
+      "build-commands": [
+        "autoreconf -fi",
+        "./configure --prefix=/app --sysconfdir=/app/etc/ssh --with-privsep-path=/app/var/empty --without-pam --without-selinux --without-kerberos5 --without-libedit",
+        "make -j${FLATPAK_BUILDER_N_JOBS}",
+        "make install-nokeys"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/openssh/openssh-portable.git",
+          "commit": "d14e182ebd0c66e2cae7ec6a4f93ebbf4a4e0851",
+          "tag": "V_10_0_P1"
+        }
+      ]
+    },
+    {
+      "name": "git",
+      "buildsystem": "simple",
+      "build-commands": [
+        "make -j${FLATPAK_BUILDER_N_JOBS} prefix=/app NO_TCLTK=YesPlease NO_PERL=YesPlease NO_GETTEXT=YesPlease",
+        "make prefix=/app NO_TCLTK=YesPlease NO_PERL=YesPlease NO_GETTEXT=YesPlease install"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/git/git.git",
+          "commit": "c44beea485f0f2feaf460e2ac87fdd5608d63cf0",
+          "tag": "v2.51.0"
+        }
+      ]
+    },
+    {
+      "name": "gitextensions-avalonia",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -d /app/bin /app/share/applications /app/share/metainfo /app/share/icons/hicolor/512x512/apps",
+        "cp -a publish/. /app/bin/",
+        "install -Dm644 com.github.gitextensions.GitExtensions.Avalonia.desktop /app/share/applications/com.github.gitextensions.GitExtensions.Avalonia.desktop",
+        "install -Dm644 com.github.gitextensions.GitExtensions.Avalonia.metainfo.xml /app/share/metainfo/com.github.gitextensions.GitExtensions.Avalonia.metainfo.xml",
+        "install -Dm644 git-extensions-logo-512px.png /app/share/icons/hicolor/512x512/apps/com.github.gitextensions.GitExtensions.Avalonia.png"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": "publish",
+          "dest": "publish"
+        },
+        {
+          "type": "file",
+          "path": "com.github.gitextensions.GitExtensions.Avalonia.desktop"
+        },
+        {
+          "type": "file",
+          "path": "com.github.gitextensions.GitExtensions.Avalonia.metainfo.xml"
+        },
+        {
+          "type": "file",
+          "path": "../../../setup/assets/Logo/git-extensions-logo-512px.png"
+        }
+      ]
+    }
+  ]
+}

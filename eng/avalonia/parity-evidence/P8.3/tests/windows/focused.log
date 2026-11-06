@@ -1,0 +1,38 @@
+
+  ParityCaptureSchema -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityCaptureSchema\net10.0\ParityCaptureSchema.dll
+  ImagesResxToAvalonia -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ImagesResxToAvalonia\net10.0\ImagesResxToAvalonia.dll
+  SpellChecker -> C:\Users\Begota\Documents\GitHub\gitextensions\externals\NetSpell.SpellChecker\bin\Debug\net10.0\SpellChecker.dll
+  GitExtensions.Shims.WinForms -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Shims.WinForms\net10.0\GitExtensions.Shims.WinForms.dll
+  GitExtensions.Extensibility -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Extensibility\net10.0\GitExtensions.Extensibility.dll
+  GitExtUtils -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtUtils\net10.0\GitExtUtils.dll
+  GitUIPluginInterfaces -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitUIPluginInterfaces\net10.0\GitUIPluginInterfaces.dll
+  GitCommands -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitCommands\net10.0\GitCommands.dll
+  ResourceManager -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ResourceManager\net10.0\ResourceManager.dll
+  GitUI.Avalonia -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitUI.Avalonia\net10.0\GitUI.Avalonia.dll
+  GitExtensions.Plugins.AutoCompileSubmodules -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\AutoCompileSubmodules\GitExtensions.Plugins.AutoCompileSubmodules.dll
+  GitExtensions.Plugins.BackgroundFetch -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\BackgroundFetch\GitExtensions.Plugins.BackgroundFetch.dll
+  GitExtensions.Plugins.CreateLocalBranches -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\CreateLocalBranches\GitExtensions.Plugins.CreateLocalBranches.dll
+  GitExtensions.Plugins.DeleteUnusedBranches -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\DeleteUnusedBranches\GitExtensions.Plugins.DeleteUnusedBranches.dll
+  GitExtensions.Plugins.FindLargeFiles -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\FindLargeFiles\GitExtensions.Plugins.FindLargeFiles.dll
+  Git.hub.Portable -> C:\Users\Begota\Documents\GitHub\gitextensions\externals\Git.hub.Portable\bin\Debug\net10.0\Git.hub.Portable.dll
+  GitExtensions.Plugins.GitHub3 -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\GitHub3\GitExtensions.Plugins.GitHub3.dll
+  GitExtensions.Plugins.Gource -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\Gource\GitExtensions.Plugins.Gource.dll
+  GitExtensions.Plugins.GitImpact -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\GitImpact\GitExtensions.Plugins.GitImpact.dll
+  GitExtensions.Plugins.GitStatistics -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\GitStatistics\GitExtensions.Plugins.GitStatistics.dll
+  GitExtensions.Plugins.ProxySwitcher -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\ProxySwitcher\GitExtensions.Plugins.ProxySwitcher.dll
+  GitExtensions.Plugins.ReleaseNotesGenerator -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.dll
+  GitExtensions.Plugins.AppVeyorIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.dll
+  GitExtensions.Plugins.AzureDevOpsIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\AzureDevOpsIntegration\GitExtensions.Plugins.AzureDevOpsIntegration.dll
+  GitExtensions.Plugins.GitHubActionsIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\GitHubActionsIntegration\GitExtensions.Plugins.GitHubActionsIntegration.dll
+  GitExtensions.Plugins.GitlabIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\GitlabIntegration\GitExtensions.Plugins.GitlabIntegration.dll
+  GitExtensions.Plugins.JenkinsIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\JenkinsIntegration\GitExtensions.Plugins.JenkinsIntegration.dll
+  GitExtensions.Plugins.TeamCityIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\Plugins\TeamCityIntegration\GitExtensions.Plugins.TeamCityIntegration.dll
+  GitExtensions.Avalonia -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Avalonia\net10.0\GitExtensions.Avalonia.dll
+  CommonTestUtils -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\CommonTestUtils\net10.0\CommonTestUtils.dll
+  GitUI.Avalonia.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitUI.Avalonia.Tests\net10.0\GitUI.Avalonia.Tests.dll
+Test run for C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitUI.Avalonia.Tests\net10.0\GitUI.Avalonia.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+WARNING: Overwriting results file: C:\Users\Begota\Documents\GitHub\gitextensions\eng\avalonia\parity-evidence\P8.3\tests\windows\P8.3-focused.trx
+Results File: C:\Users\Begota\Documents\GitHub\gitextensions\eng\avalonia\parity-evidence\P8.3\tests\windows\P8.3-focused.trx
+
+Passed!  - Failed:     0, Passed:    31, Skipped:     0, Total:    31, Duration: 1 s - GitUI.Avalonia.Tests.dll (net10.0)

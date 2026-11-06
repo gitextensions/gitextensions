@@ -1,0 +1,20 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.GitConfigAdvancedSettingsPage"
+                                 Text="Advanced">
+  <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <Grid x:Name="tlpnlMain" Margin="0" ColumnDefinitions="Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" HorizontalAlignment="Left">
+      <Label x:Name="lblPullFF" Grid.Row="0" Classes="gitextensions-dialog-label" VerticalAlignment="Center" Margin="3" Content="Fast-forward behavior when pulling" />
+      <Label x:Name="lblPullRebase" Grid.Row="1" Classes="gitextensions-dialog-label" VerticalAlignment="Center" Margin="3" Content="Rebase local branch when pulling (instead of merge)" />
+      <Label x:Name="lblFetchPrune" Grid.Row="2" Classes="gitextensions-dialog-label" VerticalAlignment="Center" Margin="3" Content="Prune remote branches during fetch" />
+      <Label x:Name="lblMergeAutoStash" Grid.Row="3" Classes="gitextensions-dialog-label" VerticalAlignment="Center" Margin="3" Content="Automatically stash before doing a merge" />
+      <Label x:Name="lblRebaseAutostash" Grid.Row="4" Classes="gitextensions-dialog-label" VerticalAlignment="Center" Margin="3" Content="Automatically stash before doing a rebase" />
+      <Label x:Name="lblRebaseAutosquash" Grid.Row="5" Classes="gitextensions-dialog-label" VerticalAlignment="Center" Margin="3" Content="Automatically squash commits when doing an interactive rebase" />
+      <Label x:Name="lblUpdateRefs" Grid.Row="6" Classes="gitextensions-dialog-label" VerticalAlignment="Center" Margin="3" Content="Rebase also dependent branches" />
+      <Label x:Name="lblReReReEnabled" Grid.Row="7" Classes="gitextensions-dialog-label" VerticalAlignment="Center" Margin="3" Content="Reuse recorded resolution of conflicted merges" />
+      <Label x:Name="lblReReReAutoUpdate" Grid.Row="8" Classes="gitextensions-dialog-label" VerticalAlignment="Center" Margin="3" Content="Automatically apply recorded resolution of conflicted merges" />
+      <Label x:Name="lblStatusShowUntrackedFiles" Grid.Row="9" Classes="gitextensions-dialog-label" VerticalAlignment="Center" Margin="3" Content="Show untracked files" />
+    </Grid>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>

@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.SubmodulesDialog.FormAddSubmodule"
+        Width="492" SizeToContent="Height"
+        MinWidth="420"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Add submodule">
+  <Grid Classes="gitextensions-dialog-main"
+        ColumnDefinitions="122,*,102"
+        RowDefinitions="Auto,Auto,Auto,Auto"
+        ColumnSpacing="8"
+        RowSpacing="6">
+    <TextBlock x:Name="label1" Text="Path to submodule" VerticalAlignment="Center" />
+    <ComboBox x:Name="Directory"
+              Grid.Column="1"
+              HorizontalAlignment="Stretch"
+              IsEditable="True" />
+    <Button x:Name="Browse"
+            Classes="gitextensions-dialog-action"
+            Grid.Column="2"
+            Width="102"
+            Content="Browse" />
+
+    <TextBlock x:Name="label2" Grid.Row="1" Text="Local path" VerticalAlignment="Center" />
+    <TextBox x:Name="LocalPath" Grid.Row="1" Grid.Column="1" />
+
+    <TextBlock x:Name="label3" Grid.Row="2" Text="Branch" VerticalAlignment="Center" />
+    <ComboBox x:Name="Branch"
+              Grid.Row="2" Grid.Column="1"
+              HorizontalAlignment="Stretch"
+              IsEditable="True" />
+
+    <CheckBox x:Name="chkForce"
+              Grid.Row="3"
+              Content="Force"
+              VerticalAlignment="Center" />
+    <Button x:Name="Add"
+            Classes="gitextensions-dialog-action"
+            Grid.Row="3" Grid.Column="2"
+            Width="102"
+            Content="Add"
+            IsDefault="True" />
+  </Grid>
+</Window>
