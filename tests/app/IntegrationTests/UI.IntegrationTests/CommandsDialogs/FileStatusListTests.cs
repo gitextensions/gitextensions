@@ -370,6 +370,30 @@ public class FileStatusListTests
     }
 
     [Test]
+    public void SetDiffs_should_keep_the_expanded_state_of_the_folders_collapsed_by_the_git_grep_workaround()
+    {
+        FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
+        MultiSelectTreeView treeView = accessor.FileStatusListView;
+        GitRevision firstRev = new(ObjectId.Random());
+        GitRevision secondRev = new(ObjectId.Random());
+        GitItemStatus[] items = [new("a/1"), new("a/2"), new("b/3"), new("b/4")];
+
+        _fileStatusList.SetDiffs(firstRev, secondRev, items);
+        GetFolder("b").Collapse();
+
+        // Starting or clearing a git-grep search collapses the displayed tree before it is replaced
+        accessor.WorkaroundTooEarlyDrawing();
+        _fileStatusList.SetDiffs(firstRev, secondRev, items);
+
+        GetFolder("a").IsExpanded.Should().BeTrue();
+        GetFolder("b").IsExpanded.Should().BeFalse();
+
+        return;
+
+        TreeNode GetFolder(string path) => treeView.Nodes.Cast<TreeNode>().Single(node => node.Tag is RelativePath folder && folder.Value == path);
+    }
+
+    [Test]
     public void SetDiffs_should_not_apply_the_expanded_state_of_the_folders_to_another_repo()
     {
         MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;

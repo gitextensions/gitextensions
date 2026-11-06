@@ -95,6 +95,15 @@ partial class FileStatusList
         }
     }
 
+    private void WorkaroundTooEarlyDrawing()
+    {
+        // Store the state set by the user before it is overwritten, and not the forced collapsed state on the next update
+        RememberExpansionStates();
+        _isExpansionStateOfDisplayedNodesRemembered = false;
+
+        FileStatusListView.CollapseAll();
+    }
+
     private string? GetWorkingDir() => TryGetUICommandsDirect(out IGitUICommands? commands) ? commands.Module.WorkingDir : null;
 
     /// <summary>

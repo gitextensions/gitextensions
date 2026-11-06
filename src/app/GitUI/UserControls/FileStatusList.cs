@@ -2142,11 +2142,6 @@ public sealed partial class FileStatusList : GitModuleControl
                     cboFindInCommitFilesGitGrep.SelectedIndexChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
                 }
             }
-
-            void WorkaroundTooEarlyDrawing()
-            {
-                FileStatusListView.CollapseAll();
-            }
         });
     }
 
@@ -2216,5 +2211,6 @@ public sealed partial class FileStatusList : GitModuleControl
         internal bool FilterWatermarkLabelVisible => _fileStatusList.cboFilterComboBox.IsWatermarkVisible;
         internal void StoreFilter(string value) => _fileStatusList.StoreFilter(value);
         internal void SetFileStatusListVisibility(bool showNoFiles) => _fileStatusList.SetFileStatusListVisibility(showNoFiles);
+        internal void WorkaroundTooEarlyDrawing() => _fileStatusList.WorkaroundTooEarlyDrawing();
     }
 }
