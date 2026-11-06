@@ -29,6 +29,9 @@ follow-up, and conflict recovery remain deferred with the remaining dialogs. Bro
 use the same persisted `Keys` values and XML settings as the Windows Forms application: F5
 refreshes, the currently implemented configurable Browse commands are dispatched through
 their upstream command IDs, and Escape closes dialogs without closing the repository browser.
+On Windows, selecting Plink enables the original PuTTY recovery dialogs: load a private key
+through Pageant, confirm an unknown host key, and retry the remote command. Linux and macOS
+use OpenSSH and the process dialog's existing input instead.
 On Linux with `setsid` available, commands shown in the process dialog run in an isolated
 process group so cancelling the dialog also terminates descendant processes, including
 children that have been re-parented.

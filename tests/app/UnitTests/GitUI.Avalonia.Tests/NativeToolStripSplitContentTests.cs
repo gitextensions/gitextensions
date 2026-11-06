@@ -425,7 +425,7 @@ public sealed class NativeToolStripSplitContentTests
         WorkingDirectoryToolStripSplitButton button = new()
         {
             UseNativeToolStripLayout = true,
-            FontFamily = new FontFamily("Segoe UI"),
+            FontFamily = new FontFamily(OperatingSystem.IsWindows() ? "Segoe UI" : "DejaVu Sans"),
             FontSize = points * 96d / 72,
             FontWeight = FontWeight.Normal,
             FontStyle = FontStyle.Normal,
