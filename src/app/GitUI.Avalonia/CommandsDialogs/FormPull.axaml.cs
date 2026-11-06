@@ -113,6 +113,26 @@ public sealed partial class FormPull : GitExtensionsDialog
         InitializeComplete();
     }
 
+    public bool ErrorOccurred { get; private set; }
+
+    private void ApplySourceAutoSize()
+    {
+        WinFormsAutoSizeContentControl.Attach(PullFromRemote, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(PullFromUrl, 25, 19);
+        WinFormsAutoSizeContentControl.Attach(Merge, 41, 21);
+        WinFormsAutoSizeContentControl.Attach(Rebase, 41, 21);
+        WinFormsAutoSizeContentControl.Attach(Fetch, 25, 21);
+        WinFormsAutoSizeContentControl.Attach(ReachableTags, 25, 21);
+        WinFormsAutoSizeContentControl.Attach(NoTags, 25, 21);
+        WinFormsAutoSizeContentControl.Attach(AllTags, 25, 21);
+        WinFormsAutoSizeContentControl.Attach(Unshallow, 26, 19);
+        WinFormsAutoSizeContentControl.Attach(Prune, 26, 19);
+        WinFormsAutoSizeContentControl.Attach(PruneTags, 26, 19);
+        WinFormsAutoSizeContentControl.Attach(AutoStash, 26, 19);
+        WinFormsAutoSizeContentControl.Attach(lblLocalBranch, 7, 15);
+        WinFormsAutoSizeContentControl.Attach(lblRemoteBranch, 7, 15);
+    }
+
     public FormPull(GitUICommands commands, string? defaultRemoteBranch, string? defaultRemote, GitPullAction pullAction)
         : base(commands, enablePositionRestore: false)
     {
@@ -141,26 +161,6 @@ public sealed partial class FormPull : GitExtensionsDialog
         UpdateFormTitleAndButton();
         UpdateActionState();
     }
-
-    private void ApplySourceAutoSize()
-    {
-        WinFormsAutoSizeContentControl.Attach(PullFromRemote, 25, 19);
-        WinFormsAutoSizeContentControl.Attach(PullFromUrl, 25, 19);
-        WinFormsAutoSizeContentControl.Attach(Merge, 41, 21);
-        WinFormsAutoSizeContentControl.Attach(Rebase, 41, 21);
-        WinFormsAutoSizeContentControl.Attach(Fetch, 25, 21);
-        WinFormsAutoSizeContentControl.Attach(ReachableTags, 25, 21);
-        WinFormsAutoSizeContentControl.Attach(NoTags, 25, 21);
-        WinFormsAutoSizeContentControl.Attach(AllTags, 25, 21);
-        WinFormsAutoSizeContentControl.Attach(Unshallow, 26, 19);
-        WinFormsAutoSizeContentControl.Attach(Prune, 26, 19);
-        WinFormsAutoSizeContentControl.Attach(PruneTags, 26, 19);
-        WinFormsAutoSizeContentControl.Attach(AutoStash, 26, 19);
-        WinFormsAutoSizeContentControl.Attach(lblLocalBranch, 7, 15);
-        WinFormsAutoSizeContentControl.Attach(lblRemoteBranch, 7, 15);
-    }
-
-    public bool ErrorOccurred { get; private set; }
 
     protected override void OnRuntimeLoad(EventArgs e)
     {
