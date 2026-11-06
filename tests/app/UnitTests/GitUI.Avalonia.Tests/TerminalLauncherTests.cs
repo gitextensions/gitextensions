@@ -218,6 +218,32 @@ public sealed class TerminalLauncherTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_terminal_hotkey_should_launch_the_shell_selected_by_initialization()
+    {
+        RecordingTerminalLauncher launcher = new();
+        using FormBrowse form = CreateBrowseForm(launcher);
+        IconSplitButton userShell = form.FindControl<IconSplitButton>("userShell")!;
+
+        form.ExecuteCommand(FormBrowse.Command.GitBash).Should().BeTrue();
+
+        launcher.WorkingDirectory.Should().Be("/work/repository");
+        if (OperatingSystem.IsWindows())
+        {
+            IShellDescriptor shell = (IShellDescriptor)userShell.Tag!;
+            shell.Should().BeSameAs(new ShellProvider().GetShell(BashShell.ShellName));
+            shell.ExecutablePath.Should().NotBeNullOrEmpty();
+            launcher.ShellLaunches.Should().Be(1);
+            launcher.GenericLaunches.Should().Be(0);
+            launcher.ExecutablePath.Should().Be(shell.ExecutablePath);
+        }
+        else
+        {
+            launcher.GenericLaunches.Should().Be(1);
+            launcher.ShellLaunches.Should().Be(0);
+        }
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_terminal_menu_and_toolbar_should_preserve_their_original_translation_keys()
     {
         FormBrowse form = CreateBrowseForm(new RecordingTerminalLauncher());
@@ -250,10 +276,9 @@ public sealed class TerminalLauncherTests
         RecordingTerminalLauncher launcher = new();
         ToolsToolStripMenuItem menu = CreateToolsMenu(launcher);
         MenuItem item = menu.GetTestAccessor().GitBashMenuItem;
-        IShellDescriptor shell = Substitute.For<IShellDescriptor>();
-        shell.Name.Returns("Configured shell");
-        shell.ExecutablePath.Returns("C:\\portable\\selected-shell.exe");
-        item.Tag = shell;
+        IShellDescriptor shell = new ShellProvider().GetShell(BashShell.ShellName);
+        item.Tag.Should().BeSameAs(shell);
+        shell.ExecutablePath.Should().NotBeNullOrEmpty();
 
         item.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
@@ -276,9 +301,10 @@ public sealed class TerminalLauncherTests
     public void Tools_terminal_menu_should_preserve_the_platform_route_when_no_shell_is_configured()
     {
         RecordingTerminalLauncher launcher = new();
-        ToolsToolStripMenuItem menu = CreateToolsMenu(launcher);
+        IShellProvider provider = Substitute.For<IShellProvider>();
+        provider.GetShell(BashShell.ShellName).Returns((IShellDescriptor)null!);
+        ToolsToolStripMenuItem menu = CreateToolsMenu(launcher, provider);
         MenuItem item = menu.GetTestAccessor().GitBashMenuItem;
-        item.Tag = null;
 
         item.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
@@ -302,12 +328,13 @@ public sealed class TerminalLauncherTests
     public void Tools_terminal_menu_should_name_the_selected_shell_when_it_cannot_launch(bool missingExecutable)
     {
         RecordingTerminalLauncher launcher = new() { Failure = new InvalidOperationException("synthetic launch failure") };
-        ToolsToolStripMenuItem menu = CreateToolsMenu(launcher);
-        MenuItem item = menu.GetTestAccessor().GitBashMenuItem;
         IShellDescriptor shell = Substitute.For<IShellDescriptor>();
         shell.Name.Returns("Configured shell");
         shell.ExecutablePath.Returns(missingExecutable ? null : "C:\\portable\\selected-shell.exe");
-        item.Tag = shell;
+        IShellProvider provider = Substitute.For<IShellProvider>();
+        provider.GetShell(BashShell.ShellName).Returns(shell);
+        ToolsToolStripMenuItem menu = CreateToolsMenu(launcher, provider);
+        MenuItem item = menu.GetTestAccessor().GitBashMenuItem;
         WinFormsShims.IMessageBoxHost? previous;
         try
         {
@@ -345,13 +372,14 @@ public sealed class TerminalLauncherTests
         }
     }
 
-    private static ToolsToolStripMenuItem CreateToolsMenu(ITerminalLauncher launcher)
+    private static ToolsToolStripMenuItem CreateToolsMenu(ITerminalLauncher launcher, IShellProvider? provider = null)
     {
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns("/work/repository");
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
         commands.GetService(typeof(ITerminalLauncher)).Returns(launcher);
+        commands.GetService(typeof(IShellProvider)).Returns(provider ?? new ShellProvider());
         ToolsToolStripMenuItem menu = new();
         menu.Initialize(() => commands);
         return menu;
@@ -379,6 +407,7 @@ public sealed class TerminalLauncherTests
             Array.Empty<RecentRepoInfo>()));
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
         commands.GetService(typeof(ITerminalLauncher)).Returns(launcher);
+        commands.GetService(typeof(IShellProvider)).Returns(new ShellProvider());
 
         return new FormBrowse(commands);
     }

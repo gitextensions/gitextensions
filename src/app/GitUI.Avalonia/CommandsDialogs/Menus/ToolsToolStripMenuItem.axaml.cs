@@ -48,6 +48,13 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
         InputAccessibility.Apply(this);
     }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        gitBashToolStripMenuItem.Tag = UICommands.GetRequiredService<IShellProvider>().GetShell(BashShell.ShellName);
+    }
+
     public override void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
     {
         gitBashToolStripMenuItem.InputGesture = GetGesture(FormBrowse.Command.GitBash);

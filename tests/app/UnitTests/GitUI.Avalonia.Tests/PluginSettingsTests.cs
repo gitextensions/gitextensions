@@ -297,6 +297,7 @@ public sealed class PluginSettingsTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+        commands.GetService(typeof(GitUI.Shells.IShellProvider)).Returns(new GitUI.Shells.ShellProvider());
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(hotkeySettingsLoader);
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
