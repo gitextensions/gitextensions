@@ -362,13 +362,21 @@ public sealed partial class FormCommit : GitModuleForm
 
         // Keep the progress bar within the height of the other status items.
         toolStripProgressBar1.Height = commitStagedCount.Height - toolStripProgressBar1.Margin.Top - toolStripProgressBar1.Margin.Bottom;
+
+        UpdateLayout();
+
+        // The distances which did not fit the initial size of the form are retried now:
+        // the bounds and window state which RestorePosition() requests in base.OnLoad are
+        // applied during opening. Retry here, and on subsequent layout changes, so that
+        // the distances survive until the splitters have their final size.
+        _splitterManager.RestorePendingSplitters();
     }
 
     private void RestoreSplitters()
     {
-        _splitterManager.AddSplitter(splitMain, nameof(splitMain), defaultDistance: 397);
-        _splitterManager.AddSplitter(splitRight, nameof(splitRight), defaultDistance: 412);
-        _splitterManager.AddSplitter(splitLeft, nameof(splitLeft), defaultDistance: 268);
+        _splitterManager.AddSplitter(splitMain, nameof(splitMain), FixedPanel.Panel1);
+        _splitterManager.AddSplitter(splitRight, nameof(splitRight), FixedPanel.Panel2);
+        _splitterManager.AddSplitter(splitLeft, nameof(splitLeft));
         _splitterManager.RestoreSplitters();
     }
 

@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
@@ -32,6 +32,8 @@ namespace GitExtensionsTests;
 [NonParallelizable]
 public sealed class ConsoleAndOutputTests
 {
+    private AppSettingsTestScope _settingsScope = null!;
+
     private int _originalOutputHistoryDepth;
     private bool _originalOutputHistoryPanelVisible;
     private bool _originalShowConsoleTab;
@@ -42,6 +44,7 @@ public sealed class ConsoleAndOutputTests
     [SetUp]
     public void SetUp()
     {
+        _settingsScope = new AppSettingsTestScope();
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
@@ -62,12 +65,19 @@ public sealed class ConsoleAndOutputTests
     [TearDown]
     public void TearDown()
     {
-        AppSettings.OutputHistoryDepth.Value = _originalOutputHistoryDepth;
-        AppSettings.OutputHistoryPanelVisible.Value = _originalOutputHistoryPanelVisible;
-        AppSettings.ShowConEmuTab.Value = _originalShowConsoleTab;
-        AppSettings.ShowOutputHistoryAsTab.Value = _originalShowOutputHistoryAsTab;
-        AppSettings.SerializedHotkeys = _originalSerializedHotkeys!;
-        AppSettings.ConEmuConsoleFont = _originalConsoleFont;
+        try
+        {
+            AppSettings.OutputHistoryDepth.Value = _originalOutputHistoryDepth;
+            AppSettings.OutputHistoryPanelVisible.Value = _originalOutputHistoryPanelVisible;
+            AppSettings.ShowConEmuTab.Value = _originalShowConsoleTab;
+            AppSettings.ShowOutputHistoryAsTab.Value = _originalShowOutputHistoryAsTab;
+            AppSettings.SerializedHotkeys = _originalSerializedHotkeys!;
+            AppSettings.ConEmuConsoleFont = _originalConsoleFont;
+        }
+        finally
+        {
+            _settingsScope.Dispose();
+        }
     }
 
     [AvaloniaTest]
@@ -171,30 +181,59 @@ public sealed class ConsoleAndOutputTests
     [Category("P8.6i.126")]
     public void Output_history_panel_should_restore_its_visible_height_without_revealing_a_hidden_panel()
     {
-        IOutputHistoryProvider provider = Substitute.For<IOutputHistoryProvider>();
-        provider.Enabled.Returns(true);
-        provider.History.Returns(string.Empty);
-        Grid parent = new()
+        AppSettings.ShowOutputHistoryAsTab.Value = false;
+        AppSettingsPath settings = new("FormBrowse.Avalonia");
+        string[] suffixes = ["Size", "Distance", "Dpi", "FontSize", "Panel1Collapsed", "Panel2Collapsed"];
+        Dictionary<string, string?> previousInput = suffixes.ToDictionary(suffix => "LeftSplitContainer_" + suffix, suffix => settings.GetValue("LeftSplitContainer_" + suffix));
+        try
         {
-            RowDefinitions = new RowDefinitions("*,0,0"),
-        };
-        GridSplitter splitter = new();
-        Border host = new();
-        using OutputHistoryPanelController controller = new(
-            provider,
-            new OutputHistoryControl(),
-            parent,
-            splitter,
-            host,
-            visible: false);
+            settings.SetValue("LeftSplitContainer_Size", "6");
+            settings.SetValue("LeftSplitContainer_Distance", "225");
+            settings.SetValue("LeftSplitContainer_Dpi", null);
+            settings.SetValue("LeftSplitContainer_Panel1Collapsed", "false");
+            settings.SetValue("LeftSplitContainer_Panel2Collapsed", "true");
+            using ServiceContainer serviceContainer = CreateServiceContainer();
+            using FormBrowse form = CreateForm(serviceContainer);
+            Dictionary<string, string?> previous = form.GetTestAccessor().SplitterManager.GetTestAccessor().Splitters
+                .SelectMany(splitter => suffixes.Select(suffix => splitter.DistanceSettingsKey[..^"Distance".Length] + suffix))
+                .ToDictionary(key => key, settings.GetValue);
+            foreach ((string key, string? value) in previousInput)
+            {
+                previous[key] = value;
+            }
 
-        controller.SplitterDistance = 225;
-
-        host.IsVisible.Should().BeFalse();
-        parent.RowDefinitions[2].Height.Value.Should().Be(0);
-        controller.FocusAndToggleIfPanel().Should().BeTrue();
-        host.IsVisible.Should().BeTrue();
-        parent.RowDefinitions[2].Height.Value.Should().Be(225);
+            try
+            {
+                form.Show();
+                Dispatcher.UIThread.RunJobs();
+                form.UpdateLayout();
+                OutputHistoryPanelController controller = (OutputHistoryPanelController)typeof(FormBrowse)
+                    .GetField("_outputHistoryController", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
+                    .GetValue(form)!;
+                Border host = form.outputHistoryPanelHost;
+                Grid parent = form.mainContentGrid;
+                host.IsVisible.Should().BeFalse();
+                parent.RowDefinitions[2].Height.Value.Should().Be(0);
+                controller.FocusAndToggleIfPanel().Should().BeTrue();
+                host.IsVisible.Should().BeTrue();
+                parent.RowDefinitions[2].Height.Value.Should().Be(225);
+            }
+            finally
+            {
+                form.Close();
+                foreach ((string key, string? value) in previous)
+                {
+                    settings.SetValue(key, value);
+                }
+            }
+        }
+        finally
+        {
+            foreach ((string key, string? value) in previousInput)
+            {
+                settings.SetValue(key, value);
+            }
+        }
     }
 
     [AvaloniaTest]

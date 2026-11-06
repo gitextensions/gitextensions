@@ -1,4 +1,4 @@
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Serialization;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -28,9 +28,17 @@ namespace GitExtensionsTests;
 [NonParallelizable]
 public sealed class HotkeyTests
 {
+    private AppSettingsTestScope _settingsScope = null!;
+
     [SetUp]
     public void SetUp()
-        => ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+    {
+        _settingsScope = new AppSettingsTestScope();
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+    }
+
+    [TearDown]
+    public void TearDown() => _settingsScope.Dispose();
 
     [TestCase(Key.F5, KeyModifiers.None, WinFormsShims.Keys.F5)]
     [TestCase(Key.B, KeyModifiers.Control | KeyModifiers.Shift, WinFormsShims.Keys.B | WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift)]

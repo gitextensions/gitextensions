@@ -10,8 +10,12 @@ namespace GitUI.Compat;
 internal static class WinFormsSplitContainerSizer
 {
     public static Action Attach(Grid grid, int sourceHeight, int sourceSplitterDistance, Func<bool>? isExpanded = null)
+        => Attach(grid, sourceHeight, sourceSplitterDistance, out _, isExpanded);
+
+    public static Action Attach(Grid grid, int sourceHeight, int sourceSplitterDistance, out Action<double, double> setReference, Func<bool>? isExpanded = null)
     {
         State state = new(grid, sourceHeight, sourceSplitterDistance, isExpanded);
+        setReference = state.SetReference;
         grid.SizeChanged += state.Resize;
         grid.Children.OfType<GridSplitter>().Single().DragCompleted += state.SplitterDragCompleted;
         return state.Refresh;
@@ -28,6 +32,15 @@ internal static class WinFormsSplitContainerSizer
         }
 
         public void Refresh() => Apply(grid.Bounds.Height);
+
+        public void SetReference(double size, double distance)
+        {
+            if (size > 0)
+            {
+                _referenceHeight = size;
+                _referenceDistance = distance;
+            }
+        }
 
         public void SplitterDragCompleted(object? sender, VectorEventArgs e)
         {

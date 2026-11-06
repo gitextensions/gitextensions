@@ -228,6 +228,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private GridLength _splitViewBottomHeight = new(1, GridUnitType.Star);
     private GridLength _splitViewTopHeight = new(211);
     private Action? _refreshRightSplitSize;
+    private Action<double, double>? _setRightSplitReference;
     private bool _gpgInfoLoaded;
     private bool _hasRuntimeCommands;
     private int _gpgInfoLoadVersion;
@@ -577,6 +578,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
+        UpdateLayout();
+        _splitterManager?.RestoreSplitters();
+        if (_isFileHistoryMode)
+        {
+            SetMainPanelCollapsed(panel1: true, collapsed: true);
+        }
 
         // All app init is done, make all repo related similar to switching repos
 
@@ -617,11 +624,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         // Restore state at startup if file history mode, ignore the forced setting
         if (_isFileHistoryMode && _fileBlameHistoryLeftPanelStartupState && !leftPanel.IsVisible)
         {
-            MainSplitContainer.ColumnDefinitions[0].Width = _leftPanelWidth.Value > 0
-                ? _leftPanelWidth
-                : new GridLength(260);
-            leftPanel.IsVisible = true;
-            leftPanelSplitter.IsVisible = true;
+            SetMainPanelCollapsed(panel1: true, collapsed: false);
         }
 
         _splitterManager?.SaveSplitters();
@@ -1339,8 +1342,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         // The WinForms Designer sets RightSplitContainer to 502 high with a
         // 209-pixel splitter distance; its unfixed panes resize proportionally.
         _refreshRightSplitSize = WinFormsSplitContainerSizer.Attach(
-            RightSplitContainer, sourceHeight: 502, sourceSplitterDistance: 209,
-            isExpanded: () => AppSettings.ShowSplitViewLayout);
+            RightSplitContainer, sourceHeight: 502, sourceSplitterDistance: 209, out _setRightSplitReference,
+            isExpanded: () => RevisionsSplitContainer.IsVisible && CommitInfoTabControl.IsVisible);
         toggleSplitViewLayout.Click += toggleSplitViewLayout_Click;
         menuCommitInfoPosition.Click += CommitInfoPositionClick;
         commitInfoBelowMenuItem.Click += CommitInfoBelowClick;
@@ -1451,17 +1454,20 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         CommitInfoPosition position = AppSettings.CommitInfoPosition;
         if (position == CommitInfoPosition.LeftwardFromList
+            && RevisionsSplitContainer.ColumnDefinitions[0].Width.IsAbsolute
             && RevisionsSplitContainer.ColumnDefinitions[0].Width.Value > 0)
         {
             _commitInfoWidth = RevisionsSplitContainer.ColumnDefinitions[0].Width;
         }
         else if (position == CommitInfoPosition.RightwardFromList
+                 && RevisionsSplitContainer.ColumnDefinitions[4].Width.IsAbsolute
                  && RevisionsSplitContainer.ColumnDefinitions[4].Width.Value > 0)
         {
             _commitInfoWidth = RevisionsSplitContainer.ColumnDefinitions[4].Width;
         }
 
-        if (AppSettings.ShowSplitViewLayout
+        if (RevisionsSplitContainer.IsVisible && CommitInfoTabControl.IsVisible
+            && RightSplitContainer.RowDefinitions[0].Height.IsAbsolute
             && RightSplitContainer.RowDefinitions[2].Height.Value > 0)
         {
             _splitViewTopHeight = RightSplitContainer.RowDefinitions[0].Height;
@@ -1501,15 +1507,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             commitInfoHost.Child = RevisionInfo;
         }
 
-        ColumnDefinitions columns = RevisionsSplitContainer.ColumnDefinitions;
-        columns[0].Width = position == CommitInfoPosition.LeftwardFromList ? _commitInfoWidth : new GridLength(0);
-        columns[1].Width = new GridLength(0);
-        columns[2].Width = new GridLength(1, GridUnitType.Star);
-        columns[3].Width = new GridLength(0);
-        columns[4].Width = position == CommitInfoPosition.RightwardFromList ? _commitInfoWidth : new GridLength(0);
-
-        commitInfoLeftSplitter.IsVisible = position == CommitInfoPosition.LeftwardFromList;
-        commitInfoRightSplitter.IsVisible = position == CommitInfoPosition.RightwardFromList;
+        commitInfoLeftHost.IsVisible = position == CommitInfoPosition.LeftwardFromList;
+        commitInfoRightHost.IsVisible = position == CommitInfoPosition.RightwardFromList;
+        RevisionGridContainer.IsVisible = true;
+        ApplyRevisionsSplitLayout();
         CommitInfoTabPage.IsVisible = below;
 
         if (below)
@@ -2714,60 +2715,95 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
+        MainSplitContainer.ColumnDefinitions[0].MinWidth = leftPanel.IsVisible ? 192 : 0;
         _splitterManager.AddSplitter(
             nameof(MainSplitContainer),
-            getDistance: () => leftPanel.IsVisible && MainSplitContainer.ColumnDefinitions[0].ActualWidth > 0
-                ? MainSplitContainer.ColumnDefinitions[0].ActualWidth
-                : _leftPanelWidth.Value,
+            getDistance: () => leftPanel.IsVisible && RightSplitContainer.IsVisible && MainSplitContainer.ColumnDefinitions[0].ActualWidth > 0
+                ? MainSplitContainer.ColumnDefinitions[0].ActualWidth : _leftPanelWidth.Value,
             setDistance: value =>
             {
                 _leftPanelWidth = new GridLength(value);
-                if (leftPanel.IsVisible)
+                if (leftPanel.IsVisible && RightSplitContainer.IsVisible)
                 {
                     MainSplitContainer.ColumnDefinitions[0].Width = _leftPanelWidth;
                 }
             },
-            getSize: () => leftPanelSplitter.Bounds.Width);
+            getSize: () => MainSplitContainer.Bounds.Width,
+            fixedPanel: FixedPanel.Panel1,
+            panel1MinSize: 192,
+            getPanel1Collapsed: () => !leftPanel.IsVisible,
+            setPanel1Collapsed: value => SetMainPanelCollapsed(panel1: true, value),
+            getPanel2Collapsed: () => !RightSplitContainer.IsVisible,
+            setPanel2Collapsed: value => SetMainPanelCollapsed(panel1: false, value),
+            visibilityControls: [leftPanel, RightSplitContainer]);
         _splitterManager.AddSplitter(
             nameof(RevisionsSplitContainer),
-            getDistance: GetCommitInfoWidth,
+            getDistance: () => AppSettings.CommitInfoPosition == CommitInfoPosition.LeftwardFromList
+                ? GetCommitInfoWidth() : RevisionsSplitContainer.Bounds.Width - GetCommitInfoWidth(),
             setDistance: value =>
             {
-                _commitInfoWidth = new GridLength(value);
-                CommitInfoPosition position = AppSettings.CommitInfoPosition;
-                if (position == CommitInfoPosition.LeftwardFromList)
-                {
-                    RevisionsSplitContainer.ColumnDefinitions[0].Width = _commitInfoWidth;
-                }
-                else if (position == CommitInfoPosition.RightwardFromList)
-                {
-                    RevisionsSplitContainer.ColumnDefinitions[4].Width = _commitInfoWidth;
-                }
+                _commitInfoWidth = new GridLength(AppSettings.CommitInfoPosition == CommitInfoPosition.LeftwardFromList
+                    ? value : Math.Max(0, RevisionsSplitContainer.Bounds.Width - value));
+                ApplyRevisionsSplitLayout();
             },
-            getSize: () => commitInfoLeftSplitter.IsVisible
-                ? commitInfoLeftSplitter.Bounds.Width
-                : commitInfoRightSplitter.Bounds.Width);
+            getSize: () => RevisionsSplitContainer.Bounds.Width,
+            getPanel1Collapsed: () => !(AppSettings.CommitInfoPosition == CommitInfoPosition.LeftwardFromList ? commitInfoLeftHost.IsVisible : RevisionGridContainer.IsVisible),
+            setPanel1Collapsed: value => SetRevisionPanelCollapsed(panel1: true, value),
+            getPanel2Collapsed: () => !(AppSettings.CommitInfoPosition == CommitInfoPosition.LeftwardFromList ? RevisionGridContainer.IsVisible : commitInfoRightHost.IsVisible),
+            setPanel2Collapsed: value => SetRevisionPanelCollapsed(panel1: false, value),
+            getFixedPanel: () => AppSettings.CommitInfoPosition == CommitInfoPosition.LeftwardFromList ? FixedPanel.Panel1 : FixedPanel.Panel2,
+            fromLegacyDistance: value => AppSettings.CommitInfoPosition == CommitInfoPosition.LeftwardFromList ? value : RevisionsSplitContainer.Bounds.Width - value,
+            visibilityControls: [commitInfoLeftHost, RevisionGridContainer, commitInfoRightHost]);
         _splitterManager.AddSplitter(
             nameof(RightSplitContainer),
-            getDistance: () => splitViewSplitter.IsVisible && RightSplitContainer.RowDefinitions[0].ActualHeight > 0
-                ? RightSplitContainer.RowDefinitions[0].ActualHeight
-                : _splitViewTopHeight.Value,
+            getDistance: () => RevisionsSplitContainer.IsVisible && CommitInfoTabControl.IsVisible && RightSplitContainer.RowDefinitions[0].ActualHeight > 0
+                ? RightSplitContainer.RowDefinitions[0].ActualHeight : _splitViewTopHeight.Value,
             setDistance: value =>
             {
                 _splitViewTopHeight = new GridLength(value);
-                if (AppSettings.ShowSplitViewLayout)
-                {
-                    RightSplitContainer.RowDefinitions[0].Height = _splitViewTopHeight;
-                }
+                _setRightSplitReference?.Invoke(RightSplitContainer.Bounds.Height, value);
+                ApplyRightSplitLayout();
             },
-            getSize: () => splitViewSplitter.Bounds.Height);
+            getSize: () => RightSplitContainer.Bounds.Height,
+            panel2MinSize: 0,
+            getPanel1Collapsed: () => !RevisionsSplitContainer.IsVisible,
+            setPanel1Collapsed: value =>
+            {
+                if (value)
+                {
+                    CommitInfoTabControl.IsVisible = true;
+                }
+
+                RevisionsSplitContainer.IsVisible = !value;
+                ApplyRightSplitLayout();
+            },
+            getPanel2Collapsed: () => !CommitInfoTabControl.IsVisible,
+            setPanel2Collapsed: value =>
+            {
+                if (value)
+                {
+                    RevisionsSplitContainer.IsVisible = true;
+                }
+
+                CommitInfoTabControl.IsVisible = !value;
+                ApplyRightSplitLayout();
+            },
+            visibilityControls: [RevisionsSplitContainer, CommitInfoTabControl]);
         if (_outputHistoryController is OutputHistoryPanelController outputHistoryPanelController)
         {
             _splitterManager.AddSplitter(
                 nameof(LeftSplitContainer),
-                getDistance: () => outputHistoryPanelController.SplitterDistance,
-                setDistance: value => outputHistoryPanelController.SplitterDistance = value,
-                getSize: () => outputHistoryPanelController.SplitterSize);
+                getDistance: () => outputHistoryPanelController.SplitterSize - outputHistoryPanelController.SplitterDistance - 6,
+                setDistance: value => outputHistoryPanelController.SplitterDistance = Math.Max(0, outputHistoryPanelController.SplitterSize - value - 6),
+                getSize: () => outputHistoryPanelController.SplitterSize,
+                fixedPanel: FixedPanel.Panel2,
+                panel2MinSize: 0,
+                getPanel1Collapsed: () => outputHistoryPanelController.Panel1Collapsed,
+                setPanel1Collapsed: value => outputHistoryPanelController.Panel1Collapsed = value,
+                getPanel2Collapsed: () => outputHistoryPanelController.Panel2Collapsed,
+                setPanel2Collapsed: value => outputHistoryPanelController.Panel2Collapsed = value,
+                fromLegacyDistance: value => outputHistoryPanelController.SplitterSize - value - 6,
+                visibilityControls: outputHistoryPanelController.VisibilityControls);
         }
 
         revisionDiff.InitSplitterManager(_splitterManager);
@@ -2776,17 +2812,19 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         double GetCommitInfoWidth()
         {
-            CommitInfoPosition position = AppSettings.CommitInfoPosition;
-            if (position == CommitInfoPosition.LeftwardFromList
-                && RevisionsSplitContainer.ColumnDefinitions[0].ActualWidth > 0)
+            if (RevisionGridContainer.IsVisible)
             {
-                return RevisionsSplitContainer.ColumnDefinitions[0].ActualWidth;
-            }
+                if (AppSettings.CommitInfoPosition == CommitInfoPosition.LeftwardFromList && commitInfoLeftHost.IsVisible
+                    && RevisionsSplitContainer.ColumnDefinitions[0].ActualWidth > 0)
+                {
+                    return RevisionsSplitContainer.ColumnDefinitions[0].ActualWidth;
+                }
 
-            if (position == CommitInfoPosition.RightwardFromList
-                && RevisionsSplitContainer.ColumnDefinitions[4].ActualWidth > 0)
-            {
-                return RevisionsSplitContainer.ColumnDefinitions[4].ActualWidth;
+                if (AppSettings.CommitInfoPosition == CommitInfoPosition.RightwardFromList && commitInfoRightHost.IsVisible
+                    && RevisionsSplitContainer.ColumnDefinitions[4].ActualWidth > 0)
+                {
+                    return RevisionsSplitContainer.ColumnDefinitions[4].ActualWidth;
+                }
             }
 
             return _commitInfoWidth.Value;
@@ -3309,21 +3347,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void toggleLeftPanel_Click(object? sender, EventArgs e)
     {
-        ColumnDefinition leftColumn = MainSplitContainer.ColumnDefinitions[0];
-        bool hide = leftColumn.Width.Value > 0;
-        if (hide)
-        {
-            _leftPanelWidth = leftColumn.Width;
-            leftColumn.Width = new GridLength(0);
-            leftPanel.IsVisible = false;
-            leftPanelSplitter.IsVisible = false;
-        }
-        else
-        {
-            leftColumn.Width = _leftPanelWidth.Value > 0 ? _leftPanelWidth : new GridLength(260);
-            leftPanel.IsVisible = true;
-            leftPanelSplitter.IsVisible = true;
-        }
+        SetMainPanelCollapsed(panel1: true, leftPanel.IsVisible);
 
         RefreshLayoutToggleButtonStates();
 
@@ -3366,15 +3390,107 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void RefreshSplitViewLayout()
     {
-        bool showSplitView = AppSettings.ShowSplitViewLayout;
-        RowDefinitions rows = RightSplitContainer.RowDefinitions;
-        rows[0].Height = showSplitView ? _splitViewTopHeight : new GridLength(1, GridUnitType.Star);
-        rows[1].Height = showSplitView ? new GridLength(6) : new GridLength(0);
-        rows[2].Height = showSplitView ? _splitViewBottomHeight : new GridLength(0);
-        splitViewSplitter.IsVisible = showSplitView;
-        CommitInfoTabControl.IsVisible = showSplitView;
-        _refreshRightSplitSize?.Invoke();
+        CommitInfoTabControl.IsVisible = AppSettings.ShowSplitViewLayout;
+        ApplyRightSplitLayout();
         RefreshLayoutToggleButtonStates();
+    }
+
+    // Avalonia grids have no collapsed-panel properties; retain their definitions and visibility here.
+    private void SetMainPanelCollapsed(bool panel1, bool collapsed)
+    {
+        if ((panel1 ? !leftPanel.IsVisible : !RightSplitContainer.IsVisible) == collapsed)
+        {
+            return;
+        }
+
+        ColumnDefinition leftColumn = MainSplitContainer.ColumnDefinitions[0];
+        if (leftPanel.IsVisible && RightSplitContainer.IsVisible && leftColumn.Width.IsAbsolute && leftColumn.Width.Value > 0)
+        {
+            _leftPanelWidth = leftColumn.Width;
+        }
+
+        if (collapsed)
+        {
+            if (panel1)
+            {
+                RightSplitContainer.IsVisible = true;
+            }
+            else
+            {
+                leftPanel.IsVisible = true;
+            }
+        }
+
+        if (panel1)
+        {
+            leftPanel.IsVisible = !collapsed;
+        }
+        else
+        {
+            RightSplitContainer.IsVisible = !collapsed;
+        }
+
+        bool bothVisible = leftPanel.IsVisible && RightSplitContainer.IsVisible;
+        leftColumn.MinWidth = leftPanel.IsVisible ? 192 : 0;
+        leftColumn.Width = leftPanel.IsVisible ? bothVisible ? _leftPanelWidth : new GridLength(1, GridUnitType.Star) : new GridLength(0);
+        MainSplitContainer.ColumnDefinitions[1].Width = new GridLength(bothVisible ? 6 : 0);
+        MainSplitContainer.ColumnDefinitions[2].Width = RightSplitContainer.IsVisible ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+        leftPanelSplitter.IsVisible = bothVisible;
+        RefreshLayoutToggleButtonStates();
+    }
+
+    private void SetRevisionPanelCollapsed(bool panel1, bool collapsed)
+    {
+        bool leftward = AppSettings.CommitInfoPosition == CommitInfoPosition.LeftwardFromList;
+        Control first = leftward ? commitInfoLeftHost : RevisionGridContainer;
+        Control second = leftward ? RevisionGridContainer : commitInfoRightHost;
+        Control panel = panel1 ? first : second;
+        if (panel.IsVisible == !collapsed)
+        {
+            return;
+        }
+
+        if (collapsed)
+        {
+            (panel1 ? second : first).IsVisible = true;
+        }
+
+        panel.IsVisible = !collapsed;
+        ApplyRevisionsSplitLayout();
+    }
+
+    private void ApplyRevisionsSplitLayout()
+    {
+        ColumnDefinitions columns = RevisionsSplitContainer.ColumnDefinitions;
+        bool history = RevisionGridContainer.IsVisible;
+        bool left = commitInfoLeftHost.IsVisible;
+        bool right = commitInfoRightHost.IsVisible;
+        columns[0].MinWidth = left ? 25 : 0;
+        columns[2].MinWidth = history ? 25 : 0;
+        columns[4].MinWidth = right ? 25 : 0;
+        columns[0].Width = left ? history ? _commitInfoWidth : new GridLength(1, GridUnitType.Star) : new GridLength(0);
+        columns[1].Width = new GridLength(0);
+        columns[2].Width = history ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+        columns[3].Width = new GridLength(0);
+        columns[4].Width = right ? history ? _commitInfoWidth : new GridLength(1, GridUnitType.Star) : new GridLength(0);
+        commitInfoLeftSplitter.IsVisible = left && history;
+        commitInfoRightSplitter.IsVisible = right && history;
+    }
+
+    private void ApplyRightSplitLayout()
+    {
+        bool first = RevisionsSplitContainer.IsVisible;
+        bool second = CommitInfoTabControl.IsVisible;
+        RowDefinitions rows = RightSplitContainer.RowDefinitions;
+        rows[0].MinHeight = first ? 25 : 0;
+        rows[0].Height = first ? second ? _splitViewTopHeight : new GridLength(1, GridUnitType.Star) : new GridLength(0);
+        rows[1].Height = new GridLength(first && second ? 6 : 0);
+        rows[2].Height = second ? first ? _splitViewBottomHeight : new GridLength(1, GridUnitType.Star) : new GridLength(0);
+        splitViewSplitter.IsVisible = first && second;
+        if (first && second)
+        {
+            _refreshRightSplitSize?.Invoke();
+        }
     }
 
     private void RefreshLayoutToggleButtonStates()

@@ -54,9 +54,150 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class FormBrowseTests
 {
+    private AppSettingsTestScope _settingsScope = null!;
     private ServiceContainer _serviceContainer = null!;
     private string _workingDirectory = null!;
     private bool _revisionGraphShowArtificialCommits;
+
+    [AvaloniaTest]
+    [TestCase(CommitInfoPosition.LeftwardFromList)]
+    [TestCase(CommitInfoPosition.RightwardFromList)]
+    public async Task Browse_splitter_settings_should_migrate_legacy_native_distances_and_keep_the_restored_ratio(CommitInfoPosition position)
+    {
+        CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
+        bool originalSplitView = AppSettings.ShowSplitViewLayout;
+        AppSettingsPath settings = new("FormBrowse.Avalonia");
+        string[] names = ["MainSplitContainer", "RevisionsSplitContainer", "RightSplitContainer"];
+        string[] suffixes = ["Size", "Distance", "Dpi", "FontSize", "Panel1Collapsed", "Panel2Collapsed"];
+        Dictionary<string, string?> previousInput = names.SelectMany(name => suffixes.Select(suffix => name + "_" + suffix)).ToDictionary(key => key, settings.GetValue);
+        try
+        {
+            AppSettings.CommitInfoPosition = position;
+            AppSettings.ShowSplitViewLayout = true;
+            foreach (string key in previousInput.Keys)
+            {
+                settings.SetValue(key, null);
+            }
+
+            foreach (string name in names)
+            {
+                settings.SetValue(name + "_Size", "6");
+                settings.SetValue(name + "_Panel1Collapsed", "false");
+                settings.SetValue(name + "_Panel2Collapsed", "false");
+            }
+
+            settings.SetValue("MainSplitContainer_Distance", "275");
+            settings.SetValue("RevisionsSplitContainer_Distance", "240");
+            settings.SetValue("RightSplitContainer_Distance", "210");
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithInitialCommit()));
+            Dictionary<string, string?> previous = form.GetTestAccessor().SplitterManager.GetTestAccessor().Splitters
+                .SelectMany(splitter => suffixes.Select(suffix => splitter.DistanceSettingsKey[..^"Distance".Length] + suffix))
+                .ToDictionary(key => key, settings.GetValue);
+            foreach ((string key, string? value) in previousInput)
+            {
+                previous[key] = value;
+            }
+
+            try
+            {
+                form.Show();
+                await form.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(30));
+                Dispatcher.UIThread.RunJobs();
+                form.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+                form.UpdateLayout();
+                Grid main = form.FindControl<Grid>("MainSplitContainer")!;
+                Grid revisions = form.FindControl<Grid>("RevisionsSplitContainer")!;
+                Grid right = form.FindControl<Grid>("RightSplitContainer")!;
+                int infoColumn = position == CommitInfoPosition.LeftwardFromList ? 0 : 4;
+                main.ColumnDefinitions[0].ActualWidth.Should().Be(275);
+                revisions.ColumnDefinitions[infoColumn].ActualWidth.Should().Be(240);
+                right.RowDefinitions[0].ActualHeight.Should().Be(210);
+                form.GetTestAccessor().SplitterManager.SaveSplitters();
+                settings.GetValue("RevisionsSplitContainer_Distance").Should().Be(Convert.ToInt32(position == CommitInfoPosition.LeftwardFromList
+                    ? 240 : revisions.Bounds.Width - 240).ToString(System.Globalization.CultureInfo.InvariantCulture));
+                settings.GetValue("MainSplitContainer_Dpi").Should().Be("96");
+                double previousSize = right.Bounds.Height;
+                form.Width += 150;
+                form.Height += 100;
+                Dispatcher.UIThread.RunJobs();
+                form.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+                form.UpdateLayout();
+                right.Bounds.Height.Should().BeGreaterThan(previousSize);
+                main.ColumnDefinitions[0].ActualWidth.Should().Be(275);
+                revisions.ColumnDefinitions[infoColumn].ActualWidth.Should().Be(240);
+                right.RowDefinitions[0].ActualHeight.Should().Be(Math.Floor(210 * right.Bounds.Height / previousSize));
+            }
+            finally
+            {
+                form.Close();
+                foreach ((string key, string? value) in previous)
+                {
+                    settings.SetValue(key, value);
+                }
+            }
+        }
+        finally
+        {
+            AppSettings.CommitInfoPosition = originalPosition;
+            AppSettings.ShowSplitViewLayout = originalSplitView;
+            foreach ((string key, string? value) in previousInput)
+            {
+                settings.SetValue(key, value);
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Browse_splitter_settings_should_use_the_real_container_bounds()
+    {
+        bool originalTab = AppSettings.ShowOutputHistoryAsTab;
+        try
+        {
+            AppSettings.ShowOutputHistoryAsTab.Value = false;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            GitCommands.AppSettingsPath settings = new("FormBrowse.Avalonia");
+            string[] suffixes = ["Size", "Distance", "Dpi", "FontSize", "Panel1Collapsed", "Panel2Collapsed"];
+            Dictionary<string, string?> previous = form.GetTestAccessor().SplitterManager.GetTestAccessor().Splitters
+                .SelectMany(splitter => suffixes.Select(suffix => splitter.DistanceSettingsKey[..^"Distance".Length] + suffix))
+                .ToDictionary(key => key, settings.GetValue);
+            form.Show();
+            try
+            {
+                await form.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(30));
+                Dispatcher.UIThread.RunJobs();
+                form.UpdateLayout();
+                form.GetTestAccessor().SplitterManager.SaveSplitters();
+                foreach ((string name, string container, bool horizontal) in new[]
+                {
+                    ("MainSplitContainer", "MainSplitContainer", false),
+                    ("RevisionsSplitContainer", "RevisionsSplitContainer", false),
+                    ("RightSplitContainer", "RightSplitContainer", true),
+                    ("LeftSplitContainer", "mainContentGrid", true),
+                })
+                {
+                    Grid grid = form.FindControl<Grid>(container)!;
+                    int actualSize = Convert.ToInt32(horizontal ? grid.Bounds.Height : grid.Bounds.Width);
+                    actualSize.Should().BeGreaterThan(6);
+                    settings.GetValue(name + "_Size").Should().Be(actualSize.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                }
+            }
+            finally
+            {
+                form.Close();
+                foreach ((string key, string? value) in previous)
+                {
+                    settings.SetValue(key, value);
+                }
+            }
+        }
+        finally
+        {
+            AppSettings.ShowOutputHistoryAsTab.Value = originalTab;
+        }
+    }
 
     [AvaloniaTest]
     public void FormBrowse_notification_bars_should_preserve_the_height_needed_by_enlarged_buttons()
@@ -85,6 +226,7 @@ public sealed class FormBrowseTests
     {
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        _settingsScope = new AppSettingsTestScope();
         _revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
         AppSettings.RevisionGraphShowArtificialCommits = false;
 
@@ -109,9 +251,16 @@ public sealed class FormBrowseTests
     [TearDown]
     public void TearDown()
     {
-        AppSettings.RevisionGraphShowArtificialCommits = _revisionGraphShowArtificialCommits;
-        _serviceContainer.Dispose();
-        TestDirectory.Delete(_workingDirectory);
+        try
+        {
+            AppSettings.RevisionGraphShowArtificialCommits = _revisionGraphShowArtificialCommits;
+            _serviceContainer.Dispose();
+            TestDirectory.Delete(_workingDirectory);
+        }
+        finally
+        {
+            _settingsScope.Dispose();
+        }
     }
 
     [AvaloniaTest]
