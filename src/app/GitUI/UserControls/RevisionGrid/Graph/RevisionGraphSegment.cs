@@ -38,7 +38,7 @@ public sealed class RevisionGraphSegment
 
     /// <summary>
     ///  The reserved lane this segment should go in. Set along the first parent chain from the node of a reserved lane
-    ///  and possiblty for one of its outgoing merge segments;
+    ///  and possibly for one of its outgoing merge segments;
     ///  otherwise equal to <see cref="int.MaxValue"/>.
     /// </summary>
     public int ReservedLaneIndex { get; set; } = int.MaxValue;
@@ -54,4 +54,6 @@ public sealed class RevisionGraphSegment
     public bool MayUseReservedLane { get; set; }
 
     public bool IsIncomingMerge => Child?.ParentCount > 1 && Parent != Child.Parents.First();
+
+    public bool IsIncomingMergeTo(RevisionGraphRevision revision) => revision == Child && IsIncomingMerge;
 }

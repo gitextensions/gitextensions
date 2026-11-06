@@ -658,8 +658,9 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 }
             }
 
-            // Ensure that all segments with a reserved lane are first, in the correct order
-            segments = [.. segments.OrderBy(s => s.ReservedLaneIndex)];
+            // Ensure that all segments with a reserved lane are first, in the correct order.
+            // The exception is incoming merges (from a reserved lane), which should stay in order at the revision node.
+            segments = [.. segments.OrderBy(s => s.IsIncomingMergeTo(revision) ? int.MaxValue : s.ReservedLaneIndex)];
 
             RevisionGraphRow row = new(revision, segments, Config.MergeGraphLanesHavingCommonParent, revisionGoesInReservedLane);
 
@@ -882,6 +883,12 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 IRevisionGraphRow previousRow = localOrderedRowCache[currentIndex - 1];
                 foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments.Take(MaxLanes))
                 {
+                    if (revisionGraphSegment.ReservedLaneIndex != int.MaxValue || revisionGraphSegment.MayUseReservedLane)
+                    {
+                        // The segment is either the owner of a reserved lane or an outgoing merge from one. Neither should be straightened.
+                        continue;
+                    }
+
                     Lane currentRowLane = currentRow.GetLaneForSegment(revisionGraphSegment);
                     if (currentRowLane.Sharing != LaneSharing.ExclusiveOrPrimary)
                     {

@@ -486,6 +486,30 @@ public class RevisionGraphTests
         await VerifyGraphLayoutAsync(revisionGraph, reservedLanes);
     }
 
+    [Test]
+    public async Task MergeFromReservedLaneIsNotStraightened_1([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        // Merge 2->7 is from reserved lane 2 above last commit in lane 2
+        RevisionGraph revisionGraph = CreateGraph("  0 1:0  2:0:dev  3:0   4:0   5:0    6:0 7:6,2  8:4   9:3,8  a:9,5   b:a,7 c:1,b:main ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task MergeFromReservedLaneIsNotStraightened_2([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        // Merge 2->7 is from reserved lane 2 below last commit in lane 2
+        RevisionGraph revisionGraph = CreateGraph("  0 1:0  2:0  3:0   4:0   5:0    6:0 7:6,2  8:4   9:3,8  a:9,5   b:a,7  c:2:dev  d:1,b:main ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
     private const string graphWithMultiLaneCrossings = "0:C,1,2,3,4,5,6,7,8,9,A,B 1:R 2:R 3:R 4:C 5:C 6:C 7:R 8:C 9:R A:C B:R C:D D:E E:F F:G G:H,K,R H:I,R I:J,R J:R K:R R";
 
     [Test]
