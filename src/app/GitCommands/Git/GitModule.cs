@@ -47,6 +47,7 @@ public sealed partial class GitModule : IGitModule
     private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
     private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
     private FrozenDictionary<string, Color>? _remoteColors;
+    private int _remoteColorsVersion;
 
     // Parse lines of format:
     //
@@ -2162,18 +2163,29 @@ public sealed partial class GitModule : IGitModule
 
     public FrozenDictionary<string, Color> GetRemoteColors()
     {
-        if (_remoteColors is null)
+        if (_remoteColors is { } remoteColors)
         {
-            lock (_lock)
-            {
-                _remoteColors ??= new ConfigFileRemoteSettingsManager(getModule: () => this)
-                            .LoadRemotes(loadDisabled: false)
-                            .Where(r => !string.IsNullOrEmpty(r.Color) && !string.IsNullOrEmpty(r.Name))
-                            .ToFrozenDictionary(r => r.Name!, r => ColorTranslator.FromHtml(r.Color!), StringComparer.Ordinal);
-            }
+            return remoteColors;
         }
 
-        return _remoteColors;
+        // Do not hold the lock while git commands are run, other threads need it to initialize the settings.
+        // Concurrent callers may load the colors twice, the result is the same.
+        int version = Volatile.Read(ref _remoteColorsVersion);
+        remoteColors = new ConfigFileRemoteSettingsManager(getModule: () => this)
+            .LoadRemotes(loadDisabled: false)
+            .Where(r => !string.IsNullOrEmpty(r.Color) && !string.IsNullOrEmpty(r.Name))
+            .ToFrozenDictionary(r => r.Name!, r => ColorTranslator.FromHtml(r.Color!), StringComparer.Ordinal);
+
+        lock (_lock)
+        {
+            // The colors may be outdated if they have been reset while they were loaded
+            if (version == _remoteColorsVersion)
+            {
+                _remoteColors = remoteColors;
+            }
+
+            return remoteColors;
+        }
     }
 
     public void ResetRemoteColors()
@@ -2181,6 +2193,7 @@ public sealed partial class GitModule : IGitModule
         lock (_lock)
         {
             _remoteColors = null;
+            _remoteColorsVersion++;
         }
     }
 
