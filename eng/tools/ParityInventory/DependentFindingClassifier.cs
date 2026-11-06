@@ -55,6 +55,12 @@ internal static class DependentFindingClassifier
                         || anchor.StartsWith("interface:", StringComparison.Ordinal)
                         || anchor.StartsWith("record:", StringComparison.Ordinal))
                     .Select(anchor => anchor[(anchor.IndexOf(':') + 1)..]));
+                string fullKey = scope.Length == 0 ? anchors[index] : $"{scope}/{anchors[index]}";
+                if (missingMembers.ContainsKey(fullKey))
+                {
+                    return fullKey;
+                }
+
                 string key = GetMemberKey(anchors[index]);
                 string scopedKey = scope.Length == 0 ? key : $"{scope}/{key}";
                 if (missingMembers.ContainsKey(scopedKey))
