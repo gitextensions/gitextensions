@@ -170,12 +170,22 @@ Are you sure you want to continue?</source>
         <source>Select branches to delete using checkboxes in '{0}' column.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_sessionRefsMayBeInUse.Text">
+        <source>{0} of them are agentic session refs.
+AI agents may still need these refs, e.g. for the checkpoints of an active session.
+Do not delete them while an agentic session is in progress.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
         <target />
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="includeSessionRefs.Text">
+        <source>Include agentic session refs</source>
         <target />
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
@@ -224,6 +234,10 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_includeSessionRefsFlag.Caption">
+        <source>Include agentic session refs</source>
         <target />
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
