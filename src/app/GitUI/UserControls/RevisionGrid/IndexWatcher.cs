@@ -18,6 +18,9 @@ public sealed class IndexWatcher : IDisposable
     public event EventHandler<IndexChangedEventArgs>? Changed;
 
     private readonly IGitUICommandsSource _uICommandsSource;
+    private readonly object _syncRoot = new();
+    private int _generation;
+    private DateTime _watchedSinceUtc;
 
     private IGitModule Module => _uICommandsSource.UICommands.Module;
 
@@ -139,10 +142,6 @@ public sealed class IndexWatcher : IDisposable
             IndexChanged = false;
         }
     }
-
-    private readonly object _syncRoot = new();
-    private int _generation;
-    private DateTime _watchedSinceUtc;
 
     private void RefreshWatcher()
     {
