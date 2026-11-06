@@ -120,8 +120,23 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
         }
     }
 
-    public IReadOnlyList<HotkeySettings> CreateDefaultSettings()
-        => CreateDefaultSettingsCore(_scriptsManager);
+    private static HotkeySettings[]? LoadSerializedSettings()
+    {
+        if (string.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
+        {
+            return null;
+        }
+
+        try
+        {
+            using StringReader reader = new(AppSettings.SerializedHotkeys);
+            return (HotkeySettings[]?)_serializer.Deserialize(reader);
+        }
+        catch
+        {
+            return null;
+        }
+    }
 
     private static Dictionary<string, HotkeyCommand> CreateCommandLookup(IEnumerable<HotkeySettings> settings)
     {
@@ -163,12 +178,8 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
     private static string CalcDictionaryKey(string settingName, int commandCode)
         => settingName + ":" + commandCode;
 
-    public IReadOnlyList<HotkeyCommand> LoadHotkeys(string hotkeySettingsName)
-    {
-        HotkeySettings? settings = LoadSettings()
-            .FirstOrDefault(candidate => candidate.Name == hotkeySettingsName);
-        return settings?.Commands ?? [];
-    }
+    public IReadOnlyList<HotkeySettings> CreateDefaultSettings()
+        => CreateDefaultSettingsCore(_scriptsManager);
 
     internal static IReadOnlyList<HotkeySettings> CreateDefaultSettingsCore(IScriptsManager? scriptsManager)
     {
@@ -395,21 +406,10 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
         }
     }
 
-    private static HotkeySettings[]? LoadSerializedSettings()
+    public IReadOnlyList<HotkeyCommand> LoadHotkeys(string hotkeySettingsName)
     {
-        if (string.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
-        {
-            return null;
-        }
-
-        try
-        {
-            using StringReader reader = new(AppSettings.SerializedHotkeys);
-            return (HotkeySettings[]?)_serializer.Deserialize(reader);
-        }
-        catch
-        {
-            return null;
-        }
+        HotkeySettings? settings = LoadSettings()
+            .FirstOrDefault(candidate => candidate.Name == hotkeySettingsName);
+        return settings?.Commands ?? [];
     }
 }

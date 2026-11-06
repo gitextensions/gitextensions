@@ -91,6 +91,11 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
     {
     }
 
+    /// <summary>
+        /// TODO: remove this direct dependency to another SettingsPage later when possible.
+        /// </summary>
+    public SshSettingsPage? SshSettingsPage { get; set; }
+
     public ChecklistSettingsPage(IServiceProvider serviceProvider)
         : base(serviceProvider)
     {
@@ -120,11 +125,6 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         CheckAtStartup.Click += CheckAtStartup_CheckedChanged;
         InitializeComplete();
     }
-
-    /// <summary>
-        /// TODO: remove this direct dependency to another SettingsPage later when possible.
-        /// </summary>
-    public SshSettingsPage? SshSettingsPage { get; set; }
 
     public override bool IsInstantSavePage => true;
 
