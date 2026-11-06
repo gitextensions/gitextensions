@@ -1,6 +1,6 @@
 # ParityFix
 
-Temporary source-parity tooling for reviewed `ParityInventory` schema 6 `types/*.json` reports.
+Temporary source-parity tooling for reviewed `ParityInventory` schema 8 `types/*.json` reports.
 Targets plain `net10.0`; belongs to neither application solution. Run from the repository root.
 
 ```powershell
@@ -80,7 +80,7 @@ Member order changes stay inside a partial and cannot cross directive-bearing me
 whose only directives are internal adjacent warning-disable/restore pairs for the same explicit codes.
 These pairs can move with their complete member only when the file has no ambient warning directives;
 their exact text remains protected by the member-multiset proof. Regions and conditional scopes stay barriers. Unknown members
-keep their slots; overloads and other ambiguous declarations remain in place. The full member multiset,
+keep their slots; overloads use the inventory matcher, while ambiguous declarations remain in place. The full member multiset,
 including trivia, and syntax outside the type must be unchanged after reordering and reparsing. Moved
 fields, events and properties with initializers are listed and block that file's order changes by default.
 After hand review, `--allow-initializers` permits those proposals; the list remains in the report. Compilation

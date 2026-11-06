@@ -67,14 +67,6 @@ internal abstract class ColumnProvider
     {
     }
 
-    /// <summary>Attempts to get custom tool tip text for a cell in this column.</summary>
-    /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
-    public virtual bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
-    {
-        toolTip = null;
-        return false;
-    }
-
     /// <summary>Attempts to get custom tool tip text for a highlight in a cell in this column.</summary>
     /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
     public virtual bool TryGetToolTip(
@@ -87,6 +79,14 @@ internal abstract class ColumnProvider
             return TryGetToolTip(revision, out toolTip);
         }
 
+        toolTip = null;
+        return false;
+    }
+
+    /// <summary>Attempts to get custom tool tip text for a cell in this column.</summary>
+    /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
+    public virtual bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
+    {
         toolTip = null;
         return false;
     }

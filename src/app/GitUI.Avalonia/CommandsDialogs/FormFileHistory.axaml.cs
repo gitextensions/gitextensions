@@ -95,7 +95,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         RevisionGrid.MultiSelect = true;
         RevisionGrid.ShowBuildServerInfo = true;
         RevisionGrid.FilePathByObjectId = [];
-        copyToClipboardToolStripMenuItem.SetRevisionFunc(RevisionGrid.GetSelectedRevisions);
+        copyToClipboardToolStripMenuItem.SetRevisionFunc(() => RevisionGrid.GetSelectedRevisions());
 
         ContextMenu? revisionContextMenu = RevisionGrid.RevisionContextMenu;
         revisionContextMenu?.Items.Remove(RevisionGrid.NavigateMenuItem);
