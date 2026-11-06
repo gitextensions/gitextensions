@@ -1147,7 +1147,11 @@ public class RevisionGraph : IRevisionGraphRowProvider
             // Select allowed segment(s) in each reserved lane
             for (int lane = 0; lane < firstIndexForReservedLane.Length; ++lane)
             {
-                RevisionGraphSegment[] segments = mergesFromReservedLane.Where(s => laneForReservedRevision[s.Parent] == lane).ToArray();
+                RevisionGraphSegment[] segments = mergesFromReservedLane
+                    .Where(s => laneForReservedRevision[s.Parent] == lane
+                        && // ignore merges from one row to the next: they cross lanes without occupying any lane
+                            orderedNodesCache[orderedNodesCache.IndexOf(s.Child) + 1] != s.Parent)
+                    .ToArray();
                 if (Config.MergeGraphLanesHavingCommonParent)
                 {
                     // Allow all segments

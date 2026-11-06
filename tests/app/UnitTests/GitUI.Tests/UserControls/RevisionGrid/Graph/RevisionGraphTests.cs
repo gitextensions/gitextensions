@@ -487,6 +487,20 @@ public class RevisionGraphTests
     }
 
     [Test]
+    public async Task MergesCanUseReservedLaneBeforeFirstNode_3(
+        [Values("A;B;C", "A;C;B", "B;A;C", "B;C;A", "C;A;B", "C;B;A")] string reservedLanes)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = false;
+        AppSettings.ReservedLanesBranchNames = reservedLanes;
+
+        // When A is on the next line above, the merge from B to A does not actually occupy B's lane.
+        // So, we can let the merge to C use B's lane.
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:1 4:1:B 5:2,4:A 6:3,4:C");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
     public async Task MergeFromReservedLaneIsNotStraightened_1([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
     {
         AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
