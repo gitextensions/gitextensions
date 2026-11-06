@@ -5,7 +5,7 @@ namespace GitExtensions.ParityInventory;
 // parity-scaffolding: Supplies the stable interchange contract consumed by later parity tooling.
 internal sealed record InventoryReport
 {
-    public const int CurrentSchemaVersion = 7;
+    public const int CurrentSchemaVersion = 8;
 
     public required int SchemaVersion { get; init; }
 

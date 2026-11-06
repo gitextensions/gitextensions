@@ -10,7 +10,7 @@ internal static class InventoryComparer
         SourceInventory comparableTwin = frameworkInputs.Twin;
         List<FunctionalFinding> findings = [];
         CompareParts(comparableOriginal, comparableTwin, findings);
-        CompareSet(comparableOriginal.Members, comparableTwin.Members, MemberKey, "members", "member", findings);
+        CompareMembers(comparableOriginal, comparableTwin, findings);
         CompareMemberDetails(comparableOriginal, comparableTwin, findings);
         CompareMemberOrder(comparableOriginal, comparableTwin, findings);
         CompareEventWiring(comparableOriginal.EventWiring, comparableTwin.EventWiring, findings);
@@ -78,6 +78,31 @@ internal static class InventoryComparer
         }
     }
 
+    internal static IReadOnlyList<MemberMatch> GetMemberMatches(SourceInventory original, SourceInventory twin)
+    {
+        FrameworkComparisonInputs comparable = FrameworkDeviationClassifier.Classify(original, twin);
+        return MatchComparableMembers(comparable.Original, comparable.Twin);
+    }
+
+    private static IReadOnlyList<MemberMatch> MatchComparableMembers(SourceInventory original, SourceInventory twin) =>
+        MemberMatcher.Match(original.Members, twin.Members, original.Parts.ToDictionary(
+            part => part.Path, part => part.ExpectedTwinPath ?? part.Path, StringComparer.Ordinal));
+
+    private static void CompareMembers(SourceInventory original, SourceInventory twin, List<FunctionalFinding> findings)
+    {
+        foreach (MemberMatch match in MatchComparableMembers(original, twin))
+        {
+            if (match.Original is null || match.Twin is null)
+            {
+                bool missing = match.Twin is null;
+                findings.Add(NewFinding("members", missing ? "member.missing" : "member.extra",
+                    $"member/{match.Key}",
+                    missing ? $"Original member '{match.Key}' is missing from the twin." : $"Twin has extra member '{match.Key}'.",
+                    match.Original?.ToString(), match.Twin?.ToString()));
+            }
+        }
+    }
+
     private static void CompareMemberOrder(
         SourceInventory original,
         SourceInventory twin,
@@ -97,36 +122,22 @@ internal static class InventoryComparer
         SourceInventory twin,
         List<FunctionalFinding> findings)
     {
-        HashSet<string> uniqueOriginalKeys = original.Members
-            .Where(member => !IsGeneratedMarkupField(member))
-            .GroupBy(MemberKey, StringComparer.Ordinal)
-            .Where(group => group.Count() == 1)
-            .Select(group => group.Key)
-            .ToHashSet(StringComparer.Ordinal);
-        HashSet<string> uniqueTwinKeys = twin.Members
-            .Where(member => !IsGeneratedMarkupField(member))
-            .GroupBy(MemberKey, StringComparer.Ordinal)
-            .Where(group => group.Count() == 1)
-            .Select(group => group.Key)
-            .ToHashSet(StringComparer.Ordinal);
-        HashSet<string> comparableKeys = uniqueOriginalKeys
-            .Where(uniqueTwinKeys.Contains)
-            .ToHashSet(StringComparer.Ordinal);
-        Dictionary<string, int> originalOrder = original.Members
-            .Where(member => comparableKeys.Contains(MemberKey(member)))
-            .Select((member, order) => (Key: MemberKey(member), Order: order))
+        MemberMatch[] matches = MatchComparableMembers(original, twin)
+            .Where(match => match.Original is not null && match.Twin is not null
+                && !IsGeneratedMarkupField(match.Original) && !IsGeneratedMarkupField(match.Twin)).ToArray();
+        Dictionary<string, int> originalOrder = matches.OrderBy(match => Array.IndexOf(original.Members.ToArray(), match.Original!))
+            .Select((match, order) => (match.Key, Order: order))
             .ToDictionary(item => item.Key, item => item.Order, StringComparer.Ordinal);
         Dictionary<string, int> expectedTwinPartOrder = original.Parts
             .Select((part, order) => (Part: part.ExpectedTwinPath
                 ?? throw new InvalidDataException("Original source part is missing its expected twin path."), Order: order))
             .GroupBy(item => item.Part, StringComparer.Ordinal)
             .ToDictionary(group => group.Key, group => group.Min(item => item.Order), StringComparer.Ordinal);
-        Dictionary<string, int> twinOrder = twin.Members
-            .Where(member => comparableKeys.Contains(MemberKey(member)))
-            .OrderBy(member => expectedTwinPartOrder.GetValueOrDefault(member.Part, int.MaxValue))
-            .ThenBy(member => member.Part, StringComparer.Ordinal)
-            .ThenBy(member => member.Order)
-            .Select((member, order) => (Key: MemberKey(member), Order: order))
+        Dictionary<string, int> twinOrder = matches
+            .OrderBy(match => expectedTwinPartOrder.GetValueOrDefault(match.Twin!.Part, int.MaxValue))
+            .ThenBy(match => match.Twin!.Part, StringComparer.Ordinal)
+            .ThenBy(match => match.Twin!.Order)
+            .Select((match, order) => (match.Key, Order: order))
             .ToDictionary(item => item.Key, item => item.Order, StringComparer.Ordinal);
         foreach ((string key, int order) in originalOrder)
         {
@@ -153,27 +164,19 @@ internal static class InventoryComparer
             part => part.ExpectedTwinPath
                 ?? throw new InvalidDataException("Original source part is missing its expected twin path."),
             StringComparer.Ordinal);
-        Dictionary<string, MemberEntry> twinMembers = twin.Members
-            .GroupBy(MemberKey, StringComparer.Ordinal)
-            .Where(group => group.Count() == 1)
-            .ToDictionary(group => group.Key, group => group.Single(), StringComparer.Ordinal);
-        foreach (IGrouping<string, MemberEntry> group in original.Members.GroupBy(MemberKey, StringComparer.Ordinal)
-                     .Where(group => group.Count() == 1))
+        foreach (MemberMatch match in MatchComparableMembers(original, twin)
+                     .Where(match => match.Original is not null && match.Twin is not null))
         {
-            MemberEntry originalMember = group.Single();
-            if (!twinMembers.TryGetValue(group.Key, out MemberEntry? twinMember))
-            {
-                continue;
-            }
-
+            MemberEntry originalMember = match.Original!;
+            MemberEntry twinMember = match.Twin!;
             string expectedPart = expectedTwinParts[originalMember.Part];
             if (!string.Equals(expectedPart, twinMember.Part, StringComparison.Ordinal))
             {
                 findings.Add(NewFinding(
                     "members",
                     "member.partial",
-                    $"member/{group.Key}/part",
-                    $"Member '{group.Key}' is declared in a different partial.",
+                    $"member/{match.Key}/part",
+                    $"Member '{match.Key}' is declared in a different partial.",
                     originalMember.Part,
                     twinMember.Part));
             }
@@ -183,8 +186,8 @@ internal static class InventoryComparer
                 findings.Add(NewFinding(
                     "members",
                     "member.accessibility",
-                    $"member/{group.Key}/accessibility",
-                    $"Member '{group.Key}' has different accessibility.",
+                    $"member/{match.Key}/accessibility",
+                    $"Member '{match.Key}' has different accessibility.",
                     originalMember.Accessibility,
                     twinMember.Accessibility));
             }
@@ -194,8 +197,8 @@ internal static class InventoryComparer
                 findings.Add(NewFinding(
                     "members",
                     "member.signature",
-                    $"member/{group.Key}/signature",
-                    $"Member '{group.Key}' has a different signature.",
+                    $"member/{match.Key}/signature",
+                    $"Member '{match.Key}' has a different signature.",
                     originalMember.Signature,
                     twinMember.Signature));
             }
@@ -383,7 +386,9 @@ internal static class InventoryComparer
             TwinValue = twinValue
         };
 
-    internal static string MemberKey(MemberEntry item) => item.ContainingType is null
+    internal static string MemberKey(MemberEntry item) => MemberMatcher.OverloadKey(item);
+
+    internal static string MemberGroupKey(MemberEntry item) => item.ContainingType is null
         ? $"{item.Kind}:{item.Name}" : $"{item.ContainingType}/{item.Kind}:{item.Name}";
 
     private static bool IsGeneratedMarkupField(MemberEntry item) =>

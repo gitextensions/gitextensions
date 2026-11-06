@@ -9,6 +9,31 @@ namespace GitExtensions.ParityFix.Tests;
 [TestFixture]
 public sealed class MechanicalFixerTests
 {
+    [TestCase("int", "int")]
+    [TestCase("Control", "AvaloniaControl")]
+    public void Fix_should_order_each_overload_using_the_inventory_match(string originalType, string twinType)
+    {
+        using Fixture fixture = new($"void A({originalType} value) {{ }}\n void A(string value) {{ }}",
+            $"void A(string value) {{ }}\n void A({twinType} value) {{ }}");
+        FileFix result = fixture.Fix();
+        result.ProofPassed.Should().BeTrue();
+        result.OrderChanged.Should().BeTrue();
+        result.Text.IndexOf($"A({twinType}", StringComparison.Ordinal)
+            .Should().BeLessThan(result.Text.IndexOf("A(string", StringComparison.Ordinal));
+    }
+
+    [Test]
+    public void Fix_should_order_generic_overloads_with_the_same_parameters()
+    {
+        using Fixture fixture = new("void A<T>(int value) { }\n void A<T, U>(int value) { }",
+            "void A<T, U>(int value) { }\n void A<T>(int value) { }");
+        FileFix result = fixture.Fix();
+        result.ProofPassed.Should().BeTrue();
+        result.OrderChanged.Should().BeTrue();
+        result.Text.IndexOf("A<T>(", StringComparison.Ordinal)
+            .Should().BeLessThan(result.Text.IndexOf("A<T, U>(", StringComparison.Ordinal));
+    }
+
     [Test]
     public void Fix_should_use_primary_constructor_and_record_parameter_order()
     {
@@ -325,9 +350,9 @@ public sealed class MechanicalFixerTests
     }
 
     [Test]
-    public void Fix_should_not_reorder_overloads_by_name()
+    public void Fix_should_not_reorder_ambiguous_overloads_by_name()
     {
-        using Fixture fixture = new("void A() { }\n    void A(int n) { }", "void A(int n) { }\n    void A() { }");
+        using Fixture fixture = new("void A(int n) { }\n    void A(string n) { }", "void A(bool n) { }\n    void A(long n) { }");
         FileFix result = fixture.Fix(forceOrder: true);
         result.OrderChanged.Should().BeFalse();
         result.Text.Should().Be(fixture.Twin);

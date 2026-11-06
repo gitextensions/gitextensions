@@ -12,8 +12,10 @@ internal static class FindingAudienceClassifier
         InventoryComparison comparison)
     {
         MemberEntry[] members = original.Members.Concat(twin.Members).ToArray();
-        HashSet<string> testMembers = members.Where(IsTestOnlyMember)
-            .Select(member => "member/" + InventoryComparer.MemberKey(member))
+        HashSet<string> testMembers = InventoryComparer.GetMemberMatches(original, twin)
+            .Where(match => (match.Original is not null && IsTestOnlyMember(match.Original))
+                || (match.Twin is not null && IsTestOnlyMember(match.Twin)))
+            .Select(match => "member/" + match.Key)
             .ToHashSet(StringComparer.Ordinal);
         HashSet<string> testComments = original.Comments.Concat(twin.Comments)
             .Where(comment => IsTestOnlyAnchor(comment.Anchor, members))

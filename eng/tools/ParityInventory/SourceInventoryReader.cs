@@ -394,9 +394,9 @@ internal static class SourceInventoryReader
         return candidate;
     }
 
-    private static void ExtractMembers(TypeDeclarationSyntax declaration, MutablePart part, string? containingType = null)
+    private static void ExtractMembers(TypeDeclarationSyntax declaration, MutablePart part, string? containingType = null, bool includePrimary = true)
     {
-        IReadOnlyList<MemberEntry> primaryMembers = GetPrimaryMembers(declaration, part.Path, containingType);
+        IReadOnlyList<MemberEntry> primaryMembers = includePrimary ? GetPrimaryMembers(declaration, part.Path, containingType) : [];
         part.Members.AddRange(primaryMembers);
         int order = primaryMembers.Count;
         foreach (MemberDeclarationSyntax member in declaration.Members)
@@ -426,11 +426,23 @@ internal static class SourceInventoryReader
                     break;
                 case MethodDeclarationSyntax method:
                     part.Members.Add(NewMember(part.Path, order++, "method", method.Identifier.ValueText,
-                        accessibility, $"{method.ReturnType} {method.Identifier}{Normalize(method.ParameterList)}", containingType));
+                        accessibility, $"{method.ReturnType} {method.ExplicitInterfaceSpecifier}{method.Identifier}{Normalize(method.TypeParameterList)}{Normalize(method.ParameterList)}", containingType));
+                    break;
+                case IndexerDeclarationSyntax indexer:
+                    part.Members.Add(NewMember(part.Path, order++, "indexer", "this",
+                        accessibility, $"{indexer.Type} {indexer.ExplicitInterfaceSpecifier}this{Normalize(indexer.ParameterList)}", containingType));
+                    break;
+                case OperatorDeclarationSyntax operation:
+                    part.Members.Add(NewMember(part.Path, order++, "operator", operation.OperatorToken.ValueText,
+                        accessibility, $"{operation.ReturnType} operator {(operation.CheckedKeyword.IsKind(SyntaxKind.CheckedKeyword) ? "checked " : string.Empty)}{operation.OperatorToken}{Normalize(operation.ParameterList)}", containingType));
+                    break;
+                case ConversionOperatorDeclarationSyntax conversion:
+                    part.Members.Add(NewMember(part.Path, order++, "conversion", conversion.ImplicitOrExplicitKeyword.ValueText,
+                        accessibility, $"{conversion.ImplicitOrExplicitKeyword} operator {(conversion.CheckedKeyword.IsKind(SyntaxKind.CheckedKeyword) ? "checked " : string.Empty)}{conversion.Type}{Normalize(conversion.ParameterList)}", containingType));
                     break;
                 case ConstructorDeclarationSyntax constructor:
                     part.Members.Add(NewMember(part.Path, order++, "constructor", constructor.Identifier.ValueText,
-                        accessibility, $"{constructor.Identifier}{Normalize(constructor.ParameterList)}", containingType));
+                        accessibility, $"{(constructor.Modifiers.Any(SyntaxKind.StaticKeyword) ? "static " : string.Empty)}{constructor.Identifier}{Normalize(constructor.ParameterList)}", containingType));
                     break;
                 case EnumDeclarationSyntax enumDeclaration:
                     part.Members.Add(NewMember(part.Path, order++, "enum", enumDeclaration.Identifier.ValueText,
@@ -461,6 +473,21 @@ internal static class SourceInventoryReader
                 ExtractMembers(nestedType, part, nestedName);
             }
         }
+    }
+
+    internal static IReadOnlyList<MemberEntry> GetDeclaredMembers(TypeDeclarationSyntax declaration)
+    {
+        List<MemberEntry> members = [.. GetPrimaryMembers(declaration, "-1")];
+        int primaryCount = members.Count;
+        for (int index = 0; index < declaration.Members.Count; index++)
+        {
+            MutablePart part = new(index.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            ExtractMembers(declaration.WithMembers(SyntaxFactory.SingletonList(declaration.Members[index])), part, includePrimary: false);
+            members.AddRange(part.Members.Where(member => member.ContainingType is null)
+                .Select(member => member with { Order = index + primaryCount }));
+        }
+
+        return members;
     }
 
     internal static IReadOnlyList<MemberEntry> GetPrimaryMembers(

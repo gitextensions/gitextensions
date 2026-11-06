@@ -97,15 +97,13 @@ internal static class MechanicalFixer
             commented = ordered;
             commentedType = FindType(commented, typeName)!;
             MemberDeclarationSyntax[] members = commentedType.Members.ToArray();
-            IReadOnlyList<MemberEntry> primaryMembers = SourceInventoryReader.GetPrimaryMembers(originalType);
-            Dictionary<string, int> ranks = originalType.Members
-                .Select((member, index) => (Key: OrderKey(member), Index: index + primaryMembers.Count))
-                .Concat(primaryMembers.Select(member => (Key: $"{member.Kind}:{member.Name}", Index: member.Order)))
-                .GroupBy(item => item.Key, StringComparer.Ordinal)
-                .Where(group => group.Count() == 1)
-                .ToDictionary(group => group.Key, group => group.Single().Index, StringComparer.Ordinal);
-            HashSet<string> unique = members.GroupBy(OrderKey, StringComparer.Ordinal)
-                .Where(group => group.Count() == 1).Select(group => group.Key).ToHashSet(StringComparer.Ordinal);
+            Dictionary<MemberDeclarationSyntax, int> ranks = MemberMatcher.Match(
+                    SourceInventoryReader.GetDeclaredMembers(originalType),
+                    SourceInventoryReader.GetDeclaredMembers(commentedType))
+                .Where(match => match.Original is not null && match.Twin is not null && match.Twin.Part != "-1")
+                .GroupBy(match => int.Parse(match.Twin!.Part, System.Globalization.CultureInfo.InvariantCulture))
+                .Where(group => group.Select(match => match.Original!.Order).Distinct().Count() == 1)
+                .ToDictionary(group => members[group.Key], group => group.First().Original!.Order);
 
             HashSet<SyntaxTrivia> movableWarnings = MovableWarningDirectives(commented, commentedType);
 
@@ -126,9 +124,9 @@ internal static class MechanicalFixer
                 }
 
                 int[] slots = Enumerable.Range(start, end - start)
-                    .Where(index => unique.Contains(OrderKey(members[index])) && ranks.ContainsKey(OrderKey(members[index])))
+                    .Where(index => ranks.ContainsKey(members[index]))
                     .ToArray();
-                MemberDeclarationSyntax[] sorted = slots.Select(index => members[index]).OrderBy(member => ranks[OrderKey(member)]).ToArray();
+                MemberDeclarationSyntax[] sorted = slots.Select(index => members[index]).OrderBy(member => ranks[member]).ToArray();
                 for (int index = 0; index < slots.Length; index++)
                 {
                     if (members[slots[index]] != sorted[index])
@@ -512,13 +510,6 @@ internal static class MechanicalFixer
 
     private static TypeDeclarationSyntax? FindType(SyntaxNode root, string name) =>
         root.DescendantNodes().OfType<TypeDeclarationSyntax>().SingleOrDefault(type => SourceInventoryReader.GetTypeName(type) == name);
-
-    private static string OrderKey(MemberDeclarationSyntax member)
-    {
-        string anchor = SourceInventoryReader.GetMemberAnchor(member);
-        int parameters = anchor.IndexOf('(');
-        return parameters < 0 ? anchor : anchor[..parameters];
-    }
 
     private static IEnumerable<string> InitializedNames(MemberDeclarationSyntax member) => member switch
     {

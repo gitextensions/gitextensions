@@ -14,7 +14,7 @@ dotnet run --project eng/tools/ParityInventory -- compare `
   --output eng/avalonia/parity-evidence/P0.4/functional-findings.json
 ```
 
-The report schema version is `7` (aggregate sweep schema `6`). It contains:
+The report schema version is `8` (aggregate sweep schema `7`). It contains:
 
 - recursive declared-member coverage of nested classes, structs, interfaces and records. A
   primary constructor and positional record properties are included; class primary parameters
@@ -31,6 +31,14 @@ The report schema version is `7` (aggregate sweep schema `6`). It contains:
   Similarly named product members and unrecognized shapes remain product findings. Neither
   partition is suppressed or treated as accepted; dependent and accepted counts stay separate;
 
+- each method, constructor, indexer and operator overload is measured separately. Generic arity,
+  explicit interface implementations and static constructors retain distinct identities. Matching
+  prefers exact signatures, then unique parameter identities/names/arity; ambiguous candidates
+  remain individual missing/extra findings. Every matched overload participates in signature,
+  accessibility, partial and relative-order comparisons. Finding keys retain their legacy shape
+  for unique names, and include the exact original overload suffix for overloaded names. Exact
+  pins validate that individual pair and still fail on source/twin drift. ParityFix uses the same
+  matching when restoring member order, with its existing directive and initializer safeguards;
 - deterministic original and twin inventories: source partials, members and lexical order,
   event handlers/wiring, menu trees, hotkey command IDs, settings reads/writes,
   `TranslationString` fields, inferred translation keys with English-catalog presence, and

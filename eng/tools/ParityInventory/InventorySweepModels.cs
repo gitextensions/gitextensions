@@ -3,7 +3,7 @@
 // parity-scaffolding: Defines the deterministic aggregate contract for a functional baseline sweep.
 internal sealed record InventorySweepResult
 {
-    public const int CurrentSchemaVersion = 6;
+    public const int CurrentSchemaVersion = 7;
 
     public required int SchemaVersion { get; init; }
 

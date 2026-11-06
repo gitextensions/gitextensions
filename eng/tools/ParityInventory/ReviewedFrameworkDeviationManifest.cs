@@ -89,6 +89,7 @@ internal sealed class ReviewedFrameworkDeviationManifest
     {
         List<FunctionalFinding> findings = [.. comparison.Findings];
         List<AcceptedFrameworkDeviation> deviations = [.. comparison.AcceptedFrameworkDeviations];
+        IReadOnlyList<MemberMatch> memberMatches = InventoryComparer.GetMemberMatches(original, twin);
         foreach (ReviewedFrameworkDeviationEntry entry in _entries.Where(entry => entry.TypeName == typeName))
         {
             if (entry.IsCommentDeviation)
@@ -120,10 +121,11 @@ internal sealed class ReviewedFrameworkDeviationManifest
                 memberKey = memberKey[..^suffix.Length];
             }
 
-            SourceInventory memberInventory = entry.Code == "member.missing" ? original : twin;
-            MemberEntry[] members = memberInventory.Members
-                .Where(member => InventoryComparer.MemberKey(member) == memberKey)
-                .ToArray();
+            MemberMatch[] matchedMembers = memberMatches
+                .Where(match => match.Key == memberKey).ToArray();
+            MemberEntry[] members = matchedMembers.Select(match =>
+                    entry.Code == "member.missing" ? match.Original : match.Twin)
+                .OfType<MemberEntry>().ToArray();
             if (members.Length != 1)
             {
                 throw new InvalidDataException(
@@ -153,9 +155,7 @@ internal sealed class ReviewedFrameworkDeviationManifest
             MemberEntry? twinMember = entry.Code == "member.missing" ? null : member;
             if (entry.Code is "member.signature" or "member.partial")
             {
-                MemberEntry[] originalMembers = original.Members
-                    .Where(candidate => InventoryComparer.MemberKey(candidate) == memberKey)
-                    .ToArray();
+                MemberEntry[] originalMembers = matchedMembers.Select(match => match.Original).OfType<MemberEntry>().ToArray();
                 if (originalMembers.Length != 1)
                 {
                     throw new InvalidDataException(

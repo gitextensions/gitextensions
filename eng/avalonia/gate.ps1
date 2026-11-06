@@ -93,7 +93,7 @@ $adapterArguments = @('--', 'NUnit.AssemblySelectLimit=100000')
 # Paths that can never reach the WinForms solution. Anything else, unknown paths included, builds it.
 $cannotAffectWinForms = '^(src/app/GitUI\.Avalonia/|src/app/GitExtensions\.Avalonia/|src/app/GitExtensions\.Shims\.WinForms/|tests/app/UnitTests/GitUI\.Avalonia\.Tests/|eng/avalonia/|eng/tools/|GitExtensions\.Avalonia\.slnx$)'
 # Paths that cannot change what the Avalonia build and its tests do. These standalone tools have no product consumers.
-$cannotAffectProduct = '^eng/avalonia/(portmap\.json|parity-ledger\.json|[^/]+\.(md|ps1))$|^eng/tools/(?:ParityFix|ParityInventory)(?:\.Tests)?/'
+$cannotAffectProduct = '^eng/avalonia/(portmap\.json|parity-ledger\.json|framework-adaptations\.json|[^/]+\.(md|ps1))$|^eng/tools/(?:ParityFix|ParityInventory)(?:\.Tests)?/'
 # Paths that cannot change the source inventory. The portmap, ledger and adaptations can.
 $cannotAffectInventory = '^eng/avalonia/[^/]+\.(md|ps1)$|^eng/tools/ParityFix(?:\.Tests)?/'
 $readOnlyOriginals = '^(src/app/GitUI/|src/app/GitExtensions/|src/app/BugReporter/|externals/(?!Git\.hub\.Portable/|Directory\.Build\.))'
