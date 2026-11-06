@@ -1134,6 +1134,7 @@ public sealed partial class FileStatusList : GitModuleControl
 
         FileStatusListView.BeginUpdate();
         ClearSelected();
+        RememberExpansionStates();
         FileStatusListView.Nodes.Clear();
         FileStatusListView.EndUpdate();
 
@@ -1168,6 +1169,7 @@ public sealed partial class FileStatusList : GitModuleControl
         {
             FileStatusListView.BeginUpdate();
 
+            RememberExpansionStates();
             FileStatusListView.Nodes.Clear();
 
             foreach ((TreeNode node, ExpandCollapseState state) in nodes)
@@ -1193,6 +1195,8 @@ public sealed partial class FileStatusList : GitModuleControl
                         break;
                 }
             }
+
+            RestoreExpansionStates();
 
             switch (FileStatusListView.Nodes.Count)
             {
@@ -2138,11 +2142,6 @@ public sealed partial class FileStatusList : GitModuleControl
                     cboFindInCommitFilesGitGrep.SelectedIndexChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
                 }
             }
-
-            void WorkaroundTooEarlyDrawing()
-            {
-                FileStatusListView.CollapseAll();
-            }
         });
     }
 
@@ -2212,5 +2211,6 @@ public sealed partial class FileStatusList : GitModuleControl
         internal bool FilterWatermarkLabelVisible => _fileStatusList.cboFilterComboBox.IsWatermarkVisible;
         internal void StoreFilter(string value) => _fileStatusList.StoreFilter(value);
         internal void SetFileStatusListVisibility(bool showNoFiles) => _fileStatusList.SetFileStatusListVisibility(showNoFiles);
+        internal void WorkaroundTooEarlyDrawing() => _fileStatusList.WorkaroundTooEarlyDrawing();
     }
 }
