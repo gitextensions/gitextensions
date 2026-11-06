@@ -1,10 +1,11 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Settings;
+using GitCommands.Utils;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
@@ -17,9 +18,6 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
     private readonly TranslationString _selectFile = new("Select file");
     private readonly GitConfigSettingsPageController _controller;
     private DiffMergeToolConfigurationManager? _diffMergeToolConfigurationManager;
-
-    [GeneratedRegex(@"\$(?:LOCAL|REMOTE|BASE|MERGED)", RegexOptions.ExplicitCapture)]
-    private static partial Regex WslRebaseRegex { get; }
 
     public GitConfigSettingsPage(IServiceProvider serviceProvider)
        : base(serviceProvider)
@@ -51,15 +49,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
             return command;
         }
 
-        // Replace "D:" with "/mnt/d"
-        int colonIndex = command.IndexOf(':');
-        if (colonIndex == (command[0] == '"' ? 2 : 1))
-        {
-            int windowsDriveIndex = colonIndex - 1;
-            command = $"{command[..windowsDriveIndex]}/mnt/{char.ToLower(command[windowsDriveIndex])}{command[(colonIndex + 1)..]}";
-        }
-
-        return WslRebaseRegex.Replace(command, @"$(wslpath -aw $&)").ToPosixPath();
+        return WslUtil.AdaptDiffMergeToolCommandToWsl(command);
     }
 
     protected override void Init(ISettingsPageHost pageHost)
