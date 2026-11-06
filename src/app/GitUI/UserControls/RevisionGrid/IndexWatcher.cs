@@ -29,6 +29,7 @@ public sealed class IndexWatcher : IDisposable
         RefsWatcher = new FileSystemWatcher();
 
         GitIndexWatcher.Changed += fileSystemWatcher_Changed;
+        GitIndexWatcher.Renamed += fileSystemWatcher_Renamed;
         RefsWatcher.Changed += fileSystemWatcher_Changed;
     }
 
@@ -54,7 +55,7 @@ public sealed class IndexWatcher : IDisposable
 
                 GitIndexWatcher.Path = _gitDirPath;
                 GitIndexWatcher.Filter = "index";
-                GitIndexWatcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite;
+                GitIndexWatcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
                 GitIndexWatcher.IncludeSubdirectories = false;
                 GitIndexWatcher.EnableRaisingEvents = _enabled;
 
@@ -113,6 +114,17 @@ public sealed class IndexWatcher : IDisposable
         IndexChanged = true;
     }
 
+    private void fileSystemWatcher_Renamed(object sender, RenamedEventArgs e)
+    {
+        // Git writes "index.lock" and renames it over "index", which raises no Changed event for "index".
+        // The Filter also matches renames away from "index", which are not index updates.
+        // Handle it like a change, so that the same filtering of notifications applies.
+        if (e.Name == "index")
+        {
+            fileSystemWatcher_Changed(sender, e);
+        }
+    }
+
     /// <summary>
     /// Reenable indexwatcher (if disabled), reset icon.
     /// </summary>
@@ -146,6 +158,7 @@ public sealed class IndexWatcher : IDisposable
         GitIndexWatcher.EnableRaisingEvents = false;
         RefsWatcher.EnableRaisingEvents = false;
         GitIndexWatcher.Changed -= fileSystemWatcher_Changed;
+        GitIndexWatcher.Renamed -= fileSystemWatcher_Renamed;
         RefsWatcher.Changed -= fileSystemWatcher_Changed;
         GitIndexWatcher.Dispose();
         RefsWatcher.Dispose();
