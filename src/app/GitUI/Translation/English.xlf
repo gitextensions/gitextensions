@@ -2793,23 +2793,6 @@ compare with first:</source>
         <source>&amp;Create pull requests...</source>
         <target />
       </trans-unit>
-      <trans-unit id="_deleteSessionRefsCaption.Text">
-        <source>Delete agentic session refs</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_deleteSessionRefsConfirm.Text">
-        <source>Do you want to delete {0} ref(s) matching the filter for agentic sessions?
-
-{1}
-
-AI agents may still need these refs, e.g. for the checkpoints of an active session.
-Do not delete them while an agentic session is in progress.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_deleteSessionRefsNone.Text">
-        <source>There are no refs matching the filter for agentic sessions.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
         <source>&amp;Fork/Clone repository...</source>
         <target />
@@ -3029,10 +3012,6 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="deleteIndexLockToolStripMenuItem.Text">
         <source>&amp;Delete index.lock</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="deleteSessionRefsToolStripMenuItem.Text">
-        <source>Delete agentic &amp;session refs...</source>
         <target />
       </trans-unit>
       <trans-unit id="deleteTagToolStripMenuItem.Text">

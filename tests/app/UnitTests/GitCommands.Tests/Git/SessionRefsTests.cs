@@ -25,7 +25,13 @@ public sealed class SessionRefsTests
     }
 
     [Test]
-    public void DeleteRefs_should_delete_only_the_refs_matching_the_filters()
+    public void GetDeleteRefArgs_should_delete_the_full_refname()
+    {
+        SessionRefs.GetDeleteRefArgs("refs/agents/a/1").ToString().Should().Be("update-ref -d \"refs/agents/a/1\"");
+    }
+
+    [Test]
+    public void GetDeleteRefArgs_should_delete_only_the_refs_matching_the_filters()
     {
         using ReferenceRepository repository = new();
         IExecutable git = repository.Module.GitExecutable;
@@ -38,7 +44,10 @@ public sealed class SessionRefsTests
         IReadOnlyList<string> found = SessionRefs.GetRefs(git, _refsFilters);
         found.Should().BeEquivalentTo(sessionRefs);
 
-        SessionRefs.DeleteRefs(git, found);
+        foreach (string gitRef in found)
+        {
+            git.Execute(SessionRefs.GetDeleteRefArgs(gitRef)).ExitedSuccessfully.Should().BeTrue();
+        }
 
         SessionRefs.GetRefs(git, _refsFilters).Should().BeEmpty();
         git.GetOutput("for-each-ref --format=%(refname)").Should().Contain("refs/keep/agents/d").And.Contain("refs/heads/");

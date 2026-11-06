@@ -175,10 +175,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly TranslationString _goToSuperProject = new("Go to superproject");
 
     private readonly TranslationString _indexLockCantDelete = new("Failed to delete index.lock");
-    private readonly TranslationString _deleteSessionRefsCaption = new("Delete agentic session refs");
-    private readonly TranslationString _deleteSessionRefsNone = new("There are no refs matching the filter for agentic sessions.");
-    private readonly TranslationString _deleteSessionRefsConfirm = new("Do you want to delete {0} ref(s) matching the filter for agentic sessions?\n\n{1}\n\n"
-        + "AI agents may still need these refs, e.g. for the checkpoints of an active session.\nDo not delete them while an agentic session is in progress.");
 
     private readonly TranslationString _loading = new("Loading...");
 
@@ -1819,33 +1815,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             throw new UserExternalOperationException(_indexLockCantDelete.Text,
                 new ExternalOperationException(arguments: ex.FileName, workingDirectory: Module.WorkingDir, innerException: ex));
         }
-    }
-
-    private void deleteSessionRefsToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        const int maxListedRefs = 15;
-
-        IReadOnlyList<string> sessionRefs = SessionRefs.GetRefs(Module.GitExecutable, AppSettings.SessionRefsFilters.Value);
-        if (sessionRefs.Count == 0)
-        {
-            MessageBoxes.Show(this, _deleteSessionRefsNone.Text, _deleteSessionRefsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
-
-        string listedRefs = string.Join(Environment.NewLine, sessionRefs.Take(maxListedRefs));
-        if (sessionRefs.Count > maxListedRefs)
-        {
-            listedRefs += $"{Environment.NewLine}...";
-        }
-
-        if (!MessageBoxes.Confirm(this, string.Format(_deleteSessionRefsConfirm.Text, sessionRefs.Count, listedRefs), _deleteSessionRefsCaption.Text,
-                MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
-        {
-            return;
-        }
-
-        SessionRefs.DeleteRefs(Module.GitExecutable, sessionRefs);
-        RefreshRevisions();
     }
 
     private void BisectClick(object sender, EventArgs e)

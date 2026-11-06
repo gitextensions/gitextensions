@@ -104,7 +104,6 @@ partial class FormBrowse
         compressGitDatabaseToolStripMenuItem = new ToolStripMenuItem();
         recoverLostObjectsToolStripMenuItem = new ToolStripMenuItem();
         deleteIndexLockToolStripMenuItem = new ToolStripMenuItem();
-        deleteSessionRefsToolStripMenuItem = new ToolStripMenuItem();
         editLocalGitConfigToolStripMenuItem = new ToolStripMenuItem();
         repoSettingsToolStripMenuItem = new ToolStripMenuItem();
         toolStripSeparator13 = new ToolStripSeparator();
@@ -952,7 +951,6 @@ partial class FormBrowse
         compressGitDatabaseToolStripMenuItem,
         recoverLostObjectsToolStripMenuItem,
         deleteIndexLockToolStripMenuItem,
-        deleteSessionRefsToolStripMenuItem,
         editLocalGitConfigToolStripMenuItem});
         gitMaintenanceToolStripMenuItem.Image = Properties.Images.Maintenance;
         gitMaintenanceToolStripMenuItem.Name = "gitMaintenanceToolStripMenuItem";
@@ -982,14 +980,7 @@ partial class FormBrowse
         deleteIndexLockToolStripMenuItem.Size = new Size(194, 22);
         deleteIndexLockToolStripMenuItem.Text = "&Delete index.lock";
         deleteIndexLockToolStripMenuItem.Click += deleteIndexLockToolStripMenuItem_Click;
-        //
-        // deleteSessionRefsToolStripMenuItem
-        //
-        deleteSessionRefsToolStripMenuItem.Name = "deleteSessionRefsToolStripMenuItem";
-        deleteSessionRefsToolStripMenuItem.Size = new Size(194, 22);
-        deleteSessionRefsToolStripMenuItem.Text = "Delete agentic &session refs...";
-        deleteSessionRefsToolStripMenuItem.Click += deleteSessionRefsToolStripMenuItem_Click;
-        //
+        // 
         // editLocalGitConfigToolStripMenuItem
         // 
         editLocalGitConfigToolStripMenuItem.Image = Properties.Images.EditGitConfig;
@@ -1562,7 +1553,6 @@ partial class FormBrowse
     private ToolStripMenuItem compressGitDatabaseToolStripMenuItem;
     private ToolStripMenuItem recoverLostObjectsToolStripMenuItem;
     private ToolStripMenuItem deleteIndexLockToolStripMenuItem;
-    private ToolStripMenuItem deleteSessionRefsToolStripMenuItem;
     private ToolStripSeparator toolStripSeparator4;
     private ToolStripMenuItem editgitignoreToolStripMenuItem1;
     private ToolStripMenuItem editGitAttributesToolStripMenuItem;

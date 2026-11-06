@@ -51,21 +51,14 @@ public static class SessionRefs
     }
 
     /// <summary>
-    ///  Deletes the <paramref name="refs"/> in a single transaction (<c>git update-ref --stdin</c>).
+    ///  Gets the arguments to delete the ref with the full name <paramref name="gitRef"/> (<c>git update-ref -d</c>).
     /// </summary>
-    public static void DeleteRefs(IExecutable gitExecutable, IEnumerable<string> refs)
+    public static ArgumentString GetDeleteRefArgs(string gitRef)
     {
-        GitArgumentBuilder args = new("update-ref")
+        return new GitArgumentBuilder("update-ref")
         {
-            "--stdin"
+            "-d",
+            gitRef.Quote()
         };
-
-        gitExecutable.Execute(args, writeInput: input =>
-        {
-            foreach (string gitRef in refs)
-            {
-                input.Write($"delete {gitRef}\n");
-            }
-        });
     }
 }
