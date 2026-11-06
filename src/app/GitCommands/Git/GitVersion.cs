@@ -14,6 +14,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     private static readonly GitVersion _v2_36_0 = new("2.36.0");
     private static readonly GitVersion _v2_38_0 = new("2.38.0");
     private static readonly GitVersion _v2_42_0 = new("2.42.0");
+    private static readonly GitVersion _v2_45_0 = new("2.45.0");
     private static readonly GitVersion _v2_46_0 = new("2.46.0");
 
     /// <summary>
@@ -151,6 +152,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     public bool IsUnknown => this == _unknown;
 
     public bool SupportAmendCommits => this >= _v2_32_0;
+    public bool SupportCommentString => this >= _v2_45_0;
     public bool SupportGuiMergeTool => this >= _v2_20_0;
     public bool SupportLsFilesFormat => this >= _v2_42_0;
     public bool SupportNewGitConfigSyntax => this >= _v2_46_0;
