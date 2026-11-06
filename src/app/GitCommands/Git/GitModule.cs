@@ -1230,7 +1230,16 @@ public sealed partial class GitModule : IGitModule
         }
 
         GitArgumentBuilder args = new("submodule") { "status" };
-        ExecutionResult result = GitExecutable.Execute(args);
+
+        // `git submodule status` fails if .gitmodules does not map a gitlink recorded in the index,
+        // e.g. when an entry lacks its "path" key. Do not let the dialog crash then, but still report
+        // the well-configured submodules git listed before it failed. The others are only traced.
+        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
+        if (!result.ExitedSuccessfully)
+        {
+            Trace.WriteLine($"{nameof(GetSubmodulesInfo)}: git {args} failed with exit code {result.ExitCodeDisplay}, the list of submodules may be incomplete:\n{result.StandardError}");
+        }
+
         LazyStringSplit lines = result.StandardOutput.LazySplit('\n');
 
         string? lastLine = null;
