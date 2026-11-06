@@ -1188,7 +1188,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 ? []
                 : new RevisionReader(capturedModule).GetStashes(cancellationToken));
         RevisionLoadEventArgs loadEventArgs = new(this, UICommands, refs, stashes, forceRefresh);
-        RevisionObserver observer = new(this, cancellationToken, loadEventArgs);
+        RevisionObserver observer = new(this, cancellationToken, loadEventArgs,
+            objectId => TryGetParents(capturedModule, _filterInfo, objectId).ToList());
 
         // Initiate update left panel
         RevisionsLoading?.Invoke(this, loadEventArgs);
@@ -1367,6 +1368,26 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             IGitRef? selectedHeadMergeSource = gitRefs.FirstOrDefault(
                 gitRef => selectedRef.IsTrackingRemote(gitRef));
             selectedHeadMergeSource?.IsSelectedHeadMergeSource = true;
+        }
+
+        IEnumerable<ObjectId> TryGetParents(IGitModule module, FilterInfo filterInfo, ObjectId objectId)
+        {
+            // Limit the search to decrease command time (this may add seconds in big repos)
+            // It is only the first that are considered interesting to select.
+            GitArgumentBuilder args = new("rev-list")
+            {
+                $"--max-count=50",
+                objectId
+            };
+
+            ExecutionResult result = module.GitExecutable.Execute(args, throwOnErrorExit: false, cancellationToken: cancellationToken);
+            foreach (string line in result.StandardOutput.LazySplit('\n'))
+            {
+                if (ObjectId.TryParse(line, out ObjectId parentId))
+                {
+                    yield return parentId;
+                }
+            }
         }
     }
 
@@ -3653,12 +3674,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         return [workTreeRevision, indexRevision];
     }
 
-    private void InsertArtificialRevisions(IReadOnlyList<GitRevision> artificialRevisions)
+    private void InsertArtificialRevisions(IReadOnlyList<GitRevision> artificialRevisions, IReadOnlyList<ObjectId> insertionParents)
     {
-        IReadOnlyList<ObjectId> insertionParents = _headId is ObjectId { IsZero: false } currentCheckout
-            ? [currentCheckout]
-            : [];
-
         // Insert before insertionParents if they are found, otherwise first.
         _revisionGraph.Insert(artificialRevisions[0], artificialRevisions[1], insertionParents);
     }
@@ -3993,7 +4010,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private sealed class RevisionObserver(
         RevisionGridControl owner,
         CancellationToken cancellationToken,
-        RevisionLoadEventArgs loadEventArgs) : IObserver<IReadOnlyList<GitRevision>>
+        RevisionLoadEventArgs loadEventArgs,
+        Func<ObjectId, IReadOnlyList<ObjectId>>? getParents = null) : IObserver<IReadOnlyList<GitRevision>>
     {
         private bool _artificialRevisionsAddedToStream;
         private readonly HashSet<ObjectId> _insertedStashIds = [];
@@ -4071,11 +4089,20 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             IReadOnlyList<GitRevision> artificialRevisions = _artificialRevisionsAddedToStream
                 ? []
                 : owner.CreateArtificialRevisions(cancellationToken);
+            IReadOnlyList<ObjectId>? headParents = null;
             if (artificialRevisions.Count > 0)
             {
+                if (!owner.CurrentCheckout.IsZero)
+                {
+                    // Not found, so search for its parents
+                    headParents = getParents?.Invoke(owner.CurrentCheckout) ?? [];
+                }
+
                 // HEAD where to insert the artificial was not found
                 // (can occur when filtering or limiting number of loaded commits)
-                owner.InsertArtificialRevisions(artificialRevisions);
+                // Try to find the revision where to attach the artificial, first is not found
+                // Insertion requires a non-null parent list, so use an empty list if no parents were found
+                owner.InsertArtificialRevisions(artificialRevisions, headParents ?? []);
             }
 
             owner._revisionGraph.LoadingCompleted();
@@ -4103,22 +4130,22 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                     bool searchParents = !fallbackSelectionId.IsZero && !fallbackSelectionId.IsArtificial
                         && !owner._revisions.Any(revision => owner._pendingSelectedObjectIds.Contains(revision.ObjectId));
                     IReadOnlyList<ObjectId>? parents = null;
-                    if (searchParents && owner._lastModule is IGitModule module)
+                    if (searchParents)
                     {
-                        // Not found, so search for its parents
-                        await TaskScheduler.Default;
-
-                        // Limit the search to decrease command time (this may add seconds in big repos)
-                        // It is only the first that are considered interesting to select.
-                        GitArgumentBuilder args = new("rev-list")
+                        // Try to reuse headParents for parents to the commit to be selected
+                        if (headParents is not null && fallbackSelectionId == owner.CurrentCheckout)
                         {
-                            "--max-count=50",
-                            fallbackSelectionId,
-                        };
-                        ExecutionResult result = module.GitExecutable.Execute(args, throwOnErrorExit: false, cancellationToken: cancellationToken);
-                        parents = [.. result.StandardOutput.LazySplit('\n')
-                            .Select(line => ObjectId.TryParse(line, out ObjectId parentId) ? parentId : default)
-                            .Where(parentId => !parentId.IsZero)];
+                            parents = headParents;
+                        }
+                        else if (headParents?.ToList().IndexOf(fallbackSelectionId) is int index and >= 0)
+                        {
+                            parents = headParents.Skip(index + 1).ToList();
+                        }
+                        else
+                        {
+                            await TaskScheduler.Default;
+                            parents = getParents?.Invoke(fallbackSelectionId);
+                        }
                     }
 
                     await owner._taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
