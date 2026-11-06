@@ -53,6 +53,34 @@ public class RevisionGridToolTipProviderTests
     }
 
     [Test]
+    public void ProcessHotkey_should_not_consume_Escape_if_neither_tooltip_nor_quick_search_is_shown()
+    {
+        RunGridTest(revisionGrid =>
+        {
+            revisionGrid.ProcessHotkey(Keys.Escape).Should().BeFalse(
+                "Esc must reach the hotkeys, e.g. 'Close repository', if there is nothing to close");
+        });
+    }
+
+    [Test]
+    public void Hide_should_return_false_if_the_tooltip_has_been_hidden_automatically()
+    {
+        RunProviderTest(provider =>
+        {
+            RevisionGridToolTipProvider.TestAccessor accessor = provider.GetTestAccessor();
+            accessor.ToolTip.ShowAlways = true; // the test form need not be active
+            accessor.ToolTip.Show("tooltip", accessor.GridView, duration: 100);
+            UITest.ProcessUntil("Showing tooltip", () => accessor.IsShown);
+
+            // Like after AutoPopDelay, the tooltip is hidden without MouseDown or MouseLeave
+            UITest.ProcessEventsFor(500);
+
+            provider.Hide().Should().BeFalse(
+                "Esc is consumed if a tooltip was hidden, so it would not reach the hotkeys, e.g. 'Close repository'");
+        });
+    }
+
+    [Test]
     public void Clear_should_forget_the_cell_the_tooltip_was_built_for()
     {
         RunProviderTest(provider =>
@@ -73,6 +101,9 @@ public class RevisionGridToolTipProviderTests
     }
 
     private void RunProviderTest(Action<RevisionGridToolTipProvider> testDriver)
+        => RunGridTest(revisionGrid => testDriver(revisionGrid.GetTestAccessor().ToolTipProvider));
+
+    private void RunGridTest(Action<RevisionGridControl> testDriver)
     {
         UITest.RunForm<FormBrowse>(
             showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
@@ -82,7 +113,7 @@ public class RevisionGridToolTipProviderTests
                 UITest.ProcessUntil("Loading Revisions", () => revisionGrid.GetTestAccessor().IsDataLoadComplete);
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                testDriver(revisionGrid.GetTestAccessor().ToolTipProvider);
+                testDriver(revisionGrid);
             });
     }
 }
