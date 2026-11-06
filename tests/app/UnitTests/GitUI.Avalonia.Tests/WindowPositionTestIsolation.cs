@@ -1,20 +1,14 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Security.Cryptography;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
 using GitUI;
 using GitUIPluginInterfaces;
-using Microsoft.Win32;
 
 [SetUpFixture]
 public sealed class WindowPositionTestIsolation
 {
-    private RegistryKey? _originalRegistryKey;
-    private RegistryKey? _isolatedRegistryKey;
-    private string? _registryPath;
-    private static FieldInfo RegistryField => typeof(AppSettings).GetField("_versionIndependentRegKey", BindingFlags.NonPublic | BindingFlags.Static)!;
-
     private Func<string> _originalConfigFilePathProvider = null!;
     private string _settingsDirectory = null!;
     private Lazy<string?>? _originalApplicationDataPath;
@@ -37,15 +31,10 @@ public sealed class WindowPositionTestIsolation
             // The existing accessor first initializes AppSettings, which may read the test
             // host's normal profile. Never delete, reset, or save that profile for a test run.
             AppSettings.TestAccessor accessor = AppSettings.GetTestAccessor();
-            // Windows keeps SSH and several startup settings in the registry, outside the file profile.
-            // Use a fresh test key so a user's PuTTY choice cannot affect local-Git or geometry tests.
             if (OperatingSystem.IsWindows())
             {
-                _originalRegistryKey = (RegistryKey?)RegistryField.GetValue(null);
-                _registryPath = $"Software\\GitExtensions.Avalonia.Tests\\{Guid.NewGuid():N}";
-                _isolatedRegistryKey = Registry.CurrentUser.CreateSubKey(_registryPath, writable: true);
-                RegistryField.SetValue(null, _isolatedRegistryKey);
-                TestContext.Progress.WriteLine($"Isolated registry: HKCU\\{_registryPath}");
+                RegistryTestIsolation.SettingsKeyName.Should().Contain(RegistryTestIsolation.TestRoot);
+                TestContext.Progress.WriteLine($"Isolated registry: {RegistryTestIsolation.SettingsKeyName}");
             }
 
             _originalApplicationDataPath = accessor.ApplicationDataPath;
@@ -122,15 +111,7 @@ public sealed class WindowPositionTestIsolation
         }
         finally
         {
-            if (OperatingSystem.IsWindows() && _isolatedRegistryKey is not null)
-            {
-                RegistryField.SetValue(null, _originalRegistryKey);
-                _isolatedRegistryKey.Dispose();
-                _isolatedRegistryKey = null;
-                _registryPath.Should().StartWith("Software\\GitExtensions.Avalonia.Tests\\");
-                Registry.CurrentUser.DeleteSubKeyTree(_registryPath!, throwOnMissingSubKey: false);
-            }
-
+            RegistryTestIsolation.VerifyAndDispose();
             _isolatedSettingsCache?.Dispose();
             _compositionContext?.Dispose();
             if (Directory.Exists(_settingsDirectory))
