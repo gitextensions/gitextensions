@@ -131,16 +131,6 @@ public sealed partial class FormVerify : GitModuleForm
         InitializeComplete();
     }
 
-    public FormVerify(IGitUICommands commands)
-        : base(commands, enablePositionRestore: false)
-    {
-        InitializeComponent();
-        WireControls();
-        fileViewer.UICommandsSource = this;
-        _gitTagController = new GitTagController(commands);
-        InitializeComplete();
-    }
-
     private static readonly Dictionary<string, string[]> _fileTypesEquivalences = new()
     {
         { "js", ["ts", "jsx", "tsx"] },
@@ -153,6 +143,16 @@ public sealed partial class FormVerify : GitModuleForm
         { "md", ["sh", "yml"] },
         { "txt", ["csv", "css", "md", "yml"] },
     };
+
+    public FormVerify(IGitUICommands commands)
+        : base(commands, enablePositionRestore: false)
+    {
+        InitializeComponent();
+        WireControls();
+        fileViewer.UICommandsSource = this;
+        _gitTagController = new GitTagController(commands);
+        InitializeComplete();
+    }
 
     private void WireControls()
     {
