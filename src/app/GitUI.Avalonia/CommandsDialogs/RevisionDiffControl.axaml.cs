@@ -178,25 +178,6 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
 
     internal GitRevision? DisplayedRevision { get; private set; }
 
-    internal IScriptOptionsProvider ScriptOptionsProvider => GetScriptOptionsProvider();
-
-    protected override IScriptOptionsProvider GetScriptOptionsProvider()
-    {
-        return new ScriptOptionsProvider(
-            DiffFiles,
-            () => BlameControl.IsVisible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine,
-            () => BlameControl.IsVisible ? BlameControl.CurrentFileColumn : DiffText.CurrentFileColumn);
-    }
-
-    public void ReloadHotkeys()
-    {
-        LoadHotkeys(HotkeySettingsName);
-        DiffFiles.ReloadHotkeys();
-        DiffText.ReloadHotkeys();
-    }
-
-    public void LoadCustomDifftools() => DiffFiles.LoadCustomDifftools();
-
     public bool ExecuteCommand(Command cmd)
         => ExecuteCommand((int)cmd);
 
@@ -259,6 +240,25 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
             return false;
         }
     }
+
+    internal IScriptOptionsProvider ScriptOptionsProvider => GetScriptOptionsProvider();
+
+    protected override IScriptOptionsProvider GetScriptOptionsProvider()
+    {
+        return new ScriptOptionsProvider(
+            DiffFiles,
+            () => BlameControl.IsVisible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine,
+            () => BlameControl.IsVisible ? BlameControl.CurrentFileColumn : DiffText.CurrentFileColumn);
+    }
+
+    public void ReloadHotkeys()
+    {
+        LoadHotkeys(HotkeySettingsName);
+        DiffFiles.ReloadHotkeys();
+        DiffText.ReloadHotkeys();
+    }
+
+    public void LoadCustomDifftools() => DiffFiles.LoadCustomDifftools();
 
     public void CancelLoadCustomDifftools() => DiffFiles.CancelLoadCustomDifftools();
 
