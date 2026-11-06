@@ -281,6 +281,7 @@ public sealed class FormBrowseSettingsRefreshTests
             commands.Module.Returns(module);
             commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
             commands.GetService(typeof(IAppTitleGenerator)).Returns(title);
+            commands.GetService(typeof(GitUI.Shells.IShellProvider)).Returns(new GitUI.Shells.ShellProvider());
             commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
             IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
             history.LoadSnapshot().Returns(new RepositoryHistorySnapshot([], []));

@@ -2523,7 +2523,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         switch ((Command)cmd)
         {
-            case Command.GitBash: userShell_Click(this, EventArgs.Empty); break;
+            case Command.GitBash: userShell_Click(userShell, EventArgs.Empty); break;
             case Command.GitGui: Module.RunGui(); break;
             case Command.GitGitK: Module.RunGitK(); break;
             case Command.FocusLeftPanel:

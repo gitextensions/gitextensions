@@ -200,6 +200,7 @@ public sealed class BrowseLowerPaneCommandRoutingTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
         commands.GetService(typeof(IAppTitleGenerator)).Returns(title);
+        commands.GetService(typeof(GitUI.Shells.IShellProvider)).Returns(new GitUI.Shells.ShellProvider());
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(hotkeys);
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(Substitute.For<IRepositoryHistoryUIService>());
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(Substitute.For<IUserRepositoriesListController>());
