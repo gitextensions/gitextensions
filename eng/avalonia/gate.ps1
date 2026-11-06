@@ -116,6 +116,32 @@ function Get-FreeGb {
     return [math]::Round((Get-PSDrive -Name $repo.Substring(0, 1)).Free / 1GB, 1)
 }
 
+function Remove-ExpiredGateLogs([string]$GateRoot, [int]$KeepPassingLogs) {
+    $passingRuns = @(Get-ChildItem -LiteralPath $gateRoot -Directory |
+        Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'receipt.json') } |
+        Sort-Object Name -Descending |
+        Where-Object { (Get-Content -LiteralPath (Join-Path $_.FullName 'receipt.json') -Raw | ConvertFrom-Json).status -eq 'passed' })
+    foreach ($old in @($passingRuns | Select-Object -Skip $keepPassingLogs)) {
+        $files = @(Get-ChildItem -LiteralPath $old.FullName -File)
+        foreach ($result in @($files | Where-Object Extension -eq '.trx')) {
+            try { $document = [xml][IO.File]::ReadAllText($result.FullName) }
+            catch { continue } # An unreadable result cannot identify a deployment directory safely.
+            foreach ($deployment in $document.SelectNodes('//*[local-name()="Deployment"]/@runDeploymentRoot')) {
+                if ([string]::IsNullOrWhiteSpace($deployment.Value)) { continue }
+                try { $target = [IO.Path]::GetFullPath((Join-Path $old.FullName $deployment.Value)) }
+                catch { continue }
+                # Only a named test deployment directly inside this run can be removed recursively.
+                if ([IO.Path]::GetDirectoryName($target) -ne $old.FullName -or
+                    [IO.Path]::GetFileName($target) -in 'windows-smoke', 'linux-runtime') { continue }
+                if (Test-Path -LiteralPath $target -PathType Container) {
+                    Remove-Item -LiteralPath $target -Recurse -Force
+                }
+            }
+        }
+        $files | Where-Object { $_.Extension -in '.log', '.trx' } | Remove-Item
+    }
+}
+
 # Hashes the whole working tree, untracked files included, without touching the real index.
 function Get-WorkTree {
     $index = New-TemporaryFile
@@ -596,14 +622,8 @@ if ((Get-WorkTree) -ne $tree) {
     notRun = $notRun
 } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $runDirectory 'receipt.json') -Encoding utf8
 
-# Receipts stay forever. Logs stay for failures and for the latest passing runs.
-$passingRuns = @(Get-ChildItem -LiteralPath $gateRoot -Directory |
-    Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'receipt.json') } |
-    Sort-Object Name -Descending |
-    Where-Object { (Get-Content -LiteralPath (Join-Path $_.FullName 'receipt.json') -Raw | ConvertFrom-Json).status -eq 'passed' })
-foreach ($old in @($passingRuns | Select-Object -Skip $keepPassingLogs)) {
-    Get-ChildItem -LiteralPath $old.FullName -Exclude 'receipt.json' | Remove-Item -Recurse
-}
+# Receipts and retained evidence stay forever; prune old successful logs/results.
+Remove-ExpiredGateLogs $gateRoot $keepPassingLogs
 
 $total = [math]::Round(((Get-Date) - $started).TotalMinutes, 1)
 "$($status.ToUpperInvariant()) $Level tree $tree in $total min, $(Get-FreeGb) GB free; receipt: eng/avalonia/parity-evidence/gates/$id/receipt.json"
