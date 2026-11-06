@@ -113,11 +113,7 @@ public partial class FileStatusList : GitModuleControl
         {
             Name = "sortListByContextMenuItem",
         };
-        tsmiCopyPaths.Initialize(
-            () => TryGetUICommandsDirect(out IGitUICommands? commands)
-                ? commands
-                : throw new InvalidOperationException("The menu is not attached to UI commands."),
-            GetSelectedFilePaths);
+        tsmiCopyPaths.Initialize(() => UICommands, GetSelectedFilePaths);
 
         lstFiles.ItemTemplate = new FuncDataTemplate<object>(CreateFileRow, supportsRecycling: false);
         tvDiffFiles.ItemTemplate = new FuncTreeDataTemplate<DiffTreeNode>(

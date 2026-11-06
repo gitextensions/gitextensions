@@ -4544,6 +4544,48 @@ public sealed class FormBrowseTests
         }
     }
 
+    [AvaloniaTest]
+    [TestCase(false, false)]
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    [TestCase(true, true)]
+    public async Task FormBrowse_Copy_paths_should_resolve_commands_through_the_owning_pane(bool fileTree, bool fullPath)
+    {
+        FieldInfo clipboardField = typeof(WinFormsShims.ShimHost).GetField("_clipboard", BindingFlags.NonPublic | BindingFlags.Static)!;
+        object? previousClipboard = clipboardField.GetValue(null);
+        WinFormsShims.IClipboard clipboard = Substitute.For<WinFormsShims.IClipboard>();
+        WinFormsShims.ShimHost.Clipboard = clipboard;
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1400, Height = 850 };
+        FileStatusList files = fileTree ? form.fileTree.FileStatusList : form.revisionDiff.FileStatusList;
+        ContextMenu menu = files.GetTestAccessor().ContextMenu;
+        try
+        {
+            form.Show();
+            form.CommitInfoTabControl.SelectedItem = fileTree ? form.TreeTabPage : form.DiffTabPage;
+            await form.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(30));
+            await WaitUntilAsync(() => files.SelectedItem?.Item.Name == "tracked.txt");
+            menu.Open(files);
+            Dispatcher.UIThread.RunJobs();
+            CopyPathsToolStripMenuItem copy = (CopyPathsToolStripMenuItem)files.GetTestAccessor().CopyPathsMenuItem;
+            copy.IsEnabled.Should().BeTrue();
+            copy.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            MenuItem action = fullPath ? copy.GetTestAccessor().FullNativeMenuItem : copy.GetTestAccessor().RelativeNativeMenuItem;
+            TopLevel popup = TopLevel.GetTopLevel(action) ?? throw new AssertionException("The copy action must be in its open popup.");
+            Click(popup, action, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            clipboard.Received(1).SetText(fullPath ? Path.Combine(module.WorkingDir, "tracked.txt") : "tracked.txt");
+            clipboard.ReceivedCalls().Should().HaveCount(1);
+        }
+        finally
+        {
+            menu.Close();
+            form.Close();
+            clipboardField.SetValue(null, previousClipboard);
+        }
+    }
+
     private GitModule CreateRepositoryWithInitialCommit()
     {
         GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);

@@ -1,3 +1,4 @@
+using Avalonia.Interactivity;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -55,6 +56,12 @@ internal partial class CopyPathsToolStripMenuItem : ToolStripMenuItemEx
     {
         // The command can be invoked via the keyboard, and the parent is null
         // Avalonia dismisses an opened native ContextMenu after the command; a closed menu has no popup to hide.
+
+        // Avalonia bubbles submenu clicks to this parent; its default action belongs only to its own activation.
+        if (e is RoutedEventArgs args && !ReferenceEquals(args.Source, sender))
+        {
+            return;
+        }
 
         CopyPathsToClipboard(Module.WorkingDir, PathUtil.ToNativePath);
     }
