@@ -28,6 +28,13 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        // Avalonia reports recoverable UI failures through its dispatcher instead of WinForms ThreadException.
+        Dispatcher.UIThread.UnhandledException += (_, e) =>
+        {
+            ReportUnhandledException(e.Exception, isTerminating: false);
+            e.Handled = true;
+        };
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             // The JoinableTaskContext must capture Avalonia's UI SynchronizationContext,
