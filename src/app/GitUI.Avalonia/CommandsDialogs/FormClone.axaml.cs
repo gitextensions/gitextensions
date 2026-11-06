@@ -323,7 +323,13 @@ public sealed partial class FormClone : GitExtensionsDialog
                 cbIntializeAllSubmodules.IsChecked == true,
                 branch, depth, isSingleBranch);
 
-            bool success = FormRemoteProcess.ShowDialog(this, destUICommands, cloneCmd);
+            using FormRemoteProcess fromProcess = new(destUICommands, cloneCmd);
+            string sourceRepo = PathUtil.IsLocalFile(from)
+                ? destUICommands.Module.GetPathForGitExecution(from)
+                : from;
+            fromProcess.SetUrlTryingToConnect(sourceRepo);
+            fromProcess.ShowDialog(this);
+            bool success = !fromProcess.ErrorOccurred();
             if (!success || Module.InTheMiddleOfPatch())
             {
                 return;

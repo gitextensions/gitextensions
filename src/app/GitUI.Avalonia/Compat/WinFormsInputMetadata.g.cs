@@ -1696,6 +1696,15 @@ internal static class WinFormsInputMetadata
                 new("lblOptions", 2, null, null),
                 new("txtOptions", 2, null, null),
             ],
+            ["GitUI.FormPuttyError"] =
+            [
+                new("Cancel", 1, null, null),
+                new("LoadSSHKey", 4, null, null),
+                new("Retry", 0, null, null),
+                new("lblMustAuthenticate", 3, null, null),
+                new("lblPleaseLoadKey", 2, null, null),
+                new("pictureBox1", 1, false, null),
+            ],
             ["GitUI.Help.HelpImageDisplayUserControl"] =
             [
                 new("buttonShowHelp", 2, null, null),
@@ -4294,6 +4303,15 @@ internal static class WinFormsInputMetadata
                 new("lblOptions", "Label"),
                 new("txtOptions", "TextBox"),
             ],
+            ["GitUI.FormPuttyError"] =
+            [
+                new("Cancel", "Button"),
+                new("LoadSSHKey", "Button"),
+                new("Retry", "Button"),
+                new("lblMustAuthenticate", "Label"),
+                new("lblPleaseLoadKey", "Label"),
+                new("pictureBox1", "PictureBox"),
+            ],
             ["GitUI.Help.HelpImageDisplayUserControl"] =
             [
                 new("buttonShowHelp", "Button"),
@@ -6479,6 +6497,15 @@ internal static class WinFormsInputMetadata
                 new("label1", null, null, true, null, null, null, null, null, false, false),
                 new("lblOptions", null, null, true, null, null, null, null, null, false, false),
                 new("txtOptions", ["Top", "Left", "Right"], null, null, null, null, null, null, null, false, false),
+            ],
+            ["GitUI.FormPuttyError"] =
+            [
+                new("Cancel", ["Bottom", "Right"], null, null, null, null, null, null, null, false, false),
+                new("LoadSSHKey", ["Bottom", "Right"], null, null, null, null, null, null, null, false, false),
+                new("Retry", ["Bottom", "Right"], null, null, null, null, null, null, null, false, false),
+                new("lblMustAuthenticate", ["Top", "Left", "Right"], null, true, null, null, null, null, null, false, false),
+                new("lblPleaseLoadKey", ["Top", "Left", "Right"], null, true, null, null, null, null, null, true, false),
+                new("pictureBox1", null, null, true, null, null, null, null, null, false, false),
             ],
             ["GitUI.Help.HelpImageDisplayUserControl"] =
             [

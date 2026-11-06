@@ -348,7 +348,7 @@ public sealed class ProcessDialogTests
         form.Should().BeAssignableTo<FormProcess>();
         translation.Received(1).AddTranslationItem(nameof(FormRemoteProcess), "$this", "Text", Arg.Any<string>());
         translation.Received(1).AddTranslationItem(nameof(FormRemoteProcess), "Abort", "Text", "&Abort");
-        translation.DidNotReceive().AddTranslationItem(
+        translation.Received(1).AddTranslationItem(
             nameof(FormRemoteProcess),
             "_fingerprintNotRegistredText",
             "Text",
@@ -394,6 +394,65 @@ public sealed class ProcessDialogTests
         finally
         {
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    [NonParallelizable]
+    public void FormRemoteProcess_should_prompt_for_missing_key_and_obey_retry(bool retry)
+    {
+        string originalSshPath = AppSettings.SshPath;
+        AppSettings.SshPath = "plink.exe";
+        IConsoleCommandRunner runner = Substitute.For<IConsoleCommandRunner, IDisposable>();
+        runner.Control.Returns(new Border());
+        IConsoleEmulatorsRegistry registry = Substitute.For<IConsoleEmulatorsRegistry>();
+        registry.CreateCommandController().Returns(runner);
+        _serviceContainer.RemoveService(typeof(IConsoleEmulatorsRegistry));
+        _serviceContainer.AddService(registry);
+        int starts = 0;
+        int prompts = 0;
+        runner.When(value => value.StartCommand(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<Dictionary<string, string>>()))
+            .Do(_ =>
+            {
+                starts++;
+                if (starts == 2)
+                {
+                    Dispatcher.UIThread.Post(() => runner.CommandProcessExited += Raise.EventWith(runner, new ConsoleProcessExitEventArgs(0)));
+                }
+            });
+        using IDisposable opened = Window.WindowOpenedEvent.AddClassHandler<Window>((window, _) =>
+        {
+            if (window.GetType().Name == "FormPuttyError")
+            {
+                prompts++;
+                Dispatcher.UIThread.Post(() => window.FindControl<Button>(retry ? "Retry" : "Cancel")!
+                    .RaiseEvent(new RoutedEventArgs(Button.ClickEvent)));
+            }
+        });
+        using FormRemoteProcess form = new(CreateCommands(Path.GetTempPath()), "version", useDialogSettings: false);
+        try
+        {
+            form.Show();
+            runner.CommandOutputReceived += Raise.EventWith(runner, new ConsoleOutputEventArgs("FATAL ERROR: authentication failed\n"));
+            runner.CommandProcessExited += Raise.EventWith(runner, new ConsoleProcessExitEventArgs(1));
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            while (!form.Ok.IsEnabled && stopwatch.ElapsedMilliseconds < 5_000)
+            {
+                Dispatcher.UIThread.RunJobs();
+                Thread.Sleep(10);
+            }
+
+            form.Ok.IsEnabled.Should().BeTrue();
+            prompts.Should().Be(OperatingSystem.IsWindows() ? 1 : 0);
+            starts.Should().Be(OperatingSystem.IsWindows() && retry ? 2 : 1);
+            form.ErrorOccurred().Should().Be(!OperatingSystem.IsWindows() || !retry);
+        }
+        finally
+        {
+            form.Close();
+            AppSettings.SshPath = originalSshPath;
         }
     }
 

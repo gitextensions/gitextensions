@@ -49729,6 +49729,189 @@
           "note": "Added by the 2026-11-04 upstream sync; no complete parity axis has been verified."
         }
       }
+    },
+    {
+      "source": "src/app/GitUI/FormPuttyError.cs",
+      "twin": "src/app/GitUI.Avalonia/FormPuttyError.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/FormPuttyError.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/FormPuttyError.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/BrowseForPrivateKey.cs",
+      "twin": "src/app/GitUI.Avalonia/BrowseForPrivateKey.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-06",
+          "commit": "811f930c26a1441b3fc9655bb251f4aa2b0acf9a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
+        }
+      }
     }
   ]
 }

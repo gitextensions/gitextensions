@@ -1,20 +1,48 @@
+using GitCommands;
+using GitCommands.Config;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Shims.WinForms;
+using GitUI.ConsoleEmulation;
+using GitUI.Infrastructure;
+using ResourceManager;
 
 namespace GitUI.HelperDialogs;
 
-public class FormRemoteProcess : FormProcess
+/// <summary>
+/// Form that handles Plink exceptions.
+/// </summary>
+public partial class FormRemoteProcess : FormProcess
 {
+    #region Translation
+    private readonly TranslationString _fingerprintNotRegistredText =
+        new(@"The fingerprint of this host is not registered by PuTTY.
+This causes this process to hang, and that why it is automatically stopped.
+
+When the connection is opened detached from Git and Git Extensions, the host's fingerprint can be registered.
+You could also manually add the host's fingerprint or run Test Connection from the remotes dialog.
+
+Do you want to register the host's fingerprint and restart the process?");
+    private readonly TranslationString _fingerprintNotRegistredTextCaption =
+        new("Host Fingerprint not registered");
+    #endregion
+
+    // parity-scaffolding: substitutes only the detached PuTTY connection in headless recovery tests.
+    private static Func<string, bool> ConnectHost { get; set; } = remoteUrl => new Plink().Connect(remoteUrl);
+
+    private bool _restart;
+    private string _urlTryingToConnect = string.Empty;
+
     public FormRemoteProcess(IGitUICommands commands, ArgumentString arguments)
         : this(commands, arguments, useDialogSettings: true)
     {
     }
 
-    // OpenSSH handles host-key confirmation and authentication through the existing process input.
     internal FormRemoteProcess(IGitUICommands commands, ArgumentString arguments, bool useDialogSettings)
         : base(commands, arguments, commands.Module.WorkingDir, input: null, useDialogSettings)
     {
+        Commands = commands ?? throw new ArgumentNullException(nameof(commands));
     }
 
     public static bool ShowDialog(IWin32Window? owner, IGitUICommands commands, ArgumentString arguments)
@@ -22,5 +50,150 @@ public class FormRemoteProcess : FormProcess
         using FormRemoteProcess formRemoteProcess = new(commands, arguments);
         formRemoteProcess.ShowDialog(owner);
         return !formRemoteProcess.ErrorOccurred();
+    }
+
+    public bool Plink { get; set; }
+
+    private IGitUICommands Commands { get; }
+
+    /// <summary>
+    /// When cloning a remote using putty, sometimes an error occurs that the fingerprint is not known.
+    /// This is fixed by trying to connect from the command line, and choose yes when asked for storing
+    /// the fingerprint. Just a dirty fix...
+    /// </summary>
+    public void SetUrlTryingToConnect(string url)
+    {
+        _urlTryingToConnect = url;
+    }
+
+    protected override void BeforeProcessStart()
+    {
+        _restart = false;
+
+        // PuTTY recovery is Windows-only; other platforms keep their OpenSSH process input.
+        Plink = OperatingSystem.IsWindows() && GitSshHelpers.IsPlink;
+        base.BeforeProcessStart();
+    }
+
+    protected override bool HandleOnExit(ref bool isError)
+    {
+        if (_restart)
+        {
+            Retry();
+            return true;
+        }
+
+        // An error occurred!
+        if (isError && Plink)
+        {
+            string output = GetOutputString();
+
+            // there might be another error, this condition is too weak
+            /*
+            if (output.Contains("successfully authenticated"))
+            {
+                isError = false;
+                return false;
+            }
+            */
+
+            // If the authentication failed because of a missing key, ask the user to supply one.
+            if (output.Contains("FATAL ERROR") && output.Contains("authentication"))
+            {
+                if (FormPuttyError.AskForKey(this, out string? loadedKey))
+                {
+                    // To prevent future authentication errors, save this key for this remote.
+                    if (!string.IsNullOrEmpty(loadedKey) && !string.IsNullOrEmpty(Remote) &&
+                        string.IsNullOrEmpty(Commands.Module.GetSetting("remote.{0}.puttykeyfile")))
+                    {
+                        Commands.Module.SetSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey.ConvertPathToGitSetting()!);
+                    }
+
+                    // Retry the command.
+                    Retry();
+                    return true;
+                }
+            }
+
+            if (output.Contains("the server's host key is not cached in the registry", StringComparison.OrdinalIgnoreCase))
+            {
+                string remoteUrl;
+
+                if (string.IsNullOrEmpty(_urlTryingToConnect))
+                {
+                    remoteUrl = Commands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
+                    if (string.IsNullOrEmpty(remoteUrl))
+                    {
+                        remoteUrl = Remote;
+                    }
+                }
+                else
+                {
+                    remoteUrl = _urlTryingToConnect;
+                }
+
+                if (AskForCacheHostkey(this, remoteUrl))
+                {
+                    Retry();
+                    return true;
+                }
+            }
+        }
+
+        return base.HandleOnExit(ref isError);
+    }
+
+    public static bool AskForCacheHostkey(IWin32Window owner, string remoteUrl)
+    {
+        if (!string.IsNullOrEmpty(remoteUrl) && MessageBoxes.CacheHostkey(owner))
+        {
+            return ConnectHost(remoteUrl);
+        }
+
+        return false;
+    }
+
+    protected override void DataReceived(object sender, ConsoleOutputEventArgs e)
+    {
+        // Redirected Avalonia console output can arrive on a worker thread.
+        this.InvokeAndForget(() =>
+        {
+            if (Plink && e.Text.Contains("If you trust this host, enter \"y\" to add the key to"))
+            {
+                if (MessageBoxes.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    string remoteUrl;
+                    if (string.IsNullOrEmpty(_urlTryingToConnect))
+                    {
+                        remoteUrl = Commands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
+                        remoteUrl = string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl;
+                    }
+                    else
+                    {
+                        remoteUrl = _urlTryingToConnect;
+                    }
+
+                    ConnectHost(remoteUrl);
+
+                    _restart = true;
+                    Reset();
+                }
+                else
+                {
+                    KillProcess();
+                }
+            }
+
+            base.DataReceived(sender, e);
+        });
+    }
+
+    internal static class TestAccessor
+    {
+        internal static Func<string, bool> ConnectHost
+        {
+            get => FormRemoteProcess.ConnectHost;
+            set => FormRemoteProcess.ConnectHost = value;
+        }
     }
 }

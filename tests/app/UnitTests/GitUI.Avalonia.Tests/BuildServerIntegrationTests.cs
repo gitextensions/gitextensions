@@ -942,6 +942,17 @@ public sealed class BuildServerIntegrationTests
         }
     }
 
+    [Test]
+    public async Task Loopback_server_should_join_cancelled_accepts_before_closing_its_socket()
+    {
+        Task[] shutdowns = Enumerable.Range(0, 50).Select(async _ =>
+        {
+            await using LoopbackHttpServer server = new();
+            await Task.Yield();
+        }).ToArray();
+        await Task.WhenAll(shutdowns).WaitAsync(TimeSpan.FromSeconds(10));
+    }
+
     private sealed class LoopbackHttpServer : System.IAsyncDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new();
@@ -964,11 +975,17 @@ public sealed class BuildServerIntegrationTests
         public async ValueTask DisposeAsync()
         {
             await _cancellationTokenSource.CancelAsync();
-            _listener.Stop();
+            try
+            {
 #pragma warning disable VSTHRD003 // The owned server task is canceled and awaited during fixture disposal.
-            await _serverTask;
+                await _serverTask;
 #pragma warning restore VSTHRD003
-            _cancellationTokenSource.Dispose();
+            }
+            finally
+            {
+                _listener.Stop();
+                _cancellationTokenSource.Dispose();
+            }
         }
 
         private async Task RunAsync()

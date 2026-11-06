@@ -5,10 +5,16 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
 using GitUI;
 using GitUIPluginInterfaces;
+using Microsoft.Win32;
 
 [SetUpFixture]
 public sealed class WindowPositionTestIsolation
 {
+    private RegistryKey? _originalRegistryKey;
+    private RegistryKey? _isolatedRegistryKey;
+    private string? _registryPath;
+    private static FieldInfo RegistryField => typeof(AppSettings).GetField("_versionIndependentRegKey", BindingFlags.NonPublic | BindingFlags.Static)!;
+
     private Func<string> _originalConfigFilePathProvider = null!;
     private string _settingsDirectory = null!;
     private Lazy<string?>? _originalApplicationDataPath;
@@ -31,6 +37,17 @@ public sealed class WindowPositionTestIsolation
             // The existing accessor first initializes AppSettings, which may read the test
             // host's normal profile. Never delete, reset, or save that profile for a test run.
             AppSettings.TestAccessor accessor = AppSettings.GetTestAccessor();
+            // Windows keeps SSH and several startup settings in the registry, outside the file profile.
+            // Use a fresh test key so a user's PuTTY choice cannot affect local-Git or geometry tests.
+            if (OperatingSystem.IsWindows())
+            {
+                _originalRegistryKey = (RegistryKey?)RegistryField.GetValue(null);
+                _registryPath = $"Software\\GitExtensions.Avalonia.Tests\\{Guid.NewGuid():N}";
+                _isolatedRegistryKey = Registry.CurrentUser.CreateSubKey(_registryPath, writable: true);
+                RegistryField.SetValue(null, _isolatedRegistryKey);
+                TestContext.Progress.WriteLine($"Isolated registry: HKCU\\{_registryPath}");
+            }
+
             _originalApplicationDataPath = accessor.ApplicationDataPath;
             _originalSettingsContainer = AppSettings.SettingsContainer;
             _originalSettingsPath = _originalSettingsContainer.SettingsCache.SettingsFilePath;
@@ -49,6 +66,7 @@ public sealed class WindowPositionTestIsolation
             AppSettings.GetString("Detailed.ShowSplitViewLayout", null).Should().BeNull(
                 "the assembly must start with its own fresh profile, not inherit a previous interactive or test session");
             AppSettings.ShowSplitViewLayout.Should().BeTrue();
+            AppSettings.SshPath.Should().BeEmpty("the test assembly starts with its own unconfigured SSH profile");
             // Compose all test plugins before any consumer materializes the cached provider.
             _compositionContext = new Microsoft.VisualStudio.Threading.JoinableTaskContext();
             ThreadHelper.JoinableTaskContext = _compositionContext;
@@ -104,6 +122,15 @@ public sealed class WindowPositionTestIsolation
         }
         finally
         {
+            if (OperatingSystem.IsWindows() && _isolatedRegistryKey is not null)
+            {
+                RegistryField.SetValue(null, _originalRegistryKey);
+                _isolatedRegistryKey.Dispose();
+                _isolatedRegistryKey = null;
+                _registryPath.Should().StartWith("Software\\GitExtensions.Avalonia.Tests\\");
+                Registry.CurrentUser.DeleteSubKeyTree(_registryPath!, throwOnMissingSubKey: false);
+            }
+
             _isolatedSettingsCache?.Dispose();
             _compositionContext?.Dispose();
             if (Directory.Exists(_settingsDirectory))

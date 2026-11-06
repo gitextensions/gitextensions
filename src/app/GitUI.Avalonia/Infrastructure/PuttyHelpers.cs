@@ -7,6 +7,9 @@ namespace GitUI.Infrastructure;
 
 public static class PuttyHelpers
 {
+    // parity-scaffolding: substitutes the external Pageant process while preserving key selection and launch wiring.
+    private static Func<string, IExecutable> CreatePageantExecutable { get; set; } = path => new Executable(path);
+
     /// <summary>
     ///  Starts PuTTY agent for the specified working directory.
     /// </summary>
@@ -80,7 +83,7 @@ public static class PuttyHelpers
 
         ThrowIfFileNotFound(AppSettings.Pageant, $"'{AppSettings.Pageant}'\r\n\r\n{TranslatedStrings.ErrorSshPuTTYInstalled}");
 
-        Executable pageantExecutable = new(AppSettings.Pageant);
+        IExecutable pageantExecutable = CreatePageantExecutable(AppSettings.Pageant);
 
         // ensure pageant is loaded, so we can wait for loading a key in the next command
         // otherwise we'll stuck there waiting until pageant exits
@@ -121,6 +124,15 @@ public static class PuttyHelpers
         {
             throw new UserExternalOperationException(errorMessage,
                 new ExternalOperationException(innerException: new FileNotFoundException(heading ?? TranslatedStrings.ErrorFileNotFound)));
+        }
+    }
+
+    internal static class TestAccessor
+    {
+        internal static Func<string, IExecutable> CreatePageantExecutable
+        {
+            get => PuttyHelpers.CreatePageantExecutable;
+            set => PuttyHelpers.CreatePageantExecutable = value;
         }
     }
 }
