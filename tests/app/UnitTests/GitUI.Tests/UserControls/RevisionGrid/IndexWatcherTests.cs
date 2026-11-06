@@ -9,6 +9,8 @@ namespace GitUITests.UserControls.RevisionGrid;
 [Apartment(ApartmentState.STA)]
 public class IndexWatcherTests
 {
+    private static readonly string _gitDirectory = Path.Join(AppContext.BaseDirectory, "repo", ".git");
+
     [Test]
     public async Task ResetAsync_should_run_the_git_command_in_the_background_and_reset_on_the_main_thread()
     {
@@ -77,11 +79,11 @@ public class IndexWatcherTests
     {
         IGitModule module = Substitute.For<IGitModule>();
         module.IsValidGitWorkingDir().Returns(true);
-        module.WorkingDirGitDir.Returns(Path.GetTempPath());
+        module.WorkingDirGitDir.Returns(_gitDirectory);
         module.GitCommonDirectory.Returns(_ =>
         {
             onGitCommonDirectory?.Invoke();
-            return Path.GetTempPath();
+            return _gitDirectory;
         });
         return module;
     }
