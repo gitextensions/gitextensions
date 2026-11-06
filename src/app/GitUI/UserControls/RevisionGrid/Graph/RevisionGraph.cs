@@ -1131,6 +1131,8 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 .ToDictionary(x => orderedNodesCache[x.firstRowIndex], x => x.lane);
 
             List<RevisionGraphSegment> mergesFromReservedLane = [];
+            int workRowIndex = -1;
+            int headRowIndex = -1;
             int maxIndex = Math.Min(orderedNodesCount, firstIndexForReservedLane.Max() + 1);
             for (int i = 0; i < maxIndex; ++i)
             {
@@ -1142,6 +1144,16 @@ public class RevisionGraph : IRevisionGraphRowProvider
                         mergesFromReservedLane.Add(segment);
                     }
                 }
+
+                if (revision.Objectid == ObjectId.WorkTreeId)
+                {
+                    workRowIndex = i;
+                }
+
+                if (revision.Objectid == HeadId)
+                {
+                    headRowIndex = i;
+                }
             }
 
             // Select allowed segment(s) in each reserved lane
@@ -1152,6 +1164,16 @@ public class RevisionGraph : IRevisionGraphRowProvider
                         && // ignore merges from one row to the next: they cross lanes without occupying any lane
                             orderedNodesCache[orderedNodesCache.IndexOf(s.Child) + 1] != s.Parent)
                     .ToArray();
+
+                if (workRowIndex != -1 && headRowIndex != -1 && firstIndexForReservedLane[lane] == headRowIndex && segments.Length == 0)
+                {
+                    // This reserved lane starts with the HEAD node, which has no outgoing merges.
+                    // Make the Worktree and Index nodes use this lane, too.
+                    firstIndexForReservedLane[lane] = workRowIndex;
+                    reservedLaneForIndex[workRowIndex] = lane;
+                    continue;
+                }
+
                 if (Config.MergeGraphLanesHavingCommonParent)
                 {
                     // Allow all segments

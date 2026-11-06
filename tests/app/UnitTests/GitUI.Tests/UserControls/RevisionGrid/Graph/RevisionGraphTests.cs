@@ -501,6 +501,20 @@ public class RevisionGraphTests
     }
 
     [Test]
+    public async Task ArtificialCommitsCanUseReservedLaneBeforeFirstNode(
+        [Values] bool mergeCommonParent,
+        [Values] bool withLaterMerge,
+        [Values("A;B;C", "A;C;B", "B;A;C", "B;C;A", "C;A;B", "C;B;A")] string reservedLanes)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeCommonParent;
+        AppSettings.ReservedLanesBranchNames = reservedLanes;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:1:C 4:1:B  _i:4 _w:_i " + (withLaterMerge ? " 5:2,4:A" : ""));
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
     public async Task MergeFromReservedLaneIsNotStraightened_1([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
     {
         AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
@@ -736,6 +750,8 @@ public class RevisionGraphTests
         Dictionary<string, GitRevision> commitsById = [];
         Random random = new(42);
 
+        RevisionGraph graph = new();
+
         // Parse and create commits
         foreach (string spec in commitSpecs.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
@@ -759,6 +775,10 @@ public class RevisionGraphTests
             {
                 string[] parentIds = parts[1].Split(',', StringSplitOptions.RemoveEmptyEntries);
                 commit.ParentIds = parentIds.Select(id => commitsById[id].ObjectId).ToList();
+                if (objectId == ObjectId.IndexId)
+                {
+                    graph.HeadId = commit.ParentIds[0];
+                }
             }
 
             if (parts.Length > 2)
@@ -769,7 +789,6 @@ public class RevisionGraphTests
         }
 
         // Add commits to graph from newest to oldest
-        RevisionGraph graph = new();
         commits.Reverse();
 
         foreach (GitRevision commit in commits)
