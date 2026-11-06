@@ -31,6 +31,19 @@ public static class DpiUtil
     public static int Scale(int value) => value;
 
     /// <summary>
+    /// Returns a scaled copy of <paramref name="i"/> which has equivalent
+    /// length on screen at the current DPI as the original would at
+    /// <paramref name="originalDpi"/>.
+    /// </summary>
+    public static int Scale(int i, int originalDpi)
+    {
+        // Avalonia lengths are DIPs; render scaling applies the current screen DPI.
+        float scale = 96F / originalDpi;
+
+        return (int)(i * scale);
+    }
+
+    /// <summary>
     /// Returns <paramref name="value"/> in device-independent units so that it has equivalent physical
     /// screen position at the current DPI as the original value would at 96 DPI.
     /// </summary>

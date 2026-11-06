@@ -19,6 +19,9 @@ public sealed class NestedSplitterManager
     public void AddSplitter(Avalonia.Controls.Grid splitter, int? defaultDistance = null)
         => _parent.AddSplitter(splitter, $"{_prefix}{splitter.Name}", defaultDistance);
 
+    internal void AddSplitter(Avalonia.Controls.Grid splitter, FixedPanel fixedPanel, int? defaultDistance = null)
+        => _parent.AddSplitter(splitter, $"{_prefix}{splitter.Name}", fixedPanel, defaultDistance);
+
     internal void AddSplitter(IPersistedSplitter splitter, string name, int? defaultDistance = null)
         => _parent.AddSplitter(splitter, $"{_prefix}{name}", defaultDistance);
 }

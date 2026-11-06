@@ -79,7 +79,7 @@ public sealed partial class FormSubmodules : GitModuleForm
 
         if (!_splitterRegistered)
         {
-            _splitterManager.AddSplitter(splitContainer1, nameof(splitContainer1), defaultDistance: 222);
+            _splitterManager.AddSplitter(splitContainer1, nameof(splitContainer1), FixedPanel.Panel1);
             _splitterManager.RestoreSplitters();
             _splitterRegistered = true;
         }

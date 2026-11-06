@@ -38,6 +38,7 @@ public sealed class FormCommitTests
 
     private string _originalApplicationExecutablePath = null!;
     private string _originalWorkingDirectory = null!;
+    private AppSettingsTestScope _settingsScope = null!;
     private ServiceContainer _serviceContainer = null!;
     private string _workingDirectory = null!;
 
@@ -46,6 +47,7 @@ public sealed class FormCommitTests
     {
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        _settingsScope = new AppSettingsTestScope();
         AppSettings.TestAccessor settingsAccessor = AppSettings.GetTestAccessor();
         _originalApplicationExecutablePath = settingsAccessor.ApplicationExecutablePath;
         settingsAccessor.ApplicationExecutablePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "GitExtensions.Avalonia.exe");
@@ -71,10 +73,182 @@ public sealed class FormCommitTests
     [TearDown]
     public void TearDown()
     {
-        AppSettings.GetTestAccessor().ApplicationExecutablePath = _originalApplicationExecutablePath;
-        _serviceContainer.Dispose();
-        Directory.SetCurrentDirectory(_originalWorkingDirectory);
-        TestDirectory.Delete(_workingDirectory);
+        try
+        {
+            AppSettings.GetTestAccessor().ApplicationExecutablePath = _originalApplicationExecutablePath;
+            _serviceContainer.Dispose();
+            Directory.SetCurrentDirectory(_originalWorkingDirectory);
+            TestDirectory.Delete(_workingDirectory);
+        }
+        finally
+        {
+            _settingsScope.Dispose();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Commit_splitter_should_retry_saved_distance_after_the_real_window_reaches_its_final_size()
+    {
+        GitModule module = CreateCleanRepository();
+        GitCommands.AppSettingsPath settings = new("CommitDialog");
+        string[] names = ["splitMain", "splitLeft", "splitRight"];
+        string[] suffixes = ["Size", "Distance", "Dpi", "FontSize", "Panel1Collapsed", "Panel2Collapsed"];
+        string[] keys = names.SelectMany(name => suffixes.Select(suffix => name + "_" + suffix)).ToArray();
+        Dictionary<string, string?> previous = keys.ToDictionary(key => key, settings.GetValue);
+        try
+        {
+            foreach (string key in keys)
+            {
+                settings.SetValue(key, null);
+            }
+
+            FormCommit first = new(new GitUICommands(_serviceContainer, module)) { Width = 1500, Height = 800 };
+            first.Show();
+            first.Width = 1500;
+            first.Height = 800;
+            Dispatcher.UIThread.RunJobs();
+            first.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            first.UpdateLayout();
+            Grid firstMain = first.FindControl<Grid>("splitMain")!;
+            GridSplitter handle = firstMain.Children.OfType<GridSplitter>().Single();
+            Avalonia.Point start = handle.TranslatePoint(new Avalonia.Point(handle.Bounds.Width / 2, handle.Bounds.Height / 2), first)!.Value;
+            Avalonia.Point end = start + new Avalonia.Vector(1000 - firstMain.ColumnDefinitions[0].ActualWidth, 0);
+            first.MouseMove(start);
+            first.MouseDown(start, Avalonia.Input.MouseButton.Left);
+            first.MouseMove(end, Avalonia.Input.RawInputModifiers.LeftMouseButton);
+            first.MouseUp(end, Avalonia.Input.MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            first.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            first.UpdateLayout();
+            firstMain.ColumnDefinitions[0].ActualWidth.Should().Be(1000);
+            first.Close();
+            await first.GetTestAccessor().ClosePersistenceTask;
+            settings.GetValue("splitMain_Distance").Should().Be("1000");
+
+            FormCommit restored = new(new GitUICommands(_serviceContainer, module));
+            File.Exists(_settingsScope.WindowPositionPath).Should().BeTrue();
+            File.Delete(_settingsScope.WindowPositionPath);
+            _settingsScope.ReloadWindowPositions();
+            try
+            {
+                restored.Show();
+                Dispatcher.UIThread.RunJobs();
+                restored.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+                restored.UpdateLayout();
+                restored.FindControl<Grid>("splitMain")!.ColumnDefinitions[0].ActualWidth.Should().Be(397);
+                restored.Width = 1500;
+                Dispatcher.UIThread.RunJobs();
+                restored.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+                restored.UpdateLayout();
+                restored.Bounds.Width.Should().Be(1500);
+                restored.FindControl<Grid>("splitMain")!.Bounds.Width.Should().Be(1500);
+                restored.FindControl<Grid>("splitMain")!.ColumnDefinitions[0].ActualWidth.Should().Be(1000);
+            }
+            finally
+            {
+                restored.Close();
+                await restored.GetTestAccessor().ClosePersistenceTask;
+            }
+        }
+        finally
+        {
+            foreach ((string key, string? value) in previous)
+            {
+                settings.SetValue(key, value);
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Commit_splitters_should_supply_fixed_panel_ratio_DPI_and_collapsed_state_from_production()
+    {
+        GitModule module = CreateCleanRepository();
+        GitCommands.AppSettingsPath settings = new("CommitDialog");
+        string[] names = ["splitMain", "splitLeft", "splitRight"];
+        string[] suffixes = ["Size", "Distance", "Dpi", "FontSize", "Panel1Collapsed", "Panel2Collapsed"];
+        Dictionary<string, string?> previous = names.SelectMany(name => suffixes.Select(suffix => name + "_" + suffix)).ToDictionary(key => key, settings.GetValue);
+        try
+        {
+            foreach (string key in previous.Keys)
+            {
+                settings.SetValue(key, null);
+            }
+
+            settings.SetValue("splitMain_Size", "1800");
+            settings.SetValue("splitMain_Distance", "600");
+            settings.SetValue("splitMain_Dpi", "144");
+            settings.SetValue("splitLeft_Size", "1000");
+            settings.SetValue("splitLeft_Distance", "400");
+            settings.SetValue("splitLeft_Dpi", "96");
+            settings.SetValue("splitRight_Size", "1000");
+            settings.SetValue("splitRight_Distance", "700");
+            settings.SetValue("splitRight_Dpi", "96");
+            FormCommit form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 800 };
+            try
+            {
+                form.Show();
+                form.Width = 1200;
+                form.Height = 800;
+                Dispatcher.UIThread.RunJobs();
+                form.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+                form.UpdateLayout();
+                Grid main = form.FindControl<Grid>("splitMain")!;
+                Grid left = form.FindControl<Grid>("splitLeft")!;
+                Grid right = form.FindControl<Grid>("splitRight")!;
+                main.ColumnDefinitions[0].ActualWidth.Should().Be(400);
+                left.RowDefinitions[0].ActualHeight.Should().Be(Convert.ToInt32(left.Bounds.Height * 400 / 1000));
+                double previousSize = left.Bounds.Height;
+                double previousDistance = left.RowDefinitions[0].ActualHeight;
+                right.RowDefinitions[2].ActualHeight.Should().Be(288, "the source restores the fixed second panel using its saved size and splitter width");
+                double fixedSecond = right.RowDefinitions[2].ActualHeight;
+                form.Width += 200;
+                form.Height += 150;
+                Dispatcher.UIThread.RunJobs();
+                form.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+                form.UpdateLayout();
+                main.ColumnDefinitions[0].ActualWidth.Should().Be(400);
+                right.RowDefinitions[2].ActualHeight.Should().Be(fixedSecond);
+                left.RowDefinitions[0].ActualHeight.Should().Be(Math.Floor(previousDistance * left.Bounds.Height / previousSize));
+            }
+            finally
+            {
+                form.Close();
+                await form.GetTestAccessor().ClosePersistenceTask;
+            }
+
+            settings.GetValue("splitMain_Dpi").Should().Be("96");
+            settings.GetValue("splitMain_FontSize").Should().NotBeNullOrEmpty();
+            settings.GetValue("splitMain_Panel1Collapsed").Should().Be("false");
+            settings.SetValue("splitMain_Panel1Collapsed", "true");
+            FormCommit collapsed = new(new GitUICommands(_serviceContainer, module));
+            try
+            {
+                collapsed.Show();
+                Dispatcher.UIThread.RunJobs();
+                collapsed.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+                collapsed.UpdateLayout();
+                collapsed.FindControl<Grid>("splitLeft")!.IsVisible.Should().BeFalse();
+            }
+            finally
+            {
+                collapsed.Close();
+                await collapsed.GetTestAccessor().ClosePersistenceTask;
+            }
+        }
+        finally
+        {
+            foreach ((string key, string? value) in previous)
+            {
+                settings.SetValue(key, value);
+            }
+        }
     }
 
     [AvaloniaTest]
@@ -261,9 +435,10 @@ public sealed class FormCommitTests
                 new GridLength(6),
                 new GridLength(1, GridUnitType.Star));
             splitRight.RowDefinitions.Select(row => row.Height).Should().Equal(
-                new GridLength(412),
+                new GridLength(1, GridUnitType.Star),
                 new GridLength(6),
                 new GridLength(192));
+            splitRight.RowDefinitions.Select(row => row.ActualHeight).Should().Equal(412, 6, 192);
             tableLayoutPanel1.RowDefinitions.Select(row => row.Height).Should().Equal(
                 new GridLength(28),
                 new GridLength(1, GridUnitType.Star));

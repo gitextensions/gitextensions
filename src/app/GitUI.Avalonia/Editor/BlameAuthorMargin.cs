@@ -13,7 +13,7 @@ namespace GitUI.Editor;
 /// This class display avatars in the gutter in a blame control.
 /// </summary>
 // Avalonia framework constraint: one native margin replaces WinForms' avatar margin and scroll-synchronised author editor.
-public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
+public class BlameAuthorMargin : AbstractMargin
 {
     private const int AgeBucketMarkerWidth = 4;
     private const double MinimumWidth = 24;
@@ -343,17 +343,4 @@ public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
 
     private static IBrush ToBrush(System.Drawing.Color color)
         => new SolidColorBrush(Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B)).ToImmutable();
-
-    double GitUI.IPersistedSplitter.SplitterSize => TextView?.Bounds.Width ?? Bounds.Width;
-
-    double GitUI.IPersistedSplitter.SplitterDistance
-    {
-        get => Bounds.Width > 0 ? Bounds.Width : _userWidth ?? _width;
-        set
-        {
-            _userWidth = Math.Max(MinimumWidth, value);
-            InvalidateMeasure();
-            InvalidateVisual();
-        }
-    }
 }

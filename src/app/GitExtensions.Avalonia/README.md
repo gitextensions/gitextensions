@@ -29,6 +29,10 @@ follow-up, and conflict recovery remain deferred with the remaining dialogs. Bro
 use the same persisted `Keys` values and XML settings as the Windows Forms application: F5
 refreshes, the currently implemented configurable Browse commands are dispatched through
 their upstream command IDs, and Escape closes dialogs without closing the repository browser.
+Splitter settings retain the container size, logical DPI, font size and collapsed states as
+well as the distance. Restoring a layout follows its ratio or fixed pane; distances rejected
+during opening are retried after layout. Earlier native handle-sized records are converted
+without treating the handle as the full container.
 On Windows, selecting Plink enables the original PuTTY recovery dialogs: load a private key
 through Pageant, confirm an unknown host key, and retry the remote command. Linux and macOS
 use OpenSSH and the process dialog's existing input instead.

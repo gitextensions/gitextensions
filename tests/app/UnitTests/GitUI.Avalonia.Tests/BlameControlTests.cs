@@ -1,7 +1,9 @@
 ﻿using System.Drawing;
 using System.Globalization;
 using System.Text;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -316,9 +318,12 @@ public sealed class BlameControlTests
             SplitterManager manager = new(settings);
             first.InitSplitterManager(new NestedSplitterManager(manager, "revisionDiff"));
             manager.RestoreSplitters();
-            first.GetTestAccessor().SplitContainer.RowDefinitions[0].Height = new GridLength(120);
-            first.GetTestAccessor().AuthorMarginWidth = 140;
             Dispatcher.UIThread.RunJobs();
+            firstWindow.UpdateLayout();
+            Grid top = first.GetTestAccessor().SplitContainer;
+            Grid author = first.FindControl<Grid>("splitContainer2")!;
+            DragSplitter(top, columns: false, distance: 120);
+            DragSplitter(author, columns: true, distance: 140);
             manager.SaveSplitters();
         }
         finally
@@ -332,10 +337,22 @@ public sealed class BlameControlTests
         BlameControl restored = new() { Name = nameof(BlameControl) };
         SplitterManager restoredManager = new(settings);
         restored.InitSplitterManager(new NestedSplitterManager(restoredManager, "revisionDiff"));
-        restoredManager.RestoreSplitters();
-
-        restored.GetTestAccessor().SplitContainer.RowDefinitions[0].Height.Should().Be(new GridLength(120));
-        restored.GetTestAccessor().AuthorMarginWidth.Should().Be(140);
+        Window restoredWindow = new() { Width = 800, Height = 600, Content = restored };
+        restoredWindow.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            restoredWindow.UpdateLayout();
+            restoredManager.RestoreSplitters();
+            Dispatcher.UIThread.RunJobs();
+            restoredWindow.UpdateLayout();
+            restored.GetTestAccessor().SplitContainer.RowDefinitions[0].Height.Should().Be(new GridLength(120));
+            restored.GetTestAccessor().AuthorMarginWidth.Should().Be(140);
+        }
+        finally
+        {
+            restoredWindow.Close();
+        }
 
         BlameControl embedded = new() { Name = nameof(BlameControl) };
         embedded.HideCommitInfo();
@@ -345,6 +362,20 @@ public sealed class BlameControlTests
 
         embedded.GetTestAccessor().SplitContainer.RowDefinitions[0].Height.Should().Be(new GridLength(0),
             "restoring a standalone Blame splitter must not reveal blank commit-info space in RevisionDiffControl");
+
+        void DragSplitter(Grid grid, bool columns, double distance)
+        {
+            GridSplitter handle = grid.Children.OfType<GridSplitter>().Single();
+            Avalonia.Point start = handle.TranslatePoint(new Avalonia.Point(handle.Bounds.Width / 2, handle.Bounds.Height / 2), firstWindow)!.Value;
+            double current = columns ? grid.ColumnDefinitions[0].ActualWidth : grid.RowDefinitions[0].ActualHeight;
+            Avalonia.Point end = start + (columns ? new Avalonia.Vector(distance - current, 0) : new Avalonia.Vector(0, distance - current));
+            firstWindow.MouseMove(start);
+            firstWindow.MouseDown(start, Avalonia.Input.MouseButton.Left);
+            firstWindow.MouseMove(end, Avalonia.Input.RawInputModifiers.LeftMouseButton);
+            firstWindow.MouseUp(end, Avalonia.Input.MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            firstWindow.UpdateLayout();
+        }
     }
 
     private static (IReadOnlyList<Color> Ages, Color Highlight) GetThemeColors(ThemeVariant theme)

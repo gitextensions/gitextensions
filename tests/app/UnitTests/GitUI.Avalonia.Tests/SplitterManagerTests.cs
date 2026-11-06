@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.Threading;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Settings;
@@ -27,10 +28,22 @@ public sealed class SplitterManagerTests
 
         manager.RestoreSplitters();
 
-        grid.ColumnDefinitions[0].Width.Should().Be(new GridLength(700));
-        grid.Measure(new Size(1000, 500));
-        grid.Arrange(new Rect(0, 0, 1000, 500));
-        grid.ColumnDefinitions[0].ActualWidth.Should().Be(700);
+        manager.GetTestAccessor().Splitters.Single().IsRestorePending.Should().BeTrue();
+        Window window = new() { Content = grid, Width = 1000, Height = 500 };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            grid.ColumnDefinitions[0].Width.Should().Be(new GridLength(700));
+            grid.ColumnDefinitions[0].ActualWidth.Should().Be(700);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [Test]
@@ -43,17 +56,17 @@ public sealed class SplitterManagerTests
             .Do(call => values[call.ArgAt<string>(0)] = call.ArgAt<string?>(1));
         SettingsSource settings = new SettingsSource<IConfigValueStore>(store);
         double distance = 275;
-        double size = 6;
+        double size = 600;
 
         SplitterManager manager = new(settings);
         manager.AddSplitter("MainSplitContainer", () => distance, value => distance = value, () => size);
         manager.SaveSplitters();
 
         values["MainSplitContainer_Distance"].Should().Be("275");
-        values["MainSplitContainer_Size"].Should().Be("6");
+        values["MainSplitContainer_Size"].Should().Be("600");
 
         distance = 100;
-        size = 4;
+        size = 600;
         SplitterManager restoredManager = new(settings);
         restoredManager.AddSplitter("MainSplitContainer", () => distance, value => distance = value, () => size);
         restoredManager.RestoreSplitters();

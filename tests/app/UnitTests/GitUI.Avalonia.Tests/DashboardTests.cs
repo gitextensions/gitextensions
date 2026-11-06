@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -7,6 +7,7 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -155,7 +156,9 @@ public sealed class DashboardTests
             dashboard.RefreshContent();
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
-            window.Focus();
+            // Keep the search caret's blink out of the frame comparison.
+            dashboard.GetLogicalDescendants().OfType<DashboardLinkLabel>().First().Focus().Should().BeTrue();
+            Dispatcher.UIThread.RunJobs();
             Grid layout = dashboard.FindControl<Grid>("tableLayoutPanel1")!;
             Border left = dashboard.FindControl<Border>("pnlLeft")!;
             layout.Bounds.Height.Should().Be(Math.Max(dashboard.Bounds.Height, layout.MinHeight));

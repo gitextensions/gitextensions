@@ -479,7 +479,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
     public void InitSplitterManager(SplitterManager splitterManager)
     {
         NestedSplitterManager nested = new(splitterManager, Name ?? nameof(RevisionDiffControl));
-        nested.AddSplitter(DiffSplitContainer);
+        nested.AddSplitter(DiffSplitContainer, FixedPanel.Panel1);
         BlameControl.InitSplitterManager(nested);
     }
 

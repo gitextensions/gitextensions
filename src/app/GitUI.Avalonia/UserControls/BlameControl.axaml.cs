@@ -129,7 +129,7 @@ public sealed partial class BlameControl : GitModuleControl
         NestedSplitterManager nested = new(splitterManager, Name ?? nameof(BlameControl));
         if (CommitInfo.IsVisible)
         {
-            nested.AddSplitter(splitContainer1, defaultDistance: 26);
+            nested.AddSplitter(splitContainer1, FixedPanel.Panel1, defaultDistance: 26);
         }
 
         nested.AddSplitter(splitContainer2, defaultDistance: 26);

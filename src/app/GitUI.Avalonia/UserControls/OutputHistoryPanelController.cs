@@ -15,6 +15,7 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
     private readonly DispatcherTimer _timer = new() { Interval = TimeSpan.FromMilliseconds(25) };
     private readonly GridSplitter _splitter;
     private readonly Border _host;
+    private readonly Control _mainPanel;
     private GridLength _visibleHeight = new(150);
 
     internal OutputHistoryPanelController(
@@ -34,6 +35,7 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
         _showVerticalSplitContainer1 = () => SetVisible(visible: true);
         _splitter = splitter;
         _host = host;
+        _mainPanel = parent.Children.Single(child => Grid.GetRow(child) == 0);
         _host.Child = _outputHistoryControl;
 
         _timer.Tick += SetSizeByVerticalSplitContainer1;
@@ -75,14 +77,41 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
         set
         {
             _visibleHeight = new GridLength(value);
-            if (_host.IsVisible)
-            {
-                _verticalSplitContainer1.RowDefinitions[2].Height = _visibleHeight;
-            }
+            ApplyLayout();
         }
     }
 
-    internal double SplitterSize => _splitter.Bounds.Height;
+    internal double SplitterSize => _verticalSplitContainer1.Bounds.Height;
+    internal IReadOnlyList<Control> VisibilityControls => [_mainPanel, _host];
+
+    internal bool Panel1Collapsed
+    {
+        get => !_mainPanel.IsVisible;
+        set
+        {
+            if (value)
+            {
+                SetVisible(true);
+            }
+
+            _mainPanel.IsVisible = !value;
+            ApplyLayout();
+        }
+    }
+
+    internal bool Panel2Collapsed
+    {
+        get => !_host.IsVisible;
+        set
+        {
+            if (value)
+            {
+                _mainPanel.IsVisible = true;
+            }
+
+            SetVisible(!value);
+        }
+    }
 
     private void SetSizeByVerticalSplitContainer1Deferred(object? sender, EventArgs eventArgs)
     {
@@ -117,7 +146,7 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
         bool visible = _host.IsVisible && _verticalSplitContainer1.IsVisible;
         if (visible)
         {
-            double maximumHeight = Math.Max(0, _horizontalSplitContainer.Bounds.Height - SplitterSize);
+            double maximumHeight = Math.Max(0, _horizontalSplitContainer.Bounds.Height - _splitter.Bounds.Height - 25);
             SplitterDistance = Math.Clamp(height, 0, maximumHeight);
         }
 
@@ -127,14 +156,24 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
     private void SetVisible(bool visible)
     {
         RowDefinitions rows = _verticalSplitContainer1.RowDefinitions;
-        if (!visible && rows[2].Height.Value > 0)
+        if (!visible && _host.IsVisible && _mainPanel.IsVisible && rows[2].Height.IsAbsolute && rows[2].Height.Value > 0)
         {
             _visibleHeight = rows[2].Height;
         }
 
-        rows[1].Height = visible ? new GridLength(6) : new GridLength(0);
-        rows[2].Height = visible ? _visibleHeight : new GridLength(0);
-        _splitter.IsVisible = visible;
         _host.IsVisible = visible;
+        ApplyLayout();
+    }
+
+    private void ApplyLayout()
+    {
+        bool mainVisible = _mainPanel.IsVisible;
+        bool outputVisible = _host.IsVisible;
+        RowDefinitions rows = _verticalSplitContainer1.RowDefinitions;
+        rows[0].MinHeight = mainVisible ? 25 : 0;
+        rows[0].Height = mainVisible ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+        rows[1].Height = mainVisible && outputVisible ? new GridLength(6) : new GridLength(0);
+        rows[2].Height = outputVisible ? mainVisible ? _visibleHeight : new GridLength(1, GridUnitType.Star) : new GridLength(0);
+        _splitter.IsVisible = mainVisible && outputVisible;
     }
 }
