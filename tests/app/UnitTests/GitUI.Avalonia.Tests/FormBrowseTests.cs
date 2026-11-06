@@ -9,6 +9,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
@@ -260,6 +261,127 @@ public sealed class FormBrowseTests
         finally
         {
             _settingsScope.Dispose();
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task Dashboard_should_publish_real_MEF_hosters_before_loading_other_plugins(bool isDashboard)
+    {
+        System.Reflection.FieldInfo providerField = typeof(ManagedExtensibility).GetField("_exportProvider", BindingFlags.NonPublic | BindingFlags.Static)!;
+        System.Reflection.FieldInfo loadedField = typeof(PluginRegistry).GetField("_isLoaded", BindingFlags.NonPublic | BindingFlags.Static)!;
+        System.Reflection.PropertyInfo registeredProperty = typeof(PluginRegistry).GetProperty(nameof(PluginRegistry.PluginsRegistered))!;
+        object? previousProvider = providerField.GetValue(null);
+        object? previousLoaded = loadedField.GetValue(null);
+        bool previousRegistered = PluginRegistry.PluginsRegistered;
+        IGitPlugin[] previousPlugins = [.. PluginRegistry.Plugins];
+        IRepositoryHostPlugin[] previousHosts = [.. PluginRegistry.GitHosters];
+        Microsoft.VisualStudio.Composition.AttributedPartDiscoveryV1 discovery = new(Microsoft.VisualStudio.Composition.Resolver.DefaultInstance);
+        Microsoft.VisualStudio.Composition.DiscoveredParts parts = await discovery.CreatePartsAsync([typeof(StartupPhaseExports)]);
+        Microsoft.VisualStudio.Composition.ComposableCatalog catalog = Microsoft.VisualStudio.Composition.ComposableCatalog.Create(Microsoft.VisualStudio.Composition.Resolver.DefaultInstance).AddParts(parts);
+        Microsoft.VisualStudio.Composition.CompositionConfiguration configuration = Microsoft.VisualStudio.Composition.CompositionConfiguration.Create(catalog);
+        configuration.ThrowOnErrors();
+        using Microsoft.VisualStudio.Composition.ExportProvider provider = Microsoft.VisualStudio.Composition.RuntimeComposition.CreateRuntimeComposition(configuration).CreateExportProviderFactory().CreateExportProvider();
+        FormBrowse? form = null;
+        bool hostLinkBeforeOtherPlugin = false;
+        bool hostMenuBeforeOtherPlugin = false;
+        try
+        {
+            PluginRegistry.Plugins.Clear();
+            PluginRegistry.GitHosters.Clear();
+            loadedField.SetValue(null, false);
+            registeredProperty.SetValue(null, false);
+            StartupPhaseExports.Hoster = Substitute.For<IRepositoryHostPlugin>();
+            StartupPhaseExports.Hoster.Name.Returns("Startup host");
+            StartupPhaseExports.Hoster.Description.Returns("Startup host plugin");
+            StartupPhaseExports.Hoster.Id.Returns(Guid.Parse("0561fb5a-aeb0-4c51-a650-246f89175ff8"));
+            StartupPhaseExports.Other = Substitute.For<IGitPlugin>();
+            StartupPhaseExports.Other.Name.Returns("Startup other");
+            StartupPhaseExports.Other.Description.Returns("Startup other plugin");
+            StartupPhaseExports.Other.Id.Returns(Guid.Parse("0561fb5a-aeb0-4c51-a650-246f89175ff9"));
+            ManagedExtensibility.SetTestExportProvider(provider);
+            form = new FormBrowse(new GitUICommands(_serviceContainer, isDashboard ? new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory) : CreateRepositoryWithInitialCommit()));
+            StartupPhaseExports.BeforeOther = () =>
+            {
+                if (Dispatcher.UIThread.CheckAccess())
+                {
+                    ReadStartupState();
+                }
+                else
+                {
+                    Dispatcher.UIThread.Invoke(ReadStartupState);
+                }
+            };
+
+            void ReadStartupState()
+            {
+                hostMenuBeforeOtherPlugin = form.FindControl<MenuItem>("_repositoryHostsToolStripMenuItem") is { IsVisible: true, Header: "Startup host" };
+                hostLinkBeforeOtherPlugin = form.GetLogicalDescendants().OfType<DashboardLinkLabel>()
+                    .Any(link => link.Text.Contains("Startup host", StringComparison.Ordinal));
+            }
+
+            form.Show();
+            await form.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(30));
+            hostMenuBeforeOtherPlugin.Should().Be(isDashboard);
+            hostLinkBeforeOtherPlugin.Should().Be(isDashboard);
+            PluginRegistry.GitHosters.Should().ContainSingle().Which.Should().BeSameAs(StartupPhaseExports.Hoster);
+            StartupPhaseExports.Hoster.Received(1).Register(form.UICommands);
+            StartupPhaseExports.Other.Received(1).Register(form.UICommands);
+        }
+        finally
+        {
+            try
+            {
+                if (form is not null)
+                {
+                    try
+                    {
+                        await form.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(30));
+                    }
+                    finally
+                    {
+                        form.Close();
+                        ((IDisposable)form).Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                StartupPhaseExports.BeforeOther = null;
+                StartupPhaseExports.Hoster = null!;
+                StartupPhaseExports.Other = null!;
+                providerField.SetValue(null, previousProvider);
+                loadedField.SetValue(null, previousLoaded);
+                registeredProperty.SetValue(null, previousRegistered);
+                PluginRegistry.Plugins.Clear();
+                PluginRegistry.Plugins.AddRange(previousPlugins);
+                PluginRegistry.GitHosters.Clear();
+                PluginRegistry.GitHosters.AddRange(previousHosts);
+            }
+        }
+    }
+
+    [System.ComponentModel.Composition.PartCreationPolicy(System.ComponentModel.Composition.CreationPolicy.Shared)]
+    public sealed class StartupPhaseExports
+    {
+        public static IRepositoryHostPlugin Hoster { get; set; } = null!;
+        public static IGitPlugin Other { get; set; } = null!;
+        public static Action? BeforeOther { get; set; }
+
+        [System.ComponentModel.Composition.Export(typeof(IRepositoryHostPlugin))]
+        [System.ComponentModel.Composition.Export(typeof(IGitPlugin))]
+        public IRepositoryHostPlugin Host => Hoster;
+
+        [System.ComponentModel.Composition.Export(typeof(IGitPlugin))]
+        public IGitPlugin General
+        {
+            get
+            {
+                BeforeOther?.Invoke();
+                return Other;
+            }
         }
     }
 

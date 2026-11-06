@@ -586,16 +586,38 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         // All app init is done, make all repo related similar to switching repos
-
+        bool isDashboard = _dashboard?.IsVisible ?? false;
         CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
         _loadOperations.FileAndForget(async () =>
         {
             try
             {
                 await TaskScheduler.Default;
-                PluginRegistry.InitializeAll();
-                await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-                RegisterPlugins();
+
+                if (isDashboard)
+                {
+                    // Load only the git hoster plugin to quickly provide related features in dashboard
+                    PluginRegistry.InitializeGitHostersOnly();
+
+                    await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
+                    // Now that hoster plugin is registered, populate Git-host-plugin actions on Dashboard, like "Clone GitHub repository"
+                    UpdateRepositoryHostsMenu();
+
+                    // Check if during plugin loading user left dashboard
+                    if (_dashboard?.IsVisible is true)
+                    {
+                        _dashboard.RefreshContent();
+                    }
+
+                    // Come back to background to load all the other plugins (that could be long...)
+                    await TaskScheduler.Default;
+                }
+
+                await InitializeAndRegisterAllPluginsAsync();
+
+                await Task.Delay(millisecondsDelay: 100, cancellationToken);
+                _repositoryHistoryUIService?.TriggerBranchNameCacheUpdate(onlyIfEmpty: true);
             }
             catch (OperationCanceledException)
             {
@@ -605,6 +627,16 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 Trace.WriteLine(exception);
             }
         });
+
+        return;
+
+        async Task InitializeAndRegisterAllPluginsAsync()
+        {
+            PluginRegistry.InitializeAll();
+            await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            RegisterPlugins();
+            UpdateRepositoryHostsMenu();
+        }
     }
 
     private void OnActivated(EventArgs e)
