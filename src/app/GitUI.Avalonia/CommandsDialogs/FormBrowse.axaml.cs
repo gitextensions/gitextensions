@@ -340,6 +340,15 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         InitCommitDetails();
         RevisionInfo.CommandClicked += RevisionInfo_CommandClicked;
         CommitInfoTabControl.SelectionChanged += CommitInfoTabControl_SelectedIndexChanged;
+
+        // Avalonia lists consume Ctrl+A before the form receives the bubbling key event.
+        AddHandler(KeyDownEvent, (_, e) =>
+        {
+            if (e.Key == Key.A && e.KeyModifiers == KeyModifiers.Control && ProcessHotkey(KeysMapper.ToKeys(e)))
+            {
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
         refreshDashboardToolStripMenuItem.Click += RefreshDashboardToolStripMenuItemClick;
         fileExplorerToolStripMenuItem.Click += FileExplorerToolStripMenuItemClick;
