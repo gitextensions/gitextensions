@@ -50,10 +50,10 @@
                                   Icon="{x:Static properties:Images.BrowseFileExplorer}"
                                   Content="Open theme folder">
             <compat:IconSplitButton.Flyout>
-              <MenuFlyout>
+              <compat:WinFormsMenuFlyout>
                 <MenuItem x:Name="tsmiApplicationFolder" Header="Application folder" />
                 <MenuItem x:Name="tsmiUserFolder" Header="User folder" />
-              </MenuFlyout>
+              </compat:WinFormsMenuFlyout>
             </compat:IconSplitButton.Flyout>
           </compat:IconSplitButton>
           <CheckBox x:Name="chkColorblind"

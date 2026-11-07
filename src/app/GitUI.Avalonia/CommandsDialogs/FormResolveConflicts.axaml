@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
         xmlns:compat="using:GitUI.Compat"
         xmlns:properties="using:GitUI.Properties"
         xmlns:usercontrols="clr-namespace:GitUI.UserControls"
@@ -13,7 +14,7 @@
       <TextBlock x:Name="label1" Text="Unresolved merge conflicts" />
       <ListBox x:Name="ConflictedFiles" Grid.Row="1" SelectionMode="Multiple">
         <ListBox.ContextMenu>
-          <ContextMenu x:Name="ConflictedFilesContextMenu">
+          <wf:ContextMenuStrip x:Name="ConflictedFilesContextMenu">
             <MenuItem x:Name="OpenMergetool" Header="Open in mergetool" />
             <MenuItem x:Name="customMergetool" Header="Open in _mergetool" />
             <MenuItem x:Name="ContextMarkAsSolved" Header="Mark conflict as solved" />
@@ -37,7 +38,7 @@
             </MenuItem>
             <Separator x:Name="toolStripSeparator4" />
             <MenuItem x:Name="fileHistoryToolStripMenuItem" Header="File history" />
-          </ContextMenu>
+          </wf:ContextMenuStrip>
         </ListBox.ContextMenu>
       </ListBox>
       <Grid x:Name="tableLayoutPanel3" Grid.Row="2" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="3">

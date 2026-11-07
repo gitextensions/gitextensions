@@ -38,6 +38,7 @@ public sealed class NativeToolStripDropDownMenuFlyout : MenuFlyout
 public sealed class NativeToolStripDropDownPresenter : MenuFlyoutPresenter
 {
     public NativeToolStripDropDownPresenter()
+        : base(new MenuMnemonicInteractionHandler(true))
     {
     }
 

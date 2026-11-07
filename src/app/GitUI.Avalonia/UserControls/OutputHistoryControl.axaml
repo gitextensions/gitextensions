@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
              xmlns:compat="using:GitUI.Compat"
              x:Class="GitUI.UserControls.OutputHistoryControl"
              Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
@@ -16,10 +17,10 @@
                                FontFamily="{DynamicResource GitExtensionsMonospaceFontFamily}"
                                FontSize="{DynamicResource GitExtensionsMonospaceFontSize}">
     <compat:ThemeAwareTextEditor.ContextMenu>
-      <ContextMenu x:Name="TextBoxContextMenuStrip">
+      <wf:ContextMenuStrip x:Name="TextBoxContextMenuStrip">
         <MenuItem x:Name="tsmiCopy" Header="_Copy" InputGesture="Ctrl+C" />
         <MenuItem x:Name="tsmiClear" Header="C_lear" />
-      </ContextMenu>
+      </wf:ContextMenuStrip>
     </compat:ThemeAwareTextEditor.ContextMenu>
   </compat:ThemeAwareTextEditor>
 </UserControl>

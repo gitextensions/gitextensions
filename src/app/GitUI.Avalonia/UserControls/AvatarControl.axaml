@@ -1,12 +1,13 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
              x:Class="GitUI.AvatarControl">
   <Image x:Name="_avatarImage"
          Width="96"
          Height="96"
          Stretch="Uniform">
     <Image.ContextMenu>
-      <ContextMenu x:Name="contextMenuStrip">
+      <wf:ContextMenuStrip x:Name="contextMenuStrip">
         <MenuItem x:Name="clearImagecacheToolStripMenuItem"
                   Header="Clear image cache" />
         <MenuItem x:Name="avatarProviderToolStripMenuItem"
@@ -16,7 +17,7 @@
         <Separator x:Name="toolStripSeparator1" />
         <MenuItem x:Name="registerGravatarToolStripMenuItem"
                   Header="Register at gravatar.com" />
-      </ContextMenu>
+      </wf:ContextMenuStrip>
     </Image.ContextMenu>
   </Image>
 </UserControl>

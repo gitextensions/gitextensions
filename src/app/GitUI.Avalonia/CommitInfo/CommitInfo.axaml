@@ -1,12 +1,13 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
              xmlns:compat="using:GitUI.Compat"
              xmlns:local="using:GitUI.CommitInfo"
              x:Class="GitUI.CommitInfo.CommitInfo"
              Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
              ContextMenu="{StaticResource CommitInfoContextMenu}">
   <UserControl.Resources>
-    <ContextMenu x:Key="CommitInfoContextMenu" x:Name="commitInfoContextMenuStrip">
+    <wf:ContextMenuStrip x:Key="CommitInfoContextMenu" x:Name="commitInfoContextMenuStrip">
       <MenuItem x:Name="copyLinkToolStripMenuItem"
                 Header="Copy link" />
       <MenuItem x:Name="copyCommitInfoToolStripMenuItem"
@@ -33,7 +34,7 @@
       <Separator x:Name="toolStripSeparator2" />
       <MenuItem x:Name="addNoteToolStripMenuItem"
                 Header="Add _notes" />
-    </ContextMenu>
+    </wf:ContextMenuStrip>
   </UserControl.Resources>
   <ScrollViewer HorizontalScrollBarVisibility="Auto"
                 VerticalScrollBarVisibility="Auto"

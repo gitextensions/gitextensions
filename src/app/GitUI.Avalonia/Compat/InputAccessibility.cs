@@ -45,14 +45,32 @@ internal static class InputAccessibility
 {
     private static readonly object InitializedMarker = new();
     private static readonly ConditionalWeakTable<Control, object> InitializedHosts = new();
+    private static readonly ConditionalWeakTable<MenuItem, object> MenuCueHosts = new();
 
     static InputAccessibility()
     {
         TemplatedControl.TemplateAppliedEvent.AddClassHandler<MenuItem>((menuItem, _) =>
         {
+            if (MenuCueHosts.TryAdd(menuItem, InitializedMarker))
+            {
+                menuItem.AttachedToVisualTree += (_, _) =>
+                    Dispatcher.UIThread.Post(() => ShowMenuAccessKeys(menuItem), DispatcherPriority.Loaded);
+            }
+
             // Avalonia follows the platform keyboard-cue setting; desktop Git Extensions menus
             // keep mnemonic underlines visible so their keyboard routes remain discoverable.
             Dispatcher.UIThread.Post(() => ShowMenuAccessKeys(menuItem), DispatcherPriority.Loaded);
+        });
+
+        // Retained popup visuals reattach without applying their templates again.
+        MenuBase.OpenedEvent.AddClassHandler<MenuBase>((menu, _) =>
+            Dispatcher.UIThread.Post(() => ShowMenuItemAccessKeys(menu), DispatcherPriority.Loaded));
+        MenuItem.SubmenuOpenedEvent.AddClassHandler<MenuItem>((item, e) =>
+        {
+            if (ReferenceEquals(e.Source, item))
+            {
+                Dispatcher.UIThread.Post(() => ShowMenuItemAccessKeys(item), DispatcherPriority.Loaded);
+            }
         });
     }
 
@@ -61,6 +79,14 @@ internal static class InputAccessibility
         foreach (AccessText accessText in menuItem.GetVisualDescendants().OfType<AccessText>())
         {
             accessText.ShowAccessKey = true;
+        }
+    }
+
+    private static void ShowMenuItemAccessKeys(ItemsControl owner)
+    {
+        foreach (MenuItem item in owner.Items.OfType<MenuItem>())
+        {
+            ShowMenuAccessKeys(item);
         }
     }
 

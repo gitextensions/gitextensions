@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
@@ -4631,6 +4632,165 @@ public sealed class FormBrowseTests
         rebaseWithAdvancedOptions.IsEnabled.Should().BeFalse();
         rebaseOn.IsSubMenuOpen = false;
         contextMenu.Close();
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FormBrowse_revision_menu_underlines_should_survive_real_pointer_reopening(bool english)
+    {
+        using TranslationTestScope translationScope = new(english ? "English" : "");
+        GitModule module = CreateRepositoryWithInitialCommit();
+        ObjectId head = module.GetCurrentCheckout();
+        string branch = module.GetSelectedBranch();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+        ContextMenu? menu = null;
+        try
+        {
+            form.Show();
+            RevisionGridControl grid = form.RevisionGrid;
+            ListBox revisions = grid.GetTestAccessor().Revisions;
+            await WaitUntilAsync(() => grid.SelectedRevision is { } revision
+                && revision.ObjectId == head && revision.Refs.Any(gitRef => gitRef.Name == branch));
+            menu = grid.FindControl<ContextMenu>("mainContextMenu")!;
+            CopyContextMenuItem copy = grid.FindControl<CopyContextMenuItem>("copyToClipboardToolStripMenuItem")!;
+            Size doubleTapSize = form.GetPlatformSettings()?.GetDoubleTapSize(PointerType.Mouse)
+                ?? throw new InvalidOperationException("The platform must define pointer gesture bounds.");
+            for (int attempt = 1; attempt <= 2; attempt++)
+            {
+                form.UpdateLayout();
+                ListBoxItem row = (ListBoxItem)revisions.ContainerFromIndex(0)!;
+                Point point = row.TranslatePoint(new Point(
+                    (row.Bounds.Width / 2) + ((attempt - 1) * (doubleTapSize.Width + 1)), row.Bounds.Height / 2), form)!.Value;
+                form.MouseMove(point, RawInputModifiers.None);
+                form.MouseDown(point, MouseButton.Right, RawInputModifiers.None);
+                form.MouseUp(point, MouseButton.Right, RawInputModifiers.None);
+                await WaitUntilAsync(() => menu.IsOpen);
+                TopLevel contextPopup = TopLevel.GetTopLevel(menu)!;
+                AssertUnderlines(menu, contextPopup, $"{attempt}-context");
+                Point copyPoint = copy.TranslatePoint(new Point(copy.Bounds.Width / 2, copy.Bounds.Height / 2), contextPopup)!.Value;
+                contextPopup.MouseMove(copyPoint, RawInputModifiers.None);
+                await WaitUntilAsync(() => copy.IsSubMenuOpen && copy.Items.OfType<MenuItem>().Any(item => item.Header?.ToString()?.StartsWith("_1:", StringComparison.Ordinal) == true));
+                MenuItem first = copy.Items.OfType<MenuItem>().Single(item => item.Header?.ToString()?.StartsWith("_1:", StringComparison.Ordinal) == true);
+                AssertUnderlines(copy, TopLevel.GetTopLevel(first)!, $"{attempt}-copy");
+                for (int escape = 0; escape < 2 && menu.IsOpen; escape++)
+                {
+                    contextPopup.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+                    contextPopup.KeyRelease(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+                }
+
+                await WaitUntilAsync(() => !menu.IsOpen);
+            }
+        }
+        finally
+        {
+            menu?.Close();
+            form.Close();
+        }
+
+        return;
+
+        void AssertUnderlines(ItemsControl owner, TopLevel popup, string part)
+        {
+            using WriteableBitmap? frame = popup.CaptureRenderedFrame();
+            frame.Should().NotBeNull();
+            if (Environment.GetEnvironmentVariable("GITEXT_REF_MENU_EVIDENCE") is { Length: > 0 } evidence)
+            {
+                Directory.CreateDirectory(evidence);
+                frame!.Save(Path.Combine(evidence, $"underlines-{english}-{part}.png"), PngBitmapEncoderOptions.Default);
+            }
+
+            AccessText[] captions = owner.Items.OfType<MenuItem>()
+                .SelectMany(item => item.GetVisualDescendants().OfType<AccessText>()).Where(text => text.AccessKey != default).ToArray();
+            captions.Should().NotBeEmpty();
+            captions.Should().OnlyContain(text => text.ShowAccessKey, "the original keeps menu mnemonic underlines visible on every opening");
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FormBrowse_revision_copy_mnemonics_should_remain_visible_and_execute_after_reopening(bool english)
+    {
+        using TranslationTestScope translationScope = new(english ? "English" : "");
+        FieldInfo clipboardField = typeof(WinFormsShims.ShimHost).GetField("_clipboard", BindingFlags.NonPublic | BindingFlags.Static)!;
+        object? previousClipboard = clipboardField.GetValue(null);
+        WinFormsShims.IClipboard clipboard = Substitute.For<WinFormsShims.IClipboard>();
+        GitModule module = CreateRepositoryWithInitialCommit();
+        ObjectId head = module.GetCurrentCheckout();
+        string branch = module.GetSelectedBranch();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+        ContextMenu? menu = null;
+        try
+        {
+            WinFormsShims.ShimHost.Clipboard = clipboard;
+            form.Show();
+            RevisionGridControl grid = form.RevisionGrid;
+            ListBox revisions = grid.GetTestAccessor().Revisions;
+            await WaitUntilAsync(() => grid.SelectedRevision is { } revision
+                && revision.ObjectId == head && revision.Refs.Any(gitRef => gitRef.Name == branch));
+            menu = grid.FindControl<ContextMenu>("mainContextMenu")
+                ?? throw new InvalidOperationException("The production revision menu was not created.");
+            CopyContextMenuItem copy = grid.FindControl<CopyContextMenuItem>("copyToClipboardToolStripMenuItem")
+                ?? throw new InvalidOperationException("The production Copy menu was not created.");
+            Size doubleTapSize = form.GetPlatformSettings()?.GetDoubleTapSize(PointerType.Mouse)
+                ?? throw new InvalidOperationException("The platform must define pointer gesture bounds.");
+            for (int attempt = 1; attempt <= 2; attempt++)
+            {
+                form.UpdateLayout();
+                ListBoxItem row = (ListBoxItem)revisions.ContainerFromIndex(0)!;
+                Point point = row.TranslatePoint(new Point(
+                    (row.Bounds.Width / 2) + ((attempt - 1) * (doubleTapSize.Width + 1)), row.Bounds.Height / 2), form)
+                    ?? throw new InvalidOperationException("The revision row must belong to Browse.");
+                form.MouseMove(point, RawInputModifiers.None);
+                form.MouseDown(point, MouseButton.Right, RawInputModifiers.None);
+                form.MouseUp(point, MouseButton.Right, RawInputModifiers.None);
+                await WaitUntilAsync(() => menu.IsOpen);
+                TopLevel contextPopup = TopLevel.GetTopLevel(menu)
+                    ?? throw new InvalidOperationException("The context menu must have a real popup root.");
+                using WriteableBitmap? contextFrame = contextPopup.CaptureRenderedFrame();
+                contextFrame.Should().NotBeNull();
+                if (Environment.GetEnvironmentVariable("GITEXT_REF_MENU_EVIDENCE") is { Length: > 0 } contextEvidence)
+                {
+                    Directory.CreateDirectory(contextEvidence);
+                    contextFrame!.Save(Path.Combine(contextEvidence, $"mnemonic-{english}-{attempt}-context.png"), PngBitmapEncoderOptions.Default);
+                }
+
+                AccessText copyCaption = copy.GetVisualDescendants().OfType<AccessText>().Single();
+                copyCaption.ShowAccessKey.Should().BeTrue("the original keeps context-menu mnemonics visible on every opening");
+                contextPopup.KeyPress(Key.C, RawInputModifiers.None, PhysicalKey.C, keySymbol: "c");
+                contextPopup.KeyTextInput("c");
+                contextPopup.KeyRelease(Key.C, RawInputModifiers.None, PhysicalKey.C, keySymbol: "c");
+                await WaitUntilAsync(() => copy.IsSubMenuOpen);
+                copy.IsSubMenuOpen.Should().BeTrue("the unique Copy mnemonic must open its submenu without Enter");
+                MenuItem first = copy.Items.OfType<MenuItem>().Single(item => item.Header?.ToString()?.StartsWith("_1:", StringComparison.Ordinal) == true);
+                TopLevel childPopup = TopLevel.GetTopLevel(first)
+                    ?? throw new InvalidOperationException("The Copy action must belong to its actual popup.");
+                using WriteableBitmap? childFrame = childPopup.CaptureRenderedFrame();
+                childFrame.Should().NotBeNull();
+                if (Environment.GetEnvironmentVariable("GITEXT_REF_MENU_EVIDENCE") is { Length: > 0 } childEvidence)
+                {
+                    Directory.CreateDirectory(childEvidence);
+                    childFrame!.Save(Path.Combine(childEvidence, $"mnemonic-{english}-{attempt}-copy.png"), PngBitmapEncoderOptions.Default);
+                }
+
+                first.GetVisualDescendants().OfType<AccessText>().Single().ShowAccessKey.Should().BeTrue();
+                childPopup.KeyPress(Key.D1, RawInputModifiers.None, PhysicalKey.Digit1, keySymbol: "1");
+                childPopup.KeyTextInput("1");
+                childPopup.KeyRelease(Key.D1, RawInputModifiers.None, PhysicalKey.Digit1, keySymbol: "1");
+                await WaitUntilAsync(() => !menu.IsOpen);
+                clipboard.Received(attempt).SetText(branch);
+                clipboard.ReceivedCalls().Count(call => call.GetMethodInfo().Name == nameof(WinFormsShims.IClipboard.SetText))
+                    .Should().Be(attempt, "one numeric mnemonic must copy once and dismiss the menu");
+                grid.GetSelectedRevisions().Should().ContainSingle().Which.ObjectId.Should().Be(head);
+            }
+        }
+        finally
+        {
+            menu?.Close();
+            form.Close();
+            clipboardField.SetValue(null, previousClipboard);
+        }
     }
 
     [AvaloniaTest]

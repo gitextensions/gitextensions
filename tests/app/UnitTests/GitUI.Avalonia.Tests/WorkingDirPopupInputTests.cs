@@ -252,15 +252,19 @@ public sealed class WorkingDirPopupInputTests
     }
 
     [AvaloniaTest]
-    public void Default_native_wrapper_should_match_regular_AccessText_outcomes_and_keep_unmodified_Enter_activation()
+    public void Default_native_wrapper_should_activate_source_mnemonics_and_keep_unmodified_Enter_activation()
     {
         DefaultMenuOutcome regular = ExerciseDefaultMenu(useNativeWrapper: false);
         DefaultMenuOutcome nativeWrapper = ExerciseDefaultMenu(useNativeWrapper: true);
         TestContext.Out.WriteLine($"Regular framework AccessText: {regular}; default native wrapper AccessText: {nativeWrapper}");
-        nativeWrapper.AccessKeyClicks.Should().Be(regular.AccessKeyClicks);
-        nativeWrapper.AccessKeySelected.Should().Be(regular.AccessKeySelected);
-        nativeWrapper.AccessKeyFocused.Should().Be(regular.AccessKeyFocused);
-        nativeWrapper.AccessKeyPopupOpen.Should().Be(regular.AccessKeyPopupOpen);
+        regular.AccessKeyClicks.Should().Be(0);
+        regular.AccessKeySelected.Should().BeTrue();
+        regular.AccessKeyFocused.Should().BeTrue();
+        regular.AccessKeyPopupOpen.Should().BeTrue();
+        nativeWrapper.AccessKeyClicks.Should().Be(1, "ToolStrip executes a unique mnemonic without Enter");
+        nativeWrapper.AccessKeySelected.Should().BeFalse();
+        nativeWrapper.AccessKeyFocused.Should().BeFalse();
+        nativeWrapper.AccessKeyPopupOpen.Should().BeFalse();
         regular.EnterClicks.Should().Be(1);
         nativeWrapper.EnterClicks.Should().Be(1);
     }
@@ -285,13 +289,10 @@ public sealed class WorkingDirPopupInputTests
         {
             window.Show();
             Settle(window);
-            menu.ShowAt(owner);
-            Settle(window);
-            choice.Focus(NavigationMethod.Tab).Should().BeTrue();
+            OpenWithPointerAndKeyboard();
             TopLevel popup = TopLevel.GetTopLevel(choice)!;
 
-            // Compare the same full headless input on an independent framework
-            // baseline; equality alone is not a positive native Alt parity claim.
+            // A unique ToolStrip mnemonic invokes Click without waiting for Enter.
             popup.KeyPress(Key.C, RawInputModifiers.Alt, PhysicalKey.C, keySymbol: "c");
             popup.KeyTextInput("c");
             popup.KeyRelease(Key.C, RawInputModifiers.None, PhysicalKey.C, keySymbol: "c");
@@ -302,17 +303,31 @@ public sealed class WorkingDirPopupInputTests
             bool accessKeyPopupOpen = menu.IsOpen;
             if (!menu.IsOpen)
             {
-                menu.ShowAt(owner);
-                Settle(window);
+                OpenWithPointerAndKeyboard();
             }
 
-            choice.Focus(NavigationMethod.Tab).Should().BeTrue();
+            choice.IsKeyboardFocusWithin.Should().BeTrue();
             popup = TopLevel.GetTopLevel(choice)!;
             int beforeEnter = clicks;
             popup.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, keySymbol: null);
             popup.KeyRelease(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, keySymbol: null);
             Settle(window);
             return new DefaultMenuOutcome(accessKeyClicks, accessKeySelected, accessKeyFocused, accessKeyPopupOpen, clicks - beforeEnter);
+
+            void OpenWithPointerAndKeyboard()
+            {
+                Point point = owner.TranslatePoint(new Point(owner.Bounds.Width / 2, owner.Bounds.Height / 2), window)!.Value;
+                window.MouseMove(point);
+                window.MouseDown(point, MouseButton.Left);
+                window.MouseUp(point, MouseButton.Left);
+                Settle(window);
+                menu.IsOpen.Should().BeTrue();
+                TopLevel root = TopLevel.GetTopLevel(choice)!;
+                root.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, keySymbol: null);
+                root.KeyRelease(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, keySymbol: null);
+                Settle(window);
+                choice.IsKeyboardFocusWithin.Should().BeTrue();
+            }
         }
         finally
         {
