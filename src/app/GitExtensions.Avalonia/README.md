@@ -269,6 +269,13 @@ project. After an intended rendering change, regenerate the images by running th
 once with the environment variable `GITEXT_UPDATE_GOLDEN_IMAGES=1`, review the new
 images, and commit them.
 
+Windows runtime validation through the Exit gate requires PowerShell hosted on
+.NET 10 or later. It tests the registry boundary before launching the application,
+then uses a disposable process-local HKCU hive. It compares the user's real Git
+Extensions registry values, kinds and subkeys before and after the run, failing
+on any difference without restoring them. Portable settings and repositories stay
+inside the disposable runtime.
+
 ## Project layout
 
 The UI lives in `src/app/GitUI.Avalonia`, which mirrors the file structure of the Windows

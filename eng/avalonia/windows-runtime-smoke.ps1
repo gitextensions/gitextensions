@@ -48,6 +48,8 @@ $process = $null
 $stdoutTask = $null
 $stderrTask = $null
 $outputCaptured = $false
+$registryScope = $null
+$smokeManifest = $null
 
 function Invoke-Git
 {
@@ -100,6 +102,31 @@ try
     [IO.Directory]::CreateDirectory($runtimeRoot) | Out-Null
     [IO.Directory]::CreateDirectory($EvidenceDirectory) | Out-Null
 
+    if ([Environment]::Version.Major -lt 10)
+    {
+        throw "The Windows runtime smoke requires PowerShell hosted on .NET 10 or later."
+    }
+
+    $registryTests = Join-Path $repositoryRoot "eng/tools/WindowsRuntimeIsolation.Tests/WindowsRuntimeIsolation.Tests.csproj"
+    $registryBuildLog = Join-Path $EvidenceDirectory "registry-contract-build.log"
+    $registryTestLog = Join-Path $EvidenceDirectory "registry-contract-tests.log"
+    & dotnet build $registryTests -m:1 -v:minimal *> $registryBuildLog
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "Registry isolation contract build failed; application launch refused. See $registryBuildLog."
+    }
+
+    $registryHelper = Join-Path $repositoryRoot "artifacts/Debug/bin/WindowsRuntimeIsolation/net10.0-windows/WindowsRuntimeIsolation.dll"
+    [Reflection.Assembly]::LoadFrom($registryHelper) | Out-Null
+    $registryScope = [GitExtensions.WindowsRuntimeIsolation.WindowsRegistryIsolationScope]::new()
+    & dotnet test $registryTests --no-build --no-restore --logger "trx;LogFileName=registry-contracts.trx" --results-directory $EvidenceDirectory *> $registryTestLog
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "Registry isolation contracts failed; application launch refused. See $registryTestLog."
+    }
+
+    $registryScope.ProveAsync((Join-Path $applicationOutput "GitExtensions.Avalonia.runtimeconfig.json")).GetAwaiter().GetResult()
+
     New-HardLinkedRuntime -Source $applicationOutput -Destination $runtimeRoot
     if (-not [IO.Directory]::Exists($fixtureRepository))
     {
@@ -143,7 +170,7 @@ try
     $startInfo.EnvironmentVariables["LOCALAPPDATA"] = Join-Path $settingsRoot "local"
     $startInfo.EnvironmentVariables["GIT_CONFIG_GLOBAL"] = "NUL"
     $startInfo.EnvironmentVariables["GITEXTENSIONS_DEBUG_FAIL_FAST"] = "1"
-    $process = [Diagnostics.Process]::Start($startInfo)
+    $process = $registryScope.StartApplication($startInfo)
     if ($null -eq $process)
     {
         throw "Unable to start the Avalonia application."
@@ -241,7 +268,7 @@ try
     }
 
     $screenshotHash = (Get-FileHash -LiteralPath $screenshot -Algorithm SHA256).Hash.ToLowerInvariant()
-    [ordered]@{
+    $smokeManifest = [ordered]@{
         schemaVersion = 1
         platform = "windows"
         command = "browse <temporary-repository>"
@@ -251,53 +278,88 @@ try
         captureMethod = $captureMethod
         prerequisiteScreenshot = if ([IO.File]::Exists($prerequisiteScreenshot)) { "prerequisite.png" } else { $null }
         settingsFileIsolation = "disposablePortableRuntime"
-        registryAccess = "readOnly"
+        registryAccess = "isolatedProcessHive"
+        registryEvidence = "registry-isolation.json"
         repositoryLocation = "outsideWorkingTree"
         screenshot = "window.png"
         screenshotSha256 = $screenshotHash
         stdout = "stdout.log"
         stderr = "stderr.log"
-    } | ConvertTo-Json | Set-Content -LiteralPath $manifest
-
-    Write-Output "Windows smoke passed; screenshot=$screenshotHash"
+    }
 }
 finally
 {
-    if ($null -ne $process)
+    $processExited = $null -eq $process
+    try
     {
-        if (-not $process.HasExited)
+        if ($null -ne $process)
         {
-            & taskkill.exe /PID $process.Id /T /F 2>&1 | Out-Null
-        }
-
-        if (-not $outputCaptured -and $null -ne $stdoutTask)
-        {
-            [IO.File]::WriteAllText($stdoutLog, $stdoutTask.GetAwaiter().GetResult())
-        }
-
-        if (-not $outputCaptured -and $null -ne $stderrTask)
-        {
-            [IO.File]::WriteAllText($stderrLog, $stderrTask.GetAwaiter().GetResult())
-        }
-
-        $process.Dispose()
-    }
-
-    $resolvedSmokeRoot = [IO.Path]::GetFullPath($smokeRoot)
-    $resolvedTemporaryParent = [IO.Path]::GetFullPath($temporaryParent) + [IO.Path]::DirectorySeparatorChar
-    if ($resolvedSmokeRoot.StartsWith($resolvedTemporaryParent, [StringComparison]::OrdinalIgnoreCase) -and
-        [IO.Directory]::Exists($resolvedSmokeRoot))
-    {
-        # Git creates hidden/read-only metadata in the disposable repository. Clear only
-        # that repository's attributes; the runtime uses hard links to build output.
-        Get-ChildItem -LiteralPath $fixtureRepository -Recurse -Force -ErrorAction SilentlyContinue |
-            Where-Object {
-                $_.Attributes -band ([IO.FileAttributes]::Hidden -bor [IO.FileAttributes]::ReadOnly)
-            } |
-            ForEach-Object {
-                $_.Attributes = $_.Attributes -band -bnot (
-                    [IO.FileAttributes]::Hidden -bor [IO.FileAttributes]::ReadOnly)
+            if (-not $process.HasExited)
+            {
+                & taskkill.exe /PID $process.Id /T /F 2>&1 | Out-Null
             }
-        Remove-Item -LiteralPath $resolvedSmokeRoot -Recurse
+
+            $processExited = $process.WaitForExit(10000)
+            if (-not $processExited)
+            {
+                throw "The isolated application did not terminate; its registry root and runtime are retained."
+            }
+
+            if (-not $outputCaptured -and $null -ne $stdoutTask)
+            {
+                [IO.File]::WriteAllText($stdoutLog, $stdoutTask.GetAwaiter().GetResult())
+            }
+
+            if (-not $outputCaptured -and $null -ne $stderrTask)
+            {
+                [IO.File]::WriteAllText($stderrLog, $stderrTask.GetAwaiter().GetResult())
+            }
+        }
+    }
+    finally
+    {
+        try
+        {
+            if ($null -ne $registryScope)
+            {
+                try
+                {
+                    $registryScope.Dispose()
+                }
+                finally
+                {
+                    [IO.File]::WriteAllText((Join-Path $EvidenceDirectory "registry-isolation.json"), $registryScope.GetEvidenceJson())
+                }
+            }
+        }
+        finally
+        {
+            if ($null -ne $process)
+            {
+                $process.Dispose()
+            }
+
+            $resolvedSmokeRoot = [IO.Path]::GetFullPath($smokeRoot)
+            $resolvedTemporaryParent = [IO.Path]::GetFullPath($temporaryParent) + [IO.Path]::DirectorySeparatorChar
+            if ($processExited -and
+                $resolvedSmokeRoot.StartsWith($resolvedTemporaryParent, [StringComparison]::OrdinalIgnoreCase) -and
+                [IO.Directory]::Exists($resolvedSmokeRoot))
+            {
+                # Git creates hidden/read-only metadata in the disposable repository. Clear only
+                # that repository's attributes; the runtime uses hard links to build output.
+                Get-ChildItem -LiteralPath $fixtureRepository -Recurse -Force -ErrorAction SilentlyContinue |
+                    Where-Object {
+                        $_.Attributes -band ([IO.FileAttributes]::Hidden -bor [IO.FileAttributes]::ReadOnly)
+                    } |
+                    ForEach-Object {
+                        $_.Attributes = $_.Attributes -band -bnot (
+                            [IO.FileAttributes]::Hidden -bor [IO.FileAttributes]::ReadOnly)
+                    }
+                Remove-Item -LiteralPath $resolvedSmokeRoot -Recurse
+            }
+        }
     }
 }
+
+$smokeManifest | ConvertTo-Json | Set-Content -LiteralPath $manifest
+Write-Output "Windows smoke passed; screenshot=$screenshotHash; owner registry unchanged."

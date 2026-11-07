@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+    <Using Include="NUnit.Framework" />
+    <Using Include="AwesomeAssertions" />
+    <ProjectReference Include="..\WindowsRuntimeIsolation\WindowsRuntimeIsolation.csproj" />
+  </ItemGroup>
+</Project>
