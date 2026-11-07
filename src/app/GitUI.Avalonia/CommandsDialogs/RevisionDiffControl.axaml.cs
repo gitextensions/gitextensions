@@ -59,6 +59,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         LayoutUpdated += (_, _) => InitializeNestedViewerRuntimeState();
 
         InitializeComplete();
+        HotkeysEnabled = true;
     }
 
     private void FileViewer_TopScrollReached(object? sender, EventArgs e)

@@ -1567,6 +1567,85 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FormBrowse_control_A_should_select_only_the_first_diff_group(bool focusFiles)
+    {
+        bool previousParents = AppSettings.ShowDiffForAllParents;
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        CommitInfoPosition previousPosition = AppSettings.CommitInfoPosition;
+        bool previousSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.ShowDiffForAllParents = true;
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithMerge();
+            ObjectId head = module.GetCurrentCheckout();
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            form.Show();
+            try
+            {
+                RevisionGridControl grid = form.RevisionGrid;
+                await WaitUntilAsync(() => grid.SelectedRevision?.ObjectId == head);
+                Click(form, form.DiffTabPage, MouseButton.Left);
+                FileStatusList files = form.revisionDiff.FileStatusList;
+                TreeView tree = files.FindControl<TreeView>("tvDiffFiles")!;
+                await WaitUntilAsync(() => files.GitItemStatuses.Count == 4 && tree.ItemCount == 2);
+                form.UpdateLayout();
+                Control target;
+                if (focusFiles)
+                {
+                    TreeViewItem group = (TreeViewItem)tree.ContainerFromIndex(0)!;
+                    TreeViewItem file = group.GetVisualDescendants().OfType<TreeViewItem>()
+                        .First(item => item.DataContext is FileStatusList.DiffTreeNode { Item: not null });
+                    target = file.GetVisualDescendants().OfType<Control>().First(control => control.Name == "PART_HeaderPresenter");
+                }
+                else
+                {
+                    target = (ListBoxItem)grid.GetTestAccessor().Revisions.ContainerFromIndex(0)!;
+                }
+
+                Click(form, target, MouseButton.Left);
+                Dispatcher.UIThread.RunJobs();
+                files.IsKeyboardFocusWithin.Should().Be(focusFiles);
+                grid.GetTestAccessor().Revisions.IsKeyboardFocusWithin.Should().Be(!focusFiles);
+                grid.GetSelectedRevisions().Should().ContainSingle().Which.ObjectId.Should().Be(head);
+
+                form.KeyPress(Key.A, RawInputModifiers.Control, PhysicalKey.A, keySymbol: "a");
+                form.KeyRelease(Key.A, RawInputModifiers.Control, PhysicalKey.A, keySymbol: "a");
+                Dispatcher.UIThread.RunJobs();
+
+                grid.GetSelectedRevisions().Should().ContainSingle().Which.ObjectId.Should().Be(head);
+                files.SelectedItems.Select(item => item.Item.Name).Should().BeEquivalentTo(["left-a.txt", "left-b.txt"]);
+                files.IsKeyboardFocusWithin.Should().BeTrue();
+
+                TextBox filter = files.GetTestAccessor().FilterComboBox.GetVisualDescendants().OfType<TextBox>().Single();
+                Click(form, filter, MouseButton.Left);
+                form.KeyTextInput("left");
+                filter.Text.Should().Be("left");
+                form.KeyPress(Key.A, RawInputModifiers.Control, PhysicalKey.A, keySymbol: "a");
+                form.KeyRelease(Key.A, RawInputModifiers.Control, PhysicalKey.A, keySymbol: "a");
+                filter.SelectedText.Should().Be("left", "Ctrl+A in a text field must remain a text selection");
+                filter.IsKeyboardFocusWithin.Should().BeTrue();
+                grid.GetSelectedRevisions().Should().ContainSingle().Which.ObjectId.Should().Be(head);
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.ShowDiffForAllParents = previousParents;
+            DiffListSortService.Instance.DiffListSorting = previousSort;
+            AppSettings.CommitInfoPosition = previousPosition;
+            AppSettings.ShowSplitViewLayout = previousSplitView;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormBrowse_diff_groups_should_select_their_files_and_support_arrow_navigation()
     {
         bool previousParents = AppSettings.ShowDiffForAllParents;
