@@ -40,6 +40,7 @@ using GitUI.LeftPanel;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using GitUI.Shells;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
@@ -3690,6 +3691,101 @@ public sealed class FormBrowseTests
         finally
         {
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormBrowse_diff_should_render_the_original_default_git_background_colors()
+    {
+        const string Before = "public string value = \"before-value\";\n";
+        const string After = "public string value = \"after-value\";\n";
+        CommitInfoPosition previousPosition = AppSettings.CommitInfoPosition;
+        bool previousSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.UseGitColoring.Value.Should().BeTrue("the original appearance settings enable Git coloring by default");
+            AppSettings.ReverseGitColoring.Value.Should().BeTrue("the original defaults request themed background colors");
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            module.SetSetting("color.diff.old", string.Empty);
+            module.SetSetting("color.diff.new", string.Empty);
+            File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), Before);
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "baseline-line" }).Should().BeTrue();
+            File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), After);
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "replace-content" }).Should().BeTrue();
+            ObjectId head = module.GetCurrentCheckout();
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 800 };
+            form.Show();
+            try
+            {
+                await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == head);
+                Click(form, form.DiffTabPage, MouseButton.Left);
+                GitUI.Editor.FileViewer viewer = form.revisionDiff.FileViewer;
+                await WaitUntilAsync(() => form.fileStatusList.SelectedItem?.Item.Name == "tracked.txt"
+                    && viewer.TextEditor.Text.Contains("+" + After.TrimEnd('\n'), StringComparison.Ordinal));
+                GitUI.Editor.FileViewerInternal native = viewer.FindControl<GitUI.Editor.FileViewerInternal>("internalFileViewer")
+                    ?? throw new InvalidOperationException("The production internal diff viewer was not created.");
+                GitUI.Editor.Diff.DiffHighlightService service = native.DiffHighlightService
+                    ?? throw new InvalidOperationException("The production diff did not create its highlight service.");
+                service.Should().BeOfType<GitUI.Editor.Diff.PatchHighlightService>();
+                service.UseGitColoring.Should().BeTrue();
+                service.UseBackgroundColoring.Should().BeTrue();
+                System.Drawing.Color removed = GitExtUtils.GitUI.Theming.AppColor.AnsiTerminalRedBackNormal.GetThemeColor();
+                System.Drawing.Color added = GitExtUtils.GitUI.Theming.AppColor.AnsiTerminalGreenBackNormal.GetThemeColor();
+                int removedOffset = viewer.TextEditor.Text.IndexOf("-" + Before.TrimEnd('\n'), StringComparison.Ordinal) + 1;
+                int addedOffset = viewer.TextEditor.Text.IndexOf("+" + After.TrimEnd('\n'), StringComparison.Ordinal) + 1;
+                removedOffset.Should().BeGreaterThan(0);
+                addedOffset.Should().BeGreaterThan(0);
+                service.TextMarkers.Should().Contain(marker => marker.Offset <= removedOffset && marker.EndOffset > removedOffset
+                    && marker.BackColor.HasValue && marker.BackColor.Value.ToArgb() == removed.ToArgb());
+                service.TextMarkers.Should().Contain(marker => marker.Offset <= addedOffset && marker.EndOffset > addedOffset
+                    && marker.BackColor.HasValue && marker.BackColor.Value.ToArgb() == added.ToArgb());
+                service.InlineMarkers.Should().Contain(marker => marker.IsRemoved && marker.Length > 0);
+                service.InlineMarkers.Should().Contain(marker => !marker.IsRemoved && marker.Length > 0);
+                viewer.TextEditor.Text.Should().NotContain("\u001b");
+                form.UpdateLayout();
+                using WriteableBitmap frame = form.CaptureRenderedFrame()
+                    ?? throw new AssertionException("The real Browse diff must render headlessly.");
+                if (Environment.GetEnvironmentVariable("GITEXT_DIFF_EVIDENCE") is { Length: > 0 } evidence)
+                {
+                    Directory.CreateDirectory(evidence);
+                    frame.Save(Path.Combine(evidence, "browse-git-colors.png"), PngBitmapEncoderOptions.Default);
+                }
+
+                using MemoryStream encoded = new();
+                frame.Save(encoded, PngBitmapEncoderOptions.Default);
+                encoded.Position = 0;
+                using SKBitmap pixels = SKBitmap.Decode(encoded)
+                    ?? throw new AssertionException("The actual diff frame must decode.");
+                AvaloniaEdit.Rendering.TextView textView = viewer.TextEditor.TextArea.TextView;
+                Point origin = textView.TranslatePoint(default, form)
+                    ?? throw new InvalidOperationException("The diff viewport must belong to Browse.");
+                Rect viewport = new(origin, textView.Bounds.Size);
+                viewport.Width.Should().BeGreaterThan(0);
+                viewport.Height.Should().BeGreaterThan(0);
+                foreach ((int offset, System.Drawing.Color sourceColor) in new[] { (removedOffset, removed), (addedOffset, added) })
+                {
+                    int lineNumber = viewer.TextEditor.Document.GetLineByOffset(offset).LineNumber;
+                    AvaloniaEdit.Rendering.VisualLine line = textView.VisualLines.Single(line =>
+                        line.FirstDocumentLine.LineNumber <= lineNumber && line.LastDocumentLine.LineNumber >= lineNumber);
+                    Point blank = new(viewport.Right - 2, origin.Y + line.VisualTop - textView.ScrollOffset.Y + (line.Height / 2));
+                    blank.Y.Should().BeGreaterThanOrEqualTo(viewport.Top);
+                    blank.Y.Should().BeLessThan(viewport.Bottom);
+                    SKColor expected = new(sourceColor.R, sourceColor.G, sourceColor.B, sourceColor.A);
+                    SKColor actual = pixels.GetPixel((int)Math.Floor(blank.X * form.RenderScaling), (int)Math.Floor(blank.Y * form.RenderScaling));
+                    actual.Should().Be(expected, "the original fills the whole changed line, including blank space beyond the text");
+                }
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.CommitInfoPosition = previousPosition;
+            AppSettings.ShowSplitViewLayout = previousSplitView;
         }
     }
 
