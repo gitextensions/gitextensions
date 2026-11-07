@@ -1646,6 +1646,79 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FormBrowse_plain_R_should_open_the_real_reset_dialog_from_the_diff_file(bool treeMode)
+    {
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        CommitInfoPosition previousPosition = AppSettings.CommitInfoPosition;
+        bool previousSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = treeMode ? DiffListSortType.FilePath : DiffListSortType.FilePathFlat;
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second revision\n");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" }).Should().BeTrue();
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            form.Show();
+            try
+            {
+                await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == module.GetCurrentCheckout());
+                Click(form, form.DiffTabPage, MouseButton.Left);
+                FileStatusList files = form.revisionDiff.FileStatusList;
+                await WaitUntilAsync(() => files.SelectedItem?.Item.Name == "tracked.txt"
+                    && form.fileViewer.TextEditor.Text.Contains("+second revision", StringComparison.Ordinal));
+                form.UpdateLayout();
+                FileStatusList.TestAccessor accessor = files.GetTestAccessor();
+                Control target = (TreeViewItem)accessor.DiffTree.ContainerFromIndex(0)!;
+                target.IsEffectivelyVisible.Should().BeTrue();
+                Click(form, target, MouseButton.Left);
+                files.IsKeyboardFocusWithin.Should().BeTrue();
+
+                int openedCount = 0;
+                Exception? observationFailure = null;
+                using IDisposable subscription = Window.WindowOpenedEvent.AddClassHandler<FormResetChanges>((dialog, _) =>
+                {
+                    openedCount++;
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        try
+                        {
+                            Click(dialog, dialog.FindControl<Button>("btnCancel")!, MouseButton.Left);
+                        }
+                        catch (Exception exception)
+                        {
+                            observationFailure = exception;
+                            dialog.Close();
+                        }
+                    });
+                });
+
+                form.KeyPress(Key.R, RawInputModifiers.None, PhysicalKey.R, keySymbol: "r");
+                form.KeyRelease(Key.R, RawInputModifiers.None, PhysicalKey.R, keySymbol: "r");
+                Dispatcher.UIThread.RunJobs();
+
+                observationFailure.Should().BeNull();
+                openedCount.Should().Be(1, "the default BrowseDiff R shortcut must invoke the production reset confirmation");
+                File.ReadAllText(Path.Combine(_workingDirectory, "tracked.txt")).Should().Be("second revision\n",
+                    "the actual Cancel button must leave the working file unchanged");
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            DiffListSortService.Instance.DiffListSorting = previousSort;
+            AppSettings.CommitInfoPosition = previousPosition;
+            AppSettings.ShowSplitViewLayout = previousSplitView;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormBrowse_diff_groups_should_select_their_files_and_support_arrow_navigation()
     {
         bool previousParents = AppSettings.ShowDiffForAllParents;
