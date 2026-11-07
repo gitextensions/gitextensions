@@ -1,0 +1,12 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui" xmlns:controls="clr-namespace:GitUI.Compat.WinFormsControls" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="BugReporter.ExceptionDetails">
+  <DockPanel>
+    <controls:Label x:Name="exceptionLabel" DockPanel.Dock="Top" Text="Exception(s):" />
+    <TreeView x:Name="exceptionTreeView" DockPanel.Dock="Top" Height="60" />
+    <controls:Label x:Name="exceptionDetailsLabel" DockPanel.Dock="Top" Margin="0,16,0,0" Text="Exception Details (double click on items to see details):" />
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+      <controls:ColumnHeader x:Name="propertyColumnHeader" Content="Property" Width="101" />
+      <controls:ColumnHeader x:Name="informationColumnHeader" Content="Information" Width="350" />
+    </StackPanel>
+    <ListBox x:Name="exceptionDetailsListView" />
+  </DockPanel>
+</UserControl>

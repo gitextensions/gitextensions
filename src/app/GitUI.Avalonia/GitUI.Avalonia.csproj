@@ -13,6 +13,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Reporter twins compile in the UI assembly to avoid a circular reference from UIReporter. -->
+    <Compile Include="..\BugReporter.Avalonia\**\*.cs" Link="BugReporter\%(RecursiveDir)%(Filename)%(Extension)" />
+    <AvaloniaXaml Include="..\BugReporter.Avalonia\**\*.axaml" Link="BugReporter\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\BugReporter\ErrorReportUrlBuilder.cs" Link="BugReporter\ErrorReportUrlBuilder.cs" />
+    <Compile Include="..\BugReporter\GitHubUrlBuilder.cs" Link="BugReporter\GitHubUrlBuilder.cs" />
+    <Compile Include="..\BugReporter\Info\Report.cs" Link="BugReporter\Info\Report.cs" />
+    <Compile Include="..\BugReporter\Info\GeneralInfo.cs" Link="BugReporter\Info\GeneralInfo.cs" />
+    <Compile Include="..\BugReporter\Serialization\SerializableException.cs" Link="BugReporter\Serialization\SerializableException.cs" />
+    <Compile Include="..\BugReporter\Serialization\SerializableDictionary.cs" Link="BugReporter\Serialization\SerializableDictionary.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Avalonia generates one InitializeComponent method per inheritance level, which makes
          an empty compiled-XAML base collide with every concrete settings-page partial. Keep the
          source-shaped empty Designer file available to parity tooling without compiling it. -->
