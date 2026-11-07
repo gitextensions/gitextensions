@@ -1,4 +1,3 @@
-using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Platform;
@@ -165,7 +164,7 @@ internal sealed class WorkingDirectoryMenuInteractionHandler(
             }
 
             foundMenuItem = true;
-            if (IsMnemonic(charCode, text))
+            if (ToolStripMnemonic.IsMnemonic(charCode, text))
             {
                 if (firstMatch is null)
                 {
@@ -203,7 +202,7 @@ internal sealed class WorkingDirectoryMenuInteractionHandler(
                 continue;
             }
 
-            if (IsPseudoMnemonic(charCode, text))
+            if (ToolStripMnemonic.IsPseudoMnemonic(charCode, text))
             {
                 if (firstMatch is null)
                 {
@@ -233,45 +232,5 @@ internal sealed class WorkingDirectoryMenuInteractionHandler(
     {
         level.SelectedItem = target;
         target.Focus(NavigationMethod.Tab);
-    }
-
-    private static bool IsMnemonic(char charCode, string text)
-    {
-        if (charCode == '&')
-        {
-            return false;
-        }
-
-        int position = -1;
-        char upperCode = char.ToUpper(charCode, CultureInfo.CurrentCulture);
-        while (position + 1 < text.Length)
-        {
-            position = text.IndexOf('&', position + 1) + 1;
-            if (position <= 0 || position >= text.Length)
-            {
-                break;
-            }
-
-            char upperText = char.ToUpper(text[position], CultureInfo.CurrentCulture);
-            if (upperText == upperCode
-                || char.ToLower(upperText, CultureInfo.CurrentCulture) == char.ToLower(upperCode, CultureInfo.CurrentCulture))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private static bool IsPseudoMnemonic(char charCode, string text)
-    {
-        // Preserve WinFormsUtils.ContainsMnemonic's actual legacy rule rather than
-        // replacing it with a more conventional prefix parser.
-        int firstAmpersand = text.IndexOf('&');
-        bool containsMnemonic = firstAmpersand >= 0 && firstAmpersand <= text.Length - 2
-            && text.IndexOf('&', firstAmpersand + 1) == -1;
-        return !containsMnemonic
-            && (char.ToUpper(text[0], CultureInfo.CurrentCulture) == char.ToUpper(charCode, CultureInfo.CurrentCulture)
-                || char.ToLower(text[0], CultureInfo.CurrentCulture) == char.ToLower(charCode, CultureInfo.CurrentCulture));
     }
 }

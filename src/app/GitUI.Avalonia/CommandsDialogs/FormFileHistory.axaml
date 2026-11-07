@@ -18,7 +18,7 @@
   <Grid x:Name="MainPanel"
         RowDefinitions="25,107,6,*">
     <Grid.ContextMenu>
-      <ContextMenu x:Name="FileHistoryContextMenu">
+      <wf:ContextMenuStrip x:Name="FileHistoryContextMenu">
         <revisionGrid:CopyContextMenuItem x:Name="copyToClipboardToolStripMenuItem" Header="Copy to clipboard" />
         <Separator x:Name="separatorAfterCopySubmenu" />
         <MenuItem x:Name="openWithDifftoolToolStripMenuItem"
@@ -47,7 +47,7 @@
                   Header="Detect and follow - exact renames and copies only"
                   ToggleType="CheckBox" />
         <Separator x:Name="toolStripSeparator4" />
-      </ContextMenu>
+      </wf:ContextMenuStrip>
     </Grid.ContextMenu>
 
     <StackPanel Height="25"
@@ -63,14 +63,14 @@
                               ToolTip.Tip="Load file history"
                               compat:TranslationCompat.UseToolTipText="True">
         <compat:IconSplitButton.Flyout>
-          <MenuFlyout>
+          <compat:WinFormsMenuFlyout>
             <MenuItem x:Name="loadHistoryOnShowToolStripMenuItem"
                       Header="Load history on show"
                       ToggleType="CheckBox" />
             <MenuItem x:Name="loadBlameOnShowToolStripMenuItem"
                       Header="Load blame on show"
                       ToggleType="CheckBox" />
-          </MenuFlyout>
+          </compat:WinFormsMenuFlyout>
         </compat:IconSplitButton.Flyout>
       </compat:IconSplitButton>
       <compat:IconDropDownButton x:Name="ShowFullHistory"
@@ -80,14 +80,14 @@
                                  ToolTip.Tip="Show Full History"
                                  compat:TranslationCompat.UseToolTipText="True">
         <compat:IconDropDownButton.Flyout>
-          <MenuFlyout>
+          <compat:WinFormsMenuFlyout>
             <MenuItem x:Name="showFullHistoryToolStripMenuItem"
                       Header="Show full history"
                       ToggleType="CheckBox" />
             <MenuItem x:Name="simplifyMergesToolStripMenuItem"
                       Header="Simplify merges"
                       ToggleType="CheckBox" />
-          </MenuFlyout>
+          </compat:WinFormsMenuFlyout>
         </compat:IconDropDownButton.Flyout>
       </compat:IconDropDownButton>
       <compat:IconDropDownButton x:Name="toolStripBlameOptions"
@@ -98,7 +98,7 @@
                                  compat:TranslationCompat.UseToolTipText="True"
                                  Icon="{x:Static properties:Images.Blame}">
         <compat:IconDropDownButton.Flyout>
-          <MenuFlyout>
+          <compat:WinFormsMenuFlyout>
             <MenuItem x:Name="blameSettingsToolStripMenuItem"
                       Header="Blame settings:"
                       IsEnabled="False" />
@@ -136,7 +136,7 @@
             <MenuItem x:Name="showOriginalFilePathToolStripMenuItem"
                       Header="Show original file path"
                       ToggleType="CheckBox" />
-          </MenuFlyout>
+          </compat:WinFormsMenuFlyout>
         </compat:IconDropDownButton.Flyout>
       </compat:IconDropDownButton>
       <compat:IconButton x:Name="gitcommandLogToolStripMenuItem"

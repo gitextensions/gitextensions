@@ -30,7 +30,7 @@
                                 Content="Add"
                                 Icon="{x:Static properties:Images.FileStatusAdded}">
           <compat:IconSplitButton.Flyout>
-            <MenuFlyout />
+            <compat:WinFormsMenuFlyout />
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
         <Border Classes="gitextensions-toolbar-separator" />

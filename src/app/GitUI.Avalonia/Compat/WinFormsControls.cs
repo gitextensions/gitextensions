@@ -248,6 +248,11 @@ public class FlowLayoutPanel : Decorator
 /// </summary>
 public class MenuStrip : Menu
 {
+    public MenuStrip()
+        : base(new MenuMnemonicInteractionHandler(false))
+    {
+    }
+
     protected override Type StyleKeyOverride => typeof(Menu);
 }
 
@@ -730,5 +735,10 @@ public class ToolStripSeparator : Separator
 /// </summary>
 public class ContextMenuStrip : ContextMenu
 {
+    public ContextMenuStrip()
+        : base(new MenuMnemonicInteractionHandler(true))
+    {
+    }
+
     protected override Type StyleKeyOverride => typeof(ContextMenu);
 }

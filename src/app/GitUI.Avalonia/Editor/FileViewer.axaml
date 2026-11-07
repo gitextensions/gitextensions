@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
              xmlns:compat="using:GitUI.Compat"
              xmlns:editor="using:GitUI.Editor"
              xmlns:properties="using:GitUI.Properties"
@@ -22,7 +23,7 @@
   <Grid>
     <editor:FileViewerInternal x:Name="internalFileViewer">
       <editor:FileViewerInternal.ContextMenu>
-        <ContextMenu x:Name="contextMenu">
+        <wf:ContextMenuStrip x:Name="contextMenu">
           <MenuItem x:Name="stageSelectedLinesToolStripMenuItem"
               Header="Stage selected line(s)">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stage}" /></MenuItem.Icon>
@@ -121,7 +122,7 @@
           <MenuItem x:Name="goToLineToolStripMenuItem"
                     Header="_Go to line"
                     InputGesture="Ctrl+G" />
-        </ContextMenu>
+        </wf:ContextMenuStrip>
       </editor:FileViewerInternal.ContextMenu>
     </editor:FileViewerInternal>
 

@@ -329,7 +329,7 @@ internal static class AvaloniaTranslationUtils
             .Replace(escapedUnderscore, "_", StringComparison.Ordinal);
     }
 
-    private static string ToWinFormsMnemonics(string text)
+    internal static string ToWinFormsMnemonics(string text)
     {
         const string escapedUnderscore = "\u0001";
         return text

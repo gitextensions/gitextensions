@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wf="using:GitUI.Compat.WinFormsControls"
         xmlns:commandsDialogs="clr-namespace:GitUI.CommandsDialogs"
         xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.BrowseDialog.FormGitCommandLog"
@@ -22,7 +23,7 @@
                Header="Command log"
                TabIndex="0">
         <TabItem.ContextMenu>
-          <ContextMenu x:Name="contextMenu">
+          <wf:ContextMenuStrip x:Name="contextMenu">
             <MenuItem x:Name="mnuSaveToFile" Header="_Save to file" InputGesture="Ctrl+S">
               <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SaveAs}" /></MenuItem.Icon>
             </MenuItem>
@@ -32,7 +33,7 @@
             <MenuItem x:Name="mnuClear" Header="C_lear" InputGesture="Ctrl+L">
               <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ClearLog}" /></MenuItem.Icon>
             </MenuItem>
-          </ContextMenu>
+          </wf:ContextMenuStrip>
         </TabItem.ContextMenu>
         <Grid x:Name="splitContainer2"
               RowDefinitions="*,7,150"
@@ -76,11 +77,11 @@
                Header="Command cache"
                TabIndex="1">
         <TabItem.ContextMenu>
-          <ContextMenu x:Name="cmsCache">
+          <wf:ContextMenuStrip x:Name="cmsCache">
             <MenuItem x:Name="tsmiClearCache" Header="C_lear" InputGesture="Ctrl+L">
               <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ClearLog}" /></MenuItem.Icon>
             </MenuItem>
-          </ContextMenu>
+          </wf:ContextMenuStrip>
         </TabItem.ContextMenu>
         <Grid x:Name="splitContainer1"
               RowDefinitions="180*,6,226*"

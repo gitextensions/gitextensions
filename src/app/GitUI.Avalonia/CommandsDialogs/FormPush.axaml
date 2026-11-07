@@ -192,14 +192,14 @@
                     BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
                     BorderThickness="0,1,1,1">
               <wf:DataGridViewCheckBoxColumn.ContextMenu>
-                <ContextMenu x:Name="menuPushSelection">
+                <wf:ContextMenuStrip x:Name="menuPushSelection">
                   <MenuItem x:Name="unselectAllToolStripMenuItem"
                             Header="Unselect all" />
                   <MenuItem x:Name="selectTrackedToolStripMenuItem"
                             Header="Select tracked" />
                   <MenuItem x:Name="selectAllToolStripMenuItem"
                             Header="Select all" />
-                </ContextMenu>
+                </wf:ContextMenuStrip>
               </wf:DataGridViewCheckBoxColumn.ContextMenu>
               <TextBlock Text="Push" />
             </wf:DataGridViewCheckBoxColumn>

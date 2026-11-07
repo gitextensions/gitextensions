@@ -293,7 +293,7 @@
                    Source="{x:Static properties:Images.LayoutFooterTab}" />
           </compat:NativeToolStripSplitButton.Content>
           <compat:NativeToolStripSplitButton.Flyout>
-            <MenuFlyout>
+            <compat:WinFormsMenuFlyout>
               <wf:ToolStripMenuItem x:Name="commitInfoBelowMenuItem" Header="Commit info _below graph">
                 <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutFooterTab}" /></MenuItem.Icon>
               </wf:ToolStripMenuItem>
@@ -303,7 +303,7 @@
               <wf:ToolStripMenuItem x:Name="commitInfoRightwardMenuItem" Header="Commit info _right of graph">
                 <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.LayoutSidebarTopRight}" /></MenuItem.Icon>
               </wf:ToolStripMenuItem>
-            </MenuFlyout>
+            </compat:WinFormsMenuFlyout>
           </compat:NativeToolStripSplitButton.Flyout>
         </compat:NativeToolStripSplitButton>
         <Border x:Name="toolStripSeparator17" Classes="gitextensions-toolbar-separator">
@@ -318,7 +318,7 @@
                                 Icon="{x:Static properties:Images.SubmodulesManage}"
                                 ToolTip.Tip="Submodules">
           <compat:IconSplitButton.Flyout>
-            <MenuFlyout />
+            <compat:WinFormsMenuFlyout />
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
         <compat:IconSplitButton x:Name="toolStripWorktrees"
@@ -330,7 +330,7 @@
                                 Icon="{x:Static properties:Images.WorkTree}"
                                 ToolTip.Tip="Worktrees">
           <compat:IconSplitButton.Flyout>
-            <MenuFlyout />
+            <compat:WinFormsMenuFlyout />
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
         <menus:WorkingDirectoryToolStripSplitButton x:Name="_NO_TRANSLATE_WorkingDir"
@@ -344,7 +344,7 @@
                                 Content="Branch"
                                 Icon="{x:Static properties:Images.Branch}">
           <compat:IconSplitButton.Flyout>
-            <MenuFlyout Placement="BottomEdgeAlignedLeft" />
+            <compat:WinFormsMenuFlyout Placement="BottomEdgeAlignedLeft" />
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
         <Border x:Name="toolStripSeparator1" Classes="gitextensions-toolbar-separator">
@@ -357,7 +357,7 @@
                                 Content="Pull"
                                 Icon="{x:Static properties:Images.Pull}">
           <compat:IconSplitButton.Flyout>
-            <MenuFlyout>
+            <compat:WinFormsMenuFlyout>
               <wf:ToolStripMenuItem x:Name="pullToolStripMenuItem1" Header="Open _pull dialog...">
                 <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Pull}" /></MenuItem.Icon>
               </wf:ToolStripMenuItem>
@@ -387,7 +387,7 @@ compat:TranslationCompat.UseToolTipText="True" Header="Fetch _all">
               </wf:ToolStripMenuItem>
               <wf:ToolStripSeparator />
               <wf:ToolStripMenuItem x:Name="setDefaultPullButtonActionToolStripMenuItem" Header="Set _default Pull button action" />
-            </MenuFlyout>
+            </compat:WinFormsMenuFlyout>
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
         <commandsDialogs:ToolStripPushButton x:Name="toolStripButtonPush"
@@ -413,7 +413,7 @@ compat:TranslationCompat.UseToolTipText="True" Header="Fetch _all">
                                 Icon="{x:Static properties:Images.Stash}"
                                 ToolTip.Tip="Manage stashes">
           <compat:IconSplitButton.Flyout>
-            <MenuFlyout>
+            <compat:WinFormsMenuFlyout>
               <wf:ToolStripMenuItem x:Name="stashChangesToolStripMenuItem"
 compat:TranslationCompat.UseToolTipText="True" Header="_Stash" ToolTip.Tip="Stash changes" />
               <wf:ToolStripMenuItem x:Name="stashStagedToolStripMenuItem"
@@ -424,7 +424,7 @@ compat:TranslationCompat.UseToolTipText="True" Header="Stash _pop" ToolTip.Tip="
               <wf:ToolStripMenuItem x:Name="manageStashesToolStripMenuItem"
 compat:TranslationCompat.UseToolTipText="True" Header="_Manage stashes..." ToolTip.Tip="Manage stashes" />
               <wf:ToolStripMenuItem x:Name="createAStashToolStripMenuItem" Header="_Create a stash..." />
-            </MenuFlyout>
+            </compat:WinFormsMenuFlyout>
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
         <Border x:Name="toolStripSeparator2" Classes="gitextensions-toolbar-separator">
@@ -444,7 +444,7 @@ compat:TranslationCompat.UseToolTipText="True" Header="_Manage stashes..." ToolT
                                 Icon="{x:Static properties:Images.GitForWindows}"
                                 ToolTip.Tip="Git bash">
           <compat:IconSplitButton.Flyout>
-            <MenuFlyout />
+            <compat:WinFormsMenuFlyout />
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
         <compat:IconButton x:Name="EditSettings"

@@ -10,6 +10,7 @@ using GitUI.Compat;
 using GitUI.UserControls;
 using Microsoft;
 using ResourceManager;
+using ContextMenuStrip = GitUI.Compat.WinFormsControls.ContextMenuStrip;
 using Point = Avalonia.Point;
 using SourceControls = GitUI.Compat.WinFormsControls;
 
@@ -30,7 +31,7 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
     /// <summary>
     /// The context menu that be shown to allow toggle visibility of toolbars in <see cref="FormBrowse"/>.
     /// </summary>
-    private readonly ContextMenu _toolStripContextMenu = new();
+    private readonly ContextMenuStrip _toolStripContextMenu = new();
     private List<MenuCommand>? _navigateMenuCommands;
     private List<MenuCommand>? _viewMenuCommands;
 
