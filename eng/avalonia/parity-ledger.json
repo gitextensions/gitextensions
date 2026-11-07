@@ -49912,6 +49912,882 @@
           "note": "New mapping from this source basis; bounded headless tests are recorded in the batch receipt. No complete axis claim; native captures, IDE preview and runtime platform coverage remain unverified."
         }
       }
+    },
+    {
+      "source": "src/app/BugReporter/BugReportForm.cs",
+      "twin": "src/app/BugReporter.Avalonia/BugReportForm.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/BugReporter/BugReportForm.Designer.cs",
+      "twin": "src/app/BugReporter.Avalonia/BugReportForm.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/BugReporter/ExceptionDetails.cs",
+      "twin": "src/app/BugReporter.Avalonia/ExceptionDetails.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/BugReporter/ExceptionDetails.Designer.cs",
+      "twin": "src/app/BugReporter.Avalonia/ExceptionDetails.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/BugReporter/ExceptionDetailView.cs",
+      "twin": "src/app/BugReporter.Avalonia/ExceptionDetailView.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/BugReporter/ExceptionDetailView.Designer.cs",
+      "twin": "src/app/BugReporter.Avalonia/ExceptionDetailView.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/BugReporter/ErrorReportUrlBuilder.cs",
+      "twin": "src/app/BugReporter/ErrorReportUrlBuilder.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/BugReporter/GitHubUrlBuilder.cs",
+      "twin": "src/app/BugReporter/GitHubUrlBuilder.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/BugReporter/Info/Report.cs",
+      "twin": "src/app/BugReporter/Info/Report.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/BugReporter/Info/GeneralInfo.cs",
+      "twin": "src/app/BugReporter/Info/GeneralInfo.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/BugReporter/Serialization/SerializableException.cs",
+      "twin": "src/app/BugReporter/Serialization/SerializableException.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/BugReporter/Serialization/SerializableDictionary.cs",
+      "twin": "src/app/BugReporter/Serialization/SerializableDictionary.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-07",
+          "commit": "f43cc5d8faeeda880443731ac446d4af883d1859",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261107-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New reporter mapping; full six-axis parity remains unverified."
+        }
+      }
     }
   ]
 }

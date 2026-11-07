@@ -4339,5 +4339,77 @@
     "status": "windowsOnly",
     "justification": "Jump lists, taskbar progress, and thumbnail toolbar buttons are Windows shell features with no portable equivalent selected for the port.",
     "substitute": "No taskbar or Dock integration; the same operations remain available inside the application."
+  },
+  "src/app/BugReporter/BugReportForm.cs": {
+    "twin": "src/app/BugReporter.Avalonia/BugReportForm.axaml.cs",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "Same-named Avalonia reporter twin, compiled into GitUI.Avalonia to avoid a UIReporter reference cycle. Preserves original report/reproduction/Copy/Send/Quit/Ignore flow; native controls, shared theme and portable shell/clipboard replace WinForms APIs. Fork issue destination is owner-required. Full visual/platform parity remains unverified."
+  },
+  "src/app/BugReporter/BugReportForm.Designer.cs": {
+    "twin": "src/app/BugReporter.Avalonia/BugReportForm.axaml",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "Same-named Avalonia reporter twin, compiled into GitUI.Avalonia to avoid a UIReporter reference cycle. Preserves original report/reproduction/Copy/Send/Quit/Ignore flow; native controls, shared theme and portable shell/clipboard replace WinForms APIs. Fork issue destination is owner-required. Full visual/platform parity remains unverified."
+  },
+  "src/app/BugReporter/ExceptionDetails.cs": {
+    "twin": "src/app/BugReporter.Avalonia/ExceptionDetails.axaml.cs",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "Same-named Avalonia reporter twin, compiled into GitUI.Avalonia to avoid a UIReporter reference cycle. Preserves original report/reproduction/Copy/Send/Quit/Ignore flow; native controls, shared theme and portable shell/clipboard replace WinForms APIs. Fork issue destination is owner-required. Full visual/platform parity remains unverified."
+  },
+  "src/app/BugReporter/ExceptionDetails.Designer.cs": {
+    "twin": "src/app/BugReporter.Avalonia/ExceptionDetails.axaml",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "Same-named Avalonia reporter twin, compiled into GitUI.Avalonia to avoid a UIReporter reference cycle. Preserves original report/reproduction/Copy/Send/Quit/Ignore flow; native controls, shared theme and portable shell/clipboard replace WinForms APIs. Fork issue destination is owner-required. Full visual/platform parity remains unverified."
+  },
+  "src/app/BugReporter/ExceptionDetailView.cs": {
+    "twin": "src/app/BugReporter.Avalonia/ExceptionDetailView.axaml.cs",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "Same-named Avalonia reporter twin, compiled into GitUI.Avalonia to avoid a UIReporter reference cycle. Preserves original report/reproduction/Copy/Send/Quit/Ignore flow; native controls, shared theme and portable shell/clipboard replace WinForms APIs. Fork issue destination is owner-required. Full visual/platform parity remains unverified."
+  },
+  "src/app/BugReporter/ExceptionDetailView.Designer.cs": {
+    "twin": "src/app/BugReporter.Avalonia/ExceptionDetailView.axaml",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "Same-named Avalonia reporter twin, compiled into GitUI.Avalonia to avoid a UIReporter reference cycle. Preserves original report/reproduction/Copy/Send/Quit/Ignore flow; native controls, shared theme and portable shell/clipboard replace WinForms APIs. Fork issue destination is owner-required. Full visual/platform parity remains unverified."
+  },
+  "src/app/BugReporter/ErrorReportUrlBuilder.cs": {
+    "twin": "src/app/BugReporter/ErrorReportUrlBuilder.cs",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "Linked unchanged into GitUI.Avalonia for the same original report serialization and issue payload."
+  },
+  "src/app/BugReporter/GitHubUrlBuilder.cs": {
+    "twin": "src/app/BugReporter/GitHubUrlBuilder.cs",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "Linked unchanged into GitUI.Avalonia for the same original report serialization and issue payload."
+  },
+  "src/app/BugReporter/Info/Report.cs": {
+    "twin": "src/app/BugReporter/Info/Report.cs",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "Linked unchanged into GitUI.Avalonia for the same original report serialization and issue payload."
+  },
+  "src/app/BugReporter/Info/GeneralInfo.cs": {
+    "twin": "src/app/BugReporter/Info/GeneralInfo.cs",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "Linked unchanged into GitUI.Avalonia for the same original report serialization and issue payload."
+  },
+  "src/app/BugReporter/Serialization/SerializableException.cs": {
+    "twin": "src/app/BugReporter/Serialization/SerializableException.cs",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "Linked unchanged into GitUI.Avalonia for the same original report serialization and issue payload."
+  },
+  "src/app/BugReporter/Serialization/SerializableDictionary.cs": {
+    "twin": "src/app/BugReporter/Serialization/SerializableDictionary.cs",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "Linked unchanged into GitUI.Avalonia for the same original report serialization and issue payload."
   }
 }

@@ -1,0 +1,61 @@
+﻿<compat:GitExtensionsFormBase xmlns="https://github.com/avaloniaui" xmlns:compat="clr-namespace:ResourceManager" xmlns:controls="clr-namespace:GitUI.Compat.WinFormsControls" xmlns:report="clr-namespace:BugReporter" xmlns:translation="clr-namespace:GitUI.Compat" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="BugReporter.BugReportForm" Width="558" Height="469" MinWidth="558" MinHeight="469" WindowStartupLocation="CenterScreen" Topmost="True">
+  <DockPanel Margin="4">
+    <controls:TableLayoutPanel x:Name="tableLayoutPanel1" DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto,Auto,Auto" Margin="4,3,4,0">
+      <Button x:Name="btnCopy" Content="_Copy" HorizontalAlignment="Left" Classes="gitextensions-dialog-action" />
+      <Button x:Name="IgnoreButton" Grid.Column="1" Content="_Ignore" Classes="gitextensions-dialog-action" />
+      <Button x:Name="sendAndQuitButton" Grid.Column="2" Content="_Send and Quit" MinWidth="120" Classes="gitextensions-dialog-action" />
+      <HyperlinkButton x:Name="quitButton" Grid.Column="3" Content="_Quit" Classes="gitextensions-link" Margin="4,0" Padding="4,0" />
+    </controls:TableLayoutPanel>
+    <TabControl x:Name="mainTabs" SelectedIndex="0">
+      <controls:TabPage x:Name="generalTabPage" Header="General" Padding="3">
+        <DockPanel>
+          <controls:Panel x:Name="panel1" DockPanel.Dock="Top" Margin="0,0,0,3">
+            <controls:TableLayoutPanel x:Name="tlpnlGeneral" RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*">
+              <controls:PictureBox x:Name="warningPictureBox" Width="32" Height="32" Margin="8" SizeMode="Zoom" />
+              <controls:Panel x:Name="pnlHeading" Grid.Column="1" translation:TranslationCompat.TranslateText="False">
+                <controls:Label x:Name="warningLabel" TextWrapping="Wrap" VerticalAlignment="Center" Text="The application has crashed and it will now be terminated. If you click Quit, the application will close immediately. If you click Send and Quit, the application will close and a bug report will be sent." />
+              </controls:Panel>
+              <controls:Panel x:Name="pnlExceptionType" Grid.Row="1" Grid.ColumnSpan="2">
+                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*">
+                  <controls:Label x:Name="exceptionTypeLabel" Text="Exception Type:" VerticalAlignment="Center" Margin="3" />
+                  <TextBox x:Name="exceptionTextBox" Grid.Column="1" IsReadOnly="True" Margin="3" />
+                  <TextBox x:Name="exceptionMessageTextBox" Grid.Row="1" Grid.ColumnSpan="2" IsReadOnly="True" AcceptsReturn="True" VerticalContentAlignment="Top" Height="60" Margin="3,3,3,8" />
+                </Grid>
+              </controls:Panel>
+            </controls:TableLayoutPanel>
+          </controls:Panel>
+          <controls:TableLayoutPanel x:Name="tpnlEnvInfo" Margin="8" ColumnDefinitions="18*,32*,18*,32*" RowDefinitions="Auto,Auto,Auto,8,Auto,*">
+            <controls:Label x:Name="targetSiteLabel" Text="Target Site:" VerticalAlignment="Center" />
+            <TextBox x:Name="targetSiteTextBox" Grid.Column="1" Grid.ColumnSpan="3" MaxLength="500" IsReadOnly="True" />
+            <controls:Label x:Name="applicationLabel" Grid.Row="1" Text="Application:" VerticalAlignment="Center" />
+            <TextBox x:Name="applicationTextBox" Grid.Row="1" Grid.Column="1" MaxLength="100" IsReadOnly="True" />
+            <controls:Label x:Name="_NO_TRANSLATE_GitLabel" Grid.Row="1" Grid.Column="2" Text="Git:" VerticalAlignment="Center" />
+            <TextBox x:Name="gitTextBox" Grid.Row="1" Grid.Column="3" MaxLength="100" IsReadOnly="True" />
+            <controls:Label x:Name="dateTimeLabel" Grid.Row="2" Text="Date/Time:" VerticalAlignment="Center" />
+            <TextBox x:Name="dateTimeTextBox" Grid.Row="2" Grid.Column="1" MaxLength="100" IsReadOnly="True" />
+            <controls:Label x:Name="_NO_TRANSLATE_ClrLabel" Grid.Row="2" Grid.Column="2" Text="CLR:" VerticalAlignment="Center" />
+            <TextBox x:Name="clrTextBox" Grid.Row="2" Grid.Column="3" MaxLength="100" IsReadOnly="True" />
+            <controls:Label x:Name="errorDescriptionLabel" Grid.Row="4" Grid.ColumnSpan="4" TextWrapping="Wrap" Text="Please add a brief description (in English) of how we can reproduce the error:" />
+            <TextBox x:Name="descriptionTextBox" Grid.Row="5" Grid.ColumnSpan="4" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" />
+          </controls:TableLayoutPanel>
+        </DockPanel>
+      </controls:TabPage>
+      <controls:TabPage x:Name="exceptionTabPage" Header="Exception" Padding="3">
+        <report:ExceptionDetails x:Name="exceptionDetails" Margin="6" />
+      </controls:TabPage>
+      <controls:TabPage x:Name="reportContentsTabPage" Header="Report Contents">
+        <StackPanel>
+          <controls:Label x:Name="contentsLabel" Text="Double-click an item to open it with the associated program." />
+          <Grid ColumnDefinitions="120,240,80">
+            <controls:ColumnHeader x:Name="nameColumnHeader" Content="Name" />
+            <controls:ColumnHeader x:Name="descriptionColumnHeader" Grid.Column="1" Content="Description" />
+            <controls:ColumnHeader x:Name="sizeColumnHeader" Grid.Column="2" Content="Size" />
+          </Grid>
+          <ListBox x:Name="reportContentsListView" />
+          <controls:Label x:Name="previewLabel" Text="Preview:" />
+          <TextBox x:Name="reportPreviewTextBox" AcceptsReturn="True" VerticalContentAlignment="Top" />
+        </StackPanel>
+      </controls:TabPage>
+    </TabControl>
+  </DockPanel>
+</compat:GitExtensionsFormBase>

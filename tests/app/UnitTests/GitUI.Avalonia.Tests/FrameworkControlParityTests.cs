@@ -454,6 +454,14 @@ public sealed class FrameworkControlParityTests
         System.Reflection.FieldInfo shellField = typeof(WinFormsShims.ShimHost).GetField(
             "_osShell", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
         object? previousShell = shellField.GetValue(null);
+        System.Reflection.FieldInfo messageField = typeof(WinFormsShims.ShimHost).GetField(
+            "_messageBoxHost", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+        object? previousMessages = messageField.GetValue(null);
+        WinFormsShims.IMessageBoxHost messages = NSubstitute.Substitute.For<WinFormsShims.IMessageBoxHost>();
+        messages.Show(NSubstitute.Arg.Any<WinFormsShims.IWin32Window?>(), NSubstitute.Arg.Any<string>(),
+            NSubstitute.Arg.Any<string>(), NSubstitute.Arg.Any<WinFormsShims.MessageBoxButtons>(),
+            NSubstitute.Arg.Any<WinFormsShims.MessageBoxIcon>(), NSubstitute.Arg.Any<WinFormsShims.MessageBoxDefaultButton>())
+            .Returns(WinFormsShims.DialogResult.Yes);
         WinFormsShims.IOsShell shell = NSubstitute.Substitute.For<WinFormsShims.IOsShell>();
         string? launchedUrl = null;
         shell.TryLaunch(NSubstitute.Arg.Any<string>(), WinFormsShims.OsShellLaunchKind.OpenUri)
@@ -467,7 +475,7 @@ public sealed class FrameworkControlParityTests
         int reports = 0;
         using IDisposable subscription = Window.WindowOpenedEvent.AddClassHandler<Window>((dialog, _) =>
         {
-            if (!dialog.Classes.Contains("gitextensions-task-dialog"))
+            if (dialog is not BugReporter.BugReportForm)
             {
                 return;
             }
@@ -478,10 +486,8 @@ public sealed class FrameworkControlParityTests
                 try
                 {
                     dialog.Owner.Should().BeSameAs(owner);
-                    Button report = dialog.GetVisualDescendants().OfType<Button>().Single(button =>
-                        button.Classes.Contains("gitextensions-command-link")
-                        && button.GetVisualDescendants().OfType<AccessText>().Any(text => text.Text
-                            == AvaloniaTranslationUtils.ToAvaloniaMnemonics(GitUI.TranslatedStrings.ReportIssue)));
+                    dialog.FindControl<TextBox>("descriptionTextBox")!.Text = "Open the repository, then refresh.";
+                    Button report = dialog.FindControl<Button>("sendAndQuitButton")!;
                     using Avalonia.Media.Imaging.WriteableBitmap? frame = dialog.CaptureRenderedFrame();
                     frame.Should().NotBeNull();
                     if (Environment.GetEnvironmentVariable("GITEXT_REPORT_EVIDENCE") is { Length: > 0 } evidence)
@@ -505,6 +511,7 @@ public sealed class FrameworkControlParityTests
         try
         {
             WinFormsShims.ShimHost.OsShell = shell;
+            WinFormsShims.ShimHost.MessageBoxHost = messages;
             owner.Show();
             WinFormsShims.DialogResult result = new AvaloniaBugReportLauncher().Show(
                 owner, new InvalidOperationException("failure details"), "Command: git", "OS: test",
@@ -512,7 +519,7 @@ public sealed class FrameworkControlParityTests
 
             observationFailure.Should().BeNull();
             reports.Should().Be(1);
-            result.Should().Be(WinFormsShims.DialogResult.OK);
+            result.Should().Be(WinFormsShims.DialogResult.Abort);
             shell.Received(1).TryLaunch(NSubstitute.Arg.Any<string>(), WinFormsShims.OsShellLaunchKind.OpenUri);
             launchedUrl.Should().NotBeNull();
             new Uri(launchedUrl!).GetLeftPart(UriPartial.Path).Should().Be("https://github.com/begota98/gitextensions/issues/new");
@@ -523,6 +530,7 @@ public sealed class FrameworkControlParityTests
             subscription.Dispose();
             owner.Close();
             shellField.SetValue(null, previousShell);
+            messageField.SetValue(null, previousMessages);
         }
     }
 
@@ -531,7 +539,9 @@ public sealed class FrameworkControlParityTests
     {
         InvalidOperationException exception = new("failure details");
 
-        string url = AvaloniaBugReportLauncher.BuildIssueUrl(exception, "Command: git", "OS: test");
+        string url = new BugReporter.GitHubUrlBuilder(new BugReporter.ErrorReportUrlBuilder()).Build(
+            "https://github.com/begota98/gitextensions/issues/new", new BugReporter.Serialization.SerializableException(exception),
+            "Command: git", "OS: test", additionalInfo: null)!;
 
         url.Should().StartWith("https://github.com/begota98/gitextensions/issues/new?");
         url.Should().Contain("template=bug_report.yml");

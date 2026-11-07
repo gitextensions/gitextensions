@@ -30,6 +30,10 @@ use the same persisted `Keys` values and XML settings as the Windows Forms appli
 refreshes, the currently implemented configurable Browse commands are dispatched through
 their upstream command IDs, and Escape closes dialogs without closing the repository browser.
 Dashboard loads repository-host actions before the remaining plugins, then refreshes its host links.
+Error reports use the original-shaped review form with exception details, reproduction steps,
+Copy, Send and Quit, Quit, and Ignore when permitted. Sending requires reproduction steps and
+confirmation, then opens the fork's issue form. Fatal reporting still runs inside the application;
+independent reporter-process isolation remains unimplemented.
 Splitter settings retain the container size, logical DPI, font size and collapsed states as
 well as the distance. Restoring a layout follows its ratio or fixed pane; distances rejected
 during opening are retried after layout. Earlier native handle-sized records are converted

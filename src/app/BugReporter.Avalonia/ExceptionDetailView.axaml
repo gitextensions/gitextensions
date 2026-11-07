@@ -1,0 +1,12 @@
+﻿<compat:GitExtensionsFormBase xmlns="https://github.com/avaloniaui" xmlns:compat="clr-namespace:ResourceManager" xmlns:controls="clr-namespace:GitUI.Compat.WinFormsControls" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="BugReporter.ExceptionDetailView" Width="567" Height="201" Title="Exception Detail">
+  <DockPanel>
+    <controls:Panel x:Name="topPanel" DockPanel.Dock="Top" Height="32">
+      <Grid ColumnDefinitions="57,*">
+        <controls:Label x:Name="propertyLabel" Text="Property:" VerticalAlignment="Center" Margin="2,0" />
+        <TextBox x:Name="propertyTextBox" Grid.Column="1" IsReadOnly="True" Margin="0,5,3,5" />
+      </Grid>
+    </controls:Panel>
+    <Border x:Name="statusStrip" DockPanel.Dock="Bottom" Height="22" Classes="gitextensions-section" />
+    <TextBox x:Name="propertyInformationTextBox" IsReadOnly="True" AcceptsReturn="True" VerticalContentAlignment="Top" TextWrapping="NoWrap" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+  </DockPanel>
+</compat:GitExtensionsFormBase>
