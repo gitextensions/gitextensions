@@ -1719,6 +1719,72 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task FormBrowse_default_artificial_commit_shortcut_should_use_the_live_staged_only_status()
+    {
+        bool previousArtificial = AppSettings.RevisionGraphShowArtificialCommits;
+        bool previousStatus = AppSettings.ShowGitStatusForArtificialCommits;
+        CommitInfoPosition previousPosition = AppSettings.CommitInfoPosition;
+        bool previousSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.RevisionGraphShowArtificialCommits = true;
+            AppSettings.ShowGitStatusForArtificialCommits = true;
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), "staged-only\n");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" }).Should().BeTrue();
+            ObjectId head = module.GetCurrentCheckout();
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            form.Show();
+            try
+            {
+                RevisionGridControl grid = form.RevisionGrid;
+                ListBox revisions = grid.GetTestAccessor().Revisions;
+                await WaitUntilAsync(() => revisions.ItemCount == 3
+                    && grid.GetChangeCount(ObjectId.WorkTreeId) is { DataValid: true, HasChanges: false }
+                    && grid.GetChangeCount(ObjectId.IndexId) is { DataValid: true, HasChanges: true });
+                form.UpdateLayout();
+                ListBoxItem headRow = (ListBoxItem)revisions.ContainerFromIndex(2)!;
+                headRow.DataContext.Should().BeOfType<GitRevision>().Which.ObjectId.Should().Be(head);
+                Point point = headRow.TranslatePoint(new Point(100, headRow.Bounds.Height / 2), form)!.Value;
+                form.MouseMove(point, RawInputModifiers.None);
+                form.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+                form.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+                await WaitUntilAsync(() => grid.SelectedRevision?.ObjectId == head);
+
+                int toggled = 0;
+                grid.ToggledBetweenArtificialAndHeadCommits += (_, _) => toggled++;
+                ObjectId[] expected = [ObjectId.IndexId, head, ObjectId.IndexId, head];
+                foreach (ObjectId revision in expected)
+                {
+                    form.KeyPress(Key.OemBackslash, RawInputModifiers.Control, PhysicalKey.IntlBackslash, keySymbol: "<");
+                    form.KeyRelease(Key.OemBackslash, RawInputModifiers.Control, PhysicalKey.IntlBackslash, keySymbol: "<");
+                    await WaitUntilAsync(() => grid.SelectedRevision?.ObjectId == revision);
+                    form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.DiffTabPage);
+                    await WaitUntilAsync(() => form.revisionDiff.FileStatusList.IsKeyboardFocusWithin);
+                    form.revisionDiff.FileStatusList.IsKeyboardFocusWithin.Should().BeTrue("the source toggle moves focus to the file list, where the next shortcut must still work");
+                    grid.GetChangeCount(ObjectId.WorkTreeId)!.HasChanges.Should().BeFalse();
+                    grid.GetChangeCount(ObjectId.IndexId)!.HasChanges.Should().BeTrue();
+                }
+
+                toggled.Should().Be(expected.Length);
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.RevisionGraphShowArtificialCommits = previousArtificial;
+            AppSettings.ShowGitStatusForArtificialCommits = previousStatus;
+            AppSettings.CommitInfoPosition = previousPosition;
+            AppSettings.ShowSplitViewLayout = previousSplitView;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormBrowse_diff_groups_should_select_their_files_and_support_arrow_navigation()
     {
         bool previousParents = AppSettings.ShowDiffForAllParents;

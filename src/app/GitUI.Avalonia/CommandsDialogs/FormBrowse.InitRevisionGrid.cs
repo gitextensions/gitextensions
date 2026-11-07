@@ -96,12 +96,13 @@ partial class FormBrowse
 
         RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (_, _) =>
         {
-            if (!revisionDiff.IsVisible)
+            // Avalonia's local IsVisible remains true for inactive tab content.
+            if (CommitInfoTabControl.SelectedItem != DiffTabPage)
             {
                 CommitInfoTabControl.SelectedItem = DiffTabPage;
             }
 
-            if (revisionDiff.IsVisible)
+            if (revisionDiff.IsEffectivelyVisible && TopLevel.GetTopLevel(revisionDiff) == this)
             {
                 // force focus of file list
                 revisionDiff.SwitchFocus(alreadyContainedFocus: false);

@@ -422,6 +422,8 @@ public partial class FileStatusList : GitModuleControl
     // Framework constraint: collapsing the Avalonia host row reproduces WinForms Control.Visible layout.
     private void SetFileStatusListVisibility(bool showNoFiles)
     {
+        // Switching Avalonia list/tree presenters clears focus; WinForms retains one control.
+        bool restoreFocus = lstFiles.IsKeyboardFocusWithin || tvDiffFiles.IsKeyboardFocusWithin || tvFiles.IsKeyboardFocusWithin;
         LoadingFiles.IsVisible = false;
 
         // Adjust visibility
@@ -436,6 +438,10 @@ public partial class FileStatusList : GitModuleControl
         lstFiles.IsVisible = !_isFileTreeMode && !ShowDiffTree;
         tvDiffFiles.IsVisible = ShowDiffTree;
         tvFiles.IsVisible = _isFileTreeMode;
+        if (restoreFocus && !IsKeyboardFocusWithin)
+        {
+            Focus();
+        }
     }
 
     public bool Focused
