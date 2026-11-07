@@ -1242,6 +1242,61 @@ public sealed class FormCommitTests
             unstaged.SelectedItem.Should().BeNull();
             selectedDiff.GetTestAccessor().OpenWithDifftool.Should().NotBeNull(
                 "FormCommit should retain its external-difftool consumer action in FileViewer");
+
+            Border toolbar = selectedDiff.FindControl<Border>("fileviewerToolbar")
+                ?? throw new InvalidOperationException("The production diff toolbar was not created.");
+            toolbar.IsVisible.Should().BeFalse("the original reveals its viewer toolbar on pointer movement");
+            form.FocusManager.Should().NotBeNull();
+            Avalonia.Input.IInputElement? focused = form.FocusManager!.GetFocusedElement();
+            focused.Should().NotBeNull();
+            AvaloniaEdit.Rendering.TextView textView = diffEditor.TextArea.TextView;
+            Point hover = textView.TranslatePoint(new Point(textView.Bounds.Width / 2,
+                Math.Min(textView.DefaultLineHeight, textView.Bounds.Height / 2)), form)
+                ?? throw new InvalidOperationException("The actual diff viewport must belong to Commit.");
+            form.MouseMove(hover, Avalonia.Input.RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            form.UpdateLayout();
+            toolbar.IsVisible.Should().BeTrue();
+            toolbar.IsEffectivelyVisible.Should().BeTrue();
+            form.FocusManager!.GetFocusedElement().Should().BeSameAs(focused,
+                "showing a pointer-hover toolbar must retain the user's keyboard focus");
+            Point toolbarOrigin = toolbar.TranslatePoint(default, selectedDiff)!.Value;
+            toolbarOrigin.Y.Should().Be(0);
+            (toolbarOrigin.X + toolbar.Bounds.Width).Should().Be(selectedDiff.Bounds.Width - 40,
+                "the original positions its toolbar forty pixels inside the viewer's right edge");
+            StackPanel items = toolbar.Child.Should().BeOfType<StackPanel>().Which;
+            items.Children.Select(control => control.Name).Should().Equal(
+                "nextChangeButton", "previousChangeButton", "toolStripSeparator3",
+                "increaseNumberOfLines", "decreaseNumberOfLines", "toolStripSeparator4",
+                "showEntireFileButton", "showNonPrintChars", "showSyntaxHighlighting",
+                "ignoreWhitespaceAtEol", "ignoreWhiteSpaces", "ignoreAllWhitespaces",
+                "encodingToolStripComboBox", "settingsButton");
+            foreach (Control item in items.Children.Where(item => item.IsEffectivelyVisible))
+            {
+                Point origin = item.TranslatePoint(default, toolbar)!.Value;
+                origin.X.Should().BeGreaterThanOrEqualTo(0);
+                origin.Y.Should().BeGreaterThanOrEqualTo(0);
+                (origin.X + item.Bounds.Width).Should().BeLessThanOrEqualTo(toolbar.Bounds.Width);
+                (origin.Y + item.Bounds.Height).Should().BeLessThanOrEqualTo(toolbar.Bounds.Height);
+            }
+
+            selectedDiff.FindControl<ComboBox>("encodingToolStripComboBox")!.SelectedItem.Should().NotBeNull(
+                "the production hover handler must initialize the encoding selector itself");
+            using Avalonia.Media.Imaging.WriteableBitmap frame = form.CaptureRenderedFrame()
+                ?? throw new AssertionException("Commit with the real hover toolbar must render headlessly.");
+            if (Environment.GetEnvironmentVariable("GITEXT_COMMIT_EVIDENCE") is { Length: > 0 } evidence)
+            {
+                Directory.CreateDirectory(evidence);
+                frame.Save(Path.Combine(evidence, "commit-hover-toolbar.png"), Avalonia.Media.Imaging.PngBitmapEncoderOptions.Default);
+            }
+
+            Control next = selectedDiff.FindControl<Control>("nextChangeButton")!;
+            Point overToolbar = next.TranslatePoint(new Point(next.Bounds.Width / 2, next.Bounds.Height / 2), form)!.Value;
+            form.MouseMove(overToolbar, Avalonia.Input.RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeTrue("the toolbar remains visible while the pointer enters it");
+            Point outside = staged.TranslatePoint(new Point(staged.Bounds.Width / 2, staged.Bounds.Height / 2), form)!.Value;
+            form.MouseMove(outside, Avalonia.Input.RawInputModifiers.None);
+            toolbar.IsVisible.Should().BeFalse("leaving the viewer hides its hover toolbar");
         }
         finally
         {
