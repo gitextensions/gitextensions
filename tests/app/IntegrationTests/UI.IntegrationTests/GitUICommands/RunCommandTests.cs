@@ -10,6 +10,13 @@ namespace GitUITests.GitUICommandsTests;
 [Apartment(ApartmentState.STA)]
 public sealed class RunCommandTests
 {
+    private const string FirstFullShaPlaceholder = "<first-full-sha>";
+    private const string FirstShortShaPlaceholder = "<first-short-sha>";
+    private const string SecondFullShaPlaceholder = "<second-full-sha>";
+    private const int ShortShaLength = 7;
+    private const string ViewDiffBranchName = "viewdiff-base";
+    private const string ViewDiffTagName = "viewdiff-tag";
+
     // Created once for the fixture
     private ReferenceRepository _referenceRepository = null!;
 
@@ -319,6 +326,63 @@ public sealed class RunCommandTests
     public void RunCommandBasedOnArgument_viewdiff()
         => RunCommandBasedOnArgument<FormLog>(["ge.exe", "viewdiff"], expectedResult: false);
 
+    [TestCase(FirstFullShaPlaceholder, SecondFullShaPlaceholder)]
+    [TestCase(FirstShortShaPlaceholder, "HEAD")]
+    [TestCase(ViewDiffBranchName, "HEAD")]
+    [TestCase(ViewDiffTagName, "HEAD")]
+    [TestCase("HEAD~1", SecondFullShaPlaceholder)]
+    public void RunCommandBasedOnArgument_viewdiff_with_two_revisions_should_open_FormDiff(string firstArg, string secondArg)
+    {
+        string firstCommit = _referenceRepository.CommitHash!;
+        string secondCommit = _referenceRepository.CreateCommit("second commit", "second content");
+        _referenceRepository.CreateBranch(ViewDiffBranchName, firstCommit);
+        _referenceRepository.CreateAnnotatedTag(ViewDiffTagName, firstCommit, "annotated tag");
+
+        firstArg = ReplacePlaceholders(firstArg);
+        secondArg = ReplacePlaceholders(secondArg);
+
+        RunCommandBasedOnArgument<FormDiff>(["ge.exe", "viewdiff", firstArg, secondArg], runTest: form =>
+        {
+            FormDiff.TestAccessor accessor = form.GetTestAccessor();
+            accessor.FirstId.Should().Be(ObjectId.Parse(firstCommit));
+            accessor.SecondId.Should().Be(ObjectId.Parse(secondCommit));
+            GetText(form, "lblFirstCommit").Should().Be(ExpectedDisplayString(firstArg, firstCommit));
+            GetText(form, "lblSecondCommit").Should().Be(ExpectedDisplayString(secondArg, secondCommit));
+        });
+
+        return;
+
+        static string ExpectedDisplayString(string arg, string commit)
+            => commit.StartsWith(arg, StringComparison.OrdinalIgnoreCase) ? ObjectId.Parse(commit).ToShortString() : arg;
+
+        string ReplacePlaceholders(string arg)
+            => arg switch
+            {
+                FirstFullShaPlaceholder => firstCommit,
+                FirstShortShaPlaceholder => firstCommit[..ShortShaLength],
+                SecondFullShaPlaceholder => secondCommit,
+                _ => arg
+            };
+    }
+
+    [TestCase("no-such-revision", "HEAD")]
+    [TestCase("HEAD", "no-such-revision")]
+    public void RunCommandBasedOnArgument_viewdiff_should_return_false_on_unknown_revision(string firstArg, string secondArg)
+    {
+        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", "viewdiff", firstArg, secondArg])
+            .Should().BeFalse();
+        Application.OpenForms.OfType<FormDiff>().Should().BeEmpty();
+    }
+
+    [TestCase("HEAD")]
+    [TestCase("HEAD", "HEAD", "HEAD")]
+    public void RunCommandBasedOnArgument_viewdiff_should_return_false_on_wrong_number_of_revisions(params string[] revisions)
+    {
+        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", "viewdiff", .. revisions])
+            .Should().BeFalse();
+        Application.OpenForms.OfType<FormDiff>().Should().BeEmpty();
+    }
+
     [TestCase("git://")]
     [TestCase("http://")]
     [TestCase("https://")]
@@ -348,6 +412,9 @@ public sealed class RunCommandTests
 
     private static void ClickButton(Form form, string buttonName)
         => form.FindDescendantOfType<Button>(button => button.Name == buttonName)!.PerformClick();
+
+    private static string GetText(Form form, string controlName)
+        => form.FindDescendantOfType<Control>(control => control.Name == controlName)!.Text;
 
     private static void SetText(Form form, string controlName, string value)
         => form.FindDescendantOfType<Control>(control => control.Name == controlName)!.Text = value;

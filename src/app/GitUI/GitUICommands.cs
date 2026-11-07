@@ -534,6 +534,27 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action);
     }
 
+    /// <summary>
+    ///  Shows the dialog that compares <paramref name="firstId"/> (BASE) to <paramref name="secondId"/> (Compare).
+    /// </summary>
+    /// <param name="owner">The owner of the dialog.</param>
+    /// <param name="firstId">The revision shown as BASE.</param>
+    /// <param name="secondId">The revision shown as Compare.</param>
+    /// <param name="firstDisplayStr">The text shown for the BASE revision.</param>
+    /// <param name="secondDisplayStr">The text shown for the Compare revision.</param>
+    /// <returns><see langword="true"/> if the dialog was shown; otherwise <see langword="false"/>.</returns>
+    public bool StartCompareRevisionsDialog(IWin32Window? owner, ObjectId firstId, ObjectId secondId, string firstDisplayStr, string secondDisplayStr)
+    {
+        bool Action()
+        {
+            using FormDiff form = new(this, firstId, secondId, firstDisplayStr, secondDisplayStr);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartAddFilesDialog(IWin32Window? owner, string? addFiles = null)
     {
         return DoActionOnRepo(owner, action: () =>
@@ -1657,8 +1678,8 @@ public sealed class GitUICommands : IGitUICommands
                 return RunSynchronizeCommand(arguments);
             case "tag":
                 return StartCreateTagDialog();
-            case "viewdiff":
-                return StartCompareRevisionsDialog();
+            case "viewdiff":    // [first second]
+                return RunViewDiffCommand(args);
             case "viewpatch":   // [filename]
                 return StartViewPatchDialog(args.Count == 3 ? args[2] : "");
             case "uninstall":
@@ -1787,6 +1808,39 @@ public sealed class GitUICommands : IGitUICommands
 
             return true;
         }
+    }
+
+    private bool RunViewDiffCommand(IReadOnlyList<string> args)
+    {
+        const int argCountWithoutRevisions = 2;
+        const int argCountWithRevisions = 4;
+
+        switch (args.Count)
+        {
+            case argCountWithoutRevisions:
+                return StartCompareRevisionsDialog();
+            case argCountWithRevisions:
+                break;
+            default:
+                Console.Error.WriteLine("Usage: viewdiff [<first> <second>]");
+                return false;
+        }
+
+        string first = args[2];
+        string second = args[3];
+        ObjectId firstId = Module.RevParse(first);
+        ObjectId secondId = Module.RevParse(second);
+        if (firstId.IsZero || secondId.IsZero)
+        {
+            Console.Error.WriteLine($"No commit found matching: {(firstId.IsZero ? first : second)}");
+            return false;
+        }
+
+        return StartCompareRevisionsDialog(owner: null, firstId, secondId, GetDisplayString(first, firstId), GetDisplayString(second, secondId));
+
+        // A hash typed on the command line is shown abbreviated, whereas a ref name or expression is more readable as typed.
+        static string GetDisplayString(string revision, ObjectId objectId)
+            => objectId.ToString().StartsWith(revision, StringComparison.OrdinalIgnoreCase) ? objectId.ToShortString() : revision;
     }
 
     private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)
