@@ -240,3 +240,4 @@ YYYY/MM/DD, github id, Full name, email
 2026/10/14, sdpfigueiredo, Sergio Figueiredo, sdpfigueiredo@gmail.com
 2026/10/22, inuik, Rishi Theivendran, vaendaam-29522253(at)yahoo(dot)com
 2026/10/31, xperiandri, Andrii Chebukin, xperiandri@outlook.com
+2026/11/07, jonmseaman, Jon Seaman, jonmseaman@live.com
