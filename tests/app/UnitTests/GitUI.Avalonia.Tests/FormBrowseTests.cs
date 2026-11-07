@@ -42,6 +42,7 @@ using GitUI.Shells;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
+using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -1563,6 +1564,121 @@ public sealed class FormBrowseTests
         form.ExecuteCommand(FormBrowse.Command.FocusRevisionGrid).Should().BeTrue();
         revisions.IsKeyboardFocusWithin.Should().BeTrue();
         revisionFilter.IsKeyboardFocusWithin.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task FormBrowse_F5_should_reload_the_actual_graph_and_preserve_the_pointer_selection(bool multiple)
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        for (int index = 0; index < 2; index++)
+        {
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), $"\nrevision {index}");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", $"revision-{index}" }).Should().BeTrue();
+        }
+
+        GitUICommands commands = new(_serviceContainer, module);
+        using FormBrowse form = new(commands) { Width = 1200, Height = 700 };
+        RevisionGridControl grid = form.RevisionGrid;
+        RevisionGraph graph = (RevisionGraph)typeof(RevisionGridControl).GetField("_revisionGraph", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(grid)!;
+        int loaded = 0;
+        int notified = 0;
+        grid.RevisionsLoaded += (_, _) => loaded++;
+        commands.PostRepositoryChanged += (_, _) => notified++;
+        form.Show();
+        try
+        {
+            await WaitUntilAsync(() => loaded > 0 && grid.GetTestAccessor().Revisions.ItemCount == 3 && graph.GetCachedCount() == 3);
+            ClickRow(2, RawInputModifiers.None);
+            if (multiple)
+            {
+                ClickRow(0, RawInputModifiers.Control);
+            }
+
+            ObjectId[] selected = [.. grid.GetSelectedRevisions().Select(revision => revision.ObjectId)];
+            selected.Should().HaveCount(multiple ? 2 : 1);
+            SaveGraphFrame("initial");
+            for (int refresh = 0; refresh < 2; refresh++)
+            {
+                int previousLoaded = loaded;
+                int previousNotified = notified;
+
+                form.KeyPress(Key.F5, RawInputModifiers.None, PhysicalKey.F5, keySymbol: null);
+                form.KeyRelease(Key.F5, RawInputModifiers.None, PhysicalKey.F5, keySymbol: null);
+                Dispatcher.UIThread.RunJobs();
+
+                notified.Should().Be(previousNotified + 1, "the original F5 shortcut broadcasts a repository refresh");
+                await WaitUntilAsync(() => loaded > previousLoaded && graph.GetCachedCount() == 3);
+                grid.GetSelectedRevisions().Select(revision => revision.ObjectId).Should().Equal(selected);
+                SaveGraphFrame($"refresh-{refresh}");
+            }
+        }
+        finally
+        {
+            form.Close();
+        }
+
+        void ClickRow(int index, RawInputModifiers modifiers)
+        {
+            form.UpdateLayout();
+            ListBoxItem row = (ListBoxItem)grid.GetTestAccessor().Revisions.ContainerFromIndex(index)!;
+            Point point = row.TranslatePoint(new Point(100, row.Bounds.Height / 2), form)!.Value;
+            form.MouseMove(point, modifiers);
+            form.MouseDown(point, MouseButton.Left, modifiers);
+            form.MouseUp(point, MouseButton.Left, modifiers);
+            Dispatcher.UIThread.RunJobs();
+        }
+
+        void SaveGraphFrame(string state)
+        {
+            form.UpdateLayout();
+            Control[] cells = [.. grid.GetVisualDescendants().OfType<Control>().Where(control => control.Classes.Contains("revision-graph-cell") && control.IsEffectivelyVisible)];
+            cells.Should().HaveCount(3);
+            cells.Should().OnlyContain(cell => cell.Bounds.Width > 0 && cell.Bounds.Height > 0);
+            graph.Count.Should().Be(3);
+            graph.GetCachedCount().Should().Be(3);
+            using WriteableBitmap? frame = form.CaptureRenderedFrame();
+            frame.Should().NotBeNull();
+            string directory = Path.Combine(TestContext.CurrentContext.WorkDirectory, "TestResults", "Browse-refresh", Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(directory);
+            string path = Path.Combine(directory, $"Browse-F5-{multiple}-{state}.png");
+            frame!.Save(path, PngBitmapEncoderOptions.Default);
+            TestContext.AddTestAttachment(path, $"Browse graph after {state}");
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_F5_should_refresh_the_dashboard_without_notifying_a_repository()
+    {
+        GitUICommands commands = new(_serviceContainer, new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory));
+        using FormBrowse form = new(commands);
+        int clicked = 0;
+        int notified = 0;
+        form.refreshDashboardToolStripMenuItem.Click += (_, e) =>
+        {
+            if (ReferenceEquals(e.Source, form.refreshDashboardToolStripMenuItem))
+            {
+                clicked++;
+            }
+        };
+        commands.PostRepositoryChanged += (_, _) => notified++;
+        form.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+
+            form.KeyPress(Key.F5, RawInputModifiers.None, PhysicalKey.F5, keySymbol: null);
+            form.KeyRelease(Key.F5, RawInputModifiers.None, PhysicalKey.F5, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+
+            clicked.Should().Be(1);
+            notified.Should().Be(0);
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]
