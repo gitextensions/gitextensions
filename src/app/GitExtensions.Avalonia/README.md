@@ -165,6 +165,10 @@ application archive. These are unsigned development snapshots intended for
 maintainer testing and issue reports, not production releases. The release title and notes
 identify the exact source commit, and `SHA256SUMS.txt` covers every attached package.
 
+Crash reports from the Avalonia error dialog open the
+[fork issue form](https://github.com/begota98/gitextensions/issues/new). Help and Dashboard
+issue links follow the original application.
+
 Install the Flatpak bundle with:
 
 ```console
