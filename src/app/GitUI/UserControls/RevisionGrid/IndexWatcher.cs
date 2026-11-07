@@ -1,6 +1,5 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls.RevisionGrid;
 
@@ -124,13 +123,13 @@ public sealed class IndexWatcher : IDisposable
     }
 
     /// <summary>
-    /// Like <see cref="Reset"/>, but the git command for the common git directory of <paramref name="module"/>
-    /// is run in the background. The watchers are changed on the UI thread, like when the repo is switched,
+    /// Like <see cref="Reset"/>, but to be run in the background, e.g. by <see cref="ThreadHelper.FileAndForget(Func{Task})"/>:
+    /// the git command for the common git directory of <paramref name="module"/> is run on the calling thread.
+    /// The watchers are changed on the UI thread, like when the repo is switched,
     /// and only if <paramref name="module"/> is still the current module.
     /// </summary>
     public async Task ResetAsync(IGitModule module, CancellationToken cancellationToken)
     {
-        await TaskScheduler.Default;
         cancellationToken.ThrowIfCancellationRequested();
         _ = module.GitCommonDirectory;
 

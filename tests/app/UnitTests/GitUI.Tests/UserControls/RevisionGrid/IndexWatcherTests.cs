@@ -12,7 +12,7 @@ public class IndexWatcherTests
     private static readonly string _gitDirectory = Path.Join(AppContext.BaseDirectory, "repo", ".git");
 
     [Test]
-    public async Task ResetAsync_should_run_the_git_command_in_the_background_and_reset_on_the_main_thread()
+    public async Task ResetAsync_should_run_the_git_command_on_the_calling_thread_and_reset_on_the_main_thread()
     {
         bool? resolvedOnMainThread = null;
         bool? resetOnMainThread = null;
