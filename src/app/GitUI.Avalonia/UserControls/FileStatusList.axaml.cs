@@ -483,7 +483,12 @@ public partial class FileStatusList : GitModuleControl
     /// <summary>
     ///  Gets whether at least one item is selected.
     /// </summary>
-    public bool HasSelection => SelectedGitItems.Count > 0 || SelectedFolder is not null;
+    public bool HasSelection
+        => _isFileTreeMode
+            ? tvFiles.SelectedItems is { Count: > 0 }
+            : ShowDiffTree
+                ? tvDiffFiles.SelectedItems is { Count: > 0 }
+                : lstFiles.SelectedItems is { Count: > 0 };
 
     /// <summary>
     ///  Gets the <see cref="RelativePath"/> of a single selected folder node.
@@ -491,8 +496,10 @@ public partial class FileStatusList : GitModuleControl
     public RelativePath? SelectedFolder
         => _isFileTreeMode && tvFiles.SelectedItem is FileTreeNode { IsFolder: true } node
             ? RelativePath.From(node.FullPath)
-            : ShowDiffTree && tvDiffFiles.SelectedItem is DiffTreeNode { FolderPath: not null } diffNode
-                ? diffNode.FolderPath
+            : ShowDiffTree
+              && tvDiffFiles.SelectedItems is { Count: 1 }
+              && tvDiffFiles.SelectedItem is DiffTreeNode { Children.Count: > 0 } diffNode
+                ? diffNode.FolderPath ?? RelativePath.From(string.Empty)
                 : null;
 
     /// <summary>
@@ -656,7 +663,7 @@ public partial class FileStatusList : GitModuleControl
     // Avalonia's focus overload has parameters, so the parameterless WinForms-shaped method is a distinct member.
     public void Focus()
     {
-        if (FocusedItem is null)
+        if (!HasSelection)
         {
             SelectFirstVisibleItem();
         }
@@ -2141,14 +2148,6 @@ public partial class FileStatusList : GitModuleControl
 
     private void DiffTreeSelectionChanged()
     {
-        if (tvDiffFiles.SelectedItems is { } selectedItems)
-        {
-            foreach (DiffTreeNode header in selectedItems.OfType<DiffTreeNode>().Where(node => node.IsGroupHeader).ToArray())
-            {
-                selectedItems.Remove(header);
-            }
-        }
-
         RaiseSelectedIndexChanged();
     }
 
@@ -2161,7 +2160,7 @@ public partial class FileStatusList : GitModuleControl
 
         e.Container.Classes.Set("diff-group-header", node.IsGroupHeader);
         e.Container.Classes.Set("leaf-node", node.Children.Count == 0);
-        e.Container.Focusable = !node.IsGroupHeader;
+        e.Container.Focusable = true;
     }
 
     private void TreeContainerPrepared(object? sender, ContainerPreparedEventArgs e)
