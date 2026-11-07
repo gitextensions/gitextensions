@@ -22,6 +22,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.ScriptsEngine;
 using GitUI.SpellChecker;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -1144,6 +1145,63 @@ public sealed class FormCommitTests
     }
 
     [AvaloniaTest]
+    public async Task FormCommit_should_keep_the_active_list_when_switching_before_selection_notifications()
+    {
+        GitModule module = CreateRepositoryWithStagedAndUnstagedChanges();
+        File.WriteAllText(Path.Combine(_workingDirectory, "z.txt"), "second unstaged file\n");
+        FormCommit form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+            FileStatusList staged = form.FindControl<FileStatusList>("Staged")!;
+            FileViewer viewer = form.FindControl<FileViewer>("SelectedDiff")!;
+            await WaitForCountsAsync(unstaged, 2, staged, 1);
+            ClickFileRow(form, unstaged, "z.txt");
+            ClickFileRow(form, staged);
+            staged.IsKeyboardFocusWithin.Should().BeTrue();
+            await WaitUntilAsync(() => ReferenceEquals(form.GetTestAccessor().CurrentFilesList, staged)
+                && staged.SelectedItem?.Item.Name == "tracked.txt"
+                && viewer.TextEditor.Text.Contains("staged line", StringComparison.Ordinal)
+                && !viewer.TextEditor.Text.Contains("unstaged line", StringComparison.Ordinal),
+                () => $"current staged={ReferenceEquals(form.GetTestAccessor().CurrentFilesList, staged)}; selected={staged.SelectedItem}; diff={viewer.TextEditor.Text}");
+            unstaged.SelectedItem.Should().BeNull();
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommit_should_keep_the_staged_file_current_when_clicked_as_the_lists_load()
+    {
+        FormCommit form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithStagedAndUnstagedChanges()));
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+            FileStatusList staged = form.FindControl<FileStatusList>("Staged")!;
+            FileViewer viewer = form.FindControl<FileViewer>("SelectedDiff")!;
+            await WaitForCountsAsync(unstaged, 1, staged, 1);
+            ClickFileRow(form, staged);
+            staged.IsKeyboardFocusWithin.Should().BeTrue();
+            await WaitUntilAsync(() => ReferenceEquals(form.GetTestAccessor().CurrentFilesList, staged)
+                && staged.SelectedItem?.Item.Name == "tracked.txt"
+                && viewer.TextEditor.Text.Contains("staged line", StringComparison.Ordinal)
+                && !viewer.TextEditor.Text.Contains("unstaged line", StringComparison.Ordinal),
+                () => $"staged current={ReferenceEquals(form.GetTestAccessor().CurrentFilesList, staged)}; focused={staged.IsKeyboardFocusWithin}; selected={staged.SelectedItem}; diff={viewer.TextEditor.Text}");
+            unstaged.SelectedItem.Should().BeNull();
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormCommit_should_show_staged_and_unstaged_changes_with_a_diff_preview()
     {
         GitModule module = CreateRepositoryWithStagedAndUnstagedChanges();
@@ -1170,8 +1228,12 @@ public sealed class FormCommitTests
             unstaged.SelectedItem.Should().NotBeNull();
             staged.SelectedItem.Should().BeNull("the unstaged list is selected first, matching the upstream dialog");
 
-            // Enter makes the staged list current before its selection drives the preview.
-            form.GetTestAccessor().RaiseStagedEnter(byMouse: false);
+            ClickFileRow(form, unstaged);
+            unstaged.IsKeyboardFocusWithin.Should().BeTrue();
+
+            // The pointer supplies Enter and selection through the actual staged control.
+            ClickFileRow(form, staged);
+            staged.IsKeyboardFocusWithin.Should().BeTrue();
             await WaitUntilAsync(() =>
                 diffEditor.Document?.Text.Contains("staged line", StringComparison.Ordinal) == true
                 && diffEditor.Document.Text.Contains("unstaged line", StringComparison.Ordinal) == false,
@@ -1186,6 +1248,31 @@ public sealed class FormCommitTests
             form.Close();
             await form.GetTestAccessor().ClosePersistenceTask;
         }
+    }
+
+    private static void ClickFileRow(FormCommit form, FileStatusList list, string fileName = "tracked.txt")
+    {
+        form.UpdateLayout();
+        FileStatusList.TestAccessor accessor = list.GetTestAccessor();
+        Control row = accessor.DiffTree.IsEffectivelyVisible
+            ? accessor.DiffTree.GetVisualDescendants().OfType<TreeViewItem>()
+                .Single(container => container.DataContext is FileStatusList.DiffTreeNode node && node.Item?.Item.Name == fileName)
+            : accessor.List.GetVisualDescendants().OfType<ListBoxItem>()
+                .Single(container => container.DataContext is FileStatusItem item && item.Item.Name == fileName);
+        FileStatusItem? item = row.DataContext switch
+        {
+            FileStatusItem status => status,
+            FileStatusList.DiffTreeNode node => node.Item,
+            _ => null,
+        };
+        item.Should().NotBeNull($"the actual pointer must target a file, not {row.DataContext?.GetType().Name}");
+        item!.Item.Name.Should().Be(fileName);
+        row.IsEffectivelyVisible.Should().BeTrue();
+        row.Bounds.Height.Should().BeGreaterThan(0);
+        Point point = row.TranslatePoint(new Point(row.Bounds.Width / 2, row.Bounds.Height / 2), form)!.Value;
+        form.MouseMove(point, Avalonia.Input.RawInputModifiers.None);
+        form.MouseDown(point, Avalonia.Input.MouseButton.Left, Avalonia.Input.RawInputModifiers.None);
+        form.MouseUp(point, Avalonia.Input.MouseButton.Left, Avalonia.Input.RawInputModifiers.None);
     }
 
     private GitModule CreateRepositoryWithStagedAndUnstagedChanges()

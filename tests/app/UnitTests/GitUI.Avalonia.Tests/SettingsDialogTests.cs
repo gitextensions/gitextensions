@@ -795,7 +795,7 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
-    public void Appearance_settings_should_map_general_and_avatar_values()
+    public async Task Appearance_settings_should_map_general_and_avatar_values()
     {
         bool originalRelativeDate = AppSettings.RelativeDate;
         bool originalRepositoryBranch = AppSettings.ShowRepoCurrentBranch;
@@ -861,19 +861,29 @@ public sealed class SettingsDialogTests
         }
         finally
         {
-            AppSettings.RelativeDate = originalRelativeDate;
-            AppSettings.ShowRepoCurrentBranch = originalRepositoryBranch;
-            AppSettings.ShowCurrentBranchInVisualStudio = originalVisualStudioBranch;
-            AppSettings.EnableAutoScale = originalAutoScale;
-            AppSettings.TruncatePathMethod = originalTruncation;
-            AppSettings.Translation = originalTranslation;
-            AppSettings.Dictionary = originalDictionary;
-            AppSettings.AvatarProvider = originalAvatarProvider;
-            AppSettings.AvatarFallbackType = originalFallback;
-            AppSettings.CustomAvatarTemplate = originalAvatarTemplate;
-            AppSettings.ShowAuthorAvatarColumn = originalShowAvatarColumn;
-            AppSettings.ShowAuthorAvatarInCommitInfo = originalShowAvatarInCommitInfo;
-            AppSettings.AvatarImageCacheDays = originalAvatarCacheDays;
+            try
+            {
+                // SaveSettings starts tracked cache work; finish it before the per-test dispatcher is reset.
+                using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(15));
+                await GitUI.ThreadHelper.JoinPendingOperationsAsync(deadline.Token);
+                deadline.Token.ThrowIfCancellationRequested();
+            }
+            finally
+            {
+                AppSettings.RelativeDate = originalRelativeDate;
+                AppSettings.ShowRepoCurrentBranch = originalRepositoryBranch;
+                AppSettings.ShowCurrentBranchInVisualStudio = originalVisualStudioBranch;
+                AppSettings.EnableAutoScale = originalAutoScale;
+                AppSettings.TruncatePathMethod = originalTruncation;
+                AppSettings.Translation = originalTranslation;
+                AppSettings.Dictionary = originalDictionary;
+                AppSettings.AvatarProvider = originalAvatarProvider;
+                AppSettings.AvatarFallbackType = originalFallback;
+                AppSettings.CustomAvatarTemplate = originalAvatarTemplate;
+                AppSettings.ShowAuthorAvatarColumn = originalShowAvatarColumn;
+                AppSettings.ShowAuthorAvatarInCommitInfo = originalShowAvatarInCommitInfo;
+                AppSettings.AvatarImageCacheDays = originalAvatarCacheDays;
+            }
         }
     }
 

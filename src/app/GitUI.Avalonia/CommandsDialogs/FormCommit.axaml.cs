@@ -1195,12 +1195,11 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void UnstagedSelectionChanged(object? sender, EventArgs e)
     {
-        if (_changingSelection || Unstaged.SelectedFileStatusItem is not FileStatusItem item)
+        if (_currentFilesList != Unstaged || _changingSelection || Unstaged.SelectedFileStatusItem is not FileStatusItem item)
         {
             return;
         }
 
-        _currentFilesList = Unstaged;
         _changingSelection = true;
         Staged.ClearSelected();
         _changingSelection = false;
@@ -1332,12 +1331,11 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void StagedSelectionChanged(object? sender, EventArgs e)
     {
-        if (_changingSelection || Staged.SelectedFileStatusItem is not FileStatusItem item)
+        if (_currentFilesList != Staged || _changingSelection || Staged.SelectedFileStatusItem is not FileStatusItem item)
         {
             return;
         }
 
-        _currentFilesList = Staged;
         _changingSelection = true;
         Unstaged.ClearSelected();
         _changingSelection = false;
