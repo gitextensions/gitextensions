@@ -156,7 +156,7 @@ settings
 stash
 synchronize [--rebase] [--merge] [--fetch] [--quiet]
 tag
-viewdiff
+viewdiff [first second]
 viewpatch [filename]</value>
   </data>
 </root>
