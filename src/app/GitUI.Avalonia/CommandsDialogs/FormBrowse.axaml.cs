@@ -2035,6 +2035,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void CommitInfoTabControl_SelectedIndexChanged(object? sender, SelectionChangedEventArgs e)
     {
+        // Avalonia bubbles child selections; WinForms raises this only for a tab change.
+        if (!ReferenceEquals(e.Source, CommitInfoTabControl))
+        {
+            return;
+        }
+
         bool selectingGpgInfo = CommitInfoTabControl.SelectedItem == GpgInfoTabPage;
         if (!selectingGpgInfo)
         {

@@ -1567,6 +1567,81 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task FormBrowse_revision_arrow_navigation_should_keep_focus_while_the_diff_loads()
+    {
+        CommitInfoPosition previousPosition = AppSettings.CommitInfoPosition;
+        bool previousSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            for (int index = 1; index <= 2; index++)
+            {
+                File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), $"revision-{index}\n");
+                module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", $"revision-{index}" }).Should().BeTrue();
+            }
+
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            form.Show();
+            try
+            {
+                RevisionGridControl grid = form.RevisionGrid;
+                ListBox revisions = grid.GetTestAccessor().Revisions;
+                await WaitUntilAsync(() => revisions.ItemCount == 3);
+                Click(form, form.TreeTabPage, MouseButton.Left);
+                Click(form, form.DiffTabPage, MouseButton.Left);
+                await WaitUntilAsync(() => form.fileViewer.TextEditor.Text.Contains("+revision-2", StringComparison.Ordinal));
+                form.revisionDiff.FileStatusList.IsKeyboardFocusWithin.Should().BeTrue("a real Diff tab change should focus its file list");
+                form.UpdateLayout();
+                ListBoxItem row = (ListBoxItem)revisions.ContainerFromIndex(1)!;
+                Point point = row.TranslatePoint(new Point(100, row.Bounds.Height / 2), form)!.Value;
+                form.MouseMove(point, RawInputModifiers.None);
+                form.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+                form.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+                await AssertDiffAndFocusAsync(1);
+
+                foreach ((Key key, PhysicalKey physicalKey, int index) in new[]
+                {
+                    (Key.Up, PhysicalKey.ArrowUp, 0),
+                    (Key.Down, PhysicalKey.ArrowDown, 1),
+                    (Key.Down, PhysicalKey.ArrowDown, 2),
+                    (Key.Up, PhysicalKey.ArrowUp, 1),
+                })
+                {
+                    form.KeyPress(key, RawInputModifiers.None, physicalKey, keySymbol: null);
+                    form.KeyRelease(key, RawInputModifiers.None, physicalKey, keySymbol: null);
+                    await AssertDiffAndFocusAsync(index);
+                }
+
+                return;
+
+                async Task AssertDiffAndFocusAsync(int index)
+                {
+                    GitRevision expected = (GitRevision)revisions.Items[index]!;
+                    string text = index == 2 ? "content" : $"revision-{2 - index}";
+                    await WaitUntilAsync(() => grid.SelectedRevision?.ObjectId == expected.ObjectId
+                        && form.revisionDiff.FileStatusList.SelectedItem?.SecondRevision.ObjectId == expected.ObjectId
+                        && (index == 2
+                            ? form.fileViewer.TextEditor.Text == text
+                            : form.fileViewer.TextEditor.Text.Contains("+" + text, StringComparison.Ordinal)));
+                    revisions.IsKeyboardFocusWithin.Should().BeTrue("loading a diff must not move focus away from revision navigation");
+                    form.revisionDiff.FileStatusList.IsKeyboardFocusWithin.Should().BeFalse();
+                }
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.CommitInfoPosition = previousPosition;
+            AppSettings.ShowSplitViewLayout = previousSplitView;
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase(2)]
     [TestCase(3)]
     public async Task FormBrowse_control_click_revisions_should_display_the_actual_endpoint_diff(int selectedCount)
