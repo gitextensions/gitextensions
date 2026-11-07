@@ -403,9 +403,7 @@ public class FormBrowseTests
                 .Where(entry => IsRepositoryStateCommand(CommandLogEntry.GetGitArgumentsWithoutConfiguration(entry.Arguments)))
         ];
 
-        // Each of these delays showing the window, they are run in the background.
-        // The common git directory is not checked: it is cached, so whoever needs it first starts the command,
-        // e.g. the settings of the build status column when the grid is refreshed.
+        // Each of these delays showing the window, they are run in the background
         repositoryStateCommandsOnUIThread.Should().BeEmpty(
             "they were started by:{0}",
             string.Concat(repositoryStateCommandsOnUIThread.Select(entry => $"{Environment.NewLine}{entry.Arguments}{Environment.NewLine}{entry.CallStack}")));
@@ -413,7 +411,7 @@ public class FormBrowseTests
         return;
 
         static bool IsRepositoryStateCommand(string arguments)
-            => arguments is "remote" or "ls-files -z --unmerged"
+            => arguments is "remote" or "rev-parse --git-common-dir" or "ls-files -z --unmerged"
             || arguments.StartsWith("config list ", StringComparison.Ordinal)
             || arguments.StartsWith("stash list ", StringComparison.Ordinal);
     }

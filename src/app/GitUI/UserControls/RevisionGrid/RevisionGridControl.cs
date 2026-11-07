@@ -1135,7 +1135,13 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             });
 
             // Apply settings early, adapt column widths, etc.
-            Refresh();
+            // The settings are stored in the common git directory, which is resolved by a git command.
+            ThreadHelper.FileAndForget(async () =>
+            {
+                _ = capturedModule.GitCommonDirectory;
+                await this.SwitchToMainThreadAsync(cancellationToken);
+                Refresh();
+            });
 
             if (!showStashes)
             {
