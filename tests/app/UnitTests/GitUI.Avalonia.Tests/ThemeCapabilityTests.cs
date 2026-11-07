@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -179,10 +180,12 @@ public sealed partial class ThemeCapabilityTests
         ThemeId originalThemeId = AppSettings.ThemeId;
         string[] originalVariations = AppSettings.ThemeVariations;
         bool originalUseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+        GitUI.Editor.FileViewer viewer = new();
         Window window = new()
         {
-            Width = 320,
+            Width = 600,
             Height = 160,
+            Content = viewer,
         };
         try
         {
@@ -192,6 +195,17 @@ public sealed partial class ThemeCapabilityTests
             window.Show();
             Dispatcher.UIThread.RunJobs();
             GetBrushColor(window.Background).Should().Be(Color.Parse("#F0F0F0"));
+            window.UpdateLayout();
+            AvaloniaEdit.Rendering.TextView textView = viewer.TextEditor.TextArea.TextView;
+            Point hover = textView.TranslatePoint(new Point(100, 40), window)!.Value;
+            window.MouseMove(hover, Avalonia.Input.RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Border toolbar = viewer.FindControl<Border>("fileviewerToolbar")!;
+            GetBrushColor(toolbar.Background).Should().Be(AvaloniaThemeResources.ToMediaColor(
+                AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.Control)),
+                "the original Designer gives the viewer toolbar the themed SystemColors.Control background");
+            AssertToolbarPaint("light");
 
             AppSettings.ThemeId = ThemeId.DefaultDark;
             AvaloniaThemeSettings.ApplyAppSettings();
@@ -199,6 +213,32 @@ public sealed partial class ThemeCapabilityTests
 
             window.IsVisible.Should().BeTrue();
             GetBrushColor(window.Background).Should().Be(Color.Parse("#202020"));
+            GetBrushColor(toolbar.Background).Should().Be(AvaloniaThemeResources.ToMediaColor(
+                AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.Control)),
+                "the existing viewer must follow the original toolbar color role after a theme switch");
+            AssertToolbarPaint("dark");
+
+            void AssertToolbarPaint(string theme)
+            {
+                toolbar.IsEffectivelyVisible.Should().BeTrue("the actual viewer pointer handler reveals its toolbar");
+                using Avalonia.Media.Imaging.WriteableBitmap frame = window.CaptureRenderedFrame()
+                    ?? throw new AssertionException("The themed viewer must render headlessly.");
+                if (Environment.GetEnvironmentVariable("GITEXT_COMMIT_EVIDENCE") is { Length: > 0 } evidence)
+                {
+                    Directory.CreateDirectory(evidence);
+                    frame.Save(Path.Combine(evidence, $"viewer-toolbar-{theme}.png"), Avalonia.Media.Imaging.PngBitmapEncoderOptions.Default);
+                }
+
+                using MemoryStream encoded = new();
+                frame.Save(encoded, Avalonia.Media.Imaging.PngBitmapEncoderOptions.Default);
+                encoded.Position = 0;
+                using SkiaSharp.SKBitmap pixels = SkiaSharp.SKBitmap.Decode(encoded);
+                Point blank = toolbar.TranslatePoint(new Point(toolbar.Bounds.Width - 2, toolbar.Bounds.Height - 2), window)!.Value;
+                System.Drawing.Color expected = AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.Control);
+                pixels.GetPixel((int)(blank.X * window.RenderScaling), (int)(blank.Y * window.RenderScaling))
+                    .Should().Be(new SkiaSharp.SKColor(expected.R, expected.G, expected.B, expected.A),
+                        "the original toolbar paints an opaque themed Control background behind its items");
+            }
         }
         finally
         {
