@@ -26,7 +26,7 @@ internal interface IBugReportLauncher
 /// </summary>
 internal sealed class AvaloniaBugReportLauncher : IBugReportLauncher
 {
-    private const string NewIssueUrl = "https://github.com/gitextensions/gitextensions/issues/new";
+    private const string NewIssueUrl = "https://github.com/begota98/gitextensions/issues/new";
 
     public DialogResult Show(
         Window? owner,
