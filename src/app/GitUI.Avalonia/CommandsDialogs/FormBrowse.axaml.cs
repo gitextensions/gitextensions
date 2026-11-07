@@ -3605,6 +3605,23 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         base.OnKeyDown(e);
+
+        // WinForms executes the original F5 ShortcutKeys; Avalonia's InputGesture only displays them.
+        if (!e.Handled && (RefreshIfMatched(refreshToolStripMenuItem) || RefreshIfMatched(refreshDashboardToolStripMenuItem)))
+        {
+            e.Handled = true;
+        }
+
+        bool RefreshIfMatched(MenuItem item)
+        {
+            if (!item.IsEffectivelyEnabled || item.InputGesture?.Matches(e) != true)
+            {
+                return false;
+            }
+
+            item.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent, item));
+            return true;
+        }
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)
