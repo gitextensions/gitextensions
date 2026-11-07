@@ -1567,6 +1567,86 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [TestCase(2)]
+    [TestCase(3)]
+    public async Task FormBrowse_control_click_revisions_should_display_the_actual_endpoint_diff(int selectedCount)
+    {
+        CommitInfoPosition previousPosition = AppSettings.CommitInfoPosition;
+        bool previousSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            ObjectId oldest = module.GetCurrentCheckout();
+            for (int index = 1; index <= 2; index++)
+            {
+                File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), $"revision-{index}\n");
+                module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", $"revision-{index}" }).Should().BeTrue();
+            }
+
+            ObjectId newest = module.GetCurrentCheckout();
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            form.Show();
+            try
+            {
+                RevisionGridControl grid = form.RevisionGrid;
+                await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.ItemCount == 3);
+                Click(form, form.DiffTabPage, MouseButton.Left);
+                await WaitUntilAsync(() => form.revisionDiff.FileStatusList.SelectedItem?.SecondRevision.ObjectId == newest
+                    && form.fileViewer.TextEditor.Text.Contains("+revision-2", StringComparison.Ordinal));
+
+                ClickRow(2, RawInputModifiers.None);
+                if (selectedCount == 3)
+                {
+                    ClickRow(1, RawInputModifiers.Control);
+                }
+
+                ClickRow(0, RawInputModifiers.Control);
+                IReadOnlyList<GitRevision> selected = grid.GetSelectedRevisions();
+                selected.Should().HaveCount(selectedCount);
+                selected[0].ObjectId.Should().Be(newest);
+                selected[^1].ObjectId.Should().Be(oldest);
+                await WaitUntilAsync(() => form.revisionDiff.FileStatusList.SelectedItem?.FirstRevision?.ObjectId == oldest
+                    && form.revisionDiff.FileStatusList.SelectedItem?.SecondRevision.ObjectId == newest
+                    && form.fileViewer.TextEditor.Text.Contains("-content", StringComparison.Ordinal)
+                    && form.fileViewer.TextEditor.Text.Contains("+revision-2", StringComparison.Ordinal));
+
+                IReadOnlyList<FileStatusWithDescription> groups = (IReadOnlyList<FileStatusWithDescription>)typeof(FileStatusList)
+                    .GetProperty("GitItemStatusesWithDescription", BindingFlags.Instance | BindingFlags.NonPublic)!
+                    .GetValue(form.revisionDiff.FileStatusList)!;
+                ObjectId[] expectedBases = selectedCount == 3 ? [oldest, module.RevParse("HEAD~1")] : [oldest];
+                groups.Select(group => group.FirstRev!.ObjectId).Should().Equal(expectedBases);
+                groups.Select(group => group.SecondRev.ObjectId).Should().OnlyContain(revision => revision == newest);
+                form.revisionDiff.FileStatusList.GitItemStatuses.Should().HaveCount(selectedCount - 1)
+                    .And.OnlyContain(item => item.Name == "tracked.txt");
+                form.revisionDiff.FileStatusList.FirstGroupItems.Should().ContainSingle().Which.FirstRevision!.ObjectId.Should().Be(oldest);
+                form.fileViewer.TextEditor.Text.Should().NotContain("-revision-1");
+
+                void ClickRow(int index, RawInputModifiers modifiers)
+                {
+                    form.UpdateLayout();
+                    ListBoxItem row = (ListBoxItem)grid.GetTestAccessor().Revisions.ContainerFromIndex(index)!;
+                    Point point = row.TranslatePoint(new Point(100, row.Bounds.Height / 2), form)!.Value;
+                    form.MouseMove(point, modifiers);
+                    form.MouseDown(point, MouseButton.Left, modifiers);
+                    form.MouseUp(point, MouseButton.Left, modifiers);
+                    Dispatcher.UIThread.RunJobs();
+                }
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.CommitInfoPosition = previousPosition;
+            AppSettings.ShowSplitViewLayout = previousSplitView;
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase(false)]
     [TestCase(true)]
     public async Task FormBrowse_F5_should_reload_the_actual_graph_and_preserve_the_pointer_selection(bool multiple)
