@@ -4634,6 +4634,69 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [TestCase(Key.Apps, RawInputModifiers.None)]
+    [TestCase(Key.F10, RawInputModifiers.Shift)]
+    public async Task FormBrowse_context_menu_keys_should_open_the_real_revision_menu(Key key, RawInputModifiers modifiers)
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        ObjectId head = module.GetCurrentCheckout();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+        ContextMenu? menu = null;
+        form.Show();
+        try
+        {
+            RevisionGridControl grid = form.RevisionGrid;
+            ListBox revisions = grid.GetTestAccessor().Revisions;
+            await WaitUntilAsync(() => revisions.ItemCount == 1 && grid.SelectedRevision?.ObjectId == head);
+            menu = grid.FindControl<ContextMenu>("mainContextMenu")
+                ?? throw new InvalidOperationException("The production revision menu was not created.");
+            int doubleClickCount = 0;
+            grid.DoubleClickRevision += (_, _) => doubleClickCount++;
+            int openingCount = 0;
+            menu.Opening += (_, _) => openingCount++;
+            PhysicalKey physicalKey = key == Key.Apps ? PhysicalKey.ContextMenu : PhysicalKey.F10;
+            Size doubleTapSize = form.GetPlatformSettings()?.GetDoubleTapSize(PointerType.Mouse)
+                ?? throw new InvalidOperationException("The platform must define pointer gesture bounds.");
+            for (int attempt = 1; attempt <= 2; attempt++)
+            {
+                form.UpdateLayout();
+                ListBoxItem row = (ListBoxItem)revisions.ContainerFromIndex(0)!;
+                Point point = row.TranslatePoint(new Point(
+                    (row.Bounds.Width / 2) + ((attempt - 1) * (doubleTapSize.Width + 1)), row.Bounds.Height / 2), form)
+                    ?? throw new InvalidOperationException("The revision row must belong to Browse.");
+                form.MouseMove(point, RawInputModifiers.None);
+                form.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+                form.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+                doubleClickCount.Should().Be(0, "each row input must be a single click, not the Commit Diff command");
+                revisions.IsKeyboardFocusWithin.Should().BeTrue($"a single row click must focus the grid (attempt {attempt}, double clicks {doubleClickCount})");
+
+                form.KeyPress(key, modifiers, physicalKey, keySymbol: null);
+                form.KeyRelease(key, modifiers, physicalKey, keySymbol: null);
+                await WaitUntilAsync(() => menu.IsOpen);
+                Dispatcher.UIThread.RunJobs();
+
+                menu.IsOpen.Should().BeTrue("the matching key release must not dismiss the context menu");
+                openingCount.Should().Be(attempt, "one real key gesture must raise Opening exactly once");
+                grid.GetSelectedRevisions().Should().ContainSingle().Which.ObjectId.Should().Be(head);
+                menu.Items.OfType<CopyContextMenuItem>().Should().ContainSingle().Which.IsEffectivelyEnabled.Should().BeTrue();
+                TopLevel popup = TopLevel.GetTopLevel(menu)
+                    ?? throw new InvalidOperationException("The real context menu must have a popup root.");
+                using WriteableBitmap? frame = popup.CaptureRenderedFrame();
+                frame.Should().NotBeNull("the menu must actually render, not just set IsOpen");
+                popup.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+                form.KeyRelease(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+                await WaitUntilAsync(() => !menu.IsOpen);
+                Dispatcher.UIThread.RunJobs();
+            }
+        }
+        finally
+        {
+            menu?.Close();
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [Category("P8.6h.3b.2b.2b.2b.4")]
     public async Task RevisionGrid_context_menu_should_route_the_selected_revision()
     {
