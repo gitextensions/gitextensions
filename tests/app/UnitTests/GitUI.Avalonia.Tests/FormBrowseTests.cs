@@ -1567,6 +1567,99 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task FormBrowse_diff_groups_should_select_their_files_and_support_arrow_navigation()
+    {
+        bool previousParents = AppSettings.ShowDiffForAllParents;
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        CommitInfoPosition previousPosition = AppSettings.CommitInfoPosition;
+        bool previousSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.ShowDiffForAllParents = true;
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithMerge();
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            form.Show();
+            try
+            {
+                await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == module.GetCurrentCheckout());
+                Click(form, form.DiffTabPage, MouseButton.Left);
+                FileStatusList files = form.revisionDiff.FileStatusList;
+                TreeView tree = files.FindControl<TreeView>("tvDiffFiles")!;
+                await WaitUntilAsync(() => files.GitItemStatuses.Count == 4 && tree.ItemCount == 2);
+                for (int groupIndex = 0; groupIndex < 2; groupIndex++)
+                {
+                    form.UpdateLayout();
+                    TreeViewItem group = (TreeViewItem)tree.ContainerFromIndex(groupIndex)!;
+                    Control header = group.GetVisualDescendants().OfType<Control>()
+                        .First(control => control.Name == "PART_HeaderPresenter"
+                            && ReferenceEquals(control.GetVisualAncestors().OfType<TreeViewItem>().FirstOrDefault(), group));
+                    Click(form, header, MouseButton.Left);
+                    Dispatcher.UIThread.RunJobs();
+                    tree.SelectedItem.Should().BeSameAs(tree.Items[groupIndex]);
+                    group.IsKeyboardFocusWithin.Should().BeTrue();
+                    Control? focused = form.FocusManager!.GetFocusedElement() as Control;
+                    TreeViewItem? focusedItem = focused as TreeViewItem
+                        ?? focused?.GetVisualAncestors().OfType<TreeViewItem>().FirstOrDefault();
+                    focusedItem.Should().BeSameAs(group, "the focused header must belong to this group rather than a child file");
+                    string prefix = groupIndex == 0 ? "left" : "right";
+                    files.SelectedItems.Select(item => item.Item.Name).Should().BeEquivalentTo([$"{prefix}-a.txt", $"{prefix}-b.txt"]);
+                    files.SelectedItem.Should().BeNull("a source group has descendants but is not itself a file");
+                    files.HasSelection.Should().BeTrue();
+                    files.SelectedFolder.Should().Be(RelativePath.From(string.Empty));
+                    await WaitUntilAsync(() => form.fileViewer.TextEditor.Text.Contains("(2) /", StringComparison.Ordinal)
+                        && form.fileViewer.TextEditor.Text.Contains($"{prefix}-a.txt", StringComparison.Ordinal)
+                        && form.fileViewer.TextEditor.Text.Contains($"{prefix}-b.txt", StringComparison.Ordinal));
+
+                    form.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, keySymbol: null);
+                    form.KeyRelease(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, keySymbol: null);
+                    await WaitUntilAsync(() => files.SelectedItem is not null);
+                    files.SelectedItems.Should().ContainSingle().Which.Item.Name.Should().Be($"{prefix}-a.txt");
+                    files.SelectedFolder.Should().BeNull("a file leaf is not a folder summary");
+
+                    form.KeyPress(Key.Up, RawInputModifiers.None, PhysicalKey.ArrowUp, keySymbol: null);
+                    form.KeyRelease(Key.Up, RawInputModifiers.None, PhysicalKey.ArrowUp, keySymbol: null);
+                    Dispatcher.UIThread.RunJobs();
+                    tree.SelectedItem.Should().BeSameAs(tree.Items[groupIndex]);
+                    files.SelectedItems.Select(item => item.Item.Name).Should().BeEquivalentTo([$"{prefix}-a.txt", $"{prefix}-b.txt"]);
+                }
+
+                Click(form, form.TreeTabPage, MouseButton.Left);
+                Click(form, form.DiffTabPage, MouseButton.Left);
+                Dispatcher.UIThread.RunJobs();
+                tree.SelectedItem.Should().BeSameAs(tree.Items[1], "returning to Diff must retain its selected group");
+                files.HasSelection.Should().BeTrue();
+
+                TreeViewItem firstGroup = (TreeViewItem)tree.ContainerFromIndex(0)!;
+                Control firstHeader = firstGroup.GetVisualDescendants().OfType<Control>()
+                    .First(control => control.Name == "PART_HeaderPresenter"
+                        && ReferenceEquals(control.GetVisualAncestors().OfType<TreeViewItem>().FirstOrDefault(), firstGroup));
+                Point point = firstHeader.TranslatePoint(new Point(firstHeader.Bounds.Width / 2, firstHeader.Bounds.Height / 2), form)!.Value;
+                form.MouseMove(point, RawInputModifiers.Control);
+                form.MouseDown(point, MouseButton.Left, RawInputModifiers.Control);
+                form.MouseUp(point, MouseButton.Left, RawInputModifiers.Control);
+                (tree.SelectedItems?.Count ?? 0).Should().Be(2);
+                files.HasSelection.Should().BeTrue("logical group selections remain selections even without directly selected file leaves");
+                files.SelectedFolder.Should().BeNull("the original summarizes a folder only when one node is selected");
+                files.SelectedItems.Should().BeEmpty("multiple group tags are not direct file tags in the original");
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.ShowDiffForAllParents = previousParents;
+            DiffListSortService.Instance.DiffListSorting = previousSort;
+            AppSettings.CommitInfoPosition = previousPosition;
+            AppSettings.ShowSplitViewLayout = previousSplitView;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormBrowse_revision_arrow_navigation_should_keep_focus_while_the_diff_loads()
     {
         CommitInfoPosition previousPosition = AppSettings.CommitInfoPosition;
@@ -4854,6 +4947,25 @@ public sealed class FormBrowseTests
             menu.Close();
             form.Close();
             clipboardField.SetValue(null, previousClipboard);
+        }
+    }
+
+    private GitModule CreateRepositoryWithMerge()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("checkout") { "--quiet", "-b", "issue-merge-left" }).Should().BeTrue();
+        CommitFiles("left");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("checkout") { "--quiet", "-b", "issue-merge-right", "HEAD~1" }).Should().BeTrue();
+        CommitFiles("right");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("merge") { "--quiet", "--no-ff", "issue-merge-left", "-m", "merge" }).Should().BeTrue();
+        return module;
+
+        void CommitFiles(string prefix)
+        {
+            File.WriteAllText(Path.Combine(_workingDirectory, $"{prefix}-a.txt"), $"{prefix} a\n");
+            File.WriteAllText(Path.Combine(_workingDirectory, $"{prefix}-b.txt"), $"{prefix} b\n");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", $"{prefix}-a.txt", $"{prefix}-b.txt" }).Should().BeTrue();
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", prefix }).Should().BeTrue();
         }
     }
 
