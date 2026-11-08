@@ -45,6 +45,9 @@ public sealed partial class FormClone : GitExtensionsDialog
     public FormClone()
     {
         InitializeComponent();
+        HelpButton = true;
+        ManualSectionAnchorName = "clone-repository";
+        ManualSectionSubfolder = "getting_started";
         WireControls();
         InitializeComplete();
         _defaultBranchItems = [];
@@ -55,6 +58,9 @@ public sealed partial class FormClone : GitExtensionsDialog
     {
         _gitModuleChanged = gitModuleChanged;
         InitializeComponent();
+        HelpButton = true;
+        ManualSectionAnchorName = "clone-repository";
+        ManualSectionSubfolder = "getting_started";
         WireControls();
         AcceptButton = Ok;
 

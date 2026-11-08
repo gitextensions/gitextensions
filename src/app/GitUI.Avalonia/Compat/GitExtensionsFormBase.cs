@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
@@ -94,6 +95,12 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
         get => _cancelButton;
         set => _cancelButton = value;
     }
+
+    /// <summary>Exposes native context-help availability through the portable footer and F1 route.</summary>
+    public bool HelpButton { get; set; }
+
+    /// <summary>Provides the native form's context-help event to portable dialogs.</summary>
+    public event EventHandler<CancelEventArgs>? HelpButtonClicked;
 
     /// <summary>Setting focuses the control; <see langword="null"/> clears nothing (WinForms parity).</summary>
     public Avalonia.Input.InputElement? ActiveControl
@@ -303,6 +310,10 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
     /// <summary>Controls the shared Escape-to-close behavior; the repository browser opts out.</summary>
     protected virtual bool CloseOnEscape => true;
 
+    /// <summary>Raises the native form's context-help event from portable input.</summary>
+    protected virtual void OnHelpButtonClicked(CancelEventArgs e)
+        => HelpButtonClicked?.Invoke(this, e);
+
     /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
     protected override void OnKeyDown(KeyEventArgs e)
     {
@@ -311,6 +322,17 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
         {
             e.Handled = true;
             return;
+        }
+
+        if (HelpButton && keyData == WinFormsShims.Keys.F1)
+        {
+            CancelEventArgs help = new();
+            OnHelpButtonClicked(help);
+            if (help.Cancel)
+            {
+                e.Handled = true;
+                return;
+            }
         }
 
         if (keyData == WinFormsShims.Keys.Enter && AcceptButton is { IsEnabled: true } acceptButton)

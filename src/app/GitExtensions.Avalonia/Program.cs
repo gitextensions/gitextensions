@@ -10,6 +10,11 @@ namespace GitExtensions;
 internal static class Program
 {
     internal static readonly ServiceContainer ServiceContainer = new();
+    private static readonly Lazy<bool> DocumentationBaseUrlInitialization = new(() =>
+    {
+        AppSettings.SetDocumentationBaseUrl(AppSettings.ProductVersion);
+        return true;
+    });
 
     /// <summary>
     /// The main entry point for the application.
@@ -19,7 +24,7 @@ internal static class Program
     {
         ServiceContainerRegistry.RegisterServices(ServiceContainer);
 
-        AppSettings.SetDocumentationBaseUrl(AppSettings.ProductVersion);
+        InitializeDocumentationBaseUrl();
         AppTitleGenerator.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.Branch);
 
         // If an error happens before we had a chance to init the environment information
@@ -56,6 +61,9 @@ internal static class Program
 
         return builder.LogToTrace();
     }
+
+    internal static void InitializeDocumentationBaseUrl()
+        => _ = DocumentationBaseUrlInitialization.Value;
 
     internal static bool ShouldUseWayland(bool isLinux, string? waylandDisplay)
         => isLinux && !string.IsNullOrWhiteSpace(waylandDisplay);

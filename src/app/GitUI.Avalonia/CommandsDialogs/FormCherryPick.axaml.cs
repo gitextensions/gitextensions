@@ -32,6 +32,9 @@ public partial class FormCherryPick : GitExtensionsDialog
     public FormCherryPick()
     {
         InitializeComponent();
+        HelpButton = true;
+        ManualSectionAnchorName = "cherry-pick-commit";
+        ManualSectionSubfolder = "modify_history";
         WireControls();
         InitializeComplete();
     }
@@ -42,9 +45,10 @@ public partial class FormCherryPick : GitExtensionsDialog
         Revision = revision;
 
         InitializeComponent();
-        WireControls();
+        HelpButton = true;
         ManualSectionAnchorName = "cherry-pick-commit";
         ManualSectionSubfolder = "modify_history";
+        WireControls();
         InitializeComplete();
     }
 

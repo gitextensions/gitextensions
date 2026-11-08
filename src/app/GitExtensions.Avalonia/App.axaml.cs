@@ -22,6 +22,7 @@ public partial class App : Application
 {
     public override void Initialize()
     {
+        Program.InitializeDocumentationBaseUrl();
         AvaloniaXamlLoader.Load(this);
         AvaloniaFontSettings.InstallPlatformDefaults(this);
     }

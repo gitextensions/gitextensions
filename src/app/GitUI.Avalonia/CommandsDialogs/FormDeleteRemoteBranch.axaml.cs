@@ -27,6 +27,9 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
     public FormDeleteRemoteBranch()
     {
         InitializeComponent();
+        HelpButton = true;
+        ManualSectionAnchorName = "delete-branch";
+        ManualSectionSubfolder = "branches";
         InitializeComplete();
     }
 
@@ -38,13 +41,14 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
         _defaultRemoteBranch = defaultRemoteBranch;
 
         InitializeComponent();
+        HelpButton = true;
+        ManualSectionAnchorName = "delete-branch";
+        ManualSectionSubfolder = "branches";
         Delete.Click += Delete_Click;
         Branches.SelectedValueChanged += Branches_SelectedValueChanged;
         DeleteRemote.IsCheckedChanged += DeleteRemote_CheckedChanged;
         DeleteLocalTrackingBranch.IsCheckedChanged += DeleteRemote_CheckedChanged;
         AcceptButton = Delete;
-        ManualSectionAnchorName = "delete-branch";
-        ManualSectionSubfolder = "branches";
 
         InitializeComplete();
     }

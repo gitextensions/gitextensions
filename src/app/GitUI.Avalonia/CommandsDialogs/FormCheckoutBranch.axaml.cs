@@ -48,6 +48,9 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
     public FormCheckoutBranch()
     {
         InitializeComponent();
+        HelpButton = true;
+        ManualSectionAnchorName = "checkout-branch";
+        ManualSectionSubfolder = "branches";
         InitializeComplete();
     }
 
@@ -59,6 +62,9 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
         _branchNameNormaliser = commands.GetRequiredService<IGitBranchNameNormaliser>();
 
         InitializeComponent();
+        HelpButton = true;
+        ManualSectionAnchorName = "checkout-branch";
+        ManualSectionSubfolder = "branches";
 
         Ok.Click += OkClick;
         Branches.SelectionChanged += Branches_SelectedIndexChanged;
@@ -70,8 +76,6 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
         Activated += FormCheckoutBranch_Activated;
 
         AcceptButton = Ok;
-        ManualSectionAnchorName = "checkout-branch";
-        ManualSectionSubfolder = "branches";
 
         InitializeComplete();
         _rbResetBranchDefaultText = rbResetBranch.Content as string ?? string.Empty;

@@ -38,6 +38,8 @@ Error reports use the original-shaped review form with exception details, reprod
 Copy, Send and Quit, Quit, and Ignore when permitted. Sending requires reproduction steps and
 confirmation, then opens the fork's issue form. Fatal reporting still runs inside the application;
 independent reporter-process isolation remains unimplemented.
+Dialogs that originally expose context help provide a Help icon in their footer and the F1 key.
+Both open the same manual section; an invalid section disables the help action.
 Splitter settings retain the container size, logical DPI, font size and collapsed states as
 well as the distance. Restoring a layout follows its ratio or fixed pane; distances rejected
 during opening are retried after layout. Earlier native handle-sized records are converted

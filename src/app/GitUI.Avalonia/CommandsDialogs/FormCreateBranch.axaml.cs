@@ -27,6 +27,9 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
     public FormCreateBranch()
     {
         InitializeComponent();
+        HelpButton = true;
+        ManualSectionAnchorName = "create-branch";
+        ManualSectionSubfolder = "branches";
         InitializeComplete();
     }
 
@@ -34,6 +37,9 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
         : base(commands, enablePositionRestore: false)
     {
         InitializeComponent();
+        HelpButton = true;
+        ManualSectionAnchorName = "create-branch";
+        ManualSectionSubfolder = "branches";
 
         BranchNameTextBox.LostFocus += BranchNameTextBox_Leave;
         cmdOk.Click += cmdOk_Click;
@@ -42,8 +48,6 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
         commitPicker.UICommandsSource = this;
 
         AcceptButton = cmdOk;
-        ManualSectionAnchorName = "create-branch";
-        ManualSectionSubfolder = "branches";
 
         InitializeComplete();
 
