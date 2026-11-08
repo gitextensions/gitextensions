@@ -1,7 +1,9 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel.Design;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
@@ -18,6 +20,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtensions.ParityCapture;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -1664,6 +1667,84 @@ public sealed class DashboardTests
         finally
         {
             AppSettings.RecentReposComboMinWidth = originalMinimum;
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Repository_groups_should_collapse_without_opening_a_hidden_selected_repository(bool recentGroup)
+    {
+        AvaloniaSynchronizationContext.InstallIfNeeded();
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        using AppSettingsTestScope settings = new();
+        using ServiceContainer services = new();
+        GitExtensions.ServiceContainerRegistry.RegisterServices(services);
+        string path = FindRepositoryRoot();
+        GitModule module = new(services.GetRequiredService<IGitExecutorProvider>(), path);
+        GitUICommands commands = new(services, module);
+        Repository recent = new(path);
+        Repository favourite = new(path) { Category = "Team" };
+        RepositoryHistorySnapshot snapshot = new(
+            [new RepositoryHistoryEntry(recent, "recent", "main", IsFavourite: false, IsAnchored: false)],
+            [new RepositoryHistoryEntry(favourite, "favourite", "main", IsFavourite: true, IsAnchored: false)]);
+        UserRepositoriesList list = new();
+        list.Initialize(CreateController(snapshot), CreateHistory(snapshot), () => commands);
+        list.ShowRecentRepositories(reloadData: false);
+        int opened = 0;
+        list.GitModuleChanged += (_, _) => opened++;
+        Window window = new() { Content = list, Width = 700, Height = 500 };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            using var frame = window.CaptureRenderedFrame();
+            ListBox repositories = list.GetTestAccessor().List;
+            var selected = repositories.Items.OfType<UserRepositoriesList.RepositoryListItem>()
+                .Single(item => item.IsFavourite != recentGroup);
+            repositories.SelectedItem = selected;
+            ListBoxItem tile = list.GetVisualDescendants().OfType<ListBoxItem>()
+                .Single(item => ReferenceEquals(item.Content, selected));
+            ListBoxItem other = list.GetVisualDescendants().OfType<ListBoxItem>()
+                .Single(item => item.Content is UserRepositoriesList.RepositoryListItem && !ReferenceEquals(item.Content, selected));
+            ToggleButton[] toggles = [.. list.GetVisualDescendants().OfType<ToggleButton>()
+                .Where(button => button.Classes.Contains("dashboard-group-toggle"))];
+            toggles.Should().HaveCount(2);
+            ToggleButton toggle = toggles.Single(button => button.Tag is UserRepositoriesList.RepositoryGroupItem group && group.IsRecentGroup == recentGroup);
+            toggle.IsChecked.Should().BeTrue();
+            PathIcon arrow = toggle.GetVisualDescendants().OfType<PathIcon>().Single();
+            arrow.TranslatePoint(default, toggle)!.Value.X.Should().BeLessThan(10, "the collapse indicator must precede the existing caption");
+            tile.IsVisible.Should().BeTrue();
+            Click(toggle);
+            Dispatcher.UIThread.RunJobs();
+            using var collapsed = window.CaptureRenderedFrame();
+            toggle.IsChecked.Should().BeFalse();
+            tile.IsVisible.Should().BeFalse();
+            other.IsVisible.Should().BeTrue();
+            repositories.SelectedItem.Should().BeSameAs(selected);
+            repositories.Focus().Should().BeTrue();
+            window.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+            opened.Should().Be(0, "a collapsed group's invisible selection must not open");
+
+            Click(toggle);
+            Dispatcher.UIThread.RunJobs();
+            using var expanded = window.CaptureRenderedFrame();
+            tile.IsVisible.Should().BeTrue();
+            toggle.IsChecked.Should().BeTrue();
+            repositories.Focus().Should().BeTrue();
+            window.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+            opened.Should().Be(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+
+        void Click(Control button)
+        {
+            Point point = button.TranslatePoint(new Point(button.Bounds.Width / 2, button.Bounds.Height / 2), window)!.Value;
+            window.MouseDown(point, MouseButton.Left);
+            window.MouseUp(point, MouseButton.Left);
         }
     }
 
