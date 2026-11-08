@@ -889,7 +889,9 @@ public sealed class BuildServerIntegrationTests
     }
 
     [AvaloniaTest]
-    public void Build_report_tab_should_follow_selected_revision_status()
+    [TestCase(true)]
+    [TestCase(false)]
+    public void FillBuildReport_should_show_the_link_and_follow_original_visibility_conditions(bool showInBuildReportTab)
     {
         SettingsSource settings = Substitute.For<SettingsSource>();
         settings.GetValue(BuildServerSettings.ShowBuildResultPage.Name).Returns("true");
@@ -899,19 +901,66 @@ public sealed class BuildServerIntegrationTests
         tabs.Items.Add(new TabItem { Header = "Diff" });
         BuildReportTabPageExtension extension = new(() => module, tabs, "Build Report");
         GitRevision revision = new(ObjectId.Parse("1234567890abcdef1234567890abcdef12345678"));
+        System.Reflection.FieldInfo shellField = typeof(WinFormsShims.ShimHost).GetField(
+            "_osShell", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+        object? previousShell = shellField.GetValue(null);
+        WinFormsShims.IOsShell shell = Substitute.For<WinFormsShims.IOsShell>();
+        shell.TryLaunch(Arg.Any<string>(), Arg.Any<WinFormsShims.OsShellLaunchKind>()).Returns(true);
+        WinFormsShims.ShimHost.OsShell = shell;
+        try
+        {
+            extension.FillBuildReport(revision);
+            tabs.Items.Should().HaveCount(1);
+            extension.Control.Should().BeNull();
 
-        extension.FillBuildReport(revision);
-        tabs.Items.Should().HaveCount(1);
+            revision.BuildStatus = new BuildInfo
+            {
+                Url = "https://example.test/build/1",
+                ShowInBuildReportTab = showInBuildReportTab,
+            };
+            Dispatcher.UIThread.RunJobs();
+            tabs.Items.Should().HaveCount(2);
+            TabItem buildTab = tabs.Items.OfType<TabItem>().Single(item => Equals(item.Header, "Build Report"));
+            HyperlinkButton link = buildTab.Content.Should().BeOfType<HyperlinkButton>().Subject;
+            link.Should().BeSameAs(extension.Control);
+            link.Content.Should().Be(GitUI.TranslatedStrings.OpenReport);
+            link.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            shell.Received(1).TryLaunch("https://example.test/build/1", WinFormsShims.OsShellLaunchKind.OpenUri);
 
-        revision.BuildStatus = new BuildInfo { Url = "https://example.test/build/1" };
-        Dispatcher.UIThread.RunJobs();
-        tabs.Items.Should().HaveCount(2);
-        TabItem buildTab = tabs.Items.OfType<TabItem>().Single(item => Equals(item.Header, "Build Report"));
-        buildTab.Content.Should().Be(extension.Control).And.BeOfType<HyperlinkButton>();
+            settings.GetValue(BuildServerSettings.ShowBuildResultPage.Name).Returns("false");
+            extension.FillBuildReport(revision);
+            tabs.Items.Should().HaveCount(1);
+            extension.Control.Should().BeNull();
 
-        revision.BuildStatus = null;
-        Dispatcher.UIThread.RunJobs();
-        tabs.Items.Should().HaveCount(1);
+            settings.GetValue(BuildServerSettings.ShowBuildResultPage.Name).Returns("true");
+            extension.FillBuildReport(revision);
+            tabs.Items.Should().HaveCount(2);
+
+            revision.BuildStatus = new BuildInfo { Url = string.Empty, ShowInBuildReportTab = showInBuildReportTab };
+            Dispatcher.UIThread.RunJobs();
+            tabs.Items.Should().HaveCount(1);
+            extension.Control.Should().BeNull();
+
+            revision.BuildStatus = new BuildInfo { Url = "https://example.test/build/2", ShowInBuildReportTab = showInBuildReportTab };
+            Dispatcher.UIThread.RunJobs();
+            tabs.Items.Should().HaveCount(2);
+            link.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            shell.Received(1).TryLaunch("https://example.test/build/2", WinFormsShims.OsShellLaunchKind.OpenUri);
+
+            revision.BuildStatus = null;
+            Dispatcher.UIThread.RunJobs();
+            tabs.Items.Should().HaveCount(1);
+            extension.Control.Should().BeNull();
+
+            extension.FillBuildReport(null);
+            tabs.Items.Should().HaveCount(1);
+            shell.ReceivedCalls().Should().HaveCount(2);
+        }
+        finally
+        {
+            extension.FillBuildReport(null);
+            shellField.SetValue(null, previousShell);
+        }
     }
 
     private sealed class StubClipboard(string text) : WinFormsShims.IClipboard
