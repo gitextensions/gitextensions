@@ -586,7 +586,6 @@ public sealed class SettingsDialogTests
         {
             FormFixHome form = new();
             FormFixHome.TestAccessor accessor = form.GetTestAccessor();
-            accessor.LoadSettings();
             accessor.OtherHome.IsChecked = true;
             accessor.OtherHomeDirectory.Text = temporaryDirectory;
 
