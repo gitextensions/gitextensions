@@ -200,6 +200,8 @@ rm -f -- \
     "$unreachable_stderr_log"
 
 flatpak info --user --show-permissions "$app_id" >"$permissions_log"
+grep -Fx 'org.freedesktop.Flatpak=talk' "$permissions_log" >/dev/null
+flatpak run --user --command=/bin/sh "$app_id" -c 'test -x /usr/bin/flatpak-spawn'
 filesystem_permissions="$(sed -n 's/^filesystems=//p' "$permissions_log")"
 case ";$filesystem_permissions" in
     *";host;"*) ;;

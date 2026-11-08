@@ -10,7 +10,8 @@
     "--socket=wayland",
     "--socket=ssh-auth",
     "--device=dri",
-    "--filesystem=host"
+    "--filesystem=host",
+    "--talk-name=org.freedesktop.Flatpak"
   ],
   "modules": [
     {

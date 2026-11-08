@@ -83,11 +83,31 @@ public sealed class TerminalLauncherTests
     }
 
     [Test]
+    public void Launch_should_forward_the_desktop_terminal_and_working_directory_to_the_Flatpak_host()
+    {
+        ProcessStartInfo? captured = null;
+        TerminalLauncher launcher = new(
+            _ => null,
+            executable => executable == "xdg-terminal-exec" ? "/usr/bin/xdg-terminal-exec" : null,
+            startInfo => captured = startInfo,
+            TerminalPlatform.Linux,
+            () => true);
+
+        launcher.Launch("/home/test/repository with spaces");
+
+        captured.Should().NotBeNull();
+        captured!.FileName.Should().Be("/usr/bin/flatpak-spawn");
+        captured.ArgumentList.Should().Equal(
+            "--host", "--watch-bus", "--directory=/home/test/repository with spaces",
+            "/usr/bin/xdg-terminal-exec", "--dir=/home/test/repository with spaces");
+    }
+
+    [Test]
     public void Launch_should_report_external_terminal_as_unavailable_in_Flatpak()
     {
         TerminalLauncher launcher = new(
             _ => null,
-            _ => throw new InvalidOperationException("Executable resolution must not run inside Flatpak."),
+            _ => throw new PlatformNotSupportedException("Host tools are not available in this Flatpak installation. Host-command permission was denied."),
             _ => throw new InvalidOperationException("Process launch must not run inside Flatpak."),
             TerminalPlatform.Linux,
             () => true);
