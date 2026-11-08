@@ -101,10 +101,12 @@ public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
 
     internal static IObservable<long> CreateFetchTriggersObservable(Func<bool> isGitRunning, TimeSpan firstTrigger, TimeSpan triggersInterval, IScheduler scheduler)
     {
+        // Switch to the latest wait: if git is still running at the next tick, the previous wait is disposed.
+        // Merging the waits (SelectMany) would accumulate one poller per tick for as long as git keeps running.
         return Observable
             .Timer(firstTrigger, triggersInterval, scheduler)
-            .SelectMany(_ => WaitForRunningGitExitsObservable(isGitRunning, scheduler))
-            .Repeat();
+            .Select(_ => WaitForRunningGitExitsObservable(isGitRunning, scheduler))
+            .Switch();
     }
 
     internal static IObservable<long> WaitForRunningGitExitsObservable(Func<bool> isGitRunning, IScheduler scheduler)

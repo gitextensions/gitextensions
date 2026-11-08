@@ -32,6 +32,32 @@ public sealed class BackgroundFetchPluginTests
     }
 
     [Test]
+    public void CreateFetchTriggersObservable_should_trigger_once_per_tick_as_soon_as_git_has_exited()
+    {
+        using IDisposable subscription = SubscribeToFetchTriggers(isGitRunningUntil: TimeSpan.FromSeconds(25));
+
+        _scheduler.AdvanceBy(TimeSpan.FromSeconds(45));
+
+        _triggers.Should().Equal(TimeSpan.FromSeconds(25), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(40));
+    }
+
+    [Test]
+    public void CreateFetchTriggersObservable_should_poll_with_a_single_poller_while_git_keeps_running()
+    {
+        using IDisposable subscription = SubscribeToFetchTriggers(isGitRunningUntil: TimeSpan.MaxValue);
+
+        TimeSpan duration = TimeSpan.FromHours(1);
+        _scheduler.AdvanceBy(duration);
+
+        _triggers.Should().BeEmpty();
+
+        // One check per tick plus one per second. Accumulating pollers would grow quadratically instead.
+        int ticks = (int)(duration / _interval);
+        int polls = (int)duration.TotalSeconds;
+        _isGitRunningCallCount.Should().BeLessThanOrEqualTo(ticks + polls);
+    }
+
+    [Test]
     public void CreateFetchTriggersObservable_should_stop_polling_when_disposed()
     {
         IDisposable subscription = SubscribeToFetchTriggers(isGitRunningUntil: TimeSpan.MaxValue);
