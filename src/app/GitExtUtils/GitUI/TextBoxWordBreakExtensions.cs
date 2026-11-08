@@ -352,13 +352,12 @@ public static class TextBoxWordBreakExtensions
             return;
         }
 
-        // Record the anchor of a plain Shift+navigation selection as it begins from a collapsed
-        // caret: that caret is the end that stays fixed. Doing so lets a later Ctrl+Shift+Left/Right
-        // extend from the correct end instead of guessing the direction (see ResolveAnchorAndCaret).
-        if (e.Shift && !e.Control && !e.Alt && IsSelectionAnchorKey(e.KeyCode) && GetSelectionLength(control) == 0)
+        // Capture the fixed end before Shift+navigation starts a selection, including
+        // Ctrl+Shift+Home/End, so later word navigation preserves its direction.
+        // Ctrl+Shift+Left/Right must still reach the custom handler below.
+        if (e.Shift && !e.Alt && IsSelectionAnchorKey(e.KeyCode) && GetSelectionLength(control) == 0)
         {
             SetAnchor(control, GetSelectionStart(control));
-            return;
         }
 
         if (!e.Control || e.Alt || (e.KeyCode != Keys.Left && e.KeyCode != Keys.Right))
