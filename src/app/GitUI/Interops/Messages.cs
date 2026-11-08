@@ -37,6 +37,7 @@ internal static partial class NativeMethods
 
     public const int EM_FORMATRANGE = WM_USER + 57;
     public const int EM_SETSEL = 0x00B1;
+    public const int EM_SCROLLCARET = 0x00B7;
     public const int EM_LINEINDEX = 0x00BB;
     public const int EM_LINELENGTH = 0x00C1;
     public const int EM_POSFROMCHAR = 0x00D6;

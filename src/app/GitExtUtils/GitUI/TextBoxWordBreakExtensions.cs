@@ -83,7 +83,7 @@ public static class TextBoxWordBreakExtensions
 
     private sealed class WordSelectionState
     {
-        public int Anchor { get; set; }
+        public int Anchor { get; set; } = -1;
         public long LastDoubleClickTicks { get; set; }
         public Point LastDoubleClickLocation { get; set; }
 
@@ -208,34 +208,25 @@ public static class TextBoxWordBreakExtensions
             // (e.g. one left at 0 by a prior Select All) can be collapsed back on mouse-up.
             // Shift+click is skipped: the native control extends the selection to the click, and a
             // zero-length pending caret would collapse it back on mouse-up.
-            SetPendingSelection(textBox, GetCaretIndexFromPosition(textBox, e.Location), 0, e.Location);
+            SetPendingSelection(textBox, GetNativeCaretOrHitTest(textBox, textBox.GetCharIndexFromPosition(e.Location)), 0, e.Location);
         }
-    }
-
-    /// <summary>
-    ///  Like <see cref="TextBoxBase.GetCharIndexFromPosition"/>, but returns the text length when the
-    ///  point is past the last character, because the latter clamps to the last character's index.
-    /// </summary>
-    private static int GetCaretIndexFromPosition(TextBoxBase textBox, Point location)
-    {
-        int index = textBox.GetCharIndexFromPosition(location);
-        int length = textBox.TextLength;
-        if (length == 0 || index != length - 1)
+        else if (e.Clicks == 1)
         {
-            return index;
+            // Shift+click extends natively from an end the cached anchor knows nothing about.
+            SetAnchor(textBox, -1);
         }
-
-        Point lastCharPosition = textBox.GetPositionFromCharIndex(index);
-        Size charSize = TextRenderer.MeasureText(textBox.Text[index].ToString(), textBox.Font, Size.Empty, TextFormatFlags.NoPadding);
-        bool isPastLastChar = location.X >= lastCharPosition.X + (charSize.Width / 2)
-            && location.Y >= lastCharPosition.Y
-            && (!textBox.Multiline || location.Y < lastCharPosition.Y + charSize.Height);
-
-        return isPastLastChar ? length : index;
     }
 
     /// <summary>
-    ///  Selects the punctuation-delimited word at <paramref name="index"/> and returns the
+    ///  The native control has already placed the caret for a plain click by the time the managed
+    ///  event runs. Its hit-test index is not equivalent: it clamps to the last character when the
+    ///  click is beyond the text.
+    /// </summary>
+    private static int GetNativeCaretOrHitTest(Control control, int hitTestIndex)
+        => GetSelectionLength(control) == 0 ? GetSelectionStart(control) : hitTestIndex;
+
+    /// <summary>
+    ///  Selects the punctuation-delimited word
     ///  applied <c>[Start, Length]</c>, or <c>(-1, 0)</c> if <paramref name="index"/> is out of range.
     /// </summary>
     private static (int Start, int Length) SelectWordAt(Control control, string text, int index)
@@ -361,6 +352,13 @@ public static class TextBoxWordBreakExtensions
             SetAnchor(control, GetSelectionStart(control));
         }
 
+        if (e.Control && !e.Shift && !e.Alt && e.KeyCode == Keys.A)
+        {
+            // Select All is handled natively and leaves no meaningful fixed end.
+            SetAnchor(control, -1);
+            return;
+        }
+
         if (!e.Control || e.Alt || (e.KeyCode != Keys.Left && e.KeyCode != Keys.Right))
         {
             return;
@@ -389,6 +387,9 @@ public static class TextBoxWordBreakExtensions
             SetSelectionLength(control, 0);
             SetAnchor(control, target);
         }
+
+        // Suppressing the native key handling also suppressed its scrolling of the caret into view.
+        ScrollToCaret(control);
     }
 
     /// <summary>Finds the start of the word at or before <paramref name="position"/>.</summary>
@@ -585,12 +586,7 @@ public static class TextBoxWordBreakExtensions
     /// </summary>
     private static void SetDirectionalSelection(Control control, int anchor, int caret)
     {
-        IntPtr handle = control switch
-        {
-            TextBoxBase { IsHandleCreated: true } t => t.Handle,
-            ComboBox cb when _comboBoxEditWindows.TryGetValue(cb, out ComboBoxEditWindow? editWindow) => editWindow.Handle,
-            _ => IntPtr.Zero
-        };
+        IntPtr handle = GetEditHandle(control);
 
         if (handle == IntPtr.Zero)
         {
@@ -600,6 +596,23 @@ public static class TextBoxWordBreakExtensions
         }
 
         NativeMethods.SendMessageW(handle, NativeMethods.EM_SETSEL, (IntPtr)anchor, (IntPtr)caret);
+    }
+
+    private static IntPtr GetEditHandle(Control control)
+        => control switch
+        {
+            TextBoxBase { IsHandleCreated: true } t => t.Handle,
+            ComboBox cb when _comboBoxEditWindows.TryGetValue(cb, out ComboBoxEditWindow? editWindow) => editWindow.Handle,
+            _ => IntPtr.Zero
+        };
+
+    private static void ScrollToCaret(Control control)
+    {
+        IntPtr handle = GetEditHandle(control);
+        if (handle != IntPtr.Zero)
+        {
+            NativeMethods.SendMessageW(handle, NativeMethods.EM_SCROLLCARET);
+        }
     }
 
     private static int GetSelectionStart(Control control)
@@ -701,7 +714,14 @@ public static class TextBoxWordBreakExtensions
                     // anchor (e.g. one left at 0 by a prior Select All) is collapsed back on mouse-up.
                     // Shift+click is skipped: the edit control extends the selection to the click, and
                     // a zero-length pending caret would collapse it back on mouse-up.
-                    SetPendingSelection(_comboBox, CharIndexFromPosition(m.LParam), 0, m.LParam.ToPoint());
+                    SetPendingSelection(_comboBox, GetNativeCaretOrHitTest(_comboBox, CharIndexFromPosition(m.LParam)), 0, m.LParam.ToPoint());
+                    break;
+                }
+
+                case NativeMethods.WM_LBUTTONDOWN:
+                {
+                    // Shift+click extends natively from an end the cached anchor knows nothing about.
+                    SetAnchor(_comboBox, -1);
                     break;
                 }
             }
