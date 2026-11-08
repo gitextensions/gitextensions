@@ -68,6 +68,22 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
         _buildServerAdapter = buildServerAdapter;
 
+        // When a build server adapter is available (including auto-detected),
+        // ensure the column visibility and width reflect the user's display preferences
+        if (buildServerAdapter is not null)
+        {
+            bool showIcon = AppSettings.ShowBuildStatusIconColumn;
+            bool showText = AppSettings.ShowBuildStatusTextColumn;
+            ColumnProvider.Column.IsVisible = showIcon || showText;
+
+            if (showIcon && !showText)
+            {
+                ColumnProvider.Column.Width = new Avalonia.Controls.GridLength(16);
+            }
+
+            _revisionGrid.UpdateColumnLayouts();
+        }
+
         await TaskScheduler.Default;
 
         if (buildServerAdapter is null || launchToken.IsCancellationRequested)
