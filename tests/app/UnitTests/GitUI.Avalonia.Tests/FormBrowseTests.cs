@@ -3154,6 +3154,7 @@ public sealed class FormBrowseTests
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(_workingDirectory);
         module.IsValidGitWorkingDir().Returns(true);
+        GitModuleTestStub.ConfigureEmptyRepositoryReads(module);
         ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);

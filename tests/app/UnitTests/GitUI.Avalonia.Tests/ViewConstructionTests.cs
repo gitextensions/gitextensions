@@ -92,6 +92,7 @@ public sealed class ViewConstructionTests
             IGitModule module = Substitute.For<IGitModule>();
             module.WorkingDir.Returns(Path.GetTempPath());
             module.IsValidGitWorkingDir().Returns(true);
+            GitModuleTestStub.ConfigureEmptyRepositoryReads(module);
             IAppTitleGenerator title = Substitute.For<IAppTitleGenerator>();
             title.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
             services.AddService<IAppTitleGenerator>(title);

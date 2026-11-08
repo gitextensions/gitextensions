@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.ComponentModel.Design;
+using System.Xml;
 using System.Xml.Serialization;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -6,8 +7,10 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
@@ -853,7 +856,7 @@ public sealed class HotkeyTests
     }
 
     [AvaloniaTest]
-    public void FormBrowse_create_tag_hotkey_should_open_for_the_current_revision()
+    public async Task FormBrowse_create_tag_hotkey_should_open_for_the_current_revision()
     {
         (FormBrowse form, IGitUICommands commands, _) = CreateBrowseForm(
             new HotkeyCommand((int)FormBrowse.Command.CreateTag, nameof(FormBrowse.Command.CreateTag))
@@ -863,9 +866,14 @@ public sealed class HotkeyTests
         form.Show();
         try
         {
+            using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(15));
+            await ThreadHelper.JoinPendingOperationsAsync(deadline.Token);
+            Dispatcher.UIThread.RunJobs();
+            GitRevision? revision = form.RevisionGrid.LatestSelectedRevision;
+
             form.KeyPress(Key.T, RawInputModifiers.Control, PhysicalKey.T, keySymbol: "t");
 
-            commands.Received(1).StartCreateTagDialog(form, revision: null);
+            commands.Received(1).StartCreateTagDialog(form, revision);
         }
         finally
         {
@@ -874,68 +882,92 @@ public sealed class HotkeyTests
     }
 
     [AvaloniaTest]
-    public void FormBrowse_workspace_hotkeys_should_select_and_cycle_functional_tabs()
+    public async Task FormBrowse_workspace_hotkeys_should_select_and_cycle_functional_tabs()
     {
         CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
         bool originalShowGpgInformation = AppSettings.ShowGpgInformation.Value;
         bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
-        AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
-        AppSettings.ShowGpgInformation.Value = true;
-        AppSettings.ShowSplitViewLayout = true;
-        (FormBrowse form, _, _) = CreateBrowseForm(
-            new HotkeyCommand((int)FormBrowse.Command.FocusDiff, nameof(FormBrowse.Command.FocusDiff))
-            {
-                KeyData = WinFormsShims.Keys.F6,
-            },
-            new HotkeyCommand((int)FormBrowse.Command.FocusFileTree, nameof(FormBrowse.Command.FocusFileTree))
-            {
-                KeyData = WinFormsShims.Keys.F9,
-            },
-            new HotkeyCommand((int)FormBrowse.Command.FocusGpgInfo, nameof(FormBrowse.Command.FocusGpgInfo))
-            {
-                KeyData = WinFormsShims.Keys.F10,
-            },
-            new HotkeyCommand((int)FormBrowse.Command.FocusNextTab, nameof(FormBrowse.Command.FocusNextTab))
-            {
-                KeyData = WinFormsShims.Keys.F7,
-            },
-            new HotkeyCommand((int)FormBrowse.Command.FocusPrevTab, nameof(FormBrowse.Command.FocusPrevTab))
-            {
-                KeyData = WinFormsShims.Keys.F8,
-            });
-        form.Show();
+        string directory = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.WorkspaceHotkeys-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
         try
         {
-            form.KeyPress(Key.F6, RawInputModifiers.None, PhysicalKey.F6, keySymbol: null);
-            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.DiffTabPage);
+            using ServiceContainer services = new();
+            GitExtUtils.ServiceContainerRegistry.RegisterServices(services);
+            GitDirectoryResolver resolver = new(new System.IO.Abstractions.FileSystem());
+            services.AddService<IGitDirectoryResolver>(resolver);
+            GitCommands.ServiceContainerRegistry.RegisterServices(services);
+            GitModule module = new(services.GetRequiredService<IGitExecutorProvider>(), directory);
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" }).Should().BeTrue();
+            module.SetSetting("user.name", "Avalonia Test");
+            module.SetSetting("user.email", "avalonia@example.com");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "--allow-empty", "-m", "initial" }).Should().BeTrue();
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowGpgInformation.Value = true;
+            AppSettings.ShowSplitViewLayout = true;
+            (FormBrowse form, _, _) = CreateBrowseForm(
+            [
+                new HotkeyCommand((int)FormBrowse.Command.FocusDiff, nameof(FormBrowse.Command.FocusDiff))
+                {
+                    KeyData = WinFormsShims.Keys.F6,
+                },
+                new HotkeyCommand((int)FormBrowse.Command.FocusFileTree, nameof(FormBrowse.Command.FocusFileTree))
+                {
+                    KeyData = WinFormsShims.Keys.F9,
+                },
+                new HotkeyCommand((int)FormBrowse.Command.FocusGpgInfo, nameof(FormBrowse.Command.FocusGpgInfo))
+                {
+                    KeyData = WinFormsShims.Keys.F10,
+                },
+                new HotkeyCommand((int)FormBrowse.Command.FocusNextTab, nameof(FormBrowse.Command.FocusNextTab))
+                {
+                    KeyData = WinFormsShims.Keys.F7,
+                },
+                new HotkeyCommand((int)FormBrowse.Command.FocusPrevTab, nameof(FormBrowse.Command.FocusPrevTab))
+                {
+                    KeyData = WinFormsShims.Keys.F8,
+                },
+            ], revisionHotkeys: [], repositoryModule: module);
+            TaskCompletionSource loaded = new();
+            form.RevisionGrid.RevisionsLoaded += (_, _) => loaded.TrySetResult();
+            form.Show();
+            try
+            {
+                await loaded.Task.WaitAsync(TimeSpan.FromSeconds(15));
+                form.KeyPress(Key.F6, RawInputModifiers.None, PhysicalKey.F6, keySymbol: null);
+                form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.DiffTabPage);
 
-            form.KeyPress(Key.F7, RawInputModifiers.None, PhysicalKey.F7, keySymbol: null);
-            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.TreeTabPage);
+                form.KeyPress(Key.F7, RawInputModifiers.None, PhysicalKey.F7, keySymbol: null);
+                form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.TreeTabPage);
 
-            form.KeyPress(Key.F8, RawInputModifiers.None, PhysicalKey.F8, keySymbol: null);
-            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.DiffTabPage);
+                form.KeyPress(Key.F8, RawInputModifiers.None, PhysicalKey.F8, keySymbol: null);
+                form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.DiffTabPage);
 
-            form.KeyPress(Key.F9, RawInputModifiers.None, PhysicalKey.F9, keySymbol: null);
-            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.TreeTabPage);
-            form.fileTree.FileStatusList.IsKeyboardFocusWithin.Should().BeTrue();
+                form.KeyPress(Key.F9, RawInputModifiers.None, PhysicalKey.F9, keySymbol: null);
+                Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+                form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.TreeTabPage);
+                form.fileTree.FileStatusList.IsKeyboardFocusWithin.Should().BeTrue();
 
-            form.KeyPress(Key.F9, RawInputModifiers.None, PhysicalKey.F9, keySymbol: null);
-            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-            form.fileTree.FileViewer.IsKeyboardFocusWithin.Should().BeTrue();
+                form.KeyPress(Key.F9, RawInputModifiers.None, PhysicalKey.F9, keySymbol: null);
+                Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+                form.fileTree.FileViewer.IsKeyboardFocusWithin.Should().BeTrue();
 
-            form.RefreshGpgInfo(new GitRevision(ObjectId.Parse("0123456789012345678901234567890123456789")));
-            form.KeyPress(Key.F10, RawInputModifiers.None, PhysicalKey.F10, keySymbol: null);
-            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.GpgInfoTabPage);
-            form.revisionGpgInfo1.IsKeyboardFocusWithin.Should().BeTrue();
+                form.RevisionGrid.SelectedRevision!.ObjectId.Should().Be(module.GetCurrentCheckout());
+                form.KeyPress(Key.F10, RawInputModifiers.None, PhysicalKey.F10, keySymbol: null);
+                Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+                form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.GpgInfoTabPage);
+                form.revisionGpgInfo1.IsKeyboardFocusWithin.Should().BeTrue();
+            }
+            finally
+            {
+                form.Close();
+            }
         }
         finally
         {
-            form.Close();
             AppSettings.CommitInfoPosition = originalPosition;
             AppSettings.ShowGpgInformation.Value = originalShowGpgInformation;
             AppSettings.ShowSplitViewLayout = originalShowSplitView;
+            TestDirectory.Delete(directory);
         }
     }
 
@@ -1078,11 +1110,16 @@ public sealed class HotkeyTests
         IReadOnlyList<HotkeyCommand>? scriptHotkeys = null,
         IReadOnlyList<HotkeyCommand>? leftPanelHotkeys = null,
         IReadOnlyList<HotkeyCommand>? fileStatusHotkeys = null,
-        IReadOnlyList<HotkeyCommand>? fileViewerHotkeys = null)
+        IReadOnlyList<HotkeyCommand>? fileViewerHotkeys = null,
+        IGitModule? repositoryModule = null)
     {
-        IGitModule module = Substitute.For<IGitModule>();
-        module.WorkingDir.Returns(Path.GetTempPath());
-        module.IsValidGitWorkingDir().Returns(true);
+        IGitModule module = repositoryModule ?? Substitute.For<IGitModule>();
+        if (repositoryModule is null)
+        {
+            module.WorkingDir.Returns(Path.GetTempPath());
+            module.IsValidGitWorkingDir().Returns(true);
+            GitModuleTestStub.ConfigureEmptyRepositoryReads(module);
+        }
 
         ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
         IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();

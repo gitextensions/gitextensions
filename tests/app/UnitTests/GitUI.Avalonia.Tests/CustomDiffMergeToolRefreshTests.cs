@@ -270,6 +270,7 @@ public sealed class CustomDiffMergeToolRefreshTests
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(Path.GetTempPath());
         module.IsValidGitWorkingDir().Returns(true);
+        GitModuleTestStub.ConfigureEmptyRepositoryReads(module);
         ConfigureTools(module, defaultTool, otherTool);
         return module;
     }

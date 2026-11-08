@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Runtime.ExceptionServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -1210,29 +1211,32 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         // Evaluate GitRefs and current commit
         _taskManager.FileAndForget(() =>
         {
-            IReadOnlyList<IGitRef> loadedRefs = refs.Value;
-            cancellationToken.ThrowIfCancellationRequested();
-            string selectedBranch = capturedModule.GetSelectedBranch(emptyIfDetached: true);
-            IGitRef? selectedRef = loadedRefs.FirstOrDefault(
-                gitRef => gitRef.IsHead && gitRef.Name == selectedBranch);
-            UpdateSelectedRef(capturedModule, loadedRefs, selectedRef);
+            TaskManager.HandleExceptions(() =>
+            {
+                IReadOnlyList<IGitRef> loadedRefs = refs.Value;
+                cancellationToken.ThrowIfCancellationRequested();
+                string selectedBranch = capturedModule.GetSelectedBranch(emptyIfDetached: true);
+                IGitRef? selectedRef = loadedRefs.FirstOrDefault(
+                    gitRef => gitRef.IsHead && gitRef.Name == selectedBranch);
+                UpdateSelectedRef(capturedModule, loadedRefs, selectedRef);
 
-            // Exclude the 'stash' ref, it is specially handled when stashes are shown
-            _refsByObjectId = (AppSettings.ShowStashes
-                    ? loadedRefs.Where(gitRef => gitRef.CompleteName != GitRefName.RefsStashPrefix)
-                    : loadedRefs)
-                .Where(gitRef => !gitRef.ObjectId.IsZero)
-                .ToLookup(gitRef => gitRef.ObjectId);
+                // Exclude the 'stash' ref, it is specially handled when stashes are shown
+                _refsByObjectId = (AppSettings.ShowStashes
+                        ? loadedRefs.Where(gitRef => gitRef.CompleteName != GitRefName.RefsStashPrefix)
+                        : loadedRefs)
+                    .Where(gitRef => !gitRef.ObjectId.IsZero)
+                    .ToLookup(gitRef => gitRef.ObjectId);
 
-            // Wait for refs,CurrentCheckout and stashes as second step
-            observer.InitializeStashes(capturedModule, stashes.Value);
+                // Wait for refs,CurrentCheckout and stashes as second step
+                observer.InitializeStashes(capturedModule, stashes.Value);
 
-            RevisionReader reader = new(capturedModule);
-            bool hasNotes = AppSettings.ShowGitNotesColumn || AppSettings.ShowGitNotes;
-            string effectivePathFilter = BuildPathFilter(pathFilter);
+                RevisionReader reader = new(capturedModule);
+                bool hasNotes = AppSettings.ShowGitNotesColumn || AppSettings.ShowGitNotes;
+                string effectivePathFilter = BuildPathFilter(pathFilter);
 
-            // Allow add revisions to the grid
-            reader.GetLog(observer, revisionFilter, effectivePathFilter, hasNotes, autostashLabel: "autostash", cancellationToken);
+                // Allow add revisions to the grid
+                reader.GetLog(observer, revisionFilter, effectivePathFilter, hasNotes, autostashLabel: "autostash", cancellationToken);
+            }, observer.OnError);
         });
 
         return;
@@ -3728,13 +3732,17 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         OnGridViewSelectionChanged(_gridView, EventArgs.Empty);
     }
 
-    private void OnLoadingError(Exception exception, CancellationToken cancellationToken)
+    private void OnRevisionReaderError(Exception exception, CancellationToken cancellationToken)
     {
         if (!cancellationToken.IsCancellationRequested)
         {
+            _refreshRevisionsSequence.CancelCurrent();
             _isRefreshingRevisions = false;
             lblLoadingStatus.Text = $"Failed to load revisions: {exception.Message}";
             SetPage(new ErrorControl());
+
+            // Rethrow the exception on the UI thread
+            ExceptionDispatchInfo.Throw(exception);
         }
     }
 
@@ -4160,7 +4168,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
 
         public void OnError(Exception error)
-            => Dispatcher.UIThread.Post(() => owner.OnLoadingError(error, cancellationToken));
+            => Dispatcher.UIThread.Post(() => owner.OnRevisionReaderError(error, cancellationToken));
 
         private IReadOnlyList<GitRevision> AddArtificialRevisionsBeforeHead(IReadOnlyList<GitRevision> revisions)
         {
