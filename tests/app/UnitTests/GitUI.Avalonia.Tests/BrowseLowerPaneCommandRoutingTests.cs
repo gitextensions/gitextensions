@@ -82,6 +82,13 @@ public sealed class BrowseLowerPaneCommandRoutingTests
                 using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(15));
                 await form.JoinLoadOperationsForTestAsync(deadline.Token);
                 await ThreadHelper.JoinPendingOperationsAsync(deadline.Token);
+
+                // Pane refreshes own separate task collections; finish them before supplying routing data.
+                Task diffReady = form.revisionDiff.GetTestAccessor().TaskManager.JoinPendingOperationsAsync(deadline.Token);
+                Task treeReady = form.fileTree.GetTestAccessor().TaskManager.JoinPendingOperationsAsync(deadline.Token);
+                await TestContext.Progress.WriteLineAsync($"{activePane}: pending pane loads: diff={!diffReady.IsCompleted}; tree={!treeReady.IsCompleted}");
+                await Task.WhenAll(diffReady, treeReady);
+                deadline.Token.ThrowIfCancellationRequested();
                 Dispatcher.UIThread.RunJobs();
                 GitRevision first = new(ObjectId.Random());
                 GitRevision second = new(ObjectId.Random());
@@ -152,7 +159,8 @@ public sealed class BrowseLowerPaneCommandRoutingTests
                 {
                     if (list.IsEffectivelyVisible && TopLevel.GetTopLevel(list) == form)
                     {
-                        list.UICommands.Should().BeSameAs(commands);
+                        list.TryGetUICommandsDirect(out IGitUICommands? actualCommands).Should().BeTrue();
+                        actualCommands.Should().BeSameAs(commands);
                     }
 
                     list.SelectFirstItemOnSetItems = false;

@@ -92,7 +92,8 @@ public sealed class OpenWithIntegrationTests
             await WaitUntilAsync(() => browse.fileTree.FileStatusList.GitItemStatuses.Any(item => item.Name == name));
             FileStatusList list = browse.fileTree.FileStatusList;
             list.SelectFileOrFolder(RelativePath.From(name)).Should().BeTrue();
-            list.UICommands.Should().BeSameAs(commands);
+            list.TryGetUICommandsDirect(out IGitUICommands? actualCommands).Should().BeTrue();
+            actualCommands.Should().BeSameAs(commands);
             using (var frame = browse.CaptureRenderedFrame())
             {
                 frame.Should().NotBeNull();

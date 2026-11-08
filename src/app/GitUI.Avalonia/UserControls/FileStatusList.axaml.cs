@@ -184,7 +184,7 @@ public partial class FileStatusList : GitModuleControl
             if (TryGetUICommandsDirect(out IGitUICommands? commands))
             {
                 BindCommands(commands);
-                ReloadHotkeys();
+                OnRuntimeLoad();
                 LoadCustomDifftools();
                 SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
             }
@@ -221,6 +221,17 @@ public partial class FileStatusList : GitModuleControl
             };
             item.Click += (_, _) => this.InvokeAndForget(OpenSubmoduleAsync);
             return item;
+        }
+    }
+
+    // Framework constraint: logical attachment dispatches the retained runtime-load callback.
+    protected override void OnRuntimeLoad()
+    {
+        base.OnRuntimeLoad();
+        ReloadHotkeys();
+        if (OperatingSystem.IsWindows())
+        {
+            VisualStudioIntegration.Init();
         }
     }
 
