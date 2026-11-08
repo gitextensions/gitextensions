@@ -31,6 +31,8 @@ refreshes, the currently implemented configurable Browse commands are dispatched
 their upstream command IDs, and Escape closes dialogs without closing the repository browser.
 Revision columns can be resized at their cell dividers. A preview line follows the drag,
 then the width commits on release; losing capture restores the original fill sizing.
+Repository refresh preserves typing focus in an open repository dropdown; otherwise
+initialization focuses the revision list.
 Dashboard loads repository-host actions before the remaining plugins, then refreshes its host links.
 Error reports use the original-shaped review form with exception details, reproduction steps,
 Copy, Send and Quit, Quit, and Ignore when permitted. Sending requires reproduction steps and
