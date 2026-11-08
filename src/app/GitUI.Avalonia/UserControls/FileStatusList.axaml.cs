@@ -720,21 +720,53 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public void SelectAll()
     {
-        if (_isFileTreeMode)
+        // Avoid scrolling and repainting between folders while expanding the whole selection.
+        TreeView? tree = _isFileTreeMode ? tvFiles : ShowDiffTree ? tvDiffFiles : null;
+        bool autoScroll = tree?.AutoScrollToSelectedItem ?? false;
+        try
         {
-            tvFiles.SelectAll();
-        }
-        else if (ShowDiffTree)
-        {
-            tvDiffFiles.SelectedItems?.Clear();
-            foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten).Where(node => node.Item is not null))
+            if (tree is not null)
             {
-                tvDiffFiles.SelectedItems?.Add(node);
+                tree.AutoScrollToSelectedItem = false;
+            }
+
+            if (_isFileTreeMode)
+            {
+                foreach (FileTreeNode node in tvFiles.Items.Cast<FileTreeNode>())
+                {
+                    ExpandAll(node);
+                }
+
+                tvFiles.SelectedItems?.Clear();
+                foreach (FileTreeNode node in tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).Where(node => node.Item is not null))
+                {
+                    tvFiles.SelectedItems?.Add(node);
+                }
+            }
+            else if (ShowDiffTree)
+            {
+                foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>())
+                {
+                    ExpandAll(node);
+                }
+
+                tvDiffFiles.SelectedItems?.Clear();
+                foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten).Where(node => node.Item is not null))
+                {
+                    tvDiffFiles.SelectedItems?.Add(node);
+                }
+            }
+            else
+            {
+                lstFiles.SelectAll();
             }
         }
-        else
+        finally
         {
-            lstFiles.SelectAll();
+            if (tree is not null)
+            {
+                tree.AutoScrollToSelectedItem = autoScroll;
+            }
         }
     }
 
