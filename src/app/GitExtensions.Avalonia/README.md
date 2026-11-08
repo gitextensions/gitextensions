@@ -29,6 +29,8 @@ follow-up, and conflict recovery remain deferred with the remaining dialogs. Bro
 use the same persisted `Keys` values and XML settings as the Windows Forms application: F5
 refreshes, the currently implemented configurable Browse commands are dispatched through
 their upstream command IDs, and Escape closes dialogs without closing the repository browser.
+Revision columns can be resized at their cell dividers. A preview line follows the drag,
+then the width commits on release; losing capture restores the original fill sizing.
 Dashboard loads repository-host actions before the remaining plugins, then refreshes its host links.
 Error reports use the original-shaped review form with exception details, reproduction steps,
 Copy, Send and Quit, Quit, and Ignore when permitted. Sending requires reproduction steps and
