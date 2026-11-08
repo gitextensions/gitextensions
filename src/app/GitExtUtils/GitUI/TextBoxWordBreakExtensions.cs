@@ -102,7 +102,8 @@ public static class TextBoxWordBreakExtensions
 
     private static void HandleDisposed(object? sender, EventArgs e)
     {
-        Control control = (Control)sender!;
+        Control control = sender as Control ?? throw new InvalidOperationException($"{nameof(sender)} is not a Control");
+
         control.Disposed -= HandleDisposed;
         control.KeyDown -= HandleKeyDown;
         control.MouseDown -= HandleMouseDown;
@@ -134,7 +135,7 @@ public static class TextBoxWordBreakExtensions
     }
 
     private static void HandleComboBoxHandleCreated(object? sender, EventArgs e)
-        => AttachComboBoxEditWindow((ComboBox)sender!);
+        => AttachComboBoxEditWindow(sender as ComboBox ?? throw new InvalidOperationException($"{nameof(sender)} is not a ComboBox"));
 
     private static void AttachComboBoxEditWindow(ComboBox comboBox)
     {
@@ -346,7 +347,7 @@ public static class TextBoxWordBreakExtensions
 
     private static void HandleKeyDown(object? sender, KeyEventArgs e)
     {
-        Control control = (Control)sender!;
+        Control control = sender as Control ?? throw new InvalidOperationException($"{nameof(sender)} is not a Control");
         if (control is ComboBox { DropDownStyle: ComboBoxStyle.DropDownList })
         {
             return;
