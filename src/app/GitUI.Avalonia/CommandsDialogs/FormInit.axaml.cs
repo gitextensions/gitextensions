@@ -29,6 +29,9 @@ public sealed partial class FormInit : GitExtensionsDialog
     public FormInit()
     {
         InitializeComponent();
+        HelpButton = true;
+        ManualSectionAnchorName = "create-new-repository";
+        ManualSectionSubfolder = "getting_started";
         WireControls();
         InitializeComplete();
     }
@@ -46,6 +49,9 @@ public sealed partial class FormInit : GitExtensionsDialog
 
         _gitModuleChanged = gitModuleChanged;
         InitializeComponent();
+        HelpButton = true;
+        ManualSectionAnchorName = "create-new-repository";
+        ManualSectionSubfolder = "getting_started";
         WireControls();
         AcceptButton = Init;
 

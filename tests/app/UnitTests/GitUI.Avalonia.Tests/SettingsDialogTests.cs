@@ -15,6 +15,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI.Theming;
+using GitUI.Avatars;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -809,6 +810,8 @@ public sealed class SettingsDialogTests
         bool originalShowAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
         bool originalShowAvatarInCommitInfo = AppSettings.ShowAuthorAvatarInCommitInfo;
         int originalAvatarCacheDays = AppSettings.AvatarImageCacheDays;
+        IAvatarCacheCleaner cacheCleaner = Substitute.For<IAvatarCacheCleaner>();
+        cacheCleaner.ClearCacheAsync().Returns(Task.CompletedTask);
         try
         {
             AppSettings.RelativeDate = true;
@@ -821,8 +824,10 @@ public sealed class SettingsDialogTests
             AppSettings.ShowAuthorAvatarColumn = true;
             AppSettings.ShowAuthorAvatarInCommitInfo = false;
             AppSettings.AvatarImageCacheDays = 23;
+            AppSettings.AvatarProvider = AvatarProvider.Default;
+            AppSettings.AvatarFallbackType = AvatarFallbackType.AuthorInitials;
 
-            AppearanceSettingsPage page = new();
+            AppearanceSettingsPage page = new(cacheCleaner);
             page.LoadSettings();
             AppearanceSettingsPage.TestAccessor accessor = page.GetTestAccessor();
             accessor.ShowRelativeDate.IsChecked.Should().BeTrue();
@@ -862,10 +867,11 @@ public sealed class SettingsDialogTests
         {
             try
             {
-                // SaveSettings starts tracked cache work; finish it before the per-test dispatcher is reset.
+                // Keep the real save callback tracked while isolating its external cache side effects.
                 using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(15));
                 await GitUI.ThreadHelper.JoinPendingOperationsAsync(deadline.Token);
                 deadline.Token.ThrowIfCancellationRequested();
+                await cacheCleaner.Received(1).ClearCacheAsync();
             }
             finally
             {
@@ -882,6 +888,7 @@ public sealed class SettingsDialogTests
                 AppSettings.ShowAuthorAvatarColumn = originalShowAvatarColumn;
                 AppSettings.ShowAuthorAvatarInCommitInfo = originalShowAvatarInCommitInfo;
                 AppSettings.AvatarImageCacheDays = originalAvatarCacheDays;
+                AvatarService.UpdateAvatarProvider();
             }
         }
     }

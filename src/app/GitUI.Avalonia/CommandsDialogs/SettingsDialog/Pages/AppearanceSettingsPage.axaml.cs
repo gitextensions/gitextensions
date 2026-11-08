@@ -24,6 +24,9 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
     private readonly TranslationString _avatarProviderTooltip = new(
         "The avatar provider defines the source for user-defined avatar images.\r\nThe \"Default\" provider uses GitHub and Gravatar,\r\nthe \"Custom\" provider allows you to set custom provider URLs and\r\n\"None\" disables user-defined avatars.\r\n\r\nClick this info icon for more details.");
 
+    // parity-scaffolding: isolate external cache I/O without bypassing settings mapping.
+    private readonly IAvatarCacheCleaner? _cacheCleanerOverride;
+
     public AppearanceSettingsPage()
         : this(EmptyServiceProvider.Instance)
     {
@@ -40,6 +43,13 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         ConfigureToolTips();
         WireEvents();
         InitializeComplete();
+    }
+
+    // parity-scaffolding: tests supply only the external cache service.
+    internal AppearanceSettingsPage(IAvatarCacheCleaner cacheCleaner)
+        : this()
+    {
+        _cacheCleanerOverride = cacheCleaner;
     }
 
     private static void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : struct, Enum
@@ -118,7 +128,7 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         Dictionary.DropDownOpened += Dictionary_DropDown;
         helpTranslate.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser(_translationsWikiURL);
         downloadDictionary.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser(_spellingWikiURL);
-        ClearImageCache.Click += (_, _) => ThreadHelper.FileAndForget(AvatarService.CacheCleaner.ClearCacheAsync);
+        ClearImageCache.Click += (_, _) => ThreadHelper.FileAndForget((_cacheCleanerOverride ?? AvatarService.CacheCleaner).ClearCacheAsync);
         pictureAvatarHelp.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "author-images-avatar-fallback"));
         avatarProviderHelp.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "author-images-avatar-provider"));
         AvatarProvider.SelectionChanged += (_, _) => ManageAvatarOptionsDisplay();
@@ -205,7 +215,7 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
             // Clear the cache directly instead of through a throwaway control, which would never be
             // disposed and would keep listening to the cache
             AvatarService.UpdateAvatarProvider();
-            ThreadHelper.FileAndForget(AvatarService.CacheCleaner.ClearCacheAsync);
+            ThreadHelper.FileAndForget((_cacheCleanerOverride ?? AvatarService.CacheCleaner).ClearCacheAsync);
         }
 
         AppSettings.Translation = Language.SelectedItem as string ?? Language.Text ?? "English";

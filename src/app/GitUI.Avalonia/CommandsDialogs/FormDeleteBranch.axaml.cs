@@ -26,6 +26,9 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
     public FormDeleteBranch()
     {
         InitializeComponent();
+        HelpButton = true;
+        ManualSectionAnchorName = "delete-branch";
+        ManualSectionSubfolder = "branches";
         Delete.Click += Delete_Click;
         InitializeComplete();
     }
@@ -36,10 +39,11 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
         _defaultBranches = [.. defaultBranches];
 
         InitializeComponent();
-        Delete.Click += Delete_Click;
-        AcceptButton = Delete;
+        HelpButton = true;
         ManualSectionAnchorName = "delete-branch";
         ManualSectionSubfolder = "branches";
+        Delete.Click += Delete_Click;
+        AcceptButton = Delete;
         InitializeComplete();
     }
 
