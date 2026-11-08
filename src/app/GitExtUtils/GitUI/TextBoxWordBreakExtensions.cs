@@ -396,7 +396,7 @@ public static class TextBoxWordBreakExtensions
     {
         for (int i = Math.Min(position, text.Length) - 1; i > 0; i--)
         {
-            if (IsWordStart(text, i))
+            if (!IsInsideSurrogatePair(text, i) && IsWordStart(text, i))
             {
                 return i;
             }
@@ -410,7 +410,7 @@ public static class TextBoxWordBreakExtensions
     {
         for (int i = position + 1; i < text.Length; i++)
         {
-            if (IsWordStart(text, i))
+            if (!IsInsideSurrogatePair(text, i) && IsWordStart(text, i))
             {
                 return i;
             }
@@ -430,18 +430,29 @@ public static class TextBoxWordBreakExtensions
             return (index, index);
         }
 
-        char type = GetCharType(text[index]);
-
-        int start = index;
-        while (start > 0 && GetCharType(text[start - 1]) == type)
+        if (IsInsideSurrogatePair(text, index))
         {
-            start--;
+            index--;
         }
 
-        int end = index + 1;
-        while (end < text.Length && GetCharType(text[end]) == type)
+        int type = GetCharType(text, index);
+
+        int start = index;
+        while (start > 0)
         {
-            end++;
+            int previous = IsInsideSurrogatePair(text, start - 1) ? start - 2 : start - 1;
+            if (GetCharType(text, previous) != type)
+            {
+                break;
+            }
+
+            start = previous;
+        }
+
+        int end = index + CodePointLength(text, index);
+        while (end < text.Length && GetCharType(text, end) == type)
+        {
+            end += CodePointLength(text, end);
         }
 
         return (start, end);
@@ -455,25 +466,33 @@ public static class TextBoxWordBreakExtensions
     /// </summary>
     private static bool IsWordStart(string text, int index)
     {
-        char current = GetCharType(text[index]);
-        return current != ' ' && current != GetCharType(text[index - 1]);
+        int current = GetCharType(text, index);
+        int previousIndex = IsInsideSurrogatePair(text, index - 1) ? index - 2 : index - 1;
+        return current != ' ' && current != GetCharType(text, previousIndex);
     }
 
-    private static char GetCharType(char c)
+    /// <summary>Whether <paramref name="index"/> addresses the low surrogate of a valid surrogate pair.</summary>
+    private static bool IsInsideSurrogatePair(string text, int index)
+        => index > 0 && char.IsLowSurrogate(text[index]) && char.IsHighSurrogate(text[index - 1]);
+
+    private static int CodePointLength(string text, int index)
+        => char.IsHighSurrogate(text[index]) && index + 1 < text.Length && char.IsLowSurrogate(text[index + 1]) ? 2 : 1;
+
+    private static int GetCharType(string text, int index)
     {
-        if (char.IsLetterOrDigit(c) || c is '_' or '+' or '-')
+        if (char.IsLetterOrDigit(text, index) || text[index] is '_' or '+' or '-')
         {
             return 'w';
         }
 
-        if (char.IsWhiteSpace(c))
+        if (char.IsWhiteSpace(text, index))
         {
             return ' ';
         }
 
         // Each distinct punctuation character is its own class so Ctrl+Left/Right stops
-        // between e.g. ')' and ':' as well as at letters.
-        return c;
+        // between e.g. ')' and ':' as well as at letters. A surrogate pair is one code point.
+        return CodePointLength(text, index) == 2 ? char.ConvertToUtf32(text, index) : text[index];
     }
 
     /// <summary>
