@@ -11,12 +11,14 @@ if [[ -z "$publish_directory" || -z "$output_archive" || -z "$bundle_version" ||
     exit 2
 fi
 
-for tool in ditto mktemp plutil; do
+for tool in codesign ditto iconutil mktemp plutil; do
     if ! command -v "$tool" >/dev/null 2>&1; then
         echo "error: required command '$tool' is not installed" >&2
         exit 1
     fi
 done
+
+logo_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../setup/assets/Logo" && pwd)"
 
 if [[ ! -x "$publish_directory/GitExtensions.Avalonia" ]]; then
     echo "error: publish directory does not contain the GitExtensions.Avalonia executable" >&2
@@ -42,6 +44,15 @@ mkdir -p "$macos_directory" "$contents_directory/Resources"
 cp -a "$publish_directory/." "$macos_directory/"
 chmod +x "$macos_directory/GitExtensions.Avalonia"
 
+iconset_directory="$work_directory/GitExtensions.iconset"
+mkdir -p "$iconset_directory"
+for icon in "16 16x16" "32 16x16@2x" "32 32x32" "64 32x32@2x" "128 128x128" \
+            "256 128x128@2x" "256 256x256" "512 256x256@2x" "512 512x512"; do
+    read -r pixels name <<<"$icon"
+    cp "$logo_directory/git-extensions-logo-${pixels}px.png" "$iconset_directory/icon_${name}.png"
+done
+iconutil -c icns "$iconset_directory" -o "$contents_directory/Resources/GitExtensions.icns"
+
 cat > "$contents_directory/Info.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "https://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -51,6 +62,8 @@ cat > "$contents_directory/Info.plist" <<EOF
   <string>Git Extensions Avalonia</string>
   <key>CFBundleExecutable</key>
   <string>GitExtensions.Avalonia</string>
+  <key>CFBundleIconFile</key>
+  <string>GitExtensions.icns</string>
   <key>CFBundleIdentifier</key>
   <string>com.github.gitextensions.GitExtensions.Avalonia</string>
   <key>CFBundleInfoDictionaryVersion</key>
@@ -72,6 +85,12 @@ cat > "$contents_directory/Info.plist" <<EOF
 EOF
 
 plutil -lint "$contents_directory/Info.plist"
+
+# The publish step signs only the apphost, ad hoc, so its signature does not cover the bundle
+# assembled around it. Apple Silicon then refuses to launch the bundle from Finder or the Dock,
+# although starting the executable from a terminal still works. Sign the finished bundle.
+codesign --force --deep --sign - "$app_directory"
+codesign --verify --deep --strict "$app_directory"
 
 mkdir -p "$(dirname "$output_archive")"
 rm -f -- "$output_archive"
