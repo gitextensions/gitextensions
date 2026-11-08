@@ -1,4 +1,6 @@
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -51,6 +53,49 @@ internal static class RegistryTestIsolation
     }
 
     [SupportedOSPlatform("windows")]
+    internal static void RemoveStaleRoots()
+    {
+        using RegistryKey? root = Registry.CurrentUser.OpenSubKey(TestRoot, writable: true);
+        if (root is null)
+        {
+            return;
+        }
+
+        foreach (string name in root.GetSubKeyNames())
+        {
+            int separator = name.IndexOf('-');
+            if (separator < 1
+                || !int.TryParse(name.AsSpan(0, separator), NumberStyles.None, CultureInfo.InvariantCulture, out int processId)
+                || processId <= 0
+                || !Guid.TryParseExact(name.AsSpan(separator + 1), "N", out _))
+            {
+                continue;
+            }
+
+            bool exited;
+            try
+            {
+                using Process process = Process.GetProcessById(processId);
+                exited = process.HasExited;
+            }
+            catch (ArgumentException)
+            {
+                exited = true;
+            }
+            catch (Win32Exception)
+            {
+                // An inaccessible process may still be alive and owns its registry root.
+                continue;
+            }
+
+            if (exited)
+            {
+                root.DeleteSubKeyTree(name, throwOnMissingSubKey: false);
+            }
+        }
+    }
+
+    [SupportedOSPlatform("windows")]
     internal static IReadOnlyDictionary<string, string> Capture(RegistryKey? root)
     {
         Dictionary<string, string> snapshot = new(StringComparer.OrdinalIgnoreCase);
@@ -87,6 +132,7 @@ internal static class RegistryTestIsolation
             _ownerSnapshot = Capture(owner);
         }
 
+        RemoveStaleRoots();
         _path = $"{TestRoot}\\{Environment.ProcessId}-{Guid.NewGuid():N}";
         _testRoot = Registry.CurrentUser.CreateSubKey(_path, writable: true);
         // AppSettings migrates SSH settings in its static constructor, before a SetUpFixture
