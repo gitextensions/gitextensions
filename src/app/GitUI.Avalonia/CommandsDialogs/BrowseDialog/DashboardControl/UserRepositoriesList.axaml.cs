@@ -1,7 +1,9 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -10,6 +12,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
@@ -421,8 +424,21 @@ public partial class UserRepositoriesList : TranslatedControl
 
     protected virtual bool ProcessDialogKey(WinFormsShims.Keys keyData)
     {
-        return keyData == WinFormsShims.Keys.Enter
-            && TryOpenRepository(GetSelectedRepository());
+        if (keyData == WinFormsShims.Keys.Enter)
+        {
+            // .NET 5.0 introduced collapsible `ListViewGroup`s; the Avalonia repository groups expose their state directly.
+            // Whenever the list of repos is collapsed but we still have a repo selected (and hidden), if we hit enter, the selected repo will
+            // be opened. This should be a no-op instead, however, since we cannot visually tell what repo is selected. In Avalonia,
+            // we can check the repository group's expanded state to fix this issue.
+            if (listView1.SelectedItem is RepositoryListItem { Group.IsExpanded: false })
+            {
+                return true;
+            }
+
+            return TryOpenRepository(GetSelectedRepository());
+        }
+
+        return false;
     }
 
     private void BindRepositories(
@@ -454,7 +470,8 @@ public partial class UserRepositoriesList : TranslatedControl
                 branchName,
                 isFavourite,
                 isValidGitDir,
-                tileSize));
+                tileSize,
+                group));
         }
     }
 
@@ -513,6 +530,43 @@ public partial class UserRepositoriesList : TranslatedControl
             header.PointerExited += (_, _) => actions.IsVisible = false;
             Grid.SetColumn(actions, 2);
             header.Children.Add(actions);
+            PathIcon arrow = new()
+            {
+                Width = 6,
+                Height = 6,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Margin = new Thickness(2, 0, 0, 0),
+                Data = StreamGeometry.Parse(group.IsExpanded ? "M0,0 L6,0 L3,3 Z" : "M0,0 L3,3 L0,6 Z"),
+            };
+            arrow[!PathIcon.ForegroundProperty] = new DynamicResourceExtension("DashboardGroupHeadingBrush");
+            ToggleButton toggle = new()
+            {
+                Classes = { "dashboard-group-toggle" },
+                Theme = (ControlTheme)Resources["DashboardGroupActionTheme"]!,
+                Content = arrow,
+                Tag = group,
+                IsChecked = group.IsExpanded,
+                Height = 21,
+                MinHeight = 0,
+                MinWidth = 0,
+                Padding = default,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+            };
+            AutomationProperties.SetName(toggle, group.Name);
+            toggle.IsCheckedChanged += (_, _) =>
+            {
+                group.IsExpanded = toggle.IsChecked == true;
+                arrow.Data = StreamGeometry.Parse(group.IsExpanded ? "M0,0 L6,0 L3,3 Z" : "M0,0 L3,3 L0,6 Z");
+                foreach (ListBoxItem container in listView1.GetVisualDescendants().OfType<ListBoxItem>())
+                {
+                    if (container.Content is RepositoryListItem repository && ReferenceEquals(repository.Group, group))
+                    {
+                        container.IsVisible = group.IsExpanded;
+                    }
+                }
+            };
+            Grid.SetColumnSpan(toggle, 2);
+            header.Children.Add(toggle);
             return header;
         }
 
@@ -1133,6 +1187,7 @@ public partial class UserRepositoriesList : TranslatedControl
             && e.Index < listView1.ItemCount
             && listView1.Items[e.Index] is RepositoryGroupItem;
         e.Container.IsEnabled = true;
+        e.Container.IsVisible = listView1.Items[e.Index] is not RepositoryListItem { Group.IsExpanded: false };
         e.Container.Focusable = !isHeader;
         e.Container.Classes.Set("repository-group", isHeader);
         e.Container.Classes.Set("repository-tile", !isHeader);
@@ -1183,7 +1238,8 @@ public partial class UserRepositoriesList : TranslatedControl
         string BranchName,
         bool IsFavourite,
         bool IsValid,
-        Size TileSize);
+        Size TileSize,
+        RepositoryGroupItem Group);
 
     internal sealed class RepositoryGroupItem(string name, bool isRecentGroup, int repositoryCount)
     {
@@ -1192,5 +1248,7 @@ public partial class UserRepositoriesList : TranslatedControl
         public bool IsRecentGroup { get; } = isRecentGroup;
 
         public int RepositoryCount { get; set; } = repositoryCount;
+
+        public bool IsExpanded { get; set; } = true;
     }
 }
