@@ -1770,7 +1770,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         return null;
     }
 
-    private void UpdateColumnLayouts()
+    internal void UpdateColumnLayouts()
     {
         foreach (RevisionRowControl row in _gridView.GetVisualDescendants().OfType<RevisionRowControl>())
         {
