@@ -77,6 +77,36 @@ public sealed class TextBoxWordBreakExtensionsTests
     }
 
     [Test]
+    public void SelectAll_then_CtrlShiftLeft_shrinks_the_selection_in_TextBox()
+    {
+        using TextBox textBox = new() { Text = "foo/bar" };
+        _ = textBox.Handle;
+        textBox.EnableProperWordBoundaries();
+
+        textBox.SelectionStart = 7;
+        TextBoxWordBreakExtensions.TestAccessor.HandleKeyDown(textBox, new KeyEventArgs(Keys.Control | Keys.A));
+        textBox.SelectAll();
+        TextBoxWordBreakExtensions.TestAccessor.HandleKeyDown(textBox, new KeyEventArgs(Keys.Control | Keys.Shift | Keys.Left));
+
+        (textBox.SelectionStart, textBox.SelectionLength).Should().Be((0, 4));
+    }
+
+    [Test]
+    public void SelectAll_then_CtrlShiftLeft_shrinks_the_selection_in_ComboBox()
+    {
+        using ComboBox comboBox = new() { Text = "foo/bar" };
+        _ = comboBox.Handle;
+        comboBox.EnableProperWordBoundaries();
+
+        comboBox.SelectionStart = 7;
+        TextBoxWordBreakExtensions.TestAccessor.HandleKeyDown(comboBox, new KeyEventArgs(Keys.Control | Keys.A));
+        comboBox.SelectAll();
+        TextBoxWordBreakExtensions.TestAccessor.HandleKeyDown(comboBox, new KeyEventArgs(Keys.Control | Keys.Shift | Keys.Left));
+
+        (comboBox.SelectionStart, comboBox.SelectionLength).Should().Be((0, 4));
+    }
+
+    [Test]
     public void FindNextBoundary_clamps_position_past_end_of_text()
     {
         TextBoxWordBreakExtensions.TestAccessor.FindNextBoundary("abc", 999).Should().Be(3);

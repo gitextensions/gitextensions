@@ -379,8 +379,8 @@ public static class TextBoxWordBreakExtensions
 
         if (e.Control && !e.Shift && !e.Alt && e.KeyCode == Keys.A)
         {
-            // Select All is handled natively and leaves no meaningful fixed end.
-            SetAnchor(control, -1);
+            // Select All is handled natively: anchor at the start, active end (caret) at the end.
+            SetAnchor(control, 0);
             return;
         }
 
@@ -779,6 +779,9 @@ public static class TextBoxWordBreakExtensions
 
         public static (int Start, int End) GetWordAt(string text, int index) =>
             TextBoxWordBreakExtensions.GetWordAt(text, index);
+
+        public static void HandleKeyDown(Control control, KeyEventArgs e) =>
+            TextBoxWordBreakExtensions.HandleKeyDown(control, e);
     }
 #pragma warning restore S3218
 }
