@@ -53,8 +53,9 @@ flatpak info --user --show-permissions "$app_id" > "$permissions_log"
 grep -F 'sockets=wayland;ssh-auth;' "$permissions_log" >/dev/null
 grep -F 'filesystems=host;' "$permissions_log" >/dev/null
 
-desktop-file-validate "$repo_root/eng/avalonia/flatpak/com.github.gitextensions.GitExtensions.Avalonia.desktop"
-appstreamcli validate --no-net "$repo_root/eng/avalonia/flatpak/com.github.gitextensions.GitExtensions.Avalonia.metainfo.xml" \
+installed_root="$(flatpak info --user --show-location "$app_id")"
+desktop-file-validate "$installed_root/files/share/applications/$app_id.desktop"
+appstreamcli validate --no-net "$installed_root/files/share/metainfo/$app_id.metainfo.xml" \
     > "$evidence_dir/appstream-validation.txt"
 
 flatpak run --user --command=sh "$app_id" -c '
@@ -261,4 +262,4 @@ cat > "$manifest_output" <<EOF
 }
 EOF
 
-printf 'confined action sweep passed; portal=8 ssh=1 credential=1 mergetool=1 theme=2 cancellation=1\n'
+printf 'confined action sweep passed; portal=9 ssh=1 credential=1 mergetool=1 theme=2 cancellation=1\n'

@@ -318,3 +318,7 @@ engine projects.
 - Follow the repository coding guidelines (`.github/copilot-instructions.md`) and the
   Windows Forms control naming conventions (`.github/ui_design_guidelines.md`).
 - Keep this document up to date when build or runtime requirements change.
+
+Show in folder selects the requested file through Explorer on Windows, Finder on macOS,
+or the XDG desktop portal on Linux. A Linux desktop without FileManager1 support falls
+back to opening the containing folder, as specified by the portal standard.

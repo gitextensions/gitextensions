@@ -23,6 +23,7 @@ internal sealed class PortalConformanceProbe
     private string _stage = "starting";
     private bool? _fileChooserAvailable;
     private bool? _openUriAvailable;
+    private bool? _openAsAccepted;
     private bool? _openFileAccepted;
     private bool? _openDirectoryAccepted;
     private bool? _showInDirectoryAccepted;
@@ -81,6 +82,9 @@ internal sealed class PortalConformanceProbe
             }
 
             string directory = Path.GetDirectoryName(_fixturePath)!;
+            _stage = "openAsAction";
+            WriteReport();
+            _openAsAccepted = await _portal.TryLaunchAsync(_fixturePath, OsShellLaunchKind.OpenAs);
             _stage = "openFileAction";
             WriteReport();
             _openFileAccepted = await _portal.TryLaunchAsync(_fixturePath, OsShellLaunchKind.Open);
@@ -166,6 +170,7 @@ internal sealed class PortalConformanceProbe
             },
             shellActions = new
             {
+                openAsAccepted = _openAsAccepted,
                 openFileAccepted = _openFileAccepted,
                 openDirectoryAccepted = _openDirectoryAccepted,
                 showInDirectoryAccepted = _showInDirectoryAccepted,
