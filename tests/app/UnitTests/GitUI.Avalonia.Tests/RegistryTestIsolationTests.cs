@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using GitCommands;
 using Microsoft.Win32;
@@ -91,6 +92,71 @@ public sealed class RegistryTestIsolationTests
         finally
         {
             Registry.CurrentUser.DeleteSubKeyTree(path, throwOnMissingSubKey: false);
+        }
+    }
+
+    [Test]
+    public void RemoveStaleRoots_should_remove_an_exited_process_root_and_preserve_the_live_host_and_unknown_keys()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            RegistryTestIsolation.SettingsKeyName.Should().BeNull();
+            return;
+        }
+
+        ProcessStartInfo start = new(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "cmd.exe"), "/d /c exit 0")
+        {
+            UseShellExecute = false,
+            CreateNoWindow = true,
+        };
+        using Process exited = Process.Start(start) ?? throw new InvalidOperationException("Cannot start the owned cleanup fixture process.");
+        bool finished = exited.WaitForExit(10000);
+        if (!finished)
+        {
+            exited.Kill(entireProcessTree: true);
+            exited.WaitForExit();
+        }
+
+        finished.Should().BeTrue();
+        exited.ExitCode.Should().Be(0);
+        string stalePath = $"{RegistryTestIsolation.TestRoot}\\{exited.Id}-{Guid.NewGuid():N}";
+        string unknownPath = $"{RegistryTestIsolation.TestRoot}\\{exited.Id}-guard-{Guid.NewGuid():N}";
+        string settingsName = RegistryTestIsolation.SettingsKeyName ?? throw new InvalidOperationException("The test host must provide its isolated settings key.");
+        string liveSettingsPath = settingsName[(Registry.CurrentUser.Name.Length + 1)..];
+        IReadOnlyDictionary<string, string> liveBefore;
+        using (RegistryKey? live = Registry.CurrentUser.OpenSubKey(liveSettingsPath, writable: false))
+        {
+            live.Should().NotBeNull();
+            liveBefore = RegistryTestIsolation.Capture(live);
+        }
+
+        try
+        {
+            using (RegistryKey stale = Registry.CurrentUser.CreateSubKey(stalePath, writable: true))
+            {
+                stale.SetValue("fixture", "exited process");
+            }
+
+            using (RegistryKey unknown = Registry.CurrentUser.CreateSubKey(unknownPath, writable: true))
+            {
+                unknown.SetValue("fixture", "unrecognized name");
+            }
+
+            RegistryTestIsolation.RemoveStaleRoots();
+
+            using RegistryKey? removed = Registry.CurrentUser.OpenSubKey(stalePath, writable: false);
+            removed.Should().BeNull("the owning process was started and observed exiting by this test");
+            using RegistryKey? liveAfter = Registry.CurrentUser.OpenSubKey(liveSettingsPath, writable: false);
+            liveAfter.Should().NotBeNull("a running test host owns this production-created settings store");
+            RegistryTestIsolation.Capture(liveAfter).Should().BeEquivalentTo(liveBefore);
+            using RegistryKey? unknownAfter = Registry.CurrentUser.OpenSubKey(unknownPath, writable: false);
+            unknownAfter.Should().NotBeNull();
+            unknownAfter!.GetValue("fixture").Should().Be("unrecognized name");
+        }
+        finally
+        {
+            Registry.CurrentUser.DeleteSubKeyTree(stalePath, throwOnMissingSubKey: false);
+            Registry.CurrentUser.DeleteSubKeyTree(unknownPath, throwOnMissingSubKey: false);
         }
     }
 
