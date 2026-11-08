@@ -48,7 +48,7 @@ public static class TextBoxWordBreakExtensions
         // triple-click, so it needs none of this and that behavior must not be overridden.
         // DropDownList combo boxes have no editable text, so they are excluded as well.
         foreach (Control textInput in control.FindDescendants()
-            .Where(c => c is ComboBox { DropDownStyle: not ComboBoxStyle.DropDownList } || c is TextBoxBase and not RichTextBox))
+            .Where(c => (c is ComboBox { DropDownStyle: not ComboBoxStyle.DropDownList } || c is TextBoxBase and not RichTextBox) && !IsMasked(c)))
         {
             // Detach first so it is safe to call this for both a form and a control it hosts
             // without handling the keystroke twice.
@@ -175,12 +175,12 @@ public static class TextBoxWordBreakExtensions
         // TextBoxBase suppresses the MouseDoubleClick event (StandardDoubleClick style is off),
         // but MouseDown still fires with Clicks == 2 for the second click. ComboBox is handled
         // separately via its child edit control (see ComboBoxEditWindow).
-        if (sender is not TextBoxBase textBox)
+        if (sender is not TextBoxBase textBox || IsMasked(textBox))
         {
             return;
         }
 
-        // Only the left button drives caret/selection gestures. Right- and middle-clicks must not
+        // Only the left button
         // queue a pending selection, or mouse-up would collapse an existing selection (e.g. the one
         // the context menu is about to act on).
         if (e.Button != MouseButtons.Left)
@@ -212,9 +212,34 @@ public static class TextBoxWordBreakExtensions
         }
         else if (e.Clicks == 1)
         {
-            // Shift+click extends natively from an end the cached anchor knows nothing about.
-            SetAnchor(textBox, -1);
+            // Shift+click extends natively and keeps the fixed end of the previous selection.
+            SetAnchor(textBox, ResolveAnchorAfterShiftClick(textBox, textBox.GetCharIndexFromPosition(e.Location)));
         }
+    }
+
+    /// <summary>
+    ///  Whether the input hides its text. Word-wise caret stops and selections would otherwise reveal
+    ///  word and punctuation boundaries of the real text.
+    /// </summary>
+    private static bool IsMasked(Control control)
+        => control is TextBox { UseSystemPasswordChar: true } or TextBox { PasswordChar: not '\0' };
+
+    /// <summary>
+    ///  By the time the managed event runs, the native control has extended the selection to the click.
+    ///  The fixed end is the endpoint that is not the click position: the cached anchor when it is
+    ///  still an endpoint, otherwise the endpoint farther from the hit-test index.
+    /// </summary>
+    private static int ResolveAnchorAfterShiftClick(Control control, int hitTestIndex)
+    {
+        int start = GetSelectionStart(control);
+        int end = start + GetSelectionLength(control);
+        int stored = GetAnchor(control);
+        if (stored == start || stored == end)
+        {
+            return stored;
+        }
+
+        return Math.Abs(hitTestIndex - start) <= Math.Abs(hitTestIndex - end) ? end : start;
     }
 
     /// <summary>
@@ -247,12 +272,12 @@ public static class TextBoxWordBreakExtensions
     {
         // ComboBox mouse handling lives in ComboBoxEditWindow (its edit area raises no usable
         // mouse events); only plain TextBoxBase controls are handled here.
-        if (sender is not TextBoxBase textBox)
+        if (sender is not TextBoxBase textBox || IsMasked(textBox))
         {
             return;
         }
 
-        // While the button is held, the native edit control drag-extends the selection from its
+        // While the button
         // anchor on any WM_MOUSEMOVE: after a double-click that grows it back to the whole
         // whitespace-delimited run, and after a Select All (anchor left at 0) it grows it to
         // [0, cursor]. Reasserting the gesture's intended selection here, on its final event,
@@ -339,7 +364,7 @@ public static class TextBoxWordBreakExtensions
     private static void HandleKeyDown(object? sender, KeyEventArgs e)
     {
         Control control = sender as Control ?? throw new InvalidOperationException($"{nameof(sender)} is not a Control");
-        if (control is ComboBox { DropDownStyle: ComboBoxStyle.DropDownList })
+        if (control is ComboBox { DropDownStyle: ComboBoxStyle.DropDownList } || IsMasked(control))
         {
             return;
         }
@@ -720,8 +745,8 @@ public static class TextBoxWordBreakExtensions
 
                 case NativeMethods.WM_LBUTTONDOWN:
                 {
-                    // Shift+click extends natively from an end the cached anchor knows nothing about.
-                    SetAnchor(_comboBox, -1);
+                    // Shift+click extends natively and keeps the fixed end of the previous selection.
+                    SetAnchor(_comboBox, ResolveAnchorAfterShiftClick(_comboBox, CharIndexFromPosition(m.LParam)));
                     break;
                 }
             }
