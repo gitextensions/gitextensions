@@ -18,7 +18,7 @@ public static class OsShellUtil
         => Launch(filePath, OsShellLaunchKind.Open);
 
     /// <summary>
-    ///  Let the user chose an application to open a file on Linux; use the associated application elsewhere.
+    ///  Let the user chose an application to open a file.
     /// </summary>
     /// <param name="filePath">Pathname of the file to open.</param>
     public static void OpenAs(string filePath)

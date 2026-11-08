@@ -42,6 +42,10 @@ HOME repair searches the original candidate locations for readable `.gitconfig` 
 XDG configuration. If HOME already names an existing directory, repair is offered only when
 there is a better candidate. The dialog suggests the first match while preserving the original
 default, user-profile and custom choices.
+Open with requests the Windows system application chooser, the Linux XDG portal chooser,
+or a macOS application-bundle picker. Choosing an application opens the selected file with
+it; cancelling leaves the file alone. The macOS picker uses AppKit directly because the
+current Avalonia storage provider filters application bundles out of file-picker results.
 On Windows, selecting Plink enables the original PuTTY recovery dialogs: load a private key
 through Pageant, confirm an unknown host key, and retry the remote command. Linux and macOS
 use OpenSSH and the process dialog's existing input instead.

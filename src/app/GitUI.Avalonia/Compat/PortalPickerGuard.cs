@@ -10,6 +10,10 @@ public static class PortalPickerGuard
 {
     private const string ErrorCaption = "Git Extensions";
 
+    // Framework constraint: the native provider discards .app bundles when filtering IStorageFile results.
+    internal static Task<string?> OpenApplicationPickerAsync(Avalonia.Controls.TopLevel owner)
+        => Task.FromResult(MacApplicationPicker.Pick(owner));
+
     public static bool IsAvailable()
         => DispatcherPump.Wait(IsAvailableAsync);
 

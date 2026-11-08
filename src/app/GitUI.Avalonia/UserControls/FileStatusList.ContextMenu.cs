@@ -814,7 +814,9 @@ partial class FileStatusList
     {
         if (GetSelectedAbsolutePath() is string path && File.Exists(path))
         {
-            OsShellUtil.OpenAs(path);
+            // Framework constraint: finish closing the popup before opening the modal application chooser.
+            ItemContextMenu.Close();
+            Dispatcher.Post(() => OsShellUtil.OpenAs(path));
         }
     }
 
