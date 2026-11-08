@@ -6,6 +6,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using EnvDTE;
 using GitCommands;
 using GitExtensions.Extensibility;
+using GitUI.Compat;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI;
@@ -20,16 +21,21 @@ internal static class VisualStudioIntegration
     {
         ThreadHelper.FileAndForget(async () =>
         {
-            string vswhere = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}\Microsoft Visual Studio\Installer\vswhere.exe";
+            string vswhere = VisualStudioDiscovery.VsWherePath();
             if (!File.Exists(vswhere))
             {
                 return;
             }
 
-            Executable executable = new(vswhere);
+            IExecutable executable = VisualStudioDiscovery.CreateExecutable(vswhere);
             ArgumentBuilder arguments =
             [
+                "-prerelease", // Include prerelease versions of Visual Studio in the search.
                 "-latest",
+                "-requires Microsoft.VisualStudio.Product.Enterprise",
+                "-requires Microsoft.VisualStudio.Product.Professional",
+                "-requires Microsoft.VisualStudio.Product.Community",
+                "-requiresAny",
                 "-property productPath"
             ];
             _devEnvPath = await executable.GetOutputAsync(arguments);

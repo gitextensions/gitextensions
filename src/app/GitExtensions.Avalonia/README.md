@@ -44,6 +44,8 @@ HOME repair searches the original candidate locations for readable `.gitconfig` 
 XDG configuration. If HOME already names an existing directory, repair is offered only when
 there is a better candidate. The dialog suggests the first match while preserving the original
 default, user-profile and custom choices.
+On Windows, Open in Visual Studio searches the latest supported Enterprise, Professional
+or Community installation, including previews, using the installer's `vswhere` utility.
 Open with requests the Windows system application chooser, the Linux XDG portal chooser,
 or a macOS application-bundle picker. Choosing an application opens the selected file with
 it; cancelling leaves the file alone. The macOS picker uses AppKit directly because the
