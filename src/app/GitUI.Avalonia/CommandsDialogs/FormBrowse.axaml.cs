@@ -337,6 +337,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         fileTree.Bind(RevisionGrid, RevisionGrid, revisionFileTree: null, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor, requestBlame: _isFileHistoryMode);
         _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse.Avalonia"));
         InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileHistoryMode);
+
+        // Framework constraint: streamed rows must recheck the dropdown after initialization returns.
+        RevisionGrid.CanFocusRevisionGridWhenShown = () => _NO_TRANSLATE_WorkingDir.Flyout?.IsOpen != true;
         InitCommitDetails();
         RevisionInfo.CommandClicked += RevisionInfo_CommandClicked;
         CommitInfoTabControl.SelectionChanged += CommitInfoTabControl_SelectedIndexChanged;
@@ -1185,6 +1188,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             RevisionGrid.ReloadRevisions(module, selectedObjectId: RevisionGrid.SelectedId);
             UpdateSubmodulesStructure();
             RefreshPushButton(module, branchName);
+
+            // Do not steal focus from an open dropdown menu.
+            if (_NO_TRANSLATE_WorkingDir.Flyout?.IsOpen != true)
+            {
+                RevisionGrid.FocusRevisionGrid();
+            }
         }
         else
         {

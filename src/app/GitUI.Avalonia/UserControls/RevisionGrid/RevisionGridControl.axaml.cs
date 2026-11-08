@@ -619,6 +619,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal bool HasRevisionSource => _lastModule is not null;
 
+    // Framework constraint: streamed rows may restore focus after their owner has opened a popup.
+    internal Func<bool>? CanFocusRevisionGridWhenShown { get; set; }
+
     internal void FocusRevisionGrid()
     {
         // Avalonia's UserControl does not delegate focus to its inner list like the WinForms control.
@@ -3860,7 +3863,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void FocusRevisionGridWhenShown()
     {
-        if (_focusGridWhenShown)
+        if (_focusGridWhenShown && CanFocusRevisionGridWhenShown?.Invoke() != false)
         {
             FocusRevisionGrid();
         }
