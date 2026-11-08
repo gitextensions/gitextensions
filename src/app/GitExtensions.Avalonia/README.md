@@ -38,6 +38,10 @@ Splitter settings retain the container size, logical DPI, font size and collapse
 well as the distance. Restoring a layout follows its ratio or fixed pane; distances rejected
 during opening are retried after layout. Earlier native handle-sized records are converted
 without treating the handle as the full container.
+HOME repair searches the original candidate locations for readable `.gitconfig` or compatible
+XDG configuration. If HOME already names an existing directory, repair is offered only when
+there is a better candidate. The dialog suggests the first match while preserving the original
+default, user-profile and custom choices.
 On Windows, selecting Plink enables the original PuTTY recovery dialogs: load a private key
 through Pageant, confirm an unknown host key, and retry the remote command. Linux and macOS
 use OpenSSH and the process dialog's existing input instead.
