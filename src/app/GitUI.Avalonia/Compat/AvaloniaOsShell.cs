@@ -40,6 +40,11 @@ public sealed class AvaloniaOsShell : IOsShell
             return await _portal.TryLaunchAsync(target, kind);
         }
 
+        if (kind == OsShellLaunchKind.ShowInDirectory)
+        {
+            return await NativeFileReveal.RevealAsync(target);
+        }
+
         TopLevel? topLevel = _desktop.MainWindow;
         if (topLevel is null)
         {
@@ -51,9 +56,6 @@ public sealed class AvaloniaOsShell : IOsShell
             OsShellLaunchKind.OpenUri => Uri.TryCreate(target, UriKind.Absolute, out Uri? uri)
                 && await topLevel.Launcher.LaunchUriAsync(uri),
             OsShellLaunchKind.OpenAs => await NativeApplicationChooser.OpenAsync(topLevel, target),
-            OsShellLaunchKind.ShowInDirectory => await LaunchPathAsync(
-                topLevel,
-                Path.GetDirectoryName(Path.GetFullPath(target))),
             _ => await LaunchPathAsync(topLevel, target),
         };
     }

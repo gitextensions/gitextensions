@@ -1369,7 +1369,9 @@ public partial class FormResolveConflicts : GitModuleForm
                 MessageBoxes.Show(this, _failureWhileOpenFile.Text, TranslatedStrings.Error, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
             }
 
-            OpenAs(fileName);
+            // Framework constraint: finish closing the popup before opening the modal application chooser.
+            ConflictedFilesContextMenu.Close();
+            Dispatcher.Post(() => OsShellUtil.OpenAs(fileName));
         }
     }
 
@@ -1535,21 +1537,9 @@ public partial class FormResolveConflicts : GitModuleForm
         string? filePath = _fullPathResolver.Resolve(fileName);
         if (filePath is not null)
         {
-            OpenAs(filePath);
-        }
-    }
-
-    private static void OpenAs(string filePath)
-    {
-        if (OperatingSystem.IsWindows())
-        {
-            OsShellUtil.OpenAs(filePath);
-        }
-        else
-        {
-            // There is no generic "open with" chooser outside Windows;
-            // open with the default application instead.
-            OsShellUtil.Open(filePath);
+            // Framework constraint: finish closing the popup before opening the modal application chooser.
+            ConflictedFilesContextMenu.Close();
+            Dispatcher.Post(() => OsShellUtil.OpenAs(filePath));
         }
     }
 
@@ -1559,15 +1549,7 @@ public partial class FormResolveConflicts : GitModuleForm
         string? filePath = _fullPathResolver.Resolve(fileName);
         if (filePath is not null)
         {
-            if (OperatingSystem.IsWindows())
-            {
-                OsShellUtil.SelectPathInFileExplorer(filePath.ToNativePath());
-            }
-            else if (Path.GetDirectoryName(filePath) is { } directory)
-            {
-                // Selecting a file needs Windows File Explorer; open the folder instead.
-                OsShellUtil.Open(directory);
-            }
+            OsShellUtil.SelectPathInFileExplorer(filePath.ToNativePath());
         }
     }
 

@@ -8,6 +8,7 @@ evidence_dir=
 flatpak_app_id=${GITEXTENSIONS_PORTAL_CONFORMANCE_FLATPAK_APP_ID:-}
 flatpak_host_home=$HOME
 flatpak_host_data_home=${XDG_DATA_HOME:-$HOME/.local/share}
+export FLATPAK_USER_DIR="${FLATPAK_USER_DIR:-$flatpak_host_data_home/flatpak}"
 if [[ "${1:-}" == "--mode" ]]; then
     mode=${2:-}
     evidence_dir=${3:-}
@@ -47,7 +48,7 @@ manifest = {
     "backendPresent": "passed",
     "pickerTransport": "org.freedesktop.portal.FileChooser",
     "shellTransport": "org.freedesktop.portal.OpenURI",
-    "defaultHandlerLaunchesObserved": 3,
+    "defaultHandlerLaunchesObserved": 4,
     "openFileApplicationChooserAccepted": True,
     "pickerCancellationCompleted": True,
     "backend": "wayland",
@@ -59,7 +60,7 @@ with open(manifest_path, "w", encoding="utf-8", newline="\n") as output:
     json.dump(manifest, output, indent=2)
     output.write("\n")
 PY
-        printf 'confined XDG portal conformance passed; backend=present pickers=3 cancellation=1 shellActions=4\n'
+        printf 'confined XDG portal conformance passed; backend=present pickers=3 cancellation=1 shellActions=5\n'
         exit 0
     fi
 
@@ -86,7 +87,7 @@ manifest = {
     "backendAbsent": "passed",
     "pickerTransport": "org.freedesktop.portal.FileChooser",
     "shellTransport": "org.freedesktop.portal.OpenURI",
-    "defaultHandlerLaunchesObserved": 3,
+    "defaultHandlerLaunchesObserved": 4,
     "openFileApplicationChooserAccepted": True,
     "backend": "x11",
     "settingsIsolation": "temporaryXdgHome",
@@ -97,7 +98,7 @@ with open(manifest_path, "w", encoding="utf-8", newline="\n") as output:
     json.dump(manifest, output, indent=2)
     output.write("\n")
 PY
-    printf 'XDG portal conformance passed; backend=present+absent pickers=3 shellActions=4\n'
+    printf 'XDG portal conformance passed; backend=present+absent pickers=3 shellActions=5\n'
     exit 0
 fi
 
@@ -120,6 +121,7 @@ else
     probe_root="$(mktemp -d "${TMPDIR:-/tmp}/gitextensions-p82-portal.XXXXXX")"
 fi
 settings_root="$probe_root/settings"
+system_data_root="$probe_root/system-data"
 fixture_repo="$probe_root/repository"
 fixture_file="$fixture_repo/portal.txt"
 mkdir -p "$settings_root/config/GitExtensions/GitExtensions" "$settings_root/data/applications" \
@@ -129,13 +131,14 @@ app_pid=
 portal_pid=
 backend_pid=
 monitor_pid=
+file_manager_pid=
 cleanup()
 {
     if [[ -n "$flatpak_app_id" ]]; then
         env HOME="$flatpak_host_home" XDG_DATA_HOME="$flatpak_host_data_home" \
             flatpak kill "$flatpak_app_id" 2>/dev/null || true
     fi
-    for pid_name in app_pid monitor_pid portal_pid backend_pid; do
+    for pid_name in app_pid monitor_pid portal_pid backend_pid file_manager_pid; do
         pid=${!pid_name:-}
         if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
             kill -TERM "$pid" 2>/dev/null || true
@@ -176,12 +179,23 @@ portal_log="$evidence_dir/portal.log"
 backend_log="$evidence_dir/backend.log"
 dbus_log="$evidence_dir/dbus-monitor.log"
 launch_log="$evidence_dir/launches.log"
-rm -f -- "$report" "$stdout_log" "$stderr_log" "$portal_log" "$backend_log" "$dbus_log" "$launch_log"
+file_manager_log="$evidence_dir/file-manager.jsonl"
+file_manager_ready="$probe_root/file-manager.ready"
+rm -f -- "$report" "$stdout_log" "$stderr_log" "$portal_log" "$backend_log" "$dbus_log" "$launch_log" "$file_manager_log"
 
 export HOME="$settings_root/home"
 export XDG_CONFIG_HOME="$settings_root/config"
 export XDG_DATA_HOME="$settings_root/data"
 export XDG_CACHE_HOME="$settings_root/cache"
+# Keep installed desktop applications outside this private chooser fixture.
+mkdir -p "$system_data_root" "$settings_root/data/flatpak/db"
+for data_entry in /usr/local/share/* /usr/share/*; do
+    [[ -e "$data_entry" ]] || continue
+    data_name=${data_entry##*/}
+    [[ "$data_name" == applications || -e "$system_data_root/$data_name" ]] && continue
+    ln -s "$data_entry" "$system_data_root/$data_name"
+done
+export XDG_DATA_DIRS="$system_data_root"
 export GIT_CONFIG_GLOBAL=/dev/null
 export GITEXTENSIONS_DEBUG_FAIL_FAST=1
 export GITEXTENSIONS_PORTAL_CONFORMANCE_REPORT="$report"
@@ -197,7 +211,7 @@ if [[ "$mode" == "present" ]]; then
     [[ -n "${DISPLAY:-}" ]] || { echo "error: DISPLAY is required for the isolated GTK portal backend" >&2; exit 2; }
     host_display=$DISPLAY
     export GDK_BACKEND=x11
-    dbus-update-activation-environment HOME XDG_CONFIG_HOME XDG_DATA_HOME XDG_CACHE_HOME DISPLAY GDK_BACKEND
+    dbus-update-activation-environment HOME XDG_CONFIG_HOME XDG_DATA_HOME XDG_DATA_DIRS XDG_CACHE_HOME FLATPAK_USER_DIR DISPLAY GDK_BACKEND
 
     recorder="$probe_root/portal-recorder.sh"
     cat > "$recorder" <<EOF
@@ -229,6 +243,17 @@ EOF
         gio mime x-scheme-handler/https
     } > "$evidence_dir/mime-associations.txt"
 
+    python3 -c 'from gi.repository import Gio, GLib'
+    python3 "$repo_root/eng/avalonia/file-manager-probe.py" "$file_manager_log" "$file_manager_ready" \
+        >"$evidence_dir/file-manager.log" 2>&1 &
+    file_manager_pid=$!
+    for _ in {1..80}; do
+        [[ -s "$file_manager_ready" ]] && break
+        kill -0 "$file_manager_pid"
+        sleep 0.1
+    done
+    [[ -s "$file_manager_ready" ]]
+
     env DISPLAY="$host_display" /usr/libexec/xdg-desktop-portal-gtk >"$backend_log" 2>&1 &
     backend_pid=$!
     /usr/libexec/xdg-desktop-portal >"$portal_log" 2>&1 &
@@ -244,7 +269,7 @@ EOF
         --object-path /org/freedesktop/portal/desktop > "$evidence_dir/introspection.txt"
     grep -F 'org.freedesktop.portal.FileChooser' "$evidence_dir/introspection.txt" >/dev/null
     grep -F 'org.freedesktop.portal.OpenURI' "$evidence_dir/introspection.txt" >/dev/null
-    dbus-monitor --session "destination='org.freedesktop.portal.Desktop'" >"$dbus_log" 2>&1 &
+    dbus-monitor --session "destination='org.freedesktop.portal.Desktop'" "interface='org.freedesktop.portal.Request'" "type='error'" >"$dbus_log" 2>&1 &
     monitor_pid=$!
 else
     export DBUS_SESSION_BUS_ADDRESS="unix:path=$probe_root/missing-session-bus"
@@ -379,7 +404,7 @@ PY
 
 complete_app_chooser()
 {
-    wait_for_stage openFileAction
+    wait_for_stage openAsAction
     local window=
     for _ in {1..80}; do
         window=$(DISPLAY="$host_display" xdotool search --name 'Open With' 2>/dev/null | tail -n 1 || true)
@@ -399,7 +424,7 @@ try:
     report = json.load(open(sys.argv[1], encoding="utf-8"))
 except (FileNotFoundError, json.JSONDecodeError):
     raise SystemExit(0)
-raise SystemExit(0 if report["stage"] == "openFileAction" else 1)
+raise SystemExit(0 if report["stage"] == "openAsAction" else 1)
 PY
         then
             return 0
@@ -430,11 +455,30 @@ if grep -Eiq 'Unhandled exception|fatal error|JIT debugger' "$stdout_log" "$stde
 fi
 
 if [[ "$mode" == "present" ]]; then
+    python3 - "$file_manager_log" "$fixture_file" <<'PYPROOF'
+import json
+from pathlib import Path
+import sys
+
+records = [json.loads(line) for line in Path(sys.argv[1]).read_text(encoding="utf-8").splitlines()]
+selections = [record["uris"] for record in records if record["method"] == "ShowItems"]
+assert selections == [[Path(sys.argv[2]).as_uri()]], ("portal must select the file, not its parent", records)
+PYPROOF
     for _ in {1..40}; do
-        [[ -s "$launch_log" ]] && [[ $(wc -l < "$launch_log") -ge 3 ]] && break
+        [[ -s "$launch_log" ]] && [[ $(wc -l < "$launch_log") -ge 4 ]] && break
         sleep 0.25
     done
-    [[ -s "$launch_log" ]] && [[ $(wc -l < "$launch_log") -ge 3 ]]
+    [[ -s "$launch_log" ]] && [[ $(wc -l < "$launch_log") -ge 4 ]]
+    python3 - "$launch_log" "$fixture_file" "$fixture_repo" <<'PYLAUNCH'
+from collections import Counter
+from pathlib import Path
+import sys
+
+lines = Path(sys.argv[1]).read_text(encoding="utf-8").splitlines()
+expected = Counter({str(Path(sys.argv[2])): 2, str(Path(sys.argv[3])): 1,
+                    "https://portal-p82.example.invalid/": 1})
+assert Counter(lines) == expected, ("file, chooser, directory and URI must reach the recorder", lines)
+PYLAUNCH
     grep -E 'OpenFile|SaveFile|OpenURI|OpenDirectory' "$dbus_log" > "$evidence_dir/portal-methods.txt"
     for member in OpenFile SaveFile OpenURI OpenDirectory; do
         grep -F "member=$member" "$evidence_dir/portal-methods.txt" >/dev/null

@@ -117,11 +117,11 @@ public sealed class XdgDesktopPortal : IXdgDesktopPortal
                 OsShellLaunchKind.OpenUri => await OpenUriAsync(connection, target),
                 OsShellLaunchKind.ShowInDirectory => await OpenDirectoryAsync(
                     connection,
-                    Path.GetDirectoryName(Path.GetFullPath(target))),
-                OsShellLaunchKind.OpenDirectory => await OpenDirectoryAsync(connection, target),
+                    target),
+                OsShellLaunchKind.OpenDirectory => await OpenHandleAsync(connection, target, "OpenFile", directory: true, ask: false),
                 OsShellLaunchKind.OpenAs => await OpenFileAsync(connection, target, ask: true),
                 _ => Directory.Exists(target)
-                    ? await OpenDirectoryAsync(connection, target)
+                    ? await OpenHandleAsync(connection, target, "OpenFile", directory: true, ask: false)
                     : await OpenFileAsync(connection, target, ask: false),
             };
         }
@@ -172,7 +172,7 @@ public sealed class XdgDesktopPortal : IXdgDesktopPortal
     private static Task<bool> OpenDirectoryAsync(DBusConnection connection, string? target)
         => string.IsNullOrWhiteSpace(target)
             ? Task.FromResult(false)
-            : OpenHandleAsync(connection, target, "OpenDirectory", directory: true, ask: false);
+            : OpenHandleAsync(connection, target, "OpenDirectory", directory: Directory.Exists(target), ask: false);
 
     private static async Task<bool> OpenHandleAsync(
         DBusConnection connection,
@@ -187,6 +187,7 @@ public sealed class XdgDesktopPortal : IXdgDesktopPortal
             return false;
         }
 
+        // The portal reveals the supplied descriptor's item; ordinary folder opens use OpenFile.
         using SafeFileHandle handle = directory
             ? OpenDirectoryHandle(fullPath)
             : File.OpenHandle(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
