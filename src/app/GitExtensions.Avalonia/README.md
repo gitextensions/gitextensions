@@ -69,9 +69,12 @@ configured default terminal, followed by `x-terminal-emulator`, GNOME Terminal, 
 xterm; Windows prefers Windows Terminal and falls back to Command Prompt; macOS opens
 Terminal.app. Linux launch removes inherited Snap-specific GTK/GIO overrides so a system
 terminal can start correctly when Git Extensions was launched from a Snap-hosted IDE.
-In Flatpak, external terminals and host Gource executables are reported as unavailable:
-`--filesystem=host` exposes their files but does not make arbitrary host programs executable
-inside the sandbox. Git and OpenSSH are bundled for repository and SSH operations.
+In Flatpak, external terminals run on the host through `flatpak-spawn --host`, using the
+host's PATH and desktop default terminal. This requires the manifest's
+`--talk-name=org.freedesktop.Flatpak` permission and a running Flatpak host-command service.
+If that permission is revoked or the service is unavailable, the terminal action reports
+that host tools are not available in this Flatpak installation. Host Gource launch is still
+unavailable. Git and OpenSSH are bundled for repository and SSH operations.
 The manifest forwards the host SSH agent. HTTPS authentication uses Git's configured
 credential-helper protocol, but a host helper executable is not assumed to be runnable inside
 the sandbox; Secret Service/keyring integration requires a compatible bundled helper and

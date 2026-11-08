@@ -95,11 +95,6 @@ internal sealed class TerminalLauncher : ITerminalLauncher
                 break;
 
             default:
-                if (_isFlatpak())
-                {
-                    throw new PlatformNotSupportedException("External terminals are not available in this Flatpak installation.");
-                }
-
                 string? configuredTerminal = _getEnvironmentVariable("TERMINAL");
                 if (!string.IsNullOrWhiteSpace(configuredTerminal))
                 {
@@ -116,6 +111,11 @@ internal sealed class TerminalLauncher : ITerminalLauncher
                 }
 
                 SanitizeLinuxEnvironment(startInfo.Environment);
+                if (_isFlatpak())
+                {
+                    FlatpakHost.ForwardToHost(startInfo);
+                }
+
                 break;
         }
 
@@ -178,6 +178,11 @@ internal sealed class TerminalLauncher : ITerminalLauncher
 
     private static string? ResolveExecutable(string executable)
     {
+        if (FlatpakEnvironment.IsFlatpak())
+        {
+            return FlatpakHost.Default.ResolveExecutable(executable);
+        }
+
         if (Path.IsPathRooted(executable) || executable.Contains(Path.DirectorySeparatorChar))
         {
             return File.Exists(executable) ? executable : null;

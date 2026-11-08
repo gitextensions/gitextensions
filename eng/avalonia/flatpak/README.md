@@ -4,7 +4,8 @@
 for confined development verification. It packages the self-contained application, Git
 2.51.0, OpenSSH 10.0p2, the desktop entry, AppStream metainfo, icon, application themes, and
 the Freedesktop 25.08 runtime. The application is Wayland-only and receives network, GPU,
-SSH-agent, and `--filesystem=host` access; it has no X11 socket. P10 performs the final runtime
+SSH-agent, `--filesystem=host` access, and host-command permission
+(`--talk-name=org.freedesktop.Flatpak`); it has no X11 socket. P10 performs the final runtime
 and dependency re-pin, clean-checkout reproducibility check, and distribution decision.
 
 From a native Linux checkout, build and smoke an isolated application ID with:
@@ -40,8 +41,8 @@ SSH push through the forwarded `ssh-agent`, a custom mergetool, sandbox-local Gi
 storage/fill protocol, both theme roots, plugin-directory behavior, and product process-group
 cancellation. It does not claim that arbitrary host HTTPS credential-helper executables or
 Secret Service providers are available inside the sandbox. External
-terminals and host Gource executables are explicitly reported as unavailable because
-`--filesystem=host` grants visibility, not permission to execute arbitrary host binaries.
+terminals use `flatpak-spawn --host --watch-bus` and the host's PATH. Revoking host-command
+permission produces an explicit unavailable error. Host Gource launch remains unavailable.
 
 Both harnesses are parity scaffolding and use only disposable application data and
 repositories outside the working tree.
