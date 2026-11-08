@@ -433,6 +433,20 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         // Inspect the native input before ListBox selection consumes the pointer event.
         _gridView.AddHandler(PointerPressedEvent, OnGridViewMouseDown, RoutingStrategies.Tunnel);
         _gridView.AddHandler(PointerPressedEvent, OnGridViewCellMouseDown, RoutingStrategies.Tunnel);
+        _gridView.PointerMoved += (_, e) =>
+        {
+            if (e.Pointer.Captured != _gridView)
+            {
+                _gridView.Cursor = FindColumnResizeTarget(e) is null ? null : ColumnResizeSession.ResizeCursor;
+            }
+        };
+        _gridView.PointerExited += (_, e) =>
+        {
+            if (e.Pointer.Captured != _gridView)
+            {
+                _gridView.Cursor = null;
+            }
+        };
 
         // ContextMenu uses the requesting child as its popup anchor. Ref cells are recycled
         // by async detail updates, so anchor to the persistent grid without changing the pointer position.
@@ -1691,7 +1705,74 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             e.Handled = true;
         }
 
+        if (properties.PointerUpdateKind == PointerUpdateKind.LeftButtonPressed
+            && _maximizedColumn is not null && _lastVisibleResizableColumn is not null
+            && FindColumnResizeTarget(e) is { } target)
+        {
+            ColumnProvider provider = target.Provider;
+            RevisionRowControl row = target.Row;
+            int maximizedIndex = _columnProviders.FindIndex(item => item.Column == _maximizedColumn);
+            int lastIndex = _columnProviders.FindIndex(item => item.Column == _lastVisibleResizableColumn);
+            double width = row.ColumnDefinitions[provider.Index].ActualWidth;
+            double edge = row.ColumnDefinitions.Take(provider.Index + 1).Sum(column => column.ActualWidth);
+            double rowOffset = row.TranslatePoint(default, _gridView)?.X ?? 0;
+
+            // make resizing of the maximized column work and restore the settings afterwards
+            _maximizedColumn.Width = new GridLength(row.ColumnDefinitions[maximizedIndex].ActualWidth); // None must be set before Fill
+            _lastVisibleResizableColumn.Width = new GridLength(1, GridUnitType.Star);
+            UpdateColumnLayouts();
+            _ = new ColumnResizeSession(_gridView, pnlRevisionGrid, e, width, edge + rowOffset,
+                provider.Column.MinimumWidth, row.Bounds.Width - edge + width - 1,
+                resizedWidth =>
+                {
+                    provider.Column.Width = new GridLength(resizedWidth);
+                    provider.OnColumnWidthChanged();
+                    UpdateColumnLayouts();
+                    _gridView.UpdateLayout();
+                }, OnGridViewMouseCaptureChanged);
+
+            void OnGridViewMouseCaptureChanged()
+            {
+                _lastVisibleResizableColumn.Width = new GridLength(row.ColumnDefinitions[lastIndex].ActualWidth); // None must be set before Fill
+                _maximizedColumn.Width = new GridLength(1, GridUnitType.Star);
+                UpdateColumnLayouts();
+            }
+        }
+
         _pendingSelectedObjectIds = [];
+    }
+
+    // Framework constraint: hidden-header ListBox rows need DataGridView's six-pixel divider hit zone.
+    private (ColumnProvider Provider, RevisionRowControl Row)? FindColumnResizeTarget(PointerEventArgs e)
+    {
+        foreach (RevisionRowControl row in _gridView.GetVisualDescendants().OfType<RevisionRowControl>())
+        {
+            Avalonia.Point point = e.GetPosition(row);
+            if (!new Rect(row.Bounds.Size).Contains(point))
+            {
+                continue;
+            }
+
+            double right = 0;
+            foreach (ColumnProvider provider in _columnProviders)
+            {
+                right += row.ColumnDefinitions[provider.Index].ActualWidth;
+                if (provider.Column.IsVisible && provider.Column.Resizable && Math.Abs(point.X - right) < 6)
+                {
+                    return (provider, row);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private void UpdateColumnLayouts()
+    {
+        foreach (RevisionRowControl row in _gridView.GetVisualDescendants().OfType<RevisionRowControl>())
+        {
+            row.ApplyColumnLayout();
+        }
     }
 
     internal bool TryGetSuperProjectInfo([System.Diagnostics.CodeAnalysis.NotNullWhen(returnValue: true)] out SuperProjectInfo? spi)
