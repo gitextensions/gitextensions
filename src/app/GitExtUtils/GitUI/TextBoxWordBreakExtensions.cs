@@ -207,8 +207,30 @@ public static class TextBoxWordBreakExtensions
             // (e.g. one left at 0 by a prior Select All) can be collapsed back on mouse-up.
             // Shift+click is skipped: the native control extends the selection to the click, and a
             // zero-length pending caret would collapse it back on mouse-up.
-            SetPendingSelection(textBox, textBox.GetCharIndexFromPosition(e.Location), 0, e.Location);
+            SetPendingSelection(textBox, GetCaretIndexFromPosition(textBox, e.Location), 0, e.Location);
         }
+    }
+
+    /// <summary>
+    ///  Like <see cref="TextBoxBase.GetCharIndexFromPosition"/>, but returns the text length when the
+    ///  point is past the last character, because the latter clamps to the last character's index.
+    /// </summary>
+    private static int GetCaretIndexFromPosition(TextBoxBase textBox, Point location)
+    {
+        int index = textBox.GetCharIndexFromPosition(location);
+        int length = textBox.TextLength;
+        if (length == 0 || index != length - 1)
+        {
+            return index;
+        }
+
+        Point lastCharPosition = textBox.GetPositionFromCharIndex(index);
+        Size charSize = TextRenderer.MeasureText(textBox.Text[index].ToString(), textBox.Font, Size.Empty, TextFormatFlags.NoPadding);
+        bool isPastLastChar = location.X >= lastCharPosition.X + (charSize.Width / 2)
+            && location.Y >= lastCharPosition.Y
+            && (!textBox.Multiline || location.Y < lastCharPosition.Y + charSize.Height);
+
+        return isPastLastChar ? length : index;
     }
 
     /// <summary>
@@ -358,8 +380,7 @@ public static class TextBoxWordBreakExtensions
 
         if (extend)
         {
-            SetSelectionStart(control, Math.Min(anchor, target));
-            SetSelectionLength(control, Math.Abs(target - anchor));
+            SetDirectionalSelection(control, anchor, target);
             SetAnchor(control, anchor);
         }
         else
@@ -539,6 +560,29 @@ public static class TextBoxWordBreakExtensions
     private static Rectangle CenteredRectangle(Point center, Size size)
         => new(center.X - (size.Width / 2), center.Y - (size.Height / 2), size.Width, size.Height);
 
+    /// <summary>
+    ///  Selects from <paramref name="anchor"/> to <paramref name="caret"/> keeping the native active end
+    ///  at <paramref name="caret"/>, so that a following plain Shift+Arrow extends from the right end.
+    /// </summary>
+    private static void SetDirectionalSelection(Control control, int anchor, int caret)
+    {
+        IntPtr handle = control switch
+        {
+            TextBoxBase { IsHandleCreated: true } t => t.Handle,
+            ComboBox cb when _comboBoxEditWindows.TryGetValue(cb, out ComboBoxEditWindow? editWindow) => editWindow.Handle,
+            _ => IntPtr.Zero
+        };
+
+        if (handle == IntPtr.Zero)
+        {
+            SetSelectionStart(control, Math.Min(anchor, caret));
+            SetSelectionLength(control, Math.Abs(caret - anchor));
+            return;
+        }
+
+        NativeMethods.SendMessageW(handle, NativeMethods.EM_SETSEL, (IntPtr)anchor, (IntPtr)caret);
+    }
+
     private static int GetSelectionStart(Control control)
         => control switch
         {
@@ -650,11 +694,13 @@ public static class TextBoxWordBreakExtensions
         /// </summary>
         private int CharIndexFromPosition(IntPtr packedPosition)
         {
-            int result = NativeMethods.SendMessageW(Handle, NativeMethods.EM_CHARFROMPOS, IntPtr.Zero, packedPosition).ToInt32();
+            // Truncate without a checked conversion: the 32-bit result may arrive zero- or sign-extended.
+            int result = unchecked((int)(long)NativeMethods.SendMessageW(Handle, NativeMethods.EM_CHARFROMPOS, IntPtr.Zero, packedPosition));
 
             // The character index is the unsigned LOWORD (0..65535); the HIWORD is the line. A whole
-            // result of -1 means no character, which callers treat as "out of range".
-            return result < 0 ? -1 : result & 0xFFFF;
+            // result of -1 means no character, which callers treat as "out of range". It must be
+            // checked before masking, which would turn it into index 65535.
+            return result == -1 ? -1 : result & 0xFFFF;
         }
     }
 
