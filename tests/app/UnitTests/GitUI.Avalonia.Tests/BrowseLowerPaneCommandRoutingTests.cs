@@ -56,7 +56,10 @@ public sealed class BrowseLowerPaneCommandRoutingTests
                     }
                 }
 
+                TaskCompletionSource loaded = new();
+                form.RevisionGrid.RevisionsLoaded += (_, _) => loaded.TrySetResult();
                 form.Show();
+                await loaded.Task.WaitAsync(TimeSpan.FromSeconds(15));
                 Dispatcher.UIThread.RunJobs();
                 form.UpdateLayout();
                 form.CommitInfoTabControl.SelectedItem = activePane switch
@@ -77,7 +80,9 @@ public sealed class BrowseLowerPaneCommandRoutingTests
 
                 Dispatcher.UIThread.RunJobs();
                 using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(15));
+                await form.JoinLoadOperationsForTestAsync(deadline.Token);
                 await ThreadHelper.JoinPendingOperationsAsync(deadline.Token);
+                Dispatcher.UIThread.RunJobs();
                 GitRevision first = new(ObjectId.Random());
                 GitRevision second = new(ObjectId.Random());
                 PrepareSelection(form.revisionDiff.FileStatusList, "diff.txt");
@@ -114,17 +119,6 @@ public sealed class BrowseLowerPaneCommandRoutingTests
                     }
                 }
 
-                commands.ClearReceivedCalls();
-                form.ExecuteCommand(FormBrowse.Command.EditFile).Should().BeTrue();
-                if (diffVisible || treeVisible)
-                {
-                    commands.Received(1).StartFileEditorDialog(Path.Combine(directory, diffVisible ? "diff.txt" : "tree.txt"));
-                }
-                else
-                {
-                    commands.DidNotReceiveWithAnyArgs().StartFileEditorDialog(default);
-                }
-
                 foreach (FormBrowse.Command command in new[] { FormBrowse.Command.OpenAsTempFile, FormBrowse.Command.OpenAsTempFileWith })
                 {
                     module.ClearReceivedCalls();
@@ -140,14 +134,25 @@ public sealed class BrowseLowerPaneCommandRoutingTests
                     }
                 }
 
+                commands.ClearReceivedCalls();
+                form.ExecuteCommand(FormBrowse.Command.EditFile).Should().BeTrue();
+                if (diffVisible || treeVisible)
+                {
+                    commands.Received(1).StartFileEditorDialog(Path.Combine(directory, diffVisible ? "diff.txt" : "tree.txt"));
+                }
+                else
+                {
+                    commands.DidNotReceiveWithAnyArgs().StartFileEditorDialog(default);
+                }
+
                 form.Close();
                 return;
 
                 void PrepareSelection(FileStatusList list, string name)
                 {
-                    if (!list.TryGetUICommandsDirect(out _))
+                    if (list.IsEffectivelyVisible && TopLevel.GetTopLevel(list) == form)
                     {
-                        list.UICommandsSource = form;
+                        list.UICommands.Should().BeSameAs(commands);
                     }
 
                     list.SelectFirstItemOnSetItems = false;
@@ -187,6 +192,7 @@ public sealed class BrowseLowerPaneCommandRoutingTests
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(directory);
         module.IsValidGitWorkingDir().Returns(true);
+        GitModuleTestStub.ConfigureEmptyRepositoryReads(module);
         // Temp-open routing is observed at the module boundary. A zero blob prevents
         // temporary-file creation and any desktop launch, even on an unfixed route.
         module.GetFileBlobHash(Arg.Any<string>(), Arg.Any<ObjectId>()).Returns(default(ObjectId));

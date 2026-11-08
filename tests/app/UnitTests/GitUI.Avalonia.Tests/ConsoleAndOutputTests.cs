@@ -371,6 +371,7 @@ public sealed class ConsoleAndOutputTests
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(Path.GetTempPath());
         module.IsValidGitWorkingDir().Returns(true);
+        GitModuleTestStub.ConfigureEmptyRepositoryReads(module);
 
         IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
         appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
