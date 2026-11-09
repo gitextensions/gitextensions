@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -7,6 +8,7 @@ using GitExtensions.Plugins.GitStatistics.PieChart;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
+using Microsoft;
 using ResourceManager;
 using Color = Avalonia.Media.Color;
 using DrawingColor = System.Drawing.Color;
@@ -15,8 +17,6 @@ namespace GitExtensions.Plugins.GitStatistics;
 
 public partial class FormGitStatistics : GitExtensionsFormBase
 {
-    private const int FileBatchSize = 128;
-
     private readonly TranslationString _commits = new("{0:N0} Commits");
     private readonly TranslationString _commitsBy = new("{0:N0} Commits by {1}");
     private readonly TranslationString _linesOfCodeInFiles = new("{0:N0} Lines of code in {1} files ({2:P1})");
@@ -86,7 +86,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         InitializeComponent();
 
         Tabs.SelectionChanged += TabsSelectedIndexChanged;
-        SizeChanged += FormGitStatisticsSizeChanged;
+        Closing += FormGitStatistics_FormClosing;
 
         SetPieStyle(CommitCountPie);
         SetPieStyle(LinesOfCodeExtensionPie);
@@ -127,8 +127,8 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         try
         {
             await Task.WhenAll(
-                InitializeCommitCountAsync(cancellationToken),
-                InitializeLinesOfCodeAsync(cancellationToken));
+                InitializeCommitCount(cancellationToken),
+                InitializeLinesOfCode(cancellationToken));
         }
         catch (OperationCanceledException)
         {
@@ -136,7 +136,8 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         }
     }
 
-    private async Task InitializeCommitCountAsync(CancellationToken cancellationToken)
+    [SuppressMessage("Usage", "VSTHRD200:Use Async suffix", Justification = "Preserve the original name while the portable owner joins asynchronous work.")]
+    private async Task InitializeCommitCount(CancellationToken cancellationToken)
     {
         (int totalCommits, Dictionary<string, int> commitsPerUser) = await Task.Run(
             () => _module.GetCommitsByContributor(),
@@ -175,23 +176,27 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         pie.SetShadowStyle(ShadowStyle.GradualShadow);
     }
 
-    private async Task InitializeLinesOfCodeAsync(CancellationToken cancellationToken)
+    [SuppressMessage("Usage", "VSTHRD200:Use Async suffix", Justification = "Preserve the original name while the portable owner joins asynchronous work.")]
+    private async Task InitializeLinesOfCode(CancellationToken cancellationToken)
     {
-        LineStatistics statistics = await Task.Run(
-            () => CountLines(cancellationToken),
-            cancellationToken);
-        cancellationToken.ThrowIfCancellationRequested();
+        if (_lineCounter is not null)
+        {
+            return;
+        }
 
-        // Sync rest to UI thread
+        _lineCounter = new LineCounter();
+        _lineCounter.Updated += OnLineCounterUpdated;
+        await Task.Run(() => CountLines(cancellationToken), cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
         await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
-        // Send UI update when done
-        UpdateUI(statistics);
+        // Send 'changed' event when done
+        OnLineCounterUpdated(_lineCounter, EventArgs.Empty);
     }
 
-    private LineStatistics CountLines(CancellationToken cancellationToken)
+    private void CountLines(CancellationToken cancellationToken)
     {
-        _lineCounter = new LineCounter();
+        Validates.NotNull(_lineCounter);
         LoadLinesOfCodeForModule(_module);
 
         if (_countSubmodules)
@@ -209,15 +214,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
             }
         }
 
-        // Must do this synchronously because lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
-        return new LineStatistics(
-            _lineCounter.CommentLineCount,
-            _lineCounter.TotalLineCount,
-            _lineCounter.DesignerLineCount,
-            _lineCounter.TestCodeLineCount,
-            _lineCounter.BlankLineCount,
-            _lineCounter.CodeLineCount,
-            new Dictionary<string, int>(_lineCounter.LinesOfCodePerExtension));
+        return;
 
         void LoadLinesOfCodeForModule(IGitModule module)
         {
@@ -226,13 +223,30 @@ public partial class FormGitStatistics : GitExtensionsFormBase
                 .Select(file => Path.Combine(module.WorkingDir, file.Name))
                 .ToArray();
             string directoryFilters = NormalizeDirectoryFilters(DirectoriesToIgnore);
-
-            foreach (IEnumerable<string> batch in filesToCheck.Chunk(FileBatchSize))
+            _lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, directoryFilters, filesToCheck.Select(file =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                _lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, directoryFilters, batch);
-            }
+                return file;
+            }));
         }
+    }
+
+    private void OnLineCounterUpdated(object? sender, EventArgs e)
+    {
+        Validates.NotNull(_lineCounter);
+
+        // Must do this synchronously because lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
+        LineStatistics statistics = new(
+            _lineCounter.CommentLineCount,
+            _lineCounter.TotalLineCount,
+            _lineCounter.DesignerLineCount,
+            _lineCounter.TestCodeLineCount,
+            _lineCounter.BlankLineCount,
+            _lineCounter.CodeLineCount,
+            new Dictionary<string, int>(_lineCounter.LinesOfCodePerExtension));
+
+        // Sync rest to UI thread
+        this.InvokeAndForget(() => UpdateUI(statistics), _lifetimeCancellation.Token);
     }
 
     private void UpdateUI(LineStatistics lineCounter)
@@ -304,14 +318,22 @@ public partial class FormGitStatistics : GitExtensionsFormBase
             string.Format(_linesOfCode.Text, lineCounter.CodeLineCount);
     }
 
-    protected override void OnRuntimeLoad(EventArgs e)
+    // Framework constraint: Avalonia calls this hook once after runtime load; dispatch the original Shown handler here.
+    protected override void OnShown(EventArgs e)
     {
-        base.OnRuntimeLoad(e);
+        base.OnShown(e);
+        FormGitStatisticsShown(this, e);
+    }
 
+    private void FormGitStatisticsShown(object sender, EventArgs e)
+    {
         Initialize();
+
         Tabs.IsVisible = true;
         LoadingLabel.IsVisible = false;
-        FormGitStatisticsSizeChanged(this, EventArgs.Empty);
+
+        FormGitStatisticsSizeChanged(sender, EventArgs.Empty);
+        SizeChanged += FormGitStatisticsSizeChanged;
     }
 
     protected override void OnClosed(EventArgs e)
@@ -324,6 +346,11 @@ public partial class FormGitStatistics : GitExtensionsFormBase
 
     private void TabsSelectedIndexChanged(object? sender, SelectionChangedEventArgs e)
         => FormGitStatisticsSizeChanged(sender, EventArgs.Empty);
+
+    private void FormGitStatistics_FormClosing(object? sender, WindowClosingEventArgs e)
+    {
+        _lineCounter?.Updated -= OnLineCounterUpdated;
+    }
 
     private static Color AdaptChartColor(Color color)
     {

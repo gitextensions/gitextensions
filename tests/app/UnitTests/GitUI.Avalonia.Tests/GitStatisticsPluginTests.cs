@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -11,6 +12,7 @@ using GitCommands.Git.Extensions;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
 using GitExtensions.Plugins.GitStatistics;
 using GitExtensions.Plugins.GitStatistics.PieChart;
@@ -18,6 +20,8 @@ using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.Compat;
+using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Composition;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using DrawingColor = System.Drawing.Color;
@@ -121,6 +125,118 @@ public sealed class GitStatisticsPluginTests
         accessor.LinesPerLanguageText.Should().Contain(".cs");
         accessor.CommitCountPie.ToolTips.Should().ContainSingle();
         accessor.LinesOfCodeExtensionPie.ToolTips.Should().ContainSingle();
+    }
+
+    [AvaloniaTest]
+    public async Task Statistics_window_should_show_real_counter_updates_before_the_final_total()
+    {
+        using AppSettingsTestScope settings = new();
+        const int fileCount = 256;
+        const int linesPerFile = 32_768;
+        const int expected = (fileCount * linesPerFile) + 1;
+        GitModule module = CreateRepository();
+        await Task.Run(() =>
+        {
+            for (int index = 0; index < fileCount; index++)
+            {
+                using StreamWriter writer = new(Path.Combine(_workingDirectory, $"Long-{index:D3}.cs"));
+                for (int line = 0; line < linesPerFile; line++)
+                {
+                    writer.WriteLine("public sealed class Source { }");
+                }
+            }
+        });
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--all" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "owned counter fixture".Quote() }).Should().BeTrue();
+        GitUICommands commands = new(_serviceContainer, module);
+        FieldInfo providerField = typeof(ManagedExtensibility).GetField("_exportProvider", BindingFlags.NonPublic | BindingFlags.Static)!;
+        FieldInfo loadedField = typeof(PluginRegistry).GetField("_isLoaded", BindingFlags.NonPublic | BindingFlags.Static)!;
+        PropertyInfo registeredProperty = typeof(PluginRegistry).GetProperty(nameof(PluginRegistry.PluginsRegistered))!;
+        object? previousProvider = providerField.GetValue(null);
+        object? previousLoaded = loadedField.GetValue(null);
+        bool previousRegistered = PluginRegistry.PluginsRegistered;
+        IGitPlugin[] previousPlugins = [.. PluginRegistry.Plugins];
+        IRepositoryHostPlugin[] previousHosters = [.. PluginRegistry.GitHosters];
+        AttributedPartDiscoveryV1 discovery = new(Resolver.DefaultInstance);
+        DiscoveredParts parts = await discovery.CreatePartsAsync(typeof(GitStatisticsPlugin));
+        ComposableCatalog catalog = ComposableCatalog.Create(Resolver.DefaultInstance).AddParts(parts);
+        CompositionConfiguration configuration = CompositionConfiguration.Create(catalog);
+        configuration.ThrowOnErrors();
+        using ExportProvider provider = RuntimeComposition.CreateRuntimeComposition(configuration).CreateExportProviderFactory().CreateExportProvider();
+        Task? observation = null;
+        FormGitStatistics? openedForm = null;
+        using IDisposable opened = Window.WindowOpenedEvent.AddClassHandler<FormGitStatistics>((form, _) =>
+        {
+            openedForm = form;
+            observation = ObserveAsync(form);
+        });
+        try
+        {
+            PluginRegistry.Plugins.Clear();
+            PluginRegistry.GitHosters.Clear();
+            loadedField.SetValue(null, false);
+            registeredProperty.SetValue(null, false);
+            ManagedExtensibility.SetTestExportProvider(provider);
+            PluginRegistry.InitializeAll();
+            PluginRegistry.Register(commands);
+            GitStatisticsPlugin plugin = PluginRegistry.Plugins.OfType<GitStatisticsPlugin>().Single();
+
+            plugin.Execute(new GitUIEventArgs(ownerForm: null, commands)).Should().BeFalse();
+            observation.Should().NotBeNull("the real plugin must open its statistics window");
+            await observation!;
+        }
+        finally
+        {
+            openedForm?.Close();
+            if (PluginRegistry.PluginsRegistered)
+            {
+                PluginRegistry.Unregister(commands);
+            }
+
+            providerField.SetValue(null, previousProvider);
+            loadedField.SetValue(null, previousLoaded);
+            registeredProperty.SetValue(null, previousRegistered);
+            PluginRegistry.Plugins.Clear();
+            PluginRegistry.Plugins.AddRange(previousPlugins);
+            PluginRegistry.GitHosters.Clear();
+            PluginRegistry.GitHosters.AddRange(previousHosters);
+        }
+
+        return;
+
+        async Task ObserveAsync(FormGitStatistics form)
+        {
+            TextBlock total = form.FindControl<TextBlock>("TotalLinesOfCode")!;
+            List<(int Count, bool OnUIThread)> updates = [];
+            total.PropertyChanged += (_, change) =>
+            {
+                if (change.Property == TextBlock.TextProperty)
+                {
+                    updates.Add((ReadCount(), Dispatcher.UIThread.CheckAccess()));
+                }
+            };
+            try
+            {
+                System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
+                while (ReadCount() != expected && stopwatch.Elapsed < TimeSpan.FromSeconds(60))
+                {
+                    await Task.Delay(10);
+                }
+
+                ReadCount().Should().Be(expected);
+                updates.Should().Contain(update => update.Count > 1 && update.Count < expected);
+                updates.Should().OnlyContain(update => update.OnUIThread);
+            }
+            finally
+            {
+                form.Close();
+            }
+
+            return;
+
+            int ReadCount()
+                => int.TryParse(new string((total.Text ?? string.Empty).Where(char.IsDigit).ToArray()), out int value) ? value : 0;
+        }
     }
 
     [AvaloniaTest]
