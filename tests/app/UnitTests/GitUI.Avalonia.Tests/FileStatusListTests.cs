@@ -484,6 +484,57 @@ public sealed class FileStatusListTests
     }
 
     [AvaloniaTest]
+    [TestCase(99, false)]
+    [TestCase(100, false)]
+    [TestCase(101, false)]
+    [TestCase(99, true)]
+    [TestCase(100, true)]
+    [TestCase(101, true)]
+    public void Grep_groups_should_remain_open_at_the_partial_expansion_boundary(int count, bool flat)
+    {
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        bool originalMerge = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = flat ? DiffListSortType.FilePathFlat : DiffListSortType.FilePath;
+            AppSettings.FileStatusMergeSingleItemWithFolder.Value = false;
+            FileStatusList control = new() { GroupByRevision = true };
+            GitRevision revision = new(ObjectId.Random());
+            GitItemStatus[] matches = [.. Enumerable.Range(0, count).Select(index => new GitItemStatus($"src/folder-{index % 2}/match-{index}.cs")
+            {
+                IsTracked = true,
+                IsChanged = true,
+                GrepString = "needle",
+            })];
+            control.SetDiffs(
+            [
+                new FileStatusWithDescription(null, revision, "Ordinary", [new GitItemStatus("ordinary.cs") { IsTracked = true }]),
+                new FileStatusWithDescription(null, revision, "grep: needle", matches, iconName: nameof(FileStatusDiffCalculator.GitGrepIconName)),
+                new FileStatusWithDescription(null, revision, "Empty grep", [], iconName: nameof(FileStatusDiffCalculator.GitGrepIconName)),
+            ],
+            isFileTreeMode: false);
+
+            FileStatusList.DiffTreeNode[] roots = [.. control.GetTestAccessor().DiffTree.Items.Cast<FileStatusList.DiffTreeNode>()];
+            roots.Should().HaveCount(3);
+            roots[0].IsExpanded.Should().BeFalse();
+            roots[1].IsExpanded.Should().BeTrue();
+            roots[2].IsExpanded.Should().BeFalse();
+            roots[1].Children.SelectMany(Flatten).Count(node => node.Item is not null).Should().Be(count);
+            if (!flat)
+            {
+                FileStatusList.DiffTreeNode[] folders = [.. roots[1].Children.SelectMany(Flatten).Where(node => node.Item is null)];
+                folders.Should().NotBeEmpty();
+                folders.Select(node => node.IsExpanded).Should().AllBeEquivalentTo(count < 100);
+            }
+        }
+        finally
+        {
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+            AppSettings.FileStatusMergeSingleItemWithFolder.Value = originalMerge;
+        }
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_should_expand_grep_results_and_collapse_the_other_revision_groups()
     {
         FileStatusList control = new() { GroupByRevision = true };

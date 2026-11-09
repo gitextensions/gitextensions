@@ -1038,6 +1038,77 @@ public partial class FileStatusList : GitModuleControl
         tvFiles.ItemsSource = null;
     }
 
+    private IReadOnlyList<DiffTreeNode> GetNodes(
+        IReadOnlyList<FileStatusWithDescription> groups,
+        IReadOnlyDictionary<int, bool> previousExpansion)
+    {
+        bool showDiffGroups = groups.Count > 1
+                              || (GroupByRevision && !(groups.Count == 1 && groups[0].Statuses.Count == 0));
+        DiffListSortType sortType = DiffListSortService.Instance.DiffListSorting;
+        bool hasGrepGroup = groups.Any(FileStatusDiffCalculator.IsGrepItemStatuses);
+        List<DiffTreeNode> roots = [];
+        for (int groupIndex = 0; groupIndex < groups.Count; groupIndex++)
+        {
+            FileStatusWithDescription group = groups[groupIndex];
+            FileStatusItem[] visibleItems =
+            [
+                .. group.Statuses
+                    .Where(item => IsFilterMatch(item) && IsDiffStatusMatch(item.DiffStatus))
+                    .Select(item => new FileStatusItem(group.FirstRev, group.SecondRev, item, group.BaseA, group.BaseB)),
+            ];
+
+            if (group.Statuses.Count == 1 && group.Statuses[0].IsRangeDiff)
+            {
+                if (visibleItems.Length == 1)
+                {
+                    roots.Add(CreateDiffFileNode(visibleItems[0], parent: null));
+                }
+
+                continue;
+            }
+
+            // Always expand grep results
+            // Collapse some groups for diffs with common BASE
+            bool defaultExpanded = hasGrepGroup
+                ? FileStatusDiffCalculator.IsGrepItemStatuses(group)
+                : ((group.Statuses.Count <= 7 && group.IconName == nameof(Images.Diff))
+                   || groups.Count < 3
+                   || groupIndex == 0)
+                  && group.Statuses.Count > 0;
+            bool expanded = previousExpansion.TryGetValue(groupIndex, out bool wasExpanded)
+                ? wasExpanded
+                : defaultExpanded;
+            bool expandFolders = expanded
+                                 && (!FileStatusDiffCalculator.IsGrepItemStatuses(group) || visibleItems.Length < 100);
+
+            if (showDiffGroups)
+            {
+                // Show shown and total number of files only if different; avoid showing "1/0" for "- No changes -"
+                string shownDisplay = visibleItems.Length >= group.Statuses.Count ? string.Empty : $"{visibleItems.Length}/";
+                DiffTreeNode header = new(
+                    $"({shownDisplay}{group.Statuses.Count}) {group.Summary}",
+                    GetGroupImage(group.IconName),
+                    item: null,
+                    folderPath: null,
+                    parent: null,
+                    isGroupHeader: true,
+                    groupIndex)
+                {
+                    IsExpanded = expanded,
+                };
+                header.Children.AddRange(BuildDiffPathTree(visibleItems, header, expandFolders, sortType));
+                roots.Add(header);
+            }
+            else
+            {
+                // Add nodes of single group as root nodes
+                roots.AddRange(BuildDiffPathTree(visibleItems, parent: null, expandFolders, sortType));
+            }
+        }
+
+        return roots;
+    }
+
     private static IImage GetItemImageKey(GitItemStatus item)
     {
         if (item.IsDeleted)
@@ -1603,18 +1674,6 @@ public partial class FileStatusList : GitModuleControl
         FindInCommitFilesGitGrep();
     }
 
-    private void StoreFilter(string value)
-    {
-        SetDeleteFilterButtonVisibility();
-        _filter = value.Length == 0
-            ? null
-            : new Regex(
-                value,
-                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
-                RegexTimeout);
-        SetFilterState(value.Length == 0 ? FilterState.Empty : FilterState.Valid, toolTip: null);
-    }
-
     // Avalonia uses separate list and tree renderers, so renderer selection stays distinct from the source's revision-group flag.
     private bool ShowDiffTree
         => !_isFileTreeMode
@@ -1682,8 +1741,17 @@ public partial class FileStatusList : GitModuleControl
         }
     }
 
-    internal TestAccessor GetTestAccessor()
-        => new(this);
+    private void StoreFilter(string value)
+    {
+        SetDeleteFilterButtonVisibility();
+        _filter = value.Length == 0
+            ? null
+            : new Regex(
+                value,
+                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
+                RegexTimeout);
+        SetFilterState(value.Length == 0 ? FilterState.Empty : FilterState.Valid, toolTip: null);
+    }
 
     /// <summary>
     ///  Shows calculated revision groups as either the ordinary diff list or a repository tree.
@@ -1739,134 +1807,8 @@ public partial class FileStatusList : GitModuleControl
         UpdateToolbar();
     }
 
-    internal readonly struct TestAccessor
-    {
-        private readonly FileStatusList _fileStatusList;
-
-        internal TestAccessor(FileStatusList fileStatusList)
-        {
-            _fileStatusList = fileStatusList;
-        }
-
-        internal WatermarkComboBox FilterComboBox => _fileStatusList.cboFilterComboBox;
-        internal Control FilterRow => (Control)_fileStatusList.cboFilterComboBox.Parent!;
-        internal TextBlock NoFilesLabel => _fileStatusList.NoFiles;
-        internal ListBox List => _fileStatusList.lstFiles;
-        internal TreeView DiffTree => _fileStatusList.tvDiffFiles;
-        internal TreeView Tree => _fileStatusList.tvFiles;
-        internal ContextMenu ContextMenu => _fileStatusList.ItemContextMenu;
-        internal StackPanel Toolbar => _fileStatusList.Toolbar;
-        internal MenuItem StageMenuItem => _fileStatusList.tsmiStageFile;
-        internal MenuItem UnstageMenuItem => _fileStatusList.tsmiUnstageFile;
-        internal MenuItem CherryPickMenuItem => _fileStatusList.tsmiCherryPickChanges;
-        internal MenuItem OpenWithDifftoolMenuItem => _fileStatusList.tsmiOpenWithDifftool;
-        internal MenuItem OpenSubmoduleMenuItem => _fileStatusList._NO_TRANSLATE_openSubmoduleMenuItem;
-        internal MenuItem CopyPathsMenuItem => _fileStatusList.tsmiCopyPaths;
-        internal SortDiffListContextMenuItem SortByContextMenuItem => _fileStatusList._sortByContextMenu;
-        internal Separator SortBySeparator => _fileStatusList._sortBySeparator;
-        internal MenuItem ResetChunkMenuItem => _fileStatusList.tsmiResetChunkOfFile;
-        internal MenuItem InteractiveAddMenuItem => _fileStatusList.tsmiInteractiveAdd;
-        internal MenuItem ResetToMenuItem => _fileStatusList.tsmiResetFileTo;
-        internal MenuItem ResetToSelectedMenuItem => _fileStatusList.tsmiResetFileToSelected;
-        internal MenuItem ResetToParentMenuItem => _fileStatusList.tsmiResetFileToParent;
-        internal MenuItem AddToGitIgnoreMenuItem => _fileStatusList.tsmiAddFileToGitIgnore;
-        internal MenuItem AddToGitInfoExcludeMenuItem => _fileStatusList.tsmiAddFileToGitInfoExclude;
-        internal MenuItem OpenInVisualStudioMenuItem => _fileStatusList.tsmiOpenInVisualStudio;
-        internal MenuItem SelectAllMenuItem => _fileStatusList._selectAll;
-        internal MenuItem CollapseAllMenuItem => _fileStatusList._collapseAll;
-        internal MenuItem ExpandAllMenuItem => _fileStatusList._expandAll;
-        internal MenuItem CollapseRootFoldersMenuItem => _fileStatusList._collapseRootFolders;
-        internal MenuItem SkipWorktreeMenuItem => _fileStatusList.tsmiSkipWorktree;
-        internal MenuItem AssumeUnchangedMenuItem => _fileStatusList.tsmiAssumeUnchanged;
-        internal MenuItem StopTrackingMenuItem => _fileStatusList.tsmiStopTracking;
-        internal ToggleButton ByPathButton => _fileStatusList.btnByPath;
-        internal ToggleButton ByExtensionButton => _fileStatusList.btnByExtension;
-        internal ToggleButton ByStatusButton => _fileStatusList.btnByStatus;
-        internal Button RefreshButton => _fileStatusList.btnRefresh;
-        internal Button CollapseGroupsButton => _fileStatusList.btnCollapseGroups;
-        internal MenuItem RefreshOnFormFocusMenuItem => _fileStatusList.tsmiRefreshOnFormFocus;
-        internal Separator ToolbarSeparator => _fileStatusList.sepToolbar;
-        internal IconSplitButton FindInFilesButton => _fileStatusList.btnFindInFilesGitGrep;
-        internal MenuItem FindUsingMatchCaseMenuItem => _fileStatusList.tsmiFindUsingMatchCase;
-        internal MenuItem FindUsingWholeWordMenuItem => _fileStatusList.tsmiFindUsingWholeWord;
-        internal MenuItem FindUsingOptionsMenuItem => _fileStatusList.tsmiFindUsingOptions;
-        internal MenuItem FindUsingBasicMenuItem => _fileStatusList._NO_TRANSLATE_tsmiFindUsingBasic;
-        internal MenuItem FindUsingInputBoxMenuItem => _fileStatusList.tsmiFindUsingInputBox;
-        internal MenuItem ShowDiffForAllParentsMenuItem => _fileStatusList.tsmiShowDiffForAllParents;
-        internal MenuItem ToolbarMenuItem => _fileStatusList.tsmiToolbar;
-        internal Grid FindInFilesPanel => _fileStatusList.FindInCommitFilesGitGrepPanel;
-        internal TextBlock Splitter => _fileStatusList.lblSplitter;
-        internal int FilteredItemsCount => _fileStatusList._gitItemFilteredStatuses.Count;
-
-        internal bool UpdateContextMenu()
-        {
-            CancelEventArgs eventArgs = new();
-            _fileStatusList.ItemContextMenu_Opening(_fileStatusList.ItemContextMenu, eventArgs);
-            return eventArgs.Cancel;
-        }
-
-        internal bool FirstTreeRootExpanded => ((FileTreeNode)_fileStatusList.tvFiles.Items[0]!).IsExpanded;
-
-        internal void SelectFirstTreeRoot()
-            => _fileStatusList.tvFiles.SelectedItem = _fileStatusList.tvFiles.Items[0];
-
-        internal void SelectFirstTreeLeaf()
-            => _fileStatusList.tvFiles.SelectedItem = _fileStatusList.tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).First(node => node.Item is not null);
-
-        internal void DoubleClick()
-            => _fileStatusList.FileStatusListView_DoubleClick(_fileStatusList, EventArgs.Empty);
-
-        internal void SetSort(DiffListSortType sortType)
-        {
-            DiffListSortService.Instance.DiffListSorting = sortType;
-            _fileStatusList.UpdateToolbar();
-        }
-
-        internal void UpdateToolbar()
-            => _fileStatusList.UpdateToolbar();
-
-        internal void OpenFindInFilesMenu()
-            => _fileStatusList.FindInFilesGitGrep_DropDownOpening(_fileStatusList.btnFindInFilesGitGrep, EventArgs.Empty);
-
-        internal void ToggleFindInFiles()
-            => _fileStatusList.FindInFilesGitGrep_ButtonClick(_fileStatusList.btnFindInFilesGitGrep, EventArgs.Empty);
-
-        internal void OpenSettingsMenu()
-            => _fileStatusList.Settings_DropDownOpening(_fileStatusList.btnSettings, EventArgs.Empty);
-
-        internal void EnableShowDiffForAllParents()
-            => _fileStatusList._enableDisablingShowDiffForAllParents = true;
-
-        internal void SetDiffStatusVisible(DiffBranchStatus status, bool visible)
-        {
-            ToggleButton button = status switch
-            {
-                DiffBranchStatus.OnlyAChange => _fileStatusList.btnOnlyA,
-                DiffBranchStatus.OnlyBChange => _fileStatusList.btnOnlyB,
-                DiffBranchStatus.SameChange => _fileStatusList.btnSameChange,
-                DiffBranchStatus.UnequalChange => _fileStatusList.btnUnequalChange,
-                _ => throw new ArgumentOutOfRangeException(nameof(status)),
-            };
-            button.IsChecked = visible;
-            _fileStatusList.ApplyFilter(selectFirstItem: false);
-        }
-
-        internal static IImage GetItemImageForTesting(GitItemStatus item)
-            => FileStatusList.GetItemImageKey(item);
-
-        // parity-scaffolding: verifies the WinForms delayed-expansion contract against Avalonia's lazy containers.
-        internal void RestoreDiffTreeChildrenForTesting(bool delayExpansion, Action? afterAction = null)
-            => RestoreChildrenOfFolderNodes(_fileStatusList.tvDiffFiles.Items.Cast<DiffTreeNode>(), afterAction, delayExpansion);
-
-        internal (int descendants, bool allExpanded) GetDiffTreeExpansionForTesting()
-        {
-            DiffTreeNode[] nodes = [.. _fileStatusList.tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten)];
-            return (nodes.Length, nodes.All(node => node.IsExpanded));
-        }
-
-        internal static IImage GetSubmoduleImageForTesting(GitItemStatus item, GitSubmoduleStatus? status)
-            => FileStatusList.GetSubmoduleItemImageKey(item, status);
-    }
+    internal TestAccessor GetTestAccessor()
+        => new(this);
 
     private IEnumerable<FileStatusItem> GetVisibleFileStatusItems()
         => _isFileTreeMode
@@ -2062,7 +2004,7 @@ public partial class FileStatusList : GitModuleControl
                 .Cast<DiffTreeNode>()
                 .Where(node => node.GroupIndex is not null)
                 .ToDictionary(node => node.GroupIndex!.Value, node => node.IsExpanded);
-            IReadOnlyList<DiffTreeNode> roots = BuildDiffTree(GitItemStatusesWithDescription, expansion);
+            IReadOnlyList<DiffTreeNode> roots = GetNodes(GitItemStatusesWithDescription, expansion);
             _showDiffGroups = GitItemStatusesWithDescription.Count > 1
                               || (GroupByRevision
                               && !(GitItemStatusesWithDescription.Count == 1 && GitItemStatusesWithDescription[0].Statuses.Count == 0));
@@ -2253,74 +2195,133 @@ public partial class FileStatusList : GitModuleControl
         tvFiles.SelectedItem = files[nextIndex];
     }
 
-    private IReadOnlyList<DiffTreeNode> BuildDiffTree(
-        IReadOnlyList<FileStatusWithDescription> groups,
-        IReadOnlyDictionary<int, bool> previousExpansion)
+    internal readonly struct TestAccessor
     {
-        bool showDiffGroups = groups.Count > 1
-                              || (GroupByRevision && !(groups.Count == 1 && groups[0].Statuses.Count == 0));
-        DiffListSortType sortType = DiffListSortService.Instance.DiffListSorting;
-        bool hasGrepGroup = groups.Any(FileStatusDiffCalculator.IsGrepItemStatuses);
-        List<DiffTreeNode> roots = [];
-        for (int groupIndex = 0; groupIndex < groups.Count; groupIndex++)
+        private readonly FileStatusList _fileStatusList;
+
+        internal TestAccessor(FileStatusList fileStatusList)
         {
-            FileStatusWithDescription group = groups[groupIndex];
-            FileStatusItem[] visibleItems =
-            [
-                .. group.Statuses
-                    .Where(item => IsFilterMatch(item) && IsDiffStatusMatch(item.DiffStatus))
-                    .Select(item => new FileStatusItem(group.FirstRev, group.SecondRev, item, group.BaseA, group.BaseB)),
-            ];
-
-            if (group.Statuses.Count == 1 && group.Statuses[0].IsRangeDiff)
-            {
-                if (visibleItems.Length == 1)
-                {
-                    roots.Add(CreateDiffFileNode(visibleItems[0], parent: null));
-                }
-
-                continue;
-            }
-
-            // Expand grep results with fewer than 100 visible files
-            bool defaultExpanded = hasGrepGroup
-                ? FileStatusDiffCalculator.IsGrepItemStatuses(group) && visibleItems.Length < 100
-
-                // Collapse some groups for diffs with common BASE
-                : ((group.Statuses.Count <= 7 && group.IconName == nameof(Images.Diff))
-                   || groups.Count < 3
-                   || groupIndex == 0)
-                  && group.Statuses.Count > 0;
-            bool expanded = previousExpansion.TryGetValue(groupIndex, out bool wasExpanded)
-                ? wasExpanded
-                : defaultExpanded;
-
-            if (showDiffGroups)
-            {
-                // Show shown and total number of files only if different; avoid showing "1/0" for "- No changes -"
-                string shownDisplay = visibleItems.Length >= group.Statuses.Count ? string.Empty : $"{visibleItems.Length}/";
-                DiffTreeNode header = new(
-                    $"({shownDisplay}{group.Statuses.Count}) {group.Summary}",
-                    GetGroupImage(group.IconName),
-                    item: null,
-                    folderPath: null,
-                    parent: null,
-                    isGroupHeader: true,
-                    groupIndex)
-                {
-                    IsExpanded = expanded,
-                };
-                header.Children.AddRange(BuildDiffPathTree(visibleItems, header, expanded, sortType));
-                roots.Add(header);
-            }
-            else
-            {
-                // Add nodes of single group as root nodes
-                roots.AddRange(BuildDiffPathTree(visibleItems, parent: null, expanded, sortType));
-            }
+            _fileStatusList = fileStatusList;
         }
 
-        return roots;
+        internal WatermarkComboBox FilterComboBox => _fileStatusList.cboFilterComboBox;
+        internal Control FilterRow => (Control)_fileStatusList.cboFilterComboBox.Parent!;
+        internal TextBlock NoFilesLabel => _fileStatusList.NoFiles;
+        internal ListBox List => _fileStatusList.lstFiles;
+        internal TreeView DiffTree => _fileStatusList.tvDiffFiles;
+        internal TreeView Tree => _fileStatusList.tvFiles;
+        internal ContextMenu ContextMenu => _fileStatusList.ItemContextMenu;
+        internal StackPanel Toolbar => _fileStatusList.Toolbar;
+        internal MenuItem StageMenuItem => _fileStatusList.tsmiStageFile;
+        internal MenuItem UnstageMenuItem => _fileStatusList.tsmiUnstageFile;
+        internal MenuItem CherryPickMenuItem => _fileStatusList.tsmiCherryPickChanges;
+        internal MenuItem OpenWithDifftoolMenuItem => _fileStatusList.tsmiOpenWithDifftool;
+        internal MenuItem OpenSubmoduleMenuItem => _fileStatusList._NO_TRANSLATE_openSubmoduleMenuItem;
+        internal MenuItem CopyPathsMenuItem => _fileStatusList.tsmiCopyPaths;
+        internal SortDiffListContextMenuItem SortByContextMenuItem => _fileStatusList._sortByContextMenu;
+        internal Separator SortBySeparator => _fileStatusList._sortBySeparator;
+        internal MenuItem ResetChunkMenuItem => _fileStatusList.tsmiResetChunkOfFile;
+        internal MenuItem InteractiveAddMenuItem => _fileStatusList.tsmiInteractiveAdd;
+        internal MenuItem ResetToMenuItem => _fileStatusList.tsmiResetFileTo;
+        internal MenuItem ResetToSelectedMenuItem => _fileStatusList.tsmiResetFileToSelected;
+        internal MenuItem ResetToParentMenuItem => _fileStatusList.tsmiResetFileToParent;
+        internal MenuItem AddToGitIgnoreMenuItem => _fileStatusList.tsmiAddFileToGitIgnore;
+        internal MenuItem AddToGitInfoExcludeMenuItem => _fileStatusList.tsmiAddFileToGitInfoExclude;
+        internal MenuItem OpenInVisualStudioMenuItem => _fileStatusList.tsmiOpenInVisualStudio;
+        internal MenuItem SelectAllMenuItem => _fileStatusList._selectAll;
+        internal MenuItem CollapseAllMenuItem => _fileStatusList._collapseAll;
+        internal MenuItem ExpandAllMenuItem => _fileStatusList._expandAll;
+        internal MenuItem CollapseRootFoldersMenuItem => _fileStatusList._collapseRootFolders;
+        internal MenuItem SkipWorktreeMenuItem => _fileStatusList.tsmiSkipWorktree;
+        internal MenuItem AssumeUnchangedMenuItem => _fileStatusList.tsmiAssumeUnchanged;
+        internal MenuItem StopTrackingMenuItem => _fileStatusList.tsmiStopTracking;
+        internal ToggleButton ByPathButton => _fileStatusList.btnByPath;
+        internal ToggleButton ByExtensionButton => _fileStatusList.btnByExtension;
+        internal ToggleButton ByStatusButton => _fileStatusList.btnByStatus;
+        internal Button RefreshButton => _fileStatusList.btnRefresh;
+        internal Button CollapseGroupsButton => _fileStatusList.btnCollapseGroups;
+        internal MenuItem RefreshOnFormFocusMenuItem => _fileStatusList.tsmiRefreshOnFormFocus;
+        internal Separator ToolbarSeparator => _fileStatusList.sepToolbar;
+        internal IconSplitButton FindInFilesButton => _fileStatusList.btnFindInFilesGitGrep;
+        internal MenuItem FindUsingMatchCaseMenuItem => _fileStatusList.tsmiFindUsingMatchCase;
+        internal MenuItem FindUsingWholeWordMenuItem => _fileStatusList.tsmiFindUsingWholeWord;
+        internal MenuItem FindUsingOptionsMenuItem => _fileStatusList.tsmiFindUsingOptions;
+        internal MenuItem FindUsingBasicMenuItem => _fileStatusList._NO_TRANSLATE_tsmiFindUsingBasic;
+        internal MenuItem FindUsingInputBoxMenuItem => _fileStatusList.tsmiFindUsingInputBox;
+        internal MenuItem ShowDiffForAllParentsMenuItem => _fileStatusList.tsmiShowDiffForAllParents;
+        internal MenuItem ToolbarMenuItem => _fileStatusList.tsmiToolbar;
+        internal Grid FindInFilesPanel => _fileStatusList.FindInCommitFilesGitGrepPanel;
+        internal TextBlock Splitter => _fileStatusList.lblSplitter;
+        internal int FilteredItemsCount => _fileStatusList._gitItemFilteredStatuses.Count;
+
+        internal bool UpdateContextMenu()
+        {
+            CancelEventArgs eventArgs = new();
+            _fileStatusList.ItemContextMenu_Opening(_fileStatusList.ItemContextMenu, eventArgs);
+            return eventArgs.Cancel;
+        }
+
+        internal bool FirstTreeRootExpanded => ((FileTreeNode)_fileStatusList.tvFiles.Items[0]!).IsExpanded;
+
+        internal void SelectFirstTreeRoot()
+            => _fileStatusList.tvFiles.SelectedItem = _fileStatusList.tvFiles.Items[0];
+
+        internal void SelectFirstTreeLeaf()
+            => _fileStatusList.tvFiles.SelectedItem = _fileStatusList.tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).First(node => node.Item is not null);
+
+        internal void DoubleClick()
+            => _fileStatusList.FileStatusListView_DoubleClick(_fileStatusList, EventArgs.Empty);
+
+        internal void SetSort(DiffListSortType sortType)
+        {
+            DiffListSortService.Instance.DiffListSorting = sortType;
+            _fileStatusList.UpdateToolbar();
+        }
+
+        internal void UpdateToolbar()
+            => _fileStatusList.UpdateToolbar();
+
+        internal void OpenFindInFilesMenu()
+            => _fileStatusList.FindInFilesGitGrep_DropDownOpening(_fileStatusList.btnFindInFilesGitGrep, EventArgs.Empty);
+
+        internal void ToggleFindInFiles()
+            => _fileStatusList.FindInFilesGitGrep_ButtonClick(_fileStatusList.btnFindInFilesGitGrep, EventArgs.Empty);
+
+        internal void OpenSettingsMenu()
+            => _fileStatusList.Settings_DropDownOpening(_fileStatusList.btnSettings, EventArgs.Empty);
+
+        internal void EnableShowDiffForAllParents()
+            => _fileStatusList._enableDisablingShowDiffForAllParents = true;
+
+        internal void SetDiffStatusVisible(DiffBranchStatus status, bool visible)
+        {
+            ToggleButton button = status switch
+            {
+                DiffBranchStatus.OnlyAChange => _fileStatusList.btnOnlyA,
+                DiffBranchStatus.OnlyBChange => _fileStatusList.btnOnlyB,
+                DiffBranchStatus.SameChange => _fileStatusList.btnSameChange,
+                DiffBranchStatus.UnequalChange => _fileStatusList.btnUnequalChange,
+                _ => throw new ArgumentOutOfRangeException(nameof(status)),
+            };
+            button.IsChecked = visible;
+            _fileStatusList.ApplyFilter(selectFirstItem: false);
+        }
+
+        internal static IImage GetItemImageForTesting(GitItemStatus item)
+            => FileStatusList.GetItemImageKey(item);
+
+        // parity-scaffolding: verifies the WinForms delayed-expansion contract against Avalonia's lazy containers.
+        internal void RestoreDiffTreeChildrenForTesting(bool delayExpansion, Action? afterAction = null)
+            => RestoreChildrenOfFolderNodes(_fileStatusList.tvDiffFiles.Items.Cast<DiffTreeNode>(), afterAction, delayExpansion);
+
+        internal (int descendants, bool allExpanded) GetDiffTreeExpansionForTesting()
+        {
+            DiffTreeNode[] nodes = [.. _fileStatusList.tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten)];
+            return (nodes.Length, nodes.All(node => node.IsExpanded));
+        }
+
+        internal static IImage GetSubmoduleImageForTesting(GitItemStatus item, GitSubmoduleStatus? status)
+            => FileStatusList.GetSubmoduleItemImageKey(item, status);
     }
 
     private static IReadOnlyList<DiffTreeNode> BuildDiffPathTree(
