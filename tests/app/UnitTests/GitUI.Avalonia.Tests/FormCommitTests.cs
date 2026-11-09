@@ -353,6 +353,66 @@ public sealed class FormCommitTests
     }
 
     [AvaloniaTest]
+    [TestCase(false, 2, 2)]
+    [TestCase(true, 3, 3)]
+    public async Task Unstage_button_should_report_rename_aware_batch_progress_from_the_real_index(bool rename, int maximum, int unstagedCount)
+    {
+        GitModule module = CreateCleanRepository();
+        string second = Path.Combine(_workingDirectory, "second.txt");
+        File.WriteAllText(second, "second file\n");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "second.txt" });
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "second file".Quote() });
+        if (rename)
+        {
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("mv") { "tracked.txt", "renamed.txt" });
+        }
+        else
+        {
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "modified\n");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" });
+        }
+
+        File.AppendAllText(second, "modified\n");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "second.txt" });
+        FormCommit form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+            FileStatusList staged = form.FindControl<FileStatusList>("Staged")!;
+            await WaitForCountsAsync(unstaged, 0, staged, 2);
+            staged.GitItemStatuses.Count(item => item.IsRenamed).Should().Be(rename ? 1 : 0);
+            staged.SelectAll();
+            await WaitUntilAsync(() => staged.SelectedGitItems.Count == 2);
+            ProgressBar progress = form.FindControl<ProgressBar>("toolStripProgressBar1")!;
+            List<(double Maximum, double Value, bool OnUIThread)> updates = [];
+            progress.PropertyChanged += (_, _) =>
+            {
+                if (progress.IsVisible)
+                {
+                    updates.Add((progress.Maximum, progress.Value, Dispatcher.UIThread.CheckAccess()));
+                }
+            };
+            Button unstage = form.FindControl<Button>("toolUnstageItem")!;
+            unstage.IsEnabled.Should().BeTrue();
+            unstage.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            await WaitForCountsAsync(unstaged, unstagedCount, staged, 0);
+            await WaitUntilAsync(() => !progress.IsVisible);
+
+            updates.Should().Contain(update => update.Maximum == maximum && update.Value == maximum - 1);
+            updates.Should().OnlyContain(update => update.OnUIThread);
+            progress.Maximum.Should().Be(maximum);
+            progress.Value.Should().Be(maximum);
+            module.GitExecutable.GetOutput(new GitArgumentBuilder("diff") { "--cached", "--name-only" }).Should().BeEmpty();
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormCommit_progress_bar_should_follow_the_adjacent_runtime_status_height()
     {
         GitModule module = CreateRepositoryWithTwoUnstagedChanges();

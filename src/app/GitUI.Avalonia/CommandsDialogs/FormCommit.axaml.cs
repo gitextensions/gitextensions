@@ -1049,6 +1049,20 @@ public sealed partial class FormCommit : GitModuleForm
 
         _indexOperationInProgress = true;
         UpdateStageButtons();
+        if (!stage)
+        {
+            toolStripProgressBar1.IsVisible = true;
+            toolStripProgressBar1.Value = 0;
+
+            // Before batch execution is introduced, rename file counts as 1
+            // When executing in batch execution, rename must be interpreted as 2 different file arguments in command line arguments
+            // because Windows max command line have 32767 characters limitations, we can not separate the two.
+            // So the only solution for exact progress bar update would be changing Maximum value to include renamed file count as 2 files
+            toolStripProgressBar1.Maximum = items.Aggregate(0, (count, item) =>
+            {
+                return item.IsRenamed ? count + 2 : count + 1;
+            });
+        }
 
         CancellationToken cancellationToken = _interactiveAddSequence.Next();
         IGitModule module = Module;
@@ -1058,9 +1072,25 @@ public sealed partial class FormCommit : GitModuleForm
             string output;
             try
             {
-                success = stage
-                    ? module.StageFiles(items, out output)
-                    : module.UnstageFiles(items, out output);
+                if (stage)
+                {
+                    success = module.StageFiles(items, out output);
+                }
+                else
+                {
+                    _ = module.BatchUnstageFiles(items, eventArgs =>
+                    {
+                        // Framework constraint: Git runs off-thread, so each progress update must reach Avalonia's UI thread before the next batch.
+                        ThreadHelper.JoinableTaskFactory.Run(async () =>
+                        {
+                            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+                            toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1,
+                                toolStripProgressBar1.Value + eventArgs.ProcessedCount);
+                        });
+                    });
+                    success = true;
+                    output = string.Empty;
+                }
             }
             catch (Exception ex)
             {
@@ -1090,6 +1120,16 @@ public sealed partial class FormCommit : GitModuleForm
                 {
                     _suppressRepositoryChangeReload = false;
                 }
+            }
+
+            if (!stage)
+            {
+                if (success)
+                {
+                    toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
+                }
+
+                toolStripProgressBar1.IsVisible = false;
             }
 
             ReloadChanges(preferStaged: stage);
