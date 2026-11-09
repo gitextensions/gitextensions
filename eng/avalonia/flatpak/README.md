@@ -44,5 +44,11 @@ Secret Service providers are available inside the sandbox. External
 terminals use `flatpak-spawn --host --watch-bus` and the host's PATH. Revoking host-command
 permission produces an explicit unavailable error. Host Gource launch remains unavailable.
 
+The package keeps stock Git under `/app/libexec/git-core`. Its `/app/bin/git` launcher selects
+a private helper overlay for external editor and diff/merge launches; saved Git configuration
+is unchanged and remains usable by host Git. At startup, known host tools are queried through
+the host service and temporary storage is accepted only after a host read of the same probe
+file succeeds. App-local launch proxies are never stored in the user's Git configuration.
+
 Both harnesses are parity scaffolding and use only disposable application data and
 repositories outside the working tree.

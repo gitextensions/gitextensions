@@ -227,12 +227,22 @@ public sealed class PlatformToolLocatorTests
     }
 
     [Test]
-    public void Find_should_leave_confined_tool_configuration_to_the_host_bridge()
+    public void Find_should_use_host_answers_instead_of_sandbox_paths_when_confined()
     {
         PlatformToolLocator locator = CreateLocator(TerminalPlatform.Linux,
-            _ => throw new AssertionException("Sandbox paths must never be advertised as host paths."), isFlatpak: true);
+            name => name == "meld" ? "/host/tools/meld" : null, isFlatpak: true);
 
-        locator.Find("meld").Should().BeNull();
+        locator.Find("meld")!.Executable.Should().Be("/host/tools/meld");
+    }
+
+    [Test]
+    public void Find_should_use_installed_host_Flatpak_apps_after_host_PATH_when_confined()
+    {
+        PlatformToolLocator locator = CreateLocator(TerminalPlatform.Linux,
+            name => name == "flatpak" ? "/host/bin/flatpak" : null,
+            () => ["org.gnome.meld"], isFlatpak: true);
+
+        locator.Find("meld").Should().BeEquivalentTo(new LocatedTool("/host/bin/flatpak", ["run", "org.gnome.meld"]));
     }
 
     [AvaloniaTest]

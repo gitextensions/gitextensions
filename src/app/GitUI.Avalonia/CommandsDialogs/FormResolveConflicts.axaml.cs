@@ -654,14 +654,25 @@ public partial class FormResolveConflicts : GitModuleForm
                 {
                     using (FormBusyScope.Enter(this))
                     {
-                        res = await new Executable(_mergetoolPath, Module.WorkingDir).ExecuteAsync(arguments, throwOnErrorExit: false);
+                        res = await ExternalToolLauncher.Current.CreateExecutable(_mergetoolPath, Module.WorkingDir, ref arguments).ExecuteAsync(arguments, throwOnErrorExit: false);
                     }
+                }
+                catch (PlatformNotSupportedException exception)
+                {
+                    MessageBoxes.FailedToRunShell(this, _mergetoolPath, exception);
+                    return;
                 }
                 catch (Exception)
                 {
                     string text = string.Format(_errorStartingMergetool.Text, _mergetoolPath);
                     MessageBoxes.Show(this, text, _noBaseFileMergeCaption.Text,
                         WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (res.ExitCode == 69 && FlatpakEnvironment.IsFlatpak())
+                {
+                    MessageBoxes.FailedToRunShell(this, _mergetoolPath, new PlatformNotSupportedException(res.AllOutput));
                     return;
                 }
 
@@ -761,13 +772,22 @@ public partial class FormResolveConflicts : GitModuleForm
             // Avalonia: Unix tools and Flatpak app commands include their executable without the Windows .exe suffix.
             _mergetoolCmd = PlatformToolLocator.GetArguments(_mergetoolPath, _mergetoolCmd);
 
-            if (!PathUtil.TryFindFullPath(_mergetoolPath!, out string? fullPath))
+            try
             {
-                MessageBoxes.Show(this, _noMergeToolConfigured.Text, TranslatedStrings.Warning, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Warning);
+                // Cross-platform constraint: host executable paths must be checked in the host namespace.
+                if (!ExternalToolLauncher.Current.TryFindFullPath(_mergetoolPath, out string? fullPath))
+                {
+                    MessageBoxes.Show(this, _noMergeToolConfigured.Text, TranslatedStrings.Warning, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Warning);
+                    return false;
+                }
+
+                _mergetoolPath = fullPath;
+            }
+            catch (PlatformNotSupportedException exception)
+            {
+                MessageBoxes.FailedToRunShell(this, _mergetoolPath!, exception);
                 return false;
             }
-
-            _mergetoolPath = fullPath;
         }
 
         return true;

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Text.Json;
 using GitCommands.Git.Extensions;
+using GitUI.Compat;
 
 namespace GitExtensions.Compat;
 
@@ -17,6 +18,8 @@ internal static class FlatpakConformanceProbe
         {
             return null;
         }
+
+        bool hostToolsInitialized = await FlatpakToolEnvironment.InitializeAsync();
 
         string fullReportPath = Path.GetFullPath(reportPath);
         string childProcessPath = fullReportPath + ".child-pid";
@@ -63,6 +66,14 @@ internal static class FlatpakConformanceProbe
         {
             schemaVersion = 1,
             confined = File.Exists("/.flatpak-info"),
+            externalTools = new
+            {
+                initialized = hostToolsInitialized,
+                temporaryDirectory = Environment.GetEnvironmentVariable("TMPDIR"),
+                proxyDirectory = Environment.GetEnvironmentVariable("GITEXTENSIONS_HOST_PROXY_DIR"),
+                error = Environment.GetEnvironmentVariable("GITEXTENSIONS_HOST_TOOLS_ERROR"),
+                builtInEditor = FlatpakToolEnvironment.GetBuiltInEditorCommand()
+            },
             processTreeCancellation = new
             {
                 cancellationObserved,

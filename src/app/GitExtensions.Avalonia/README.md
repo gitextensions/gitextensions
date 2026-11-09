@@ -84,10 +84,16 @@ Known diff/merge tools and editor suggestions retain the shared installation loo
 On unconfined Linux, an additional lookup searches PATH, then installed Flatpak applications
 by their known IDs. On macOS it checks the executables inside system and user application
 bundles, then /opt/homebrew/bin and /usr/local/bin. Explicit configured paths and custom
-commands take priority. Detection inside the application Flatpak is being connected to the
-host launch and Git configuration boundary; its terminal host route is available separately.
+commands take priority. Inside the application Flatpak, discovery queries the host's PATH
+and installed Flatpak applications through the host-command service.
 Flatpak tool and editor commands use file forwarding so the selected application can read
 files created by the host's Git in a private temporary directory.
+
+Git settings retain host-valid commands. Bundled Git translates external editor and diff/merge
+launches through the host service without rewriting those settings. The built-in editor uses
+the installed Flatpak application ID with file forwarding, so the same saved command works
+from the host's Git. Before using temporary storage, startup checks that the host can read the
+same file in its cache directory; sandbox-private `/tmp` is not used for these tool files.
 
 On Linux, file and folder dialogs use the XDG FileChooser portal. Opening a file or URI and
 showing a path in the file manager use the XDG OpenURI portal. If the desktop portal or its

@@ -146,6 +146,8 @@ logo="$repo_root/setup/assets/Logo/git-extensions-logo-512px.png"
 sed -e 's/\r$//' -e "s/$package_app_id/$app_id/g" "$desktop_source" > "$desktop"
 sed -e 's/\r$//' -e "s/$package_app_id/$app_id/g" "$metainfo_source" > "$metainfo"
 
+cp "$flatpak_root"/gitextensions-*.sh "$flatpak_cache_root/"
+
 sed \
     -e "s/$package_app_id/$app_id/g" \
     -e "s#\"path\": \"publish\"#\"path\": \"$publish_root\"#" \

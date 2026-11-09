@@ -17,7 +17,7 @@ public static class EditorHelper
                 "nano",
                 GetVsCode(),
                 GetZed(),
-                .. PlatformToolLocator.Current.CanDiscover ? new[] { GetSublimeText() } : [],
+                GetSublimeText(),
             ];
         }
 
@@ -37,6 +37,12 @@ public static class EditorHelper
 
     internal static string GetBuiltInEditorCommand()
     {
+        if (FlatpakEnvironment.IsFlatpak())
+        {
+            // Cross-platform constraint: the saved editor must also run from the host's Git, including host-private temporary files.
+            return FlatpakToolEnvironment.GetBuiltInEditorCommand();
+        }
+
         string executableName = OperatingSystem.IsWindows()
             ? "GitExtensions.Avalonia.exe"
             : "GitExtensions.Avalonia";
