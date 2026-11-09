@@ -14,7 +14,9 @@ internal sealed class BuildServerCredentialStore(Func<string?> getWorkingDir)
     {
         CredentialsSetting setting = CreateSetting(buildServerUniqueKey);
         NetworkCredential credential = setting.GetValueOrDefault(GlobalSettings);
-        return Deserialize(credential);
+
+        // Framework constraint: the new apphost reads old encrypted stores only when their credential value is unambiguous.
+        return Deserialize(credential) ?? LegacyBuildServerCredentialStore.Get(buildServerUniqueKey);
     }
 
     internal void Save(string buildServerUniqueKey, IBuildServerCredentials credentials)

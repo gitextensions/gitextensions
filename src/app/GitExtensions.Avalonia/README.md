@@ -84,6 +84,12 @@ credential-helper protocol, but a host helper executable is not assumed to be ru
 the sandbox; Secret Service/keyring integration requires a compatible bundled helper and
 explicit packaging support.
 
+On Windows, build-server sign-in first uses the configured credential helper. If it has no
+stored value, the app can read the original application's per-user encrypted build-server
+files. Conflicting or unreadable old stores prompt for credentials rather than selecting an
+account. The old files stay unchanged; saving the dialog writes to the current helper.
+Other platforms keep using their configured helper and the same credential dialog.
+
 Known diff/merge tools and editor suggestions retain the shared installation lookup first.
 On unconfined Linux, an additional lookup searches PATH, then installed Flatpak applications
 by their known IDs. On macOS it checks the executables inside system and user application

@@ -168,7 +168,6 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
                 credentials = new BuildServerCredentials { BuildServerCredentialsType = BuildServerCredentialsType.Guest };
             }
 
-            // Continue to the prompt so the user can reset the credentials.
             IBuildServerCredentials? enteredCredentials = ThreadHelper.JoinableTaskFactory.Run(
                 () => ShowBuildServerCredentialsFormAsync(buildServerAdapter.UniqueKey, credentials));
             if (enteredCredentials is null)
