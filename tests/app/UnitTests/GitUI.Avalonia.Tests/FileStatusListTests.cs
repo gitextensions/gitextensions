@@ -587,6 +587,53 @@ public sealed class FileStatusListTests
     }
 
     [AvaloniaTest]
+    public void Status_sort_should_use_the_original_icon_order_after_the_branch_status([Values] bool flat)
+    {
+        using AppSettingsTestScope settings = new();
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        bool showGroups = AppSettings.FileStatusShowGroupNodesInFlatList;
+        try
+        {
+            AppSettings.FileStatusShowGroupNodesInFlatList.Value = false;
+            List<GitItemStatus> expected = [];
+            foreach (DiffBranchStatus branchStatus in Enum.GetValues<DiffBranchStatus>().OrderByDescending(status => status))
+            {
+                GitItemStatus[] statuses =
+                [
+                    new($"{branchStatus}-00-unknown") { IsTracked = true },
+                    new($"{branchStatus}-01-unmerged") { IsTracked = true, IsUnmerged = true },
+                    new($"{branchStatus}-02-modified") { IsTracked = true, IsChanged = true },
+                    new($"{branchStatus}-03-copied") { IsTracked = true, IsCopied = true },
+                    new($"{branchStatus}-04-renamed") { IsTracked = true, IsRenamed = true, RenameCopyPercentage = "100" },
+                    new($"{branchStatus}-05-added") { IsNew = true },
+                    new($"{branchStatus}-06-removed") { IsDeleted = true },
+                    new($"{branchStatus}-07-submodule") { IsTracked = true, IsSubmodule = true },
+                    new($"{branchStatus}-08-dirty-submodule") { IsTracked = true, IsSubmodule = true, IsDirty = true },
+                    new($"{branchStatus}-09-range") { IsRangeDiff = true },
+                ];
+                foreach (GitItemStatus status in statuses)
+                {
+                    status.DiffStatus = branchStatus;
+                    expected.Add(status);
+                }
+            }
+
+            DiffListSortService.Instance.DiffListSorting = flat ? DiffListSortType.FileStatusFlat : DiffListSortType.FileStatus;
+            FileStatusList control = new();
+            control.SetDiffs(
+                [new FileStatusWithDescription(null, new GitRevision(ObjectId.Random()), "Diff with parent", [.. expected.AsEnumerable().Reverse()])],
+                isFileTreeMode: false);
+
+            control.GitItemFilteredStatuses.Should().Equal(expected);
+        }
+        finally
+        {
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+            AppSettings.FileStatusShowGroupNodesInFlatList.Value = showGroups;
+        }
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_should_use_the_complete_primary_status_icon_matrix()
     {
         FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("added") { IsNew = true })

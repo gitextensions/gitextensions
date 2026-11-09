@@ -99,6 +99,11 @@ public partial class FileStatusList : GitModuleControl
     [DefaultValue(false)]
     public bool DisableSubmoduleMenuItemBold { get; set; }
 
+    // Framework constraint: a keyed native-image registry replaces WinForms ImageList storage and retains its source indices.
+    private record ImageListData(IReadOnlyDictionary<string, IImage> ImageList, Dictionary<string, int> StateImageIndexMap, IImage DefaultFileImage, int IconSize);
+
+    private static readonly ImageListData _imageListData = CreateImageListData();
+
     public FileStatusList()
     {
         _diffCalculator = new FileStatusDiffCalculator(() => Module);
@@ -224,6 +229,70 @@ public partial class FileStatusList : GitModuleControl
         }
     }
 
+    private static ImageListData CreateImageListData()
+    {
+        // Note: The order of images also affects sorting by file status as second key after DiffBranchStatus
+        (string imageKey, IImage icon)[] images =
+        [
+            (nameof(Images.FolderClosed), Images.FolderClosed),
+            (nameof(Images.FileStatusUnknown), Images.FileStatusUnknown),
+            (nameof(Images.Unmerged), Images.Unmerged),
+            (nameof(Images.FileStatusModifiedUnequal), Images.FileStatusModifiedUnequal),
+            (nameof(Images.FileStatusModifiedOnlyB), Images.FileStatusModifiedOnlyB),
+            (nameof(Images.FileStatusModifiedOnlyA), Images.FileStatusModifiedOnlyA),
+            (nameof(Images.FileStatusModifiedSame), Images.FileStatusModifiedSame),
+            (nameof(Images.FileStatusModified), Images.FileStatusModified),
+            (nameof(Images.FileStatusCopiedUnequal), Images.FileStatusCopiedUnequal),
+            (nameof(Images.FileStatusCopiedOnlyB), Images.FileStatusCopiedOnlyB),
+            (nameof(Images.FileStatusCopiedOnlyA), Images.FileStatusCopiedOnlyA),
+            (nameof(Images.FileStatusCopiedSame), Images.FileStatusCopiedSame),
+            (nameof(Images.FileStatusCopied), Images.FileStatusCopied),
+            (nameof(Images.FileStatusRenamedUnequal), Images.FileStatusRenamedUnequal.AdaptLightness()),
+            (nameof(Images.FileStatusRenamedOnlyB), Images.FileStatusRenamedOnlyB.AdaptLightness()),
+            (nameof(Images.FileStatusRenamedOnlyA), Images.FileStatusRenamedOnlyA.AdaptLightness()),
+            (nameof(Images.FileStatusRenamedSame), Images.FileStatusRenamedSame.AdaptLightness()),
+            (nameof(Images.FileStatusRenamed), Images.FileStatusRenamed.AdaptLightness()),
+            (nameof(Images.FileStatusAddedUnequal), Images.FileStatusAddedUnequal),
+            (nameof(Images.FileStatusAddedOnlyB), Images.FileStatusAddedOnlyB),
+            (nameof(Images.FileStatusAddedOnlyA), Images.FileStatusAddedOnlyA),
+            (nameof(Images.FileStatusAddedSame), Images.FileStatusAddedSame),
+            (nameof(Images.FileStatusAdded), Images.FileStatusAdded),
+            (nameof(Images.FileStatusRemovedUnequal), Images.FileStatusRemovedUnequal),
+            (nameof(Images.FileStatusRemovedOnlyB), Images.FileStatusRemovedOnlyB),
+            (nameof(Images.FileStatusRemovedOnlyA), Images.FileStatusRemovedOnlyA),
+            (nameof(Images.FileStatusRemovedSame), Images.FileStatusRemovedSame),
+            (nameof(Images.FileStatusRemoved), Images.FileStatusRemoved),
+            (nameof(Images.SubmodulesManage), Images.SubmodulesManage),
+            (nameof(Images.FolderSubmodule), Images.FolderSubmodule),
+            (nameof(Images.SubmoduleDirty), Images.SubmoduleDirty),
+            (nameof(Images.SubmoduleRevisionUp), Images.SubmoduleRevisionUp),
+            (nameof(Images.SubmoduleRevisionUpDirty), Images.SubmoduleRevisionUpDirty),
+            (nameof(Images.SubmoduleRevisionDown), Images.SubmoduleRevisionDown),
+            (nameof(Images.SubmoduleRevisionDownDirty), Images.SubmoduleRevisionDownDirty),
+            (nameof(Images.SubmoduleRevisionSemiUp), Images.SubmoduleRevisionSemiUp),
+            (nameof(Images.SubmoduleRevisionSemiUpDirty), Images.SubmoduleRevisionSemiUpDirty),
+            (nameof(Images.SubmoduleRevisionSemiDown), Images.SubmoduleRevisionSemiDown),
+            (nameof(Images.SubmoduleRevisionSemiDownDirty), Images.SubmoduleRevisionSemiDownDirty),
+            (nameof(FileStatusDiffCalculator.GitGrepIconName), Images.ViewFile),
+            (nameof(ImageListData.DefaultFileImage), Images.File),
+            (nameof(Images.Diff), Images.Diff),
+            (nameof(Images.DiffR), Images.DiffR),
+            (nameof(Images.DiffB), Images.DiffB),
+            (nameof(Images.DiffA), Images.DiffA),
+            (nameof(Images.DiffC), Images.DiffC),
+        ];
+
+        Dictionary<string, int> stateImageIndexDict = [];
+        Dictionary<string, IImage> list = [];
+        for (int i = 0; i < images.Length; i++)
+        {
+            list.Add(images[i].imageKey, images[i].icon);
+            stateImageIndexDict.Add(images[i].imageKey, i);
+        }
+
+        return new ImageListData(list, stateImageIndexDict, Images.File, 16);
+    }
+
     // Framework constraint: logical attachment dispatches the retained runtime-load callback.
     protected override void OnRuntimeLoad()
     {
@@ -232,6 +301,18 @@ public partial class FileStatusList : GitModuleControl
         if (OperatingSystem.IsWindows())
         {
             VisualStudioIntegration.Init();
+        }
+    }
+
+    /// <summary>
+    ///  Refreshes this list when repository-change notifications are raised.
+    /// </summary>
+    public void Bind(Action refreshAction)
+    {
+        _refreshAction = refreshAction;
+        if (TryGetUICommandsDirect(out IGitUICommands? commands))
+        {
+            BindCommands(commands);
         }
     }
 
@@ -271,18 +352,6 @@ public partial class FileStatusList : GitModuleControl
                     SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
                 }
             });
-        }
-    }
-
-    /// <summary>
-    ///  Refreshes this list when repository-change notifications are raised.
-    /// </summary>
-    public void Bind(Action refreshAction)
-    {
-        _refreshAction = refreshAction;
-        if (TryGetUICommandsDirect(out IGitUICommands? commands))
-        {
-            BindCommands(commands);
         }
     }
 
@@ -771,6 +840,20 @@ public partial class FileStatusList : GitModuleControl
     }
 
     /// <summary>
+    ///  Shows the given diff items.
+    /// </summary>
+    public void SetDiffs(IReadOnlyList<GitItemStatus> items)
+    {
+        SetFileTreeMode(false);
+        GitItemStatusesWithDescription = [];
+        _showDiffGroups = false;
+        _gitItemStatuses = items;
+        _allListItems = [.. items.Cast<object>()];
+        _allTreeItems = [];
+        ApplyFilter(selectFirstItem: SelectFirstItemOnSetItems);
+    }
+
+    /// <summary>
     ///  Selects the first file in the active list/tree.
     /// </summary>
     public void SelectFirstVisibleItem()
@@ -814,20 +897,6 @@ public partial class FileStatusList : GitModuleControl
         {
             lstFiles.SelectedIndex = 0;
         }
-    }
-
-    /// <summary>
-    ///  Shows the given diff items.
-    /// </summary>
-    public void SetDiffs(IReadOnlyList<GitItemStatus> items)
-    {
-        SetFileTreeMode(false);
-        GitItemStatusesWithDescription = [];
-        _showDiffGroups = false;
-        _gitItemStatuses = items;
-        _allListItems = [.. items.Cast<object>()];
-        _allTreeItems = [];
-        ApplyFilter(selectFirstItem: SelectFirstItemOnSetItems);
     }
 
     public void SelectStoredNextItem(bool orSelectFirst = false)
@@ -1109,112 +1178,124 @@ public partial class FileStatusList : GitModuleControl
         return roots;
     }
 
-    private static IImage GetItemImageKey(GitItemStatus item)
+    private static string GetItemImageKey(GitItemStatus gitItemStatus)
     {
-        if (item.IsDeleted)
+        if (gitItemStatus.IsDeleted)
         {
-            return item.DiffStatus switch
+            return gitItemStatus.DiffStatus switch
             {
-                DiffBranchStatus.OnlyAChange => Images.FileStatusRemovedOnlyA,
-                DiffBranchStatus.OnlyBChange => Images.FileStatusRemovedOnlyB,
-                DiffBranchStatus.SameChange => Images.FileStatusRemovedSame,
-                DiffBranchStatus.UnequalChange => Images.FileStatusRemovedUnequal,
-                _ => Images.FileStatusRemoved,
+                DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusRemovedOnlyA),
+                DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusRemovedOnlyB),
+                DiffBranchStatus.SameChange => nameof(Images.FileStatusRemovedSame),
+                DiffBranchStatus.UnequalChange => nameof(Images.FileStatusRemovedUnequal),
+                _ => nameof(Images.FileStatusRemoved)
             };
         }
 
-        if (item.IsRangeDiff)
+        if (gitItemStatus.IsRangeDiff)
         {
-            return Images.DiffR;
+            return nameof(Images.DiffR);
         }
 
         // Image without evaluating added/removed etc
-        if (!string.IsNullOrWhiteSpace(item.GrepString))
+        if (!string.IsNullOrWhiteSpace(gitItemStatus.GrepString))
         {
-            return Images.File;
+            return nameof(ImageListData.DefaultFileImage);
         }
 
-        if (item.IsNew || !item.IsTracked)
+        if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
         {
-            return item.DiffStatus switch
+            return gitItemStatus.DiffStatus switch
             {
-                DiffBranchStatus.OnlyAChange => Images.FileStatusAddedOnlyA,
-                DiffBranchStatus.OnlyBChange => Images.FileStatusAddedOnlyB,
-                DiffBranchStatus.SameChange => Images.FileStatusAddedSame,
-                DiffBranchStatus.UnequalChange => Images.FileStatusAddedUnequal,
-                _ => Images.FileStatusAdded,
+                DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusAddedOnlyA),
+                DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusAddedOnlyB),
+                DiffBranchStatus.SameChange => nameof(Images.FileStatusAddedSame),
+                DiffBranchStatus.UnequalChange => nameof(Images.FileStatusAddedUnequal),
+                _ => nameof(Images.FileStatusAdded)
             };
         }
 
-        if (item.IsUnmerged)
+        if (gitItemStatus.IsUnmerged)
         {
-            return Images.Unmerged;
+            return nameof(Images.Unmerged);
         }
 
-        if (item.IsSubmodule)
+        if (gitItemStatus.IsSubmodule)
         {
-            return item.IsDirty ? Images.SubmoduleDirty : Images.SubmodulesManage;
+            return GetSubmoduleItemImageKey(gitItemStatus);
         }
 
-        if (item.IsChanged || (item.IsRenamed && item.RenameCopyPercentage != "100"))
+        if (gitItemStatus.IsChanged || (gitItemStatus.IsRenamed && gitItemStatus.RenameCopyPercentage != "100"))
         {
-            return item.DiffStatus switch
+            return gitItemStatus.DiffStatus switch
             {
-                DiffBranchStatus.OnlyAChange => Images.FileStatusModifiedOnlyA,
-                DiffBranchStatus.OnlyBChange => Images.FileStatusModifiedOnlyB,
-                DiffBranchStatus.SameChange => Images.FileStatusModifiedSame,
-                DiffBranchStatus.UnequalChange => Images.FileStatusModifiedUnequal,
-                _ => Images.FileStatusModified,
+                DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusModifiedOnlyA),
+                DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusModifiedOnlyB),
+                DiffBranchStatus.SameChange => nameof(Images.FileStatusModifiedSame),
+                DiffBranchStatus.UnequalChange => nameof(Images.FileStatusModifiedUnequal),
+                _ => nameof(Images.FileStatusModified)
             };
         }
 
-        if (item.IsRenamed)
+        if (gitItemStatus.IsRenamed)
         {
-            return item.DiffStatus switch
+            return gitItemStatus.DiffStatus switch
             {
-                DiffBranchStatus.OnlyAChange => Images.FileStatusRenamedOnlyA.AdaptLightness(),
-                DiffBranchStatus.OnlyBChange => Images.FileStatusRenamedOnlyB.AdaptLightness(),
-                DiffBranchStatus.SameChange => Images.FileStatusRenamedSame.AdaptLightness(),
-                DiffBranchStatus.UnequalChange => Images.FileStatusRenamedUnequal.AdaptLightness(),
-                _ => Images.FileStatusRenamed.AdaptLightness(),
+                DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusRenamedOnlyA),
+                DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusRenamedOnlyB),
+                DiffBranchStatus.SameChange => nameof(Images.FileStatusRenamedSame),
+                DiffBranchStatus.UnequalChange => nameof(Images.FileStatusRenamedUnequal),
+                _ => nameof(Images.FileStatusRenamed)
             };
         }
 
-        if (item.IsCopied)
+        if (gitItemStatus.IsCopied)
         {
-            return item.DiffStatus switch
+            return gitItemStatus.DiffStatus switch
             {
-                DiffBranchStatus.OnlyAChange => Images.FileStatusCopiedOnlyA,
-                DiffBranchStatus.OnlyBChange => Images.FileStatusCopiedOnlyB,
-                DiffBranchStatus.SameChange => Images.FileStatusCopiedSame,
-                DiffBranchStatus.UnequalChange => Images.FileStatusCopiedUnequal,
-                _ => Images.FileStatusCopied,
+                DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusCopiedOnlyA),
+                DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusCopiedOnlyB),
+                DiffBranchStatus.SameChange => nameof(Images.FileStatusCopiedSame),
+                DiffBranchStatus.UnequalChange => nameof(Images.FileStatusCopiedUnequal),
+                _ => nameof(Images.FileStatusCopied)
             };
         }
 
         // Illegal flag combinations or no flags set?
-        return Images.FileStatusUnknown;
+        return nameof(Images.FileStatusUnknown);
     }
 
-    private static IImage GetSubmoduleItemImageKey(GitItemStatus item, GitSubmoduleStatus? status)
+    // Framework constraint: Avalonia images are resolved by the original resource key rather than a WinForms ImageList index.
+    private static IImage GetItemImage(GitItemStatus item)
+        => _imageListData.ImageList[GetItemImageKey(item)];
+
+    private static string GetSubmoduleItemImageKey(GitItemStatus gitItemStatus)
+    {
+        GitSubmoduleStatus? status = gitItemStatus.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus?> { IsCompleted: true } task
+            ? task.CompletedResult()
+            : null;
+        return GetSubmoduleItemImageKey(gitItemStatus, status);
+    }
+
+    private static string GetSubmoduleItemImageKey(GitItemStatus item, GitSubmoduleStatus? status)
     {
         if (status is null)
         {
-            return item.IsDirty ? Images.SubmoduleDirty : Images.SubmodulesManage;
+            return item.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.SubmodulesManage);
         }
 
         return (status.Status, status.IsDirty) switch
         {
-            (SubmoduleStatus.FastForward, true) => Images.SubmoduleRevisionUpDirty,
-            (SubmoduleStatus.FastForward, false) => Images.SubmoduleRevisionUp,
-            (SubmoduleStatus.Rewind, true) => Images.SubmoduleRevisionDownDirty,
-            (SubmoduleStatus.Rewind, false) => Images.SubmoduleRevisionDown,
-            (SubmoduleStatus.NewerTime, true) => Images.SubmoduleRevisionSemiUpDirty,
-            (SubmoduleStatus.NewerTime, false) => Images.SubmoduleRevisionSemiUp,
-            (SubmoduleStatus.OlderTime, true) => Images.SubmoduleRevisionSemiDownDirty,
-            (SubmoduleStatus.OlderTime, false) => Images.SubmoduleRevisionSemiDown,
-            (SubmoduleStatus.SameCommit, false) => Images.FolderSubmodule,
-            _ => Images.SubmoduleDirty,
+            (SubmoduleStatus.FastForward, true) => nameof(Images.SubmoduleRevisionUpDirty),
+            (SubmoduleStatus.FastForward, false) => nameof(Images.SubmoduleRevisionUp),
+            (SubmoduleStatus.Rewind, true) => nameof(Images.SubmoduleRevisionDownDirty),
+            (SubmoduleStatus.Rewind, false) => nameof(Images.SubmoduleRevisionDown),
+            (SubmoduleStatus.NewerTime, true) => nameof(Images.SubmoduleRevisionSemiUpDirty),
+            (SubmoduleStatus.NewerTime, false) => nameof(Images.SubmoduleRevisionSemiUp),
+            (SubmoduleStatus.OlderTime, true) => nameof(Images.SubmoduleRevisionSemiDownDirty),
+            (SubmoduleStatus.OlderTime, false) => nameof(Images.SubmoduleRevisionSemiDown),
+            (SubmoduleStatus.SameCommit, false) => nameof(Images.FolderSubmodule),
+            _ => nameof(Images.SubmoduleDirty),
         };
     }
 
@@ -2308,7 +2389,7 @@ public partial class FileStatusList : GitModuleControl
         }
 
         internal static IImage GetItemImageForTesting(GitItemStatus item)
-            => FileStatusList.GetItemImageKey(item);
+            => FileStatusList.GetItemImage(item);
 
         // parity-scaffolding: verifies the WinForms delayed-expansion contract against Avalonia's lazy containers.
         internal void RestoreDiffTreeChildrenForTesting(bool delayExpansion, Action? afterAction = null)
@@ -2321,7 +2402,7 @@ public partial class FileStatusList : GitModuleControl
         }
 
         internal static IImage GetSubmoduleImageForTesting(GitItemStatus item, GitSubmoduleStatus? status)
-            => FileStatusList.GetSubmoduleItemImageKey(item, status);
+            => _imageListData.ImageList[FileStatusList.GetSubmoduleItemImageKey(item, status)];
     }
 
     private static IReadOnlyList<DiffTreeNode> BuildDiffPathTree(
@@ -2344,7 +2425,7 @@ public partial class FileStatusList : GitModuleControl
                 => items.GroupBy(item => Path.GetExtension(item.Item.Name), StringComparer.OrdinalIgnoreCase)
                     .OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase),
             DiffListSortType.FileStatus or DiffListSortType.FileStatusFlat
-                => items.GroupBy(item => GetStatusGroupKey(item.Item))
+                => items.GroupBy(item => GetStatusKey(item.Item))
                     .OrderBy(group => group.Key, StringComparer.Ordinal),
             _ => throw new NotSupportedException($"{sortType} is not a supported diff-list sorting mode."),
         };
@@ -2368,7 +2449,7 @@ public partial class FileStatusList : GitModuleControl
                 text,
                 sortType is DiffListSortType.FileExtension or DiffListSortType.FileExtensionFlat
                     ? Images.File
-                    : GetItemImageKey(groupItems[0].Item),
+                    : GetItemImage(groupItems[0].Item),
                 item: null,
                 folderPath: null,
                 parent,
@@ -2383,23 +2464,13 @@ public partial class FileStatusList : GitModuleControl
 
         return roots;
 
-        // Note: The order of status keys also affects sorting by file status as second key after DiffBranchStatus
-        static string GetStatusGroupKey(GitItemStatus status)
+        static string GetStatusKey(GitItemStatus status)
         {
-            string primaryStatus = status switch
-            {
-                { IsDeleted: true } => "01-removed",
-                { IsRangeDiff: true } => "02-range",
-                { IsNew: true } or { IsTracked: false } => "03-added",
-                { IsUnmerged: true } => "04-unmerged",
-                { IsSubmodule: true, IsDirty: true } => "05-submodule-dirty",
-                { IsSubmodule: true } => "06-submodule",
-                { IsChanged: true } => "07-modified",
-                { IsRenamed: true } => "08-renamed",
-                { IsCopied: true } => "09-copied",
-                _ => "10-unknown",
-            };
-            return $"{(char)((int)'Z' - (int)status.DiffStatus)}:{primaryStatus}";
+            char inverseDiffStatus = (char)((int)'Z' - (int)status.DiffStatus);
+            int imageIndex = _imageListData.StateImageIndexMap[GetItemImageKey(status)];
+            DebugHelpers.Assert(inverseDiffStatus >= 0, $"offset of {nameof(inverseDiffStatus)} needs to be adapted");
+            DebugHelpers.Assert(imageIndex < 100, $"width of {nameof(imageIndex)} needs to be adapted");
+            return $"{inverseDiffStatus}{imageIndex:D02}";
         }
     }
 
@@ -2432,7 +2503,7 @@ public partial class FileStatusList : GitModuleControl
             FileStatusItem? item = statusNode.Tag as FileStatusItem;
             DiffTreeNode node = new(
                 statusNode.Text,
-                item is null ? Images.FolderClosed : GetItemImageKey(item.Item),
+                item is null ? Images.FolderClosed : GetItemImage(item.Item),
                 item,
                 statusNode.Tag is RelativePath folderPath ? folderPath : null,
                 currentParent,
@@ -2458,7 +2529,7 @@ public partial class FileStatusList : GitModuleControl
             item.Item.OldName is null
                 ? showFullPath ? item.Item.Name : item.Item.Name.Split('/')[^1]
                 : $"{(showFullPath ? item.Item.Name : item.Item.Name.Split('/')[^1])} ({item.Item.OldName})",
-            GetItemImageKey(item.Item),
+            GetItemImage(item.Item),
             item,
             folderPath: null,
             parent,
@@ -2619,7 +2690,7 @@ public partial class FileStatusList : GitModuleControl
                 ? Images.FolderClosed
                 : _isFileTreeMode && !node.Item.Item.IsSubmodule
                     ? Images.File
-                    : GetItemImageKey(node.Item.Item),
+                    : GetItemImage(node.Item.Item),
             Margin = new Avalonia.Thickness(1, 0, 3, 0),
         };
         if (node.Item is not null)
@@ -2708,7 +2779,7 @@ public partial class FileStatusList : GitModuleControl
             Width = 16,
             Height = 16,
             Stretch = Stretch.Uniform,
-            Source = GetItemImageKey(gitItemStatus),
+            Source = GetItemImage(gitItemStatus),
             Margin = new Avalonia.Thickness(3, 0, 3, 0),
         };
         string itemText = gitItemStatus.OldName is null
@@ -2747,7 +2818,7 @@ public partial class FileStatusList : GitModuleControl
 #pragma warning restore VSTHRD003
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                image.Source = GetSubmoduleItemImageKey(item, status);
+                image.Source = _imageListData.ImageList[GetSubmoduleItemImageKey(item, status)];
                 text.Text = AppendItemSubmoduleStatus(itemText, item);
             });
         });
