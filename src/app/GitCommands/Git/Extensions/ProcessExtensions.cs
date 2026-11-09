@@ -47,7 +47,7 @@ public static class ProcessExtensions
 
             // Query the required buffer size first.
             int status = NativeMethods.NtQueryInformationProcess(handle, NativeMethods.ProcessCommandLineInformation, IntPtr.Zero, 0, out int length);
-            if (status != NativeMethods.STATUS_INFO_LENGTH_MISMATCH || length < Marshal.SizeOf<NativeMethods.UNICODE_STRING>() || length > NativeMethods.MaxCommandLineInformationLength)
+            if (status != NativeMethods.STATUS_INFO_LENGTH_MISMATCH || length < Marshal.SizeOf<NativeMethods.UnicodeString>() || length > NativeMethods.MaxCommandLineInformationLength)
             {
                 return null;
             }
@@ -61,8 +61,8 @@ public static class ProcessExtensions
                 }
 
                 // The string data follows the UNICODE_STRING header in the same buffer.
-                NativeMethods.UNICODE_STRING commandLine = Marshal.PtrToStructure<NativeMethods.UNICODE_STRING>(buffer);
-                if (commandLine.Length > length - Marshal.SizeOf<NativeMethods.UNICODE_STRING>())
+                NativeMethods.UnicodeString commandLine = Marshal.PtrToStructure<NativeMethods.UnicodeString>(buffer);
+                if (commandLine.Length > length - Marshal.SizeOf<NativeMethods.UnicodeString>())
                 {
                     return null;
                 }
@@ -90,7 +90,7 @@ public static class ProcessExtensions
         public const int MaxCommandLineInformationLength = ushort.MaxValue + 64;
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct UNICODE_STRING
+        public struct UnicodeString
         {
             public ushort Length;
             public ushort MaximumLength;

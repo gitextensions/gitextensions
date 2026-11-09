@@ -10,7 +10,8 @@ public class ProcessExtensionsTests
     public void TryGetCommandLine_should_return_command_line_of_other_process()
     {
         const string arguments = "-n 30 127.0.0.1";
-        using Process process = Process.Start(new ProcessStartInfo("ping.exe", arguments) { CreateNoWindow = true, UseShellExecute = false, RedirectStandardOutput = true })!;
+        string ping = Path.Combine(Environment.SystemDirectory, "ping.exe");
+        using Process process = Process.Start(new ProcessStartInfo(ping, arguments) { CreateNoWindow = true, UseShellExecute = false, RedirectStandardOutput = true })!;
         try
         {
             string? commandLine = process.TryGetCommandLine();
