@@ -833,14 +833,18 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void UpdateConflictedFilesMenu()
     {
-        baseFileName.Text = localFileName.Text = remoteFileName.Text = "";
-        if (HasMultipleRowsSelected())
+        // NOTE we use WaitCursorScope here as Avalonia needs explicit cursor restoration after the operation
+        using (WaitCursorScope.Enter(cursor: null, requiredWindow: this))
         {
-            HandleMultipleSelect();
-        }
-        else if (HasOneRowSelected())
-        {
-            HandleSingleSelect();
+            baseFileName.Text = localFileName.Text = remoteFileName.Text = "";
+            if (HasMultipleRowsSelected())
+            {
+                HandleMultipleSelect();
+            }
+            else if (HasOneRowSelected())
+            {
+                HandleSingleSelect();
+            }
         }
     }
 

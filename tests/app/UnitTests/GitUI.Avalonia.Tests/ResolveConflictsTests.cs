@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CommonTestUtils;
@@ -260,6 +261,57 @@ public sealed class ResolveConflictsTests
         form.conflictDescription.Text.Should().Contain("deleted locally");
         form.localFileName.Text.Should().Be("deleted");
         form.remoteFileName.Text.Should().Be("b.txt");
+    }
+
+    [AvaloniaTest]
+    public void Conflict_selection_should_show_a_wait_cursor_during_the_menu_query_and_restore_it([Values] bool queryFails)
+    {
+        using AppSettingsTestScope settings = new();
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        module.GetConflictsAsync(Arg.Any<string?>()).Returns(
+        [
+            CreateConflict("a.txt", hasBase: true, hasLocal: true, hasRemote: true),
+            CreateConflict("b.txt", hasBase: true, hasLocal: true, hasRemote: true),
+        ]);
+        string root = Path.Combine(Path.GetTempPath(), "GitExtensions.ConflictCursor-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(Path.Combine(root, "b.txt"));
+        module.WorkingDir.Returns(root);
+        FormResolveConflicts form = new(commands);
+        try
+        {
+            form.Show();
+            Cursor? previous = form.Cursor;
+            List<Cursor?> queriedCursors = [];
+            module.IsSubmodule("b.txt").Returns(_ =>
+            {
+                queriedCursors.Add(form.Cursor);
+                if (queryFails)
+                {
+                    throw new IOException("Owned conflict query failure");
+                }
+
+                return false;
+            });
+            Action select = () => form.ConflictedFiles.SelectedIndex = 1;
+            if (queryFails)
+            {
+                select.Should().Throw<IOException>().WithMessage("Owned conflict query failure");
+            }
+            else
+            {
+                select();
+                form.localFileName.Text.Should().Be("b.txt");
+            }
+
+            queriedCursors.Should().ContainSingle().Which.Should().NotBeNull();
+            queriedCursors[0]!.ToString().Should().Contain(nameof(StandardCursorType.Wait));
+            form.Cursor.Should().BeSameAs(previous);
+        }
+        finally
+        {
+            form.Close();
+            TestDirectory.Delete(root);
+        }
     }
 
     [AvaloniaTest]
