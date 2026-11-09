@@ -8,6 +8,7 @@ using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.Gource.Properties;
 using GitUI;
+using GitUI.Compat;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.Gource;
@@ -70,6 +71,18 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
 
         string pathToGource = _gourcePath.ValueOrDefault(Settings);
         pathToGource = ResetMissingConfiguredPath(args.OwnerForm, pathToGource);
+        if (string.IsNullOrEmpty(pathToGource))
+        {
+            try
+            {
+                pathToGource = PlatformToolLocator.Current.Find("gource")?.Executable ?? pathToGource;
+            }
+            catch (PlatformNotSupportedException exception)
+            {
+                MessageBoxes.FailedToRunShell(args.OwnerForm, "Gource", exception);
+                return false;
+            }
+        }
 
         // Cross-platform constraint: the upstream archive is Windows-only; Linux and macOS select their native executable.
         if (string.IsNullOrEmpty(pathToGource) && ShouldOfferAutomaticDownload)
@@ -121,7 +134,8 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
 
     private string ResetMissingConfiguredPath(IWin32Window? owner, string pathToGource)
     {
-        if (!string.IsNullOrEmpty(pathToGource) && !File.Exists(pathToGource))
+        // Cross-platform constraint: validate configured host executables at launch inside Flatpak.
+        if (!string.IsNullOrEmpty(pathToGource) && !FlatpakEnvironment.IsFlatpak() && !File.Exists(pathToGource))
         {
             DialogResult result = MessageBoxes.Show(
                 owner,

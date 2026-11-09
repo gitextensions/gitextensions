@@ -73,8 +73,8 @@ In Flatpak, external terminals run on the host through `flatpak-spawn --host`, u
 host's PATH and desktop default terminal. This requires the manifest's
 `--talk-name=org.freedesktop.Flatpak` permission and a running Flatpak host-command service.
 If that permission is revoked or the service is unavailable, the terminal action reports
-that host tools are not available in this Flatpak installation. Host Gource launch is still
-unavailable. Git and OpenSSH are bundled for repository and SSH operations.
+that host tools are not available in this Flatpak installation. Configured Gource also uses
+the host launcher. Git and OpenSSH are bundled for repository and SSH operations.
 The manifest forwards the host SSH agent. HTTPS authentication uses Git's configured
 credential-helper protocol, but a host helper executable is not assumed to be runnable inside
 the sandbox; Secret Service/keyring integration requires a compatible bundled helper and
@@ -94,6 +94,9 @@ launches through the host service without rewriting those settings. The built-in
 the installed Flatpak application ID with file forwarding, so the same saved command works
 from the host's Git. Before using temporary storage, startup checks that the host can read the
 same file in its cache directory; sandbox-private `/tmp` is not used for these tool files.
+When only a registered tool's Flatpak application is installed, the bundled Git helper uses
+an app-local launch proxy with file forwarding. Native host executables take priority.
+On macOS, edit/reword uses a POSIX sequence-editor command instead of GNU-only `sed` flags.
 
 On Linux, file and folder dialogs use the XDG FileChooser portal. Opening a file or URI and
 showing a path in the file manager use the XDG OpenURI portal. If the desktop portal or its

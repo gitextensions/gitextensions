@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitExtensions.Extensibility;
 
@@ -13,6 +14,7 @@ public sealed class ExternalToolLauncher
     private readonly Func<bool> _isFlatpak;
     private readonly Func<string, string?> _resolveHost;
     private readonly Func<string, string, IExecutable> _createExecutable;
+    private readonly Func<ProcessStartInfo, Process?> _startProcess;
 
     public ExternalToolLauncher()
         : this(FlatpakEnvironment.IsFlatpak, FlatpakHost.Default.ResolveExecutable,
@@ -21,16 +23,21 @@ public sealed class ExternalToolLauncher
     }
 
     internal ExternalToolLauncher(Func<bool> isFlatpak, Func<string, string?> resolveHost,
-        Func<string, string, IExecutable> createExecutable)
+        Func<string, string, IExecutable> createExecutable,
+        Func<ProcessStartInfo, Process?>? startProcess = null)
     {
         _isFlatpak = isFlatpak;
         _resolveHost = resolveHost;
         _createExecutable = createExecutable;
+        _startProcess = startProcess ?? Process.Start;
     }
 
     public static ExternalToolLauncher Current => _current;
 
-    public bool TryFindFullPath(string? command, out string? path)
+    public Process? Start(ProcessStartInfo startInfo)
+        => _startProcess(startInfo);
+
+    public bool TryFindFullPath([NotNullWhen(true)] string? command, [NotNullWhen(true)] out string? path)
     {
         path = null;
         if (string.IsNullOrWhiteSpace(command))

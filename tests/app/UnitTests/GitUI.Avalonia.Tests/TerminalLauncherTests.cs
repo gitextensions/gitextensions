@@ -103,6 +103,52 @@ public sealed class TerminalLauncherTests
     }
 
     [Test]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Launch_should_use_an_installed_known_Flatpak_terminal_after_native_lookup(bool confined)
+    {
+        ProcessStartInfo? captured = null;
+        TerminalLauncher launcher = new(
+            _ => null,
+            _ => null,
+            startInfo => captured = startInfo,
+            TerminalPlatform.Linux,
+            () => confined,
+            executable => executable == "konsole" ? new LocatedTool("/usr/bin/flatpak", ["run", "org.kde.konsole"]) : null);
+
+        launcher.Launch("/work/repository");
+
+        captured.Should().NotBeNull();
+        captured!.WorkingDirectory.Should().Be("/work/repository");
+        if (confined)
+        {
+            captured.FileName.Should().Be("/usr/bin/flatpak-spawn");
+            captured.ArgumentList.Should().Equal("--host", "--watch-bus", "--directory=/work/repository", "/usr/bin/flatpak", "run", "org.kde.konsole", "--workdir", "/work/repository");
+        }
+        else
+        {
+            captured.FileName.Should().Be("/usr/bin/flatpak");
+            captured.ArgumentList.Should().Equal("run", "org.kde.konsole", "--workdir", "/work/repository");
+        }
+    }
+
+    [Test]
+    public void Launch_should_prefer_a_native_terminal_before_an_installed_Flatpak_fallback()
+    {
+        ProcessStartInfo? captured = null;
+        TerminalLauncher launcher = new(
+            _ => null,
+            executable => executable == "xterm" ? "/usr/bin/xterm" : null,
+            startInfo => captured = startInfo,
+            TerminalPlatform.Linux,
+            locateTool: _ => throw new AssertionException("All native candidates must be exhausted before installed apps are queried."));
+
+        launcher.Launch("/work/repository");
+
+        captured!.FileName.Should().Be("/usr/bin/xterm");
+    }
+
+    [Test]
     public void Launch_should_report_external_terminal_as_unavailable_in_Flatpak()
     {
         TerminalLauncher launcher = new(

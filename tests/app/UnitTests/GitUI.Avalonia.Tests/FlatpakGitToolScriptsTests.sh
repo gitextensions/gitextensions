@@ -21,12 +21,14 @@ chmod +x "$core/git"
 cp "$native_core/git-mergetool--lib" "$native_core/git-difftool--helper" "$core/"
 cp "$native_core/mergetools/meld" "$core/mergetools/"
 bash "$sources/gitextensions-install-tools.sh" "$root/package"
-export GITEXTENSIONS_FLATPAK_PREFIX="$root/package" GITEXTENSIONS_HOST_PROXY_DIR="$root/proxies"
+export GITEXTENSIONS_FLATPAK_PREFIX="$root/package" GITEXTENSIONS_HOST_PROXY_DIR="${GITEXTENSIONS_TEST_PROXY_DIR:-$root/proxies}"
+export GITEXTENSIONS_HOST_TOOL="$root/package/bin/gitextensions-host-tool"
 export GITEXTENSIONS_FLATPAK_SPAWN="$root/spawn" GITEXTENSIONS_SCRIPT_LOG="$root/host.log"
 cat > "$root/spawn" <<'EOF'
 #!/bin/bash
 if [[ ${GITEXTENSIONS_TEST_DENIED:-} = 1 ]]; then exit 1; fi
 printf '%s\0' "$@" >> "$GITEXTENSIONS_SCRIPT_LOG.spawn"
+if [[ ${GITEXTENSIONS_TEST_MANAGED_PROXY:-} = 1 && " $* " = *' gitextensions-tool-lookup meld '* ]]; then exit 44; fi
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --directory=*) cd -- "${1#*=}"; shift;;
@@ -35,7 +37,11 @@ while [[ $# -gt 0 ]]; do
         *) break;;
     esac
 done
-exec "$@"
+arguments=()
+for argument do
+    if [[ "$argument" = /host/flatpak ]]; then arguments+=("$GITEXTENSIONS_TEST_FLATPAK"); else arguments+=("$argument"); fi
+done
+exec "${arguments[@]}"
 EOF
 cat > "$root/tool" <<'EOF'
 #!/bin/bash
@@ -61,8 +67,23 @@ diff-command)
     "$git" difftool --no-prompt --tool=owned
     test "$(cat .git/config)" = "$before"
     ;;
+diff-environment)
+    "$git" config difftool.difftastic.cmd "'${root}/tool' \"\$LOCAL\" \"\$REMOTE\""
+    read -r -a diff_arguments <<< "$GITEXTENSIONS_TEST_DIFF_ARGUMENTS"
+    before=$(cat .git/config)
+    "$git" difftool --no-prompt "${diff_arguments[@]}"
+    test "$(cat .git/config)" = "$before"
+    ;;
 diff-path)
     "$git" config difftool.meld.path "$root/tool"
+    before=$(cat .git/config)
+    "$git" difftool --no-prompt --tool=meld
+    test "$(cat .git/config)" = "$before"
+    ;;
+diff-managed-proxy)
+    export GITEXTENSIONS_TEST_MANAGED_PROXY=1 GITEXTENSIONS_TEST_FLATPAK="$root/flatpak"
+    printf '#!/bin/bash\nprintf "%%s\\0" "$@" > "$GITEXTENSIONS_SCRIPT_LOG"\n' > "$root/flatpak"
+    chmod +x "$root/flatpak"
     before=$(cat .git/config)
     "$git" difftool --no-prompt --tool=meld
     test "$(cat .git/config)" = "$before"

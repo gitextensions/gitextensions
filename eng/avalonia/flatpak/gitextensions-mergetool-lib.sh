@@ -64,7 +64,22 @@ get_merge_tool_path () {
         echo "$merge_tool_path"
         return
     fi
-    gitextensions_resolved=$("$gitextensions_prefix/bin/gitextensions-host-tool" --resolve "$merge_tool_path") || return $?
+    gitextensions_resolved=$("$gitextensions_prefix/bin/gitextensions-host-tool" --resolve "$merge_tool_path")
+    gitextensions_status=$?
+    if test "$gitextensions_status" != 0
+    then
+        case "$merge_tool_path" in
+        */*) return "$gitextensions_status" ;;
+        *)
+            if test "$gitextensions_status" = 44 && test -x "$GITEXTENSIONS_HOST_PROXY_DIR/$merge_tool_path"
+            then
+                echo "$GITEXTENSIONS_HOST_PROXY_DIR/$merge_tool_path"
+                return
+            fi
+            return "$gitextensions_status"
+            ;;
+        esac
+    fi
     gitextensions_digest=$(printf '%s' "$gitextensions_resolved" | sha256sum)
     gitextensions_proxy="$GITEXTENSIONS_HOST_PROXY_DIR/path-${gitextensions_digest%% *}"
     if test ! -f "$gitextensions_proxy"

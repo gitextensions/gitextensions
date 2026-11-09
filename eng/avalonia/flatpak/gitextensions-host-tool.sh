@@ -25,11 +25,11 @@ if ! "$spawn" --host /bin/true >/dev/null 2>&1; then
 fi
 
 arguments=(--host --watch-bus "--directory=$PWD")
-for name in GIT_CONFIG_GLOBAL GIT_CONFIG_SYSTEM GIT_CONFIG_NOSYSTEM HOME; do
-    if declare -p "$name" >/dev/null 2>&1; then
-        arguments+=("--env=$name=${!name}")
-    fi
-done
+while IFS= read -r name; do
+    case "$name" in
+        GIT_CONFIG_*|HOME|TMPDIR|LANG|LANGUAGE|LC_*|DFT_*) arguments+=("--env=$name=${!name}");;
+    esac
+done < <(compgen -e)
 
 # The host service creates this command's own process group. Its bus-loss signal must also stop descendants.
 exec "$spawn" "${arguments[@]}" /bin/sh -c '

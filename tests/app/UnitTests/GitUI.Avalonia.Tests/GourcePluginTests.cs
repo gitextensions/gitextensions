@@ -40,6 +40,8 @@ public sealed class GourcePluginTests
     private StubMessageBoxHost _messageBoxes = null!;
     private WinFormsShims.IMessageBoxHost? _originalMessageBoxHost;
     private WinFormsShims.IOsShell? _originalOsShell;
+    private ExternalToolLauncher _originalToolLauncher = null!;
+    private PlatformToolLocator _originalToolLocator = null!;
 
     [SetUp]
     public void SetUp()
@@ -65,6 +67,8 @@ public sealed class GourcePluginTests
 
         _originalMessageBoxHost = TryGetMessageBoxHost();
         _originalOsShell = TryGetOsShell();
+        _originalToolLauncher = ExternalToolLauncher.TestAccessor.Current;
+        _originalToolLocator = PlatformToolLocator.TestAccessor.Current;
         _messageBoxes = new StubMessageBoxHost();
         WinFormsShims.ShimHost.MessageBoxHost = _messageBoxes;
         WinFormsShims.ShimHost.OsShell = new StubOsShell();
@@ -75,15 +79,67 @@ public sealed class GourcePluginTests
     {
         WinFormsShims.ShimHost.MessageBoxHost = _originalMessageBoxHost ?? new StubMessageBoxHost();
         WinFormsShims.ShimHost.OsShell = _originalOsShell ?? new StubOsShell();
+        ExternalToolLauncher.TestAccessor.Current = _originalToolLauncher;
+        PlatformToolLocator.TestAccessor.Current = _originalToolLocator;
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
     }
 
-    [TestCase(false, true)]
-    [TestCase(true, false)]
-    public void IsLaunchAvailable_should_reject_host_executable_in_Flatpak(bool isFlatpak, bool expected)
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Gource_button_should_use_the_host_boundary_and_report_denied_permission(bool denied)
     {
-        GourceStart.IsLaunchAvailable(isFlatpak).Should().Be(expected);
+        GitModule module = CreateRepository();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        ProcessStartInfo? launched = null;
+        ExternalToolLauncher.TestAccessor.Current = new(() => true,
+            command => denied ? throw new PlatformNotSupportedException("Gource is not available in this Flatpak installation.") : command,
+            (_, _) => throw new AssertionException("Detached Gource does not use the Git executable factory."),
+            startInfo =>
+            {
+                launched = startInfo;
+                return null;
+            });
+        const string hostProgram = "/host/bin/gource";
+        using GourceStart form = new(hostProgram, new GitUIEventArgs(ownerForm: null, commands), "--hide filenames");
+
+        form.GetTestAccessor().Button1.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+
+        if (denied)
+        {
+            launched.Should().BeNull();
+            _messageBoxes.Messages.Should().ContainSingle().Which.Should().Contain("not available in this Flatpak installation");
+        }
+        else
+        {
+            launched.Should().NotBeNull();
+            launched!.FileName.Should().Be(Path.Combine(AppContext.BaseDirectory, "gitextensions-host-tool"));
+            launched.Arguments.Should().Be("\"/host/bin/gource\" --hide filenames");
+            launched.WorkingDirectory.Should().Be(module.WorkingDir);
+            form.PathToGource.Should().Be(hostProgram);
+            form.GourceArguments.Should().Be("--hide filenames");
+            _messageBoxes.Messages.Should().BeEmpty();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Gource_plugin_should_report_denied_host_discovery_before_opening_its_dialog()
+    {
+        GourcePlugin plugin = new();
+        IGitPluginSettingsContainer container = Substitute.For<IGitPluginSettingsContainer>();
+        container.GetSettingsSource().Returns(new DictionarySettingsSource());
+        plugin.SettingsContainer = container;
+        PlatformToolLocator.TestAccessor.Current = new(TerminalPlatform.Linux, _ => false,
+            _ => throw new PlatformNotSupportedException("Host tools are not available in this Flatpak installation."),
+            _ => [], [], [], isFlatpak: true);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(CreateRepository());
+
+        plugin.Execute(new GitUIEventArgs(ownerForm: null, commands)).Should().BeFalse();
+
+        _messageBoxes.Messages.Should().ContainSingle().Which.Should().Contain("not available in this Flatpak installation");
     }
 
     [AvaloniaTest]
@@ -219,23 +275,15 @@ public sealed class GourcePluginTests
     }
 
     [AvaloniaTest]
-    public void Gource_start_should_validate_missing_and_confined_executables()
+    public void Gource_start_should_validate_a_missing_executable()
     {
         using GourceStart form = new();
         GourceStart.TestAccessor accessor = form.GetTestAccessor();
         IAvatarProvider avatars = Substitute.For<IAvatarProvider>();
 
         accessor.GourcePath.Text = Path.Combine(_workingDirectory, "missing-gource");
-        accessor.StartGource(false, _ => null, avatars);
+        accessor.StartGource(_ => null, avatars);
         _messageBoxes.Messages.Should().ContainSingle().Which.Should().StartWith("Cannot find Gource.");
-
-        _messageBoxes.Messages.Clear();
-        string existingPath = Path.Combine(_workingDirectory, "gource");
-        File.WriteAllText(existingPath, string.Empty);
-        accessor.GourcePath.Text = existingPath;
-        accessor.StartGource(true, _ => null, avatars);
-        _messageBoxes.Messages.Should().ContainSingle()
-            .Which.Should().Contain("Gource is not available in this Flatpak installation.");
     }
 
     [AvaloniaTest]
@@ -254,7 +302,6 @@ public sealed class GourcePluginTests
         ProcessStartInfo? launched = null;
 
         accessor.StartGource(
-            false,
             startInfo =>
             {
                 launched = startInfo;
@@ -276,7 +323,6 @@ public sealed class GourcePluginTests
         _messageBoxes.Messages.Clear();
         using GourceStart failingForm = new(executablePath, eventArgs, "--hide filenames");
         failingForm.GetTestAccessor().StartGource(
-            false,
             _ => throw new InvalidOperationException("launch failed"),
             avatars);
         _messageBoxes.Messages.Should().ContainSingle("launch failed");
