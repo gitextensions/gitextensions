@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
@@ -56,14 +57,14 @@ public partial class FileViewer : GitModuleControl
     private int _lastCaretLine = -1;
 
     /// <summary>
-    ///  Gets or sets the owning task factory so its synchronous joins can pump rendering work.
-    /// </summary>
-    internal JoinableTaskFactory? MainThreadFactory { get; set; }
-
-    /// <summary>
     /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
     /// </summary>
     public event Action? EscapePressed;
+
+    /// <summary>
+    ///  Gets or sets the owning task factory so its synchronous joins can pump rendering work.
+    /// </summary>
+    internal JoinableTaskFactory? MainThreadFactory { get; set; }
 
     private readonly TranslationString _largeFileSizeWarning = new("This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
     private readonly TranslationString _cannotViewImage = new("Cannot view image {0}");
@@ -125,6 +126,9 @@ public partial class FileViewer : GitModuleControl
     private Encoding? _encoding;
     private Func<Task>? _deferShowFunc;
     private FileStatusItem? _viewItem;
+
+    [GeneratedRegex(@"warning: .*has type .* expected .*", RegexOptions.ExplicitCapture)]
+    private static partial Regex FileModeWarningRegex { get; }
 
     public FileViewer()
     {
@@ -1715,6 +1719,12 @@ public partial class FileViewer : GitModuleControl
             throwOnErrorExit: false,
             cancellationToken: CancellationToken.None);
         string output = result.AllOutput.Trim();
+        if (OperatingSystem.IsWindows())
+        {
+            // remove file mode warnings
+            output = output.RemoveLines(FileModeWarningRegex.IsMatch);
+        }
+
         if (!result.ExitedSuccessfully
             && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, GetOwner(), false, false)))
         {

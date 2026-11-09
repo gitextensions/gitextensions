@@ -1,7 +1,9 @@
 using System.ComponentModel.Design;
+using System.Reflection;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
@@ -20,6 +22,8 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
+using GitUI.CommandsDialogs;
+using GitUI.Compat;
 using GitUI.Editor;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -495,6 +499,98 @@ public sealed class FileViewerContentTests
         finally
         {
             AppSettings.DiffDisplayAppearance.Value = originalAppearance;
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task Selected_line_patch_failures_should_remove_file_mode_warnings_only_on_Windows()
+    {
+        using AppSettingsTestScope settings = new();
+        DiffDisplayAppearance originalAppearance = AppSettings.DiffDisplayAppearance.Value;
+        AppSettings.TestAccessor settingsAccessor = AppSettings.GetTestAccessor();
+        string originalExecutablePath = settingsAccessor.ApplicationExecutablePath;
+        FormCommit? form = null;
+        Dictionary<FieldInfo, object?> originalServices = typeof(GitExtensions.Shims.WinForms.ShimHost)
+            .GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+            .Where(field => !field.IsInitOnly && !field.IsLiteral)
+            .ToDictionary(field => field, field => field.GetValue(null));
+        try
+        {
+            settingsAccessor.ApplicationExecutablePath = Path.Combine(AppContext.BaseDirectory, "GitExtensions.Avalonia.exe");
+            ShimServices.Install(Substitute.For<IClassicDesktopStyleApplicationLifetime>());
+            AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+            _module.SetSetting("core.autocrlf", "false");
+            _module.SetSetting("core.filemode", "false");
+            const string fileName = "mode-warning.txt";
+            string path = Path.Combine(_workingDirectory, fileName);
+            File.WriteAllText(path, "one\ntwo\nthree\n");
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", fileName }).Should().BeTrue();
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("update-index") { "--chmod=+x", "--", fileName }).Should().BeTrue();
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" }).Should().BeTrue();
+            File.WriteAllText(path, "ONE\ntwo\nthree\n");
+            form = new FormCommit(_commands);
+            form.Show();
+            FileViewer viewer = form.FindControl<FileViewer>("SelectedDiff")
+                ?? throw new AssertionException("The actual commit form did not create its diff viewer.");
+            await WaitUntilAsync(() => viewer.TextEditor.Text.Contains("+ONE", StringComparison.Ordinal));
+            viewer.SupportLinePatching.Should().BeTrue();
+            int selectedLine = viewer.GetText().IndexOf("+ONE", StringComparison.Ordinal);
+            selectedLine.Should().BeGreaterThanOrEqualTo(0);
+            viewer.TextEditor.Select(selectedLine, "+ONE".Length);
+
+            File.WriteAllText(path, "different\ntwo\nthree\n");
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", fileName }).Should().BeTrue();
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("update-index") { "--chmod=-x", "--", fileName }).Should().BeTrue();
+            string? message = null;
+            int dialogs = 0;
+            using IDisposable opened = Window.WindowOpenedEvent.AddClassHandler<Window>((dialog, _) =>
+            {
+                if (dialog.Classes.Contains("gitextensions-message-box"))
+                {
+                    dialogs++;
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        message = string.Join('\n', dialog.GetLogicalDescendants().OfType<TextBlock>().Select(text => text.Text));
+                        dialog.Close();
+                    });
+                }
+            });
+            viewer.StageSelectedLines(stage: true);
+
+            dialogs.Should().Be(1);
+            message.Should().NotBeNull().And.Contain("error:").And.Contain("patch does not apply").And.Contain("+ONE");
+            if (OperatingSystem.IsWindows())
+            {
+                message.Should().NotContain("has type 100644, expected 100755");
+            }
+            else
+            {
+                message.Should().Contain("warning: mode-warning.txt has type 100644, expected 100755");
+            }
+
+            await WaitUntilAsync(() => viewer.GetText().Contains("+different", StringComparison.Ordinal));
+        }
+        finally
+        {
+            try
+            {
+                if (form is not null)
+                {
+                    form.Close();
+                    await form.GetTestAccessor().ClosePersistenceTask;
+                }
+            }
+            finally
+            {
+                foreach ((FieldInfo field, object? originalValue) in originalServices)
+                {
+                    field.SetValue(null, originalValue);
+                }
+
+                settingsAccessor.ApplicationExecutablePath = originalExecutablePath;
+                AppSettings.DiffDisplayAppearance.Value = originalAppearance;
+            }
         }
     }
 

@@ -5,13 +5,16 @@ namespace GitExtensionsTests;
 internal static class ProcessTestHelper
 {
     public static bool HasExited(int processId)
+        => HasExited(processId, File.ReadAllText);
+
+    internal static bool HasExited(int processId, Func<string, string> readStat)
     {
         if (OperatingSystem.IsLinux())
         {
             string statPath = $"/proc/{processId}/stat";
             try
             {
-                string stat = File.ReadAllText(statPath);
+                string stat = readStat(statPath);
                 int commandEnd = stat.LastIndexOf(')');
                 if (commandEnd >= 0 && commandEnd + 2 < stat.Length
                     && stat[commandEnd + 2] is 'Z' or 'X')
@@ -19,10 +22,9 @@ internal static class ProcessTestHelper
                     return true;
                 }
             }
-            catch (IOException exception)
-                when (exception is FileNotFoundException or DirectoryNotFoundException)
+            catch (IOException)
             {
-                return true;
+                // procfs can lose an opened stat entry during exit; confirm the process lifetime below.
             }
         }
 
