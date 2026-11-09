@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -13,6 +13,7 @@ using GitExtensions.Extensibility.Translations;
 using GitUI;
 using GitUI.Compat;
 using GitUI.NBugReports;
+using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -65,6 +66,15 @@ public sealed class BugReportFormTests
         FieldInfo messageField = typeof(WinFormsShims.ShimHost).GetField("_messageBoxHost", BindingFlags.Static | BindingFlags.NonPublic)!;
         object? oldShell = shellField.GetValue(null);
         object? oldMessages = messageField.GetValue(null);
+        var oldStart = AvaloniaBugReportProcess.TestAccessor.StartProcess;
+        var oldArguments = AvaloniaBugReportProcess.TestAccessor.CommandLineArguments;
+        JoinableTaskContext oldContext = ThreadHelper.JoinableTaskContext;
+        Dictionary<FieldInfo, object?> oldEnvironmentState = new[] { "_alreadySet", "_sha", "_dirty" }
+            .Select(name => typeof(UserEnvironmentInformation).GetField(name, BindingFlags.Static | BindingFlags.NonPublic)
+                ?? throw new InvalidOperationException($"Environment field {name} is missing."))
+            .ToDictionary(field => field, field => field.GetValue(null));
+        var oldDefaultFont = WinFormsShims.SystemFonts.DefaultFont;
+        var oldMessageFont = WinFormsShims.SystemFonts.MessageBoxFont;
         var oldPresenter = UIReporter.TestAccessor.TaskDialogPresenter;
         var oldEnvironment = UIReporter.TestAccessor.EnvironmentInformationProvider;
         var oldExit = UIReporter.TestAccessor.ExitApplication;
@@ -121,15 +131,21 @@ public sealed class BugReportFormTests
 
                         Button ignore = form.FindControl<Button>("IgnoreButton")!;
                         bool external = action is "ignore" or "quit-external" or "details";
-                        ignore.IsVisible.Should().Be(external);
+                        ignore.IsVisible.Should().Be(external && !terminating);
                         ignore.IsEnabled.Should().Be(external && !terminating);
                         form.FindControl<Button>("sendAndQuitButton")!.IsEnabled.Should().Be(action != "details");
                         form.FindControl<TabControl>("mainTabs")!.SelectedItem.Should().BeSameAs(
                             form.FindControl<TabItem>(action == "details" ? "exceptionTabPage" : "generalTabPage"));
                         if (terminating)
                         {
-                            RequestNativeClose(form).Should().BeTrue();
-                            form.IsVisible.Should().BeTrue("fatal reports cannot be dismissed through the title bar");
+                            ignore.IsVisible.Should().BeFalse("the independent reporter uses the original Program flags");
+                            if (action == "quit-external")
+                            {
+                                RequestNativeClose(form).Should().BeFalse("the independent reporter permits the original title-bar close");
+                                form.IsVisible.Should().BeFalse();
+                                return;
+                            }
+
                             if (action == "programmatic")
                             {
                                 form.Close();
@@ -221,13 +237,19 @@ public sealed class BugReportFormTests
             UIReporter.TestAccessor.EnvironmentInformationProvider = () => "OS: test";
             UIReporter.TestAccessor.ExitApplication = exits.Add;
 
+            AvaloniaBugReportProcess.TestAccessor.StartProcess = start =>
+            {
+                AvaloniaBugReportProcess.TestAccessor.CommandLineArguments = () => start.ArgumentList.ToArray();
+                BugReporter.Program.Run();
+            };
+
             deadline.Start();
             BugReportInvoker.Report(reported, terminating);
 
             failure.Should().BeNull();
             formCount.Should().Be(1);
             detailCount.Should().Be(action == "details" ? 1 : 0);
-            exits.Should().HaveCount(action == "ignore" ? 0 : 1);
+            exits.Should().HaveCount(terminating || action == "ignore" ? 0 : 1);
             if (action == "send")
             {
                 shell.Received(1).TryLaunch(Arg.Is<string>(url =>
@@ -239,6 +261,24 @@ public sealed class BugReportFormTests
         {
             deadline.Stop();
             observer.Dispose();
+            AvaloniaBugReportProcess.TestAccessor.StartProcess = oldStart;
+            AvaloniaBugReportProcess.TestAccessor.CommandLineArguments = oldArguments;
+            if (!ReferenceEquals(ThreadHelper.JoinableTaskContext, oldContext))
+            {
+                ThreadHelper.JoinableTaskContext.Dispose();
+            }
+
+            ThreadHelper.JoinableTaskContext = oldContext;
+            foreach ((FieldInfo field, object? value) in oldEnvironmentState)
+            {
+                field.SetValue(null, value);
+            }
+
+            WinFormsShims.SystemFonts.DefaultFont = oldDefaultFont;
+            WinFormsShims.SystemFonts.MessageBoxFont = oldMessageFont;
+            settings.Dispose();
+            AvaloniaThemeSettings.ApplyAppSettings();
+            AvaloniaFontSettings.ApplyAppSettings();
             UIReporter.TestAccessor.TaskDialogPresenter = oldPresenter;
             UIReporter.TestAccessor.EnvironmentInformationProvider = oldEnvironment;
             UIReporter.TestAccessor.ExitApplication = oldExit;

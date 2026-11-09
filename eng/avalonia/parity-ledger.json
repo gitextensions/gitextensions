@@ -50787,6 +50787,79 @@
           "note": "New reporter mapping; full six-axis parity remains unverified."
         }
       }
+    },
+    {
+      "source": "src/app/BugReporter/Program.cs",
+      "twin": "src/app/BugReporter.Avalonia/Program.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-09",
+          "commit": "dbf0c17a0a5aa881ff0d46dacc82bf1321aaa9d5",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261108-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New independent reporter mapping. No six-axis completion claimed; native process/UI and final platform evidence are pending."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-09",
+          "commit": "dbf0c17a0a5aa881ff0d46dacc82bf1321aaa9d5",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261108-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New independent reporter mapping. No six-axis completion claimed; native process/UI and final platform evidence are pending."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-09",
+          "commit": "dbf0c17a0a5aa881ff0d46dacc82bf1321aaa9d5",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261108-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New independent reporter mapping. No six-axis completion claimed; native process/UI and final platform evidence are pending."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-09",
+          "commit": "dbf0c17a0a5aa881ff0d46dacc82bf1321aaa9d5",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261108-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New independent reporter mapping. No six-axis completion claimed; native process/UI and final platform evidence are pending."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-09",
+          "commit": "dbf0c17a0a5aa881ff0d46dacc82bf1321aaa9d5",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261108-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New independent reporter mapping. No six-axis completion claimed; native process/UI and final platform evidence are pending."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-09",
+          "commit": "dbf0c17a0a5aa881ff0d46dacc82bf1321aaa9d5",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261108-2/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New independent reporter mapping. No six-axis completion claimed; native process/UI and final platform evidence are pending."
+        }
+      }
     }
   ]
 }

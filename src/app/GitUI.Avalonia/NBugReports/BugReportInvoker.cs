@@ -2,16 +2,18 @@
 using System.Diagnostics;
 using System.Security;
 using System.Text;
+using BugReporter.Serialization;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
+using GitUI.Compat;
 
 namespace GitUI.NBugReports;
 
 /// <summary>
 ///  Provides methods for reporting unhandled exceptions to the user
-///  via UI dialogs or through the native report form.
+///  via UI dialogs or by launching the external bug reporter process.
 /// </summary>
 public static class BugReportInvoker
 {
@@ -85,8 +87,6 @@ public static class BugReportInvoker
     /// </summary>
     /// <param name="exception">The exception to report.</param>
     /// <param name="isTerminating">Indicates whether the exception is terminating the application.</param>
-    // The native Avalonia report flow avoids the original external process and its inefficient XML round trip.
-    // GetExceptionInfo() remains available to the report UI instead of being lost during serialization.
     public static void Report(Exception exception, bool isTerminating)
     {
         if (AppSettings.WriteErrorLog)
@@ -123,6 +123,16 @@ public static class BugReportInvoker
 
         if (isTerminating)
         {
+            // TODO: this is not very efficient
+            // GetExceptionInfo() info is lost
+            SerializableException serializableException = new(exception);
+            string xml = serializableException.ToXmlString();
+            string encoded = Base64Encode(xml);
+
+            // Framework constraint: the portable apphost supplies the independent reporter on every desktop platform.
+            AvaloniaBugReportProcess.Start(encoded);
+
+            return;
         }
 
         bool isUserExternalOperation

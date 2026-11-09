@@ -4340,6 +4340,12 @@
     "justification": "Jump lists, taskbar progress, and thumbnail toolbar buttons are Windows shell features with no portable equivalent selected for the port.",
     "substitute": "No taskbar or Dock integration; the same operations remain available inside the application."
   },
+  "src/app/BugReporter/Program.cs": {
+    "twin": "src/app/BugReporter.Avalonia/Program.cs",
+    "status": "functional",
+    "basedOn": "52d08e996c673df38d5eff1a34a59605597c773f",
+    "notes": "P8.6i progress 132: original-shaped independent reporter entry point compiled into the Avalonia apphost for its build identity and startup access. The --bugreport role runs before normal services, plugins and settings saving. Avalonia supplies its native synchronization context, theme and fonts; the original private Main is invoked through a narrow internal Run bridge by the minimal desktop lifetime. Preserve original XML/Base64 decoding, fallback errors and canIgnore/showIgnore/focusDetails values. Headless handoff and real receiver are tested; native child UI, parent-exit survival and macOS/Flatpak remain unverified for this implementation."
+  },
   "src/app/BugReporter/BugReportForm.cs": {
     "twin": "src/app/BugReporter.Avalonia/BugReportForm.axaml.cs",
     "status": "functional",

@@ -36,8 +36,10 @@ initialization focuses the revision list.
 Dashboard loads repository-host actions before the remaining plugins, then refreshes its host links.
 Error reports use the original-shaped review form with exception details, reproduction steps,
 Copy, Send and Quit, Quit, and Ignore when permitted. Sending requires reproduction steps and
-confirmation, then opens the fork's issue form. Fatal reporting still runs inside the application;
-independent reporter-process isolation remains unimplemented.
+confirmation, then opens the fork's issue form. Fatal exceptions are handed to an independent
+reporter process using the same Avalonia executable. Its dedicated reporter role starts without
+normal application services, plugins or settings-saving callbacks. Recoverable errors retain
+the in-application report flow.
 Dialogs that originally expose context help provide a Help icon in their footer and the F1 key.
 Both open the same manual section; an invalid section disables the help action.
 Splitter settings retain the container size, logical DPI, font size and collapsed states as

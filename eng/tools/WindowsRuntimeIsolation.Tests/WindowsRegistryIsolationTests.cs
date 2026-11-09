@@ -132,6 +132,130 @@ public sealed class WindowsRegistryIsolationTests
     }
 
     [Test]
+    public async Task An_inherited_managed_descendant_should_retain_its_parents_actual_startup_proofAsync()
+    {
+        using WindowsRegistryIsolationScope scope = new();
+        string configuration = Path.Combine(_helperDirectory, "WindowsRuntimeIsolation.runtimeconfig.json");
+        await scope.ProveAsync(configuration);
+        ProcessStartInfo start = NewHelperStart();
+        start.ArgumentList.Clear();
+        start.ArgumentList.Add("--registry-inherited-parent");
+        using Process application = scope.StartApplication(start);
+        try
+        {
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(30));
+            await application.WaitForExitAsync(timeout.Token);
+            application.ExitCode.Should().Be(0);
+            scope.Invoking(value => value.Dispose()).Should().NotThrow(
+                "a managed child inheriting the real hook and launch identity must not overwrite its parent's startup proof");
+            scope.ApplicationsProved.Should().BeTrue();
+            scope.OwnerUnchanged.Should().BeTrue();
+            scope.OwnerAfterHash.Should().Be(scope.OwnerBeforeHash);
+        }
+        finally
+        {
+            if (!application.HasExited)
+            {
+                application.Kill(entireProcessTree: true);
+                await application.WaitForExitAsync();
+            }
+
+            scope.Dispose();
+        }
+    }
+
+    [Test]
+    public async Task An_inherited_child_should_keep_the_hive_until_it_exitsAsync()
+    {
+        using WindowsRegistryIsolationScope scope = new();
+        string configuration = Path.Combine(_helperDirectory, "WindowsRuntimeIsolation.runtimeconfig.json");
+        await scope.ProveAsync(configuration);
+        string directory = Path.Combine(_temporaryDirectory, "live-descendant");
+        Directory.CreateDirectory(directory);
+        ProcessStartInfo start = NewHelperStart();
+        start.ArgumentList.Clear();
+        start.ArgumentList.Add("--registry-inherited-parent-wait");
+        start.ArgumentList.Add(directory);
+        using Process application = scope.StartApplication(start);
+        Process? child = null;
+        try
+        {
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(30));
+            await application.WaitForExitAsync(timeout.Token);
+            application.ExitCode.Should().Be(0);
+            JsonNode ready = JsonNode.Parse(File.ReadAllText(Path.Combine(directory, "child-ready.json")))!;
+            int childId = ready["processId"]!.GetValue<int>();
+            child = Process.GetProcessById(childId);
+            child.StartTime.ToUniversalTime().Ticks.Should().Be(ready["startTimeUtcTicks"]!.GetValue<long>());
+            child.HasExited.Should().BeFalse();
+            scope.Invoking(value => value.Dispose()).Should().Throw<InvalidOperationException>()
+                .WithMessage("*inherited managed processes*");
+            using (RegistryKey? retained = Registry.CurrentUser.OpenSubKey(scope.RegistryPath, writable: false))
+            {
+                retained.Should().NotBeNull("a live inherited managed process still uses this hive");
+            }
+
+            scope.VerifyOwnerUnchanged();
+            scope.OwnerAfterHash.Should().Be(scope.OwnerBeforeHash);
+            File.WriteAllText(Path.Combine(directory, "stop-child"), "stop");
+            await child.WaitForExitAsync(timeout.Token);
+            child.ExitCode.Should().Be(0);
+            scope.Dispose();
+            scope.ApplicationsProved.Should().BeTrue();
+            JsonNode evidence = JsonNode.Parse(scope.GetEvidenceJson())!;
+            evidence["managedProcessProofs"]!.AsArray().Select(proof => proof!["ProcessId"]!.GetValue<int>())
+                .Should().Contain([application.Id, childId]);
+        }
+        finally
+        {
+            File.WriteAllText(Path.Combine(directory, "stop-child"), "stop");
+            if (!application.HasExited)
+            {
+                application.Kill(entireProcessTree: true);
+                await application.WaitForExitAsync();
+            }
+
+            if (child is null && File.Exists(Path.Combine(directory, "child-ready.json")))
+            {
+                JsonNode ready = JsonNode.Parse(File.ReadAllText(Path.Combine(directory, "child-ready.json")))!;
+                try
+                {
+                    child = Process.GetProcessById(ready["processId"]!.GetValue<int>());
+                    if (child.StartTime.ToUniversalTime().Ticks != ready["startTimeUtcTicks"]!.GetValue<long>())
+                    {
+                        child.Dispose();
+                        child = null;
+                    }
+                }
+                catch (ArgumentException)
+                {
+                }
+            }
+
+            if (child is not null)
+            {
+                if (!child.HasExited)
+                {
+                    using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(5));
+                    try
+                    {
+                        await child.WaitForExitAsync(timeout.Token);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        child.Kill(entireProcessTree: true);
+                        await child.WaitForExitAsync();
+                    }
+                }
+
+                child.Dispose();
+            }
+
+            scope.Dispose();
+        }
+    }
+
+    [Test]
     public void Root_contract_should_reject_a_nested_path_and_a_changed_nonce_before_any_override()
     {
         using WindowsRegistryIsolationScope scope = new();

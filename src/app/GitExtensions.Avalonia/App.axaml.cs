@@ -175,7 +175,7 @@ public partial class App : Application
     private static void ReportUnhandledException(Exception exception, bool isTerminating)
     {
         Console.Error.WriteLine(exception);
-        if (Dispatcher.UIThread.CheckAccess())
+        if (isTerminating || Dispatcher.UIThread.CheckAccess())
         {
             BugReportInvoker.Report(exception, isTerminating);
         }

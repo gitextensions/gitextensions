@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- The assembly guard and real-app hook share their managed-process identity reader. -->
+    <Compile Include="$(RepoRoot)/eng/tools/WindowsRuntimeIsolation/ManagedProcessProof.cs" Link="RegistryIsolation/ManagedProcessProof.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- CommonAssemblyInfo.cs declares SupportedOSPlatform("windows7.0"), which NUnit 4
          translates into a Windows-only platform requirement for every test: on Linux the
          whole assembly is silently discovered as empty. This project is cross-platform. -->

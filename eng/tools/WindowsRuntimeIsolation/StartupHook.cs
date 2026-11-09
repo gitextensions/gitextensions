@@ -28,8 +28,7 @@ internal static class StartupHook
 
         // Keep the override and handle alive through every ProcessExit callback; only OS teardown releases them.
         _redirectedHive = root;
-        using RegistryKey initialized = _redirectedHive.CreateSubKey("InitializedProcesses", writable: true);
-        initialized.SetValue(launch, Environment.ProcessId, RegistryValueKind.DWord);
+        ManagedProcessProof.Record(_redirectedHive, launch);
     }
 
     [DllImport("advapi32.dll", ExactSpelling = true)]

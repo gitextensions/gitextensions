@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using GitCommands;
+using GitExtensions.WindowsRuntimeIsolation;
 using Microsoft.Win32;
 
 namespace GitExtensionsTests;
@@ -120,6 +121,8 @@ public sealed class RegistryTestIsolationTests
         finished.Should().BeTrue();
         exited.ExitCode.Should().Be(0);
         string stalePath = $"{RegistryTestIsolation.TestRoot}\\{exited.Id}-{Guid.NewGuid():N}";
+        string inheritedPath = $"{RegistryTestIsolation.TestRoot}\\{exited.Id}-{Guid.NewGuid():N}";
+        string malformedPath = $"{RegistryTestIsolation.TestRoot}\\{exited.Id}-{Guid.NewGuid():N}";
         string unknownPath = $"{RegistryTestIsolation.TestRoot}\\{exited.Id}-guard-{Guid.NewGuid():N}";
         string settingsName = RegistryTestIsolation.SettingsKeyName ?? throw new InvalidOperationException("The test host must provide its isolated settings key.");
         string liveSettingsPath = settingsName[(Registry.CurrentUser.Name.Length + 1)..];
@@ -142,7 +145,22 @@ public sealed class RegistryTestIsolationTests
                 unknown.SetValue("fixture", "unrecognized name");
             }
 
+            using (RegistryKey inherited = Registry.CurrentUser.CreateSubKey(inheritedPath, writable: true))
+            {
+                ManagedProcessProof.Record(inherited, Guid.NewGuid().ToString("N"));
+            }
+
+            using (RegistryKey malformed = Registry.CurrentUser.CreateSubKey($@"{malformedPath}\ManagedProcesses\not-a-process", writable: true))
+            {
+                malformed.SetValue("Launch", Guid.NewGuid().ToString("N"));
+            }
+
             RegistryTestIsolation.RemoveStaleRoots();
+
+            using RegistryKey? inheritedAfter = Registry.CurrentUser.OpenSubKey(inheritedPath, writable: false);
+            inheritedAfter.Should().NotBeNull("the real process-proof producer recorded this still-running managed host");
+            using RegistryKey? malformedAfter = Registry.CurrentUser.OpenSubKey(malformedPath, writable: false);
+            malformedAfter.Should().NotBeNull("an unreadable descendant identity cannot establish that its process exited");
 
             using RegistryKey? removed = Registry.CurrentUser.OpenSubKey(stalePath, writable: false);
             removed.Should().BeNull("the owning process was started and observed exiting by this test");
@@ -156,6 +174,8 @@ public sealed class RegistryTestIsolationTests
         finally
         {
             Registry.CurrentUser.DeleteSubKeyTree(stalePath, throwOnMissingSubKey: false);
+            Registry.CurrentUser.DeleteSubKeyTree(inheritedPath, throwOnMissingSubKey: false);
+            Registry.CurrentUser.DeleteSubKeyTree(malformedPath, throwOnMissingSubKey: false);
             Registry.CurrentUser.DeleteSubKeyTree(unknownPath, throwOnMissingSubKey: false);
         }
     }

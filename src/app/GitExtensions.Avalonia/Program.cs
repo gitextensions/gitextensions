@@ -3,6 +3,7 @@ using Avalonia;
 using GitCommands;
 using GitExtensions.Compat;
 using GitUI;
+using GitUI.Compat;
 
 namespace GitExtensions;
 
@@ -22,6 +23,11 @@ internal static class Program
     [STAThread]
     private static int Main(string[] args)
     {
+        if (args.FirstOrDefault() == AvaloniaBugReportProcess.Command)
+        {
+            return BuildBugReportApp().StartWithClassicDesktopLifetime(args);
+        }
+
         ServiceContainerRegistry.RegisterServices(ServiceContainer);
 
         InitializeDocumentationBaseUrl();
@@ -54,6 +60,18 @@ internal static class Program
         AppBuilder builder = AppBuilder.Configure<App>()
             .UsePlatformDetect();
 
+        if (ShouldUseWayland(OperatingSystem.IsLinux(), Environment.GetEnvironmentVariable("WAYLAND_DISPLAY")))
+        {
+            builder = builder.UseWayland();
+        }
+
+        return builder.LogToTrace();
+    }
+
+    private static AppBuilder BuildBugReportApp()
+    {
+        AppBuilder builder = AppBuilder.Configure<BugReportApplication>()
+            .UsePlatformDetect();
         if (ShouldUseWayland(OperatingSystem.IsLinux(), Environment.GetEnvironmentVariable("WAYLAND_DISPLAY")))
         {
             builder = builder.UseWayland();

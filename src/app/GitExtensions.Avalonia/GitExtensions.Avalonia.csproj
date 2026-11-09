@@ -3,6 +3,7 @@
   <PropertyGroup>
     <!-- Cross-platform Avalonia entry point. -->
     <OutputType>Exe</OutputType>
+    <StartupObject>GitExtensions.Program</StartupObject>
     <IsPublishable>true</IsPublishable>
     <TargetFramework>net10.0</TargetFramework>
     <UseWindowsForms>false</UseWindowsForms>
@@ -124,6 +125,11 @@
          attribute from CommonAssemblyInfo.cs; use the platform-neutral variant. -->
     <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
     <Compile Include="$(RepoRoot)\src\app\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The independent reporter entry point needs the executable identity and startup context. -->
+    <Compile Include="..\BugReporter.Avalonia\Program.cs" Link="BugReporter\Program.cs" />
   </ItemGroup>
 
 </Project>

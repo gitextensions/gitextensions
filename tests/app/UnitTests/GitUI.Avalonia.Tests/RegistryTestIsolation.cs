@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text.Json;
 using GitCommands;
+using GitExtensions.WindowsRuntimeIsolation;
 using Microsoft.Win32;
 
 internal static class RegistryTestIsolation
@@ -90,6 +91,20 @@ internal static class RegistryTestIsolation
 
             if (exited)
             {
+                try
+                {
+                    using RegistryKey? candidate = root.OpenSubKey(name, writable: false);
+                    if (candidate is null || ManagedProcessProof.Read(candidate).Any(ManagedProcessProof.IsAlive))
+                    {
+                        continue;
+                    }
+                }
+                catch (Exception exception) when (exception is IOException or InvalidDataException or Win32Exception or UnauthorizedAccessException)
+                {
+                    // Preserve an unreadable proof because an inherited process may still own the hive.
+                    continue;
+                }
+
                 root.DeleteSubKeyTree(name, throwOnMissingSubKey: false);
             }
         }

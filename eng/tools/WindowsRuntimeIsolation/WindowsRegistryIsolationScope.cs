@@ -10,7 +10,8 @@ public sealed class WindowsRegistryIsolationScope : IDisposable
 {
     private const string OwnerPath = @"Software\GitExtensions";
     private readonly RegistrySnapshot _ownerBefore;
-    private readonly List<(Process Process, string Launch)> _applications = [];
+    private readonly List<(Process Process, string Launch, long StartTimeUtcTicks)> _applications = [];
+    private IReadOnlyList<ManagedProcessRecord> _managedProcessProofs = [];
     private bool _disposed;
     private string? _runtimeConfigurationHash;
 
@@ -91,7 +92,10 @@ public sealed class WindowsRegistryIsolationScope : IDisposable
         using RegistryKey root = RegistryRootContract.OpenValidatedRoot(RegistryPath, Nonce);
         using RegistryKey? initialized = root.OpenSubKey("InitializedProcesses", writable: false);
         using RegistryKey? nested = root.OpenSubKey($"{RegistryPath}\\Probe", writable: false);
-        if (!Equals(initialized?.GetValue(launch), ProbeProcessId)
+        _managedProcessProofs = ManagedProcessProof.Read(root);
+        if (!_managedProcessProofs.Any(record => record.ProcessId == probe.Id
+                && record.StartTimeUtcTicks == probe.StartTime.ToUniversalTime().Ticks && record.Launch == launch)
+            || !Equals(initialized?.GetValue(launch), ProbeProcessId)
             || !string.Equals(nested?.GetValue("Early") as string, launch, StringComparison.Ordinal)
             || !string.Equals(nested?.GetValue("Late") as string, launch, StringComparison.Ordinal))
         {
@@ -122,7 +126,7 @@ public sealed class WindowsRegistryIsolationScope : IDisposable
         OwnerAfterHash = null;
         Process application = Process.Start(start)
             ?? throw new InvalidOperationException("Cannot start the isolated application.");
-        _applications.Add((application, launch));
+        _applications.Add((application, launch, application.StartTime.ToUniversalTime().Ticks));
         return application;
     }
 
@@ -145,7 +149,8 @@ public sealed class WindowsRegistryIsolationScope : IDisposable
         ownerBeforeSha256 = OwnerBeforeHash,
         ownerAfterSha256 = OwnerAfterHash,
         ownerUnchanged = OwnerUnchanged,
-        applicationProofs = _applications.Select(application => new { processId = application.Process.Id, launchIdentity = application.Launch }).ToArray(),
+        applicationProofs = _applications.Select(application => new { processId = application.Process.Id, launchIdentity = application.Launch, startTimeUtcTicks = application.StartTimeUtcTicks }).ToArray(),
+        managedProcessProofs = _managedProcessProofs,
         applicationsProved = ApplicationsProved,
         cleaned = _disposed,
     }, new JsonSerializerOptions { WriteIndented = true });
@@ -162,15 +167,28 @@ public sealed class WindowsRegistryIsolationScope : IDisposable
             throw new InvalidOperationException("Terminate and wait for isolated applications before disposing their registry scope.");
         }
 
+        using (RegistryKey root = RegistryRootContract.OpenValidatedRoot(RegistryPath, Nonce))
+        {
+            _managedProcessProofs = ManagedProcessProof.Read(root);
+            ManagedProcessRecord[] alive = [.. _managedProcessProofs.Where(ManagedProcessProof.IsAlive)];
+            if (alive.Length > 0)
+            {
+                string identities = string.Join(", ", alive.Select(record => record.ProcessId));
+                throw new InvalidOperationException($"Terminate and wait for inherited managed processes {identities} before disposing their registry scope.");
+            }
+        }
+
         try
         {
             VerifyOwnerUnchanged();
             using RegistryKey root = RegistryRootContract.OpenValidatedRoot(RegistryPath, Nonce);
             using RegistryKey? initialized = root.OpenSubKey("InitializedProcesses", writable: false);
-            foreach ((Process application, string launch) in _applications)
+            foreach ((Process application, string launch, long startTimeUtcTicks) in _applications)
             {
                 string id = application.Id.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                if (!Equals(initialized?.GetValue(launch), application.Id))
+                if (!Equals(initialized?.GetValue(launch), application.Id)
+                    || !_managedProcessProofs.Any(record => record.ProcessId == application.Id
+                        && record.StartTimeUtcTicks == startTimeUtcTicks && record.Launch == launch))
                 {
                     throw new InvalidOperationException($"The runtime-smoke child {id} has no matching startup-hook proof.");
                 }
