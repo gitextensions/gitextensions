@@ -560,6 +560,54 @@ public sealed class FileViewerContentTests
         viewer.Editor.TextArea.Caret.Column.Should().Be(3);
     }
 
+    [AvaloniaTest]
+    [NonParallelizable]
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(true, true)]
+    public async Task Ordinary_content_should_restore_the_preferred_ruler_after_difftastic(bool sideBySide, bool patch)
+    {
+        using AppSettingsTestScope settings = new();
+        int originalRuler = AppSettings.DiffVerticalRulerPosition;
+        string? originalWidth = Environment.GetEnvironmentVariable("DFT_WIDTH");
+        Window? window = null;
+        try
+        {
+            AppSettings.DiffVerticalRulerPosition = 88;
+            Environment.SetEnvironmentVariable("DFT_WIDTH", "80");
+            FileViewer viewer = CreateViewer();
+            window = new Window { Width = 700, Height = 400, Content = viewer };
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            await WaitUntilAsync(() => viewer.GetTestAccessor().VRulerPosition == 88);
+            string text = "sample.cs --- Text\n" + (sideBySide ? "1 before".PadRight(40) + "1 after" : "1 before") + "\n";
+            await viewer.ViewDifftasticAsync("sample.cs", text);
+            viewer.GetTestAccessor().VRulerPosition.Should().Be(sideBySide ? 38 : 0);
+            viewer.TextEditor.Options.ShowColumnRulers.Should().Be(sideBySide);
+
+            if (patch)
+            {
+                viewer.ViewPatch("diff --git a/sample.cs b/sample.cs\n--- a/sample.cs\n+++ b/sample.cs\n@@ -1 +1 @@\n-before\n+after\n");
+            }
+            else
+            {
+                await viewer.ViewTextAsync("plain.cs", "ordinary text", CancellationToken.None);
+            }
+
+            viewer.GetTestAccessor().VRulerPosition.Should().Be(88);
+            viewer.TextEditor.Options.ShowColumnRulers.Should().BeTrue();
+            await viewer.ViewDifftasticAsync("sample.cs", text);
+            viewer.GetTestAccessor().VRulerPosition.Should().Be(sideBySide ? 38 : 0);
+        }
+        finally
+        {
+            window?.Close();
+            AppSettings.DiffVerticalRulerPosition = originalRuler;
+            Environment.SetEnvironmentVariable("DFT_WIDTH", originalWidth);
+        }
+    }
+
     private FileViewer CreateViewer()
         => new() { UICommandsSource = _source };
 

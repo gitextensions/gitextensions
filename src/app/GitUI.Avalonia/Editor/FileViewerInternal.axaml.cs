@@ -290,6 +290,12 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         _currentViewPositionCache.Capture();
         OpenWithDifftool = openWithDifftool;
         ClearHighlighting();
+        if (viewMode != ViewMode.Difftastic && VRulerPosition != AppSettings.DiffVerticalRulerPosition)
+        {
+            // Reset if Difftastic changed the position
+            VRulerPosition = AppSettings.DiffVerticalRulerPosition;
+        }
+
         TextEditor.Document ??= new TextDocument();
         TextEditor.Document.Text = text;
 
