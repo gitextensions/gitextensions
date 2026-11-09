@@ -47604,20 +47604,19 @@
     },
     {
       "source": "src/plugins/Statistics/GitStatistics/PieChart/Quadrilateral.cs",
-      "twin": "src/plugins/Statistics/GitStatistics/PieChart/PieChart3D.NonWindows.cs",
+      "twin": "src/plugins/Statistics/GitStatistics/PieChart/Quadrilateral.NonWindows.cs",
       "complete": false,
       "axes": {
         "structural": {
           "status": "unverified",
-          "verifiedOn": "2026-08-27",
-          "commit": "9b5ea806a03e1fbdf44911848adca44563b92bac",
+          "verifiedOn": "2026-11-09",
+          "commit": "dfe3ff0d6c1ada20805d5811f2dee82841e35ff1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/framework-signatures-65/sweep/windows/functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/framework-signatures-65/sweep/linux/functional-findings.json"
+            "eng/avalonia/parity-evidence/run-20261108-2/B131-004-reviewed-final/types/GitExtensions.Plugins.GitStatistics.PieChart.Quadrilateral.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "P8.6i progress 65 restores safely anchored source comments and moves exact native-control field type substitutions into pinned, visible reviewed-deviation evidence. The byte-identical Windows/Linux schema-v4 inventory records zero ordinary findings for this mapping; accepted framework deviations and unexercised axes prevent an identity or parity claim."
+          "findingCount": 1,
+          "note": "The named native Quadrilateral is now inventoried as its own type. One original GDI point-flags field remains measured; required drawing signatures and moved annotations are exact accepted deviations. The current working-tree report and final Batch receipt carry the source proof; no structural completion is claimed."
         },
         "functional": {
           "status": "unverified",

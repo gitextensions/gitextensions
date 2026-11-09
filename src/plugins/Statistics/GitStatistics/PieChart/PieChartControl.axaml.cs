@@ -324,28 +324,24 @@ public partial class PieChartControl : UserControl
         {
             get
             {
-                control._pieChart = control.CreateChart();
                 return control._pieChart?.SliceCount ?? 0;
             }
         }
 
         public Point GetSliceHitPoint(int index)
         {
-            control._pieChart = control.CreateChart();
             return control._pieChart?.GetSliceHitPoint(index)
                 ?? throw new InvalidOperationException("The chart has no drawable slices.");
         }
 
         public Color GetSliceColor(int index)
         {
-            control._pieChart = control.CreateChart();
             return control._pieChart?.GetSliceColor(index)
                 ?? throw new InvalidOperationException("The chart has no drawable slices.");
         }
 
         public Color GetEdgeColor(int index)
         {
-            control._pieChart = control.CreateChart();
             return control._pieChart?.GetEdgeColor(index)
                 ?? throw new InvalidOperationException("The chart has no drawable slices.");
         }

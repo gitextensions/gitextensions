@@ -147,6 +147,7 @@ internal static class ComponentFactory
             "GitUI.SettingControlBindings.SettingControlBindingsNullCaptureSurface" =>
                 new SettingControlBindingsNullCaptureSurface(),
             "GitExtensions.Plugins.Gource.GourceStart" => new GourceStart(string.Empty, null!, string.Empty),
+            "GitExtensions.Plugins.GitStatistics.PieChart.PieChart3D" => new StatisticsChartCaptureSurface(),
             _ => CreateParameterless(component.TypeName)
         };
         PrepareInitialSize(control);
