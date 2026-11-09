@@ -247,8 +247,8 @@ cat > "$manifest_output" <<EOF
   "mergetool": "passed",
   "themeDirectories": "passed",
   "processGroupCancellation": "passed",
-  "externalTerminal": "explicitly-unavailable",
-  "gource": "explicitly-unavailable",
+  "externalTerminal": "not-exercised",
+  "gource": "not-exercised",
   "repositoryLocation": "outsideWorkingTree",
   "evidence": {
     "portal": "portal/manifest.json",

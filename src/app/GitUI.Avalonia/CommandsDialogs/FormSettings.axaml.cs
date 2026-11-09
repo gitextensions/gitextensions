@@ -96,6 +96,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         {
             result = form.ShowDialog(owner);
         });
+        FlatpakHostGit.InitializeEnvironment();
         return result;
     }
 

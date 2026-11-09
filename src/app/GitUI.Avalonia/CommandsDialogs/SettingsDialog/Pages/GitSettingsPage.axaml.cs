@@ -89,6 +89,7 @@ public sealed partial class GitSettingsPage : SettingsPageWithHeader
 
     private void ConfigurePlatformControls()
     {
+        FlatpakHostGit.Attach(this, GitPath);
         if (OperatingSystem.IsWindows())
         {
             return;

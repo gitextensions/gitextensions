@@ -64,6 +64,7 @@ public partial class App : Application
             string? userPluginsPath = UserPluginsDirectory.GetPath(AppSettings.LocalApplicationDataPath.Value);
             ManagedExtensibility.Initialise(userPluginsPath: userPluginsPath);
             AppSettings.LoadSettings();
+            FlatpakHostGit.InitializeEnvironment();
             AvaloniaThemeSettings.ApplyAppSettings();
             AvaloniaFontSettings.ApplyAppSettings();
 
@@ -100,6 +101,14 @@ public partial class App : Application
                 formChoose.ShowDialog();
             }
 
+            FlatpakHostGit.InitializeEnvironment();
+            DispatcherPump.Wait(async () =>
+            {
+                await FlatpakHostGit.NotifyIfFallingBackAsync();
+                return true;
+            });
+            FileEditorConformanceProbe.InstallIfRequested(desktop);
+
             StartupCoordinator coordinator = new();
             if (!coordinator.EnsurePrerequisites(commands, args))
             {
@@ -125,6 +134,8 @@ public partial class App : Application
 
             // parity-scaffolding: font evidence is requested only after the runtime screenshot.
             RuntimeFontProbe.StartIfRequested(desktop);
+
+            HostGitConformanceProbe.StartIfRequested(desktop, commands);
         }
         catch (Exception exception)
         {

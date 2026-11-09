@@ -75,6 +75,10 @@
         },
         {
           "type": "file",
+          "path": "gitextensions-host-git.sh"
+        },
+        {
+          "type": "file",
           "path": "gitextensions-editor.sh"
         },
         {

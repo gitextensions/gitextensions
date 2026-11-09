@@ -139,6 +139,19 @@ public sealed class PlatformToolLocator
         return null;
     }
 
+    internal LocatedTool? FindForConfiguration(string executable)
+    {
+        try
+        {
+            return Find(executable);
+        }
+        catch (PlatformNotSupportedException exception)
+        {
+            Trace.TraceWarning(exception.Message);
+            return null;
+        }
+    }
+
     internal DiffMergeToolConfiguration Adapt(DiffMergeToolConfiguration original)
     {
         if (!string.Equals(original.Path, original.ExeFileName, StringComparison.Ordinal))
@@ -146,7 +159,7 @@ public sealed class PlatformToolLocator
             return original;
         }
 
-        LocatedTool? location = Find(original.ExeFileName);
+        LocatedTool? location = FindForConfiguration(original.ExeFileName);
         if (location is null)
         {
             return original;
