@@ -14,7 +14,6 @@ internal sealed partial class FormFilePrompt : GitExtensionsForm, IUserInputProm
 
     public FormFilePrompt()
     {
-        // let Avalonia scale up for hi DPI
         InitializeComponent();
         AcceptButton = btnOk;
         btnBrowse.Click += btnBrowse_Click;
@@ -25,6 +24,10 @@ internal sealed partial class FormFilePrompt : GitExtensionsForm, IUserInputProm
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);
+
+        // scale up for hi DPI
+        MinHeight = MaxHeight = 78;
+
         txtFilePath.Focus();
     }
 

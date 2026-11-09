@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
@@ -82,6 +83,40 @@ public sealed class ScriptsEngineTests
 
         prompt.UserInput.Should().Be("feature");
         prompt.DialogResult.Should().Be(WinFormsShims.DialogResult.OK);
+    }
+
+    [AvaloniaTest]
+    public void File_prompt_from_the_registered_factory_should_keep_the_designer_client_height()
+    {
+        using AppSettingsTestScope settings = new();
+        using ServiceContainer services = new();
+        GitExtUtils.ServiceContainerRegistry.RegisterServices(services);
+        services.AddService<IGitExecutorProvider>(Substitute.For<IGitExecutorProvider>());
+        GitUI.ServiceContainerRegistry.RegisterServices(services);
+        using IUserInputPrompt input = services.GetRequiredService<IFilePromptCreator>().Create();
+        FormFilePrompt prompt = input.Should().BeOfType<FormFilePrompt>().Subject;
+        try
+        {
+            prompt.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            prompt.MinWidth.Should().Be(450);
+            prompt.MaxWidth.Should().Be(800);
+            prompt.MinHeight.Should().Be(78);
+            prompt.MaxHeight.Should().Be(78);
+            prompt.Bounds.Height.Should().Be(78);
+            prompt.FindControl<TextBox>("txtFilePath")!.IsFocused.Should().BeTrue();
+            prompt.Width = 700;
+            prompt.Height = 150;
+            Dispatcher.UIThread.RunJobs();
+            prompt.UpdateLayout();
+            prompt.Bounds.Width.Should().Be(700);
+            prompt.Bounds.Height.Should().Be(78);
+        }
+        finally
+        {
+            prompt.Close();
+        }
     }
 
     [AvaloniaTest]
