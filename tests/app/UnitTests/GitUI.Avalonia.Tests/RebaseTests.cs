@@ -6,6 +6,7 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using AwesomeAssertions.Execution;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -384,6 +385,73 @@ public sealed class RebaseTests
         patchGrid.PatchFiles[1].IsNext.Should().BeTrue();
         patchGrid.PatchFiles[2].IsApplied.Should().BeFalse();
         patchGrid.Patches.SelectedItem.Should().BeSameAs(patchGrid.PatchFiles[1]);
+    }
+
+    [AvaloniaTest]
+    public async Task Interactive_patch_rows_should_offer_the_full_commit_body_as_the_cell_tooltip()
+    {
+        using AppSettingsTestScope settings = new();
+        GitModule module = CreateConflictingRepository();
+        File.WriteAllText(Path.Combine(_workingDirectory, "tooltip.txt"), "owned tooltip fixture\n");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tooltip.txt" }).Should().BeTrue();
+        module.SetSetting("user.name", "A");
+        module.SetSetting("user.email", "a@b.c");
+        string message = "Tooltip subject\n\nDetailed first paragraph.\nSecond line of explanation.";
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", message.Quote() }).Should().BeTrue();
+        ObjectId detailedId = module.GetCurrentCheckout();
+        ExecutionResult result = module.GitExecutable.Execute("rebase -i main", throwOnErrorExit: false);
+        result.ExitCode.Should().NotBe(0);
+        module.InTheMiddleOfRebase().Should().BeTrue();
+        FormRebase form = new(new GitUICommands(_serviceContainer, module), defaultBranch: null);
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => form.PatchGrid.PatchFiles?.Count == 3);
+            IReadOnlyList<PatchFile> patchFiles = form.PatchGrid.PatchFiles ?? throw new AssertionException("The actual rebase grid did not populate.");
+            PatchFile target = patchFiles.Single(patch => patch.ObjectId == detailedId);
+            string expected = target.Subject ?? throw new AssertionException("The real commit body is missing.");
+            expected.Should().Contain("Tooltip subject").And.Contain("Detailed first paragraph.").And.Contain("Second line of explanation.");
+            expected.Should().Contain("\n");
+            form.PatchGrid.Patches.ScrollIntoView(target);
+            form.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            Control container = form.PatchGrid.Patches.ContainerFromItem(target)
+                ?? throw new AssertionException("The actual patch row was not materialized.");
+            TextBlock cell = container.GetVisualDescendants().OfType<TextBlock>().Single(block => Grid.GetColumn(block) == 3);
+            cell.IsEffectivelyVisible.Should().BeTrue();
+            cell.Foreground.Should().NotBeNull("ordinary patch cells must inherit the themed text color");
+            ToolTip.GetTip(cell).Should().Be(expected);
+            Grid row = cell.Parent as Grid ?? throw new AssertionException("The actual subject cell has no grid row.");
+            TextBlock hash = row.Children.OfType<TextBlock>().Single(block => Grid.GetColumn(block) == 6);
+            using (AssertionScope scope = new())
+            {
+                cell.Text.Should().Be(expected.ReplaceLineEndings(string.Empty));
+                cell.TextLayout.TextLines.Any(line => line.HasCollapsed).Should().BeTrue();
+                ToolTip.GetTip(hash).Should().Be(detailedId.ToString());
+                hash.Text.Should().Be(detailedId.ToString());
+            }
+
+            cell.MaxLines.Should().Be(1);
+            cell.TextLayout.TextLines.Should().ContainSingle();
+            CancelRoutedEventArgs opening = new(ToolTip.ToolTipOpeningEvent);
+            cell.RaiseEvent(opening);
+            opening.Handled.Should().BeFalse();
+            TextBlock author = row.Children.OfType<TextBlock>().Single(block => Grid.GetColumn(block) == 4);
+            author.TextLayout.TextLines.Should().OnlyContain(line => !line.HasCollapsed);
+            CancelRoutedEventArgs authorOpening = new(ToolTip.ToolTipOpeningEvent);
+            author.RaiseEvent(authorOpening);
+            authorOpening.Handled.Should().BeTrue();
+            TextBlock clippedAuthor = form.PatchGrid.Patches.GetVisualDescendants().OfType<TextBlock>().First(block =>
+                Grid.GetColumn(block) == 4 && block.Text?.StartsWith("Avalonia Test", StringComparison.Ordinal) == true);
+            clippedAuthor.TextLayout.TextLines.Should().Contain(line => line.HasCollapsed);
+            CancelRoutedEventArgs clippedAuthorOpening = new(ToolTip.ToolTipOpeningEvent);
+            clippedAuthor.RaiseEvent(clippedAuthorOpening);
+            clippedAuthorOpening.Handled.Should().BeFalse();
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]

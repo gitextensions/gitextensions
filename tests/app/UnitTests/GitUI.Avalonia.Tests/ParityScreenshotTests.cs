@@ -83,6 +83,8 @@ public sealed partial class ParityScreenshotTests
     private const string CaptureDeterministicRepositoryEnvironmentVariable = "GITEXT_CAPTURE_PARITY_DETERMINISTIC_REPOSITORY";
     // parity-scaffolding: Lets paired WinForms/Avalonia captures consume one externally-owned repository fixture.
     private const string CaptureRepositoryEnvironmentVariable = "GITEXT_CAPTURE_PARITY_REPOSITORY";
+    // parity-scaffolding: retain each requested comparison in a distinct evidence directory.
+    private const string CaptureOutputEnvironmentVariable = "GITEXT_CAPTURE_PARITY_OUTPUT";
     private const string AxamlExtension = ".axaml";
     private const string AppSourcePath = "src/App.cs";
     private const string FeatureBranchName = "feature/visual-parity";
@@ -103,6 +105,41 @@ public sealed partial class ParityScreenshotTests
         views.Select(view => view.ViewType).Should().OnlyHaveUniqueItems();
         views.Should().OnlyContain(view => typeof(Control).IsAssignableFrom(view.ViewType));
         views.Where(view => view.ViewType.GetConstructor(Type.EmptyTypes) is null).Should().BeEmpty();
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    [NonParallelizable]
+    public void Capture_output_should_preserve_existing_evidence(bool targetAlreadyExists)
+    {
+        string? previousOutput = Environment.GetEnvironmentVariable(CaptureOutputEnvironmentVariable);
+        string root = Path.Combine(Path.GetTempPath(), $"GitExtensions.CaptureOutput-{Guid.NewGuid():N}");
+        string target = Path.Combine(root, "avalonia");
+        string retained = Path.Combine(targetAlreadyExists ? target : root, "accepted.txt");
+        Directory.CreateDirectory(Path.GetDirectoryName(retained)!);
+        File.WriteAllText(retained, "retained capture evidence");
+        try
+        {
+            Environment.SetEnvironmentVariable(CaptureOutputEnvironmentVariable, root);
+            if (targetAlreadyExists)
+            {
+                Action capture = () => PrepareCaptureOutputDirectory();
+                capture.Should().Throw<IOException>().WithMessage("Capture evidence already exists*");
+            }
+            else
+            {
+                PrepareCaptureOutputDirectory().Should().Be(target);
+                Directory.Exists(target).Should().BeTrue();
+            }
+
+            File.ReadAllText(retained).Should().Be("retained capture evidence");
+            Directory.EnumerateFiles(root, "accepted.txt", SearchOption.AllDirectories).Should().ContainSingle();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(CaptureOutputEnvironmentVariable, previousOutput);
+            TestDirectory.Delete(root);
+        }
     }
 
     [AvaloniaTest]
@@ -2962,7 +2999,30 @@ public sealed partial class ParityScreenshotTests
     }
 
     private static string GetOutputDirectory([CallerFilePath] string thisFilePath = "")
-        => Path.Combine(FindRepositoryRoot(thisFilePath), "eng", "avalonia", "parity-shots");
+    {
+        string? configuredPath = Environment.GetEnvironmentVariable(CaptureOutputEnvironmentVariable);
+        return string.IsNullOrWhiteSpace(configuredPath)
+            ? Path.Combine(FindRepositoryRoot(thisFilePath), "eng", "avalonia", "parity-shots")
+            : Path.GetFullPath(configuredPath);
+    }
+
+    // parity-scaffolding: explicit evidence roots refuse replacement; the default remains disposable staging.
+    private static string PrepareCaptureOutputDirectory()
+    {
+        string outputDirectory = Path.Combine(GetOutputDirectory(), "avalonia");
+        if (Directory.Exists(outputDirectory))
+        {
+            if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(CaptureOutputEnvironmentVariable)))
+            {
+                throw new IOException($"Capture evidence already exists at {outputDirectory}; choose a fresh output directory.");
+            }
+
+            TestDirectory.Delete(outputDirectory);
+        }
+
+        Directory.CreateDirectory(outputDirectory);
+        return outputDirectory;
+    }
 
     private static string FindRepositoryRoot(string startPath)
     {

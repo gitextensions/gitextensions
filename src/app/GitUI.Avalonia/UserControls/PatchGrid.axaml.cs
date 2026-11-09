@@ -152,7 +152,7 @@ public partial class PatchGrid : GitModuleControl
                 ObjectId = objectId,
 
                 // During a rebase, "Patch" subject is filled with commit **body** to display it
-                // packed in the grid
+                // packed in the grid and more readable in the cell tooltip
                 Subject = data?.Body ?? string.Join(' ', parts.Skip(2)),
                 Author = data?.Author,
                 Date = data?.CommitDate.LocalDateTime.ToString(),
@@ -464,20 +464,32 @@ public partial class PatchGrid : GitModuleControl
             AddCell(patchFile.Subject, 3);
             AddCell(patchFile.Author, 4);
             AddCell(patchFile.Date, 5);
-            AddCell(patchFile.ObjectId.IsZero ? string.Empty : patchFile.ObjectId.ToShortString(), 6, null, _owner.IsManagingRebase);
+            AddCell(patchFile.ObjectId.IsZero ? string.Empty : patchFile.ObjectId.ToString(), 6, null, _owner.IsManagingRebase);
         }
 
         private void AddCell(string? text, int column, IBrush? foreground = null, bool visible = true)
         {
+            // Avalonia needs explicit single-line display text; the tooltip retains the original cell value.
             TextBlock textBlock = new()
             {
-                Text = text ?? string.Empty,
+                Text = (text ?? string.Empty).ReplaceLineEndings(string.Empty),
                 Margin = new Avalonia.Thickness(6, 4),
                 TextTrimming = TextTrimming.CharacterEllipsis,
+                MaxLines = 1,
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                Foreground = foreground,
                 IsVisible = visible,
             };
+            if (foreground is not null)
+            {
+                textBlock.Foreground = foreground;
+            }
+
+            ToolTip.SetTip(textBlock, string.IsNullOrEmpty(text) ? null : text);
+            ToolTip.AddToolTipOpeningHandler(textBlock, (_, e) =>
+            {
+                // Avalonia needs an explicit clipping check for the original grid's automatic cell tooltips.
+                e.Handled = !textBlock.TextLayout.TextLines.Any(line => line.HasCollapsed);
+            });
             SetColumn(textBlock, column);
             Children.Add(textBlock);
         }

@@ -6,7 +6,10 @@ the state, theme, DPI, DPI acquisition mode, and image API used for every artifa
 
 The public command does not load `AppSettings`. It copies the built runtime to a disposable
 directory and starts a worker there in portable mode. Consequently, `GitExtensions.settings`,
-the custom capture theme, and all other worker state stay under that disposable directory.
+the custom capture theme, and other file-based worker state stay under that disposable directory.
+Portable mode does not redirect HKCU. Launch native workers through
+`WindowsRegistryIsolationScope` as well, retaining its owner-key proof.
+
 The custom theme is staged as local/preinstalled for that isolated process, so it is never
 resolved from or written to the user themes directory. The supplied repository must also be
 a throwaway repository outside the current working tree and contain at least one commit.
@@ -81,3 +84,9 @@ offsets. The unused canvas is transparent; it never contains unrelated desktop w
 Native browser surfaces that require a screen grab are checked for occlusion before and after
 copying only the owned rectangles. An unrelated window covering any requested surface makes
 that state explicitly unsupported rather than silently contaminating the reference image.
+
+For the Avalonia headless plan runner, set `GITEXT_CAPTURE_PARITY_OUTPUT` to a fresh
+evidence directory. It creates an `avalonia` child and refuses to replace that child
+if it already exists. Without the override, the existing `eng/avalonia/parity-shots`
+disposable staging behavior remains. Keep the same plan and repository fixture for
+both workers.

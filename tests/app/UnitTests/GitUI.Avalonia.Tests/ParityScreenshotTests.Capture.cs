@@ -1340,13 +1340,7 @@ public sealed partial class ParityScreenshotTests
             descriptors.Should().ContainKey(component.TypeName);
         }
 
-        string outputDirectory = Path.Combine(GetOutputDirectory(), "avalonia");
-        if (Directory.Exists(outputDirectory))
-        {
-            TestDirectory.Delete(outputDirectory);
-        }
-
-        Directory.CreateDirectory(outputDirectory);
+        string outputDirectory = PrepareCaptureOutputDirectory();
         List<CaptureManifestEntry> entries = [];
         using CaptureContext context = new();
         string repositoryRoot = FindRepositoryRoot(Path.Combine(AppContext.BaseDirectory, "GitUI.Avalonia.Tests.dll"));
