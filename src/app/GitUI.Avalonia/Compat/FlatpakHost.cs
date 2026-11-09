@@ -8,6 +8,8 @@ namespace GitUI.Compat;
 /// </summary>
 internal sealed class FlatpakHost
 {
+    private const int ToolNotFoundExitCode = 44;
+
     internal static readonly FlatpakHost Default = new();
 
     private readonly Func<ProcessStartInfo, (int ExitCode, string Output, string Error)> _query;
@@ -25,7 +27,7 @@ internal sealed class FlatpakHost
         ArgumentException.ThrowIfNullOrWhiteSpace(executable);
         ProcessStartInfo request = new("/bin/sh");
         request.ArgumentList.Add("-c");
-        request.ArgumentList.Add("command -v \"$1\" || exit 44");
+        request.ArgumentList.Add($"command -v \"$1\" || exit {ToolNotFoundExitCode}");
         request.ArgumentList.Add("gitextensions-tool-lookup");
         request.ArgumentList.Add(executable);
         ForwardToHost(request);
@@ -35,7 +37,7 @@ internal sealed class FlatpakHost
             return exitCode switch
             {
                 0 when !string.IsNullOrWhiteSpace(output) => output.TrimEnd('\r', '\n'),
-                44 => null,
+                ToolNotFoundExitCode => null,
                 _ => throw Unavailable(error),
             };
         }
@@ -74,7 +76,7 @@ internal sealed class FlatpakHost
     private static PlatformNotSupportedException Unavailable(string reason)
         => new($"Host tools are not available in this Flatpak installation. {reason}");
 
-    private static (int ExitCode, string Output, string Error) Query(ProcessStartInfo startInfo)
+    internal static (int ExitCode, string Output, string Error) Query(ProcessStartInfo startInfo)
         => DispatcherPump.Wait(() => QueryAsync(startInfo));
 
     private static async Task<(int ExitCode, string Output, string Error)> QueryAsync(ProcessStartInfo startInfo)

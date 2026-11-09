@@ -139,12 +139,14 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         }
 
         _NO_TRANSLATE_cboMergeTool.Text = mergeTool;
-        txtMergeToolPath.Text = _diffMergeToolConfigurationManager.GetToolPath(mergeTool, DiffMergeToolType.Merge);
-        txtMergeToolCommand.Text = _diffMergeToolConfigurationManager.GetToolCommand(mergeTool, DiffMergeToolType.Merge);
+
+        // Cross-platform constraint: supplement the shared search with native installation locations.
+        txtMergeToolPath.Text = PlatformToolLocator.Current.GetToolPath(_diffMergeToolConfigurationManager, mergeTool, DiffMergeToolType.Merge, CurrentSettings);
+        txtMergeToolCommand.Text = PlatformToolLocator.Current.GetToolCommand(_diffMergeToolConfigurationManager, mergeTool, DiffMergeToolType.Merge, CurrentSettings);
 
         _NO_TRANSLATE_cboDiffTool.Text = diffTool;
-        txtDiffToolPath.Text = _diffMergeToolConfigurationManager.GetToolPath(diffTool, DiffMergeToolType.Diff);
-        txtDiffToolCommand.Text = _diffMergeToolConfigurationManager.GetToolCommand(diffTool, DiffMergeToolType.Diff);
+        txtDiffToolPath.Text = PlatformToolLocator.Current.GetToolPath(_diffMergeToolConfigurationManager, diffTool, DiffMergeToolType.Diff, CurrentSettings);
+        txtDiffToolCommand.Text = PlatformToolLocator.Current.GetToolCommand(_diffMergeToolConfigurationManager, diffTool, DiffMergeToolType.Diff, CurrentSettings);
 
         AutoCRLFType? autocrlf = ((ISettingsValueGetter)CurrentSettings).GetValue<AutoCRLFType>("core.autocrlf");
         globalAutoCrlfFalse.IsChecked = autocrlf is AutoCRLFType.@false;
@@ -281,7 +283,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         }
 
         Validates.NotNull(_diffMergeToolConfigurationManager);
-        DiffMergeToolConfiguration config = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtDiffToolPath.Text);
+        DiffMergeToolConfiguration config = PlatformToolLocator.Current.LoadDiffMergeToolConfig(_diffMergeToolConfigurationManager, toolName, txtDiffToolPath.Text, CurrentSettings);
         txtDiffToolCommand.Text = AdaptCommandIfWsl(config.FullDiffCommand);
     }
 
@@ -295,7 +297,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         }
 
         Validates.NotNull(_diffMergeToolConfigurationManager);
-        DiffMergeToolConfiguration config = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtMergeToolPath.Text);
+        DiffMergeToolConfiguration config = PlatformToolLocator.Current.LoadDiffMergeToolConfig(_diffMergeToolConfigurationManager, toolName, txtMergeToolPath.Text, CurrentSettings);
         txtMergeToolCommand.Text = AdaptCommandIfWsl(config.FullMergeCommand);
     }
 
@@ -310,7 +312,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         }
 
         Validates.NotNull(_diffMergeToolConfigurationManager);
-        DiffMergeToolConfiguration config = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, null);
+        DiffMergeToolConfiguration config = PlatformToolLocator.Current.LoadDiffMergeToolConfig(_diffMergeToolConfigurationManager, toolName, null, CurrentSettings);
         string initialDirectory = _controller.GetInitialDirectory(pathTextBox.Text ?? string.Empty, config.Path);
         string? selectedPath = await SelectFileAsync(initialDirectory, config.ExeFileName);
         if (selectedPath is null)
@@ -436,7 +438,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         }
 
         Validates.NotNull(_diffMergeToolConfigurationManager);
-        string toolPath = _diffMergeToolConfigurationManager.GetToolPath(combo.Text, toolType);
+        string toolPath = PlatformToolLocator.Current.GetToolPath(_diffMergeToolConfigurationManager, combo.Text, toolType, CurrentSettings);
         if (string.IsNullOrWhiteSpace(toolPath))
         {
             path.Text = string.Empty;
@@ -445,7 +447,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         }
 
         path.Text = toolPath;
-        command.Text = _diffMergeToolConfigurationManager.GetToolCommand(combo.Text, toolType);
+        command.Text = PlatformToolLocator.Current.GetToolCommand(_diffMergeToolConfigurationManager, combo.Text, toolType, CurrentSettings);
     }
 
     private static void ConfigureToolControls(ComboBox combo, TextBox path, Button browse, TextBox command, Button suggest)

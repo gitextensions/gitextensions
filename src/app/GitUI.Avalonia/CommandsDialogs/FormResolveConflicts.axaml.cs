@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -707,7 +707,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private bool InitMergetool()
     {
-        // All _mergetool related is for native ("Windows")
+        // All _mergetool related is for native
         Executable nativeGit = new(AppSettings.GitCommand, Module.WorkingDir);
         EffectiveGitConfigSettings nativeSettings = new(nativeGit);
         if (GitVersion.CurrentVersion(nativeGit).SupportGuiMergeTool)
@@ -757,6 +757,9 @@ public partial class FormResolveConflicts : GitModuleForm
                     _mergetoolCmd = _mergetoolCmd[(idx + executablePattern.Length + 1)..];
                 }
             }
+
+            // Avalonia: Unix tools and Flatpak app commands include their executable without the Windows .exe suffix.
+            _mergetoolCmd = PlatformToolLocator.GetArguments(_mergetoolPath, _mergetoolCmd);
 
             if (!PathUtil.TryFindFullPath(_mergetoolPath!, out string? fullPath))
             {
