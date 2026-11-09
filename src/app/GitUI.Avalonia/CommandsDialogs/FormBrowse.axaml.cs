@@ -201,6 +201,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly TranslationString _undoLastCommitText = new("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
     private readonly TranslationString _undoLastCommitCaption = new("Undo last commit");
 
+    private readonly uint _closeAllMessage = WindowsCloseRequests.RegisterMessage();
+
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
     private readonly TaskManager _loadOperations = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly SplitterManager? _splitterManager;
@@ -255,6 +257,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _commitDataManager = new CommitDataManager(() => Module);
         _commitDataManager.RevisionDetailsLoaded += (_, _) => RevisionGrid.InvalidateVisual();
         InitializeComponent();
+        WindowsCloseRequests.Install(this, WndProc);
         commitInfoBelowHost.SizeChanged += CommitInfoHost_SizeChanged;
         commitInfoLeftHost.SizeChanged += CommitInfoHost_SizeChanged;
         commitInfoRightHost.SizeChanged += CommitInfoHost_SizeChanged;
@@ -293,6 +296,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _commitDataManager = new CommitDataManager(() => Module);
         _commitDataManager.RevisionDetailsLoaded += (_, _) => RevisionGrid.InvalidateVisual();
         InitializeComponent();
+        WindowsCloseRequests.Install(this, WndProc);
         toolStripSplitStash.Content = string.Empty;
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip);
 
@@ -728,6 +732,25 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UICommands.BrowseRepo = this;
 
         base.OnUICommandsChanged(e);
+    }
+
+    // Framework constraint: Avalonia routes this native callback instead of overriding WinForms WndProc.
+    private nint WndProc(nint windowHandle, uint message, nint wordParameter, nint longParameter, ref bool handled)
+    {
+        if (message == _closeAllMessage || (message == WindowsCloseRequests.SystemCommand && wordParameter == WindowsCloseRequests.CloseCommand))
+        {
+            // Application close is requested, e.g. using the Taskbar context menu.
+            // This request is directed to the main form also if a modal form like FormCommit is on top.
+            // So forward the request and try to close the modal form.
+            GitExtensionsFormBase? modalForm = WindowsCloseRequests.FindModalForm();
+            modalForm?.Close();
+
+            Close();
+            handled = true;
+        }
+
+        // Framework constraint: unhandled messages continue through Avalonia's native window procedure.
+        return 0;
     }
 
     public override void AddTranslationItems(ITranslation translation)

@@ -40,6 +40,8 @@ confirmation, then opens the fork's issue form. Fatal exceptions are handed to a
 reporter process using the same Avalonia executable. Its dedicated reporter role starts without
 normal application services, plugins or settings-saving callbacks. Recoverable errors retain
 the in-application report flow.
+On Windows, Browse forwards registered close-all and taskbar close requests to an open modal
+before closing itself. The taskbar thumbnail toolbar that produces close-all requests is not yet ported.
 Dialogs that originally expose context help provide a Help icon in their footer and the F1 key.
 Both open the same manual section; an invalid section disables the help action.
 Splitter settings retain the container size, logical DPI, font size and collapsed states as

@@ -61,6 +61,11 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
         }
     }
 
+    /// <summary>
+    ///  Gets whether the form is in its modal show lifecycle.
+    /// </summary>
+    public bool Modal => _isShownModally || IsDialog;
+
     /// <summary>Records the result while a window close is already in progress.</summary>
     /// <remarks>
     ///  Use this from an <c>OnClosing</c> override. Assigning

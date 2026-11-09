@@ -64,6 +64,117 @@ public sealed class FormBrowseTests
     private bool _revisionGraphShowArtificialCommits;
 
     [AvaloniaTest]
+    [NonParallelizable]
+    [TestCase("broadcast")]
+    [TestCase("taskbar")]
+    [TestCase("unrelated")]
+    [TestCase("native-modal")]
+    public async Task Native_close_requests_should_reach_the_real_modal_before_BrowseAsync(string reason)
+    {
+        var previousRegister = WindowsCloseRequests.TestAccessor.Register;
+        var previousAttach = WindowsCloseRequests.TestAccessor.Attach;
+        var previousDetach = WindowsCloseRequests.TestAccessor.Detach;
+        const uint closeAllMessage = 0xc123;
+        string? registeredName = null;
+        TopLevel? attachedWindow = null;
+        Win32Properties.CustomWndProcHookCallback? observed = null;
+        int removals = 0;
+        FormBrowse? form = null;
+        FormFilePrompt? modal = null;
+        List<string> closed = [];
+        Exception? failure = null;
+        DispatcherTimer deadline = new() { Interval = TimeSpan.FromSeconds(20) };
+        deadline.Tick += (_, _) =>
+        {
+            deadline.Stop();
+            failure = new AssertionException("The owned modal-close request did not complete.");
+            modal?.Close();
+        };
+        try
+        {
+            WindowsCloseRequests.TestAccessor.Register = name =>
+            {
+                registeredName = name;
+                return closeAllMessage;
+            };
+            WindowsCloseRequests.TestAccessor.Attach = (window, callback) =>
+            {
+                attachedWindow = window;
+                observed = callback;
+            };
+            WindowsCloseRequests.TestAccessor.Detach = (window, callback) =>
+            {
+                window.Should().BeSameAs(form);
+                callback.Should().BeSameAs(observed);
+                removals++;
+            };
+            form = new FormBrowse(new GitUICommands(_serviceContainer, CreateRepositoryWithInitialCommit()));
+            registeredName.Should().Be("Global.GitExtensions.CloseAllInstances");
+            attachedWindow.Should().BeSameAs(form);
+            Win32Properties.CustomWndProcHookCallback hook = observed.Should().BeOfType<Win32Properties.CustomWndProcHookCallback>().Subject;
+            form.Show();
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(20));
+            await form.JoinLoadOperationsForTestAsync(timeout.Token);
+            using IUserInputPrompt prompt = _serviceContainer.GetRequiredService<IFilePromptCreator>().Create();
+            modal = (FormFilePrompt)prompt;
+            modal.Closed += (_, _) => closed.Add("modal");
+            form.Closed += (_, _) => closed.Add("browse");
+            Dispatcher.UIThread.Post(() =>
+            {
+                try
+                {
+                    modal.Owner.Should().BeSameAs(form);
+                    modal.IsVisible.Should().BeTrue();
+                    bool handled = false;
+                    uint message = reason is "broadcast" or "native-modal" ? closeAllMessage : 0x0112;
+                    nint command = reason == "taskbar" ? 0xf060 : 0xf020;
+                    hook(form.TryGetPlatformHandle()?.Handle ?? 0, message, command, 0, ref handled);
+                    handled.Should().Be(reason != "unrelated");
+                    if (reason == "unrelated")
+                    {
+                        modal.IsVisible.Should().BeTrue();
+                        form.IsVisible.Should().BeTrue();
+                        closed.Should().BeEmpty();
+                        modal.Close();
+                        form.Close();
+                    }
+                }
+                catch (Exception exception)
+                {
+                    failure = exception;
+                    modal.Close();
+                }
+            });
+            deadline.Start();
+            if (reason == "native-modal")
+            {
+                await ((Window)modal).ShowDialog<object?>(form);
+            }
+            else
+            {
+                prompt.ShowDialog(form);
+            }
+
+            deadline.Stop();
+            failure.Should().BeNull();
+            await WaitUntilAsync(() => closed.Count == 2);
+            closed.Should().Equal("modal", "browse");
+            modal.IsVisible.Should().BeFalse();
+            form.IsVisible.Should().BeFalse();
+            removals.Should().Be(1);
+        }
+        finally
+        {
+            deadline.Stop();
+            modal?.Close();
+            form?.Close();
+            WindowsCloseRequests.TestAccessor.Register = previousRegister;
+            WindowsCloseRequests.TestAccessor.Attach = previousAttach;
+            WindowsCloseRequests.TestAccessor.Detach = previousDetach;
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase(CommitInfoPosition.LeftwardFromList)]
     [TestCase(CommitInfoPosition.RightwardFromList)]
     public async Task Browse_splitter_settings_should_migrate_legacy_native_distances_and_keep_the_restored_ratio(CommitInfoPosition position)

@@ -900,13 +900,18 @@ public sealed class NativeToolbarOverflowTooltipTests
         internal async Task WaitForHintAsync()
         {
             Stopwatch elapsed = Stopwatch.StartNew();
-            while (elapsed.Elapsed < TimeSpan.FromSeconds(2))
+            while (true)
             {
                 Settle();
                 if (ToolTip.GetIsOpen(Owner))
                 {
                     TopLevel.GetTopLevel(ActiveTip).Should().NotBeNull();
                     return;
+                }
+
+                if (elapsed.Elapsed >= TimeSpan.FromSeconds(2))
+                {
+                    break;
                 }
 
                 await Task.Delay(10);
