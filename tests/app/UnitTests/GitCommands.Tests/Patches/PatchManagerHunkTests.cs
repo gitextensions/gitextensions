@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using GitCommands.Patches;
 
 namespace GitCommandsTests.Patches;
@@ -56,11 +56,24 @@ public sealed class PatchManagerHunkTests
     [Test]
     public void Patch_from_hunk_range_should_contain_only_that_hunk()
     {
-        (int position, int length) = PatchManager.GetHunkRange(_diff, _diff.IndexOf("+B", StringComparison.Ordinal))!.Value;
+        (int Position, int Length)? value = PatchManager.GetHunkRange(_diff, _diff.IndexOf("+B", StringComparison.Ordinal));
+        if (value == null)
+        {
+            Assert.Fail("GetHunkRange returned null");
+            return;
+        }
+
+        (int position, int length) = value.Value;
 
         byte[]? patch = PatchManager.GetSelectedLinesAsPatch(_diff, position, length, isIndex: false, Encoding.UTF8, reset: false, isNewFile: false, isRenamed: false);
 
-        string patchText = Encoding.UTF8.GetString(patch!);
+        if (patch == null)
+        {
+            Assert.Fail("GetSelectedLinesAsPatch returned null");
+            return;
+        }
+
+        string patchText = Encoding.UTF8.GetString(patch);
         patchText.Should().Contain("-b\n+B\n");
         patchText.Should().NotContain("Y");
     }

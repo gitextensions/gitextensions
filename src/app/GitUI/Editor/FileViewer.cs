@@ -983,9 +983,10 @@ public partial class FileViewer : GitModuleControl
         // For the user it looks the same and they expect the same menu item (and hotkey)
         bool isIndex = ViewItemStagedStatus() == StagedStatus.Index;
         stageSelectedLinesToolStripMenuItem.Visible = SupportLinePatching && !isIndex;
-        unstageSelectedLinesToolStripMenuItem.Visible = SupportLinePatching && isIndex;
+        bool supportLinePatchingWithIndex = SupportLinePatching && isIndex;
+        unstageSelectedLinesToolStripMenuItem.Visible = supportLinePatchingWithIndex;
         stageHunkToolStripMenuItem.Visible = SupportLinePatching && ViewItemStagedStatus() == StagedStatus.WorkTree;
-        unstageHunkToolStripMenuItem.Visible = SupportLinePatching && isIndex;
+        unstageHunkToolStripMenuItem.Visible = supportLinePatchingWithIndex;
         resetSelectedLinesToolStripMenuItem.Visible = SupportLinePatching;
 
         // RangeDiff patch is undefined, could be new/old commit or to parents
