@@ -103,6 +103,8 @@ the last selected commit.");
 
     private readonly TranslationString _stageSelectedLines = new("Stage selected line(s)");
     private readonly TranslationString _unstageSelectedLines = new("Unstage selected line(s)");
+    private readonly TranslationString _stageHunk = new("Stage hunk");
+    private readonly TranslationString _unstageHunk = new("Unstage hunk");
     private readonly TranslationString _resetSelectedLines = new("Reset selected line(s)");
     private readonly TranslationString _resetSelectedLinesConfirmation = new("Are you sure you want to reset the changes to the selected lines?");
     private readonly TranslationString _resetChangesCaption = new("Reset changes");
@@ -311,6 +313,8 @@ Copy error details to clipboard?");
 
     public static string StageSelectedLines => _instance.Value._stageSelectedLines.Text;
     public static string UnstageSelectedLines => _instance.Value._unstageSelectedLines.Text;
+    public static string StageHunk => _instance.Value._stageHunk.Text;
+    public static string UnstageHunk => _instance.Value._unstageHunk.Text;
     public static string ResetSelectedLines => _instance.Value._resetSelectedLines.Text;
     public static string ResetSelectedLinesConfirmation => _instance.Value._resetSelectedLinesConfirmation.Text;
     public static string ResetChangesCaption => _instance.Value._resetChangesCaption.Text;

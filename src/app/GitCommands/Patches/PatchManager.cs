@@ -9,6 +9,45 @@ namespace GitCommands.Patches;
 
 public static class PatchManager
 {
+    /// <summary>
+    /// Gets the text range of the hunk (from its "@@" header to the next hunk or the end of the diff)
+    /// that contains <paramref name="position"/>.
+    /// </summary>
+    /// <param name="text">The diff text.</param>
+    /// <param name="position">The position in <paramref name="text"/>, usually the caret.</param>
+    /// <returns>The hunk range, or <see langword="null"/> if <paramref name="position"/> is not inside a hunk.</returns>
+    public static (int Position, int Length)? GetHunkRange(string text, int position)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return null;
+        }
+
+        position = Math.Clamp(position, 0, text.Length);
+        int lineStart = position == 0 ? 0 : text.LastIndexOf('\n', position - 1) + 1;
+
+        int hunkStart;
+        if (text.AsSpan(lineStart).StartsWith("@@"))
+        {
+            hunkStart = lineStart;
+        }
+        else
+        {
+            int previousHunkHeader = lineStart == 0 ? -1 : text.LastIndexOf("\n@@", lineStart - 1, StringComparison.Ordinal);
+            if (previousHunkHeader < 0)
+            {
+                // In the file header, before the first hunk
+                return null;
+            }
+
+            hunkStart = previousHunkHeader + 1;
+        }
+
+        int nextHunkHeader = text.IndexOf("\n@@", hunkStart, StringComparison.Ordinal);
+        int hunkEnd = nextHunkHeader < 0 ? text.Length : nextHunkHeader;
+        return (hunkStart, hunkEnd - hunkStart);
+    }
+
     public static byte[]? GetResetWorkTreeLinesAsPatch(string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding)
     {
         IReadOnlyList<Chunk>? selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out string? header);
