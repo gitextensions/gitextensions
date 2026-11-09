@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
@@ -8,11 +9,14 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using CommonTestUtils;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI;
+using GitUI.Compat;
+using GitUI.HelperDialogs;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -243,6 +247,67 @@ public sealed class RevisionGridContextSourceActionTests
     }
 
     [AvaloniaTest]
+    [TestCase("editCommitToolStripMenuItem", "e")]
+    [TestCase("rewordCommitToolStripMenuItem", "r")]
+    public void Edit_and_reword_should_supply_the_portable_sequence_editor_through_the_real_process_dialog(string item, string action)
+    {
+        string root = Path.Combine(Path.GetTempPath(), "GitExtensions.SequenceEditor-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        string config = Path.Combine(root, "global.config");
+        File.WriteAllText(config, string.Empty);
+        string[] names = ["GIT_CONFIG_GLOBAL", "GIT_CONFIG_SYSTEM", "GIT_CONFIG_NOSYSTEM"];
+        Dictionary<string, string?> previous = names.ToDictionary(name => name, Environment.GetEnvironmentVariable);
+        Func<bool> previousPlatform = PortableSequenceEditor.TestAccessor.IsMacOS;
+        bool previousClose = AppSettings.CloseProcessDialog;
+        try
+        {
+            Environment.SetEnvironmentVariable(names[0], config);
+            Environment.SetEnvironmentVariable(names[1], config);
+            Environment.SetEnvironmentVariable(names[2], "1");
+            PortableSequenceEditor.TestAccessor.IsMacOS = () => true;
+            AppSettings.CloseProcessDialog = true;
+            using GitModuleTestHelper repository = new(nameof(RevisionGridContextSourceActionTests));
+            repository.Module.SetSetting("commit.gpgsign", "false");
+            repository.Module.SetSetting("core.editor", "true");
+            repository.Module.GitExecutable.RunCommand("commit --allow-empty -qm parent").Should().BeTrue();
+            repository.Module.GitExecutable.RunCommand("commit --allow-empty -qm selected").Should().BeTrue();
+            using ServiceContainer services = new();
+            GitExtensions.ServiceContainerRegistry.RegisterServices(services);
+            using GridFixture fixture = new(bare: false, revisions: [repository.Module.GetRevision()], module: repository.Module);
+            fixture.Commands.GetService(Arg.Any<Type>()).Returns(call => services.GetService(call.Arg<Type>()));
+            string? editor = null;
+            bool? succeeded = null;
+            using IDisposable observer = Window.WindowOpenedEvent.AddClassHandler<Window>((window, _) =>
+            {
+                if (window is FormProcess process)
+                {
+                    editor = process.ProcessEnvVariables["GIT_SEQUENCE_EDITOR"];
+                    process.Closed += (_, _) => succeeded = !process.ErrorOccurred();
+                }
+            });
+
+            fixture.OpenContextMenu();
+            fixture.Item(item).IsEnabled.Should().BeTrue();
+            fixture.Item(item).RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            editor.Should().Be(PortableSequenceEditor.GetCommand(action, isMacOS: true));
+            editor.Should().NotContain("sed -i -re");
+            succeeded.Should().BeTrue();
+        }
+        finally
+        {
+            PortableSequenceEditor.TestAccessor.IsMacOS = previousPlatform;
+            AppSettings.CloseProcessDialog = previousClose;
+            foreach ((string name, string? value) in previous)
+            {
+                Environment.SetEnvironmentVariable(name, value);
+            }
+
+            TestDirectory.Delete(root);
+        }
+    }
+
+    [AvaloniaTest]
     public void Edit_by_fixup_should_keep_the_original_menu_order_and_ignore_a_root_commit()
     {
         using GridFixture fixture = new(bare: false, kind: "commit");
@@ -264,7 +329,7 @@ public sealed class RevisionGridContextSourceActionTests
     {
         private readonly Dictionary<string, string?> _settings;
 
-        public GridFixture(bool bare, string kind = "commit", string refs = "none", int count = 1)
+        public GridFixture(bool bare, string kind = "commit", string refs = "none", int count = 1, GitRevision[]? revisions = null, IGitModule? module = null)
         {
             string[] keys =
             [
@@ -280,10 +345,14 @@ public sealed class RevisionGridContextSourceActionTests
             AppSettings.ShowRemoteBranches = true;
             AppSettings.ShowTags = true;
             AppSettings.AlwaysShowAdvOpt = false;
-            Module = Substitute.For<IGitModule>();
-            Module.GitVersion.Returns(Substitute.For<IGitVersion>());
-            Module.IsBareRepository().Returns(bare);
-            Module.GetSelectedBranch().Returns("current");
+            Module = module ?? Substitute.For<IGitModule>();
+            if (module is null)
+            {
+                Module.GitVersion.Returns(Substitute.For<IGitVersion>());
+                Module.IsBareRepository().Returns(bare);
+                Module.GetSelectedBranch().Returns("current");
+            }
+
             Commands = Substitute.For<IGitUICommands>();
             Commands.Module.Returns(Module);
             Commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
@@ -293,7 +362,7 @@ public sealed class RevisionGridContextSourceActionTests
             Grid = new RevisionGridControl(Substitute.For<ICommitDataManager>()) { UICommandsSource = source };
             Grid.SuspendRefreshRevisions();
             Grid.SelectInLeftPanel += SelectedRefs.Add;
-            Revisions = [.. Enumerable.Range(1, count).Select(index => new GitRevision(ObjectId.Parse(index.ToString("x40")))
+            Revisions = revisions ?? [.. Enumerable.Range(1, count).Select(index => new GitRevision(ObjectId.Parse(index.ToString("x40")))
             {
                 Subject = "Commit " + index,
                 Body = "Commit " + index,
@@ -309,15 +378,19 @@ public sealed class RevisionGridContextSourceActionTests
                 Revisions[0].IsAutostash = true;
             }
 
-            Revisions[0].Refs = refs switch
+            if (revisions is null)
             {
-                "current" => [Ref("refs/heads/current")],
-                "local" => [Ref("refs/heads/other")],
-                "remote" => [Ref("refs/remotes/origin/other")],
-                "tag" => [Ref("refs/tags/release")],
-                "mixed" => [Ref("refs/heads/current"), Ref("refs/heads/other"), Ref("refs/remotes/origin/other"), Ref("refs/tags/release")],
-                _ => [],
-            };
+                Revisions[0].Refs = refs switch
+                {
+                    "current" => [Ref("refs/heads/current")],
+                    "local" => [Ref("refs/heads/other")],
+                    "remote" => [Ref("refs/remotes/origin/other")],
+                    "tag" => [Ref("refs/tags/release")],
+                    "mixed" => [Ref("refs/heads/current"), Ref("refs/heads/other"), Ref("refs/remotes/origin/other"), Ref("refs/tags/release")],
+                    _ => [],
+                };
+            }
+
             Grid.GetTestAccessor().SetRevisions(Revisions);
             Window = new Window { Width = 1000, Height = 220, Content = Grid };
             Window.Show();

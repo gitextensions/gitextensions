@@ -42,7 +42,8 @@ storage/fill protocol, both theme roots, plugin-directory behavior, and product 
 cancellation. It does not claim that arbitrary host HTTPS credential-helper executables or
 Secret Service providers are available inside the sandbox. External
 terminals use `flatpak-spawn --host --watch-bus` and the host's PATH. Revoking host-command
-permission produces an explicit unavailable error. Host Gource launch remains unavailable.
+permission produces an explicit unavailable error. Configured Gource uses the same host
+launcher; its avatar directory comes from the host-visible temporary storage selected at startup.
 
 The package keeps stock Git under `/app/libexec/git-core`. Its `/app/bin/git` launcher selects
 a private helper overlay for external editor and diff/merge launches; saved Git configuration

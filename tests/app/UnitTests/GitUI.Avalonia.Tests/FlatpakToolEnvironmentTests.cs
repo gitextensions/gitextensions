@@ -27,6 +27,22 @@ public sealed class FlatpakToolEnvironmentTests
     }
 
     [Test]
+    public async Task Initialize_should_supply_only_verified_installed_app_proxies_and_keep_native_tools_first()
+    {
+        Dictionary<string, string?> environment = [];
+        string cache = Path.Combine(_root, "host-cache");
+        bool result = await Initialize(environment, cache + "\0" + cache + "\0meld\0",
+            installedApps: "/usr/bin/flatpak\0org.gnome.meld\norg.kde.kdiff3\ncom.visualstudio.code\norg.example.Unknown\n");
+
+        result.Should().BeTrue();
+        string proxy = environment[FlatpakToolEnvironment.ProxyDirectoryVariable]!;
+        File.ReadAllText(Path.Combine(proxy, "meld")).Should().Contain("'meld'").And.NotContain("--file-forwarding");
+        File.ReadAllText(Path.Combine(proxy, "kdiff3")).Should().Contain("'/usr/bin/flatpak' run --file-forwarding 'org.kde.kdiff3'");
+        File.ReadAllText(Path.Combine(proxy, "code")).Should().Contain("com.visualstudio.code");
+        Directory.GetFiles(proxy).Select(Path.GetFileName).Should().BeEquivalentTo(["meld", "kdiff3", "code"]);
+    }
+
+    [Test]
     public async Task Initialize_should_leave_an_unconfined_environment_unchanged()
     {
         bool result = await FlatpakToolEnvironment.InitializeAsync(false,
@@ -140,7 +156,8 @@ public sealed class FlatpakToolEnvironmentTests
     }
 
     private Task<bool> Initialize(Dictionary<string, string?> environment, string metadata,
-        Func<string, (int ExitCode, string Output, string Error)>? readMarker = null)
+        Func<string, (int ExitCode, string Output, string Error)>? readMarker = null,
+        string installedApps = "")
         => FlatpakToolEnvironment.InitializeAsync(true, GetEnvironment, (name, value) => environment[name] = value,
             request =>
             {
@@ -150,6 +167,11 @@ public sealed class FlatpakToolEnvironmentTests
                 {
                     string marker = request.ArgumentList.Last();
                     return Task.FromResult(readMarker?.Invoke(marker) ?? (0, File.ReadAllText(marker), string.Empty));
+                }
+
+                if (request.ArgumentList.Contains("gitextensions-installed-host-apps"))
+                {
+                    return Task.FromResult((0, installedApps, string.Empty));
                 }
 
                 request.ArgumentList.Should().Contain("gitextensions-tool-environment");

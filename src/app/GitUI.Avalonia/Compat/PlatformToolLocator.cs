@@ -67,7 +67,7 @@ public sealed class PlatformToolLocator
     {
     }
 
-    internal static PlatformToolLocator Current => _current;
+    public static PlatformToolLocator Current => _current;
 
     internal PlatformToolLocator(
         TerminalPlatform platform,
@@ -198,6 +198,9 @@ public sealed class PlatformToolLocator
 
     internal static string QuoteShell(string text)
         => "'" + text.Replace("'", "'\\''", StringComparison.Ordinal) + "'";
+
+    internal static IReadOnlyList<string> GetFlatpakIds(string executable)
+        => FlatpakIds.GetValueOrDefault(GetUnixName(executable)) ?? [];
 
     internal string GetToolPath(DiffMergeToolConfigurationManager shared, string? name, DiffMergeToolType type, IConfigValueStore? settings)
     {

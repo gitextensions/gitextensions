@@ -3853,7 +3853,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         using FormProcess formProcess = new(UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
 
         const string envVarNameGitSequenceEditor = "GIT_SEQUENCE_EDITOR";
-        formProcess.ProcessEnvVariables.Add(envVarNameGitSequenceEditor, string.Format("sed -i -re '0,/pick/s//{0}/'", command));
+
+        // Cross-platform constraint: macOS sed does not accept the original GNU in-place/address syntax.
+        formProcess.ProcessEnvVariables.Add(envVarNameGitSequenceEditor, PortableSequenceEditor.GetCommand(command));
         formProcess.ProcessEnvVariables.ForwardEnvironmentVariableToWsl(Module.WorkingDir, envVarNameGitSequenceEditor);
 
         formProcess.ShowDialog(GetOwner());

@@ -15,6 +15,7 @@ internal sealed class TerminalLauncher : ITerminalLauncher
     private readonly Func<bool> _isFlatpak;
     private readonly Func<string, string?> _resolveExecutable;
     private readonly Action<ProcessStartInfo> _startProcess;
+    private readonly Func<string, LocatedTool?> _locateTool;
     private readonly TerminalPlatform _platform;
 
     public TerminalLauncher()
@@ -23,7 +24,8 @@ internal sealed class TerminalLauncher : ITerminalLauncher
             ResolveExecutable,
             startInfo => Process.Start(startInfo),
             GetCurrentPlatform(),
-            FlatpakEnvironment.IsFlatpak)
+            FlatpakEnvironment.IsFlatpak,
+            executable => PlatformToolLocator.Current.Find(executable))
     {
     }
 
@@ -32,12 +34,14 @@ internal sealed class TerminalLauncher : ITerminalLauncher
         Func<string, string?> resolveExecutable,
         Action<ProcessStartInfo> startProcess,
         TerminalPlatform platform,
-        Func<bool>? isFlatpak = null)
+        Func<bool>? isFlatpak = null,
+        Func<string, LocatedTool?>? locateTool = null)
     {
         _getEnvironmentVariable = getEnvironmentVariable;
         _isFlatpak = isFlatpak ?? (() => false);
         _resolveExecutable = resolveExecutable;
         _startProcess = startProcess;
+        _locateTool = locateTool ?? (_ => null);
         _platform = platform;
     }
 
@@ -98,7 +102,7 @@ internal sealed class TerminalLauncher : ITerminalLauncher
                 string? configuredTerminal = _getEnvironmentVariable("TERMINAL");
                 if (!string.IsNullOrWhiteSpace(configuredTerminal))
                 {
-                    startInfo.FileName = FindRequiredExecutable(configuredTerminal);
+                    SetTerminal(FindRequiredTool(configuredTerminal));
                 }
                 else if (_resolveExecutable("xdg-terminal-exec") is string desktopTerminalLauncher)
                 {
@@ -107,7 +111,7 @@ internal sealed class TerminalLauncher : ITerminalLauncher
                 }
                 else
                 {
-                    startInfo.FileName = FindRequiredExecutable("x-terminal-emulator", "gnome-terminal", "konsole", "xterm");
+                    SetTerminal(FindRequiredTool("x-terminal-emulator", "gnome-terminal", "konsole", "xterm"));
                 }
 
                 SanitizeLinuxEnvironment(startInfo.Environment);
@@ -120,6 +124,21 @@ internal sealed class TerminalLauncher : ITerminalLauncher
         }
 
         return startInfo;
+
+        void SetTerminal(LocatedTool tool)
+        {
+            startInfo.FileName = tool.Executable;
+            foreach (string argument in tool.PrefixArguments)
+            {
+                startInfo.ArgumentList.Add(argument);
+            }
+
+            if (tool.PrefixArguments.SequenceEqual(["run", "org.kde.konsole"]))
+            {
+                startInfo.ArgumentList.Add("--workdir");
+                startInfo.ArgumentList.Add(workingDirectory);
+            }
+        }
     }
 
     internal static void SanitizeLinuxEnvironment(IDictionary<string, string?> environment)
@@ -163,13 +182,24 @@ internal sealed class TerminalLauncher : ITerminalLauncher
     }
 
     private string FindRequiredExecutable(params string[] candidates)
+        => FindRequiredTool(candidates).Executable;
+
+    private LocatedTool FindRequiredTool(params string[] candidates)
     {
         foreach (string candidate in candidates)
         {
             string? executable = _resolveExecutable(candidate);
             if (executable is not null)
             {
-                return executable;
+                return new LocatedTool(executable, []);
+            }
+        }
+
+        foreach (string candidate in candidates)
+        {
+            if (_locateTool(candidate) is LocatedTool tool)
+            {
+                return tool;
             }
         }
 

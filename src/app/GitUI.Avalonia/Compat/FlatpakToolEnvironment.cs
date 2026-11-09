@@ -68,6 +68,7 @@ public static class FlatpakToolEnvironment
             }
 
             HashSet<string> installed = fields.Skip(2).ToHashSet(StringComparer.Ordinal);
+            Dictionary<string, (string Flatpak, string AppId)> installedApps = await GetInstalledAppsAsync(knownExecutables, query);
             foreach (string executable in knownExecutables)
             {
                 if (Path.GetFileName(executable) != executable || executable is "." or "..")
@@ -76,7 +77,7 @@ public static class FlatpakToolEnvironment
                 }
 
                 string proxy = Path.Combine(proxyDirectory, executable);
-                if (!installed.Contains(executable))
+                if (!installed.Contains(executable) && !installedApps.ContainsKey(executable))
                 {
                     File.Delete(proxy);
                     continue;
@@ -84,6 +85,11 @@ public static class FlatpakToolEnvironment
 
                 string script = "#!/bin/sh\nexec \"${GITEXTENSIONS_HOST_TOOL:-/app/bin/gitextensions-host-tool}\" "
                     + QuoteShell(executable) + " \"$@\"\n";
+                if (!installed.Contains(executable) && installedApps.TryGetValue(executable, out (string Flatpak, string AppId) application))
+                {
+                    script = GetFlatpakProxyScript(executable, application.Flatpak, application.AppId);
+                }
+
                 string temporaryProxy = proxy + "." + Guid.NewGuid().ToString("N");
                 try
                 {
@@ -179,6 +185,50 @@ public static class FlatpakToolEnvironment
             .Select(tool => PlatformToolLocator.GetUnixName(new DiffMergeToolConfigurationManager(() => null).LoadDiffMergeToolConfig(tool, null).ExeFileName))
             .Concat(["vi", "vim", "nano"])
             .Distinct(StringComparer.Ordinal);
+
+    private static async Task<Dictionary<string, (string Flatpak, string AppId)>> GetInstalledAppsAsync(
+        IEnumerable<string> executables,
+        Func<ProcessStartInfo, Task<(int ExitCode, string Output, string Error)>> query)
+    {
+        ProcessStartInfo request = new("/bin/sh");
+        request.ArgumentList.Add("-c");
+        request.ArgumentList.Add("flatpak=$(command -v flatpak) || exit 0; printf '%s\\0' \"$flatpak\"; \"$flatpak\" list --app --columns=application");
+        request.ArgumentList.Add("gitextensions-installed-host-apps");
+        FlatpakHost.ForwardToHost(request);
+        (int exitCode, string output, string error) = await query(request);
+        Dictionary<string, (string Flatpak, string AppId)> result = new(StringComparer.Ordinal);
+        string[] fields = output.Split('\0', 2);
+        if (exitCode != 0 || fields.Length != 2 || !fields[0].StartsWith('/'))
+        {
+            if (exitCode != 0)
+            {
+                Trace.TraceWarning("Cannot list installed host Flatpak applications: " + error);
+            }
+
+            return result;
+        }
+
+        HashSet<string> installed = fields[1].Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries).ToHashSet(StringComparer.Ordinal);
+        foreach (string executable in executables)
+        {
+            string? appId = PlatformToolLocator.GetFlatpakIds(executable).FirstOrDefault(installed.Contains);
+            if (appId is not null)
+            {
+                result[executable] = (fields[0], appId);
+            }
+        }
+
+        return result;
+    }
+
+    private static string GetFlatpakProxyScript(string executable, string flatpak, string appId)
+    {
+        string outputOption = executable == "smerge" ? "case \"$argument\" in -o=*) arguments+=(-o); argument=${argument#-o=};; esac\n" : string.Empty;
+        return "#!/bin/bash\narguments=()\nfor argument do\n" + outputOption
+            + "if [[ -f \"$argument\" || -d \"$argument\" ]]; then arguments+=(@@ \"$argument\" @@); else arguments+=(\"$argument\"); fi\ndone\n"
+            + "exec \"${GITEXTENSIONS_HOST_TOOL:-/app/bin/gitextensions-host-tool}\" "
+            + QuoteShell(flatpak) + " run --file-forwarding " + QuoteShell(appId) + " \"${arguments[@]}\"\n";
+    }
 
     private static void CreatePrivateDirectory(string path)
     {

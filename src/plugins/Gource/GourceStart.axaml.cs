@@ -62,7 +62,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
     public string GourceArguments { get; set; } = "";
 
     private void RunRealCmdDetached(string cmd, string arguments)
-        => RunRealCmdDetached(cmd, arguments, startInfo => Process.Start(startInfo));
+        => RunRealCmdDetached(cmd, arguments, ExternalToolLauncher.Current.Start);
 
     private void RunRealCmdDetached(
         string cmd,
@@ -81,40 +81,30 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
     }
 
     internal static ProcessStartInfo CreateProcessStartInfo(string cmd, string arguments, string workingDirectory)
-        => new()
-        {
-            FileName = cmd,
-            Arguments = arguments,
-            WorkingDirectory = workingDirectory,
-            UseShellExecute = false,
-        };
+        => ExternalToolLauncher.Current.CreateStartInfo(cmd, arguments, workingDirectory);
 
     private void Button1Click(object? sender, EventArgs e)
         => StartGource(
-            FlatpakEnvironment.IsFlatpak(),
-            startInfo => Process.Start(startInfo),
+            ExternalToolLauncher.Current.Start,
             AvatarService.DefaultProvider);
 
     private void StartGource(
-        bool isFlatpak,
         Func<ProcessStartInfo, Process?> startProcess,
         IAvatarProvider avatarProvider)
     {
         ThreadHelper.ThrowIfNotOnUIThread();
 
-        if (!IsLaunchAvailable(isFlatpak))
+        try
         {
-            // Cross-platform constraint: host executables are visible but not executable in Flatpak.
-            MessageBoxes.FailedToRunShell(
-                this,
-                "Gource",
-                new PlatformNotSupportedException("Gource is not available in this Flatpak installation."));
-            return;
+            if (!ExternalToolLauncher.Current.TryFindFullPath(GourcePath.Text, out _))
+            {
+                MessageBoxes.ShowError(this, "Cannot find Gource.\nPlease download Gource and set the correct path.");
+                return;
+            }
         }
-
-        if (!File.Exists(GourcePath.Text))
+        catch (PlatformNotSupportedException exception)
         {
-            MessageBoxes.ShowError(this, "Cannot find Gource.\nPlease download Gource and set the correct path.");
+            MessageBoxes.FailedToRunShell(this, "Gource", exception);
             return;
         }
 
@@ -129,9 +119,6 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         RunRealCmdDetached(GourcePath.Text, arguments, startProcess);
         Close();
     }
-
-    internal static bool IsLaunchAvailable(bool isFlatpak)
-        => !isFlatpak;
 
     private async Task<string> LoadAvatarsAsync()
         => await LoadAvatarsAsync(AvatarService.DefaultProvider);
@@ -303,9 +290,8 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         internal void OpenProjectLink() => form.linkLabel1_LinkClicked(null, EventArgs.Empty);
         internal void OpenCommandLineLink() => form.linkLabel2_LinkClicked(null, EventArgs.Empty);
         internal void StartGource(
-            bool isFlatpak,
             Func<ProcessStartInfo, Process?> startProcess,
             IAvatarProvider avatarProvider)
-            => form.StartGource(isFlatpak, startProcess, avatarProvider);
+            => form.StartGource(startProcess, avatarProvider);
     }
 }
