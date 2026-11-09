@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Text;
@@ -1833,7 +1833,8 @@ public sealed class GitUICommands : IGitUICommands
         GitConfigSettings globalSettings = new(new Executable(AppSettings.GitCommand), GitSettingLevel.Global);
         string? coreEditor = globalSettings.GetValue("core.editor");
         string? path = AppSettings.GetInstallDir().ToPosixPath();
-        if (path is not null && coreEditor?.Contains(path, StringComparison.InvariantCultureIgnoreCase) is true)
+        if ((path is not null && coreEditor?.Contains(path, StringComparison.InvariantCultureIgnoreCase) is true)
+            || (FlatpakEnvironment.IsFlatpak() && coreEditor == CommandsDialogs.SettingsDialog.EditorHelper.GetBuiltInEditorCommand()))
         {
             globalSettings.SetValue("core.editor", value: null);
             globalSettings.Save();

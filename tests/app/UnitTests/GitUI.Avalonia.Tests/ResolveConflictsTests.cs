@@ -1,12 +1,17 @@
 ﻿using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using CommonTestUtils;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.Compat;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -27,6 +32,103 @@ public sealed class ResolveConflictsTests
         // The "no mergetool configured" warning (and similar) must not block the test run.
         _messageBoxes = new StubMessageBoxHost();
         WinFormsShims.ShimHost.MessageBoxHost = _messageBoxes;
+    }
+
+    [AvaloniaTest]
+    public async Task OpenMergetool_should_forward_the_real_conflict_files_and_stage_the_host_result()
+    {
+        string root = Path.Combine(Path.GetTempPath(), "GitExtensions.HostMerge-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        string config = Path.Combine(root, "global.config");
+        File.WriteAllText(config, string.Empty);
+        string[] names = ["GIT_CONFIG_GLOBAL", "GIT_CONFIG_SYSTEM", "GIT_CONFIG_NOSYSTEM"];
+        Dictionary<string, string?> previous = names.ToDictionary(name => name, Environment.GetEnvironmentVariable);
+        ExternalToolLauncher previousLauncher = ExternalToolLauncher.TestAccessor.Current;
+        try
+        {
+            Environment.SetEnvironmentVariable(names[0], config);
+            Environment.SetEnvironmentVariable(names[1], config);
+            Environment.SetEnvironmentVariable(names[2], "1");
+            using GitModuleTestHelper repository = new(nameof(ResolveConflictsTests));
+            GitModule module = repository.Module;
+            string file = Path.Combine(module.WorkingDir, "file.txt");
+            File.WriteAllText(file, "base\n");
+            Git("add file.txt");
+            Git("commit -qm base");
+            Git("checkout -qb other");
+            File.WriteAllText(file, "other\n");
+            Git("commit -qam other");
+            Git("checkout -q -");
+            File.WriteAllText(file, "current\n");
+            Git("commit -qam current");
+            (await module.GitExecutable.ExecuteAsync("merge other", throwOnErrorExit: false)).ExitCode.Should().Be(1);
+            module.SetSetting("merge.tool", "owned");
+            module.SetSetting("mergetool.owned.path", "/host/tools/merge");
+            module.SetSetting("mergetool.owned.cmd", "\"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"");
+            int launches = 0;
+            ExternalToolLauncher.TestAccessor.Current = new(() => true, command => command,
+                (command, directory) =>
+                {
+                    command.Should().Be(Path.Combine(AppContext.BaseDirectory, "gitextensions-host-tool"));
+                    directory.Should().Be(module.WorkingDir);
+                    IExecutable executable = Substitute.For<IExecutable>();
+                    executable.Start(Arg.Any<ArgumentString>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<bool>(),
+                        Arg.Any<Encoding?>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+                        .Returns(call =>
+                        {
+                            string[] paths = Regex.Matches(call.Arg<ArgumentString>().ToString(), "\"([^\"]*)\"")
+                                .Select(match => match.Groups[1].Value).ToArray();
+                            paths.Should().HaveCount(5);
+                            paths[0].Should().Be("/host/tools/merge");
+                            foreach (string conflictFile in paths.Skip(1).Take(3))
+                            {
+                                File.Exists(conflictFile).Should().BeTrue("Git checks out each real conflict side");
+                            }
+
+                            paths[4].Should().Be("file.txt");
+                            DateTime before = File.GetLastWriteTimeUtc(file);
+                            File.WriteAllText(file, "resolved by host\n");
+                            File.SetLastWriteTimeUtc(file, before.AddSeconds(2));
+                            launches++;
+                            IProcess process = Substitute.For<IProcess>();
+                            process.StandardOutput.Returns(new StreamReader(new MemoryStream()));
+                            process.StandardError.Returns(string.Empty);
+                            process.WaitForExitAsync().Returns(Task.FromResult(0));
+                            process.WaitForExitAsync(Arg.Any<CancellationToken>()).Returns(Task.FromResult(0));
+                            return process;
+                        });
+                    return executable;
+                });
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            using FormResolveConflicts form = new(commands, offerCommit: false);
+            form.Show();
+            try
+            {
+                form.ConflictedFiles.ItemCount.Should().Be(1);
+                form.OpenMergetool.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+                await WaitUntilAsync(() => launches == 1 && form.ConflictedFiles.ItemCount == 0);
+                module.GitExecutable.GetOutput("ls-files -u").Should().BeEmpty();
+                module.GitExecutable.GetOutput("show :file.txt").Should().Be("resolved by host\n");
+                _messageBoxes.Messages.Should().BeEmpty();
+            }
+            finally
+            {
+                form.Close();
+            }
+
+            void Git(string arguments) => module.GitExecutable.RunCommand(arguments).Should().BeTrue(arguments);
+        }
+        finally
+        {
+            ExternalToolLauncher.TestAccessor.Current = previousLauncher;
+            foreach ((string name, string? value) in previous)
+            {
+                Environment.SetEnvironmentVariable(name, value);
+            }
+
+            TestDirectory.Delete(root);
+        }
     }
 
     [AvaloniaTest]

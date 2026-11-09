@@ -48,6 +48,9 @@ public partial class App : Application
 
             ShimServices.Install(desktop);
 
+            // Cross-platform constraint: external tools need host-visible files, while their launch proxies stay private.
+            DispatcherPump.Wait(FlatpakToolEnvironment.InitializeAsync);
+
             // If you want to suppress the BugReportInvoker when debugging and exit quickly, uncomment the condition:
             ////if (!Debugger.IsAttached)
             AppDomain.CurrentDomain.UnhandledException += (_, e) => ReportUnhandledException(

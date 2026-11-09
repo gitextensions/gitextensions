@@ -59,15 +59,15 @@ public sealed class PlatformToolLocator
     }
 
     internal PlatformToolLocator(TerminalPlatform platform)
-        : this(platform, File.Exists, FindOnPath, ListFlatpakApps,
+        : this(platform, File.Exists,
+            FlatpakEnvironment.IsFlatpak() ? FlatpakHost.Default.ResolveExecutable : FindOnPath,
+            FlatpakEnvironment.IsFlatpak() ? ListHostFlatpakApps : ListFlatpakApps,
             ["/Applications", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Applications")],
             ["/opt/homebrew/bin", "/usr/local/bin"], FlatpakEnvironment.IsFlatpak())
     {
     }
 
     internal static PlatformToolLocator Current => _current;
-
-    internal bool CanDiscover => !_isFlatpak;
 
     internal PlatformToolLocator(
         TerminalPlatform platform,
@@ -117,11 +117,6 @@ public sealed class PlatformToolLocator
                     return new LocatedTool(candidate, []);
                 }
             }
-        }
-
-        if (_isFlatpak)
-        {
-            return null;
         }
 
         string? path = _findOnPath(name);
@@ -238,8 +233,9 @@ public sealed class PlatformToolLocator
     internal DiffMergeToolConfiguration LoadDiffMergeToolConfig(DiffMergeToolConfigurationManager shared, string name, string? path, IConfigValueStore? settings)
     {
         DiffMergeToolConfiguration original = shared.LoadDiffMergeToolConfig(name, path);
-        if (!_isFlatpak && _platform == TerminalPlatform.Linux && Path.GetFileName(original.Path) == "flatpak"
-            && _fileExists(original.Path) && FlatpakIds.TryGetValue(GetUnixName(original.ExeFileName), out string[]? ids))
+        if (_platform == TerminalPlatform.Linux && Path.GetFileName(original.Path) == "flatpak"
+            && (_isFlatpak ? _findOnPath("flatpak") == original.Path : _fileExists(original.Path))
+            && FlatpakIds.TryGetValue(GetUnixName(original.ExeFileName), out string[]? ids))
         {
             IReadOnlyCollection<string> installed = _listFlatpakApps(original.Path);
             string? id = ids.FirstOrDefault(candidate => installed.Contains(candidate, StringComparer.Ordinal));
@@ -319,6 +315,18 @@ public sealed class PlatformToolLocator
         return exitCode == 0 ? output.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries) : [];
     }
 
+    private static IReadOnlyCollection<string> ListHostFlatpakApps(string flatpak)
+    {
+        ProcessStartInfo request = new(flatpak);
+        request.ArgumentList.Add("list");
+        request.ArgumentList.Add("--app");
+        request.ArgumentList.Add("--columns=application");
+        FlatpakHost.ForwardToHost(request);
+        (int exitCode, string output, string error) = FlatpakHost.Query(request);
+        return exitCode == 0 ? output.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
+            : throw new PlatformNotSupportedException("Host tools are not available in this Flatpak installation. " + error);
+    }
+
     private static bool IsKnownExecutable(string executable)
     {
         string name = GetUnixName(executable);
@@ -334,7 +342,7 @@ public sealed class PlatformToolLocator
             .Any(tool => GetUnixName(shared.LoadDiffMergeToolConfig(tool, null).ExeFileName) == name);
     }
 
-    private static string GetUnixName(string executable)
+    internal static string GetUnixName(string executable)
         => executable.ToLowerInvariant() switch
         {
             "code.exe" => "code",

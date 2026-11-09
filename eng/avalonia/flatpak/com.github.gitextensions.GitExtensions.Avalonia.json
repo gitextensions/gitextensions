@@ -54,6 +54,7 @@
       "build-commands": [
         "install -d /app/bin /app/share/applications /app/share/metainfo /app/share/icons/hicolor/512x512/apps",
         "cp -a publish/. /app/bin/",
+        "bash gitextensions-install-tools.sh /app",
         "install -Dm644 com.github.gitextensions.GitExtensions.Avalonia.desktop /app/share/applications/com.github.gitextensions.GitExtensions.Avalonia.desktop",
         "install -Dm644 com.github.gitextensions.GitExtensions.Avalonia.metainfo.xml /app/share/metainfo/com.github.gitextensions.GitExtensions.Avalonia.metainfo.xml",
         "install -Dm644 git-extensions-logo-512px.png /app/share/icons/hicolor/512x512/apps/com.github.gitextensions.GitExtensions.Avalonia.png"
@@ -63,6 +64,26 @@
           "type": "dir",
           "path": "publish",
           "dest": "publish"
+        },
+        {
+          "type": "file",
+          "path": "gitextensions-git.sh"
+        },
+        {
+          "type": "file",
+          "path": "gitextensions-host-tool.sh"
+        },
+        {
+          "type": "file",
+          "path": "gitextensions-editor.sh"
+        },
+        {
+          "type": "file",
+          "path": "gitextensions-mergetool-lib.sh"
+        },
+        {
+          "type": "file",
+          "path": "gitextensions-install-tools.sh"
         },
         {
           "type": "file",

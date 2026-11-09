@@ -79,7 +79,7 @@ internal sealed class FlatpakHost
     internal static (int ExitCode, string Output, string Error) Query(ProcessStartInfo startInfo)
         => DispatcherPump.Wait(() => QueryAsync(startInfo));
 
-    private static async Task<(int ExitCode, string Output, string Error)> QueryAsync(ProcessStartInfo startInfo)
+    internal static async Task<(int ExitCode, string Output, string Error)> QueryAsync(ProcessStartInfo startInfo)
     {
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
