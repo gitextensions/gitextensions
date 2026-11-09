@@ -4,6 +4,9 @@ set -u
 # parity-scaffolding: the prefix override supplies an owned package fixture in portable tests.
 prefix=${GITEXTENSIONS_FLATPAK_PREFIX:-/app}
 real_git="$prefix/libexec/git-core/git"
+if [[ ${GITEXTENSIONS_HOST_GIT_SELECTED:-0} = 1 && ${GITEXTENSIONS_HOST_GIT_FALLBACK:-0} != 1 ]]; then
+    exec "$prefix/bin/gitextensions-host-git" "$@"
+fi
 if [[ -z ${GITEXTENSIONS_HOST_PROXY_DIR:-} ]]; then exec "$real_git" "$@"; fi
 
 editor="$prefix/bin/gitextensions-editor"

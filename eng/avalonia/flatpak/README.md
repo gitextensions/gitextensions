@@ -51,5 +51,14 @@ is unchanged and remains usable by host Git. At startup, known host tools are qu
 the host service and temporary storage is accepted only after a host read of the same probe
 file succeeds. App-local launch proxies are never stored in the user's Git configuration.
 
+Settings → Paths offers an optional host-Git launcher; bundled Git remains the default.
+`/app/bin/gitextensions-host-git` forwards the working directory, Git/SSH environment,
+standard streams and exit status through `flatpak-spawn --host --watch-bus`. Its host process
+group guard also stops descendants on cancellation. Only a missing, unsupported or unavailable
+host Git causes fallback before the requested operation starts; a failed Git command is not
+replayed. The application supplies the original minimum Git version and translated fallback
+messages. Port-owned text uses the existing translator with `English.Avalonia.xlf` and optional
+language-specific companion catalogs.
+
 Both harnesses are parity scaffolding and use only disposable application data and
 repositories outside the working tree.

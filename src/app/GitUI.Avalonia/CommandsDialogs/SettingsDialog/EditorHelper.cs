@@ -67,7 +67,7 @@ public static class EditorHelper
         string exec = executableName.FindInFolders(installFolders);
 
         // Cross-platform constraint: supplement the shared search with native installation locations.
-        if (string.IsNullOrEmpty(exec) && PlatformToolLocator.Current.Find(executableName) is LocatedTool tool)
+        if (string.IsNullOrEmpty(exec) && PlatformToolLocator.Current.FindForConfiguration(executableName) is LocatedTool tool)
         {
             return PlatformToolLocator.GetEditorCommand(tool, commandLineParameter);
         }

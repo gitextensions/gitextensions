@@ -181,6 +181,7 @@
     <!-- The language files are shared with the WinForms application; translation keys are
          identical, so all existing translations apply to the Avalonia controls unchanged. -->
     <None Include="..\GitUI\Translation\*.xlf" Link="Translation\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Translation\*.xlf" CopyToOutputDirectory="PreserveNewest" />
     <!-- Compile and deploy the same CSS theme files as the WinForms application. -->
     <Content Include="..\GitUI\Themes\*.css" Link="Themes\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="..\GitUI\Themes\README.md" Link="Themes\README.md" CopyToOutputDirectory="PreserveNewest" />

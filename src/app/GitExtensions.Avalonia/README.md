@@ -98,6 +98,11 @@ When only a registered tool's Flatpak application is installed, the bundled Git 
 an app-local launch proxy with file forwarding. Native host executables take priority.
 On macOS, edit/reword uses a POSIX sequence-editor command instead of GNU-only `sed` flags.
 
+The Flatpak uses its bundled Git by default. In Settings → Paths, select **Use Git installed
+on the host** to run host Git through the existing Git command setting. The host must provide
+Git 2.43.0 or later. If Git is missing, too old, or host-command permission is unavailable,
+the launcher uses bundled Git and reports the fallback. Clear the option to select bundled Git.
+
 On Linux, file and folder dialogs use the XDG FileChooser portal. Opening a file or URI and
 showing a path in the file manager use the XDG OpenURI portal. If the desktop portal or its
 backend is unavailable, Git Extensions reports the failure and does not fall back to an

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.0" GitExVersion="">
+  <file datatype="plaintext" original="HostGitMessages" source-language="en">
+    <body>
+      <trans-unit id="_useHostGit.Text">
+        <source>Use Git installed on the host</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_missing.Text">
+        <source>Host Git was not found. Using the bundled Git.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_old.Text">
+        <source>Host Git is older than the required version ({0}). Using the bundled Git.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_unavailable.Text">
+        <source>Host Git is not available in this Flatpak installation. Using the bundled Git.</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
