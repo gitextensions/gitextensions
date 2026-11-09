@@ -79,6 +79,16 @@ The manifest forwards the host SSH agent. HTTPS authentication uses Git's config
 credential-helper protocol, but a host helper executable is not assumed to be runnable inside
 the sandbox; Secret Service/keyring integration requires a compatible bundled helper and
 explicit packaging support.
+
+Known diff/merge tools and editor suggestions retain the shared installation lookup first.
+On unconfined Linux, an additional lookup searches PATH, then installed Flatpak applications
+by their known IDs. On macOS it checks the executables inside system and user application
+bundles, then /opt/homebrew/bin and /usr/local/bin. Explicit configured paths and custom
+commands take priority. Detection inside the application Flatpak is being connected to the
+host launch and Git configuration boundary; its terminal host route is available separately.
+Flatpak tool and editor commands use file forwarding so the selected application can read
+files created by the host's Git in a private temporary directory.
+
 On Linux, file and folder dialogs use the XDG FileChooser portal. Opening a file or URI and
 showing a path in the file manager use the XDG OpenURI portal. If the desktop portal or its
 backend is unavailable, Git Extensions reports the failure and does not fall back to an
