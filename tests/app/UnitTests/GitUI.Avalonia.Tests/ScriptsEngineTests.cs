@@ -30,6 +30,7 @@ public sealed class ScriptsEngineTests
         using ServiceContainer services = new();
         GitExtUtils.ServiceContainerRegistry.RegisterServices(services);
         services.AddService<IGitExecutorProvider>(Substitute.For<IGitExecutorProvider>());
+        services.AddService<GitCommands.UserRepositoryHistory.IRepositoryDescriptionProvider>(new GitCommands.UserRepositoryHistory.RepositoryDescriptionProvider(new GitCommands.Git.GitDirectoryResolver(new System.IO.Abstractions.FileSystem())));
 
         GitUI.ServiceContainerRegistry.RegisterServices(services);
 
@@ -92,6 +93,7 @@ public sealed class ScriptsEngineTests
         using ServiceContainer services = new();
         GitExtUtils.ServiceContainerRegistry.RegisterServices(services);
         services.AddService<IGitExecutorProvider>(Substitute.For<IGitExecutorProvider>());
+        services.AddService<GitCommands.UserRepositoryHistory.IRepositoryDescriptionProvider>(new GitCommands.UserRepositoryHistory.RepositoryDescriptionProvider(new GitCommands.Git.GitDirectoryResolver(new System.IO.Abstractions.FileSystem())));
         GitUI.ServiceContainerRegistry.RegisterServices(services);
         using IUserInputPrompt input = services.GetRequiredService<IFilePromptCreator>().Create();
         FormFilePrompt prompt = input.Should().BeOfType<FormFilePrompt>().Subject;

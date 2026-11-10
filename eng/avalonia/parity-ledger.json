@@ -50860,6 +50860,225 @@
           "note": "New independent reporter mapping. No six-axis completion claimed; native process/UI and final platform evidence are pending."
         }
       }
+    },
+    {
+      "source": "src/app/GitUI/WindowsJumpListManager.cs",
+      "twin": "src/app/GitUI.Avalonia/WindowsJumpListManager.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/WindowsThumbnailToolbarButton.cs",
+      "twin": "src/app/GitUI.Avalonia/WindowsThumbnailToolbarButton.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/WindowsThumbnailToolbarButtons.cs",
+      "twin": "src/app/GitUI.Avalonia/WindowsThumbnailToolbarButtons.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-11-10",
+          "commit": "d64c4e037d364cf1942f7d7d7b5bd4e9c827c151",
+          "evidence": [
+            "eng/avalonia/parity-evidence/run-20261110/report.md"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "New Windows taskbar mapping; its framework signature substitutions are exactly pinned. Headless Windows/Linux tests use a recording shell. Native taskbar display and clicks, macOS and Linux substitutes are pending; no six-axis completion claimed."
+        }
+      }
     }
   ]
 }

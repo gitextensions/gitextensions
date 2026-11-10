@@ -216,6 +216,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
 
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
+    private readonly IWindowsJumpListManager? _windowsJumpListManager;
     private readonly ISubmoduleStatusProvider? _submoduleStatusProvider;
     private readonly IScriptsManager? _scriptsManager;
 
@@ -304,6 +305,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _shellProvider = commands.GetService(typeof(IShellProvider)) as IShellProvider ?? _shellProvider;
         _isFileHistoryMode = args.IsFileHistoryMode;
         _appTitleGenerator = commands.GetRequiredService<IAppTitleGenerator>();
+        _windowsJumpListManager = commands.GetService(typeof(IWindowsJumpListManager)) as IWindowsJumpListManager;
         _scriptsManager = UICommands.GetService(typeof(IScriptsManager)) as IScriptsManager;
         _submoduleStatusProvider = UICommands.GetService(typeof(ISubmoduleStatusProvider)) as ISubmoduleStatusProvider;
         if (_submoduleStatusProvider is not null)
@@ -658,13 +660,26 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private void OnActivated(EventArgs e)
     {
         // wait for windows to really be displayed, which isn't necessarily the case in OnLoad()
+        if (_windowsJumpListManager?.NeedsJumpListCreation is true)
+        {
+            _windowsJumpListManager.CreateJumpList(
+                ApplicationForms.GetHandle(this),
+                new WindowsThumbnailToolbarButtons(
+                    new WindowsThumbnailToolbarButton((string)toolStripButtonCommit.Content!, toolStripButtonCommit.Icon!, CommitToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton((string)toolStripButtonPush.Content!, toolStripButtonPush.Icon!, PushToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton((string)toolStripButtonPull.Content!, toolStripButtonPull.Icon!, PullToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton(_closeAll.Text, Images.DeleteFile, (s, e) => WindowsCloseRequests.BroadcastCloseAll(_closeAllMessage))));
+        }
+
+        _windowsJumpListManager?.EnableThumbnailToolbar(_dashboard?.IsVisible is not true && Module.IsValidGitWorkingDir());
+
         Dispatcher.UIThread.Post(OnActivate);
     }
 
     private void OnDeactivate(EventArgs e)
     {
-        // The original method only updates Windows taskbar thumbnail buttons. Avalonia has no
-        // cross-platform thumbnail-toolbar contract, so deactivation has no retained UI state.
+        bool formDeactivatedByOwnModalDialog = ApplicationForms.ActiveForm is not null;
+        _windowsJumpListManager?.EnableThumbnailToolbar(!formDeactivatedByOwnModalDialog && _dashboard?.IsVisible is not true && Module.IsValidGitWorkingDir());
     }
 
     private void OnFormClosing(WindowClosingEventArgs e)
@@ -701,6 +716,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _submoduleStatusProvider?.Init();
         _gpgInfoLoadSequence.Dispose();
         _gitStatusMonitor?.Dispose();
+        _windowsJumpListManager?.Dispose();
         RevisionGrid.CancelBackgroundTasks();
         revisionDiff.CancelBackgroundTasks();
         fileTree.CancelBackgroundTasks();
@@ -1000,6 +1016,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void ShowDashboard()
     {
+        _windowsJumpListManager?.EnableThumbnailToolbar(false);
+
         ToolStripMain.CloseOverflow();
         if (_dashboard is null)
         {
@@ -1202,6 +1220,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             HideDashboard();
 
+            _windowsJumpListManager?.AddToRecent(module.WorkingDir);
+
             // add Navigate and View menu
             _formBrowseMenus?.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
             _NO_TRANSLATE_WorkingDir.RefreshContent();
@@ -1233,6 +1253,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UpdateStashCount();
         OnActivate();
         LoadUserMenu();
+
+        _windowsJumpListManager?.EnableThumbnailToolbar(isValidWorkingDir);
+
         UICommands.RaisePostBrowseInitialize(this);
     }
 

@@ -175,6 +175,123 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [NonParallelizable]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task Taskbar_thumbnail_toolbar_should_follow_the_original_Browse_wiringAsync(bool isDashboard)
+    {
+        const nint browseHandle = 0x5150;
+        const nint dialogHandle = 0x6160;
+        const uint closeAllMessage = 0xc124;
+        ITaskbarShell previousShell = TaskbarManager.TestAccessor.Shell;
+        Func<string, uint>? previousRegister = WindowsCloseRequests.TestAccessor.Register;
+        Action<uint>? previousBroadcast = WindowsCloseRequests.TestAccessor.Broadcast;
+        Func<TopLevel, nint>? previousHandle = ApplicationForms.TestAccessor.Handle;
+        Func<nint>? previousActiveWindow = ApplicationForms.TestAccessor.ActiveWindow;
+        WindowsJumpListManagerTests.RecordingTaskbarShell shell = new();
+        List<uint> broadcasts = [];
+        FormBrowse? form = null;
+        Window? dialog = null;
+        nint activeWindow = 0;
+        try
+        {
+            TaskbarManager.TestAccessor.Shell = shell;
+            WindowsCloseRequests.TestAccessor.Register = _ => closeAllMessage;
+            WindowsCloseRequests.TestAccessor.Broadcast = broadcasts.Add;
+            ApplicationForms.TestAccessor.Handle = window => ReferenceEquals(window, form) ? browseHandle : ReferenceEquals(window, dialog) ? dialogHandle : 0;
+            ApplicationForms.TestAccessor.ActiveWindow = () => activeWindow;
+            GitModule module = isDashboard
+                ? new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory)
+                : CreateRepositoryWithInitialCommit();
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form.Show();
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(20));
+            await form.JoinLoadOperationsForTestAsync(timeout.Token);
+            form.Activate();
+            Dispatcher.UIThread.RunJobs();
+
+            if (!OperatingSystem.IsWindows())
+            {
+                // The original's Windows guard keeps every other platform without taskbar state.
+                shell.Calls.Should().BeEmpty();
+                return;
+            }
+
+            await WaitUntilAsync(() => shell.AddedButtons.Count == 4);
+            shell.AddedWindow.Should().Be(browseHandle);
+            // The original passes Push into the pull slot and Pull into the push slot, so the taskbar shows Commit, Push, Pull.
+            // The texts are the toolbar captions when the buttons are created, before the commit count is appended.
+            shell.AddedButtons.Select(button => button.Tooltip).Should().Equal("Commit", "Push", "Pull", "Close all windows");
+            // The close-all handler is the original's inline broadcast; its click is asserted below.
+            shell.AddedButtons.Take(3).Select(HandlerName).Should().Equal(
+                "CommitToolStripMenuItemClick",
+                "PushToolStripMenuItemClick",
+                "PullToolStripMenuItemClick");
+            shell.AddedButtons.Select(button => button.Enabled).Should().Equal(!isDashboard, !isDashboard, !isDashboard, true);
+
+            string recentDirectory = Path.Join(AppSettings.ApplicationDataPath.Value!, "Recent");
+            if (isDashboard)
+            {
+                shell.RecentPaths.Should().BeEmpty();
+            }
+            else
+            {
+                string recentFile = shell.RecentPaths.Should().ContainSingle().Subject;
+                Path.GetDirectoryName(recentFile).Should().Be(recentDirectory);
+                File.ReadAllText(recentFile).Should().Be(module.WorkingDir);
+            }
+
+            ThumbnailToolBarButton closeAll = shell.AddedButtons[3];
+            ThumbnailToolBarManager.DispatchClick(shell.AddedButtons, 0x0111, (0x1800 << 16) | (nint)closeAll.Id).Should().BeTrue();
+            broadcasts.Should().Equal(closeAllMessage);
+
+            // A dialog of the same application taking activation disables the repository actions.
+            using IUserInputPrompt prompt = _serviceContainer.GetRequiredService<IFilePromptCreator>().Create();
+            dialog = (FormFilePrompt)prompt;
+            dialog.Show();
+            activeWindow = dialogHandle;
+            RaiseNativeDeactivation(form);
+            shell.AddedButtons.Select(button => button.Enabled).Should().Equal(false, false, false, true);
+
+            // Another application taking activation keeps them available for a repository.
+            activeWindow = 0;
+            form.Activate();
+            Dispatcher.UIThread.RunJobs();
+            RaiseNativeDeactivation(form);
+            shell.AddedButtons.Select(button => button.Enabled).Should().Equal(!isDashboard, !isDashboard, !isDashboard, true);
+        }
+        finally
+        {
+            dialog?.Close();
+            form?.Close();
+            TaskbarManager.TestAccessor.Shell = previousShell;
+            WindowsCloseRequests.TestAccessor.Register = previousRegister;
+            WindowsCloseRequests.TestAccessor.Broadcast = previousBroadcast;
+            ApplicationForms.TestAccessor.Handle = previousHandle;
+            ApplicationForms.TestAccessor.ActiveWindow = previousActiveWindow;
+        }
+
+        // The headless platform has no window manager; raise the window implementation's own
+        // deactivation callback, which the native WM_ACTIVATE message drives on Windows.
+        static void RaiseNativeDeactivation(Window window)
+        {
+            object impl = typeof(TopLevel).GetProperty("PlatformImpl", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(window)!;
+            PropertyInfo deactivated = impl.GetType().GetInterfaces()
+                .Select(contract => contract.GetProperty("Deactivated"))
+                .First(property => property?.PropertyType == typeof(Action))!;
+            ((Action)deactivated.GetValue(impl)!).Invoke();
+            Dispatcher.UIThread.RunJobs();
+        }
+
+        static string? HandlerName(ThumbnailToolBarButton button)
+        {
+            FieldInfo field = typeof(ThumbnailToolBarButton).GetField(nameof(ThumbnailToolBarButton.Click), BindingFlags.NonPublic | BindingFlags.Instance)!;
+            Delegate handler = ((Delegate)field.GetValue(button)!).GetInvocationList().Single();
+            return handler.Target is FormBrowse ? handler.Method.Name : null;
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase(CommitInfoPosition.LeftwardFromList)]
     [TestCase(CommitInfoPosition.RightwardFromList)]
     public async Task Browse_splitter_settings_should_migrate_legacy_native_distances_and_keep_the_restored_ratio(CommitInfoPosition position)

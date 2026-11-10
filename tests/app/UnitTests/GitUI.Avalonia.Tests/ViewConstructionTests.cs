@@ -88,6 +88,7 @@ public sealed class ViewConstructionTests
             GitExtUtils.ServiceContainerRegistry.RegisterServices(services);
             services.AddService<IGitExecutorProvider>(Substitute.For<IGitExecutorProvider>());
             services.AddService<ILinkFactory>(Substitute.For<ILinkFactory>());
+            services.AddService<GitCommands.UserRepositoryHistory.IRepositoryDescriptionProvider>(new GitCommands.UserRepositoryHistory.RepositoryDescriptionProvider(new GitCommands.Git.GitDirectoryResolver(new System.IO.Abstractions.FileSystem())));
             GitUI.ServiceContainerRegistry.RegisterServices(services);
             IGitModule module = Substitute.For<IGitModule>();
             module.WorkingDir.Returns(Path.GetTempPath());

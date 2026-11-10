@@ -12,6 +12,8 @@ internal static class WindowsCloseRequests
     internal const uint SystemCommand = 0x0112;
     internal const int CloseCommand = 0xf060;
 
+    private const nint BroadcastWindow = 0xffff;
+
     private const string CloseAllMessageName = "Global.GitExtensions.CloseAllInstances";
     private static readonly List<GitExtensionsFormBase> OpenForms = [];
 
@@ -23,6 +25,9 @@ internal static class WindowsCloseRequests
 
     // parity-scaffolding: observes only native hook removal when the actual window closes.
     private static Action<TopLevel, Win32Properties.CustomWndProcHookCallback>? _detachForTesting;
+
+    // parity-scaffolding: substitutes only the native broadcast, which would reach every running instance.
+    private static Action<uint>? _broadcastForTesting;
 
     static WindowsCloseRequests()
     {
@@ -39,6 +44,21 @@ internal static class WindowsCloseRequests
     internal static uint RegisterMessage()
         => _registerForTesting?.Invoke(CloseAllMessageName)
             ?? (OperatingSystem.IsWindows() ? RegisterWindowMessageW(CloseAllMessageName) : 0);
+
+    /// <summary>
+    /// Posts the close-all request to every top-level window, so every running instance closes.
+    /// </summary>
+    internal static void BroadcastCloseAll(uint message)
+    {
+        if (_broadcastForTesting is not null)
+        {
+            _broadcastForTesting(message);
+        }
+        else if (OperatingSystem.IsWindows())
+        {
+            PostMessageW(BroadcastWindow, message, 0, 0);
+        }
+    }
 
     internal static void Install(TopLevel window, Win32Properties.CustomWndProcHookCallback callback)
     {
@@ -67,7 +87,12 @@ internal static class WindowsCloseRequests
         }
     }
 
-    internal static GitExtensionsFormBase? FindModalForm()
+    internal static GitExtensionsFormBase? FindModalForm() => GetOpenForms().FirstOrDefault(form => form.Modal);
+
+    /// <summary>
+    /// Gets the application's open forms, like WinForms <c>Application.OpenForms</c>.
+    /// </summary>
+    internal static IReadOnlyList<GitExtensionsFormBase> GetOpenForms()
     {
         IEnumerable<GitExtensionsFormBase> forms = OpenForms;
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -75,11 +100,15 @@ internal static class WindowsCloseRequests
             forms = desktop.Windows.OfType<GitExtensionsFormBase>().Concat(forms).Distinct();
         }
 
-        return forms.FirstOrDefault(form => form.Modal);
+        return [.. forms];
     }
 
     [DllImport("user32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
     private static extern uint RegisterWindowMessageW(string name);
+
+    [DllImport("user32.dll", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool PostMessageW(nint window, uint message, nint wordParameter, nint longParameter);
 
     // parity-scaffolding: observes only the external registration boundary supplied by the real Browse constructor.
     internal readonly struct TestAccessor
@@ -100,6 +129,12 @@ internal static class WindowsCloseRequests
         {
             get => _detachForTesting;
             set => _detachForTesting = value;
+        }
+
+        internal static Action<uint>? Broadcast
+        {
+            get => _broadcastForTesting;
+            set => _broadcastForTesting = value;
         }
     }
 }

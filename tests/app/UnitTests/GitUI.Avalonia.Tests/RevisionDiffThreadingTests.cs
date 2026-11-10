@@ -59,7 +59,9 @@ public sealed class RevisionDiffThreadingTests
         GitExtUtils.ServiceContainerRegistry.RegisterServices(_serviceContainer);
         System.IO.Abstractions.FileSystem fileSystem = new();
         _serviceContainer.AddService<System.IO.Abstractions.IFileSystem>(fileSystem);
-        _serviceContainer.AddService<IGitDirectoryResolver>(new GitDirectoryResolver(fileSystem));
+        GitDirectoryResolver gitDirectoryResolver = new(fileSystem);
+        _serviceContainer.AddService<IGitDirectoryResolver>(gitDirectoryResolver);
+        _serviceContainer.AddService<GitCommands.UserRepositoryHistory.IRepositoryDescriptionProvider>(new GitCommands.UserRepositoryHistory.RepositoryDescriptionProvider(gitDirectoryResolver));
         GitCommands.ServiceContainerRegistry.RegisterServices(_serviceContainer);
         GitUI.ServiceContainerRegistry.RegisterServices(_serviceContainer);
 

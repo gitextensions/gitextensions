@@ -362,6 +362,7 @@ public sealed class ConsoleAndOutputTests
         GitExtUtils.ServiceContainerRegistry.RegisterServices(serviceContainer);
         serviceContainer.AddService<IGitExecutorProvider>(Substitute.For<IGitExecutorProvider>());
         serviceContainer.AddService<ILinkFactory>(Substitute.For<ILinkFactory>());
+        serviceContainer.AddService<GitCommands.UserRepositoryHistory.IRepositoryDescriptionProvider>(new GitCommands.UserRepositoryHistory.RepositoryDescriptionProvider(new GitCommands.Git.GitDirectoryResolver(new System.IO.Abstractions.FileSystem())));
         GitUI.ServiceContainerRegistry.RegisterServices(serviceContainer);
         return serviceContainer;
     }

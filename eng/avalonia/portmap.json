@@ -4326,19 +4326,22 @@
     "notes": "Preserves the 10-percent screen-presence heuristic, DPI-tagged bounds, normal/maximized state, centered-dialog location preservation, and corrupt-settings fallback. Wayland compositors own placement, so that backend preserves the last meaningful location while saving size/state. P8.6i progress 67 classifies exact WinForms Designer-generated lifecycle omissions, required Avalonia-only seams, and approved framework signature substitutions through schema-4 drift-checked deviations, and restores 18 original handler identities where Avalonia permits them; all remaining differences stay measured."
   },
   "src/app/GitUI/WindowsJumpListManager.cs": {
-    "status": "windowsOnly",
-    "justification": "Jump lists, taskbar progress, and thumbnail toolbar buttons are Windows shell features with no portable equivalent selected for the port.",
-    "substitute": "No taskbar or Dock integration; the same operations remain available inside the application."
+    "twin": "src/app/GitUI.Avalonia/WindowsJumpListManager.cs",
+    "status": "functional",
+    "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
+    "notes": "Windows thumbnail toolbar (Commit, Push, Pull, Close all) and the Recent jump-list category, with the original deferral, enablement, .gitext recent files and SafeInvoke exception filter. The Windows API Code Pack needs the Windows desktop framework, so Compat/WindowsTaskbar.cs supplies the same TaskbarManager/ThumbnailToolBarButton/JumpList surface over ITaskbarList3, ICustomDestinationList, SHAddToRecentDocs and SetCurrentProcessExplicitAppUserModelID. MakeIcon draws through an Avalonia render-target bitmap. The application id appends .Avalonia so the side-by-side WinForms application keeps its own taskbar group and jump list. The original IsSupported guard keeps other platforms inert; macOS Dock and Linux launcher substitutes are later work. Real taskbar display and clicks are not yet confirmed natively."
   },
   "src/app/GitUI/WindowsThumbnailToolbarButton.cs": {
-    "status": "windowsOnly",
-    "justification": "Jump lists, taskbar progress, and thumbnail toolbar buttons are Windows shell features with no portable equivalent selected for the port.",
-    "substitute": "No taskbar or Dock integration; the same operations remain available inside the application."
+    "twin": "src/app/GitUI.Avalonia/WindowsThumbnailToolbarButton.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Same immutable text/image/click holder; the image is an Avalonia IImage and the click arguments come from the port taskbar boundary."
   },
   "src/app/GitUI/WindowsThumbnailToolbarButtons.cs": {
-    "status": "windowsOnly",
-    "justification": "Jump lists, taskbar progress, and thumbnail toolbar buttons are Windows shell features with no portable equivalent selected for the port.",
-    "substitute": "No taskbar or Dock integration; the same operations remain available inside the application."
+    "twin": "src/app/GitUI.Avalonia/WindowsThumbnailToolbarButtons.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Unchanged copy of the original four-button holder."
   },
   "src/app/BugReporter/Program.cs": {
     "twin": "src/app/BugReporter.Avalonia/Program.cs",

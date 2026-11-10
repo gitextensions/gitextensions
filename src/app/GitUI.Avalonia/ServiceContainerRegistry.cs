@@ -36,6 +36,7 @@ public static class ServiceContainerRegistry
             }
         };
 
+        serviceContainer.AddService<IWindowsJumpListManager>(new WindowsJumpListManager(serviceContainer.GetRequiredService<IRepositoryDescriptionProvider>()));
         serviceContainer.AddService<IConsoleEmulatorsRegistry>(PlainTextConsoleEmulatorsRegistry.Instance);
         serviceContainer.AddService<IScriptsManager>(scriptsManager);
         serviceContainer.AddService<IScriptsRunner>(scriptsManager);

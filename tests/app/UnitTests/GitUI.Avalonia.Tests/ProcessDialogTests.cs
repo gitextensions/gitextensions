@@ -48,6 +48,7 @@ public sealed class ProcessDialogTests
         GitCommands.Git.GitDirectoryResolver gitDirectoryResolver = new(fileSystem);
         _serviceContainer.AddService<System.IO.Abstractions.IFileSystem>(fileSystem);
         _serviceContainer.AddService<GitCommands.Git.IGitDirectoryResolver>(gitDirectoryResolver);
+        _serviceContainer.AddService<GitCommands.UserRepositoryHistory.IRepositoryDescriptionProvider>(new GitCommands.UserRepositoryHistory.RepositoryDescriptionProvider(gitDirectoryResolver));
         GitCommands.ServiceContainerRegistry.RegisterServices(_serviceContainer);
         GitUI.ServiceContainerRegistry.RegisterServices(_serviceContainer);
     }

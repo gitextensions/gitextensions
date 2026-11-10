@@ -435,6 +435,7 @@ public sealed class CheckoutBranchTests
         GitDirectoryResolver gitDirectoryResolver = new(fileSystem);
         services.AddService<System.IO.Abstractions.IFileSystem>(fileSystem);
         services.AddService<IGitDirectoryResolver>(gitDirectoryResolver);
+        services.AddService<GitCommands.UserRepositoryHistory.IRepositoryDescriptionProvider>(new GitCommands.UserRepositoryHistory.RepositoryDescriptionProvider(gitDirectoryResolver));
         GitCommands.ServiceContainerRegistry.RegisterServices(services);
         GitUI.ServiceContainerRegistry.RegisterServices(services);
         return services;
