@@ -479,6 +479,45 @@ public sealed class FormPushTests
         }
     }
 
+    [AvaloniaTest]
+    public void Changing_remote_should_restore_an_empty_local_branch_from_the_real_repository([Values] bool empty)
+    {
+        using AppSettingsTestScope settings = new();
+        GitModule module = CreateRepositoryAndRemote();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "feature" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("remote") { "add", "second", _bareRemoteDirectory.Quote() }).Should().BeTrue();
+        string currentBranch = module.GetSelectedBranch();
+        FormPush form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            ComboBox branches = form.FindControl<ComboBox>("_NO_TRANSLATE_Branch")!;
+            ComboBox remotes = form.FindControl<ComboBox>("_NO_TRANSLATE_Remotes")!;
+            branches.SelectedIndex = -1;
+            branches.Text = empty ? string.Empty : "feature";
+            remotes.SelectedItem = remotes.Items.Cast<string>().Single(remote => remote == "second");
+            Dispatcher.UIThread.RunJobs();
+
+            branches.Text.Should().Be(empty ? currentBranch : "feature");
+            if (empty)
+            {
+                GitRef fallback = branches.Items.OfType<GitRef>().Should().ContainSingle().Subject;
+                branches.SelectedItem.Should().Be(currentBranch);
+                fallback.Module.Should().BeSameAs(module);
+                fallback.Name.Should().Be(currentBranch);
+                fallback.Remote.Should().Be("second");
+            }
+
+            form.FindControl<ComboBox>("RemoteBranch")!.Text.Should().Be(empty ? currentBranch : "feature");
+            form.FindControl<ComboBox>("PushDestination")!.Text.Should().Be(_bareRemoteDirectory);
+            form.FindControl<Button>("Push")!.IsEnabled.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
     private GitModule CreateRepositoryAndRemote()
     {
         GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);

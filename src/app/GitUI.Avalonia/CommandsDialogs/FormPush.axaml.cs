@@ -17,6 +17,7 @@ using GitUI.Compat;
 using GitUI.HelperDialogs;
 using GitUI.Infrastructure;
 using GitUI.ScriptsEngine;
+using Microsoft;
 using ResourceManager;
 using ColumnHeader = GitUI.Compat.WinFormsControls.ColumnHeader;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -899,6 +900,19 @@ public sealed partial class FormPush : GitModuleForm
 
         // update the text box of the Remote Url combobox to show the URL of selected remote
         PushDestination.Text = string.IsNullOrEmpty(_selectedRemote.PushUrl) ? _selectedRemote.Url : _selectedRemote.PushUrl;
+
+        if (string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text))
+        {
+            // Doing this makes it pretty easy to accidentally create a branch on the remote.
+            // But leaving it blank is rejected instead of pushing all branches.
+            // Solution: when pushing a branch that doesn't exist on the remote, ask what to do
+            Validates.NotNull(_currentBranchName);
+            Validates.NotNull(_selectedRemote.Name);
+            GitRef currentBranch = new(Module, default, _currentBranchName, _selectedRemote.Name);
+            _NO_TRANSLATE_Branch.Items.Add(currentBranch);
+            _NO_TRANSLATE_Branch.SelectedItem = currentBranch;
+        }
+
         UpdateRemoteBranchDropDown();
         BranchSelectedValueChanged(this, EventArgs.Empty);
         if (TabControlTagBranch.SelectedItem == MultipleBranchTab)
