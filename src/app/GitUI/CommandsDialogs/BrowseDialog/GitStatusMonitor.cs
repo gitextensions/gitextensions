@@ -156,6 +156,12 @@ public sealed class GitStatusMonitor : IDisposable
                 return;
             }
 
+            // cookie file of git's file system monitor, created by any git command which queries the daemon, e.g. by git-status
+            if (IsFsMonitorDaemonPath(e.FullPath))
+            {
+                return;
+            }
+
             // submodules directory's subdir changed
             // cut/paste/rename/delete operations are not expected on directories inside nested .git dirs
             if (e.FullPath.StartsWith(_submodulesPath!) && Directory.Exists(e.FullPath))
@@ -187,10 +193,28 @@ public sealed class GitStatusMonitor : IDisposable
                 return;
             }
 
+            // old submodule .git\fsmonitor--daemon\cookies file
+            if (e.FullPath.Contains("\\.git\\") && IsFsMonitorDaemonPath(e.FullPath))
+            {
+                return;
+            }
+
             _workTreeWatcher.EnableRaisingEvents = false;
             ScheduleNextUpdateTime(FileChangedUpdateDelay);
         }
     }
+
+    /// <summary>
+    ///  Determines whether the path of a file inside a git directory belongs to a <c>git fsmonitor--daemon</c>.
+    /// </summary>
+    /// <remarks>
+    ///  If <c>core.fsmonitor</c> is enabled, every git command which refreshes the index - including git-status -
+    ///  makes the daemon create and delete a cookie file in <c>fsmonitor--daemon\cookies</c> of the git directory
+    ///  (also of a submodule or of a linked worktree) in order to synchronize with the file system.
+    ///  These files must not trigger a status update, otherwise every status update would schedule the next one.
+    /// </remarks>
+    internal static bool IsFsMonitorDaemonPath(string path)
+        => path.Contains("\\fsmonitor--daemon\\", StringComparison.Ordinal);
 
     public void InvalidateGitWorkingDirectoryStatus()
     {
