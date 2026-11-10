@@ -41,7 +41,7 @@ public class GitStatusMonitorTests
     [TestCase(@"C:\repo\fsmonitor--daemon\cookies\1234-1", @"C:\repo\.git", false)]
     public void IsFsMonitorDaemonPath_should_detect_cookies_of_the_daemon(string path, string gitDir, bool expected)
     {
-        GitStatusMonitor.IsFsMonitorDaemonPath(path, gitDir).Should().Be(expected);
+        GitStatusMonitor.TestAccessor.IsFsMonitorDaemonPath(path, gitDir).Should().Be(expected);
     }
 
     // the cookie file of an old submodule having its own .git directory
@@ -65,6 +65,6 @@ public class GitStatusMonitorTests
     [TestCase(@"C:\repo", @"C:\repo\", false)]
     public void IsNestedFsMonitorDaemonPath_should_detect_cookies_of_the_daemon_of_an_old_submodule(string path, string workTreeDir, bool expected)
     {
-        GitStatusMonitor.IsNestedFsMonitorDaemonPath(path, workTreeDir).Should().Be(expected);
+        GitStatusMonitor.TestAccessor.IsNestedFsMonitorDaemonPath(path, workTreeDir).Should().Be(expected);
     }
 }

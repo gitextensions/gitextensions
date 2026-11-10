@@ -152,7 +152,7 @@ public sealed partial class GitStatusMonitor : IDisposable
                 return;
             }
 
-            // index.lock file or cookie file of git's file system monitor, created by any git command which queries the daemon, e.g. by git-status
+            // files created by git commands that queries the daemon (e.g. by git-status)
             if (e.FullPath.EndsWith("\\index.lock") || IsFsMonitorDaemonPath(e.FullPath, _gitPath))
             {
                 return;
@@ -183,7 +183,7 @@ public sealed partial class GitStatusMonitor : IDisposable
                 return;
             }
 
-            // old submodule .git\index.lock file or .git\fsmonitor--daemon\cookies file
+            // old submodule files
             if (e.FullPath.EndsWith("\\.git\\index.lock") || IsNestedFsMonitorDaemonPath(e.FullPath, _workTreeWatcher.Path))
             {
                 return;
@@ -194,29 +194,19 @@ public sealed partial class GitStatusMonitor : IDisposable
         }
     }
 
-    /// <summary>
-    ///  Matches the path, relative to a git directory, of the cookies directory of a <c>git fsmonitor--daemon</c> or of a file in it.
-    ///  The daemon belongs to the git directory itself, to one of its linked worktrees or to one of its submodules.
-    /// </summary>
+    // The cookies directory, relative to the git directory, of the daemon of the repository, of a linked worktree or of a submodule
     [GeneratedRegex(@"^(worktrees\\[^\\]+\\)?(modules\\.+\\)?fsmonitor--daemon\\cookies(\\[^\\]+)?$", RegexOptions.ExplicitCapture)]
     private static partial Regex FsMonitorDaemonPathRegex { get; }
 
     /// <summary>
-    ///  Determines whether <paramref name="path"/> is the cookies directory of a <c>git fsmonitor--daemon</c> or a file in it.
+    ///  Determines whether <paramref name="path"/> is the cookies directory of a <c>git fsmonitor--daemon</c>
+    ///  in <paramref name="gitDir"/> or a file in it.
     /// </summary>
-    /// <param name="path">The full path of a file or directory.</param>
-    /// <param name="gitDir">The full path of the git directory of the repository.</param>
     /// <remarks>
-    ///  If <c>core.fsmonitor</c> is enabled, every git command which refreshes the index - including git-status -
-    ///  makes the daemon create and delete a cookie file in <c>fsmonitor--daemon\cookies</c> of the git directory
-    ///  (also of a submodule or of a linked worktree) in order to synchronize with the file system.
-    ///  These files must not trigger a status update, otherwise every status update would schedule the next one.
-    ///  <para>
-    ///   Only the directory of the daemon directly below a git directory is matched,
-    ///   but not e.g. a branch, a linked worktree or a submodule named <c>fsmonitor--daemon</c>.
-    ///  </para>
+    ///  Every git command which queries the daemon creates and deletes a cookie file.
+    ///  These must not trigger a status update, otherwise every status update would schedule the next one.
     /// </remarks>
-    internal static bool IsFsMonitorDaemonPath(ReadOnlySpan<char> path, ReadOnlySpan<char> gitDir)
+    private static bool IsFsMonitorDaemonPath(ReadOnlySpan<char> path, ReadOnlySpan<char> gitDir)
     {
         gitDir = gitDir.TrimEnd('\\');
 
@@ -227,17 +217,13 @@ public sealed partial class GitStatusMonitor : IDisposable
     }
 
     /// <summary>
-    ///  Determines whether <paramref name="path"/> belongs to the <c>git fsmonitor--daemon</c> of a git directory
-    ///  nested in the working directory, i.e. of an old submodule having its own <c>.git</c> directory.
+    ///  Like <see cref="IsFsMonitorDaemonPath"/> for an old submodule, which has its own <c>.git</c> directory in <paramref name="workTreeDir"/>.
     /// </summary>
-    /// <param name="path">The full path of a file or directory in the working directory.</param>
-    /// <param name="workTreeDir">The full path of the working directory.</param>
-    /// <seealso cref="IsFsMonitorDaemonPath"/>
-    internal static bool IsNestedFsMonitorDaemonPath(ReadOnlySpan<char> path, ReadOnlySpan<char> workTreeDir)
+    private static bool IsNestedFsMonitorDaemonPath(ReadOnlySpan<char> path, ReadOnlySpan<char> workTreeDir)
     {
         const string gitDirName = "\\.git";
 
-        // Search behind the working directory, whose own path does not matter
+        // Search behind the working directory
         int start = workTreeDir.TrimEnd('\\').Length;
         if (path.Length <= start)
         {
@@ -683,5 +669,14 @@ public sealed partial class GitStatusMonitor : IDisposable
                 _nextUpdateTime = ticks + delay;
             }
         }
+    }
+
+    internal static class TestAccessor
+    {
+        internal static bool IsFsMonitorDaemonPath(string path, string gitDir)
+            => GitStatusMonitor.IsFsMonitorDaemonPath(path, gitDir);
+
+        internal static bool IsNestedFsMonitorDaemonPath(string path, string workTreeDir)
+            => GitStatusMonitor.IsNestedFsMonitorDaemonPath(path, workTreeDir);
     }
 }
