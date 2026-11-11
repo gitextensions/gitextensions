@@ -1,9 +1,12 @@
+using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Xml.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using GitCommands.UserRepositoryHistory;
 using GitUI;
 using GitUI.Compat;
@@ -35,6 +38,8 @@ public sealed class LinuxLauncherShellTests
     private string _bookmarkFile = null!;
     private LinuxLauncherShell _shell = null!;
     private GitExtensionsFormBase? _window;
+    private (Action<string> Invoke, Func<long> LastActivation)? _actions;
+    private int _actionStarts;
 
     [SetUp]
     public void SetUp()
@@ -46,7 +51,18 @@ public sealed class LinuxLauncherShellTests
         _directory = Path.Join(Path.GetTempPath(), $"launcher-shell-{Guid.NewGuid():N}");
         Directory.CreateDirectory(_directory);
         _bookmarkFile = Path.Join(_directory, "data", "recently-used.xbel");
-        _shell = new LinuxLauncherShell((uri, update) => _updates.Add((uri, update)), () => _bookmarkFile, DesktopId, OpenCommand);
+        _actions = null;
+        _actionStarts = 0;
+        _shell = new LinuxLauncherShell(
+            (uri, update) => _updates.Add((uri, update)),
+            () => _bookmarkFile,
+            DesktopId,
+            OpenCommand,
+            (invoke, lastActivation) =>
+            {
+                _actions = (invoke, lastActivation);
+                _actionStarts++;
+            });
         TaskbarManager.TestAccessor.Shell = _shell;
         ApplicationForms.TestAccessor.Handle = window => ReferenceEquals(window, _window) ? WindowHandle : 0;
 
@@ -213,6 +229,114 @@ public sealed class LinuxLauncherShellTests
         handle.Should().NotBe(0, "a WinForms form always has a handle");
         ApplicationForms.GetHandle(first).Should().Be(handle);
         ApplicationForms.GetHandle(second).Should().NotBe(handle);
+    }
+
+    [AvaloniaTest]
+    public void Desktop_actions_should_run_the_original_buttons_and_leave_with_their_window()
+    {
+        ShowWindow();
+        List<string> clicked = [];
+        using WindowsJumpListManager manager = new(Substitute.For<IRepositoryDescriptionProvider>());
+
+        // Browse passes Push into the pull slot and Pull into the push slot, as the original does.
+        manager.CreateJumpList(WindowHandle, new WindowsThumbnailToolbarButtons(
+            new WindowsThumbnailToolbarButton("Commit", CreateImage(), (_, _) => clicked.Add("commit")),
+            new WindowsThumbnailToolbarButton("Push", CreateImage(), (_, _) => clicked.Add("push")),
+            new WindowsThumbnailToolbarButton("Pull", CreateImage(), (_, _) => clicked.Add("pull")),
+            new WindowsThumbnailToolbarButton("Close all", CreateImage(), (_, _) => clicked.Add("close all"))));
+
+        _actionStarts.Should().Be(1, "the instance answers desktop actions once its Browse buttons exist");
+        (Action<string> invoke, Func<long> lastActivation) = _actions!.Value;
+        invoke(LinuxLauncherActions.Commit);
+        invoke(LinuxLauncherActions.Push);
+        invoke(LinuxLauncherActions.Pull);
+        clicked.Should().Equal("commit", "push", "pull");
+
+        // A disabled button only brings its window forward, as no repository is open.
+        manager.EnableThumbnailToolbar(false);
+        invoke(LinuxLauncherActions.Commit);
+        clicked.Should().HaveCount(3);
+
+        _window!.Activate();
+        Dispatcher.UIThread.RunJobs();
+        lastActivation().Should().BeGreaterThan(long.MinValue, "an activated Browse competes for the next action");
+
+        _window.Close();
+        Dispatcher.UIThread.RunJobs();
+        lastActivation().Should().Be(long.MinValue);
+        manager.EnableThumbnailToolbar(true);
+        invoke(LinuxLauncherActions.Commit);
+        clicked.Should().HaveCount(3, "the actions leave with their window");
+    }
+
+    [AvaloniaTest]
+    public void Close_all_action_should_reach_this_instances_windows()
+    {
+        Func<string, uint>? previousRegister = WindowsCloseRequests.TestAccessor.Register;
+        Action<TopLevel, Win32Properties.CustomWndProcHookCallback>? previousAttach = WindowsCloseRequests.TestAccessor.Attach;
+        Action<TopLevel, Win32Properties.CustomWndProcHookCallback>? previousDetach = WindowsCloseRequests.TestAccessor.Detach;
+        List<uint> received = [];
+        try
+        {
+            WindowsCloseRequests.TestAccessor.Register = _ => 0xc125;
+            WindowsCloseRequests.TestAccessor.Attach = (_, _) => { };
+            WindowsCloseRequests.TestAccessor.Detach = (_, _) => { };
+            _window = new GitExtensionsFormBase();
+            WindowsCloseRequests.Install(_window, (nint handle, uint message, nint wordParameter, nint longParameter, ref bool handled) =>
+            {
+                received.Add(message);
+                return 0;
+            });
+            _window.Show();
+
+            _shell.InvokeAction(LinuxLauncherActions.CloseAll);
+
+            received.Should().Equal(0xc125u);
+        }
+        finally
+        {
+            WindowsCloseRequests.TestAccessor.Register = previousRegister;
+            WindowsCloseRequests.TestAccessor.Attach = previousAttach;
+            WindowsCloseRequests.TestAccessor.Detach = previousDetach;
+        }
+    }
+
+    [Test]
+    public async Task Desktop_actions_should_reach_the_running_instances_over_a_session_busAsync()
+    {
+        string? daemon = OperatingSystem.IsLinux()
+            ? new[] { "/usr/bin/dbus-daemon", "/bin/dbus-daemon" }.FirstOrDefault(File.Exists)
+            : null;
+        if (daemon is null)
+        {
+            Assert.Ignore("A private session bus needs dbus-daemon, which only Linux provides.");
+        }
+
+        // A private bus keeps the test away from the session's own instances.
+        using Process bus = Process.Start(new ProcessStartInfo(daemon, "--session --nofork --print-address=1")
+        {
+            RedirectStandardOutput = true,
+            UseShellExecute = false,
+        })!;
+        try
+        {
+            string address = (await bus.StandardOutput.ReadLineAsync())!.Trim();
+            ConcurrentQueue<string> older = new();
+            ConcurrentQueue<string> newer = new();
+            using IDisposable first = await LinuxLauncherActions.StartAsync(address, DesktopId, older.Enqueue, () => 100);
+            using IDisposable second = await LinuxLauncherActions.StartAsync(address, DesktopId, newer.Enqueue, () => 200);
+
+            (await LinuxLauncherActions.ForwardAsync(address, DesktopId, LinuxLauncherActions.Commit)).Should().BeTrue();
+            (await LinuxLauncherActions.ForwardAsync(address, DesktopId, LinuxLauncherActions.CloseAll)).Should().BeTrue();
+            (await LinuxLauncherActions.ForwardAsync(address, "com.example.Other", LinuxLauncherActions.Commit)).Should().BeFalse("no instance of another application answers");
+
+            older.Should().Equal(LinuxLauncherActions.CloseAll);
+            newer.Should().Equal(LinuxLauncherActions.Commit, LinuxLauncherActions.CloseAll);
+        }
+        finally
+        {
+            bus.Kill();
+        }
     }
 
     [Test]

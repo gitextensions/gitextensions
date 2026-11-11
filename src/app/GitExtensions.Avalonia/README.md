@@ -52,7 +52,9 @@ and the status dot. On Linux, launchers that read the `com.canonical.Unity.Launc
 (Ubuntu Dock, Dash to Dock, Dash to Panel, KDE Plasma, Plank) show the progress of running
 commands and request attention while the working directory has changes; opened repositories are
 added to the shared recently-used list that KDE's task manager offers. Stock GNOME Shell and COSMIC
-show neither yet.
+show neither yet. The desktop entry also offers Commit, Push, Pull and Close all windows: the first
+three act in the most recently used Browse window (or start Git Extensions when none is running),
+and Close all windows closes every running instance.
 Dialogs that originally expose context help provide a Help icon in their footer and the F1 key.
 Both open the same manual section; an invalid section disables the help action.
 Splitter settings retain the container size, logical DPI, font size and collapsed states as
@@ -143,7 +145,7 @@ unconfined toolkit dialog or invoke `xdg-open` directly.
 - A desktop environment:
   - Windows 10 or later
   - Linux with an X11 or Wayland session (standard desktop distributions work out of the box)
-  - macOS 11 or later on Apple Silicon
+  - macOS 12 or later on Apple Silicon
 
 On Windows, automatic Git discovery also checks `GITEXT_GIT` (an installation directory
 ending in a path separator), the Git installer registry, standard and per-user installations,

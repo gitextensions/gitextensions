@@ -77,7 +77,7 @@ cat > "$contents_directory/Info.plist" <<EOF
   <key>CFBundleVersion</key>
   <string>$bundle_version</string>
   <key>LSMinimumSystemVersion</key>
-  <string>10.15</string>
+  <string>12.0</string>
   <key>NSHighResolutionCapable</key>
   <true/>
 </dict>

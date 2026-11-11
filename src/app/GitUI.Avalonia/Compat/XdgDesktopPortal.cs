@@ -353,7 +353,7 @@ public sealed class XdgDesktopPortal : IXdgDesktopPortal
                 {
                     response.TrySetResult(notification.Value);
                 }
-                else if (notification.Exception is { } exception)
+                else if (notification.CompletionReason is { } exception)
                 {
                     response.TrySetException(exception);
                 }
@@ -394,7 +394,7 @@ public sealed class XdgDesktopPortal : IXdgDesktopPortal
                 {
                     response.TrySetResult(notification.Value);
                 }
-                else if (notification.Exception is { } exception)
+                else if (notification.CompletionReason is { } exception)
                 {
                     response.TrySetException(exception);
                 }

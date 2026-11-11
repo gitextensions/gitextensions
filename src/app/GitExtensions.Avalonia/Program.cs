@@ -1,5 +1,6 @@
 using System.ComponentModel.Design;
 using Avalonia;
+using Avalonia.Wayland;
 using GitCommands;
 using GitExtensions.Compat;
 using GitUI;
@@ -8,6 +9,8 @@ using GitUI.Compat;
 namespace GitExtensions;
 
 // Framework constraint: the CLR entry point stays synchronous for STA; the Flatpak-only probe finishes before UI startup.
+// Cross-platform constraint: a Linux desktop-file action starts a new process, which hands the action to the
+// running instances before UI startup instead of opening its own window.
 internal static class Program
 {
     internal static readonly ServiceContainer ServiceContainer = new();
@@ -26,6 +29,11 @@ internal static class Program
         if (args.FirstOrDefault() == AvaloniaBugReportProcess.Command)
         {
             return BuildBugReportApp().StartWithClassicDesktopLifetime(args);
+        }
+
+        if (OperatingSystem.IsLinux() && args is [LinuxLauncherActions.Argument, string desktopAction])
+        {
+            return LinuxLauncherShell.RunDesktopAction(desktopAction);
         }
 
         ServiceContainerRegistry.RegisterServices(ServiceContainer);
@@ -62,7 +70,9 @@ internal static class Program
 
         if (ShouldUseWayland(OperatingSystem.IsLinux(), Environment.GetEnvironmentVariable("WAYLAND_DISPLAY")))
         {
-            builder = builder.UseWayland();
+            // Wayland launchers link a window to its desktop entry, icon and launcher state by the app id,
+            // which Avalonia otherwise sets to the assembly name.
+            builder = builder.With(new WaylandPlatformOptions { AppId = LinuxLauncherShell.DesktopId }).UseWayland();
         }
 
         return builder.LogToTrace();
@@ -74,7 +84,7 @@ internal static class Program
             .UsePlatformDetect();
         if (ShouldUseWayland(OperatingSystem.IsLinux(), Environment.GetEnvironmentVariable("WAYLAND_DISPLAY")))
         {
-            builder = builder.UseWayland();
+            builder = builder.With(new WaylandPlatformOptions { AppId = LinuxLauncherShell.DesktopId }).UseWayland();
         }
 
         return builder.LogToTrace();

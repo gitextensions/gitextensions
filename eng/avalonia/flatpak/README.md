@@ -31,8 +31,10 @@ a custom theme, and a nested Wayland compositor. It validates the installed perm
 captures the compositor-rendered window. It also observes the session bus for the
 `com.canonical.Unity.LauncherEntry` update the confined Browse sends, and reads the repository
 it records in the shared `recently-used.xbel` with GLib's bookmark parser; the application's
-host data directory points at a scratch copy so the user's own file is never written. Neither
-needs a permission beyond the ones above. Generated publish and builder output remain ignored.
+host data directory points at a scratch copy so the user's own file is never written. Finally it
+checks that the exported desktop entry offers the Commit, Push, Pull and Close all windows actions
+and starts Close all windows from a second sandbox, which must close the running Browse over the
+session bus. None of this needs a permission beyond the ones above. Generated publish and builder output remain ignored.
 
 After the smoke has installed that isolated ID, run every confined host-facing action:
 

@@ -299,7 +299,7 @@ public sealed class FormBrowseTests
         try
         {
             WindowsJumpListManagerTests.ClearSharedIconCache();
-            TaskbarManager.TestAccessor.Shell = new LinuxLauncherShell((_, _) => { }, () => bookmarks, "com.example.BrowseLauncherTest", "test browse %f");
+            TaskbarManager.TestAccessor.Shell = new LinuxLauncherShell((_, _) => { }, () => bookmarks, "com.example.BrowseLauncherTest", "test browse %f", (_, _) => { });
             ApplicationForms.TestAccessor.Handle = null;
             GitModule module = CreateRepositoryWithInitialCommit();
             form = new FormBrowse(new GitUICommands(_serviceContainer, module));

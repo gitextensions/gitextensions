@@ -190,11 +190,13 @@ unreachable_stdout_log="$evidence_dir/plugin-unreachable-stdout.log"
 unreachable_stderr_log="$evidence_dir/plugin-unreachable-stderr.log"
 launcher_log="$evidence_dir/launcher-entry.log"
 recent_log="$evidence_dir/recently-used.txt"
+actions_log="$evidence_dir/launcher-actions.txt"
 # The app writes the host launcher's recently-used file; the smoke points it at a scratch copy.
 host_data="$smoke_parent/host-data"
 rm -f -- \
     "$launcher_log" \
     "$recent_log" \
+    "$actions_log" \
     "$stdout_log" \
     "$stderr_log" \
     "$capture_log" \
@@ -452,6 +454,36 @@ print(f"title={bookmarks.get_title(uri)}")
 print(f"applications={','.join(bookmarks.get_applications(uri))}")
 PY
 
+# The exported desktop entry offers the thumbnail-toolbar actions, and Close all windows, started from
+# a second sandbox the way a launcher starts it, reaches the running Browse over the session bus.
+exported_desktop="$(flatpak info --user --show-location "$app_id")/export/share/applications/$app_id.desktop"
+grep -Fx 'Actions=commit;push;pull;close-all;' "$exported_desktop" >/dev/null
+grep -F -- '--launcher-action close-all' "$exported_desktop" >/dev/null
+flatpak run --user \
+    --env=HOST_XDG_DATA_HOME="$host_data" \
+    "$app_id" \
+    --launcher-action close-all >>"$actions_log" 2>&1
+closed_by_action=false
+for _ in {1..40}; do
+    if ! kill -0 "$flatpak_pid" 2>/dev/null; then
+        closed_by_action=true
+        break
+    fi
+    sleep 0.5
+done
+if [[ "$closed_by_action" != true ]]; then
+    echo "error: the Close all windows desktop action did not close the confined Browse" >&2
+    sed -n '1,80p' "$actions_log" >&2
+    exit 1
+fi
+wait "$flatpak_pid" 2>/dev/null || true
+flatpak_pid=
+{
+    printf 'desktopEntry=%s\n' "$(grep -Fx 'Actions=commit;push;pull;close-all;' "$exported_desktop")"
+    printf 'closeAllExec=%s\n' "$(grep -F -- '--launcher-action close-all' "$exported_desktop")"
+    printf 'closeAll=running Browse exited\n'
+} >>"$actions_log"
+
 screenshot_sha256="$(sha256sum "$screenshot" | cut -d' ' -f1)"
 cat > "$manifest_output" <<EOF
 {
@@ -475,6 +507,7 @@ cat > "$manifest_output" <<EOF
   "pluginDiscoveryEvidence": "plugin-discovery.txt",
   "launcherEntryEvidence": "launcher-entry.log",
   "recentlyUsedEvidence": "recently-used.txt",
+  "launcherActionsEvidence": "launcher-actions.txt",
   "permissionsEvidence": "flatpak-permissions.txt",
   "screenshot": "window.png",
   "screenshotSha256": "$screenshot_sha256",
