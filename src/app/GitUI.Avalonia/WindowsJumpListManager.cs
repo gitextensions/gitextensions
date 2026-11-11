@@ -7,7 +7,6 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
-using GitCommands.Utils;
 using GitUI.Compat;
 using Microsoft;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -76,8 +75,9 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
         }
     }
 
-    private static bool IsSupported => OperatingSystem.IsWindows() && TaskbarManager.IsPlatformSupported;
-    private static bool IsSupportedAndVisible => EnvUtils.RunningOnWindowsWithMainWindow() && TaskbarManager.IsPlatformSupported;
+    // Cross-platform constraint: the taskbar shell also carries the macOS Dock, so it decides support and the main-window check.
+    private static bool IsSupported => TaskbarManager.IsPlatformSupported;
+    private static bool IsSupportedAndVisible => TaskbarManager.RunningWithMainWindow && TaskbarManager.IsPlatformSupported;
 
     /// <summary>
     /// Adds the given working directory to the list of Recent for future quick access.

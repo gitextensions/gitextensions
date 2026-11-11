@@ -5,14 +5,17 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
+using GitCommands.Utils;
 
 namespace GitUI.Compat;
 
 // Framework constraint: the original Windows API Code Pack taskbar types require the Windows desktop
-// framework, so the port supplies the same small surface over the Windows shell.
+// framework, so the port supplies the same small surface over the Windows shell and the macOS Dock.
 internal sealed class TaskbarManager
 {
-    private static ITaskbarShell _shell = OperatingSystem.IsWindows() ? new WindowsTaskbarShell() : new UnsupportedTaskbarShell();
+    private static ITaskbarShell _shell = OperatingSystem.IsWindows() ? new WindowsTaskbarShell()
+        : OperatingSystem.IsMacOS() ? new MacDockShell()
+        : new UnsupportedTaskbarShell();
     private string? _applicationId;
 
     private TaskbarManager()
@@ -24,6 +27,12 @@ internal sealed class TaskbarManager
     internal static bool IsPlatformSupported => _shell.IsPlatformSupported;
 
     internal static ITaskbarShell Shell => _shell;
+
+    /// <summary>
+    /// Gets whether the application shows a main window the taskbar can follow. On Windows this is the
+    /// original <c>EnvUtils.RunningOnWindowsWithMainWindow</c> check.
+    /// </summary>
+    internal static bool RunningWithMainWindow => _shell.HasMainWindow;
 
     internal string? ApplicationId
     {
@@ -41,22 +50,9 @@ internal sealed class TaskbarManager
     internal ThumbnailToolBarManager ThumbnailToolBars { get; } = new();
 
     /// <summary>
-    /// Gets the process's main window, which owns the taskbar button, like the Code Pack's OwnerHandle.
+    /// Gets the window that owns the taskbar button, like the Code Pack's OwnerHandle.
     /// </summary>
-    internal static nint OwnerHandle
-    {
-        get
-        {
-            using Process process = Process.GetCurrentProcess();
-            nint handle = process.MainWindowHandle;
-            if (handle == 0)
-            {
-                throw new InvalidOperationException("A valid active Window is needed to update the Taskbar.");
-            }
-
-            return handle;
-        }
-    }
+    internal static nint OwnerHandle => _shell.GetOwnerHandle();
 
     internal void SetProgressState(TaskbarProgressBarState state) => _shell.SetProgressState(OwnerHandle, state);
 
@@ -311,12 +307,16 @@ internal sealed class ShellException : Exception
 }
 
 /// <summary>
-/// The native boundary behind the taskbar types. The Windows shell implements it; other platforms
-/// report no support, so callers keep their original IsPlatformSupported guards.
+/// The native boundary behind the taskbar types. The Windows shell and the macOS Dock implement it;
+/// other platforms report no support, so callers keep their original IsPlatformSupported guards.
 /// </summary>
 internal interface ITaskbarShell
 {
     bool IsPlatformSupported { get; }
+
+    bool HasMainWindow { get; }
+
+    nint GetOwnerHandle();
 
     void SetApplicationId(string applicationId);
 
@@ -342,6 +342,10 @@ internal interface ITaskbarShell
 internal sealed class UnsupportedTaskbarShell : ITaskbarShell
 {
     public bool IsPlatformSupported => false;
+
+    public bool HasMainWindow => false;
+
+    public nint GetOwnerHandle() => throw new PlatformNotSupportedException();
 
     public void SetApplicationId(string applicationId) => throw new PlatformNotSupportedException();
 
@@ -385,6 +389,20 @@ internal sealed unsafe class WindowsTaskbarShell : ITaskbarShell
     private nint _taskbarList;
 
     public bool IsPlatformSupported => OperatingSystem.IsWindowsVersionAtLeast(6, 1);
+
+    public bool HasMainWindow => EnvUtils.RunningOnWindowsWithMainWindow();
+
+    public nint GetOwnerHandle()
+    {
+        using Process process = Process.GetCurrentProcess();
+        nint handle = process.MainWindowHandle;
+        if (handle == 0)
+        {
+            throw new InvalidOperationException("A valid active Window is needed to update the Taskbar.");
+        }
+
+        return handle;
+    }
 
     public void SetApplicationId(string applicationId)
         => Check(SetCurrentProcessExplicitAppUserModelID(applicationId), nameof(SetApplicationId));

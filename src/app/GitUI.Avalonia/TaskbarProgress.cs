@@ -1,4 +1,3 @@
-using GitCommands.Utils;
 using GitUI.Compat;
 
 namespace GitUI;
@@ -7,7 +6,8 @@ public static class TaskbarProgress
 {
     private static void Try(Action<TaskbarManager> action)
     {
-        if (EnvUtils.RunningOnWindowsWithMainWindow() && TaskbarManager.IsPlatformSupported)
+        // Cross-platform constraint: the taskbar shell also carries the macOS Dock, so it decides the main-window check.
+        if (TaskbarManager.RunningWithMainWindow && TaskbarManager.IsPlatformSupported)
         {
             try
             {

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -16,6 +17,7 @@ internal static class WindowsCloseRequests
 
     private const string CloseAllMessageName = "Global.GitExtensions.CloseAllInstances";
     private static readonly List<GitExtensionsFormBase> OpenForms = [];
+    private static readonly ConditionalWeakTable<TopLevel, List<Win32Properties.CustomWndProcHookCallback>> InstalledHooks = new();
 
     // parity-scaffolding: substitute native message registration and hook I/O, never form or modal state.
     private static Func<string, uint>? _registerForTesting;
@@ -58,6 +60,28 @@ internal static class WindowsCloseRequests
         {
             PostMessageW(BroadcastWindow, message, 0, 0);
         }
+        else
+        {
+            // Cross-platform constraint: other platforms have no broadcast window message, so the request
+            // reaches the windows of this instance only.
+            DispatchToInstalledWindows(message);
+        }
+    }
+
+    /// <summary>
+    /// Delivers a message to every installed window callback of this instance, as the native window
+    /// procedure would.
+    /// </summary>
+    internal static void DispatchToInstalledWindows(uint message)
+    {
+        foreach ((TopLevel window, List<Win32Properties.CustomWndProcHookCallback> callbacks) in InstalledHooks.ToArray())
+        {
+            foreach (Win32Properties.CustomWndProcHookCallback callback in callbacks.ToArray())
+            {
+                bool handled = false;
+                callback(ApplicationForms.GetHandle(window), message, 0, 0, ref handled);
+            }
+        }
     }
 
     internal static void Install(TopLevel window, Win32Properties.CustomWndProcHookCallback callback)
@@ -71,10 +95,12 @@ internal static class WindowsCloseRequests
             Win32Properties.AddWndProcHookCallback(window, callback);
         }
 
+        InstalledHooks.GetOrCreateValue(window).Add(callback);
         if (window is Window form)
         {
             form.Closed += (_, _) =>
             {
+                InstalledHooks.GetOrCreateValue(window).Remove(callback);
                 if (_detachForTesting is not null)
                 {
                     _detachForTesting(window, callback);

@@ -211,13 +211,6 @@ public sealed class FormBrowseTests
             form.Activate();
             Dispatcher.UIThread.RunJobs();
 
-            if (!OperatingSystem.IsWindows())
-            {
-                // The original's Windows guard keeps every other platform without taskbar state.
-                shell.Calls.Should().BeEmpty();
-                return;
-            }
-
             await WaitUntilAsync(() => shell.AddedButtons.Count == 4);
             shell.AddedWindow.Should().Be(browseHandle);
             // The original passes Push into the pull slot and Pull into the push slot, so the taskbar shows Commit, Push, Pull.
@@ -299,8 +292,7 @@ public sealed class FormBrowseTests
         const nint browseHandle = 0x5151;
         ITaskbarShell previousShell = TaskbarManager.TestAccessor.Shell;
         Func<TopLevel, nint>? previousHandle = ApplicationForms.TestAccessor.Handle;
-        WindowsJumpListManagerTests.RecordingTaskbarShell shell = new();
-        NativeMainWindowScope? mainWindow = OperatingSystem.IsWindows() ? NativeMainWindowScope.Create() : null;
+        WindowsJumpListManagerTests.RecordingTaskbarShell shell = new() { HasMainWindow = true };
         FormBrowse? form = null;
         try
         {
@@ -316,10 +308,7 @@ public sealed class FormBrowseTests
             await form.JoinLoadOperationsForTestAsync(timeout.Token);
             IconButton commit = form.FindControl<IconButton>("toolStripButtonCommit")!;
             await WaitUntilAsync(() => commit.Content is "Commit (0)");
-            if (mainWindow is not null)
-            {
-                await WaitUntilAsync(() => shell.AddedButtons.Count == 4);
-            }
+            await WaitUntilAsync(() => shell.AddedButtons.Count == 4);
 
             // The real status monitor then reports a new untracked file, which changes the status brush.
             // A finished command notifies the repository change, which requests an interactive refresh
@@ -327,13 +316,6 @@ public sealed class FormBrowseTests
             File.WriteAllText(Path.Combine(module.WorkingDir, "untracked.txt"), "untracked");
             form.UICommands.RepoChangedNotifier.Notify();
             await WaitUntilAsync(() => commit.Content is "Commit (1)");
-
-            if (mainWindow is null)
-            {
-                // The original Windows main-window guard keeps other platforms without a taskbar overlay.
-                shell.Calls.Should().BeEmpty();
-                return;
-            }
 
             Stopwatch overlayWait = Stopwatch.StartNew();
             while (!(shell.OverlayIcons.Count > 0 && shell.UpdatedButtons.Count > 0) && overlayWait.Elapsed < TimeSpan.FromSeconds(15))
@@ -344,7 +326,7 @@ public sealed class FormBrowseTests
 
             shell.UpdatedButtons.Should().NotBeEmpty("the shell saw {0}", string.Join(", ", shell.Calls));
             (nint window, TaskbarIcon? icon, string description) = shell.OverlayIcons[^1];
-            window.Should().Be(mainWindow.Handle);
+            window.Should().Be(shell.OwnerHandle);
             description.Should().BeEmpty();
             using (Bitmap overlay = new(new MemoryStream(icon!.PngData)))
             {
@@ -365,14 +347,13 @@ public sealed class FormBrowseTests
             typeof(FormBrowse).GetMethod("HandleSettingsChanged", BindingFlags.Instance | BindingFlags.NonPublic)!
                 .Invoke(form, [AppSettings.Translation, AppSettings.CommitInfoPosition]);
             await WaitUntilAsync(() => shell.OverlayIcons.Count > overlays);
-            shell.OverlayIcons[^1].Should().Be((mainWindow.Handle, (TaskbarIcon?)null, string.Empty));
+            shell.OverlayIcons[^1].Should().Be((shell.OwnerHandle, (TaskbarIcon?)null, string.Empty));
         }
         finally
         {
             form?.Close();
             TaskbarManager.TestAccessor.Shell = previousShell;
             ApplicationForms.TestAccessor.Handle = previousHandle;
-            mainWindow?.Dispose();
         }
 
         static (byte B, byte G, byte R, byte A) Pixel(Bitmap bitmap, int x, int y)

@@ -46,15 +46,6 @@ public sealed class WindowsJumpListManagerTests
         List<string> clicked = [];
         WindowsThumbnailToolbarButtons buttons = CreateButtons(clicked);
 
-        if (!OperatingSystem.IsWindows())
-        {
-            // The original guards every taskbar feature with a Windows check; other platforms keep no taskbar state.
-            manager.NeedsJumpListCreation.Should().BeFalse();
-            manager.CreateJumpList(WindowHandle, buttons);
-            _shell.Calls.Should().BeEmpty();
-            return;
-        }
-
         manager.NeedsJumpListCreation.Should().BeTrue();
         manager.CreateJumpList(WindowHandle, buttons);
 
@@ -85,7 +76,7 @@ public sealed class WindowsJumpListManagerTests
         manager.CreateJumpList(IntPtr.Zero, CreateButtons([]));
 
         _shell.Calls.Should().BeEmpty();
-        manager.NeedsJumpListCreation.Should().Be(OperatingSystem.IsWindows());
+        manager.NeedsJumpListCreation.Should().BeTrue();
     }
 
     [AvaloniaTest]
@@ -102,13 +93,6 @@ public sealed class WindowsJumpListManagerTests
         manager.CreateJumpList(WindowHandle, CreateButtons([]));
 
         string recentFile = Path.Join(AppSettings.ApplicationDataPath.Value!, "Recent", "Jump list repository.gitext");
-        if (!OperatingSystem.IsWindows())
-        {
-            File.Exists(recentFile).Should().BeFalse();
-            _shell.Calls.Should().BeEmpty();
-            return;
-        }
-
         File.ReadAllText(recentFile).Should().Be(workingDir);
         _shell.RecentPaths.Should().Equal(recentFile);
         _shell.JumpListRefreshes.Should().Equal(JumpListKnownCategoryType.Recent, JumpListKnownCategoryType.Recent);
@@ -122,12 +106,6 @@ public sealed class WindowsJumpListManagerTests
         _shell.Calls.Should().BeEmpty();
 
         manager.CreateJumpList(WindowHandle, CreateButtons([]));
-        if (!OperatingSystem.IsWindows())
-        {
-            _shell.Calls.Should().BeEmpty();
-            return;
-        }
-
         manager.EnableThumbnailToolbar(false);
 
         _shell.AddedButtons.Select(button => button.Enabled).Should().Equal(false, false, false, true);
@@ -146,7 +124,7 @@ public sealed class WindowsJumpListManagerTests
         manager.Invoking(m => m.CreateJumpList(WindowHandle, CreateButtons([]))).Should().NotThrow();
 
         _shell.Calls.Should().NotContain(nameof(ITaskbarShell.AddButtons));
-        manager.NeedsJumpListCreation.Should().Be(OperatingSystem.IsWindows());
+        manager.NeedsJumpListCreation.Should().BeTrue();
     }
 
     [AvaloniaTest]
@@ -159,7 +137,7 @@ public sealed class WindowsJumpListManagerTests
         manager.Dispose();
 
         _shell.DestroyedIcons.Should().BeEquivalentTo(created);
-        created.Should().HaveCount(OperatingSystem.IsWindows() ? 4 : 0);
+        created.Should().HaveCount(4);
     }
 
     [Test]
@@ -194,9 +172,9 @@ public sealed class WindowsJumpListManagerTests
             object instance = taskbar.GetProperty(nameof(TaskbarManager.Instance), BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)!;
             string? applicationId = (string?)taskbar.GetProperty(nameof(TaskbarManager.ApplicationId), BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(instance);
             bool supported = (bool)taskbar.GetProperty(nameof(TaskbarManager.IsPlatformSupported), BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)!;
-            if (!OperatingSystem.IsWindows())
+            supported.Should().Be(OperatingSystem.IsWindows() || OperatingSystem.IsMacOS(), "Windows has the taskbar and macOS the Dock");
+            if (!supported)
             {
-                supported.Should().BeFalse();
                 applicationId.Should().BeNull();
                 return;
             }
@@ -209,6 +187,12 @@ public sealed class WindowsJumpListManagerTests
             else
             {
                 applicationId.Should().Be(expected);
+            }
+
+            if (!OperatingSystem.IsWindows())
+            {
+                // The macOS Dock names the application by its bundle identifier.
+                return;
             }
 
             GetCurrentProcessExplicitAppUserModelID(out nint nativeId).Should().Be(0);
@@ -241,11 +225,6 @@ public sealed class WindowsJumpListManagerTests
             new WindowsThumbnailToolbarButton("Close all", CreateImage(16, 16), (_, _) => { }));
 
         manager.CreateJumpList(WindowHandle, buttons);
-        if (!OperatingSystem.IsWindows())
-        {
-            _shell.Calls.Should().BeEmpty();
-            return;
-        }
 
         TaskbarIcon icon = _shell.AddedButtons[0].Icon!;
         using Bitmap rendered = new(new MemoryStream(icon.PngData));
@@ -275,6 +254,7 @@ public sealed class WindowsJumpListManagerTests
         {
             UnsupportedTaskbarShell unsupported = new();
             unsupported.IsPlatformSupported.Should().BeFalse();
+            unsupported.HasMainWindow.Should().BeFalse();
             unsupported.Invoking(shell => shell.CreateIcon([], 48)).Should().Throw<PlatformNotSupportedException>();
             return;
         }
@@ -284,6 +264,35 @@ public sealed class WindowsJumpListManagerTests
         nint handle = native.CreateIcon(Convert.FromBase64String(OnePixelPng), 1);
         handle.Should().NotBe(0);
         native.DestroyIcon(handle);
+    }
+
+    [Test]
+    public void Windows_shell_should_follow_the_original_main_window_guard()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            new UnsupportedTaskbarShell().Invoking(shell => shell.GetOwnerHandle()).Should().Throw<PlatformNotSupportedException>();
+            return;
+        }
+
+        WindowsTaskbarShell native = new();
+        native.HasMainWindow.Should().Be(GitCommands.Utils.EnvUtils.RunningOnWindowsWithMainWindow());
+        native.HasMainWindow.Should().BeFalse("the headless test host has no native main window");
+        InvalidOperationException? noOwner = null;
+        try
+        {
+            native.GetOwnerHandle();
+        }
+        catch (InvalidOperationException exception)
+        {
+            noOwner = exception;
+        }
+
+        noOwner.Should().NotBeNull("the original taskbar owner needs a main window");
+
+        using NativeMainWindowScope mainWindow = NativeMainWindowScope.Create();
+        native.HasMainWindow.Should().BeTrue();
+        native.GetOwnerHandle().Should().Be(mainWindow.Handle);
     }
 
     /// <summary>
@@ -350,7 +359,16 @@ public sealed class WindowsJumpListManagerTests
         public nint AddedWindow { get; private set; }
         public Exception? RefreshFailure { get; set; }
 
+        /// <summary>Gets the owner the shell reports while it has a main window.</summary>
+        public nint OwnerHandle { get; } = 0x7170;
+
         public bool IsPlatformSupported => true;
+
+        /// <summary>Gets or sets whether a main window is shown; the headless host shows none by default.</summary>
+        public bool HasMainWindow { get; set; }
+
+        public nint GetOwnerHandle()
+            => HasMainWindow ? OwnerHandle : throw new InvalidOperationException("A valid active Window is needed to update the Taskbar.");
 
         public void SetApplicationId(string applicationId)
         {

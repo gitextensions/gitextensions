@@ -15,7 +15,6 @@ using GitCommands.Git;
 using GitCommands.Git.Gpg;
 using GitCommands.Remotes;
 using GitCommands.Submodules;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
@@ -2025,7 +2024,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         // fall back to operation without info in the button
         UpdateCommitButtonAndGetBrush(status: null, showCount: false);
         RevisionGrid.UpdateArtificialCommitCount(status: null);
-        if (EnvUtils.RunningOnWindowsWithMainWindow())
+
+        // Cross-platform constraint: the taskbar shell also carries the macOS Dock, so it decides the main-window check.
+        if (TaskbarManager.RunningWithMainWindow)
         {
             TaskbarManager.Instance.SetOverlayIcon(null, "");
         }
@@ -2053,7 +2054,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         void UpdateStatusInTaskbar()
         {
-            if (!EnvUtils.RunningOnWindowsWithMainWindow())
+            // Cross-platform constraint: the taskbar shell also carries the macOS Dock, so it decides the main-window check.
+            if (!TaskbarManager.RunningWithMainWindow)
             {
                 return;
             }

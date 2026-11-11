@@ -45,8 +45,10 @@ before closing itself. Its taskbar thumbnail toolbar offers Commit, Push, Pull a
 windows, and opened repositories are added to the Recent category of the jump list. The Avalonia
 application uses its own taskbar identity, so it does not share a taskbar group or jump list with
 the WinForms application. The taskbar button shows the progress of running commands, and a
-coloured dot for the working-directory status when the Browse status display is enabled. macOS
-and Linux have no taskbar integration yet.
+coloured dot for the working-directory status when the Browse status display is enabled. On
+macOS the Dock menu lists the ten most recent repositories followed by Commit, Push, Pull and Close
+all windows, which closes the windows of that instance only; the Dock icon shows the progress bar
+and the status dot. Linux has no launcher integration yet.
 Dialogs that originally expose context help provide a Help icon in their footer and the F1 key.
 Both open the same manual section; an invalid section disables the help action.
 Splitter settings retain the container size, logical DPI, font size and collapsed states as

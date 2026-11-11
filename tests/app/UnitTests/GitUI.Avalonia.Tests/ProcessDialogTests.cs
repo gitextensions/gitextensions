@@ -519,8 +519,7 @@ public sealed class ProcessDialogTests
     public async Task FormProcess_should_report_its_progress_on_the_taskbar_like_the_originalAsync()
     {
         GitUI.Compat.ITaskbarShell previousShell = GitUI.Compat.TaskbarManager.TestAccessor.Shell;
-        WindowsJumpListManagerTests.RecordingTaskbarShell shell = new();
-        NativeMainWindowScope? mainWindow = OperatingSystem.IsWindows() ? NativeMainWindowScope.Create() : null;
+        WindowsJumpListManagerTests.RecordingTaskbarShell shell = new() { HasMainWindow = true };
         FormProcess? form = null;
         try
         {
@@ -542,14 +541,7 @@ public sealed class ProcessDialogTests
             form.Close();
             Dispatcher.UIThread.RunJobs();
 
-            if (mainWindow is null)
-            {
-                // The original Windows main-window guard keeps other platforms without taskbar progress.
-                shell.Calls.Should().BeEmpty();
-                return;
-            }
-
-            shell.ProgressStates.Should().OnlyContain(call => call.Window == mainWindow.Handle);
+            shell.ProgressStates.Should().OnlyContain(call => call.Window == shell.OwnerHandle);
             shell.ProgressStates.Select(call => call.State).Should().StartWith(
                 [TaskbarProgressBarState.Indeterminate, TaskbarProgressBarState.Normal, TaskbarProgressBarState.Normal]);
             shell.ProgressStates[^1].State.Should().Be(TaskbarProgressBarState.NoProgress);
@@ -559,7 +551,6 @@ public sealed class ProcessDialogTests
         {
             form?.Close();
             GitUI.Compat.TaskbarManager.TestAccessor.Shell = previousShell;
-            mainWindow?.Dispose();
         }
     }
 
@@ -568,8 +559,7 @@ public sealed class ProcessDialogTests
     public void FormStatus_should_show_a_failed_command_in_the_taskbar_progress()
     {
         GitUI.Compat.ITaskbarShell previousShell = GitUI.Compat.TaskbarManager.TestAccessor.Shell;
-        WindowsJumpListManagerTests.RecordingTaskbarShell shell = new();
-        NativeMainWindowScope? mainWindow = OperatingSystem.IsWindows() ? NativeMainWindowScope.Create() : null;
+        WindowsJumpListManagerTests.RecordingTaskbarShell shell = new() { HasMainWindow = true };
         try
         {
             GitUI.Compat.TaskbarManager.TestAccessor.Shell = shell;
@@ -577,19 +567,12 @@ public sealed class ProcessDialogTests
 
             InvokeFormStatusMethod(form, "Done", false);
 
-            if (mainWindow is null)
-            {
-                shell.Calls.Should().BeEmpty();
-                return;
-            }
-
-            shell.ProgressStates.Should().Equal((mainWindow.Handle, TaskbarProgressBarState.Error));
-            shell.ProgressValues.Should().Equal((mainWindow.Handle, 100UL, 100UL));
+            shell.ProgressStates.Should().Equal((shell.OwnerHandle, TaskbarProgressBarState.Error));
+            shell.ProgressValues.Should().Equal((shell.OwnerHandle, 100UL, 100UL));
         }
         finally
         {
             GitUI.Compat.TaskbarManager.TestAccessor.Shell = previousShell;
-            mainWindow?.Dispose();
         }
     }
 
@@ -607,7 +590,7 @@ public sealed class ProcessDialogTests
             TaskbarProgress.SetState(TaskbarProgressBarState.Paused);
             TaskbarProgress.Clear();
 
-            shell.Calls.Should().BeEmpty("the headless test host has no native main window");
+            shell.Calls.Should().BeEmpty("the shell reports no main window");
         }
         finally
         {
