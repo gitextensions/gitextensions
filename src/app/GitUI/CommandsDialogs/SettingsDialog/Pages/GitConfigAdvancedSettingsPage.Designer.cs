@@ -39,6 +39,8 @@ partial class GitConfigAdvancedSettingsPage
         lblReReReEnabled = new Label();
         lblReReReAutoUpdate = new Label();
         lblStatusShowUntrackedFiles = new Label();
+        lblCoreUntrackedCache = new Label();
+        lblCoreFsMonitor = new Label();
         tlpnlMain.SuspendLayout();
         SuspendLayout();
         // 
@@ -59,10 +61,14 @@ partial class GitConfigAdvancedSettingsPage
         tlpnlMain.Controls.Add(lblReReReEnabled, 0, 7);
         tlpnlMain.Controls.Add(lblReReReAutoUpdate, 0, 8);
         tlpnlMain.Controls.Add(lblStatusShowUntrackedFiles, 0, 9);
+        tlpnlMain.Controls.Add(lblCoreUntrackedCache, 0, 10);
+        tlpnlMain.Controls.Add(lblCoreFsMonitor, 0, 11);
         tlpnlMain.Dock = DockStyle.Fill;
         tlpnlMain.Location = new Point(0, 0);
         tlpnlMain.Name = "tlpnlMain";
-        tlpnlMain.RowCount = 11;
+        tlpnlMain.RowCount = 13;
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
         tlpnlMain.RowStyles.Add(new RowStyle());
         tlpnlMain.RowStyles.Add(new RowStyle());
         tlpnlMain.RowStyles.Add(new RowStyle());
@@ -147,6 +153,20 @@ partial class GitConfigAdvancedSettingsPage
         lblStatusShowUntrackedFiles.Name = "lblStatusShowUntrackedFiles";
         lblStatusShowUntrackedFiles.Text = "Show untracked files";
         // 
+        // lblCoreUntrackedCache
+        // 
+        lblCoreUntrackedCache.Anchor = AnchorStyles.Left;
+        lblCoreUntrackedCache.AutoSize = true;
+        lblCoreUntrackedCache.Name = "lblCoreUntrackedCache";
+        lblCoreUntrackedCache.Text = "Cache the untracked files in the index";
+        // 
+        // lblCoreFsMonitor
+        // 
+        lblCoreFsMonitor.Anchor = AnchorStyles.Left;
+        lblCoreFsMonitor.AutoSize = true;
+        lblCoreFsMonitor.Name = "lblCoreFsMonitor";
+        lblCoreFsMonitor.Text = "Run a file system monitor daemon per working directory";
+        // 
         // GitConfigAdvancedSettingsPage
         // 
         AutoScaleDimensions = new SizeF(96F, 96F);
@@ -174,4 +194,6 @@ partial class GitConfigAdvancedSettingsPage
     private Label lblReReReEnabled;
     private Label lblReReReAutoUpdate;
     private Label lblStatusShowUntrackedFiles;
+    private Label lblCoreUntrackedCache;
+    private Label lblCoreFsMonitor;
 }
