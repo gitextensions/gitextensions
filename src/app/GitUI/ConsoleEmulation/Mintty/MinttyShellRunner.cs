@@ -14,7 +14,7 @@ internal sealed class MinttyShellRunner : IConsoleShellRunner
         _minttyPath = minttyPath;
         _bashPath = bashPath;
         _settings = settings;
-        _control = new MinttyControl { Dock = DockStyle.Fill };
+        _control = new MinttyControl(interceptTabPress: false) { Dock = DockStyle.Fill };
     }
 
     public bool IsShellRunning => _control.IsShellRunning;
