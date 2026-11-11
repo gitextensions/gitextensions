@@ -10,11 +10,13 @@ using GitCommands.Utils;
 namespace GitUI.Compat;
 
 // Framework constraint: the original Windows API Code Pack taskbar types require the Windows desktop
-// framework, so the port supplies the same small surface over the Windows shell and the macOS Dock.
+// framework, so the port supplies the same small surface over the Windows shell, the macOS Dock and
+// Linux launchers.
 internal sealed class TaskbarManager
 {
     private static ITaskbarShell _shell = OperatingSystem.IsWindows() ? new WindowsTaskbarShell()
         : OperatingSystem.IsMacOS() ? new MacDockShell()
+        : OperatingSystem.IsLinux() ? new LinuxLauncherShell()
         : new UnsupportedTaskbarShell();
     private string? _applicationId;
 
@@ -307,8 +309,8 @@ internal sealed class ShellException : Exception
 }
 
 /// <summary>
-/// The native boundary behind the taskbar types. The Windows shell and the macOS Dock implement it;
-/// other platforms report no support, so callers keep their original IsPlatformSupported guards.
+/// The native boundary behind the taskbar types. The Windows shell, the macOS Dock and Linux launchers
+/// implement it; other platforms report no support, so callers keep their original IsPlatformSupported guards.
 /// </summary>
 internal interface ITaskbarShell
 {

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -14,6 +15,9 @@ internal static class ApplicationForms
     // parity-scaffolding: substitutes only the native active-window query in a headless host.
     private static Func<nint>? _activeWindowForTesting;
 
+    private static readonly ConditionalWeakTable<TopLevel, StrongBox<nint>> StandInHandles = new();
+    private static long _lastStandInHandle;
+
     /// <summary>
     /// Gets the application's window that is currently active, like WinForms <c>Form.ActiveForm</c>.
     /// On Windows this reads the native active window, which is already updated while the previously
@@ -23,12 +27,7 @@ internal static class ApplicationForms
     {
         get
         {
-            IEnumerable<Window> windows = WindowsCloseRequests.GetOpenForms();
-            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                windows = desktop.Windows.Concat(windows).Distinct();
-            }
-
+            IEnumerable<Window> windows = GetWindows();
             if (_activeWindowForTesting is null && !OperatingSystem.IsWindows())
             {
                 return windows.FirstOrDefault(window => window.IsActive);
@@ -42,10 +41,43 @@ internal static class ApplicationForms
     }
 
     /// <summary>
-    /// Gets the native window handle, like WinForms <c>Form.Handle</c>, or zero when the window has none.
+    /// Gets the first shown window of the application, which stands for the WinForms main window.
+    /// </summary>
+    internal static Window? FindShownWindow() => GetWindows().FirstOrDefault(window => window.IsVisible);
+
+    /// <summary>
+    /// Gets the application's window with the given native handle, or <see langword="null"/>.
+    /// </summary>
+    internal static Window? FindWindow(nint windowHandle)
+        => windowHandle == 0 ? null : GetWindows().FirstOrDefault(window => GetHandle(window) == windowHandle);
+
+    /// <summary>
+    /// Gets the native window handle, like WinForms <c>Form.Handle</c>. A WinForms form always has a
+    /// handle, so where the platform gives windows none (Wayland, the headless host) each window gets a
+    /// stable negative stand-in that no native handle uses.
     /// </summary>
     internal static nint GetHandle(TopLevel window)
-        => _handleForTesting?.Invoke(window) ?? window.TryGetPlatformHandle()?.Handle ?? 0;
+    {
+        if (_handleForTesting is not null)
+        {
+            return _handleForTesting(window);
+        }
+
+        return window.TryGetPlatformHandle() is { Handle: not 0 } handle
+            ? handle.Handle
+            : StandInHandles.GetValue(window, static _ => new StrongBox<nint>((nint)Interlocked.Decrement(ref _lastStandInHandle))).Value;
+    }
+
+    private static IEnumerable<Window> GetWindows()
+    {
+        IEnumerable<Window> windows = WindowsCloseRequests.GetOpenForms();
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            windows = desktop.Windows.Concat(windows).Distinct();
+        }
+
+        return windows;
+    }
 
     [DllImport("user32.dll", ExactSpelling = true)]
     private static extern nint GetActiveWindow();

@@ -284,6 +284,7 @@ if [[ -n "$flatpak_app_id" ]]; then
         --env=WAYLAND_DISPLAY="$WAYLAND_DISPLAY" \
         --env=XDG_CONFIG_HOME="$XDG_CONFIG_HOME" \
         --env=XDG_DATA_HOME="$XDG_DATA_HOME" \
+        --env=HOST_XDG_DATA_HOME="$XDG_DATA_HOME" \
         --env=XDG_CACHE_HOME="$XDG_CACHE_HOME" \
         --env=GIT_CONFIG_GLOBAL=/dev/null \
         --env=GITEXTENSIONS_DEBUG_FAIL_FAST=1 \

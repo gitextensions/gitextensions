@@ -287,6 +287,47 @@ public sealed class FormBrowseTests
 
     [AvaloniaTest]
     [NonParallelizable]
+    public async Task Browse_should_record_the_repository_with_Linux_launchers_without_native_window_handlesAsync()
+    {
+        // Wayland windows, like the headless host's, have no native handle, which the original's
+        // jump-list creation requires; the port's Form.Handle stand-in keeps the original path working.
+        ITaskbarShell previousShell = TaskbarManager.TestAccessor.Shell;
+        Func<TopLevel, nint>? previousHandle = ApplicationForms.TestAccessor.Handle;
+        string directory = Path.Join(Path.GetTempPath(), $"browse-launcher-{Guid.NewGuid():N}");
+        string bookmarks = Path.Join(directory, "recently-used.xbel");
+        FormBrowse? form = null;
+        try
+        {
+            WindowsJumpListManagerTests.ClearSharedIconCache();
+            TaskbarManager.TestAccessor.Shell = new LinuxLauncherShell((_, _) => { }, () => bookmarks, "com.example.BrowseLauncherTest", "test browse %f");
+            ApplicationForms.TestAccessor.Handle = null;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form.Show();
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(20));
+            await form.JoinLoadOperationsForTestAsync(timeout.Token);
+            form.Activate();
+            Dispatcher.UIThread.RunJobs();
+
+            ApplicationForms.GetHandle(form).Should().NotBe(0);
+            await WaitUntilAsync(() => File.Exists(bookmarks));
+            System.Xml.Linq.XDocument.Load(bookmarks).Root!.Elements("bookmark").Select(bookmark => (string?)bookmark.Attribute("href"))
+                .Should().Equal(new Uri(Path.TrimEndingDirectorySeparator(module.WorkingDir)).AbsoluteUri);
+        }
+        finally
+        {
+            form?.Close();
+            TaskbarManager.TestAccessor.Shell = previousShell;
+            ApplicationForms.TestAccessor.Handle = previousHandle;
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, recursive: true);
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
     public async Task Git_status_should_mark_the_taskbar_button_like_the_originalAsync()
     {
         const nint browseHandle = 0x5151;

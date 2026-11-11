@@ -184,7 +184,9 @@ flatpak run --user --command=/app/bin/git "$app_id" -C "$fixture_repo" mergetool
 grep -F 'invoked' "$action_root/mergetool-invoked" >/dev/null
 flatpak run --user --command=/app/bin/git "$app_id" -C "$fixture_repo" diff --check >> "$mergetool_log"
 
+# The host launcher's recently-used file stays untouched: the app writes a scratch copy instead.
 flatpak run --user \
+    --env=HOST_XDG_DATA_HOME="$action_root/host-data" \
     --env=GITEXTENSIONS_FLATPAK_CONFORMANCE_REPORT="$process_report_in_sandbox" \
     "$app_id"
 cp "$process_report_host" "$process_report"

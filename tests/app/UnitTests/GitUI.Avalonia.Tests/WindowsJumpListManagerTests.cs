@@ -172,7 +172,9 @@ public sealed class WindowsJumpListManagerTests
             object instance = taskbar.GetProperty(nameof(TaskbarManager.Instance), BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)!;
             string? applicationId = (string?)taskbar.GetProperty(nameof(TaskbarManager.ApplicationId), BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(instance);
             bool supported = (bool)taskbar.GetProperty(nameof(TaskbarManager.IsPlatformSupported), BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)!;
-            supported.Should().Be(OperatingSystem.IsWindows() || OperatingSystem.IsMacOS(), "Windows has the taskbar and macOS the Dock");
+            supported.Should().Be(
+                OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() || OperatingSystem.IsLinux(),
+                "Windows has the taskbar, macOS the Dock and Linux its launchers");
             if (!supported)
             {
                 applicationId.Should().BeNull();
@@ -191,7 +193,7 @@ public sealed class WindowsJumpListManagerTests
 
             if (!OperatingSystem.IsWindows())
             {
-                // The macOS Dock names the application by its bundle identifier.
+                // The macOS Dock and Linux launchers name the application by its bundle or desktop file.
                 return;
             }
 

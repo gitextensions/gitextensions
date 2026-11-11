@@ -9,7 +9,7 @@ if [[ -z "$evidence_dir" ]]; then
     exit 2
 fi
 
-for tool in dotnet flatpak flatpak-builder git weston weston-screenshooter; do
+for tool in dotnet flatpak flatpak-builder git weston weston-screenshooter dbus-monitor python3; do
     if ! command -v "$tool" >/dev/null 2>&1; then
         echo "error: required command '$tool' is not installed" >&2
         exit 1
@@ -188,7 +188,13 @@ permissions_log="$evidence_dir/flatpak-permissions.txt"
 plugin_discovery_log="$evidence_dir/plugin-discovery.txt"
 unreachable_stdout_log="$evidence_dir/plugin-unreachable-stdout.log"
 unreachable_stderr_log="$evidence_dir/plugin-unreachable-stderr.log"
+launcher_log="$evidence_dir/launcher-entry.log"
+recent_log="$evidence_dir/recently-used.txt"
+# The app writes the host launcher's recently-used file; the smoke points it at a scratch copy.
+host_data="$smoke_parent/host-data"
 rm -f -- \
+    "$launcher_log" \
+    "$recent_log" \
     "$stdout_log" \
     "$stderr_log" \
     "$capture_log" \
@@ -254,8 +260,13 @@ if [[ ! -S "$weston_runtime/$weston_socket" ]]; then
 fi
 
 flatpak_pid=
+monitor_pid=
 cleanup()
 {
+    if [[ -n "$monitor_pid" ]]; then
+        kill -TERM "$monitor_pid" 2>/dev/null || true
+        wait "$monitor_pid" 2>/dev/null || true
+    fi
     flatpak kill "$app_id" 2>/dev/null || true
     if [[ -n "$flatpak_pid" ]]; then
         wait "$flatpak_pid" 2>/dev/null || true
@@ -305,6 +316,7 @@ flatpak run --user \
     --env=MESA_LOADER_DRIVER_OVERRIDE=llvmpipe \
     --env=GALLIUM_DRIVER=llvmpipe \
     --env=GIT_CONFIG_GLOBAL="$git_config_global" \
+    --env=HOST_XDG_DATA_HOME="$host_data" \
     "$app_id" \
     browse \
     "$smoke_repo" >"$unreachable_stdout_log" 2>"$unreachable_stderr_log" &
@@ -341,6 +353,10 @@ done
 
 rm -f -- "$unreachable_user_plugins_path"
 
+# The launcher signal is a session-bus broadcast; observe it from outside the sandbox.
+dbus-monitor --session "type='signal',interface='com.canonical.Unity.LauncherEntry'" >"$launcher_log" 2>&1 &
+monitor_pid=$!
+
 flatpak run --user \
     --nosocket=x11 \
     --nosocket=fallback-x11 \
@@ -350,6 +366,7 @@ flatpak run --user \
     --env=MESA_LOADER_DRIVER_OVERRIDE=llvmpipe \
     --env=GALLIUM_DRIVER=llvmpipe \
     --env=GIT_CONFIG_GLOBAL="$git_config_global" \
+    --env=HOST_XDG_DATA_HOME="$host_data" \
     "$app_id" \
     browse \
     "$smoke_repo" >"$stdout_log" 2>"$stderr_log" &
@@ -403,6 +420,38 @@ if [[ ! -s "$screenshot" ]]; then
 fi
 reject_failure_signatures "confined runtime" "$stdout_log" "$stderr_log"
 
+# The confined Browse reaches the host launchers: its status sends a launcher entry update, and the
+# opened repository is recorded in the shared recently-used file, read here with GLib's own parser.
+launcher_uri="application://$app_id.desktop"
+for _ in {1..40}; do
+    grep -Fq "\"$launcher_uri\"" "$launcher_log" && break
+    sleep 0.5
+done
+if ! grep -Fq 'member=Update' "$launcher_log" || ! grep -Fq "\"$launcher_uri\"" "$launcher_log"; then
+    echo "error: the confined application sent no launcher entry update for $launcher_uri" >&2
+    sed -n '1,80p' "$launcher_log" >&2
+    exit 1
+fi
+python3 - "$host_data/recently-used.xbel" "$smoke_repo" "$app_id" >"$recent_log" <<'PY'
+import sys
+
+import gi
+
+gi.require_version("GLib", "2.0")
+from gi.repository import GLib
+
+path, repository, application = sys.argv[1:4]
+bookmarks = GLib.BookmarkFile()
+bookmarks.load_from_file(path)
+uri = GLib.filename_to_uri(repository, None)
+assert bookmarks.has_item(uri), bookmarks.get_uris()
+assert bookmarks.has_application(uri, application), bookmarks.get_applications(uri)
+assert bookmarks.get_mime_type(uri) == "inode/directory", bookmarks.get_mime_type(uri)
+print(f"uri={uri}")
+print(f"title={bookmarks.get_title(uri)}")
+print(f"applications={','.join(bookmarks.get_applications(uri))}")
+PY
+
 screenshot_sha256="$(sha256sum "$screenshot" | cut -d' ' -f1)"
 cat > "$manifest_output" <<EOF
 {
@@ -424,6 +473,8 @@ cat > "$manifest_output" <<EOF
   "userPluginsNormal": "created-and-readable",
   "userPluginsUnreachable": "bundled-plugins-only",
   "pluginDiscoveryEvidence": "plugin-discovery.txt",
+  "launcherEntryEvidence": "launcher-entry.log",
+  "recentlyUsedEvidence": "recently-used.txt",
   "permissionsEvidence": "flatpak-permissions.txt",
   "screenshot": "window.png",
   "screenshotSha256": "$screenshot_sha256",

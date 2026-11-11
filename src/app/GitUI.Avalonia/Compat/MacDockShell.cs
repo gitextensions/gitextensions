@@ -2,13 +2,8 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Media;
-using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using GitCommands;
-using GitUI.Properties;
-using Color = Avalonia.Media.Color;
 
 namespace GitUI.Compat;
 
@@ -25,11 +20,6 @@ internal sealed unsafe partial class MacDockShell : ITaskbarShell
 
     // Windows lists ten recent items in a jump list by default.
     private const int RecentLimit = 10;
-    private const int TileSize = 256;
-
-    private static readonly Color NormalProgress = Color.FromRgb(0x06, 0xB0, 0x25);
-    private static readonly Color ErrorProgress = Color.FromRgb(0xE8, 0x11, 0x23);
-    private static readonly Color PausedProgress = Color.FromRgb(0xFF, 0xB9, 0x00);
 
     private readonly Action<byte[]?> _setTileImage;
     private readonly Action<string> _openRecent;
@@ -55,7 +45,7 @@ internal sealed unsafe partial class MacDockShell : ITaskbarShell
 
     public bool IsPlatformSupported => true;
 
-    public bool HasMainWindow => FindShownWindow() is not null;
+    public bool HasMainWindow => ApplicationForms.FindShownWindow() is not null;
 
     // Avalonia objects belong to the UI thread, so the menu is created on first use there.
     internal NativeMenu Menu => _menu ??= new NativeMenu();
@@ -63,7 +53,7 @@ internal sealed unsafe partial class MacDockShell : ITaskbarShell
     public nint GetOwnerHandle()
     {
         // The Dock belongs to the application, so any shown window stands for it like a Windows main window.
-        Window window = FindShownWindow() ?? throw new InvalidOperationException("A valid active Window is needed to update the Taskbar.");
+        Window window = ApplicationForms.FindShownWindow() ?? throw new InvalidOperationException("A valid active Window is needed to update the Taskbar.");
         return ApplicationForms.GetHandle(window);
     }
 
@@ -133,22 +123,6 @@ internal sealed unsafe partial class MacDockShell : ITaskbarShell
         });
     }
 
-    private static IEnumerable<Window> GetWindows()
-    {
-        IEnumerable<Window> windows = WindowsCloseRequests.GetOpenForms();
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            windows = desktop.Windows.Concat(windows).Distinct();
-        }
-
-        return windows;
-    }
-
-    private static Window? FindShownWindow() => GetWindows().FirstOrDefault(window => window.IsVisible);
-
-    private static Window? FindWindow(nint windowHandle)
-        => windowHandle == 0 ? null : GetWindows().FirstOrDefault(window => ApplicationForms.GetHandle(window) == windowHandle);
-
     private static IReadOnlyList<string> GetRecentFiles()
     {
         string recentFolder = Path.Join(AppSettings.ApplicationDataPath.Value!, "Recent");
@@ -189,7 +163,7 @@ internal sealed unsafe partial class MacDockShell : ITaskbarShell
         }
 
         // Like thumbnail buttons, the items leave together with their window.
-        if (FindWindow(windowHandle) is { } window)
+        if (ApplicationForms.FindWindow(windowHandle) is { } window)
         {
             window.Closed += (_, _) =>
             {
@@ -258,61 +232,7 @@ internal sealed unsafe partial class MacDockShell : ITaskbarShell
         }
 
         _tileChanged = true;
-        _setTileImage(RenderTile());
-    }
-
-    private byte[] RenderTile()
-    {
-        using RenderTargetBitmap tile = new(new PixelSize(TileSize, TileSize));
-        using (DrawingContext context = tile.CreateDrawingContext())
-        {
-            context.DrawImage(Images.GitExtensionsLogo256, new Rect(0, 0, TileSize, TileSize));
-
-            if (_overlay is not null)
-            {
-                // The Windows taskbar draws the overlay at half the button size in its bottom-right corner.
-                using Bitmap overlay = new(new MemoryStream(_overlay));
-                context.DrawImage(overlay, new Rect(TileSize / 2, TileSize / 2, TileSize / 2, TileSize / 2));
-            }
-
-            if (_progressState != TaskbarProgressBarState.NoProgress)
-            {
-                DrawProgress(context);
-            }
-        }
-
-        using MemoryStream stream = new();
-        tile.Save(stream, PngBitmapEncoderOptions.Default);
-        return stream.ToArray();
-    }
-
-    private void DrawProgress(DrawingContext context)
-    {
-        Rect bar = new(24, TileSize - 56, TileSize - 48, 32);
-        context.DrawRectangle(new SolidColorBrush(Color.FromArgb(0xC0, 0x20, 0x20, 0x20)), new Pen(Brushes.White, 2), bar, 8, 8);
-
-        Rect inner = bar.Deflate(4);
-        switch (_progressState)
-        {
-            case TaskbarProgressBarState.Indeterminate:
-                // A Dock tile cannot animate a marquee, so the whole bar shows in a lighter normal color.
-                context.DrawRectangle(new SolidColorBrush(NormalProgress, 0.5), null, inner, 4, 4);
-                break;
-            default:
-                Color color = _progressState switch
-                {
-                    TaskbarProgressBarState.Error => ErrorProgress,
-                    TaskbarProgressBarState.Paused => PausedProgress,
-                    _ => NormalProgress,
-                };
-
-                if (_progress > 0)
-                {
-                    context.DrawRectangle(new SolidColorBrush(color), null, inner.WithWidth(inner.Width * _progress), 4, 4);
-                }
-
-                break;
-        }
+        _setTileImage(TaskbarTileImage.Render(_progressState, _progress, _overlay));
     }
 
     private static void OpenRepository(string path)

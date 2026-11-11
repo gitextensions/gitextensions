@@ -48,7 +48,11 @@ the WinForms application. The taskbar button shows the progress of running comma
 coloured dot for the working-directory status when the Browse status display is enabled. On
 macOS the Dock menu lists the ten most recent repositories followed by Commit, Push, Pull and Close
 all windows, which closes the windows of that instance only; the Dock icon shows the progress bar
-and the status dot. Linux has no launcher integration yet.
+and the status dot. On Linux, launchers that read the `com.canonical.Unity.LauncherEntry` signal
+(Ubuntu Dock, Dash to Dock, Dash to Panel, KDE Plasma, Plank) show the progress of running
+commands and request attention while the working directory has changes; opened repositories are
+added to the shared recently-used list that KDE's task manager offers. Stock GNOME Shell and COSMIC
+show neither yet.
 Dialogs that originally expose context help provide a Help icon in their footer and the F1 key.
 Both open the same manual section; an invalid section disables the help action.
 Splitter settings retain the container size, logical DPI, font size and collapsed states as

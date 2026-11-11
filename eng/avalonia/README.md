@@ -93,7 +93,7 @@ sudo apt-get update
 sudo apt-get install libice6 libsm6 libfontconfig1 libwayland-client0 libxkbcommon0 libegl1 \
   rsync lsof weston wayland-utils xserver-xephyr x11-apps x11-utils xdotool imagemagick iproute2 \
   sway wl-clipboard xclip \
-  flatpak flatpak-builder
+  flatpak flatpak-builder dbus-bin python3-gi
 ```
 
 ```powershell

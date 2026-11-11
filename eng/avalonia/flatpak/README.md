@@ -28,7 +28,11 @@ GITEXTENSIONS_FLATPAK_PREBUILT=/tmp/gitextensions-flatpak-publish \
 The smoke uses `com.github.gitextensions.GitExtensions.Avalonia.P83Smoke`, a throwaway
 repository under `~/.local/share`, isolated Flatpak settings, an inaccessible-plugin probe,
 a custom theme, and a nested Wayland compositor. It validates the installed permissions and
-captures the compositor-rendered window. Generated publish and builder output remain ignored.
+captures the compositor-rendered window. It also observes the session bus for the
+`com.canonical.Unity.LauncherEntry` update the confined Browse sends, and reads the repository
+it records in the shared `recently-used.xbel` with GLib's bookmark parser; the application's
+host data directory points at a scratch copy so the user's own file is never written. Neither
+needs a permission beyond the ones above. Generated publish and builder output remain ignored.
 
 After the smoke has installed that isolated ID, run every confined host-facing action:
 
