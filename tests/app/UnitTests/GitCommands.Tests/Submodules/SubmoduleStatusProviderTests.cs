@@ -85,6 +85,42 @@ internal class SubmoduleStatusProviderTests
 
     [NonParallelizable]
     [Test]
+    public async Task UpdateSubmoduleStructure_shows_checked_out_branch_of_submodule()
+    {
+        string branch = _repo2Module.GetSelectedBranch();
+
+        SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo1Module);
+
+        result.AllSubmodules.Single(info => info.Path == _repo2Module.WorkingDir).Text.Should().Be($"repo2 ({branch})");
+    }
+
+    [NonParallelizable]
+    [Test]
+    public async Task UpdateSubmoduleStructure_shows_first_tag_of_detached_submodule()
+    {
+        await _repo2Module.GitExecutable.GetOutputAsync("checkout --detach");
+        await _repo2Module.GitExecutable.GetOutputAsync("tag v1.0");
+
+        SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo1Module);
+
+        result.AllSubmodules.Single(info => info.Path == _repo2Module.WorkingDir).Text.Should().Be("repo2 (v1.0)");
+    }
+
+    [NonParallelizable]
+    [Test]
+    public async Task UpdateSubmoduleStructure_shows_abbreviated_commit_id_of_detached_submodule_without_tag()
+    {
+        await _repo2Module.GitExecutable.GetOutputAsync("checkout --detach");
+        string sha = _repo2Module.GetCurrentCheckout().ToShortString();
+
+        SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo1Module);
+
+        sha.Should().NotBeEmpty();
+        result.AllSubmodules.Single(info => info.Path == _repo2Module.WorkingDir).Text.Should().Be($"repo2 ({sha})");
+    }
+
+    [NonParallelizable]
+    [Test]
     public async Task UpdateSubmoduleStructure_valid_result_for_first_nested_submodule()
     {
         SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo2Module);

@@ -138,6 +138,30 @@ public static partial class Commands
     }
 
     /// <summary>
+    ///  Gets the first tag pointing at HEAD.
+    /// </summary>
+    /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
+    /// <returns>The name of the first tag; <see langword="null"/> if there is no tag at HEAD or git fails.</returns>
+    public static string? GetFirstTagPointingAtHead(this IExecutable gitExecutable)
+    {
+        GitArgumentBuilder args = new("tag")
+        {
+            "--points-at",
+            "HEAD"
+        };
+        ExecutionResult result = gitExecutable.Execute(args, throwOnErrorExit: false);
+
+        if (!result.ExitedSuccessfully)
+        {
+            return null;
+        }
+
+        string tags = result.StandardOutput;
+        (int beginning, int length) = tags.LazySplitRanges('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        return length == 0 ? null : tags.Substring(beginning, length);
+    }
+
+    /// <summary>
     ///  Removes a git config (sub)section.
     /// </summary>
     /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
