@@ -15,6 +15,7 @@ using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
+using GitUI.Compat;
 using GitUI.ConsoleEmulation;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;
@@ -510,6 +511,107 @@ public sealed class ProcessDialogTests
         finally
         {
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task FormProcess_should_report_its_progress_on_the_taskbar_like_the_originalAsync()
+    {
+        GitUI.Compat.ITaskbarShell previousShell = GitUI.Compat.TaskbarManager.TestAccessor.Shell;
+        WindowsJumpListManagerTests.RecordingTaskbarShell shell = new();
+        NativeMainWindowScope? mainWindow = OperatingSystem.IsWindows() ? NativeMainWindowScope.Create() : null;
+        FormProcess? form = null;
+        try
+        {
+            GitUI.Compat.TaskbarManager.TestAccessor.Shell = shell;
+            form = new FormProcess(CreateCommands(Path.GetTempPath()), arguments: "version", Path.GetTempPath(), input: null, useDialogSettings: false);
+            form.Show();
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            while (!form.Ok.IsEnabled && stopwatch.ElapsedMilliseconds < 30_000)
+            {
+                Dispatcher.UIThread.RunJobs();
+                Thread.Sleep(25);
+            }
+
+            form.Ok.IsEnabled.Should().BeTrue();
+
+            // Git reports transfer progress as text; the dialog parses the percentage.
+            MethodInfo setProgress = typeof(FormStatus).GetMethod("SetProgressAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            await (Task)setProgress.Invoke(form, ["Receiving objects:  40% (4/10)"])!;
+            form.Close();
+            Dispatcher.UIThread.RunJobs();
+
+            if (mainWindow is null)
+            {
+                // The original Windows main-window guard keeps other platforms without taskbar progress.
+                shell.Calls.Should().BeEmpty();
+                return;
+            }
+
+            shell.ProgressStates.Should().OnlyContain(call => call.Window == mainWindow.Handle);
+            shell.ProgressStates.Select(call => call.State).Should().StartWith(
+                [TaskbarProgressBarState.Indeterminate, TaskbarProgressBarState.Normal, TaskbarProgressBarState.Normal]);
+            shell.ProgressStates[^1].State.Should().Be(TaskbarProgressBarState.NoProgress);
+            shell.ProgressValues.Select(call => (call.Completed, call.Total)).Should().Equal((100UL, 100UL), (40UL, 100UL));
+        }
+        finally
+        {
+            form?.Close();
+            GitUI.Compat.TaskbarManager.TestAccessor.Shell = previousShell;
+            mainWindow?.Dispose();
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public void FormStatus_should_show_a_failed_command_in_the_taskbar_progress()
+    {
+        GitUI.Compat.ITaskbarShell previousShell = GitUI.Compat.TaskbarManager.TestAccessor.Shell;
+        WindowsJumpListManagerTests.RecordingTaskbarShell shell = new();
+        NativeMainWindowScope? mainWindow = OperatingSystem.IsWindows() ? NativeMainWindowScope.Create() : null;
+        try
+        {
+            GitUI.Compat.TaskbarManager.TestAccessor.Shell = shell;
+            using FormStatus form = new(CreateCommands(Path.GetTempPath()), GitUI.ConsoleEmulation.PlainText.PlainTextConsoleEmulatorsRegistry.Instance, useDialogSettings: false);
+
+            InvokeFormStatusMethod(form, "Done", false);
+
+            if (mainWindow is null)
+            {
+                shell.Calls.Should().BeEmpty();
+                return;
+            }
+
+            shell.ProgressStates.Should().Equal((mainWindow.Handle, TaskbarProgressBarState.Error));
+            shell.ProgressValues.Should().Equal((mainWindow.Handle, 100UL, 100UL));
+        }
+        finally
+        {
+            GitUI.Compat.TaskbarManager.TestAccessor.Shell = previousShell;
+            mainWindow?.Dispose();
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public void TaskbarProgress_should_need_a_native_main_window_like_the_original()
+    {
+        GitUI.Compat.ITaskbarShell previousShell = GitUI.Compat.TaskbarManager.TestAccessor.Shell;
+        WindowsJumpListManagerTests.RecordingTaskbarShell shell = new();
+        try
+        {
+            GitUI.Compat.TaskbarManager.TestAccessor.Shell = shell;
+
+            TaskbarProgress.SetProgress(TaskbarProgressBarState.Normal, 10, 100);
+            TaskbarProgress.SetState(TaskbarProgressBarState.Paused);
+            TaskbarProgress.Clear();
+
+            shell.Calls.Should().BeEmpty("the headless test host has no native main window");
+        }
+        finally
+        {
+            GitUI.Compat.TaskbarManager.TestAccessor.Shell = previousShell;
         }
     }
 

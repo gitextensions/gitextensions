@@ -86,6 +86,7 @@ public class GitExtensionsForm : GitExtensionsFormBase
         {
             _needsPositionSave = false;
             _windowPositionManager.SavePosition(this);
+            TaskbarProgress.Clear();
         }
 
         base.OnClosing(e);

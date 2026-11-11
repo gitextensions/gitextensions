@@ -3962,9 +3962,10 @@
     "substitute": "Avalonia text-layout metrics used by the native spell-check editor."
   },
   "src/app/GitUI/TaskbarProgress.cs": {
-    "status": "windowsOnly",
-    "justification": "Jump lists, taskbar progress, and thumbnail toolbar buttons are Windows shell features with no portable equivalent selected for the port.",
-    "substitute": "No taskbar or Dock integration; the same operations remain available inside the application."
+    "twin": "src/app/GitUI.Avalonia/TaskbarProgress.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Unchanged copy of the original guarded progress helper over the port's Compat taskbar surface (ITaskbarList3 SetProgressState/SetProgressValue on the process main window). FormStatus, GitExtensionsForm and the FormBrowse status overlay call it at the original positions. The original Windows main-window guard keeps other platforms inert; macOS Dock and Linux launcher progress are later work. Native taskbar display is not yet confirmed."
   },
   "src/app/GitUI/Theming/HighlightingExtension.cs": {
     "status": "unported",

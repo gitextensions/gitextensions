@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -14,6 +15,7 @@ using GitCommands.Git;
 using GitCommands.Git.Gpg;
 using GitCommands.Remotes;
 using GitCommands.Submodules;
+using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
@@ -247,6 +249,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private bool _fileBlameHistoryLeftPanelStartupState;
     private TabItem? _consoleTabPage;
     private OutputHistoryControllerBase? _outputHistoryController;
+
+    private readonly Dictionary<IBrush, TaskbarIcon> _overlayIconByBrush = [];
+
+    // The twin's named status handlers replace the original constructor closure that held the last overlay brush.
+    private IBrush? _lastBrush;
     private KeyModifiers _pushActivationModifiers;
 
     private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
@@ -2018,17 +2025,68 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         // fall back to operation without info in the button
         UpdateCommitButtonAndGetBrush(status: null, showCount: false);
         RevisionGrid.UpdateArtificialCommitCount(status: null);
+        if (EnvUtils.RunningOnWindowsWithMainWindow())
+        {
+            TaskbarManager.Instance.SetOverlayIcon(null, "");
+        }
+
+        _lastBrush = null;
     }
 
     private void GitWorkingDirectoryStatusChanged(object? sender, GitWorkingDirectoryStatusEventArgs? e)
     {
         IReadOnlyList<GitItemStatus>? status = e?.ItemStatuses;
-        UpdateCommitButtonAndGetBrush(status, AppSettings.ShowGitStatusInBrowseToolbar);
-        RevisionGrid.UpdateArtificialCommitCount(
-            AppSettings.ShowGitStatusForArtificialCommits
-                && AppSettings.RevisionGraphShowArtificialCommits
-                    ? status
-                    : null);
+
+        bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
+        bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowArtificialCommits;
+
+        IBrush brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
+
+        RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
+
+        if (countToolbar || countArtificial)
+        {
+            UpdateStatusInTaskbar();
+        }
+
+        return;
+
+        void UpdateStatusInTaskbar()
+        {
+            if (!EnvUtils.RunningOnWindowsWithMainWindow())
+            {
+                return;
+            }
+
+            if (ReferenceEquals(brush, _lastBrush))
+            {
+                TaskbarManager.Instance.SetOverlayIcon(_overlayIconByBrush[_lastBrush], "");
+                return;
+            }
+
+            _lastBrush = brush;
+
+            if (!_overlayIconByBrush.TryGetValue(brush, out TaskbarIcon? overlay))
+            {
+                const int imgDim = 32;
+                const int dotDim = 15;
+                const int pad = 2;
+
+                // Framework constraint: Avalonia draws an antialiased ellipse into a cleared render-target bitmap instead of GDI+ Graphics.
+                using RenderTargetBitmap bmp = new(new PixelSize(imgDim, imgDim));
+                using (DrawingContext g = bmp.CreateDrawingContext())
+                {
+                    g.DrawEllipse(brush, null, new Rect(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
+                }
+
+                overlay = TaskbarIcon.FromBitmap(bmp);
+                _overlayIconByBrush.Add(brush, overlay);
+            }
+
+            TaskbarManager.Instance.SetOverlayIcon(overlay, "");
+
+            _windowsJumpListManager?.UpdateCommitIcon(toolStripButtonCommit.Icon!);
+        }
     }
 
     private void RefreshPushButton(IGitModule module, string branchName)

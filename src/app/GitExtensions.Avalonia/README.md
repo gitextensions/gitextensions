@@ -44,7 +44,8 @@ On Windows, Browse forwards registered close-all and taskbar close requests to a
 before closing itself. Its taskbar thumbnail toolbar offers Commit, Push, Pull and Close all
 windows, and opened repositories are added to the Recent category of the jump list. The Avalonia
 application uses its own taskbar identity, so it does not share a taskbar group or jump list with
-the WinForms application. Taskbar progress and the changes badge are not yet ported, and macOS
+the WinForms application. The taskbar button shows the progress of running commands, and a
+coloured dot for the working-directory status when the Browse status display is enabled. macOS
 and Linux have no taskbar integration yet.
 Dialogs that originally expose context help provide a Help icon in their footer and the F1 key.
 Both open the same manual section; an invalid section disables the help action.

@@ -286,6 +286,17 @@ public sealed class WindowsJumpListManagerTests
         native.DestroyIcon(handle);
     }
 
+    /// <summary>
+    /// The original caches icons per image in a static dictionary, but disposing a manager destroys them,
+    /// so a later manager in the same process reuses disposed icons and its toolbar silently fails to appear.
+    /// The port keeps that upstream behavior; tests that use the shared toolbar images start from an empty cache.
+    /// </summary>
+    internal static void ClearSharedIconCache()
+    {
+        FieldInfo cache = typeof(WindowsJumpListManager).GetField("_iconByImage", BindingFlags.NonPublic | BindingFlags.Static)!;
+        ((System.Collections.IDictionary)cache.GetValue(null)!).Clear();
+    }
+
     private const string OnePixelPng = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 
     private static int Alpha(byte[] pixels, int x, int y) => pixels[(((y * 48) + x) * 4) + 3];
@@ -394,6 +405,29 @@ public sealed class WindowsJumpListManagerTests
         {
             Calls.Add(nameof(DestroyIcon));
             DestroyedIcons.Add(icon);
+        }
+
+        public List<(nint Window, TaskbarProgressBarState State)> ProgressStates { get; } = [];
+        public List<(nint Window, ulong Completed, ulong Total)> ProgressValues { get; } = [];
+        public List<(nint Window, TaskbarIcon? Icon, string Description)> OverlayIcons { get; } = [];
+
+        public void SetProgressState(nint windowHandle, TaskbarProgressBarState state)
+        {
+            Calls.Add(nameof(SetProgressState));
+            ProgressStates.Add((windowHandle, state));
+        }
+
+        public void SetProgressValue(nint windowHandle, ulong completed, ulong total)
+        {
+            Calls.Add(nameof(SetProgressValue));
+            ProgressValues.Add((windowHandle, completed, total));
+        }
+
+        public void SetOverlayIcon(nint windowHandle, TaskbarIcon? icon, string description)
+        {
+            Calls.Add(nameof(SetOverlayIcon));
+            icon?.GetHandle();
+            OverlayIcons.Add((windowHandle, icon, description));
         }
     }
 }

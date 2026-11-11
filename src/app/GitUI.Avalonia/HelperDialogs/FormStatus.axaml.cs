@@ -5,6 +5,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Shims.WinForms;
 using GitExtUtils;
+using GitUI.Compat;
 using GitUI.ConsoleEmulation;
 using GitUI.ConsoleEmulation.PlainText;
 using GitUI.Models;
@@ -13,8 +14,7 @@ using GitUI.UserControls;
 
 namespace GitUI.HelperDialogs;
 
-// Platform taskbar progress is not portable; status badge window icons are, and the console
-// uses the plain-text emulator.
+// Status badge window icons replace the WinForms form icon, and the console uses the plain-text emulator.
 public partial class FormStatus : GitExtensionsDialog
 {
     private static readonly Lazy<IReadOnlyDictionary<Avalonia.Media.Imaging.Bitmap, Avalonia.Controls.WindowIcon>> _statusIcons = new(
@@ -141,6 +141,7 @@ public partial class FormStatus : GitExtensionsDialog
     /// </summary>
     protected override void OnClosed(EventArgs e)
     {
+        TaskbarProgress.Clear();
         (ConsoleCommandRunner as IDisposable)?.Dispose();
         base.OnClosed(e);
     }
@@ -192,6 +193,7 @@ public partial class FormStatus : GitExtensionsDialog
         Ok.Focus();
         AcceptButton = Ok;
         Abort.IsEnabled = false;
+        TaskbarProgress.SetProgress(isSuccess ? TaskbarProgressBarState.Normal : TaskbarProgressBarState.Error, 100, 100);
         SetIcon(isSuccess ? Images.StatusBadgeSuccess : Images.StatusBadgeError);
 
         if (isSuccess && (_useDialogSettings && AppSettings.CloseProcessDialog))
@@ -227,6 +229,7 @@ public partial class FormStatus : GitExtensionsDialog
         {
             ProgressBar.IsIndeterminate = false;
             ProgressBar.Value = Math.Min(100, progressValue);
+            TaskbarProgress.SetProgress(TaskbarProgressBarState.Normal, progressValue, 100);
         }
 
         // Show last progress message in the title, unless it's showing in the control body already
@@ -247,6 +250,8 @@ public partial class FormStatus : GitExtensionsDialog
         {
             Abort.IsVisible = false;
         }
+
+        TaskbarProgress.SetState(TaskbarProgressBarState.Indeterminate);
 
         Reset();
         ProcessCallback(this);

@@ -195,6 +195,7 @@ public sealed class FormBrowseTests
         nint activeWindow = 0;
         try
         {
+            WindowsJumpListManagerTests.ClearSharedIconCache();
             TaskbarManager.TestAccessor.Shell = shell;
             WindowsCloseRequests.TestAccessor.Register = _ => closeAllMessage;
             WindowsCloseRequests.TestAccessor.Broadcast = broadcasts.Add;
@@ -288,6 +289,106 @@ public sealed class FormBrowseTests
             FieldInfo field = typeof(ThumbnailToolBarButton).GetField(nameof(ThumbnailToolBarButton.Click), BindingFlags.NonPublic | BindingFlags.Instance)!;
             Delegate handler = ((Delegate)field.GetValue(button)!).GetInvocationList().Single();
             return handler.Target is FormBrowse ? handler.Method.Name : null;
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task Git_status_should_mark_the_taskbar_button_like_the_originalAsync()
+    {
+        const nint browseHandle = 0x5151;
+        ITaskbarShell previousShell = TaskbarManager.TestAccessor.Shell;
+        Func<TopLevel, nint>? previousHandle = ApplicationForms.TestAccessor.Handle;
+        WindowsJumpListManagerTests.RecordingTaskbarShell shell = new();
+        NativeMainWindowScope? mainWindow = OperatingSystem.IsWindows() ? NativeMainWindowScope.Create() : null;
+        FormBrowse? form = null;
+        try
+        {
+            WindowsJumpListManagerTests.ClearSharedIconCache();
+            TaskbarManager.TestAccessor.Shell = shell;
+            ApplicationForms.TestAccessor.Handle = window => ReferenceEquals(window, form) ? browseHandle : 0;
+            AppSettings.ShowGitStatusInBrowseToolbar = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form.Show();
+            form.Activate();
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(20));
+            await form.JoinLoadOperationsForTestAsync(timeout.Token);
+            IconButton commit = form.FindControl<IconButton>("toolStripButtonCommit")!;
+            await WaitUntilAsync(() => commit.Content is "Commit (0)");
+            if (mainWindow is not null)
+            {
+                await WaitUntilAsync(() => shell.AddedButtons.Count == 4);
+            }
+
+            // The real status monitor then reports a new untracked file, which changes the status brush.
+            // A finished command notifies the repository change, which requests an interactive refresh
+            // instead of waiting for the monitor's 30-second minimum file-change interval.
+            File.WriteAllText(Path.Combine(module.WorkingDir, "untracked.txt"), "untracked");
+            form.UICommands.RepoChangedNotifier.Notify();
+            await WaitUntilAsync(() => commit.Content is "Commit (1)");
+
+            if (mainWindow is null)
+            {
+                // The original Windows main-window guard keeps other platforms without a taskbar overlay.
+                shell.Calls.Should().BeEmpty();
+                return;
+            }
+
+            Stopwatch overlayWait = Stopwatch.StartNew();
+            while (!(shell.OverlayIcons.Count > 0 && shell.UpdatedButtons.Count > 0) && overlayWait.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            shell.UpdatedButtons.Should().NotBeEmpty("the shell saw {0}", string.Join(", ", shell.Calls));
+            (nint window, TaskbarIcon? icon, string description) = shell.OverlayIcons[^1];
+            window.Should().Be(mainWindow.Handle);
+            description.Should().BeEmpty();
+            using (Bitmap overlay = new(new MemoryStream(icon!.PngData)))
+            {
+                overlay.PixelSize.Should().Be(new PixelSize(32, 32));
+                Pixel(overlay, 22, 22).Should().Be((0xE2, 0x2B, 0x8A, 0xFF), "the original draws the untracked-only BlueViolet dot in the corner");
+                Pixel(overlay, 5, 5).A.Should().Be(0);
+                Pixel(overlay, 13, 22).A.Should().Be(0);
+            }
+
+            // The commit thumbnail button follows the commit button image.
+            ThumbnailToolBarButton commitThumbnail = shell.AddedButtons.Should().NotBeEmpty().And.Subject.First();
+            shell.UpdatedButtons.Should().Contain(commitThumbnail);
+
+            // Turning the status display off stops the monitor, which removes the overlay.
+            int overlays = shell.OverlayIcons.Count;
+            AppSettings.ShowGitStatusInBrowseToolbar = false;
+            AppSettings.ShowGitStatusForArtificialCommits = false;
+            typeof(FormBrowse).GetMethod("HandleSettingsChanged", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .Invoke(form, [AppSettings.Translation, AppSettings.CommitInfoPosition]);
+            await WaitUntilAsync(() => shell.OverlayIcons.Count > overlays);
+            shell.OverlayIcons[^1].Should().Be((mainWindow.Handle, (TaskbarIcon?)null, string.Empty));
+        }
+        finally
+        {
+            form?.Close();
+            TaskbarManager.TestAccessor.Shell = previousShell;
+            ApplicationForms.TestAccessor.Handle = previousHandle;
+            mainWindow?.Dispose();
+        }
+
+        static (byte B, byte G, byte R, byte A) Pixel(Bitmap bitmap, int x, int y)
+        {
+            byte[] pixel = new byte[4];
+            System.Runtime.InteropServices.GCHandle pinned = System.Runtime.InteropServices.GCHandle.Alloc(pixel, System.Runtime.InteropServices.GCHandleType.Pinned);
+            try
+            {
+                bitmap.CopyPixels(new PixelRect(x, y, 1, 1), pinned.AddrOfPinnedObject(), 4, 4);
+            }
+            finally
+            {
+                pinned.Free();
+            }
+
+            return (pixel[0], pixel[1], pixel[2], pixel[3]);
         }
     }
 

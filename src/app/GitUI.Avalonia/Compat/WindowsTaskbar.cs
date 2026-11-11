@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using Avalonia;
@@ -38,6 +39,32 @@ internal sealed class TaskbarManager
     }
 
     internal ThumbnailToolBarManager ThumbnailToolBars { get; } = new();
+
+    /// <summary>
+    /// Gets the process's main window, which owns the taskbar button, like the Code Pack's OwnerHandle.
+    /// </summary>
+    internal static nint OwnerHandle
+    {
+        get
+        {
+            using Process process = Process.GetCurrentProcess();
+            nint handle = process.MainWindowHandle;
+            if (handle == 0)
+            {
+                throw new InvalidOperationException("A valid active Window is needed to update the Taskbar.");
+            }
+
+            return handle;
+        }
+    }
+
+    internal void SetProgressState(TaskbarProgressBarState state) => _shell.SetProgressState(OwnerHandle, state);
+
+    internal void SetProgressValue(int currentValue, int maximumValue)
+        => _shell.SetProgressValue(OwnerHandle, Convert.ToUInt64(currentValue), Convert.ToUInt64(maximumValue));
+
+    internal void SetOverlayIcon(TaskbarIcon? icon, string accessibilityText)
+        => _shell.SetOverlayIcon(OwnerHandle, icon, accessibilityText);
 
     // parity-scaffolding: replaces only the native shell boundary, never the taskbar state above it.
     internal readonly struct TestAccessor
@@ -178,6 +205,18 @@ public sealed class ThumbnailButtonClickedEventArgs : EventArgs
     internal ThumbnailToolBarButton ThumbnailButton { get; }
 }
 
+/// <summary>
+/// The taskbar progress states, with the Windows TBPFLAG values.
+/// </summary>
+public enum TaskbarProgressBarState
+{
+    NoProgress = 0,
+    Indeterminate = 0x1,
+    Normal = 0x2,
+    Error = 0x4,
+    Paused = 0x8,
+}
+
 internal enum JumpListKnownCategoryType
 {
     Neither,
@@ -292,6 +331,12 @@ internal interface ITaskbarShell
     nint CreateIcon(byte[] pngData, int size);
 
     void DestroyIcon(nint icon);
+
+    void SetProgressState(nint windowHandle, TaskbarProgressBarState state);
+
+    void SetProgressValue(nint windowHandle, ulong completed, ulong total);
+
+    void SetOverlayIcon(nint windowHandle, TaskbarIcon? icon, string description);
 }
 
 internal sealed class UnsupportedTaskbarShell : ITaskbarShell
@@ -311,6 +356,12 @@ internal sealed class UnsupportedTaskbarShell : ITaskbarShell
     public nint CreateIcon(byte[] pngData, int size) => throw new PlatformNotSupportedException();
 
     public void DestroyIcon(nint icon) => throw new PlatformNotSupportedException();
+
+    public void SetProgressState(nint windowHandle, TaskbarProgressBarState state) => throw new PlatformNotSupportedException();
+
+    public void SetProgressValue(nint windowHandle, ulong completed, ulong total) => throw new PlatformNotSupportedException();
+
+    public void SetOverlayIcon(nint windowHandle, TaskbarIcon? icon, string description) => throw new PlatformNotSupportedException();
 }
 
 [SupportedOSPlatform("windows")]
@@ -415,6 +466,28 @@ internal sealed unsafe class WindowsTaskbarShell : ITaskbarShell
     }
 
     public void DestroyIcon(nint icon) => DestroyIconNative(icon);
+
+    public void SetProgressState(nint windowHandle, TaskbarProgressBarState state)
+    {
+        nint taskbarList = GetTaskbarList();
+        Check(((delegate* unmanaged[Stdcall]<nint, nint, int, int>)Method(taskbarList, 10))(taskbarList, windowHandle, (int)state), nameof(SetProgressState));
+    }
+
+    public void SetProgressValue(nint windowHandle, ulong completed, ulong total)
+    {
+        nint taskbarList = GetTaskbarList();
+        Check(((delegate* unmanaged[Stdcall]<nint, nint, ulong, ulong, int>)Method(taskbarList, 9))(taskbarList, windowHandle, completed, total), nameof(SetProgressValue));
+    }
+
+    public void SetOverlayIcon(nint windowHandle, TaskbarIcon? icon, string description)
+    {
+        nint taskbarList = GetTaskbarList();
+        nint iconHandle = icon?.GetHandle() ?? 0;
+        fixed (char* text = description)
+        {
+            Check(((delegate* unmanaged[Stdcall]<nint, nint, nint, char*, int>)Method(taskbarList, 18))(taskbarList, windowHandle, iconHandle, text), nameof(SetOverlayIcon));
+        }
+    }
 
     private static int AppendKnownCategory(nint destinationList, int category)
         => ((delegate* unmanaged[Stdcall]<nint, int, int>)Method(destinationList, 6))(destinationList, category);
