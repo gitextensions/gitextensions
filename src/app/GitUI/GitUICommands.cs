@@ -1621,6 +1621,8 @@ public sealed class GitUICommands : IGitUICommands
                 return RunCloneCommand(args);
             case "commit":      // [--quiet]
                 return Commit(arguments);
+            case "compare":     // first second
+                return RunCompareCommand(args);
             case "difftool":    // filename
                 try
                 {
@@ -1678,8 +1680,8 @@ public sealed class GitUICommands : IGitUICommands
                 return RunSynchronizeCommand(arguments);
             case "tag":
                 return StartCreateTagDialog();
-            case "viewdiff":    // [first second]
-                return RunViewDiffCommand(args);
+            case "viewdiff":
+                return StartCompareRevisionsDialog();
             case "viewpatch":   // [filename]
                 return StartViewPatchDialog(args.Count == 3 ? args[2] : "");
             case "uninstall":
@@ -1810,20 +1812,15 @@ public sealed class GitUICommands : IGitUICommands
         }
     }
 
-    private bool RunViewDiffCommand(IReadOnlyList<string> args)
+    private bool RunCompareCommand(IReadOnlyList<string> args)
     {
-        const int argCountWithoutRevisions = 2;
-        const int argCountWithRevisions = 4;
+        // ge.exe compare <first> <second>
+        const int expectedArgCount = 4;
 
-        switch (args.Count)
+        if (args.Count != expectedArgCount)
         {
-            case argCountWithoutRevisions:
-                return StartCompareRevisionsDialog();
-            case argCountWithRevisions:
-                break;
-            default:
-                Console.Error.WriteLine("Usage: viewdiff [<first> <second>]");
-                return false;
+            Console.Error.WriteLine("Usage: compare <first> <second>");
+            return false;
         }
 
         string first = args[2];

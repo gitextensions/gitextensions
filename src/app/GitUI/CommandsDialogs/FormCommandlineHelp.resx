@@ -134,6 +134,7 @@ cherry
 cleanup
 clone [path]
 commit [--quiet] [--message commitmessage]
+compare first second
 difftool filename
 filehistory filename
 fileeditor filename
@@ -156,7 +157,7 @@ settings
 stash
 synchronize [--rebase] [--merge] [--fetch] [--quiet]
 tag
-viewdiff [first second]
+viewdiff
 viewpatch [filename]</value>
   </data>
 </root>
