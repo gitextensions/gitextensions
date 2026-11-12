@@ -1,0 +1,11 @@
+﻿  *   [Working directory]
+  |
+  *   [Commit index]
+  |
+  4  B
+  |
+3 |  C
+| |
+| | 2
+|/-´
+1
