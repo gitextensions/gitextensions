@@ -14,6 +14,7 @@ public sealed class RunCommandTests
     private const string FirstFullShaPlaceholder = "<first-full-sha>";
     private const string FirstShortShaPlaceholder = "<first-short-sha>";
     private const string SecondFullShaPlaceholder = "<second-full-sha>";
+    private const string NonexistentFullSha = "0123456789abcdef0123456789abcdef01234567";
     private const int ShortShaLength = 7;
     private const string CompareBranchName = "compare-base";
     private const string CompareTagName = "compare-tag";
@@ -193,9 +194,22 @@ public sealed class RunCommandTests
 
     [TestCase("no-such-revision", "HEAD")]
     [TestCase("HEAD", "no-such-revision")]
+    [TestCase(NonexistentFullSha, "HEAD")]
+    [TestCase("HEAD", NonexistentFullSha)]
     public void RunCommandBasedOnArgument_compare_should_return_false_on_unknown_revision(string firstArg, string secondArg)
     {
         _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", CompareCommand, firstArg, secondArg])
+            .Should().BeFalse();
+        Application.OpenForms.OfType<FormDiff>().Should().BeEmpty();
+    }
+
+    [Test]
+    public void RunCommandBasedOnArgument_compare_should_return_false_on_full_sha_of_non_commit()
+    {
+        string treeSha = _referenceRepository.Module.GitExecutable.GetOutput("rev-parse HEAD^{tree}").Trim();
+        ObjectId.TryParse(treeSha, out _).Should().BeTrue();
+
+        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", CompareCommand, treeSha, "HEAD"])
             .Should().BeFalse();
         Application.OpenForms.OfType<FormDiff>().Should().BeEmpty();
     }

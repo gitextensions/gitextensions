@@ -215,7 +215,8 @@ internal static class Program
     {
         string? workingDir = null;
 
-        if (args.Length >= 3)
+        // The arguments of "compare" are revisions, not paths: find its repository from the current directory.
+        if (args.Length >= 3 && args[1] != "compare")
         {
             // there is bug in .net
             // while parsing command line arguments, it unescapes " incorrectly

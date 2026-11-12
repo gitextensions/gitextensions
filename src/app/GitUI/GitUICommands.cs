@@ -1825,8 +1825,11 @@ public sealed class GitUICommands : IGitUICommands
 
         string first = args[2];
         string second = args[3];
-        ObjectId firstId = Module.RevParse(first);
-        ObjectId secondId = Module.RevParse(second);
+
+        // "^{commit}" makes git verify the revision, even a full hash (which RevParse would otherwise accept as is),
+        // and rejects objects that are not commits.
+        ObjectId firstId = Module.RevParse($"{first}^{{commit}}");
+        ObjectId secondId = Module.RevParse($"{second}^{{commit}}");
         if (firstId.IsZero || secondId.IsZero)
         {
             Console.Error.WriteLine($"No commit found matching: {(firstId.IsZero ? first : second)}");
