@@ -2096,12 +2096,20 @@ Suitable for some config files modified locally.</source>
         <source>Show synta&amp;x highlighting</source>
         <target />
       </trans-unit>
+      <trans-unit id="stageHunkToolStripMenuItem.Text">
+        <source>Stage hunk</source>
+        <target />
+      </trans-unit>
       <trans-unit id="stageSelectedLinesToolStripMenuItem.Text">
         <source>Stage selected line(s)</source>
         <target />
       </trans-unit>
       <trans-unit id="treatAllFilesAsTextToolStripMenuItem.Text">
         <source>&amp;Treat all files as text</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="unstageHunkToolStripMenuItem.Text">
+        <source>Unstage hunk</source>
         <target />
       </trans-unit>
       <trans-unit id="unstageSelectedLinesToolStripMenuItem.Text">
@@ -10818,6 +10826,10 @@ the last selected commit.</source>
         <source>&amp;Sort order</source>
         <target />
       </trans-unit>
+      <trans-unit id="_stageHunk.Text">
+        <source>Stage hunk</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_stageSelectedLines.Text">
         <source>Stage selected line(s)</source>
         <target />
@@ -10865,6 +10877,10 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="_uninterestingDiffOmitted.Text">
         <source>Uninteresting diff hunks are omitted.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_unstageHunk.Text">
+        <source>Unstage hunk</source>
         <target />
       </trans-unit>
       <trans-unit id="_unstageSelectedLines.Text">

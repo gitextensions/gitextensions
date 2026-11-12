@@ -387,6 +387,8 @@ public partial class FileViewer : GitModuleControl
         LoadHotkeys(HotkeySettingsName);
         stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageLines);
         unstageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnstageLines);
+        stageHunkToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageHunk);
+        unstageHunkToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnstageHunk);
         resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ResetLines);
         ignoreAllWhitespaceChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.IgnoreAllWhitespace);
         increaseNumberOfLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.IncreaseNumberOfVisibleLines);
@@ -982,7 +984,10 @@ public partial class FileViewer : GitModuleControl
         // For the user it looks the same and they expect the same menu item (and hotkey)
         bool isIndex = ViewItemStagedStatus() == StagedStatus.Index;
         stageSelectedLinesToolStripMenuItem.Visible = SupportLinePatching && !isIndex;
-        unstageSelectedLinesToolStripMenuItem.Visible = SupportLinePatching && isIndex;
+        bool supportLinePatchingWithIndex = SupportLinePatching && isIndex;
+        unstageSelectedLinesToolStripMenuItem.Visible = supportLinePatchingWithIndex;
+        stageHunkToolStripMenuItem.Visible = SupportLinePatching && ViewItemStagedStatus() == StagedStatus.WorkTree;
+        unstageHunkToolStripMenuItem.Visible = supportLinePatchingWithIndex;
         resetSelectedLinesToolStripMenuItem.Visible = SupportLinePatching;
 
         // RangeDiff patch is undefined, could be new/old commit or to parents
@@ -1626,6 +1631,16 @@ public partial class FileViewer : GitModuleControl
         UnstageSelectedLines();
     }
 
+    private void stageHunkToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        StageHunk();
+    }
+
+    private void unstageHunkToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        UnstageHunk();
+    }
+
     private void resetSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
     {
         ResetSelectedLines();
@@ -1713,6 +1728,30 @@ public partial class FileViewer : GitModuleControl
         return true;
     }
 
+    private bool StageHunk()
+    {
+        if (!SupportLinePatching || ViewItemStagedStatus() != StagedStatus.WorkTree)
+        {
+            // Hotkey executed when menu is disabled
+            return false;
+        }
+
+        StageSelectedLines(stage: true, hunk: true);
+        return true;
+    }
+
+    private bool UnstageHunk()
+    {
+        if (!SupportLinePatching || ViewItemStagedStatus() != StagedStatus.Index)
+        {
+            // Hotkey executed when menu is disabled
+            return false;
+        }
+
+        StageSelectedLines(stage: false, hunk: true);
+        return true;
+    }
+
     private bool ResetSelectedLines()
     {
         if (!SupportLinePatching)
@@ -1735,12 +1774,31 @@ public partial class FileViewer : GitModuleControl
     /// Stage lines in WorkTree or Unstage lines in Index.
     /// </summary>
     /// <param fileName="stage"><see langword="true"/> if current commit is worktree and the lines are to be staged, <see langword="false"/> otherwise.</param>
-    public void StageSelectedLines(bool stage)
+    /// <param fileName="hunk"><see langword="true"/> to (un)stage the whole hunk at the caret instead of the selected lines, like "Stage Hunk" in git gui.</param>
+    public void StageSelectedLines(bool stage, bool hunk = false)
     {
         if (!AllowLinePatching || _viewItem is null)
         {
             // reload not completed
             return;
+        }
+
+        string text = GetText();
+        int selectionPosition = GetSelectionPosition();
+        int selectionLength = GetSelectionLength();
+        if (hunk)
+        {
+            // A new file is shown as its content only, i.e. a single hunk.
+            (int Position, int Length)? hunkRange = _viewItem.Item.IsNew
+                ? (0, text.Length)
+                : PatchManager.GetHunkRange(text, selectionPosition);
+            if (hunkRange is null)
+            {
+                // The caret is not in a hunk
+                return;
+            }
+
+            (selectionPosition, selectionLength) = hunkRange.Value;
         }
 
         byte[]? patch;
@@ -1752,9 +1810,9 @@ public partial class FileViewer : GitModuleControl
             patch = PatchManager.GetSelectedLinesAsNewPatch(
                 Module,
                 _viewItem.Item.Name,
-                GetText(),
-                GetSelectionPosition(),
-                GetSelectionLength(),
+                text,
+                selectionPosition,
+                selectionLength,
                 Encoding,
                 reset: false,
                 FilePreamble,
@@ -1763,9 +1821,9 @@ public partial class FileViewer : GitModuleControl
         else
         {
             patch = PatchManager.GetSelectedLinesAsPatch(
-                GetText(),
-                GetSelectionPosition(),
-                GetSelectionLength(),
+                text,
+                selectionPosition,
+                selectionLength,
                 isIndex: !stage,
                 Encoding,
                 reset: false,
@@ -2162,6 +2220,8 @@ public partial class FileViewer : GitModuleControl
         UnstageLines = 13,
         ResetLines = 14,
         IgnoreAllWhitespace = 15,
+        StageHunk = 20,
+        UnstageHunk = 21,
     }
 
     protected override bool ExecuteCommand(int cmd)
@@ -2194,6 +2254,8 @@ public partial class FileViewer : GitModuleControl
             case Command.PreviousOccurrence: internalFileViewer.GoToPreviousOccurrence(); break;
             case Command.StageLines: return StageSelectedLines();
             case Command.UnstageLines: return UnstageSelectedLines();
+            case Command.StageHunk: return StageHunk();
+            case Command.UnstageHunk: return UnstageHunk();
             case Command.ResetLines: return ResetSelectedLines();
             case Command.IgnoreAllWhitespace: return PerformClickIfAvailable(ignoreAllWhitespaceChangesToolStripMenuItem);
             default: return base.ExecuteCommand(cmd);

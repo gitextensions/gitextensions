@@ -23,6 +23,8 @@ partial class FileViewer
         copyToolStripMenuItem = new ToolStripMenuItem();
         stageSelectedLinesToolStripMenuItem = new ToolStripMenuItem();
         unstageSelectedLinesToolStripMenuItem = new ToolStripMenuItem();
+        stageHunkToolStripMenuItem = new ToolStripMenuItem();
+        unstageHunkToolStripMenuItem = new ToolStripMenuItem();
         resetSelectedLinesToolStripMenuItem = new ToolStripMenuItem();
         copyPatchToolStripMenuItem = new ToolStripMenuItem();
         copyNewVersionToolStripMenuItem = new ToolStripMenuItem();
@@ -74,6 +76,8 @@ partial class FileViewer
         contextMenu.Items.AddRange(new ToolStripItem[] {
         stageSelectedLinesToolStripMenuItem,
         unstageSelectedLinesToolStripMenuItem,
+        stageHunkToolStripMenuItem,
+        unstageHunkToolStripMenuItem,
         resetSelectedLinesToolStripMenuItem,
         copyToolStripMenuItem,
         copyPatchToolStripMenuItem,
@@ -113,7 +117,23 @@ partial class FileViewer
         unstageSelectedLinesToolStripMenuItem.Size = new Size(243, 22);
         unstageSelectedLinesToolStripMenuItem.Text = TranslatedStrings.UnstageSelectedLines;
         unstageSelectedLinesToolStripMenuItem.Click += unstageSelectedLinesToolStripMenuItem_Click;
-        // 
+        //
+        // stageHunkToolStripMenuItem
+        //
+        stageHunkToolStripMenuItem.Image = Properties.Images.Stage;
+        stageHunkToolStripMenuItem.Name = "stageHunkToolStripMenuItem";
+        stageHunkToolStripMenuItem.Size = new Size(243, 22);
+        stageHunkToolStripMenuItem.Text = TranslatedStrings.StageHunk;
+        stageHunkToolStripMenuItem.Click += stageHunkToolStripMenuItem_Click;
+        //
+        // unstageHunkToolStripMenuItem
+        //
+        unstageHunkToolStripMenuItem.Image = Properties.Images.Unstage;
+        unstageHunkToolStripMenuItem.Name = "unstageHunkToolStripMenuItem";
+        unstageHunkToolStripMenuItem.Size = new Size(243, 22);
+        unstageHunkToolStripMenuItem.Text = TranslatedStrings.UnstageHunk;
+        unstageHunkToolStripMenuItem.Click += unstageHunkToolStripMenuItem_Click;
+        //
         // resetSelectedLinesToolStripMenuItem
         // 
         resetSelectedLinesToolStripMenuItem.Image = Properties.Images.ResetWorkingDirChanges;
@@ -545,6 +565,8 @@ partial class FileViewer
     private ToolStripMenuItem copyOldVersionToolStripMenuItem;
     private ToolStripMenuItem stageSelectedLinesToolStripMenuItem;
     private ToolStripMenuItem unstageSelectedLinesToolStripMenuItem;
+    private ToolStripMenuItem stageHunkToolStripMenuItem;
+    private ToolStripMenuItem unstageHunkToolStripMenuItem;
     private ToolStripMenuItem resetSelectedLinesToolStripMenuItem;
     private ToolStripButton ignoreAllWhitespaces;
     private ToolStripMenuItem ignoreAllWhitespaceChangesToolStripMenuItem;
