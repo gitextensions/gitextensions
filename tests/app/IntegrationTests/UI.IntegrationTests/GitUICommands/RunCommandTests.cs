@@ -10,6 +10,7 @@ namespace GitUITests.GitUICommandsTests;
 [Apartment(ApartmentState.STA)]
 public sealed class RunCommandTests
 {
+    private const string CompareCommand = "compare";
     private const string FirstFullShaPlaceholder = "<first-full-sha>";
     private const string FirstShortShaPlaceholder = "<first-short-sha>";
     private const string SecondFullShaPlaceholder = "<second-full-sha>";
@@ -158,7 +159,7 @@ public sealed class RunCommandTests
     [TestCase("HEAD~1", SecondFullShaPlaceholder)]
     public void RunCommandBasedOnArgument_compare_should_open_FormDiff(string firstArg, string secondArg)
     {
-        string firstCommit = _referenceRepository.CommitHash!;
+        string firstCommit = _referenceRepository.CommitHash ?? throw new InvalidOperationException("The reference repository has no commit.");
         string secondCommit = _referenceRepository.CreateCommit("second commit", "second content");
         _referenceRepository.CreateBranch(CompareBranchName, firstCommit);
         _referenceRepository.CreateAnnotatedTag(CompareTagName, firstCommit, "annotated tag");
@@ -166,7 +167,7 @@ public sealed class RunCommandTests
         firstArg = ReplacePlaceholders(firstArg);
         secondArg = ReplacePlaceholders(secondArg);
 
-        RunCommandBasedOnArgument<FormDiff>(["ge.exe", "compare", firstArg, secondArg], runTest: form =>
+        RunCommandBasedOnArgument<FormDiff>(["ge.exe", CompareCommand, firstArg, secondArg], runTest: form =>
         {
             FormDiff.TestAccessor accessor = form.GetTestAccessor();
             accessor.FirstId.Should().Be(ObjectId.Parse(firstCommit));
@@ -194,7 +195,7 @@ public sealed class RunCommandTests
     [TestCase("HEAD", "no-such-revision")]
     public void RunCommandBasedOnArgument_compare_should_return_false_on_unknown_revision(string firstArg, string secondArg)
     {
-        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", "compare", firstArg, secondArg])
+        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", CompareCommand, firstArg, secondArg])
             .Should().BeFalse();
         Application.OpenForms.OfType<FormDiff>().Should().BeEmpty();
     }
@@ -202,7 +203,7 @@ public sealed class RunCommandTests
     [Test]
     public void RunCommandBasedOnArgument_compare_should_return_false_without_revisions()
     {
-        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", "compare"])
+        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", CompareCommand])
             .Should().BeFalse();
         Application.OpenForms.OfType<FormDiff>().Should().BeEmpty();
     }
@@ -211,7 +212,7 @@ public sealed class RunCommandTests
     [TestCase("HEAD", "HEAD", "HEAD")]
     public void RunCommandBasedOnArgument_compare_should_return_false_on_wrong_number_of_revisions(params string[] revisions)
     {
-        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", "compare", .. revisions])
+        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", CompareCommand, .. revisions])
             .Should().BeFalse();
         Application.OpenForms.OfType<FormDiff>().Should().BeEmpty();
     }
@@ -422,7 +423,8 @@ public sealed class RunCommandTests
         => form.FindDescendantOfType<Button>(button => button.Name == buttonName)!.PerformClick();
 
     private static string GetText(Form form, string controlName)
-        => form.FindDescendantOfType<Control>(control => control.Name == controlName)!.Text;
+        => (form.FindDescendantOfType<Control>(control => control.Name == controlName)
+            ?? throw new InvalidOperationException($"Control '{controlName}' not found.")).Text;
 
     private static void SetText(Form form, string controlName, string value)
         => form.FindDescendantOfType<Control>(control => control.Name == controlName)!.Text = value;
