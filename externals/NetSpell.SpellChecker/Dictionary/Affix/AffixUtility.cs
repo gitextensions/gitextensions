@@ -313,4 +313,84 @@ public static class AffixUtility
 
         return word;
     }
+
+#nullable enable
+    /// <summary>
+    ///     Allocation free version of <see cref="RemovePrefix(string, AffixEntry)"/>
+    /// </summary>
+    /// <param name="word">The word to be modified</param>
+    /// <param name="entry">The affix rule entry to use</param>
+    /// <param name="destination">
+    ///     Receives the word after the affix is removed,
+    ///     must be at least <c>word.Length + entry.StripCharacters.Length</c> long
+    /// </param>
+    /// <returns>The length written to <paramref name="destination"/>, or -1 if the affix could not be removed</returns>
+    public static int RemovePrefix(ReadOnlySpan<char> word, AffixEntry entry, Span<char> destination)
+    {
+        int tempLength = word.Length - entry.AddCharacters.Length;
+        if (tempLength > 0
+            && tempLength + entry.StripCharacters.Length >= entry.ConditionCount
+            && word.StartsWith(entry.AddCharacters, StringComparison.Ordinal))
+        {
+            // strip chars plus word without affix
+            int length = entry.StripCharacters.Length + tempLength;
+            Span<char> tempWord = destination[..length];
+            entry.StripCharacters.CopyTo(tempWord);
+            word[entry.AddCharacters.Length..].CopyTo(tempWord[entry.StripCharacters.Length..]);
+
+            // check that this is valid
+            for (int i = 0; i < entry.ConditionCount; i++)
+            {
+                int charCode = tempWord[i];
+                if ((entry.Condition[charCode] & (1 << i)) != (1 << i))
+                {
+                    return -1; // not valid
+                }
+            }
+
+            return tempWord.SequenceEqual(word) ? -1 : length;
+        }
+
+        return -1;
+    }
+
+    /// <summary>
+    ///     Allocation free version of <see cref="RemoveSuffix(string, AffixEntry)"/>
+    /// </summary>
+    /// <param name="word">The word to be modified</param>
+    /// <param name="entry">The affix rule entry to use</param>
+    /// <param name="destination">
+    ///     Receives the word after the affix is removed,
+    ///     must be at least <c>word.Length + entry.StripCharacters.Length</c> long
+    /// </param>
+    /// <returns>The length written to <paramref name="destination"/>, or -1 if the affix could not be removed</returns>
+    public static int RemoveSuffix(ReadOnlySpan<char> word, AffixEntry entry, Span<char> destination)
+    {
+        int tempLength = word.Length - entry.AddCharacters.Length;
+        if (tempLength > 0
+            && tempLength + entry.StripCharacters.Length >= entry.ConditionCount
+            && word.EndsWith(entry.AddCharacters, StringComparison.Ordinal))
+        {
+            // word without affix plus strip chars
+            int length = tempLength + entry.StripCharacters.Length;
+            Span<char> tempWord = destination[..length];
+            word[..tempLength].CopyTo(tempWord);
+            entry.StripCharacters.CopyTo(tempWord[tempLength..]);
+
+            // check that this is valid
+            for (int i = 0; i < entry.ConditionCount; i++)
+            {
+                int charCode = tempWord[^(entry.ConditionCount - i)];
+                if ((entry.Condition[charCode] & (1 << i)) != (1 << i))
+                {
+                    return -1; // not valid
+                }
+            }
+
+            return tempWord.SequenceEqual(word) ? -1 : length;
+        }
+
+        return -1;
+    }
+#nullable restore
 }

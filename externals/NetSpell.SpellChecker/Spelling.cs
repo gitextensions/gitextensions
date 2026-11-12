@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.Text;
@@ -287,23 +288,38 @@ public partial class Spelling : Component
     private void ReplaceChars(List<Word> tempSuggestion)
     {
         List<string> replacementChars = Dictionary.ReplaceCharacters;
+
+        // a replacement never grows the word by more than the length of the replacement entry
+        int maxEntryLength = 0;
+        for (int i = 0; i < replacementChars.Count; i++)
+        {
+            maxEntryLength = Math.Max(maxEntryLength, replacementChars[i].Length);
+        }
+
+        int maxLength = CurrentWord.Length + maxEntryLength;
+        Span<char> tempWord = maxLength <= 256 ? stackalloc char[maxLength] : new char[maxLength];
+
         for (int i = 0; i < replacementChars.Count; i++)
         {
             int split = replacementChars[i].IndexOf(' ');
-            string key = replacementChars[i][..split];
-            string replacement = replacementChars[i][(split + 1)..];
+            ReadOnlySpan<char> key = replacementChars[i].AsSpan(..split);
+            ReadOnlySpan<char> replacement = replacementChars[i].AsSpan((split + 1)..);
 
             int pos = CurrentWord.IndexOf(key, StringComparison.InvariantCulture);
             while (pos > -1)
             {
-                string tempWord = $"{CurrentWord[..pos]}{replacement}{CurrentWord[(pos + key.Length)..]}";
+                CurrentWord.AsSpan(..pos).CopyTo(tempWord);
+                replacement.CopyTo(tempWord[pos..]);
+                ReadOnlySpan<char> rest = CurrentWord.AsSpan((pos + key.Length)..);
+                rest.CopyTo(tempWord[(pos + replacement.Length)..]);
 
-                if (FindWord(ref tempWord))
+                if (FindWord(tempWord[..(pos + replacement.Length + rest.Length)], out string word))
                 {
-                    SuggestWord(tempWord, tempSuggestion);
+                    SuggestWord(word, tempSuggestion);
                 }
 
-                pos = CurrentWord.IndexOf(key, pos + 1, StringComparison.InvariantCulture);
+                int next = CurrentWord.AsSpan((pos + 1)..).IndexOf(key, StringComparison.InvariantCulture);
+                pos = next < 0 ? -1 : pos + 1 + next;
             }
         }
     }
@@ -315,15 +331,15 @@ public partial class Spelling : Component
     private void BadChar(List<Word> tempSuggestion)
     {
         string tryme = Dictionary.TryCharacters;
+        Span<char> tempWord = CurrentWord.Length <= 256 ? stackalloc char[CurrentWord.Length] : new char[CurrentWord.Length];
 
         for (int i = 0; i < CurrentWord.Length; i++)
         {
-            StringBuilder tempWord = new(CurrentWord);
+            CurrentWord.CopyTo(tempWord);
             for (int x = 0; x < tryme.Length; x++)
             {
                 tempWord[i] = tryme[x];
-                string word = tempWord.ToString();
-                if (FindWord(ref word))
+                if (FindWord(tempWord, out string word))
                 {
                     SuggestWord(word, tempSuggestion);
                 }
@@ -338,13 +354,13 @@ public partial class Spelling : Component
     {
         if (CurrentWord.Length > 1)
         {
+            Span<char> tempWord = CurrentWord.Length <= 257 ? stackalloc char[CurrentWord.Length - 1] : new char[CurrentWord.Length - 1];
+
             for (int i = 0; i < CurrentWord.Length; i++)
             {
-                StringBuilder tempWord = new(CurrentWord);
-                tempWord.Remove(i, 1);
-
-                string word = tempWord.ToString();
-                if (FindWord(ref word))
+                CurrentWord.AsSpan(0, i).CopyTo(tempWord);
+                CurrentWord.AsSpan(i + 1).CopyTo(tempWord[i..]);
+                if (FindWord(tempWord, out string word))
                 {
                     SuggestWord(word, tempSuggestion);
                 }
@@ -358,16 +374,16 @@ public partial class Spelling : Component
     private void ForgotChar(List<Word> tempSuggestion)
     {
         string tryme = Dictionary.TryCharacters;
+        Span<char> tempWord = CurrentWord.Length <= 255 ? stackalloc char[CurrentWord.Length + 1] : new char[CurrentWord.Length + 1];
 
         for (int i = 0; i <= CurrentWord.Length; i++)
         {
+            CurrentWord.AsSpan(0, i).CopyTo(tempWord);
+            CurrentWord.AsSpan(i).CopyTo(tempWord[(i + 1)..]);
             for (int x = 0; x < tryme.Length; x++)
             {
-                StringBuilder tempWord = new(CurrentWord);
-                tempWord.Insert(i, tryme[x]);
-
-                string word = tempWord.ToString();
-                if (FindWord(ref word))
+                tempWord[i] = tryme[x];
+                if (FindWord(tempWord, out string word))
                 {
                     SuggestWord(word, tempSuggestion);
                 }
@@ -380,13 +396,13 @@ public partial class Spelling : Component
     /// </summary>
     private void SwapChar(List<Word> tempSuggestion)
     {
+        Span<char> tempWord = CurrentWord.Length <= 256 ? stackalloc char[CurrentWord.Length] : new char[CurrentWord.Length];
+
         for (int i = 0; i < CurrentWord.Length - 1; i++)
         {
-            StringBuilder tempWord = new(CurrentWord);
-
+            CurrentWord.CopyTo(tempWord);
             (tempWord[i + 1], tempWord[i]) = (tempWord[i], tempWord[i + 1]);
-            string word = tempWord.ToString();
-            if (FindWord(ref word))
+            if (FindWord(tempWord, out string word))
             {
                 SuggestWord(word, tempSuggestion);
             }
@@ -401,13 +417,10 @@ public partial class Spelling : Component
     {
         for (int i = 1; i < CurrentWord.Length - 1; i++)
         {
-            string firstWord = CurrentWord[..i];
-            string secondWord = CurrentWord[i..];
-
-            if (FindWord(ref firstWord) && FindWord(ref secondWord))
+            if (FindWord(CurrentWord.AsSpan(..i), out string firstWord)
+                && FindWord(CurrentWord.AsSpan(i..), out string secondWord))
             {
-                string tempWord = firstWord + " " + secondWord;
-                SuggestWord(tempWord, tempSuggestion);
+                SuggestWord(string.Concat(firstWord, " ", secondWord), tempSuggestion);
             }
         }
     }
@@ -438,8 +451,8 @@ public partial class Spelling : Component
 
         // adjust length to remove extra white space after first word
         if (index == 0
-            && index + length < _text.Length
-            && _text[index + length] == ' ')
+            && length < _text.Length
+            && _text[length] == ' ')
         {
             length++; // removing trailing space
         }
@@ -503,44 +516,33 @@ public partial class Spelling : Component
     /// </returns>
     public int EditDistance(string source, string target, bool positionPriority)
     {
-        // i.e. 2-D array
-        int[,] matrix = new int[source.Length + 1, target.Length + 1];
+        // Only the previous and current row of the distance matrix are needed
+        int width = target.Length + 1;
+        Span<int> buffer = width <= 128 ? stackalloc int[width * 2] : new int[width * 2];
+        Span<int> prev = buffer[..width];
+        Span<int> curr = buffer[width..];
 
-        // boundary conditions
-        matrix[0, 0] = 0;
-
-        for (int j = 1; j <= target.Length; j++)
+        for (int j = 0; j < width; j++)
         {
-            // boundary conditions
-            int val = matrix[0, j - 1];
-            matrix[0, j] = val + 1;
+            prev[j] = j;
         }
 
-        // outer loop
         for (int i = 1; i <= source.Length; i++)
         {
-            // boundary conditions
-            int val = matrix[i - 1, 0];
-            matrix[i, 0] = val + 1;
+            curr[0] = i;
 
-            // inner loop
-            for (int j = 1; j <= target.Length; j++)
+            for (int j = 1; j < width; j++)
             {
-                int diag = matrix[i - 1, j - 1];
+                int diag = prev[j - 1] + (source[i - 1] == target[j - 1] ? 0 : 1);
+                curr[j] = Math.Min(diag, Math.Min(prev[j], curr[j - 1]) + 1);
+            }
 
-                if (!source.AsSpan(i - 1, 1).SequenceEqual(target.AsSpan(j - 1, 1)))
-                {
-                    diag++;
-                }
+            Span<int> swap = prev;
+            prev = curr;
+            curr = swap;
+        }
 
-                int deletion = matrix[i - 1, j];
-                int insertion = matrix[i, j - 1];
-                int match = Math.Min(deletion + 1, insertion + 1);
-                matrix[i, j] = Math.Min(diag, match);
-            }// for j
-        }// for i
-
-        int dist = matrix[source.Length, target.Length];
+        int dist = prev[^1];
 
         // extra edit on first and last chars
         if (positionPriority)
@@ -745,7 +747,7 @@ public partial class Spelling : Component
         // if first letter upper case, match case for replacement word
         if (char.IsUpper(_words[replacedIndex].ValueSpan[0]))
         {
-            _replacementWord = $"{char.ToUpper(_replacementWord[0], CultureInfo.CurrentUICulture)}{_replacementWord[1..]}";
+            _replacementWord = string.Concat([char.ToUpper(_replacementWord[0], CultureInfo.CurrentUICulture)], _replacementWord.AsSpan(1..));
         }
 
         _text.Insert(index, _replacementWord);
@@ -1139,6 +1141,50 @@ public partial class Spelling : Component
 
         return false;
     }
+
+#nullable enable
+    /// <summary>
+    ///     Checks to see if the word is in the dictionary without allocating for words that are not found
+    /// </summary>
+    /// <param name="word">The word to check</param>
+    /// <param name="foundWord">
+    ///     The word as found in the dictionary, which is the lower case word
+    ///     if only that is in the dictionary. Null if the word was not found.
+    /// </param>
+    /// <returns>
+    ///     Returns true if word is found in dictionary
+    /// </returns>
+    /// <remarks>
+    ///     Unlike <see cref="FindWord(ref string)"/> this does not update the possible base words
+    ///     used when generating phonetic suggestions
+    /// </remarks>
+    public bool FindWord(ReadOnlySpan<char> word, [NotNullWhen(true)] out string? foundWord)
+    {
+        Initialize();
+
+        if (TraceWriter.Switch.TraceVerbose)
+        {
+            TraceWriter.TraceVerbose("Find Word: {0}", word.ToString());
+        }
+
+        if (Dictionary.ContainsWord(word))
+        {
+            foundWord = word.ToString();
+            return true;
+        }
+
+        Span<char> wordLower = word.Length <= 256 ? stackalloc char[word.Length] : new char[word.Length];
+        word.ToLowerInvariant(wordLower);
+        if (!word.SequenceEqual(wordLower) && Dictionary.ContainsWord(wordLower))
+        {
+            foundWord = wordLower.ToString();
+            return true;
+        }
+    
+        foundWord = null;
+        return false;
+    }
+#nullable restore
 
     #endregion
 
