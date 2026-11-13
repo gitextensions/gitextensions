@@ -1,0 +1,5 @@
+directory=<XDG_DATA_HOME>/GitExtensions/UserPlugins.Avalonia
+normal=created-and-readable
+unreachable=bundled-plugins-only
+unreachableDiagnostic=plugin-unreachable-stderr.log
+winFormsUserPluginsFallback=false

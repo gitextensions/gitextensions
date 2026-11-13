@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.ScriptsEngine.SimplePrompt"
+        Width="334" SizeToContent="Height"
+        MinWidth="260" CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="User input">
+  <Grid Classes="gitextensions-dialog-main" RowDefinitions="Auto,Auto,Auto">
+    <TextBlock x:Name="labelInput"
+               Text="Please specify your input:" />
+    <TextBox x:Name="txtUserInput"
+             Grid.Row="1"
+             Margin="0,2,0,0" />
+    <StackPanel Grid.Row="2"
+                Classes="gitextensions-dialog-controls"
+                Margin="0,6,0,0">
+      <Button x:Name="btnOk"
+              Classes="gitextensions-dialog-action"
+              Content="_OK"
+              IsDefault="True" />
+    </StackPanel>
+  </Grid>
+</Window>

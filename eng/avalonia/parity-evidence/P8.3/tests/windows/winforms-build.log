@@ -1,0 +1,91 @@
+  Determining projects to restore...
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\app\GitUI\GitUI.csproj (in 324 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\ProxySwitcher\GitExtensions.Plugins.ProxySwitcher.csproj (in 324 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\app\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj (in 276 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\GitHub3\GitExtensions.Plugins.GitHub3.csproj (in 324 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\app\GitExtUtils\GitExtUtils.csproj (in 324 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj (in 324 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\app\GitCommands\GitCommands.csproj (in 252 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\tests\CommonTestUtils\CommonTestUtils.csproj (in 324 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\Gource\GitExtensions.Plugins.Gource.csproj (in 324 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\tests\plugins\UnitTests\BuildServerIntegration\AppVeyorIntegration.Tests\AppVeyorIntegration.Tests.csproj (in 343 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\DeleteUnusedBranches\GitExtensions.Plugins.DeleteUnusedBranches.csproj (in 324 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\FindLargeFiles\GitExtensions.Plugins.FindLargeFiles.csproj (in 324 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\CreateLocalBranches\GitExtensions.Plugins.CreateLocalBranches.csproj (in 324 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\tests\plugins\UnitTests\BuildServerIntegration\AzureDevOpsIntegration.Tests\AzureDevOpsIntegration.Tests.csproj (in 343 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\Statistics\GitImpact\GitExtensions.Plugins.GitImpact.csproj (in 12 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.csproj (in 13 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\BuildServerIntegration\TeamCityIntegration\GitExtensions.Plugins.TeamCityIntegration.csproj (in 20 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\BuildServerIntegration\JenkinsIntegration\GitExtensions.Plugins.JenkinsIntegration.csproj (in 25 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\BuildServerIntegration\GitlabIntegration\GitExtensions.Plugins.GitlabIntegration.csproj (in 36 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\AutoCompileSubmodules\GitExtensions.Plugins.AutoCompileSubmodules.csproj (in 31 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\BuildServerIntegration\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.csproj (in 31 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\BackgroundFetch\GitExtensions.Plugins.BackgroundFetch.csproj (in 29 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\app\ResourceManager\ResourceManager.csproj (in 32 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\BuildServerIntegration\AzureDevOpsIntegration\GitExtensions.Plugins.AzureDevOpsIntegration.csproj (in 36 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\BuildServerIntegration\GitHubActionsIntegration\GitExtensions.Plugins.GitHubActionsIntegration.csproj (in 36 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\tests\plugins\UnitTests\BuildServerIntegration\JenkinsIntegration.Tests\JenkinsIntegration.Tests.csproj (in 41 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\tests\plugins\UnitTests\ReleaseNotesGenerator.Tests\ReleaseNotesGenerator.Tests.csproj (in 41 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\tests\plugins\UnitTests\BuildServerIntegration\GitlabIntegration.Tests\GitlabIntegration.Tests.csproj (in 48 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\tests\plugins\UnitTests\BuildServerIntegration\GitHubActionsIntegration.Tests\GitHubActionsIntegration.Tests.csproj (in 22 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\externals\NetSpell.SpellChecker\SpellChecker.csproj (in 29 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\tests\app\UnitTests\GitExtensions.Extensibility.Tests\GitExtensions.Extensibility.Tests.csproj (in 29 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\app\BugReporter\BugReporter.csproj (in 73 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\src\plugins\Statistics\GitStatistics\GitExtensions.Plugins.GitStatistics.csproj (in 55 ms).
+  Restored C:\Users\Begota\Documents\GitHub\gitextensions\tests\plugins\UnitTests\DeleteUnusedBranches.Tests\DeleteUnusedBranches.Tests.csproj (in 110 ms).
+  15 of 49 projects are up-to-date for restore.
+  GitExtensions.Analyzers.CSharp -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Analyzers.CSharp\netstandard2.0\GitExtensions.Analyzers.CSharp.dll
+  ConEmuWinForms -> C:\Users\Begota\Documents\GitHub\gitextensions\externals\conemu-inside\ConEmuWinForms\bin\net10.0-windows\ConEmuWinForms.dll
+  Git.hub -> C:\Users\Begota\Documents\GitHub\gitextensions\externals\Git.hub\Git.hub\bin\Debug\net10.0-windows\Git.hub.dll
+  ICSharpCode.TextEditor -> C:\Users\Begota\Documents\GitHub\gitextensions\externals\ICSharpCode.TextEditor\Project\bin\Debug\net10.0-windows\ICSharpCode.TextEditor.dll
+  SpellChecker -> C:\Users\Begota\Documents\GitHub\gitextensions\externals\NetSpell.SpellChecker\bin\Debug\net10.0-windows\SpellChecker.dll
+  GitExtensions.Extensibility -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions.Extensibility\net10.0-windows\GitExtensions.Extensibility.dll
+  GitExtUtils -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtUtils\net10.0-windows\GitExtUtils.dll
+  GitUIPluginInterfaces -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitUIPluginInterfaces\net10.0-windows\GitUIPluginInterfaces.dll
+  GitCommands -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitCommands\net10.0-windows\GitCommands.dll
+  ResourceManager -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ResourceManager\net10.0-windows\ResourceManager.dll
+  BugReporter -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\BugReporter\net10.0-windows\BugReporter.dll
+  GitUI -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitUI\net10.0-windows\GitUI.dll
+  TranslationApp -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\TranslationApp\net10.0-windows\TranslationApp.dll
+  GitExtensions.Plugins.AutoCompileSubmodules -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\AutoCompileSubmodules\GitExtensions.Plugins.AutoCompileSubmodules.dll
+  GitExtensions.Plugins.BackgroundFetch -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\BackgroundFetch\GitExtensions.Plugins.BackgroundFetch.dll
+  GitExtensions.Plugins.AppVeyorIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.dll
+  GitExtensions.Plugins.AzureDevOpsIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\AzureDevOpsIntegration\GitExtensions.Plugins.AzureDevOpsIntegration.dll
+  GitExtensions.Plugins.GitHubActionsIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\GitHubActionsIntegration\GitExtensions.Plugins.GitHubActionsIntegration.dll
+  GitExtensions.Plugins.GitlabIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\GitlabIntegration\GitExtensions.Plugins.GitlabIntegration.dll
+  GitExtensions.Plugins.JenkinsIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\JenkinsIntegration\GitExtensions.Plugins.JenkinsIntegration.dll
+  GitExtensions.Plugins.TeamCityIntegration -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\TeamCityIntegration\GitExtensions.Plugins.TeamCityIntegration.dll
+  GitExtensions.Plugins.CreateLocalBranches -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\CreateLocalBranches\GitExtensions.Plugins.CreateLocalBranches.dll
+  GitExtensions.Plugins.DeleteUnusedBranches -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\DeleteUnusedBranches\GitExtensions.Plugins.DeleteUnusedBranches.dll
+  GitExtensions.Plugins.FindLargeFiles -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\FindLargeFiles\GitExtensions.Plugins.FindLargeFiles.dll
+  GitExtensions.Plugins.GitHub3 -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\GitHub3\GitExtensions.Plugins.GitHub3.dll
+  GitExtensions.Plugins.Gource -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\Gource\GitExtensions.Plugins.Gource.dll
+  GitExtensions.Plugins.ProxySwitcher -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\ProxySwitcher\GitExtensions.Plugins.ProxySwitcher.dll
+  GitExtensions.Plugins.ReleaseNotesGenerator -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.dll
+  GitExtensions.Plugins.GitImpact -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\GitImpact\GitExtensions.Plugins.GitImpact.dll
+  GitExtensions.Plugins.GitStatistics -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\Plugins\GitStatistics\GitExtensions.Plugins.GitStatistics.dll
+  GitExtensions -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\GitExtensions\net10.0-windows\GitExtensions.dll
+  CommonTestUtils -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\CommonTestUtils\net10.0-windows\CommonTestUtils.dll
+  BugReporter.IntegrationTests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\IntegrationTests\BugReporter.IntegrationTests\net10.0-windows\BugReporter.IntegrationTests.dll
+  UI.IntegrationTests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\IntegrationTests\UI.IntegrationTests\net10.0-windows\UI.IntegrationTests.dll
+  BugReporter.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\BugReporter.Tests\net10.0-windows\BugReporter.Tests.dll
+  GitCommands.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitCommands.Tests\net10.0-windows\GitCommands.Tests.dll
+  GitExtensions.Extensibility.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitExtensions.Extensibility.Tests\net10.0-windows\GitExtensions.Extensibility.Tests.dll
+  GitExtUtils.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitExtUtils.Tests\net10.0-windows\GitExtUtils.Tests.dll
+  GitUI.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitUI.Tests\net10.0-windows\GitUI.Tests.dll
+  ResourceManager.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\ResourceManager.Tests\net10.0-windows\ResourceManager.Tests.dll
+  DeleteUnusedBranches.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\DeleteUnusedBranches.Tests\net10.0-windows\DeleteUnusedBranches.Tests.dll
+  FindLargeFiles.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\FindLargeFiles.Tests\net10.0-windows\FindLargeFiles.Tests.dll
+  GitUIPluginInterfaces.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitUIPluginInterfaces.Tests\net10.0-windows\GitUIPluginInterfaces.Tests.dll
+  ReleaseNotesGenerator.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\ReleaseNotesGenerator.Tests\net10.0-windows\ReleaseNotesGenerator.Tests.dll
+  AppVeyorIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\AppVeyorIntegration.Tests\net10.0-windows\AppVeyorIntegration.Tests.dll
+  AzureDevOpsIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\AzureDevOpsIntegration.Tests\net10.0-windows\AzureDevOpsIntegration.Tests.dll
+  GitHubActionsIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitHubActionsIntegration.Tests\net10.0-windows\GitHubActionsIntegration.Tests.dll
+  GitlabIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\GitlabIntegration.Tests\net10.0-windows\GitlabIntegration.Tests.dll
+  JenkinsIntegration.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\tests\UnitTests\JenkinsIntegration.Tests\net10.0-windows\JenkinsIntegration.Tests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:01:42.66

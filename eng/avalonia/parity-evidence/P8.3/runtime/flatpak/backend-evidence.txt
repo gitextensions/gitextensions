@@ -1,0 +1,4 @@
+selector=WAYLAND_DISPLAY present
+flatpakSockets=wayland
+runtimeOverrides=--nosocket=x11,--nosocket=fallback-x11
+captureProvider=weston-screenshooter

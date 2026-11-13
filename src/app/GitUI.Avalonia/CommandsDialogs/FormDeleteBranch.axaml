@@ -1,0 +1,44 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="clr-namespace:GitUI"
+        x:Class="GitUI.CommandsDialogs.FormDeleteBranch"
+        Width="412" Height="91"
+        MinWidth="412" MinHeight="91"
+        MaxWidth="942" MaxHeight="91"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
+        Title="Delete branch">
+  <DockPanel>
+    <Grid x:Name="ControlsPanel"
+          Classes="gitextensions-dialog-controls"
+          DockPanel.Dock="Bottom"
+          Height="41">
+      <Button x:Name="Delete"
+              Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
+              Margin="0,8,13,8"
+              Width="75" Height="25"
+              HorizontalAlignment="Right"
+              Content="_Delete"
+              IsDefault="True" />
+    </Grid>
+
+    <Border x:Name="MainPanel"
+            Classes="gitextensions-dialog-main"
+            Height="50" Padding="9"
+            Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
+      <Grid x:Name="tlpnlMain" Height="32" ColumnDefinitions="95,299">
+        <Label x:Name="labelSelectBranches"
+               Classes="gitextensions-dialog-label"
+               Margin="3,0,3,4"
+               Width="89" Height="28"
+               Padding="0"
+               Content="Select _branches"
+               Target="{Binding #Branches}" />
+        <gitui:BranchComboBox x:Name="Branches"
+                              Grid.Column="1"
+                              Width="299" Height="28"
+                              VerticalAlignment="Top" />
+      </Grid>
+    </Border>
+  </DockPanel>
+</Window>

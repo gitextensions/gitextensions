@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.FormPuttyError"
+        Width="353"
+        Height="125"
+        CanResize="False"
+        CanMinimize="False"
+        CanMaximize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Authentication error">
+  <Canvas>
+    <Label x:Name="lblMustAuthenticate"
+           Canvas.Left="65" Canvas.Top="47"
+           Padding="0" TabIndex="3"
+           Content="You must authenticate to run this command." />
+    <Image x:Name="pictureBox1"
+           Canvas.Left="23" Canvas.Top="26"
+           Width="32" Height="32"
+           Source="{x:Static properties:Images.Pageant}" />
+    <compat:IconButton x:Name="LoadSSHKey"
+                       Canvas.Left="23" Canvas.Top="86"
+                       Width="140" Height="25" TabIndex="4"
+                       Icon="{x:Static properties:Images.Putty}"
+                       Content="Load SSH key" />
+    <Button x:Name="Cancel"
+            Canvas.Left="252" Canvas.Top="86"
+            Width="77" Height="25" TabIndex="1"
+            Content="Cancel" />
+    <Label x:Name="lblPleaseLoadKey"
+           Canvas.Left="64" Canvas.Top="18"
+           Padding="0" TabIndex="2" FontWeight="Bold"
+           Foreground="{DynamicResource GitExtensionsKnownColorControlDarkDarkBrush}"
+           Content="Please load your SSH private key" />
+    <Button x:Name="Retry"
+            Canvas.Left="169" Canvas.Top="86"
+            Width="77" Height="25" TabIndex="0"
+            Content="Retry" />
+  </Canvas>
+</Window>

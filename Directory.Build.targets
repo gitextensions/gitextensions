@@ -21,4 +21,29 @@
     <!-- Stop transitive consumption of JetBrains annotations -->
     <PackageReference Update="JetBrains.Annotations" PrivateAssets="all" />
   </ItemGroup>
+
+  <!-- Avalonia/Linux port: allow compiling the net10.0-windows flavor on
+       non-Windows machines (restore of multi-targeted projects evaluates all flavors). -->
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <!-- Avalonia/Linux port: the cross-platform 'net10.0' flavor of the
+       multi-targeted tier projects compiles against headless WinForms stand-ins instead of
+       real WinForms. The global usings below replace the implicit System.Windows.Forms and
+       System.Drawing usings that UseWindowsForms provides on the Windows flavor. -->
+  <ItemGroup Condition="'$(UseGitExtensionsShims)' == 'true' and '$(TargetFramework)' == 'net10.0'">
+    <Using Include="GitExtensions.Shims.WinForms" />
+    <Using Include="System.Drawing" />
+    <ProjectReference Include="$(RepoRoot)src\app\GitExtensions.Shims.WinForms\GitExtensions.Shims.WinForms.csproj" />
+  </ItemGroup>
+
+  <!-- Avalonia/Linux port: Avalonia.Headless.NUnit requires a newer NUnit than the
+       repository pin; override for the Avalonia test project only. NUnit.ConsoleRunner is
+       removed because this project is run with 'dotnet test' only and the runner would put
+       a second NUnit engine into the output next to the test adapter's own. -->
+  <ItemGroup Condition="'$(MSBuildProjectName)' == 'GitUI.Avalonia.Tests'">
+    <PackageReference Update="NUnit" VersionOverride="4.5.1" />
+    <PackageReference Remove="NUnit.ConsoleRunner" />
+  </ItemGroup>
 </Project>
