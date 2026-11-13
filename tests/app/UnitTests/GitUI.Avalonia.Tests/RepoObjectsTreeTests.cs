@@ -1323,6 +1323,20 @@ public sealed class RepoObjectsTreeTests
         }
     }
 
+    /// <summary>
+    /// Processes UI jobs until the left panel's visibility update has applied, as the original runs it
+    /// on the UI thread once the tree has loaded. The caller asserts the final state afterwards.
+    /// </summary>
+    private static void WaitForVisibilityUpdate(Func<bool> applied)
+    {
+        System.Diagnostics.Stopwatch wait = System.Diagnostics.Stopwatch.StartNew();
+        while (!applied() && wait.Elapsed < TimeSpan.FromSeconds(10))
+        {
+            Dispatcher.UIThread.RunJobs();
+            Thread.Sleep(10);
+        }
+    }
+
     [AvaloniaTest]
     public void Stashes_should_start_hidden_and_apply_grid_visibility_after_loading()
     {
@@ -1344,15 +1358,19 @@ public sealed class RepoObjectsTreeTests
                 Substitute.For<IRevisionGridInfo>());
             control.SetRefs([], [CreateStash()]);
             TreeViewItem stash = control.GetTestAccessor().TreeView.Items.Cast<TreeViewItem>().Last().Items.Cast<TreeViewItem>().Single();
+            WaitForVisibilityUpdate(() => ReferenceEquals(StashIcon(), NativeTreeImageListImage.Create(GitUI.Properties.Images.EyeClosed)));
 
             NativeTreeImageListImage.Create(((Image)((StackPanel)stash.Header!).Children[0]).Source!)
                 .Should().BeSameAs(NativeTreeImageListImage.Create(GitUI.Properties.Images.EyeClosed));
 
             refsSource.Contains(StashId).Returns(true);
             control.RefreshRevisionsLoaded();
+            WaitForVisibilityUpdate(() => ReferenceEquals(StashIcon(), NativeTreeImageListImage.Create(GitUI.Properties.Images.Stash)));
 
             NativeTreeImageListImage.Create(((Image)((StackPanel)stash.Header!).Children[0]).Source!)
                 .Should().BeSameAs(NativeTreeImageListImage.Create(GitUI.Properties.Images.Stash));
+
+            Avalonia.Media.IImage StashIcon() => NativeTreeImageListImage.Create(((Image)((StackPanel)stash.Header!).Children[0]).Source!);
         }
         finally
         {
@@ -1889,6 +1907,7 @@ public sealed class RepoObjectsTreeTests
                 .Single(item => HeaderText(item).StartsWith("Tags", StringComparison.Ordinal))
                 .Items.Cast<TreeViewItem>()
                 .Single();
+            WaitForVisibilityUpdate(() => tag.Classes.Contains("repo-node-invisible"));
             Image icon = (Image)((StackPanel)tag.Header!).Children[0];
             NativeTreeImageListImage.Create(icon.Source!)
                 .Should().BeSameAs(NativeTreeImageListImage.Create(GitUI.Properties.Images.EyeClosed));

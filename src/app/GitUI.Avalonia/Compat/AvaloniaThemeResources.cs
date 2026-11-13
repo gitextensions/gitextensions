@@ -357,6 +357,9 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionAdjacentEdgeBrush", treeInactiveSelection.AdjacentEdge);
         SetBrush(resources, "GitExtensionsNativeTreeInactiveSelectionInnerCornerBrush", treeInactiveSelection.InnerCorner);
 
+        // Revision nodes hidden from the grid use GrayText in dark mode and Silver otherwise.
+        SetBrush(resources, "GitExtensionsRepoNodeInvisibleBrush", isDark ? ResolveSystemColor(settings, KnownColor.GrayText) : DrawingColor.Silver);
+
         // The Professional checked gradient is Color.Empty at both ends, preserving
         // the owner's actual backdrop. It is not Explorer/ListView selection paint.
         SetBrush(resources, "GitExtensionsToolStripCheckedBackgroundBrush", settings.UseSystemVisualStyle

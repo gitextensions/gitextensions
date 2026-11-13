@@ -17,6 +17,47 @@ namespace GitExtensionsTests;
 public sealed class NativeSystemPaletteTests
 {
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Hidden_revision_nodes_should_use_the_original_invisible_color(bool dark)
+    {
+        Application application = Application.Current!;
+        ThemeVariant variant = dark ? ThemeVariant.Dark : ThemeVariant.Light;
+        bool hadResources = application.Resources.ThemeDictionaries.TryGetValue(variant, out IThemeVariantProvider? previous);
+        ThemeSettings previousSettings = ThemeModule.Settings;
+        ResourceDictionary resources = new();
+        application.Resources.ThemeDictionaries[variant] = resources;
+
+        // A custom GrayText proves dark mode follows the theme's GrayText, while light mode keeps Silver.
+        Theme theme = new(
+            new Dictionary<AppColor, DrawingColor> { [AppColor.PanelBackground] = dark ? DrawingColor.Black : DrawingColor.White },
+            new Dictionary<KnownColor, DrawingColor> { [KnownColor.GrayText] = DrawingColor.Magenta },
+            new ThemeId("hidden-revision-node-custom"));
+        try
+        {
+            ThemeSettings settings = new(theme, Theme.Default, ThemeVariations.None, useSystemVisualStyle: false);
+            AvaloniaThemeResources.Apply(application, settings);
+
+            DrawingColor expected = dark ? AvaloniaThemeResources.ResolveSystemColor(settings, KnownColor.GrayText) : DrawingColor.Silver;
+            ((ISolidColorBrush)resources["GitExtensionsRepoNodeInvisibleBrush"]!).Color.Should()
+                .Be(Color.FromArgb(expected.A, expected.R, expected.G, expected.B));
+        }
+        finally
+        {
+            if (hadResources)
+            {
+                application.Resources.ThemeDictionaries[variant] = previous!;
+            }
+            else
+            {
+                application.Resources.ThemeDictionaries.Remove(variant);
+            }
+
+            ColorHelper.ThemeSettings = previousSettings;
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase(false, "GitExtensionsNativeTreeSearchBackgroundBrush", KnownColor.Info, "#FFFFE1")]
     [TestCase(false, "GitExtensionsNativeTreeSearchForegroundBrush", KnownColor.InfoText, "#000000")]
     [TestCase(false, "GitExtensionsNativeTreeDefaultBackgroundBrush", KnownColor.Window, "#FFFFFF")]

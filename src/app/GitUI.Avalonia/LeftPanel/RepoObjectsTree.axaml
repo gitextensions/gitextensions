@@ -24,7 +24,7 @@
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
     </Style>
     <Style Selector="TreeViewItem.repo-node-invisible TextBlock">
-      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsRepoNodeInvisibleBrush}" />
     </Style>
   </UserControl.Styles>
   <Grid x:Name="repoTreePanel" RowDefinitions="25,26,*">

@@ -246,6 +246,9 @@ internal abstract class Tree : NodeBase, IDisposable
         {
             _firstReloadNodesSinceModuleChanged = false;
         }
+
+        // The tree is built from refs that are already loaded, so the load the original awaits is complete.
+        LoadingCompleted.TrySetResult();
     }
 
     // Called after the TreeView has been populated from Nodes. A good place to update properties
