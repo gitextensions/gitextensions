@@ -11,6 +11,7 @@ using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Settings;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
@@ -102,7 +103,7 @@ public sealed class BuildServerAutoDetectionColumnTests
                 { "add", "origin", "https://github.com/parity-owner/parity-repository.git" }).Should().BeTrue();
             BuildServerSettings.ServerName[module.GetEffectiveSettings()].Should().BeNullOrEmpty();
             BuildServerSettings.IntegrationEnabled[module.GetEffectiveSettings()].Should().BeNull();
-            form = new FormBrowse(new GitUICommands(services, module)) { Width = 1400, Height = 800 };
+            form = new FormBrowse(new GitUICommands(services, module), new BrowseArguments()) { Width = 1400, Height = 800 };
             BuildStatusColumnProvider column = form.RevisionGrid.ColumnProviders.OfType<BuildStatusColumnProvider>().Single();
             column.Column.IsVisible.Should().BeFalse("discovery has not yet published an available adapter");
             form.Show();

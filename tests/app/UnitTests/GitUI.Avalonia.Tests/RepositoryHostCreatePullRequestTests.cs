@@ -11,6 +11,7 @@ using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
@@ -584,7 +585,7 @@ public sealed class RepositoryHostCreatePullRequestTests
             _serviceContainer.GetRequiredService<IGitExecutorProvider>(),
             _workingDirectory);
         GitUICommands commands = new(_serviceContainer, module);
-        FormBrowse owner = new(commands);
+        FormBrowse owner = new(commands, new BrowseArguments());
         try
         {
             commands.AddUpstreamRemote(owner, host);

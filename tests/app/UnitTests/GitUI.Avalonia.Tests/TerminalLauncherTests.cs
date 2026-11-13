@@ -475,7 +475,7 @@ public sealed class TerminalLauncherTests
         commands.GetService(typeof(ITerminalLauncher)).Returns(launcher);
         commands.GetService(typeof(IShellProvider)).Returns(new ShellProvider());
 
-        return new FormBrowse(commands);
+        return new FormBrowse(commands, new BrowseArguments());
     }
 
     private sealed class RecordingTerminalLauncher : ITerminalLauncher

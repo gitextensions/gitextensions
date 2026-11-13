@@ -220,6 +220,6 @@ public sealed class BrowseLowerPaneCommandRoutingTests
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(Substitute.For<IUserRepositoriesListController>());
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         commands.GetService(typeof(IScriptsManager)).Returns(scripts);
-        return (new FormBrowse(commands), commands, module);
+        return (new FormBrowse(commands, new BrowseArguments()), commands, module);
     }
 }

@@ -8,6 +8,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
@@ -47,7 +48,7 @@ public sealed class BrowseRepositoryDropdownFocusTests
             File.WriteAllText(Path.Combine(directory, "file.txt"), "content\n");
             module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "file.txt" }).Should().BeTrue();
             module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" }).Should().BeTrue();
-            form = new FormBrowse(new GitUICommands(services, module));
+            form = new FormBrowse(new GitUICommands(services, module), new BrowseArguments());
             form.Show();
             await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == module.GetCurrentCheckout()
                 && form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!.Text!.EndsWith(" revisions", StringComparison.Ordinal),

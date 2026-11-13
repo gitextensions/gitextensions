@@ -209,7 +209,7 @@ public sealed class RenameBranchTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(Arg.Any<Type>()).Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
 
-        FormBrowse form = new(commands);
+        FormBrowse form = new(commands, new BrowseArguments());
         try
         {
             form.Show();

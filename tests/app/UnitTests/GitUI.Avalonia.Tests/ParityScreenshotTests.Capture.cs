@@ -19,6 +19,7 @@ using AvaloniaEdit;
 using GitCommands;
 using GitCommands.Settings;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.ParityCapture;
@@ -70,7 +71,7 @@ public sealed partial class ParityScreenshotTests
             favourites.Should().ContainSingle(item => item.Repo.Path == context.Module.WorkingDir && item.Repo.Category == "Development");
         }
 
-        FormBrowse browse = new(context.Commands);
+        FormBrowse browse = new(context.Commands, new BrowseArguments());
         try
         {
             await PrepareViewAsync(browse, context);

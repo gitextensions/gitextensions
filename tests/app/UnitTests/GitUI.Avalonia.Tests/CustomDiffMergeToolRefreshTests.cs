@@ -297,7 +297,7 @@ public sealed class CustomDiffMergeToolRefreshTests
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(Substitute.For<IRepositoryHistoryUIService>());
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(Substitute.For<IUserRepositoriesListController>());
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
-        return new FormBrowse(commands);
+        return new FormBrowse(commands, new BrowseArguments());
     }
 
     private static MenuItem[] DiffMenus(FormBrowse form)

@@ -759,7 +759,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormBrowse))
         {
-            FormBrowse form = new(context.Commands);
+            FormBrowse form = new(context.Commands, new BrowseArguments());
             GetFieldValue<GitUI.CommitInfo.CommitInfo>(form, "RevisionInfo").ShowBranchesAsLinks = true;
             return form;
         }

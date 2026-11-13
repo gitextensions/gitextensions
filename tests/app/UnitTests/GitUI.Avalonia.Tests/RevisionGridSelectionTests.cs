@@ -89,7 +89,7 @@ public sealed class RevisionGridSelectionTests
             ignore.PerformClick();
             return ignore;
         };
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
         try
         {
             form.Show();
@@ -131,7 +131,7 @@ public sealed class RevisionGridSelectionTests
             File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "dirty");
         }
 
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
         form.Show();
         try
         {

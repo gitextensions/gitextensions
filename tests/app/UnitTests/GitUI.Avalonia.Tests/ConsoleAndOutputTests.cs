@@ -383,7 +383,7 @@ public sealed class ConsoleAndOutputTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(Arg.Any<Type>()).Returns(call => serviceContainer.GetService(call.Arg<Type>()));
-        return new FormBrowse(commands);
+        return new FormBrowse(commands, new BrowseArguments());
     }
 
     private static async Task WaitUntilAsync(Func<bool> condition)

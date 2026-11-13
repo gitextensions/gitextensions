@@ -351,7 +351,7 @@ public sealed class FormBrowseSourceActionTests
     public async Task Branch_filter_suggestions_should_refresh_even_when_the_left_panel_is_hidden([Values] bool hidden)
     {
         GitModule module = CreateRepository("refresh");
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1600, Height = 850 };
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1600, Height = 850 };
         form.GetGitExtensionsFormTestAccessor().WindowPositionManager = new PositionManager();
         form.Show();
         try
@@ -386,7 +386,7 @@ public sealed class FormBrowseSourceActionTests
         GitModule second = CreateRepository("second");
         first.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "only-first" });
         second.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "only-second" });
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, first)) { Width = 1600, Height = 850 };
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, first), new BrowseArguments()) { Width = 1600, Height = 850 };
         form.GetGitExtensionsFormTestAccessor().WindowPositionManager = new PositionManager();
         form.Show();
         try
@@ -429,7 +429,7 @@ public sealed class FormBrowseSourceActionTests
         commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
         commands.GetService(Arg.Any<Type>()).Returns(call => call.Arg<Type>() == typeof(IHotkeySettingsLoader)
             ? loader : _serviceContainer.GetService(call.Arg<Type>()));
-        FormBrowse form = new(commands) { Width = 1600, Height = 850 };
+        FormBrowse form = new(commands, new BrowseArguments()) { Width = 1600, Height = 850 };
         // Action tests must not restore or publish geometry through the real production position manager.
         form.GetGitExtensionsFormTestAccessor().WindowPositionManager = new PositionManager();
         form.Show();

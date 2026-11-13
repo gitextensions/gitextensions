@@ -1,4 +1,5 @@
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.HelperDialogs;
@@ -96,7 +97,7 @@ public sealed partial class FormMergeSubmodule : GitModuleForm
 
     private void btOpenSubmodule_Click(object? sender, EventArgs e)
     {
-        FormBrowse form = new(UICommands.WithWorkingDirectory(Module.GetSubmoduleFullPath(_filename)));
+        FormBrowse form = new(UICommands.WithWorkingDirectory(Module.GetSubmoduleFullPath(_filename)), new BrowseArguments());
         form.Show();
     }
 

@@ -108,7 +108,7 @@ public sealed class FormBrowseTests
                 callback.Should().BeSameAs(observed);
                 removals++;
             };
-            form = new FormBrowse(new GitUICommands(_serviceContainer, CreateRepositoryWithInitialCommit()));
+            form = new FormBrowse(new GitUICommands(_serviceContainer, CreateRepositoryWithInitialCommit()), new BrowseArguments());
             registeredName.Should().Be("Global.GitExtensions.CloseAllInstances");
             attachedWindow.Should().BeSameAs(form);
             Win32Properties.CustomWndProcHookCallback hook = observed.Should().BeOfType<Win32Properties.CustomWndProcHookCallback>().Subject;
@@ -204,7 +204,7 @@ public sealed class FormBrowseTests
             GitModule module = isDashboard
                 ? new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory)
                 : CreateRepositoryWithInitialCommit();
-            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(20));
             await form.JoinLoadOperationsForTestAsync(timeout.Token);
@@ -302,7 +302,7 @@ public sealed class FormBrowseTests
             TaskbarManager.TestAccessor.Shell = new LinuxLauncherShell((_, _) => { }, () => bookmarks, "com.example.BrowseLauncherTest", "test browse %f", (_, _) => { });
             ApplicationForms.TestAccessor.Handle = null;
             GitModule module = CreateRepositoryWithInitialCommit();
-            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(20));
             await form.JoinLoadOperationsForTestAsync(timeout.Token);
@@ -342,7 +342,7 @@ public sealed class FormBrowseTests
             ApplicationForms.TestAccessor.Handle = window => ReferenceEquals(window, form) ? browseHandle : 0;
             AppSettings.ShowGitStatusInBrowseToolbar = true;
             GitModule module = CreateRepositoryWithInitialCommit();
-            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             form.Activate();
             using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(20));
@@ -444,7 +444,7 @@ public sealed class FormBrowseTests
             settings.SetValue("MainSplitContainer_Distance", "275");
             settings.SetValue("RevisionsSplitContainer_Distance", "240");
             settings.SetValue("RightSplitContainer_Distance", "210");
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithInitialCommit()));
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithInitialCommit()), new BrowseArguments());
             Dictionary<string, string?> previous = form.GetTestAccessor().SplitterManager.GetTestAccessor().Splitters
                 .SelectMany(splitter => suffixes.Select(suffix => splitter.DistanceSettingsKey[..^"Distance".Length] + suffix))
                 .ToDictionary(key => key, settings.GetValue);
@@ -512,7 +512,7 @@ public sealed class FormBrowseTests
         {
             AppSettings.ShowOutputHistoryAsTab.Value = false;
             GitModule module = CreateRepositoryWithInitialCommit();
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             GitCommands.AppSettingsPath settings = new("FormBrowse.Avalonia");
             string[] suffixes = ["Size", "Distance", "Dpi", "FontSize", "Panel1Collapsed", "Panel2Collapsed"];
             Dictionary<string, string?> previous = form.GetTestAccessor().SplitterManager.GetTestAccessor().Splitters
@@ -656,7 +656,7 @@ public sealed class FormBrowseTests
             StartupPhaseExports.Other.Description.Returns("Startup other plugin");
             StartupPhaseExports.Other.Id.Returns(Guid.Parse("0561fb5a-aeb0-4c51-a650-246f89175ff9"));
             ManagedExtensibility.SetTestExportProvider(provider);
-            form = new FormBrowse(new GitUICommands(_serviceContainer, isDashboard ? new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory) : CreateRepositoryWithInitialCommit()));
+            form = new FormBrowse(new GitUICommands(_serviceContainer, isDashboard ? new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory) : CreateRepositoryWithInitialCommit()), new BrowseArguments());
             StartupPhaseExports.BeforeOther = () =>
             {
                 if (Dispatcher.UIThread.CheckAccess())
@@ -744,7 +744,7 @@ public sealed class FormBrowseTests
     public void Browse_should_register_all_source_splitter_boundaries()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
 
         SplitterManager manager = form.GetTestAccessor().SplitterManager;
 
@@ -774,7 +774,7 @@ public sealed class FormBrowseTests
     public async Task Browse_revision_fill_column_should_use_the_full_viewport_without_vertical_overflow()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module))
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments())
         {
             Width = 923,
             Height = 573,
@@ -825,7 +825,7 @@ public sealed class FormBrowseTests
         }
 
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
         form.Show();
         try
         {
@@ -1012,7 +1012,7 @@ public sealed class FormBrowseTests
     public async Task Browse_custom_panel_color_should_not_replace_the_grid_window_color()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module))
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments())
         {
             RequestedThemeVariant = ThemeVariant.Dark,
         };
@@ -1046,7 +1046,7 @@ public sealed class FormBrowseTests
     public void Browse_capture_should_open_the_main_navigate_and_view_menus()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
         form.Show();
         try
         {
@@ -1146,7 +1146,7 @@ public sealed class FormBrowseTests
     public void Browse_working_directory_capture_should_emit_the_hosted_filter_before_its_separator()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 923, Height = 573 };
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 923, Height = 573 };
         form.Show();
         try
         {
@@ -1504,7 +1504,7 @@ public sealed class FormBrowseTests
     public void Browse_diff_tab_should_keep_the_original_refresh_and_find_toolbar_commands()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
         form.Show();
         try
         {
@@ -1557,7 +1557,7 @@ public sealed class FormBrowseTests
         GitModule invalidModule = new(
             _serviceContainer.GetRequiredService<IGitExecutorProvider>(),
             _workingDirectory);
-        using (FormBrowse dashboardForm = new(new GitUICommands(_serviceContainer, invalidModule)))
+        using (FormBrowse dashboardForm = new(new GitUICommands(_serviceContainer, invalidModule), new BrowseArguments()))
         {
             dashboardForm.Show();
             Dispatcher.UIThread.RunJobs();
@@ -1590,7 +1590,7 @@ public sealed class FormBrowseTests
         }
 
         invalidModule.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
-        using FormBrowse repositoryForm = new(new GitUICommands(_serviceContainer, invalidModule));
+        using FormBrowse repositoryForm = new(new GitUICommands(_serviceContainer, invalidModule), new BrowseArguments());
         repositoryForm.Show();
         Dispatcher.UIThread.RunJobs();
 
@@ -1614,7 +1614,7 @@ public sealed class FormBrowseTests
             _serviceContainer.GetRequiredService<IGitExecutorProvider>(),
             _workingDirectory);
         module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
 
         form.Show();
 
@@ -1631,7 +1631,7 @@ public sealed class FormBrowseTests
     public void FormBrowse_should_measure_tab_headers_with_source_padding(double scale)
     {
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
         try
         {
             form.Show();
@@ -1682,7 +1682,7 @@ public sealed class FormBrowseTests
     public void FormBrowse_should_paint_source_tab_overflow_and_toolbar_surfaces_with_the_shared_scrollbar()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module))
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments())
         {
             Width = 923,
             Height = 573,
@@ -1894,7 +1894,7 @@ public sealed class FormBrowseTests
     public async Task FormBrowse_should_focus_the_revision_list_after_loading_and_when_commanded()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
 
         form.Show();
         TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
@@ -1936,7 +1936,7 @@ public sealed class FormBrowseTests
             AppSettings.ShowSplitViewLayout = true;
             GitModule module = CreateRepositoryWithMerge();
             ObjectId head = module.GetCurrentCheckout();
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 700 };
             form.Show();
             try
             {
@@ -2014,7 +2014,7 @@ public sealed class FormBrowseTests
             GitModule module = CreateRepositoryWithInitialCommit();
             File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second revision\n");
             module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" }).Should().BeTrue();
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 700 };
             form.Show();
             try
             {
@@ -2088,7 +2088,7 @@ public sealed class FormBrowseTests
             File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), "staged-only\n");
             module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" }).Should().BeTrue();
             ObjectId head = module.GetCurrentCheckout();
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 700 };
             form.Show();
             try
             {
@@ -2151,7 +2151,7 @@ public sealed class FormBrowseTests
             AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
             AppSettings.ShowSplitViewLayout = true;
             GitModule module = CreateRepositoryWithMerge();
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 700 };
             form.Show();
             try
             {
@@ -2246,7 +2246,7 @@ public sealed class FormBrowseTests
                 module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", $"revision-{index}" }).Should().BeTrue();
             }
 
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 700 };
             form.Show();
             try
             {
@@ -2325,7 +2325,7 @@ public sealed class FormBrowseTests
             }
 
             ObjectId newest = module.GetCurrentCheckout();
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 700 };
             form.Show();
             try
             {
@@ -2398,7 +2398,7 @@ public sealed class FormBrowseTests
         }
 
         GitUICommands commands = new(_serviceContainer, module);
-        using FormBrowse form = new(commands) { Width = 1200, Height = 700 };
+        using FormBrowse form = new(commands, new BrowseArguments()) { Width = 1200, Height = 700 };
         RevisionGridControl grid = form.RevisionGrid;
         RevisionGraph graph = (RevisionGraph)typeof(RevisionGridControl).GetField("_revisionGraph", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(grid)!;
         int loaded = 0;
@@ -2471,7 +2471,7 @@ public sealed class FormBrowseTests
     public void FormBrowse_F5_should_refresh_the_dashboard_without_notifying_a_repository()
     {
         GitUICommands commands = new(_serviceContainer, new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory));
-        using FormBrowse form = new(commands);
+        using FormBrowse form = new(commands, new BrowseArguments());
         int clicked = 0;
         int notified = 0;
         form.refreshDashboardToolStripMenuItem.Click += (_, e) =>
@@ -2507,7 +2507,7 @@ public sealed class FormBrowseTests
         scriptEvents.CancelledEvents.Add(ScriptEvent.BeforeFetch);
         GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
         module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
-        FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
 
         form.ExecuteCommand(FormBrowse.Command.QuickFetch).Should().BeTrue();
 
@@ -2519,7 +2519,7 @@ public sealed class FormBrowseTests
     {
         GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
         module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
 
         form.ExecuteCommand(FormBrowse.Command.AddNotes).Should().BeTrue();
     }
@@ -2538,7 +2538,7 @@ public sealed class FormBrowseTests
             AppSettings.AlwaysShowCheckoutBranchDlg = false;
             AppSettings.CheckForUncommittedChangesInCheckoutBranch = true;
             AppSettings.CloseProcessDialog = true;
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
             await WaitUntilAsync(() => loadingStatus.Text == "1 revisions");
@@ -2632,7 +2632,7 @@ public sealed class FormBrowseTests
             File.WriteAllText(Path.Combine(_workingDirectory, "staged.txt"), "staged");
             module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "staged.txt" });
 
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
 
             TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
@@ -2719,7 +2719,7 @@ public sealed class FormBrowseTests
         module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" });
 
         GitUICommands commands = new(_serviceContainer, module);
-        FormBrowse form = new(commands);
+        FormBrowse form = new(commands, new BrowseArguments());
         try
         {
             form.Show();
@@ -2778,7 +2778,7 @@ public sealed class FormBrowseTests
             module.GitExecutable.RunCommand(new GitArgumentBuilder("stash") { "push", "-m", "latest left panel".Quote() });
             IReadOnlyCollection<GitRevision> stashes = new RevisionReader(module).GetStashes(CancellationToken.None);
             GitRevision olderStash = stashes.Last();
-            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             RepoObjectsTree repoObjectsTree = form.FindControl<RepoObjectsTree>("repoObjectsTree")!;
             RepoObjectsTree.TestAccessor accessor = repoObjectsTree.GetTestAccessor();
@@ -2829,7 +2829,7 @@ public sealed class FormBrowseTests
             ObjectId stashIndex = module.RevParse("refs/stash^2");
             File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "working");
 
-            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             RevisionGridControl revisionGrid = form.RevisionGrid;
             TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
@@ -2879,7 +2879,7 @@ public sealed class FormBrowseTests
             GitModule module = CreateRepositoryWithInitialCommit();
             module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "feature" });
             module.GitExecutable.RunCommand(new GitArgumentBuilder("worktree") { "add", "--quiet", linkedPath.Quote(), "feature" });
-            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             RepoObjectsTree repoObjectsTree = form.FindControl<RepoObjectsTree>("repoObjectsTree")!;
             RepoObjectsTree.TestAccessor accessor = repoObjectsTree.GetTestAccessor();
@@ -2934,7 +2934,7 @@ public sealed class FormBrowseTests
                 ? provider
                 : _serviceContainer.GetService(call.Arg<Type>()));
 
-        using FormBrowse form = new(commands);
+        using FormBrowse form = new(commands, new BrowseArguments());
         form.Show();
         Dispatcher.UIThread.RunJobs();
         IconSplitButton levelUp = form.FindControl<IconSplitButton>("toolStripButtonLevelUp")!;
@@ -3088,7 +3088,7 @@ public sealed class FormBrowseTests
     public void FormBrowse_refresh_shortcut_should_follow_the_visible_repository_or_dashboard_menu()
     {
         GitModule repository = CreateRepositoryWithInitialCommit();
-        using FormBrowse repositoryForm = new(new GitUICommands(_serviceContainer, repository));
+        using FormBrowse repositoryForm = new(new GitUICommands(_serviceContainer, repository), new BrowseArguments());
 
         repositoryForm.refreshToolStripMenuItem.InputGesture.Should().Be(new KeyGesture(Key.F5));
         WinFormsToolStripMenuSizer.GetShortcutDisplayString(repositoryForm.refreshToolStripMenuItem).Should().Be("F5");
@@ -3100,7 +3100,7 @@ public sealed class FormBrowseTests
         try
         {
             GitModule dashboard = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), nonRepositoryPath);
-            using FormBrowse dashboardForm = new(new GitUICommands(_serviceContainer, dashboard));
+            using FormBrowse dashboardForm = new(new GitUICommands(_serviceContainer, dashboard), new BrowseArguments());
 
             dashboardForm.refreshToolStripMenuItem.InputGesture.Should().BeNull();
             WinFormsToolStripMenuSizer.GetShortcutDisplayString(dashboardForm.refreshToolStripMenuItem).Should().BeNull();
@@ -3124,7 +3124,7 @@ public sealed class FormBrowseTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(Arg.Any<Type>())
             .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
-        using FormBrowse form = new(commands);
+        using FormBrowse form = new(commands, new BrowseArguments());
 
         form.manageRemoteRepositoriesToolStripMenuItem1.IsEnabled.Should().BeTrue();
         form.manageSubmodulesToolStripMenuItem.IsEnabled.Should().BeFalse();
@@ -3272,7 +3272,7 @@ public sealed class FormBrowseTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(Arg.Any<Type>())
             .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
-        using FormBrowse form = new(commands);
+        using FormBrowse form = new(commands, new BrowseArguments());
         StartToolStripMenuItem.TestAccessor start = form.fileToolStripMenuItem.GetTestAccessor();
         ToolsToolStripMenuItem.TestAccessor tools = form.toolsToolStripMenuItem.GetTestAccessor();
         HelpToolStripMenuItem.TestAccessor help = form.helpToolStripMenuItem.GetTestAccessor();
@@ -3517,7 +3517,7 @@ public sealed class FormBrowseTests
         try
         {
             AppSettings.ShowRemoteBranches = false;
-            using FormBrowse form = new(commands);
+            using FormBrowse form = new(commands, new BrowseArguments());
             MenuItem view = GetMainMenuItem(form, "viewToolStripMenuItem");
             MenuItem mainRemote = GetTaggedMenuItem(view, "ShowRemoteBranches");
             MenuItem contextRemote = GetTaggedMenuItem(form.RevisionGrid.ViewMenuItem, "ShowRemoteBranches");
@@ -3564,7 +3564,7 @@ public sealed class FormBrowseTests
             commands.RepoChangedNotifier.Returns(notifier);
             commands.GetService(Arg.Any<Type>())
                 .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
-            using FormBrowse form = new(commands);
+            using FormBrowse form = new(commands, new BrowseArguments());
             form.Show();
             await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == head
                 && form.RevisionGrid.GetTestAccessor().Revisions.Items.OfType<GitRevision>()
@@ -3710,7 +3710,7 @@ public sealed class FormBrowseTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(Arg.Any<Type>())
             .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
-        using FormBrowse form = new(commands);
+        using FormBrowse form = new(commands, new BrowseArguments());
 
         form.Show();
         TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
@@ -3786,7 +3786,7 @@ public sealed class FormBrowseTests
         commands.GetService(Arg.Any<Type>())
             .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
 
-        using (FormBrowse invalidForm = new(commands))
+        using (FormBrowse invalidForm = new(commands, new BrowseArguments()))
         {
             invalidForm.repositoryToolStripMenuItem.IsVisible.Should().BeFalse();
             invalidForm.commandsToolStripMenuItem.IsVisible.Should().BeFalse();
@@ -3802,7 +3802,7 @@ public sealed class FormBrowseTests
         }
 
         module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet", "--bare" });
-        using FormBrowse bareForm = new(commands);
+        using FormBrowse bareForm = new(commands, new BrowseArguments());
         bareForm.repositoryToolStripMenuItem.IsVisible.Should().BeTrue();
         bareForm.commandsToolStripMenuItem.IsVisible.Should().BeTrue();
         bareForm.FindControl<IconSplitButton>("toolStripButtonLevelUp")!.IsEnabled.Should().BeFalse();
@@ -3859,7 +3859,7 @@ public sealed class FormBrowseTests
             ObjectId initialCommit = module.GetCurrentCheckout();
             File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second");
             module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
-            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
             await WaitUntilAsync(() => loadingStatus.Text == "2 revisions");
@@ -3947,7 +3947,7 @@ public sealed class FormBrowseTests
 
         try
         {
-            form = new FormBrowse(commands);
+            form = new FormBrowse(commands, new BrowseArguments());
             form.Show();
             form.UpdateRepositoryHostsMenuForTest();
             MenuItem hostMenu = form.FindControl<MenuItem>("_repositoryHostsToolStripMenuItem")!;
@@ -3986,7 +3986,7 @@ public sealed class FormBrowseTests
         File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second");
         module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
 
-        FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
         try
         {
             form.Show();
@@ -4067,7 +4067,7 @@ public sealed class FormBrowseTests
             File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), After);
             module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "replace-content" }).Should().BeTrue();
             ObjectId head = module.GetCurrentCheckout();
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 800 };
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 800 };
             form.Show();
             try
             {
@@ -4154,7 +4154,7 @@ public sealed class FormBrowseTests
             File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "\nsecond");
             module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
 
-            FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             try
             {
                 form.Show();
@@ -4213,7 +4213,7 @@ public sealed class FormBrowseTests
     public void Browse_revision_pane_should_paint_the_native_split_container_border()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module))
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments())
         {
             Width = 923,
             Height = 573,
@@ -4292,7 +4292,7 @@ public sealed class FormBrowseTests
         {
             AppSettings.ShowSplitViewLayout = true;
             GitModule module = CreateRepositoryWithInitialCommit();
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module))
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments())
             {
                 Width = 923,
                 Height = 573,
@@ -4358,7 +4358,7 @@ public sealed class FormBrowseTests
         GitModule module = CreateRepositoryWithInitialCommit();
         string trackedFile = Path.Combine(_workingDirectory, "tracked.txt");
         string siblingDirectory = _workingDirectory + "-sibling";
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
         Directory.CreateDirectory(siblingDirectory);
         try
         {
@@ -4451,7 +4451,7 @@ public sealed class FormBrowseTests
     public void FormBrowse_start_menu_should_fit_its_repository_command_caption()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
         form.Show();
         try
         {
@@ -4495,7 +4495,7 @@ public sealed class FormBrowseTests
             module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "src/followed.txt", "docs/other.txt" });
             module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "add tree".Quote() });
 
-            FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             try
             {
                 form.Show();
@@ -4549,7 +4549,7 @@ public sealed class FormBrowseTests
             AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
             AppSettings.ShowSplitViewLayout = true;
             GitModule module = CreateRepositoryWithInitialCommit();
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             try
             {
@@ -4615,7 +4615,7 @@ public sealed class FormBrowseTests
             AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
             AppSettings.ShowSplitViewLayout = true;
             GitModule module = CreateRepositoryWithInitialCommit();
-            using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             try
             {
@@ -4676,7 +4676,7 @@ public sealed class FormBrowseTests
             File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "\nsecond");
             module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
 
-            FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             try
             {
                 form.Show();
@@ -4732,7 +4732,7 @@ public sealed class FormBrowseTests
             File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "\nsecond");
             module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
 
-            FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             try
             {
                 form.Show();
@@ -4796,7 +4796,8 @@ public sealed class FormBrowseTests
                 return completion.Task;
             });
 
-            FormBrowse form = new(new GitUICommands(_serviceContainer, module), provider);
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
+            SetGpgInfoProvider(form, provider);
             try
             {
                 form.Show();
@@ -4886,7 +4887,8 @@ public sealed class FormBrowseTests
 #pragma warning restore VSTHRD003
             });
 
-            FormBrowse form = new(new GitUICommands(_serviceContainer, module), provider);
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
+            SetGpgInfoProvider(form, provider);
             try
             {
                 form.Show();
@@ -4942,7 +4944,7 @@ public sealed class FormBrowseTests
             }).Should().BeTrue();
 
             GitUICommands commands = new(_serviceContainer, module);
-            FormBrowse form = new(commands);
+            FormBrowse form = new(commands, new BrowseArguments());
             try
             {
                 form.Show();
@@ -4989,7 +4991,7 @@ public sealed class FormBrowseTests
             module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
             ObjectId secondCommit = module.GetCurrentCheckout();
 
-            FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             try
             {
                 form.Show();
@@ -5047,7 +5049,7 @@ public sealed class FormBrowseTests
     public async Task RevisionGrid_rebase_menu_should_match_current_branch_state()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
         form.Show();
         RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")
             ?? throw new InvalidOperationException("Revision grid was not created.");
@@ -5091,7 +5093,7 @@ public sealed class FormBrowseTests
         GitModule module = CreateRepositoryWithInitialCommit();
         ObjectId head = module.GetCurrentCheckout();
         string branch = module.GetSelectedBranch();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 700 };
         ContextMenu? menu = null;
         try
         {
@@ -5167,7 +5169,7 @@ public sealed class FormBrowseTests
         GitModule module = CreateRepositoryWithInitialCommit();
         ObjectId head = module.GetCurrentCheckout();
         string branch = module.GetSelectedBranch();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 700 };
         ContextMenu? menu = null;
         try
         {
@@ -5248,7 +5250,7 @@ public sealed class FormBrowseTests
     {
         GitModule module = CreateRepositoryWithInitialCommit();
         ObjectId head = module.GetCurrentCheckout();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 700 };
         ContextMenu? menu = null;
         form.Show();
         try
@@ -5317,7 +5319,7 @@ public sealed class FormBrowseTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(Arg.Any<Type>()).Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
 
-        FormBrowse form = new(commands);
+        FormBrowse form = new(commands, new BrowseArguments());
         try
         {
             form.Show();
@@ -5523,7 +5525,7 @@ public sealed class FormBrowseTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
         commands.GetService(Arg.Any<Type>()).Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
-        FormBrowse form = new(commands) { Width = 1400, Height = 850 };
+        FormBrowse form = new(commands, new BrowseArguments()) { Width = 1400, Height = 850 };
         try
         {
             form.Show();
@@ -5665,7 +5667,7 @@ public sealed class FormBrowseTests
             stashes.Should().HaveCount(2);
             ObjectId olderUntracked = stashes[1].ParentIds![2];
             ObjectId olderIndex = stashes[1].ParentIds![1];
-            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             RevisionGridControl grid = form.RevisionGrid;
             await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.Items.OfType<GitRevision>()
@@ -5706,7 +5708,7 @@ public sealed class FormBrowseTests
             AppSettings.RevisionGraphShowArtificialCommits = true;
             AppSettings.ShowGitStatusForArtificialCommits = showStatus;
             GitModule module = CreateRepositoryWithInitialCommit();
-            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             RevisionGridControl grid = form.RevisionGrid;
             await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.Items.Count >= 3);
@@ -5763,7 +5765,7 @@ public sealed class FormBrowseTests
             module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" })
                 .Should().BeTrue();
             ObjectId previousRevision = module.RevParse("HEAD~1");
-            form = new FormBrowse(new GitUICommands(_serviceContainer, module)) { Width = 1200, Height = 700 };
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 700 };
             form.Show();
             RevisionGridControl grid = form.RevisionGrid;
             await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.Items.Count >= 4);
@@ -5809,7 +5811,7 @@ public sealed class FormBrowseTests
         WinFormsShims.IClipboard clipboard = Substitute.For<WinFormsShims.IClipboard>();
         WinFormsShims.ShimHost.Clipboard = clipboard;
         GitModule module = CreateRepositoryWithInitialCommit();
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module)) { Width = 1400, Height = 850 };
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1400, Height = 850 };
         FileStatusList files = fileTree ? form.fileTree.FileStatusList : form.revisionDiff.FileStatusList;
         ContextMenu menu = files.GetTestAccessor().ContextMenu;
         try
@@ -5881,6 +5883,11 @@ public sealed class FormBrowseTests
 
         condition().Should().BeTrue("the repository reload should complete before the timeout");
     }
+
+    // The form creates its own GPG provider, as the original does; the test replaces it before the first selection.
+    private static void SetGpgInfoProvider(FormBrowse form, IGpgInfoProvider provider)
+        => (typeof(FormBrowse).GetField("_controller", BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new MissingFieldException(nameof(FormBrowse), "_controller")).SetValue(form, provider);
 
     private static void Click(TopLevel topLevel, Control control, MouseButton button)
     {

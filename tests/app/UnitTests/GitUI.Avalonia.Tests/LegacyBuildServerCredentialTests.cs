@@ -12,6 +12,7 @@ using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
@@ -172,7 +173,7 @@ public sealed class LegacyBuildServerCredentialTests
                 });
             }
 
-            browse = new FormBrowse(new GitUICommands(services, module));
+            browse = new FormBrowse(new GitUICommands(services, module), new BrowseArguments());
             RevisionGridControl grid = browse.FindControl<RevisionGridControl>("RevisionGrid")!;
             FieldInfo field = typeof(RevisionGridControl).GetField("_buildServerWatcher", BindingFlags.NonPublic | BindingFlags.Instance)
                 ?? throw new AssertionException("The real grid no longer owns its watcher.");

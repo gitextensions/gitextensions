@@ -306,7 +306,7 @@ public sealed class PluginSettingsTests
             Array.Empty<RecentRepoInfo>(),
             Array.Empty<RecentRepoInfo>()));
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
-        return new FormBrowse(commands);
+        return new FormBrowse(commands, new BrowseArguments());
     }
 
     private static IGitPlugin CreatePlugin()

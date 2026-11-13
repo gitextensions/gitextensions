@@ -1146,7 +1146,7 @@ public sealed class HotkeyTests
         commands.GetService(typeof(IScriptsManager)).Returns(scriptsManager);
         commands.GetService(typeof(IScriptsRunner)).Returns(scriptsRunner);
 
-        return (new FormBrowse(commands), commands, notifier);
+        return (new FormBrowse(commands, new BrowseArguments()), commands, notifier);
     }
 
     private static IGitUICommands CreateHotkeyCommands(IReadOnlyList<HotkeyCommand> hotkeys)

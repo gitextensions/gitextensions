@@ -17,6 +17,7 @@ using CommonTestUtils;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
@@ -461,7 +462,7 @@ public sealed class MainWindowMenuChromeTests
                 module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { name }).Should().BeTrue();
             }
 
-            using FormBrowse form = new(new GitUICommands(services, module)) { Width = 1280, Height = 800 };
+            using FormBrowse form = new(new GitUICommands(services, module), new BrowseArguments()) { Width = 1280, Height = 800 };
             try
             {
                 form.Show();

@@ -105,7 +105,7 @@ public sealed class FormUpdatesTests
             AppSettings.CheckForUpdates = true;
             AppSettings.LastUpdateCheck = DateTime.Now.AddDays(-8);
             GitModule module = new(services.GetRequiredService<IGitExecutorProvider>(), workingDirectory);
-            FormBrowse form = new(new GitUICommands(services, module));
+            FormBrowse form = new(new GitUICommands(services, module), new BrowseArguments());
             form.Show();
             try
             {

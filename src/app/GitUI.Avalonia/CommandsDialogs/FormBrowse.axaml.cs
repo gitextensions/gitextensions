@@ -210,10 +210,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly GitStatusMonitor? _gitStatusMonitor;
     private FormBrowseMenus? _formBrowseMenus;
     private readonly IGpgInfoProvider? _controller;
+    private readonly CancellationTokenSequence _gpgInfoSequence = new();
     private readonly IUpdateCheckService? _updateCheckService;
     private readonly ICommitDataManager _commitDataManager;
     private readonly IAppTitleGenerator? _appTitleGenerator;
-    private readonly CancellationTokenSequence _gpgInfoLoadSequence = new();
     private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
 
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
@@ -276,27 +276,20 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         InitializeToolbarsMenus();
     }
 
-    public FormBrowse(IGitUICommands commands)
-        : this(commands, new BrowseArguments())
-    {
-    }
-
     /// <summary>
     /// Open Browse - main GUI including dashboard.
     /// </summary>
     /// <param name="commands">The commands in the current form.</param>
     /// <param name="args">The start up arguments.</param>
     public FormBrowse(IGitUICommands commands, BrowseArguments args)
-        : this(commands, args, gpgInfoProvider: null)
+#pragma warning disable CS0618 // Type or member is obsolete
+        : this(commands, args, new AppSettingsPath("FormBrowse.Avalonia"))
+#pragma warning restore CS0618 // Type or member is obsolete
     {
     }
 
-    internal FormBrowse(IGitUICommands commands, IGpgInfoProvider? gpgInfoProvider)
-        : this(commands, new BrowseArguments(), gpgInfoProvider)
-    {
-    }
-
-    private FormBrowse(IGitUICommands commands, BrowseArguments args, IGpgInfoProvider? gpgInfoProvider)
+    [Obsolete("Test only!")]
+    internal FormBrowse(IGitUICommands commands, BrowseArguments args, SettingsSource settingsSource)
         : base(commands, enablePositionRestore: true)
     {
         _commitDataManager = new CommitDataManager(() => Module);
@@ -337,7 +330,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         Activated += (_, e) => OnActivated(e);
         Deactivated += (_, e) => OnDeactivate(e);
         _consoleEmulatorsRegistry = UICommands.GetService(typeof(IConsoleEmulatorsRegistry)) as IConsoleEmulatorsRegistry;
-        _controller = gpgInfoProvider ?? new GpgInfoProvider(new GitGpgController(() => Module));
+        _controller = new GpgInfoProvider(new GitGpgController(() => Module));
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
         repoObjectsTree.Initialize(_aheadBehindDataProvider, RevisionGrid.SetAndApplyBranchFilter, RevisionGrid, RevisionGrid);
@@ -345,7 +338,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         ToolStripFilters.Bind(() => Module, RevisionGrid);
         revisionDiff.Bind(RevisionGrid, RevisionGrid, fileTree, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor);
         fileTree.Bind(RevisionGrid, RevisionGrid, revisionFileTree: null, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor, requestBlame: _isFileHistoryMode);
-        _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse.Avalonia"));
+        _splitterManager = new(settingsSource);
         InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileHistoryMode);
 
         // Framework constraint: streamed rows must recheck the dropdown after initialization returns.
@@ -575,11 +568,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
     }
 
-    public FormBrowse(IServiceProvider serviceProvider, GitModule module)
-        : this(new GitUICommands(serviceProvider, module))
-    {
-    }
-
     protected override void OnApplicationActivated()
     {
         if (_hasRuntimeCommands && AppSettings.RefreshArtificialCommitOnApplicationActivated)
@@ -718,7 +706,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         _submoduleStatusProvider?.Init();
-        _gpgInfoLoadSequence.Dispose();
+        _gpgInfoSequence.Dispose();
         _gitStatusMonitor?.Dispose();
         _windowsJumpListManager?.Dispose();
         RevisionGrid.CancelBackgroundTasks();
@@ -1882,7 +1870,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     internal void RefreshGpgInfo(GitRevision? revision)
     {
-        _gpgInfoLoadSequence.CancelCurrent();
+        _gpgInfoSequence.CancelCurrent();
         _gpgInfoLoadVersion++;
         _gpgInfo = null;
         _gpgInfoLoadingRevision = null;
@@ -1932,7 +1920,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         _gpgInfoLoadingRevision = revision;
-        CancellationToken cancellationToken = _gpgInfoLoadSequence.Next();
+        CancellationToken cancellationToken = _gpgInfoSequence.Next();
         _loadOperations.FileAndForget(() => FillGpgInfoAsync(revision, cancellationToken));
     }
 
@@ -2731,9 +2719,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             case Command.EditFile: EditFile(); break;
             case Command.OpenAsTempFile when fileTree.IsEffectivelyVisible && TopLevel.GetTopLevel(fileTree) == this: fileTree.ExecuteCommand(RevisionDiffControl.Command.OpenAsTempFile); break;
             case Command.OpenAsTempFileWith when fileTree.IsEffectivelyVisible && TopLevel.GetTopLevel(fileTree) == this: fileTree.ExecuteCommand(RevisionDiffControl.Command.OpenAsTempFileWith); break;
-            case Command.ToggleBetweenArtificialAndHeadCommits: RevisionGrid.ExecuteCommand(RevisionGridControl.Command.ToggleBetweenArtificialAndHeadCommits); break;
-            case Command.GoToChild: RestoreFileStatusListFocus(() => RevisionGrid.ExecuteCommand(RevisionGridControl.Command.GoToChild)); break;
-            case Command.GoToParent: RestoreFileStatusListFocus(() => RevisionGrid.ExecuteCommand(RevisionGridControl.Command.GoToParent)); break;
+            case Command.ToggleBetweenArtificialAndHeadCommits: RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.ToggleBetweenArtificialAndHeadCommits); break;
+            case Command.GoToChild: RestoreFileStatusListFocus(() => RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToChild)); break;
+            case Command.GoToParent: RestoreFileStatusListFocus(() => RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToParent)); break;
             case Command.PullOrFetch: PullToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.Push: PushToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.CreateBranch: CreateBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
@@ -3850,9 +3838,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             ?? throw new InvalidOperationException("The splitter manager is not initialized.");
         public SourceControls.TabPage TreeTabPage => _form.TreeTabPage;
         public FilterToolBar ToolStripFilters => _form.ToolStripFilters;
+        public CommitInfo.CommitInfo RevisionInfo => _form.RevisionInfo;
+        public SourceControls.TabPage CommitInfoTabPage => _form.CommitInfoTabPage;
         public GridLength CommitInfoWidth => _form._commitInfoWidth;
 
         public void RefreshRevisions() => _form.RefreshRevisions();
+        public void SetWorkingDir(string? path) => _form.SetWorkingDir(path);
     }
 
     private void FormBrowse_DragDrop(object? sender, DragEventArgs e)

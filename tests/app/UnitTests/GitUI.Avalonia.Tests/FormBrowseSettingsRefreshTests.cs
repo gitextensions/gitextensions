@@ -291,7 +291,7 @@ public sealed class FormBrowseSettingsRefreshTests
             commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(history);
             commands.GetService(typeof(IUserRepositoriesListController)).Returns(controller);
             commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
-            Form = new FormBrowse(commands);
+            Form = new FormBrowse(commands, new BrowseArguments());
         }
 
         public FormBrowse Form { get; }
