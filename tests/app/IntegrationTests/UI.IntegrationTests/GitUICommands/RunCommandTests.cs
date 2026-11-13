@@ -10,6 +10,15 @@ namespace GitUITests.GitUICommandsTests;
 [Apartment(ApartmentState.STA)]
 public sealed class RunCommandTests
 {
+    private const string CompareCommand = "compare";
+    private const string FirstFullShaPlaceholder = "<first-full-sha>";
+    private const string FirstShortShaPlaceholder = "<first-short-sha>";
+    private const string SecondFullShaPlaceholder = "<second-full-sha>";
+    private const string NonexistentFullSha = "0123456789abcdef0123456789abcdef01234567";
+    private const int ShortShaLength = 7;
+    private const string CompareBranchName = "compare-base";
+    private const string CompareTagName = "compare-tag";
+
     // Created once for the fixture
     private ReferenceRepository _referenceRepository = null!;
 
@@ -143,6 +152,84 @@ public sealed class RunCommandTests
     [Test]
     public void RunCommandBasedOnArgument_commit()
         => RunCommandBasedOnArgument<FormCommit>(["ge.exe", "commit"]);
+
+    [TestCase(FirstFullShaPlaceholder, SecondFullShaPlaceholder)]
+    [TestCase(FirstShortShaPlaceholder, "HEAD")]
+    [TestCase(CompareBranchName, "HEAD")]
+    [TestCase(CompareTagName, "HEAD")]
+    [TestCase("HEAD~1", SecondFullShaPlaceholder)]
+    public void RunCommandBasedOnArgument_compare_should_open_FormDiff(string firstArg, string secondArg)
+    {
+        string firstCommit = _referenceRepository.CommitHash ?? throw new InvalidOperationException("The reference repository has no commit.");
+        string secondCommit = _referenceRepository.CreateCommit("second commit", "second content");
+        _referenceRepository.CreateBranch(CompareBranchName, firstCommit);
+        _referenceRepository.CreateAnnotatedTag(CompareTagName, firstCommit, "annotated tag");
+
+        firstArg = ReplacePlaceholders(firstArg);
+        secondArg = ReplacePlaceholders(secondArg);
+
+        RunCommandBasedOnArgument<FormDiff>(["ge.exe", CompareCommand, firstArg, secondArg], runTest: form =>
+        {
+            FormDiff.TestAccessor accessor = form.GetTestAccessor();
+            accessor.FirstId.Should().Be(ObjectId.Parse(firstCommit));
+            accessor.SecondId.Should().Be(ObjectId.Parse(secondCommit));
+            GetText(form, "lblFirstCommit").Should().Be(ExpectedDisplayString(firstArg, firstCommit));
+            GetText(form, "lblSecondCommit").Should().Be(ExpectedDisplayString(secondArg, secondCommit));
+        });
+
+        return;
+
+        static string ExpectedDisplayString(string arg, string commit)
+            => commit.StartsWith(arg, StringComparison.OrdinalIgnoreCase) ? ObjectId.Parse(commit).ToShortString() : arg;
+
+        string ReplacePlaceholders(string arg)
+            => arg switch
+            {
+                FirstFullShaPlaceholder => firstCommit,
+                FirstShortShaPlaceholder => firstCommit[..ShortShaLength],
+                SecondFullShaPlaceholder => secondCommit,
+                _ => arg
+            };
+    }
+
+    [TestCase("no-such-revision", "HEAD")]
+    [TestCase("HEAD", "no-such-revision")]
+    [TestCase(NonexistentFullSha, "HEAD")]
+    [TestCase("HEAD", NonexistentFullSha)]
+    public void RunCommandBasedOnArgument_compare_should_return_false_on_unknown_revision(string firstArg, string secondArg)
+    {
+        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", CompareCommand, firstArg, secondArg])
+            .Should().BeFalse();
+        Application.OpenForms.OfType<FormDiff>().Should().BeEmpty();
+    }
+
+    [Test]
+    public void RunCommandBasedOnArgument_compare_should_return_false_on_full_sha_of_non_commit()
+    {
+        string treeSha = _referenceRepository.Module.GitExecutable.GetOutput("rev-parse HEAD^{tree}").Trim();
+        ObjectId.TryParse(treeSha, out _).Should().BeTrue();
+
+        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", CompareCommand, treeSha, "HEAD"])
+            .Should().BeFalse();
+        Application.OpenForms.OfType<FormDiff>().Should().BeEmpty();
+    }
+
+    [Test]
+    public void RunCommandBasedOnArgument_compare_should_return_false_without_revisions()
+    {
+        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", CompareCommand])
+            .Should().BeFalse();
+        Application.OpenForms.OfType<FormDiff>().Should().BeEmpty();
+    }
+
+    [TestCase("HEAD")]
+    [TestCase("HEAD", "HEAD", "HEAD")]
+    public void RunCommandBasedOnArgument_compare_should_return_false_on_wrong_number_of_revisions(params string[] revisions)
+    {
+        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", CompareCommand, .. revisions])
+            .Should().BeFalse();
+        Application.OpenForms.OfType<FormDiff>().Should().BeEmpty();
+    }
 
     [Test]
     public void RunCommandBasedOnArgument_difftool_returns_false_on_missing_argument()
@@ -348,6 +435,10 @@ public sealed class RunCommandTests
 
     private static void ClickButton(Form form, string buttonName)
         => form.FindDescendantOfType<Button>(button => button.Name == buttonName)!.PerformClick();
+
+    private static string GetText(Form form, string controlName)
+        => (form.FindDescendantOfType<Control>(control => control.Name == controlName)
+            ?? throw new InvalidOperationException($"Control '{controlName}' not found.")).Text;
 
     private static void SetText(Form form, string controlName, string value)
         => form.FindDescendantOfType<Control>(control => control.Name == controlName)!.Text = value;
