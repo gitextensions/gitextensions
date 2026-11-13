@@ -189,6 +189,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
     private void PopulateBranches()
     {
+        string previousBranch = Branches.Text;
         Branches.Items.Clear();
 
         IEnumerable<string> branchNames;
@@ -212,7 +213,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
         }
         else
         {
-            Branches.Text = null;
+            Branches.Text = TranslateBranchName(previousBranch, branchNames);
         }
 
         IReadOnlyList<string> GetContainsObjectIdBranches()
@@ -244,6 +245,34 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
             return result.ToList();
         }
+    }
+
+    internal static string TranslateBranchName(string previousBranchName, IEnumerable<string> branchNamesInNewMode)
+    {
+        if (string.IsNullOrWhiteSpace(previousBranchName))
+        {
+            return "";
+        }
+
+        if (branchNamesInNewMode.Contains(previousBranchName))
+        {
+            return previousBranchName;
+        }
+
+        int slashIndex = previousBranchName.IndexOf('/');
+        if (slashIndex > 0)
+        {
+            string strippedName = previousBranchName[(slashIndex + 1)..];
+            if (branchNamesInNewMode.Contains(strippedName))
+            {
+                return strippedName;
+            }
+        }
+
+        return branchNamesInNewMode.FirstOrDefault(branchName =>
+                   branchName.EndsWith("/" + previousBranchName, StringComparison.Ordinal) &&
+                   branchName.IndexOf('/') == branchName.Length - previousBranchName.Length - 1)
+               ?? previousBranchName;
     }
 
     private void OkClick(object sender, EventArgs e)
