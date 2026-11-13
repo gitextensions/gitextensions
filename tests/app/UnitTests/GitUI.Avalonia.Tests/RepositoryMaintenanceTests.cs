@@ -183,13 +183,12 @@ public sealed class RepositoryMaintenanceTests
     public void FormBisect_should_construct_with_the_original_buttons()
     {
         FormBisect form = new();
-        FormBisect.TestAccessor accessor = form.GetTestAccessor();
 
-        accessor.Start.Should().NotBeNull();
-        accessor.Good.Should().NotBeNull();
-        accessor.Bad.Should().NotBeNull();
-        accessor.Stop.Should().NotBeNull();
-        accessor.btnSkip.Should().NotBeNull();
+        form.FindControl<Button>("Start").Should().NotBeNull();
+        form.FindControl<Button>("Good").Should().NotBeNull();
+        form.FindControl<Button>("Bad").Should().NotBeNull();
+        form.FindControl<Button>("Stop").Should().NotBeNull();
+        form.FindControl<Button>("btnSkip").Should().NotBeNull();
     }
 
     [AvaloniaTest]

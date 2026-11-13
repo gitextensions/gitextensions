@@ -91,6 +91,7 @@ public sealed class RemoteBranchTreeConfigurationTests
         tree = GetRemotes(control);
         tree.Nodes.OfType<RemoteRepoNode>().Select(node => node.FullPath).Should().Equal("origin", "empty");
         tree.RefreshInternal(filter => module.GetRefs(filter));
+        RepoObjectsTreeTestExtensions.WaitForLoading();
         tree.Nodes.OfType<RemoteRepoNode>().Select(node => node.FullPath).Should().Equal(["origin", "empty"],
             because: "a source-style ref refresh must preserve the explicit configuration filter");
         tree.DescendantsAndSelf().OfType<RemoteBranchNode>().Should().HaveCount(2);
@@ -112,7 +113,7 @@ public sealed class RemoteBranchTreeConfigurationTests
             "the native mismatch arises when refs survive their configuration section");
         await PublishSnapshotAsync(control, module);
         GetRemotes(control).Nodes.Should().BeEmpty(
-            "an explicitly empty enabled-remote snapshot is not the standalone preview's omitted snapshot");
+            "like the original, tracking refs of a remote that is no longer configured are not shown");
 
         AddRemote(module, "origin");
         await PublishSnapshotAsync(control, module);
@@ -154,16 +155,25 @@ public sealed class RemoteBranchTreeConfigurationTests
     [AvaloniaTest]
     [TestCase(false)]
     [TestCase(true)]
-    public void Remote_tree_should_reject_a_zero_object_id_before_testing_configured_membership(bool configured)
+    public async Task Remote_tree_should_reject_a_zero_object_id_before_testing_configured_membership(bool configured)
     {
         GitModule module = CreateRepository();
         RepoObjectsTree control = CreateTree(module);
+        await PublishSnapshotAsync(control, module);
+        RemoteBranchTree tree = GetRemotes(control);
         GitRef branch = new(module, objectId: default, "refs/remotes/origin/main", remote: "origin");
-        Remote[] remotes = configured ? [new("origin", "https://example.invalid/origin.git", "https://example.invalid/origin.git")] : [];
+        Dictionary<string, Remote> remotes = configured
+            ? new() { ["origin"] = new("origin", "https://example.invalid/origin.git", "https://example.invalid/origin.git") }
+            : [];
+        (typeof(RemoteBranchTree).GetField("_remoteByName", BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new AssertionException("The source remote lookup must remain available.")).SetValue(tree, remotes);
+        MethodInfo fill = typeof(RemoteBranchTree).GetMethod("FillTree", BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new AssertionException("The source tree-fill boundary must remain available.");
 
-        Action construct = () => _ = new RemoteBranchTree(control, [branch], enabledRemotes: remotes);
+        Action construct = () => fill.Invoke(tree, [new IGitRef[] { branch }, CancellationToken.None]);
 
-        construct.Should().Throw<InvalidOperationException>().WithMessage("Branch 'origin/main' has no ObjectId.");
+        construct.Should().Throw<TargetInvocationException>()
+            .WithInnerException<InvalidOperationException>().WithMessage("Branch 'origin/main' has no ObjectId.");
     }
 
     [AvaloniaTest]
@@ -208,7 +218,7 @@ public sealed class RemoteBranchTreeConfigurationTests
         commands.Module.Returns(module);
         IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
         source.UICommands.Returns(commands);
-        RepoObjectsTree control = new() { UICommandsSource = source };
+        RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
         _window = new Window { Width = 360, Height = 560, Content = control };
         _window.Show();
         return control;
@@ -218,18 +228,10 @@ public sealed class RemoteBranchTreeConfigurationTests
         => control.GetTestAccessor().TreeView.Items.Cast<TreeViewItem>()
             .Select(item => item.Tag).OfType<RemoteBranchTree>().Single();
 
-    private static async Task PublishSnapshotAsync(RepoObjectsTree control, GitModule module)
+    private static Task PublishSnapshotAsync(RepoObjectsTree control, GitModule module)
     {
         module.InvalidateGitSettings();
-        ConfigFileRemoteSettingsManager manager = new(() => module);
-        control.SetRefs(
-            module.GetRefs(RefsFilter.NoFilter),
-            [],
-            "main",
-            await module.GetRemotesAsync(),
-            manager.GetDisabledRemotes(),
-            manager,
-            currentWorkingDirectory: module.WorkingDir);
-        Dispatcher.UIThread.RunJobs();
+        control.RefreshFromModule(module.GetRefs);
+        return Task.CompletedTask;
     }
 }

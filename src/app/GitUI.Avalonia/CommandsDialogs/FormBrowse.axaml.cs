@@ -236,7 +236,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private bool _gpgInfoLoaded;
     private bool _hasRuntimeCommands;
     private int _gpgInfoLoadVersion;
-    private IReadOnlyList<GitWorktree> _worktrees = [];
     private readonly IRepositoryHistoryUIService? _repositoryHistoryUIService;
     private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
     private List<MenuItem>? _currentSubmoduleMenuItems;
@@ -333,7 +332,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         RevisionGrid.ShowBuildServerInfo = true;
         revisionDiff.UICommandsSource = this;
         fileTree.UICommandsSource = this;
-        repoObjectsTree.UICommandsSource = this;
         notificationBarBisectInProgress.UICommandsSource = this;
         notificationBarGitActionInProgress.UICommandsSource = this;
         Activated += (_, e) => OnActivated(e);
@@ -1225,6 +1223,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         if (isValidWorkingDir)
         {
             HideDashboard();
+            toolStripWorktrees.IsEnabled = true;
 
             _windowsJumpListManager?.AddToRecent(module.WorkingDir);
 
@@ -1247,7 +1246,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         else
         {
             ShowDashboard();
-            _worktrees = [];
             toolStripWorktrees.IsEnabled = false;
             _NO_TRANSLATE_WorkingDir.RefreshContent();
             lblRepoPath.Text = "No git repository";
@@ -1501,45 +1499,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
     }
 
-    private void RefreshLeftPanel(
-        Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs,
-        Lazy<IReadOnlyCollection<GitRevision>> getStashRevs,
-        bool forceRefresh)
+    private void RefreshLeftPanel(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh)
     {
-        IGitModule module = Module;
-        string workingDirectory = module.WorkingDir;
-        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
-        _loadOperations.FileAndForget(async () =>
-        {
-            await TaskScheduler.Default;
-            cancellationToken.ThrowIfCancellationRequested();
-            IReadOnlyList<IGitRef> refs = getRefs(RefsFilter.NoFilter);
-            IReadOnlyCollection<GitRevision> stashes = getStashRevs.Value;
-            string currentBranch = module.GetSelectedBranch();
-            IReadOnlyList<Remote> enabledRemotes = await module.GetRemotesAsync();
-            IReadOnlyList<GitWorktree> worktrees = module.GetWorktrees();
-            ConfigFileRemoteSettingsManager remotesManager = new(() => module);
-            IReadOnlyList<Remote> disabledRemotes = remotesManager.GetDisabledRemotes();
-            cancellationToken.ThrowIfCancellationRequested();
-            await GitUI.LeftPanel.Tree.WaitForIdleAsync(cancellationToken);
-            await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            if (!ReferenceEquals(Module, module))
-            {
-                return;
-            }
-
-            _worktrees = worktrees;
-            toolStripWorktrees.IsEnabled = true;
-            repoObjectsTree.SetRefs(
-                refs,
-                stashes,
-                currentBranch,
-                enabledRemotes,
-                disabledRemotes,
-                remotesManager,
-                worktrees,
-                workingDirectory);
-        });
+        repoObjectsTree.RefreshRevisionsLoading(getRefs, getStashRevs, forceRefresh);
     }
 
     private void CheckoutToolStripMenuItemClick(object sender, EventArgs e)

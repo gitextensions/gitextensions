@@ -46,30 +46,17 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private readonly List<Tree> _rootNodes = [];
     private readonly SearchControl<string> _txtBranchCriterion;
-    private IGitUICommandsSource? _commandsSource;
     private LocalBranchTree _branchesTree = null!;
     private RemoteBranchTree _remotesTree = null!;
-    private IReadOnlyList<IGitRef> _currentRefs = [];
-    private IReadOnlyCollection<GitRevision> _currentStashes = [];
-    private string _currentBranch = string.Empty;
-    private IReadOnlyList<GitWorktree> _currentWorktrees = [];
-    private string _currentWorkingDirectory = string.Empty;
-    private IReadOnlyList<Remote>? _disabledRemotes;
-    private IReadOnlyList<Remote>? _enabledRemotes;
-
-    private bool _includeStashes;
-    private Action<string, ObjectId, ObjectId>? _openRepository;
-    private IConfigFileRemoteSettingsManager? _remotesManager;
     private TagTree _tagTree = null!;
-    private ISubmoduleStatusProvider? _submoduleStatusProvider;
     private StashTree _stashTree = null!;
-    private readonly SubmoduleTree _submoduleTree;
-    private readonly WorktreeTree _worktreeTree;
+    private SubmoduleTree _submoduleTree = null!;
+    private WorktreeTree _worktreeTree = null!;
     private List<TreeViewItem>? _searchResult;
+    private Action<string, ObjectId, ObjectId>? _openRepository;
+    private ISubmoduleStatusProvider? _submoduleStatusProvider;
     private int _selectionUpdateDepth;
     private KeyModifiers _selectionModifiers;
-
-    internal IGitUICommandsSource? CommandsSource => _commandsSource;
 
     /// <summary>Occurs when the selected node changes.</summary>
     public event EventHandler? NodeSelectionChanged;
@@ -87,7 +74,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             _ => null,
         };
 
-    private NodeBase? SelectedNode => (treeMain.SelectedItem as TreeViewItem)?.Tag as NodeBase;
+    internal NodeBase? SelectedNode => (treeMain.SelectedItem as TreeViewItem)?.Tag as NodeBase;
 
     private StashNode? SelectedStashNode => SelectedNode as StashNode;
 
@@ -102,110 +89,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     internal void OpenRepository(string path, ObjectId selectedId = default, ObjectId firstId = default)
         => _openRepository?.Invoke(path, selectedId, firstId);
-
-    /// <summary>Fills the tree from the repository refs.</summary>
-    public void SetRefs(IReadOnlyList<IGitRef> refs)
-        => SetRefs(refs, [], includeStashes: false, currentBranch: string.Empty, enabledRemotes: null, disabledRemotes: null, remotesManager: null);
-
-    /// <summary>Fills the tree from repository refs and stash revisions.</summary>
-    public void SetRefs(IReadOnlyList<IGitRef> refs, IReadOnlyCollection<GitRevision> stashes)
-        => SetRefs(refs, stashes, includeStashes: true, currentBranch: string.Empty, enabledRemotes: null, disabledRemotes: null, remotesManager: null);
-
-    /// <summary>Fills the tree and marks the currently checked-out local branch.</summary>
-    public void SetRefs(IReadOnlyList<IGitRef> refs, IReadOnlyCollection<GitRevision> stashes, string currentBranch)
-        => SetRefs(refs, stashes, includeStashes: true, currentBranch, enabledRemotes: null, disabledRemotes: null, remotesManager: null);
-
-    /// <summary>Fills the tree with configured enabled and inactive remotes, including remotes without branches.</summary>
-    public void SetRefs(
-        IReadOnlyList<IGitRef> refs,
-        IReadOnlyCollection<GitRevision> stashes,
-        string currentBranch,
-        IReadOnlyList<Remote> enabledRemotes,
-        IReadOnlyList<Remote> disabledRemotes,
-        IConfigFileRemoteSettingsManager remotesManager,
-        IReadOnlyList<GitWorktree>? worktrees = null,
-        string currentWorkingDirectory = "")
-        => SetRefs(refs, stashes, includeStashes: true, currentBranch, enabledRemotes, disabledRemotes, remotesManager, worktrees, currentWorkingDirectory);
-
-    private void SetRefs(
-        IReadOnlyList<IGitRef> refs,
-        IReadOnlyCollection<GitRevision> stashes,
-        bool includeStashes,
-        string currentBranch,
-        IReadOnlyList<Remote>? enabledRemotes,
-        IReadOnlyList<Remote>? disabledRemotes,
-        IConfigFileRemoteSettingsManager? remotesManager,
-        IReadOnlyList<GitWorktree>? worktrees = null,
-        string currentWorkingDirectory = "")
-        => UpdateNodes(() =>
-    {
-        bool moduleChanged = !string.IsNullOrEmpty(_currentWorkingDirectory)
-            && !string.IsNullOrEmpty(currentWorkingDirectory)
-            && !IsSameWorkingDirectory(_currentWorkingDirectory, currentWorkingDirectory);
-        if (moduleChanged)
-        {
-            PrepareForModuleChange();
-        }
-
-        _currentStashes = stashes;
-        _currentRefs = refs;
-        _includeStashes = includeStashes;
-        _currentBranch = currentBranch;
-        _enabledRemotes = enabledRemotes;
-        _disabledRemotes = disabledRemotes;
-        _remotesManager = remotesManager;
-        _currentWorktrees = worktrees ?? [];
-        _currentWorkingDirectory = currentWorkingDirectory;
-
-        HashSet<string> expandedNodes =
-        [
-            .. _rootNodes
-                .SelectMany(tree => tree.DescendantsAndSelf())
-                .Where(node => node.TreeViewNode.IsExpanded)
-                .Select(GetNodeIdentity),
-        ];
-        HashSet<string> selectedNodes = [.. _rootNodes.SelectMany(tree => tree.GetSelectedNodes()).Select(GetNodeIdentity)];
-        string? highlightedNode = SelectedNode is { } caret ? GetNodeIdentity(caret) : null;
-        bool restoreState = _rootNodes.Count > 0 && !moduleChanged;
-
-        ClearSearchResults();
-        foreach (Tree tree in _rootNodes.Where(tree => !ReferenceEquals(tree, _submoduleTree) && !ReferenceEquals(tree, _worktreeTree)))
-        {
-            tree.Dispose();
-        }
-
-        _rootNodes.Clear();
-
-        CreateBranches();
-        CreateRemotes();
-        CreateWorktrees();
-        CreateTags();
-        CreateSubmodules();
-        CreateStashes();
-
-        RefreshRevisionsLoaded();
-        if (restoreState)
-        {
-            NodeBase[] nodes = [.. _rootNodes.SelectMany(tree => tree.DescendantsAndSelf())];
-            foreach (NodeBase node in nodes)
-            {
-                node.TreeViewNode.IsExpanded = expandedNodes.Contains(GetNodeIdentity(node));
-            }
-
-            foreach (NodeBase node in nodes.Where(node => selectedNodes.Contains(GetNodeIdentity(node))))
-            {
-                node.Select(true);
-            }
-
-            treeMain.SelectedItem = nodes.FirstOrDefault(node => GetNodeIdentity(node) == highlightedNode)?.TreeViewNode;
-        }
-
-        if (treeMain.SelectedItem is null
-            && _branchesTree.DepthEnumerator<LocalBranchNode>().FirstOrDefault(node => node.IsCurrent) is { } current)
-        {
-            treeMain.SelectedItem = current.TreeViewNode;
-        }
-    });
 
     internal void UpdateNodes(Action update)
     {
@@ -232,8 +115,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         Grid.SetColumn(_txtBranchCriterion, 0);
         branchSearchPanel.Children.Add(_txtBranchCriterion);
         tsbCollapseAll.Icon = Images.CollapseAll.AdaptLightness();
-        _submoduleTree = new SubmoduleTree(this);
-        _worktreeTree = new WorktreeTree(this);
         HotkeysEnabled = true;
         RegisterContextActions();
         treeMain.AddHandler(InputElement.KeyDownEvent, OnTreeKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
@@ -263,13 +144,12 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         tsbShowTags.IsChecked = AppSettings.RepoObjectsTreeShowTags;
         tsbShowSubmodules.IsChecked = AppSettings.RepoObjectsTreeShowSubmodules;
         tsbShowStashes.IsChecked = AppSettings.RepoObjectsTreeShowStashes;
-        FixInvalidTreeToPositionIndices();
 
-        AttachedToLogicalTree += (_, _) => _submoduleTree.Attach(_submoduleStatusProvider);
+        AttachedToLogicalTree += (_, _) => _submoduleTree?.Attach(_submoduleStatusProvider);
         DetachedFromLogicalTree += (_, _) =>
         {
             _selectionCancellationTokenSequence.CancelCurrent();
-            _submoduleTree.Detach();
+            _submoduleTree?.Detach();
         };
 
         InitializeComplete();
@@ -353,19 +233,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             {
                 node.Select(false);
             }
-
-            tree.OnModuleChanged();
         }
-    }
-
-    private static bool IsSameWorkingDirectory(string first, string second)
-    {
-        string firstNormalized = first.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        string secondNormalized = second.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        StringComparison comparison = OperatingSystem.IsWindows()
-            ? StringComparison.OrdinalIgnoreCase
-            : StringComparison.Ordinal;
-        return string.Equals(firstNormalized, secondNormalized, comparison);
     }
 
     public void Initialize(
@@ -405,17 +273,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         Lazy<IReadOnlyCollection<GitRevision>> getStashRevs,
         bool forceRefresh)
     {
-        IReadOnlyList<IGitRef> refs = getRefs(RefsFilter.NoFilter);
-        SetRefs(
-            refs,
-            getStashRevs.Value,
-            includeStashes: true,
-            Module.GetSelectedBranch(emptyIfDetached: true),
-            _enabledRemotes,
-            _disabledRemotes,
-            _remotesManager,
-            _currentWorktrees,
-            _currentWorkingDirectory);
+        _branchesTree.Refresh(getRefs);
+        _remotesTree.Refresh(getRefs);
+        _worktreeTree.Refresh();
+        _tagTree.Refresh(getRefs);
+        _stashTree.Refresh(getStashRevs);
     }
 
     // Native tree state uses the stable node name/path, not its changing branch/status text.
@@ -530,7 +392,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
-    private void ApplyRoots()
+    internal void ApplyRoots()
     {
         foreach (NodeBase node in _rootNodes.SelectMany(tree => tree.DescendantsAndSelf()))
         {
@@ -551,6 +413,18 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         if (!treeMain.Items.Cast<TreeViewItem>().SequenceEqual(visibleRoots))
         {
             treeMain.ItemsSource = visibleRoots;
+        }
+
+        // Framework constraint: Avalonia keeps a removed item selected, where the native tree drops it.
+        TreeViewItem? shownRoot = treeMain.SelectedItem as TreeViewItem;
+        while (shownRoot?.Parent is TreeViewItem parent)
+        {
+            shownRoot = parent;
+        }
+
+        if (shownRoot is not null && !visibleRoots.Contains(shownRoot))
+        {
+            treeMain.SelectedItem = null;
         }
     }
 
@@ -666,15 +540,21 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _selectionCancellationTokenSequence.CancelCurrent();
 
         base.OnUICommandsSourceSet(source);
-        _commandsSource = source;
-        _submoduleTree.SetUICommandsSource(source);
-        _worktreeTree.SetUICommandsSource(source);
-        foreach (Tree tree in _rootNodes)
-        {
-            tree.SetUICommandsSource(source);
-        }
 
+        // Framework constraint: Avalonia raises selection changes on the owning TreeView, so the
+        // module change clears every tree's selection inside the selection-notification boundary.
         source.UICommandsChanged += (_, _) => UpdateNodes(PrepareForModuleChange);
+
+        CreateBranches();
+        CreateRemotes();
+        CreateWorktrees();
+        CreateTags();
+        CreateSubmodules();
+        CreateStashes();
+
+        FixInvalidTreeToPositionIndices();
+        ShowEnabledTrees();
+
         _submoduleStatusProvider = source.UICommands.GetService(typeof(ISubmoduleStatusProvider)) as ISubmoduleStatusProvider;
         _submoduleTree.Attach(_submoduleStatusProvider);
         if (source.UICommands.GetService(typeof(IHotkeySettingsLoader)) is not null)
@@ -693,50 +573,74 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private void CreateBranches()
     {
-        IGitRef[] branches = [.. _currentRefs.Where(gitRef => gitRef.IsHead && !gitRef.IsTag)];
-        _branchesTree = new LocalBranchTree(this, branches, _currentBranch, _aheadBehindDataProvider, _refsSource, _revisionGridInfo);
+        TreeNode rootNode = new()
+        {
+            Header = CreateHeader(TranslatedStrings.Branches, Images.BranchLocalRoot),
+            Name = TranslatedStrings.Branches,
+        };
+
+        _branchesTree = new LocalBranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource, _revisionGridInfo) { OwnerControl = this };
         AddTree(_branchesTree);
     }
 
     private void CreateRemotes()
     {
-        IGitRef[] remotes = [.. _currentRefs.Where(gitRef => gitRef.IsRemote)];
-        _remotesTree = new RemoteBranchTree(
-            this,
-            remotes,
-            _enabledRemotes,
-            _disabledRemotes,
-            _remotesManager,
-            _aheadBehindDataProvider,
-            _refsSource);
+        TreeNode rootNode = new()
+        {
+            Header = CreateHeader(TranslatedStrings.Remotes, Images.BranchRemoteRoot),
+            Name = TranslatedStrings.Remotes,
+        };
+
+        _remotesTree = new RemoteBranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource) { OwnerControl = this };
         AddTree(_remotesTree);
     }
 
     private void CreateWorktrees()
     {
-        _worktreeTree.Load(_currentWorktrees, _currentWorkingDirectory);
+        TreeNode rootNode = new()
+        {
+            Header = CreateHeader(TranslatedStrings.Worktrees, Images.WorkTree),
+            Name = TranslatedStrings.Worktrees,
+        };
+
+        _worktreeTree = new WorktreeTree(rootNode, UICommandsSource) { OwnerControl = this };
         AddTree(_worktreeTree);
     }
 
     private void CreateTags()
     {
-        IGitRef[] tags = [.. _currentRefs.Where(gitRef => gitRef.IsTag && !gitRef.IsDereference)];
-        _tagTree = new TagTree(this, tags, _refsSource);
+        TreeNode rootNode = new()
+        {
+            Header = CreateHeader(TranslatedStrings.Tags, Images.TagHorizontal),
+            Name = TranslatedStrings.Tags,
+        };
+
+        _tagTree = new TagTree(rootNode, UICommandsSource, _refsSource) { OwnerControl = this };
         AddTree(_tagTree);
     }
 
     private void CreateSubmodules()
     {
+        TreeNode rootNode = new()
+        {
+            Header = CreateHeader(TranslatedStrings.Submodules, Images.FolderSubmodule),
+            Name = TranslatedStrings.Submodules,
+        };
+
+        _submoduleTree = new SubmoduleTree(rootNode, UICommandsSource) { OwnerControl = this };
         AddTree(_submoduleTree);
     }
 
     private void CreateStashes()
     {
-        _stashTree = new StashTree(this, _currentStashes, _refsSource);
-        if (_includeStashes)
+        TreeNode rootNode = new()
         {
-            AddTree(_stashTree);
-        }
+            Header = CreateHeader(TranslatedStrings.Stashes, Images.Stash),
+            Name = TranslatedStrings.Stashes,
+        };
+
+        _stashTree = new StashTree(rootNode, UICommandsSource, _refsSource) { OwnerControl = this };
+        AddTree(_stashTree);
     }
 
     private void AddTree(Tree tree)
@@ -749,6 +653,8 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
 
         ApplyRoots();
+
+        tree.Attached();
     }
 
     internal void FocusTree()
@@ -1142,56 +1048,19 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             _repoObjectsTree = repoObjectsTree;
         }
 
-        internal Avalonia.Controls.ContextMenu ContextMenu => _repoObjectsTree.menuMain;
+        public Avalonia.Controls.ContextMenu ContextMenu => _repoObjectsTree.menuMain;
+        public TreeView TreeView => _repoObjectsTree.treeMain;
 
         internal IEnumerable<TreeViewItem> LogicalSelection
             => _repoObjectsTree.GetSelectedNodes().Select(node => node.TreeViewNode);
 
-        internal TreeView TreeView => _repoObjectsTree.treeMain;
-
         internal SearchControl<string> SearchBox => _repoObjectsTree._txtBranchCriterion;
 
-        internal Button SearchButton => _repoObjectsTree.btnSearch;
-
-        internal ToggleButton ShowBranchesButton => _repoObjectsTree.tsbShowBranches;
-
-        internal ToggleButton ShowRemotesButton => _repoObjectsTree.tsbShowRemotes;
-
-        internal ToggleButton ShowWorktreesButton => _repoObjectsTree.tsbShowWorktrees;
-
-        internal ToggleButton ShowTagsButton => _repoObjectsTree.tsbShowTags;
-
-        internal ToggleButton ShowSubmodulesButton => _repoObjectsTree.tsbShowSubmodules;
-
-        internal ToggleButton ShowStashesButton => _repoObjectsTree.tsbShowStashes;
-
-        internal MenuItem StashAllMenuItem => _repoObjectsTree.mnubtnStashAllFromRootNode;
-
-        internal MenuItem StashStagedMenuItem => _repoObjectsTree.mnubtnStashStagedFromRootNode;
-
-        internal MenuItem ManageStashesMenuItem => _repoObjectsTree.mnubtnManageStashFromRootNode;
-
-        internal MenuItem OpenStashMenuItem => _repoObjectsTree.mnubtnOpenStash;
-
-        internal MenuItem ApplyStashMenuItem => _repoObjectsTree.mnubtnApplyStash;
-
-        internal MenuItem PopStashMenuItem => _repoObjectsTree.mnubtnPopStash;
-
-        internal MenuItem DropStashMenuItem => _repoObjectsTree.mnubtnDropStash;
-
-        internal MenuItem CreateWorktreeMenuItem => _repoObjectsTree.mnubtnCreateWorktreeFromRootNode;
-
-        internal MenuItem PruneWorktreesMenuItem => _repoObjectsTree.mnubtnPruneWorktreesFromRootNode;
-
-        internal MenuItem ManageWorktreesMenuItem => _repoObjectsTree.mnubtnManageWorktreesFromRootNode;
-
-        internal MenuItem OpenWorktreeMenuItem => _repoObjectsTree.mnubtnOpenWorktree;
-
-        internal MenuItem DeleteWorktreeMenuItem => _repoObjectsTree.mnubtnDeleteWorktree;
-
-        internal MenuItem CopyWorktreePathMenuItem => _repoObjectsTree.mnubtnCopyWorktreePath;
-
-        internal MenuItem ShowWorktreeInFolderMenuItem => _repoObjectsTree.mnubtnShowWorktreeInFolder;
+        public void OpenContextMenu()
+        {
+            _repoObjectsTree.contextMenu_Opening(ContextMenu, new CancelEventArgs());
+            _repoObjectsTree.contextMenu_Opened(ContextMenu, new EventArgs());
+        }
 
         internal MenuItem GetActionMenuItem(string action)
             => _repoObjectsTree.GetActionMenuItem(action);
@@ -1199,21 +1068,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         internal Nodes GetNodes(TreeViewItem item)
             => ((NodeBase)item.Tag!).Nodes;
 
-        internal bool OpenContextMenu()
-        {
-            System.ComponentModel.CancelEventArgs eventArgs = new();
-            _repoObjectsTree.contextMenu_Opening(_repoObjectsTree.menuMain, eventArgs);
-            return !eventArgs.Cancel;
-        }
-
         internal void Search()
             => _repoObjectsTree.DoSearch();
 
         internal void SetSubmodules(SubmoduleInfoResult result)
             => _repoObjectsTree._submoduleTree.Load(result);
-
-        internal void SetWorktrees(IReadOnlyList<GitWorktree> worktrees, string currentWorkingDirectory)
-            => _repoObjectsTree._worktreeTree.Load(worktrees, currentWorkingDirectory);
 
         internal void SetSelectionModifiers(KeyModifiers modifiers)
             => _repoObjectsTree._selectionModifiers = modifiers;
@@ -1227,7 +1086,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         /// simulates holding <see cref="Keys.Shift"/> while clicking.</param>
         /// <exception cref="ArgumentException">Thrown if either <paramref name="nodeTexts"/> don't point to an existing node
         /// or the selected node is not of type <typeparamref name="TExpected"/>.</exception>
-        internal void SelectNode<TExpected>(string[] nodeTexts, bool multiple = false, bool includingDescendants = false)
+        public void SelectNode<TExpected>(string[] nodeTexts, bool multiple = false, bool includingDescendants = false)
             where TExpected : NodeBase
         {
             IEnumerable<TreeViewItem> nodes = _repoObjectsTree.treeMain.Items.Cast<TreeViewItem>();
@@ -1255,6 +1114,24 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
             static string? GetText(TreeViewItem node)
                 => (node.Header as StackPanel)?.Children.OfType<TextBlock>().FirstOrDefault()?.Text;
+        }
+
+        public void ReorderTreeNode(TreeNode node, bool up)
+        {
+            _repoObjectsTree.ReorderTreeNode(node, up);
+        }
+
+        public void SetTreeVisibleByIndex(int index, bool visible)
+        {
+            Tree tree = _repoObjectsTree.GetTreeToPositionIndex().FirstOrDefault(kvp => kvp.Value == index).Key;
+
+            if (tree.IsEnabled == visible)
+            {
+                return;
+            }
+
+            // The portable tree shows the roots whose setting is enabled.
+            _repoObjectsTree.ToggleTree(tree.Kind, visible);
         }
     }
 }

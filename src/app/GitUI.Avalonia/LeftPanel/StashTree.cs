@@ -1,20 +1,16 @@
 using GitCommands;
-using GitExtensions.Extensibility.Git;
-using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
-
-using ResourceManager;
+using Microsoft.VisualStudio.Threading;
+using TreeNode = Avalonia.Controls.TreeViewItem;
 
 namespace GitUI.LeftPanel;
 
-/// <summary>Repository-tree root for stored stashes.</summary>
 internal sealed class StashTree : BaseRevisionTree
 {
-    public StashTree(RepoObjectsTree owner, IReadOnlyCollection<GitRevision> stashes, ICheckRefs? refsSource = null)
-        : base(owner, RepoTreeKind.Stashes, TranslatedStrings.Stashes, Images.Stash, refsSource)
+    public StashTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
+        : base(treeNode, uiCommands, refsSource)
     {
-        Refresh(new Lazy<IReadOnlyCollection<GitRevision>>(() => stashes));
     }
 
     internal void Refresh(Lazy<IReadOnlyCollection<GitRevision>> getStashRevs)
@@ -24,22 +20,15 @@ internal sealed class StashTree : BaseRevisionTree
             return;
         }
 
-        OwnerControl.UpdateNodes(() =>
-        {
-            TreeSelectionState selected = OwnerControl.CaptureSelectionState(this);
-            bool wasExpanded = TreeViewNode.IsExpanded;
-            TreeViewNode.Items.Clear();
-            Nodes.Clear();
-            Nodes.AddNodes(FillStashTree(getStashRevs.Value, CancellationToken.None));
-            Complete(TranslatedStrings.Stashes, Images.Stash, expanded: wasExpanded);
-            OwnerControl.RestoreSelectionState(this, selected);
-        });
+        ReloadNodesDetached((_, cancellationToken) => LoadNodesAsync(getStashRevs, cancellationToken), getRefs: null!);
     }
 
-    private Task<Nodes> LoadNodesAsync(Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, CancellationToken token)
+    private async Task<Nodes> LoadNodesAsync(Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, CancellationToken token)
     {
+        await TaskScheduler.Default;
         token.ThrowIfCancellationRequested();
-        return Task.FromResult(FillStashTree(getStashRevs.Value, token));
+
+        return FillStashTree(getStashRevs.Value, token);
     }
 
     private Nodes FillStashTree(IReadOnlyCollection<GitRevision> stashes, CancellationToken token)
@@ -47,7 +36,7 @@ internal sealed class StashTree : BaseRevisionTree
         Nodes nodes = new(this);
         Dictionary<string, BaseRevisionNode> pathToNodes = [];
 
-        foreach (GitRevision stash in stashes.Where(stash => !string.IsNullOrEmpty(stash.ReflogSelector)))
+        foreach (GitRevision stash in stashes)
         {
             token.ThrowIfCancellationRequested();
 

@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using GitUI.UserControls.RevisionGrid;
 using Microsoft.VisualStudio.Threading;
+using TreeNode = Avalonia.Controls.TreeViewItem;
 
 namespace GitUI.LeftPanel;
 
@@ -11,15 +12,10 @@ internal abstract class BaseRevisionTree : Tree
         ? new ExclusiveTaskRunner(new TaskManager(new JoinableTaskContext()))
         : ThreadHelper.CreateExclusiveTaskRunner();
 
-    protected readonly ICheckRefs? _refsSource;
+    protected readonly ICheckRefs _refsSource;
 
-    public BaseRevisionTree(
-        RepoObjectsTree owner,
-        RepoTreeKind kind,
-        string caption,
-        Avalonia.Media.IImage icon,
-        ICheckRefs? refsSource)
-        : base(owner, kind, caption, icon)
+    public BaseRevisionTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
+        : base(treeNode, uiCommands)
     {
         _refsSource = refsSource;
     }
@@ -38,7 +34,7 @@ internal abstract class BaseRevisionTree : Tree
 
     internal virtual void UpdateVisibility()
     {
-        if (!IsAttached || _refsSource is not { } refsSource)
+        if (!IsAttached)
         {
             return;
         }
@@ -66,7 +62,7 @@ internal abstract class BaseRevisionTree : Tree
                     continue;
                 }
 
-                bool isVisible = refsSource.Contains(node.ObjectId);
+                bool isVisible = _refsSource.Contains(node.ObjectId);
                 if (node.Visible != isVisible)
                 {
                     node.Visible = isVisible;

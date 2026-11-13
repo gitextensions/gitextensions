@@ -69,13 +69,4 @@ public partial class FormDashboardCategoryTitle : GitExtensionsForm
     {
         btnOk.IsEnabled = txtCategoryName.Text != Category;
     }
-
-    internal TestAccessor GetTestAccessor() => new(this);
-
-    internal readonly struct TestAccessor(FormDashboardCategoryTitle form)
-    {
-        internal Avalonia.Controls.TextBox CategoryName => form.txtCategoryName;
-        internal Avalonia.Controls.Button Ok => form.btnOk;
-        internal Avalonia.Controls.Button Cancel => form.btnCancel;
-    }
 }

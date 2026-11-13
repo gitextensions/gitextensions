@@ -5,9 +5,7 @@ using GitCommands.Submodules;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitUI.Properties;
-
-using ResourceManager;
+using TreeNode = Avalonia.Controls.TreeViewItem;
 
 namespace GitUI.LeftPanel;
 
@@ -20,10 +18,9 @@ internal sealed class SubmoduleTree : Tree
         ? StringComparer.OrdinalIgnoreCase
         : StringComparer.Ordinal;
 
-    public SubmoduleTree(RepoObjectsTree owner)
-        : base(owner, RepoTreeKind.Submodules, TranslatedStrings.Submodules, Images.FolderSubmodule)
+    public SubmoduleTree(TreeNode treeNode, IGitUICommandsSource commandsSource)
+        : base(treeNode, commandsSource)
     {
-        Complete(TranslatedStrings.Submodules, Images.FolderSubmodule, expanded: true);
     }
 
     public override void Dispose()
@@ -109,7 +106,9 @@ internal sealed class SubmoduleTree : Tree
         Nodes loadedNodes = FillSubmoduleTree(result);
         Nodes.AddNodes(loadedNodes);
         _currentNodes = Nodes;
-        Complete(TranslatedStrings.Submodules, Images.FolderSubmodule, expanded: true);
+        Nodes.FillTreeViewNode(TreeViewNode);
+        OwnerControl.ApplyRoots();
+        TreeViewNode.IsExpanded = true;
 
         foreach (NodeBase node in DescendantsAndSelf())
         {

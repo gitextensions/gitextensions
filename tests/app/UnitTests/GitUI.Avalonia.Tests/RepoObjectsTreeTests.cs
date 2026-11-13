@@ -144,7 +144,7 @@ public sealed class RepoObjectsTreeTests
             accessor.TreeView.Focus(NavigationMethod.Tab).Should().BeTrue();
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
             accessor.TreeView.IsKeyboardFocusWithin.Should().BeTrue();
-            accessor.SearchButton.IsFocused.Should().BeFalse();
+            control.btnSearch.IsFocused.Should().BeFalse();
             accessor.SearchBox.Margin.Should().Be(default(Avalonia.Thickness));
             accessor.SearchBox.Bounds.Height.Should().Be(23);
             accessor.SearchBox.Bounds.Y.Should().BeApproximately(1, 0.5);
@@ -442,7 +442,7 @@ public sealed class RepoObjectsTreeTests
             commands.Module.Returns(Substitute.For<IGitModule>());
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             control.SetRefs([CreateRef("refs/heads/main"), CreateRef("refs/heads/feature")], [], "main");
             window.Content = control;
             window.Show();
@@ -575,7 +575,7 @@ public sealed class RepoObjectsTreeTests
             accessor.SearchBox.Text = "feature";
             accessor.Search();
             TreeViewItem match = (TreeViewItem)accessor.TreeView.SelectedItem!;
-            (focused ? (InputElement)accessor.TreeView : accessor.SearchButton).Focus().Should().BeTrue();
+            (focused ? (InputElement)accessor.TreeView : control.btnSearch).Focus().Should().BeTrue();
             window.UpdateLayout();
             Border selection = match.GetVisualDescendants().OfType<Border>()
                 .Single(border => border.Name == "PART_NativeSelectionBorder" && border.FindAncestorOfType<TreeViewItem>() == match);
@@ -646,7 +646,7 @@ public sealed class RepoObjectsTreeTests
             commands.Module.Returns(Substitute.For<IGitModule>());
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             control.SetRefs(
                 [CreateRef("refs/heads/main")],
                 [],
@@ -773,14 +773,14 @@ public sealed class RepoObjectsTreeTests
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
             accessor.SelectNode<LocalBranchNode>(["Branches", "main"]);
             accessor.SelectNode<TagNode>(["Tags", "v1"], multiple: true);
-            accessor.ShowTagsButton.IsChecked = false;
-            Click(accessor.ShowTagsButton);
+            control.tsbShowTags.IsChecked = false;
+            Click(control.tsbShowTags);
             accessor.LogicalSelection.Select(HeaderText).Should().Equal("main");
 
             control.SetRefs(refs);
             accessor.LogicalSelection.Select(HeaderText).Should().Equal("main");
-            accessor.ShowTagsButton.IsChecked = true;
-            Click(accessor.ShowTagsButton);
+            control.tsbShowTags.IsChecked = true;
+            Click(control.tsbShowTags);
             accessor.LogicalSelection.Select(HeaderText).Should().BeEquivalentTo("main", "v1");
         }
         finally
@@ -835,16 +835,17 @@ public sealed class RepoObjectsTreeTests
             control.SetRefs([], []);
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
 
-            accessor.ShowTagsButton.IsChecked = false;
-            Click(accessor.ShowTagsButton);
+            control.tsbShowTags.IsChecked = false;
+            Click(control.tsbShowTags);
             AppSettings.RepoObjectsTreeShowTags.Should().BeFalse();
             accessor.TreeView.Items.Cast<TreeViewItem>().Select(HeaderText).Should().NotContain(text => text.StartsWith("Tags", StringComparison.Ordinal));
 
-            accessor.ShowTagsButton.IsChecked = true;
-            Click(accessor.ShowTagsButton);
+            control.tsbShowTags.IsChecked = true;
+            Click(control.tsbShowTags);
             TreeViewItem tags = accessor.TreeView.Items.Cast<TreeViewItem>().Single(item => HeaderText(item).StartsWith("Tags", StringComparison.Ordinal));
             SelectNode<TagTree>(accessor, tags);
-            accessor.OpenContextMenu().Should().BeTrue();
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
             MenuItem moveUp = accessor.GetActionMenuItem("MoveUp");
             moveUp.IsVisible.Should().BeTrue();
             int previousTagIndex = AppSettings.RepoObjectsTreeTagsIndex;
@@ -853,13 +854,13 @@ public sealed class RepoObjectsTreeTests
             AppSettings.RepoObjectsTreeTagsIndex.Should().Be(previousWorktreeIndex);
             AppSettings.RepoObjectsTreeWorktreesIndex.Should().Be(previousTagIndex);
 
-            accessor.ShowSubmodulesButton.IsChecked = false;
-            Click(accessor.ShowSubmodulesButton);
+            control.tsbShowSubmodules.IsChecked = false;
+            Click(control.tsbShowSubmodules);
             AppSettings.RepoObjectsTreeShowSubmodules.Should().BeFalse();
             accessor.TreeView.Items.Cast<TreeViewItem>().Select(HeaderText).Should().NotContain(text => text.StartsWith("Submodules", StringComparison.Ordinal));
 
-            accessor.ShowWorktreesButton.IsChecked = false;
-            Click(accessor.ShowWorktreesButton);
+            control.tsbShowWorktrees.IsChecked = false;
+            Click(control.tsbShowWorktrees);
             AppSettings.RepoObjectsTreeShowWorktrees.Should().BeFalse();
             accessor.TreeView.Items.Cast<TreeViewItem>().Select(HeaderText).Should().NotContain(text => text.StartsWith("Worktrees", StringComparison.Ordinal));
         }
@@ -883,13 +884,14 @@ public sealed class RepoObjectsTreeTests
             commands.Module.Returns(module);
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             control.SetRefs([CreateRef("refs/heads/feature")], [], "main");
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
             TreeViewItem branch = accessor.TreeView.Items.Cast<TreeViewItem>().First().Items.Cast<TreeViewItem>().Single();
 
             SelectNode<LocalBranchNode>(accessor, branch);
-            accessor.OpenContextMenu().Should().BeTrue();
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
             accessor.GetActionMenuItem("Copy").Should().BeOfType<CopyContextMenuItem>();
             MenuItem reset = accessor.GetActionMenuItem("Reset");
             MenuItem rename = accessor.GetActionMenuItem("RenameBranch");
@@ -927,7 +929,7 @@ public sealed class RepoObjectsTreeTests
             commands.Module.Returns(Substitute.For<IGitModule>());
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             control.Initialize(_ => { });
             control.SetRefs([CreateRef("refs/heads/main"), CreateRef("refs/heads/feature"), CreateRef("refs/tags/v1")], [], "main");
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
@@ -949,7 +951,8 @@ public sealed class RepoObjectsTreeTests
 
             accessor.LogicalSelection.Should().HaveCount(logicalSelectionCount);
             accessor.TreeView.SelectedItems!.Cast<TreeViewItem>().Should().Equal(feature);
-            accessor.OpenContextMenu().Should().Be(logicalSelectionCount > 0);
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Any(item => item.IsVisible && item.IsEnabled).Should().Be(logicalSelectionCount > 0);
             accessor.GetActionMenuItem("Reset").IsVisible.Should().Be(logicalSelectionCount == 1);
             accessor.GetActionMenuItem("Copy").IsVisible.Should().Be(logicalSelectionCount == 1);
             accessor.GetActionMenuItem("Filter").IsVisible.Should().Be(logicalSelectionCount > 0);
@@ -981,7 +984,7 @@ public sealed class RepoObjectsTreeTests
             commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             control.SetRefs(
             [
                 CreateRef("refs/heads/main"),
@@ -1003,12 +1006,14 @@ public sealed class RepoObjectsTreeTests
             tag.Tag.Should().BeAssignableTo<ICanDelete>();
 
             SelectNode<RemoteBranchNode>(accessor, remote);
-            accessor.OpenContextMenu().Should().BeTrue();
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
             accessor.GetActionMenuItem("DeleteRemoteBranch").IsVisible.Should().BeTrue();
             Click(accessor.GetActionMenuItem("DeleteRemoteBranch"));
 
             SelectNode<TagNode>(accessor, tag);
-            accessor.OpenContextMenu().Should().BeTrue();
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
             accessor.GetActionMenuItem("CheckoutTag").IsVisible.Should().BeTrue();
             Click(accessor.GetActionMenuItem("CheckoutTag"));
 
@@ -1041,7 +1046,11 @@ public sealed class RepoObjectsTreeTests
 
             control.ResortRefs(filter =>
             {
-                requestedFilters.Add(filter);
+                lock (requestedFilters)
+                {
+                    requestedFilters.Add(filter);
+                }
+
                 return filter switch
                 {
                     RefsFilter.Heads =>
@@ -1056,7 +1065,9 @@ public sealed class RepoObjectsTreeTests
                 };
             });
 
-            requestedFilters.Should().Equal(RefsFilter.Heads, RefsFilter.Remotes, RefsFilter.Tags);
+            RepoObjectsTreeTestExtensions.WaitForLoading();
+            requestedFilters.Should().BeEquivalentTo([RefsFilter.Heads, RefsFilter.Remotes, RefsFilter.Tags],
+                "like the original, each ref tree requeries its refs on its own background load");
             TreeViewItem[] roots = [.. accessor.TreeView.Items.Cast<TreeViewItem>()];
             roots.Should().Equal(originalRoots);
             TreeViewItem branches = roots.Single(item => HeaderText(item).StartsWith("Branches", StringComparison.Ordinal));
@@ -1090,7 +1101,7 @@ public sealed class RepoObjectsTreeTests
             commands.BrowseRepo.Returns(browseRepo);
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             control.SetRefs([CreateRef("refs/heads/main"), CreateRef("refs/heads/feature"), CreateRef("refs/tags/v1")], [], "main");
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
             TreeViewItem[] originalRoots = [.. accessor.TreeView.Items.Cast<TreeViewItem>()];
@@ -1174,7 +1185,7 @@ public sealed class RepoObjectsTreeTests
             commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             control.SetRefs([CreateRef("refs/heads/feature")], [], "main");
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
             TreeViewItem branches = accessor.TreeView.Items.Cast<TreeViewItem>().First();
@@ -1209,7 +1220,7 @@ public sealed class RepoObjectsTreeTests
             AppSettings.RepoObjectsTreeSubmodulesIndex = 2;
             AppSettings.RepoObjectsTreeStashesIndex = 2;
 
-            _ = new RepoObjectsTree();
+            _ = RepoObjectsTreeTestExtensions.Create(Substitute.For<IGitUICommandsSource>());
 
             int[] positions =
             [
@@ -1276,7 +1287,8 @@ public sealed class RepoObjectsTreeTests
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
             accessor.SelectNode<LocalBranchNode>(["Branches", "main"]);
             accessor.SelectNode<TagNode>(["Tags", "v1"], multiple: true);
-            accessor.OpenContextMenu().Should().BeTrue();
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
             MenuItem filterItem = accessor.GetActionMenuItem("Filter");
             filterItem.IsVisible.Should().BeTrue();
             Click(filterItem);
@@ -1350,12 +1362,7 @@ public sealed class RepoObjectsTreeTests
             commands.Module.Returns(Substitute.For<IGitModule>());
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
-            control.Initialize(
-                aheadBehindDataProvider: null,
-                filterRevisionGridBySpaceSeparatedRefs: _ => { },
-                refsSource,
-                Substitute.For<IRevisionGridInfo>());
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source, refsSource: refsSource, revisionGridInfo: Substitute.For<IRevisionGridInfo>());
             control.SetRefs([], [CreateStash()]);
             TreeViewItem stash = control.GetTestAccessor().TreeView.Items.Cast<TreeViewItem>().Last().Items.Cast<TreeViewItem>().Single();
             WaitForVisibilityUpdate(() => ReferenceEquals(StashIcon(), NativeTreeImageListImage.Create(GitUI.Properties.Images.EyeClosed)));
@@ -1412,7 +1419,7 @@ public sealed class RepoObjectsTreeTests
             commands.Module.Returns(module);
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             control.SetRefs([CreateRef("refs/heads/main")], [], "main");
             LocalBranchNode currentBranch = control.GetTestAccessor().TreeView.Items.Cast<TreeViewItem>()
                 .First()
@@ -1447,19 +1454,20 @@ public sealed class RepoObjectsTreeTests
             commands.Module.Returns(module);
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             control.SetRefs([], [CreateStash()]);
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
             TreeViewItem stashRoot = accessor.TreeView.Items.Cast<TreeViewItem>().Last();
             TreeViewItem stashItem = stashRoot.Items.Cast<TreeViewItem>().Single();
 
             SelectNode<StashTree>(accessor, stashRoot);
-            accessor.OpenContextMenu().Should().BeTrue();
-            accessor.StashAllMenuItem.IsVisible.Should().BeTrue();
-            accessor.OpenStashMenuItem.IsVisible.Should().BeFalse();
-            Click(accessor.StashAllMenuItem);
-            Click(accessor.StashStagedMenuItem);
-            Click(accessor.ManageStashesMenuItem);
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
+            control.mnubtnStashAllFromRootNode.IsVisible.Should().BeTrue();
+            control.mnubtnOpenStash.IsVisible.Should().BeFalse();
+            Click(control.mnubtnStashAllFromRootNode);
+            Click(control.mnubtnStashStagedFromRootNode);
+            Click(control.mnubtnManageStashFromRootNode);
 
             commands.Received(1).StashSave(
                 control,
@@ -1471,13 +1479,14 @@ public sealed class RepoObjectsTreeTests
             commands.Received(1).StartStashDialog(control, manageStashes: true);
 
             SelectNode<StashNode>(accessor, stashItem);
-            accessor.OpenContextMenu().Should().BeTrue();
-            accessor.StashAllMenuItem.IsVisible.Should().BeFalse();
-            accessor.OpenStashMenuItem.IsVisible.Should().BeTrue();
-            Click(accessor.OpenStashMenuItem);
-            Click(accessor.ApplyStashMenuItem);
-            Click(accessor.PopStashMenuItem);
-            Click(accessor.DropStashMenuItem);
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
+            control.mnubtnStashAllFromRootNode.IsVisible.Should().BeFalse();
+            control.mnubtnOpenStash.IsVisible.Should().BeTrue();
+            Click(control.mnubtnOpenStash);
+            Click(control.mnubtnApplyStash);
+            Click(control.mnubtnPopStash);
+            Click(control.mnubtnDropStash);
 
             commands.Received(1).StartStashDialog(control, manageStashes: true, "refs/stash@{0}");
             commands.Received(1).StashApply(control, "refs/stash@{0}");
@@ -1531,7 +1540,6 @@ public sealed class RepoObjectsTreeTests
             GitWorktree feature = new(Path.Combine(linkedRoot, "feature-a"), GitWorktreeHeadType.Branch, "2222222222222222222222222222222222222222", "feature-a", IsDeleted: false);
             GitWorktree deleted = new(Path.Combine(linkedRoot, "feature-b"), GitWorktreeHeadType.Detached, "3333333333333333333333333333333333333333", null, IsDeleted: true);
             RepoObjectsTree control = new();
-            control.SetRefs([], []);
 
             control.GetTestAccessor().SetWorktrees([main, feature, deleted], mainPath);
 
@@ -1588,7 +1596,7 @@ public sealed class RepoObjectsTreeTests
             commands.Module.Returns(module);
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             control.SetRefs([], []);
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
             accessor.SetWorktrees([main, linked], mainPath);
@@ -1598,27 +1606,30 @@ public sealed class RepoObjectsTreeTests
             TreeViewItem other = root.Items.Cast<TreeViewItem>().Last();
 
             SelectNode<WorktreeTree>(accessor, root);
-            accessor.OpenContextMenu().Should().BeTrue();
-            accessor.CreateWorktreeMenuItem.IsVisible.Should().BeTrue();
-            accessor.PruneWorktreesMenuItem.IsVisible.Should().BeTrue();
-            accessor.ManageWorktreesMenuItem.IsVisible.Should().BeTrue();
-            Click(accessor.CreateWorktreeMenuItem);
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
+            control.mnubtnCreateWorktreeFromRootNode.IsVisible.Should().BeTrue();
+            control.mnubtnPruneWorktreesFromRootNode.IsVisible.Should().BeTrue();
+            control.mnubtnManageWorktreesFromRootNode.IsVisible.Should().BeTrue();
+            Click(control.mnubtnCreateWorktreeFromRootNode);
             commands.Received(1).WorktreeCreate(control, mainPath);
 
             SelectNode<WorktreeNode>(accessor, current);
-            accessor.OpenContextMenu().Should().BeTrue();
-            accessor.OpenWorktreeMenuItem.IsVisible.Should().BeTrue();
-            accessor.OpenWorktreeMenuItem.IsEnabled.Should().BeFalse();
-            accessor.DeleteWorktreeMenuItem.IsEnabled.Should().BeFalse();
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
+            control.mnubtnOpenWorktree.IsVisible.Should().BeTrue();
+            control.mnubtnOpenWorktree.IsEnabled.Should().BeFalse();
+            control.mnubtnDeleteWorktree.IsEnabled.Should().BeFalse();
 
             SelectNode<WorktreeNode>(accessor, other);
-            accessor.OpenContextMenu().Should().BeTrue();
-            accessor.OpenWorktreeMenuItem.IsEnabled.Should().BeTrue();
-            accessor.DeleteWorktreeMenuItem.IsEnabled.Should().BeTrue();
-            accessor.CopyWorktreePathMenuItem.IsEnabled.Should().BeTrue();
-            accessor.ShowWorktreeInFolderMenuItem.IsEnabled.Should().BeTrue();
-            Click(accessor.OpenWorktreeMenuItem);
-            Click(accessor.DeleteWorktreeMenuItem);
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
+            control.mnubtnOpenWorktree.IsEnabled.Should().BeTrue();
+            control.mnubtnDeleteWorktree.IsEnabled.Should().BeTrue();
+            control.mnubtnCopyWorktreePath.IsEnabled.Should().BeTrue();
+            control.mnubtnShowWorktreeInFolder.IsEnabled.Should().BeTrue();
+            Click(control.mnubtnOpenWorktree);
+            Click(control.mnubtnDeleteWorktree);
 
             commands.Received(1).WorktreeSwitch(control, linkedPath);
             commands.Received(1).WorktreeDelete(control, linkedPath);
@@ -1628,9 +1639,10 @@ public sealed class RepoObjectsTreeTests
                 .Single(item => HeaderText(item).StartsWith("Worktrees", StringComparison.Ordinal))
                 .Items.Cast<TreeViewItem>().First();
             SelectNode<WorktreeNode>(accessor, mainFromLinked);
-            accessor.OpenContextMenu().Should().BeTrue();
-            accessor.OpenWorktreeMenuItem.IsEnabled.Should().BeTrue();
-            accessor.DeleteWorktreeMenuItem.IsEnabled.Should().BeFalse("the noncurrent main worktree still owns the entire repository");
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
+            control.mnubtnOpenWorktree.IsEnabled.Should().BeTrue();
+            control.mnubtnDeleteWorktree.IsEnabled.Should().BeFalse("the noncurrent main worktree still owns the entire repository");
         }
         finally
         {
@@ -1741,7 +1753,7 @@ public sealed class RepoObjectsTreeTests
             commands.GetService(typeof(ISubmoduleStatusProvider)).Returns(provider);
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             control.SetRefs([], []);
             SubmoduleInfoResult result = CreateSubmoduleResult(
                 Path.Combine(Path.GetTempPath(), "repo"),
@@ -1791,7 +1803,7 @@ public sealed class RepoObjectsTreeTests
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
             string? openedPath = null;
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             control.Initialize(_ => { }, (path, _, _) => openedPath = path);
             control.SetRefs([], []);
             control.GetTestAccessor().SetSubmodules(CreateSubmoduleResult(
@@ -1804,7 +1816,8 @@ public sealed class RepoObjectsTreeTests
             TreeViewItem child = top.Items.Cast<TreeViewItem>().Single().Items.Cast<TreeViewItem>().Single();
 
             SelectNode<SubmoduleNode>(accessor, child);
-            accessor.OpenContextMenu().Should().BeTrue();
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
             accessor.GetActionMenuItem("Copy").IsVisible.Should().BeFalse();
             accessor.GetActionMenuItem("Filter").IsVisible.Should().BeFalse();
             accessor.GetActionMenuItem("OpenSubmodule").IsVisible.Should().BeTrue();
@@ -1816,7 +1829,8 @@ public sealed class RepoObjectsTreeTests
             commands.Received(1).StartUpdateSubmoduleDialog(control, "libs/child", topPath);
 
             SelectNode<SubmoduleNode>(accessor, top);
-            accessor.OpenContextMenu().Should().BeTrue();
+            accessor.OpenContextMenu();
+            accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
             accessor.GetActionMenuItem("OpenSubmodule").IsVisible.Should().BeFalse();
             accessor.GetActionMenuItem("ManageSubmodules").IsVisible.Should().BeTrue();
             Click(accessor.GetActionMenuItem("ManageSubmodules"));
@@ -1853,8 +1867,7 @@ public sealed class RepoObjectsTreeTests
             refsSource.Contains(branch.ObjectId).Returns(true);
             IRevisionGridInfo revisionGridInfo = Substitute.For<IRevisionGridInfo>();
             revisionGridInfo.GetCurrentBranch().Returns("main");
-            RepoObjectsTree control = new() { UICommandsSource = source };
-            control.Initialize(aheadBehind, _ => { }, refsSource, revisionGridInfo);
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source, aheadBehind, refsSource, revisionGridInfo);
             control.SetRefs([branch], [], "main");
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
             TreeViewItem branchItem = accessor.TreeView.Items.Cast<TreeViewItem>()
@@ -1897,8 +1910,7 @@ public sealed class RepoObjectsTreeTests
             refsSource.Contains(hiddenTag.ObjectId).Returns(false);
             IRevisionGridInfo revisionGridInfo = Substitute.For<IRevisionGridInfo>();
             revisionGridInfo.GetCurrentBranch().Returns("main");
-            RepoObjectsTree control = new() { UICommandsSource = source };
-            control.Initialize(aheadBehindDataProvider: null, _ => { }, refsSource, revisionGridInfo);
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source, refsSource: refsSource, revisionGridInfo: revisionGridInfo);
             control.SetRefs([visibleBranch, hiddenTag], [], "main");
 
             control.RefreshRevisionsLoaded();

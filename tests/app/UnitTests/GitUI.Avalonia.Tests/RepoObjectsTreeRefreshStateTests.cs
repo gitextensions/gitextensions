@@ -62,13 +62,13 @@ public sealed class RepoObjectsTreeRefreshStateTests
         commands.Module.Returns(module);
         IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
         source.UICommands.Returns(commands);
-        RepoObjectsTree control = new() { UICommandsSource = source };
+        RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
         List<Exception> exceptions = [];
         void OnThreadException(object? sender, ThreadExceptionEventArgs e) => exceptions.Add(e.Exception);
         WinFormsShims.Application.ThreadException += OnThreadException;
         try
         {
-            control.GetTestAccessor().TreeView.Items.Should().BeEmpty();
+            control.GetTestAccessor().TreeView.Items.Cast<TreeViewItem>().Should().AllSatisfy(root => root.Items.Should().BeEmpty());
             control.SelectionChanged([revision]);
             using CancellationTokenSource cancellation = new(TimeSpan.FromSeconds(10));
             await ThreadHelper.JoinPendingOperationsAsync(cancellation.Token);
@@ -105,7 +105,7 @@ public sealed class RepoObjectsTreeRefreshStateTests
             commands.GetService(typeof(ISubmoduleStatusProvider)).Returns(provider);
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             try
             {
                 control.SetRefs([], []);
@@ -171,7 +171,7 @@ public sealed class RepoObjectsTreeRefreshStateTests
             commands.GetService(typeof(ISubmoduleStatusProvider)).Returns(provider);
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
-            RepoObjectsTree control = new() { UICommandsSource = source };
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
             try
             {
                 control.SetRefs([], []);
@@ -203,7 +203,7 @@ public sealed class RepoObjectsTreeRefreshStateTests
                     workerFailure.Should().BeNull();
                 }
 
-                SetVisible(accessor, visible: false);
+                SetVisible(control, visible: false);
                 if (!queuedBeforeHide)
                 {
                     Notify(provider, hiddenUpdate);
@@ -213,7 +213,7 @@ public sealed class RepoObjectsTreeRefreshStateTests
                 accessor.TreeView.Items.Cast<TreeViewItem>().Should().NotContain(root);
                 root.Items.Cast<TreeViewItem>().Should().Equal(before);
 
-                SetVisible(accessor, visible: true);
+                SetVisible(control, visible: true);
                 Dispatcher.UIThread.RunJobs();
                 accessor.TreeView.Items.Cast<TreeViewItem>().Should().Contain(root);
                 root.Items.Cast<TreeViewItem>().Should().Equal(before, "the original has no OnAttached replay of cached status");
@@ -234,10 +234,10 @@ public sealed class RepoObjectsTreeRefreshStateTests
         => provider.StatusUpdated += Raise.Event<EventHandler<SubmoduleStatusEventArgs>>(
             provider, new SubmoduleStatusEventArgs(result, structureUpdated: true, CancellationToken.None));
 
-    private static void SetVisible(RepoObjectsTree.TestAccessor accessor, bool visible)
+    private static void SetVisible(RepoObjectsTree control, bool visible)
     {
-        accessor.ShowSubmodulesButton.IsChecked = visible;
-        accessor.ShowSubmodulesButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        control.tsbShowSubmodules.IsChecked = visible;
+        control.tsbShowSubmodules.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
     }
 
     private static IGitModule CreateModule(string topPath)

@@ -3,8 +3,8 @@ using GitCommands.Git;
 using GitCommands.Remotes;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
+using TreeNode = Avalonia.Controls.TreeViewItem;
 
 namespace GitUI.LeftPanel;
 
@@ -12,27 +12,11 @@ internal sealed class RemoteBranchTree : BaseRefTree
 {
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
     private Dictionary<string, Remote> _remoteByName = [];
-    private readonly IReadOnlyList<Remote> _disabledRemotes;
-    private readonly IReadOnlyList<Remote>? _enabledRemotes;
-    private readonly IConfigFileRemoteSettingsManager? _remotesManager;
 
-    public RemoteBranchTree(
-        RepoObjectsTree owner,
-        IReadOnlyList<IGitRef> branches,
-        IReadOnlyList<Remote>? enabledRemotes = null,
-        IReadOnlyList<Remote>? disabledRemotes = null,
-        IConfigFileRemoteSettingsManager? remotesManager = null,
-        IAheadBehindDataProvider? aheadBehindDataProvider = null,
-        ICheckRefs? refsSource = null)
-        : base(owner, RepoTreeKind.Remotes, TranslatedStrings.Remotes, Images.BranchRemoteRoot, refsSource, RefsFilter.Remotes)
+    public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, IAheadBehindDataProvider? aheadBehindDataProvider, ICheckRefs refsSource)
+        : base(treeNode, uiCommands, refsSource, RefsFilter.Remotes)
     {
         _aheadBehindDataProvider = aheadBehindDataProvider;
-        _disabledRemotes = disabledRemotes ?? [];
-        _enabledRemotes = enabledRemotes;
-        _remoteByName = (_enabledRemotes ?? []).ToDictionary(remote => remote.Name, StringComparer.Ordinal);
-        _remotesManager = remotesManager;
-        Nodes.AddNodes(FillTree(branches, CancellationToken.None));
-        Complete(TranslatedStrings.Remotes, Images.BranchRemoteRoot, expanded: true);
     }
 
     protected override async Task PreloadAsync(CancellationToken token)
@@ -52,9 +36,7 @@ internal sealed class RemoteBranchTree : BaseRefTree
         List<RemoteRepoNode> enabledRemoteRepoNodes = [];
         Dictionary<string, Remote> remoteByName = _remoteByName;
 
-        // Cross-platform constraint: FormBrowse reads the remote configuration with the refs snapshot,
-        // and the standalone previewer omits it to show every remote branch.
-        IConfigFileRemoteSettingsManager? remotesManager = _remotesManager;
+        ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
 
         // Create nodes for enabled remotes with branches
         foreach (IGitRef branch in PrioritizedBranches(branches))
@@ -67,8 +49,7 @@ internal sealed class RemoteBranchTree : BaseRefTree
             }
 
             string remoteName = branch.Name.SubstringUntil('/');
-            Remote? remote = remoteByName.TryGetValue(remoteName, out Remote configured) ? configured : null;
-            if (remote is not null || _enabledRemotes is null)
+            if (remoteByName.TryGetValue(remoteName, out Remote remote))
             {
                 RemoteBranchNode remoteBranchNode = new(this, branch.ObjectId, branch.Name, visible: true) { GitRef = branch };
                 if (aheadBehindData?.TryGetValue(branch.CompleteName, out AheadBehindData aheadBehind) is true)
@@ -78,7 +59,7 @@ internal sealed class RemoteBranchTree : BaseRefTree
 
                 BaseRevisionNode? parent = remoteBranchNode.CreateRootNode(
                     pathToNodes,
-                    (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remoteName, remote));
+                    (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
 
                 if (parent is not null)
                 {
@@ -105,7 +86,7 @@ internal sealed class RemoteBranchTree : BaseRefTree
         }
 
         // Add disabled remotes, if any
-        IReadOnlyList<Remote> disabledRemotes = _disabledRemotes;
+        IReadOnlyList<Remote> disabledRemotes = remotesManager.GetDisabledRemotes();
         if (disabledRemotes.Count > 0)
         {
             List<RemoteRepoNode> disabledRemoteRepoNodes = [];
@@ -126,9 +107,9 @@ internal sealed class RemoteBranchTree : BaseRefTree
 
         return nodes;
 
-        BaseRevisionNode CreateRemoteBranchPathNode(Tree tree, string parentPath, string remoteName, Remote? remote)
+        BaseRevisionNode CreateRemoteBranchPathNode(Tree tree, string parentPath, Remote remote)
         {
-            if (parentPath == remoteName)
+            if (parentPath == remote.Name)
             {
                 return new RemoteRepoNode(tree, parentPath, remotesManager, remote, true);
             }
@@ -155,7 +136,9 @@ internal sealed class RemoteBranchTree : BaseRefTree
     }
 
     internal void PopupManageRemotesForm(string? remoteName)
-        => UICommands.StartRemotesDialog(Owner, remoteName);
+    {
+        UICommands.StartRemotesDialog(Owner, remoteName);
+    }
 
     internal bool FetchAll()
     {

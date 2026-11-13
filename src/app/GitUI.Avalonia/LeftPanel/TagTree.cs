@@ -1,17 +1,15 @@
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
+using TreeNode = Avalonia.Controls.TreeViewItem;
 
 namespace GitUI.LeftPanel;
 
 internal sealed class TagTree : BaseRefTree
 {
-    public TagTree(RepoObjectsTree owner, IReadOnlyList<IGitRef> tags, ICheckRefs? refsSource = null)
-        : base(owner, RepoTreeKind.Tags, TranslatedStrings.Tags, Images.TagHorizontal, refsSource, RefsFilter.Tags)
+    public TagTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
+        : base(treeNode, uiCommands, refsSource, RefsFilter.Tags)
     {
-        Nodes.AddNodes(FillTree(tags, CancellationToken.None));
-        Complete(TranslatedStrings.Tags, Images.TagHorizontal, expanded: false);
     }
 
     protected override Nodes FillTree(IReadOnlyList<IGitRef> tags, CancellationToken token)

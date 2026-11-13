@@ -4,6 +4,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
 using Microsoft.VisualStudio.Threading;
+using TreeNode = Avalonia.Controls.TreeViewItem;
 
 namespace GitUI.LeftPanel;
 
@@ -15,14 +16,8 @@ internal abstract class BaseRefTree : BaseRevisionTree
 
     protected readonly RefsFilter _refsFilter;
 
-    protected BaseRefTree(
-        RepoObjectsTree owner,
-        RepoTreeKind kind,
-        string caption,
-        Avalonia.Media.IImage icon,
-        ICheckRefs? refsSource,
-        RefsFilter filter)
-        : base(owner, kind, caption, icon, refsSource)
+    protected BaseRefTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource, RefsFilter filter)
+        : base(treeNode, uiCommands, refsSource)
     {
         _refsFilter = filter;
     }
@@ -82,29 +77,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
         // Break the local cache to ensure the data is requeried to reflect the required sort order.
         _loadedRefs = null;
 
-        HashSet<string> expandedNodes =
-        [
-            .. DescendantsAndSelf()
-                .Where(node => node.TreeViewNode.IsExpanded)
-                .Select(RepoObjectsTree.GetNodeIdentity),
-        ];
-        TreeSelectionState selectedNodes = Owner.CaptureSelectionState(this);
-
-        Owner.UpdateNodes(() =>
-        {
-            _loadedRefs = getRefs(_refsFilter);
-            Nodes newNodes = FillTree(_loadedRefs, CancellationToken.None);
-            Nodes.Clear();
-            Nodes.AddNodes(newNodes);
-            Nodes.FillTreeViewNode(TreeViewNode);
-
-            foreach (NodeBase node in DescendantsAndSelf())
-            {
-                node.TreeViewNode.IsExpanded = expandedNodes.Contains(RepoObjectsTree.GetNodeIdentity(node));
-            }
-
-            Owner.RestoreSelectionState(this, selectedNodes);
-        });
+        ReloadNodesDetached(LoadNodesAsync, getRefs);
     }
 
     internal override void UpdateVisibility()

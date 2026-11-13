@@ -28,7 +28,7 @@ using ColorHelper = GitExtUtils.GitUI.Theming.ColorHelper;
 namespace GitExtensionsTests;
 
 /// <summary>
-///  Checks command-source ownership when the portable left panel replaces repository roots.
+///  Checks command-source ownership when the left panel refreshes its persistent repository roots.
 /// </summary>
 [TestFixture]
 [NonParallelizable]
@@ -62,13 +62,13 @@ public sealed class RepoObjectsTreeLifetimeTests
     }
 
     /// <summary>
-    ///  Retires replaced roots without changing their current-source behavior or painted state.
+    ///  Keeps the persistent roots and their subscriptions without changing their painted state.
     /// </summary>
     [AvaloniaTest]
     [TestCase("light")]
     [TestCase("dark")]
     [TestCase("custom")]
-    public void Repeated_ref_refresh_should_release_retired_tree_subscriptions_and_keep_the_actual_frame(string theme)
+    public void Repeated_ref_refresh_should_keep_the_tree_subscriptions_and_the_actual_frame(string theme)
     {
         using TreeThemeScope themeScope = new(theme);
         bool showBranches = AppSettings.RepoObjectsTreeShowBranches;
@@ -80,16 +80,14 @@ public sealed class RepoObjectsTreeLifetimeTests
         TrackingCommandsSource source = new(commands);
         RepoObjectsTree? control = null;
         Window? window = null;
-        bool rootsDisposed = false;
         const int refreshCount = 12;
         try
         {
-            control = new RepoObjectsTree { UICommandsSource = source };
             ICheckRefs refsSource = Substitute.For<ICheckRefs>();
             refsSource.Contains(Arg.Any<ObjectId>()).Returns(true);
             IRevisionGridInfo gridInfo = Substitute.For<IRevisionGridInfo>();
             gridInfo.GetCurrentBranch().Returns("main");
-            control.Initialize(aheadBehindDataProvider: null, _ => { }, refsSource, gridInfo);
+            control = RepoObjectsTreeTestExtensions.Create(source, refsSource: refsSource, revisionGridInfo: gridInfo);
             IGitRef[] refs =
             [
                 new GitRef(module, ObjectId.Parse(new string('1', ObjectId.Sha1CharCount)), "refs/heads/main"),
@@ -108,66 +106,33 @@ public sealed class RepoObjectsTreeLifetimeTests
 
             for (int iteration = 0; iteration < refreshCount; iteration++)
             {
-                Tree[] previous = CurrentRoots(control);
                 control.SetRefs(refs, [], "main");
-                Tree[] current = CurrentRoots(control);
+                CurrentRoots(control).Should().Equal(initialRoots,
+                    "like the original, a refresh reloads the persistent trees instead of replacing them");
                 source.SubscriptionCount.Should().Be(initialSubscriptions,
-                    "replacing roots must release their source event subscriptions rather than retaining another generation");
-                source.TreeSubscribers.Should().HaveCount(current.Length);
-                foreach (Tree live in current)
-                {
-                    source.TreeSubscribers.Should().Contain(subscriber => ReferenceEquals(subscriber, live));
-                }
-
-                foreach (Tree retired in previous.Where(old => !current.Any(live => ReferenceEquals(old, live))))
-                {
-                    source.TreeSubscribers.Should().NotContain(subscriber => ReferenceEquals(subscriber, retired));
-                }
+                    "a refresh must not add another command-source subscription");
             }
 
             using SKBitmap after = Capture(window, theme, "after", source, refreshCount);
             after.Width.Should().Be(before.Width);
             after.Height.Should().Be(before.Height);
             after.Pixels.Should().Equal(before.Pixels,
-                "subscription ownership is a lifetime repair, not a change to the actual same-theme selected tree presentation");
+                "repeated refreshes must not change the actual same-theme selected tree presentation");
             tree.SelectedItem.Should().NotBeNull();
             Tree root = CurrentRoots(control).OfType<LocalBranchTree>().Single();
-            root.SetUICommandsSource(source);
-            source.SubscriptionCount.Should().Be(initialSubscriptions, "assigning the same source is idempotent");
-
-            TrackingCommandsSource replacement = new(commands);
-            root.SetUICommandsSource(replacement);
-            source.SubscriptionCount.Should().Be(initialSubscriptions - 1);
-            source.TreeSubscribers.Should().NotContain(subscriber => ReferenceEquals(subscriber, root));
-            replacement.TreeSubscribers.Should().ContainSingle().Which.Should().BeSameAs(root);
             FieldInfo firstReload = typeof(Tree).GetField("_firstReloadNodesSinceModuleChanged", BindingFlags.Instance | BindingFlags.NonPublic)
                 ?? throw new AssertionException("The source-shaped first-reload state must exist.");
-            firstReload.SetValue(root, false);
             firstReload.GetValue(root).Should().Be(false);
-            replacement.RaiseChanged();
-            firstReload.GetValue(root).Should().Be(true,
-                "the replacement source only reaches the root's own named module-change handler");
-            root.SetUICommandsSource(source);
-            replacement.SubscriptionCount.Should().Be(0);
-            source.SubscriptionCount.Should().Be(initialSubscriptions);
 
             source.RaiseChanged();
+            firstReload.GetValue(root).Should().Be(true, "each tree resets its first reload when the module changes");
             tree.SelectedItems.Should().NotBeNull();
-            tree.SelectedItems!.Cast<object>().Should().BeEmpty("the current command source must retain the original module-change selection reset");
-            foreach (Tree live in CurrentRoots(control))
-            {
-                live.Dispose();
-            }
-
-            rootsDisposed = true;
-            source.TreeSubscribers.Should().BeEmpty("all current root owners have released their command-source subscriptions");
-            source.SubscriptionCount.Should().Be(initialSubscriptions - initialRoots.Length,
-                "only the unchanged owning control's module-change handler remains");
+            tree.SelectedItems!.Cast<object>().Should().BeEmpty("the module change must retain the original selection reset");
         }
         finally
         {
             window?.Close();
-            if (control is not null && !rootsDisposed)
+            if (control is not null)
             {
                 foreach (Tree root in CurrentRoots(control))
                 {

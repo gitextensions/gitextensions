@@ -1957,13 +1957,13 @@ public sealed class DashboardTests
     public void Category_title_should_disable_unchanged_names_and_accept_a_new_name()
     {
         FormDashboardCategoryTitle form = new(["Team", "Personal"], "Team");
-        FormDashboardCategoryTitle.TestAccessor accessor = form.GetTestAccessor();
+        Button ok = form.FindControl<Button>("btnOk")!;
 
-        accessor.Ok.IsEnabled.Should().BeFalse();
-        accessor.CategoryName.Text = "Release";
+        ok.IsEnabled.Should().BeFalse();
+        form.FindControl<TextBox>("txtCategoryName")!.Text = "Release";
         Dispatcher.UIThread.RunJobs();
-        accessor.Ok.IsEnabled.Should().BeTrue();
-        accessor.Ok.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+        ok.IsEnabled.Should().BeTrue();
+        ok.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
 
         form.Category.Should().Be("Release");
         form.DialogResult.Should().Be(GitExtensions.Shims.WinForms.DialogResult.OK);

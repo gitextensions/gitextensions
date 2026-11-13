@@ -1,20 +1,15 @@
 using System.Buffers;
+using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.WorktreeDialog;
-using GitUI.Properties;
-
-using ResourceManager;
+using Microsoft.VisualStudio.Threading;
+using TreeNode = Avalonia.Controls.TreeViewItem;
 
 namespace GitUI.LeftPanel;
 
-internal sealed class WorktreeTree : Tree
+internal sealed class WorktreeTree(TreeNode treeNode, IGitUICommandsSource uiCommands) : Tree(treeNode, uiCommands)
 {
-    public WorktreeTree(RepoObjectsTree owner)
-        : base(owner, RepoTreeKind.Worktrees, TranslatedStrings.Worktrees, Images.WorkTree)
-    {
-        Complete(TranslatedStrings.Worktrees, Images.WorkTree, expanded: false);
-    }
-
     internal void Refresh()
     {
         if (!IsAttached)
@@ -22,26 +17,12 @@ internal sealed class WorktreeTree : Tree
             return;
         }
 
-        Load(Module.GetWorktrees(), Module.WorkingDir);
+        ReloadNodesDetached((_, cancellationToken) => LoadNodesAsync(cancellationToken), getRefs: null!);
     }
-
-    public void Load(IReadOnlyList<GitWorktree> worktrees, string currentWorkingDirectory)
-        => OwnerControl.UpdateNodes(() =>
-    {
-        TreeSelectionState selected = OwnerControl.CaptureSelectionState(this);
-        bool wasExpanded = TreeViewNode.IsExpanded;
-        TreeViewNode.Items.Clear();
-        Nodes.Clear();
-
-        Nodes loadedNodes = FillWorktreeTree(worktrees, currentWorkingDirectory, CancellationToken.None);
-        Nodes.AddNodes(loadedNodes);
-        Complete(TranslatedStrings.Worktrees, Images.WorkTree, expanded: wasExpanded);
-        OwnerControl.RestoreSelectionState(this, selected);
-    });
 
     private async Task<Nodes> LoadNodesAsync(CancellationToken token)
     {
-        await Task.CompletedTask;
+        await TaskScheduler.Default;
         token.ThrowIfCancellationRequested();
 
         return FillWorktreeTree(token);
@@ -49,55 +30,38 @@ internal sealed class WorktreeTree : Tree
 
     private Nodes FillWorktreeTree(CancellationToken token)
     {
+        Nodes nodes = new(this);
+        string currentWorkingDir = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
+
+        IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
+
         // Use the main worktree's parent as the reference for relative paths.
         // Git always lists the main worktree first. Using the main worktree's parent
         // ensures linked worktrees in a sibling directory produce paths like
         // "repo.worktrees/feature-a" rather than flat names with no directory component.
-        // Strip the common directory prefix from non-main worktrees to reduce visual noise.
-        // The first worktree is always the main worktree and is excluded from prefix calculation.
-        return FillWorktreeTree(Module.GetWorktrees(), Module.WorkingDir, token);
-    }
-
-    private Task<Nodes> LoadNodesAsync(
-        IReadOnlyList<GitWorktree> worktrees,
-        string currentWorkingDirectory,
-        CancellationToken token)
-    {
-        token.ThrowIfCancellationRequested();
-        return Task.FromResult(FillWorktreeTree(worktrees, currentWorkingDirectory, token));
-    }
-
-    private Nodes FillWorktreeTree(
-        IReadOnlyList<GitWorktree> worktrees,
-        string currentWorkingDirectory,
-        CancellationToken token)
-    {
-        Nodes nodes = new(this);
-
-        string currentWorkingDir = currentWorkingDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         string mainWorktreePath = worktrees.Count > 0
-            ? worktrees[0].Path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+            ? worktrees[0].Path.TrimEnd(Path.DirectorySeparatorChar)
             : currentWorkingDir;
         string parentDir = Path.GetDirectoryName(mainWorktreePath) ?? mainWorktreePath;
+
         List<(GitWorktree Worktree, bool IsCurrent, string RelativePath)> worktreeInfos = [];
-        StringComparison pathComparison = OperatingSystem.IsWindows()
-            ? StringComparison.OrdinalIgnoreCase
-            : StringComparison.Ordinal;
 
         foreach (GitWorktree worktree in worktrees)
         {
             token.ThrowIfCancellationRequested();
 
+            // Cross-platform constraint: worktree paths are case-sensitive outside Windows.
             bool isCurrent = string.Equals(
-                worktree.Path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                worktree.Path.TrimEnd(Path.DirectorySeparatorChar),
                 currentWorkingDir,
-                pathComparison);
+                OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+
             string relativePath;
             try
             {
                 relativePath = Path.GetRelativePath(parentDir, worktree.Path);
             }
-            catch (ArgumentException)
+            catch
             {
                 relativePath = worktree.Path;
             }
@@ -105,18 +69,25 @@ internal sealed class WorktreeTree : Tree
             worktreeInfos.Add((worktree, isCurrent, relativePath));
         }
 
-        string commonPrefix = GetCommonPrefix(worktreeInfos.Skip(1).Select(worktree => worktree.RelativePath));
+        // Strip the common directory prefix from non-main worktrees to reduce visual noise.
+        // The first worktree is always the main worktree and is excluded from prefix calculation.
+        string commonPrefix = GetCommonPrefix(
+            worktreeInfos.Skip(1).Select(w => w.RelativePath));
+
         for (int i = 0; i < worktreeInfos.Count; i++)
         {
             token.ThrowIfCancellationRequested();
 
             (GitWorktree worktree, bool isCurrent, string relativePath) = worktreeInfos[i];
+
             string displayPath = i > 0
                 && commonPrefix.Length > 0
                 && relativePath.StartsWith(commonPrefix, StringComparison.OrdinalIgnoreCase)
-                    ? relativePath[commonPrefix.Length..]
-                    : relativePath;
-            nodes.AddNode(new WorktreeNode(this, worktree, isCurrent, displayPath));
+                ? relativePath[commonPrefix.Length..]
+                : relativePath;
+
+            WorktreeNode node = new(this, worktree, isCurrent, displayPath);
+            nodes.AddNode(node);
         }
 
         return nodes;
@@ -170,14 +141,14 @@ internal sealed class WorktreeTree : Tree
 
         if (count < 2 || prefix.Length == 0)
         {
-            return string.Empty;
+            return "";
         }
 
         // Snap to the last directory separator in the common prefix.
-        int directorySeparatorIndex = prefix.LastIndexOfAny(DirectorySeparatorChars);
-        if (directorySeparatorIndex >= 0)
+        int dirSepIndex = prefix.LastIndexOfAny(DirectorySeparatorChars);
+        if (dirSepIndex >= 0)
         {
-            return prefix[..(directorySeparatorIndex + 1)].ToString();
+            return prefix[..(dirSepIndex + 1)].ToString();
         }
 
         // Fall back to word-boundary characters only when none of the paths contain
@@ -185,11 +156,16 @@ internal sealed class WorktreeTree : Tree
         // siblings in the same directory (e.g. "repo_dev", "repo_test").
         if (hasDirectorySeparator)
         {
-            return string.Empty;
+            return "";
         }
 
         int boundaryIndex = prefix.LastIndexOfAny(WordBoundaryChars);
-        return boundaryIndex < 0 ? string.Empty : prefix[..(boundaryIndex + 1)].ToString();
+        if (boundaryIndex < 0)
+        {
+            return "";
+        }
+
+        return prefix[..(boundaryIndex + 1)].ToString();
     }
 
     private static readonly SearchValues<char> DirectorySeparatorChars = SearchValues.Create(
@@ -200,7 +176,7 @@ internal sealed class WorktreeTree : Tree
 
     protected override void PostFillTreeViewNode(bool firstTime)
     {
-        if (firstTime && Nodes.Count > 1)
+        if (firstTime && TreeViewNode.Items.Count > 1)
         {
             TreeViewNode.IsExpanded = true;
         }
@@ -208,7 +184,7 @@ internal sealed class WorktreeTree : Tree
 
     public void CreateWorktree(IWin32Window owner)
     {
-        string mainWorktreePath = GetMainWorktreePath();
+        string? mainWorktreePath = GetMainWorktreePath();
         if (UICommands.WorktreeCreate(owner, mainWorktreePath))
         {
             Refresh();
@@ -237,9 +213,9 @@ internal sealed class WorktreeTree : Tree
     {
         foreach (Node node in Nodes)
         {
-            if (node is WorktreeNode worktree)
+            if (node is WorktreeNode wt)
             {
-                return worktree.Worktree.Path;
+                return wt.Worktree.Path;
             }
         }
 

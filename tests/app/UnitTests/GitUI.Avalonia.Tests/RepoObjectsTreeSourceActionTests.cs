@@ -83,7 +83,8 @@ public sealed class RepoObjectsTreeSourceActionTests
 
                 TreeViewItem[] selection = [.. accessor.LogicalSelection];
                 selection.Should().BeEquivalentTo([alpha, beta]);
-                accessor.OpenContextMenu().Should().BeTrue();
+                accessor.OpenContextMenu();
+                accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
                 MenuItem action = accessor.GetActionMenuItem(expand ? "Expand" : "Collapse");
                 action.IsVisible.Should().BeTrue();
                 action.IsEnabled.Should().BeTrue();
@@ -120,7 +121,8 @@ public sealed class RepoObjectsTreeSourceActionTests
                 RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
                 TreeViewItem branches = accessor.TreeView.Items.Cast<TreeViewItem>().Single(item => item.Tag is LocalBranchTree);
                 accessor.SelectNode<BranchPathNode>([HeaderText(branches), "features"]);
-                accessor.OpenContextMenu().Should().BeTrue();
+                accessor.OpenContextMenu();
+                accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
                 MenuItem create = accessor.GetActionMenuItem("CreateInFolder");
                 MenuItem delete = accessor.GetActionMenuItem("DeleteFolderBranches");
                 create.IsVisible.Should().BeTrue();
@@ -166,7 +168,8 @@ public sealed class RepoObjectsTreeSourceActionTests
                 RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
                 TreeViewItem remotes = accessor.TreeView.Items.Cast<TreeViewItem>().Single(item => item.Tag is RemoteBranchTree);
                 accessor.SelectNode<RemoteBranchNode>([HeaderText(remotes), "origin", "topic"]);
-                accessor.OpenContextMenu().Should().BeTrue();
+                accessor.OpenContextMenu();
+                accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
                 MenuItem create = accessor.GetActionMenuItem("FetchCreate");
                 create.IsVisible.Should().BeTrue();
                 create.IsEnabled.Should().BeTrue();
@@ -213,7 +216,7 @@ public sealed class RepoObjectsTreeSourceActionTests
     {
         IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
         source.UICommands.Returns(commands);
-        return new RepoObjectsTree { UICommandsSource = source };
+        return RepoObjectsTreeTestExtensions.Create(source);
     }
 
     private static GitRef CreateRef(string completeName, string remote = "")

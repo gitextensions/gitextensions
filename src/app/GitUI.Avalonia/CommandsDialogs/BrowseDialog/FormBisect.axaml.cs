@@ -106,15 +106,4 @@ public sealed partial class FormBisect : GitModuleForm
         FormProcess.ShowDialog(this, UICommands, arguments: Commands.ContinueBisect(bisectOption), Module.WorkingDir, input: null, useDialogSettings: false);
         Close();
     }
-
-    internal TestAccessor GetTestAccessor() => new(this);
-
-    internal readonly struct TestAccessor(FormBisect form)
-    {
-        public Button Start => form.Start;
-        public Button Good => form.Good;
-        public Button Bad => form.Bad;
-        public Button Stop => form.Stop;
-        public Button btnSkip => form.btnSkip;
-    }
 }
