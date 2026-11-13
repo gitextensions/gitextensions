@@ -1,13 +1,16 @@
-using GitCommands;
+using System.Diagnostics;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.LeftPanel.Interfaces;
+using GitUI.Properties;
 
 namespace GitUI.LeftPanel;
 
+[DebuggerDisplay("(Remote) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
 internal sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICanDelete
 {
-    public RemoteBranchNode(RemoteBranchTree tree, NodeBase parent, IGitRef gitRef)
-        : base(tree, parent, gitRef.Name, gitRef, remote: true)
+    public RemoteBranchNode(Tree tree, in ObjectId objectId, string fullPath, bool visible)
+        : base(tree, objectId, fullPath, visible, Images.BranchRemote, Images.BranchRemoteMerged)
     {
     }
 
@@ -24,52 +27,83 @@ internal sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICa
 
     public bool Fetch()
     {
-        (string remote, string branch) = GetRemoteBranchInfo();
+        RemoteBranchInfo remoteBranchInfo = GetRemoteBranchInfo();
         UICommands.StartPullDialogAndPullImmediately(
             out bool pullCompleted,
             Owner,
-            remoteBranch: branch,
-            remote,
+            remoteBranch: remoteBranchInfo.BranchName,
+            remote: remoteBranchInfo.Remote,
             pullAction: GitPullAction.Fetch);
         return pullCompleted;
     }
 
-    private (string Remote, string Branch) GetRemoteBranchInfo()
+    private RemoteBranchInfo GetRemoteBranchInfo()
     {
-        int separator = FullPath.IndexOf('/');
-        return separator < 0
-            ? (FullPath, string.Empty)
-            : (FullPath[..separator], FullPath[(separator + 1)..]);
+        string remote = FullPath.LazySplit('/').First();
+        string branch = FullPath[(remote.Length + 1)..];
+        return new RemoteBranchInfo(remote, branch);
     }
 
     internal override void OnDelete()
-        => Delete();
+    {
+        Delete();
+    }
 
     public bool CreateBranch()
-        => UICommands.StartCreateBranchDialog(Owner, FullPath);
+    {
+        return UICommands.StartCreateBranchDialog(Owner, FullPath);
+    }
 
     public bool Delete()
-        => UICommands.StartDeleteRemoteBranchDialog(Owner, FullPath);
+    {
+        RemoteBranchInfo remoteBranchInfo = GetRemoteBranchInfo();
+        return UICommands.StartDeleteRemoteBranchDialog(Owner, remoteBranchInfo.Remote + '/' + remoteBranchInfo.BranchName);
+    }
 
     public bool Checkout()
-        => MessageBoxes.ConfirmBranchCheckout(Owner, FullPath)
-           && UICommands.StartCheckoutRemoteBranch(Owner, FullPath);
+    {
+        return MessageBoxes.ConfirmBranchCheckout(ParentWindow(), FullPath) && UICommands.StartCheckoutRemoteBranch(Owner, FullPath);
+    }
 
     public bool Merge()
-        => UICommands.StartMergeBranchDialog(Owner, FullPath);
+    {
+        return UICommands.StartMergeBranchDialog(Owner, FullPath);
+    }
 
     internal override void OnDoubleClick()
-        => Checkout();
+    {
+        Checkout();
+    }
 
     public bool FetchAndMerge()
-        => Fetch() && Merge();
+    {
+        return Fetch() && Merge();
+    }
 
     public bool FetchAndCheckout()
-        => Fetch() && Checkout();
+    {
+        return Fetch() && Checkout();
+    }
 
     public bool FetchAndCreateBranch()
-        => Fetch() && CreateBranch();
+    {
+        return Fetch() && CreateBranch();
+    }
 
     public bool FetchAndRebase()
-        => Fetch() && Rebase();
+    {
+        return Fetch() && Rebase();
+    }
+
+    private readonly struct RemoteBranchInfo
+    {
+        public string Remote { get; }
+        public string BranchName { get; }
+
+        public RemoteBranchInfo(string remote, string branchName)
+        {
+            Remote = remote;
+            BranchName = branchName;
+        }
+    }
 }

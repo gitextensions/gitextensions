@@ -56,52 +56,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
     /// </summary>
     protected virtual Task PreloadAsync(CancellationToken token) => Task.CompletedTask;
 
-    protected void FillNested(
-        IEnumerable<IGitRef> refs,
-        Func<NodeBase, string, IGitRef?, int, BaseRevisionNode> createNode)
-    {
-        PathEntry root = new(string.Empty);
-        int order = 0;
-        foreach (IGitRef gitRef in refs)
-        {
-            PathEntry entry = root;
-            string[] parts = gitRef.Name.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            string path = string.Empty;
-            foreach (string part in parts)
-            {
-                path = string.IsNullOrEmpty(path) ? part : $"{path}/{part}";
-                if (!entry.Children.TryGetValue(part, out PathEntry? child))
-                {
-                    child = new PathEntry(path);
-                    entry.Children.Add(part, child);
-                }
-
-                child.Order = Math.Min(child.Order, order);
-                entry = child;
-            }
-
-            entry.GitRef ??= gitRef;
-            order++;
-        }
-
-        AddChildren(this, root, level: 0);
-        return;
-
-        void AddChildren(NodeBase parent, PathEntry parentEntry, int level)
-        {
-            foreach (PathEntry entry in parentEntry.Children.Values
-                         .OrderBy(item => item.Order)
-                         .ThenBy(item => item.Path, StringComparer.OrdinalIgnoreCase))
-            {
-                BaseRevisionNode node = createNode(parent, entry.Path, entry.GitRef, level);
-                AddNode(parent, node);
-                AddChildren(node, entry, level + 1);
-            }
-        }
-    }
-
-    protected virtual Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
-        => Nodes;
+    protected abstract Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token);
 
     /// <summary>
     /// Requests (from FormBrowse) to refresh the data tree and to apply filtering, if necessary.
@@ -137,15 +92,10 @@ internal abstract class BaseRefTree : BaseRevisionTree
 
         Owner.UpdateNodes(() =>
         {
-            Nodes.Clear();
-            TreeViewNode.Items.Clear();
             _loadedRefs = getRefs(_refsFilter);
-            FillTree(_loadedRefs, CancellationToken.None);
-            foreach (NodeBase node in DescendantsAndSelf().Skip(1))
-            {
-                node.ApplyStyle();
-            }
-
+            Nodes newNodes = FillTree(_loadedRefs, CancellationToken.None);
+            Nodes.Clear();
+            Nodes.AddNodes(newNodes);
             Nodes.FillTreeViewNode(TreeViewNode);
 
             foreach (NodeBase node in DescendantsAndSelf())
@@ -224,21 +174,5 @@ internal abstract class BaseRefTree : BaseRevisionTree
 
         // Order by the sort match, with no match last as int.Max
         return references.OrderBy(node => orderByNodeKey.GetValueOrDefault(keySelector(node), int.MaxValue));
-    }
-
-    private static void AddNode(NodeBase parent, NodeBase child)
-    {
-        parent.AddChild(child);
-    }
-
-    private sealed class PathEntry(string path)
-    {
-        public Dictionary<string, PathEntry> Children { get; } = new(StringComparer.Ordinal);
-
-        public IGitRef? GitRef { get; set; }
-
-        public int Order { get; set; } = int.MaxValue;
-
-        public string Path { get; } = path;
     }
 }

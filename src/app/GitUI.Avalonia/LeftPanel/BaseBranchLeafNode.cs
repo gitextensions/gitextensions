@@ -1,18 +1,24 @@
+using Avalonia.Controls;
+using Avalonia.Media;
 using GitExtensions.Extensibility.Git;
+using GitUI.Compat;
 using GitUI.Properties;
+
 namespace GitUI.LeftPanel;
 
 internal abstract class BaseBranchLeafNode : BaseRevisionNode
 {
-    private readonly Avalonia.Media.IImage _imageKeyMerged;
-    private readonly Avalonia.Media.IImage _imageKeyUnmerged;
+    private readonly IImage _imageKeyMerged;
+    private readonly IImage _imageKeyUnmerged;
+
     private bool _isMerged = false;
 
-    public BaseBranchLeafNode(Tree tree, NodeBase parent, string fullPath, IGitRef gitRef, bool remote)
-        : base(tree, parent, fullPath, gitRef, remote ? Images.BranchRemote : Images.BranchLocal)
+    public BaseBranchLeafNode(Tree tree, in ObjectId objectId, string fullPath, bool visible, IImage imageKeyUnmerged, IImage imageKeyMerged)
+        : base(tree, fullPath, visible)
     {
-        _imageKeyUnmerged = remote ? Images.BranchRemote : Images.BranchLocal;
-        _imageKeyMerged = remote ? Images.BranchRemoteMerged : Images.BranchLocalMerged;
+        ObjectId = objectId;
+        _imageKeyUnmerged = imageKeyUnmerged;
+        _imageKeyMerged = imageKeyMerged;
     }
 
     protected string? AheadBehind { get; set; }
@@ -39,13 +45,17 @@ internal abstract class BaseBranchLeafNode : BaseRevisionNode
     {
         base.ApplyStyle();
 
+        TreeViewNode.SetImage(
+            Visible
+                ? IsMerged ? _imageKeyMerged : _imageKeyUnmerged
+                : Images.EyeClosed);
         if (!Visible)
         {
-            Avalonia.Controls.ToolTip.SetTip(TreeViewNode, string.Format(TranslatedStrings.InvisibleCommit, FullPath));
+            ToolTip.SetTip(TreeViewNode, string.Format(TranslatedStrings.InvisibleCommit, FullPath));
         }
         else if (_isMerged)
         {
-            Avalonia.Controls.ToolTip.SetTip(TreeViewNode, string.Format(TranslatedStrings.ContainedInCurrentCommit, Name));
+            ToolTip.SetTip(TreeViewNode, string.Format(TranslatedStrings.ContainedInCurrentCommit, Name));
         }
     }
 
@@ -59,9 +69,6 @@ internal abstract class BaseBranchLeafNode : BaseRevisionNode
     {
         return string.IsNullOrEmpty(AheadBehind) ? Name : $"{Name} ({AheadBehind})";
     }
-
-    protected override Avalonia.Media.IImage GetVisibleIcon()
-        => IsMerged ? _imageKeyMerged : _imageKeyUnmerged;
 
     protected override void SelectRevision()
     {

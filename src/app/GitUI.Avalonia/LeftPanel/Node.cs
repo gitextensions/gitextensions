@@ -1,34 +1,50 @@
 using Avalonia.Controls;
-using Avalonia.Media;
 using GitExtensions.Extensibility.Git;
+using GitUI.Compat;
 using GitUI.LeftPanel.Interfaces;
+using Microsoft;
 using TreeNode = Avalonia.Controls.TreeViewItem;
 
 namespace GitUI.LeftPanel;
 
 internal abstract class Node : NodeBase, INode
 {
-    protected Tree Tree { get; }
+    protected Tree Tree
+    {
+        get
+        {
+            Validates.NotNull(Nodes.Tree);
+            return Nodes.Tree;
+        }
+    }
 
     protected IGitUICommands UICommands => Tree.UICommands;
 
-    protected Node(Tree tree, NodeBase parent, string caption, IImage icon, bool isBold = false, bool isItalic = false)
-        : base(tree.OwnerControl, parent, caption, icon, isBold, isItalic)
+    protected Node(Tree? tree)
+        : base(tree)
     {
-        Tree = tree;
     }
-
-    private TreeViewItem? _treeViewNode;
 
     /// <summary>
     /// The tree node representing this node.
-    /// Note that it may not always be set; which <see cref="Node"/> it represents does not change because
-    /// <see cref="Nodes.FillTreeViewNode(TreeViewItem)"/> reuses each node's own <see cref="TreeViewItem"/>.
+    /// Note that it may not always be set and which <see cref="Node"/> it represents may change
+    /// because <see cref="Nodes.FillTreeViewNode(TreeNode)"/> recycles <see cref="TreeNode"/>s.
     /// </summary>
-    protected internal override TreeViewItem TreeViewNode
+    protected internal override TreeNode TreeViewNode
     {
-        get => _treeViewNode!;
-        protected set => _treeViewNode = value;
+        get
+        {
+            Validates.NotNull(field);
+            return field;
+        }
+        set
+        {
+            Validates.NotNull(value);
+            field = value;
+            field.Tag = this;
+            ApplyText();
+            ApplyStyle();
+        }
     }
 
     /// <summary>
@@ -41,25 +57,26 @@ internal abstract class Node : NodeBase, INode
         => Owner;
 
     protected virtual string DisplayText()
-        => SearchText;
+    {
+        return ToString()!;
+    }
 
     // Override to provide a unique node name (key), otherwise DisplayText is used
     protected virtual string NodeName()
-        => DisplayText();
+    {
+        return DisplayText();
+    }
 
     protected void ApplyText()
     {
-        if (TreeViewNode.Header is Avalonia.Controls.StackPanel panel
-            && panel.Children.OfType<Avalonia.Controls.Image>().FirstOrDefault()?.Source is IImage icon)
+        // Check before if value has changed because that's a costly operation
+        string updatedText = DisplayText();
+        if (updatedText != TreeViewNode.GetText())
         {
-            // Check before if value has changed because that's a costly operation
-            if (DisplayText() == ((Avalonia.Controls.TextBlock)panel.Children[1]).Text)
-            {
-                return;
-            }
-
-            SetHeader(DisplayText(), icon);
+            TreeViewNode.SetText(updatedText);
         }
+
+        // Framework constraint: an Avalonia item cannot be renamed once styled, so NodeName() is not stored on it.
     }
 
     /// <summary>
@@ -99,17 +116,17 @@ internal abstract class Node : NodeBase, INode
     {
     }
 
-    public static Node GetNode(Avalonia.Controls.TreeViewItem treeNode)
+    public static Node GetNode(TreeNode treeNode)
     {
         return (Node)treeNode.Tag!;
     }
 
-    internal static T? GetNodeSafe<T>(Avalonia.Controls.TreeViewItem? treeNode) where T : class, INode
+    internal static T? GetNodeSafe<T>(TreeNode? treeNode) where T : class, INode
     {
         return treeNode?.Tag as T;
     }
 
-    public static void OnNode<T>(Avalonia.Controls.TreeViewItem? treeNode, Action<T> action) where T : class, INode
+    public static void OnNode<T>(TreeNode? treeNode, Action<T> action) where T : class, INode
     {
         T? node = GetNodeSafe<T>(treeNode);
 

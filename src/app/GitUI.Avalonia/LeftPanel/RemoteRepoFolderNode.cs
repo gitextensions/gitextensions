@@ -1,22 +1,21 @@
+using System.Diagnostics;
 using GitUI.Compat;
 using GitUI.Properties;
 
 namespace GitUI.LeftPanel;
 
+[DebuggerDisplay("(Folder) FullPath = {FullPath}")]
 internal sealed class RemoteRepoFolderNode : BaseRevisionNode
 {
-    public RemoteRepoFolderNode(RemoteBranchTree tree, NodeBase parent, string fullPath)
-        : base(tree, parent, fullPath, gitRef: null, GitUI.Properties.Images.EyeClosed.AdaptLightness())
+    public RemoteRepoFolderNode(Tree tree, string name) : base(tree, name, true)
     {
     }
 
     public override void ApplyStyle()
     {
         base.ApplyStyle();
+        TreeViewNode.SetImage(Images.EyeClosed.AdaptLightness());
     }
-
-    protected override Avalonia.Media.IImage GetVisibleIcon()
-        => Images.EyeClosed.AdaptLightness();
 
     protected override string DisplayText()
     {

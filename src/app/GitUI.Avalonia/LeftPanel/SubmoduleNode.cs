@@ -7,6 +7,7 @@ using GitCommands.Submodules;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.Compat;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -25,15 +26,9 @@ internal sealed class SubmoduleNode : Node
     public string SubmoduleName { get; }
     public string BranchText { get; }
 
-    public SubmoduleNode(
-        Tree tree,
-        NodeBase parent,
-        SubmoduleInfo submoduleInfo,
-        bool isCurrent,
-        IReadOnlyList<GitItemStatus>? gitStatus,
-        string localPath,
-        string superPath)
-        : base(tree, parent, GetSubmoduleName(submoduleInfo), GetSubmoduleItemImage(submoduleInfo.Detailed), isCurrent)
+    public SubmoduleNode(Tree tree, SubmoduleInfo submoduleInfo, bool isCurrent,
+        IReadOnlyList<GitItemStatus>? gitStatus, string localPath, string superPath)
+        : base(tree)
     {
         Info = submoduleInfo;
         IsCurrent = isCurrent;
@@ -48,7 +43,6 @@ internal sealed class SubmoduleNode : Node
         Trace.Assert(pathAndBranch.Length >= 1);
         SubmoduleName = pathAndBranch[0].SubstringAfterLast('/').SubstringAfterLast('\\'); // Remove path
         BranchText = pathAndBranch.Length == 2 ? " " + pathAndBranch[1] : string.Empty;
-        RefreshDetails();
     }
 
     public override string SearchText => Info.Text;
@@ -140,12 +134,29 @@ internal sealed class SubmoduleNode : Node
 
     private void ApplyStatus()
     {
-        // NOTE: Copied and adapted from FormBrowse.GetSubmoduleItemImage
-        SetHeader(DisplayText(), GetSubmoduleItemImage(Info.Detailed), IsCurrent);
-
-        // Avalonia replaces the header for its native image wrapper, so reapply the retained node style.
-        base.ApplyStyle();
         ToolTip.SetTip(TreeViewNode, DisplayText());
+        TreeViewNode.SetImage(GetSubmoduleItemImage(Info?.Detailed));
+
+        return;
+
+        // NOTE: Copied and adapted from FormBrowse.GetSubmoduleItemImage
+        static IImage GetSubmoduleItemImage(DetailedSubmoduleInfo? details)
+        {
+            return (details?.Status, details?.IsDirty) switch
+            {
+                (SubmoduleStatus.FastForward, true) => Images.SubmoduleRevisionUpDirty,
+                (SubmoduleStatus.FastForward, false) => Images.SubmoduleRevisionUp,
+                (SubmoduleStatus.Rewind, true) => Images.SubmoduleRevisionDownDirty,
+                (SubmoduleStatus.Rewind, false) => Images.SubmoduleRevisionDown,
+                (SubmoduleStatus.NewerTime, true) => Images.SubmoduleRevisionSemiUpDirty,
+                (SubmoduleStatus.NewerTime, false) => Images.SubmoduleRevisionSemiUp,
+                (SubmoduleStatus.OlderTime, true) => Images.SubmoduleRevisionSemiDownDirty,
+                (SubmoduleStatus.OlderTime, false) => Images.SubmoduleRevisionSemiDown,
+                (_, true) => Images.SubmoduleDirty,
+                (_, false) => Images.FileStatusModified,
+                _ => Images.FolderSubmodule
+            };
+        }
     }
 
     internal async Task SetStatusToolTipAsync(CancellationToken token)
@@ -177,29 +188,5 @@ internal sealed class SubmoduleNode : Node
         }, token);
 
         await Dispatcher.UIThread.InvokeAsync(() => ToolTip.SetTip(TreeViewNode, toolTip));
-    }
-
-    private static string GetSubmoduleName(SubmoduleInfo info)
-    {
-        string path = info.Text.Split(Delimiters.Space, 2)[0];
-        return path.SubstringAfterLast('/').SubstringAfterLast('\\');
-    }
-
-    private static IImage GetSubmoduleItemImage(DetailedSubmoduleInfo? details)
-    {
-        return (details?.Status, details?.IsDirty) switch
-        {
-            (SubmoduleStatus.FastForward, true) => Images.SubmoduleRevisionUpDirty,
-            (SubmoduleStatus.FastForward, false) => Images.SubmoduleRevisionUp,
-            (SubmoduleStatus.Rewind, true) => Images.SubmoduleRevisionDownDirty,
-            (SubmoduleStatus.Rewind, false) => Images.SubmoduleRevisionDown,
-            (SubmoduleStatus.NewerTime, true) => Images.SubmoduleRevisionSemiUpDirty,
-            (SubmoduleStatus.NewerTime, false) => Images.SubmoduleRevisionSemiUp,
-            (SubmoduleStatus.OlderTime, true) => Images.SubmoduleRevisionSemiDownDirty,
-            (SubmoduleStatus.OlderTime, false) => Images.SubmoduleRevisionSemiDown,
-            (_, true) => Images.SubmoduleDirty,
-            (_, false) => Images.FileStatusModified,
-            _ => Images.FolderSubmodule,
-        };
     }
 }

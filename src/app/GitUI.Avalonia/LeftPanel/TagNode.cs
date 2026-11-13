@@ -1,14 +1,18 @@
+using System.Diagnostics;
 using GitExtensions.Extensibility.Git;
+using GitUI.Compat;
 using GitUI.LeftPanel.Interfaces;
 using GitUI.Properties;
 
 namespace GitUI.LeftPanel;
 
+[DebuggerDisplay("(Tag) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
 internal sealed class TagNode : BaseRevisionNode, IGitRefActions, ICanDelete
 {
-    public TagNode(TagTree tree, NodeBase parent, IGitRef gitRef)
-        : base(tree, parent, gitRef.Name, gitRef, Images.TagHorizontal)
+    public TagNode(Tree tree, in ObjectId objectId, string fullPath, bool visible)
+        : base(tree, fullPath, visible)
     {
+        ObjectId = objectId;
     }
 
     internal override void OnSelected()
@@ -23,25 +27,42 @@ internal sealed class TagNode : BaseRevisionNode, IGitRefActions, ICanDelete
     }
 
     internal override void OnDoubleClick()
-        => CreateBranch();
+    {
+        CreateBranch();
+    }
 
     internal override void OnDelete()
-        => Delete();
+    {
+        Delete();
+    }
 
     public bool CreateBranch()
-        => UICommands.StartCreateBranchDialog(Owner, ObjectId);
+    {
+        return UICommands.StartCreateBranchDialog(Owner, ObjectId);
+    }
 
     public bool Delete()
-        => UICommands.StartDeleteTagDialog(Owner, FullPath);
+    {
+        return UICommands.StartDeleteTagDialog(Owner, FullPath);
+    }
 
     public bool Merge()
-        => UICommands.StartMergeBranchDialog(Owner, FullPath);
+    {
+        return UICommands.StartMergeBranchDialog(Owner, FullPath);
+    }
 
     public override void ApplyStyle()
     {
         base.ApplyStyle();
+
+        TreeViewNode.SetImage(
+            Visible
+                ? Images.TagHorizontal
+                : Images.EyeClosed);
     }
 
     public bool Checkout()
-        => UICommands.StartCheckoutRevisionDialog(Owner, FullPath);
+    {
+        return UICommands.StartCheckoutRevisionDialog(Owner, FullPath);
+    }
 }

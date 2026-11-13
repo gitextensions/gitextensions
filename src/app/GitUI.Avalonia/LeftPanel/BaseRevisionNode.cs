@@ -1,39 +1,49 @@
+using System.Diagnostics;
 using Avalonia.Controls;
-using Avalonia.Media;
 using GitExtensions.Extensibility.Git;
+using GitUI.Compat;
 using GitUI.Properties;
 
 namespace GitUI.LeftPanel;
 
+[DebuggerDisplay("(Node) FullPath = {FullPath}")]
 internal abstract class BaseRevisionNode : Node
 {
     protected const char PathSeparator = '/';
-    private readonly IImage _visibleIcon;
 
-    protected BaseRevisionNode(Tree tree, NodeBase parent, string fullPath, IGitRef? gitRef, IImage icon, bool isBold = false)
-        : base(tree, parent, GetName(fullPath), icon, isBold)
+    protected BaseRevisionNode(Tree tree, string fullPath, bool visible)
+        : base(tree)
     {
+        fullPath = fullPath.Trim();
+        if (string.IsNullOrEmpty(fullPath))
+        {
+            throw new ArgumentNullException(nameof(fullPath));
+        }
+
         FullPath = fullPath;
-        GitRef = gitRef;
-        ObjectId = gitRef?.ObjectId ?? default;
-        _visibleIcon = icon;
+        int nameIndex = fullPath.LastIndexOf(PathSeparator);
+        if (nameIndex == -1)
+        {
+            Name = fullPath;
+            ParentPath = null!;
+        }
+        else
+        {
+            Name = fullPath[(nameIndex + 1)..];
+            ParentPath = fullPath[..nameIndex];
+        }
+
+        Visible = visible;
     }
 
     /// <summary>
     /// Short name of the branch/branch path. <example>"issue1344"</example>.
     /// </summary>
-    public string Name => GetName(FullPath);
+    public string Name { get; }
 
-    protected string ParentPath
-    {
-        get
-        {
-            int separator = FullPath.LastIndexOf('/');
-            return separator < 0 ? string.Empty : FullPath[..separator];
-        }
-    }
+    protected string ParentPath { get; }
 
-    public IGitRef? GitRef { get; }
+    public IGitRef? GitRef { get; init; }
 
     /// <summary>
     /// Full path of the branch. <example>"issues/issue1344"</example>.
@@ -45,41 +55,71 @@ internal abstract class BaseRevisionNode : Node
     /// <summary>
     /// ObjectId for nodes with a revision.
     /// </summary>
-    public ObjectId ObjectId { get; protected init; }
+    public ObjectId ObjectId { get; init; }
 
     public override void ApplyStyle()
     {
-        SetHeader(DisplayText(), Visible ? GetVisibleIcon() : Images.EyeClosed);
+        base.ApplyStyle();
 
         // The source revision node reapplies its normal/invisible ForeColor on style
         // updates, even if a previous search assigned SystemColors.InfoText.
         TreeViewNode.Classes.Remove("repo-search-foreground");
         TreeViewNode.Classes.Set("repo-node-invisible", !Visible);
-        base.ApplyStyle();
         if (!Visible)
         {
+            TreeViewNode.SetImage(Images.EyeClosed);
             ToolTip.SetTip(TreeViewNode, string.Format(TranslatedStrings.InvisibleCommit, FullPath));
         }
     }
 
-    public override int GetHashCode()
-        => FullPath.GetHashCode();
+    public override int GetHashCode() => FullPath.GetHashCode();
 
     public override bool Equals(object? obj)
-        => obj is BaseRevisionNode other
-            && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath, StringComparison.Ordinal));
+    {
+        return obj is BaseRevisionNode other
+            && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath));
+    }
 
     public bool Rebase()
-        => UICommands.StartRebaseDialog(Owner, FullPath);
+    {
+        return UICommands.StartRebaseDialog(ParentWindow(), onto: FullPath);
+    }
 
     public bool Reset()
-        => UICommands.StartResetCurrentBranchDialog(Owner, FullPath);
+    {
+        return UICommands.StartResetCurrentBranchDialog(ParentWindow(), branch: FullPath);
+    }
+
+    internal BaseRevisionNode? CreateRootNode(IDictionary<string, BaseRevisionNode> pathToNode,
+        Func<Tree, string, BaseRevisionNode> createPathNode)
+    {
+        if (string.IsNullOrEmpty(ParentPath))
+        {
+            return this;
+        }
+
+        BaseRevisionNode? result;
+
+        if (pathToNode.TryGetValue(ParentPath, out BaseRevisionNode? parent))
+        {
+            result = null;
+        }
+        else
+        {
+            parent = createPathNode(Tree, ParentPath);
+            pathToNode.Add(ParentPath, parent);
+            result = parent.CreateRootNode(pathToNode, createPathNode);
+        }
+
+        parent.Nodes.AddNode(this);
+
+        return result;
+    }
 
     protected override string DisplayText()
-        => Name;
-
-    protected virtual IImage GetVisibleIcon()
-        => _visibleIcon;
+    {
+        return Name;
+    }
 
     protected virtual void SelectRevision()
     {
@@ -87,11 +127,5 @@ internal abstract class BaseRevisionNode : Node
         {
             GoToRevision(ObjectId.ToString());
         }
-    }
-
-    private static string GetName(string fullPath)
-    {
-        int separator = fullPath.LastIndexOf('/');
-        return separator < 0 ? fullPath : fullPath[(separator + 1)..];
     }
 }

@@ -3,6 +3,8 @@ using Avalonia.Media;
 
 using GitCommands;
 using GitUI.Compat;
+using Microsoft;
+using TreeNode = Avalonia.Controls.TreeViewItem;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.LeftPanel;
@@ -13,71 +15,68 @@ internal abstract class NodeBase
     /// <summary>
     ///  Initializes a new instance of the <see cref="NodeBase"/> class for <see cref="Tree"/> nodes.
     /// </summary>
-    /// <remarks>
-    ///  Initializes a new instance of the <see cref="NodeBase"/> class for non-<see cref="Tree"/> nodes.
-    /// </remarks>
-    protected NodeBase(RepoObjectsTree owner, NodeBase? parent, string caption, IImage icon, bool isBold = false, bool isItalic = false)
+    protected NodeBase(TreeNode treeNode)
     {
-        Owner = owner;
-        Parent = parent;
-        Caption = caption;
-        Nodes = new Nodes(this is Tree tree ? tree : parent?.Nodes.Tree);
-        TreeViewNode = new TreeViewItem
-        {
-            Header = RepoObjectsTree.CreateHeader(caption, icon, isBold, isItalic),
-            Tag = this,
-        };
-        owner.PrepareTreeViewItem(this);
+        Nodes = new Nodes((Tree)this);
+        TreeViewNode = treeNode;
+        treeNode.Tag = this;
     }
 
-    protected RepoObjectsTree Owner { get; }
+    /// <summary>
+    ///  Initializes a new instance of the <see cref="NodeBase"/> class for non-<see cref="Tree"/> nodes.
+    /// </summary>
+    protected NodeBase(Tree? tree)
+    {
+        Nodes = new Nodes(tree);
+    }
+
+    protected RepoObjectsTree Owner
+    {
+        get
+        {
+            Validates.NotNull(Nodes.Tree);
+            return Nodes.Tree.OwnerControl;
+        }
+    }
 
     /// <summary>The child nodes.</summary>
     protected internal Nodes Nodes { get; protected set; }
 
     internal bool HasChildren => Nodes.Count > 0;
 
-    public NodeBase? Parent { get; private set; }
+    // Framework constraint: the parent is the node of the Avalonia item that contains this node's item.
+    public NodeBase? Parent => (TreeViewNode.Parent as TreeNode)?.Tag as NodeBase;
 
     /// <summary>The corresponding tree node.</summary>
-    protected internal virtual TreeViewItem TreeViewNode { get; protected set; }
+    protected internal virtual TreeNode TreeViewNode { get => field ?? throw new NotImplementedException(); set; }
 
     /// <summary>
     /// Marks this node to be included in multi-selection. See <see cref="Select(bool, bool)"/>.
     /// This is remembered here instead of relying on the status of <see cref="TreeViewNode"/>
-    /// because Avalonia's tree highlights a single node independently of multi-selection.
+    /// because <see cref="Nodes.FillTreeViewNode(TreeNode)"/> recycles <see cref="TreeNode"/>s
+    /// and may change the association between <see cref="Node"/> and <see cref="TreeNode"/>.
     /// </summary>
     protected internal bool IsSelected { get; set; }
 
     /// <summary>
     /// Gets whether the commit that the node represents is currently visible in the revision grid.
     /// </summary>
-    public bool Visible { get; set; } = true;
+    public bool Visible { get; set; }
 
     public virtual string SearchText => Caption;
 
-    protected string Caption { get; private set; }
+    protected string Caption => TreeViewNode.GetText();
 
     public IEnumerable<NodeBase> DescendantsAndSelf()
     {
         yield return this;
-        foreach (TreeViewItem childItem in TreeViewNode.Items.Cast<TreeViewItem>())
+        foreach (Node child in Nodes)
         {
-            foreach (NodeBase node in ((NodeBase)childItem.Tag!).DescendantsAndSelf())
+            foreach (NodeBase node in child.DescendantsAndSelf())
             {
                 yield return node;
             }
         }
-    }
-
-    protected internal void AddChild(NodeBase node)
-    {
-        if (node is Node child)
-        {
-            Nodes.AddNode(child);
-        }
-
-        TreeViewNode.Items.Add(node.TreeViewNode);
     }
 
     protected internal void Select(bool select, bool includingDescendants = false)
@@ -88,20 +87,11 @@ internal abstract class NodeBase
         // recursively process descendants if required
         if (includingDescendants && HasChildren)
         {
-            foreach (NodeBase child in DescendantsAndSelf().Skip(1))
+            foreach (Node child in Nodes)
             {
-                child.Select(select);
+                child.Select(select, includingDescendants);
             }
         }
-    }
-
-    internal void Reparent(NodeBase parent)
-        => Parent = parent;
-
-    protected void SetHeader(string caption, IImage icon, bool isBold = false, bool isItalic = false)
-    {
-        Caption = caption;
-        TreeViewNode.Header = RepoObjectsTree.CreateHeader(caption, icon, isBold, isItalic);
     }
 
     #region style / appearance
@@ -132,6 +122,7 @@ internal abstract class NodeBase
         if (text is NativeTreeTextBlock nativeText)
         {
             nativeText.UsesAmbientFont = false;
+            nativeText.UsesNodeFontForMeasurement = style.HasFlag(WinFormsShims.FontStyle.Bold) || style.HasFlag(WinFormsShims.FontStyle.Italic);
         }
 
         text.FontFamily = new FontFamily(AppSettings.Font.Name);
@@ -150,6 +141,7 @@ internal abstract class NodeBase
             && panel.Children.OfType<NativeTreeTextBlock>().FirstOrDefault() is { } text)
         {
             text.UsesAmbientFont = true;
+            text.UsesNodeFontForMeasurement = false;
             text.TextDecorations = null;
         }
     }

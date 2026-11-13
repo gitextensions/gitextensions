@@ -45,12 +45,20 @@ internal sealed class StashTree : BaseRevisionTree
     private Nodes FillStashTree(IReadOnlyCollection<GitRevision> stashes, CancellationToken token)
     {
         Nodes nodes = new(this);
+        Dictionary<string, BaseRevisionNode> pathToNodes = [];
+
         foreach (GitRevision stash in stashes.Where(stash => !string.IsNullOrEmpty(stash.ReflogSelector)))
         {
             token.ThrowIfCancellationRequested();
 
             // Visibility is set after the grid is loaded
-            nodes.AddNode(new StashNode(this, this, stash.ObjectId, stash.ReflogSelector!, stash.Subject, visible: false));
+            StashNode node = new(this, stash.ObjectId, stash.ReflogSelector!, stash.Subject, visible: false);
+            Node? parent = node.CreateRootNode(pathToNodes, (tree, parentPath) => new BasePathNode(tree, parentPath));
+
+            if (parent is not null)
+            {
+                nodes.AddNode(parent);
+            }
         }
 
         return nodes;

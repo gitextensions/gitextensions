@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+﻿using TreeNode = Avalonia.Controls.TreeViewItem;
 
 namespace GitUI.LeftPanel;
 
@@ -72,29 +72,64 @@ internal sealed class Nodes(Tree? tree) : IReadOnlyCollection<Node>
     #endregion
 
     /// <summary>
-    /// This function is responsible for building the TreeViewItem structure that matches this Nodes's
-    /// structure, recursively. To avoid needlessly recreating TreeViewItems, it reuses existing ones
-    /// owned by each Node.
+    /// This function is responsible for building the TreeNode structure that matches this Nodes's
+    /// structure, recursively. To avoid needlessly recreating TreeNodes, it recycles existing ones
+    /// if they are considered equal, so it's important to implement Equals on Node classes.
     /// </summary>
-    internal void FillTreeViewNode(TreeViewItem treeViewNode)
+    internal void FillTreeViewNode(TreeNode treeViewNode)
     {
-        // Avalonia requires each model node to retain its own TreeViewItem because handlers are attached to it.
-        treeViewNode.Items.Clear();
-        foreach (Node node in _nodesList)
+        HashSet<Node> prevNodes = [];
+
+        for (int i = 0; i < treeViewNode.Items.Count; i++)
         {
-            treeViewNode.Items.Add(CreateTreeNode(node));
+            prevNodes.Add(Node.GetNode((TreeNode)treeViewNode.Items[i]!));
+        }
+
+        int oldNodeIdx = 0;
+
+        foreach (Node node in this)
+        {
+            if (oldNodeIdx < treeViewNode.Items.Count)
+            {
+                TreeNode treeNode = (TreeNode)treeViewNode.Items[oldNodeIdx]!;
+                Node oldNode = Node.GetNode(treeNode);
+
+                if (!oldNode.Equals(node) && !prevNodes.Contains(node))
+                {
+                    treeViewNode.Items.Insert(oldNodeIdx, CreateTreeNode(node));
+                }
+                else
+                {
+                    node.TreeViewNode = treeNode;
+                    node.Nodes.FillTreeViewNode(treeNode);
+                }
+            }
+            else
+            {
+                treeViewNode.Items.Add(CreateTreeNode(node));
+            }
+
+            oldNodeIdx++;
+        }
+
+        while (oldNodeIdx < treeViewNode.Items.Count)
+        {
+            treeViewNode.Items.RemoveAt(oldNodeIdx);
         }
 
         return;
 
-        static TreeViewItem CreateTreeNode(Node node)
+        static TreeNode CreateTreeNode(Node node)
         {
-            // Build the whole new subtree before it is attached to the tree view. As soon as a TreeViewItem belongs to
-            // a visible TreeView, adding it, setting its text, image or colour each invalidates the
-            // control, which is very slow for thousands of refs. A detached TreeViewItem
-            // only stores the values, and adding the finished subtree inserts each node once.
-            node.Nodes.FillTreeViewNode(node.TreeViewNode);
-            return node.TreeViewNode;
+            // Build the whole new subtree before it is attached to the tree view. As soon as a TreeNode belongs to
+            // a TreeView that is shown, adding it, setting its text, image or colour each invalidates the
+            // control's layout, which is very slow for thousands of refs. A detached TreeNode
+            // only stores the values, and adding the finished subtree sends a single insert per node.
+            TreeNode treeNode = new();
+            node.TreeViewNode = treeNode;
+            node.Nodes.FillTreeViewNode(treeNode);
+
+            return treeNode;
         }
     }
 

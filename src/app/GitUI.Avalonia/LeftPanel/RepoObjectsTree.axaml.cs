@@ -452,7 +452,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
-    internal static Control CreateHeader(string caption, IImage icon, bool isBold = false, bool isItalic = false)
+    internal static Control CreateHeader(string caption, IImage? icon, bool isBold = false, bool isItalic = false)
         => new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Horizontal,
@@ -461,12 +461,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             Spacing = 3,
             Children =
             {
-                new NativeTreeImageListControl(icon)
-                {
-                    Width = 16,
-                    Height = 16,
-                    Stretch = Stretch.Uniform,
-                },
+                NativeTreeNodeExtensions.CreateImage(icon),
                 new NativeTreeTextBlock
                 {
                     // Live Nodes.FillTreeViewNode updates cache the styled HFONT extent;
@@ -482,12 +477,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 },
             },
         };
-
-    internal void PrepareTreeViewItem(NodeBase node)
-    {
-        // Avalonia input events bubble through treeMain, so one routed handler covers recycled
-        // item templates without attaching a second handler to every model node.
-    }
 
     internal int GetTreePosition(RepoTreeKind kind)
         => kind switch

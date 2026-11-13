@@ -1,13 +1,16 @@
+using System.Diagnostics;
 using GitExtensions.Extensibility.Git;
 using GitUI.LeftPanel.Interfaces;
+using GitUI.Properties;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.LeftPanel;
 
+[DebuggerDisplay("(Local) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
 internal sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
 {
-    public LocalBranchNode(LocalBranchTree tree, NodeBase parent, IGitRef gitRef, bool isCurrent)
-        : base(tree, parent, gitRef.Name, gitRef, remote: false)
+    public LocalBranchNode(Tree tree, in ObjectId objectId, string fullPath, bool isCurrent, bool visible)
+        : base(tree, objectId, fullPath, visible, Images.BranchLocal, Images.BranchLocalMerged)
     {
         IsCurrent = isCurrent;
     }
@@ -25,7 +28,9 @@ internal sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICan
         => base.GetHashCode();
 
     internal override void OnDoubleClick()
-        => Checkout();
+    {
+        Checkout();
+    }
 
     internal override void OnSelected()
     {
@@ -39,24 +44,37 @@ internal sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICan
     }
 
     internal override void OnRename()
-        => Rename();
+    {
+        Rename();
+    }
 
     internal override void OnDelete()
-        => Delete();
+    {
+        Delete();
+    }
 
     public bool Checkout()
-        => MessageBoxes.ConfirmBranchCheckout(Owner, FullPath)
-           && UICommands.StartCheckoutBranch(Owner, FullPath, remote: false);
+    {
+        return MessageBoxes.ConfirmBranchCheckout(ParentWindow(), FullPath) && UICommands.StartCheckoutBranch(ParentWindow(), branch: FullPath, remote: false);
+    }
 
     public bool CreateBranch()
-        => UICommands.StartCreateBranchDialog(Owner, FullPath);
+    {
+        return UICommands.StartCreateBranchDialog(ParentWindow(), branch: FullPath);
+    }
 
     public bool Merge()
-        => UICommands.StartMergeBranchDialog(Owner, FullPath);
+    {
+        return UICommands.StartMergeBranchDialog(ParentWindow(), branch: FullPath);
+    }
 
     public bool Delete()
-        => UICommands.StartDeleteBranchDialog(Owner, FullPath);
+    {
+        return UICommands.StartDeleteBranchDialog(ParentWindow(), branch: FullPath);
+    }
 
     public bool Rename()
-        => UICommands.StartRenameDialog(Owner, FullPath);
+    {
+        return UICommands.StartRenameDialog(ParentWindow(), branch: FullPath);
+    }
 }

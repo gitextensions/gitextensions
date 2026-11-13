@@ -20,9 +20,12 @@ internal sealed class NativeTreeImageListControl : Image
     {
     }
 
-    internal NativeTreeImageListControl(IImage original)
+    internal NativeTreeImageListControl(IImage? original)
     {
-        Source = NativeTreeImageListImage.Create(original, ResolveBackdrop);
+        if (original is not null)
+        {
+            Source = NativeTreeImageListImage.Create(original, ResolveBackdrop);
+        }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

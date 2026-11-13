@@ -1,32 +1,28 @@
 using System.Diagnostics;
 using Avalonia.Controls;
+using Avalonia.Media;
 using GitCommands;
 using GitCommands.Remotes;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitUI.Compat;
 using GitUI.Properties;
 using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitUI.LeftPanel;
 
+[DebuggerDisplay("Remote = {_remote.Name}, FullPath = {FullPath}")]
 internal sealed class RemoteRepoNode : BaseRevisionNode
 {
     private readonly Remote? _remote;
     private readonly IConfigFileRemoteSettingsManager? _remotesManager;
 
-    public RemoteRepoNode(
-        RemoteBranchTree tree,
-        NodeBase parent,
-        string fullPath,
-        Remote? remote,
-        bool enabled,
-        IConfigFileRemoteSettingsManager? remotesManager)
-        : base(tree, parent, fullPath, gitRef: null, GetIcon(remote))
+    public RemoteRepoNode(Tree tree, string fullPath, IConfigFileRemoteSettingsManager? remotesManager, Remote? remote, bool isEnabled)
+        : base(tree, fullPath, visible: true)
     {
         _remote = remote;
-        Enabled = enabled;
+        Enabled = isEnabled;
         _remotesManager = remotesManager;
-        ApplyStyle();
     }
 
     public bool Enabled { get; }
@@ -83,14 +79,38 @@ internal sealed class RemoteRepoNode : BaseRevisionNode
     {
         base.ApplyStyle();
 
-        if (_remote is Remote remote)
+        // Framework constraint: the standalone previewer shows remote nodes without their configuration.
+        if (_remote is not Remote remote)
         {
-            ToolTip.SetTip(
-                TreeViewNode,
-                remote.PushUrls.Count != 1 && remote.FetchUrl != remote.PushUrls[0]
-                    ? $"Fetch: {remote.FetchUrl}\nPush: {string.Join("\n", remote.PushUrls.ToArray())}"
-                    : remote.FetchUrl);
+            TreeViewNode.SetImage(Images.Remote);
+            return;
         }
+
+        ToolTip.SetTip(
+            TreeViewNode,
+            remote.PushUrls.Count != 1 && remote.FetchUrl != remote.PushUrls[0]
+                ? $"Fetch: {remote.FetchUrl}\nPush: {string.Join("\n", remote.PushUrls.ToArray())}"
+                : remote.FetchUrl);
+
+        IImage imageKey;
+        if (remote.FetchUrl.Contains("github.com"))
+        {
+            imageKey = Images.GitHub;
+        }
+        else if (remote.FetchUrl.Contains("bitbucket."))
+        {
+            imageKey = Images.BitBucket;
+        }
+        else if (remote.FetchUrl.Contains("visualstudio.com") || remote.FetchUrl.Contains("dev.azure.com"))
+        {
+            imageKey = Images.VisualStudioTeamServices;
+        }
+        else
+        {
+            imageKey = Images.Remote;
+        }
+
+        TreeViewNode.SetImage(imageKey);
     }
 
     internal override void OnDoubleClick()
@@ -117,27 +137,5 @@ internal sealed class RemoteRepoNode : BaseRevisionNode
             remote: FullPath,
             pullAction: GitPullAction.FetchPruneAll);
         return pullCompleted;
-    }
-
-    private static Avalonia.Media.IImage GetIcon(Remote? remote)
-    {
-        string url = remote?.FetchUrl ?? string.Empty;
-        if (url.Contains("github.com", StringComparison.OrdinalIgnoreCase))
-        {
-            return Images.GitHub;
-        }
-
-        if (url.Contains("bitbucket.", StringComparison.OrdinalIgnoreCase))
-        {
-            return Images.BitBucket;
-        }
-
-        if (url.Contains("visualstudio.com", StringComparison.OrdinalIgnoreCase)
-            || url.Contains("dev.azure.com", StringComparison.OrdinalIgnoreCase))
-        {
-            return Images.VisualStudioTeamServices;
-        }
-
-        return Images.Remote;
     }
 }

@@ -1111,7 +1111,7 @@ public sealed class RepoObjectsTreeTests
                 Nodes loaded = new(branchTree);
                 foreach (IGitRef gitRef in refs(RefsFilter.Heads))
                 {
-                    loaded.AddNode(new LocalBranchNode(branchTree, branchTree, gitRef, gitRef.Name == "main"));
+                    loaded.AddNode(new LocalBranchNode(branchTree, gitRef.ObjectId, gitRef.Name, gitRef.Name == "main", visible: true));
                 }
 
                 return loaded;
@@ -1125,7 +1125,7 @@ public sealed class RepoObjectsTreeTests
             Dispatcher.UIThread.RunJobs();
 
             TreeViewItem refreshedMain = branches.Items.Cast<TreeViewItem>().Single(item => HeaderText(item) == "main");
-            refreshedMain.Should().NotBeSameAs(originalMain);
+            refreshedMain.Should().BeSameAs(originalMain, "like the original, an equal node recycles the existing item");
             accessor.TreeView.Items.Cast<TreeViewItem>().Should().Equal(originalRoots);
             accessor.TreeView.SelectedItem.Should().BeSameAs(refreshedMain);
             accessor.TreeView.SelectedItems.Cast<object>().Should().ContainSingle().Which.Should().BeSameAs(refreshedMain);

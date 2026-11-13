@@ -4,8 +4,10 @@ using Avalonia.Threading;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations.Xliff;
+using GitUI.Compat;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
+using TreeNode = Avalonia.Controls.TreeViewItem;
 
 namespace GitUI.LeftPanel;
 
@@ -32,8 +34,9 @@ internal abstract class Tree : NodeBase, IDisposable
     protected TaskCompletionSource LoadingCompleted = new();
 
     protected Tree(RepoObjectsTree owner, RepoTreeKind kind, string caption, IImage icon)
-        : base(owner, parent: null, caption, icon)
+        : base(new TreeNode { Header = RepoObjectsTree.CreateHeader(caption, icon) })
     {
+        OwnerControl = owner;
         Kind = kind;
 
         // When GitModule has changed, clear selected node
@@ -54,7 +57,7 @@ internal abstract class Tree : NodeBase, IDisposable
 
     public RepoTreeKind Kind { get; }
 
-    internal RepoObjectsTree OwnerControl => Owner;
+    internal RepoObjectsTree OwnerControl { get; }
 
     public IGitUICommands UICommands => _uiCommandsSource?.UICommands ?? Owner.UICommands;
 
@@ -233,13 +236,9 @@ internal abstract class Tree : NodeBase, IDisposable
 
     protected void Complete(string caption, Avalonia.Media.IImage icon, bool expanded)
     {
-        SetHeader(caption, icon);
+        TreeViewNode.SetText(caption);
+        TreeViewNode.SetImage(icon);
         TreeViewNode.IsExpanded = expanded;
-        foreach (NodeBase node in DescendantsAndSelf().Skip(1))
-        {
-            node.ApplyStyle();
-        }
-
         FillTreeViewNode(originalSelectedNodeFullNamePath: null, _firstReloadNodesSinceModuleChanged);
         ExpandPathToSelectedNode();
         if (Nodes.Count > 0)

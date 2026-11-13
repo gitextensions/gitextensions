@@ -7,21 +7,18 @@ using ResourceManager;
 
 namespace GitUI.LeftPanel;
 
-[DebuggerDisplay("(Stash) ReflogSelector = {ReflogSelector}, Hash = {ObjectId}")]
+[DebuggerDisplay("(Tag) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
 internal sealed class StashNode : BaseRevisionNode
 {
-    public StashNode(StashTree tree, NodeBase parent, in ObjectId objectId, string reflogSelector, string subject, bool visible)
-        : base(tree, parent, reflogSelector.RemovePrefix("refs/"), gitRef: null, GitUI.Properties.Images.Stash)
+    public StashNode(Tree tree, in ObjectId objectId, string reflogSelector, string subject, bool visible)
+        : base(tree, reflogSelector.RemovePrefix("refs/"), visible)
     {
         ObjectId = objectId;
         DisplayName = $"{reflogSelector.RemovePrefix(GitRefName.RefsStashPrefix)}: {subject}";
         ReflogSelector = reflogSelector;
-        Visible = visible;
-        ApplyStyle();
     }
 
     public string DisplayName { get; }
-
     public string ReflogSelector { get; }
 
     internal override void OnSelected()
@@ -96,6 +93,11 @@ internal sealed class StashNode : BaseRevisionNode
     public override void ApplyStyle()
     {
         base.ApplyStyle();
+
+        TreeViewNode.SetImage(
+            Visible
+                ? GitUI.Properties.Images.Stash
+                : GitUI.Properties.Images.EyeClosed);
     }
 
     protected override string DisplayText()

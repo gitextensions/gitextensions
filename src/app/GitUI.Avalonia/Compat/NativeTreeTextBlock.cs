@@ -20,10 +20,10 @@ internal sealed class NativeTreeTextBlock : TextBlock
     }
 
     /// <summary>
-    ///  Gets whether this header was created by the live native node-update route, which
+    ///  Gets or sets whether this header follows the live native node-update route, which
     ///  selects an existing styled NodeFont before caching the item's text extent.
     /// </summary>
-    internal bool UsesNodeFontForMeasurement { get; init; }
+    internal bool UsesNodeFontForMeasurement { get; set; }
 
     /// <summary>
     ///  Gets or sets whether the native node has no authored NodeFont and paints with the tree font.

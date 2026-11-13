@@ -3839,7 +3839,7 @@
     "twin": "src/app/GitUI.Avalonia/LeftPanel/Nodes.cs",
     "status": "functional",
     "basedOn": "23c361e77cc5cc86b143f634a5d0bf8bb4e674bd",
-    "notes": "Preserves collection, insertion, depth enumeration, and model-to-control synchronization. Avalonia nodes retain their own TreeViewItem because routed handlers are attached to that native item instead of recycling a WinForms TreeNode across model nodes. 2026-11-03 Tier 1 comment review: Original and twin members reviewed; surviving comments restored verbatim or minimally adapted beside their code. Exact moved, absent and adapted-wording pins preserve the source text and reviewed rationale; accepted pins are separate from closed findings. No parity axis promoted."
+    "notes": "Preserves collection, insertion, depth enumeration, and model-to-control synchronization. As in the original, FillTreeViewNode recycles the TreeViewItem of an equal node and reassigns it to the new node; input is handled once on the tree, not per item. 2026-11-03 Tier 1 comment review: Original and twin members reviewed; surviving comments restored verbatim or minimally adapted beside their code. Exact moved, absent and adapted-wording pins preserve the source text and reviewed rationale; accepted pins are separate from closed findings. No parity axis promoted."
   },
   "src/app/GitUI/LeftPanel/RepoObjectsTree.Command.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.Command.cs",

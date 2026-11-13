@@ -1,31 +1,21 @@
-﻿using Avalonia.Controls;
+﻿using GitUI.Compat;
 using GitUI.Properties;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.LeftPanel;
 
 // Top-level nodes used to group SubmoduleNodes
-internal sealed class SubmoduleFolderNode : Node
+internal sealed class SubmoduleFolderNode(Tree tree, string name) : Node(tree)
 {
-    private string _name;
-
-    public SubmoduleFolderNode(Tree tree, NodeBase parent, string name)
-        : base(tree, parent, name, Images.FolderClosed, isItalic: true)
-    {
-        _name = name;
-    }
-
-    internal string Name => _name;
-
     protected override string DisplayText()
     {
-        return _name;
+        return name;
     }
 
     public override void ApplyStyle()
     {
-        SetHeader(DisplayText(), Images.FolderClosed, isItalic: true);
         base.ApplyStyle();
+        TreeViewNode.SetImage(Images.FolderClosed);
     }
 
     /// <summary>
@@ -35,21 +25,11 @@ internal sealed class SubmoduleFolderNode : Node
     /// </summary>
     public void CompactSingleChildFolders()
     {
-        while (TreeViewNode.Items is [TreeViewItem { Tag: SubmoduleFolderNode childFolder }])
+        while (Nodes is [SubmoduleFolderNode childFolder])
         {
-            _name += "/" + childFolder._name;
-            TreeViewItem[] children = [.. childFolder.TreeViewNode.Items.Cast<TreeViewItem>()];
-            TreeViewNode.Items.Clear();
-            Nodes.Clear();
-            foreach (TreeViewItem child in children)
-            {
-                Node node = (Node)child.Tag!;
-                node.Reparent(this);
-                Nodes.AddNode(node);
-                TreeViewNode.Items.Add(child);
-            }
+            name += "/" + childFolder.DisplayText();
 
-            ApplyStyle();
+            Nodes = childFolder.Nodes;
         }
     }
 

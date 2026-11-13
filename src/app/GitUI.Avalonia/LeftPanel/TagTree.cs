@@ -10,22 +10,29 @@ internal sealed class TagTree : BaseRefTree
     public TagTree(RepoObjectsTree owner, IReadOnlyList<IGitRef> tags, ICheckRefs? refsSource = null)
         : base(owner, RepoTreeKind.Tags, TranslatedStrings.Tags, Images.TagHorizontal, refsSource, RefsFilter.Tags)
     {
-        FillTree(tags, CancellationToken.None);
+        Nodes.AddNodes(FillTree(tags, CancellationToken.None));
         Complete(TranslatedStrings.Tags, Images.TagHorizontal, expanded: false);
     }
 
     protected override Nodes FillTree(IReadOnlyList<IGitRef> tags, CancellationToken token)
     {
-        FillNested(
-            tags,
-            (parent, path, gitRef, _) =>
+        Nodes nodes = new(this);
+        Dictionary<string, BaseRevisionNode> pathToNodes = [];
+
+        foreach (IGitRef tag in tags)
+        {
+            token.ThrowIfCancellationRequested();
+
+            TagNode tagNode = new(this, tag.ObjectId, tag.Name, visible: true) { GitRef = tag };
+            BaseRevisionNode? parent = tagNode.CreateRootNode(pathToNodes, (tree, parentPath) => new BasePathNode(tree, parentPath));
+
+            if (parent is not null)
             {
-                token.ThrowIfCancellationRequested();
-                return gitRef is null
-                    ? new BasePathNode(this, parent, path)
-                    : new TagNode(this, parent, gitRef);
-            });
-        return Nodes;
+                nodes.AddNode(parent);
+            }
+        }
+
+        return nodes;
     }
 
     protected override void PostFillTreeViewNode(bool firstTime)
