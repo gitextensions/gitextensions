@@ -62,6 +62,11 @@ public partial class PluginSettingsPage : AutoLayoutSettingsPage
     {
         PluginSettingsPage result = Create<PluginSettingsPage>(pageHost, serviceProvider);
         result.Init(gitPlugin);
+
+        // Create<T>() enabled word boundaries before Init() generated the plugin's setting inputs,
+        // so those inputs were not yet present to be hooked. Re-run it now that they exist; it is
+        // idempotent for the controls already hooked.
+        result.EnableProperWordBoundaries();
         return result;
     }
 

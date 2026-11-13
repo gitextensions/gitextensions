@@ -5,6 +5,7 @@ internal static partial class NativeMethods
     public const int WM_USER = 0x0400;
     public const int WM_LBUTTONDOWN = 0x0201;
     public const int WM_LBUTTONUP = 0x0202;
+    public const int WM_LBUTTONDBLCLK = 0x0203;
     public const int WM_RBUTTONDOWN = 0x0204;
     public const int WM_RBUTTONUP = 0x0205;
     public const int WM_MOUSEACTIVATE = 0x21;
@@ -35,6 +36,8 @@ internal static partial class NativeMethods
     public const int TMT_FONT = 210;
 
     public const int EM_FORMATRANGE = WM_USER + 57;
+    public const int EM_SETSEL = 0x00B1;
+    public const int EM_SCROLLCARET = 0x00B7;
     public const int EM_LINEINDEX = 0x00BB;
     public const int EM_LINELENGTH = 0x00C1;
     public const int EM_POSFROMCHAR = 0x00D6;
