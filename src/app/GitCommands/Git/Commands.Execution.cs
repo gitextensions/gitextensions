@@ -138,6 +138,22 @@ public static partial class Commands
     }
 
     /// <summary>
+    ///  Gets the commit ID of the currently checked out commit.
+    ///  If the repo is bare, has no commits or is corrupt, a zero <see cref="ObjectId"/> is returned.
+    /// </summary>
+    /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
+    /// <returns>The commit ID of HEAD; a zero <see cref="ObjectId"/> if it could not be determined.</returns>
+    public static ObjectId GetCurrentCheckout(this IExecutable gitExecutable)
+    {
+        GitArgumentBuilder args = new("rev-parse") { "HEAD" };
+        ExecutionResult result = gitExecutable.Execute(args, throwOnErrorExit: false);
+
+        return result.ExitedSuccessfully && ObjectId.TryParse(result.StandardOutput, offset: 0, out ObjectId objectId)
+            ? objectId
+            : default;
+    }
+
+    /// <summary>
     ///  Gets the first tag pointing at HEAD.
     /// </summary>
     /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
