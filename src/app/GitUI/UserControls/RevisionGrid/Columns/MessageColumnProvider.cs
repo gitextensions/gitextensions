@@ -709,19 +709,13 @@ internal sealed class MessageColumnProvider : ColumnProvider
         string name,
         RefLabelShape shape)
     {
-        if (gitRef.IsBisect)
+        if (gitRef.IsBisectGood)
         {
-            if (gitRef.IsBisectGood)
-            {
-                DrawImage(e, _bisectGoodImage, messageBounds, ref offset);
-                return (Rectangle.Empty, DrawHighlight: null);
-            }
-
-            if (gitRef.IsBisectBad)
-            {
-                DrawImage(e, _bisectBadImage, messageBounds, ref offset);
-                return (Rectangle.Empty, DrawHighlight: null);
-            }
+            DrawImage(e, _bisectGoodImage, messageBounds, ref offset);
+        }
+        else if (gitRef.IsBisectBad)
+        {
+            DrawImage(e, _bisectBadImage, messageBounds, ref offset);
         }
 
         Color headColor = GetRefColor(gitRef, style);
