@@ -11,8 +11,10 @@ public class DeleteUnusedBranchesFormSettings
         string regexFilter,
         bool regexCaseInsensitiveFlag,
         bool regexInvertedFlag,
-        bool includeUnmergedBranchesFlag)
+        bool includeUnmergedBranchesFlag,
+        bool includeSessionRefsFlag)
     {
+        IncludeSessionRefsFlag = includeSessionRefsFlag;
         MergedInBranch = mergedInBranch;
         DaysOlderThan = daysOlderThan;
         DeleteRemoteBranchesFromFlag = removeDeleteRemoteBranchesFromFlag;
@@ -33,4 +35,5 @@ public class DeleteUnusedBranchesFormSettings
     public bool RegexCaseInsensitiveFlag { get; }
     public bool RegexInvertedFlag { get; }
     public bool IncludeUnmergedBranchesFlag { get; }
+    public bool IncludeSessionRefsFlag { get; }
 }

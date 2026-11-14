@@ -63,6 +63,7 @@ partial class DeleteUnusedBranchesForm
         includeUnmergedBranches = new CheckBox();
         useRegexCaseInsensitive = new CheckBox();
         regexDoesNotMatch = new CheckBox();
+        includeSessionRefs = new CheckBox();
         statusStrip1 = new StatusStrip();
         statusStrip1.SuspendLayout();
         pnlBranchesArea.SuspendLayout();
@@ -278,6 +279,7 @@ partial class DeleteUnusedBranchesForm
         tableLayoutPanel3.Controls.Add(RefreshBtn, 1, 7);
         tableLayoutPanel3.Controls.Add(includeUnmergedBranches, 0, 6);
         tableLayoutPanel3.Controls.Add(regexDoesNotMatch, 1, 5);
+        tableLayoutPanel3.Controls.Add(includeSessionRefs, 0, 7);
         tableLayoutPanel3.Dock = DockStyle.Fill;
         tableLayoutPanel3.Location = new Point(3, 28);
         tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -414,7 +416,18 @@ partial class DeleteUnusedBranchesForm
         regexDoesNotMatch.TabIndex = 16;
         regexDoesNotMatch.Text = "Does not match";
         regexDoesNotMatch.UseVisualStyleBackColor = true;
-        // 
+        //
+        // includeSessionRefs
+        //
+        includeSessionRefs.AutoSize = true;
+        includeSessionRefs.Location = new Point(3, 213);
+        includeSessionRefs.Name = "includeSessionRefs";
+        includeSessionRefs.Size = new Size(181, 19);
+        includeSessionRefs.TabIndex = 17;
+        includeSessionRefs.Text = "Include agentic session refs";
+        includeSessionRefs.UseVisualStyleBackColor = true;
+        includeSessionRefs.CheckedChanged += ClearResults;
+        //
         // DeleteUnusedBranchesForm
         // 
         AutoScaleDimensions = new SizeF(96F, 96F);
@@ -476,4 +489,5 @@ partial class DeleteUnusedBranchesForm
     private DataGridViewTextBoxColumn Message;
     private CheckBox useRegexCaseInsensitive;
     private CheckBox regexDoesNotMatch;
+    private CheckBox includeSessionRefs;
 }
