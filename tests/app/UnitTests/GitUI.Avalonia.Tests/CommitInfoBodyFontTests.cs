@@ -49,7 +49,7 @@ public sealed class CommitInfoBodyFontTests
             AppSettings.CommitFont = new WinFormsShims.Font(family, points);
             AvaloniaFontSettings.ApplyAppSettings();
             CommitInfo control = new();
-            CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             accessor.TableLayout.IsVisible = true;
             XhtmlTextBlock[] blocks = [accessor.CommitMessage, accessor.RevisionInfo];
             foreach (XhtmlTextBlock block in blocks)
@@ -193,7 +193,7 @@ public sealed class CommitInfoBodyFontTests
             AppSettings.CommitFont = new WinFormsShims.Font("Consolas", 18);
             AvaloniaFontSettings.ApplyAppSettings();
             CommitInfo control = new();
-            CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             accessor.TableLayout.IsVisible = true;
             accessor.CommitMessage.SetXHTMLText(PlainParagraphs);
             accessor.RevisionInfo.SetXHTMLText(PlainParagraphs);

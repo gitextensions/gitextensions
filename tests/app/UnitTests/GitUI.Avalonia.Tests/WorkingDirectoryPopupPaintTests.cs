@@ -31,7 +31,7 @@ public sealed class WorkingDirectoryPopupPaintTests
     {
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
         WorkingDirectoryToolStripSplitButton selector = new();
-        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        WorkingDirectoryTestSupport.Accessor accessor = selector.GetTestAccessor();
         Repository favouriteRepository = new(Path.Combine(Path.GetTempPath(), "GitExtensions.WorkingDirectoryPaint")) { Category = "Paint probe" };
         accessor.PrepareDropDown([favouriteRepository], []);
         Window window = new()

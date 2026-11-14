@@ -968,7 +968,7 @@ public partial class CommitInfo : GitModuleControl
     // Avalonia has no WinForms OnLayout event. Measure/arrange supply the real parent
     // constraint, while finite source columns prevent ScrollViewer's infinity from
     // disabling RichEdit-style word wrapping.
-    private void OnLayout(Size availableSize)
+    protected void OnLayout(Size availableSize)
     {
         if (!tableLayout.IsVisible)
         {
@@ -1249,42 +1249,12 @@ public partial class CommitInfo : GitModuleControl
             _commitInfo = commitInfo;
         }
 
-        public AvatarControl Avatar => _commitInfo.commitInfoHeader.GetTestAccessor().Avatar;
-
         public XhtmlTextBlock CommitMessage => _commitInfo.rtbxCommitMessage;
 
         public XhtmlTextBlock RevisionInfo => _commitInfo.RevisionInfo;
 
-        public CommitInfoHeader Header => _commitInfo.commitInfoHeader;
-
-        public MenuItem AddNoteMenuItem => _commitInfo.addNoteToolStripMenuItem;
-
-        public ContextMenu ContextMenu => _commitInfo.commitInfoContextMenuStrip;
-
-        public MenuItem CopyLinkMenuItem => _commitInfo.copyLinkToolStripMenuItem;
-
-        public MenuItem ShowLocalBranchesMenuItem => _commitInfo.showContainedInBranchesToolStripMenuItem;
-
-        public MenuItem ShowRemoteBranchesMenuItem => _commitInfo.showContainedInBranchesRemoteToolStripMenuItem;
-
-        public MenuItem ShowRemoteBranchesIfNoLocalMenuItem => _commitInfo.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem;
-
-        public MenuItem ShowTagsMenuItem => _commitInfo.showContainedInTagsToolStripMenuItem;
-
-        public MenuItem ShowAnnotatedTagMessagesMenuItem => _commitInfo.showMessagesOfAnnotatedTagsToolStripMenuItem;
-
-        public MenuItem ShowDerivedTagMenuItem => _commitInfo.showTagThisCommitDerivesFromMenuItem;
-
-        public Grid TableLayout => _commitInfo.tableLayout;
-
-        public Border CommitMessagePanel => _commitInfo.pnlCommitMessage;
-
-        public int CommitMessageHeight => _commitInfo._commitMessageHeight;
-
-        public int RevisionInfoHeight => _commitInfo._revisionInfoHeight;
-
         public IDictionary<string, int> GetSortedTags() => _commitInfo.GetSortedTags();
 
-        public void LinkClicked(object sender, string linkUri) => _commitInfo.LinkClicked(sender, new LinkClickedEventArgs(linkUri));
+        public void LinkClicked(object sender, LinkClickedEventArgs e) => _commitInfo.LinkClicked(sender, e);
     }
 }

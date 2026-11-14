@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -38,22 +39,53 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         /// <summary>
         ///  Gets the current instance of the git module.
         /// </summary>
-        private IGitModule? Module => _button._getUICommands?.Invoke().Module;
+        private IGitModule Module => UICommands.Module;
+
+        /// <summary>
+        ///  Gets the active or the first open form.
+        /// </summary>
+        private static Window? ActiveOrOpenForm
+            => Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+                ? desktop.Windows.FirstOrDefault(window => window.IsActive) ?? desktop.Windows.FirstOrDefault()
+                : null;
+
+        /// <summary>
+        ///  Gets the current instance of the UI commands.
+        /// </summary>
+        private IGitUICommands UICommands => _getUICommands();
+
+        private readonly Func<IGitUICommands> _getUICommands;
 
         /// <summary>
         ///  The current instance of the <see cref="RepositoryHistoryUIService"/>.
         /// </summary>
-        private IRepositoryHistoryUIService? RepositoryHistoryUIService => _button._repositoryHistoryUIService;
+        private readonly IRepositoryHistoryUIService _repositoryHistoryUIService;
 
         // Avalonia retains its native split-button owner for flyout updates.
         private readonly WorkingDirectoryToolStripSplitButton _button;
 
-        internal Implementation(WorkingDirectoryToolStripSplitButton button)
+        internal Implementation(
+            WorkingDirectoryToolStripSplitButton button,
+            Func<IGitUICommands> getUICommands,
+            IRepositoryHistoryUIService repositoryHistoryUIService)
         {
             _button = button;
+            _getUICommands = getUICommands;
+            _repositoryHistoryUIService = repositoryHistoryUIService;
+            button._menu.Opening += (s, e) =>
+            {
+                if (button._dropDownPreparedForTest)
+                {
+                    button._dropDownPreparedForTest = false;
+                    return;
+                }
+
+                FillDropDown(button);
+            };
+            button.AddHandler(PointerReleasedEvent, MouseUpHandler, RoutingStrategies.Tunnel);
         }
 
-        internal void FillDropDown()
+        private void FillDropDown(WorkingDirectoryToolStripSplitButton button)
         {
             // Do not rebuild while the dropdown is open — Clear() would close it.
             if (_button._menu.IsOpen)
@@ -61,24 +93,24 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
                 return;
             }
 
-            if (RepositoryHistoryUIService is not null)
-            {
-                RepositoryHistorySnapshot snapshot = RepositoryHistoryUIService.LoadSnapshot();
-                _button.FillDropDown(snapshot);
-                return;
-            }
-
-            IList<Repository> favourites = ThreadHelper.JoinableTaskFactory.Run(
-                RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
-            IList<Repository> recent = ThreadHelper.JoinableTaskFactory.Run(
-                RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
-            _button.FillDropDown(favourites, recent);
+            RepositoryHistorySnapshot snapshot = _repositoryHistoryUIService.LoadSnapshot();
+            button.FillDropDown(snapshot);
         }
 
-        internal void RefreshContent()
+        private void MouseUpHandler(object? sender, PointerReleasedEventArgs e)
+        {
+            if (e.InitialPressMouseButton == MouseButton.Right)
+            {
+                _button._openRepository?.Invoke();
+                e.Handled = true;
+            }
+        }
+
+        internal void RefreshContent(WorkingDirectoryToolStripSplitButton button)
         {
             Window? owner = TopLevel.GetTopLevel(_button) as Window
-                ?? _button.GetLogicalAncestors().OfType<Window>().FirstOrDefault(window => window.IsVisible);
+                ?? _button.GetLogicalAncestors().OfType<Window>().FirstOrDefault(window => window.IsVisible)
+                ?? ActiveOrOpenForm;
             if (owner is null)
             {
                 // The component is unparented, no point doing anything.
@@ -88,15 +120,10 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             // The source uses an open Form for measurement, not the item's current
             // ToolStrip parent. Overflow retains its logical owner even when its visual
             // parent is a PopupRoot or the closed overflow has no visual parent.
-            if (Module is not IGitModule module)
-            {
-                return;
-            }
-
             // A successful explicit refresh already crossed the source open-form boundary.
             // Its first overflow attachment must not repeat repository-history writes.
             _button._contentOwner = owner;
-            string path = module.WorkingDir;
+            string path = Module.WorkingDir;
 
             // It appears at times Module.WorkingDir path is an empty string,
             // this caused issues like https://github.com/gitextensions/gitextensions/issues/4874.
@@ -106,9 +133,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
                 return;
             }
 
-            IList<Repository> recentRepositoryHistory = RepositoryHistoryUIService?.AddAsMostRecent(path)
-                ?? ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
-            _button.RefreshContent(path, recentRepositoryHistory);
+            IList<Repository> recentRepositoryHistory = _repositoryHistoryUIService.AddAsMostRecent(path);
+            button.RefreshContent(path, recentRepositoryHistory);
         }
 
         internal void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
@@ -141,7 +167,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     // This is used to mark controls which are to be excluded from the filtering considerations.
     private readonly HashSet<MenuItem> _fixedItems = [];
-    private readonly Dictionary<MenuItem, string> _repositoryItemTexts = [];
     private readonly MenuItem _filterHost;
     private readonly MenuFlyout _menu;
     private readonly TextBox _txtFilter = new NativeToolStripMenuTextBox();
@@ -155,15 +180,12 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private Implementation? _implementation;
     private Window? _contentOwner;
 
+    // parity-scaffolding: retain fixture-supplied popup items for native input probes.
     private bool _dropDownPreparedForTest;
     private KeyModifiers _repositoryActivationModifiers;
     private Action? _closeRepository;
     private Action? _configure;
 
-    /// <summary>
-    ///  Gets the current instance of the UI commands.
-    /// </summary>
-    private Func<IGitUICommands>? _getUICommands;
     private IRepositoryHistoryUIService? _repositoryHistoryUIService;
     private Action<string>? _launchRepository;
     private Action? _openRepository;
@@ -172,9 +194,9 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private KeyGesture? _openRepositoryGesture;
     private string? _closeRepositoryShortcutDisplay;
     private string? _openRepositoryShortcutDisplay;
-    private string _closeRepositoryText = "Close (go to Dashboard)";
+    private string _closeRepositoryText = "_Close (go to Dashboard)";
     private string _favouriteRepositoriesText = "&Favorite repositories";
-    private string _openRepositoryText = "Open repository";
+    private string _openRepositoryText = "_Open...";
 
     public WorkingDirectoryToolStripSplitButton()
     {
@@ -210,12 +232,9 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         _dropDownLayout = new NativeToolStripDropDownLayout(this, _menu, _filterHost, _txtFilter);
         _menu.Items.Add(_filterHost);
         Click += (_, _) => OpenFlyout();
-        _menu.Opening += Menu_Opening;
         _menu.Opened += (_, _) => ApplySourceShortcutText();
         _txtFilter.TextChanged += (_, _) => ApplyFilter();
         _txtFilter.KeyDown += TxtFilter_KeyDown;
-        AddHandler(PointerReleasedEvent, MouseUpHandler, RoutingStrategies.Tunnel);
-        _implementation = new Implementation(this);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -260,7 +279,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         ArgumentNullException.ThrowIfNull(closeRepository);
         ArgumentNullException.ThrowIfNull(configure);
 
-        _getUICommands = getUICommands;
         _repositoryHistoryUIService = repositoryHistoryUIService;
         _setWorkingDirectory = setWorkingDirectory;
         _launchRepository = launchRepository;
@@ -268,6 +286,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         _closeRepository = closeRepository;
         _configure = configure;
         Translator.Translate(this, AppSettings.CurrentTranslation);
+        _implementation = new Implementation(this, getUICommands, repositoryHistoryUIService);
         RefreshContent();
     }
 
@@ -275,7 +294,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     public void RefreshContent()
 
         // If the component is not initialized, no point doing anything.
-        => _implementation?.RefreshContent();
+        => _implementation?.RefreshContent(this);
 
     private void RefreshContent(string path, IList<Repository> recentRepositoryHistory)
     {
@@ -310,9 +329,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     public void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
         => _implementation?.RefreshShortcutKeys(hotkeys);
 
-    private void FillDropDown()
-        => _implementation?.FillDropDown();
-
     private void FillDropDown(RepositoryHistorySnapshot snapshot)
     {
         ResetDropDown();
@@ -320,17 +336,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         AddRecentRepositories(snapshot.Recent, snapshot.TopCount);
         AddFixedItems();
         ApplySourceDropDownWidth();
-    }
-
-    private void Menu_Opening(object? sender, EventArgs e)
-    {
-        if (_dropDownPreparedForTest)
-        {
-            _dropDownPreparedForTest = false;
-            return;
-        }
-
-        FillDropDown();
     }
 
     private void FillDropDown(IList<Repository> favourites, IList<Repository> recent)
@@ -361,7 +366,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         }
 
         _fixedItems.Clear();
-        _repositoryItemTexts.Clear();
         _tsmiCategorisedRepos?.Items.Clear();
 
         // We are clearing the textbox while opening the dropdown
@@ -541,7 +545,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             Tag = repository,
             Icon = anchored ? CreateIcon(Images.Pin) : null,
         };
-        _repositoryItemTexts.Add(item, sourceText);
         item.Classes.Add("gitextensions-working-directory-entry");
         item.Classes.Add("gitextensions-working-directory-repository");
         ToolTip.SetTip(item, repository.Repo.Path == repository.Caption ? null : repository.Repo.Path);
@@ -565,7 +568,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             Tag = repository,
             Icon = anchored ? CreateIcon(Images.Pin) : null,
         };
-        _repositoryItemTexts.Add(item, sourceText);
         item.Classes.Add("gitextensions-working-directory-entry");
         item.Classes.Add("gitextensions-working-directory-repository");
         WinFormsToolStripMenuSizer.SetShortcutDisplayString(item, repository.BranchName);
@@ -614,11 +616,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     private string? GetSourceItemText(MenuItem item)
     {
-        if (_repositoryItemTexts.TryGetValue(item, out string? sourceText))
-        {
-            return sourceText;
-        }
-
         if (item.Header is not string text)
         {
             return null;
@@ -727,8 +724,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
                 // categories and fixed actions are explicitly excluded, including their children.
                 // Its ToolStripItem.Text retains the source '&' markers and literal '_';
                 // Avalonia's escaped AccessText Header must not become the search model.
-                string? sourceText = _repositoryItemTexts.TryGetValue(item, out string? repositoryText)
-                    ? repositoryText : item.Header as string;
+                string? sourceText = GetSourceItemText(item);
                 item.IsVisible = string.IsNullOrWhiteSpace(filter)
                     || sourceText?.Contains(filter, StringComparison.CurrentCultureIgnoreCase) is true;
             }
@@ -742,15 +738,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             // The native hosted input preprocesses Escape by closing its dropdown;
             // FillDropDown clears the retained text only on the next actual opening.
             _menu.Hide();
-            e.Handled = true;
-        }
-    }
-
-    private void MouseUpHandler(object? sender, PointerReleasedEventArgs e)
-    {
-        if (e.InitialPressMouseButton == MouseButton.Right)
-        {
-            _openRepository?.Invoke();
             e.Handled = true;
         }
     }
@@ -804,60 +791,5 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     {
         _menu.Hide();
         _dropDownLayout.Dispose();
-    }
-
-    internal TestAccessor GetTestAccessor() => new(this);
-
-    internal readonly struct TestAccessor(WorkingDirectoryToolStripSplitButton control)
-    {
-        public MenuFlyout Menu => control._menu;
-
-        public TextBox Filter => control._txtFilter;
-
-        public MenuItem FilterHost => control._filterHost;
-
-        // parity-scaffolding: expose the consumed layout model, not native-looking capture projections.
-        public NativeToolStripDropDownLayout.Group Layout => control._dropDownLayout.Root;
-
-        public void FillDropDown(IList<Repository> favourites, IList<Repository> recent)
-            => control.FillDropDown(favourites, recent);
-
-        public void FillDropDown(RepositoryHistorySnapshot snapshot)
-            => control.FillDropDown(snapshot);
-
-        public void ApplyFilterForTesting() => control.ApplyFilter();
-
-        public void ShowDropDown(IList<Repository> favourites, IList<Repository> recent)
-        {
-            PrepareDropDown(favourites, recent);
-            control._menu.ShowAt(control);
-        }
-
-        public void PrepareDropDown(IList<Repository> favourites, IList<Repository> recent)
-        {
-            control.FillDropDown(favourites, recent);
-            control._dropDownPreparedForTest = true;
-        }
-
-        public void PrepareDropDown(RepositoryHistorySnapshot snapshot)
-        {
-            control.FillDropDown(snapshot);
-            control._dropDownPreparedForTest = true;
-        }
-
-        public void RefreshContent(string path, IList<Repository> recent)
-            => control.RefreshContent(path, recent);
-
-        public void SetRepositoryActions(Action<string> setWorkingDirectory, Action<string> launchRepository)
-        {
-            control._setWorkingDirectory = setWorkingDirectory;
-            control._launchRepository = launchRepository;
-        }
-
-        public void SetOpenRepositoryAction(Action openRepository)
-            => control._openRepository = openRepository;
-
-        public void OpenRepository(string path, bool openInNewInstance)
-            => control.OpenRepository(path, openInNewInstance);
     }
 }

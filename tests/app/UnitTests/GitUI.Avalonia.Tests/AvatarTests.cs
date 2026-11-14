@@ -503,7 +503,7 @@ public sealed class AvatarTests
             await AvatarService.CacheCleaner.ClearCacheAsync();
 
             CommitInfo control = new() { Revision = CreateRevision() };
-            AvatarControl avatar = control.GetTestAccessor().Avatar;
+            AvatarControl avatar = control.GetNativeTestSupport().Avatar;
 
             await WaitUntilAsync(() => avatar.GetTestAccessor().Image.Source is Bitmap);
 

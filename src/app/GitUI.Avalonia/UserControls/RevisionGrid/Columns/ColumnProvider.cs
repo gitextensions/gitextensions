@@ -106,7 +106,7 @@ internal abstract class ColumnProvider
         ToolTip.SetTip(
             control,
             AppSettings.ShowRevisionGridTooltips
-                && TryGetToolTip(revision, out string? toolTip)
+                && TryGetToolTip(revision, highlightRef: null, out string? toolTip)
                     ? toolTip
                     : null);
     }

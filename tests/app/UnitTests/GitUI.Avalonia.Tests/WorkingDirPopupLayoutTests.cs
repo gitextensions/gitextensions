@@ -48,7 +48,7 @@ public sealed class WorkingDirPopupLayoutTests
         strip.Items.Add(selector);
         Window window = CreateWindow(strip, rightToLeft);
         window.FontSize = (ambientEleven ? 11 : 9) * 96d / 72;
-        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        WorkingDirectoryTestSupport.Accessor accessor = selector.GetTestAccessor();
         try
         {
             window.Show();
@@ -134,7 +134,7 @@ public sealed class WorkingDirPopupLayoutTests
         using WorkingDirectoryToolStripSplitButton selector = new() { UseNativeToolStripLayout = true, Width = 140 };
         strip.Items.Add(selector);
         Window window = CreateWindow(strip, rightToLeft);
-        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        WorkingDirectoryTestSupport.Accessor accessor = selector.GetTestAccessor();
         try
         {
             window.Show();
@@ -189,7 +189,7 @@ public sealed class WorkingDirPopupLayoutTests
     public void Favourite_submenus_should_use_owned_layout_without_replacing_menu_interactions(bool rightToLeft)
     {
         using WorkingDirectoryToolStripSplitButton selector = new();
-        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        WorkingDirectoryTestSupport.Accessor accessor = selector.GetTestAccessor();
         Window window = CreateWindow(selector, rightToLeft);
         try
         {
@@ -243,7 +243,7 @@ public sealed class WorkingDirPopupLayoutTests
     public void Owned_fonts_should_preserve_explicit_item_overrides_and_release_removed_controls()
     {
         using WorkingDirectoryToolStripSplitButton selector = new() { FontSize = 11 * 96d / 72 };
-        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        WorkingDirectoryTestSupport.Accessor accessor = selector.GetTestAccessor();
         accessor.FillDropDown(CreateSnapshot());
         MenuItem repository = accessor.Menu.Items.OfType<MenuItem>().First(item => item.Tag is RepositoryHistoryEntry);
         repository.FontSize = 18;
@@ -297,7 +297,7 @@ public sealed class WorkingDirPopupLayoutTests
     public void Owned_caption_should_paint_all_source_prefixes_without_changing_its_header_or_first_access_key(string caption, string displayed)
     {
         using WorkingDirectoryToolStripSplitButton selector = new();
-        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        WorkingDirectoryTestSupport.Accessor accessor = selector.GetTestAccessor();
         Window window = CreateWindow(selector, rightToLeft: false);
         try
         {
@@ -330,7 +330,7 @@ public sealed class WorkingDirPopupLayoutTests
     public void Actual_selected_and_disabled_rows_should_share_source_foregrounds_even_without_pointer_hover(bool dark, bool rightToLeft)
     {
         using WorkingDirectoryToolStripSplitButton selector = new();
-        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        WorkingDirectoryTestSupport.Accessor accessor = selector.GetTestAccessor();
         Window window = CreateWindow(selector, rightToLeft);
         window.RequestedThemeVariant = dark ? ThemeVariant.Dark : ThemeVariant.Light;
         try
@@ -340,7 +340,7 @@ public sealed class WorkingDirPopupLayoutTests
             accessor.PrepareDropDown(CreateSnapshot());
             selector.ShowDropDown();
             Settle(window);
-            MenuItem row = accessor.Menu.Items.OfType<MenuItem>().Single(item => item.Header as string == "Close (go to Dashboard)");
+            MenuItem row = accessor.Menu.Items.OfType<MenuItem>().Single(item => item.Header as string == "_Close (go to Dashboard)");
             ContentPresenter caption = Part<ContentPresenter>(row, "PART_HeaderPresenter");
             TextBlock shortcut = Part<TextBlock>(row, "PART_InputGestureText");
             Border background = Part<Border>(row, "PART_LayoutRoot");
@@ -387,7 +387,7 @@ public sealed class WorkingDirPopupLayoutTests
             Content = new Canvas { Children = { content } },
         };
 
-    private static MenuFlyoutPresenter GetPopup(WorkingDirectoryToolStripSplitButton.TestAccessor accessor)
+    private static MenuFlyoutPresenter GetPopup(WorkingDirectoryTestSupport.Accessor accessor)
         => accessor.Filter.GetVisualAncestors().OfType<MenuFlyoutPresenter>().First();
 
     private static T Part<T>(MenuItem item, string name)

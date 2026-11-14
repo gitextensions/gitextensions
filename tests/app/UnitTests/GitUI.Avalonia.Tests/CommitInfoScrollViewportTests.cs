@@ -398,7 +398,7 @@ public sealed class CommitInfoScrollViewportTests
 
         public ScrollViewer Scroll { get; }
 
-        public CommitInfo.TestAccessor Accessor => _control.GetTestAccessor();
+        public CommitInfoTestSupport.Accessor Accessor => _control.GetNativeTestSupport();
 
         public void Dispose()
         {

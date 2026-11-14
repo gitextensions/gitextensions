@@ -88,7 +88,7 @@ public sealed class RevisionGridMessageToolTipTests
             TextBlock subject = fixture.Subject(fixture.Plain);
             subject.TextLayout.TextLines.Any(line => line.HasCollapsed || line.HasOverflowed).Should().BeTrue(
                 "the plain message must exercise the source's actual truncation fallback");
-            provider.TryGetToolTip(fixture.Plain, out _).Should().BeFalse();
+            provider.TryGetToolTip(fixture.Plain, highlightRef: null, out _).Should().BeFalse();
             string? plainTip = tooltips ? fixture.Plain.Subject : null;
             MoveSubject(fixture.Plain, "plain-first", plainTip);
             MoveSubject(fixture.Plain, "plain-repeat", plainTip, alternate: true);
@@ -128,7 +128,7 @@ public sealed class RevisionGridMessageToolTipTests
                 AppSettings.ShowGitNotesColumn.Value = false;
                 provider.ApplySettings();
                 string ordinaryExpected = SourceSummary(fixture.Referenced, includeNotes: true);
-                bool ordinaryFound = provider.TryGetToolTip(fixture.Referenced, out string? ordinaryActual);
+                bool ordinaryFound = provider.TryGetToolTip(fixture.Referenced, highlightRef: null, out string? ordinaryActual);
                 string? highlightedExpected = tooltips
                     ? "[main]" + Environment.NewLine + GitUI.TranslatedStrings.IsLocalBranch
                         + Environment.NewLine + Environment.NewLine + ordinaryExpected

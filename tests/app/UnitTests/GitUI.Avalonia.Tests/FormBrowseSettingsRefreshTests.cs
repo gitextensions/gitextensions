@@ -155,7 +155,7 @@ public sealed class FormBrowseSettingsRefreshTests
         GitUI.CommitInfo.CommitInfo details = fixture.Form.FindControl<GitUI.CommitInfo.CommitInfo>("RevisionInfo")
             ?? throw new AssertionException("The actual Browse commit-details control must exist.");
         details.ReloadHotkeys();
-        MenuItem addNotes = details.GetTestAccessor().AddNoteMenuItem;
+        MenuItem addNotes = details.GetNativeTestSupport().AddNoteMenuItem;
         addNotes.InputGesture.Should().NotBeNull();
         addNotes.InputGesture!.Matches(KeyEvent(Key.F20)).Should().BeTrue();
         addNotes.InputGesture.Matches(KeyEvent(Key.F21)).Should().BeFalse();

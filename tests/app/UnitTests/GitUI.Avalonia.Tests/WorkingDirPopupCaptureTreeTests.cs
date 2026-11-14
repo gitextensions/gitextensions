@@ -41,7 +41,7 @@ public sealed class WorkingDirPopupCaptureTreeTests
             UseNativeToolStripLayout = true,
             Width = 140,
         };
-        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        WorkingDirectoryTestSupport.Accessor accessor = selector.GetTestAccessor();
         accessor.PrepareDropDown([], []);
         strip.Items.Add(selector);
         Window window = new()

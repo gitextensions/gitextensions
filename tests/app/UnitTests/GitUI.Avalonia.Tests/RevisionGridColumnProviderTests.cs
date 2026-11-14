@@ -1,5 +1,6 @@
 using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -423,8 +424,8 @@ public sealed class RevisionGridColumnProviderTests
 
         RevisionGridRefRenderer.RefLabelControl[] labels =
         [
-            .. MessageColumnProvider.CreateSuperprojectLabels(revision, superProjectInfo)
-                .Cast<RevisionGridRefRenderer.RefLabelControl>(),
+            .. DrawSuperproject("DrawSuperprojectInfo"),
+            .. DrawSuperproject("DrawSuperprojectRefs"),
         ];
 
         labels.Should().HaveCount(2);
@@ -443,6 +444,14 @@ public sealed class RevisionGridColumnProviderTests
             .Should().ContainSingle()
             .Which.Should().BeOfType<RevisionGridRefRenderer.RefLabelControl>().Subject;
         existingLabel.IsDashed.Should().BeTrue();
+
+        return;
+
+        IEnumerable<RevisionGridRefRenderer.RefLabelControl> DrawSuperproject(string methodName)
+            => ((IReadOnlyList<Control>)typeof(MessageColumnProvider)
+                .GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic)!
+                .Invoke(null, [revision, superProjectInfo])!)
+                .Cast<RevisionGridRefRenderer.RefLabelControl>();
     }
 
     [AvaloniaTest]

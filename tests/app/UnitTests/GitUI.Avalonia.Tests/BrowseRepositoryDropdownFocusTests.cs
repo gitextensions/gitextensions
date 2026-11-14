@@ -56,7 +56,7 @@ public sealed class BrowseRepositoryDropdownFocusTests
             form.Width = form.ToolStripMain.PreferredSize.Width + form.ToolStripFilters.Strip.PreferredSize.Width + 100;
             Settle(form);
             WorkingDirectoryToolStripSplitButton selector = form.FindControl<WorkingDirectoryToolStripSplitButton>("_NO_TRANSLATE_WorkingDir")!;
-            WorkingDirectoryToolStripSplitButton.TestAccessor popup = selector.GetTestAccessor();
+            WorkingDirectoryTestSupport.Accessor popup = selector.GetTestAccessor();
             ListBox revisions = form.RevisionGrid._gridView;
             if (dropdownOpen)
             {

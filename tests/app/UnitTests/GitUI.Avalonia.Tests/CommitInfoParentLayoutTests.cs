@@ -57,7 +57,7 @@ public sealed class CommitInfoParentLayoutTests
     {
         WithConfiguredFonts(family, points, (control, window) =>
         {
-            CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             SetConstructorHeaderBounds(accessor);
             accessor.CommitMessage.SetXHTMLText(PlainParagraphs);
             accessor.RevisionInfo.SetXHTMLText(PlainParagraphs);
@@ -120,7 +120,7 @@ public sealed class CommitInfoParentLayoutTests
     {
         WithConfiguredFonts(family, points, (control, window) =>
         {
-            CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             SetConstructorHeaderBounds(accessor);
             accessor.CommitMessage.SetXHTMLText(WrappedParagraph);
             accessor.RevisionInfo.SetXHTMLText(WrappedParagraph);
@@ -199,7 +199,7 @@ public sealed class CommitInfoParentLayoutTests
             AppSettings.ShowAuthorAvatarInCommitInfo = showAvatar;
             WithConfiguredFonts("Segoe UI", 9, (control, window) =>
             {
-                CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+                CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
                 accessor.Header.CommandClicked += (_, _) => { };
                 accessor.Header.ShowCommitInfo(CreateRevision(artificial), artificial ? null : [ObjectId.IndexId]);
                 accessor.CommitMessage.SetXHTMLText(PlainParagraphs);
@@ -241,7 +241,7 @@ public sealed class CommitInfoParentLayoutTests
             IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
             source.UICommands.Returns(commands);
             control.UICommandsSource = source;
-            CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             accessor.CommitMessage.SetXHTMLText("start <a href='gitext://gotocommit/source'>caption</a> end");
             accessor.RevisionInfo.SetXHTMLText("refs");
             string? activatedUri = null;
@@ -280,7 +280,7 @@ public sealed class CommitInfoParentLayoutTests
     {
         WithConfiguredFonts("Segoe UI", 9, (control, window) =>
         {
-            CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             SetConstructorHeaderBounds(accessor);
             window.Height = 120;
             RunLayout(window);
@@ -325,7 +325,7 @@ public sealed class CommitInfoParentLayoutTests
     {
         WithConfiguredFonts("Segoe UI", 9, (control, window) =>
         {
-            CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             accessor.Header.ShowCommitInfo(CreateRevision(artificial: false), [ObjectId.IndexId]);
             accessor.CommitMessage.SetXHTMLText("commit subject");
             accessor.RevisionInfo.SetXHTMLText("loading refs");
@@ -417,7 +417,7 @@ public sealed class CommitInfoParentLayoutTests
     {
         WithConfiguredFonts("Segoe UI", 9, (control, _) =>
         {
-            CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             XhtmlTextBlock block = message ? accessor.CommitMessage : accessor.RevisionInfo;
             double clientHeight = block.LineHeight;
             block.SetXHTMLText("first\nsecond\nthird\nfourth\nfifth\nsixth\nseventh\neighth");
@@ -439,7 +439,7 @@ public sealed class CommitInfoParentLayoutTests
         try
         {
             form.Show();
-            CommitInfo.TestAccessor accessor = form.RevisionInfo.GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = form.RevisionInfo.GetNativeTestSupport();
             accessor.TableLayout.IsVisible = true;
             accessor.CommitMessage.SetXHTMLText("body with source cached anchors");
             accessor.RevisionInfo.SetXHTMLText("refs");
@@ -486,7 +486,7 @@ public sealed class CommitInfoParentLayoutTests
 
     private static void AssertParentLayout(CommitInfo control)
     {
-        CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+        CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         TextLayout messageLayout = GetLayout(accessor.CommitMessage);
         TextLayout refsLayout = GetLayout(accessor.RevisionInfo);
         int contentsHeight = (int)Math.Ceiling(messageLayout.Height);
@@ -653,7 +653,7 @@ public sealed class CommitInfoParentLayoutTests
                 throw new AssertionException("The native-shaped parent fixture must own its CommitInfo control.");
             }
 
-            CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             Layoutable[] layout = [window, control, accessor.TableLayout, accessor.Header, accessor.CommitMessage, accessor.RevisionInfo];
             if (layout.All(element => element.IsMeasureValid && element.IsArrangeValid))
             {
@@ -664,7 +664,7 @@ public sealed class CommitInfoParentLayoutTests
         throw new AssertionException("The actual CommitInfo parent/header/body layout did not settle after eight framework passes.");
     }
 
-    private static void SetConstructorHeaderBounds(CommitInfo.TestAccessor accessor)
+    private static void SetConstructorHeaderBounds(CommitInfoTestSupport.Accessor accessor)
     {
         // The native parent probe deliberately covers the constructor header, not a
         // rendered avatar-off Browse header. Match that authored state only here.
@@ -683,7 +683,7 @@ public sealed class CommitInfoParentLayoutTests
             AppSettings.CommitFont = new WinFormsShims.Font(family, points);
             AvaloniaFontSettings.ApplyAppSettings();
             CommitInfo control = new();
-            control.GetTestAccessor().TableLayout.IsVisible = true;
+            control.GetNativeTestSupport().TableLayout.IsVisible = true;
             window = new Window { Width = SourceTableWidth, Height = 900, Content = control };
             window.Show();
             RunLayout(window);

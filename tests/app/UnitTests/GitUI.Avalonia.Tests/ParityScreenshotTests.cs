@@ -2337,7 +2337,7 @@ public sealed partial class ParityScreenshotTests
 
         // The revision list and primary commit-details loaders complete independently.
         // Wait for the selected revision's header and message before recording it.
-        CommitInfo.TestAccessor commitInfo = formBrowse.RevisionInfo.GetTestAccessor();
+        CommitInfoTestSupport.Accessor commitInfo = formBrowse.RevisionInfo.GetNativeTestSupport();
         Stopwatch commitInfoStopwatch = Stopwatch.StartNew();
         while ((!commitInfo.Header.GetTestAccessor().RevisionHeader.GetPlainText()
             .Contains(revision.ObjectId.ToString(), StringComparison.Ordinal)

@@ -35,7 +35,7 @@ public sealed class WorkingDirectoryPopupSeparatorTests
         {
             FlowDirection = rightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
         };
-        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        WorkingDirectoryTestSupport.Accessor accessor = selector.GetTestAccessor();
         Repository favourite = new(Path.Combine(Path.GetTempPath(), "GitExtensions.PopupSeparatorFavourite")) { Category = "Separator probe" };
         Repository recent = new(Path.Combine(Path.GetTempPath(), "GitExtensions.PopupSeparatorRecent"));
         accessor.PrepareDropDown([favourite], [recent]);

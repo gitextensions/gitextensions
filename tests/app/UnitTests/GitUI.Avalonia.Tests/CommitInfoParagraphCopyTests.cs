@@ -196,7 +196,7 @@ public sealed class CommitInfoParagraphCopyTests
                 ?? throw new AssertionException("The source caption characters must be attached to the owned window.");
             int activations = 0;
             block.LinkClicked += (_, _) => activations++;
-            CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             try
             {
                 window.MouseMove(point);
@@ -231,7 +231,7 @@ public sealed class CommitInfoParagraphCopyTests
     {
         WithClipboard(clipboard => WithSurface("body", (control, _, window) =>
         {
-            CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
             header.SetXHTMLText("Author:\tA &amp; B\r\nCommit hash:\tabc123");
             string body = "body first\nbody second" + (trailingParagraph ? "\n" : string.Empty);
@@ -292,7 +292,7 @@ public sealed class CommitInfoParagraphCopyTests
     private static void WithSurface(string role, Action<CommitInfo, XhtmlTextBlock, Window> verify)
     {
         CommitInfo control = new();
-        CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+        CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock block = role switch
         {

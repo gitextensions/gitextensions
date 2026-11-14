@@ -522,7 +522,7 @@ public sealed class CommitInfoTests
     public void CommitInfo_should_preserve_the_original_named_surfaces()
     {
         CommitInfo control = new();
-        CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+        CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
 
         accessor.Header.Should().NotBeNull();
         accessor.Avatar.Should().NotBeNull();
@@ -1292,7 +1292,7 @@ public sealed class CommitInfoTests
     public void CommitInfo_should_render_the_hostless_revision_body_and_hide_a_null_revision()
     {
         CommitInfo control = new();
-        CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+        CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         GitRevision revision = new(ObjectId.Parse("1234567890abcdef1234567890abcdef12345678"))
         {
             Subject = "Commit subject",
@@ -1330,7 +1330,7 @@ public sealed class CommitInfoTests
         source.UICommands.Returns(commands);
 
         CommitInfo control = new() { UICommandsSource = source };
-        KeyGesture? gesture = control.GetTestAccessor().AddNoteMenuItem.InputGesture;
+        KeyGesture? gesture = control.GetNativeTestSupport().AddNoteMenuItem.InputGesture;
 
         gesture.Should().NotBeNull();
         gesture!.Key.Should().Be(Key.N);
@@ -1350,7 +1350,7 @@ public sealed class CommitInfoTests
         bool originalDerived = AppSettings.CommitInfoShowTagThisCommitDerivesFrom;
         try
         {
-            CommitInfo.TestAccessor accessor = new CommitInfo().GetTestAccessor();
+            CommitInfoTestSupport.Accessor accessor = new CommitInfo().GetNativeTestSupport();
 
             accessor.ShowLocalBranchesMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             accessor.ShowRemoteBranchesMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));

@@ -411,7 +411,7 @@ public sealed class WorkingDirPopupInputTests
                 ?? throw new InvalidOperationException("The retained filter must be in the real opened popup.");
         }
 
-        public WorkingDirectoryToolStripSplitButton.TestAccessor Accessor { get; }
+        public WorkingDirectoryTestSupport.Accessor Accessor { get; }
 
         public TopLevel Popup { get; }
 

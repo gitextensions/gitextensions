@@ -32,7 +32,7 @@ public sealed class CommitInfoContextLinkTests
     public void Shared_context_menu_should_query_only_the_freshly_right_clicked_editor_and_character()
     {
         CommitInfo control = new();
-        CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+        CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
         XhtmlTextBlock[] surfaces = [accessor.CommitMessage, header, accessor.RevisionInfo];
@@ -92,7 +92,7 @@ public sealed class CommitInfoContextLinkTests
         WinFormsShims.IClipboard clipboard = Substitute.For<WinFormsShims.IClipboard>();
         WinFormsShims.ShimHost.Clipboard = clipboard;
         CommitInfo control = new();
-        CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+        CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
         header.SetXHTMLText("prefix <a href='gitext://gotorevision/second'>caption</a> tail");
@@ -133,7 +133,7 @@ public sealed class CommitInfoContextLinkTests
     {
         const string link = "https://example.invalid/source";
         CommitInfo control = new();
-        CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+        CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
         header.SetXHTMLText($"head <a href='{link}'>caption</a> tail");
@@ -185,7 +185,7 @@ public sealed class CommitInfoContextLinkTests
     public void Keyboard_context_request_should_use_the_known_mouse_point_not_the_caret_or_old_link()
     {
         CommitInfo control = new();
-        CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+        CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
         header.SetXHTMLText("prefix <a href='gitext://first'>first</a> plain <a href='gitext://second'>second</a> tail");
@@ -219,7 +219,7 @@ public sealed class CommitInfoContextLinkTests
     public void Keyboard_context_request_without_a_known_pointer_after_reparenting_should_not_reuse_a_link()
     {
         CommitInfo control = new();
-        CommitInfo.TestAccessor accessor = control.GetTestAccessor();
+        CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
         header.SetXHTMLText("prefix <a href='gitext://first'>caption</a>");

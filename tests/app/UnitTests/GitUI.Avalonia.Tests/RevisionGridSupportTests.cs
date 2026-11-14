@@ -819,7 +819,7 @@ public sealed class RevisionGridSupportTests
             revision.Notes = "review note";
             revision.Refs = [new GitRef(null!, revision.ObjectId, "refs/heads/branch1")];
 
-            provider.TryGetToolTip(revision, out string? toolTip).Should().BeTrue();
+            provider.TryGetToolTip(revision, highlightRef: null, out string? toolTip).Should().BeTrue();
 
             toolTip.Should().Contain("body detail");
             toolTip.Should().Contain("Notes:");
@@ -850,7 +850,7 @@ public sealed class RevisionGridSupportTests
             provider.ApplySettings();
             GitRevision revision = Revision('a', "subject", multiline: true);
 
-            provider.TryGetToolTip(revision, out string? toolTip).Should().BeTrue();
+            provider.TryGetToolTip(revision, highlightRef: null, out string? toolTip).Should().BeTrue();
 
             toolTip.Should().Be("subject" + TranslatedStrings.BodyNotLoaded);
             commitDataManager.Received(1).InitiateDelayedLoadingOfDetails(revision);
