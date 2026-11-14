@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.UserControls;
@@ -13,15 +14,17 @@ public class FileStatusListTests
     // Created once for each test
     private Form _form = null!;
     private FileStatusList _fileStatusList = null!;
+    private Func<IGitModule, GitUICommands> _createCommands = null!;
+    private GitUICommands _commands = null!;
 
     [SetUp]
     public void SetUp()
     {
         ServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
-        IGitModule module = Substitute.For<IGitModule>();
-        GitUICommands commands = new(serviceContainer, module);
+        _createCommands = module => new(serviceContainer, module);
+        _commands = _createCommands(Substitute.For<IGitModule>());
         IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
-        uiCommandsSource.UICommands.Returns(x => commands);
+        uiCommandsSource.UICommands.Returns(x => _commands);
 
         _form = new Form();
         _fileStatusList = new FileStatusList
@@ -321,6 +324,146 @@ public class FileStatusListTests
         ((Action)(() => accessor.StoreFilter(invalidRegex))).Should().Throw<ArgumentException>();
 
         CheckStoreFilter(accessor.InvalidInputColor, validRegex, accessor);
+    }
+
+    [Test]
+    public void SetDiffs_should_keep_the_expanded_state_of_the_folders()
+    {
+        MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;
+        GitRevision firstRev = new(ObjectId.Random());
+        GitRevision secondRev = new(ObjectId.Random());
+
+        _fileStatusList.SetDiffs(firstRev, secondRev, [new("a/1"), new("a/2"), new("b/3"), new("b/4")]);
+        GetFolder("b").Collapse();
+
+        // refresh with one more file in the collapsed folder and a new folder
+        _fileStatusList.SetDiffs(firstRev, secondRev, [new("a/1"), new("a/2"), new("b/3"), new("b/4"), new("b/5"), new("c/6"), new("c/7")]);
+
+        GetFolder("a").IsExpanded.Should().BeTrue();
+        GetFolder("b").IsExpanded.Should().BeFalse();
+        GetFolder("c").IsExpanded.Should().BeTrue();
+
+        return;
+
+        TreeNode GetFolder(string path) => treeView.Nodes.Cast<TreeNode>().Single(node => node.Tag is RelativePath folder && folder.Value == path);
+    }
+
+    [Test]
+    public void SetDiffs_should_keep_the_expanded_state_of_a_folder_if_its_parent_folders_change()
+    {
+        MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;
+        GitRevision firstRev = new(ObjectId.Random());
+        GitRevision secondRev = new(ObjectId.Random());
+
+        _fileStatusList.SetDiffs(firstRev, secondRev, [new("a/1"), new("a/2"), new("b/c/3"), new("b/c/4")]);
+        GetFolder("b/c").Collapse();
+
+        // The sibling folder b/d inserts the common parent folder b
+        _fileStatusList.SetDiffs(firstRev, secondRev, [new("a/1"), new("a/2"), new("b/c/3"), new("b/c/4"), new("b/d/5"), new("b/d/6")]);
+
+        GetFolder("b").IsExpanded.Should().BeTrue();
+        GetFolder("b/c").IsExpanded.Should().BeFalse();
+        GetFolder("b/d").IsExpanded.Should().BeTrue();
+
+        return;
+
+        TreeNode GetFolder(string path) => treeView.Items().Single(node => node.Tag is RelativePath folder && folder.Value == path);
+    }
+
+    [Test]
+    public void SetDiffs_should_keep_the_expanded_state_of_the_folders_collapsed_by_the_git_grep_workaround()
+    {
+        FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
+        MultiSelectTreeView treeView = accessor.FileStatusListView;
+        GitRevision firstRev = new(ObjectId.Random());
+        GitRevision secondRev = new(ObjectId.Random());
+        GitItemStatus[] items = [new("a/1"), new("a/2"), new("b/3"), new("b/4")];
+
+        _fileStatusList.SetDiffs(firstRev, secondRev, items);
+        GetFolder("b").Collapse();
+
+        // Starting or clearing a git-grep search collapses the displayed tree before it is replaced
+        accessor.WorkaroundTooEarlyDrawing();
+        _fileStatusList.SetDiffs(firstRev, secondRev, items);
+
+        GetFolder("a").IsExpanded.Should().BeTrue();
+        GetFolder("b").IsExpanded.Should().BeFalse();
+
+        return;
+
+        TreeNode GetFolder(string path) => treeView.Nodes.Cast<TreeNode>().Single(node => node.Tag is RelativePath folder && folder.Value == path);
+    }
+
+    [Test]
+    public void SetDiffs_should_not_apply_the_expanded_state_of_the_folders_to_another_repo()
+    {
+        MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;
+        GitRevision firstRev = new(ObjectId.Random());
+        GitRevision secondRev = new(ObjectId.Random());
+        GitItemStatus[] items = [new("a/1"), new("a/2"), new("b/3"), new("b/4")];
+        _commands.Module.WorkingDir.Returns("repo1");
+
+        _fileStatusList.SetDiffs(firstRev, secondRev, items);
+        treeView.Nodes[1].Collapse();
+
+        // UICommands are replaced before the list is refreshed for the other repo
+        IGitModule otherModule = Substitute.For<IGitModule>();
+        otherModule.WorkingDir.Returns("repo2");
+        _commands = _createCommands(otherModule);
+        _fileStatusList.SetDiffs(firstRev, secondRev, items);
+
+        treeView.Nodes.Cast<TreeNode>().Should().OnlyContain(node => node.IsExpanded);
+    }
+
+    [Test]
+    public void SetFilter_should_restore_the_expanded_state_of_the_folders_when_the_filter_is_cleared()
+    {
+        MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;
+        GitRevision firstRev = new(ObjectId.Random());
+        GitRevision secondRev = new(ObjectId.Random());
+        GitItemStatus[] items = [new("a/1"), new("a/2"), new("b/3"), new("b/4")];
+
+        _fileStatusList.SetDiffs(firstRev, secondRev, items);
+        GetFolder("b").Collapse();
+
+        _fileStatusList.SetFilter("3");
+        _fileStatusList.SetFilter("34");
+        _fileStatusList.SetDiffs(firstRev, secondRev, items); // refresh while filtered
+        _fileStatusList.SetFilter("");
+
+        GetFolder("a").IsExpanded.Should().BeTrue();
+        GetFolder("b").IsExpanded.Should().BeFalse();
+
+        return;
+
+        TreeNode GetFolder(string path) => treeView.Nodes.Cast<TreeNode>().Single(node => node.Tag is RelativePath folder && folder.Value == path);
+    }
+
+    [TestCase(DiffListSortType.FileExtension)]
+    [TestCase(DiffListSortType.FileStatus)]
+    [TestCase(DiffListSortType.FilePathFlat)]
+    public void Changing_the_grouping_should_keep_the_collapsed_folders_collapsed(DiffListSortType other)
+    {
+        MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;
+        GitRevision firstRev = new(ObjectId.Random());
+        GitRevision secondRev = new(ObjectId.Random());
+        GitItemStatus[] items = [new("a/1.cs"), new("a/2.txt"), new("b/3.cs"), new("b/4.txt")];
+        DiffListSortType original = DiffListSortService.Instance.DiffListSorting;
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+            _fileStatusList.SetDiffs(firstRev, secondRev, items);
+            treeView.Items().Single(node => node.Tag is RelativePath folder && folder.Value == "b").Collapse();
+
+            DiffListSortService.Instance.DiffListSorting = other;
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+
+            treeView.Items().Single(node => node.Tag is RelativePath folder && folder.Value == "b").IsExpanded.Should().BeFalse();
+        }
+        finally
+        {
+            DiffListSortService.Instance.DiffListSorting = original;
+        }
     }
 
     private static void CheckStoreFilter(Color expectedColor, string expectedRegex, FileStatusList.TestAccessor accessor)
