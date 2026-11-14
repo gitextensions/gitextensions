@@ -4,6 +4,7 @@ public interface IGitVersion : IComparable<IGitVersion>
 {
     bool IsUnknown { get; }
     bool SupportAmendCommits { get; }
+    bool SupportCommentString { get; }
     bool SupportGuiMergeTool { get; }
     bool SupportLsFilesFormat { get; }
     bool SupportNewGitConfigSyntax { get; }
