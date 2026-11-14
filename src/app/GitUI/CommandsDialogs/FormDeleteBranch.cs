@@ -176,14 +176,9 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
 
             if (TaskDialog.ShowDialog(Handle, page) == TaskDialogButton.Yes)
             {
-                bool anyDeleted = false;
                 foreach ((IGitRef branch, GitWorktree worktree) in classification.LinkedWorktreeBranches)
                 {
-                    if (worktree.Path.TryDeleteDirectory(out string? errorMessage))
-                    {
-                        anyDeleted = true;
-                    }
-                    else
+                    if (!Module.TryRemoveWorktree(worktree.Path, out string? errorMessage))
                     {
                         MessageBoxes.Show(
                             this,
@@ -193,11 +188,6 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
                             MessageBoxIcon.Error);
                         excludedBranches.Add(branch.Name);
                     }
-                }
-
-                if (anyDeleted)
-                {
-                    UICommands.StartCommandLineProcessDialog(Owner, command: null, "worktree prune");
                 }
             }
             else

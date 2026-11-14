@@ -411,6 +411,14 @@ public partial class CommandsTests
         Commands.Remove(files: ["a", "b", "c"]).Arguments.Should().Be("rm --force -r a b c");
     }
 
+    [TestCase(@"C:\repos\feature", null, "worktree remove --force \"C:/repos/feature\"")]
+    [TestCase(@"C:\my repos\work tree", null, "worktree remove --force \"C:/my repos/work tree\"")]
+    [TestCase(@"\\wsl$\Ubuntu\home\me\wt", "Ubuntu", "worktree remove --force \"/home/me/wt\"")]
+    public void RemoveWorktreeCmd(string worktreePath, string? wslDistro, string expected)
+    {
+        Commands.RemoveWorktree(worktreePath, path => PathUtil.GetPathForGitExecution(path, wslDistro)).Arguments.Should().Be(expected);
+    }
+
     [Test]
     public void RenameBranch()
     {
