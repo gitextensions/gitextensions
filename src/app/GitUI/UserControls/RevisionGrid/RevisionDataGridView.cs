@@ -12,6 +12,8 @@ using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
+using Windows.Win32;
+using Windows.Win32.UI.Controls;
 
 namespace GitUI.UserControls.RevisionGrid;
 
@@ -1029,6 +1031,23 @@ public sealed partial class RevisionDataGridView : DataGridView
 
         // If clicking while loading, cancel load-select
         ClearToBeSelected();
+    }
+
+    /// <summary>
+    ///  Occurs when a tooltip of the grid is about to be hidden, also if Windows hides it on its own,
+    ///  e.g. after <see cref="ToolTip.AutoPopDelay"/>.
+    /// </summary>
+    internal event EventHandler? ToolTipHiding;
+
+    protected override unsafe void WndProc(ref Message m)
+    {
+        // The tooltip notifies the window of its tool, i.e. this grid
+        if (m.Msg == (int)PInvoke.WM_NOTIFY && ((NMHDR*)m.LParam)->code == PInvoke.TTN_POP)
+        {
+            ToolTipHiding?.Invoke(this, EventArgs.Empty);
+        }
+
+        base.WndProc(ref m);
     }
 
     protected override void OnMouseWheel(MouseEventArgs e)

@@ -26,3 +26,8 @@ GetClassName
 VIRTUAL_KEY
 WINDOW_STYLE
 WINDOW_EX_STYLE
+
+// comctl32 - Tooltip notifications
+NMHDR
+TTN_POP
+WM_NOTIFY

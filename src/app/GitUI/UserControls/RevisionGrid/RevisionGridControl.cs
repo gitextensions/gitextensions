@@ -319,7 +319,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         _gridView.ShowCellToolTips = false;
         _gridView.AuthorHighlighting = _authorHighlighting;
 
-        _gridView.PreviewKeyDown += (_, e) => _quickSearchProvider.OnPreviewKeyDown(e);
         _gridView.KeyPress += (_, e) => _quickSearchProvider.OnKeyPress(e);
         _gridView.MouseDown += OnGridViewMouseDown;
         _gridView.CellMouseDown += OnGridViewCellMouseDown;
@@ -911,7 +910,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 return true; // never select all revisions
 
             case Keys.Escape:
-                if (_toolTipProvider.Hide())
+                // Consume Esc only if it has something to close, otherwise let it be handled as hotkey
+                bool quickSearchCancelled = _quickSearchProvider.Cancel();
+                if (_toolTipProvider.Hide() || quickSearchCancelled)
                 {
                     return true;
                 }
