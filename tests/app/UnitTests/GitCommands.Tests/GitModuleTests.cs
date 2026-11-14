@@ -531,6 +531,29 @@ public sealed partial class GitModuleTests
         commitId.ToString().Should().Be(commitRef);
     }
 
+    [Test]
+    public void StopTrackingFile_should_stage_removal_of_submodule_without_gitmodules_entry()
+    {
+        using GitModuleTestHelper moduleTestHelperSuper = new("super repo"),
+                                                   moduleTestHelperSub = new("sub repo");
+        const string submodulePath = "sub";
+        moduleTestHelperSuper.AddSubmodule(moduleTestHelperSub, submodulePath);
+        GitModule module = moduleTestHelperSuper.Module;
+        module.GitExecutable.GetOutput("rm .gitmodules");
+        module.GitExecutable.GetOutput(@"commit -m ""Remove .gitmodules""");
+
+        // The populated gitlink is clean for git-status, so no list in the UI shows it as changed
+        module.GetAllChangedFiles().Should().BeEmpty();
+
+        module.StopTrackingFile(submodulePath).Should().BeTrue();
+
+        GitItemStatus removed = module.GetAllChangedFiles().Single(item => item.Staged == StagedStatus.Index);
+        removed.Name.Should().Be(submodulePath);
+        removed.IsDeleted.Should().BeTrue();
+        removed.IsSubmodule.Should().BeTrue();
+        Directory.Exists(Path.Combine(module.WorkingDir, submodulePath)).Should().BeTrue("only the index entry is removed");
+    }
+
     [TestCase(false, @"stash list")]
     [TestCase(true, @"--no-optional-locks stash list")]
     public void GetStashesCmd(bool noLocks, string? expected)
