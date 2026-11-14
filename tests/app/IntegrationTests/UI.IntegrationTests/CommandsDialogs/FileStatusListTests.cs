@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.UserControls;
@@ -412,6 +413,57 @@ public class FileStatusListTests
         _fileStatusList.SetDiffs(firstRev, secondRev, items);
 
         treeView.Nodes.Cast<TreeNode>().Should().OnlyContain(node => node.IsExpanded);
+    }
+
+    [Test]
+    public void SetFilter_should_restore_the_expanded_state_of_the_folders_when_the_filter_is_cleared()
+    {
+        MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;
+        GitRevision firstRev = new(ObjectId.Random());
+        GitRevision secondRev = new(ObjectId.Random());
+        GitItemStatus[] items = [new("a/1"), new("a/2"), new("b/3"), new("b/4")];
+
+        _fileStatusList.SetDiffs(firstRev, secondRev, items);
+        GetFolder("b").Collapse();
+
+        _fileStatusList.SetFilter("3");
+        _fileStatusList.SetFilter("34");
+        _fileStatusList.SetDiffs(firstRev, secondRev, items); // refresh while filtered
+        _fileStatusList.SetFilter("");
+
+        GetFolder("a").IsExpanded.Should().BeTrue();
+        GetFolder("b").IsExpanded.Should().BeFalse();
+
+        return;
+
+        TreeNode GetFolder(string path) => treeView.Nodes.Cast<TreeNode>().Single(node => node.Tag is RelativePath folder && folder.Value == path);
+    }
+
+    [TestCase(DiffListSortType.FileExtension)]
+    [TestCase(DiffListSortType.FileStatus)]
+    [TestCase(DiffListSortType.FilePathFlat)]
+    public void Changing_the_grouping_should_keep_the_collapsed_folders_collapsed(DiffListSortType other)
+    {
+        MultiSelectTreeView treeView = _fileStatusList.GetTestAccessor().FileStatusListView;
+        GitRevision firstRev = new(ObjectId.Random());
+        GitRevision secondRev = new(ObjectId.Random());
+        GitItemStatus[] items = [new("a/1.cs"), new("a/2.txt"), new("b/3.cs"), new("b/4.txt")];
+        DiffListSortType original = DiffListSortService.Instance.DiffListSorting;
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+            _fileStatusList.SetDiffs(firstRev, secondRev, items);
+            treeView.Items().Single(node => node.Tag is RelativePath folder && folder.Value == "b").Collapse();
+
+            DiffListSortService.Instance.DiffListSorting = other;
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+
+            treeView.Items().Single(node => node.Tag is RelativePath folder && folder.Value == "b").IsExpanded.Should().BeFalse();
+        }
+        finally
+        {
+            DiffListSortService.Instance.DiffListSorting = original;
+        }
     }
 
     private static void CheckStoreFilter(Color expectedColor, string expectedRegex, FileStatusList.TestAccessor accessor)

@@ -22,7 +22,7 @@ partial class FileStatusList
     /// </summary>
     /// <remarks>
     ///  The state of a filtered tree is not stored, so that the state before filtering is restored when the filter is cleared.
-    ///  An empty tree does not replace the stored state.
+    ///  An empty tree does not change the stored state, and the state of folders which are not displayed, e.g. in a flat list, is kept.
     /// </remarks>
     private void RememberExpansionStates()
     {
@@ -31,7 +31,8 @@ partial class FileStatusList
             return;
         }
 
-        Dictionary<string, bool> expansionStates = [];
+        // Keep the states of folders which are not displayed now, e.g. in a flat list or with another grouping, until the repo is switched
+        Dictionary<string, bool> expansionStates = _rememberedExpansionStatesWorkingDir == _displayedNodesWorkingDir ? new(_rememberedExpansionStates) : [];
         AddExpansionStates(FileStatusListView.Nodes, parentKey: "");
         _rememberedExpansionStates = expansionStates;
 
