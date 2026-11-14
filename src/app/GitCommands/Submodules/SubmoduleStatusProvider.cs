@@ -282,7 +282,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
             : branch;
         return $"({text})";
 
-        // Describes a detached HEAD by the first tag pointing at it, or by the abbreviated commit id if there is no such tag.
+        // Describes a detached HEAD by the first tag or branch pointing at it, or by the abbreviated commit id if there is no such tag.
         string? GetDetachedHeadDescription()
         {
             try
@@ -291,6 +291,12 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
                 if (tag is not null)
                 {
                     return tag;
+                }
+
+                string? branchAtHead = executor.GitExecutable.GetFirstBranchPointingAtHead();
+                if (branchAtHead is not null)
+                {
+                    return branchAtHead;
                 }
 
                 ObjectId currentCheckout = executor.GitExecutable.GetCurrentCheckout();

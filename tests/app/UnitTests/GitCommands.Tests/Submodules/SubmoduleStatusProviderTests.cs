@@ -108,9 +108,22 @@ internal class SubmoduleStatusProviderTests
 
     [NonParallelizable]
     [Test]
-    public async Task UpdateSubmoduleStructure_shows_abbreviated_commit_id_of_detached_submodule_without_tag()
+    public async Task UpdateSubmoduleStructure_shows_branch_of_detached_submodule_without_tag()
+    {
+        string branch = _repo2Module.GetSelectedBranch();
+        await _repo2Module.GitExecutable.GetOutputAsync("checkout --detach");
+
+        SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo1Module);
+
+        result.AllSubmodules.Single(info => info.Path == _repo2Module.WorkingDir).Text.Should().Be($"repo2 ({branch})");
+    }
+
+    [NonParallelizable]
+    [Test]
+    public async Task UpdateSubmoduleStructure_shows_abbreviated_commit_id_of_detached_submodule_without_tag_or_branch()
     {
         await _repo2Module.GitExecutable.GetOutputAsync("checkout --detach");
+        await _repo2Module.GitExecutable.GetOutputAsync("commit --allow-empty -m detached");
         string sha = _repo2Module.GetCurrentCheckout().ToShortString();
 
         SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo1Module);

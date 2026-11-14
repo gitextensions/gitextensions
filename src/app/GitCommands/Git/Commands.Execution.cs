@@ -178,6 +178,49 @@ public static partial class Commands
     }
 
     /// <summary>
+    ///  Gets the first branch pointing at HEAD, local branches before remote-tracking branches.
+    /// </summary>
+    /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
+    /// <returns>The short name of the first branch; <see langword="null"/> if there is no branch at HEAD or git fails.</returns>
+    public static string? GetFirstBranchPointingAtHead(this IExecutable gitExecutable)
+    {
+        const string LocalBranchPrefix = "refs/heads/";
+        const string RemoteBranchPrefix = "refs/remotes/";
+
+        GitArgumentBuilder args = new("for-each-ref")
+        {
+            "--points-at HEAD",
+            "--format=%(refname)",
+            "refs/heads",
+            "refs/remotes"
+        };
+        ExecutionResult result = gitExecutable.Execute(args, throwOnErrorExit: false);
+
+        if (!result.ExitedSuccessfully)
+        {
+            return null;
+        }
+
+        // refs/heads sorts before refs/remotes; skip the symbolic remote HEAD (refs/remotes/origin/HEAD)
+        string refs = result.StandardOutput;
+        foreach ((int beginning, int length) in refs.LazySplitRanges('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+        {
+            string refName = refs.Substring(beginning, length);
+            if (refName.StartsWith(LocalBranchPrefix, StringComparison.Ordinal))
+            {
+                return refName.Substring(LocalBranchPrefix.Length);
+            }
+
+            if (refName.StartsWith(RemoteBranchPrefix, StringComparison.Ordinal) && !refName.EndsWith("/HEAD", StringComparison.Ordinal))
+            {
+                return refName.Substring(RemoteBranchPrefix.Length);
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
     ///  Removes a git config (sub)section.
     /// </summary>
     /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
