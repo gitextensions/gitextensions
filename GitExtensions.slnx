@@ -149,6 +149,7 @@
   <Folder Name="/tests/plugins/" />
   <Folder Name="/tests/plugins/UnitTests/">
     <File Path="tests/plugins/UnitTests/Directory.Build.props" />
+    <Project Path="tests/plugins/UnitTests/BackgroundFetch.Tests/BackgroundFetch.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/DeleteUnusedBranches.Tests/DeleteUnusedBranches.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/FindLargeFiles.Tests/FindLargeFiles.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/GitUIPluginInterfaces.Tests/GitUIPluginInterfaces.Tests.csproj" />

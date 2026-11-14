@@ -153,6 +153,21 @@ public sealed partial class GitModuleTests
         GitModule.UnescapeOctalCodePoints(input).Should().Be(expected);
     }
 
+    [TestCase(null, false)]
+    [TestCase("", false)]
+    [TestCase("git fetch --all", false)]
+    [TestCase("\"C:\\Program Files\\Git\\cmd\\git.exe\" -c log.showsignature=false status", false)]
+    [TestCase("git log -- fsmonitor--daemon", false)]
+    [TestCase("git log -- fsmonitor--daemon.c", false)]
+    [TestCase("git fsmonitor--daemon.c", false)]
+    [TestCase("git fsmonitor--daemon", true)]
+    [TestCase("git fsmonitor--daemon run --detach --ipc-threads=8", true)]
+    [TestCase("\"C:\\Program Files\\Git\\mingw64\\bin\\git.exe\" fsmonitor--daemon run --detach --ipc-threads=8", true)]
+    public void IsGitFsMonitorDaemon_should_return_expected(string? commandLine, bool expected)
+    {
+        GitModule.IsGitFsMonitorDaemon(commandLine).Should().Be(expected);
+    }
+
     [Test]
     public void UnescapeOctalCodePoints_returns_same_string_if_nothing_to_escape()
     {
