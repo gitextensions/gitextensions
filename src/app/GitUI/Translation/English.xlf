@@ -10203,6 +10203,10 @@ When OpenSSH is used, command line dialogs are shown!
         <source>Autostash</source>
         <target />
       </trans-unit>
+      <trans-unit id="_bisectText.Text">
+        <source>Bisect</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">
         <source>
 

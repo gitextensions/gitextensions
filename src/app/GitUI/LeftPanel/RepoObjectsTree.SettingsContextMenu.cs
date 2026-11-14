@@ -96,6 +96,7 @@ partial class RepoObjectsTree
         _tagTree.ClearTree();
         _submoduleTree.ClearTree();
         _stashTree.ClearTree();
+        _bisectTree.ClearTree();
     }
 
     private void ShowEnabledTrees()
