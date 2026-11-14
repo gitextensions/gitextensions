@@ -241,16 +241,9 @@ public partial class FormDiff : GitModuleForm
     internal TestAccessor GetTestAccessor()
         => new(this);
 
-    internal readonly struct TestAccessor
+    internal readonly struct TestAccessor(FormDiff form)
     {
-        private readonly FormDiff _form;
-
-        public TestAccessor(FormDiff form)
-        {
-            _form = form;
-        }
-
-        public ObjectId? FirstId => _form._firstRevision?.ObjectId;
-        public ObjectId? SecondId => _form._secondRevision?.ObjectId;
+        public ObjectId? FirstId => form._firstRevision?.ObjectId;
+        public ObjectId? SecondId => form._secondRevision?.ObjectId;
     }
 }
