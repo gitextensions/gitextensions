@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -24,6 +25,8 @@ using PhoneticRuleCollection = List<PhoneticRule>;
 public partial class WordDictionary : Component
 {
     private string _dictionaryFile = Thread.CurrentThread.CurrentCulture.Name + ".dic";
+    private int _maxStripLength = -1;
+    private int _combineSuffixEntryCount;
     private Container _components;
 
     [GeneratedRegex(@"[^\s]+")]
@@ -294,6 +297,147 @@ public partial class WordDictionary : Component
     }
 
     /// <summary>
+    ///     Allocation free version of <see cref="Contains(string)"/> used to probe candidate words
+    /// </summary>
+    /// <param name="word">The word to search for</param>
+    /// <returns>Returns true if word is found</returns>
+    /// <remarks>
+    ///     Unlike <see cref="Contains(string)"/> this does not update <see cref="PossibleBaseWords"/>
+    /// </remarks>
+#nullable enable
+    internal bool ContainsWord(ReadOnlySpan<char> word)
+    {
+        Dictionary<string, string>.AlternateLookup<ReadOnlySpan<char>> userWords = UserWords.GetAlternateLookup<ReadOnlySpan<char>>();
+        Dictionary<string, Word>.AlternateLookup<ReadOnlySpan<char>> baseWords = BaseWords.GetAlternateLookup<ReadOnlySpan<char>>();
+
+        // Step 1 Search UserWords
+        if (userWords.ContainsKey(word))
+        {
+            return true;
+        }
+
+        // Step 2 Search BaseWords
+        if (baseWords.ContainsKey(word))
+        {
+            return true;
+        }
+
+        EnsureAffixLimits();
+
+        // every candidate is a word with an affix removed and some strip chars added
+        int maxLength = word.Length + _maxStripLength;
+        Span<char> scratch = maxLength <= 256 ? stackalloc char[maxLength] : new char[maxLength];
+
+        // Step 3 Remove suffix, Search BaseWords
+        // save suffixed words (fixed stride of maxLength) for use when removing prefix
+        int combineCapacity = _combineSuffixEntryCount;
+        Span<char> suffixChars = combineCapacity * maxLength <= 2048 ? stackalloc char[combineCapacity * maxLength] : new char[combineCapacity * maxLength];
+        Span<int> suffixLengths = combineCapacity <= 128 ? stackalloc int[combineCapacity] : new int[combineCapacity];
+        int suffixCount = 0;
+
+        foreach (AffixRule rule in SuffixRules.Values)
+        {
+            foreach (AffixEntry entry in rule.AffixEntries)
+            {
+                int length = AffixUtility.RemoveSuffix(word, entry, scratch);
+                if (length < 0)
+                {
+                    continue;
+                }
+
+                ReadOnlySpan<char> tempWord = scratch[..length];
+                if (HasAffixKey(baseWords, tempWord, rule.Name[0]))
+                {
+                    return true; // word found
+                }
+
+                if (rule.AllowCombine)
+                {
+                    // saving word to check if it is a word after prefix is removed
+                    tempWord.CopyTo(suffixChars[(suffixCount * maxLength)..]);
+                    suffixLengths[suffixCount] = length;
+                    suffixCount++;
+                }
+            }
+        }
+
+        // Step 4 Remove Prefix, Search BaseWords
+        foreach (AffixRule rule in PrefixRules.Values)
+        {
+            foreach (AffixEntry entry in rule.AffixEntries)
+            {
+                if (HasPrefixedBaseWord(baseWords, word, entry, rule.Name[0], scratch))
+                {
+                    return true; // word found
+                }
+
+                for (int i = 0; i < suffixCount; i++)
+                {
+                    ReadOnlySpan<char> suffixWord = suffixChars.Slice(i * maxLength, suffixLengths[i]);
+                    if (HasPrefixedBaseWord(baseWords, suffixWord, entry, rule.Name[0], scratch))
+                    {
+                        return true; // word found
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static bool HasAffixKey(Dictionary<string, Word>.AlternateLookup<ReadOnlySpan<char>> baseWords, ReadOnlySpan<char> word, char affixKey)
+    {
+        // make sure base word has this affix key
+        return baseWords.TryGetValue(word, out Word? baseWord) && baseWord.AffixKeys.Contains(affixKey);
+    }
+
+    private static bool HasPrefixedBaseWord(
+        Dictionary<string, Word>.AlternateLookup<ReadOnlySpan<char>> baseWords,
+        ReadOnlySpan<char> word,
+        AffixEntry entry,
+        char affixKey,
+        Span<char> scratch)
+    {
+        int length = AffixUtility.RemovePrefix(word, entry, scratch);
+        return length >= 0 && HasAffixKey(baseWords, scratch[..length], affixKey);
+    }
+
+    private void EnsureAffixLimits()
+    {
+        if (_maxStripLength >= 0)
+        {
+            return;
+        }
+
+        int maxStripLength = 0;
+        foreach (AffixRule rule in PrefixRules.Values)
+        {
+            foreach (AffixEntry entry in rule.AffixEntries)
+            {
+                maxStripLength = Math.Max(maxStripLength, entry.StripCharacters.Length);
+            }
+        }
+
+        int combineSuffixEntryCount = 0;
+        foreach (AffixRule rule in SuffixRules.Values)
+        {
+            foreach (AffixEntry entry in rule.AffixEntries)
+            {
+                maxStripLength = Math.Max(maxStripLength, entry.StripCharacters.Length);
+            }
+
+            if (rule.AllowCombine)
+            {
+                combineSuffixEntryCount += rule.AffixEntries.Count;
+            }
+        }
+
+        _combineSuffixEntryCount = combineSuffixEntryCount;
+        _maxStripLength = maxStripLength;
+    }
+#nullable restore
+
+    /// <summary>
     ///     Expands an affix compressed base word
     /// </summary>
     /// <param name="word" type="NetSpell.SpellChecker.Dictionary.Word">
@@ -366,6 +510,7 @@ public partial class WordDictionary : Component
     public void Initialize()
     {
         // clean up data first
+        _maxStripLength = -1;
         BaseWords.Clear();
         ReplaceCharacters.Clear();
         PrefixRules.Clear();
@@ -542,13 +687,13 @@ public partial class WordDictionary : Component
     /// </returns>
     public string PhoneticCode(string word)
     {
-        string tempWord = word.ToUpper();
+        ReadOnlySpan<char> tempWord = word.ToUpper();
         StringBuilder code = new();
 
         while (tempWord.Length > 0)
         {
-            // save previous word
-            string prevWord = tempWord;
+            // save previous length
+            int prevLength = tempWord.Length;
             foreach (PhoneticRule rule in PhoneticRules)
             {
                 bool beginning = tempWord.Length == word.Length;
@@ -579,7 +724,7 @@ public partial class WordDictionary : Component
                     {
                         if (rule.ReplaceMode)
                         {
-                            tempWord = rule.ReplaceString + tempWord[(rule.ConditionCount - rule.ConsumeCount)..];
+                            tempWord = string.Concat(rule.ReplaceString, tempWord[(rule.ConditionCount - rule.ConsumeCount)..]);
                         }
                         else
                         {
@@ -597,7 +742,7 @@ public partial class WordDictionary : Component
             }
 
             // if no match consume one char
-            if (prevWord.Length == tempWord.Length)
+            if (prevLength == tempWord.Length)
             {
                 tempWord = tempWord[1..];
             }
