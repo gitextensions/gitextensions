@@ -534,6 +534,27 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action);
     }
 
+    /// <summary>
+    ///  Shows the dialog that compares <paramref name="firstId"/> (BASE) to <paramref name="secondId"/> (Compare).
+    /// </summary>
+    /// <param name="owner">The owner of the dialog.</param>
+    /// <param name="firstId">The revision shown as BASE.</param>
+    /// <param name="secondId">The revision shown as Compare.</param>
+    /// <param name="firstDisplayStr">The text shown for the BASE revision.</param>
+    /// <param name="secondDisplayStr">The text shown for the Compare revision.</param>
+    /// <returns><see langword="true"/> if the dialog was shown; otherwise <see langword="false"/>.</returns>
+    public bool StartCompareRevisionsDialog(IWin32Window? owner, ObjectId firstId, ObjectId secondId, string firstDisplayStr, string secondDisplayStr)
+    {
+        bool Action()
+        {
+            using FormDiff form = new(this, firstId, secondId, firstDisplayStr, secondDisplayStr);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartAddFilesDialog(IWin32Window? owner, string? addFiles = null)
     {
         return DoActionOnRepo(owner, action: () =>
@@ -1600,6 +1621,8 @@ public sealed class GitUICommands : IGitUICommands
                 return RunCloneCommand(args);
             case "commit":      // [--quiet]
                 return Commit(arguments);
+            case "compare":     // first second
+                return RunCompareCommand(args);
             case "difftool":    // filename
                 try
                 {
@@ -1787,6 +1810,37 @@ public sealed class GitUICommands : IGitUICommands
 
             return true;
         }
+    }
+
+    private bool RunCompareCommand(IReadOnlyList<string> args)
+    {
+        // ge.exe compare <first> <second>
+        const int expectedArgCount = 4;
+
+        if (args.Count != expectedArgCount)
+        {
+            Console.Error.WriteLine("Usage: compare <first> <second>");
+            return false;
+        }
+
+        string first = args[2];
+        string second = args[3];
+
+        // "^{commit}" makes git verify the revision, even a full hash (which RevParse would otherwise accept as is),
+        // and rejects objects that are not commits.
+        ObjectId firstId = Module.RevParse($"{first}^{{commit}}");
+        ObjectId secondId = Module.RevParse($"{second}^{{commit}}");
+        if (firstId.IsZero || secondId.IsZero)
+        {
+            Console.Error.WriteLine($"No commit found matching: {(firstId.IsZero ? first : second)}");
+            return false;
+        }
+
+        return StartCompareRevisionsDialog(owner: null, firstId, secondId, GetDisplayString(first, firstId), GetDisplayString(second, secondId));
+
+        // A hash typed on the command line is shown abbreviated, whereas a ref name or expression is more readable as typed.
+        static string GetDisplayString(string revision, ObjectId objectId)
+            => objectId.ToString().StartsWith(revision, StringComparison.OrdinalIgnoreCase) ? objectId.ToShortString() : revision;
     }
 
     private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)
