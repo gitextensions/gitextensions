@@ -44,7 +44,7 @@ internal static class RevisionGridRefRenderer
 
     // Pixel width of the highlight frame drawn around a hovered ref label,
     // and the left-side offset used when drawing the nestled remote label.
-    private static int RefLabelHighlightWidth => 1;
+    private static float RefLabelHighlightWidth => 1F;
 
     private static int PointWidth(int height) => height / 2;
 
@@ -177,15 +177,6 @@ internal static class RevisionGridRefRenderer
     ///  Creates the ordered controls for a revision's refs, nesting a local branch with its
     ///  tracked remote when both point at the same commit.
     /// </summary>
-    public static IReadOnlyList<Control> CreateLabels(IReadOnlyList<IGitRef> refs)
-        => CreateLabels(
-            refs,
-            showTags: true,
-            showRemoteBranches: true,
-            fill: false,
-            getVirtualRef: null,
-            superprojectRefs: null);
-
     internal static IReadOnlyList<Control> CreateLabels(
         IReadOnlyList<IGitRef> refs,
         bool showTags,
@@ -390,7 +381,9 @@ internal static class RevisionGridRefRenderer
             label,
             GetBrushResourceKey(gitRef),
             icon is { } explicitIcon
-                ? GetEffectiveIcon(explicitIcon)
+                ? explicitIcon is RefLabelIcon.Head or RefLabelIcon.HeadMergeSource or RefLabelIcon.RemoteForced
+                    ? explicitIcon
+                    : RefLabelIcon.None
                 : showHeadIndicator && gitRef.IsSelected
                     ? RefLabelIcon.Head
                     : showHeadIndicator && gitRef.IsSelectedHeadMergeSource
@@ -685,11 +678,6 @@ internal static class RevisionGridRefRenderer
         return _ascent;
     }
 
-    private static RefLabelIcon GetEffectiveIcon(RefLabelIcon icon)
-        => icon is RefLabelIcon.Head or RefLabelIcon.HeadMergeSource or RefLabelIcon.RemoteForced
-            ? icon
-            : RefLabelIcon.None;
-
     /// <summary>
     ///  Computes the point width for the given font, which is needed to calculate the ideal capsule
     ///  size for Notch and Point shapes.
@@ -864,7 +852,7 @@ internal static class RevisionGridRefRenderer
         {
             // The source measures prefixes with NoPadding but paints the literal caption
             // with NoPrefix. Empty labels retain the font's space height and zero width.
-            (_textSize, _backgroundHeight, _textOffsetY, _iconRenderer, _iconAreaWidth) = MeasureContent(this, Label, GetEffectiveIcon(Icon));
+            (_textSize, _backgroundHeight, _textOffsetY, _iconRenderer, _iconAreaWidth) = MeasureContent(this, Label, Icon);
             _literalTextWidth = WinFormsTextMeasurer.MeasureSize(FontFamily, FontStyle, FontWeight,
                 FontSize, Label, singleLine: false, useTextRendererPadding: false).Width;
 
@@ -904,7 +892,6 @@ internal static class RevisionGridRefRenderer
             }
 
             IBrush refBrush = RefBrush;
-            RefLabelIcon effectiveIcon = GetEffectiveIcon(Icon);
             Rect capsuleBounds = CapsuleBounds;
             if (capsuleBounds.Width <= 0 || capsuleBounds.Height <= 0)
             {
@@ -945,7 +932,7 @@ internal static class RevisionGridRefRenderer
             // so the icon and text must be shifted right by pointWidth.
             int iconXOffset = Shape is RefLabelShape.NotchLeft or RefLabelShape.PointLeft
                 ? PointWidth
-                : effectiveIcon == RefLabelIcon.None ? 0 : 1;
+                : _iconRenderer is null ? 0 : 1;
 
             _iconRenderer?.Draw(context,
                 (int)capsuleBounds.X + iconXOffset + IconPaddingLeftRight,

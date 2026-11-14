@@ -119,7 +119,9 @@ public sealed class FormBrowseToolbarTests
     }
 
     [AvaloniaTest]
-    public void Browse_menu_commands_should_share_state_and_unregister_only_their_own_presentations()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Browse_menu_commands_should_share_state_and_unregister_only_their_own_presentations(bool dispose)
     {
         bool enabled = true;
         bool selected = false;
@@ -142,6 +144,18 @@ public sealed class FormBrowseToolbarTests
         menus.InsertRevisionGridMainMenuItems(repositoryMenu);
         MenuItem mainItem = menus.ViewMenuItem.Items.OfType<MenuItem>().Single();
 
+        command.Text = "&Translated selection";
+        command.ToolTipText = "Translated tooltip";
+        command.ShortcutKeyDisplayString = "Ctrl+K, Ctrl+C";
+        menus.OnMenuCommandsPropertyChanged();
+        foreach (MenuItem item in new[] { mainItem, contextItem })
+        {
+            item.Header.Should().Be("_Translated selection");
+            ToolTip.GetTip(item).Should().Be("Translated tooltip");
+            item.InputGesture.Should().Be(new KeyGesture(Key.K, KeyModifiers.Control));
+            WinFormsToolStripMenuSizer.GetShortcutDisplayString(item).Should().Be("Ctrl+K, Ctrl+C");
+        }
+
         mainItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
         selected.Should().BeTrue();
@@ -153,7 +167,15 @@ public sealed class FormBrowseToolbarTests
         mainItem.IsEnabled.Should().BeFalse();
         contextItem.IsEnabled.Should().BeFalse();
 
-        menus.ResetMenuCommandSets();
+        if (dispose)
+        {
+            menus.Dispose();
+        }
+        else
+        {
+            menus.ResetMenuCommandSets();
+        }
+
         enabled = true;
         selected = false;
         command.SetCheckForRegisteredMenuItems();

@@ -171,7 +171,7 @@ public sealed class FileHistoryTests
     [AvaloniaTest]
     public void FormFileHistory_should_expose_and_execute_the_original_git_command_log_toolbar_command()
     {
-        FormGitCommandLog.TestAccessor.OpenInstance?.Close();
+        GetOpenCommandLog()?.Close();
         Dispatcher.UIThread.RunJobs();
         FormFileHistory form = new();
         Button commandLogButton = form.FindControl<Button>("gitcommandLogToolStripMenuItem")
@@ -181,7 +181,7 @@ public sealed class FileHistoryTests
         commandLogButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         Dispatcher.UIThread.RunJobs();
 
-        FormGitCommandLog commandLog = FormGitCommandLog.TestAccessor.OpenInstance
+        FormGitCommandLog commandLog = GetOpenCommandLog()
             ?? throw new AssertionException("The toolbar command did not open the Git command log.");
         commandLog.IsVisible.Should().BeTrue();
 
@@ -560,4 +560,10 @@ public sealed class FileHistoryTests
 
         condition().Should().BeTrue("the condition should be met within the timeout");
     }
+
+    // parity-scaffolding: Inspect the original single-instance field without adding a product accessor.
+    private static FormGitCommandLog? GetOpenCommandLog()
+        => (FormGitCommandLog?)typeof(FormGitCommandLog)
+            .GetField("instance", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!
+            .GetValue(null);
 }

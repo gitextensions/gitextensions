@@ -137,14 +137,15 @@ public sealed class BlameAndLogTests
     public void FormGitCommandLog_should_construct_with_two_tabs_and_wrap_enabled()
     {
         FormGitCommandLog form = new();
-        FormGitCommandLog.TestAccessor accessor = form.GetTestAccessor();
 
-        accessor.TabControl.Items.Should().HaveCount(2);
-        accessor.LogItems.Should().NotBeNull();
-        accessor.CommandCacheItems.Should().NotBeNull();
-        accessor.WordWrap.IsChecked.Should().BeTrue();
-        accessor.LogOutput.IsReadOnly.Should().BeFalse();
-        accessor.CommandCacheOutput.IsReadOnly.Should().BeFalse();
+        form.TabControl.Items.Should().HaveCount(2);
+        form.LogItems.Should().NotBeNull();
+        form.CommandCacheItems.Should().NotBeNull();
+        form.chkWordWrap.IsChecked.Should().BeTrue();
+        form.LogOutput.IsReadOnly.Should().BeFalse();
+        form.commandCacheOutput.IsReadOnly.Should().BeFalse();
+        form.LogOutput.Text.Should().BeEmpty();
+        form.commandCacheOutput.Text.Should().BeEmpty();
 
         form.Close();
     }
@@ -157,7 +158,7 @@ public sealed class BlameAndLogTests
         form.Show();
         Dispatcher.UIThread.RunJobs();
 
-        form.GetTestAccessor().LogItems.IsFocused.Should().BeTrue();
+        form.LogItems.IsFocused.Should().BeTrue();
         form.Close();
     }
 
@@ -165,7 +166,6 @@ public sealed class BlameAndLogTests
     public void FormGitCommandLog_should_preserve_the_96_dpi_designer_layout_theme_and_context_surfaces()
     {
         FormGitCommandLog form = new();
-        FormGitCommandLog.TestAccessor accessor = form.GetTestAccessor();
         Grid logSplit = form.FindControl<Grid>("splitContainer2")!;
         Grid cacheSplit = form.FindControl<Grid>("splitContainer1")!;
         TabItem logTab = form.FindControl<TabItem>("tabPageCommandLog")!;
@@ -174,10 +174,10 @@ public sealed class BlameAndLogTests
         form.Name.Should().Be(nameof(FormGitCommandLog));
         form.Width.Should().Be(659);
         form.Height.Should().Be(470);
-        accessor.TabControl.Margin.Should().Be(new Thickness(0, 3, 0, 0));
-        accessor.TabControl.Classes.Should().Contain("gitextensions-native-tabs");
-        accessor.TabControl.Classes.Should().Contain("gitextensions-full-bleed-tabs");
-        accessor.TabControl.TabIndex.Should().Be(1);
+        form.TabControl.Margin.Should().Be(new Thickness(0, 3, 0, 0));
+        form.TabControl.Classes.Should().Contain("gitextensions-native-tabs");
+        form.TabControl.Classes.Should().Contain("gitextensions-full-bleed-tabs");
+        form.TabControl.TabIndex.Should().Be(1);
         logSplit.RowDefinitions.Select(row => row.Height).Should().Equal(
             GridLength.Star,
             new GridLength(7),
@@ -192,34 +192,34 @@ public sealed class BlameAndLogTests
         cacheSplit.Children.OfType<GridSplitter>().Single().MinHeight.Should().Be(6);
         logTab.Classes.Should().Contain("gitextensions-dialog-tab");
         cacheTab.Classes.Should().Contain("gitextensions-dialog-tab");
-        accessor.LogItems.BorderThickness.Should().Be(default(Thickness));
-        accessor.CommandCacheItems.BorderThickness.Should().Be(default(Thickness));
-        accessor.LogItems.Focusable.Should().BeTrue();
-        accessor.CommandCacheItems.Focusable.Should().BeTrue();
-        accessor.LogItems.FontSize.Should().Be(12);
-        accessor.CommandCacheItems.FontSize.Should().Be(12);
-        accessor.LogOutput.FontSize.Should().Be(12);
-        accessor.CommandCacheOutput.FontSize.Should().Be(12);
+        form.LogItems.BorderThickness.Should().Be(default(Thickness));
+        form.CommandCacheItems.BorderThickness.Should().Be(default(Thickness));
+        form.LogItems.Focusable.Should().BeTrue();
+        form.CommandCacheItems.Focusable.Should().BeTrue();
+        form.LogItems.FontSize.Should().Be(12);
+        form.CommandCacheItems.FontSize.Should().Be(12);
+        form.LogOutput.FontSize.Should().Be(12);
+        form.commandCacheOutput.FontSize.Should().Be(12);
         string genericMonospace = OperatingSystem.IsWindows() ? "Courier New" : "DejaVu Sans Mono";
-        accessor.LogItems.FontFamily.Name.Should().Be(genericMonospace);
-        accessor.CommandCacheItems.FontFamily.Should().Be(accessor.LogItems.FontFamily);
-        accessor.LogOutput.FontFamily.Should().Be(accessor.LogItems.FontFamily);
-        accessor.CommandCacheOutput.FontFamily.Should().Be(accessor.LogItems.FontFamily);
+        form.LogItems.FontFamily.Name.Should().Be(genericMonospace);
+        form.CommandCacheItems.FontFamily.Should().Be(form.LogItems.FontFamily);
+        form.LogOutput.FontFamily.Should().Be(form.LogItems.FontFamily);
+        form.commandCacheOutput.FontFamily.Should().Be(form.LogItems.FontFamily);
         logTab.Background.Should().NotBeNull();
         cacheTab.Background.Should().Be(logTab.Background);
-        accessor.LogOutput.Background.Should().NotBeNull();
-        accessor.CommandCacheOutput.Background.Should().Be(accessor.LogOutput.Background);
+        form.LogOutput.Background.Should().NotBeNull();
+        form.commandCacheOutput.Background.Should().Be(form.LogOutput.Background);
         logTab.ContextMenu.Should().NotBeNull();
         cacheTab.ContextMenu.Should().NotBeNull();
-        accessor.AlwaysOnTop.TabIndex.Should().Be(2);
-        accessor.AlwaysOnTop.Width.Should().Be(101);
-        accessor.AlwaysOnTop.Height.Should().Be(19);
-        accessor.WordWrap.TabIndex.Should().Be(3);
-        accessor.WordWrap.Width.Should().Be(84);
-        accessor.WordWrap.Height.Should().Be(19);
-        accessor.CaptureCallStacks.TabIndex.Should().Be(4);
-        accessor.CaptureCallStacks.Width.Should().Be(124);
-        accessor.CaptureCallStacks.Height.Should().Be(19);
+        form.chkAlwaysOnTop.TabIndex.Should().Be(2);
+        form.chkAlwaysOnTop.Width.Should().Be(101);
+        form.chkAlwaysOnTop.Height.Should().Be(19);
+        form.chkWordWrap.TabIndex.Should().Be(3);
+        form.chkWordWrap.Width.Should().Be(84);
+        form.chkWordWrap.Height.Should().Be(19);
+        form.chkCaptureCallStacks.TabIndex.Should().Be(4);
+        form.chkCaptureCallStacks.Width.Should().Be(124);
+        form.chkCaptureCallStacks.Height.Should().Be(19);
 
         form.Close();
     }
@@ -228,12 +228,11 @@ public sealed class BlameAndLogTests
     public void FormGitCommandLog_should_toggle_word_wrap_on_both_outputs()
     {
         FormGitCommandLog form = new();
-        FormGitCommandLog.TestAccessor accessor = form.GetTestAccessor();
 
-        accessor.WordWrap.IsChecked = false;
+        form.chkWordWrap.IsChecked = false;
 
-        accessor.LogOutput.TextWrapping.Should().Be(TextWrapping.NoWrap);
-        accessor.CommandCacheOutput.TextWrapping.Should().Be(TextWrapping.NoWrap);
+        form.LogOutput.TextWrapping.Should().Be(TextWrapping.NoWrap);
+        form.commandCacheOutput.TextWrapping.Should().Be(TextWrapping.NoWrap);
 
         form.Close();
     }
@@ -242,12 +241,11 @@ public sealed class BlameAndLogTests
     public void FormGitCommandLog_should_toggle_always_on_top()
     {
         FormGitCommandLog form = new();
-        FormGitCommandLog.TestAccessor accessor = form.GetTestAccessor();
 
-        accessor.AlwaysOnTop.IsChecked = true;
+        form.chkAlwaysOnTop.IsChecked = true;
 
         form.Topmost.Should().BeTrue();
-        accessor.AlwaysOnTop.IsChecked.Should().BeTrue();
+        form.chkAlwaysOnTop.IsChecked.Should().BeTrue();
 
         form.Close();
     }
@@ -257,10 +255,10 @@ public sealed class BlameAndLogTests
     {
         ListBox log = new();
 
-        FormGitCommandLog.TestAccessor.Refresh(log, ["a", "b", "c"]);
+        RefreshCommandLog(log, ["a", "b", "c"]);
         log.SelectedIndex.Should().Be(2);
 
-        FormGitCommandLog.TestAccessor.Refresh(log, ["a", "b", "c", "d"]);
+        RefreshCommandLog(log, ["a", "b", "c", "d"]);
         log.SelectedIndex.Should().Be(3);
     }
 
@@ -269,10 +267,10 @@ public sealed class BlameAndLogTests
     {
         ListBox log = new();
 
-        FormGitCommandLog.TestAccessor.Refresh(log, ["a", "b", "c"]);
+        RefreshCommandLog(log, ["a", "b", "c"]);
         log.SelectedIndex = 0;
 
-        FormGitCommandLog.TestAccessor.Refresh(log, ["x", "y", "z"]);
+        RefreshCommandLog(log, ["x", "y", "z"]);
 
         log.SelectedIndex.Should().Be(0);
     }
@@ -288,14 +286,13 @@ public sealed class BlameAndLogTests
         FormGitCommandLog form = new();
         form.Show();
         Dispatcher.UIThread.RunJobs();
-        FormGitCommandLog.TestAccessor accessor = form.GetTestAccessor();
 
-        Action selectCacheTab = () => accessor.TabControl.SelectedIndex = 1;
+        Action selectCacheTab = () => form.TabControl.SelectedIndex = 1;
 
         selectCacheTab.Should().NotThrow();
         Dispatcher.UIThread.RunJobs();
-        accessor.CommandCacheItems.ItemCount.Should().Be(1);
-        accessor.CommandCacheItems.SelectedIndex.Should().Be(0);
+        form.CommandCacheItems.ItemCount.Should().Be(1);
+        form.CommandCacheItems.SelectedIndex.Should().Be(0);
 
         form.Close();
         CommandLog.Clear();
@@ -344,5 +341,12 @@ public sealed class BlameAndLogTests
         ((ITranslate)menu).AddTranslationItems(translation);
 
         translation.Received(1).AddTranslationItem("FormBrowse", "gitcommandLogToolStripMenuItem", "Text", "Git &command log");
+    }
+
+    private static void RefreshCommandLog(ListBox log, object[] dataSource)
+    {
+        // parity-scaffolding: Exercise the original private refresh boundary without a production accessor.
+        typeof(FormGitCommandLog).GetMethod("RefreshListBox", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!
+            .Invoke(null, [log, dataSource]);
     }
 }

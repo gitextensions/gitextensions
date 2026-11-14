@@ -100,7 +100,13 @@ public sealed class ContentColorGoldenImageTests
             Orientation = Orientation.Horizontal,
             Spacing = 4,
         };
-        panel.Children.AddRange(RevisionGridRefRenderer.CreateLabels(refs));
+        panel.Children.AddRange(RevisionGridRefRenderer.CreateLabels(
+            refs,
+            showTags: true,
+            showRemoteBranches: true,
+            fill: false,
+            getVirtualRef: null,
+            superprojectRefs: null));
         return panel;
     }
 

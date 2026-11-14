@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Collections;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -99,28 +100,27 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
         }
     }
 
-    private static void RefreshListBox(ListBox log, IReadOnlyList<object> dataSource)
+    private static void RefreshListBox(ListBox log, object dataSource)
     {
-        int itemCount = log.ItemCount;
-        bool isLastIndexSelected = itemCount == 0 || log.SelectedIndex == itemCount - 1;
+        bool isLastIndexSelected = log.ItemCount == 0 || log.SelectedIndex == log.ItemCount - 1;
         int lastIndex = -1;
         if (!isLastIndexSelected)
         {
             lastIndex = log.SelectedIndex;
         }
 
-        log.ItemsSource = dataSource;
+        log.ItemsSource = (IEnumerable)dataSource;
 
-        if (dataSource.Count < 1)
+        if (log.ItemCount < 1)
         {
             return;
         }
 
         // select the very last item first, then select the previously selected item, if any
-        log.SelectedIndex = dataSource.Count - 1;
+        log.SelectedIndex = log.ItemCount - 1;
         if (isLastIndexSelected)
         {
-            log.SelectedIndex = dataSource.Count - 1;
+            log.SelectedIndex = log.ItemCount - 1;
         }
         else if (lastIndex >= 0)
         {
@@ -311,27 +311,5 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
     {
         public string Key { get; } = key;
         public string DisplayString { get; } = CommandLogEntry.GetGitArgumentsWithoutConfiguration(key);
-    }
-
-    internal TestAccessor GetTestAccessor() => new(this);
-
-    internal readonly struct TestAccessor(FormGitCommandLog form)
-    {
-        public TabControl TabControl => form.TabControl;
-        public ListBox LogItems => form.LogItems;
-        public ListBox CommandCacheItems => form.CommandCacheItems;
-        public TextBox LogOutput => form.LogOutput;
-        public TextBox CommandCacheOutput => form.commandCacheOutput;
-        public CheckBox AlwaysOnTop => form.chkAlwaysOnTop;
-        public CheckBox WordWrap => form.chkWordWrap;
-        public CheckBox CaptureCallStacks => form.chkCaptureCallStacks;
-        public MenuItem SaveToFile => form.mnuSaveToFile;
-        public MenuItem CopyCommandLine => form.mnuCopyCommandLine;
-        public MenuItem ClearLog => form.mnuClear;
-        public MenuItem ClearCache => form.tsmiClearCache;
-
-        public static FormGitCommandLog? OpenInstance => instance;
-
-        public static void Refresh(ListBox log, IReadOnlyList<object> dataSource) => RefreshListBox(log, dataSource);
     }
 }

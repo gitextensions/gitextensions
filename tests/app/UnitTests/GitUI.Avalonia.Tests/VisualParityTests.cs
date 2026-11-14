@@ -1090,7 +1090,13 @@ public sealed class VisualParityTests
             remote: "origin");
 
         RevisionGridRefRenderer.NestledRefLabelPanel pair =
-            RevisionGridRefRenderer.CreateLabels([remote, local])
+            RevisionGridRefRenderer.CreateLabels(
+                [remote, local],
+                showTags: true,
+                showRemoteBranches: true,
+                fill: false,
+                getVirtualRef: null,
+                superprojectRefs: null)
                 .Should()
                 .ContainSingle()
                 .Which.Should()
@@ -1102,7 +1108,12 @@ public sealed class VisualParityTests
         ];
         RevisionGridRefRenderer.RefLabelControl standaloneTrackingRemote =
             RevisionGridRefRenderer.CreateLabels(
-                [CreateRef("origin/next", isRemote: true, isSelectedHeadMergeSource: true)])
+                [CreateRef("origin/next", isRemote: true, isSelectedHeadMergeSource: true)],
+                showTags: true,
+                showRemoteBranches: true,
+                fill: false,
+                getVirtualRef: null,
+                superprojectRefs: null)
                 .Should()
                 .ContainSingle()
                 .Which.Should()
@@ -1917,7 +1928,13 @@ public sealed class VisualParityTests
         Color expectedBackground)
     {
         RevisionGridRefRenderer.RefLabelControl label =
-            RevisionGridRefRenderer.CreateLabels([gitRef])
+            RevisionGridRefRenderer.CreateLabels(
+                [gitRef],
+                showTags: true,
+                showRemoteBranches: true,
+                fill: false,
+                getVirtualRef: null,
+                superprojectRefs: null)
                 .Should()
                 .ContainSingle()
                 .Which.Should()

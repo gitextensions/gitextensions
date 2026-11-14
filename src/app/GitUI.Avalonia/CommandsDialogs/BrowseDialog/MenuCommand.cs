@@ -197,6 +197,7 @@ internal sealed class MenuCommand
         }
     }
 
+    // Avalonia retains menu items outside the form's translation fields; propagate the translated command text explicitly.
     public void UpdateMenuItemsText()
     {
         foreach (MenuItem item in _registeredMenuItems)
@@ -264,6 +265,7 @@ internal sealed class MenuCommand
         }
     }
 
+    // Avalonia InputGesture requires a KeyGesture; keep the original full shortcut string separately for display.
     private static KeyGesture? ParseShortcut(string? shortcut)
     {
         if (string.IsNullOrWhiteSpace(shortcut))

@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs;
 /// This class is intended to have NO dependency to FormBrowse
 ///   (if needed this kind of code should be done in FormBrowseMenuCommands).
 /// </summary>
-internal sealed class FormBrowseMenus : ITranslate, IDisposable
+internal class FormBrowseMenus : ITranslate, IDisposable
 {
     /// <summary>
     /// The menu to which we will be adding RevisionGrid command menus.
@@ -58,10 +58,20 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
 
     public void Dispose()
     {
-        _navigateToolStripMenuItem?.SubmenuOpened -= MainMenuItem_SubmenuOpened;
-        _viewToolStripMenuItem?.SubmenuOpened -= MainMenuItem_SubmenuOpened;
-        RemoveRevisionGridMainMenuItems();
-        _toolStripContextMenu.Close();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Avalonia menu controls are not IDisposable; release their subscriptions, registrations and popup explicitly.
+            _navigateToolStripMenuItem?.SubmenuOpened -= MainMenuItem_SubmenuOpened;
+            _viewToolStripMenuItem?.SubmenuOpened -= MainMenuItem_SubmenuOpened;
+            RemoveRevisionGridMainMenuItems();
+            _toolStripContextMenu.Close();
+        }
     }
 
     public void Translate()
@@ -75,7 +85,7 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
 
     internal ContextMenu ToolStripContextMenu => _toolStripContextMenu;
 
-    public void AddTranslationItems(ITranslation translation)
+    public virtual void AddTranslationItems(ITranslation translation)
     {
         foreach ((string name, object _) in GetAdditionalMainMenuItemsForTranslation())
         {
@@ -83,7 +93,7 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
         }
     }
 
-    public void TranslateItems(ITranslation translation)
+    public virtual void TranslateItems(ITranslation translation)
     {
         foreach ((string name, object item) in GetAdditionalMainMenuItemsForTranslation())
         {

@@ -3320,7 +3320,7 @@ public sealed class FormBrowseTests
     [AvaloniaTest]
     public void FormBrowse_should_execute_the_git_command_log_shortcut_while_the_tools_menu_is_closed()
     {
-        FormGitCommandLog.TestAccessor.OpenInstance?.Close();
+        GetOpenCommandLog()?.Close();
         Dispatcher.UIThread.RunJobs();
         using FormBrowse form = new();
         KeyEventArgs keyEvent = new()
@@ -3333,7 +3333,7 @@ public sealed class FormBrowseTests
         Dispatcher.UIThread.RunJobs();
 
         keyEvent.Handled.Should().BeTrue();
-        FormGitCommandLog commandLog = FormGitCommandLog.TestAccessor.OpenInstance
+        FormGitCommandLog commandLog = GetOpenCommandLog()
             ?? throw new AssertionException("F12 did not open the Git command log.");
         commandLog.IsVisible.Should().BeTrue();
         form.toolsToolStripMenuItem.IsSubMenuOpen.Should().BeFalse();
@@ -5923,4 +5923,10 @@ public sealed class FormBrowseTests
                 _ => throw new InvalidOperationException($"Unexpected shared menu entry: {item?.GetType().Name}"),
             })
             .ToArray();
+
+    // parity-scaffolding: Inspect the original single-instance field without adding a product accessor.
+    private static FormGitCommandLog? GetOpenCommandLog()
+        => (FormGitCommandLog?)typeof(FormGitCommandLog)
+            .GetField("instance", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!
+            .GetValue(null);
 }
