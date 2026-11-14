@@ -12,8 +12,8 @@ public sealed class CustomDiffMergeToolCacheTests
 
     public void ParseCustomDiffMergeToolTest(string output, string[] expected)
     {
-        IEnumerable<string> tools = CustomDiffMergeToolCache.DiffToolCache.GetTestAccessor().ParseCustomDiffMergeTool(output, "winmerge");
+        IEnumerable<string> tools = CustomDiffMergeToolCache.TestAccessor.ParseCustomDiffMergeTool(output, "winmerge");
 
-        tools.Should().BeEquivalentTo(expected);
+        tools.Should().Equal(expected);
     }
 }

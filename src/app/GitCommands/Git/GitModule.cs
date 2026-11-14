@@ -67,6 +67,10 @@ public sealed partial class GitModule : IGitModule
     [GeneratedRegex(@"(\\(?<octal>[0-7]{3}))+", RegexOptions.ExplicitCapture)]
     private static partial Regex EscapedOctalCodePointRegex { get; }
 
+    // The executable (possibly quoted) directly followed by the subcommand, as git starts the daemon.
+    [GeneratedRegex(@"^\s*(""[^""]*""|\S+)\s+fsmonitor--daemon(\s|$)", RegexOptions.ExplicitCapture)]
+    private static partial Regex GitFsMonitorDaemonCommandLineRegex { get; }
+
     [GeneratedRegex(@"^(?<code>[\-+U ])(?<sha>[0-9a-f]{40}) (?<path>.+) \((?<branch>.+)\)$", RegexOptions.ExplicitCapture)]
     private static partial Regex ShaRegex { get; }
 
@@ -3764,7 +3768,9 @@ public sealed partial class GitModule : IGitModule
         if (OperatingSystem.IsWindows())
         {
             Process[] processes = Process.GetProcessesByName("git");
-            bool running = processes.Length > 0;
+
+            // A process whose command line cannot be read is considered a running git command.
+            bool running = processes.Any(p => !IsGitFsMonitorDaemon(p.TryGetCommandLine()));
             foreach (Process p in processes)
             {
                 p.Dispose();
@@ -3799,6 +3805,17 @@ public sealed partial class GitModule : IGitModule
 
         return false;
     }
+
+    /// <summary>
+    ///  Determines whether the command line is the one git uses to start a <c>git fsmonitor--daemon</c>.
+    /// </summary>
+    /// <remarks>
+    ///  Git starts one daemon per worktree with <c>core.fsmonitor</c> enabled, and it keeps running until it is stopped
+    ///  or the worktree is deleted. It does not prevent other git commands from running, so it must not be considered
+    ///  as a running git command, otherwise a periodic background fetch would never run.
+    /// </remarks>
+    internal static bool IsGitFsMonitorDaemon(string? commandLine)
+        => commandLine is not null && GitFsMonitorDaemonCommandLineRegex.IsMatch(commandLine);
 
     /// <summary>
     /// Un-escapes any octal code points embedded within <paramref name="s"/>.

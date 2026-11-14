@@ -8099,6 +8099,14 @@ Context menu for additional operations</source>
         <source>Advanced</source>
         <target />
       </trans-unit>
+      <trans-unit id="lblCoreFsMonitor.Text">
+        <source>Run a file system monitor daemon per working directory</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblCoreUntrackedCache.Text">
+        <source>Cache the untracked files in the index</source>
+        <target />
+      </trans-unit>
       <trans-unit id="lblFetchPrune.Text">
         <source>Prune remote branches during fetch</source>
         <target />
