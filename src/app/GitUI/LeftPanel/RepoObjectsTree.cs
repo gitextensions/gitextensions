@@ -13,6 +13,7 @@ using GitUI.Theming;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.LeftPanel;
@@ -22,6 +23,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     public const string HotkeySettingsName = "LeftPanel";
 
     private readonly CancellationTokenSequence _selectionCancellationTokenSequence = new();
+    private readonly CancellationTokenSequence _bisectCancellationTokenSequence = new();
     private readonly TranslationString _searchTooltip = new("Search");
 
     private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
@@ -34,6 +36,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private StashTree _stashTree = null!;
     private SubmoduleTree _submoduleTree = null!;
     private WorktreeTree _worktreeTree = null!;
+    private BisectTree _bisectTree = null!;
     private List<TreeNode>? _searchResult;
     private Action<string?> _filterRevisionGridBySpaceSeparatedRefs = null!;
     private IAheadBehindDataProvider? _aheadBehindDataProvider;
@@ -43,7 +46,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     public RepoObjectsTree()
     {
-        Disposed += (s, e) => _selectionCancellationTokenSequence.Dispose();
+        Disposed += (s, e) =>
+        {
+            _selectionCancellationTokenSequence.Dispose();
+            _bisectCancellationTokenSequence.Dispose();
+        };
 
         InitializeComponent();
         InitImageList();
@@ -97,6 +104,10 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 {
                     { nameof(Images.ArrowDown), Pad(Images.ArrowDown) },
                     { nameof(Images.ArrowUp), Pad(Images.ArrowUp) },
+                    { nameof(Images.Bisect), Pad(Images.Bisect) },
+                    { nameof(Images.BisectBad), Pad(Images.BisectBad) },
+                    { nameof(Images.BisectGood), Pad(Images.BisectGood) },
+                    { nameof(Images.BisectSkip), Pad(Images.BisectSkip) },
                     { nameof(Images.BitBucket), Pad(Images.BitBucket) },
                     { nameof(Images.Branch), Pad(Images.Branch.AdaptLightness()) },
                     { nameof(Images.BranchFolder), Pad(Images.BranchFolder) },
@@ -247,6 +258,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _worktreeTree.Refresh();
         _tagTree.Refresh(getRefs);
         _stashTree.Refresh(getStashRevs);
+        RefreshBisectTree(getRefs);
     }
 
     /// <summary>
@@ -260,6 +272,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _remotesTree.UpdateVisibility();
         _tagTree.UpdateVisibility();
         _stashTree.UpdateVisibility();
+        _bisectTree.UpdateVisibility();
     }
 
     /// <summary>
@@ -372,6 +385,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         CreateTags();
         CreateSubmodules();
         CreateStashes();
+        CreateBisect();
 
         FixInvalidTreeToPositionIndices();
         ShowEnabledTrees();
@@ -456,6 +470,49 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _stashTree = new StashTree(rootNode, UICommandsSource, _refsSource);
     }
 
+    private void CreateBisect()
+    {
+        TreeNode rootNode = new(TranslatedStrings.Bisect)
+        {
+            Name = TranslatedStrings.Bisect,
+            ImageKey = nameof(Images.Bisect),
+            SelectedImageKey = nameof(Images.Bisect)
+        };
+
+        _bisectTree = new BisectTree(rootNode, UICommandsSource, _refsSource);
+    }
+
+    /// <summary>
+    ///  Shows the Bisect tree as the first root node while a bisect is in progress, and removes it otherwise.
+    /// </summary>
+    private void RefreshBisectTree(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+    {
+        CancellationToken cancellationToken = _bisectCancellationTokenSequence.Next();
+
+        ThreadHelper.FileAndForget(async () =>
+        {
+            await TaskScheduler.Default;
+            bool isBisecting = Module.IsValidGitWorkingDir() && BisectTree.IsBisecting(getRefs(RefsFilter.NoFilter));
+
+            await treeMain.SwitchToMainThreadAsync(cancellationToken);
+
+            bool isShown = _rootNodes.Contains(_bisectTree);
+            if (isBisecting)
+            {
+                if (!isShown)
+                {
+                    AddTree(_bisectTree);
+                }
+
+                _bisectTree.Refresh(getRefs);
+            }
+            else if (isShown)
+            {
+                RemoveTree(_bisectTree);
+            }
+        });
+    }
+
     private void AddTree(Tree tree)
     {
         tree.TreeViewNode.SelectedImageKey = tree.TreeViewNode.ImageKey;
@@ -468,7 +525,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         nodeList.Add(tree.TreeViewNode);
         treeMain.Nodes.Clear();
         Dictionary<Tree, int> treeToPositionIndex = GetTreeToPositionIndex();
-        treeMain.Nodes.AddRange([.. nodeList.OrderBy(treeNode => treeToPositionIndex[(Tree)treeNode.Tag!])]);
+        treeMain.Nodes.AddRange([.. nodeList.OrderBy(treeNode => treeNode.Tag == _bisectTree ? -1 : treeToPositionIndex[(Tree)treeNode.Tag!])]);
         treeMain.EndUpdate();
 
         treeMain.Font = AppSettings.Font;

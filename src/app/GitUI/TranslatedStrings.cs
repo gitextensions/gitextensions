@@ -40,6 +40,7 @@ internal sealed class TranslatedStrings : Translate
     private readonly TranslationString _stashesText = new("Stashes");
     private readonly TranslationString _submodulesText = new("Submodules");
     private readonly TranslationString _worktreesText = new("Worktrees");
+    private readonly TranslationString _bisectText = new("Bisect");
     private readonly TranslationString _bodyNotLoaded = new("\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.");
     private readonly TranslationString _searchingFor = new("Searching for: ");
     private readonly TranslationString _loadingDataText = new("Loading data...");
@@ -248,6 +249,7 @@ Copy error details to clipboard?");
     public static string Stashes => _instance.Value._stashesText.Text;
     public static string Submodules => _instance.Value._submodulesText.Text;
     public static string Worktrees => _instance.Value._worktreesText.Text;
+    public static string Bisect => _instance.Value._bisectText.Text;
 
     public static string BodyNotLoaded => _instance.Value._bodyNotLoaded.Text;
     public static string SearchingFor => _instance.Value._searchingFor.Text;

@@ -60,10 +60,11 @@ partial class RepoObjectsTree : IMenuItemFactory
 
     private void EnableMoveTreeUpDownContexMenu(bool hasSingleSelection, NodeBase? selectedNode)
     {
-        bool isSingleTreeSelected = hasSingleSelection && selectedNode is Tree;
+        // The Bisect tree is always the first one and cannot be moved.
+        bool isSingleTreeSelected = hasSingleSelection && selectedNode is Tree and not BisectTree;
         TreeNode? treeNode = (selectedNode as Tree)?.TreeViewNode;
         mnubtnMoveUp.Visible = mnubtnMoveDown.Visible = isSingleTreeSelected;
-        mnubtnMoveUp.Enabled = isSingleTreeSelected && treeNode?.PrevNode is not null;
+        mnubtnMoveUp.Enabled = isSingleTreeSelected && treeNode?.PrevNode is { Tag: not BisectTree };
         mnubtnMoveDown.Enabled = isSingleTreeSelected && treeNode?.NextNode is not null;
     }
 
