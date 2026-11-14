@@ -426,4 +426,22 @@ public sealed partial class FormStash : GitModuleForm
             Close();
         }
     }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly FormStash _form;
+
+        public TestAccessor(FormStash form)
+        {
+            _form = form;
+        }
+
+        public TableLayoutPanel ButtonsAndOptions => _form.tableLayoutPanel1;
+        public Button StashAll => _form.Stash;
+        public Button StashSelected => _form.StashSelectedFiles;
+        public Button Drop => _form.Clear;
+        public Button ApplySelected => _form.Apply;
+    }
 }

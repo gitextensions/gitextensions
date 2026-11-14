@@ -128,9 +128,12 @@ partial class FormStash
         // StashSelectedFiles
         // 
         tableLayoutPanel1.SetColumnSpan(StashSelectedFiles, 2);
+        StashSelectedFiles.AutoSize = true;
+        StashSelectedFiles.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         StashSelectedFiles.Dock = DockStyle.Fill;
         StashSelectedFiles.Location = new Point(6, 109);
         StashSelectedFiles.Margin = new Padding(6, 6, 0, 6);
+        StashSelectedFiles.MinimumSize = new Size(0, 50);
         StashSelectedFiles.Name = "StashSelectedFiles";
         StashSelectedFiles.Size = new Size(274, 50);
         StashSelectedFiles.TabIndex = 18;
@@ -142,9 +145,12 @@ partial class FormStash
         // Stash
         // 
         tableLayoutPanel1.SetColumnSpan(Stash, 2);
+        Stash.AutoSize = true;
+        Stash.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         Stash.Dock = DockStyle.Fill;
         Stash.Location = new Point(6, 47);
         Stash.Margin = new Padding(6, 6, 0, 6);
+        Stash.MinimumSize = new Size(0, 50);
         Stash.Name = "Stash";
         Stash.Size = new Size(274, 50);
         Stash.TabIndex = 15;
@@ -182,9 +188,12 @@ partial class FormStash
         // Apply
         // 
         tableLayoutPanel1.SetColumnSpan(Apply, 2);
+        Apply.AutoSize = true;
+        Apply.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         Apply.Dock = DockStyle.Fill;
         Apply.Location = new Point(6, 233);
         Apply.Margin = new Padding(6, 6, 0, 6);
+        Apply.MinimumSize = new Size(0, 50);
         Apply.Name = "Apply";
         Apply.Size = new Size(274, 50);
         Apply.TabIndex = 17;
@@ -196,9 +205,12 @@ partial class FormStash
         // Clear
         // 
         tableLayoutPanel1.SetColumnSpan(Clear, 2);
+        Clear.AutoSize = true;
+        Clear.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         Clear.Dock = DockStyle.Fill;
         Clear.Location = new Point(6, 171);
         Clear.Margin = new Padding(6, 6, 0, 6);
+        Clear.MinimumSize = new Size(0, 50);
         Clear.Name = "Clear";
         Clear.Size = new Size(274, 50);
         Clear.TabIndex = 16;
