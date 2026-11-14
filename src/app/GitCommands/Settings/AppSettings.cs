@@ -1620,6 +1620,15 @@ public static partial class AppSettings
         set => SetBool("dashboardshowcurrentbranch", value);
     }
 
+    /// <summary>
+    /// Gets or sets whether the main window title starts with the current branch name instead of the repository name.
+    /// </summary>
+    public static bool ShowBranchFirstInAppTitle
+    {
+        get => GetBool("showbranchfirstinapptitle", false);
+        set => SetBool("showbranchfirstinapptitle", value);
+    }
+
     public static string? OwnScripts
     {
         get => GetString("ownScripts", "");

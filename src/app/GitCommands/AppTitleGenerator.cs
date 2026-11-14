@@ -52,10 +52,15 @@ public sealed class AppTitleGenerator : IAppTitleGenerator
 
         string description = _descriptionProvider.Get(workingDir);
 
+        // Taskbar thumbnails and Alt+Tab truncate long titles, so let worktree users put the branch first
+        string repoAndBranch = AppSettings.ShowBranchFirstInAppTitle
+            ? $"{branchName} ({description})"
+            : $"{description} ({branchName})";
+
 #if DEBUG
-        return $"{pathName}{description} ({branchName}) - {AppSettings.ApplicationName}{_extraInfo}";
+        return $"{pathName}{repoAndBranch} - {AppSettings.ApplicationName}{_extraInfo}";
 #else
-        return $"{pathName}{description} ({branchName}) - {AppSettings.ApplicationName}";
+        return $"{pathName}{repoAndBranch} - {AppSettings.ApplicationName}";
 #endif
 
         static string? GetFileName(string? path)

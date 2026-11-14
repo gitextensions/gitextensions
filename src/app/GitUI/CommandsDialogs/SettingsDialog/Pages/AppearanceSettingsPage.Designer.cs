@@ -34,6 +34,7 @@ partial class AppearanceSettingsPage
         chkShowRelativeDate = new CheckBox();
         chkShowRepoCurrentBranch = new CheckBox();
         chkShowCurrentBranchInVisualStudio = new CheckBox();
+        chkShowBranchFirstInAppTitle = new CheckBox();
         chkEnableAutoScale = new CheckBox();
         truncateLongFilenames = new Label();
         truncatePathMethod = new ComboBox();
@@ -119,13 +120,15 @@ partial class AppearanceSettingsPage
         tlpnlGeneral.Controls.Add(chkShowRelativeDate, 0, 0);
         tlpnlGeneral.Controls.Add(chkShowRepoCurrentBranch, 0, 1);
         tlpnlGeneral.Controls.Add(chkShowCurrentBranchInVisualStudio, 0, 2);
-        tlpnlGeneral.Controls.Add(chkEnableAutoScale, 0, 3);
-        tlpnlGeneral.Controls.Add(truncateLongFilenames, 0, 4);
-        tlpnlGeneral.Controls.Add(truncatePathMethod, 1, 4);
+        tlpnlGeneral.Controls.Add(chkShowBranchFirstInAppTitle, 0, 3);
+        tlpnlGeneral.Controls.Add(chkEnableAutoScale, 0, 4);
+        tlpnlGeneral.Controls.Add(truncateLongFilenames, 0, 5);
+        tlpnlGeneral.Controls.Add(truncatePathMethod, 1, 5);
         tlpnlGeneral.Dock = DockStyle.Fill;
         tlpnlGeneral.Location = new Point(8, 24);
         tlpnlGeneral.Name = "tlpnlGeneral";
-        tlpnlGeneral.RowCount = 5;
+        tlpnlGeneral.RowCount = 6;
+        tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
@@ -169,16 +172,28 @@ partial class AppearanceSettingsPage
         chkShowCurrentBranchInVisualStudio.TabIndex = 2;
         chkShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
         chkShowCurrentBranchInVisualStudio.UseVisualStyleBackColor = true;
-        // 
+        //
+        // chkShowBranchFirstInAppTitle
+        //
+        chkShowBranchFirstInAppTitle.AutoSize = true;
+        tlpnlGeneral.SetColumnSpan(chkShowBranchFirstInAppTitle, 2);
+        chkShowBranchFirstInAppTitle.Dock = DockStyle.Fill;
+        chkShowBranchFirstInAppTitle.Location = new Point(3, 78);
+        chkShowBranchFirstInAppTitle.Name = "chkShowBranchFirstInAppTitle";
+        chkShowBranchFirstInAppTitle.Size = new Size(501, 19);
+        chkShowBranchFirstInAppTitle.TabIndex = 3;
+        chkShowBranchFirstInAppTitle.Text = "Show branch name before repository name in the window title";
+        chkShowBranchFirstInAppTitle.UseVisualStyleBackColor = true;
+        //
         // chkEnableAutoScale
         // 
         chkEnableAutoScale.AutoSize = true;
         tlpnlGeneral.SetColumnSpan(chkEnableAutoScale, 2);
         chkEnableAutoScale.Dock = DockStyle.Fill;
-        chkEnableAutoScale.Location = new Point(3, 78);
+        chkEnableAutoScale.Location = new Point(3, 103);
         chkEnableAutoScale.Name = "chkEnableAutoScale";
         chkEnableAutoScale.Size = new Size(501, 19);
-        chkEnableAutoScale.TabIndex = 3;
+        chkEnableAutoScale.TabIndex = 4;
         chkEnableAutoScale.Text = "Auto scale user interface when high DPI is used";
         chkEnableAutoScale.UseVisualStyleBackColor = true;
         // 
@@ -186,10 +201,10 @@ partial class AppearanceSettingsPage
         // 
         truncateLongFilenames.AutoSize = true;
         truncateLongFilenames.Dock = DockStyle.Fill;
-        truncateLongFilenames.Location = new Point(3, 100);
+        truncateLongFilenames.Location = new Point(3, 125);
         truncateLongFilenames.Name = "truncateLongFilenames";
         truncateLongFilenames.Size = new Size(133, 29);
-        truncateLongFilenames.TabIndex = 4;
+        truncateLongFilenames.TabIndex = 5;
         truncateLongFilenames.Text = "Truncate long filenames";
         truncateLongFilenames.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -199,10 +214,10 @@ partial class AppearanceSettingsPage
         truncatePathMethod.DropDownStyle = ComboBoxStyle.DropDownList;
         truncatePathMethod.FormattingEnabled = true;
         truncatePathMethod.Items.AddRange(new object[] { "None", "Compact", "Trim start", "Filename only" });
-        truncatePathMethod.Location = new Point(142, 103);
+        truncatePathMethod.Location = new Point(142, 128);
         truncatePathMethod.Name = "truncatePathMethod";
         truncatePathMethod.Size = new Size(362, 23);
-        truncatePathMethod.TabIndex = 4;
+        truncatePathMethod.TabIndex = 5;
         // 
         // gbLanguages
         // 
@@ -564,6 +579,7 @@ partial class AppearanceSettingsPage
     private CheckBox chkShowRelativeDate;
     private CheckBox chkShowRepoCurrentBranch;
     private CheckBox chkShowCurrentBranchInVisualStudio;
+    private CheckBox chkShowBranchFirstInAppTitle;
     private CheckBox chkEnableAutoScale;
     private Label truncateLongFilenames;
     private ComboBox truncatePathMethod;
