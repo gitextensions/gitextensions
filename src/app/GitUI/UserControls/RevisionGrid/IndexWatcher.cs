@@ -1,4 +1,6 @@
-﻿using GitCommands;
+﻿using System.Buffers.Binary;
+using System.Security.Cryptography;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 
 namespace GitUI.UserControls.RevisionGrid;
@@ -22,6 +24,11 @@ public sealed class IndexWatcher : IDisposable
     private int _generation;
     private DateTime _watchedSinceUtc;
 
+    /// <summary>
+    ///  The <see cref="GetIndexContentHash"/> of the index at the last <see cref="Reset"/>, <see langword="null"/> if not (yet) known.
+    /// </summary>
+    private byte[]? _indexContentHashAtReset;
+
     private IGitModule Module => _uICommandsSource.UICommands.Module;
 
     public IndexWatcher(IGitUICommandsSource uiCommandsSource)
@@ -31,7 +38,7 @@ public sealed class IndexWatcher : IDisposable
         GitIndexWatcher = new FileSystemWatcher();
         RefsWatcher = new FileSystemWatcher();
 
-        GitIndexWatcher.Changed += fileSystemWatcher_Changed;
+        GitIndexWatcher.Changed += gitIndexWatcher_Changed;
         GitIndexWatcher.Renamed += fileSystemWatcher_Renamed;
         RefsWatcher.Changed += fileSystemWatcher_Changed;
     }
@@ -117,6 +124,26 @@ public sealed class IndexWatcher : IDisposable
         IndexChanged = true;
     }
 
+    private void gitIndexWatcher_Changed(object sender, FileSystemEventArgs e)
+    {
+        // "git status" refreshes the file system data of the index entries and rewrites the index if that data is stale,
+        // e.g. after "git stash". Git Extensions runs the first status update after a refresh, i.e. after Reset(),
+        // without "--no-optional-locks" to speed up the subsequent updates, so the refresh would mark the index as changed itself.
+        // Ignore rewrites which do not change the entries. Other changes of the index (made concurrently or not) change the entries.
+        byte[]? hashAtReset;
+        lock (_syncRoot)
+        {
+            hashAtReset = _indexContentHashAtReset;
+        }
+
+        if (hashAtReset is not null && ReadIndexContentHash(e.FullPath) is byte[] hash && hash.AsSpan().SequenceEqual(hashAtReset))
+        {
+            return;
+        }
+
+        fileSystemWatcher_Changed(sender, e);
+    }
+
     private void fileSystemWatcher_Renamed(object sender, RenamedEventArgs e)
     {
         // Git writes "index.lock" and renames it over "index", which raises no Changed event for "index".
@@ -124,7 +151,7 @@ public sealed class IndexWatcher : IDisposable
         // Handle it like a change, so that the same filtering of notifications applies.
         if (e.Name == "index")
         {
-            fileSystemWatcher_Changed(sender, e);
+            gitIndexWatcher_Changed(sender, e);
         }
     }
 
@@ -138,6 +165,7 @@ public sealed class IndexWatcher : IDisposable
             ++_generation;
             RefreshWatcher();
             IndexChanged = false;
+            CaptureIndexContentHash();
         }
     }
 
@@ -149,10 +177,170 @@ public sealed class IndexWatcher : IDisposable
         lock (_syncRoot)
         {
             ++_generation;
+            _indexContentHashAtReset = null;
             GitIndexWatcher.EnableRaisingEvents = false;
             RefsWatcher.EnableRaisingEvents = false;
             IndexChanged = false;
         }
+    }
+
+    /// <summary>
+    ///  Reads the <see cref="GetIndexContentHash"/> of the index in the background, if the index is not changed meanwhile.
+    /// </summary>
+    private void CaptureIndexContentHash()
+    {
+        _indexContentHashAtReset = null;
+        if (!_enabled || _gitDirPath is null)
+        {
+            return;
+        }
+
+        string indexPath = Path.Join(_gitDirPath, "index");
+        int generation = _generation;
+
+        // Only the file system data is read synchronously, it identifies the version of the index which is hashed asynchronously.
+        // So a change made after the reset but before the hash is read is not taken for the state at the reset, but is still reported.
+        IndexFileState? stateAtReset = GetIndexFileState(indexPath);
+        if (stateAtReset is null)
+        {
+            return;
+        }
+
+        ThreadHelper.FileAndForget(() =>
+        {
+            byte[]? hash = ReadIndexContentHash(indexPath, stateAtReset);
+            lock (_syncRoot)
+            {
+                if (generation == _generation)
+                {
+                    _indexContentHashAtReset = hash;
+                }
+            }
+        });
+    }
+
+    private static IndexFileState? GetIndexFileState(string indexPath)
+    {
+        try
+        {
+            FileInfo fileInfo = new(indexPath);
+            return fileInfo.Exists ? new IndexFileState(fileInfo.LastWriteTimeUtc, fileInfo.Length) : null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    ///  Reads the index and returns its <see cref="GetIndexContentHash"/>.
+    /// </summary>
+    /// <param name="indexPath">The path of the index file.</param>
+    /// <param name="expectedState">If not <see langword="null"/>, the hash is returned only if this version of the index has been read.</param>
+    /// <returns>The hash or <see langword="null"/> if the index cannot be read or parsed.</returns>
+    private static byte[]? ReadIndexContentHash(string indexPath, IndexFileState? expectedState = null)
+    {
+        try
+        {
+            byte[] index;
+
+            // Git replaces the index by renaming "index.lock" over it, so allow that while reading
+            using (FileStream stream = new(indexPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+            {
+                index = new byte[stream.Length];
+                stream.ReadExactly(index);
+            }
+
+            if (expectedState is not null && GetIndexFileState(indexPath) != expectedState)
+            {
+                return null;
+            }
+
+            return GetIndexContentHash(index);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    ///  Gets a hash of the entries of the git index (https://git-scm.com/docs/index-format) without the file system data
+    ///  (times, device, inode, uid, gid, file size) and without the extensions, which "git status" refreshes.
+    /// </summary>
+    /// <returns>The hash or <see langword="null"/> if the data is not an index of version 2, 3 or 4 with SHA-1 object IDs.</returns>
+    private static byte[]? GetIndexContentHash(ReadOnlySpan<byte> index)
+    {
+        const int headerLength = 12;
+        const int statDataLength = 40;
+        const int modeOffset = 24;
+        const int modeLength = 4;
+        const int objectIdLength = 20;
+        const int flagsLength = 2;
+        const int extendedFlagsLength = 2;
+        const ushort extendedFlag = 0x4000;
+        const int entryAlignment = 8;
+
+        if (index.Length < headerLength || !index.StartsWith("DIRC"u8))
+        {
+            return null;
+        }
+
+        uint version = BinaryPrimitives.ReadUInt32BigEndian(index[4..]);
+        if (version is < 2 or > 4)
+        {
+            return null;
+        }
+
+        uint entryCount = BinaryPrimitives.ReadUInt32BigEndian(index[8..]);
+
+        using IncrementalHash hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
+        hash.AppendData(index[..headerLength]);
+        ReadOnlySpan<byte> entries = index[headerLength..];
+        for (uint i = 0; i < entryCount; ++i)
+        {
+            int nameOffset = statDataLength + objectIdLength + flagsLength;
+            if (entries.Length < nameOffset)
+            {
+                return null;
+            }
+
+            ushort flags = BinaryPrimitives.ReadUInt16BigEndian(entries[(statDataLength + objectIdLength)..]);
+            if (version >= 3 && (flags & extendedFlag) != 0)
+            {
+                nameOffset += extendedFlagsLength;
+            }
+
+            int entryLength;
+            if (version == 4)
+            {
+                // The path is prefix-compressed: a variable-length number of bytes to strip from the previous path, then the NUL-terminated rest
+                int suffixOffset = entries[nameOffset..].IndexOfAnyInRange((byte)0, (byte)0x7F);
+                int suffixLength = suffixOffset < 0 ? -1 : entries[(nameOffset + suffixOffset + 1)..].IndexOf((byte)0);
+                if (suffixLength < 0)
+                {
+                    return null;
+                }
+
+                entryLength = nameOffset + suffixOffset + 1 + suffixLength + 1;
+            }
+            else
+            {
+                // The path is NUL-terminated and padded with NULs to a multiple of 8 bytes
+                int nameLength = entries[nameOffset..].IndexOf((byte)0);
+                entryLength = (nameOffset + nameLength + entryAlignment) & ~(entryAlignment - 1);
+                if (nameLength < 0 || entryLength > entries.Length)
+                {
+                    return null;
+                }
+            }
+
+            hash.AppendData(entries.Slice(modeOffset, modeLength));
+            hash.AppendData(entries[statDataLength..entryLength]);
+            entries = entries[entryLength..];
+        }
+
+        return hash.GetHashAndReset();
     }
 
     private void RefreshWatcher()
@@ -240,16 +428,41 @@ public sealed class IndexWatcher : IDisposable
 
         GitIndexWatcher.EnableRaisingEvents = false;
         RefsWatcher.EnableRaisingEvents = false;
-        GitIndexWatcher.Changed -= fileSystemWatcher_Changed;
+        GitIndexWatcher.Changed -= gitIndexWatcher_Changed;
         GitIndexWatcher.Renamed -= fileSystemWatcher_Renamed;
         RefsWatcher.Changed -= fileSystemWatcher_Changed;
         GitIndexWatcher.Dispose();
         RefsWatcher.Dispose();
     }
 
-    internal static class TestAccessor
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(IndexWatcher indexWatcher)
     {
+        public bool IndexChanged => indexWatcher.IndexChanged;
+
+        public static byte[]? GetIndexContentHash(byte[] index) => IndexWatcher.GetIndexContentHash(index);
+
         public static bool HasChangedSince(string gitDirPath, string gitCommonDirPath, DateTime sinceUtc)
             => IndexWatcher.HasChangedSince(gitDirPath, gitCommonDirPath, sinceUtc);
+
+        public void RaiseIndexChanged()
+            => indexWatcher.gitIndexWatcher_Changed(indexWatcher, new FileSystemEventArgs(WatcherChangeTypes.Changed, indexWatcher._gitDirPath!, "index"));
+
+        public bool WaitForIndexContentHashAtReset(TimeSpan timeout)
+        {
+            IndexWatcher watcher = indexWatcher;
+            return SpinWait.SpinUntil(
+                () =>
+                {
+                    lock (watcher._syncRoot)
+                    {
+                        return watcher._indexContentHashAtReset is not null;
+                    }
+                },
+                timeout);
+        }
     }
+
+    private readonly record struct IndexFileState(DateTime LastWriteTimeUtc, long Length);
 }
