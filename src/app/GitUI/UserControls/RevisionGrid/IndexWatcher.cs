@@ -142,6 +142,24 @@ public sealed class IndexWatcher : IDisposable
     }
 
     /// <summary>
+    /// Like <see cref="Reset"/>, but to be run in the background, e.g. by <see cref="ThreadHelper.FileAndForget(Func{Task})"/>:
+    /// the git command for the common git directory of <paramref name="module"/> is run on the calling thread.
+    /// The watchers are changed on the UI thread, like when the repo is switched,
+    /// and only if <paramref name="module"/> is still the current module.
+    /// </summary>
+    public async Task ResetAsync(IGitModule module, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        _ = module.GitCommonDirectory;
+
+        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+        if (ReferenceEquals(module, Module))
+        {
+            Reset();
+        }
+    }
+
+    /// <summary>
     /// Disable events, reset icon.
     /// </summary>
     public void Clear()

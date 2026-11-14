@@ -168,12 +168,13 @@ public class FormBrowse_LeftPanel_RemotesTests
         _remotesManager.ToggleRemoteState(nodeText, true);
     }
 
-    private static TreeNode GetRemoteNode(FormBrowse form)
+    private static async Task<TreeNode> GetRemoteNodeAsync(FormBrowse form)
     {
         form.MainSplitContainer.Panel1Collapsed.Should().BeFalse();
 
-        // Await all async operation such as load of branches and remotes in the left panel
-        AsyncTestHelper.JoinPendingOperations();
+        // Await all async operation such as load of branches and remotes in the left panel.
+        // The message loop must keep running, because the tree view is filled when the UI thread is idle.
+        await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
         GitUI.UserControls.NativeTreeView treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
         TreeNode? remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
@@ -185,10 +186,9 @@ public class FormBrowse_LeftPanel_RemotesTests
     private void RunRepoObjectsTreeTest(Action<TreeNode> testDriver)
     {
         RunFormTest(
-            form =>
+            async form =>
             {
-                testDriver(GetRemoteNode(form));
-                return Task.CompletedTask;
+                testDriver(await GetRemoteNodeAsync(form));
             });
     }
 

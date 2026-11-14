@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using GitCommands.Git;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -29,6 +30,10 @@ public partial class InteractiveGitActionControl : GitModuleControl
         Patch
     }
 
+    private readonly CancellationTokenSequence _refreshGitActionSequence = new();
+
+    // The repo which the banner has been shown for
+    private IGitModule? _actionModule;
     private GitAction _action;
     private bool _hasConflicts;
 
@@ -68,49 +73,80 @@ public partial class InteractiveGitActionControl : GitModuleControl
 
     /// <summary>
     /// Refresh the banner in the revision grid after reactivation.
+    /// The banner is updated when the state of the repo is known, which requires a Git command.
+    /// The command is run in the background, so that it does not block the UI thread, e.g. while the window is shown for the first time.
+    /// The banner of another repo is hidden until then.
     /// </summary>
     /// <param name="checkForConflicts">Allow running Git command to check for conflicts.</param>
     public void RefreshGitAction(bool checkForConflicts)
     {
         // get the current state of the repo
 
-        if (!Module.IsValidGitWorkingDir())
+        IGitModule module = Module;
+        if (!module.IsValidGitWorkingDir())
         {
+            _refreshGitActionSequence.CancelCurrent();
             return;
         }
 
-        bool hasConflicts;
-        try
+        CancellationToken cancellationToken = _refreshGitActionSequence.Next();
+
+        if (!ReferenceEquals(module, _actionModule))
         {
-            // This command can be executed seemingly in the background (selecting Browse),
-            // do not notify the user (this can occur if Git is upgraded).
-            // Running Git commands async when restoring may fail.
-            hasConflicts = checkForConflicts && Module.InTheMiddleOfConflictedMerge(throwOnErrorExit: false);
-        }
-        catch (Win32Exception)
-        {
-            hasConflicts = false;
+            // The buttons act on the repo which is open now, so the banner of the previous repo
+            // must not stay usable until the Git command for this repo has finished.
+            _actionModule = module;
+            SetGitAction(GitAction.None, hasConflicts: false);
         }
 
-        if (Module.InTheMiddleOfRebase())
+        ThreadHelper.FileAndForget(async () =>
         {
-            SetGitAction(GitAction.Rebase, hasConflicts);
-            return;
-        }
+            (GitAction action, bool hasConflicts) = GetGitAction(module, checkForConflicts);
 
-        if (Module.InTheMiddleOfMerge())
+            await this.SwitchToMainThreadAsync(cancellationToken);
+            SetGitAction(action, hasConflicts);
+        });
+
+        return;
+
+        static (GitAction Action, bool HasConflicts) GetGitAction(IGitModule module, bool checkForConflicts)
         {
-            SetGitAction(GitAction.Merge, hasConflicts);
-            return;
-        }
+            bool hasConflicts;
+            try
+            {
+                // This command can be executed seemingly in the background (selecting Browse),
+                // do not notify the user (this can occur if Git is upgraded).
+                // Running Git commands async when restoring may fail.
+                hasConflicts = checkForConflicts && module.InTheMiddleOfConflictedMerge(throwOnErrorExit: false);
+            }
+            catch (Win32Exception)
+            {
+                hasConflicts = false;
+            }
 
-        if (Module.InTheMiddleOfPatch())
-        {
-            SetGitAction(GitAction.Patch, hasConflicts);
-            return;
-        }
+            if (module.InTheMiddleOfRebase())
+            {
+                return (GitAction.Rebase, hasConflicts);
+            }
 
-        SetGitAction(GitAction.None, hasConflicts);
+            if (module.InTheMiddleOfMerge())
+            {
+                return (GitAction.Merge, hasConflicts);
+            }
+
+            if (module.InTheMiddleOfPatch())
+            {
+                return (GitAction.Patch, hasConflicts);
+            }
+
+            return (GitAction.None, hasConflicts);
+        }
+    }
+
+    protected override void DisposeCustomResources()
+    {
+        _refreshGitActionSequence.Dispose();
+        base.DisposeCustomResources();
     }
 
     private void SetGitAction(GitAction action, bool hasConflicts)

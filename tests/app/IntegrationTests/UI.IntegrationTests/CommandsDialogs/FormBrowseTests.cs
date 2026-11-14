@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using CommonTestUtils;
 using GitCommands;
+using GitCommands.Logging;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -428,6 +429,49 @@ public class FormBrowseTests
                 },
                 commandsA);
         }
+    }
+
+    [Test]
+    public void OnLoad_should_not_run_git_commands_for_the_repository_state_on_the_UI_thread()
+    {
+        _referenceRepository.CreateCommit("Commit1", "Commit1");
+        bool logCaptureCallStacks = AppSettings.LogCaptureCallStacks;
+        AppSettings.LogCaptureCallStacks = true;
+        CommandLog.Clear();
+
+        try
+        {
+            RunFormTest(
+                async form =>
+                {
+                    WaitForRevisionsToBeLoaded(form);
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                });
+        }
+        finally
+        {
+            AppSettings.LogCaptureCallStacks = logCaptureCallStacks;
+        }
+
+        CommandLog.Commands.Should().Contain(entry => !entry.IsOnMainThread && entry.Arguments.Contains("log "), "the commands of the form must have been logged");
+        CommandLogEntry[] repositoryStateCommandsOnUIThread =
+        [
+            .. CommandLog.Commands
+                .Where(entry => entry.IsOnMainThread)
+                .Where(entry => IsRepositoryStateCommand(CommandLogEntry.GetGitArgumentsWithoutConfiguration(entry.Arguments)))
+        ];
+
+        // Each of these delays showing the window, they are run in the background
+        repositoryStateCommandsOnUIThread.Should().BeEmpty(
+            "they were started by:{0}",
+            string.Concat(repositoryStateCommandsOnUIThread.Select(entry => $"{Environment.NewLine}{entry.Arguments}{Environment.NewLine}{entry.CallStack}")));
+
+        return;
+
+        static bool IsRepositoryStateCommand(string arguments)
+            => arguments is "remote" or "rev-parse --git-common-dir" or "ls-files -z --unmerged"
+            || arguments.StartsWith("config list ", StringComparison.Ordinal)
+            || arguments.StartsWith("stash list ", StringComparison.Ordinal);
     }
 
     private static void CreateCommitWithSubject(GitModuleTestHelper helper, string subject)

@@ -92,12 +92,13 @@ public class FormBrowse_LeftPanel_SubmodulesTests
     public void RepoObjectTree_should_show_all_submodules()
     {
         RunFormTest(
-            form =>
+            async form =>
             {
                 TreeNode submodulesNode = GetSubmoduleNode(form);
 
-                // act: wait until loaded by left panel
-                UITest.ProcessUntil("Loading submodules", () => submodulesNode.Nodes.Count == 1);
+                // act: wait until loaded by left panel.
+                // The message loop must keep running, because the tree view is filled when the UI thread is idle.
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 // assert
                 submodulesNode.Nodes.Count.Should().Be(1);
@@ -113,8 +114,6 @@ public class FormBrowse_LeftPanel_SubmodulesTests
                 TreeNode repo3Node = repo2Node.Nodes[0];
                 repo3Node.Name.Should().StartWith("repo3");
                 repo3Node.Nodes.Count.Should().Be(0);
-
-                return Task.CompletedTask;
             });
     }
 
