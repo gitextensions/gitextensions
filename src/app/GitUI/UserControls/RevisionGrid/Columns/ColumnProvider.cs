@@ -60,7 +60,7 @@ internal abstract class ColumnProvider
     /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
     public virtual bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, IGitRef? highlightRef, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
-        if (AppSettings.ShowRevisionGridTooltips.Value)
+        if (AppSettings.ShowRevisionGridTooltips)
         {
             return TryGetToolTip(e, revision, out toolTip);
         }

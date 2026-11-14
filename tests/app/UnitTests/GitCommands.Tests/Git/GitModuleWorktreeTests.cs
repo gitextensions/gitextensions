@@ -115,6 +115,33 @@ public sealed class GitModuleWorktreeTests
     }
 
     [Test]
+    public void GetWorktrees_should_mark_only_the_first_worktree_as_the_main_one()
+    {
+        // git always reports the main worktree first, and refuses to remove it. Deleting its
+        // directory would take the repository with it, so it has to be told apart from the rest.
+        string output = string.Join('\0',
+            "worktree C:/repos/main",
+            "HEAD aaaa1234aaaa1234aaaa1234aaaa1234aaaa1234",
+            "branch refs/heads/master",
+            "",
+            "worktree C:/repos/feature",
+            "HEAD bbbb5678bbbb5678bbbb5678bbbb5678bbbb5678",
+            "branch refs/heads/feature/my-feature",
+            "",
+            "worktree C:/repos/hotfix",
+            "HEAD cccc9012cccc9012cccc9012cccc9012cccc9012",
+            "branch refs/heads/hotfix",
+            "", "");
+
+        using (_executable.StageOutput("worktree list --porcelain -z", output))
+        {
+            IReadOnlyList<GitWorktree> worktrees = _gitModule.GetWorktrees();
+
+            worktrees.Select(worktree => worktree.IsMain).Should().Equal(true, false, false);
+        }
+    }
+
+    [Test]
     public void GetWorktrees_should_handle_path_with_spaces()
     {
         string output = string.Join('\0',

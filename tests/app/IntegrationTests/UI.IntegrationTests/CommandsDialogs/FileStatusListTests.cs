@@ -40,6 +40,27 @@ public class FileStatusListTests
     }
 
     [Test]
+    public void SelectAll_should_expand_folders_and_focus_the_first_node()
+    {
+        const int folderCount = 4;
+        const int filesPerFolder = 50;
+        GitItemStatus[] items = Enumerable.Range(0, folderCount * filesPerFolder)
+            .Select(index => new GitItemStatus($"folder{index / filesPerFolder}/subfolder/file{index:D3}"))
+            .ToArray();
+        _fileStatusList.SetDiffs(null, new GitRevision(ObjectId.Random()), items);
+        MultiSelectTreeView tree = _fileStatusList.GetTestAccessor().FileStatusListView;
+        tree.CollapseAll();
+
+        _fileStatusList.SelectAll();
+
+        _fileStatusList.SelectedItems.Items().Should().BeEquivalentTo(items);
+        tree.Items().Where(node => node.Nodes.Count > 0).Should().OnlyContain(node => node.IsExpanded);
+        tree.FocusedNode.Should().BeSameAs(tree.Nodes[0]);
+        tree.Nodes[0].IsVisible.Should().BeTrue();
+        tree.UpdateSuspended.Should().BeFalse();
+    }
+
+    [Test]
     public void ItemSelections()
     {
         FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();

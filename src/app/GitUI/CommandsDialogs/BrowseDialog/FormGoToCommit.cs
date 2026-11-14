@@ -106,32 +106,46 @@ public sealed partial class FormGoToCommit : GitModuleForm
 
     private void comboBoxTags_Enter(object sender, EventArgs e)
     {
-        SetSelectedRevisionByFocusedControl();
+        SetSelectedRevisionByFocusedControl(comboBoxTags);
     }
 
     private void comboBoxBranches_Enter(object sender, EventArgs e)
     {
-        SetSelectedRevisionByFocusedControl();
+        SetSelectedRevisionByFocusedControl(comboBoxBranches);
     }
 
-    private void SetSelectedRevisionByFocusedControl()
+    /// <summary>
+    ///  Updates <see cref="_selectedRevision"/> from the control which supplies the revision to go to.
+    /// </summary>
+    /// <param name="enteredControl">
+    ///  The control raising <see cref="Control.Enter"/>. Such a control does not report itself as
+    ///  <see cref="Control.Focused"/> yet, so it has to be recognised explicitly; otherwise the focus
+    ///  would be moved away from it below. Pass <see langword="null"/> outside of that event.
+    /// </param>
+    private void SetSelectedRevisionByFocusedControl(Control? enteredControl = null)
     {
-        if (textboxCommitExpression.Focused)
+        if (IsSupplyingRevision(textboxCommitExpression))
         {
             _selectedRevision = textboxCommitExpression.Text.Trim();
         }
-        else if (comboBoxTags.Focused)
+        else if (IsSupplyingRevision(comboBoxTags))
         {
             _selectedRevision = _selectedTag is not null ? _selectedTag.Guid : "";
         }
-        else if (comboBoxBranches.Focused)
+        else if (IsSupplyingRevision(comboBoxBranches))
         {
             _selectedRevision = _selectedBranch is not null ? _selectedBranch.Guid : "";
         }
         else
         {
+            // No control supplies a revision, e.g. when the refs have just been loaded into the
+            // combo boxes: offer the commit expression for input.
             textboxCommitExpression.Focus();
         }
+
+        return;
+
+        bool IsSupplyingRevision(Control control) => control.Focused || control == enteredControl;
     }
 
     private void comboBoxTags_TextChanged(object? sender, EventArgs e)

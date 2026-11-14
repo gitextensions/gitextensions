@@ -72,7 +72,7 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
             return false;
         }
 
-        bool show = !AppSettings.OutputHistoryPanelVisible.Value;
+        bool show = !AppSettings.OutputHistoryPanelVisible;
         AppSettings.OutputHistoryPanelVisible.Value = show;
         _verticalSplitContainer1.Panel2Collapsed = !show;
         if (show && !_verticalSplitContainer1.Visible)

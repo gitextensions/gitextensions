@@ -16,11 +16,13 @@ public class FormRemotesTests
     private ReferenceRepository _referenceRepository = null!;
     private GitUICommands _commands = null!;
     private bool _originalAlwaysShowAdvOpt;
+    private Font _originalFont = null!;
 
     [SetUp]
     public void SetUp()
     {
         _originalAlwaysShowAdvOpt = AppSettings.AlwaysShowAdvOpt;
+        _originalFont = AppSettings.Font;
 
         _referenceRepository = new ReferenceRepository();
 
@@ -33,6 +35,7 @@ public class FormRemotesTests
     public void TearDown()
     {
         AppSettings.AlwaysShowAdvOpt = _originalAlwaysShowAdvOpt;
+        AppSettings.Font = _originalFont;
         _referenceRepository.Dispose();
     }
 
@@ -118,6 +121,31 @@ public class FormRemotesTests
                 accessor.RemoteName.Focus();
 
                 accessor.RemotePrefix.Text.Should().Be("invalid-branch-prefix/");
+            });
+    }
+
+    /// <summary>
+    ///  The Windows "Text size" accessibility setting enlarges <see cref="SystemFonts.MessageBoxFont"/>,
+    ///  which <see cref="AppSettings.Font"/> defaults to, without changing the DPI - so nothing scales
+    ///  the sizes recorded by the designer. 12pt stands for the 134% text size of issue #13113.
+    /// </summary>
+    [TestCase(9F)]
+    [TestCase(12F)]
+    public void Should_fit_the_default_pull_behaviour_details_at_larger_text_sizes(float fontSizeInPoints)
+    {
+        AppSettings.Font = new Font(SystemFonts.MessageBoxFont!.FontFamily, fontSizeInPoints);
+
+        RunFormTest(
+            form =>
+            {
+                FormRemotes.TestAccessor accessor = form.GetTestAccessor();
+                accessor.TabControl.SelectedIndex = 1;
+
+                LayoutAssert.Report(accessor.PullBehaviourDetails);
+
+                LayoutAssert.ChildrenDoNotOverlap(accessor.PullBehaviourDetails);
+                LayoutAssert.ChildrenFitIntoContainer(accessor.PullBehaviourDetails);
+                LayoutAssert.CaptionFits(accessor.SaveDefaultPushPull);
             });
     }
 

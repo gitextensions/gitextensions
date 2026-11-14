@@ -107,7 +107,8 @@ public sealed class GitRef : IGitRef
     public bool IsSelected { get; set; }
     public bool IsSelectedHeadMergeSource { get; set; }
 
-    public bool IsBisect => _type == GitRefType.Bisect;
+    // Any ref below refs/bisect/, like before GitRefType was introduced
+    public bool IsBisect => _type is GitRefType.Bisect or GitRefType.BisectGood or GitRefType.BisectBad;
     public bool IsBisectGood => _type == GitRefType.BisectGood;
     public bool IsBisectBad => _type == GitRefType.BisectBad;
 

@@ -38,7 +38,9 @@ public static class FileHelper
         ".vsdx", // microsoft
         ".xls", // microsoft excel
         ".xlsx", // microsoft excel
-        ".odt" // Open office
+        ".odt", // Open office
+        ".webp", // image
+        ".avif", // image
     };
 
     private static readonly IEnumerable<string> ImageExtensions = new[]
@@ -51,6 +53,8 @@ public static class FileHelper
         ".png",
         ".tif",
         ".tiff",
+        ".webp",
+        ".avif",
     };
 
     public static bool IsBinaryFileName(IGitModule module, string? fileName)

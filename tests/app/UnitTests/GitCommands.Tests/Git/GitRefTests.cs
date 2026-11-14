@@ -103,6 +103,19 @@ public sealed class GitRefTests
         name.Should().Be(remoteBranchRef.LocalName);
     }
 
+    [TestCase("refs/bisect/bad", true, false, true)]
+    [TestCase("refs/bisect/good-1234", true, true, false)]
+    [TestCase("refs/bisect/skip-1234", true, false, false)]
+    [TestCase("refs/heads/bisect", false, false, false)]
+    public void IsBisect_should_include_good_and_bad(string completeName, bool isBisect, bool isBisectGood, bool isBisectBad)
+    {
+        IGitRef gitRef = new GitRef(Substitute.For<IGitModule>(), ObjectId.Random(), completeName);
+
+        gitRef.IsBisect.Should().Be(isBisect);
+        gitRef.IsBisectGood.Should().Be(isBisectGood);
+        gitRef.IsBisectBad.Should().Be(isBisectBad);
+    }
+
     private static IGitRef SetupRawRemoteRef(string remoteName, string completeName)
     {
         IGitModule localGitModule = Substitute.For<IGitModule>();

@@ -160,7 +160,9 @@ public static class TreeViewExtensions
 
     public static void ScrollLeftMost(this TreeView? treeView)
     {
-        if (treeView is not null)
+        // Reading Handle creates the window if there is none, which throws for a disposed control and
+        // is pointless for one which was not shown yet - it has nothing to scroll.
+        if (treeView?.IsHandleCreated is true)
         {
             NativeMethods.SendMessageW(treeView.Handle, NativeMethods.WM_HSCROLL, (IntPtr)NativeMethods.SBH.LEFT, IntPtr.Zero);
         }

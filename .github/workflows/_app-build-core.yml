@@ -166,16 +166,14 @@ jobs:
       run: |
         $zip = Get-ChildItem artifacts\Release\publish\*.zip | Select-Object -First 1
         if (-not $zip) { throw 'No publish zip found under artifacts\Release\publish' }
-        "name=$($zip.BaseName)" >> $env:GITHUB_OUTPUT
+        "name=$zip" >> $env:GITHUB_OUTPUT
 
     - name: Upload portable archive
       if: ${{ !inputs.release }}
       uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       with:
-        name: ${{ steps.portable-name.outputs.name }}
-        # Upload the published folder contents, not the .zip: actions/upload-artifact always zips its input,
-        # so uploading the pre-built .zip would nest a zip inside GitHub's artifact zip.
-        path: 'artifacts\Release\publish\GitExtensions\**'
+        archive: false
+        path: ${{ steps.portable-name.outputs.name }}
         retention-days: 7
 
     - name: Display artifacts

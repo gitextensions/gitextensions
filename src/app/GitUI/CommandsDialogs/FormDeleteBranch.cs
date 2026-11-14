@@ -38,7 +38,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
         base.OnRuntimeLoad(e);
 
         Branches.BranchesToSelect = Module.GetRefs(RefsFilter.Heads).ToList();
-        if (AppSettings.DontConfirmDeleteUnmergedBranch.Value)
+        if (AppSettings.DontConfirmDeleteUnmergedBranch)
         {
             // no need to fill _mergedBranches
             _currentBranch = Module.GetSelectedBranch();
@@ -87,7 +87,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
             return;
         }
 
-        if (!AppSettings.DontConfirmDeleteUnmergedBranch.Value)
+        if (!AppSettings.DontConfirmDeleteUnmergedBranch)
         {
             Validates.NotNull(_mergedBranches);
 
@@ -170,6 +170,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
                 Icon = TaskDialogIcon.Warning,
                 Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
                 DefaultButton = TaskDialogButton.No,
+                AllowCancel = true,
                 SizeToContent = true,
             };
 

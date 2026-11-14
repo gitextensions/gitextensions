@@ -38,6 +38,9 @@ public sealed partial class AvatarControl : GitExtensionsControl
             avatarProviderToolStripMenuItem.DropDownItems.Add(item);
         }
 
+        // The cache may also be cleared by another control, e.g. from the settings dialog
+        _avatarCacheCleaner.CacheCleared += OnCacheCleared;
+
         foreach (AvatarFallbackType defaultImageType in EnumHelper.GetValues<AvatarFallbackType>())
         {
             ToolStripMenuItem item = new()
@@ -75,6 +78,7 @@ public sealed partial class AvatarControl : GitExtensionsControl
     {
         if (disposing)
         {
+            _avatarCacheCleaner.CacheCleared -= OnCacheCleared;
             _cancellationTokenSequence.Dispose();
             components?.Dispose();
         }
@@ -100,6 +104,9 @@ public sealed partial class AvatarControl : GitExtensionsControl
         AuthorName = name;
         ThreadHelper.FileAndForget(UpdateAvatarAsync);
     }
+
+    private void OnCacheCleared(object? sender, EventArgs e)
+        => ThreadHelper.FileAndForget(UpdateAvatarAsync);
 
     private void RefreshImage(Image? image)
     {

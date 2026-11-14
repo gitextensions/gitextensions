@@ -1,4 +1,5 @@
 ﻿using CommonTestUtils;
+using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 
@@ -12,10 +13,12 @@ public class FormCloneTests
 
     // Created once for each test
     private GitUICommands _commands = null!;
+    private Font _originalFont = null!;
 
     [SetUp]
     public void SetUp()
     {
+        _originalFont = AppSettings.Font;
         _referenceRepository = new ReferenceRepository();
         _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
     }
@@ -23,7 +26,44 @@ public class FormCloneTests
     [TearDown]
     public void TearDown()
     {
+        AppSettings.Font = _originalFont;
         _referenceRepository.Dispose();
+    }
+
+    /// <summary>
+    ///  The Windows "Text size" accessibility setting enlarges <see cref="SystemFonts.MessageBoxFont"/>,
+    ///  which <see cref="AppSettings.Font"/> defaults to, without changing the DPI - so nothing scales
+    ///  the sizes recorded by the designer. 12pt stands for the 134% text size of issue #13113.
+    /// </summary>
+    [TestCase(9F)]
+    [TestCase(12F)]
+    public void Should_fit_its_content_at_larger_text_sizes(float fontSizeInPoints)
+    {
+        AppSettings.Font = new Font(SystemFonts.MessageBoxFont!.FontFamily, fontSizeInPoints);
+
+        RunFormTest(
+            form =>
+            {
+                FormClone.TestAccessor accessor = form.GetTestAccessor();
+
+                TestContext.Out.WriteLine($"form {form.Bounds}, minimum {form.MinimumSize}, maximum {form.MaximumSize}");
+                LayoutAssert.Report(accessor.RepositoryFields);
+                LayoutAssert.Report(accessor.RepositoryType);
+                LayoutAssert.Report(accessor.RepositoryTypeOptions);
+                TestContext.Out.WriteLine($"Info {accessor.Info.Bounds}");
+
+                LayoutAssert.ChildrenDoNotOverlap(accessor.RepositoryFields);
+                LayoutAssert.ChildrenFitIntoContainer(accessor.RepositoryFields);
+                LayoutAssert.CaptionFits(accessor.FromBrowse);
+                LayoutAssert.CaptionFits(accessor.ToBrowse);
+
+                LayoutAssert.ChildrenFitIntoContainer(accessor.RepositoryType);
+                LayoutAssert.ChildrenDoNotOverlap(accessor.RepositoryTypeOptions);
+                LayoutAssert.ChildrenFitIntoContainer(accessor.RepositoryTypeOptions);
+
+                // The banner always renders two lines of text.
+                accessor.Info.Height.Should().BeGreaterThanOrEqualTo(2 * accessor.Info.Font.Height);
+            });
     }
 
     [TestCase(null, false, "")]

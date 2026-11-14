@@ -19,6 +19,7 @@ public sealed partial class FormVerify : GitModuleForm
     private readonly TranslationString _selectLostObjectsToRestoreMessage = new("Select objects to restore.");
     private readonly TranslationString _selectLostObjectsToRestoreCaption = new("Restore lost objects");
     private readonly TranslationString _seemingly = new("seemingly");
+    private readonly TranslationString _lostObjectUnreadable = new("Object could not be read. It may be corrupted or no longer available.");
 
     private readonly List<LostObject> _lostObjects = [];
     private readonly SortableLostObjectsList _filteredLostObjects = new();
@@ -401,7 +402,17 @@ public sealed partial class FormVerify : GitModuleForm
     }
 
     private string GetLostObjectContent(LostObject item)
-        => Module.ShowObject(item.ObjectId, returnRaw: item.ObjectType == LostObjectType.Blob) ?? "";
+    {
+        try
+        {
+            return Module.ShowObject(item.ObjectId, returnRaw: item.ObjectType == LostObjectType.Blob) ?? "";
+        }
+        catch (ExternalOperationException ex)
+        {
+            // The object could not be read (e.g. corrupted or pruned from the repository).
+            return $"{_lostObjectUnreadable.Text}\n\n{ex.Message}";
+        }
+    }
 
     private string GetOptions()
     {

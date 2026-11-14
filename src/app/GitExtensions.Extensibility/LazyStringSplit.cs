@@ -118,6 +118,56 @@ public static class LazyStringSplitExtensions
         return new(s, delimiter, options);
     }
 
+    /// <summary>
+    ///  Lazily splits <paramref name="stringToSplit"/> and returns ranges into the original string.
+    /// </summary>
+    /// <param name="stringToSplit">The string to split.</param>
+    /// <param name="delimiter">The character that delimits the ranges.</param>
+    /// <param name="options">Options controlling trimming and removal of empty ranges.</param>
+    /// <returns>The zero-based beginning and length of each resulting range.</returns>
+    public static IEnumerable<(int beginning, int length)> LazySplitRanges(this string stringToSplit, char delimiter, StringSplitOptions options = StringSplitOptions.None)
+    {
+        bool trim = options.HasFlag(StringSplitOptions.TrimEntries);
+        bool removeEmpty = options.HasFlag(StringSplitOptions.RemoveEmptyEntries);
+        for (int start = 0; start <= stringToSplit.Length;)
+        {
+            int indexOfNextDelimiter = stringToSplit.IndexOf(delimiter, start);
+            int end = indexOfNextDelimiter < 0 ? stringToSplit.Length : indexOfNextDelimiter;
+
+            (int beginning, int length) range = GetRange(stringToSplit, start, end, trim);
+
+            if (!removeEmpty || range.length != 0)
+            {
+                yield return range;
+            }
+
+            if (indexOfNextDelimiter < 0)
+            {
+                yield break;
+            }
+
+            start = indexOfNextDelimiter + 1;
+        }
+    }
+
+    private static (int beginning, int length) GetRange(string value, int start, int end, bool trim)
+    {
+        if (trim)
+        {
+            while (start < end && char.IsWhiteSpace(value[start]))
+            {
+                start++;
+            }
+
+            while (end > start && char.IsWhiteSpace(value[end - 1]))
+            {
+                end--;
+            }
+        }
+
+        return (start, end - start);
+    }
+
     public static IEnumerable<T> Select<T>(this LazyStringSplit split, Func<string, T> func)
     {
         foreach (string value in split)

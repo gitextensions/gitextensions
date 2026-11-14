@@ -51,20 +51,29 @@ internal abstract class BaseRevisionTree : Tree
                 return;
             }
 
-            foreach (BaseRevisionNode node in Nodes.DepthEnumerator<BaseRevisionNode>())
+            // Batch style updates to avoid per-node TreeView invalidation on large ref sets.
+            treeView.BeginUpdate();
+            try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                if (node.ObjectId.IsZero)
+                foreach (BaseRevisionNode node in Nodes.DepthEnumerator<BaseRevisionNode>())
                 {
-                    continue;
-                }
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (node.ObjectId.IsZero)
+                    {
+                        continue;
+                    }
 
-                bool isVisible = _refsSource.Contains(node.ObjectId);
-                if (node.Visible != isVisible)
-                {
-                    node.Visible = isVisible;
-                    node.ApplyStyle();
+                    bool isVisible = _refsSource.Contains(node.ObjectId);
+                    if (node.Visible != isVisible)
+                    {
+                        node.Visible = isVisible;
+                        node.ApplyStyle();
+                    }
                 }
+            }
+            finally
+            {
+                treeView.EndUpdate();
             }
         });
     }

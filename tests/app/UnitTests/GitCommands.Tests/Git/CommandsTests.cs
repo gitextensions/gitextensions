@@ -223,23 +223,25 @@ public partial class CommandsTests
                         sortConditionRef = $@" --sort=""{order}*{derefSortKey}""";
                     }
 
+                    const string exclusions = " --exclude=refs/notes/commits --exclude=refs/agents/** --exclude=refs/sessions/** --exclude=refs/*/checkpoints/** --exclude=refs/copilot/** --exclude=refs/jj/keep/**";
+
                     yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
-                        /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
+                        /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Tags, /* noLocks */ false, sortBy, sortOrder, 0,
-                        /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/tags/");
+                        /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/tags/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder, 0,
-                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/heads/");
+                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/heads/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder, 100,
-                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} --count=100 refs/heads/");
+                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} --count=100 refs/heads/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ true, sortBy, sortOrder, 0,
-                        /* expected */ $@"--no-optional-locks for-each-ref{sortCondition}{formatNoTag} refs/heads/");
+                        /* expected */ $@"--no-optional-locks for-each-ref{sortCondition}{formatNoTag} refs/heads/{exclusions}");
                     yield return new TestCaseData(RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
-                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/remotes/");
+                        /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/remotes/{exclusions}");
 
                     yield return new TestCaseData(RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder, 0,
-                        /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format}");
+                        /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format}{exclusions}");
                     yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder, 0,
-                        /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
+                        /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/{exclusions}");
                 }
             }
         }
@@ -253,7 +255,10 @@ public partial class CommandsTests
 
     // Don't care about permutations because the args aren't correlated
     [TestCase(false, false, false, null, false, null, null, "merge --no-ff --no-edit branch")]
-    [TestCase(true, true, true, null, true, null, null, "merge --squash --no-commit --allow-unrelated-histories --no-edit branch")]
+    [TestCase(true, true, true, null, true, null, null, "merge --ff --squash --no-commit --allow-unrelated-histories --no-edit branch")]
+
+    // Fast forward is requested explicitly, so that merge.ff=false does not override the choice
+    [TestCase(true, false, false, null, false, null, null, "merge --ff --no-edit branch")]
 
     // mergeCommitFilePath parameter
     [TestCase(false, true, false, null, false, "", null, "merge --no-ff --squash --no-edit branch")]
@@ -264,9 +269,9 @@ public partial class CommandsTests
     [TestCase(false, true, false, null, false, "D:\\myrepo\\.git\\file", null, "merge --no-ff --squash -F \"D:/myrepo/.git/file\" --no-edit branch")]
 
     // log parameter
-    [TestCase(true, true, false, null, false, null, -1, "merge --squash --no-edit branch")]
-    [TestCase(true, true, false, null, false, null, 0, "merge --squash --no-edit branch")]
-    [TestCase(true, true, false, null, false, null, 5, "merge --squash --log=5 --no-edit branch")]
+    [TestCase(true, true, false, null, false, null, -1, "merge --ff --squash --no-edit branch")]
+    [TestCase(true, true, false, null, false, null, 0, "merge --ff --squash --no-edit branch")]
+    [TestCase(true, true, false, null, false, null, 5, "merge --ff --squash --log=5 --no-edit branch")]
     public void MergeBranchCmd(bool allowFastForward, bool squash, bool noCommit, string? strategy, bool allowUnrelatedHistories, string? mergeCommitFilePath, int? log, string expected)
     {
         Commands.MergeBranch("branch", allowFastForward, squash, noCommit, strategy!, allowUnrelatedHistories, mergeCommitFilePath, PathUtil.ToPosixPath, log).Arguments.Should().Be(expected);

@@ -87,6 +87,55 @@ public class GitDirectoryResolverTests
         _directory.DidNotReceive().Exists(_gitWorkingDir);
     }
 
+    [Platform(Include = "Win")]
+    [Test]
+    public void Resolve_should_reconstruct_wsl_unc_path_for_posix_gitdir_in_linked_worktree()
+    {
+        // Regression test for #13272: committing from a linked worktree in a WSL repo.
+        // The working tree is accessed via a \\wsl$ UNC path, but the .git file's "gitdir:"
+        // line points at a POSIX absolute path (as written by the Linux git binary) that
+        // lives under the main repo's .git, on a different top-level directory.
+        // The resolver must convert that POSIX path back into the \\wsl$ UNC path so that
+        // COMMITMESSAGE is written to the same location git reads it from.
+        string workingDir = @"\\wsl$\Ubuntu\home\user\source\MyRepo.wt\ACTIVE";
+        string gitFile = Path.Combine(workingDir, ".git");
+
+        _file.Exists(gitFile).Returns(true);
+        _file.ReadLines(gitFile).Returns(new[] { "gitdir: /home/user/source/MyRepo/.git/worktrees/ACTIVE" });
+
+        _resolver.Resolve(workingDir)
+            .Should().Be(@"\\wsl$\Ubuntu\home\user\source\MyRepo\.git\worktrees\ACTIVE\");
+
+        _directory.DidNotReceive().Exists(gitFile.EnsureTrailingPathSeparator());
+    }
+
+    [Platform(Include = "Win")]
+    [Test]
+    public void Resolve_should_map_wsl_mnt_path_to_windows_drive()
+    {
+        // A /mnt/<drive> path (WSL view of a Windows drive) must map back to the drive letter.
+        string workingDir = @"\\wsl$\Ubuntu\mnt\c\dev\repo";
+        string gitFile = Path.Combine(workingDir, ".git");
+
+        _file.Exists(gitFile).Returns(true);
+        _file.ReadLines(gitFile).Returns(new[] { "gitdir: /mnt/c/dev/repo/.git/worktrees/ACTIVE" });
+
+        _resolver.Resolve(workingDir)
+            .Should().Be(@"C:\dev\repo\.git\worktrees\ACTIVE\");
+    }
+
+    [Platform(Include = "Win")]
+    [Test]
+    public void Resolve_should_return_unc_gitdir_path_unchanged()
+    {
+        // A fully qualified UNC gitdir path is already usable and must be returned as-is.
+        _file.Exists(_gitFile).Returns(true);
+        _file.ReadLines(_gitFile).Returns(new[] { @"gitdir: \\wsl$\Ubuntu\home\user\source\MyRepo\.git\worktrees\ACTIVE" });
+
+        _resolver.Resolve(_workingDir)
+            .Should().Be(@"\\wsl$\Ubuntu\home\user\source\MyRepo\.git\worktrees\ACTIVE\");
+    }
+
     [Test]
     public void Resolve_non_bare_repository_real_filesystem()
     {

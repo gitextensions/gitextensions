@@ -112,4 +112,32 @@ public class TreeViewExtensionsTests
         _b2_1.Name = "B_2_1_Name";
         _b2_1.GetFullNamePath().Should().Be(@"Root\B_Name\B_2\B_2_1_Name");
     }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    public void ScrollLeftMost_should_not_throw_for_a_disposed_treeView()
+    {
+        TreeView treeView = new();
+        _ = treeView.Handle;
+        treeView.Dispose();
+
+        ((Action)(() => treeView.ScrollLeftMost())).Should().NotThrow();
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    public void ScrollLeftMost_should_not_create_the_handle()
+    {
+        using TreeView treeView = new();
+
+        treeView.ScrollLeftMost();
+
+        treeView.IsHandleCreated.Should().BeFalse();
+    }
+
+    [Test]
+    public void ScrollLeftMost_should_not_throw_for_null()
+    {
+        ((Action)(() => ((TreeView?)null).ScrollLeftMost())).Should().NotThrow();
+    }
 }

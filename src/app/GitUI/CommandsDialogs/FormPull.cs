@@ -523,7 +523,7 @@ public sealed partial class FormPull : GitExtensionsDialog
                 // If the "Update submodules on checkout" option is `true`, initialize and update
                 // all submodules. If it's `false` don't initialize/update the submodules. If it's
                 // indeterminate, ask the user what they'd like to do.
-                if (AppSettings.UpdateSubmodulesOnCheckout ?? AppSettings.DontConfirmUpdateSubmodulesOnCheckout ?? AskIfSubmodulesShouldBeInitialized())
+                if (AppSettings.UpdateSubmodulesOnCheckout ?? AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value ?? AskIfSubmodulesShouldBeInitialized())
                 {
                     UICommands.StartUpdateSubmodulesDialog(this);
                 }
@@ -583,12 +583,15 @@ public sealed partial class FormPull : GitExtensionsDialog
                     {
                         Text = TranslatedStrings.DontShowAgain
                     },
+                    AllowCancel = true,
                     SizeToContent = true
                 };
 
-                messageBoxResult = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page) == TaskDialogButton.Yes;
+                TaskDialogButton answer = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page);
+                messageBoxResult = answer == TaskDialogButton.Yes;
 
-                if (page.Verification.Checked)
+                // Dismissing the dialog is not an answer, so it must not be remembered as one
+                if (page.Verification.Checked && answer != TaskDialogButton.Cancel)
                 {
                     AppSettings.AutoPopStashAfterPull = messageBoxResult;
                 }

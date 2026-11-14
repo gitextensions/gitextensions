@@ -1,4 +1,5 @@
 ﻿using GitUI.Avatars;
+using NSubstitute;
 
 namespace GitUITests.Avatars;
 public sealed class AvatarMemoryCacheTests : AvatarCacheTestBase
@@ -52,5 +53,24 @@ public sealed class AvatarMemoryCacheTests : AvatarCacheTestBase
         // That should have pushed images 2 and 3 out of the cache
         await MissAsync(_email2, _name2, _img2);
         await MissAsync(_email3, _name3, _img3);
+    }
+
+    [Test]
+    public async Task ClearCacheAsync_must_not_dispose_an_image_it_handed_out()
+    {
+        // Own the image instead of reusing one of the shared ones, which the cache would dispose
+        // before the sibling tests run
+        const string email = "cleared@avatar.com";
+        const string name = "Cleared Cache";
+        using Bitmap image = new(_size, _size);
+        _inner.GetAvatarAsync(email, name, _size).Returns(Task.FromResult<Image?>(image));
+
+        Image? handedOut = await _cache.GetAvatarAsync(email, name, _size);
+
+        await _cacheCleaner.ClearCacheAsync();
+
+        handedOut.Should().BeSameAs(image);
+        ((Action)(() => _ = handedOut!.Size)).Should()
+            .NotThrow<ArgumentException>("a consumer may still be painting the image the cache handed out");
     }
 }

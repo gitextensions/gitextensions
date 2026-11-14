@@ -13,11 +13,12 @@ partial class FormBrowse
     {
         RevisionGrid.ArtificialChanged += (_, _) => RefreshGitStatusMonitor();
 
-        RevisionGrid.IndexWatcher.Changed += (_, args) =>
+        RevisionGrid.IndexWatcher.Changed += (_, _) =>
         {
-            bool indexChanged = args.IsIndexChanged;
+            // Evaluate the state on the UI thread, not when the notification was raised:
+            // A notification from the thread pool can be applied after an inline Reset() by the refresh.
             this.InvokeAndForget(() =>
-                RefreshButton.Image = indexChanged && AppSettings.ShowGitStatusInBrowseToolbar && Module.IsValidGitWorkingDir()
+                RefreshButton.Image = RevisionGrid.IndexWatcher.IndexChanged && AppSettings.ShowGitStatusInBrowseToolbar && Module.IsValidGitWorkingDir()
                     ? Images.ReloadRevisionsDirty
                     : Images.ReloadRevisions);
         };
