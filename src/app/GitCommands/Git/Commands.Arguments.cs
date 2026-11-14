@@ -578,6 +578,25 @@ public static partial class Commands
         };
     }
 
+    /// <summary>
+    ///  Removes a linked worktree, its directory and its administrative files.
+    /// </summary>
+    /// <remarks>
+    ///  <c>--force</c> is required to remove a worktree with local changes or submodules. git still refuses
+    ///  to remove the main worktree and a locked one.
+    /// </remarks>
+    /// <param name="worktreePath">The path of the worktree as seen by Git Extensions.</param>
+    /// <param name="getPathForGitExecution">Converts <paramref name="worktreePath"/> for the git executable, e.g. for WSL git.</param>
+    public static ArgumentString RemoveWorktree(string worktreePath, Func<string?, string?> getPathForGitExecution)
+    {
+        return new GitArgumentBuilder("worktree")
+        {
+            "remove",
+            "--force",
+            getPathForGitExecution(worktreePath).Quote()
+        };
+    }
+
     public static ArgumentString RenameBranch(string name, string newName)
     {
         return new GitArgumentBuilder("branch")

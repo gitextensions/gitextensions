@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -207,6 +208,37 @@ public static partial class Commands
                 ? value.Replace("$", @"\$")
                 : value;
         }
+    }
+
+    /// <summary>
+    ///  Removes a linked worktree, falling back to deleting its directory if git refuses.
+    /// </summary>
+    /// <param name="module">The repository the worktree belongs to.</param>
+    /// <param name="worktreePath">The path of the worktree as seen by Git Extensions.</param>
+    /// <param name="errorMessage">The reason why the worktree could not be removed.</param>
+    /// <returns><see langword="true"/> if the worktree has been removed; otherwise <see langword="false"/>.</returns>
+    public static bool TryRemoveWorktree(this IGitModule module, string worktreePath, [NotNullWhen(returnValue: false)] out string? errorMessage)
+    {
+        // Let git delete the directory: WSL git runs inside the distro and can delete symlinks in a
+        // \\wsl$ worktree, which Windows cannot open (e.g. those of a Python venv). git also removes
+        // the administrative files, so no prune is needed.
+        ExecutionResult result = module.GitExecutable.Execute(RemoveWorktree(worktreePath, module.GetPathForGitExecution), throwOnErrorExit: false);
+        if (result.ExitedSuccessfully)
+        {
+            errorMessage = null;
+            return true;
+        }
+
+        // git refuses e.g. a locked worktree, which Git Extensions has always deleted regardless.
+        if (!worktreePath.TryDeleteDirectory(out string? deleteErrorMessage))
+        {
+            errorMessage = $"{result.StandardError.Trim()}\n{deleteErrorMessage}".Trim();
+            return false;
+        }
+
+        module.GitExecutable.Execute(new GitArgumentBuilder("worktree") { "prune" }, throwOnErrorExit: false);
+        errorMessage = null;
+        return true;
     }
 
     private static bool SupportNewGitConfigSyntax(this IExecutable gitExecutable) => GitVersion.CurrentVersion(gitExecutable).SupportNewGitConfigSyntax;
