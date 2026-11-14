@@ -1573,7 +1573,7 @@ public sealed class FormBrowseTests
                 .Should().ContainSingle(item => item.Name == "mnuConfigure");
             dashboard.GetVisualDescendants().OfType<Button>()
                 .Should().NotContain(button => button.Name == "mnuConfigure");
-            dashboard.GetTestAccessor().Repositories.GetTestAccessor().Search.IsFocused.Should().BeTrue();
+            dashboard.GetTestAccessor().Repositories.textBoxSearch.IsFocused.Should().BeTrue();
             dashboardForm.FindControl<MenuItem>("repositoryToolStripMenuItem")!.IsVisible.Should().BeFalse();
 
             invalidModule.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });

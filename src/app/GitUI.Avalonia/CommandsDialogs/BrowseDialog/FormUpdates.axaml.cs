@@ -19,9 +19,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog;
 
 // The shared release configuration describes Windows MSI packages, so Linux and macOS expose
 // release links without attempting to execute the installer.
-public sealed partial class FormUpdates : GitExtensionsDialog
+public partial class FormUpdates : GitExtensionsDialog
 {
-    private const string ReleasesPage = "https://github.com/gitextensions/gitextensions/releases";
     private const string ReleasesConfigUrl =
         "https://raw.githubusercontent.com/gitextensions/gitextensions/configdata/GitExtensions.releases";
 
@@ -36,13 +35,13 @@ public sealed partial class FormUpdates : GitExtensionsDialog
     #endregion
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
-    private Window? _ownerWindow;
+    private IWin32Window? _ownerWindow;
     private readonly Func<CancellationToken, Task<string>> _loadReleases;
 
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
     private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
     private bool _alwaysShow;
-    private readonly Version _currentVersion;
+    private Version _currentVersion;
     private bool _updateFound;
     private string _netRuntimeDownloadUrl = string.Empty;
     private string _updateUrl = string.Empty;
@@ -50,35 +49,35 @@ public sealed partial class FormUpdates : GitExtensionsDialog
     private Version? _requiredNetRuntimeVersion;
 
     public FormUpdates()
-        : this(AppSettings.AppVersion)
+        : this(typeof(FormUpdates).Assembly.GetName().Version ?? new Version())
     {
     }
 
     public FormUpdates(Version currentVersion)
-        : this(currentVersion, LoadReleasesAsync)
-    {
-    }
-
-    internal FormUpdates(
-        Version currentVersion,
-        Func<CancellationToken, Task<string>> loadReleases)
         : base(commands: null, enablePositionRestore: false)
     {
         _currentVersion = currentVersion;
-        _loadReleases = loadReleases;
+        _loadReleases = LoadReleasesAsync;
 
         InitializeComponent();
-        WireEvents();
+        linkChangeLog.Click += linkChangeLog_LinkClicked;
+        linkDirectDownload.Click += linkDirectDownload_LinkClicked;
+        linkRequiredDotNetRuntime.InfoClicked += linkRequiredDotNetRuntime_InfoClicked;
+        linkRequiredDotNetRuntime.LinkClicked += linkRequiredDotNetRuntime_LinkClicked;
+        btnUpdateNow.Click += btnUpdateNow_Click;
+        progressBar1.IsVisible = true;
+        progressBar1.IsIndeterminate = true;
+        linkRequiredDotNetRuntime.IsVisible = false;
         InitializeComplete();
     }
 
     public void SearchForUpdatesAndShow(IWin32Window ownerWindow, bool alwaysShow)
     {
-        _ownerWindow = ownerWindow as Window;
+        _ownerWindow = ownerWindow;
         _alwaysShow = alwaysShow;
-        if (_ownerWindow is not null)
+        if (_ownerWindow is Window owner)
         {
-            _ownerWindow.Closed += OwnerWindow_Closed;
+            owner.Closed += OwnerWindow_Closed;
         }
 
         SearchForUpdates();
@@ -99,7 +98,7 @@ public sealed partial class FormUpdates : GitExtensionsDialog
         base.OnKeyDown(e);
     }
 
-    private bool ProcessCmdKey(WinFormsShims.Keys keyData)
+    protected bool ProcessCmdKey(WinFormsShims.Keys keyData)
     {
         // We need to override ProcessCmdKey as mnemonics on labels do not behave the same as buttons
         if (keyData == (WinFormsShims.Keys.Alt | WinFormsShims.Keys.L))
@@ -184,18 +183,6 @@ public sealed partial class FormUpdates : GitExtensionsDialog
     private static Task<string> LoadReleasesAsync(CancellationToken cancellationToken)
         => HttpClient.GetStringAsync(ReleasesConfigUrl, cancellationToken);
 
-    private void WireEvents()
-    {
-        linkChangeLog.Click += linkChangeLog_LinkClicked;
-        linkDirectDownload.Click += linkDirectDownload_LinkClicked;
-        linkRequiredDotNetRuntime.InfoClicked += linkRequiredDotNetRuntime_InfoClicked;
-        linkRequiredDotNetRuntime.LinkClicked += linkRequiredDotNetRuntime_LinkClicked;
-        btnUpdateNow.Click += btnUpdateNow_Click;
-        progressBar1.IsVisible = true;
-        progressBar1.IsIndeterminate = true;
-        linkRequiredDotNetRuntime.IsVisible = false;
-    }
-
     private void CheckForNewerVersion(string releases)
     {
         IEnumerable<ReleaseVersion> versions = ReleaseVersion.Parse(releases);
@@ -216,6 +203,15 @@ public sealed partial class FormUpdates : GitExtensionsDialog
         _updateUrl = AdaptFromX64ToCurrentProcessArchitecture(update.DownloadPage);
         _requiredNetRuntimeVersion = update.RequiredNetRuntimeVersion;
         _newVersion = update.ApplicationVersion.ToString();
+        return;
+
+        string AdaptFromX64ToCurrentProcessArchitecture(string link)
+            => RuntimeInformation.OSArchitecture == Architecture.X64
+                ? link
+                : link.Replace(
+                    "-x64-",
+                    $"-{RuntimeInformation.OSArchitecture.ToString().ToLowerInvariant()}-",
+                    StringComparison.Ordinal);
     }
 
     private void Done()
@@ -239,7 +235,7 @@ public sealed partial class FormUpdates : GitExtensionsDialog
         if (OperatingSystem.IsWindows()
             && UpdateRequired(
                 _requiredNetRuntimeVersion,
-                GetDotnetDesktopRuntimeVersions()))
+                UserEnvironmentInformation.GetDotnetDesktopRuntimeVersions()))
         {
             DisplayNetRuntimeLink(linkRequiredDotNetRuntime.Text!, _requiredNetRuntimeVersion!);
         }
@@ -254,7 +250,7 @@ public sealed partial class FormUpdates : GitExtensionsDialog
             linkDirectDownload.Focus();
         }
 
-        if (!_alwaysShow && _ownerWindow is { IsVisible: true } owner)
+        if (!_alwaysShow && _ownerWindow is Window { IsVisible: true } owner)
         {
             // Do not await the modal lifetime from the owner task. The search then leaves the
             // task collection before FormUpdates.OnClosed joins outstanding operations.
@@ -293,15 +289,7 @@ public sealed partial class FormUpdates : GitExtensionsDialog
         }
     }
 
-    private static string AdaptFromX64ToCurrentProcessArchitecture(string link)
-        => RuntimeInformation.OSArchitecture == Architecture.X64
-            ? link
-            : link.Replace(
-                "-x64-",
-                $"-{RuntimeInformation.OSArchitecture.ToString().ToLowerInvariant()}-",
-                StringComparison.Ordinal);
-
-    private void DisplayNetRuntimeLink(string format, Version? requiredNetRuntimeVersion)
+    private void DisplayNetRuntimeLink(string format, Version requiredNetRuntimeVersion)
     {
         if (requiredNetRuntimeVersion is null || !OperatingSystem.IsWindows())
         {
@@ -323,12 +311,13 @@ public sealed partial class FormUpdates : GitExtensionsDialog
 
     private void LaunchUrl(LaunchType launchType)
     {
+        const string releases = @"https://github.com/gitextensions/gitextensions/releases";
         string? url = launchType switch
         {
-            LaunchType.ChangeLog => ReleasesPage,
+            LaunchType.ChangeLog => releases,
             LaunchType.DirectDownload when OperatingSystem.IsWindows() && !AppSettings.IsPortable()
                 => _updateUrl,
-            LaunchType.DirectDownload => ReleasesPage,
+            LaunchType.DirectDownload => releases,
             LaunchType.DotNetRuntime => _netRuntimeDownloadUrl,
             LaunchType.LocalDotNetRuntime
                 => "https://github.com/gitextensions/gitextensions/wiki/.NET-Desktop-Runtime",
@@ -446,116 +435,16 @@ public sealed partial class FormUpdates : GitExtensionsDialog
 
     private void DetachOwner()
     {
-        if (_ownerWindow is not null)
+        if (_ownerWindow is Window owner)
         {
-            _ownerWindow.Closed -= OwnerWindow_Closed;
-            _ownerWindow = null;
+            owner.Closed -= OwnerWindow_Closed;
         }
+
+        _ownerWindow = null;
     }
 
     private static bool CanInstallUpdate(bool isWindows, bool isPortable)
         => isWindows && !isPortable;
-
-    private static IEnumerable<Version> GetDotnetDesktopRuntimeVersions()
-    {
-        if (!OperatingSystem.IsWindows())
-        {
-            return [];
-        }
-
-        try
-        {
-            string? dotnetHostPath = GetDotnetHostPath();
-            if (dotnetHostPath is null)
-            {
-                return [];
-            }
-
-            ProcessStartInfo startInfo = new(dotnetHostPath)
-            {
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true,
-            };
-            startInfo.ArgumentList.Add("--list-runtimes");
-            using Process? process = Process.Start(startInfo);
-            if (process is null)
-            {
-                return [];
-            }
-
-            string output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-            return output
-                .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
-                .Where(line => line.StartsWith("Microsoft.WindowsDesktop.App ", StringComparison.Ordinal))
-                .Select(line => line.Split(' ', StringSplitOptions.RemoveEmptyEntries).ElementAtOrDefault(1))
-                .Select(version => Version.TryParse(version, out Version? parsed) ? parsed : null)
-                .WhereNotNull()
-                .ToArray();
-        }
-        catch (Exception exception) when (exception is Win32Exception or InvalidOperationException)
-        {
-            return [];
-        }
-    }
-
-    private static string? GetDotnetHostPath()
-    {
-        string executableName = OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet";
-        string? hostPath = Environment.GetEnvironmentVariable("DOTNET_HOST_PATH");
-        if (!string.IsNullOrWhiteSpace(hostPath)
-            && Path.IsPathFullyQualified(hostPath)
-            && File.Exists(hostPath))
-        {
-            return hostPath;
-        }
-
-        string? dotnetRoot = Environment.GetEnvironmentVariable("DOTNET_ROOT");
-        if (!string.IsNullOrWhiteSpace(dotnetRoot))
-        {
-            hostPath = Path.Combine(dotnetRoot, executableName);
-            if (File.Exists(hostPath))
-            {
-                return hostPath;
-            }
-        }
-
-        if (OperatingSystem.IsWindows())
-        {
-            hostPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                "dotnet",
-                executableName);
-            if (File.Exists(hostPath))
-            {
-                return hostPath;
-            }
-        }
-
-        string? path = Environment.GetEnvironmentVariable("PATH");
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            return null;
-        }
-
-        foreach (string pathEntry in path.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
-        {
-            string directory = pathEntry.Trim().Trim('"');
-            if (!Path.IsPathFullyQualified(directory))
-            {
-                continue;
-            }
-
-            hostPath = Path.Combine(directory, executableName);
-            if (File.Exists(hostPath))
-            {
-                return Path.GetFullPath(hostPath);
-            }
-        }
-
-        return null;
-    }
 
     private static bool UpdateRequired(Version? required, IEnumerable<Version> installed)
     {
@@ -587,35 +476,13 @@ public sealed partial class FormUpdates : GitExtensionsDialog
             _form = form;
         }
 
-        public Button UpdateNow => _form.btnUpdateNow;
-
-        public HyperlinkButton ChangeLog => _form.linkChangeLog;
-
-        public HyperlinkButton DirectDownload => _form.linkDirectDownload;
-
         public SettingsLinkLabel linkRequiredNetRuntime => _form.linkRequiredDotNetRuntime;
-
-        public TextBlock UpdateText => _form.UpdateLabel;
 
         public string NetRuntimeDownloadUrl => _form._netRuntimeDownloadUrl;
 
-        public string UpdateUrl => _form._updateUrl;
-
-        public bool UpdateFound => _form._updateFound;
-
-        public void DisplayNetRuntimeLink(string format, Version? requiredNetRuntimeVersion)
+        public void DisplayNetRuntimeLink(string format, Version requiredNetRuntimeVersion)
             => _form.DisplayNetRuntimeLink(format, requiredNetRuntimeVersion);
 
-        public void DisplayReleases(string releases)
-        {
-            _form.CheckForNewerVersion(releases);
-            _form.Done();
-        }
-
-        public Task JoinOperationsAsync(CancellationToken cancellationToken = default)
-            => _form._operations.JoinPendingOperationsAsync(cancellationToken);
-
-        public static bool CanInstall(bool isWindows, bool isPortable)
-            => CanInstallUpdate(isWindows, isPortable);
+        public void LaunchUrl(LaunchType launchType) => _form.LaunchUrl(launchType);
     }
 }

@@ -5,10 +5,12 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitUI.Compat;
 using Microsoft;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -20,7 +22,6 @@ public partial class FormRecentReposSettings : GitExtensionsForm
     private readonly Func<string, Task<IList<Repository>>> _removeRecentAsync;
     private readonly Func<IEnumerable<Repository>, Task> _saveRecentAsync;
     private IList<Repository>? _repositoryHistory;
-    private ListBox? _contextList;
     private decimal _previousValue;
 
     // Avalonia's designer must not read or mutate repository history.
@@ -38,28 +39,13 @@ public partial class FormRecentReposSettings : GitExtensionsForm
         IList<Repository> repositoryHistory,
         Func<IEnumerable<Repository>, Task>? saveRecentAsync = null,
         Func<string, Task<IList<Repository>>>? removeRecentAsync = null)
+        : base(enablePositionRestore: true)
     {
         _repositoryHistory = repositoryHistory;
         _saveRecentAsync = saveRecentAsync ?? (_ => Task.CompletedTask);
         _removeRecentAsync = removeRecentAsync ?? RemoveRecentFromMemoryAsync;
 
         InitializeComponent();
-        ConfigureControls();
-        InitializeComplete();
-        LoadSettings();
-        RefreshRepos();
-        _NO_TRANSLATE_maxRecentRepositories.ValueChanged += sortTopRepos_CheckedChanged;
-        hideTopRepositoriesFromRecentList.IsCheckedChanged += sortTopRepos_CheckedChanged;
-        sortTopRepos.IsCheckedChanged += sortTopRepos_CheckedChanged;
-        sortRecentRepos.IsCheckedChanged += sortTopRepos_CheckedChanged;
-        dontShortenRB.IsCheckedChanged += sortTopRepos_CheckedChanged;
-        middleDotRB.IsCheckedChanged += sortTopRepos_CheckedChanged;
-        mostSigDirRB.IsCheckedChanged += sortTopRepos_CheckedChanged;
-        comboMinWidthEdit.ValueChanged += comboMinWidthEdit_ValueChanged;
-    }
-
-    private void ConfigureControls()
-    {
         contextMenuStrip1.Opening += contextMenuStrip1_Opening;
         RecentLB.ContextMenu = contextMenuStrip1;
         TopLB.ItemTemplate = CreateRepositoryTemplate();
@@ -74,20 +60,32 @@ public partial class FormRecentReposSettings : GitExtensionsForm
         anchorToRecentReposToolStripMenuItem.Click += anchorToLessToolStripMenuItem_Click;
         removeAnchorToolStripMenuItem.Click += removeAnchorToolStripMenuItem_Click;
         removeRecentToolStripMenuItem.Click += removeRecentToolStripMenuItem_Click;
-    }
+        InitializeComplete();
+        LoadSettings();
+        RefreshRepos();
+        _NO_TRANSLATE_maxRecentRepositories.ValueChanged += sortTopRepos_CheckedChanged;
+        hideTopRepositoriesFromRecentList.IsCheckedChanged += sortTopRepos_CheckedChanged;
+        sortTopRepos.IsCheckedChanged += sortTopRepos_CheckedChanged;
+        sortRecentRepos.IsCheckedChanged += sortTopRepos_CheckedChanged;
+        dontShortenRB.IsCheckedChanged += sortTopRepos_CheckedChanged;
+        middleDotRB.IsCheckedChanged += sortTopRepos_CheckedChanged;
+        mostSigDirRB.IsCheckedChanged += sortTopRepos_CheckedChanged;
+        comboMinWidthEdit.ValueChanged += comboMinWidthEdit_ValueChanged;
+        return;
 
-    private FuncDataTemplate<RecentRepoInfo> CreateRepositoryTemplate()
-        => new(
-            (repo, _) =>
-            {
-                if (repo is null)
+        FuncDataTemplate<RecentRepoInfo> CreateRepositoryTemplate()
+            => new(
+                (repo, _) =>
                 {
-                    return new Border();
-                }
+                    if (repo is null)
+                    {
+                        return new Border();
+                    }
 
-                return GetRepositoryListViewItem(repo, repo.Anchored);
-            },
-            supportsRecycling: true);
+                    return GetRepositoryListViewItem(repo, repo.Anchored);
+                },
+                supportsRecycling: true);
+    }
 
     private void LoadSettings()
     {
@@ -104,23 +102,23 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
         static void SetNumericUpDownValue(NumericUpDown control, int value)
             => control.Value = Math.Min(Math.Max(control.Minimum, value), control.Maximum);
-    }
 
-    private void SetShorteningStrategy(ShorteningRecentRepoPathStrategy strategy)
-    {
-        switch (strategy)
+        void SetShorteningStrategy(ShorteningRecentRepoPathStrategy strategy)
         {
-            case ShorteningRecentRepoPathStrategy.None:
-                dontShortenRB.IsChecked = true;
-                break;
-            case ShorteningRecentRepoPathStrategy.MostSignDir:
-                mostSigDirRB.IsChecked = true;
-                break;
-            case ShorteningRecentRepoPathStrategy.MiddleDots:
-                middleDotRB.IsChecked = true;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(strategy), strategy, "Unhandled shortening strategy.");
+            switch (strategy)
+            {
+                case ShorteningRecentRepoPathStrategy.None:
+                    dontShortenRB.IsChecked = true;
+                    break;
+                case ShorteningRecentRepoPathStrategy.MostSignDir:
+                    mostSigDirRB.IsChecked = true;
+                    break;
+                case ShorteningRecentRepoPathStrategy.MiddleDots:
+                    middleDotRB.IsChecked = true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(strategy), strategy, "Unhandled shortening strategy.");
+            }
         }
     }
 
@@ -139,36 +137,22 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
     private ShorteningRecentRepoPathStrategy GetShorteningStrategy()
     {
-        if (TryGetShorteningStrategy(out ShorteningRecentRepoPathStrategy strategy))
-        {
-            return strategy;
-        }
-
-        throw new InvalidOperationException("Cannot determine the shortening strategy.");
-    }
-
-    private bool TryGetShorteningStrategy(out ShorteningRecentRepoPathStrategy strategy)
-    {
         if (dontShortenRB.IsChecked == true)
         {
-            strategy = ShorteningRecentRepoPathStrategy.None;
-            return true;
+            return ShorteningRecentRepoPathStrategy.None;
         }
-
-        if (mostSigDirRB.IsChecked == true)
+        else if (mostSigDirRB.IsChecked == true)
         {
-            strategy = ShorteningRecentRepoPathStrategy.MostSignDir;
-            return true;
+            return ShorteningRecentRepoPathStrategy.MostSignDir;
         }
-
-        if (middleDotRB.IsChecked == true)
+        else if (middleDotRB.IsChecked == true)
         {
-            strategy = ShorteningRecentRepoPathStrategy.MiddleDots;
-            return true;
+            return ShorteningRecentRepoPathStrategy.MiddleDots;
         }
-
-        strategy = default;
-        return false;
+        else
+        {
+            throw new Exception("Can not figure shortening strategy");
+        }
     }
 
     private void RefreshRepos()
@@ -184,7 +168,9 @@ public partial class FormRecentReposSettings : GitExtensionsForm
             SortRecentRepos = sortRecentRepos.IsChecked == true,
             SortTopRepos = sortTopRepos.IsChecked == true,
             RecentReposComboMinWidth = Convert.ToInt32(comboMinWidthEdit.Value),
-            MeasureFont = AppSettings.Font,
+            MeasureFont = new WinFormsShims.Font(TopLB.FontFamily.Name, AvaloniaFontSettings.ToPoints(TopLB.FontSize),
+                (TopLB.FontWeight >= FontWeight.Bold ? WinFormsShims.FontStyle.Bold : WinFormsShims.FontStyle.Regular)
+                | (TopLB.FontStyle == FontStyle.Italic ? WinFormsShims.FontStyle.Italic : WinFormsShims.FontStyle.Regular)),
         };
 
         splitter.SplitRecentRepos(_repositoryHistory, topRepos, recentRepos);
@@ -195,14 +181,8 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
     private Control GetRepositoryListViewItem(RecentRepoInfo repo, bool anchored)
     {
-        TextBlock item = new()
-        {
-            Width = chdrRepository.SourceWidth,
-            Margin = new Thickness(4, 2),
-            Text = repo.Caption,
-            TextTrimming = TextTrimming.CharacterEllipsis,
-            FontWeight = anchored ? FontWeight.Bold : FontWeight.Normal,
-        };
+        TextBlock item = listView_DrawItem(repo);
+        item.FontWeight = anchored ? FontWeight.Bold : FontWeight.Normal;
 
         if (!Directory.Exists(repo.Repo.Path))
         {
@@ -223,7 +203,7 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
     private void sortTopRepos_CheckedChanged(object? sender, EventArgs e)
     {
-        if (TryGetShorteningStrategy(out _))
+        if (dontShortenRB.IsChecked == true || mostSigDirRB.IsChecked == true || middleDotRB.IsChecked == true)
         {
             RefreshRepos();
         }
@@ -261,7 +241,6 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
     private void contextMenuStrip1_Opening(object? sender, CancelEventArgs e)
     {
-        _contextList = contextMenuStrip1.PlacementTarget as ListBox ?? _contextList;
         if (GetSelectedRepos(sender, out List<RecentRepoInfo>? repos))
         {
             e.Cancel = false;
@@ -285,9 +264,9 @@ public partial class FormRecentReposSettings : GitExtensionsForm
         {
             sender = strip.PlacementTarget;
         }
-        else if (sender is MenuItem)
+        else if (sender is MenuItem item)
         {
-            sender = _contextList;
+            return GetSelectedRepos(item.FindLogicalAncestorOfType<ContextMenu>(), out repos);
         }
 
         ListBox? list = sender == TopLB
@@ -312,7 +291,8 @@ public partial class FormRecentReposSettings : GitExtensionsForm
             return;
         }
 
-        _contextList = listBox;
+        // Avalonia needs an explicit source for a context menu shared by both lists.
+        contextMenuStrip1.PlacementTarget = listBox;
         ListBoxItem? item = (e.Source as Visual)?.FindAncestorOfType<ListBoxItem>(includeSelf: true);
         if (listBox.SelectedItems is { } selectedItems
             && item?.DataContext is RecentRepoInfo repo
@@ -407,42 +387,13 @@ public partial class FormRecentReposSettings : GitExtensionsForm
         return Task.FromResult(_repositoryHistory);
     }
 
-    internal TestAccessor GetTestAccessor() => new(this);
-
-    internal readonly struct TestAccessor(FormRecentReposSettings form)
-    {
-        public ListBox TopRepositories => form.TopLB;
-
-        public ListBox RecentRepositories => form.RecentLB;
-
-        public NumericUpDown MaximumTopRepositories => form._NO_TRANSLATE_maxRecentRepositories;
-
-        public NumericUpDown HistorySize => form._NO_TRANSLATE_RecentRepositoriesHistorySize;
-
-        public NumericUpDown MinimumWidth => form.comboMinWidthEdit;
-
-        public CheckBox HideTopRepositories => form.hideTopRepositoriesFromRecentList;
-
-        public CheckBox SortTopRepositories => form.sortTopRepos;
-
-        public CheckBox SortRecentRepositories => form.sortRecentRepos;
-
-        public RadioButton DoNotShorten => form.dontShortenRB;
-
-        public RadioButton MiddleDots => form.middleDotRB;
-
-        public RadioButton MostSignificantDirectory => form.mostSigDirRB;
-
-        public void SaveSettings() => form.SaveSettings();
-
-        public void SetContextList(ListBox list) => form._contextList = list;
-
-        public void AnchorSelectedToTop() => form.AnchorToMostRecentRepositories(form._contextList!);
-
-        public void AnchorSelectedToRecent() => form.AnchorToLessRecentRepositories(form._contextList!);
-
-        public void RemoveSelectedAnchor() => form.removeAnchorToolStripMenuItem_Click(form._contextList, EventArgs.Empty);
-
-        public void RemoveSelectedRecent() => form.removeRecentToolStripMenuItem_Click(form._contextList, EventArgs.Empty);
-    }
+    // Avalonia paints ListBox rows through a TextBlock template rather than a GDI DrawItem event.
+    private TextBlock listView_DrawItem(RecentRepoInfo repo)
+        => new()
+        {
+            Width = chdrRepository.SourceWidth,
+            Margin = new Thickness(4, 2),
+            Text = repo.Caption,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        };
 }

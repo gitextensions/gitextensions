@@ -306,6 +306,7 @@ public sealed class PluginSettingsTests
             Array.Empty<RecentRepoInfo>(),
             Array.Empty<RecentRepoInfo>()));
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
         return new FormBrowse(commands, new BrowseArguments());
     }
 

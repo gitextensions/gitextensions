@@ -472,6 +472,7 @@ public sealed class TerminalLauncherTests
             Array.Empty<RecentRepoInfo>(),
             Array.Empty<RecentRepoInfo>()));
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
         commands.GetService(typeof(ITerminalLauncher)).Returns(launcher);
         commands.GetService(typeof(IShellProvider)).Returns(new ShellProvider());
 

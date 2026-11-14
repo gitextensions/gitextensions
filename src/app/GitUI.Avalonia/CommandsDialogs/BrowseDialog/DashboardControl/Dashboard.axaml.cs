@@ -64,18 +64,8 @@ public partial class Dashboard : GitModuleControl
     }
 
     public void Initialize(IRepositoryHistoryUIService repositoryHistoryUIService)
-        => Initialize(
-            UICommands.GetRequiredService<IUserRepositoriesListController>(),
-            repositoryHistoryUIService);
-
-    internal void Initialize(
-        IUserRepositoriesListController controller,
-        IRepositoryHistoryUIService? repositoryHistoryUIService)
     {
-        userRepositoriesList.Initialize(
-            controller,
-            repositoryHistoryUIService,
-            () => UICommands);
+        userRepositoriesList.Initialize(repositoryHistoryUIService);
         userRepositoriesList.GitModuleChanged += OnModuleChanged;
     }
 

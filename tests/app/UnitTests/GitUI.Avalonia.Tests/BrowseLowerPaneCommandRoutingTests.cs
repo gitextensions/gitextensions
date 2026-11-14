@@ -218,6 +218,7 @@ public sealed class BrowseLowerPaneCommandRoutingTests
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(hotkeys);
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(Substitute.For<IRepositoryHistoryUIService>());
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(Substitute.For<IUserRepositoriesListController>());
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         commands.GetService(typeof(IScriptsManager)).Returns(scripts);
         return (new FormBrowse(commands, new BrowseArguments()), commands, module);

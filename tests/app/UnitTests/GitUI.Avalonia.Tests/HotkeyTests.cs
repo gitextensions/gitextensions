@@ -1142,6 +1142,7 @@ public sealed class HotkeyTests
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(repositoryHistory);
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         commands.GetService(typeof(IScriptsManager)).Returns(scriptsManager);
         commands.GetService(typeof(IScriptsRunner)).Returns(scriptsRunner);

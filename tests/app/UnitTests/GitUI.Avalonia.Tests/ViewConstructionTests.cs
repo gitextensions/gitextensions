@@ -192,6 +192,7 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
 
         FormBrowse form = new(commands, new BrowseArguments());
         MenuItem refresh = form.FindControl<MenuItem>("refreshToolStripMenuItem")
@@ -358,6 +359,7 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
 
         FormBrowse form = new(commands, new BrowseArguments());
         MenuItem commit = form.FindControl<MenuItem>("commitToolStripMenuItem")
@@ -390,6 +392,7 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
 
         FormBrowse form = new(commands, new BrowseArguments());
         MenuItem stash = form.FindControl<MenuItem>("stashToolStripMenuItem")
@@ -422,6 +425,7 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
 
         FormBrowse form = new(commands, new BrowseArguments());
         MenuItem merge = form.FindControl<MenuItem>("mergeBranchToolStripMenuItem")
@@ -455,6 +459,7 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
 
         FormBrowse form = new(commands, new BrowseArguments());
         MenuItem rebase = form.FindControl<MenuItem>("rebaseToolStripMenuItem")
@@ -504,6 +509,7 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
 
         FormBrowse form = new(commands, new BrowseArguments());
         MenuItem pull = form.FindControl<MenuItem>("pullToolStripMenuItem")
@@ -538,6 +544,7 @@ public sealed class ViewConstructionTests
             commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
             IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
             commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+            commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
 
             FormBrowse form = new(commands, new BrowseArguments());
             Button commit = form.FindControl<Button>("toolStripButtonCommit")!;
@@ -583,6 +590,7 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
 
         FormBrowse form = new(commands, new BrowseArguments());
         MenuItem checkout = form.FindControl<MenuItem>("checkoutBranchToolStripMenuItem")
@@ -615,6 +623,7 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
 
         FormBrowse form = new(commands, new BrowseArguments());
         MenuItem createBranch = form.FindControl<MenuItem>("branchToolStripMenuItem")
@@ -647,6 +656,7 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
 
         FormBrowse form = new(commands, new BrowseArguments());
         MenuItem deleteBranch = form.FindControl<MenuItem>("deleteBranchToolStripMenuItem")
@@ -679,6 +689,7 @@ public sealed class ViewConstructionTests
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         IUserRepositoriesListController repositoriesController = RepositoryHistoryTestHelper.CreateEmptyController();
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
 
         FormBrowse form = new(commands, new BrowseArguments());
         MenuItem createTag = form.FindControl<MenuItem>("tagToolStripMenuItem")

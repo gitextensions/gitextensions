@@ -1,4 +1,5 @@
 using System.ComponentModel.Design;
+using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
@@ -33,22 +34,22 @@ public sealed class FormUpdatesTests
         config.SetValue("Version \"99.1\".DownloadPage", "https://example.test/GitExtensions-x64-99.1.msi");
         config.SetValue("Version \"99.1\".NetRuntimeVersion", "99.0.2");
 
-        FormUpdates form = new(
+        FormUpdates form = CreateForm(
             new Version(98, 0),
             _ => Task.FromResult(config.GetAsString()));
         GitExtensionsFormBase owner = new();
 
         form.SearchForUpdatesAndShow(owner, alwaysShow: false);
-        await form.GetTestAccessor().JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(10));
+        await GetOperations(form).JoinPendingOperationsAsync(CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(10));
 
         FormUpdates.TestAccessor accessor = form.GetTestAccessor();
-        accessor.UpdateFound.Should().BeTrue();
-        accessor.UpdateText.Text.Should().Be("There is a new version 99.1 of Git Extensions available");
-        accessor.ChangeLog.IsVisible.Should().BeTrue();
-        accessor.DirectDownload.IsVisible.Should().BeTrue();
-        accessor.UpdateUrl.Should().Contain("GitExtensions-");
-        accessor.UpdateNow.IsVisible.Should().Be(
-            FormUpdates.TestAccessor.CanInstall(OperatingSystem.IsWindows(), AppSettings.IsPortable()));
+        GetField<bool>(form, "_updateFound").Should().BeTrue();
+        form.UpdateLabel.Text.Should().Be("There is a new version 99.1 of Git Extensions available");
+        form.linkChangeLog.IsVisible.Should().BeTrue();
+        form.linkDirectDownload.IsVisible.Should().BeTrue();
+        GetField<string>(form, "_updateUrl").Should().Contain("GitExtensions-");
+        form.btnUpdateNow.IsVisible.Should().Be(
+            CanInstall(OperatingSystem.IsWindows(), AppSettings.IsPortable()));
         accessor.linkRequiredNetRuntime.IsVisible.Should().Be(OperatingSystem.IsWindows());
         if (OperatingSystem.IsWindows())
         {
@@ -60,7 +61,7 @@ public sealed class FormUpdatesTests
     public void Update_dialog_should_preserve_existing_translation_keys()
     {
         ITranslation translation = Substitute.For<ITranslation>();
-        FormUpdates form = new(new Version(98, 0), _ => Task.FromResult(string.Empty));
+        FormUpdates form = CreateForm(new Version(98, 0), _ => Task.FromResult(string.Empty));
 
         form.AddTranslationItems(translation);
 
@@ -79,10 +80,10 @@ public sealed class FormUpdatesTests
     [AvaloniaTest]
     public void Update_install_policy_should_never_launch_the_windows_installer_on_other_hosts()
     {
-        FormUpdates.TestAccessor.CanInstall(isWindows: true, isPortable: false).Should().BeTrue();
-        FormUpdates.TestAccessor.CanInstall(isWindows: true, isPortable: true).Should().BeFalse();
-        FormUpdates.TestAccessor.CanInstall(isWindows: false, isPortable: false).Should().BeFalse();
-        FormUpdates.TestAccessor.CanInstall(isWindows: false, isPortable: true).Should().BeFalse();
+        CanInstall(isWindows: true, isPortable: false).Should().BeTrue();
+        CanInstall(isWindows: true, isPortable: true).Should().BeFalse();
+        CanInstall(isWindows: false, isPortable: false).Should().BeFalse();
+        CanInstall(isWindows: false, isPortable: true).Should().BeFalse();
     }
 
     [AvaloniaTest]
@@ -132,6 +133,23 @@ public sealed class FormUpdatesTests
             Directory.Delete(workingDirectory, recursive: true);
         }
     }
+
+    private static FormUpdates CreateForm(Version currentVersion, Func<CancellationToken, Task<string>> loadReleases)
+    {
+        FormUpdates form = new(currentVersion);
+        // Substitute only external feed I/O while retaining the original constructor and real update flow.
+        typeof(FormUpdates).GetField("_loadReleases", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(form, loadReleases);
+        return form;
+    }
+
+    private static bool CanInstall(bool isWindows, bool isPortable)
+        => (bool)typeof(FormUpdates).GetMethod("CanInstallUpdate", BindingFlags.NonPublic | BindingFlags.Static)!
+            .Invoke(null, [isWindows, isPortable])!;
+
+    private static TaskManager GetOperations(FormUpdates form) => GetField<TaskManager>(form, "_operations");
+
+    private static T GetField<T>(FormUpdates form, string name)
+        => (T)typeof(FormUpdates).GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(form)!;
 
     private static ServiceContainer CreateServiceContainer()
     {

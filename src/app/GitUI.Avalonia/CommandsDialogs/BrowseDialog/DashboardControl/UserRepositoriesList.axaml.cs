@@ -33,7 +33,7 @@ using WinFormsControls = GitUI.Compat.WinFormsControls;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 
-public partial class UserRepositoriesList : TranslatedControl
+public partial class UserRepositoriesList : GitExtensionsControl
 {
 #pragma warning disable SX1309 // Retain the WinForms twin's source field name for structural parity.
     private readonly IReadOnlyList<IImage> imageList1 = [Images.DashboardFolderGit, Images.DashboardFolderError];
@@ -84,16 +84,19 @@ public partial class UserRepositoriesList : TranslatedControl
     private readonly RepositoryGroupItem _lvgRecentRepositories;
     private bool _hasInvalidRepos;
     private ListBoxItem? _rightClickedItem;
-    private Func<IGitUICommands>? _getUICommands;
+
+    // Avalonia ListBox has no Groups collection; retain the source group identities beside its flattened rows.
+    private RepositoryGroupItem[] _groups = [];
     private bool _isSubscribed;
-    private IUserRepositoriesListController? _controller;
     private IRepositoryHistoryUIService? _repositoryHistoryUIService;
-    private RepositoryGroupItem? _selectedCategory;
 
     public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
 
     private IUserRepositoriesListController Controller
-        => _controller ?? throw new InvalidOperationException("The repository list is not initialized.");
+        => field ??= new UserRepositoriesListController(
+            RepositoryHistoryManager.Locals,
+            new InvalidRepositoryRemover(),
+            ServiceProvider.GetRequiredService<IRepositoryCurrentBranchNameCache>());
 
     public UserRepositoriesList()
     {
@@ -321,22 +324,21 @@ public partial class UserRepositoriesList : TranslatedControl
         base.TranslateItems(translation);
         Avalonia.Automation.AutomationProperties.SetName(this, _groupRecentRepositories.Text);
         textBoxSearch.PlaceholderText = textBoxSearch.IsFocused ? null : _repositorySearchPlaceholder.Text;
-        ShowRecentRepositories(reloadData: false);
+        if (IsLoaded)
+        {
+            ShowRecentRepositories(reloadData: false);
+        }
     }
 
-    public void Initialize(
-        IUserRepositoriesListController controller,
-        IRepositoryHistoryUIService? repositoryHistoryUIService,
-        Func<IGitUICommands> getUICommands)
+    // Avalonia's shared branch-cache service notifies the retained list after asynchronous refreshes.
+    public void Initialize(IRepositoryHistoryUIService? repositoryHistoryUIService)
     {
         if (_repositoryHistoryUIService is not null && _isSubscribed)
         {
             _repositoryHistoryUIService.HistoryChanged -= RepositoryHistoryUIService_HistoryChanged;
         }
 
-        _controller = controller;
         _repositoryHistoryUIService = repositoryHistoryUIService;
-        _getUICommands = getUICommands;
         if (_repositoryHistoryUIService is not null)
         {
             _repositoryHistoryUIService.HistoryChanged += RepositoryHistoryUIService_HistoryChanged;
@@ -347,11 +349,6 @@ public partial class UserRepositoriesList : TranslatedControl
 
     public void ShowRecentRepositories(bool reloadData = true)
     {
-        if (_controller is null)
-        {
-            return;
-        }
-
         if (reloadData)
         {
             Controller.ClearCache();
@@ -367,20 +364,63 @@ public partial class UserRepositoriesList : TranslatedControl
         List<object> rows = [];
         _hasInvalidRepos = false;
         _lvgRecentRepositories.RepositoryCount = recentRepositories.Count;
-        BindRepositories(rows, _lvgRecentRepositories, recentRepositories, tileSize, isFavourite: false);
-        foreach (IGrouping<string?, RecentRepoInfo> category in favouriteRepositories
-                     .GroupBy(repo => repo.Repo.Category, GroupHeaderComparer)
-                     .OrderBy(group => group.Key, GroupHeaderComparer))
+        _groups =
+        [
+            _lvgRecentRepositories,
+            .. recentRepositories.Concat(favouriteRepositories)
+                .Select(repo => repo.Repo.Category)
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Distinct(GroupHeaderComparer)
+                .OrderBy(c => c)
+                .Select(c => new RepositoryGroupItem(c!, isRecentGroup: false, repositoryCount: 0)),
+        ];
+        BindRepositories(recentRepositories, isFavourite: false);
+        BindRepositories(favouriteRepositories, isFavourite: true);
+
+        foreach (RepositoryGroupItem group in _groups)
         {
-            RecentRepoInfo[] repositories = [.. category];
-            RepositoryGroupItem group = GetTileGroup(repositories[0].Repo);
-            group.RepositoryCount = repositories.Length;
-            BindRepositories(rows, group, repositories, tileSize, isFavourite: true);
+            RepositoryListItem[] items = [.. rows.OfType<RepositoryListItem>().Where(item => item.Group == group)];
+            group.RepositoryCount = items.Length;
+            if (items.Length == 0)
+            {
+                continue;
+            }
+
+            if (!string.IsNullOrWhiteSpace(group.Name))
+            {
+                rows.Add(group);
+            }
+
+            rows.AddRange(items);
         }
 
+        rows.RemoveRange(0, recentRepositories.Count + favouriteRepositories.Count);
         HoveredItem = null;
         listView1.ItemsSource = rows;
         listView1.SelectedItem = null;
+
+        void BindRepositories(IReadOnlyList<RecentRepoInfo> repos, bool isFavourite)
+        {
+            for (int index = 0; index < repos.Count; index++)
+            {
+                RecentRepoInfo recent = repos[index];
+                RepositoryGroupItem group = isFavourite
+                    ? GetTileGroup(recent.Repo)
+                    : _lvgRecentRepositories;
+                bool isValidGitDir = Controller.IsValidGitWorkingDir(recent.Repo.Path);
+                string branchName = isValidGitDir ? Controller.GetCurrentBranchName(recent.Repo.Path) : string.Empty;
+                _hasInvalidRepos |= !isValidGitDir;
+                rows.Add(new RepositoryListItem(
+                    recent.Caption ?? recent.Repo.Path,
+                    recent,
+                    branchName,
+                    isFavourite,
+                    isValidGitDir,
+                    tileSize,
+                    group));
+                //// NB: we can add a 3rd row as well: { repository.Repo.Category, Brushes.Gray, Background, _secondaryFont }
+            }
+        }
     }
 
     protected override void OnDetachedFromLogicalTree(Avalonia.LogicalTree.LogicalTreeAttachmentEventArgs e)
@@ -439,40 +479,6 @@ public partial class UserRepositoriesList : TranslatedControl
         }
 
         return false;
-    }
-
-    private void BindRepositories(
-        ICollection<object> rows,
-        RepositoryGroupItem group,
-        IEnumerable<RecentRepoInfo> repositories,
-        Size tileSize,
-        bool isFavourite)
-    {
-        RecentRepoInfo[] items = [.. repositories];
-        if (items.Length == 0)
-        {
-            return;
-        }
-
-        if (!string.IsNullOrWhiteSpace(group.Name))
-        {
-            rows.Add(group);
-        }
-
-        foreach (RecentRepoInfo recent in items)
-        {
-            bool isValidGitDir = Controller.IsValidGitWorkingDir(recent.Repo.Path);
-            string branchName = isValidGitDir ? Controller.GetCurrentBranchName(recent.Repo.Path) : string.Empty;
-            _hasInvalidRepos |= !isValidGitDir;
-            rows.Add(new RepositoryListItem(
-                recent.Caption ?? recent.Repo.Path,
-                recent,
-                branchName,
-                isFavourite,
-                isValidGitDir,
-                tileSize,
-                group));
-        }
     }
 
     private Control CreateRowCore(object? item)
@@ -642,7 +648,6 @@ public partial class UserRepositoriesList : TranslatedControl
                     FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(_secondaryFont.Size),
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 },
-                //// NB: we can add a 3rd row as well: { repository.Repository.Repo.Category, Brushes.Gray, Background, _secondaryFont }
             },
         };
         row.Children.Add(text);
@@ -681,23 +686,50 @@ public partial class UserRepositoriesList : TranslatedControl
             .Select(item => item.Repository.Repo);
     }
 
-    private SelectedRepositoryItem? GetSelectedRepositoryItem()
+    private static SelectedRepositoryItem? GetSelectedRepositoryItem(MenuItem? menuItem)
     {
-        RepositoryListItem? selected = _rightClickedItem?.DataContext as RepositoryListItem
-            ?? listView1.SelectedItem as RepositoryListItem;
-        if (string.IsNullOrWhiteSpace(selected?.Repository.Repo.Path))
+        // Retrieve the ContextMenuStrip that owns this MenuItem
+        ContextMenu? contextMenu = menuItem?.FindLogicalAncestorOfType<ContextMenu>();
+
+        // Get the control that is displaying this context menu
+        SelectedRepositoryItem? selected = contextMenu?.Tag as SelectedRepositoryItem;
+        if (string.IsNullOrWhiteSpace(selected?.Repository?.Path))
         {
             return null;
         }
 
-        return new SelectedRepositoryItem(selected.IsFavourite, selected.Repository.Repo);
+        return selected;
     }
 
     private Repository? GetSelectedRepository()
-        => (listView1.SelectedItem as RepositoryListItem)?.Repository.Repo;
+    {
+        if ((listView1.SelectedItems?.Count ?? 0) < 1)
+        {
+            return null;
+        }
 
-    private static RepositoryGroupItem GetTileGroup(Repository repository)
-        => new(repository.Category ?? string.Empty, isRecentGroup: false, repositoryCount: 0);
+        Repository? selected = (listView1.SelectedItem as RepositoryListItem)?.Repository.Repo;
+        if (string.IsNullOrWhiteSpace(selected?.Path))
+        {
+            return null;
+        }
+
+        return selected;
+    }
+
+    private RepositoryGroupItem GetTileGroup(Repository repository)
+    {
+        string category = string.IsNullOrWhiteSpace(repository.Category) ? string.Empty : repository.Category;
+        RepositoryGroupItem? group = _groups.SingleOrDefault(x => GroupHeaderComparer.Equals(x.Name, category));
+        if (group is null)
+        {
+            // Avalonia ListBox has no default ListView group; retain unmatched favorites as unheaded rows.
+            group = new RepositoryGroupItem(category, isRecentGroup: false, repositoryCount: 0);
+            _groups = [.. _groups, group];
+        }
+
+        return group;
+    }
 
     private Size GetTileSize(
         IEnumerable<RecentRepoInfo> recentRepositories,
@@ -733,9 +765,9 @@ public partial class UserRepositoriesList : TranslatedControl
         return new Size(Math.Ceiling(width + 50), Math.Ceiling(Math.Max(height, 50)));
     }
 
-    private void RepositoryContextAction(Action<SelectedRepositoryItem> action)
+    private static void RepositoryContextAction(MenuItem? menuItem, Action<SelectedRepositoryItem> action)
     {
-        SelectedRepositoryItem? selected = GetSelectedRepositoryItem();
+        SelectedRepositoryItem? selected = GetSelectedRepositoryItem(menuItem);
         if (selected is not null)
         {
             action(selected);
@@ -804,7 +836,15 @@ public partial class UserRepositoriesList : TranslatedControl
     private void contextMenuStrip_Closed(object? sender, EventArgs e)
     {
         _rightClickedItem = null;
-        ShowRecentRepositories();
+
+        // Avalonia can close the popup during an ItemsSource reset; refresh after that reset finishes.
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (IsLoaded)
+            {
+                ShowRecentRepositories();
+            }
+        });
     }
 
     private void contextMenuStrip_Opening(object? sender, CancelEventArgs e)
@@ -822,6 +862,13 @@ public partial class UserRepositoriesList : TranslatedControl
             e.Cancel = true;
             return;
         }
+
+        // address a bug in context menu implementation
+        // nested toolstrip items can't get source control
+        // http://stackoverflow.com/questions/30534417/
+        contextMenuStripRepository.Tag = new SelectedRepositoryItem(
+            isFavourite: (_rightClickedItem.DataContext as RepositoryListItem)?.Group != _lvgRecentRepositories,
+            repository: selected.Repository.Repo);
     }
 
     private Control listView1_DrawItem(object? item)
@@ -841,7 +888,7 @@ public partial class UserRepositoriesList : TranslatedControl
             return;
         }
 
-        _selectedCategory = group;
+        contextMenuStripCategory.Tag = group;
         tsmiCategoryDelete.IsVisible = !group.IsRecentGroup;
         tsmiCategoryRename.IsVisible = !group.IsRecentGroup;
         tsmiCategoryClear.IsVisible = group.IsRecentGroup;
@@ -863,10 +910,6 @@ public partial class UserRepositoriesList : TranslatedControl
         listView1.SelectedItem = item;
         if (e.GetCurrentPoint(container).Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
         {
-            // address a bug in context menu implementation
-            // nested toolstrip items can't get source control
-            // http://stackoverflow.com/questions/30534417/
-
             // Avalonia menu items share their owning context menu instead of WinForms SourceControl.
             // Keep the clicked container so nested category actions resolve the same repository.
             _rightClickedItem = container;
@@ -998,7 +1041,7 @@ public partial class UserRepositoriesList : TranslatedControl
         }
 
         tsmiCategories.Items.Add(tsmiCategoryAdd);
-        RepositoryContextAction(selectedRepositoryItem =>
+        RepositoryContextAction(sender as MenuItem, selectedRepositoryItem =>
         {
             foreach (MenuItem item in tsmiCategories.Items.OfType<MenuItem>())
             {
@@ -1015,7 +1058,7 @@ public partial class UserRepositoriesList : TranslatedControl
 
     private void tsmiCategory_Click(object? sender, RoutedEventArgs e)
     {
-        SelectedRepositoryItem? selectedRepositoryItem = GetSelectedRepositoryItem();
+        SelectedRepositoryItem? selectedRepositoryItem = GetSelectedRepositoryItem(sender as MenuItem);
         if (selectedRepositoryItem is null)
         {
             return;
@@ -1028,7 +1071,7 @@ public partial class UserRepositoriesList : TranslatedControl
 
     private void tsmiCategoryAdd_Click(object? sender, RoutedEventArgs e)
     {
-        RepositoryContextAction(selectedRepositoryItem =>
+        RepositoryContextAction(sender as MenuItem, selectedRepositoryItem =>
         {
             if (PromptCategoryName(GetCategories(), originalName: null, out string? categoryName))
             {
@@ -1039,11 +1082,11 @@ public partial class UserRepositoriesList : TranslatedControl
     }
 
     private void tsmiOpenFolder_Click(object? sender, RoutedEventArgs e)
-        => RepositoryContextAction(selectedRepositoryItem => OsShellUtil.OpenWithFileExplorer(selectedRepositoryItem.Repository.Path));
+        => RepositoryContextAction(sender as MenuItem, selectedRepositoryItem => OsShellUtil.OpenWithFileExplorer(selectedRepositoryItem.Repository.Path));
 
     private void tsmiRemoveFromList_Click(object? sender, RoutedEventArgs e)
     {
-        RepositoryContextAction(selectedRepositoryItem =>
+        RepositoryContextAction(sender as MenuItem, selectedRepositoryItem =>
         {
             ThreadHelper.JoinableTaskFactory.Run(() =>
                 selectedRepositoryItem.IsFavourite
@@ -1055,7 +1098,7 @@ public partial class UserRepositoriesList : TranslatedControl
 
     private void tsmiRemoveMissingReposFromList_Click(object? sender, RoutedEventArgs e)
     {
-        RepositoryContextAction(_ =>
+        RepositoryContextAction(sender as MenuItem, _ =>
         {
             ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(Controller.IsValidGitWorkingDir));
             ShowRecentRepositories();
@@ -1064,7 +1107,8 @@ public partial class UserRepositoriesList : TranslatedControl
 
     private void tsmiCategoryRename_Click(object? sender, RoutedEventArgs e)
     {
-        string? originalName = _selectedCategory?.Name;
+        RepositoryGroupItem categoryGroup = (RepositoryGroupItem)contextMenuStripCategory.Tag!;
+        string? originalName = categoryGroup.Name;
         List<string> categories = GetCategories();
         categories.Remove(originalName!);
 
@@ -1076,8 +1120,9 @@ public partial class UserRepositoriesList : TranslatedControl
 
     private void tsmiCategoryDelete_Click(object? sender, RoutedEventArgs e)
     {
-        string? name = _selectedCategory?.Name;
-        string question = string.Format(_deleteCategoryQuestion.Text, name, _selectedCategory?.RepositoryCount ?? 0);
+        RepositoryGroupItem categoryGroup = (RepositoryGroupItem)contextMenuStripCategory.Tag!;
+        string? name = categoryGroup.Name;
+        string question = string.Format(_deleteCategoryQuestion.Text, name, categoryGroup.RepositoryCount);
         if (!PromptUserConfirm(question, _deleteCategoryCaption.Text))
         {
             return;
@@ -1115,8 +1160,7 @@ public partial class UserRepositoriesList : TranslatedControl
         string dir = fileNameArray[0];
         if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
         {
-            IGitExecutorProvider executorProvider = _getUICommands?.Invoke().GetRequiredService<IGitExecutorProvider>()
-                ?? throw new InvalidOperationException("The repository list is not initialized.");
+            IGitExecutorProvider executorProvider = ServiceProvider.GetRequiredService<IGitExecutorProvider>();
             GitModule module = new(executorProvider, dir);
             if (!module.IsValidGitWorkingDir())
             {
@@ -1130,20 +1174,24 @@ public partial class UserRepositoriesList : TranslatedControl
         }
     }
 
+    // Avalonia supplies the source's permitted effects on each drag event; reject invalid paths explicitly.
     private static void OnDragEnter(object? sender, DragEventArgs e)
     {
+        e.DragEffects = DragDropEffects.None;
         string[] fileNameArray = GetDroppedFileNames(e.DataTransfer);
 
-        // Allow drop (copy, not move) folders
-        e.DragEffects = CanDropRepositoryDirectory(fileNameArray)
-            ? DragDropEffects.Copy
-            : DragDropEffects.None;
-    }
+        if (fileNameArray.Length != 1)
+        {
+            return;
+        }
 
-    internal static bool CanDropRepositoryDirectory(IReadOnlyList<string> fileNameArray)
-        => fileNameArray.Count == 1
-            && !string.IsNullOrEmpty(fileNameArray[0])
-            && Directory.Exists(fileNameArray[0]);
+        string dir = fileNameArray[0];
+        if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
+        {
+            // Allow drop (copy, not move) folders
+            e.DragEffects = DragDropEffects.Copy;
+        }
+    }
 
     private static string[] GetDroppedFileNames(IDataTransfer dataTransfer)
     {
@@ -1166,8 +1214,7 @@ public partial class UserRepositoriesList : TranslatedControl
 
         if (Controller.IsValidGitWorkingDir(repository.Path))
         {
-            IGitExecutorProvider executorProvider = _getUICommands?.Invoke().GetRequiredService<IGitExecutorProvider>()
-                ?? throw new InvalidOperationException("The repository list is not initialized.");
+            IGitExecutorProvider executorProvider = ServiceProvider.GetRequiredService<IGitExecutorProvider>();
             OnModuleChanged(new GitModuleEventArgs(new GitModule(executorProvider, repository.Path)));
             return true;
         }
@@ -1209,28 +1256,6 @@ public partial class UserRepositoriesList : TranslatedControl
 
     private WinFormsShims.IWin32Window? GetOwner()
         => this.FindAncestorOfType<Window>() as WinFormsShims.IWin32Window;
-
-    internal TestAccessor GetTestAccessor() => new(this);
-
-    internal readonly struct TestAccessor(UserRepositoriesList control)
-    {
-        internal TextBox Search => control.textBoxSearch;
-        internal ListBox List => control.listView1;
-        internal MenuItem Configure => control.mnuConfigure;
-        internal MenuItem Categories => control.tsmiCategories;
-        internal MenuItem CategoryNone => control.tsmiCategoryNone;
-        internal MenuItem CategoryAdd => control.tsmiCategoryAdd;
-        internal MenuItem Remove => control.tsmiRemoveFromList;
-        internal void OpenSelected() => control.TryOpenRepository(control.GetSelectedRepository());
-        internal void OpenCategories() => control.tsmiCategories_DropDownOpening(control.tsmiCategories, EventArgs.Empty);
-        internal bool UpdateContextMenu()
-        {
-            CancelEventArgs eventArgs = new();
-            control._rightClickedItem = new ListBoxItem { DataContext = control.listView1.SelectedItem };
-            control.contextMenuStrip_Opening(control.contextMenuStripRepository, eventArgs);
-            return !eventArgs.Cancel;
-        }
-    }
 
     internal sealed record RepositoryListItem(
         string Text,

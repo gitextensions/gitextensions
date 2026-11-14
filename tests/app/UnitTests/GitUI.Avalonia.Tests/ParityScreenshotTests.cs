@@ -863,13 +863,14 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormUpdates))
         {
             FormUpdates form = new(new Version(98, 0));
-            form.GetTestAccessor().DisplayReleases(
+            typeof(FormUpdates).GetMethod("CheckForNewerVersion", BindingFlags.NonPublic | BindingFlags.Instance)!.Invoke(form, [
                 """
                 [Version "99.1"]
                     ReleaseType = Major
                     DownloadPage = https://github.com/gitextensions/gitextensions/releases/download/v99.1/GitExtensions-x64-99.1.msi
                     NetRuntimeVersion = 99.0.2
-                """);
+                """]);
+            typeof(FormUpdates).GetMethod("Done", BindingFlags.NonPublic | BindingFlags.Instance)!.Invoke(form, null);
             return form;
         }
 
@@ -1499,9 +1500,9 @@ public sealed partial class ParityScreenshotTests
         {
             // parity-scaffolding: Use the same isolated repository-history seed and product
             // controller as the reference worker, not differently named synthetic repositories.
-            dashboard.Initialize(
-                context.Commands.GetRequiredService<IUserRepositoriesListController>(),
-                context.Commands.GetRequiredService<IRepositoryHistoryUIService>());
+            typeof(UserRepositoriesList).GetField("<Controller>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .SetValue(dashboard.userRepositoriesList, context.Commands.GetRequiredService<IUserRepositoriesListController>());
+            dashboard.Initialize(context.Commands.GetRequiredService<IRepositoryHistoryUIService>());
             dashboard.RefreshContent();
             return;
         }

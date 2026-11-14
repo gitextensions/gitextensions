@@ -703,37 +703,44 @@ public sealed class WorkingDirectorySelectorTests
                     saved = [.. repositories];
                     return Task.CompletedTask;
                 });
-            FormRecentReposSettings.TestAccessor accessor = form.GetTestAccessor();
-            accessor.TopRepositories.Items.Cast<RecentRepoInfo>().Should().ContainSingle();
-            accessor.RecentRepositories.Items.Cast<RecentRepoInfo>().Should().ContainSingle();
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
+            form.TopLB.Items.Cast<RecentRepoInfo>().Should().ContainSingle();
+            form.RecentLB.Items.Cast<RecentRepoInfo>().Should().ContainSingle();
 
-            RecentRepoInfo top = accessor.TopRepositories.Items.Cast<RecentRepoInfo>().Single();
-            accessor.TopRepositories.SelectedItem = top;
-            accessor.SetContextList(accessor.TopRepositories);
-            accessor.AnchorSelectedToRecent();
+            RecentRepoInfo top = form.TopLB.Items.Cast<RecentRepoInfo>().Single();
+            form.TopLB.SelectedItem = top;
+            OpenContextMenu(form.TopLB);
+            Click(TopLevel.GetTopLevel(form.anchorToRecentReposToolStripMenuItem)!, form.anchorToRecentReposToolStripMenuItem, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            form.contextMenuStrip1.IsOpen.Should().BeFalse();
             first.Anchor.Should().Be(Repository.RepositoryAnchor.AnchoredInRecent);
-            accessor.RecentRepositories.SelectedItem = accessor.RecentRepositories.Items
+            form.RecentLB.SelectedItem = form.RecentLB.Items
                 .Cast<RecentRepoInfo>()
                 .Single(item => item.Repo.Path == first.Path);
-            accessor.SetContextList(accessor.RecentRepositories);
-            accessor.RemoveSelectedAnchor();
+            OpenContextMenu(form.RecentLB);
+            Click(TopLevel.GetTopLevel(form.removeAnchorToolStripMenuItem)!, form.removeAnchorToolStripMenuItem, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            form.contextMenuStrip1.IsOpen.Should().BeFalse();
             first.Anchor.Should().Be(Repository.RepositoryAnchor.None);
 
-            RecentRepoInfo recent = accessor.RecentRepositories.Items.Cast<RecentRepoInfo>().Single();
-            accessor.RecentRepositories.SelectedItem = recent;
-            accessor.SetContextList(accessor.RecentRepositories);
-            accessor.RemoveSelectedRecent();
-            accessor.RecentRepositories.Items.Cast<RecentRepoInfo>()
+            RecentRepoInfo recent = form.RecentLB.Items.Cast<RecentRepoInfo>().Single();
+            form.RecentLB.SelectedItem = recent;
+            OpenContextMenu(form.RecentLB);
+            Click(TopLevel.GetTopLevel(form.removeRecentToolStripMenuItem)!, form.removeRecentToolStripMenuItem, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            form.contextMenuStrip1.IsOpen.Should().BeFalse();
+            form.RecentLB.Items.Cast<RecentRepoInfo>()
                 .Should().NotContain(item => item.Repo.Path == second.Path);
 
-            accessor.MaximumTopRepositories.Value = 2;
-            accessor.HistorySize.Value = 30;
-            accessor.MinimumWidth.Value = 140;
-            accessor.HideTopRepositories.IsChecked = false;
-            accessor.SortTopRepositories.IsChecked = true;
-            accessor.SortRecentRepositories.IsChecked = true;
-            accessor.MiddleDots.IsChecked = true;
-            accessor.SaveSettings();
+            form._NO_TRANSLATE_maxRecentRepositories.Value = 2;
+            form._NO_TRANSLATE_RecentRepositoriesHistorySize.Value = 30;
+            form.comboMinWidthEdit.Value = 140;
+            form.hideTopRepositoriesFromRecentList.IsChecked = false;
+            form.sortTopRepos.IsChecked = true;
+            form.sortRecentRepos.IsChecked = true;
+            form.middleDotRB.IsChecked = true;
+            form.Ok.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
             AppSettings.MaxTopRepositories.Should().Be(2);
             AppSettings.RecentRepositoriesHistorySize.Should().Be(30);
@@ -754,6 +761,20 @@ public sealed class WorkingDirectorySelectorTests
             AppSettings.SortTopRepos = originalSortTop;
             AppSettings.SortRecentRepos = originalSortRecent;
             AppSettings.ShorteningRecentRepoPathStrategy = originalShortening;
+        }
+
+        return;
+
+        void OpenContextMenu(ListBox list)
+        {
+            Dispatcher.UIThread.RunJobs();
+            ListBoxItem container = list.GetVisualDescendants().OfType<ListBoxItem>()
+                .Single(item => ReferenceEquals(item.Content, list.SelectedItem));
+            Point point = container.TranslatePoint(new Point(10, 8), form)!.Value;
+            form.MouseDown(point, MouseButton.Right);
+            form.MouseUp(point, MouseButton.Right);
+            Dispatcher.UIThread.RunJobs();
+            form.contextMenuStrip1.IsOpen.Should().BeTrue();
         }
     }
 

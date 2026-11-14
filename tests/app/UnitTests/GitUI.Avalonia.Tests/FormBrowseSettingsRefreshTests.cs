@@ -285,11 +285,8 @@ public sealed class FormBrowseSettingsRefreshTests
             commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
             IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
             history.LoadSnapshot().Returns(new RepositoryHistorySnapshot([], []));
-            IUserRepositoriesListController controller = Substitute.For<IUserRepositoriesListController>();
-            IReadOnlyList<RecentRepoInfo> emptyRepositories = [];
-            controller.PreRenderRepositories(Arg.Any<string>()).Returns((emptyRepositories, emptyRepositories));
             commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(history);
-            commands.GetService(typeof(IUserRepositoriesListController)).Returns(controller);
+            commands.GetService(typeof(IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<IRepositoryCurrentBranchNameCache>());
             commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
             Form = new FormBrowse(commands, new BrowseArguments());
         }

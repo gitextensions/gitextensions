@@ -296,6 +296,7 @@ public sealed class CustomDiffMergeToolRefreshTests
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(Substitute.For<IRepositoryHistoryUIService>());
         commands.GetService(typeof(IUserRepositoriesListController)).Returns(Substitute.For<IUserRepositoriesListController>());
+        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
         commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
         return new FormBrowse(commands, new BrowseArguments());
     }
