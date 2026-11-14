@@ -72,7 +72,7 @@ public sealed class RevisionGridColumnResizeTests
             last.Column.Resizable.Should().BeFalse();
             ColumnProvider selected = columnName == "last visible" ? last : providers.Single(provider => provider.Name == columnName);
             selected.Column.Resizable.Should().Be(columnName != "last visible");
-            ListBox grid = form.RevisionGrid.GetTestAccessor().Revisions;
+            ListBox grid = form.RevisionGrid._gridView;
             IPointer? pointer = null;
             grid.AddHandler(InputElement.PointerPressedEvent, (_, e) => pointer = e.Pointer, RoutingStrategies.Tunnel, handledEventsToo: true);
             double[] before = row.ColumnDefinitions.Select(definition => definition.ActualWidth).ToArray();

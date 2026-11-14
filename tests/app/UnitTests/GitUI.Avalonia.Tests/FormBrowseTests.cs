@@ -1620,7 +1620,7 @@ public sealed class FormBrowseTests
 
         TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
         await WaitUntilAsync(() => loadingStatus.Text == "0 revisions");
-        form.RevisionGrid.GetTestAccessor().CurrentPage.Should().BeOfType<EmptyRepoControl>();
+        form.RevisionGrid.revisionPage.Content.Should().BeOfType<EmptyRepoControl>();
     }
 
     [AvaloniaTest]
@@ -1899,7 +1899,7 @@ public sealed class FormBrowseTests
         form.Show();
         TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
         await WaitUntilAsync(() => loadingStatus.Text == "1 revisions");
-        ListBox revisions = form.RevisionGrid.GetTestAccessor().Revisions;
+        ListBox revisions = form.RevisionGrid._gridView;
         object? focused = TopLevel.GetTopLevel(revisions)?.FocusManager?.GetFocusedElement();
         revisions.IsKeyboardFocusWithin.Should().BeTrue($"the focused element was {focused}");
 
@@ -1957,13 +1957,13 @@ public sealed class FormBrowseTests
                 }
                 else
                 {
-                    target = (ListBoxItem)grid.GetTestAccessor().Revisions.ContainerFromIndex(0)!;
+                    target = (ListBoxItem)grid._gridView.ContainerFromIndex(0)!;
                 }
 
                 Click(form, target, MouseButton.Left);
                 Dispatcher.UIThread.RunJobs();
                 files.IsKeyboardFocusWithin.Should().Be(focusFiles);
-                grid.GetTestAccessor().Revisions.IsKeyboardFocusWithin.Should().Be(!focusFiles);
+                grid._gridView.IsKeyboardFocusWithin.Should().Be(!focusFiles);
                 grid.GetSelectedRevisions().Should().ContainSingle().Which.ObjectId.Should().Be(head);
 
                 form.KeyPress(Key.A, RawInputModifiers.Control, PhysicalKey.A, keySymbol: "a");
@@ -2093,7 +2093,7 @@ public sealed class FormBrowseTests
             try
             {
                 RevisionGridControl grid = form.RevisionGrid;
-                ListBox revisions = grid.GetTestAccessor().Revisions;
+                ListBox revisions = grid._gridView;
                 await WaitUntilAsync(() => revisions.ItemCount == 3
                     && grid.GetChangeCount(ObjectId.WorkTreeId) is { DataValid: true, HasChanges: false }
                     && grid.GetChangeCount(ObjectId.IndexId) is { DataValid: true, HasChanges: true });
@@ -2251,7 +2251,7 @@ public sealed class FormBrowseTests
             try
             {
                 RevisionGridControl grid = form.RevisionGrid;
-                ListBox revisions = grid.GetTestAccessor().Revisions;
+                ListBox revisions = grid._gridView;
                 await WaitUntilAsync(() => revisions.ItemCount == 3);
                 Click(form, form.TreeTabPage, MouseButton.Left);
                 Click(form, form.DiffTabPage, MouseButton.Left);
@@ -2330,7 +2330,7 @@ public sealed class FormBrowseTests
             try
             {
                 RevisionGridControl grid = form.RevisionGrid;
-                await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.ItemCount == 3);
+                await WaitUntilAsync(() => grid._gridView.ItemCount == 3);
                 Click(form, form.DiffTabPage, MouseButton.Left);
                 await WaitUntilAsync(() => form.revisionDiff.FileStatusList.SelectedItem?.SecondRevision.ObjectId == newest
                     && form.fileViewer.TextEditor.Text.Contains("+revision-2", StringComparison.Ordinal));
@@ -2365,7 +2365,7 @@ public sealed class FormBrowseTests
                 void ClickRow(int index, RawInputModifiers modifiers)
                 {
                     form.UpdateLayout();
-                    ListBoxItem row = (ListBoxItem)grid.GetTestAccessor().Revisions.ContainerFromIndex(index)!;
+                    ListBoxItem row = (ListBoxItem)grid._gridView.ContainerFromIndex(index)!;
                     Point point = row.TranslatePoint(new Point(100, row.Bounds.Height / 2), form)!.Value;
                     form.MouseMove(point, modifiers);
                     form.MouseDown(point, MouseButton.Left, modifiers);
@@ -2408,7 +2408,7 @@ public sealed class FormBrowseTests
         form.Show();
         try
         {
-            await WaitUntilAsync(() => loaded > 0 && grid.GetTestAccessor().Revisions.ItemCount == 3 && graph.GetCachedCount() == 3);
+            await WaitUntilAsync(() => loaded > 0 && grid._gridView.ItemCount == 3 && graph.GetCachedCount() == 3);
             ClickRow(2, RawInputModifiers.None);
             if (multiple)
             {
@@ -2441,7 +2441,7 @@ public sealed class FormBrowseTests
         void ClickRow(int index, RawInputModifiers modifiers)
         {
             form.UpdateLayout();
-            ListBoxItem row = (ListBoxItem)grid.GetTestAccessor().Revisions.ContainerFromIndex(index)!;
+            ListBoxItem row = (ListBoxItem)grid._gridView.ContainerFromIndex(index)!;
             Point point = row.TranslatePoint(new Point(100, row.Bounds.Height / 2), form)!.Value;
             form.MouseMove(point, modifiers);
             form.MouseDown(point, MouseButton.Left, modifiers);
@@ -2693,7 +2693,7 @@ public sealed class FormBrowseTests
                 .Select(label => label.Label)
                 .Should()
                 .Contain([ResourceManager.TranslatedStrings.Workspace, ResourceManager.TranslatedStrings.Index]);
-            RevisionGridControl.TestAccessor revisionGrid = form.RevisionGrid.GetTestAccessor();
+            RevisionGridTestSupport.Accessor revisionGrid = form.RevisionGrid.GetNativeTestAccessor();
             revisionGrid.HasGraphParent(ObjectId.WorkTreeId, ObjectId.IndexId).Should().BeTrue();
             revisionGrid.HasGraphParent(ObjectId.IndexId, module.GetCurrentCheckout()).Should().BeTrue();
         }
@@ -2794,7 +2794,7 @@ public sealed class FormBrowseTests
             await WaitUntilAsync(() => revisionGrid.SelectedRevision?.ObjectId == olderStash.ObjectId);
             repoObjectsTree.SelectedRevisionObjectId.Should().Be(olderStash.ObjectId);
             revisionGrid.SelectedRevision!.ReflogSelector.Should().Be("refs/stash@{1}");
-            revisionGrid.GetTestAccessor().Revisions.Items
+            revisionGrid._gridView.Items
                 .Cast<GitRevision>()
                 .Select(revision => revision.ObjectId)
                 .Should().OnlyHaveUniqueItems();
@@ -2835,7 +2835,7 @@ public sealed class FormBrowseTests
             TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
             await WaitUntilAsync(() => loadingStatus.Text == "6 revisions");
             ObjectId initial = module.RevParse("HEAD~1");
-            ObjectId[] revisionOrder = [.. revisionGrid.GetTestAccessor().Revisions.Items
+            ObjectId[] revisionOrder = [.. revisionGrid._gridView.Items
                 .Cast<GitRevision>()
                 .Select(revision => revision.ObjectId)];
 
@@ -2851,7 +2851,7 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Revision context menu was not created.");
             MenuItem deleteBranch = revisionGrid.FindControl<MenuItem>("deleteBranchToolStripMenuItem")
                 ?? throw new InvalidOperationException("Delete-branch menu item was not created.");
-            contextMenu.Open(revisionGrid.GetTestAccessor().Revisions);
+            contextMenu.Open(revisionGrid._gridView);
             Dispatcher.UIThread.RunJobs();
             deleteBranch.IsVisible.Should().BeTrue();
             deleteBranch.IsEnabled.Should().BeFalse();
@@ -3567,7 +3567,7 @@ public sealed class FormBrowseTests
             using FormBrowse form = new(commands, new BrowseArguments());
             form.Show();
             await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == head
-                && form.RevisionGrid.GetTestAccessor().Revisions.Items.OfType<GitRevision>()
+                && form.RevisionGrid._gridView.Items.OfType<GitRevision>()
                     .Any(revision => revision.ObjectId == ObjectId.WorkTreeId));
 
             // The source starts on HEAD; explicitly establish the artificial-row navigation precondition.
@@ -4567,7 +4567,7 @@ public sealed class FormBrowseTests
                     Dispatcher.UIThread.RunJobs();
                 }
 
-                ListBox revisions = form.RevisionGrid.GetTestAccessor().Revisions;
+                ListBox revisions = form.RevisionGrid._gridView;
                 (revisions.SelectedItems
                     ?? throw new AssertionException("The actual revision grid must retain its selection collection.")).Clear();
                 form.RevisionGrid.GetSelectedRevisions().Should().BeEmpty();
@@ -5099,7 +5099,7 @@ public sealed class FormBrowseTests
         {
             form.Show();
             RevisionGridControl grid = form.RevisionGrid;
-            ListBox revisions = grid.GetTestAccessor().Revisions;
+            ListBox revisions = grid._gridView;
             await WaitUntilAsync(() => grid.SelectedRevision is { } revision
                 && revision.ObjectId == head && revision.Refs.Any(gitRef => gitRef.Name == branch));
             menu = grid.FindControl<ContextMenu>("mainContextMenu")!;
@@ -5176,7 +5176,7 @@ public sealed class FormBrowseTests
             WinFormsShims.ShimHost.Clipboard = clipboard;
             form.Show();
             RevisionGridControl grid = form.RevisionGrid;
-            ListBox revisions = grid.GetTestAccessor().Revisions;
+            ListBox revisions = grid._gridView;
             await WaitUntilAsync(() => grid.SelectedRevision is { } revision
                 && revision.ObjectId == head && revision.Refs.Any(gitRef => gitRef.Name == branch));
             menu = grid.FindControl<ContextMenu>("mainContextMenu")
@@ -5256,7 +5256,7 @@ public sealed class FormBrowseTests
         try
         {
             RevisionGridControl grid = form.RevisionGrid;
-            ListBox revisions = grid.GetTestAccessor().Revisions;
+            ListBox revisions = grid._gridView;
             await WaitUntilAsync(() => revisions.ItemCount == 1 && grid.SelectedRevision?.ObjectId == head);
             menu = grid.FindControl<ContextMenu>("mainContextMenu")
                 ?? throw new InvalidOperationException("The production revision menu was not created.");
@@ -5610,7 +5610,7 @@ public sealed class FormBrowseTests
 
             menu.Close();
             refreshedLabel.IsHighlighted.Should().BeFalse();
-            grid.GetTestAccessor().Revisions.Focus().Should().BeTrue();
+            grid._gridView.Focus().Should().BeTrue();
             form.KeyPress(Key.Apps, RawInputModifiers.None, PhysicalKey.ContextMenu, keySymbol: null);
             form.KeyRelease(Key.Apps, RawInputModifiers.None, PhysicalKey.ContextMenu, keySymbol: null);
             Dispatcher.UIThread.RunJobs();
@@ -5670,9 +5670,9 @@ public sealed class FormBrowseTests
             form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             RevisionGridControl grid = form.RevisionGrid;
-            await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.Items.OfType<GitRevision>()
+            await WaitUntilAsync(() => grid._gridView.Items.OfType<GitRevision>()
                 .Any(revision => revision.ObjectId == stashes[1].ObjectId));
-            GitRevision[] revisions = [.. grid.GetTestAccessor().Revisions.Items.OfType<GitRevision>()];
+            GitRevision[] revisions = [.. grid._gridView.Items.OfType<GitRevision>()];
             revisions.Select(revision => revision.ObjectId).Should().OnlyHaveUniqueItems();
             GitRevision olderStash = revisions.Single(revision => revision.ObjectId == stashes[1].ObjectId);
             olderStash.ParentIds.Should().HaveCount(limit > 1 ? 2 : 1);
@@ -5711,7 +5711,7 @@ public sealed class FormBrowseTests
             form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments());
             form.Show();
             RevisionGridControl grid = form.RevisionGrid;
-            await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.Items.Count >= 3);
+            await WaitUntilAsync(() => grid._gridView.Items.Count >= 3);
             ObjectId head = module.GetCurrentCheckout();
             grid.SetSelectedRevision(head);
             List<GitItemStatus> status = [];
@@ -5768,7 +5768,7 @@ public sealed class FormBrowseTests
             form = new FormBrowse(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 700 };
             form.Show();
             RevisionGridControl grid = form.RevisionGrid;
-            await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.Items.Count >= 4);
+            await WaitUntilAsync(() => grid._gridView.Items.Count >= 4);
             grid.SetSelectedRevision(ObjectId.WorkTreeId).Should().BeTrue();
             Dispatcher.UIThread.RunJobs();
             ListBoxItem row = grid.GetVisualDescendants()
@@ -5785,9 +5785,9 @@ public sealed class FormBrowseTests
             form.MouseMove(point, RawInputModifiers.Control);
             form.MouseDown(point, MouseButton.Left, RawInputModifiers.Control);
             form.MouseUp(point, MouseButton.Left, RawInputModifiers.Control);
-            await WaitUntilAsync(() => grid.GetTestAccessor().Revisions.SelectedItems?.Count == 2);
+            await WaitUntilAsync(() => grid._gridView.SelectedItems?.Count == 2);
 
-            grid.GetTestAccessor().Revisions.SelectedItems!
+            grid._gridView.SelectedItems!
                 .Cast<GitRevision>()
                 .Select(revision => revision.ObjectId)
                 .Should().BeEquivalentTo([ObjectId.WorkTreeId, previousRevision]);

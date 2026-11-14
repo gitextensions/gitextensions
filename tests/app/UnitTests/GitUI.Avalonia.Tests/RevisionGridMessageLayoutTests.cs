@@ -248,9 +248,9 @@ public sealed class RevisionGridMessageLayoutTests
         [Values(false, true)] bool selected)
     {
         using RowFixture fixture = new(9, "subject", body: null, theme: theme, defaultStarColumn: true);
-        fixture.Grid.GetTestAccessor().Revisions.SelectedIndex = selected ? 0 : -1;
+        fixture.Grid._gridView.SelectedIndex = selected ? 0 : -1;
         fixture.SetMarker(kind);
-        object? itemsSource = fixture.Grid.GetTestAccessor().Revisions.ItemsSource;
+        object? itemsSource = fixture.Grid._gridView.ItemsSource;
         foreach ((string family, int nativeHeight) in new[] { ("Segoe UI", 26), ("Arial", 23), ("Consolas", 24) })
         {
             fixture.SetFont(family);
@@ -259,8 +259,8 @@ public sealed class RevisionGridMessageLayoutTests
                 ? nativeHeight
                 : RevisionGridControl.GetRowHeight(fixture.Grid));
             fixture.Subject.FontFamily.Name.Should().Be(family);
-            fixture.Grid.GetTestAccessor().Revisions.SelectedIndex.Should().Be(selected ? 0 : -1);
-            fixture.Grid.GetTestAccessor().Revisions.ItemsSource.Should().BeSameAs(itemsSource);
+            fixture.Grid._gridView.SelectedIndex.Should().Be(selected ? 0 : -1);
+            fixture.Grid._gridView.ItemsSource.Should().BeSameAs(itemsSource);
             fixture.AssertMarkerPlacement();
 
             fixture.Revision.Body = fixture.Revision.Subject + "\n\nbody loaded on the same revision";
@@ -364,7 +364,7 @@ public sealed class RevisionGridMessageLayoutTests
             fixture.Grid.IsCurrentCheckout(fixture.Revision).Should().BeTrue();
         }
 
-        fixture.Grid.GetTestAccessor().Revisions.SelectedIndex = selected ? 0 : -1;
+        fixture.Grid._gridView.SelectedIndex = selected ? 0 : -1;
         fixture.Refresh();
         fixture.Provider.Column.Width.IsStar.Should().BeTrue();
         fixture.Body.Text.Should().BeEmpty();
@@ -482,7 +482,7 @@ public sealed class RevisionGridMessageLayoutTests
                 HasMultiLineMessage = initiallyMultiline || body is not null,
                 Author = "Author",
             };
-            Grid.GetTestAccessor().SetRevisions([Revision]);
+            Grid.GetNativeTestAccessor().SetRevisions([Revision]);
             DockPanel.SetDock(_focusTarget, Dock.Top);
             Window = new Window
             {
@@ -492,7 +492,7 @@ public sealed class RevisionGridMessageLayoutTests
                 Content = new DockPanel { Children = { _focusTarget, Grid } },
             };
             Window.Show();
-            Grid.GetTestAccessor().Revisions.SelectedIndex = 0;
+            Grid._gridView.SelectedIndex = 0;
             SetFocus(true);
         }
 
@@ -569,7 +569,7 @@ public sealed class RevisionGridMessageLayoutTests
         {
             if (focused)
             {
-                Grid.GetTestAccessor().Revisions.Focus();
+                Grid._gridView.Focus();
             }
             else
             {
@@ -577,7 +577,7 @@ public sealed class RevisionGridMessageLayoutTests
             }
 
             Refresh();
-            Grid.GetTestAccessor().Revisions.IsKeyboardFocusWithin.Should().Be(focused);
+            Grid._gridView.IsKeyboardFocusWithin.Should().Be(focused);
         }
 
         public void AssertBrush(IBrush? brush, string key)
@@ -652,8 +652,8 @@ public sealed class RevisionGridMessageLayoutTests
                 test = TestContext.CurrentContext.Test.Name,
                 theme = Window.ActualThemeVariant?.ToString(),
                 systemColorMode = ThemeModule.Settings.Theme.SystemColorMode.ToString(),
-                Grid.GetTestAccessor().Revisions.SelectedIndex,
-                Grid.GetTestAccessor().Revisions.IsKeyboardFocusWithin,
+                Grid._gridView.SelectedIndex,
+                Grid._gridView.IsKeyboardFocusWithin,
                 palette,
                 samples = new
                 {
@@ -836,7 +836,7 @@ public sealed class RevisionGridMessageLayoutTests
                 theme = Window.ActualThemeVariant?.ToString(),
                 family = Subject.FontFamily.Name,
                 Subject.FontSize,
-                Grid.GetTestAccessor().Revisions.SelectedIndex,
+                Grid._gridView.SelectedIndex,
                 Revision.Subject,
                 refs = Revision.Refs.Select(gitRef => gitRef.CompleteName),
                 cellBounds = Cell.Bounds.ToString(),

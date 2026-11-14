@@ -1536,8 +1536,8 @@ public sealed class VisualParityTests
                 new GitRevision(ObjectId.Random()) { AuthorEmail = "other@example.com", Subject = "alternating" },
                 new GitRevision(ObjectId.Random()) { AuthorEmail = "other@example.com", Subject = "panel" },
             ];
-            control.GetTestAccessor().SetRevisions(revisions);
-            ListBox gridView = control.GetTestAccessor().Revisions;
+            control.GetNativeTestAccessor().SetRevisions(revisions);
+            ListBox gridView = control._gridView;
             Window window = new() { Width = 700, Height = 180, Content = control };
             window.Show();
             try

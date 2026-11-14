@@ -527,8 +527,8 @@ public sealed class DiffPatchDialogTests
         FormFormatPatch form = new(commands);
         FormFormatPatch.TestAccessor accessor = form.GetTestAccessor();
         accessor.OutputPath.Text = outputPath;
-        accessor.RevisionGrid.GetTestAccessor().SetRevisions([revision]);
-        accessor.RevisionGrid.GetTestAccessor().Revisions.SelectedItem = revision;
+        accessor.RevisionGrid.GetNativeTestAccessor().SetRevisions([revision]);
+        accessor.RevisionGrid._gridView.SelectedItem = revision;
 
         Invoke(form, "FormatPatch_Click", form, EventArgs.Empty);
 
@@ -597,8 +597,8 @@ public sealed class DiffPatchDialogTests
         FormFormatPatch form = new(commands);
         FormFormatPatch.TestAccessor accessor = form.GetTestAccessor();
         accessor.OutputPath.Text = outputPath;
-        accessor.RevisionGrid.GetTestAccessor().SetRevisions([revision]);
-        accessor.RevisionGrid.GetTestAccessor().Revisions.SelectedItem = revision;
+        accessor.RevisionGrid.GetNativeTestAccessor().SetRevisions([revision]);
+        accessor.RevisionGrid._gridView.SelectedItem = revision;
 
         Invoke(form, "FormatPatch_Click", form, EventArgs.Empty);
 
@@ -623,9 +623,9 @@ public sealed class DiffPatchDialogTests
         FormFormatPatch form = new(commands);
         FormFormatPatch.TestAccessor accessor = form.GetTestAccessor();
         accessor.OutputPath.Text = outputPath;
-        accessor.RevisionGrid.GetTestAccessor().SetRevisions([oldestRevision, newestRevision]);
-        accessor.RevisionGrid.GetTestAccessor().Revisions.SelectedItems!.Add(oldestRevision);
-        accessor.RevisionGrid.GetTestAccessor().Revisions.SelectedItems!.Add(newestRevision);
+        accessor.RevisionGrid.GetNativeTestAccessor().SetRevisions([oldestRevision, newestRevision]);
+        accessor.RevisionGrid._gridView.SelectedItems!.Add(oldestRevision);
+        accessor.RevisionGrid._gridView.SelectedItems!.Add(newestRevision);
 
         Invoke(form, "FormatPatch_Click", form, EventArgs.Empty);
 
@@ -648,10 +648,10 @@ public sealed class DiffPatchDialogTests
         FormFormatPatch form = new(commands);
         FormFormatPatch.TestAccessor accessor = form.GetTestAccessor();
         accessor.OutputPath.Text = outputPath;
-        accessor.RevisionGrid.GetTestAccessor().SetRevisions(revisions);
+        accessor.RevisionGrid.GetNativeTestAccessor().SetRevisions(revisions);
         foreach (GitRevision revision in revisions)
         {
-            accessor.RevisionGrid.GetTestAccessor().Revisions.SelectedItems!.Add(revision);
+            accessor.RevisionGrid._gridView.SelectedItems!.Add(revision);
         }
 
         Invoke(form, "FormatPatch_Click", form, EventArgs.Empty);

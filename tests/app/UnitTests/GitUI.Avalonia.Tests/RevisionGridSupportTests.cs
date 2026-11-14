@@ -171,8 +171,8 @@ public sealed class RevisionGridSupportTests
         IGitUICommandsSource source = CreateUICommandsSource();
         RevisionGridControl control = new() { UICommandsSource = source };
         GitRevision previousSelection = Revision('1', "previous selection");
-        control.GetTestAccessor().SetRevisions([previousSelection]);
-        control.GetTestAccessor().Revisions.SelectedItem = previousSelection;
+        control.GetNativeTestAccessor().SetRevisions([previousSelection]);
+        control._gridView.SelectedItem = previousSelection;
         int loadingCount = 0;
         control.RevisionsLoading += (_, _) => loadingCount++;
         ObjectId requestedSelection = Id('2');
@@ -187,7 +187,7 @@ public sealed class RevisionGridSupportTests
                 getRefs: _ => []);
 
             loadingCount.Should().Be(2);
-            control.GetTestAccessor().PendingSelectedObjectId.Should().Be(requestedSelection);
+            control.GetNativeTestAccessor().PendingSelectedObjectId.Should().Be(requestedSelection);
         }
         finally
         {
@@ -207,7 +207,7 @@ public sealed class RevisionGridSupportTests
         {
             Dispatcher.UIThread.RunJobs();
 
-            control.GetTestAccessor().CurrentPage.Should().BeSameAs(control.GetTestAccessor().Revisions);
+            control.revisionPage.Content.Should().BeSameAs(control._gridView);
             control.GetVisualDescendants().OfType<LoadingControl>().Should().ContainSingle();
         }
         finally
@@ -221,7 +221,7 @@ public sealed class RevisionGridSupportTests
     public void Revision_grid_should_preserve_rows_populated_before_first_attachment()
     {
         RevisionGridControl control = new() { UICommandsSource = CreateUICommandsSource() };
-        control.GetTestAccessor().SetRevisions([Revision('1', "already loaded")]);
+        control.GetNativeTestAccessor().SetRevisions([Revision('1', "already loaded")]);
         Window window = new() { Width = 500, Height = 240, Content = control };
 
         window.Show();
@@ -229,8 +229,8 @@ public sealed class RevisionGridSupportTests
         {
             Dispatcher.UIThread.RunJobs();
 
-            control.GetTestAccessor().CurrentPage.Should().BeSameAs(control.GetTestAccessor().Revisions);
-            control.GetTestAccessor().Revisions.ItemCount.Should().Be(1);
+            control.revisionPage.Content.Should().BeSameAs(control._gridView);
+            control._gridView.ItemCount.Should().Be(1);
         }
         finally
         {
@@ -247,7 +247,7 @@ public sealed class RevisionGridSupportTests
         window.Show();
         try
         {
-            control.GetTestAccessor().SetRevisions(
+            control.GetNativeTestAccessor().SetRevisions(
             [
                 Revision('1', "first"),
                 Revision('2', "second"),
@@ -257,7 +257,7 @@ public sealed class RevisionGridSupportTests
 
             int selectionChangedCount = 0;
             control.SelectionChanged += (_, _) => selectionChangedCount++;
-            ListBox revisions = control.GetTestAccessor().Revisions;
+            ListBox revisions = control._gridView;
 
             revisions.SelectedIndex = 0;
             revisions.SelectedIndex = 1;
@@ -317,7 +317,7 @@ public sealed class RevisionGridSupportTests
     public void SetSelectedRevision_should_focus_the_grid_and_replace_an_existing_selection()
     {
         RevisionGridControl control = new() { UICommandsSource = CreateUICommandsSource() };
-        RevisionGridControl.TestAccessor accessor = control.GetTestAccessor();
+        RevisionGridTestSupport.Accessor accessor = control.GetNativeTestAccessor();
         GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
         accessor.SetRevisions(revisions);
         TextBox otherControl = new();
@@ -1074,7 +1074,7 @@ public sealed class RevisionGridSupportTests
     public void Revision_grid_should_preserve_selection_and_scroll_anchor_while_streaming_rows()
     {
         RevisionGridControl control = new() { UICommandsSource = CreateUICommandsSource() };
-        RevisionGridControl.TestAccessor accessor = control.GetTestAccessor();
+        RevisionGridTestSupport.Accessor accessor = control.GetNativeTestAccessor();
         GitRevision[] initial = [.. Enumerable.Range(1, 80).Select(Revision)];
         accessor.SetRevisions(initial);
         Window window = new()
@@ -1114,7 +1114,7 @@ public sealed class RevisionGridSupportTests
     public void Revision_grid_should_preserve_pointer_focus_when_streamed_rows_receive_their_final_order()
     {
         RevisionGridControl control = new() { UICommandsSource = CreateUICommandsSource() };
-        RevisionGridControl.TestAccessor accessor = control.GetTestAccessor();
+        RevisionGridTestSupport.Accessor accessor = control.GetNativeTestAccessor();
         GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
         accessor.SetRevisions(revisions);
         TextBox otherControl = new();
@@ -1160,7 +1160,7 @@ public sealed class RevisionGridSupportTests
     public void Revision_grid_should_preserve_home_end_copy_and_patch_drop_routes()
     {
         RevisionGridControl control = new() { UICommandsSource = CreateUICommandsSource() };
-        RevisionGridControl.TestAccessor accessor = control.GetTestAccessor();
+        RevisionGridTestSupport.Accessor accessor = control.GetNativeTestAccessor();
         GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
         accessor.SetRevisions(revisions);
         Window window = new() { Width = 900, Height = 160, Content = control };

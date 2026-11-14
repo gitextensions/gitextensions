@@ -629,7 +629,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             || !_gridView.Focus(NavigationMethod.Tab);
     }
 
-    internal GitRevision? LatestSelectedRevision => IsValidRevisionIndex(_latestSelectedRowIndex) ? _revisions[_latestSelectedRowIndex] : null;
+    internal GitRevision? LatestSelectedRevision => IsValidRevisionIndex(_latestSelectedRowIndex) ? GetRevision(_latestSelectedRowIndex) : null;
 
     internal bool MultiSelect
     {
@@ -849,9 +849,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     public void CancelLoadCustomDifftools()
         => _customDiffToolsSequence.CancelCurrent();
 
-    bool IRevisionGridUpdate.SetSelectedRevision(ObjectId commitId, bool toggleSelection, bool updateNavigationHistory)
-        => SetSelectedRevision(commitId, toggleSelection, updateNavigationHistory);
-
     /// <summary>
     /// Selects row containing revision matching <paramref name="commitId"/>.
     /// Returns whether the required revision was found and selected.
@@ -1006,6 +1003,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private bool IsValidRevisionIndex(int index)
         => index >= 0 && index < _revisions.Count;
+
+    private GitRevision? GetRevision(int row)
+    {
+        // Avalonia's retained ListBox exposes its visible items rather than DataGridView's virtual graph rows.
+        return IsValidRevisionIndex(row) ? _revisions[row] : null;
+    }
 
     /// <summary>
     /// Get the actual GitRevision from grid or use GitModule if parents may be rewritten or the commit is not in the grid.
@@ -1732,9 +1735,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                     provider.OnColumnWidthChanged();
                     UpdateColumnLayouts();
                     _gridView.UpdateLayout();
-                }, OnGridViewMouseCaptureChanged);
+                }, () => OnGridViewMouseCaptureChanged(null, EventArgs.Empty));
 
-            void OnGridViewMouseCaptureChanged()
+            void OnGridViewMouseCaptureChanged(object? ignoredSender, EventArgs ignoredArgs)
             {
                 _lastVisibleResizableColumn.Width = new GridLength(row.ColumnDefinitions[lastIndex].ActualWidth); // None must be set before Fill
                 _maximizedColumn.Width = new GridLength(1, GridUnitType.Star);
@@ -1835,7 +1838,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    internal void OnGridViewCellMouseLeave(object? sender, PointerEventArgs e)
+    private void OnGridViewCellMouseLeave(object? sender, PointerEventArgs e)
     {
         if (!mainContextMenu.IsOpen && _rightClickedHitInfo is null)
         {
@@ -4385,6 +4388,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                         : 0,
                 });
                 Control cell = provider.CreateCell();
+
+                // Avalonia ListBox has no CellMouseLeave event; wire the source handler on each retained cell.
+                cell.PointerExited += owner.OnGridViewCellMouseLeave;
                 SetColumn(cell, provider.Index);
                 Children.Add(cell);
                 _cells.Add((provider, cell));
@@ -4562,50 +4568,15 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             _revisionGridControl = revisionGridControl;
         }
 
-        public Control? CurrentPage => _revisionGridControl.revisionPage.Content as Control;
+        public int VisibleRevisionCount => _revisionGridControl._gridView.ItemCount;
 
-        public Window? OwnerWindow => _revisionGridControl._ownerWindow;
+        public RevisionGridToolTipProvider ToolTipProvider => _revisionGridControl._toolTipProvider;
 
-        public ListBox Revisions => _revisionGridControl._gridView;
-
-        public ObjectId PendingSelectedObjectId => _revisionGridControl._pendingSelectedObjectIds.FirstOrDefault();
-
-        public IReadOnlyList<ObjectId> PendingSelectedObjectIds => _revisionGridControl._pendingSelectedObjectIds;
-
-        public void RaiseOwnerWindowDeactivated()
-            => _revisionGridControl.OnOwnerWindowDeactivated(_revisionGridControl._ownerWindow, EventArgs.Empty);
-
-        public void SetRevisions(IEnumerable<GitRevision> revisions)
+        public void ClearSelection()
         {
-            _revisionGridControl.ApplyFinalRevisionOrder([.. revisions]);
-            _revisionGridControl.SetPage(_revisionGridControl._gridView);
-            _revisionGridControl.FocusRevisionGridWhenShown();
+            _revisionGridControl._gridView.SelectedItems?.Clear();
+            _revisionGridControl._latestSelectedRowIndex = -1;
         }
-
-        public void AppendRevisions(IEnumerable<GitRevision> revisions)
-            => _revisionGridControl.AppendRevisions([.. revisions], cancellationToken: default);
-
-        public void ReadRevisions(IEnumerable<GitRevision> revisions, CancellationToken cancellationToken = default)
-        {
-            GitRevision[] batch = [.. revisions];
-            _revisionGridControl.AddToGraph(batch, cancellationToken);
-            _revisionGridControl.AppendRevisions(batch, cancellationToken);
-        }
-
-        public void CompleteLoading(CancellationToken cancellationToken = default)
-            => _revisionGridControl.OnLoadingCompleted(cancellationToken);
-
-        public IObserver<IReadOnlyList<GitRevision>> CreateRevisionObserver(CancellationToken cancellationToken)
-            => new RevisionObserver(_revisionGridControl, cancellationToken, new RevisionLoadEventArgs(
-                _revisionGridControl,
-                _revisionGridControl.UICommands,
-                new Lazy<IReadOnlyList<IGitRef>>(() => []),
-                new Lazy<IReadOnlyCollection<GitRevision>>(() => []),
-                forceRefresh: false));
-
-        public bool HasGraphParent(ObjectId childId, ObjectId parentId)
-            => _revisionGridControl._revisionGraph.TryGetNode(childId, out RevisionGraphRevision? child)
-                && child.Parents.Any(parent => parent.Objectid == parentId);
     }
 
     public void OnRepositoryChanged()

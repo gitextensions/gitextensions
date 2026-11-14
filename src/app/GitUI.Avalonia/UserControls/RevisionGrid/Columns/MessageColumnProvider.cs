@@ -1277,7 +1277,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
             Children.Add(Indicator);
             Children.Add(ContentPanel);
             PointerMoved += OnPointerMoved;
-            PointerExited += provider._grid.OnGridViewCellMouseLeave;
             DoubleTapped += OnDoubleTapped;
         }
 

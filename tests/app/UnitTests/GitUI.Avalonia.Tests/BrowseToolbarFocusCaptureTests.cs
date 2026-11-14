@@ -120,7 +120,7 @@ public sealed class BrowseToolbarFocusCaptureTests
             using AvaloniaControlStateDriver hovered = AvaloniaControlStateDriver.Apply(form,
                 new CaptureStatePlan { Id = "row.hover", Kind = CaptureStateKind.Hover, TargetField = field });
             hovered.PopupSurfaceRoots.Should().NotBeEmpty();
-            hovered.PopupFocusOwner.Should().BeSameAs(form.RevisionGridControl.GetTestAccessor().Revisions,
+            hovered.PopupFocusOwner.Should().BeSameAs(form.RevisionGridControl._gridView,
                 "the capture must retain the actual focused grid before entering its popup, not infer a default owner afterward");
             CaptureNode node = Read(form, "_gridView", hovered.PopupFocusOwner);
             node.Focused.Should().BeTrue("native ToolStrip popups keep the existing grid HWND focused even when Avalonia focuses an owned popup scope");
@@ -217,7 +217,7 @@ public sealed class BrowseToolbarFocusCaptureTests
         Dispatcher.UIThread.RunJobs();
         form.UpdateLayout();
         Dispatcher.UIThread.RunJobs();
-        form.RevisionGridControl.GetTestAccessor().Revisions.Focus().Should().BeTrue();
+        form.RevisionGridControl._gridView.Focus().Should().BeTrue();
         return form;
     }
 

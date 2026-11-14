@@ -806,11 +806,11 @@ public sealed class HotkeyTests
         try
         {
             form.FindControl<Grid>("mainContentGrid")!.IsVisible = true;
-            form.RevisionGrid.GetTestAccessor().SetRevisions(
+            form.RevisionGrid.GetNativeTestAccessor().SetRevisions(
                 [new GitRevision(ObjectId.Random()) { Subject = "Selected revision" }]);
             form.RevisionGrid.FocusRevisionGrid();
             Dispatcher.UIThread.RunJobs();
-            form.RevisionGrid.GetTestAccessor().Revisions.IsKeyboardFocusWithin.Should().BeTrue();
+            form.RevisionGrid._gridView.IsKeyboardFocusWithin.Should().BeTrue();
 
             form.KeyPress(Key.LeftAlt, RawInputModifiers.Alt, PhysicalKey.AltLeft, keySymbol: null);
 

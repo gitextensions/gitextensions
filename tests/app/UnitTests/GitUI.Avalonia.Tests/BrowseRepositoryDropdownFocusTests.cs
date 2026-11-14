@@ -57,7 +57,7 @@ public sealed class BrowseRepositoryDropdownFocusTests
             Settle(form);
             WorkingDirectoryToolStripSplitButton selector = form.FindControl<WorkingDirectoryToolStripSplitButton>("_NO_TRANSLATE_WorkingDir")!;
             WorkingDirectoryToolStripSplitButton.TestAccessor popup = selector.GetTestAccessor();
-            ListBox revisions = form.RevisionGrid.GetTestAccessor().Revisions;
+            ListBox revisions = form.RevisionGrid._gridView;
             if (dropdownOpen)
             {
                 Button primary = selector.GetVisualDescendants().OfType<Button>().Single(button => button.Name == "PART_PrimaryButton");

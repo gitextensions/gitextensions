@@ -34,7 +34,7 @@ public sealed class RevisionGridViewportTests
     public void Revision_rows_should_fill_the_native_viewport_without_extending_beneath_its_scrollbar(int width, int revisionCount)
     {
         RevisionGridControl control = new();
-        control.GetTestAccessor().SetRevisions(CreateRevisions(revisionCount));
+        control.GetNativeTestAccessor().SetRevisions(CreateRevisions(revisionCount));
         Window window = new() { Width = width, Height = 160, Content = control };
         window.Show();
         try
@@ -56,7 +56,7 @@ public sealed class RevisionGridViewportTests
     public void Revision_fill_column_should_release_and_restore_the_scrollbar_reservation_after_viewport_resize(int width)
     {
         RevisionGridControl control = new();
-        control.GetTestAccessor().SetRevisions(CreateRevisions(40));
+        control.GetNativeTestAccessor().SetRevisions(CreateRevisions(40));
         Window window = new() { Width = width, Height = 160, Content = control };
         window.Show();
         try
@@ -89,7 +89,7 @@ public sealed class RevisionGridViewportTests
     public void Revision_fill_column_should_follow_the_actual_scrollbar_when_history_grows_and_shrinks()
     {
         RevisionGridControl control = new();
-        control.GetTestAccessor().SetRevisions(CreateRevisions(2));
+        control.GetNativeTestAccessor().SetRevisions(CreateRevisions(2));
         Window window = new() { Width = 900, Height = 160, Content = control };
         window.Show();
         try
@@ -97,12 +97,12 @@ public sealed class RevisionGridViewportTests
             Settle(window);
             double fullMessageWidth = AssertViewport(control, shouldScroll: false);
 
-            control.GetTestAccessor().SetRevisions(CreateRevisions(40));
+            control.GetNativeTestAccessor().SetRevisions(CreateRevisions(40));
             Settle(window);
             double reservedMessageWidth = AssertViewport(control, shouldScroll: true);
             fullMessageWidth.Should().Be(reservedMessageWidth + FindVerticalScrollBar(control).Bounds.Width);
 
-            control.GetTestAccessor().SetRevisions(CreateRevisions(2));
+            control.GetNativeTestAccessor().SetRevisions(CreateRevisions(2));
             Settle(window);
             AssertViewport(control, shouldScroll: false).Should().Be(fullMessageWidth);
         }
@@ -118,7 +118,7 @@ public sealed class RevisionGridViewportTests
     public void Revision_columns_should_remain_reachable_at_their_source_minimum_during_horizontal_scroll_and_regrowth(int revisionCount)
     {
         RevisionGridControl control = new();
-        control.GetTestAccessor().SetRevisions(CreateRevisions(revisionCount));
+        control.GetNativeTestAccessor().SetRevisions(CreateRevisions(revisionCount));
         Window window = new() { Width = 200, Height = 160, Content = control };
         window.Show();
         try
@@ -150,7 +150,7 @@ public sealed class RevisionGridViewportTests
     {
         RevisionGridControl control = new();
         GitRevision[] revisions = CreateRevisions(revisionCount).ToArray();
-        control.GetTestAccessor().SetRevisions(revisions);
+        control.GetNativeTestAccessor().SetRevisions(revisions);
         Window window = new() { Width = 200, Height = 160, Content = control };
         window.Show();
         try
@@ -162,7 +162,7 @@ public sealed class RevisionGridViewportTests
                 revision.Subject = new string('W', 1000);
             }
 
-            control.GetTestAccessor().SetRevisions(revisions);
+            control.GetNativeTestAccessor().SetRevisions(revisions);
             Settle(window);
             AssertHorizontalOverflow(control, window, shouldScrollVertically: revisionCount > 2);
             FindScrollViewer(control).Extent.Width.Should().Be(originalExtent);
@@ -179,7 +179,7 @@ public sealed class RevisionGridViewportTests
     public void Revision_horizontal_extent_should_remeasure_after_fixed_column_width_changes(int revisionCount)
     {
         RevisionGridControl control = new();
-        control.GetTestAccessor().SetRevisions(CreateRevisions(revisionCount));
+        control.GetNativeTestAccessor().SetRevisions(CreateRevisions(revisionCount));
         Window window = new() { Width = 900, Height = 160, Content = control };
         window.Show();
         try
@@ -239,7 +239,7 @@ public sealed class RevisionGridViewportTests
             }
 
             RevisionGridControl control = new() { FontSize = points * 96d / 72 };
-            control.GetTestAccessor().SetRevisions([revision]);
+            control.GetNativeTestAccessor().SetRevisions([revision]);
             window = new Window { Width = 1000, Height = 180, Content = control };
             window.Show();
             Settle(window);
@@ -279,7 +279,7 @@ public sealed class RevisionGridViewportTests
 
     private static void AssertHorizontalOverflow(RevisionGridControl control, Window window, bool shouldScrollVertically)
     {
-        ListBox revisions = control.GetTestAccessor().Revisions;
+        ListBox revisions = control._gridView;
         ScrollViewer.GetHorizontalScrollBarVisibility(revisions).Should().Be(ScrollBarVisibility.Auto);
         ScrollViewer scrollViewer = FindScrollViewer(control);
         ScrollContentPresenter viewport = FindViewport(control);
@@ -320,7 +320,7 @@ public sealed class RevisionGridViewportTests
 
     private static double AssertViewport(RevisionGridControl control, bool shouldScroll)
     {
-        ListBox revisions = control.GetTestAccessor().Revisions;
+        ListBox revisions = control._gridView;
         ScrollViewer scrollViewer = revisions.GetVisualDescendants().OfType<ScrollViewer>().Single();
         ScrollContentPresenter viewport = FindViewport(control);
         ScrollBar vertical = FindVerticalScrollBar(control);
@@ -383,17 +383,17 @@ public sealed class RevisionGridViewportTests
     }
 
     private static ScrollContentPresenter FindViewport(RevisionGridControl control)
-        => control.GetTestAccessor().Revisions.GetVisualDescendants().OfType<ScrollContentPresenter>().Single();
+        => control._gridView.GetVisualDescendants().OfType<ScrollContentPresenter>().Single();
 
     private static ScrollViewer FindScrollViewer(RevisionGridControl control)
-        => control.GetTestAccessor().Revisions.GetVisualDescendants().OfType<ScrollViewer>().Single();
+        => control._gridView.GetVisualDescendants().OfType<ScrollViewer>().Single();
 
     private static ScrollBar FindHorizontalScrollBar(RevisionGridControl control)
-        => control.GetTestAccessor().Revisions.GetVisualDescendants().OfType<ScrollBar>()
+        => control._gridView.GetVisualDescendants().OfType<ScrollBar>()
             .Single(scrollbar => scrollbar.Name == "PART_HorizontalScrollBar");
 
     private static ScrollBar FindVerticalScrollBar(RevisionGridControl control)
-        => control.GetTestAccessor().Revisions.GetVisualDescendants().OfType<ScrollBar>()
+        => control._gridView.GetVisualDescendants().OfType<ScrollBar>()
             .Single(scrollbar => scrollbar.Name == "PART_VerticalScrollBar");
 
     private static void Settle(Window window)

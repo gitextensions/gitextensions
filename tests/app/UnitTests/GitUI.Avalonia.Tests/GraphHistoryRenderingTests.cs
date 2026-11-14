@@ -60,7 +60,7 @@ public sealed class GraphHistoryRenderingTests
         RevisionGraph graph = BuildGraph();
         RevisionGridControl grid = new() { UICommandsSource = CreateCommandsSource() };
         GitRevision revision = graph.GetNodeForRow(0)!.GitRevision!;
-        grid.GetTestAccessor().SetRevisions([revision]);
+        grid.GetNativeTestAccessor().SetRevisions([revision]);
         Window window = new() { Width = 800, Height = 180, Content = grid };
         using RevisionGraphColumnProvider provider = new(graph, grid, Substitute.For<IGitRevisionSummaryBuilder>());
         VisibleRowRange range = new(fromIndex: 0, count: 16);
@@ -69,7 +69,7 @@ public sealed class GraphHistoryRenderingTests
         try
         {
             Dispatcher.UIThread.RunJobs();
-            grid.GetTestAccessor().Revisions.GetRealizedContainers().Should().NotBeEmpty();
+            grid._gridView.GetRealizedContainers().Should().NotBeEmpty();
 
             await Task.Run(() => provider.RenderGraphToCacheAsync(range, toRowIndex: 15, RowHeight, CancellationToken.None));
 
@@ -117,23 +117,23 @@ public sealed class GraphHistoryRenderingTests
         int firstLaneCount = graph.GetSegmentsForRow(0)!.GetLaneCount();
         int firstWiderRowIndex = Enumerable.Range(1, graph.Count - 1)
             .First(index => graph.GetSegmentsForRow(index)!.GetLaneCount() > firstLaneCount);
-        grid.GetTestAccessor().Revisions.ItemsPanel = new FuncTemplate<Panel?>(
+        grid._gridView.ItemsPanel = new FuncTemplate<Panel?>(
             () => new VirtualizingStackPanel { CacheLength = 1 });
-        grid.GetTestAccessor().SetRevisions(orderedRevisions);
+        grid.GetNativeTestAccessor().SetRevisions(orderedRevisions);
         Window window = new() { Width = 1200, Height = 155, Content = grid };
         window.Show();
         try
         {
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
-            ScrollContentPresenter viewport = grid.GetTestAccessor().Revisions.GetVisualDescendants()
+            ScrollContentPresenter viewport = grid._gridView.GetVisualDescendants()
                 .OfType<ScrollContentPresenter>().Single();
             double rowHeight = RevisionGridControl.GetRowHeight(grid);
             double targetViewportHeight = (firstWiderRowIndex * rowHeight) - (rowHeight / 2);
             window.Height += targetViewportHeight - viewport.Bounds.Height;
             window.UpdateLayout();
             AssertViewportWidth(requireOverscan: true);
-            ScrollViewer scroll = grid.GetTestAccessor().Revisions.GetVisualDescendants().OfType<ScrollViewer>().Single();
+            ScrollViewer scroll = grid._gridView.GetVisualDescendants().OfType<ScrollViewer>().Single();
             scroll.Offset = new Vector(scroll.Offset.X, (rowHeight * firstWiderRowIndex) + (rowHeight / 3));
             AssertViewportWidth(requireOverscan: false);
             scroll.Offset = default;
@@ -153,7 +153,7 @@ public sealed class GraphHistoryRenderingTests
             Dispatcher.UIThread.RunJobs();
             using WriteableBitmap frame = window.CaptureRenderedFrame()
                 ?? throw new InvalidOperationException("The actual virtualized grid did not render.");
-            ScrollContentPresenter viewport = grid.GetTestAccessor().Revisions.GetVisualDescendants()
+            ScrollContentPresenter viewport = grid._gridView.GetVisualDescendants()
                 .OfType<ScrollContentPresenter>().Single();
             Control[] cells = [.. grid.GetVisualDescendants().OfType<Control>()
                 .Where(control => control.Classes.Contains("revision-graph-cell"))];
@@ -227,7 +227,7 @@ public sealed class GraphHistoryRenderingTests
                 .GetField("_revisionGraph", BindingFlags.Instance | BindingFlags.NonPublic)!
                 .GetValue(grid)!);
             graph.GetCachedCount().Should().Be(graph.Count);
-            grid.GetTestAccessor().Revisions.Items.Count.Should().Be(600 + (showArtificial ? 2 : 0));
+            grid._gridView.Items.Count.Should().Be(600 + (showArtificial ? 2 : 0));
             using WriteableBitmap frame = window.CaptureRenderedFrame()
                 ?? throw new InvalidOperationException("The actual history grid did not render a frame.");
             using MemoryStream stream = new();
@@ -237,7 +237,7 @@ public sealed class GraphHistoryRenderingTests
                 .OfType<Control>()
                 .Where(control => control.Classes.Contains("revision-graph-cell"))];
             cells.Should().NotBeEmpty();
-            ScrollContentPresenter viewport = grid.GetTestAccessor().Revisions.GetVisualDescendants()
+            ScrollContentPresenter viewport = grid._gridView.GetVisualDescendants()
                 .OfType<ScrollContentPresenter>().Single();
             int visibleLaneCount = cells
                 .Where(cell => cell.TranslatePoint(default, viewport) is Point origin
@@ -303,7 +303,7 @@ public sealed class GraphHistoryRenderingTests
 
             // Retire the painted rows before draining detail-loading callbacks, while
             // their repository and joinable context are still available.
-            grid?.GetTestAccessor().SetRevisions([]);
+            grid?.GetNativeTestAccessor().SetRevisions([]);
             window?.Close();
             Dispatcher.UIThread.RunJobs();
             using CancellationTokenSource cancellation = new(TimeSpan.FromSeconds(10));

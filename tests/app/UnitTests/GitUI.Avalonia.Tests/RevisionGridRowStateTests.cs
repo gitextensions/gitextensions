@@ -167,7 +167,7 @@ public sealed class RevisionGridRowStateTests
         using SettingsScope settings = new(gray: true, tooltips);
         using GridFixture fixture = new(longHistory: true);
         RevisionGraphColumnProvider provider = fixture.Grid.ColumnProviders.OfType<RevisionGraphColumnProvider>().Single();
-        ListBox list = fixture.Grid.GetTestAccessor().Revisions;
+        ListBox list = fixture.Grid._gridView;
         Dictionary<ListBoxItem, GitRevision> originalContainers = list.GetRealizedContainers().OfType<ListBoxItem>()
             .ToDictionary(container => container, container => (GitRevision)container.Content!);
         List<object> observations = [];
@@ -183,7 +183,7 @@ public sealed class RevisionGridRowStateTests
         {
             ToolTip.SetIsOpen(cell, true);
             ToolTip.GetIsOpen(cell).Should().BeTrue();
-            fixture.Grid.GetTestAccessor().RaiseOwnerWindowDeactivated();
+            fixture.Grid.GetNativeTestAccessor().RaiseOwnerWindowDeactivated();
             Dispatcher.UIThread.RunJobs();
             ToolTip.GetIsOpen(cell).Should().BeFalse("the central owner must track the graph tooltip too");
         }
@@ -469,7 +469,7 @@ public sealed class RevisionGridRowStateTests
 
         public void SetSelection(GitRevision revision, bool selected, bool focused)
         {
-            ListBox list = Grid.GetTestAccessor().Revisions;
+            ListBox list = Grid._gridView;
             list.SelectedItem = selected ? revision : Revisions.First(candidate => !ReferenceEquals(candidate, revision));
             (focused ? (Avalonia.Input.InputElement)list : FocusTarget).Focus().Should().BeTrue();
             Dispatcher.UIThread.RunJobs();
@@ -481,7 +481,7 @@ public sealed class RevisionGridRowStateTests
 
         public void ScrollTo(GitRevision revision)
         {
-            Grid.GetTestAccessor().Revisions.ScrollIntoView(revision);
+            Grid._gridView.ScrollIntoView(revision);
             Dispatcher.UIThread.RunJobs();
             Window.UpdateLayout();
         }
@@ -489,7 +489,7 @@ public sealed class RevisionGridRowStateTests
         public void Dispose()
         {
             Grid.CancelBackgroundTasks();
-            Grid.GetTestAccessor().SetRevisions([]);
+            Grid.GetNativeTestAccessor().SetRevisions([]);
             Window.Close();
             Dispatcher.UIThread.RunJobs();
         }
@@ -523,7 +523,7 @@ public sealed class RevisionGridRowStateTests
             Graph.LoadingCompleted();
             Graph.CacheTo(Graph.Count - 1, Graph.Count - 1);
             Revisions = [.. Enumerable.Range(0, Graph.Count).Select(index => Graph.GetNodeForRow(index)!.GitRevision!)];
-            Grid.GetTestAccessor().SetRevisions(Revisions);
+            Grid.GetNativeTestAccessor().SetRevisions(Revisions);
             return;
 
             GitRevision Revision(int index, params int[] parents)

@@ -142,7 +142,7 @@ public sealed class RevisionGridSelectionTests
                 .Which.ObjectId.Should().Be(head);
             form.RevisionGrid.SelectedId.Should().Be(default(ObjectId));
             form.RevisionGrid.SelectedRevision?.Refs.Should().Contain(gitRef => gitRef.IsSelected);
-            form.RevisionGrid.GetTestAccessor().Revisions.IsKeyboardFocusWithin.Should().BeTrue();
+            form.RevisionGrid._gridView.IsKeyboardFocusWithin.Should().BeTrue();
         }
         finally
         {
@@ -169,7 +169,7 @@ public sealed class RevisionGridSelectionTests
 
             control.SelectedRevision?.ObjectId.Should().Be(requestedId);
             control.SelectedId.Should().Be(default(ObjectId));
-            control.GetTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
+            control.GetNativeTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
         }
         finally
         {
@@ -197,7 +197,7 @@ public sealed class RevisionGridSelectionTests
                 .Should().Equal(ObjectId.WorkTreeId, first);
             control.SelectedRevision?.ObjectId.Should().Be(ObjectId.WorkTreeId);
             control.LatestSelectedRevision?.ObjectId.Should().Be(ObjectId.WorkTreeId);
-            (control.GetTestAccessor().Revisions.SelectedItem as GitRevision)?.ObjectId.Should().Be(first);
+            (control._gridView.SelectedItem as GitRevision)?.ObjectId.Should().Be(first);
         }
         finally
         {
@@ -252,8 +252,8 @@ public sealed class RevisionGridSelectionTests
             form.RevisionGrid.SelectedRevision?.ObjectId.Should().Be(expectedDetails);
             form.GetLatestSelectedRevision()?.ObjectId.Should().Be(expectedDetails);
             form.RevisionInfo.Revision?.ObjectId.Should().Be(expectedDetails);
-            (form.RevisionGrid.GetTestAccessor().Revisions.SelectedItem as GitRevision)?.ObjectId.Should().Be(expectedCurrent);
-            form.RevisionGrid.GetTestAccessor().Revisions.SelectedItems!.OfType<GitRevision>()
+            (form.RevisionGrid._gridView.SelectedItem as GitRevision)?.ObjectId.Should().Be(expectedCurrent);
+            form.RevisionGrid._gridView.SelectedItems!.OfType<GitRevision>()
                 .Select(revision => revision.ObjectId).Should().Equal(expectedCurrent, expectedDetails);
         }
     }
@@ -265,7 +265,7 @@ public sealed class RevisionGridSelectionTests
     {
         GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
         RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
-        control.GetTestAccessor().SetRevisions(revisions);
+        control.GetNativeTestAccessor().SetRevisions(revisions);
         GitRevision first = reverseSelection ? revisions[2] : revisions[0];
         GitRevision last = reverseSelection ? revisions[0] : revisions[2];
         control.SetSelectedRevision(first.ObjectId).Should().BeTrue();
@@ -276,7 +276,7 @@ public sealed class RevisionGridSelectionTests
         control.GetSelectedRevisions(SortDirection.Descending).Should().Equal(revisions[2], revisions[0]);
         control.GetSelectedRevisionOrDefault().Should().BeSameAs(last);
         control.LatestSelectedRevision.Should().BeSameAs(last);
-        control.GetTestAccessor().Revisions.SelectedItem.Should().BeSameAs(first);
+        control._gridView.SelectedItem.Should().BeSameAs(first);
     }
 
     [AvaloniaTest]
@@ -288,7 +288,7 @@ public sealed class RevisionGridSelectionTests
     {
         GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
         RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
-        control.GetTestAccessor().SetRevisions(revisions);
+        control.GetNativeTestAccessor().SetRevisions(revisions);
         control.DisableContextMenu();
         Window window = new() { Width = 900, Height = 240, Content = control };
         window.Show();
@@ -298,7 +298,7 @@ public sealed class RevisionGridSelectionTests
             control.SetSelectedRevision(revisions[2].ObjectId, toggleSelection: true).Should().BeTrue();
             Settle(window);
             Point point = clickedIndex < 0
-                ? control.GetTestAccessor().Revisions.TranslatePoint(new Point(100, 180), window)!.Value
+                ? control._gridView.TranslatePoint(new Point(100, 180), window)!.Value
                 : RowPoint(control, window, clickedIndex);
             window.MouseMove(point);
             window.MouseDown(point, MouseButton.Right);
@@ -308,18 +308,18 @@ public sealed class RevisionGridSelectionTests
             if (clickedIndex == 2)
             {
                 control.GetSelectedRevisions().Should().Equal(revisions[2], revisions[0]);
-                control.GetTestAccessor().Revisions.SelectedItem.Should().BeSameAs(revisions[0]);
+                control._gridView.SelectedItem.Should().BeSameAs(revisions[0]);
             }
             else if (clickedIndex >= 0)
             {
                 control.GetSelectedRevisions().Should().Equal(revisions[clickedIndex]);
-                control.GetTestAccessor().Revisions.SelectedItem.Should().BeSameAs(revisions[clickedIndex]);
+                control._gridView.SelectedItem.Should().BeSameAs(revisions[clickedIndex]);
             }
             else
             {
                 control.GetSelectedRevisions().Should().Equal(revisions[2], revisions[0]);
                 control.GetSelectedRevisionOrDefault().Should().BeSameAs(revisions[2]);
-                control.GetTestAccessor().Revisions.SelectedItem.Should().BeSameAs(revisions[0]);
+                control._gridView.SelectedItem.Should().BeSameAs(revisions[0]);
             }
 
             control.LatestSelectedRevision.Should().BeSameAs(clickedIndex >= 0 ? revisions[clickedIndex] : null);
@@ -335,7 +335,7 @@ public sealed class RevisionGridSelectionTests
     {
         GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
         RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
-        control.GetTestAccessor().SetRevisions(revisions);
+        control.GetNativeTestAccessor().SetRevisions(revisions);
         control.DisableContextMenu();
         Window window = new() { Width = 900, Height = 240, Content = control };
         window.Show();
@@ -343,7 +343,7 @@ public sealed class RevisionGridSelectionTests
         {
             DeselectLatestRow(control, window, revisions);
             IInputElement? caret = window.FocusManager?.GetFocusedElement();
-            caret.Should().BeSameAs(control.GetTestAccessor().Revisions.ContainerFromIndex(2));
+            caret.Should().BeSameAs(control._gridView.ContainerFromIndex(2));
             Point point = RowPoint(control, window, 0);
             window.MouseDown(point, MouseButton.Right);
             window.MouseUp(point, MouseButton.Right);
@@ -374,18 +374,18 @@ public sealed class RevisionGridSelectionTests
         try
         {
             StartControlledLoad(control, module);
-            control.GetTestAccessor().ReadRevisions([first]);
-            control.GetTestAccessor().PendingSelectedObjectIds.Should().Equal(requested.ObjectId);
+            control.GetNativeTestAccessor().ReadRevisions([first]);
+            control.GetNativeTestAccessor().PendingSelectedObjectIds.Should().Equal(requested.ObjectId);
             Settle(window);
-            Point point = control.GetTestAccessor().Revisions.TranslatePoint(new Point(100, 180), window)!.Value;
+            Point point = control._gridView.TranslatePoint(new Point(100, 180), window)!.Value;
             window.MouseDown(point, MouseButton.Right);
             window.MouseUp(point, MouseButton.Right);
             Settle(window);
 
-            control.GetTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
+            control.GetNativeTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
             control.GetSelectedRevisions().Should().BeEmpty();
             control.LatestSelectedRevision.Should().BeNull();
-            control.GetTestAccessor().ReadRevisions([requested]);
+            control.GetNativeTestAccessor().ReadRevisions([requested]);
             control.GetSelectedRevisions().Should().BeEmpty();
         }
         finally
@@ -414,10 +414,10 @@ public sealed class RevisionGridSelectionTests
             GitRevision first = Revision(1);
             GitRevision last = Revision(2);
             RevisionGridControl control = CreatePausedControl(first.ObjectId, out _);
-            control.GetTestAccessor().SetRevisions([first, last]);
+            control.GetNativeTestAccessor().SetRevisions([first, last]);
             control.SetSelectedRevision(first.ObjectId).Should().BeTrue();
             control.SetSelectedRevision(last.ObjectId, toggleSelection: true).Should().BeTrue();
-            control.GetTestAccessor().Revisions.RaiseEvent(new KeyEventArgs
+            control._gridView.RaiseEvent(new KeyEventArgs
             {
                 RoutedEvent = InputElement.KeyDownEvent,
                 Key = Key.C,
@@ -452,7 +452,7 @@ public sealed class RevisionGridSelectionTests
     {
         GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
         RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
-        control.GetTestAccessor().SetRevisions(revisions);
+        control.GetNativeTestAccessor().SetRevisions(revisions);
         control.DisableContextMenu();
         Window window = new() { Width = 900, Height = 240, Content = control };
         window.Show();
@@ -503,7 +503,7 @@ public sealed class RevisionGridSelectionTests
         revisions[1].ParentIds = [revisions[2].ObjectId];
         revisions[2].ParentIds = [revisions[3].ObjectId];
         RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
-        control.GetTestAccessor().SetRevisions(revisions);
+        control.GetNativeTestAccessor().SetRevisions(revisions);
         control.DisableContextMenu();
         Window window = new() { Width = 900, Height = 240, Content = control };
         window.Show();
@@ -526,7 +526,7 @@ public sealed class RevisionGridSelectionTests
     {
         GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
         RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
-        control.GetTestAccessor().SetRevisions(revisions);
+        control.GetNativeTestAccessor().SetRevisions(revisions);
         control.DisableContextMenu();
         Window window = new() { Width = 900, Height = 240, Content = control };
         window.Show();
@@ -563,7 +563,7 @@ public sealed class RevisionGridSelectionTests
             control.ResumeRefreshRevisions();
         }
 
-        control.GetTestAccessor().SetRevisions(revisions);
+        control.GetNativeTestAccessor().SetRevisions(revisions);
         control.SetSelectedRevision(revisions[0].ObjectId).Should().BeTrue();
         control.SetSelectedRevision(revisions[2].ObjectId, toggleSelection: true).Should().BeTrue();
         int filtersChanged = 0;
@@ -576,7 +576,7 @@ public sealed class RevisionGridSelectionTests
         filtersChanged.Should().Be(0);
         loadsStarted.Should().Be(0);
         control.GetSelectedRevisions().Should().Equal(revisions[2], revisions[0]);
-        control.GetTestAccessor().Revisions.SelectedItem.Should().BeSameAs(revisions[0]);
+        control._gridView.SelectedItem.Should().BeSameAs(revisions[0]);
         return;
 
         void ApplyMode()
@@ -615,7 +615,7 @@ public sealed class RevisionGridSelectionTests
                 new(ObjectId.Parse(new string('c', 40))),
             ];
             RevisionGridControl control = CreatePausedControl(revisions[0].ObjectId, out _);
-            control.GetTestAccessor().SetRevisions(revisions);
+            control.GetNativeTestAccessor().SetRevisions(revisions);
             foreach (GitRevision revision in revisions)
             {
                 control.SetSelectedRevision(revision.ObjectId).Should().BeTrue();
@@ -627,7 +627,7 @@ public sealed class RevisionGridSelectionTests
                 control.NavigateBackward();
             }
 
-            control.GetTestAccessor().SetRevisions([revisions[0], revisions[2]]);
+            control.GetNativeTestAccessor().SetRevisions([revisions[0], revisions[2]]);
             if (forward)
             {
                 control.NavigateForward();
@@ -733,10 +733,10 @@ public sealed class RevisionGridSelectionTests
             await ReloadAsync(control, module, revisionFilter: "--all --grep=visible --date-order");
 
             control.CurrentCheckout.Should().Be(head);
-            ObjectId[] rows = control.GetTestAccessor().Revisions.Items.OfType<GitRevision>()
+            ObjectId[] rows = control._gridView.Items.OfType<GitRevision>()
                 .Select(revision => revision.ObjectId).ToArray();
             rows.Should().Equal(unrelated, ObjectId.WorkTreeId, ObjectId.IndexId, ancestor);
-            control.GetTestAccessor().HasGraphParent(ObjectId.WorkTreeId, ObjectId.IndexId).Should().BeTrue();
+            control.GetNativeTestAccessor().HasGraphParent(ObjectId.WorkTreeId, ObjectId.IndexId).Should().BeTrue();
         }
         finally
         {
@@ -755,7 +755,7 @@ public sealed class RevisionGridSelectionTests
             await ReloadAsync(control, module, selectedObjectId: ObjectId.Parse(new string('a', 40)));
 
             control.SelectedRevision?.ObjectId.Should().Be(first);
-            control.GetTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
+            control.GetNativeTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
         }
         finally
         {
@@ -783,7 +783,7 @@ public sealed class RevisionGridSelectionTests
             else
             {
                 control.SelectedRevision.Should().BeNull();
-                control.GetTestAccessor().CurrentPage.Should().BeOfType<EmptyRepoControl>();
+                control.revisionPage.Content.Should().BeOfType<EmptyRepoControl>();
             }
         }
         finally
@@ -803,19 +803,19 @@ public sealed class RevisionGridSelectionTests
             control.FirstId = first.ObjectId;
             control.SelectedId = selected.ObjectId;
             StartControlledLoad(control, module);
-            control.GetTestAccessor().PendingSelectedObjectIds.Should().Equal(first.ObjectId, selected.ObjectId);
+            control.GetNativeTestAccessor().PendingSelectedObjectIds.Should().Equal(first.ObjectId, selected.ObjectId);
 
-            control.GetTestAccessor().ReadRevisions([first]);
+            control.GetNativeTestAccessor().ReadRevisions([first]);
             control.SelectedRevision.Should().BeNull();
-            control.GetTestAccessor().PendingSelectedObjectIds.Should().Equal(first.ObjectId, selected.ObjectId);
+            control.GetNativeTestAccessor().PendingSelectedObjectIds.Should().Equal(first.ObjectId, selected.ObjectId);
 
-            control.GetTestAccessor().ReadRevisions([selected]);
+            control.GetNativeTestAccessor().ReadRevisions([selected]);
             control.GetSelectedRevisions().Select(revision => revision.ObjectId)
                 .Should().Equal(selected.ObjectId, first.ObjectId);
             control.GetSelectedRevisionOrDefault().Should().BeSameAs(selected);
             control.LatestSelectedRevision.Should().BeSameAs(selected);
-            control.GetTestAccessor().Revisions.SelectedItem.Should().BeSameAs(first);
-            control.GetTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
+            control._gridView.SelectedItem.Should().BeSameAs(first);
+            control.GetNativeTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
         }
         finally
         {
@@ -836,13 +836,13 @@ public sealed class RevisionGridSelectionTests
             StartControlledLoad(control, module);
             StartControlledLoad(control, module);
 
-            control.GetTestAccessor().PendingSelectedObjectIds.Should().Equal(first.ObjectId, selected.ObjectId);
+            control.GetNativeTestAccessor().PendingSelectedObjectIds.Should().Equal(first.ObjectId, selected.ObjectId);
 
             control.SelectedId = first.ObjectId;
             StartControlledLoad(control, module);
 
-            control.GetTestAccessor().PendingSelectedObjectIds.Should().Equal(first.ObjectId);
-            control.GetTestAccessor().ReadRevisions([first, selected]);
+            control.GetNativeTestAccessor().PendingSelectedObjectIds.Should().Equal(first.ObjectId);
+            control.GetNativeTestAccessor().ReadRevisions([first, selected]);
             control.GetSelectedRevisions().Should().ContainSingle().Which.Should().BeSameAs(first);
         }
         finally
@@ -862,12 +862,12 @@ public sealed class RevisionGridSelectionTests
             control.FirstId = first.ObjectId;
             control.SelectedId = selected.ObjectId;
             StartControlledLoad(control, module);
-            control.GetTestAccessor().ReadRevisions([first]);
+            control.GetNativeTestAccessor().ReadRevisions([first]);
 
-            control.GetTestAccessor().CompleteLoading();
+            control.GetNativeTestAccessor().CompleteLoading();
 
             control.GetSelectedRevisions().Should().ContainSingle().Which.Should().BeSameAs(first);
-            control.GetTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
+            control.GetNativeTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
         }
         finally
         {
@@ -890,24 +890,24 @@ public sealed class RevisionGridSelectionTests
         try
         {
             StartControlledLoad(control, module);
-            control.GetTestAccessor().ReadRevisions([first]);
+            control.GetNativeTestAccessor().ReadRevisions([first]);
             if (programmatic)
             {
                 control.SetSelectedRevision(first.ObjectId).Should().BeTrue();
             }
             else
             {
-                control.GetTestAccessor().Revisions.SelectedItem = first;
+                control._gridView.SelectedItem = first;
             }
 
             otherControl.Focus(NavigationMethod.Pointer).Should().BeTrue();
 
-            control.GetTestAccessor().ReadRevisions([selected]);
-            control.GetTestAccessor().CompleteLoading();
+            control.GetNativeTestAccessor().ReadRevisions([selected]);
+            control.GetNativeTestAccessor().CompleteLoading();
 
             control.SelectedRevision.Should().BeSameAs(first);
             otherControl.IsKeyboardFocusWithin.Should().BeTrue();
-            control.GetTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
+            control.GetNativeTestAccessor().PendingSelectedObjectIds.Should().BeEmpty();
         }
         finally
         {
@@ -930,11 +930,11 @@ public sealed class RevisionGridSelectionTests
         {
             Dispatcher.UIThread.RunJobs();
             StartControlledLoad(control, module);
-            control.GetTestAccessor().Revisions.IsKeyboardFocusWithin.Should().BeTrue();
+            control._gridView.IsKeyboardFocusWithin.Should().BeTrue();
             otherControl.Focus(NavigationMethod.Pointer).Should().BeTrue();
 
-            control.GetTestAccessor().ReadRevisions([selected]);
-            control.GetTestAccessor().CompleteLoading();
+            control.GetNativeTestAccessor().ReadRevisions([selected]);
+            control.GetNativeTestAccessor().CompleteLoading();
 
             control.SelectedRevision.Should().BeSameAs(selected);
             otherControl.IsKeyboardFocusWithin.Should().BeTrue();
@@ -953,7 +953,7 @@ public sealed class RevisionGridSelectionTests
     {
         RevisionGridControl control = CreatePausedControl(Revision(1).ObjectId, out _);
         GitRevision[] revisions = [Revision(1), Revision(2)];
-        control.GetTestAccessor().SetRevisions(revisions);
+        control.GetNativeTestAccessor().SetRevisions(revisions);
         control.SetSelectedRevision(revisions[0].ObjectId).Should().BeTrue();
         if (multipleSelection)
         {
@@ -965,7 +965,7 @@ public sealed class RevisionGridSelectionTests
         int notifications = 0;
         control.SelectionChanged += (_, _) => notifications++;
 
-        control.GetTestAccessor().SetRevisions(revisions.Reverse());
+        control.GetNativeTestAccessor().SetRevisions(revisions.Reverse());
         await Task.Delay(100);
         Dispatcher.UIThread.RunJobs();
 
@@ -973,7 +973,7 @@ public sealed class RevisionGridSelectionTests
         control.SelectedRevision.Should().BeSameAs(expectedDetails);
         control.GetSelectedRevisionOrDefault().Should().BeSameAs(expectedDetails);
         control.LatestSelectedRevision.Should().BeSameAs(expectedDetails);
-        control.GetTestAccessor().Revisions.SelectedItem.Should().BeSameAs(revisions[0]);
+        control._gridView.SelectedItem.Should().BeSameAs(revisions[0]);
         control.GetSelectedRevisions().Should().Equal(multipleSelection ? [revisions[1], revisions[0]] : [revisions[0]]);
         notifications.Should().Be(0);
     }
@@ -986,7 +986,7 @@ public sealed class RevisionGridSelectionTests
         GitRevision first = Revision(1);
         GitRevision second = Revision(2);
         RevisionGridControl control = CreatePausedControl(first.ObjectId, out IGitModule module);
-        control.GetTestAccessor().SetRevisions([first, second]);
+        control.GetNativeTestAccessor().SetRevisions([first, second]);
         control.SetSelectedRevision(first.ObjectId).Should().BeTrue();
         ObjectId targetId = changesSelection ? second.ObjectId : first.ObjectId;
         IGitRef relatedRef = new GitRef(null!, targetId, "refs/remotes/origin/related");
@@ -1008,15 +1008,15 @@ public sealed class RevisionGridSelectionTests
         try
         {
             StartControlledLoad(control, module);
-            control.GetTestAccessor().ReadRevisions([selected]);
+            control.GetNativeTestAccessor().ReadRevisions([selected]);
             staleLoad.Cancel();
 
-            IObserver<IReadOnlyList<GitRevision>> staleObserver = control.GetTestAccessor().CreateRevisionObserver(staleLoad.Token);
+            IObserver<IReadOnlyList<GitRevision>> staleObserver = control.GetNativeTestAccessor().CreateRevisionObserver(staleLoad.Token);
             staleObserver.OnNext([first]);
             staleObserver.OnCompleted();
             Dispatcher.UIThread.RunJobs();
 
-            control.GetTestAccessor().Revisions.Items.OfType<GitRevision>().Should().ContainSingle()
+            control._gridView.Items.OfType<GitRevision>().Should().ContainSingle()
                 .Which.Should().BeSameAs(selected);
             control.SelectedRevision.Should().BeSameAs(selected);
         }
@@ -1083,7 +1083,7 @@ public sealed class RevisionGridSelectionTests
 
     private static Point RowPoint(RevisionGridControl control, Window window, int rowIndex)
     {
-        ListBoxItem row = (ListBoxItem)control.GetTestAccessor().Revisions.ContainerFromIndex(rowIndex)!;
+        ListBoxItem row = (ListBoxItem)control._gridView.ContainerFromIndex(rowIndex)!;
         Point point = row.TranslatePoint(new Point(100, row.Bounds.Height / 2), window)!.Value;
         (window.InputHitTest(point) as Visual)?.GetSelfAndVisualAncestors().OfType<ListBoxItem>()
             .FirstOrDefault().Should().BeSameAs(row);

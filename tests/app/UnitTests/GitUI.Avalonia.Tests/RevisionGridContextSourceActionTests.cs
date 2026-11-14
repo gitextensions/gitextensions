@@ -391,7 +391,7 @@ public sealed class RevisionGridContextSourceActionTests
                 };
             }
 
-            Grid.GetTestAccessor().SetRevisions(Revisions);
+            Grid.GetNativeTestAccessor().SetRevisions(Revisions);
             Window = new Window { Width = 1000, Height = 220, Content = Grid };
             Window.Show();
             Window.Activate();
@@ -431,7 +431,7 @@ public sealed class RevisionGridContextSourceActionTests
         public void OpenContextMenu()
         {
             Settle();
-            Control row = Grid.GetTestAccessor().Revisions.ContainerFromIndex(Revisions.Length - 1) as Control
+            Control row = Grid._gridView.ContainerFromIndex(Revisions.Length - 1) as Control
                 ?? throw new AssertionException("The real selected row must be realized.");
             Point point = row.TranslatePoint(new Point(row.Bounds.Width - 5, row.Bounds.Height / 2), Window)
                 ?? throw new AssertionException("The real selected row must remain attached.");
@@ -456,7 +456,7 @@ public sealed class RevisionGridContextSourceActionTests
         {
             Menu.Close();
             Grid.CancelBackgroundTasks();
-            Grid.GetTestAccessor().SetRevisions([]);
+            Grid.GetNativeTestAccessor().SetRevisions([]);
             Window.Close();
             Dispatcher.UIThread.RunJobs();
             foreach (KeyValuePair<string, string?> setting in _settings)

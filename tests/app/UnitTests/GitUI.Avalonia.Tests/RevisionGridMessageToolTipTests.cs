@@ -306,7 +306,7 @@ public sealed class RevisionGridMessageToolTipTests
             source.UICommands.Returns(commands);
             Grid = new RevisionGridControl(Substitute.For<ICommitDataManager>()) { UICommandsSource = source };
             Referenced.Refs = [new GitRef(module, Referenced.ObjectId, "refs/heads/main")];
-            Grid.GetTestAccessor().SetRevisions([Plain, Multiline, Referenced]);
+            Grid.GetNativeTestAccessor().SetRevisions([Plain, Multiline, Referenced]);
             DockPanel host = new();
             DockPanel.SetDock(FocusTarget, Dock.Bottom);
             host.Children.Add(FocusTarget);
@@ -430,7 +430,7 @@ public sealed class RevisionGridMessageToolTipTests
         {
             ExceptionDispatchInfo? failure = null;
             TryCleanup(Grid.CancelBackgroundTasks, ref failure);
-            TryCleanup(() => Grid.GetTestAccessor().SetRevisions([]), ref failure);
+            TryCleanup(() => Grid.GetNativeTestAccessor().SetRevisions([]), ref failure);
             TryCleanup(Window.Close, ref failure);
             TryCleanup(() => Dispatcher.UIThread.RunJobs(), ref failure);
             failure?.Throw();

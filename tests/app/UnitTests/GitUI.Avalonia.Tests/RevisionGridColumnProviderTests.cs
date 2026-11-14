@@ -634,12 +634,12 @@ public sealed class RevisionGridColumnProviderTests
             GitRevision revision = CreateRevision();
             revision.HasMultiLineMessage = true;
             revision.Body = revision.Subject + "\n\nTooltip body";
-            control.GetTestAccessor().SetRevisions([revision]);
+            control.GetNativeTestAccessor().SetRevisions([revision]);
             owner.Content = control;
             owner.Show();
             owner.Activate();
             Dispatcher.UIThread.RunJobs();
-            control.GetTestAccessor().OwnerWindow.Should().BeSameAs(owner);
+            control.GetNativeTestAccessor().OwnerWindow.Should().BeSameAs(owner);
             Control messageCell = control.GetVisualDescendants()
                 .OfType<Control>()
                 .Single(item => item.Classes.Contains("revision-message-cell"));
@@ -654,7 +654,7 @@ public sealed class RevisionGridColumnProviderTests
             ToolTip.SetIsOpen(messageCell, true);
             ToolTip.GetIsOpen(messageCell).Should().BeTrue();
 
-            control.GetTestAccessor().RaiseOwnerWindowDeactivated();
+            control.GetNativeTestAccessor().RaiseOwnerWindowDeactivated();
             Dispatcher.UIThread.RunJobs();
 
             ToolTip.GetIsOpen(messageCell).Should().BeFalse();

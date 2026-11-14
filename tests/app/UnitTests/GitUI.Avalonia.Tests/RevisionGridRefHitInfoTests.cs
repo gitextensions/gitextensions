@@ -424,6 +424,19 @@ public sealed class RevisionGridRefHitInfoTests
     }
 
     [AvaloniaTest]
+    public void Leaving_a_realized_message_cell_should_clear_its_ref_highlight()
+    {
+        using GridFixture fixture = new(nestled: false);
+        RevisionGridRefRenderer.RefLabelControl label = fixture.Labels.Single();
+        fixture.MovePointer(label.TranslatePoint(label.CapsuleBounds.Center, fixture.Window)!.Value);
+        fixture.Labels.Single().IsHighlighted.Should().BeTrue();
+
+        fixture.MovePointer(new Point(fixture.Window.ClientSize.Width - 2, fixture.Window.ClientSize.Height - 2));
+
+        fixture.Labels.Single().IsHighlighted.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
     public void Hover_should_cross_the_nestled_diagonal_and_restore_the_row_tooltip_outside_capsules()
     {
         using GridFixture fixture = new(nestled: true);
@@ -648,11 +661,11 @@ public sealed class RevisionGridRefHitInfoTests
                 Revision.Refs = [.. Revision.Refs, tag];
             }
 
-            Grid.GetTestAccessor().SetRevisions([Revision]);
+            Grid.GetNativeTestAccessor().SetRevisions([Revision]);
             Window = new Window { Width = 1000, Height = 180, Content = Grid };
             Window.Show();
             Dispatcher.UIThread.RunJobs();
-            Grid.GetTestAccessor().Revisions.SelectedItem = Revision;
+            Grid._gridView.SelectedItem = Revision;
             Window.UpdateLayout();
             Dispatcher.UIThread.RunJobs();
             Menu = Grid.FindControl<ContextMenu>("mainContextMenu")!;

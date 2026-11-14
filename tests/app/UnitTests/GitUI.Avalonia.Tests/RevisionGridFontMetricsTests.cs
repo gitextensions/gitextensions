@@ -128,8 +128,8 @@ public sealed class RevisionGridFontMetricsTests
             AvaloniaFontSettings.ApplyAppSettings();
             RevisionGridControl control = new() { UICommandsSource = CreateCommandsSource() };
             GitRevision revision = new(ObjectId.WorkTreeId) { Subject = "Working directory" };
-            ListBox list = control.GetTestAccessor().Revisions;
-            control.GetTestAccessor().SetRevisions([revision]);
+            ListBox list = control._gridView;
+            control.GetNativeTestAccessor().SetRevisions([revision]);
             window = new Window { Width = 900, Height = 240, Content = control };
             window.Show();
             Dispatcher.UIThread.RunJobs();
