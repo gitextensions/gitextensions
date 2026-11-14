@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
@@ -102,17 +102,11 @@ public sealed class SpellingTests
         _spelling.Dispose();
     }
 
-    [TestCase("ab")]
-    public void FindWord_should_find_base_word(string word)
-    {
-        _spelling.FindWord(word.AsSpan(), out string? foundWord).Should().BeTrue();
-        foundWord.Should().Be(word);
-    }
-
+    [TestCase("ab")] // base word
     [TestCase("baking")] // suffix replacing the stripped 'e'
     [TestCase("carried")] // suffix replacing the stripped 'y'
     [TestCase("rewalk")] // prefix
-    public void FindWord_should_find_affixed_word(string word)
+    public void FindWord_should_find_known_word(string word)
     {
         _spelling.FindWord(word.AsSpan(), out string? foundWord).Should().BeTrue();
         foundWord.Should().Be(word);
