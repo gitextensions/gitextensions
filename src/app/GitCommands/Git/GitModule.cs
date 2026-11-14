@@ -1091,14 +1091,7 @@ public sealed partial class GitModule : IGitModule
     /// If the repo is bare, has no commits, detached head or is corrupt, a zero <see cref="ObjectId"/> is returned.
     /// </summary>
     public ObjectId GetCurrentCheckout()
-    {
-        GitArgumentBuilder args = new("rev-parse") { "HEAD" };
-        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
-
-        return result.ExitedSuccessfully && ObjectId.TryParse(result.StandardOutput, offset: 0, out ObjectId objectId)
-            ? objectId
-            : default;
-    }
+        => GitExecutable.GetCurrentCheckout();
 
     public bool TryResolvePartialCommitId(string objectIdPrefix, out ObjectId objectId)
     {
