@@ -287,14 +287,12 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
         {
             try
             {
-                string? tag = executor.GitExecutable.GetFirstTagPointingAtHead();
-                if (tag is not null)
+                if (executor.GitExecutable.GetFirstTagPointingAtHead() is string tag)
                 {
                     return tag;
                 }
 
-                string? branchAtHead = executor.GitExecutable.GetFirstBranchPointingAtHead();
-                if (branchAtHead is not null)
+                if (executor.GitExecutable.GetFirstBranchPointingAtHead() is string branchAtHead)
                 {
                     return branchAtHead;
                 }

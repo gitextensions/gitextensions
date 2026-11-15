@@ -184,15 +184,12 @@ public static partial class Commands
     /// <returns>The short name of the first branch; <see langword="null"/> if there is no branch at HEAD or git fails.</returns>
     public static string? GetFirstBranchPointingAtHead(this IExecutable gitExecutable)
     {
-        const string LocalBranchPrefix = "refs/heads/";
-        const string RemoteBranchPrefix = "refs/remotes/";
-
         GitArgumentBuilder args = new("for-each-ref")
         {
             "--points-at HEAD",
             "--format=%(refname)",
-            "refs/heads",
-            "refs/remotes"
+            GitRefName.RefsHeadsPrefix,
+            GitRefName.RefsRemotesPrefix
         };
         ExecutionResult result = gitExecutable.Execute(args, throwOnErrorExit: false);
 
@@ -206,14 +203,14 @@ public static partial class Commands
         foreach ((int beginning, int length) in refs.LazySplitRanges('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
         {
             string refName = refs.Substring(beginning, length);
-            if (refName.StartsWith(LocalBranchPrefix, StringComparison.Ordinal))
+            if (refName.StartsWith(GitRefName.RefsHeadsPrefix, StringComparison.Ordinal))
             {
-                return refName.Substring(LocalBranchPrefix.Length);
+                return refName.Substring(GitRefName.RefsHeadsPrefix.Length);
             }
 
-            if (refName.StartsWith(RemoteBranchPrefix, StringComparison.Ordinal) && !refName.EndsWith("/HEAD", StringComparison.Ordinal))
+            if (refName.StartsWith(GitRefName.RefsRemotesPrefix, StringComparison.Ordinal) && !refName.EndsWith("/HEAD", StringComparison.Ordinal))
             {
-                return refName.Substring(RemoteBranchPrefix.Length);
+                return refName.Substring(GitRefName.RefsRemotesPrefix.Length);
             }
         }
 
