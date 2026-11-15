@@ -74,7 +74,11 @@ public sealed class IndexWatcher : IDisposable
     }
 
     private bool _indexChanged;
-    private bool IndexChanged
+
+    /// <summary>
+    ///  Gets whether the index or any ref has changed since the last <see cref="Reset"/>.
+    /// </summary>
+    public bool IndexChanged
     {
         get
         {
@@ -90,7 +94,7 @@ public sealed class IndexWatcher : IDisposable
 
             return _indexChanged;
         }
-        set
+        private set
         {
             _indexChanged = value;
             try
@@ -109,12 +113,35 @@ public sealed class IndexWatcher : IDisposable
 
     private bool _enabled;
     private string? _gitDirPath;
+    private static readonly TimeSpan _fileTimeGranularity = TimeSpan.FromMilliseconds(20);
+    private static readonly DateTime _missingFileTimeUtc = DateTime.FromFileTimeUtc(0);
+    private DateTime _lastResetUtc;
     private FileSystemWatcher GitIndexWatcher { get; }
     private FileSystemWatcher RefsWatcher { get; }
 
     private void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
     {
-        IndexChanged = true;
+        // The notifications are raised asynchronously on the thread pool and can arrive after Reset()
+        // for changes made before it, e.g. by the fetch that triggered the refresh.
+        // A no longer existing file, e.g. a *.lock file renamed to the ref, has the time 1601-01-01.
+        // Use the time of its directory instead, which is updated by the rename.
+        // (Check the time read instead of the existence before, else the file can vanish in between.)
+        DateTime lastWriteTimeUtc = File.GetLastWriteTimeUtc(e.FullPath);
+        if (lastWriteTimeUtc == _missingFileTimeUtc)
+        {
+            lastWriteTimeUtc = Directory.GetLastWriteTimeUtc(Path.GetDirectoryName(e.FullPath)!);
+        }
+
+        // Compare and set atomically with Reset(), else a stale notification can set the state after Reset() cleared it.
+        lock (_syncRoot)
+        {
+            if (lastWriteTimeUtc < _lastResetUtc)
+            {
+                return;
+            }
+
+            IndexChanged = true;
+        }
     }
 
     private void fileSystemWatcher_Renamed(object sender, RenamedEventArgs e)
@@ -136,6 +163,10 @@ public sealed class IndexWatcher : IDisposable
         lock (_syncRoot)
         {
             ++_generation;
+
+            // File times are set with the coarse system clock tick (15.6 ms by default), DateTime.UtcNow is precise.
+            // Do not ignore changes made just after the reset.
+            _lastResetUtc = DateTime.UtcNow - _fileTimeGranularity;
             RefreshWatcher();
             IndexChanged = false;
         }
@@ -247,9 +278,16 @@ public sealed class IndexWatcher : IDisposable
         RefsWatcher.Dispose();
     }
 
-    internal static class TestAccessor
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(IndexWatcher indexWatcher)
     {
+        public DateTime LastResetUtc => indexWatcher._lastResetUtc;
+
         public static bool HasChangedSince(string gitDirPath, string gitCommonDirPath, DateTime sinceUtc)
             => IndexWatcher.HasChangedSince(gitDirPath, gitCommonDirPath, sinceUtc);
+
+        public void RaiseChanged(string fullPath)
+            => indexWatcher.fileSystemWatcher_Changed(indexWatcher, new FileSystemEventArgs(WatcherChangeTypes.Changed, Path.GetDirectoryName(fullPath)!, Path.GetFileName(fullPath)));
     }
 }
