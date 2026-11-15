@@ -424,6 +424,15 @@ public class RevisionGraphTests
     }
 
     [Test]
+    public async Task OnlyBranchesGetReservedLanes()
+    {
+        AppSettings.ReservedLanesBranchNames = "A.*;B.*;C.*;D.*";
+        RevisionGraph revisionGraph = CreateGraph(" 1::A(local)  2::refs/remotes/origin/B  3::refs/tags/C(tag)  4::refs/stash/D  5::E ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
     public async Task ReservedLaneCanBeReusedBelowFirstOccupation([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
     {
         AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
@@ -750,7 +759,8 @@ public class RevisionGraphTests
     ///
     /// The special IDs "_w" and "_i" denote the working tree and index, respectively.
     ///
-    /// Refs can be specified after an additional colon, e.g.: " 1   2:1:tag1  3:2:tag2  4:3:tag3,main "
+    /// Refs can be specified after an additional colon, e.g.: " 1   2:1:feat1  3:2:feat2  4:3:feat3,main ".
+    /// Refs are given the ref/heads/ prefix unless they already have a ref/ prefix, in which case they are used as-is.
     /// </summary>
     private static RevisionGraph CreateGraph(string commitSpecs)
     {
@@ -793,8 +803,13 @@ public class RevisionGraphTests
 
             if (parts.Length > 2)
             {
-                string[] refNames = parts[2].Split(',');
-                commit.Refs = refNames.Select(name => new GitRef(module, objectId, name)).AsReadOnlyList();
+                string[] refNames = parts[2].Split(',').Select(name => name switch
+                    {
+                        _ when name.StartsWith("refs/") => name,
+                        _ => $"{GitRefName.RefsHeadsPrefix}{name}"
+                    })
+                    .ToArray();
+                commit.Refs = refNames.Select(name => new GitRef(module, objectId, name, GitRefName.GetRemoteName(name))).AsReadOnlyList();
             }
         }
 

@@ -1,0 +1,9 @@
+﻿    5  E
+
+    4  stash/D
+
+    3  C(tag)
+
+  2  origin/B
+
+1  A(local)

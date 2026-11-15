@@ -1224,7 +1224,8 @@ public class RevisionGraph : IRevisionGraphRowProvider
     /// </summary>
     private static Dictionary<IGitRef, int> LanePriorities(IReadOnlyList<IGitRef> refs)
     {
-        return Priority.Priorities(refs, x => x.LocalName, regexList: AppSettings.ReservedLanesBranchNames);
+        List<IGitRef> branches = refs.Where(r => r.IsHead || r.IsRemote).ToList();
+        return Priority.Priorities(branches, x => x.LocalName, regexList: AppSettings.ReservedLanesBranchNames);
     }
 
     /// <summary>
