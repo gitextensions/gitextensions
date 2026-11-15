@@ -804,6 +804,10 @@ public class RevisionGraphTests
         foreach (GitRevision commit in commits)
         {
             graph.Add(commit);
+
+            // Cache the graph line by line to increase the chance of uncovering
+            // bugs related to partial invalidatation of the graph.
+            graph.CacheTo(graph.Count - 1, graph.Count - 1);
         }
 
         graph.LoadingCompleted();

@@ -77,6 +77,12 @@ public class RevisionGraph : IRevisionGraphRowProvider
     /// </summary>
     private int _orderedRowCacheInvalidFromScore = int.MaxValue;
 
+    /// <summary>
+    /// The row index of the revision that owns each reserved lane, by lane index.
+    /// Null if not yet computed (for the so far loaded set of refs).
+    /// </summary>
+    private int[]? _firstIndexForReservedLane = null;
+
     private int _straightenDiagonalsLookAhead => Config.StraightenGraphDiagonals ? _straightenLanesLookAhead / 2 : 0;
 
     /// <summary>
@@ -325,6 +331,14 @@ public class RevisionGraph : IRevisionGraphRowProvider
             }
         }
 
+        if (LanePriorities(revision.Refs).Any())
+        {
+            // The revision has a ref which matches a reserved lane name.
+            // This typically affects the layout of reserved lanes, so invalidate the whole graph.
+            _firstIndexForReservedLane = null;
+            minExistingScore = 0;
+        }
+
         _revisionByObjectId.TryAdd(revision.ObjectId, revisionGraphRevision);
         Count++;
         return MarkCacheAsInvalidIfNeeded(minExistingScore);
@@ -444,34 +458,37 @@ public class RevisionGraph : IRevisionGraphRowProvider
             return;
         }
 
-        // Collect all refs for known revisions
-        IReadOnlyList<IGitRef> refs = orderedNodesCache
-            .Where(x => x.GitRevision is not null)
-            .SelectMany(x => x.GitRevision!.Refs)
-            .AsReadOnlyList();
-
-        // Find the first revision that goes in each reserved lane.
-        Dictionary<IGitRef, int> lanePriorityByRef = Priority.Priorities(refs, x => x.LocalName, regexList: AppSettings.ReservedLanesBranchNames);
-        int[] firstIndexForReservedLane = Enumerable.Repeat(-1, lanePriorityByRef.Values.Append(-1).Max() + 1).ToArray();
-        for (int nodeIndex = 0; nodeIndex < orderedNodesCount; ++nodeIndex)
+        if (_firstIndexForReservedLane is null)
         {
-            if (orderedNodesCache[nodeIndex].GitRevision is { } gitRevision)
+            // Collect all refs for known revisions
+            IReadOnlyList<IGitRef> refs = orderedNodesCache
+                .Where(x => x.GitRevision is not null)
+                .SelectMany(x => x.GitRevision!.Refs)
+                .AsReadOnlyList();
+
+            // Find the first revision that goes in each reserved lane.
+            Dictionary<IGitRef, int> lanePriorityByRef = LanePriorities(refs);
+            _firstIndexForReservedLane = Enumerable.Repeat(-1, lanePriorityByRef.Values.Append(-1).Max() + 1).ToArray();
+            for (int nodeIndex = 0; nodeIndex < orderedNodesCount; ++nodeIndex)
             {
-                foreach (IGitRef gitRef in gitRevision.Refs)
+                if (orderedNodesCache[nodeIndex].GitRevision is { } gitRevision)
                 {
-                    if (lanePriorityByRef.TryGetValue(gitRef, out int priority) && firstIndexForReservedLane[priority] == -1)
+                    foreach (IGitRef gitRef in gitRevision.Refs)
                     {
-                        firstIndexForReservedLane[priority] = nodeIndex;
+                        if (lanePriorityByRef.TryGetValue(gitRef, out int priority) && _firstIndexForReservedLane[priority] == -1)
+                        {
+                            _firstIndexForReservedLane[priority] = nodeIndex;
+                        }
                     }
                 }
             }
+
+            // Eliminate unused reserved lanes and duplicates (same revision in multiple lanes)
+            _firstIndexForReservedLane = _firstIndexForReservedLane.Where(x => x != -1).GroupBy(x => x).Select(g => g.Key).ToArray();
         }
 
-        // Eliminate unused reserved lanes and duplicates (same revision in multiple lanes)
-        firstIndexForReservedLane = firstIndexForReservedLane.Where(x => x != -1).GroupBy(x => x).Select(g => g.Key).ToArray();
-
         // Create the reverse map
-        Dictionary<int, int> reservedLaneForIndex = firstIndexForReservedLane
+        Dictionary<int, int> reservedLaneForIndex = _firstIndexForReservedLane
             .Select((firstIndex, priority) => (firstIndex, priority))
             .ToDictionary(x => x.firstIndex, x => x.priority);
 
@@ -490,6 +507,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
             if (revisionStartSegments.Length > 0)
             {
                 RevisionGraphSegment firstStartSegment = revisionStartSegments[0];
+                firstStartSegment.ReservedLaneIndex = int.MaxValue;
 
                 if (revisionGoesInReservedLane)
                 {
@@ -648,9 +666,9 @@ public class RevisionGraph : IRevisionGraphRowProvider
             {
                 // First row: Add a placeholder segment for each reserved lane.
                 // The segment is invisible and keeps the lane occupied above the lane's first node.
-                for (int lane = 0; lane < firstIndexForReservedLane.Length; ++lane)
+                for (int lane = 0; lane < _firstIndexForReservedLane.Length; ++lane)
                 {
-                    RevisionGraphRevision parent = orderedNodesCache[firstIndexForReservedLane[lane]];
+                    RevisionGraphRevision parent = orderedNodesCache[_firstIndexForReservedLane[lane]];
                     segments.Add(new RevisionGraphSegment(parent, null!) { ReservedLaneIndex = lane });
                 }
             }
@@ -677,7 +695,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
         loadingCompleted = loadingCompleted && lastToCacheRowIndex == lastOrderedNodeIndex;
         int straightenLanesStartIndex = Math.Max(1, startIndex - _straightenLanesLookAhead);
         int straightenLanesLastIndex = loadingCompleted ? lastToCacheRowIndex - 1 : lastToCacheRowIndex - _straightenLanesLookAhead;
-        StraightenLanes(straightenLanesStartIndex, straightenLanesLastIndex, lastLookAheadIndex: lastToCacheRowIndex, _orderedRowCache, Config.StraightenGraphSegmentsLimit, firstIndexForReservedLane);
+        StraightenLanes(straightenLanesStartIndex, straightenLanesLastIndex, lastLookAheadIndex: lastToCacheRowIndex, _orderedRowCache, Config.StraightenGraphSegmentsLimit, _firstIndexForReservedLane);
 
         int straightenDiagonalsLookAhead = _straightenDiagonalsLookAhead;
         if (straightenDiagonalsLookAhead > 0)
@@ -1116,21 +1134,21 @@ public class RevisionGraph : IRevisionGraphRowProvider
         // is furthest counter-clockwise in the graph.
         void SelectSegmentsInReservedLane()
         {
-            if (firstIndexForReservedLane.Length == 0)
+            if (_firstIndexForReservedLane.Length == 0)
             {
                 return;
             }
 
             // Gather the outgoing merges from first nodes of reserved lanes
 
-            Dictionary<RevisionGraphRevision, int> laneForReservedRevision = firstIndexForReservedLane
+            Dictionary<RevisionGraphRevision, int> laneForReservedRevision = _firstIndexForReservedLane
                 .Select((firstRowIndex, lane) => (firstRowIndex, lane))
                 .ToDictionary(x => orderedNodesCache[x.firstRowIndex], x => x.lane);
 
             List<RevisionGraphSegment> mergesFromReservedLane = [];
             int workRowIndex = -1;
             int headRowIndex = -1;
-            int maxIndex = Math.Min(orderedNodesCount, firstIndexForReservedLane.Max() + 1);
+            int maxIndex = Math.Min(orderedNodesCount, _firstIndexForReservedLane.Max() + 1);
             for (int i = 0; i < maxIndex; ++i)
             {
                 RevisionGraphRevision revision = orderedNodesCache[i];
@@ -1154,7 +1172,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
             }
 
             // Select allowed segment(s) in each reserved lane
-            for (int lane = 0; lane < firstIndexForReservedLane.Length; ++lane)
+            for (int lane = 0; lane < _firstIndexForReservedLane.Length; ++lane)
             {
                 RevisionGraphSegment[] segments = mergesFromReservedLane
                     .Where(s => laneForReservedRevision[s.Parent] == lane
@@ -1162,11 +1180,11 @@ public class RevisionGraph : IRevisionGraphRowProvider
                             orderedNodesCache[orderedNodesCache.IndexOf(s.Child) + 1] != s.Parent)
                     .ToArray();
 
-                if (workRowIndex != -1 && headRowIndex != -1 && firstIndexForReservedLane[lane] == headRowIndex && segments.Length == 0)
+                if (workRowIndex != -1 && headRowIndex != -1 && _firstIndexForReservedLane[lane] == headRowIndex && segments.Length == 0)
                 {
                     // This reserved lane starts with the HEAD node, which has no outgoing merges.
                     // Make the Worktree and Index nodes use this lane, too.
-                    firstIndexForReservedLane[lane] = workRowIndex;
+                    _firstIndexForReservedLane[lane] = workRowIndex;
                     reservedLaneForIndex[workRowIndex] = lane;
                     continue;
                 }
@@ -1199,6 +1217,14 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 }
             }
         }
+    }
+
+    /// <summary>
+    ///  Returns a dictionary with lane priorities for the references whose name matches a reserved lane pattern
+    /// </summary>
+    private static Dictionary<IGitRef, int> LanePriorities(IReadOnlyList<IGitRef> refs)
+    {
+        return Priority.Priorities(refs, x => x.LocalName, regexList: AppSettings.ReservedLanesBranchNames);
     }
 
     /// <summary>
