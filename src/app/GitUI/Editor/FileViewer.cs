@@ -513,6 +513,11 @@ public partial class FileViewer : GitModuleControl
         return internalFileViewer.GetSelectionLength();
     }
 
+    public int GetCaretPosition()
+    {
+        return internalFileViewer.GetCaretPosition();
+    }
+
     public void GoToLine(int line)
     {
         internalFileViewer.GoToLine(line);
@@ -1755,9 +1760,10 @@ public partial class FileViewer : GitModuleControl
         if (hunk)
         {
             // A new file is shown as its content only, i.e. a single hunk.
+            // Use the caret, not the selection start: the caret may be at either end of a selection.
             (int Position, int Length)? hunkRange = _viewItem.Item.IsNew
                 ? (0, text.Length)
-                : PatchManager.GetHunkRange(text, selectionPosition);
+                : PatchManager.GetHunkRange(text, GetCaretPosition());
             if (hunkRange is null)
             {
                 // The caret is not in a hunk
