@@ -8,17 +8,19 @@ namespace GitCommandsTests_Git;
 
 partial class CommandsTests
 {
-    [Test]
-    public void TryRemoveWorktree_should_let_git_remove_the_worktree()
+    [TestCase(@"C:\repos\feature", null, "worktree remove --force \"C:/repos/feature\"")]
+    [TestCase(@"C:\my repos\work tree", null, "worktree remove --force \"C:/my repos/work tree\"")]
+    [TestCase(@"\\wsl$\Ubuntu\home\me\wt", "Ubuntu", "worktree remove --force \"/home/me/wt\"")]
+    public void TryRemoveWorktree_should_let_git_remove_the_worktree(string worktreePath, string? wslDistro, string expectedArguments)
     {
         // git deletes the directory itself, which is what makes symlinks in a \\wsl$ worktree work
         // with WSL git, and it also removes the administrative files, so no prune is run.
         MockExecutable executable = new();
-        IGitModule module = CreateModule(executable);
+        IGitModule module = CreateModule(executable, wslDistro);
 
-        using (executable.StageOutput("worktree remove --force \"C:/repos/feature\"", ""))
+        using (executable.StageOutput(expectedArguments, ""))
         {
-            bool removed = module.TryRemoveWorktree(@"C:\repos\feature", out string? errorMessage);
+            bool removed = module.TryRemoveWorktree(worktreePath, out string? errorMessage);
 
             removed.Should().BeTrue();
             errorMessage.Should().BeNull();
@@ -43,6 +45,33 @@ partial class CommandsTests
 
                 removed.Should().BeTrue();
                 errorMessage.Should().BeNull();
+                Directory.Exists(worktreePath).Should().BeFalse();
+            }
+
+            executable.Verify();
+        }
+        finally
+        {
+            DeleteTemporaryWorktreeDirectory(worktreePath);
+        }
+    }
+
+    [Test]
+    public void TryRemoveWorktree_should_report_the_error_if_prune_fails()
+    {
+        MockExecutable executable = new();
+        IGitModule module = CreateModule(executable);
+        string worktreePath = CreateTemporaryWorktreeDirectory();
+
+        try
+        {
+            using (executable.StageOutput($"worktree remove --force \"{worktreePath.ToPosixPath()}\"", "", exitCode: 128, error: "fatal: cannot remove a locked working tree"))
+            using (executable.StageOutput("worktree prune", "", exitCode: 128, error: "fatal: unable to prune\n"))
+            {
+                bool removed = module.TryRemoveWorktree(worktreePath, out string? errorMessage);
+
+                removed.Should().BeFalse();
+                errorMessage.Should().Be("fatal: unable to prune");
                 Directory.Exists(worktreePath).Should().BeFalse();
             }
 
@@ -81,11 +110,11 @@ partial class CommandsTests
         }
     }
 
-    private static IGitModule CreateModule(MockExecutable executable)
+    private static IGitModule CreateModule(MockExecutable executable, string? wslDistro = null)
     {
         IGitModule module = Substitute.For<IGitModule>();
         module.GitExecutable.Returns(executable);
-        module.GetPathForGitExecution(Arg.Any<string?>()).Returns(callInfo => PathUtil.GetPathForGitExecution(callInfo.Arg<string?>(), wslDistro: null));
+        module.GetPathForGitExecution(Arg.Any<string?>()).Returns(callInfo => PathUtil.GetPathForGitExecution(callInfo.Arg<string?>(), wslDistro));
         return module;
     }
 

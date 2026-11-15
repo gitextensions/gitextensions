@@ -220,9 +220,18 @@ public static partial class Commands
     public static bool TryRemoveWorktree(this IGitModule module, string worktreePath, [NotNullWhen(returnValue: false)] out string? errorMessage)
     {
         // Let git delete the directory: WSL git runs inside the distro and can delete symlinks in a
-        // \\wsl$ worktree, which Windows cannot open (e.g. those of a Python venv). git also removes
-        // the administrative files, so no prune is needed.
-        ExecutionResult result = module.GitExecutable.Execute(RemoveWorktree(worktreePath, module.GetPathForGitExecution), throwOnErrorExit: false);
+        // \\wsl$ worktree (e.g. those of a Python venv), which Windows cannot open. Windows git (used if
+        // WSL git is disabled or the WSL file system is mapped to a drive) fails on them like
+        // Directory.Delete does, so the fallback below then reports the same error as before.
+        // git also removes the administrative files, so no prune is needed.
+        // --force also removes a worktree with local changes or submodules.
+        GitArgumentBuilder args = new("worktree")
+        {
+            "remove",
+            "--force",
+            module.GetPathForGitExecution(worktreePath).Quote()
+        };
+        ExecutionResult result = module.GitExecutable.Execute(args, throwOnErrorExit: false);
         if (result.ExitedSuccessfully)
         {
             errorMessage = null;
@@ -236,7 +245,13 @@ public static partial class Commands
             return false;
         }
 
-        module.GitExecutable.Execute(new GitArgumentBuilder("worktree") { "prune" }, throwOnErrorExit: false);
+        ExecutionResult pruneResult = module.GitExecutable.Execute(new GitArgumentBuilder("worktree") { "prune" }, throwOnErrorExit: false);
+        if (!pruneResult.ExitedSuccessfully)
+        {
+            errorMessage = pruneResult.StandardError.Trim();
+            return false;
+        }
+
         errorMessage = null;
         return true;
     }
