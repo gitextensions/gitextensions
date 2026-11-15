@@ -319,6 +319,16 @@ public class RevisionGraphTests
     }
 
     [Test]
+    public async Task IsolatedNodeInTopRowDoesNotCrash([Values("main;dev", "dev;main")] string reservedLanes)
+    {
+        AppSettings.ReservedLanesBranchNames = reservedLanes;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 3:2:dev 4:3 5::main ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
     public async Task DevGetsTheSecondLane()
     {
         RevisionGraph revisionGraph = CreateGraph(" 1  m:1:main d:1:dev 3:1  4:3 ");

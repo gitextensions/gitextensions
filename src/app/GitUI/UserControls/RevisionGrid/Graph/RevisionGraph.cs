@@ -650,11 +650,8 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 // The segment is invisible and keeps the lane occupied above the lane's first node.
                 for (int lane = 0; lane < firstIndexForReservedLane.Length; ++lane)
                 {
-                    if (firstIndexForReservedLane[lane] > 0)
-                    {
-                        RevisionGraphRevision parent = orderedNodesCache[firstIndexForReservedLane[lane]];
-                        segments.Insert(lane, new RevisionGraphSegment(parent, null!) { ReservedLaneIndex = lane });
-                    }
+                    RevisionGraphRevision parent = orderedNodesCache[firstIndexForReservedLane[lane]];
+                    segments.Add(new RevisionGraphSegment(parent, null!) { ReservedLaneIndex = lane });
                 }
             }
 
