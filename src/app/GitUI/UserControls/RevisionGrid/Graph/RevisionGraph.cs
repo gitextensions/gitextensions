@@ -79,9 +79,10 @@ public class RevisionGraph : IRevisionGraphRowProvider
 
     /// <summary>
     /// The row index of the revision that owns each reserved lane, by lane index.
-    /// Null if not yet computed (for the so far loaded set of refs).
     /// </summary>
-    private int[]? _firstIndexForReservedLane = null;
+    private int[] _firstIndexForReservedLane = [];
+
+    private int _firstIndexForReservedLaneInvalidCount;
 
     private int _straightenDiagonalsLookAhead => Config.StraightenGraphDiagonals ? _straightenLanesLookAhead / 2 : 0;
 
@@ -335,7 +336,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
         {
             // The revision has a ref which matches a reserved lane name.
             // This typically affects the layout of reserved lanes, so invalidate the whole graph.
-            _firstIndexForReservedLane = null;
+            Interlocked.Increment(ref _firstIndexForReservedLaneInvalidCount);
             minExistingScore = 0;
         }
 
@@ -458,7 +459,9 @@ public class RevisionGraph : IRevisionGraphRowProvider
             return;
         }
 
-        if (_firstIndexForReservedLane is null)
+        int firstIndexForReservedLaneInvalidCount = Interlocked.Exchange(ref _firstIndexForReservedLaneInvalidCount, 0);
+
+        if (firstIndexForReservedLaneInvalidCount > 0)
         {
             // Collect all refs for known revisions
             IReadOnlyList<IGitRef> refs = orderedNodesCache
