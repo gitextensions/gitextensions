@@ -133,7 +133,6 @@ partial class FileStatusList
 
         tsmiShowIgnoredFiles.Visible = canAutoRefresh;
         tsmiShowAssumeUnchangedFiles.Visible = canAutoRefresh;
-        tsmiShowUntrackedFiles.Checked = Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
 
         tsmiStageFile.Font = new Font(tsmiStageFile.Font, FontStyle.Bold);
         tsmiUnstageFile.Font = new Font(tsmiUnstageFile.Font, FontStyle.Bold);
@@ -613,6 +612,11 @@ partial class FileStatusList
 
             return (allFilesExist, allDirectoriesExist, allFilesOrUntrackedDirectoriesExist);
         }
+    }
+
+    public void InitializeContextMenuAndToolbar()
+    {
+        tsmiShowUntrackedFiles.Checked = Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
     }
 
     public void InitResetFileToToolStripMenuItem()
@@ -1143,7 +1147,7 @@ partial class FileStatusList
     private void ShowFindInCommitFilesGitGrep_Click(object sender, EventArgs e)
     {
         AppSettings.ShowFindInCommitFilesGitGrep.Value = tsmiShowFindInCommitFilesGitGrep.Checked;
-        SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value);
+        SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
     }
 
     private void ShowInFileTree_Click(object sender, EventArgs e)
@@ -1295,7 +1299,7 @@ partial class FileStatusList
         tsmiShowInFileTree.Visible = !_isFileTreeMode && _openInFileTreeTab_AsBlame is not null && _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         tsmiFilterFileInGrid.Enabled = _filterFileInGrid is not null && _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
         tsmiFileHistory.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
-        tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame.Value || _blame is null
+        tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame || _blame is null
             ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
             : _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         if (!tsmiBlame.Enabled)

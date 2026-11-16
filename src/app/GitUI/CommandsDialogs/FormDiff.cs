@@ -237,4 +237,13 @@ public partial class FormDiff : GitModuleForm
             PopulateDiffFiles();
         }
     }
+
+    internal TestAccessor GetTestAccessor()
+        => new(this);
+
+    internal readonly struct TestAccessor(FormDiff form)
+    {
+        public ObjectId? FirstId => form._firstRevision?.ObjectId;
+        public ObjectId? SecondId => form._secondRevision?.ObjectId;
+    }
 }

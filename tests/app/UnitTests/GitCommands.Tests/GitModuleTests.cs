@@ -153,6 +153,21 @@ public sealed partial class GitModuleTests
         GitModule.UnescapeOctalCodePoints(input).Should().Be(expected);
     }
 
+    [TestCase(null, false)]
+    [TestCase("", false)]
+    [TestCase("git fetch --all", false)]
+    [TestCase("\"C:\\Program Files\\Git\\cmd\\git.exe\" -c log.showsignature=false status", false)]
+    [TestCase("git log -- fsmonitor--daemon", false)]
+    [TestCase("git log -- fsmonitor--daemon.c", false)]
+    [TestCase("git fsmonitor--daemon.c", false)]
+    [TestCase("git fsmonitor--daemon", true)]
+    [TestCase("git fsmonitor--daemon run --detach --ipc-threads=8", true)]
+    [TestCase("\"C:\\Program Files\\Git\\mingw64\\bin\\git.exe\" fsmonitor--daemon run --detach --ipc-threads=8", true)]
+    public void IsGitFsMonitorDaemon_should_return_expected(string? commandLine, bool expected)
+    {
+        GitModule.IsGitFsMonitorDaemon(commandLine).Should().Be(expected);
+    }
+
     [Test]
     public void UnescapeOctalCodePoints_returns_same_string_if_nothing_to_escape()
     {
@@ -702,6 +717,87 @@ public sealed partial class GitModuleTests
                 },
                 true);
         }
+    }
+
+    [TestCase(0)]
+    [TestCase(5)] // git exits with 5 when the setting does not exist at the given level
+    public void SetGitSetting_unsetting_globally_invalidates_the_cached_effective_settings(int exitCode)
+    {
+        using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
+        GitVersion.ResetVersion();
+
+        using IDisposable configListBeforeUnset = _executable.StageOutput("config list --includes --null", "http.proxy\nhttp://proxy:8080\0");
+        _gitModule.GetEffectiveSetting("http.proxy").Should().Be("http://proxy:8080");
+
+        using IDisposable unset = _executable.StageOutput("config unset --global -- \"http.proxy\"", "", exitCode);
+        using IDisposable configListAfterUnset = _executable.StageOutput("config list --includes --null", "");
+        _gitModule.SetGitSetting(GitSettingLevel.Global, "http.proxy", value: null);
+
+        _gitModule.GetEffectiveSetting("http.proxy").Should().BeEmpty();
+    }
+
+    [TestCase("BASE", "1")]
+    [TestCase("LOCAL", "2")]
+    [TestCase("REMOTE", "3")]
+    public void HandleConflictSelectSide_should_return_true_and_empty_error_on_success(string side, string stage)
+    {
+        // HandleConflictSelectSide's first line is Directory.SetCurrentDirectory(WorkingDir), which
+        // throws for the fixture's default empty WorkingDir - a real directory is needed here.
+        GitModule gitModule = GetGitModuleWithExecutable(_executable, path: Path.GetTempPath());
+
+        using IDisposable checkoutIndex = _executable.StageOutput($"checkout-index -f --stage={stage} -- \"file.txt\"", "");
+        using IDisposable add = _executable.StageOutput("add -- \"file.txt\"", "");
+
+        gitModule.HandleConflictSelectSide("file.txt", side, out string errorMessage).Should().BeTrue();
+        errorMessage.Should().BeEmpty();
+    }
+
+    [Test]
+    public void HandleConflictSelectSide_should_return_false_and_the_git_error_when_checkout_index_fails()
+    {
+        GitModule gitModule = GetGitModuleWithExecutable(_executable, path: Path.GetTempPath());
+
+        using IDisposable checkoutIndex = _executable.StageOutput(
+            "checkout-index -f --stage=2 -- \"file.txt\"", "", exitCode: 1, error: "file.txt: is not in the cache");
+
+        gitModule.HandleConflictSelectSide("file.txt", "LOCAL", out string errorMessage).Should().BeFalse();
+        errorMessage.Should().Contain("file.txt: is not in the cache");
+    }
+
+    [Test]
+    public void HandleConflictSelectSide_should_return_false_and_the_git_error_when_add_fails()
+    {
+        GitModule gitModule = GetGitModuleWithExecutable(_executable, path: Path.GetTempPath());
+
+        using IDisposable checkoutIndex = _executable.StageOutput("checkout-index -f --stage=3 -- \"file.txt\"", "");
+        using IDisposable add = _executable.StageOutput(
+            "add -- \"file.txt\"", "", exitCode: 128, error: "fatal: pathspec 'file.txt' did not match any files");
+
+        gitModule.HandleConflictSelectSide("file.txt", "REMOTE", out string errorMessage).Should().BeFalse();
+        errorMessage.Should().Contain("fatal: pathspec 'file.txt' did not match any files");
+    }
+
+    [Test]
+    public void HandleConflictSelectSide_should_return_false_and_the_output_when_checkout_index_writes_to_stdout()
+    {
+        GitModule gitModule = GetGitModuleWithExecutable(_executable, path: Path.GetTempPath());
+
+        using IDisposable checkoutIndex = _executable.StageOutput("checkout-index -f --stage=1 -- \"file.txt\"", "unexpected checkout-index output");
+
+        gitModule.HandleConflictSelectSide("file.txt", "BASE", out string errorMessage).Should().BeFalse();
+        errorMessage.Should().Contain("unexpected checkout-index output");
+    }
+
+    [Test]
+    public void HandleConflictSelectSide_should_return_false_and_the_output_when_add_writes_to_stdout()
+    {
+        GitModule gitModule = GetGitModuleWithExecutable(_executable, path: Path.GetTempPath());
+
+        using IDisposable checkoutIndex = _executable.StageOutput("checkout-index -f --stage=2 -- \"file.txt\"", "");
+        using IDisposable add = _executable.StageOutput("add -- \"file.txt\"", "unexpected add output");
+
+        gitModule.HandleConflictSelectSide("file.txt", "LOCAL", out string errorMessage).Should().BeFalse();
+        errorMessage.Should().Contain("unexpected add output");
     }
 
     /// <summary>

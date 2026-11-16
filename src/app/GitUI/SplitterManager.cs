@@ -30,6 +30,22 @@ public sealed class SplitterManager
         }
     }
 
+    /// <summary>
+    ///  Restores the distances which have been stored for a larger window than the one the
+    ///  splitters had while <see cref="RestoreSplitters"/> ran, and which had to be skipped
+    ///  therefore. To be called once the form has reached its final size.
+    /// </summary>
+    public void RestorePendingSplitters()
+    {
+        foreach (SplitterData splitter in _splitters)
+        {
+            if (splitter.IsRestorePending)
+            {
+                splitter.RestoreFromSettings(_settings);
+            }
+        }
+    }
+
     public void SaveSplitters()
     {
         foreach (SplitterData splitter in _splitters)
@@ -61,8 +77,16 @@ public sealed class SplitterManager
         internal string Panel1CollapsedSettingsKey => _settingName + "_Panel1Collapsed";
         internal string Panel2CollapsedSettingsKey => _settingName + "_Panel2Collapsed";
 
+        /// <summary>
+        ///  Gets whether the stored distance did not fit the size the splitter had while it was
+        ///  restored, so that it has been kept for <see cref="RestorePendingSplitters"/>.
+        /// </summary>
+        internal bool IsRestorePending { get; private set; }
+
         public void RestoreFromSettings(SettingsSource settings)
         {
+            IsRestorePending = false;
+
             _splitter.BeginInit();
             _splitter.SuspendLayout();
 
@@ -134,9 +158,18 @@ public sealed class SplitterManager
                 {
                     _splitter.SplitterDistance = intDistance;
                 }
-                else if (_defaultDistance.HasValue && IsValidSplitterDistance(_defaultDistance.Value))
+                else
                 {
-                    _splitter.SplitterDistance = _defaultDistance.Value;
+                    // The window is still smaller than the one the distance has been stored for,
+                    // because its stored bounds and state are applied only after the form has been
+                    // constructed. Keep the distance for RestorePendingSplitters() rather than
+                    // dropping it, which used to reset the layout of an enlarged window.
+                    IsRestorePending = true;
+
+                    if (_defaultDistance.HasValue && IsValidSplitterDistance(_defaultDistance.Value))
+                    {
+                        _splitter.SplitterDistance = _defaultDistance.Value;
+                    }
                 }
             }
             catch

@@ -335,41 +335,10 @@ public sealed partial class FormStash : GitModuleForm
     {
         using (new WaitCursorScope())
         {
-            string stashName = GetStashName();
-            if (!AppSettings.DontConfirmStashDrop)
-            {
-                TaskDialogPage page = new()
-                {
-                    Text = TranslatedStrings.AreYouSure,
-                    Caption = TranslatedStrings.StashDropConfirmTitle,
-                    Heading = TranslatedStrings.CannotBeUndone,
-                    Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
-                    Icon = TaskDialogIcon.Information,
-                    Verification = new TaskDialogVerificationCheckBox
-                    {
-                        Text = TranslatedStrings.DontShowAgain
-                    },
-                    SizeToContent = true
-                };
-
-                TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
-
-                if (result == TaskDialogButton.Yes)
-                {
-                    _lastSelectedStashIndex = Stashes.SelectedIndex;
-                    UICommands.StashDrop(this, stashName);
-                    Initialize();
-                }
-
-                if (page.Verification.Checked)
-                {
-                    AppSettings.DontConfirmStashDrop = true;
-                }
-            }
-            else
+            if (MessageBoxes.ConfirmSuppressible(this, TranslatedStrings.AreYouSure, TranslatedStrings.StashDropConfirmTitle, AppSettings.DontConfirmStashDrop, heading: TranslatedStrings.CannotBeUndone, icon: TaskDialogIcon.Information))
             {
                 _lastSelectedStashIndex = Stashes.SelectedIndex;
-                UICommands.StashDrop(this, stashName);
+                UICommands.StashDrop(this, GetStashName());
                 Initialize();
             }
         }
@@ -456,5 +425,16 @@ public sealed partial class FormStash : GitModuleForm
         {
             Close();
         }
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(FormStash form)
+    {
+        public TableLayoutPanel ButtonsAndOptions => form.tableLayoutPanel1;
+        public Button StashAll => form.Stash;
+        public Button StashSelected => form.StashSelectedFiles;
+        public Button Drop => form.Clear;
+        public Button ApplySelected => form.Apply;
     }
 }

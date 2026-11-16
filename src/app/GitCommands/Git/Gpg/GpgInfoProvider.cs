@@ -24,7 +24,7 @@ public class GpgInfoProvider(IGitGpgController gitGpgController) : IGpgInfoProvi
 
     public async Task<GpgInfo?> LoadGpgInfoAsync(GitRevision? revision, CancellationToken cancellationToken)
     {
-        if (!AppSettings.ShowGpgInformation.Value || revision?.ObjectId is null)
+        if (!AppSettings.ShowGpgInformation || revision?.ObjectId is null)
         {
             return null;
         }

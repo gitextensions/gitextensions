@@ -87,7 +87,9 @@ int APIENTRY _tWinMain(HINSTANCE	/*hInstance*/,
 		g_Prompt = lpPrompt;
 	}
 
-	TCHAR *yesno=_T("(yes/no)");
+	// Match the prefix only: OpenSSH asks "(yes/no/[fingerprint])" for an unknown host key
+	// and "(yes/no)" for the remaining confirmations.
+	TCHAR *yesno=_T("(yes/no");
 	size_t lens = _tcslen(yesno);
 	TCHAR *p = lpCmdLine;
 	BOOL bYesNo=FALSE;

@@ -22,7 +22,7 @@ public static class ServiceContainerRegistry
         ScriptsManager scriptsManager = new();
         HotkeySettingsManager hotkeySettingsManager = new(scriptsManager);
 
-        OutputHistoryModel outputHistoryModel = new(AppSettings.OutputHistoryDepth.Value);
+        OutputHistoryModel outputHistoryModel = new(AppSettings.OutputHistoryDepth);
         serviceContainer.GetRequiredService<ISubscribableTraceListener>().TraceReceived += (in string message) =>
         {
             // In release builds, all Trace.Write* output is recorded.

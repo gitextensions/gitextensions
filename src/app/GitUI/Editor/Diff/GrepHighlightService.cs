@@ -72,7 +72,7 @@ public partial class GrepHighlightService : TextHighlightService
         commandConfiguration.Add(new GitConfigItem("color.grep.separator", ""), "grep");
 
         SetIfUnsetInGit(key: "color.grep.function", value: "white dim reverse");
-        if (AppSettings.ReverseGitColoring.Value)
+        if (AppSettings.ReverseGitColoring)
         {
             SetIfUnsetInGit(key: "color.grep.matchselected", value: "red bold reverse");
         }

@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 
@@ -468,22 +469,7 @@ public record FilterInfo
             // (so included for --reflog/--all, not explicitly added for other)
             // --exclude is ignored for --reflog, notes/stash below only applicable with --all
             // Similar but unhandled refs include Gerrit refs like refs/for/ and refs/changes/
-            if (!AppSettings.ShowGitNotes)
-            {
-                filter.Add($"--exclude={GitRefName.RefsNotesPrefix}");
-            }
-
-            if (!AppSettings.ShowStashes)
-            {
-                filter.Add($"--exclude={GitRefName.RefsStashPrefix}");
-            }
-
-            if (!AppSettings.ShowSessionRefs)
-            {
-                filter.Add($"--exclude={GitRefName.RefsAgentsPrefix}**");
-                filter.Add($"--exclude={GitRefName.RefsSessionsPrefix}**");
-                filter.Add($"--exclude={GitRefName.RefsCopilotCheckpointsPrefix}**");
-            }
+            filter.AddOptionalRefsFilters();
 
             // All refs/
             filter.Add("--all");

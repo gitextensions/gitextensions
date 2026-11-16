@@ -39,19 +39,19 @@ public sealed class EnvironmentPathsProvider : IEnvironmentPathsProvider
             yield break;
         }
 
-        foreach (string rawDir in pathVariable.LazySplit(Path.PathSeparator))
+        foreach ((int beginning, int length) in pathVariable.LazySplitRanges(Path.PathSeparator))
         {
-            string dir = rawDir;
+            ReadOnlySpan<char> dir = pathVariable.AsSpan(beginning, length);
 
             // Usually, paths with spaces are not quoted on %PATH%, but it's well possible, and .NET won't consume a quoted path
             // This does not handle the full grammar of the %PATH%, but at least prevents Illegal Characters in Path exceptions (see #2924)
-            dir = dir.Trim(' ', '"', '\t');
+            dir = dir.Trim([' ', '"', '\t']);
             if (dir.Length == 0)
             {
                 continue;
             }
 
-            yield return dir;
+            yield return new string(dir);
         }
     }
 

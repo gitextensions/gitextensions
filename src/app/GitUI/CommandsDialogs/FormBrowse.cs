@@ -502,7 +502,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         bool isDashboard = _dashboard?.Visible ?? false;
         _loadOperations.InvokeAndForget(this, async () =>
         {
-            _outputHistoryController = AppSettings.ShowOutputHistoryAsTab.Value
+            _outputHistoryController = AppSettings.ShowOutputHistoryAsTab
                 ? new OutputHistoryTabController(UICommands.GetRequiredService<IOutputHistoryProvider>(), new OutputHistoryControl(), parent: CommitInfoTabControl,
                     tabCaption: _outputHistoryTabCaption.Text)
                 : new OutputHistoryPanelController(UICommands.GetRequiredService<IOutputHistoryProvider>(), new OutputHistoryControl(), parent: toolPanel.ContentPanel,
@@ -730,7 +730,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         // Pre-warm the ahead/behind cache in the background so the revision grid can pick it up synchronously. GetData checks the AppSetting itself.
         ThreadHelper.FileAndForget(() => _ = _aheadBehindDataProvider?.GetData());
 
-        RevisionGrid.PerformRefreshRevisions(getRefs, forceRefresh: true);
+        RevisionGrid.PerformRefreshRevisions(getRefs, forceRefreshRefs: true);
 
         InternalInitialize();
         ToolStripFilters.RefreshRevisionFunction(getRefs);
@@ -972,7 +972,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                     : DetachedHeadParser.DetachedBranch
                 : "";
             toolStripButtonLevelUp.Enabled = hasWorkingDir && !bareRepository;
-            UpdateWorktreeToolStripVisibility();
+            toolStripWorktrees.Enabled = validBrowseDir;
             CommitInfoTabControl.Visible = validBrowseDir;
             fileExplorerToolStripMenuItem.Enabled = validBrowseDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validBrowseDir;
@@ -1183,6 +1183,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         // check if we are in the middle of an action (merge/rebase/etc.)
         notificationBarGitActionInProgress.RefreshGitAction(
             checkForConflicts: AppSettings.GitAsyncWhenMinimized || (WindowState != FormWindowState.Minimized));
+
+        IndexWatcher indexWatcher = RevisionGrid.IndexWatcher;
+        ThreadHelper.FileAndForget(indexWatcher.DetectUnreportedChangesInWsl);
     }
 
     private void UpdateStashCount()
@@ -1278,12 +1281,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
-        _selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
-
         if (revision is null)
         {
             return;
         }
+
+        _selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
 
         IReadOnlyList<ObjectId> children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
         RevisionInfo.SetRevisionWithChildren(revision, children);
@@ -1292,7 +1295,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private async Task FillGpgInfoAsync(GitRevision? revision, CancellationToken cancellationToken)
     {
         // Don't show the "GPG" tab for artificial commits
-        bool showGpgInfoTab = revision?.IsArtificial is false && AppSettings.ShowGpgInformation.Value;
+        bool showGpgInfoTab = revision?.IsArtificial is false && AppSettings.ShowGpgInformation;
 
         if (!showGpgInfoTab)
         {
@@ -1307,7 +1310,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             CommitInfoTabControl.TabPages.Insert(index + 1, GpgInfoTabPage);
         }
 
-        if (!AppSettings.ShowGpgInformation.Value || CommitInfoTabControl.SelectedTab != GpgInfoTabPage)
+        if (!AppSettings.ShowGpgInformation || CommitInfoTabControl.SelectedTab != GpgInfoTabPage)
         {
             return;
         }
@@ -1735,40 +1738,50 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         if (Module.IsValidGitWorkingDir())
         {
             RevisionGrid.SuspendRefreshRevisions();
-            string path = Module.WorkingDir;
-            AppSettings.RecentWorkingDir = path;
-
-            HideDashboard();
-
-            if (!string.Equals(originalWorkingDir, Module.WorkingDir, StringComparison.Ordinal))
+            try
             {
-                ChangeTerminalActiveFolder(Module.WorkingDir);
+                string path = Module.WorkingDir;
+                AppSettings.RecentWorkingDir = path;
+
+                HideDashboard();
+
+                if (!string.Equals(originalWorkingDir, Module.WorkingDir, StringComparison.Ordinal))
+                {
+                    ChangeTerminalActiveFolder(Module.WorkingDir);
 
 #if DEBUG
-                // Current encodings
-                Debug.WriteLine($"Encodings for {Module.WorkingDir}");
-                Debug.WriteLine($"Files content encoding: {Module.FilesEncoding.EncodingName}");
-                Debug.WriteLine($"Commit encoding: {Module.CommitEncoding.EncodingName}");
-                if (Module.LogOutputEncoding.CodePage != Module.CommitEncoding.CodePage)
-                {
-                    Debug.WriteLine($"Log output encoding: {Module.LogOutputEncoding.EncodingName}");
-                }
+                    // Current encodings
+                    Debug.WriteLine($"Encodings for {Module.WorkingDir}");
+                    Debug.WriteLine($"Files content encoding: {Module.FilesEncoding.EncodingName}");
+                    Debug.WriteLine($"Commit encoding: {Module.CommitEncoding.EncodingName}");
+                    if (Module.LogOutputEncoding.CodePage != Module.CommitEncoding.CodePage)
+                    {
+                        Debug.WriteLine($"Log output encoding: {Module.LogOutputEncoding.EncodingName}");
+                    }
 #endif
 
-                // Reset the filter when switching repos
+                    // Reset the filter when switching repos
 
-                // If we're applying custom branch or revision filters - reset them
-                RevisionGrid.ResetAllFilters();
-                ToolStripFilters.ClearQuickFilters();
-                revisionDiff.RepositoryChanged();
+                    // If we're applying custom branch or revision filters - reset them
+                    RevisionGrid.ResetAllFilters();
+                    ToolStripFilters.ClearQuickFilters();
+                    revisionDiff.RepositoryChanged();
+
+                    _selectedRevisionUpdatedTargets = UpdateTargets.None;
+                }
+
+                RevisionInfo.SetRevisionWithChildren(revision: null, children: []);
             }
+            finally
+            {
+                // The refresh must not be skipped if anything above failed, the grid would keep displaying
+                // the revisions of the previous repository, and the suspend counter would stay unbalanced.
+                RevisionGrid.ResumeRefreshRevisions();
 
-            RevisionInfo.SetRevisionWithChildren(revision: null, children: []);
-            RevisionGrid.ResumeRefreshRevisions();
+                RefreshRevisions();
 
-            RefreshRevisions();
-
-            SetShortcutKeyDisplayStringsFromHotkeySettings();
+                SetShortcutKeyDisplayStringsFromHotkeySettings();
+            }
         }
         else
         {
@@ -2103,7 +2116,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             case Command.FocusCommitInfo: FocusCommitInfo(); break;
             case Command.FocusDiff: FocusTabOf(revisionDiff, (c, alreadyContainedFocus) => c.SwitchFocus(alreadyContainedFocus)); break;
             case Command.FocusFileTree: FocusTabOf(fileTree, (c, alreadyContainedFocus) => c.SwitchFocus(alreadyContainedFocus)); break;
-            case Command.FocusGpgInfo when AppSettings.ShowGpgInformation.Value: FocusTabOf(revisionGpgInfo1, (c, alreadyContainedFocus) => c.Focus()); break;
+            case Command.FocusGpgInfo when AppSettings.ShowGpgInformation: FocusTabOf(revisionGpgInfo1, (c, alreadyContainedFocus) => c.Focus()); break;
             case Command.FocusGitConsole: FocusGitConsole(); break;
             case Command.FocusBuildServerStatus: FocusTabOf(_buildReportTabPageExtension?.Control, (c, alreadyContainedFocus) => c.Focus()); break;
             case Command.FocusOutputHistoryAndToggleIfPanel: return _outputHistoryController!.FocusAndToggleIfPanel();
@@ -2324,7 +2337,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             }
         }
 
-        LeftSplitContainer.Panel2Collapsed = !AppSettings.OutputHistoryPanelVisible.Value;
+        LeftSplitContainer.Panel2Collapsed = !AppSettings.OutputHistoryPanelVisible;
 
         // Account for shift by 2px as for RevisionsSplitContainer
         if (!LeftSplitContainer.Panel2Collapsed && LeftSplitContainer.FixedPanel == FixedPanel.Panel2)
@@ -2723,7 +2736,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     /// </summary>
     private void FillTerminalTab()
     {
-        if (!AppSettings.ShowConEmuTab.Value)
+        if (!AppSettings.ShowConEmuTab)
         {
             return;
         }
@@ -3086,8 +3099,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         public SplitterManager SplitterManager => _form._splitterManager;
         public TabPage TreeTabPage => _form.TreeTabPage;
         public FilterToolBar ToolStripFilters => _form.ToolStripFilters;
+        public CommitInfo.CommitInfo RevisionInfo => _form.RevisionInfo;
+        public TabPage CommitInfoTabPage => _form.CommitInfoTabPage;
 
         public void RefreshRevisions() => _form.RefreshRevisions();
+        public void SetWorkingDir(string? path) => _form.SetWorkingDir(path);
     }
 
     private void FormBrowse_DragDrop(object? sender, DragEventArgs e)

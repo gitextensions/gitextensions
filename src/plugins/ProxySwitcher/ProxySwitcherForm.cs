@@ -5,7 +5,6 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
-using GitExtUtils;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.ProxySwitcher;
@@ -77,7 +76,6 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
     private string BuildHttpProxy()
     {
         StringBuilder sb = new();
-        sb.Append('"');
         string username = _plugin.Username.ValueOrDefault(_settings);
         if (!string.IsNullOrEmpty(username))
         {
@@ -100,33 +98,25 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
             sb.Append(port);
         }
 
-        sb.Append('"');
+        // Not quoted: SetGitSetting quotes the value.
         return sb.ToString();
     }
 
     private void SetProxy_Button_Click(object sender, EventArgs e)
     {
-        string httpProxy = BuildHttpProxy();
-
-        GitArgumentBuilder args = new("config")
-        {
-            { ApplyGlobally_CheckBox.Checked, "--global" },
-            "http.proxy",
-            httpProxy
-        };
-        _gitCommands.GitExecutable.GetOutput(args);
+        _gitCommands.SetGitSetting(SelectedSettingLevel, "http.proxy", BuildHttpProxy());
 
         RefreshProxy();
     }
 
     private void UnsetProxy_Button_Click(object sender, EventArgs e)
     {
-        string arguments = ApplyGlobally_CheckBox.Checked
-            ? "config --global --unset http.proxy"
-            : "config --unset http.proxy";
-
-        _gitCommands.GitExecutable.GetOutput(arguments);
+        // Git exits with code 5 when the setting does not exist at the level it is unset at, which
+        // SetGitSetting tolerates - unlike a bare "git config --unset".
+        _gitCommands.SetGitSetting(SelectedSettingLevel, "http.proxy", value: null);
 
         RefreshProxy();
     }
+
+    private GitSettingLevel SelectedSettingLevel => ApplyGlobally_CheckBox.Checked ? GitSettingLevel.Global : GitSettingLevel.Local;
 }

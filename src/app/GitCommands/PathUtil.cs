@@ -1,4 +1,4 @@
-using System.Buffers;
+﻿using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
@@ -155,6 +155,11 @@ public static partial class PathUtil
     public static string NormalizePath(this string path)
     {
         if (string.IsNullOrWhiteSpace(path))
+        {
+            return string.Empty;
+        }
+
+        if (path == ".")
         {
             return string.Empty;
         }

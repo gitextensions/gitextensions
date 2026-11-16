@@ -69,6 +69,9 @@ public class FormCommitSubmoduleTests
         {
             FormCommit.TestAccessor ta = form.GetTestAccessor();
 
+            // The initial status load may not have populated the lists yet (seen on CI)
+            UITest.ProcessUntil("loading the staged submodule", () => ta.StagedList.AllItems.Items().Any(IsSubmoduleItem), maxMilliseconds: 10_000);
+
             GitItemStatus staged = GetSubmoduleItem(ta.StagedList);
             staged.IsSubmodule.Should().BeTrue("`git submodule add` stages the submodule");
 
@@ -89,7 +92,10 @@ public class FormCommitSubmoduleTests
         return;
 
         static GitItemStatus GetSubmoduleItem(FileStatusList list)
-            => list.AllItems.Items().Single(item => item.Name.TrimEnd('/') == _submodulePath);
+            => list.AllItems.Items().Single(IsSubmoduleItem);
+
+        static bool IsSubmoduleItem(GitItemStatus item)
+            => item.Name.TrimEnd('/') == _submodulePath;
     }
 
     private void RunFormTest(Func<FormCommit, Task> testDriverAsync)

@@ -150,6 +150,64 @@ public class FormBrowseTests
             });
     }
 
+    [Test]
+    public void Switching_repo_while_the_grid_is_refreshing_should_reload_the_grid()
+    {
+        // Regression test for #12792: switching the repository while the revision grid was still loading
+        // silently dropped the refresh for the new repository, so the grid kept displaying the revisions of
+        // the previous one. This is a latch state, not a race: with a refresh flagged as running at the time
+        // of the switch, the refresh was dropped in 100% of the cases, so the flag can be set artificially.
+        using ReferenceRepository otherRepository = new();
+        ObjectId otherCommit = ObjectId.Parse(otherRepository.CreateCommit("Commit in the repository switched to"));
+
+        RunFormTest(
+            form =>
+            {
+                WaitForRevisionsToBeLoaded(form);
+
+                RevisionGridControl revisionGrid = form.GetTestAccessor().RevisionGrid;
+                revisionGrid.GetRevision(otherCommit).Should().BeNull();
+
+                // Pretend that the revisions of the current repository are still being loaded
+                revisionGrid.GetTestAccessor().IsRefreshingRevisions = true;
+
+                form.SetWorkingDir(otherRepository.Module.WorkingDir);
+
+                UITest.ProcessUntil(
+                    "loading the revisions of the repository switched to",
+                    () => revisionGrid.GetTestAccessor().IsDataLoadComplete && revisionGrid.GetRevision(otherCommit) is not null,
+                    maxMilliseconds: 10_000);
+
+                revisionGrid.GetTestAccessor().IsRefreshingRevisions.Should().BeFalse();
+            });
+    }
+
+    [Test]
+    public void Refreshing_the_grid_while_it_is_refreshing_should_reload_the_grid()
+    {
+        RunFormTest(
+            form =>
+            {
+                WaitForRevisionsToBeLoaded(form);
+
+                RevisionGridControl revisionGrid = form.GetTestAccessor().RevisionGrid;
+                ObjectId newCommit = ObjectId.Parse(_referenceRepository.CreateCommit("Commit created after the grid was loaded"));
+                revisionGrid.GetRevision(newCommit).Should().BeNull();
+
+                // Pretend that the revisions are still being loaded - the refresh must supersede that load
+                revisionGrid.GetTestAccessor().IsRefreshingRevisions = true;
+
+                form.GetTestAccessor().RefreshRevisions();
+
+                UITest.ProcessUntil(
+                    "reloading the revisions",
+                    () => revisionGrid.GetTestAccessor().IsDataLoadComplete && revisionGrid.GetRevision(newCommit) is not null,
+                    maxMilliseconds: 10_000);
+
+                revisionGrid.GetTestAccessor().IsRefreshingRevisions.Should().BeFalse();
+            });
+    }
+
     [TestCase("", "file.txt")]
     [TestCase("", "file with spaces.txt")]
     [TestCase("Dir with spaces", "file.txt")]
@@ -163,7 +221,7 @@ public class FormBrowseTests
         string revision2 = referenceRepository.CreateCommitRelative(fileRelativePath, fileName, $"Update '{fileName}' in directory '{fileRelativePath}'");
         string revision3 = referenceRepository.CreateCommitRelative(fileRelativePath, fileName, $"Update '{fileName}' in directory '{fileRelativePath}' again");
 
-        bool useBrowseForFileHistory = AppSettings.UseBrowseForFileHistory.Value;
+        bool useBrowseForFileHistory = AppSettings.UseBrowseForFileHistory;
 
         AppSettings.UseBrowseForFileHistory.Value = true;
 
@@ -341,6 +399,42 @@ public class FormBrowseTests
             commands);
     }
 
+    [Test]
+    public void SetWorkingDir_should_reload_commit_info_for_auto_selected_revision_after_repository_switch()
+    {
+        using (CommitInfoPanelTestSettingsScope.ForBrowseRepositorySwitch())
+        {
+            using GitModuleTestHelper repoA = new("formBrowseRepoSwitchA");
+            using GitModuleTestHelper repoB = new("formBrowseRepoSwitchB");
+            CreateCommitWithSubject(repoA, "REPO_A_HEAD subject");
+            CreateCommitWithSubject(repoB, "REPO_B_HEAD subject");
+
+            GitUICommands commandsA = new(GlobalServiceContainer.CreateDefaultMockServiceContainer(), repoA.Module);
+
+            RunFormTest(
+                async form =>
+                {
+                    FormBrowse.TestAccessor ta = form.GetTestAccessor();
+                    ta.CommitInfoTabControl.SelectedTab = ta.CommitInfoTabPage;
+
+                    WaitForRevisionsToBeLoaded(form);
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                    WaitForCommitMessageContaining(form, "REPO_A_HEAD");
+
+                    ta.SetWorkingDir(repoB.Module.WorkingDir);
+                    WaitForRevisionsToBeLoaded(form);
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+                    WaitForCommitMessageAfterRepositorySwitch(form, "REPO_B_HEAD", "REPO_A_HEAD");
+                },
+                commandsA);
+        }
+    }
+
+    private static void CreateCommitWithSubject(GitModuleTestHelper helper, string subject)
+    {
+        helper.Module.GitExecutable.GetOutput($@"commit --allow-empty -m ""{subject}""");
+    }
+
     private static void RunFormTest(Action<FormBrowse> testDriver, GitUICommands commands)
     {
         UITest.RunForm(
@@ -372,5 +466,28 @@ public class FormBrowseTests
     private static void WaitForRevisionsToBeLoaded(FormBrowse form, [CallerMemberName] string caller = "")
     {
         UITest.ProcessUntil($"{caller} loading revisions", () => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsDataLoadComplete, maxMilliseconds: 10_000);
+    }
+
+    private static void WaitForCommitMessageContaining(FormBrowse form, string subjectFragment, [CallerMemberName] string caller = "")
+    {
+        GitUI.CommitInfo.CommitInfo.TestAccessor commitInfo = form.GetTestAccessor().RevisionInfo.GetTestAccessor();
+        UITest.ProcessUntil(
+            $"{caller} commit message contains '{subjectFragment}'",
+            () => commitInfo.CommitMessage.Text.Contains(subjectFragment, StringComparison.Ordinal),
+            maxMilliseconds: 10_000);
+    }
+
+    private static void WaitForCommitMessageAfterRepositorySwitch(FormBrowse form, string expectedSubjectFragment, string staleSubjectFragment)
+    {
+        GitUI.CommitInfo.CommitInfo.TestAccessor commitInfo = form.GetTestAccessor().RevisionInfo.GetTestAccessor();
+        UITest.ProcessUntil(
+            "commit message after repository switch",
+            () =>
+            {
+                string text = commitInfo.CommitMessage.Text;
+                return text.Contains(expectedSubjectFragment, StringComparison.Ordinal)
+                    && !text.Contains(staleSubjectFragment, StringComparison.Ordinal);
+            },
+            maxMilliseconds: 10_000);
     }
 }

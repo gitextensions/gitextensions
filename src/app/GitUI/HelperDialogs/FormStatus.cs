@@ -43,7 +43,7 @@ public partial class FormStatus : GitExtensionsDialog
         pnlOutput.Controls.Add(ConsoleCommandRunner.Control);
         ConsoleCommandRunner.Control.Dock = DockStyle.Fill;
 
-        ShowPassword.Checked = AppSettings.ShowProcessDialogPasswordInput.Value;
+        ShowPassword.Checked = AppSettings.ShowProcessDialogPasswordInput;
 
         if (_useDialogSettings)
         {

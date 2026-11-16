@@ -67,6 +67,10 @@ public sealed partial class GitModule : IGitModule
     [GeneratedRegex(@"(\\(?<octal>[0-7]{3}))+", RegexOptions.ExplicitCapture)]
     private static partial Regex EscapedOctalCodePointRegex { get; }
 
+    // The executable (possibly quoted) directly followed by the subcommand, as git starts the daemon.
+    [GeneratedRegex(@"^\s*(""[^""]*""|\S+)\s+fsmonitor--daemon(\s|$)", RegexOptions.ExplicitCapture)]
+    private static partial Regex GitFsMonitorDaemonCommandLineRegex { get; }
+
     [GeneratedRegex(@"^(?<code>[\-+U ])(?<sha>[0-9a-f]{40}) (?<path>.+) \((?<branch>.+)\)$", RegexOptions.ExplicitCapture)]
     private static partial Regex ShaRegex { get; }
 
@@ -522,7 +526,7 @@ public sealed partial class GitModule : IGitModule
         return result.ExitedSuccessfully && !string.IsNullOrEmpty(result.StandardOutput);
     }
 
-    public bool HandleConflictSelectSide(string fileName, string side)
+    public bool HandleConflictSelectSide(string fileName, string side, out string errorMessage)
     {
         Directory.SetCurrentDirectory(WorkingDir);
         GitArgumentBuilder args = new("checkout-index")
@@ -532,10 +536,11 @@ public sealed partial class GitModule : IGitModule
             "--",
             fileName.ToPosixPath().QuoteNE()
         };
-        string output = GitExecutable.GetOutput(args);
 
-        if (!string.IsNullOrEmpty(output))
+        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
+        if (IsConflictSelectSideFailure(result))
         {
+            errorMessage = FormatConflictSelectSideError(result);
             return false;
         }
 
@@ -544,8 +549,22 @@ public sealed partial class GitModule : IGitModule
             "--",
             fileName.ToPosixPath().QuoteNE()
         };
-        output = GitExecutable.GetOutput(args);
-        return string.IsNullOrEmpty(output);
+        result = GitExecutable.Execute(args, throwOnErrorExit: false);
+        if (IsConflictSelectSideFailure(result))
+        {
+            errorMessage = FormatConflictSelectSideError(result);
+            return false;
+        }
+
+        errorMessage = string.Empty;
+        return true;
+
+        static string FormatConflictSelectSideError(ExecutionResult result)
+            => $"{result.ExitCodeDisplay}: {result.AllOutput.Trim()}";
+
+        // Both commands are silent on success, so any stdout is treated as a failure, too.
+        static bool IsConflictSelectSideFailure(ExecutionResult result)
+            => !result.ExitedSuccessfully || !string.IsNullOrEmpty(result.StandardOutput);
     }
 
     public bool HandleConflictsSaveSide(string fileName, string saveAsFileName, string side)
@@ -2472,9 +2491,9 @@ public sealed partial class GitModule : IGitModule
             {
                 "--files-with-matches",
                 "-z",
-                { applyAppSettings, AppSettings.GitGrepUserArguments.Value },
-                { applyAppSettings && AppSettings.GitGrepIgnoreCase.Value, "--ignore-case" },
-                { applyAppSettings && AppSettings.GitGrepMatchWholeWord.Value, "--word-regexp" },
+                { applyAppSettings, AppSettings.GitGrepUserArguments },
+                { applyAppSettings && AppSettings.GitGrepIgnoreCase, "--ignore-case" },
+                { applyAppSettings && AppSettings.GitGrepMatchWholeWord, "--word-regexp" },
                 grepString,
                 !objectId.IsArtificial ? objectId.ToString() : objectId == ObjectId.IndexId ? "--cached" : "",
                 "--"
@@ -2529,9 +2548,9 @@ public sealed partial class GitModule : IGitModule
             { !useGitColoring, "--column" },
             { useGitColoring, "--color=always" },
             extraArgs,
-            AppSettings.GitGrepUserArguments.Value,
-            { AppSettings.GitGrepIgnoreCase.Value, "--ignore-case" },
-            { AppSettings.GitGrepMatchWholeWord.Value, "--word-regexp" },
+            AppSettings.GitGrepUserArguments,
+            { AppSettings.GitGrepIgnoreCase, "--ignore-case" },
+            { AppSettings.GitGrepMatchWholeWord, "--word-regexp" },
             grepString,
             !objectId.IsArtificial ? objectId.ToString() : objectId == ObjectId.IndexId ? "--cached" : "",
             "--",
@@ -3749,7 +3768,9 @@ public sealed partial class GitModule : IGitModule
         if (OperatingSystem.IsWindows())
         {
             Process[] processes = Process.GetProcessesByName("git");
-            bool running = processes.Length > 0;
+
+            // A process whose command line cannot be read is considered a running git command.
+            bool running = processes.Any(p => !IsGitFsMonitorDaemon(p.TryGetCommandLine()));
             foreach (Process p in processes)
             {
                 p.Dispose();
@@ -3784,6 +3805,17 @@ public sealed partial class GitModule : IGitModule
 
         return false;
     }
+
+    /// <summary>
+    ///  Determines whether the command line is the one git uses to start a <c>git fsmonitor--daemon</c>.
+    /// </summary>
+    /// <remarks>
+    ///  Git starts one daemon per worktree with <c>core.fsmonitor</c> enabled, and it keeps running until it is stopped
+    ///  or the worktree is deleted. It does not prevent other git commands from running, so it must not be considered
+    ///  as a running git command, otherwise a periodic background fetch would never run.
+    /// </remarks>
+    internal static bool IsGitFsMonitorDaemon(string? commandLine)
+        => commandLine is not null && GitFsMonitorDaemonCommandLineRegex.IsMatch(commandLine);
 
     /// <summary>
     /// Un-escapes any octal code points embedded within <paramref name="s"/>.
@@ -4118,7 +4150,7 @@ public sealed partial class GitModule : IGitModule
         }
     }
 
-    private void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value, bool append = false)
+    public void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value, bool append = false)
     {
         Commands.SetGitSetting(GitExecutable, settingLevel, setting, value, append);
 
