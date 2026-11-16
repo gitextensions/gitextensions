@@ -5,7 +5,7 @@
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
       <Private>false</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+    <ProjectReference Include="..\..\plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
       <Private>false</Private>
     </ProjectReference>
