@@ -555,7 +555,9 @@ internal sealed partial class Chunk
     private readonly List<SubChunk> _subChunks = [];
     private SubChunk? _currentSubChunk;
 
-    [GeneratedRegex(@".*-(?<startline>\d+),", RegexOptions.ExplicitCapture)]
+    // The line count is omitted for one-line ranges, e.g. "@@ -1 +1 @@".
+    // Anchored at the start, so that the function context after "@@" cannot match.
+    [GeneratedRegex(@"^\s*(@@\s*)?-(?<startline>\d+)(,\d+)?\s+\+\d+", RegexOptions.ExplicitCapture)]
     private static partial Regex HeaderRegex { get; }
 
     private SubChunk CurrentSubChunk
@@ -610,7 +612,7 @@ internal sealed partial class Chunk
     /// <code>
     ///  -116,12 +117,15 @@ private string LoadFile(string fileName, Encoding filesContentEncoding)
     /// </code>
-    /// In which case the start line is <c>116</c>.
+    /// In which case the start line is <c>116</c>. The count is omitted for a one-line range, e.g. <c> -1 +1 @@</c>.
     /// </remarks>
     private void ParseHeader(string header)
     {

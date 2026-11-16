@@ -77,4 +77,24 @@ public sealed class PatchManagerHunkTests
         patchText.Should().Contain("-b\n+B\n");
         patchText.Should().NotContain("Y");
     }
+
+    // Git omits the line count for one-line ranges
+    [TestCase("@@ -1 +1 @@\n-a\n+A\n", "@@ -1,1 +1,1 @@\n-a\n+A")]
+    [TestCase("@@ -5 +5,2 @@\n-a\n+A\n+B\n", "@@ -5,1 +5,2 @@\n-a\n+A\n+B")]
+    [TestCase("@@ -10,3 +10,3 @@ int f(a-5, b)\n x\n-y\n+Y\n z\n", "@@ -10,3 +10,3 @@\n x\n-y\n+Y\n z")]
+    public void Patch_should_keep_the_hunk_start_line(string hunk, string expectedPatchHunk)
+    {
+        string diff = "diff --git a/f.txt b/f.txt\nindex 1111111..2222222 100644\n--- a/f.txt\n+++ b/f.txt\n" + hunk;
+        int hunkStart = diff.IndexOf("@@", StringComparison.Ordinal);
+
+        byte[]? patch = PatchManager.GetSelectedLinesAsPatch(diff, hunkStart, diff.Length - hunkStart, isIndex: false, Encoding.UTF8, reset: false, isNewFile: false, isRenamed: false);
+
+        if (patch is null)
+        {
+            Assert.Fail("GetSelectedLinesAsPatch returned null");
+            return;
+        }
+
+        Encoding.UTF8.GetString(patch).Should().Contain(expectedPatchHunk);
+    }
 }

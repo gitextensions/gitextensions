@@ -826,7 +826,7 @@ public class FormCommitTests
     }
 
     [Test]
-    public void StageHunkShouldStageHunkAtCaretWhenSelectionSpansHunks()
+    public void StageHunk_should_stage_hunk_at_caret_when_selection_spans_hunks()
     {
         RunFormTest(form =>
         {
@@ -869,6 +869,49 @@ public class FormCommitTests
                 offset.Should().BeGreaterThanOrEqualTo(0);
                 return textArea.Document.GetLineNumberForOffset(offset);
             }
+        });
+    }
+
+    [Test]
+    public void UnstageHunk_should_unstage_only_the_hunk_at_caret()
+    {
+        RunFormTest(form =>
+        {
+            FormCommit.TestAccessor ta = form.GetTestAccessor();
+
+            FileViewer.TestAccessor selectedDiff = ta.SelectedDiff.GetTestAccessor();
+            FileViewerInternal selectedDiffInternal = selectedDiff.FileViewerInternal;
+
+            // Two staged changes far enough apart to be in separate hunks
+            string contents = string.Concat(Enumerable.Range(1, 20).Select(i => $"line{i}\n"));
+            _referenceRepository.CreateCommit("commit", contents, "unstage.txt");
+            _referenceRepository.CreateRepoFile("unstage.txt", contents.Replace("line2\n", "first change\n").Replace("line18\n", "second change\n"));
+            _referenceRepository.Module.GitExecutable.GetOutput("add -- unstage.txt");
+
+            ta.RescanChanges();
+            AsyncTestHelper.JoinPendingOperations();
+
+            ta.StagedList.SelectedGitItem = ta.StagedList.AllItems.Single(i => i.Item.Name == "unstage.txt").Item;
+            selectedDiffInternal.Focus();
+            AsyncTestHelper.JoinPendingOperations();
+
+            // Caret in the first hunk, nothing selected
+            TextAreaControl textArea = selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl;
+            int offset = textArea.Document.TextContent.IndexOf("+first change", StringComparison.Ordinal);
+            offset.Should().BeGreaterThanOrEqualTo(0);
+            textArea.SelectionManager.ClearSelection();
+            textArea.Caret.Position = new TextLocation(1, textArea.Document.GetLineNumberForOffset(offset));
+
+            selectedDiff.ExecuteCommand(FileViewer.Command.UnstageHunk).Should().BeTrue();
+            AsyncTestHelper.JoinPendingOperations();
+
+            string stagedDiff = _referenceRepository.Module.GitExecutable.GetOutput("diff --cached -- unstage.txt");
+            stagedDiff.Should().Contain("+second change");
+            stagedDiff.Should().NotContain("+first change");
+
+            string unstagedDiff = _referenceRepository.Module.GitExecutable.GetOutput("diff -- unstage.txt");
+            unstagedDiff.Should().Contain("+first change");
+            unstagedDiff.Should().NotContain("+second change");
         });
     }
 
