@@ -326,7 +326,7 @@ public partial class WordDictionary : Component
 
         // every candidate is a word with an affix removed and some strip chars added
         int maxLength = word.Length + _maxStripLength;
-        Span<char> scratch = maxLength <= 256 ? stackalloc char[maxLength] : new char[maxLength];
+        Span<char> scratch = maxLength <= 256 ? stackalloc char[256] : new char[maxLength];
 
         // Step 3 Remove suffix, Search BaseWords
         // save suffixed words (fixed stride of maxLength) for use when removing prefix
