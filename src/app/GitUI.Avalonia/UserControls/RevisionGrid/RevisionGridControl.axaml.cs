@@ -1727,6 +1727,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             _maximizedColumn.Width = new GridLength(row.ColumnDefinitions[maximizedIndex].ActualWidth); // None must be set before Fill
             _lastVisibleResizableColumn.Width = new GridLength(1, GridUnitType.Star);
             UpdateColumnLayouts();
+            _gridView.PointerCaptureLost += OnGridViewMouseCaptureChanged;
             _ = new ColumnResizeSession(_gridView, pnlRevisionGrid, e, width, edge + rowOffset,
                 provider.Column.MinimumWidth, row.Bounds.Width - edge + width - 1,
                 resizedWidth =>
@@ -1735,10 +1736,17 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                     provider.OnColumnWidthChanged();
                     UpdateColumnLayouts();
                     _gridView.UpdateLayout();
-                }, () => OnGridViewMouseCaptureChanged(null, EventArgs.Empty));
+                });
 
-            void OnGridViewMouseCaptureChanged(object? ignoredSender, EventArgs ignoredArgs)
+            void OnGridViewMouseCaptureChanged(object? ignoredSender, PointerCaptureLostEventArgs ignoredArgs)
             {
+                // Avalonia capture-loss events bubble from descendants; the source observes only its own grid.
+                if (!ReferenceEquals(ignoredArgs.Source, _gridView))
+                {
+                    return;
+                }
+
+                _gridView.PointerCaptureLost -= OnGridViewMouseCaptureChanged;
                 _lastVisibleResizableColumn.Width = new GridLength(row.ColumnDefinitions[lastIndex].ActualWidth); // None must be set before Fill
                 _maximizedColumn.Width = new GridLength(1, GridUnitType.Star);
                 UpdateColumnLayouts();
@@ -2319,10 +2327,10 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         {
             foreach (IGitRef gitRef in selectableRefs)
             {
-                AddRefMenuItem(
+                AddBranchMenuItem(
                     tsmiSelectInLeftPanel,
                     gitRef,
-                    () =>
+                    (_, _) =>
                     {
                         mainContextMenu.Close();
                         SelectInLeftPanel?.Invoke(gitRef.Name);
@@ -2345,10 +2353,10 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                     firstRemoteBranchForCheckout = false;
                 }
 
-                AddRefMenuItem(
+                AddBranchMenuItem(
                     checkoutBranchToolStripMenuItem,
                     branch,
-                    () =>
+                    (_, _) =>
                     {
                         if (branch.IsRemote)
                         {
@@ -2364,25 +2372,25 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             // skip remote branches - they can not be deleted this way
             if (!branch.IsRemote)
             {
-                AddRefMenuItem(
+                AddBranchMenuItem(
                     tsmiPushBranch,
                     branch,
-                    () => commands.StartPushDialog(
+                    (_, _) => commands.StartPushDialog(
                         GetOwner(),
                         pushOnShow: false,
                         forceWithLease: false,
                         out _,
                         branch.Name));
-                AddRefMenuItem(
+                AddBranchMenuItem(
                     renameBranchToolStripMenuItem,
                     branch,
-                    () => commands.StartRenameDialog(GetOwner(), branch.Name));
+                    (_, _) => commands.StartRenameDialog(GetOwner(), branch.Name));
                 if (branch.CompleteName != currentBranchRef)
                 {
-                    AddRefMenuItem(
+                    AddBranchMenuItem(
                         deleteBranchToolStripMenuItem,
                         branch,
-                        () => commands.StartDeleteBranchDialog(GetOwner(), branch.Name));
+                        (_, _) => commands.StartDeleteBranchDialog(GetOwner(), branch.Name));
                 }
             }
         }
@@ -2401,19 +2409,19 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                     }
                 }
 
-                AddRefMenuItem(
+                AddBranchMenuItem(
                     deleteBranchToolStripMenuItem,
                     branch,
-                    () => commands.StartDeleteRemoteBranchDialog(GetOwner(), branch.Name));
+                    (_, _) => commands.StartDeleteRemoteBranchDialog(GetOwner(), branch.Name));
             }
         }
 
         foreach (IGitRef tag in filterRefs(refLists.AllTags))
         {
-            AddRefMenuItem(
+            AddBranchMenuItem(
                 deleteTagToolStripMenuItem,
                 tag,
-                () => commands.StartDeleteTagDialog(GetOwner(), tag.Name));
+                (_, _) => commands.StartDeleteTagDialog(GetOwner(), tag.Name));
         }
 
         bool currentBranchPointsToRevision = allBranches.Any(branch => branch.CompleteName == currentBranchRef);
@@ -2423,11 +2431,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             .Where(gitRef => gitRef.CompleteName != currentBranchRef);
         foreach (IGitRef gitRef in mergeRefs)
         {
-            string mergeTarget = GetUnambiguousRefName(revision, gitRef);
-            AddRefMenuItem(
+            string mergeTarget = GetRefUnambiguousName(gitRef);
+            AddBranchMenuItem(
                 mergeBranchToolStripMenuItem,
                 gitRef,
-                () => commands.StartMergeBranchDialog(GetOwner(), mergeTarget));
+                (_, _) => commands.StartMergeBranchDialog(GetOwner(), mergeTarget));
             _rebaseOnTopOf ??= mergeTarget;
         }
 
@@ -2445,36 +2453,30 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         {
             _rebaseOnTopOf = revision.Guid;
         }
-    }
 
-    private static string GetUnambiguousRefName(GitRevision revision, IGitRef gitRef)
-        => revision.Refs.Count(other => other.Name == gitRef.Name) > 1
-            ? gitRef.CompleteName
-            : gitRef.Name;
+        return;
 
-    private static void AddRefMenuItem(MenuItem parent, IGitRef gitRef, Action action)
-    {
-        MenuItem item = new()
+        MenuItem AddBranchMenuItem(MenuItem menu, IGitRef gitRef, EventHandler<RoutedEventArgs> action)
         {
-            Header = gitRef.Name.Replace("_", "__", StringComparison.Ordinal),
-            Icon = new Image
+            MenuItem menuItem = new()
             {
-                Width = 16,
-                Height = 16,
-                Source = gitRef.IsTag
-                    ? Properties.Images.Tag
-                    : gitRef.IsRemote
-                        ? Properties.Images.BranchRemote
-                        : Properties.Images.BranchLocal,
-            },
-        };
-        item.Click += (_, e) =>
-        {
-            // Native menu children do not bubble a second command through their parent.
-            e.Handled = true;
-            action();
-        };
-        parent.Items.Add(item);
+                Header = gitRef.Name.Replace("_", "__", StringComparison.Ordinal),
+                Icon = new Image
+                {
+                    Width = 16,
+                    Height = 16,
+                    Source = gitRef.IsRemote ? Properties.Images.BranchRemote : Properties.Images.BranchLocal,
+                },
+            };
+            menuItem.Click += action;
+            menuItem.Click += (_, e) =>
+            {
+                // Native menu children do not bubble a second command through their parent.
+                e.Handled = true;
+            };
+            menu.Items.Add(menuItem);
+            return menuItem;
+        }
     }
 
     // Avalonia controls have one logical parent; detach both collections before regrouping.
@@ -3275,13 +3277,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         ShowIdColumnMenuItem.IsChecked = AppSettings.ShowObjectIdColumn;
     }
 
-    private MenuItem GetMenuItem(string name)
-    {
-        IEnumerable<MenuItem> menuItems = navigateToolStripMenuItem.Items.OfType<MenuItem>()
-            .Concat(viewToolStripMenuItem.Items.OfType<MenuItem>());
-        return menuItems.Single(menuItem => menuItem.Tag as string == name);
-    }
-
     private static MenuItem GetMenuItem(MenuItem parent, string name)
         => parent.Items.OfType<MenuItem>().Single(menuItem => menuItem.Tag as string == name);
 
@@ -3339,11 +3334,19 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         SetShortcutString(compareToBaseToolStripMenuItem, Command.CompareToBase);
         SetShortcutString(compareToWorkingDirectoryMenuItem, Command.CompareToWorkingDirectory);
         SetShortcutString(compareSelectedCommitsMenuItem, Command.CompareSelectedCommits);
+        SetShortcutString(commitToolStripMenuItem, FormBrowse.Command.Commit);
     }
 
     private void SetShortcutString(ToolStripMenuItem item, Command command)
         => item.InputGesture = KeysMapper.ToKeyGesture(
             Hotkeys.FirstOrDefault(hotkey => hotkey.CommandCode == (int)command)?.KeyData);
+
+    private void SetShortcutString(ToolStripMenuItem item, FormBrowse.Command command)
+    {
+        IReadOnlyList<HotkeyCommand> hotkeys = GetHotkeys(FormBrowse.HotkeySettingsName);
+        item.InputGesture = KeysMapper.ToKeyGesture(hotkeys.GetShortcutKey(command));
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(item, hotkeys.GetShortcutDisplay(command));
+    }
 
     private void ShowFormDiff(ObjectId baseCommitSha, ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
     {

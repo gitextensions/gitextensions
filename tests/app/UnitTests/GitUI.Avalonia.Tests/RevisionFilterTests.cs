@@ -168,32 +168,39 @@ public sealed class RevisionFilterTests
             HideMergeCommits = true,
         };
         FormRevisionFilter form = new(Substitute.For<IGitUICommands>(), filter);
-        FormRevisionFilter.TestAccessor accessor = form.GetTestAccessor();
+        try
+        {
+            FormRevisionFilter.TestAccessor accessor = form.GetTestAccessor();
 
-        accessor.LoadFilters();
+            form.Show();
 
-        accessor.SinceCheck.IsChecked.Should().BeTrue();
-        accessor.Since.SelectedDate?.Date.Should().Be(new DateTime(2026, 7, 1));
-        accessor.Author.IsEnabled.Should().BeTrue();
-        accessor.Message.IsEnabled.Should().BeTrue();
-        accessor.PathFilter.IsEnabled.Should().BeTrue();
-        accessor.BranchFilter.IsEnabled.Should().BeTrue();
-        accessor.ReflogCheck.IsChecked = true;
-        accessor.CurrentBranchOnlyCheck.IsEnabled.Should().BeFalse();
-        accessor.BranchFilterCheck.IsEnabled.Should().BeFalse();
+            form.FindControl<CheckBox>("SinceCheck")!.IsChecked.Should().BeTrue();
+            form.FindControl<DatePicker>("Since")!.SelectedDate?.Date.Should().Be(new DateTime(2026, 7, 1));
+            form.FindControl<TextBox>("Author")!.IsEnabled.Should().BeTrue();
+            form.FindControl<TextBox>("Message")!.IsEnabled.Should().BeTrue();
+            form.FindControl<TextBox>("PathFilter")!.IsEnabled.Should().BeTrue();
+            form.FindControl<TextBox>("BranchFilter")!.IsEnabled.Should().BeTrue();
+            form.FindControl<CheckBox>("ReflogCheck")!.IsChecked = true;
+            form.FindControl<CheckBox>("CurrentBranchOnlyCheck")!.IsEnabled.Should().BeFalse();
+            form.FindControl<CheckBox>("BranchFilterCheck")!.IsEnabled.Should().BeFalse();
 
-        accessor.ReflogCheck.IsChecked = false;
-        accessor.Author.Text = "  updated author  ";
-        accessor.DiffContentCheck.IsChecked = true;
-        accessor.DiffContent.Text = "  changed line  ";
-        accessor.FullHistoryCheck.IsChecked = true;
-        accessor.SaveFilters();
+            form.FindControl<CheckBox>("ReflogCheck")!.IsChecked = false;
+            form.FindControl<TextBox>("Author")!.Text = "  updated author  ";
+            form.FindControl<CheckBox>("DiffContentCheck")!.IsChecked = true;
+            form.FindControl<TextBox>("DiffContent")!.Text = "  changed line  ";
+            accessor.FullHistoryCheck.IsChecked = true;
+            form.FindControl<Button>("Ok")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
-        FilterInfo raw = filter with { IsRaw = true };
-        raw.Author.Should().Be("updated author");
-        raw.ByDiffContent.Should().BeTrue();
-        raw.DiffContent.Should().Be("changed line");
-        raw.ShowFullHistory.Should().BeTrue();
+            FilterInfo raw = filter with { IsRaw = true };
+            raw.Author.Should().Be("updated author");
+            raw.ByDiffContent.Should().BeTrue();
+            raw.DiffContent.Should().Be("changed line");
+            raw.ShowFullHistory.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]
@@ -204,7 +211,7 @@ public sealed class RevisionFilterTests
         try
         {
             FormRevisionFilter.TestAccessor accessor = form.GetTestAccessor();
-            accessor.LoadFilters();
+            form.Show();
 
             accessor.SimplifyMergesCheck.IsEnabled.Should().BeFalse();
             accessor.SimplifyMergesCheck.IsChecked.Should().BeTrue();
@@ -214,7 +221,7 @@ public sealed class RevisionFilterTests
             accessor.SimplifyMergesCheck.IsEnabled.Should().BeFalse();
             accessor.SimplifyMergesCheck.IsChecked.Should().BeTrue();
 
-            accessor.SaveFilters();
+            form.FindControl<Button>("Ok")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             (filter with { IsRaw = true }).ShowSimplifyMerges.Should().BeTrue();
         }
         finally

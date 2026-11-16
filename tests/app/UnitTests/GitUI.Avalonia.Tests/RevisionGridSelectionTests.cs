@@ -1026,6 +1026,60 @@ public sealed class RevisionGridSelectionTests
         }
     }
 
+    [AvaloniaTest]
+    public async Task Ref_menu_should_use_the_original_tag_icon_and_repository_wide_unambiguous_name()
+    {
+        string? previousShowTags = AppSettings.SettingsContainer.GetValue("showtags");
+        try
+        {
+            AppSettings.ShowTags = true;
+            GitModule module = CreateRepository();
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "same" }).Should().BeTrue();
+            AddCommit(module, "tagged");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("tag") { "same" }).Should().BeTrue();
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
+            commands.GetService(Arg.Any<Type>()).Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            RevisionGridControl control = new() { UICommandsSource = source };
+            Window window = new() { Width = 1000, Height = 300, Content = control };
+            try
+            {
+                window.Show();
+                await ReloadAsync(control, module);
+                control.SetSelectedRevision(module.GetCurrentCheckout()).Should().BeTrue();
+                Settle(window);
+                ListBoxItem row = control._gridView.GetVisualDescendants().OfType<ListBoxItem>()
+                    .Single(item => item.DataContext is GitRevision revision && revision.ObjectId == module.GetCurrentCheckout());
+                Point position = row.TranslatePoint(new Point(row.Bounds.Width - 40, row.Bounds.Height / 2), window)!.Value;
+                window.MouseDown(position, MouseButton.Right, RawInputModifiers.None);
+                window.MouseUp(position, MouseButton.Right, RawInputModifiers.None);
+                Dispatcher.UIThread.RunJobs();
+                ContextMenu menu = control.FindControl<ContextMenu>("mainContextMenu")!;
+                menu.IsOpen.Should().BeTrue();
+                MenuItem merge = control.FindControl<MenuItem>("mergeBranchToolStripMenuItem")!.Items
+                    .OfType<MenuItem>().Single(item => item.Header as string == "same");
+                using AwesomeAssertions.Execution.AssertionScope assertions = new();
+                ((Image)merge.Icon!).Source.Should().BeSameAs(GitUI.Properties.Images.BranchLocal);
+                merge.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+                commands.ReceivedCalls().Where(call => call.GetMethodInfo().Name == nameof(IGitUICommands.StartMergeBranchDialog))
+                    .Select(call => call.GetArguments()[1]).Should().Equal("refs/tags/same");
+                menu.Close();
+            }
+            finally
+            {
+                window.Close();
+                control.CancelBackgroundTasks();
+            }
+        }
+        finally
+        {
+            AppSettings.SettingsContainer.SetValue("showtags", previousShowTags);
+        }
+    }
+
     private GitModule CreateRepository(bool createCommit = true)
     {
         GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);

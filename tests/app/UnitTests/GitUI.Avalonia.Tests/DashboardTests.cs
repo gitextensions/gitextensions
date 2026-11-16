@@ -1933,6 +1933,71 @@ public sealed class DashboardTests
 
     [AvaloniaTest]
     [Category("P4.5")]
+    public void Dashboard_should_forward_one_repository_transition_after_history_reinitialization()
+    {
+        string repositoryPath = FindRepositoryRoot();
+        Repository repository = new(repositoryPath);
+        RepositoryHistorySnapshot snapshot =
+            new RepositoryHistorySnapshot(
+                [new RepositoryHistoryEntry(repository, "selected", "main", IsFavourite: false, IsAnchored: false)],
+                []);
+        IUserRepositoriesListController controller = CreateController(snapshot);
+        IRepositoryHistoryUIService history = CreateHistory(snapshot);
+        IGitExecutorProvider executorProvider = Substitute.For<IGitExecutorProvider>();
+        IGitExecutor executor = Substitute.For<IGitExecutor>();
+        executor.WorkingDir.Returns(repositoryPath);
+        executor.GetGitDirectory().Returns(Path.Join(repositoryPath, ".git"));
+        executorProvider.GetExecutor(repositoryPath).Returns(executor);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.GetService(typeof(IGitExecutorProvider)).Returns(executorProvider);
+        Dashboard dashboard = new();
+        GitModuleEventArgs? transition = null;
+        int transitionCount = 0;
+        dashboard.GitModuleChanged += (_, e) =>
+        {
+            transition = e;
+            transitionCount++;
+        };
+        Initialize(dashboard, controller, history);
+        dashboard.Initialize(history);
+        dashboard.RefreshContent();
+        UserRepositoriesList list = dashboard.userRepositoriesList;
+        RepositoryListOwner window = new(commands)
+        {
+            Width = 960,
+            Height = 700,
+            Content = dashboard,
+        };
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            ListBoxItem repositoryRow = list.GetVisualDescendants()
+                .OfType<ListBoxItem>()
+                .Single(item => item.Content is UserRepositoriesList.RepositoryListItem);
+            Avalonia.Point clickPoint = Avalonia.VisualExtensions.TranslatePoint(
+                repositoryRow,
+                new Avalonia.Point(repositoryRow.Bounds.Width / 2, repositoryRow.Bounds.Height / 2),
+                window) ?? throw new InvalidOperationException("The repository row position was not available.");
+
+            window.MouseDown(clickPoint, MouseButton.Left, RawInputModifiers.None);
+            window.MouseUp(clickPoint, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            transitionCount.Should().Be(1);
+            transition.Should().NotBeNull();
+            Path.TrimEndingDirectorySeparator(transition!.GitModule.WorkingDir)
+                .Should().Be(Path.TrimEndingDirectorySeparator(repositoryPath));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P4.5")]
     public void Attached_repository_list_should_replace_rows_after_branch_cache_refresh()
     {
         Repository repository = new(@"C:\repos\recent");

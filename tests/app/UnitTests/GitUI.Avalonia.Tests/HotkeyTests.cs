@@ -1086,6 +1086,28 @@ public sealed class HotkeyTests
     }
 
     [AvaloniaTest]
+    public void RevisionGrid_should_display_the_Browse_commit_shortcut_from_the_runtime_provider()
+    {
+        (FormBrowse form, _, _) = CreateBrowseForm(
+            new HotkeyCommand((int)FormBrowse.Command.Commit, nameof(FormBrowse.Command.Commit))
+            {
+                KeyData = WinFormsShims.Keys.F7,
+            });
+        try
+        {
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
+            MenuItem commit = form.RevisionGrid.FindControl<MenuItem>("commitToolStripMenuItem")!;
+
+            commit.InputGesture.Should().Be(new KeyGesture(Key.F7));
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_should_register_and_release_its_browse_command_owner()
     {
         (FormBrowse form, IGitUICommands commands, _) = CreateBrowseForm();

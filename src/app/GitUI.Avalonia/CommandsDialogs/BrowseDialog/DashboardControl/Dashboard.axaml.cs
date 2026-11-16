@@ -59,6 +59,8 @@ public partial class Dashboard : GitModuleControl
         IsVisible = false;
         InitializeComplete();
 
+        userRepositoriesList.GitModuleChanged += OnModuleChanged;
+
         // apply scaling
         userRepositoriesList.HeaderHeight = 68;
     }
@@ -66,7 +68,6 @@ public partial class Dashboard : GitModuleControl
     public void Initialize(IRepositoryHistoryUIService repositoryHistoryUIService)
     {
         userRepositoriesList.Initialize(repositoryHistoryUIService);
-        userRepositoriesList.GitModuleChanged += OnModuleChanged;
     }
 
     protected virtual void OnVisibleChanged(EventArgs e)
@@ -80,152 +81,177 @@ public partial class Dashboard : GitModuleControl
         DashboardTheme selectedTheme = ThemeModule.Settings.Theme.SystemColorMode == GitExtensions.Shims.WinForms.SystemColorMode.Dark
             ? DashboardTheme.Dark : DashboardTheme.Light;
 
-        // The source recreates anonymous LinkLabels on refresh. Keep their runtime ownership
-        // and order instead of adding permanent Designer fields and stale translated content.
-        StackPanel startLinks = (StackPanel)flpnlStart.Child!;
-        StackPanel contributionLinks = (StackPanel)flpnlContribute.Child!;
-        contributionLinks.Children.Clear();
-        contributionLinks.Children.Add(lblContribute);
-        CreateLink(contributionLinks, _develop.Text, Images.Develop.AdaptLightness(), GitHubItem_Click);
-        CreateLink(contributionLinks, _donate.Text, Images.DollarSign, DonateItem_Click);
-        CreateLink(contributionLinks, _translate.Text, Images.Translate.AdaptLightness(), TranslateItem_Click);
-        CreateLink(contributionLinks, _issues.Text, Images.Bug, IssuesItem_Click);
-        startLinks.Children.Clear();
-        CreateLink(startLinks, _createRepository.Text, Images.RepoCreate, createItem_Click);
-        CreateLink(startLinks, _openRepository.Text, Images.RepoOpen, openItem_Click);
-        CreateLink(startLinks, _cloneRepository.Text, Images.CloneRepoGit, cloneItem_Click);
-
-        foreach (IRepositoryHostPlugin gitHoster in PluginRegistry.GitHosters)
-        {
-            CreateLink(startLinks, string.Format(_cloneFork.Text, gitHoster.Name), Images.CloneRepoGitHub,
-                (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged));
-        }
-
-        // The source paints its tiled BackgroundImage in the Dashboard's client, not
-        // in the scrolling child table. Keep the tile origin fixed when focus scrolls.
-        ((ScrollViewer)Content!).Background = new ImageBrush((IImageBrushSource)selectedTheme.BackgroundImage)
-        {
-            TileMode = TileMode.Tile,
-            Stretch = Stretch.None,
-            AlignmentX = AlignmentX.Left,
-            AlignmentY = AlignmentY.Top,
-            DestinationRect = new RelativeRect(new Rect(default, selectedTheme.BackgroundImage.Size), RelativeUnit.Absolute),
-        };
-        pnlLogo.Background = new SolidColorBrush(selectedTheme.LogoBackColor);
-        flpnlStart.Background = new SolidColorBrush(selectedTheme.StartBackColor);
-        flpnlContribute.Background = new SolidColorBrush(selectedTheme.ContributeBackColor);
-        Resources["DashboardLinkForegroundBrush"] = new SolidColorBrush(selectedTheme.PrimaryText);
-        Resources["DashboardLinkHoverForegroundBrush"] = new SolidColorBrush(selectedTheme.AccentedText);
-        lblContribute.Foreground = new SolidColorBrush(selectedTheme.SecondaryHeadingText);
-        lblContribute.FontFamily = new FontFamily(AppSettings.Font.Name);
-        lblContribute.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size + 5.5F);
-        lblContribute.FontStyle = FontStyle.Normal;
-        lblContribute.FontWeight = FontWeight.Normal;
-        lblContribute.Padding = WinFormsTextMeasurer.GetTextRendererPadding(lblContribute);
-
-        // Native LinkLabel AutoSize measures its text plus padding, not an extra image column.
-        // Keep the source runtime minimum-height calculation so smaller hosts scroll instead
-        // of silently clipping the last start or contribution command.
-        Avalonia.Size heading = WinFormsTextMeasurer.MeasureTextRenderer(lblContribute, lblContribute.Text ?? string.Empty);
-        lblContribute.Width = Math.Ceiling(heading.Width);
-        lblContribute.Height = Math.Ceiling(heading.Height);
-        double contributionHeight = SizeLinks((StackPanel)flpnlContribute.Child!)
-            + lblContribute.Height + lblContribute.Margin.Top + lblContribute.Margin.Bottom
-            + flpnlContribute.Padding.Top + flpnlContribute.Padding.Bottom;
-
-        // Native onLayout fixes the contribution Height and MinimumSize before sizing start links.
-        flpnlContribute.Height = contributionHeight;
-        flpnlContribute.MinHeight = contributionHeight;
-        double startHeight = SizeLinks(startLinks) + flpnlStart.Padding.Top + flpnlStart.Padding.Bottom;
-        flpnlStart.MinHeight = startHeight;
-        tableLayoutPanel1.MinHeight = pnlLogo.Height + startHeight + contributionHeight;
-
-        // Dock.Fill inside native AutoScroll uses the host/minimum height, not the background's preferred size.
-        tableLayoutPanel1.Height = Math.Max(Bounds.Height, tableLayoutPanel1.MinHeight);
-        userRepositoriesList.MainBackColor = AvaloniaThemeResources.ToMediaColor(
-            AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.Window));
-        userRepositoriesList.BranchNameColor = selectedTheme.SecondaryText;
-        userRepositoriesList.FavouriteColor = selectedTheme.AccentedText;
-        userRepositoriesList.ForeColor = selectedTheme.PrimaryText;
-        userRepositoriesList.HeaderColor = selectedTheme.SecondaryHeadingText;
-        userRepositoriesList.HeaderBackColor = selectedTheme.HeaderBackColor;
-        userRepositoriesList.HoverColor = selectedTheme.StartBackColor;
-        userRepositoriesList.SearchBackColor = selectedTheme.SearchBackColor;
-        Background = new SolidColorBrush(userRepositoriesList.MainBackColor);
+        InitDashboardLayout();
+        ApplyTheme();
         userRepositoriesList.ShowRecentRepositories(reloadData: false);
 
         return;
 
-        static void CreateLink(StackPanel container, string text, IImage icon, EventHandler<RoutedEventArgs> handler)
+        void ApplyTheme()
         {
-            LinkLabel linkLabel = new DashboardLinkLabel()
+            // The source paints its tiled BackgroundImage in the Dashboard's client, not
+            // in the scrolling child table. Keep the tile origin fixed when focus scrolls.
+            ((ScrollViewer)Content!).Background = new ImageBrush((IImageBrushSource)selectedTheme.BackgroundImage)
             {
-                Classes = { "dashboard-link" },
-                Content = CreateLinkContent(icon, text),
-                FontFamily = new FontFamily(AppSettings.Font.Name),
-                FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
-                FontStyle = AppSettings.Font.Italic ? FontStyle.Italic : FontStyle.Normal,
-                FontWeight = AppSettings.Font.Bold ? FontWeight.Bold : FontWeight.Normal,
-                Margin = new Thickness(3, 0, 3, 8),
-                Padding = new Thickness(24, 3, 3, 3),
-                TabIndex = container.Children.Count,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                HorizontalContentAlignment = HorizontalAlignment.Left,
+                TileMode = TileMode.Tile,
+                Stretch = Stretch.None,
+                AlignmentX = AlignmentX.Left,
+                AlignmentY = AlignmentY.Top,
+                DestinationRect = new RelativeRect(new Rect(default, selectedTheme.BackgroundImage.Size), RelativeUnit.Absolute),
             };
-            linkLabel.Click += handler;
-            container.Children.Add(linkLabel);
+            pnlLogo.Background = new SolidColorBrush(selectedTheme.LogoBackColor);
+            flpnlStart.Background = new SolidColorBrush(selectedTheme.StartBackColor);
+            flpnlContribute.Background = new SolidColorBrush(selectedTheme.ContributeBackColor);
+            Resources["DashboardLinkForegroundBrush"] = new SolidColorBrush(selectedTheme.PrimaryText);
+            Resources["DashboardLinkHoverForegroundBrush"] = new SolidColorBrush(selectedTheme.AccentedText);
+            lblContribute.Foreground = new SolidColorBrush(selectedTheme.SecondaryHeadingText);
+            userRepositoriesList.MainBackColor = AvaloniaThemeResources.ToMediaColor(
+                AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.Window));
+            userRepositoriesList.BranchNameColor = selectedTheme.SecondaryText;
+            userRepositoriesList.FavouriteColor = selectedTheme.AccentedText;
+            userRepositoriesList.ForeColor = selectedTheme.PrimaryText;
+            userRepositoriesList.HeaderColor = selectedTheme.SecondaryHeadingText;
+            userRepositoriesList.HeaderBackColor = selectedTheme.HeaderBackColor;
+            userRepositoriesList.HoverColor = selectedTheme.StartBackColor;
+            userRepositoriesList.SearchBackColor = selectedTheme.SearchBackColor;
+            Background = new SolidColorBrush(userRepositoriesList.MainBackColor);
         }
 
-        static double SizeLinks(StackPanel panel)
+        void InitDashboardLayout()
         {
-            double height = 0;
-            LinkLabel[] links = [.. panel.Children.OfType<LinkLabel>()];
-            foreach (LinkLabel link in links)
+            StackPanel startLinks = (StackPanel)flpnlStart.Child!;
+            StackPanel contributionLinks = (StackPanel)flpnlContribute.Child!;
+            try
             {
-                TextBlock text = ((Grid)link.Content!).Children.OfType<TextBlock>().Single();
-                Avalonia.Size measured = WinFormsTextMeasurer.MeasureTextRenderer(text, text.Text ?? string.Empty);
-                link.Width = Math.Ceiling(measured.Width) + link.Padding.Left + link.Padding.Right;
-                link.Height = Math.Ceiling(measured.Height) + link.Padding.Top + link.Padding.Bottom;
-                height += link.Height + link.Margin.Top + link.Margin.Bottom;
+                AddLinks(contributionLinks,
+                    panel =>
+                    {
+                        panel.Children.Add(lblContribute);
+                        lblContribute.FontFamily = new FontFamily(AppSettings.Font.Name);
+                        lblContribute.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size + 5.5F);
+                        lblContribute.FontStyle = FontStyle.Normal;
+                        lblContribute.FontWeight = FontWeight.Normal;
+                        lblContribute.Padding = WinFormsTextMeasurer.GetTextRendererPadding(lblContribute);
+
+                        CreateLink(panel, _develop.Text, Images.Develop.AdaptLightness(), GitHubItem_Click);
+                        CreateLink(panel, _donate.Text, Images.DollarSign, DonateItem_Click);
+                        CreateLink(panel, _translate.Text, Images.Translate.AdaptLightness(), TranslateItem_Click);
+                        Control lastControl = CreateLink(panel, _issues.Text, Images.Bug, IssuesItem_Click);
+                        return lastControl;
+                    },
+                    (panel, lastControl) =>
+                    {
+                        Avalonia.Size heading = WinFormsTextMeasurer.MeasureTextRenderer(lblContribute, lblContribute.Text ?? string.Empty);
+                        lblContribute.Width = Math.Ceiling(heading.Width);
+                        lblContribute.Height = Math.Ceiling(heading.Height);
+                        double height = SizeLinks(panel) + lblContribute.Height + lblContribute.Margin.Top + lblContribute.Margin.Bottom
+                            + flpnlContribute.Padding.Top + flpnlContribute.Padding.Bottom;
+                        flpnlContribute.Height = height;
+                        flpnlContribute.MinHeight = height;
+                    });
+
+                AddLinks(startLinks,
+                    panel =>
+                    {
+                        CreateLink(panel, _createRepository.Text, Images.RepoCreate, createItem_Click);
+                        CreateLink(panel, _openRepository.Text, Images.RepoOpen, openItem_Click);
+                        Control lastControl = CreateLink(panel, _cloneRepository.Text, Images.CloneRepoGit, cloneItem_Click);
+                        foreach (IRepositoryHostPlugin gitHoster in PluginRegistry.GitHosters)
+                        {
+                            lastControl = CreateLink(panel, string.Format(_cloneFork.Text, gitHoster.Name), Images.CloneRepoGitHub,
+                                (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged));
+                        }
+
+                        return lastControl;
+                    },
+                    (panel, lastControl) => flpnlStart.MinHeight = SizeLinks(panel) + flpnlStart.Padding.Top + flpnlStart.Padding.Bottom);
+            }
+            finally
+            {
+                tableLayoutPanel1.MinHeight = pnlLogo.Height + flpnlStart.MinHeight + flpnlContribute.MinHeight;
+                tableLayoutPanel1.Height = Math.Max(Bounds.Height, tableLayoutPanel1.MinHeight);
             }
 
-            return height - (links.LastOrDefault()?.Margin.Bottom ?? 0);
-        }
-    }
+            return;
 
-    private static Control CreateLinkContent(IImage icon, string text)
-    {
-        TextBlock caption = new DashboardTextBlock()
-        {
-            Text = text,
-            FontFamily = new FontFamily(AppSettings.Font.Name),
-            FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
-            FontStyle = AppSettings.Font.Italic ? FontStyle.Italic : FontStyle.Normal,
-            FontWeight = AppSettings.Font.Bold ? FontWeight.Bold : FontWeight.Normal,
-            VerticalAlignment = VerticalAlignment.Top,
-
-            // Native LinkLabel clips once at its HWND client. This anonymous renderer
-            // has a smaller Skia line box, which must not clip native-em descenders.
-            ClipToBounds = false,
-        };
-        caption.Padding = WinFormsTextMeasurer.GetTextRendererPadding(caption);
-        return new Grid
-        {
-            Children =
+            static void AddLinks(StackPanel panel, Func<StackPanel, Control> addLinks, Action<StackPanel, Control> onLayout)
             {
-                new Image
-                {
-                    Width = 16,
-                    Height = 16,
-                    Source = icon,
+                panel.Children.Clear();
+                Control lastControl = addLinks(panel);
+                onLayout(panel, lastControl);
+            }
 
-                    // Label.CalcImageRenderBounds insets a left-aligned image by two pixels.
-                    HorizontalAlignment = HorizontalAlignment.Left,
+            Control CreateLink(Control container, string text, IImage icon, EventHandler<RoutedEventArgs> handler)
+            {
+                TextBlock caption = new DashboardTextBlock()
+                {
+                    Text = text,
+                    FontFamily = new FontFamily(AppSettings.Font.Name),
+                    FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
+                    FontStyle = AppSettings.Font.Italic ? FontStyle.Italic : FontStyle.Normal,
+                    FontWeight = AppSettings.Font.Bold ? FontWeight.Bold : FontWeight.Normal,
                     VerticalAlignment = VerticalAlignment.Top,
-                },
-                caption,
-            },
-        };
+
+                    // Native LinkLabel clips once at its HWND client. This anonymous renderer
+                    // has a smaller Skia line box, which must not clip native-em descenders.
+                    ClipToBounds = false,
+                };
+                caption.Padding = WinFormsTextMeasurer.GetTextRendererPadding(caption);
+                Control content = new Grid
+                {
+                    Children =
+                    {
+                        new Image
+                        {
+                            Width = 16,
+                            Height = 16,
+                            Source = icon,
+
+                            // Label.CalcImageRenderBounds insets a left-aligned image by two pixels.
+                            HorizontalAlignment = HorizontalAlignment.Left,
+                            VerticalAlignment = VerticalAlignment.Top,
+                        },
+                        caption,
+                    },
+                };
+
+                LinkLabel linkLabel = new DashboardLinkLabel()
+                {
+                    Classes = { "dashboard-link" },
+                    Content = content,
+                    FontFamily = new FontFamily(AppSettings.Font.Name),
+                    FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(AppSettings.Font.Size),
+                    FontStyle = AppSettings.Font.Italic ? FontStyle.Italic : FontStyle.Normal,
+                    FontWeight = AppSettings.Font.Bold ? FontWeight.Bold : FontWeight.Normal,
+                    Margin = new Thickness(3, 0, 3, 8),
+                    Padding = new Thickness(24, 3, 3, 3),
+                    TabIndex = ((StackPanel)container).Children.Count,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    HorizontalContentAlignment = HorizontalAlignment.Left,
+                };
+
+                // Avalonia supplies delayed hover/leave colors through DashboardLinkLabel and its native styles.
+                linkLabel.Click += handler;
+                ((StackPanel)container).Children.Add(linkLabel);
+                return linkLabel;
+            }
+
+            static double SizeLinks(StackPanel panel)
+            {
+                double height = 0;
+                LinkLabel[] links = [.. panel.Children.OfType<LinkLabel>()];
+                foreach (LinkLabel link in links)
+                {
+                    TextBlock text = ((Grid)link.Content!).Children.OfType<TextBlock>().Single();
+                    Avalonia.Size measured = WinFormsTextMeasurer.MeasureTextRenderer(text, text.Text ?? string.Empty);
+                    link.Width = Math.Ceiling(measured.Width) + link.Padding.Left + link.Padding.Right;
+                    link.Height = Math.Ceiling(measured.Height) + link.Padding.Top + link.Padding.Bottom;
+                    height += link.Height + link.Margin.Top + link.Margin.Bottom;
+                }
+
+                return height - (links.LastOrDefault()?.Margin.Bottom ?? 0);
+            }
+        }
     }
 
     protected virtual void OnModuleChanged(object? sender, GitModuleEventArgs e)
@@ -286,13 +312,5 @@ public partial class Dashboard : GitModuleControl
     private static void DonateItem_Click(object? sender, EventArgs e)
     {
         OsShellUtil.OpenUrlInDefaultBrowser(FormDonate.DonationUrl);
-    }
-
-    internal TestAccessor GetTestAccessor() => new(this);
-
-    internal readonly struct TestAccessor(Dashboard dashboard)
-    {
-        internal UserRepositoriesList Repositories => dashboard.userRepositoriesList;
-        internal Button Open => ((StackPanel)dashboard.flpnlStart.Child!).Children.OfType<LinkLabel>().ElementAt(1);
     }
 }

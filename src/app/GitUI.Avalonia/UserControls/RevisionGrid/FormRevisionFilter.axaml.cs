@@ -2,14 +2,18 @@
 using GitExtensions.Extensibility.Git;
 using GitUI.Compat;
 using ResourceManager;
+using ToolTip = GitUI.Compat.Components.ToolTip;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.UserControls.RevisionGrid;
 
-// The shared FilterInfo is mutated only when OK is pressed, allowing quick filters and the
-// advanced dialog to continue describing one revision-grid state.
 public partial class FormRevisionFilter : GitExtensionsDialog
 {
+    // Avalonia does not generate a field for this nonvisual tooltip; retain the component in code.
+#pragma warning disable SX1309 // Preserve the original Designer field name.
+    private readonly ToolTip toolTip = new();
+#pragma warning restore SX1309
+
     private readonly FilterInfo _filterInfo;
 
     private readonly TranslationString _since = new("&Since");
@@ -22,29 +26,17 @@ public partial class FormRevisionFilter : GitExtensionsDialog
     private readonly TranslationString _limit = new("&Limit");
     private readonly TranslationString _pathFilter = new("&Path filter");
     private readonly TranslationString _branches = new("&Branches");
-    private bool _loaded;
 
+    // Avalonia's preview loader requires a parameterless constructor without runtime commands.
     public FormRevisionFilter()
+        : this(commands: null, filterInfo: new FilterInfo())
     {
-        _filterInfo = new FilterInfo();
-        InitializeComponent();
-        WireControls();
-        InitializeComplete();
-        ApplyTranslatedLabels();
     }
 
-    public FormRevisionFilter(IGitUICommands commands, FilterInfo filterInfo)
+    public FormRevisionFilter(IGitUICommands? commands, FilterInfo filterInfo)
         : base(commands, enablePositionRestore: false)
     {
-        _filterInfo = filterInfo;
         InitializeComponent();
-        WireControls();
-        InitializeComplete();
-        ApplyTranslatedLabels();
-    }
-
-    private void WireControls()
-    {
         SinceCheck.IsCheckedChanged += option_CheckedChanged;
         CheckUntil.IsCheckedChanged += option_CheckedChanged;
         AuthorCheck.IsCheckedChanged += option_CheckedChanged;
@@ -63,43 +55,32 @@ public partial class FormRevisionFilter : GitExtensionsDialog
         SimplifyMergesCheck.IsCheckedChanged += option_CheckedChanged;
         Ok.Click += OkClick;
         AcceptButton = Ok;
-    }
-
-    private void ApplyTranslatedLabels()
-    {
+        InitializeComplete();
         _NO_TRANSLATE_lblSince.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_since.Text);
         _NO_TRANSLATE_lblUntil.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_until.Text);
         _NO_TRANSLATE_lblAuthor.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_author.Text);
         _NO_TRANSLATE_lblCommitter.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_committer.Text);
         _NO_TRANSLATE_lblMessage.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_message.Text);
         _NO_TRANSLATE_lblDiffContent.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_diffContent.Text);
-        ToolTip.SetTip(DiffContentCheck, _diffContentToolTip.Text);
-        ToolTip.SetTip(DiffContent, _diffContentToolTip.Text);
+        toolTip.SetToolTip(DiffContentCheck, _diffContentToolTip.Text);
+        toolTip.SetToolTip(DiffContent, _diffContentToolTip.Text);
         _NO_TRANSLATE_lblLimit.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_limit.Text);
         _NO_TRANSLATE_lblPathFilter.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_pathFilter.Text);
         _NO_TRANSLATE_lblBranches.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_branches.Text);
+
+        _filterInfo = filterInfo;
     }
 
-    protected override void OnRuntimeLoad(EventArgs e)
+    protected override void OnLoad(EventArgs e)
     {
-        base.OnRuntimeLoad(e);
-        LoadFilters();
-    }
+        base.OnLoad(e);
 
-    private void LoadFilters()
-    {
-        if (_loaded)
-        {
-            return;
-        }
-
-        _loaded = true;
         FilterInfo rawFilterInfo = _filterInfo with { IsRaw = true };
 
         SinceCheck.IsChecked = rawFilterInfo.ByDateFrom;
-        Since.SelectedDate = ToDateTimeOffset(rawFilterInfo.DateFrom);
+        Since.SelectedDate = new DateTimeOffset(rawFilterInfo.DateFrom == DateTime.MinValue ? DateTime.Today : rawFilterInfo.DateFrom);
         CheckUntil.IsChecked = rawFilterInfo.ByDateTo;
-        Until.SelectedDate = ToDateTimeOffset(rawFilterInfo.DateTo);
+        Until.SelectedDate = new DateTimeOffset(rawFilterInfo.DateTo == DateTime.MinValue ? DateTime.Today : rawFilterInfo.DateTo);
         AuthorCheck.IsChecked = rawFilterInfo.ByAuthor;
         Author.Text = rawFilterInfo.Author;
         CommitterCheck.IsChecked = rawFilterInfo.ByCommitter;
@@ -124,12 +105,6 @@ public partial class FormRevisionFilter : GitExtensionsDialog
         SimplifyMergesCheck.IsChecked = rawFilterInfo.ShowSimplifyMerges;
 
         UpdateFilters();
-    }
-
-    private static DateTimeOffset ToDateTimeOffset(DateTime value)
-    {
-        DateTime date = value == DateTime.MinValue ? DateTime.Today : value;
-        return new DateTimeOffset(date);
     }
 
     private void option_CheckedChanged(object? sender, EventArgs e)
@@ -171,12 +146,7 @@ public partial class FormRevisionFilter : GitExtensionsDialog
     private void OkClick(object? sender, EventArgs e)
     {
         // Note: There is no validation that information (like branch filters) are valid
-        SaveFilters();
-        DialogResult = WinFormsShims.DialogResult.OK;
-    }
 
-    private void SaveFilters()
-    {
         _filterInfo.ByDateFrom = SinceCheck.IsChecked == true;
         _filterInfo.DateFrom = Since.SelectedDate?.Date ?? DateTime.Today;
         _filterInfo.ByDateTo = CheckUntil.IsChecked == true;
@@ -203,51 +173,16 @@ public partial class FormRevisionFilter : GitExtensionsDialog
         _filterInfo.ShowSimplifyByDecoration = SimplifyByDecorationCheck.IsChecked == true;
         _filterInfo.ShowFullHistory = FullHistoryCheck.IsChecked == true;
         _filterInfo.ShowSimplifyMerges = SimplifyMergesCheck.IsChecked == true;
+        DialogResult = WinFormsShims.DialogResult.OK;
     }
 
     internal TestAccessor GetTestAccessor()
         => new(this);
 
-    internal readonly struct TestAccessor
+    internal readonly struct TestAccessor(FormRevisionFilter form)
     {
-        private readonly FormRevisionFilter _form;
-
-        public TestAccessor(FormRevisionFilter form)
-        {
-            _form = form;
-        }
-
-        public CheckBox SinceCheck => _form.SinceCheck;
-        public DatePicker Since => _form.Since;
-        public CheckBox UntilCheck => _form.CheckUntil;
-        public DatePicker Until => _form.Until;
-        public CheckBox AuthorCheck => _form.AuthorCheck;
-        public TextBox Author => _form.Author;
-        public CheckBox CommitterCheck => _form.CommitterCheck;
-        public TextBox Committer => _form.Committer;
-        public CheckBox MessageCheck => _form.MessageCheck;
-        public TextBox Message => _form.Message;
-        public CheckBox DiffContentCheck => _form.DiffContentCheck;
-        public TextBox DiffContent => _form.DiffContent;
-        public CheckBox IgnoreCase => _form.IgnoreCase;
-        public CheckBox CommitsLimitCheck => _form.CommitsLimitCheck;
-        public NumericUpDown CommitsLimit => _form._NO_TRANSLATE_CommitsLimit;
-        public CheckBox PathFilterCheck => _form.PathFilterCheck;
-        public TextBox PathFilter => _form.PathFilter;
-        public CheckBox BranchFilterCheck => _form.BranchFilterCheck;
-        public TextBox BranchFilter => _form.BranchFilter;
-        public CheckBox CurrentBranchOnlyCheck => _form.CurrentBranchOnlyCheck;
-        public CheckBox ReflogCheck => _form.ReflogCheck;
-        public CheckBox OnlyFirstParentCheck => _form.OnlyFirstParentCheck;
-        public CheckBox HideMergeCommitsCheck => _form.HideMergeCommitsCheck;
-        public CheckBox SimplifyByDecorationCheck => _form.SimplifyByDecorationCheck;
-        public CheckBox FullHistoryCheck => _form.FullHistoryCheck;
-        public CheckBox SimplifyMergesCheck => _form.SimplifyMergesCheck;
-
-        public void LoadFilters()
-            => _form.LoadFilters();
-
-        public void SaveFilters()
-            => _form.SaveFilters();
+        public CheckBox FullHistoryCheck => form.FullHistoryCheck;
+        public CheckBox SimplifyMergesCheck => form.SimplifyMergesCheck;
+        public void UpdateFilters() => form.UpdateFilters();
     }
 }

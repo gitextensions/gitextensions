@@ -64,11 +64,17 @@ public class GitExtensionsControl : TranslatedControl
     /// <param name="hotkeySettingsName">The setting name.</param>
     protected void LoadHotkeys(string hotkeySettingsName)
     {
-        /* Get hotkeys for the specified configuration setting.
-         * hotkeySettingsName: The setting name.
-         */
+        _hotkeys = GetHotkeys(hotkeySettingsName);
+    }
+
+    /// <summary>
+    ///  Get hotkeys for the specified configuration setting.
+    /// </summary>
+    /// <param name="hotkeySettingsName">The setting name.</param>
+    protected IReadOnlyList<HotkeyCommand> GetHotkeys(string hotkeySettingsName)
+    {
         // Hotkeys shall be loaded by all controls in OnRuntimeLoad
-        _hotkeys = HotkeysEnabled
+        return HotkeysEnabled
             ? ServiceProvider.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName) ?? []
             : [];
     }

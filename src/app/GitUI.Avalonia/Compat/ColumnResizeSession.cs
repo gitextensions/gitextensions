@@ -17,7 +17,6 @@ internal sealed class ColumnResizeSession
     private readonly IPointer _pointer;
     private readonly Border _preview;
     private readonly Action<double> _commit;
-    private readonly Action _restore;
     private readonly double _startX;
     private readonly double _startWidth;
     private readonly double _minimum;
@@ -28,13 +27,12 @@ internal sealed class ColumnResizeSession
     private bool _finished;
 
     internal ColumnResizeSession(Control owner, Panel overlay, PointerPressedEventArgs e,
-        double width, double edge, double minimum, double maximum, Action<double> commit, Action restore)
+        double width, double edge, double minimum, double maximum, Action<double> commit)
     {
         _owner = owner;
         _overlay = overlay;
         _pointer = e.Pointer;
         _commit = commit;
-        _restore = restore;
         _startX = e.GetPosition(owner).X;
         _startWidth = _width = width;
         _minimum = minimum;
@@ -108,6 +106,5 @@ internal sealed class ColumnResizeSession
         _owner.DetachedFromVisualTree -= OnDetached;
         _overlay.Children.Remove(_preview);
         _owner.Cursor = null;
-        _restore();
     }
 }
