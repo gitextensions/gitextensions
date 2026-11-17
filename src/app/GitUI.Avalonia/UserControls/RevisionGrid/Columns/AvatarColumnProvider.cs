@@ -32,7 +32,24 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         _revisionGridView = revisionGridView;
         _avatarProvider = avatarProvider;
         _avatarCacheCleaner = avatarCacheCleaner;
-        _ = new CacheRefreshSubscription(this, _avatarCacheCleaner);
+
+        // Avalonia's shared cleaner outlives recycled grids; retain only a weak owner.
+        WeakReference<AvatarColumnProvider> columnReference = new(this);
+        IAvatarCacheCleaner cacheCleaner = _avatarCacheCleaner;
+        EventHandler? onCacheCleared = null;
+        onCacheCleared = (sender, args) =>
+        {
+            if (columnReference.TryGetTarget(out AvatarColumnProvider? columnProvider))
+            {
+                Interlocked.Increment(ref columnProvider._cacheVersion);
+                columnProvider._revisionGridView.RefreshRealizedRows();
+            }
+            else if (onCacheCleared is { } obsolete)
+            {
+                cacheCleaner.CacheCleared -= obsolete;
+            }
+        };
+        _avatarCacheCleaner.CacheCleared += onCacheCleared;
     }
 
     public override void ApplySettings()
@@ -90,6 +107,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         return true;
     }
 
+    // Avalonia recycles Image controls instead of painting DataGridView cells; each cell owns its image request and clip.
     internal sealed class AvatarCell : Image
     {
         private readonly IAvatarProvider _avatarProvider;
@@ -105,19 +123,14 @@ internal sealed class AvatarColumnProvider : ColumnProvider
 
         internal Task<byte[]?>? LastLoadTask { get; private set; }
 
-        public AvatarCell(IAvatarProvider avatarProvider, IImage placeholderImage)
+        public AvatarCell(IAvatarProvider avatarProvider, IImage? placeholderImage = null)
         {
             _avatarProvider = avatarProvider;
-            _placeholderImage = placeholderImage;
+            _placeholderImage = placeholderImage ?? AvatarColumnProvider._placeholderImage;
 
             // The original DrawImage(image, rect) fills the square cell destination,
             // including when a custom provider returns a non-square server image.
             Stretch = Avalonia.Media.Stretch.Fill;
-        }
-
-        public AvatarCell(IAvatarProvider avatarProvider)
-            : this(avatarProvider, Images.User80)
-        {
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -261,34 +274,6 @@ internal sealed class AvatarColumnProvider : ColumnProvider
             {
                 previous?.Dispose();
             }
-        }
-    }
-
-    private sealed class CacheRefreshSubscription
-    {
-        private readonly IAvatarCacheCleaner _avatarCacheCleaner;
-        private readonly WeakReference<AvatarColumnProvider> _columnProvider;
-
-        public CacheRefreshSubscription(
-            AvatarColumnProvider columnProvider,
-            IAvatarCacheCleaner avatarCacheCleaner)
-        {
-            // The shared cleaner must not retain a closed grid through an instance callback.
-            _columnProvider = new WeakReference<AvatarColumnProvider>(columnProvider);
-            _avatarCacheCleaner = avatarCacheCleaner;
-            _avatarCacheCleaner.CacheCleared += OnCacheCleared;
-        }
-
-        private void OnCacheCleared(object? sender, EventArgs e)
-        {
-            if (_columnProvider.TryGetTarget(out AvatarColumnProvider? columnProvider))
-            {
-                Interlocked.Increment(ref columnProvider._cacheVersion);
-                columnProvider._revisionGridView.RefreshRealizedRows();
-                return;
-            }
-
-            _avatarCacheCleaner.CacheCleared -= OnCacheCleared;
         }
     }
 }

@@ -238,30 +238,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal Action<string>? SelectInLeftPanel { get; set; } = null;
 
-    private MenuItem ToggleBetweenArtificialAndHeadCommitsMenuItem => GetMenuItem(navigateToolStripMenuItem, "ToggleBetweenArtificialAndHeadCommits");
-    private MenuItem GotoCurrentRevisionMenuItem => GetMenuItem(navigateToolStripMenuItem, "GotoCurrentRevision");
-    private MenuItem GotoChildCommitMenuItem => GetMenuItem(navigateToolStripMenuItem, "GotoChildCommit");
-    private MenuItem GotoParentCommitMenuItem => GetMenuItem(navigateToolStripMenuItem, "GotoParentCommit");
-    private MenuItem GotoFirstParentCommitMenuItem => GetMenuItem(navigateToolStripMenuItem, "GotoFirstParentCommit");
-    private MenuItem GotoLastParentCommitMenuItem => GetMenuItem(navigateToolStripMenuItem, "GotoLastParentCommit");
-    private MenuItem ShowAllBranchesMenuItem => GetMenuItem(viewToolStripMenuItem, "ShowAllBranches");
-    private MenuItem ShowCurrentBranchOnlyMenuItem => GetMenuItem(viewToolStripMenuItem, "ShowCurrentBranchOnly");
-    private MenuItem ShowFilteredBranchesMenuItem => GetMenuItem(viewToolStripMenuItem, "ShowFilteredBranches");
-    private MenuItem ShowReflogReferencesMenuItem => GetMenuItem(viewToolStripMenuItem, "ShowReflogReferences");
-    private MenuItem FilterMenuItem => GetMenuItem(viewToolStripMenuItem, "filterToolStripMenuItem");
-    private MenuItem DrawNonRelativesGrayMenuItem => GetMenuItem(viewToolStripMenuItem, "drawNonrelativesGrayToolStripMenuItem");
-    private MenuItem HighlightSelectedBranchMenuItem => GetMenuItem(viewToolStripMenuItem, "HighlightSelectedBranch");
-    private MenuItem ShowGitNotesMenuItem => GetMenuItem(viewToolStripMenuItem, "showGitNotesToolStripMenuItem");
-    private MenuItem ShowRemoteBranchesMenuItem => GetMenuItem(viewToolStripMenuItem, "ShowRemoteBranches");
-    private MenuItem ShowTagsMenuItem => GetMenuItem(viewToolStripMenuItem, "showTagsToolStripMenuItem");
-    private MenuItem ShowAuthorDateMenuItem => GetMenuItem(viewToolStripMenuItem, "showAuthorDateToolStripMenuItem");
-    private MenuItem ShowRelativeDateMenuItem => GetMenuItem(viewToolStripMenuItem, "showRelativeDateToolStripMenuItem");
-    private MenuItem ShowRevisionGraphColumnMenuItem => GetMenuItem(viewToolStripMenuItem, "showRevisionGraphColumnToolStripMenuItem");
-    private MenuItem ShowGitNotesColumnMenuItem => GetMenuItem(viewToolStripMenuItem, "showGitNotesColumnToolStripMenuItem");
-    private MenuItem ShowAuthorNameColumnMenuItem => GetMenuItem(viewToolStripMenuItem, "showAuthorNameColumnToolStripMenuItem");
-    private MenuItem ShowDateColumnMenuItem => GetMenuItem(viewToolStripMenuItem, "showDateColumnToolStripMenuItem");
-    private MenuItem ShowIdColumnMenuItem => GetMenuItem(viewToolStripMenuItem, "showIdColumnToolStripMenuItem");
-
     internal MenuItem NavigateMenuItem => navigateToolStripMenuItem;
 
     internal MenuItem ViewMenuItem => viewToolStripMenuItem;
@@ -273,26 +249,29 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void RefreshMenuShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
     {
-        SetInputGesture(ToggleBetweenArtificialAndHeadCommitsMenuItem, Command.ToggleBetweenArtificialAndHeadCommits);
-        SetInputGesture(GotoCurrentRevisionMenuItem, Command.SelectCurrentRevision);
-        SetInputGesture(GotoChildCommitMenuItem, Command.GoToChild);
-        SetInputGesture(GotoParentCommitMenuItem, Command.GoToParent);
-        SetInputGesture(GotoFirstParentCommitMenuItem, Command.GoToFirstParent);
-        SetInputGesture(GotoLastParentCommitMenuItem, Command.GoToLastParent);
-        SetInputGesture(ShowAllBranchesMenuItem, Command.ShowAllBranches);
-        SetInputGesture(ShowCurrentBranchOnlyMenuItem, Command.ShowCurrentBranchOnly);
-        SetInputGesture(ShowFilteredBranchesMenuItem, Command.ShowFilteredBranches);
-        SetInputGesture(ShowReflogReferencesMenuItem, Command.ShowReflogReferences);
-        SetInputGesture(FilterMenuItem, Command.RevisionFilter);
-        SetInputGesture(HighlightSelectedBranchMenuItem, Command.ToggleHighlightSelectedBranch);
-        SetInputGesture(ShowRemoteBranchesMenuItem, Command.ShowRemoteBranches);
-        SetInputGesture(ShowTagsMenuItem, Command.ToggleShowTags);
+        SetInputGesture(navigateToolStripMenuItem, "ToggleBetweenArtificialAndHeadCommits", Command.ToggleBetweenArtificialAndHeadCommits);
+        SetInputGesture(navigateToolStripMenuItem, "GotoCurrentRevision", Command.SelectCurrentRevision);
+        SetInputGesture(navigateToolStripMenuItem, "GotoChildCommit", Command.GoToChild);
+        SetInputGesture(navigateToolStripMenuItem, "GotoParentCommit", Command.GoToParent);
+        SetInputGesture(navigateToolStripMenuItem, "GotoFirstParentCommit", Command.GoToFirstParent);
+        SetInputGesture(navigateToolStripMenuItem, "GotoLastParentCommit", Command.GoToLastParent);
+        SetInputGesture(viewToolStripMenuItem, "ShowAllBranches", Command.ShowAllBranches);
+        SetInputGesture(viewToolStripMenuItem, "ShowCurrentBranchOnly", Command.ShowCurrentBranchOnly);
+        SetInputGesture(viewToolStripMenuItem, "ShowFilteredBranches", Command.ShowFilteredBranches);
+        SetInputGesture(viewToolStripMenuItem, "ShowReflogReferences", Command.ShowReflogReferences);
+        SetInputGesture(viewToolStripMenuItem, "filterToolStripMenuItem", Command.RevisionFilter);
+        SetInputGesture(viewToolStripMenuItem, "HighlightSelectedBranch", Command.ToggleHighlightSelectedBranch);
+        SetInputGesture(viewToolStripMenuItem, "ShowRemoteBranches", Command.ShowRemoteBranches);
+        SetInputGesture(viewToolStripMenuItem, "showTagsToolStripMenuItem", Command.ToggleShowTags);
 
         return;
 
-        void SetInputGesture(MenuItem menuItem, Command command)
-            => menuItem.InputGesture = KeysMapper.ToKeyGesture(
+        void SetInputGesture(MenuItem parent, string name, Command command)
+        {
+            MenuItem menuItem = parent.Items.OfType<MenuItem>().Single(item => item.Tag as string == name);
+            menuItem.InputGesture = KeysMapper.ToKeyGesture(
                 hotkeys?.FirstOrDefault(hotkey => hotkey.CommandCode == (int)command)?.KeyData);
+        }
     }
 
     internal void SetAheadBehindDataProvider(IAheadBehindDataProvider? provider)
@@ -799,7 +778,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         UpdateViewMenuChecks();
     }
 
-    private void OnCreateControl()
+    // Avalonia has no OnCreateControl base hook; retain the original protected declaration in this sealed control.
+#pragma warning disable CS0628
+    protected void OnCreateControl()
     {
         if (_isControlCreated)
         {
@@ -815,6 +796,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
+#pragma warning restore CS0628
     protected override void OnRuntimeLoad()
     {
         base.OnRuntimeLoad();
@@ -3259,26 +3241,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void UpdateViewMenuChecks()
     {
-        ShowAllBranchesMenuItem.IsChecked = _filterInfo.IsShowAllBranchesChecked;
-        ShowCurrentBranchOnlyMenuItem.IsChecked = _filterInfo.IsShowCurrentBranchOnlyChecked;
-        ShowFilteredBranchesMenuItem.IsChecked = _filterInfo.IsShowFilteredBranchesChecked;
-        ShowReflogReferencesMenuItem.IsChecked = _filterInfo.ShowReflogReferences;
-        DrawNonRelativesGrayMenuItem.IsChecked = AppSettings.RevisionGraphDrawNonRelativesGray;
-        HighlightSelectedBranchMenuItem.IsEnabled = SelectedRevision is not null;
-        ShowGitNotesMenuItem.IsChecked = AppSettings.ShowGitNotes;
-        ShowRemoteBranchesMenuItem.IsChecked = AppSettings.ShowRemoteBranches;
-        ShowTagsMenuItem.IsChecked = AppSettings.ShowTags;
-        ShowAuthorDateMenuItem.IsChecked = AppSettings.ShowAuthorDate;
-        ShowRelativeDateMenuItem.IsChecked = AppSettings.RelativeDate;
-        ShowRevisionGraphColumnMenuItem.IsChecked = AppSettings.ShowRevisionGridGraphColumn;
-        ShowGitNotesColumnMenuItem.IsChecked = AppSettings.ShowGitNotesColumn;
-        ShowAuthorNameColumnMenuItem.IsChecked = AppSettings.ShowAuthorNameColumn;
-        ShowDateColumnMenuItem.IsChecked = AppSettings.ShowDateColumn;
-        ShowIdColumnMenuItem.IsChecked = AppSettings.ShowObjectIdColumn;
+        foreach (MenuCommand menuCommand in MenuCommands.NavigateMenuCommands.Concat(MenuCommands.ViewMenuCommands))
+        {
+            menuCommand.SetCheckForRegisteredMenuItems();
+        }
     }
-
-    private static MenuItem GetMenuItem(MenuItem parent, string name)
-        => parent.Items.OfType<MenuItem>().Single(menuItem => menuItem.Tag as string == name);
 
     private void GoToRelatedRef(IGitRef gitRef, Action<string>? handleGone = null, bool toggleSelection = false)
     {

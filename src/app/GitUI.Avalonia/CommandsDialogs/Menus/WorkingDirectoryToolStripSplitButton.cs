@@ -149,7 +149,14 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
             _tsmiOpenLocalRepository = NativeRepositoryMenu.Copy(_startToolStripMenuItem.OpenRepositoryMenuItem);
             _tsmiOpenLocalRepository.Tag = _excludeFromFilterMarker;
-            _tsmiOpenLocalRepository.Click += (s, e) => _startToolStripMenuItem.OpenRepositoryMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            // Avalonia must dismiss the flyout before pumping a synchronous modal dialog.
+            _tsmiOpenLocalRepository.Click += (s, e) =>
+            {
+                button._menu.Hide();
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    _startToolStripMenuItem.OpenRepositoryMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent)));
+            };
 
             _tsmiCloseRepo = NativeRepositoryMenu.Copy(_closeToolStripMenuItem);
             _tsmiCloseRepo.Tag = _excludeFromFilterMarker;
@@ -164,13 +171,17 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             };
             _tsmiRecentReposSettings.Click += (hs, he) =>
             {
-                using (FormRecentReposSettings frm = new())
+                button._menu.Hide();
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                 {
-                    frm.ShowDialog((button._contentOwner ?? ActiveOrOpenForm) as GitExtensions.Shims.WinForms.IWin32Window);
-                }
+                    using (FormRecentReposSettings frm = new())
+                    {
+                        frm.ShowDialog((button._contentOwner ?? ActiveOrOpenForm) as GitExtensions.Shims.WinForms.IWin32Window);
+                    }
 
-                _repositoryHistoryUIService.Invalidate();
-                RefreshContent(button);
+                    _repositoryHistoryUIService.Invalidate();
+                    RefreshContent(button);
+                });
             };
         }
 

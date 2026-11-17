@@ -64,6 +64,69 @@ public sealed class FormBrowseTests
     private bool _revisionGraphShowArtificialCommits;
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task Working_directory_fixed_actions_should_dismiss_the_popup_before_opening_their_real_dialog(bool configure)
+    {
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithInitialCommit()), new BrowseArguments());
+        form.Show();
+        WorkingDirectoryToolStripSplitButton selector = form.FindControl<WorkingDirectoryToolStripSplitButton>("_NO_TRANSLATE_WorkingDir")!;
+        MenuFlyout menu = (MenuFlyout)selector.Flyout!;
+        Window? openedDialog = null;
+        WindowBase? dialogOwner = null;
+        bool popupWasOpen = false;
+        bool deadlineExpired = false;
+        int dialogCount = 0;
+        DispatcherTimer deadline = new() { Interval = TimeSpan.FromSeconds(20) };
+        deadline.Tick += (_, _) =>
+        {
+            deadline.Stop();
+            deadlineExpired = true;
+            openedDialog?.Close();
+            menu.Hide();
+        };
+        using IDisposable observer = Window.WindowOpenedEvent.AddClassHandler<Window>((dialog, _) =>
+        {
+            if (configure ? dialog is FormRecentReposSettings : dialog is FormOpenDirectory)
+            {
+                openedDialog = dialog;
+                popupWasOpen = menu.IsOpen;
+                dialog.Opened += (_, _) =>
+                {
+                    dialogOwner = dialog.Owner;
+                    dialogCount++;
+                    Dispatcher.UIThread.Post(dialog.Close);
+                };
+            }
+        });
+        try
+        {
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(20));
+            await form.JoinLoadOperationsForTestAsync(timeout.Token);
+            selector.ShowDropDown();
+            Dispatcher.UIThread.RunJobs();
+            menu.IsOpen.Should().BeTrue();
+            MenuItem item = (MenuItem)menu.Items[menu.Items.Count - (configure ? 1 : 4)]!;
+            TopLevel popup = TopLevel.GetTopLevel(item)!;
+            deadline.Start();
+            Click(popup, item, MouseButton.Left);
+            await WaitUntilAsync(() => dialogCount > 0);
+            deadlineExpired.Should().BeFalse();
+            dialogCount.Should().Be(1);
+            dialogOwner.Should().BeSameAs(form);
+            popupWasOpen.Should().BeFalse("the native flyout must dismiss before entering a synchronous modal flow");
+            menu.IsOpen.Should().BeFalse();
+        }
+        finally
+        {
+            deadline.Stop();
+            menu.Hide();
+            openedDialog?.Close();
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task Working_directory_reopening_should_rebuild_from_current_saved_history_without_duplicates()
     {
         using FormBrowse form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithInitialCommit()), new BrowseArguments());
