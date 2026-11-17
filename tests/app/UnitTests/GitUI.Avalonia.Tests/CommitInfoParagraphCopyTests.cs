@@ -254,6 +254,7 @@ public sealed class CommitInfoParagraphCopyTests
 
     private static void RunLayout(Window window)
     {
+        CommitInfoTestSupport.WaitForContentsLayout(window);
         for (int pass = 0; pass < 8; pass++)
         {
             Dispatcher.UIThread.RunJobs();
@@ -291,7 +292,9 @@ public sealed class CommitInfoParagraphCopyTests
 
     private static void WithSurface(string role, Action<CommitInfo, XhtmlTextBlock, Window> verify)
     {
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
         CommitInfo control = new();
+        using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock block = role switch

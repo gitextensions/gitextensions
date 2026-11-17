@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Net;
+using System.Reactive.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Avalonia;
@@ -8,6 +9,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.ExternalLinks;
@@ -19,6 +21,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -26,6 +29,7 @@ using ResourceManager;
 using ResourceManager.CommitDataRenders;
 using Point = Avalonia.Point;
 using Size = Avalonia.Size;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommitInfo;
 
@@ -69,6 +73,9 @@ public partial class CommitInfo : GitModuleControl
     private readonly CancellationTokenSequence _asyncLoadCancellation = new();
     private bool _hasSubscribedToUICommandsChanged;
 
+    private readonly IDisposable _revisionInfoResizedSubscription;
+    private readonly IDisposable _commitMessageResizedSubscription;
+
     private GitRevision? _revision;
     private IReadOnlyList<ObjectId>? _children;
     private string? _linksInfo;
@@ -91,6 +98,9 @@ public partial class CommitInfo : GitModuleControl
     private Point? _contextMenuSourcePosition;
     private TopLevel? _contextMenuRoot;
     private Point? _contextMenuPointerPosition;
+
+    // Avalonia does not dispose child controls when their owning window closes.
+    private Window? _disposalOwner;
 
     [DefaultValue(false)]
     public bool ShowBranchesAsLinks { get; set; }
@@ -129,8 +139,17 @@ public partial class CommitInfo : GitModuleControl
         // source configured-font line metrics, not a fixed default-font LineHeight.
         rtbxCommitMessage.UseNativeContentsHeightMeasurement();
         RevisionInfo.UseNativeContentsHeightMeasurement();
-        rtbxCommitMessage.ContentsResized += CommitMessage_ContentsResized;
-        RevisionInfo.ContentsResized += RevisionInfo_ContentsResized;
+        _commitMessageResizedSubscription = subscribeToContentsResized(rtbxCommitMessage, CommitMessage_ContentsResized);
+        _revisionInfoResizedSubscription = subscribeToContentsResized(RevisionInfo, RevisionInfo_ContentsResized);
+
+        IDisposable subscribeToContentsResized(XhtmlTextBlock richTextBox, Action<int> handler) =>
+            Observable
+                .FromEvent<int>(
+                    h => richTextBox.ContentsResized += h,
+                    h => richTextBox.ContentsResized -= h)
+                .Throttle(TimeSpan.FromMilliseconds(100))
+                .ObserveOn(MainThreadScheduler.Instance)
+                .Subscribe(contentsHeight => TaskManager.HandleExceptions(() => handler(contentsHeight), WinFormsShims.Application.OnThreadException));
 
         // WinForms AutoSize raises parent layout after the header's client size changes.
         // A Grid with an explicit total height cannot propagate that change through its
@@ -163,7 +182,11 @@ public partial class CommitInfo : GitModuleControl
         showTagThisCommitDerivesFromMenuItem.Click += showTagThisCommitDerivesFromMenuItem_Click;
         addNoteToolStripMenuItem.Click += addNoteToolStripMenuItem_Click;
         commitInfoContextMenuStrip.Opening += commitInfoContextMenuStrip_Opening;
-        commitInfoContextMenuStrip.Closed += (_, _) => ClearContextMenuSource();
+        commitInfoContextMenuStrip.Closed += (_, _) =>
+        {
+            _contextMenuSourceControl = null;
+            _contextMenuSourcePosition = null;
+        };
         AddHandler(ContextRequestedEvent, commitInfoContextMenuStrip_ContextRequested, RoutingStrategies.Tunnel);
 
         // Run the original Copy handlers before SelectableTextBlock's default action;
@@ -172,8 +195,49 @@ public partial class CommitInfo : GitModuleControl
         RevisionInfo.AddHandler(KeyDownEvent, RichTextBox_KeyDown, RoutingStrategies.Tunnel);
         commitInfoHeader.SetContextMenuStrip(commitInfoContextMenuStrip);
 
-        // Avalonia constraint: controls have no DisposeCustomResources lifecycle hook.
+        // Avalonia detachment can be temporary; cancel the current load without disposing reusable subscriptions.
         DetachedFromVisualTree += (_, _) => _asyncLoadCancellation.CancelCurrent();
+    }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _asyncLoadCancellation.Dispose();
+
+            UnsubscribeFromUICommandsChanged();
+            if (_disposalOwner is not null)
+            {
+                _disposalOwner.Closed -= OnOwnerClosed;
+                _disposalOwner = null;
+            }
+        }
+
+        base.Dispose(disposing);
+    }
+
+    protected override void OnAttachedToLogicalTree(LogicalTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToLogicalTree(e);
+
+        Window? owner = this.GetLogicalAncestors().OfType<Window>().FirstOrDefault();
+        if (!ReferenceEquals(owner, _disposalOwner))
+        {
+            if (_disposalOwner is not null)
+            {
+                _disposalOwner.Closed -= OnOwnerClosed;
+            }
+
+            _disposalOwner = owner;
+            if (_disposalOwner is not null)
+            {
+                _disposalOwner.Closed += OnOwnerClosed;
+            }
+        }
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -184,17 +248,30 @@ public partial class CommitInfo : GitModuleControl
         _contextMenuRoot?.AddHandler(PointerExitedEvent, ContextMenuPointerExited, RoutingStrategies.Direct, handledEventsToo: true);
     }
 
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         _contextMenuRoot?.RemoveHandler(PointerMovedEvent, ContextMenuPointerMoved);
         _contextMenuRoot?.RemoveHandler(PointerExitedEvent, ContextMenuPointerExited);
         _contextMenuRoot = null;
         _contextMenuPointerPosition = null;
-        ClearContextMenuSource();
+        _contextMenuSourceControl = null;
+        _contextMenuSourcePosition = null;
         base.OnDetachedFromVisualTree(e);
+    }
+
+    // Avalonia final owner closure is independent of lazy UI-command discovery and reusable layout detachment.
+    private void OnOwnerClosed(object? sender, EventArgs e)
+    {
+        if (_disposalOwner is Window owner && ReferenceEquals(sender, owner))
+        {
+            bool isOwned = this.GetLogicalAncestors().Any(ancestor => ReferenceEquals(ancestor, owner));
+            owner.Closed -= OnOwnerClosed;
+            _disposalOwner = null;
+            if (isOwned)
+            {
+                ((IDisposable)this).Dispose();
+            }
+        }
     }
 
     protected override void OnRuntimeLoad()
@@ -236,11 +313,6 @@ public partial class CommitInfo : GitModuleControl
             {
                 source.UICommandsChanged += OnUICommandsChanged;
                 _hasSubscribedToUICommandsChanged = true;
-                if (source is Window window)
-                {
-                    // Framework constraint: final owner close replaces WinForms control disposal; layout detachment remains reusable.
-                    window.Closed += (_, _) => UnsubscribeFromUICommandsChanged();
-                }
             }
 
             // call this event handler also now (necessary for "Contained in branches/tags")
@@ -810,7 +882,8 @@ public partial class CommitInfo : GitModuleControl
         {
             copyLinkToolStripMenuItem.IsVisible = false;
             copyLinkToolStripMenuItem.Tag = null;
-            ClearContextMenuSource();
+            _contextMenuSourceControl = null;
+            _contextMenuSourcePosition = null;
             return;
         }
 
@@ -818,12 +891,14 @@ public partial class CommitInfo : GitModuleControl
         copyLinkToolStripMenuItem.IsVisible = link is not null;
         copyLinkToolStripMenuItem.Header = string.Format(_copyLink.Text, link);
         copyLinkToolStripMenuItem.Tag = link;
-        ClearContextMenuSource();
+        _contextMenuSourceControl = null;
+        _contextMenuSourcePosition = null;
     }
 
     private void commitInfoContextMenuStrip_ContextRequested(object? sender, ContextRequestedEventArgs e)
     {
-        ClearContextMenuSource();
+        _contextMenuSourceControl = null;
+        _contextMenuSourcePosition = null;
         if (e.Source is not Visual origin)
         {
             return;
@@ -861,12 +936,6 @@ public partial class CommitInfo : GitModuleControl
         {
             _contextMenuPointerPosition = null;
         }
-    }
-
-    private void ClearContextMenuSource()
-    {
-        _contextMenuSourceControl = null;
-        _contextMenuSourcePosition = null;
     }
 
     private void copyLinkToolStripMenuItem_Click(object sender, EventArgs e)
@@ -954,6 +1023,7 @@ public partial class CommitInfo : GitModuleControl
     private void RevisionInfo_ContentsResized(int contentsHeight)
     {
         _revisionInfoHeight = contentsHeight;
+        OnLayout(Bounds.Size);
         InvalidateMeasure();
     }
 
@@ -962,6 +1032,7 @@ public partial class CommitInfo : GitModuleControl
         _commitMessageHeight = contentsHeight;
 
         //
+        OnLayout(Bounds.Size);
         InvalidateMeasure();
     }
 
@@ -1078,6 +1149,22 @@ public partial class CommitInfo : GitModuleControl
         // Override RichTextBox Ctrl-c handling to copy plain text
         ClipboardUtil.TrySetText(rtb.GetSelectionPlainText());
         e.Handled = true;
+    }
+
+    protected override void DisposeCustomResources()
+    {
+        try
+        {
+            _asyncLoadCancellation.Dispose();
+            _revisionInfoResizedSubscription?.Dispose();
+            _commitMessageResizedSubscription?.Dispose();
+
+            base.DisposeCustomResources();
+        }
+        catch (InvalidOperationException)
+        {
+            // On WinForms, System.Reactive causes the app to fail with: 'Invoke or BeginInvoke cannot be called on a control until the window handle has been created.'
+        }
     }
 
     internal sealed class BranchComparer : IComparer<string>

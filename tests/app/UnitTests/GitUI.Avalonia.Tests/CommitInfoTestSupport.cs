@@ -1,8 +1,12 @@
+using System.Diagnostics;
 using System.Reflection;
 using Avalonia.Controls;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitUI;
 using GitUI.CommitInfo;
 using GitUI.Compat;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitExtensionsTests;
 
@@ -10,6 +14,83 @@ namespace GitExtensionsTests;
 internal static class CommitInfoTestSupport
 {
     public static Accessor GetNativeTestSupport(this CommitInfo control) => new(control);
+
+    public static void WaitForContentsLayout(Window window)
+    {
+        DispatcherPump.Wait(async () =>
+        {
+            Stopwatch watch = Stopwatch.StartNew();
+            while (watch.Elapsed < TimeSpan.FromSeconds(5))
+            {
+                Dispatcher.UIThread.RunJobs();
+                window.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+                CommitInfo[] controls = window.GetVisualDescendants().OfType<CommitInfo>()
+                    .Where(control => control.IsEffectivelyVisible && control.GetNativeTestSupport().TableLayout.IsVisible).ToArray();
+                if (controls.All(control =>
+                    {
+                        Accessor accessor = control.GetNativeTestSupport();
+                        return accessor.CommitMessageHeight == accessor.CommitMessage.ContentsHeight
+                            && accessor.RevisionInfoHeight == accessor.RevisionInfo.ContentsHeight;
+                    }) && window.IsMeasureValid && window.IsArrangeValid)
+                {
+                    return true;
+                }
+
+                await Task.Delay(10);
+            }
+
+            throw new AssertionException("The real throttled CommitInfo contents and layout did not settle.");
+        });
+    }
+
+    // parity-scaffolding: render fixtures own an actual UI task context and restore the exact previous task manager.
+    internal sealed class UiContextScope : IDisposable
+    {
+        private static readonly FieldInfo TaskManagerField = typeof(ThreadHelper).GetField("_taskManager", BindingFlags.Static | BindingFlags.NonPublic)!;
+        private static readonly FieldInfo CollectionField = typeof(TaskManager).GetField("_joinableTaskCollection", BindingFlags.Instance | BindingFlags.NonPublic)!;
+        private readonly object? _previousManager;
+        private readonly SynchronizationContext? _previousSynchronizationContext;
+        private readonly JoinableTaskContext _context;
+        private readonly JoinableTaskCollection _collection;
+
+        public UiContextScope()
+        {
+            _previousManager = TaskManagerField.GetValue(null);
+            _previousSynchronizationContext = SynchronizationContext.Current;
+            AvaloniaSynchronizationContext.InstallIfNeeded();
+            _context = new JoinableTaskContext(Thread.CurrentThread, SynchronizationContext.Current);
+            ThreadHelper.JoinableTaskContext = _context;
+            _collection = (JoinableTaskCollection)CollectionField.GetValue(TaskManagerField.GetValue(null))!;
+        }
+
+        public void Dispose()
+        {
+            try
+            {
+                Dispatcher.UIThread.RunJobs();
+                using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(5));
+                DispatcherPump.Wait(async () =>
+                {
+                    await ThreadHelper.JoinPendingOperationsAsync(deadline.Token);
+                    _collection.Should().BeEmpty("all work owned by the disposed render controls must finish before their UI context is released");
+                    return true;
+                });
+            }
+            finally
+            {
+                TaskManagerField.SetValue(null, _previousManager);
+                try
+                {
+                    _context.Dispose();
+                }
+                finally
+                {
+                    SynchronizationContext.SetSynchronizationContext(_previousSynchronizationContext);
+                }
+            }
+        }
+    }
 
     internal readonly struct Accessor(CommitInfo control)
     {

@@ -31,7 +31,9 @@ public sealed class CommitInfoContextLinkTests
     [AvaloniaTest]
     public void Shared_context_menu_should_query_only_the_freshly_right_clicked_editor_and_character()
     {
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
         CommitInfo control = new();
+        using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
@@ -47,11 +49,13 @@ public sealed class CommitInfoContextLinkTests
         try
         {
             Dispatcher.UIThread.RunJobs();
+            CommitInfoTestSupport.WaitForContentsLayout(window);
             for (int index = 0; index < surfaces.Length; index++)
             {
                 XhtmlTextBlock block = surfaces[index];
+                string layout = $"surface {index}, bounds {block.Bounds}, body {accessor.CommitMessageHeight}/{accessor.CommitMessage.ContentsHeight}, refs {accessor.RevisionInfoHeight}/{accessor.RevisionInfo.ContentsHeight}";
                 RequestAt(window, accessor.ContextMenu, GetLinkPoint(block, window, 0));
-                accessor.CopyLinkMenuItem.IsVisible.Should().BeTrue();
+                accessor.CopyLinkMenuItem.IsVisible.Should().BeTrue("the freshly clicked link must be available: {0}", layout);
                 accessor.CopyLinkMenuItem.Tag.Should().Be(links[index]);
                 accessor.CopyLinkMenuItem.Header?.ToString().Should().Contain(links[index]);
                 accessor.ContextMenu.Close();
@@ -91,7 +95,9 @@ public sealed class CommitInfoContextLinkTests
         WinFormsShims.IClipboard? previousClipboard = GetInstalledClipboard();
         WinFormsShims.IClipboard clipboard = Substitute.For<WinFormsShims.IClipboard>();
         WinFormsShims.ShimHost.Clipboard = clipboard;
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
         CommitInfo control = new();
+        using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
@@ -132,7 +138,9 @@ public sealed class CommitInfoContextLinkTests
     public void Native_header_right_click_should_preserve_selection_inside_and_outside_the_pressed_caption(bool pressInsideSelection)
     {
         const string link = "https://example.invalid/source";
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
         CommitInfo control = new();
+        using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
@@ -184,7 +192,9 @@ public sealed class CommitInfoContextLinkTests
     [AvaloniaTest]
     public void Keyboard_context_request_should_use_the_known_mouse_point_not_the_caret_or_old_link()
     {
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
         CommitInfo control = new();
+        using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
@@ -218,7 +228,9 @@ public sealed class CommitInfoContextLinkTests
     [AvaloniaTest]
     public void Keyboard_context_request_without_a_known_pointer_after_reparenting_should_not_reuse_a_link()
     {
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
         CommitInfo control = new();
+        using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;

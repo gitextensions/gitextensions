@@ -13,6 +13,7 @@ namespace GitUI;
 /// </summary>
 public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32Window
 {
+    private int _isDisposed;
     private IGitUICommandsSource? _uiCommandsSource;
 
     /// <summary>
@@ -88,6 +89,32 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32W
 
     /// <summary>Gets the <see cref="UICommands"/>' <see cref="IGitModule"/> reference.</summary>
     public IGitModule Module => UICommands.Module;
+
+    protected override void Dispose(bool disposing)
+    {
+        if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) != 0)
+        {
+            return;
+        }
+
+        if (_uiCommandsSource is not null)
+        {
+            DisposeUICommandsSource();
+        }
+
+        DisposeCustomResources();
+
+        base.Dispose(disposing);
+    }
+
+    protected virtual void DisposeCustomResources()
+    {
+    }
+
+    /// <summary>Occurs when the <see cref="UICommandsSource"/> is disposed.</summary>
+    protected virtual void DisposeUICommandsSource()
+    {
+    }
 
     protected override bool ExecuteCommand(int command)
     {

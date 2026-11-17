@@ -48,7 +48,9 @@ public sealed class CommitInfoBodyFontTests
             AppSettings.Font = new WinFormsShims.Font(family, points);
             AppSettings.CommitFont = new WinFormsShims.Font(family, points);
             AvaloniaFontSettings.ApplyAppSettings();
+            using CommitInfoTestSupport.UiContextScope uiContext = new();
             CommitInfo control = new();
+            using IDisposable controlLifetime = control;
             CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             accessor.TableLayout.IsVisible = true;
             XhtmlTextBlock[] blocks = [accessor.CommitMessage, accessor.RevisionInfo];
@@ -192,7 +194,9 @@ public sealed class CommitInfoBodyFontTests
             AppSettings.Font = new WinFormsShims.Font("Segoe UI", 11);
             AppSettings.CommitFont = new WinFormsShims.Font("Consolas", 18);
             AvaloniaFontSettings.ApplyAppSettings();
+            using CommitInfoTestSupport.UiContextScope uiContext = new();
             CommitInfo control = new();
+            using IDisposable controlLifetime = control;
             CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
             accessor.TableLayout.IsVisible = true;
             accessor.CommitMessage.SetXHTMLText(PlainParagraphs);
@@ -268,6 +272,7 @@ public sealed class CommitInfoBodyFontTests
 
     private static void RunLayout(Window window)
     {
+        CommitInfoTestSupport.WaitForContentsLayout(window);
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
         Dispatcher.UIThread.RunJobs();

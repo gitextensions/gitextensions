@@ -431,6 +431,7 @@ public sealed class CommitInfoScrollViewportTests
                 Scroll.PropertyChanged -= ObserveScrollChange;
                 _horizontalBar.PropertyChanged -= ObserveScrollChange;
                 _verticalBar.PropertyChanged -= ObserveScrollChange;
+                ((IDisposable)_control).Dispose();
                 Window.Close();
                 _clock.Dispose();
                 Dispatcher.UIThread.RunJobs();
@@ -450,6 +451,7 @@ public sealed class CommitInfoScrollViewportTests
             int stablePasses = 0;
             for (int pass = 0; pass < 12; pass++)
             {
+                CommitInfoTestSupport.WaitForContentsLayout(Window);
                 int changesBeforePass = _scrollChangeCount;
                 Dispatcher.UIThread.RunJobs();
                 Window.UpdateLayout();
@@ -463,6 +465,7 @@ public sealed class CommitInfoScrollViewportTests
                 LayoutState state = ReadState();
                 _samples.Add(new LayoutSample(stage, pass, "afterRender", state));
                 if (state.LayoutValid && state == beforeRender && state == previous
+                    && state.BodyContentsHeight == state.BodyCachedHeight && state.RefsContentsHeight == state.RefsCachedHeight
                     && changesBeforePass == _scrollChangeCount
                     && Accessor.Avatar.Bounds.Height == AppSettings.AuthorImageSizeInCommitInfo)
                 {

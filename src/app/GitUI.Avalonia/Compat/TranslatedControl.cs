@@ -31,7 +31,13 @@ public class TranslatedControl : UserControl, ITranslate
 
     void IDisposable.Dispose()
     {
+        Dispose(disposing: true);
         GC.SuppressFinalize(this);
+    }
+
+    // Avalonia has no Control.Dispose(bool); retain the original virtual cleanup chain for IDisposable consumers.
+    protected virtual void Dispose(bool disposing)
+    {
     }
 
     public virtual void AddTranslationItems(ITranslation translation)

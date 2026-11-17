@@ -431,11 +431,13 @@ public sealed class CommitInfoParentLayoutTests
     [AvaloniaTest]
     public void Browse_capture_should_report_the_actual_source_anchored_body_client_and_outer_height()
     {
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
         CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
         bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
         AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
         AppSettings.ShowSplitViewLayout = true;
         using FormBrowse form = new();
+        using IDisposable controlLifetime = form.RevisionInfo;
         try
         {
             form.Show();
@@ -450,6 +452,7 @@ public sealed class CommitInfoParentLayoutTests
                 Dispatcher.UIThread.RunJobs();
             }
 
+            CommitInfoTestSupport.WaitForContentsLayout(form);
             XhtmlTextBlock body = accessor.CommitMessage;
             body.IsEffectivelyVisible.Should().BeTrue();
             body.Bounds.Height.Should().Be(body.ContentsHeight + SourceMinimumHeight,
@@ -640,6 +643,7 @@ public sealed class CommitInfoParentLayoutTests
 
     private static void RunLayout(Window window)
     {
+        CommitInfoTestSupport.WaitForContentsLayout(window);
         // A rendered header/queued avatar update can invalidate its parent after the
         // first pass. Consume real framework work until the owned layout is valid; do
         // not call source handlers or overwrite the parent's cached heights in tests.
@@ -682,7 +686,9 @@ public sealed class CommitInfoParentLayoutTests
             AppSettings.Font = new WinFormsShims.Font(family, points);
             AppSettings.CommitFont = new WinFormsShims.Font(family, points);
             AvaloniaFontSettings.ApplyAppSettings();
+            using CommitInfoTestSupport.UiContextScope uiContext = new();
             CommitInfo control = new();
+            using IDisposable controlLifetime = control;
             control.GetNativeTestSupport().TableLayout.IsVisible = true;
             window = new Window { Width = SourceTableWidth, Height = 900, Content = control };
             window.Show();

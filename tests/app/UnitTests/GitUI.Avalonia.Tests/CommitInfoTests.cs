@@ -41,7 +41,9 @@ public sealed class CommitInfoTests
     [AvaloniaTest]
     public void CommitInfo_should_reserve_scrollbar_space_when_content_overflows()
     {
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
         CommitInfo control = new();
+        using IDisposable controlLifetime = control;
         Grid table = control.FindControl<Grid>("tableLayout")!;
         table.IsVisible = true;
         control.FindControl<XhtmlTextBlock>("rtbxCommitMessage")!
@@ -51,6 +53,7 @@ public sealed class CommitInfoTests
         try
         {
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            CommitInfoTestSupport.WaitForContentsLayout(window);
             ScrollViewer scroll = control.GetVisualDescendants().OfType<ScrollViewer>().First();
             scroll.AllowAutoHide.Should().BeFalse();
             scroll.Extent.Height.Should().BeGreaterThan(scroll.Viewport.Height);
@@ -521,7 +524,9 @@ public sealed class CommitInfoTests
     [AvaloniaTest]
     public void CommitInfo_should_preserve_the_original_named_surfaces()
     {
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
         CommitInfo control = new();
+        using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
 
         accessor.Header.Should().NotBeNull();
@@ -1291,7 +1296,9 @@ public sealed class CommitInfoTests
     [AvaloniaTest]
     public void CommitInfo_should_render_the_hostless_revision_body_and_hide_a_null_revision()
     {
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
         CommitInfo control = new();
+        using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         GitRevision revision = new(ObjectId.Parse("1234567890abcdef1234567890abcdef12345678"))
         {
@@ -1329,7 +1336,9 @@ public sealed class CommitInfoTests
         IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
         source.UICommands.Returns(commands);
 
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
         CommitInfo control = new() { UICommandsSource = source };
+        using IDisposable controlLifetime = control;
         KeyGesture? gesture = control.GetNativeTestSupport().AddNoteMenuItem.InputGesture;
 
         gesture.Should().NotBeNull();
@@ -1350,7 +1359,10 @@ public sealed class CommitInfoTests
         bool originalDerived = AppSettings.CommitInfoShowTagThisCommitDerivesFrom;
         try
         {
-            CommitInfoTestSupport.Accessor accessor = new CommitInfo().GetNativeTestSupport();
+            using CommitInfoTestSupport.UiContextScope uiContext = new();
+            CommitInfo control = new();
+            using IDisposable controlLifetime = control;
+            CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
 
             accessor.ShowLocalBranchesMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             accessor.ShowRemoteBranchesMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
@@ -1380,7 +1392,9 @@ public sealed class CommitInfoTests
     [AvaloniaTest]
     public void CommitInfo_should_preserve_menu_translation_keys_without_empty_text_keys()
     {
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
         CommitInfo control = new();
+        using IDisposable controlLifetime = control;
         ITranslation translation = Substitute.For<ITranslation>();
 
         control.AddTranslationItems(translation);

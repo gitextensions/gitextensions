@@ -1217,7 +1217,7 @@ public partial class EditNetSpell : GitModuleControl, IDisposable
     /// Clean up any resources being used.
     /// </summary>
     /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected virtual void Dispose(bool disposing)
+    protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
@@ -1225,6 +1225,8 @@ public partial class EditNetSpell : GitModuleControl, IDisposable
             SpellCheckTimer.Stop();
             _autoCompleteCancellationTokenSource.Dispose();
         }
+
+        base.Dispose(disposing);
     }
 
     /// <inheritdoc />
