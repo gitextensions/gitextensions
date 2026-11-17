@@ -507,7 +507,7 @@ public sealed class WorkingDirectorySelectorTests
         };
         WorkingDirectoryTestSupport.Accessor accessor = selector.GetTestAccessor();
         IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
-        history.LoadSnapshot().Returns(new RepositoryHistorySnapshot(
+        RepositoryHistoryTestHelper.SetSnapshot(history, new RepositoryHistorySnapshot(
             [
                 new RepositoryHistoryEntry(new Repository("/repos/alpha"), "alpha", null, IsFavourite: false, IsAnchored: false),
                 new RepositoryHistoryEntry(new Repository("/repos/beta"), "beta", null, IsFavourite: false, IsAnchored: false),
@@ -540,13 +540,13 @@ public sealed class WorkingDirectorySelectorTests
 
             accessor.Menu.IsOpen.Should().BeFalse();
             retainedFilter.Text.Should().Be("beta", "the native focused input closes the menu without clearing its text");
-            history.Received(1).LoadSnapshot();
+            history.Received(1).PopulateRecentRepositoriesMenu(Arg.Any<GitUI.Compat.WinFormsControls.ToolStripDropDownItem>());
             accessor.Menu.ShowAt(selector);
             Dispatcher.UIThread.RunJobs();
             accessor.Menu.IsOpen.Should().BeTrue();
             accessor.Filter.Should().BeSameAs(retainedFilter);
             retainedFilter.Text.Should().BeEmpty("only the actual reopened FillDropDown clears the retained native input");
-            history.Received(2).LoadSnapshot();
+            history.Received(2).PopulateRecentRepositoriesMenu(Arg.Any<GitUI.Compat.WinFormsControls.ToolStripDropDownItem>());
             accessor.Menu.Items.OfType<MenuItem>().Where(item => item.Tag is RepositoryHistoryEntry)
                 .Should().OnlyContain(item => item.IsVisible);
         }
@@ -929,7 +929,7 @@ public sealed class WorkingDirectorySelectorTests
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
         IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
-        history.LoadSnapshot().Returns(new RepositoryHistorySnapshot([], []));
+        RepositoryHistoryTestHelper.SetSnapshot(history, new RepositoryHistorySnapshot([], []));
         WorkingDirectoryTestSupport.InitializeInputFixture(selector, () => commands, history);
     }
 

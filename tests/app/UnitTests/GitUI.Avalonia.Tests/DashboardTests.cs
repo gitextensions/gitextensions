@@ -2376,7 +2376,7 @@ public sealed class DashboardTests
     private static IRepositoryHistoryUIService CreateHistory(RepositoryHistorySnapshot snapshot)
     {
         IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
-        history.LoadSnapshot().Returns(snapshot);
+        RepositoryHistoryTestHelper.SetSnapshot(history, snapshot);
         return history;
     }
 

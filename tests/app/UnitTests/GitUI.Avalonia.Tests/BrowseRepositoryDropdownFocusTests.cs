@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
@@ -81,10 +82,20 @@ public sealed class BrowseRepositoryDropdownFocusTests
 
             TaskCompletionSource reloaded = new(TaskCreationOptions.RunContinuationsAsynchronously);
             form.RevisionGrid.RevisionsLoaded += (_, _) => reloaded.TrySetResult();
-            form.ExecuteCommand(FormBrowse.Command.Refresh).Should().BeTrue();
-            await reloaded.Task.WaitAsync(TimeSpan.FromSeconds(15));
+            Button refresh = form.FindControl<Button>("RefreshButton")!;
+            refresh.IsEnabled.Should().BeTrue();
+            int clicks = 0;
+            int notifications = 0;
+            refresh.Click += (_, _) => clicks++;
+            form.UICommands.PostRepositoryChanged += (_, _) => Interlocked.Increment(ref notifications);
+            refresh.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(15));
             await form.JoinLoadOperationsForTestAsync(deadline.Token);
+            await WaitUntilAsync(() => reloaded.Task.IsCompleted,
+                () => $"Refresh: clicks={clicks}, notifications={notifications}, selected={form.RevisionGrid.SelectedRevision?.ObjectId}, status={form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!.Text}");
+            reloaded.Task.IsCompletedSuccessfully.Should().BeTrue();
+            clicks.Should().Be(1);
+            notifications.Should().Be(1);
             Settle(form);
             if (dropdownOpen)
             {

@@ -90,7 +90,7 @@ public sealed class HotkeyTests
             IReadOnlyList<HotkeyCommand> hotkeys = loader.LoadHotkeys(FormBrowse.HotkeySettingsName);
 
             hotkeys.Should().HaveCount(49);
-            hotkeys.Should().NotContain(command => command.CommandCode == (int)FormBrowse.Command.Refresh);
+            hotkeys.Should().OnlyContain(command => Enum.IsDefined(typeof(FormBrowse.Command), command.CommandCode));
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.Commit
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Space));
@@ -404,13 +404,9 @@ public sealed class HotkeyTests
     }
 
     [AvaloniaTest]
-    public void FormBrowse_F5_should_dispatch_refresh_through_the_hotkey_command()
+    public void FormBrowse_F5_should_dispatch_refresh_through_the_original_menu_gesture()
     {
-        (FormBrowse form, IGitUICommands commands, ILockableNotifier notifier) = CreateBrowseForm(
-            new HotkeyCommand((int)FormBrowse.Command.Refresh, nameof(FormBrowse.Command.Refresh))
-            {
-                KeyData = WinFormsShims.Keys.F5,
-            });
+        (FormBrowse form, IGitUICommands commands, ILockableNotifier notifier) = CreateBrowseForm();
         form.Show();
         try
         {

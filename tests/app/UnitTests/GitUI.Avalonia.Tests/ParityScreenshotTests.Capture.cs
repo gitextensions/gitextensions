@@ -75,9 +75,11 @@ public sealed partial class ParityScreenshotTests
         try
         {
             await PrepareViewAsync(browse, context);
-            RepositoryHistorySnapshot snapshot = context.Commands.GetRequiredService<IRepositoryHistoryUIService>().LoadSnapshot();
-            snapshot.Favourites.Should().ContainSingle(item => item.Repository.Path == context.Module.WorkingDir
-                && item.Repository.Category == "Development",
+            GitUI.Compat.WinFormsControls.ToolStripDropDownItem favourites = new();
+            context.Commands.GetRequiredService<IRepositoryHistoryUIService>().PopulateFavouriteRepositoriesMenu(favourites);
+            favourites.Items.OfType<MenuItem>().SelectMany(category => category.Items.OfType<MenuItem>())
+                .Select(item => (Repository)item.Tag!).Should().ContainSingle(item => item.Path == context.Module.WorkingDir
+                && item.Category == "Development",
                 "Browse and Dashboard must receive the same explicit native-reference history input");
         }
         finally

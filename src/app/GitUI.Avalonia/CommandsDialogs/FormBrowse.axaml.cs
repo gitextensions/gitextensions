@@ -53,7 +53,7 @@ using SourceControls = GitUI.Compat.WinFormsControls;
 
 namespace GitUI.CommandsDialogs;
 
-public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
+public partial class FormBrowse : GitModuleForm, IBrowseRepo
 {
     private const int VerticalScrollBarWidthAt96Dpi = 17;
 
@@ -2502,10 +2502,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         GoToChild = 37,
         GoToParent = 38,
 
-        // WinForms routes F5 through ToolStripItem.ShortcutKeys. Avalonia has no ToolStrip,
-        // so refresh joins the same command dispatcher without changing persisted upstream IDs.
-        Refresh = 50,
-
         /* deprecated: RotateApplicationIcon = 14, */
     }
 
@@ -2687,7 +2683,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             case Command.OpenSettings: OnShowSettingsClick(this, EventArgs.Empty); break;
             case Command.FocusNextTab: FocusNextWorkspaceTab(forward: true); break;
             case Command.FocusPrevTab: FocusNextWorkspaceTab(forward: false); break;
-            case Command.Refresh: RefreshToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.Commit: CommitToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.AddNotes: AddNotes(); break;
             case Command.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
@@ -3829,7 +3824,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         public FilterToolBar ToolStripFilters => _form.ToolStripFilters;
         public CommitInfo.CommitInfo RevisionInfo => _form.RevisionInfo;
         public SourceControls.TabPage CommitInfoTabPage => _form.CommitInfoTabPage;
-        public GridLength CommitInfoWidth => _form._commitInfoWidth;
 
         public void RefreshRevisions() => _form.RefreshRevisions();
         public void SetWorkingDir(string? path) => _form.SetWorkingDir(path);

@@ -92,7 +92,7 @@ internal static class WorkingDirectoryTestSupport
         public void FillDropDown(IList<Repository> favourites, IList<Repository> recent)
         {
             State state = State;
-            state.Snapshot = state.Producer.GetTestAccessor().CreateSnapshot(recent, favourites);
+            state.Snapshot = state.CreateSnapshot(recent, favourites);
             state.UseInfoTags = true;
             Populate();
         }
@@ -234,6 +234,9 @@ internal static class WorkingDirectoryTestSupport
         public bool UseInfoTags { get; set; }
         public Action<string>? Current { get; set; }
 
+        public RepositoryHistorySnapshot CreateSnapshot(IList<Repository> recent, IList<Repository> favourites)
+            => RepositoryHistoryTestHelper.CreateSnapshot(recent, favourites, _branches.GetCachedBranchName);
+
         public void Initialize(Func<IGitUICommands>? getCommands = null)
         {
             if (_initialized)
@@ -245,10 +248,10 @@ internal static class WorkingDirectoryTestSupport
 
             IGitUICommands commands = Substitute.For<IGitUICommands>();
             commands.Module.Returns(Module);
-            IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
+            IRepositoryHistoryUIService history = History ?? Substitute.For<IRepositoryHistoryUIService>();
             history.When(service => service.PopulateFavouriteRepositoriesMenu(Arg.Any<ToolStripDropDownItem>())).Do(call =>
             {
-                _opening = Snapshot ?? History?.LoadSnapshot() ?? new RepositoryHistorySnapshot([], []);
+                _opening = Snapshot ?? RepositoryHistoryTestHelper.GetSnapshot(history);
                 ToolStripDropDownItem container = call.Arg<ToolStripDropDownItem>();
                 container.Items.Clear();
                 foreach (RepositoryHistoryEntry entry in _opening.Favourites)
@@ -267,7 +270,7 @@ internal static class WorkingDirectoryTestSupport
                     _branches.GetCachedBranchName(entry.Repository.Path).Returns(entry.BranchName);
                 }
 
-                Producer.GetTestAccessor().PopulateRecentRepositoriesMenu(container, _opening);
+                RepositoryHistoryTestHelper.PopulateRecentFixture(Producer, container, _opening);
                 Remap(container, _opening.Recent);
             });
             ToolStripMenuItem close = new()

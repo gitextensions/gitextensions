@@ -285,7 +285,7 @@ public sealed class FormBrowseSettingsRefreshTests
             commands.GetService(typeof(GitUI.Shells.IShellProvider)).Returns(new GitUI.Shells.ShellProvider());
             commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
             IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
-            history.LoadSnapshot().Returns(new RepositoryHistorySnapshot([], []));
+            RepositoryHistoryTestHelper.SetSnapshot(history, new RepositoryHistorySnapshot([], []));
             commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(history);
             commands.GetService(typeof(IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<IRepositoryCurrentBranchNameCache>());
             commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());

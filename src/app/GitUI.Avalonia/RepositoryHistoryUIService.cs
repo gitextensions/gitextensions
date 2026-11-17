@@ -11,26 +11,8 @@ using GitUI.Properties;
 using Microsoft.VisualStudio.Threading;
 using ToolStripDropDownItem = GitUI.Compat.WinFormsControls.ToolStripDropDownItem;
 using ToolStripMenuItem = GitUI.Compat.WinFormsControls.ToolStripMenuItem;
-using ToolStripSeparator = GitUI.Compat.WinFormsControls.ToolStripSeparator;
 
 namespace GitUI;
-
-public sealed record RepositoryHistoryEntry(
-    Repository Repository,
-    string Caption,
-    string? BranchName,
-    bool IsFavourite,
-    bool IsAnchored);
-
-public sealed record RepositoryHistorySnapshot(
-    IReadOnlyList<RepositoryHistoryEntry> Recent,
-    IReadOnlyList<RepositoryHistoryEntry> Favourites)
-{
-    /// <summary>
-    ///  Gets the number of recent entries supplied by the splitter's top group.
-    /// </summary>
-    public int TopCount { get; init; }
-}
 
 /// <summary>
 ///  Represents a service for managing the git repository history.
@@ -58,7 +40,6 @@ public interface IRepositoryHistoryUIService
     /// <param name="container">The container to populate with menu items.</param>
     void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container);
 
-    RepositoryHistorySnapshot LoadSnapshot();
     void Invalidate();
 
     /// <summary>
@@ -79,7 +60,6 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private readonly CancellationTokenSequence _branchCacheSequence = new();
     private JoinableTask? _branchCacheUpdateTask;
     private bool _firstLoad = true;
-    private RepositoryHistorySnapshot? _snapshot;
 
     public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
     public event EventHandler? HistoryChanged;
@@ -276,44 +256,9 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
-    private void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container, RepositoryHistorySnapshot snapshot)
-    {
-        int number = 0;
-        foreach (RepositoryHistoryEntry repository in snapshot.Recent)
-        {
-            // A top group can contain unanchored entries, and a recent group can
-            // contain pinned entries. Only the splitter's boundary determines the separator.
-            if (number > 0 && number == snapshot.TopCount)
-            {
-                container.Items.Add(container.CreateSeparator());
-            }
-
-            AddRecentRepositories(
-                container,
-                repository.Repository,
-                repository.Caption,
-                ++number,
-                repository.IsAnchored);
-        }
-    }
-
-    public RepositoryHistorySnapshot LoadSnapshot()
-    {
-        if (_snapshot is not null)
-        {
-            return _snapshot;
-        }
-
-        IList<Repository> recent = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
-        IList<Repository> favourites = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
-        _snapshot = CreateSnapshot(recent, favourites);
-        return _snapshot;
-    }
-
     public void Invalidate()
     {
         _branchCacheSequence.CancelCurrent();
-        _snapshot = null;
         _branchNameCache.InvalidateAll();
         HistoryChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -373,45 +318,8 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
                     .ForAll(path => _ = _branchNameCache.GetUpdatedBranchName(path));
             }
 
-            _snapshot = null;
             HistoryChanged?.Invoke(this, EventArgs.Empty);
         }
-    }
-
-    private RepositoryHistorySnapshot CreateSnapshot(IList<Repository> recent, IList<Repository> favourites)
-    {
-        IReadOnlyList<RepositoryHistoryEntry> recentEntries = Split(recent, isFavourite: false, out int topCount);
-        return new RepositoryHistorySnapshot(
-            recentEntries,
-            Split(favourites, isFavourite: true, out _))
-        {
-            TopCount = topCount,
-        };
-    }
-
-    private IReadOnlyList<RepositoryHistoryEntry> Split(IList<Repository> repositories, bool isFavourite, out int topCount)
-    {
-        List<RecentRepoInfo> top = [];
-        List<RecentRepoInfo> recent = [];
-        RecentRepoSplitter splitter = new()
-        {
-            MeasureFont = AppSettings.Font,
-        };
-        splitter.SplitRecentRepos(repositories, top, recent);
-        topCount = top.Count;
-
-        // Source favourites deduplicate shared RecentRepoInfo instances between
-        // groups. Projecting first would change Union's reference-identity semantics.
-        IEnumerable<RecentRepoInfo> ordered = isFavourite ? top.Union(recent) : top.Concat(recent);
-        return
-        [
-            .. ordered.Select(info => new RepositoryHistoryEntry(
-                info.Repo,
-                info.Caption ?? info.Repo.Path,
-                _branchNameCache.GetCachedBranchName(info.Repo.Path),
-                isFavourite,
-                info.Anchored)),
-        ];
     }
 
     internal TestAccessor GetTestAccessor()
@@ -421,12 +329,6 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
     {
         internal void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number)
             => service.AddRecentRepositories(menuItemContainer, repo, caption, number);
-
-        internal RepositoryHistorySnapshot CreateSnapshot(IList<Repository> recent, IList<Repository> favourites)
-            => service.CreateSnapshot(recent, favourites);
-
-        internal void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container, RepositoryHistorySnapshot snapshot)
-            => service.PopulateRecentRepositoriesMenu(container, snapshot);
 
         internal void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
             => service.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);

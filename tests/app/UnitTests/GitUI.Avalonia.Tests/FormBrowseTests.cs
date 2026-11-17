@@ -1009,7 +1009,9 @@ public sealed class FormBrowseTests
     {
         using FormBrowse form = new();
 
-        GridLength commitInfoWidth = form.GetTestAccessor().CommitInfoWidth;
+        FieldInfo width = typeof(FormBrowse).GetField("_commitInfoWidth", BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new MissingFieldException(nameof(FormBrowse), "_commitInfoWidth");
+        GridLength commitInfoWidth = (GridLength)width.GetValue(form)!;
 
         commitInfoWidth.Value.Should().Be(507,
             "the source uses 490 content pixels plus the 17-pixel 96-DPI system scrollbar width");

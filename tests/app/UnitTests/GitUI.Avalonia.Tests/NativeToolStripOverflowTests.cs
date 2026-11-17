@@ -666,7 +666,7 @@ public sealed class NativeToolStripOverflowTests
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
         IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
-        history.LoadSnapshot().Returns(new RepositoryHistorySnapshot([], []));
+        RepositoryHistoryTestHelper.SetSnapshot(history, new RepositoryHistorySnapshot([], []));
         string firstPath = Path.Combine(Path.GetTempPath(), "GitExtensions.OverflowOwner", "first-repository");
         string secondPath = Path.Combine(Path.GetTempPath(), "GitExtensions.OverflowOwner", "second-longer-repository");
         string thirdPath = Path.Combine(Path.GetTempPath(), "GitExtensions.OverflowOwner", "third-repository-with-longer-caption");

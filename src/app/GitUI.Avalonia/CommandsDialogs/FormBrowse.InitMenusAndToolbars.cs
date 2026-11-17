@@ -22,7 +22,6 @@ partial class FormBrowse
     // This file is dedicated to init logic for FormBrowse menus and toolbars
 
     internal static readonly string FetchPullToolbarShortcutsPrefix = "pull_shortcut_";
-    private const string ToolbarSettingsPrefix = "formbrowse_toolbar_visibility_";
 
     private void InitMenusAndToolbars(string? revFilter, string? pathFilter)
     {
@@ -146,9 +145,6 @@ partial class FormBrowse
                 Icon = image,
                 Name = FetchPullToolbarShortcutsPrefix + toolStripMenuItem.Name,
                 Content = toolTipText,
-                IsVisible = AppSettings.GetBool(
-                    ToolbarSettingsPrefix + FetchPullToolbarShortcutsPrefix + toolStripMenuItem.Name,
-                    defaultValue: false),
             };
             clonedToolStripMenuItem.Classes.Add("gitextensions-toolbar-button");
             clonedToolStripMenuItem.Classes.Add("gitextensions-icon-only");

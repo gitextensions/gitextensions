@@ -261,9 +261,11 @@ public sealed class RepositoryHistoryUIServiceTests
     [AvaloniaTest]
     [TestCase(false)]
     [TestCase(true)]
-    public void CreateSnapshot_should_retain_the_source_top_count_and_recent_Concat_but_favourite_Union(bool hideTop)
+    public void Menu_population_should_retain_the_source_top_count_and_recent_Concat_but_favourite_Union(bool hideTop)
     {
-        using SplitSettingsScope settings = new();
+        using AppSettingsTestScope settings = new();
+        using SplitSettingsScope splitSettings = new();
+        using WorkingDirectoryTestSupport.HistoryStorageScope storage = new();
         AppSettings.HideTopRepositoriesFromRecentList.Value = hideTop;
         Repository top = new(Path.Join(Path.GetTempPath(), "source-top"));
         Repository anchoredRecent = new(Path.Join(Path.GetTempPath(), "source-pinned-recent"))
@@ -272,39 +274,53 @@ public sealed class RepositoryHistoryUIServiceTests
         };
         Repository tail = new(Path.Join(Path.GetTempPath(), "source-tail"));
         Repository[] repositories = [top, anchoredRecent, tail];
-
-        RepositoryHistorySnapshot snapshot = _service.GetTestAccessor().CreateSnapshot(repositories, repositories);
+        storage.Storage.Load(Arg.Any<string>()).Returns(repositories);
+        ToolStripDropDownItem recent = new();
+        ToolStripDropDownItem favourites = new();
+        _service.PopulateRecentRepositoriesMenu(recent);
+        _service.GetTestAccessor().PopulateFavouriteRepositoriesMenu(favourites, repositories);
         Repository[] expectedRecent = hideTop ? [top, anchoredRecent, tail] : [top, top, anchoredRecent, tail];
+        ToolStripMenuItem[] recentItems = [.. recent.Items.OfType<ToolStripMenuItem>()];
+        ToolStripMenuItem[] favouriteItems = [.. favourites.Items.OfType<ToolStripMenuItem>()
+            .SelectMany(category => category.Items.OfType<ToolStripMenuItem>())];
 
-        snapshot.TopCount.Should().Be(1);
-        snapshot.Recent.Select(entry => entry.Repository).Should().Equal(expectedRecent);
-        snapshot.Favourites.Select(entry => entry.Repository).Should().Equal(top, anchoredRecent, tail);
-        snapshot.Recent[0].IsAnchored.Should().BeFalse(
-            "the source top group is not synonymous with pinned repositories");
-        snapshot.Recent.Should().Contain(entry => ReferenceEquals(entry.Repository, anchoredRecent) && entry.IsAnchored);
-        snapshot.Recent.Should().OnlyContain(entry => !entry.IsFavourite);
-        snapshot.Favourites.Should().OnlyContain(entry => entry.IsFavourite);
+        recent.Items.OfType<Separator>().Should().ContainSingle();
+        recent.Items[1].Should().BeOfType<GitUI.Compat.WinFormsControls.ToolStripSeparator>();
+        recentItems.Select(item => item.Tag).Should().Equal(expectedRecent);
+        favouriteItems.Select(item => item.Tag).Should().Equal(top, anchoredRecent, tail);
+        recentItems[0].Icon.Should().BeNull("the source top group is not synonymous with pinned repositories");
+        recentItems.Should().Contain(item => ReferenceEquals(item.Tag, anchoredRecent) && typeof(Image).IsInstanceOfType(item.Icon));
+        recentItems.Should().OnlyContain(item => item.Items.Count == 0);
+        favourites.Items.OfType<ToolStripMenuItem>().Should().OnlyContain(category => ReferenceEquals(category.Tag, null) && category.Items.Count > 0);
     }
 
     [AvaloniaTest]
-    public void CreateSnapshot_should_Union_source_info_identity_before_projecting_equal_entry_values()
+    public void Menu_population_should_Union_source_info_identity_without_deduplicating_equal_payloads()
     {
-        using SplitSettingsScope settings = new();
+        using AppSettingsTestScope settings = new();
+        using SplitSettingsScope splitSettings = new();
+        using WorkingDirectoryTestSupport.HistoryStorageScope storage = new();
         AppSettings.HideTopRepositoriesFromRecentList.Value = false;
         string root = Path.GetPathRoot(Path.GetFullPath(Path.GetTempPath()))
             ?? throw new InvalidOperationException("The portable fixture path has no filesystem root.");
         Repository repository = new(root) { Category = "Team" };
+        Repository[] repositories = [repository, repository];
+        storage.Storage.Load(Arg.Any<string>()).Returns(repositories);
+        ToolStripDropDownItem recent = new();
+        ToolStripDropDownItem favourites = new();
+        _service.PopulateRecentRepositoriesMenu(recent);
+        _service.GetTestAccessor().PopulateFavouriteRepositoriesMenu(favourites, repositories);
+        ToolStripMenuItem[] favouriteItems = [.. favourites.Items.OfType<ToolStripMenuItem>()
+            .SelectMany(category => category.Items.OfType<ToolStripMenuItem>())];
 
-        RepositoryHistorySnapshot snapshot = _service.GetTestAccessor()
-            .CreateSnapshot([repository, repository], [repository, repository]);
-
-        snapshot.TopCount.Should().Be(1);
-        snapshot.Recent.Should().HaveCount(3);
-        snapshot.Favourites.Should().HaveCount(2,
+        recent.Items[1].Should().BeOfType<GitUI.Compat.WinFormsControls.ToolStripSeparator>();
+        recent.Items.OfType<ToolStripMenuItem>().Should().HaveCount(3);
+        favouriteItems.Should().HaveCount(2,
             "Union removes only a shared RecentRepoInfo across top/recent, not separate source info instances with equal values");
-        snapshot.Favourites.Should().OnlyContain(entry => ReferenceEquals(entry.Repository, repository));
-        snapshot.Favourites[0].Should().Be(snapshot.Favourites[1],
-            "equal projected records must not retroactively alter source reference-based Union");
+        favouriteItems.Should().OnlyContain(item => ReferenceEquals(item.Tag, repository));
+        favouriteItems[0].Should().NotBeSameAs(favouriteItems[1]);
+        favouriteItems[0].Tag.Should().BeSameAs(favouriteItems[1].Tag,
+            "equal payloads must not retroactively alter source reference-based Union");
     }
 
     [AvaloniaTest]
@@ -315,13 +331,15 @@ public sealed class RepositoryHistoryUIServiceTests
     public void PopulateRecentRepositoriesMenu_should_insert_one_separator_only_at_the_exact_source_group_boundary(
         int topCount, int count)
     {
-        RepositoryHistoryEntry[] entries = [.. Enumerable.Range(0, count).Select(index => new RepositoryHistoryEntry(
-            new Repository($"/repos/group-{index}"), $"Group {index}", null,
-            IsFavourite: false, IsAnchored: index % 2 != 0))];
-        RepositoryHistorySnapshot snapshot = new(entries, []) { TopCount = topCount };
+        using AppSettingsTestScope settings = new();
+        using SplitSettingsScope splitSettings = new();
+        using WorkingDirectoryTestSupport.HistoryStorageScope storage = new();
+        AppSettings.MaxTopRepositories = topCount;
+        Repository[] repositories = [.. Enumerable.Range(0, count).Select(index => new Repository($"Group {index}"))];
+        storage.Storage.Load(Arg.Any<string>()).Returns(repositories);
         ToolStripDropDownItem container = new();
 
-        _service.GetTestAccessor().PopulateRecentRepositoriesMenu(container, snapshot);
+        _service.PopulateRecentRepositoriesMenu(container);
 
         ToolStripMenuItem[] items = [.. container.Items.OfType<ToolStripMenuItem>()];
         items.Select(item => item.Header)
@@ -335,7 +353,7 @@ public sealed class RepositoryHistoryUIServiceTests
     }
 
     [AvaloniaTest]
-    public void RepositoryHistorySnapshot_should_preserve_two_argument_construction_and_deconstruction_with_no_inferred_group()
+    public void Repository_history_input_fixture_should_not_infer_a_group_from_an_anchor()
     {
         RepositoryHistoryEntry anchored = new(new Repository("/repos/legacy-pinned"), "Pinned", null,
             IsFavourite: false, IsAnchored: true);
@@ -344,7 +362,7 @@ public sealed class RepositoryHistoryUIServiceTests
         (IReadOnlyList<RepositoryHistoryEntry> recent, IReadOnlyList<RepositoryHistoryEntry> favourites) = snapshot;
         ToolStripDropDownItem container = new();
 
-        _service.GetTestAccessor().PopulateRecentRepositoriesMenu(container, snapshot);
+        RepositoryHistoryTestHelper.PopulateRecentFixture(_service, container, snapshot);
 
         snapshot.TopCount.Should().Be(0);
         recent.Should().BeSameAs(entries);
