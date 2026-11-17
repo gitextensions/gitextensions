@@ -311,7 +311,7 @@ public static class AffixUtility
         return -1;
     }
 
-#nullable disable
+#nullable restore
     /// <summary>
     ///     Removes the affix suffix rule entry for the word if valid
     /// </summary>
