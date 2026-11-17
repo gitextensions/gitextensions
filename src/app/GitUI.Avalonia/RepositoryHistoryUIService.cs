@@ -224,9 +224,10 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
             }
         }
 
-        container.Items.Clear();
+        IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
+            RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
 
-        PopulateRecentRepositoriesMenu(container, LoadSnapshot());
+        PopulateRecentRepositoriesMenu(container, CreateSnapshot(repositoryHistory, []));
     }
 
     private void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container, RepositoryHistorySnapshot snapshot)

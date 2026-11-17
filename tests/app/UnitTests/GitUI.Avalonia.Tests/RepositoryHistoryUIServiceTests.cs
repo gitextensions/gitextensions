@@ -7,6 +7,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.Menus;
 using GitUI.Compat;
 using NSubstitute;
 using ToolStripDropDownItem = GitUI.Compat.WinFormsControls.ToolStripDropDownItem;
@@ -32,6 +33,84 @@ public sealed class RepositoryHistoryUIServiceTests
         _branchNameCache = Substitute.For<IRepositoryCurrentBranchNameCache>();
         _invalidRepositoryRemover = Substitute.For<IInvalidRepositoryRemover>();
         _service = new RepositoryHistoryUIService(_executorProvider, _branchNameCache, _invalidRepositoryRemover);
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task PopulateRecentRepositoriesMenu_should_append_without_removing_existing_items(bool hasHistory)
+    {
+        using AppSettingsTestScope settings = new();
+        using SplitSettingsScope splitSettings = new();
+        string path = Path.Join(Path.GetTempPath(), "repository-menu-append");
+        await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(hasHistory ? [new Repository(path)] : []);
+        ToolStripMenuItem existing = new() { Header = "Existing" };
+        ToolStripDropDownItem container = new();
+        container.Items.Add(existing);
+
+        _service.PopulateRecentRepositoriesMenu(container);
+
+        container.Items.Should().HaveCount(hasHistory ? 2 : 1);
+        container.Items[0].Should().BeSameAs(existing);
+        if (hasHistory)
+        {
+            container.Items.OfType<ToolStripMenuItem>().Last().Tag
+                .Should().BeOfType<Repository>().Which.Path.Should().Be(path);
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task Start_menu_should_rebuild_recent_items_before_each_population(bool hasHistory)
+    {
+        using AppSettingsTestScope settings = new();
+        using SplitSettingsScope splitSettings = new();
+        string path = Path.Join(Path.GetTempPath(), "repository-menu-repeat");
+        await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(hasHistory ? [new Repository(path)] : []);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(_service);
+        using StartToolStripMenuItem menu = new();
+        menu.Initialize(() => commands);
+        MenuItem recent = menu.GetTestAccessor().RecentRepositoriesMenuItem;
+        MenuItem clear = menu.FindControl<MenuItem>("tsmiRecentRepositoriesClear")!;
+
+        for (int opening = 0; opening < 2; opening++)
+        {
+            recent.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+
+            recent.Items.Should().HaveCount(hasHistory ? 3 : 0);
+            if (hasHistory)
+            {
+                recent.Items.OfType<ToolStripMenuItem>().Should().ContainSingle()
+                    .Which.Tag.Should().BeOfType<Repository>().Which.Path.Should().Be(path);
+                recent.Items.OfType<Separator>().Should().ContainSingle();
+                recent.Items.Last().Should().BeSameAs(clear);
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Start_menu_should_read_current_history_on_each_opening()
+    {
+        using AppSettingsTestScope settings = new();
+        using SplitSettingsScope splitSettings = new();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(_service);
+        using StartToolStripMenuItem menu = new();
+        menu.Initialize(() => commands);
+        MenuItem recent = menu.GetTestAccessor().RecentRepositoriesMenuItem;
+
+        foreach (string name in new[] { "first", "second" })
+        {
+            string path = Path.Join(Path.GetTempPath(), "repository-menu-" + name);
+            await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync([new Repository(path)]);
+
+            recent.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+
+            recent.Items.OfType<ToolStripMenuItem>().Should().ContainSingle()
+                .Which.Tag.Should().BeOfType<Repository>().Which.Path.Should().Be(path);
+        }
     }
 
     [AvaloniaTest]

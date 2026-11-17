@@ -86,6 +86,7 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
     private void tsmiRecentRepositories_DropDownOpening(object? sender, EventArgs e)
     {
         // Note: repo-branch name cache is shared with the dashboard, no update needed
+        tsmiRecentRepositories.Items.Clear();
         GetRepositoryHistoryUIService().PopulateRecentRepositoriesMenu(tsmiRecentRepositories);
 
         if (tsmiRecentRepositories.Items.Count < 1)
