@@ -1959,7 +1959,7 @@ public sealed class DashboardTests
             transitionCount++;
         };
         Initialize(dashboard, controller, history);
-        dashboard.Initialize(history);
+        dashboard.userRepositoriesList.Initialize(history);
         dashboard.RefreshContent();
         UserRepositoriesList list = dashboard.userRepositoriesList;
         RepositoryListOwner window = new(commands)
@@ -2390,7 +2390,7 @@ public sealed class DashboardTests
     private static void Initialize(Dashboard dashboard, IUserRepositoriesListController controller, IRepositoryHistoryUIService history)
     {
         SetController(dashboard.userRepositoriesList, controller);
-        dashboard.Initialize(history);
+        dashboard.userRepositoriesList.Initialize(history);
     }
 
     private static void Initialize(UserRepositoriesList list, IUserRepositoriesListController controller,

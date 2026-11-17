@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
@@ -60,6 +61,44 @@ public sealed class RepoObjectsTreeTests
         {
             ThreadHelper.JoinableTaskContext = _previousContext!;
             _context.Dispose();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Controlled_tree_reload_should_not_wait_for_unrelated_global_work()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        TaskCompletionSource unrelated = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        ThreadHelper.FileAndForget(unrelated.Task);
+        try
+        {
+            settings.EnableAllTrees();
+            RepoObjectsTree control = new();
+            IGitRef reference = CreateRef("refs/heads/main");
+            Stopwatch elapsed = Stopwatch.StartNew();
+            control.SetRefs([reference]);
+            elapsed.Stop();
+
+            elapsed.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(20),
+                "waiting for this tree's load must not wait for an unrelated application operation");
+            unrelated.Task.IsCompleted.Should().BeFalse("the fixture must not cancel or finish unrelated application work");
+            control.GetTestAccessor().TreeView.Items.OfType<TreeViewItem>()
+                .SelectMany(root => root.Items.OfType<TreeViewItem>())
+                .Select(item => item.Tag).OfType<BaseRevisionNode>()
+                .Should().ContainSingle(node => ReferenceEquals(node.GitRef, reference));
+        }
+        finally
+        {
+            unrelated.TrySetResult();
+            try
+            {
+                using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(10));
+                await ThreadHelper.JoinPendingOperationsAsync(deadline.Token).WaitAsync(deadline.Token);
+            }
+            finally
+            {
+                settings.Restore();
+            }
         }
     }
 
@@ -1065,7 +1104,7 @@ public sealed class RepoObjectsTreeTests
                 };
             });
 
-            RepoObjectsTreeTestExtensions.WaitForLoading();
+            RepoObjectsTreeTestExtensions.WaitForLoading(control);
             requestedFilters.Should().BeEquivalentTo([RefsFilter.Heads, RefsFilter.Remotes, RefsFilter.Tags],
                 "like the original, each ref tree requeries its refs on its own background load");
             TreeViewItem[] roots = [.. accessor.TreeView.Items.Cast<TreeViewItem>()];

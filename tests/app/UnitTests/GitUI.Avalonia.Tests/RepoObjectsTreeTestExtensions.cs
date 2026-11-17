@@ -11,6 +11,7 @@ using GitUI.CommandsDialogs;
 using GitUI.LeftPanel;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 
 namespace GitExtensionsTests;
@@ -23,6 +24,11 @@ namespace GitExtensionsTests;
 internal static class RepoObjectsTreeTestExtensions
 {
     private static readonly ConditionalWeakTable<RepoObjectsTree, Snapshot> Snapshots = new();
+
+    // parity-scaffolding: inspect the original per-tree reload ownership without joining unrelated application tasks.
+    private static readonly FieldInfo RootNodes = typeof(RepoObjectsTree).GetField("_rootNodes", BindingFlags.Instance | BindingFlags.NonPublic)!;
+    private static readonly FieldInfo ReloadTaskRunner = typeof(GitUI.LeftPanel.Tree).GetField("_reloadTaskRunner", BindingFlags.Instance | BindingFlags.NonPublic)!;
+    private static readonly FieldInfo RunningTask = typeof(ExclusiveTaskRunner).GetField("_runningTask", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
     /// <summary>Creates a tree whose trees were built with the given revision-grid services, like FormBrowse's Initialize.</summary>
     internal static RepoObjectsTree Create(
@@ -73,9 +79,9 @@ internal static class RepoObjectsTreeTestExtensions
     public static void RefreshFromModule(this RepoObjectsTree control, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
         control.RefreshRevisionsLoading(getRefs, new Lazy<IReadOnlyCollection<GitRevision>>(() => []), forceRefresh: true);
-        WaitForLoading();
+        WaitForLoading(control);
         control.RefreshRevisionsLoaded();
-        WaitForLoading();
+        WaitForLoading(control);
     }
 
     private static void Publish(
@@ -120,9 +126,9 @@ internal static class RepoObjectsTreeTestExtensions
             filter => Filter(snapshot.Refs, filter),
             new Lazy<IReadOnlyCollection<GitRevision>>(() => snapshot.Stashes),
             forceRefresh: true);
-        WaitForLoading();
+        WaitForLoading(control);
         control.RefreshRevisionsLoaded();
-        WaitForLoading();
+        WaitForLoading(control);
     }
 
     private static Snapshot GetSnapshot(this RepoObjectsTree control)
@@ -199,12 +205,22 @@ internal static class RepoObjectsTreeTestExtensions
             _ => refs,
         };
 
-    /// <summary>Runs the UI thread until every tree has applied its background load.</summary>
-    internal static void WaitForLoading()
+    /// <summary>Runs the UI thread until this control's trees have applied their background loads.</summary>
+    internal static void WaitForLoading(RepoObjectsTree control)
     {
+        List<Task> tasks = [];
+        foreach (GitUI.LeftPanel.Tree tree in (IEnumerable<GitUI.LeftPanel.Tree>)RootNodes.GetValue(control)!)
+        {
+            ExclusiveTaskRunner runner = (ExclusiveTaskRunner)ReloadTaskRunner.GetValue(tree)!;
+            if (RunningTask.GetValue(runner) is JoinableTask running)
+            {
+                tasks.Add(running.Task);
+            }
+        }
+
         using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(30));
-        Task pending = ThreadHelper.JoinPendingOperationsAsync(deadline.Token);
-        while (!pending.IsCompleted)
+        Task pending = Task.WhenAll(tasks);
+        while (!pending.IsCompleted && !deadline.IsCancellationRequested)
         {
             Dispatcher.UIThread.RunJobs();
             Thread.Sleep(1);

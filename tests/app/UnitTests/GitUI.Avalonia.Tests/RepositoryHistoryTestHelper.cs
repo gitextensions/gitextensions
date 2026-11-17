@@ -11,6 +11,23 @@ internal static class RepositoryHistoryTestHelper
     public static IRepositoryHistoryUIService CreateEmptyService()
         => new EmptyRepositoryHistoryService();
 
+    // parity-scaffolding: isolated popup consumers supply value fixtures; real Browse tests use the public saved-history producer.
+    public static void PopulateFavouriteFixture(RepositoryHistoryUIService service,
+        GitUI.Compat.WinFormsControls.ToolStripDropDownItem container, IReadOnlyList<RepositoryHistoryEntry> entries)
+    {
+        foreach (IGrouping<string?, RepositoryHistoryEntry> group in entries.GroupBy(entry => entry.Repository.Category).OrderBy(group => group.Key))
+        {
+            GitUI.Compat.WinFormsControls.ToolStripMenuItem category = container.CreateMenuItem();
+            category.Header = GitUI.Compat.AvaloniaTranslationUtils.ToAvaloniaMnemonics(group.Key ?? string.Empty);
+            container.Items.Add(category);
+            int number = 0;
+            foreach (RepositoryHistoryEntry entry in group)
+            {
+                service.GetTestAccessor().AddRecentRepositories(category, entry.Repository, entry.Caption, ++number);
+            }
+        }
+    }
+
     public static IUserRepositoriesListController CreateEmptyController()
     {
         IUserRepositoriesListController controller = Substitute.For<IUserRepositoriesListController>();
@@ -36,10 +53,6 @@ internal static class RepositoryHistoryTestHelper
             => container.Items.Clear();
 
         public RepositoryHistorySnapshot LoadSnapshot() => new([], []);
-
-        public IList<Repository> AddAsMostRecent(string path) => [];
-
-        public bool CanOpenRepository(string path) => false;
 
         public void Invalidate() => HistoryChanged?.Invoke(this, EventArgs.Empty);
 

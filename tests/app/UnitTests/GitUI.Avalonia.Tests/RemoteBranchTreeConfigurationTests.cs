@@ -91,7 +91,7 @@ public sealed class RemoteBranchTreeConfigurationTests
         tree = GetRemotes(control);
         tree.Nodes.OfType<RemoteRepoNode>().Select(node => node.FullPath).Should().Equal("origin", "empty");
         tree.RefreshInternal(filter => module.GetRefs(filter));
-        RepoObjectsTreeTestExtensions.WaitForLoading();
+        RepoObjectsTreeTestExtensions.WaitForLoading(control);
         tree.Nodes.OfType<RemoteRepoNode>().Select(node => node.FullPath).Should().Equal(["origin", "empty"],
             because: "a source-style ref refresh must preserve the explicit configuration filter");
         tree.DescendantsAndSelf().OfType<RemoteBranchNode>().Should().HaveCount(2);

@@ -65,11 +65,6 @@ public partial class Dashboard : GitModuleControl
         userRepositoriesList.HeaderHeight = 68;
     }
 
-    public void Initialize(IRepositoryHistoryUIService repositoryHistoryUIService)
-    {
-        userRepositoriesList.Initialize(repositoryHistoryUIService);
-    }
-
     protected virtual void OnVisibleChanged(EventArgs e)
     {
         // Focus the control in order for the search bar to have focus once the dashboard is shown

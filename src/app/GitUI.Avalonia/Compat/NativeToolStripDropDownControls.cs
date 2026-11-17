@@ -67,7 +67,12 @@ public sealed class NativeToolStripDropDownMenuItem : WinFormsControls.ToolStrip
     // The owning native dropdown already supplies sizing and directional coordinates.
     protected override bool UseDefaultDropDownLayout => false;
 
-    internal bool UseSourceMnemonicRouting { get; set; }
+    internal override bool UseSourceMnemonicRouting { get; set; }
+
+    internal override WinFormsControls.ToolStripMenuItem CreateMenuItem()
+        => new NativeToolStripDropDownMenuItem { UseSourceMnemonicRouting = true, Classes = { "gitextensions-working-directory-entry" } };
+
+    internal override Separator CreateSeparator() => new NativeToolStripDropDownSeparator();
 
     protected override Type StyleKeyOverride => typeof(MenuItem);
 

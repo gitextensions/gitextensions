@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
@@ -123,6 +123,67 @@ public sealed class FormBrowseTests
             menu.Hide();
             openedDialog?.Close();
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Working_directory_menu_captions_should_use_the_real_container_font()
+    {
+        WinFormsShims.Font originalFont = AppSettings.Font;
+        AppSettings.Font = new WinFormsShims.Font(originalFont.Name, 9);
+        AppSettings.MaxTopRepositories = 0;
+        AppSettings.ShorteningRecentRepoPathStrategy = ShorteningRecentRepoPathStrategy.MiddleDots;
+        AppSettings.RecentReposComboMinWidth = 240;
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithInitialCommit()), new BrowseArguments());
+        MenuFlyout? menu = null;
+        try
+        {
+            form.Show();
+            await form.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(20));
+            WorkingDirectoryToolStripSplitButton selector = form.FindControl<WorkingDirectoryToolStripSplitButton>("_NO_TRANSLATE_WorkingDir")!;
+            selector.FontFamily = new FontFamily(originalFont.Name);
+            selector.FontSize = 32;
+            selector.FontWeight = FontWeight.Normal;
+            selector.FontStyle = FontStyle.Normal;
+            string path = Path.Join(_workingDirectory, "source-font-measurement", "repo");
+            Repository recent = new(path);
+            Repository favourite = new(path) { Category = "Team" };
+            await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync([recent]);
+            await RepositoryHistoryManager.Locals.SaveFavouriteHistoryAsync([favourite]);
+            using WinFormsShims.Font containerFont = new(selector.FontFamily.Name, 24);
+            string expectedCaption = Caption(containerFont);
+            SourceControls.ToolStripDropDownItem favouriteContainer = selector.GetTestAccessor().CategorisedRepositoriesMenu;
+            string expectedFavouriteCaption = Caption(favouriteContainer.Font);
+            expectedFavouriteCaption.Should().NotBe(expectedCaption,
+                "the separate source favourite item keeps its own font before it is attached");
+            expectedCaption.Should().NotBe(Caption(AppSettings.Font), "this path must distinguish the authored menu font from application defaults");
+            selector.ShowDropDown();
+            Dispatcher.UIThread.RunJobs();
+            menu = (MenuFlyout)selector.Flyout!;
+            menu.IsOpen.Should().BeTrue();
+            MenuItem recentItem = menu.Items.OfType<MenuItem>().Single(item => item.Tag is Repository);
+            MenuItem favouriteRoot = menu.Items.OfType<MenuItem>().Single(item => item.Items.Count > 0);
+            MenuItem favouriteItem = favouriteRoot.Items.OfType<MenuItem>().Single()
+                .Items.OfType<MenuItem>().Single();
+            string expectedHeader = AvaloniaTranslationUtils.ToAvaloniaMnemonics("&1: " + expectedCaption);
+            recentItem.Header.Should().Be(expectedHeader);
+            favouriteRoot.Should().BeSameAs(favouriteContainer);
+            favouriteItem.Header.Should().Be(AvaloniaTranslationUtils.ToAvaloniaMnemonics("&1: " + expectedFavouriteCaption));
+            return;
+
+            string Caption(WinFormsShims.Font font)
+            {
+                List<RecentRepoInfo> top = [];
+                List<RecentRepoInfo> tail = [];
+                new RecentRepoSplitter { MeasureFont = font }.SplitRecentRepos([recent], top, tail);
+                return top.Concat(tail).Single().Caption!;
+            }
+        }
+        finally
+        {
+            menu?.Hide();
+            form.Close();
+            AppSettings.Font = originalFont;
         }
     }
 
@@ -727,6 +788,79 @@ public sealed class FormBrowseTests
         finally
         {
             _settingsScope.Dispose();
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task Dashboard_should_discover_owner_history_and_refresh_after_detach_and_reattach()
+    {
+        GitModule first = CreateRepositoryWithInitialCommit();
+        IGitExecutorProvider executors = _serviceContainer.GetRequiredService<IGitExecutorProvider>();
+        string secondPath = Path.Join(_workingDirectory, "second-repository");
+        string thirdPath = Path.Join(_workingDirectory, "third-repository");
+        foreach (string path in new[] { secondPath, thirdPath })
+        {
+            Directory.CreateDirectory(path);
+            GitModule repository = new(executors, path);
+            repository.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet", "--initial-branch=selection" })
+                .Should().BeTrue();
+        }
+
+        await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync([new Repository(first.WorkingDir)]);
+        await RepositoryHistoryManager.Locals.SaveFavouriteHistoryAsync([]);
+        string invalidPath = Path.Join(Path.GetTempPath(), $"GitExtensions.DashboardDiscovery-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(invalidPath);
+        FormBrowse? form = null;
+        try
+        {
+            form = new FormBrowse(new GitUICommands(_serviceContainer, new GitModule(executors, invalidPath)), new BrowseArguments());
+            form.Show();
+            await form.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(20));
+            Dashboard dashboard = form.GetLogicalDescendants().OfType<Dashboard>().Single();
+            UserRepositoriesList list = dashboard.userRepositoriesList;
+            IRepositoryHistoryUIService history = form.UICommands.GetRequiredService<IRepositoryHistoryUIService>();
+            await WaitUntilAsync(() => Paths().SequenceEqual([Path.TrimEndingDirectorySeparator(first.WorkingDir)]));
+
+            await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync([new Repository(secondPath)]);
+            history.Invalidate();
+            await WaitUntilAsync(() => Paths().SequenceEqual([secondPath]));
+            Panel parent = (Panel)dashboard.Parent!;
+            int position = parent.Children.IndexOf(dashboard);
+            parent.Children.Remove(dashboard);
+            await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync([new Repository(thirdPath)]);
+            history.Invalidate();
+            Dispatcher.UIThread.RunJobs();
+            Paths().Should().Equal([secondPath], "detached controls must release their history subscription");
+
+            parent.Children.Insert(position, dashboard);
+            await WaitUntilAsync(() => Paths().SequenceEqual([thirdPath]));
+            int transitions = 0;
+            GitModuleEventArgs? transition = null;
+            dashboard.GitModuleChanged += (_, e) =>
+            {
+                transitions++;
+                transition = e;
+            };
+            form.UpdateLayout();
+            ListBoxItem item = list.GetVisualDescendants().OfType<ListBoxItem>().Single(container =>
+                container.Content is UserRepositoriesList.RepositoryListItem repository
+                && Path.TrimEndingDirectorySeparator(repository.Repository.Repo.Path) == thirdPath);
+            Click(form, item, MouseButton.Left);
+            await WaitUntilAsync(() => Path.TrimEndingDirectorySeparator(form.Module.WorkingDir) == thirdPath);
+            transitions.Should().Be(1);
+            transition.Should().NotBeNull();
+            Path.TrimEndingDirectorySeparator(transition!.GitModule.WorkingDir).Should().Be(thirdPath);
+            return;
+
+            string[] Paths() => list.listView1.Items.OfType<UserRepositoriesList.RepositoryListItem>()
+                .Select(repository => Path.TrimEndingDirectorySeparator(repository.Repository.Repo.Path)).ToArray();
+        }
+        finally
+        {
+            form?.Close();
+            ((IDisposable?)form)?.Dispose();
+            TestDirectory.Delete(invalidPath);
         }
     }
 

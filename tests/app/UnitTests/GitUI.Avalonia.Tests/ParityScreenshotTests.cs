@@ -1502,7 +1502,7 @@ public sealed partial class ParityScreenshotTests
             // controller as the reference worker, not differently named synthetic repositories.
             typeof(UserRepositoriesList).GetField("<Controller>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!
                 .SetValue(dashboard.userRepositoriesList, context.Commands.GetRequiredService<IUserRepositoriesListController>());
-            dashboard.Initialize(context.Commands.GetRequiredService<IRepositoryHistoryUIService>());
+            dashboard.userRepositoriesList.Initialize(context.Commands.GetRequiredService<IRepositoryHistoryUIService>());
             dashboard.RefreshContent();
             return;
         }

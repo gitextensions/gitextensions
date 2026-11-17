@@ -20,6 +20,14 @@ namespace GitExtensionsTests;
 [NonParallelizable]
 public sealed class NativeTreeImageListTests
 {
+    private JoinableTaskContextTestScope _threading = null!;
+
+    [SetUp]
+    public void SetUp() => _threading = new JoinableTaskContextTestScope();
+
+    [TearDown]
+    public void TearDown() => _threading.Dispose();
+
     private static readonly Color[] _backdrops =
     [
         Colors.White, Colors.Black, Color.FromRgb(50, 50, 50),

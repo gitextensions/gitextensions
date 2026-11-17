@@ -437,6 +437,33 @@ public partial class UserRepositoriesList : GitExtensionsControl
     protected override void OnAttachedToLogicalTree(Avalonia.LogicalTree.LogicalTreeAttachmentEventArgs e)
     {
         base.OnAttachedToLogicalTree(e);
+        ResourceManager.GitExtensionsFormBase? owner = this.GetLogicalAncestors()
+            .OfType<ResourceManager.GitExtensionsFormBase>().FirstOrDefault();
+        if (owner is not null && owner.TryGetUICommands(out IGitUICommands? commands)
+            && commands.GetService(typeof(IRepositoryHistoryUIService)) is IRepositoryHistoryUIService history)
+        {
+            bool refresh = false;
+            if (!ReferenceEquals(_repositoryHistoryUIService, history))
+            {
+                refresh = _repositoryHistoryUIService is not null;
+                Initialize(history);
+            }
+            else if (_repositoryHistoryUIService is not null && !_isSubscribed)
+            {
+                _repositoryHistoryUIService.HistoryChanged += RepositoryHistoryUIService_HistoryChanged;
+                _isSubscribed = true;
+                refresh = true;
+            }
+
+            if (refresh)
+            {
+                Controller.ClearCache();
+                ShowRecentRepositories(reloadData: false);
+            }
+
+            return;
+        }
+
         if (_repositoryHistoryUIService is not null && !_isSubscribed)
         {
             _repositoryHistoryUIService.HistoryChanged += RepositoryHistoryUIService_HistoryChanged;
@@ -1249,6 +1276,11 @@ public partial class UserRepositoriesList : GitExtensionsControl
     private void RepositoryHistoryUIService_HistoryChanged(object? sender, EventArgs e)
         => this.InvokeAndForget(() =>
         {
+            if (!_isSubscribed)
+            {
+                return Task.CompletedTask;
+            }
+
             Controller.ClearCache();
             ShowRecentRepositories(reloadData: false);
             return Task.CompletedTask;

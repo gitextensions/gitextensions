@@ -74,6 +74,17 @@ internal static class WorkingDirectoryTestSupport
         private State State => States.GetValue(control, item => new State(item));
 
         public MenuFlyout Menu => Get<MenuFlyout>("_menu");
+        public ToolStripDropDownItem CategorisedRepositoriesMenu
+        {
+            get
+            {
+                object implementation = typeof(WorkingDirectoryToolStripSplitButton)
+                    .GetField("_implementation", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(control)!;
+                return (ToolStripDropDownItem)implementation.GetType()
+                    .GetField("_tsmiCategorisedRepos", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(implementation)!;
+            }
+        }
+
         public TextBox Filter => Get<TextBox>("_txtFilter");
         public MenuItem FilterHost => Get<MenuItem>("_filterHost");
         public NativeToolStripDropDownLayout.Group Layout => Get<NativeToolStripDropDownLayout>("_dropDownLayout").Root;
@@ -245,7 +256,7 @@ internal static class WorkingDirectoryTestSupport
                     _branches.GetCachedBranchName(entry.Repository.Path).Returns(entry.BranchName);
                 }
 
-                Producer.GetTestAccessor().PopulateFavouriteRepositoriesMenu(container, _opening.Favourites);
+                RepositoryHistoryTestHelper.PopulateFavouriteFixture(Producer, container, _opening.Favourites);
                 Remap(container, _opening.Favourites);
             });
             history.When(service => service.PopulateRecentRepositoriesMenu(Arg.Any<ToolStripDropDownItem>())).Do(call =>

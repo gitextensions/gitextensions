@@ -214,7 +214,13 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
                 }
 
                 // Avalonia's split button owns a flyout rather than a MenuItem collection.
-                NativeToolStripDropDownMenuItem container = new();
+                NativeToolStripDropDownMenuItem container = new()
+                {
+                    FontFamily = button.FontFamily,
+                    FontSize = button.FontSize,
+                    FontStyle = button.FontStyle,
+                    FontWeight = button.FontWeight,
+                };
                 _repositoryHistoryUIService.PopulateRecentRepositoriesMenu(container);
                 while (container.Items.Count > 0)
                 {

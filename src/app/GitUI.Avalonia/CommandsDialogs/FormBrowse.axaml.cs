@@ -1012,11 +1012,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 Name = "dashboard",
                 UICommandsSource = this,
             };
-            if (_repositoryHistoryUIService is not null)
-            {
-                _dashboard.Initialize(_repositoryHistoryUIService);
-            }
-
             _dashboard.GitModuleChanged += SetGitModule;
             _contentPanel.Children.Add(_dashboard);
         }

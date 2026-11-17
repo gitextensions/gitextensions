@@ -26,6 +26,14 @@ namespace GitExtensionsTests;
 [NonParallelizable]
 public sealed class NativeTreePaintTests
 {
+    private JoinableTaskContextTestScope _threading = null!;
+
+    [SetUp]
+    public void SetUp() => _threading = new JoinableTaskContextTestScope();
+
+    [TearDown]
+    public void TearDown() => _threading.Dispose();
+
     [Test]
     [Category("P8.6i.126")]
     [TestCase(false, false, "#FFFFFF", "#CCE8FF", "#0078D4")]

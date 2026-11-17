@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -173,29 +174,27 @@ public sealed class RepositoryHistoryUIServiceTests
     }
 
     [AvaloniaTest]
-    public void PopulateFavouriteRepositoriesMenu_should_order_categories_and_number_each_category()
+    public async Task PopulateFavouriteRepositoriesMenu_should_order_categories_and_number_each_category()
     {
+        using AppSettingsTestScope settings = new();
+        using SplitSettingsScope splitSettings = new();
         ToolStripDropDownItem container = new();
-        RepositoryHistoryEntry[] repositories =
+        Repository[] repositories =
         [
-            Entry("/repos/d", "D repo", "D"),
-            Entry("/repos/a2", "A second", "A"),
-            Entry("/repos/c", "C repo", "C"),
-            Entry("/repos/a1", "A first", "A"),
+            new("D repo") { Category = "D" },
+            new("A second") { Category = "A" },
+            new("C repo") { Category = "C" },
+            new("A first") { Category = "A" },
         ];
+        await RepositoryHistoryManager.Locals.SaveFavouriteHistoryAsync(repositories);
 
-        _service.GetTestAccessor().PopulateFavouriteRepositoriesMenu(container, repositories);
+        _service.PopulateFavouriteRepositoriesMenu(container);
 
         ToolStripMenuItem[] categories = [.. container.Items.OfType<ToolStripMenuItem>()];
         categories.Select(item => item.Header).Should().Equal("A", "C", "D");
         categories[0].Items.OfType<ToolStripMenuItem>()
             .Select(item => item.Header)
             .Should().Equal("_1: A second", "_2: A first");
-
-        return;
-
-        static RepositoryHistoryEntry Entry(string path, string caption, string category)
-            => new(new Repository(path) { Category = category }, caption, null, IsFavourite: true, IsAnchored: false);
     }
 
     [AvaloniaTest]
@@ -237,12 +236,17 @@ public sealed class RepositoryHistoryUIServiceTests
     [AvaloniaTest]
     [TestCase(false)]
     [TestCase(true)]
-    public void AddRecentRepositories_should_show_a_pin_only_for_an_anchored_recent_entry(bool anchored)
+    public async Task AddRecentRepositories_should_show_a_pin_only_for_an_anchored_recent_entry(bool anchored)
     {
+        using AppSettingsTestScope settings = new();
+        using SplitSettingsScope splitSettings = new();
+        Repository repository = new(Path.Join(Path.GetTempPath(), "source-anchor"))
+        {
+            Anchor = anchored ? Repository.RepositoryAnchor.AnchoredInRecent : Repository.RepositoryAnchor.None,
+        };
+        await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync([repository]);
         ToolStripDropDownItem container = new();
-        _service.GetTestAccessor().AddRecentRepositories(
-            container, new Repository("/repos/pin"), "Pin", number: 1, anchored: anchored);
-
+        _service.PopulateRecentRepositoriesMenu(container);
         ToolStripMenuItem item = container.Items.OfType<ToolStripMenuItem>().Single();
         if (anchored)
         {
@@ -361,19 +365,53 @@ public sealed class RepositoryHistoryUIServiceTests
     public void Repository_item_should_capture_new_instance_routing_only_for_the_exact_source_Control_modifier(
         KeyModifiers modifiers, bool expected)
     {
+        string path = Path.Join(Path.GetTempPath(), $"GitExtensions.RepositoryModifiers-{Guid.NewGuid():N}");
+        string gitDirectory = Path.Join(path, ".git");
+        Directory.CreateDirectory(gitDirectory);
+        IGitExecutor executor = Substitute.For<IGitExecutor>();
+        executor.WorkingDir.Returns(path);
+        executor.GetGitDirectory().Returns(gitDirectory);
+        _executorProvider.GetExecutor(path).Returns(executor);
         ToolStripDropDownItem container = new();
-        _service.GetTestAccessor().AddRecentRepositories(container, new Repository("/repos/key-route"), "Route", number: 1);
+        _service.GetTestAccessor().AddRecentRepositories(container, new Repository(path), "Route", number: 1);
         ToolStripMenuItem item = container.Items.OfType<ToolStripMenuItem>().Single();
-
-        item.RaiseEvent(new KeyEventArgs
+        GitModuleEventArgs? transition = null;
+        _service.GitModuleChanged += (_, e) => transition = e;
+        string? launchedPath = null;
+        Func<string, string, IProcess>? previousStart = GitExtensionsProcess.StartForTesting;
+        GitExtensionsProcess.StartForTesting = (_, workingDirectory) =>
         {
-            RoutedEvent = InputElement.KeyDownEvent,
-            Key = Key.A,
-            KeyModifiers = modifiers,
-        });
+            launchedPath = workingDirectory;
+            return Substitute.For<IProcess>();
+        };
+        try
+        {
+            item.RaiseEvent(new KeyEventArgs
+            {
+                RoutedEvent = InputElement.KeyDownEvent,
+                Key = Key.A,
+                KeyModifiers = modifiers,
+            });
+            item.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
-        _service.GetTestAccessor().GetOpenInNewInstance(item).Should().Be(expected,
-            "source Control.ModifierKeys == Keys.Control excludes every additional modifier");
+            (launchedPath is not null).Should().Be(expected,
+                "source Control.ModifierKeys == Keys.Control excludes every additional modifier");
+            if (expected)
+            {
+                launchedPath.Should().Be(path);
+                transition.Should().BeNull();
+            }
+            else
+            {
+                transition.Should().NotBeNull();
+                transition!.GitModule.WorkingDir.Should().Be(path);
+            }
+        }
+        finally
+        {
+            GitExtensionsProcess.StartForTesting = previousStart;
+            Directory.Delete(path, recursive: true);
+        }
     }
 
     private sealed class SplitSettingsScope : IDisposable

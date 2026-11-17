@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -58,8 +59,6 @@ public interface IRepositoryHistoryUIService
     void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container);
 
     RepositoryHistorySnapshot LoadSnapshot();
-    IList<Repository> AddAsMostRecent(string path);
-    bool CanOpenRepository(string path);
     void Invalidate();
 
     /// <summary>
@@ -104,9 +103,7 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
             _ => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
         };
         string? branchName = _branchNameCache.GetCachedBranchName(repo.Path);
-        ToolStripMenuItem item = menuItemContainer is NativeToolStripDropDownMenuItem
-            ? new NativeToolStripDropDownMenuItem { UseSourceMnemonicRouting = true, Classes = { "gitextensions-working-directory-entry", "gitextensions-working-directory-repository" } }
-            : new ToolStripMenuItem();
+        ToolStripMenuItem item = menuItemContainer.CreateMenuItem();
         item.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics($"{numberString}: {caption}");
         item.Tag = repo;
         item.Icon = anchored
@@ -121,7 +118,7 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
 
         // The owned native popup supplies release/Enter modifiers synchronously around Click.
-        if (item is not NativeToolStripDropDownMenuItem)
+        if (!item.UseSourceMnemonicRouting)
         {
             item.PointerPressed += (_, e) =>
                 item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers == KeyModifiers.Control);
@@ -131,9 +128,8 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         item.Click += (_, _) =>
         {
-            KeyModifiers sourceControl = KeysMapper.ToKeyGesture(GitExtensions.Shims.WinForms.Keys.Control | GitExtensions.Shims.WinForms.Keys.A)!.KeyModifiers;
             bool openInNewInstance = NativeRepositoryMenu.ActivationModifiers is KeyModifiers modifiers
-                ? modifiers == sourceControl : item.GetValue(OpenInNewInstanceProperty);
+                ? modifiers == KeyModifiers.Control : item.GetValue(OpenInNewInstanceProperty);
             item.ClearValue(OpenInNewInstanceProperty);
             if (openInNewInstance)
             {
@@ -183,36 +179,46 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         container.Items.Clear();
 
-        IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
-        RepositoryHistorySnapshot snapshot = CreateSnapshot([], repositoryHistory);
-        if (snapshot.Favourites.Count < 1)
+        IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
+            RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
+
+        if (repositoryHistory.Count < 1)
         {
             return;
         }
 
-        PopulateFavouriteRepositoriesMenu(container, snapshot.Favourites);
+        PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
     }
 
-    private void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, IReadOnlyList<RepositoryHistoryEntry> repositoryHistory)
+    private void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
     {
-        foreach (IGrouping<string?, RepositoryHistoryEntry> repositories in repositoryHistory
-                     .GroupBy(item => item.Repository.Category)
-                     .OrderBy(group => group.Key))
+        List<RecentRepoInfo> pinnedRepos = [];
+        List<RecentRepoInfo> allRecentRepos = [];
+
+        RecentRepoSplitter splitter = new()
         {
-            ToolStripMenuItem menuItemCategory = container is NativeToolStripDropDownMenuItem
-                ? new NativeToolStripDropDownMenuItem { UseSourceMnemonicRouting = true, Classes = { "gitextensions-working-directory-entry" } }
-                : new ToolStripMenuItem();
-            menuItemCategory.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(repositories.Key ?? string.Empty);
+            MeasureFont = container.Font,
+        };
+
+        splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
+
+        foreach (IGrouping<string?, RecentRepoInfo> repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
+        {
+            AddFavouriteRepositories(repo.Key, repo);
+        }
+
+        return;
+
+        void AddFavouriteRepositories(string? category, IEnumerable<RecentRepoInfo> repos)
+        {
+            ToolStripMenuItem menuItemCategory = container.CreateMenuItem();
+            menuItemCategory.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(category ?? string.Empty);
             container.Items.Add(menuItemCategory);
 
             int number = 0;
-            foreach (RepositoryHistoryEntry repository in repositories)
+            foreach (RecentRepoInfo r in repos)
             {
-                AddRecentRepositories(
-                    menuItemCategory,
-                    repository.Repository,
-                    repository.Caption,
-                    ++number);
+                AddRecentRepositories(menuItemCategory, r.Repo, r.Caption, ++number);
             }
         }
     }
@@ -232,10 +238,42 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
             }
         }
 
+        List<RecentRepoInfo> pinnedRepos = [];
+        List<RecentRepoInfo> allRecentRepos = [];
+
         IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
             RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
 
-        PopulateRecentRepositoriesMenu(container, CreateSnapshot(repositoryHistory, []));
+        if (repositoryHistory.Count < 1)
+        {
+            return;
+        }
+
+        RecentRepoSplitter splitter = new()
+        {
+            MeasureFont = container.Font,
+        };
+
+        splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
+
+        int number = 0;
+        foreach (RecentRepoInfo repo in CollectionsMarshal.AsSpan(pinnedRepos))
+        {
+            AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored);
+        }
+
+        if (allRecentRepos.Count > 0)
+        {
+            if (pinnedRepos.Count > 0)
+            {
+                container.Items.Add(container.CreateSeparator());
+            }
+
+            foreach (RecentRepoInfo repo in CollectionsMarshal.AsSpan(allRecentRepos))
+            {
+                AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored);
+            }
+        }
     }
 
     private void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container, RepositoryHistorySnapshot snapshot)
@@ -247,7 +285,7 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
             // contain pinned entries. Only the splitter's boundary determines the separator.
             if (number > 0 && number == snapshot.TopCount)
             {
-                container.Items.Add(container is NativeToolStripDropDownMenuItem ? new NativeToolStripDropDownSeparator() : new ToolStripSeparator());
+                container.Items.Add(container.CreateSeparator());
             }
 
             AddRecentRepositories(
@@ -270,30 +308,6 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
         IList<Repository> favourites = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
         _snapshot = CreateSnapshot(recent, favourites);
         return _snapshot;
-    }
-
-    public IList<Repository> AddAsMostRecent(string path)
-    {
-        IList<Repository> repositories = ThreadHelper.JoinableTaskFactory.Run(
-            () => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
-        Invalidate();
-        return repositories;
-    }
-
-    public bool CanOpenRepository(string path)
-    {
-        GitModule module = new(_executorProvider, path);
-        if (module.IsValidGitWorkingDir())
-        {
-            return true;
-        }
-
-        if (_invalidRepositoryRemover.ShowDeleteInvalidRepositoryDialog(path))
-        {
-            Invalidate();
-        }
-
-        return false;
     }
 
     public void Invalidate()
@@ -347,7 +361,7 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
             [
                 .. recentHistory.Concat(favouriteHistory)
                     .Select(repository => repository.Path)
-                    .Distinct(GetPathComparer()),
+                    .Distinct(OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal),
             ];
 
             if (paths.Length > 0)
@@ -400,16 +414,13 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
         ];
     }
 
-    private static StringComparer GetPathComparer()
-        => OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
-
     internal TestAccessor GetTestAccessor()
         => new(this);
 
     internal readonly struct TestAccessor(RepositoryHistoryUIService service)
     {
-        internal void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number, bool anchored = false)
-            => service.AddRecentRepositories(menuItemContainer, repo, caption, number, anchored);
+        internal void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number)
+            => service.AddRecentRepositories(menuItemContainer, repo, caption, number);
 
         internal RepositoryHistorySnapshot CreateSnapshot(IList<Repository> recent, IList<Repository> favourites)
             => service.CreateSnapshot(recent, favourites);
@@ -417,10 +428,7 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
         internal void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container, RepositoryHistorySnapshot snapshot)
             => service.PopulateRecentRepositoriesMenu(container, snapshot);
 
-        internal bool GetOpenInNewInstance(ToolStripMenuItem item)
-            => item.GetValue(OpenInNewInstanceProperty);
-
-        internal void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, IReadOnlyList<RepositoryHistoryEntry> repositoryHistory)
+        internal void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
             => service.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
     }
 }
