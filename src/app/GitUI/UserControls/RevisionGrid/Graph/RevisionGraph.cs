@@ -82,6 +82,9 @@ public class RevisionGraph : IRevisionGraphRowProvider
     /// </summary>
     private int[] _firstIndexForReservedLane = [];
 
+    /// <summary>
+    ///  If not 0, <see cref="_firstIndexForReservedLane"/> must be recomputed
+    /// </summary>
     private int _firstIndexForReservedLaneInvalidCount;
 
     private int _straightenDiagonalsLookAhead => Config.StraightenGraphDiagonals ? _straightenLanesLookAhead / 2 : 0;
@@ -103,6 +106,8 @@ public class RevisionGraph : IRevisionGraphRowProvider
         _orderedNodesCacheInvalid = true;
         _orderedRowCache.Clear();
         _orderedRowCacheInvalidFromScore = int.MaxValue;
+        _firstIndexForReservedLane = [];
+        _firstIndexForReservedLaneInvalidCount = 0;
         Config = new();
     }
 
