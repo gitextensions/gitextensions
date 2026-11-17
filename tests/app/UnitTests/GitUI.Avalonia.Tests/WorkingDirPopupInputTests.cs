@@ -20,6 +20,9 @@ public sealed class WorkingDirPopupInputTests
     [SetUp]
     public void SetUp() => ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
+    [TearDown]
+    public void TearDown() => WorkingDirectoryTestSupport.Reset();
+
     [AvaloniaTest]
     [TestCase(RawInputModifiers.None, RawInputModifiers.None)]
     [TestCase(RawInputModifiers.Control, RawInputModifiers.Control)]
@@ -395,7 +398,7 @@ public sealed class WorkingDirPopupInputTests
         {
             Accessor = _selector.GetTestAccessor();
             Accessor.SetRepositoryActions(Current.Add, Launched.Add);
-            Paths = Enumerable.Range(0, captions.Length).Select(index => $"/repos/input-{index}").ToArray();
+            Paths = Enumerable.Range(0, captions.Length).Select(index => WorkingDirectoryTestSupport.CreateRepositoryPath($"input-{index}")).ToArray();
             RepositoryHistoryEntry[] entries = captions.Select((caption, index) => new RepositoryHistoryEntry(
                 new Repository(Paths[index]) { Category = favourite ? caption : null },
                 favourite ? "repo&Quasar" : caption, null, favourite, IsAnchored: false)).ToArray();

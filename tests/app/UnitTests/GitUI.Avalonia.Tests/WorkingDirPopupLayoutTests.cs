@@ -29,6 +29,9 @@ public sealed class WorkingDirPopupLayoutTests
     [SetUp]
     public void SetUp() => ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
+    [TearDown]
+    public void TearDown() => WorkingDirectoryTestSupport.Reset();
+
     [AvaloniaTest]
     [TestCase(false, false, false)]
     [TestCase(true, false, false)]

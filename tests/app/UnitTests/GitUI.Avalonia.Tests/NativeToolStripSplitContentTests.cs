@@ -44,6 +44,9 @@ public sealed class NativeToolStripSplitContentTests
         }
     }
 
+    [TearDown]
+    public void TearDown() => WorkingDirectoryTestSupport.Reset();
+
     [AvaloniaTest]
     [TestCaseSource(nameof(PreferredCases))]
     public void Native_content_should_measure_the_actual_item_font_and_arrange_source_padded_image_and_caption(

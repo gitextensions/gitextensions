@@ -104,14 +104,14 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
             _ => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
         };
         string? branchName = _branchNameCache.GetCachedBranchName(repo.Path);
-        ToolStripMenuItem item = new()
-        {
-            Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics($"{numberString}: {caption}"),
-            Tag = repo,
-            Icon = anchored
-                ? new Image { Classes = { "gitextensions-icon-16" }, Source = Images.Pin }
-                : null,
-        };
+        ToolStripMenuItem item = menuItemContainer is NativeToolStripDropDownMenuItem
+            ? new NativeToolStripDropDownMenuItem { UseSourceMnemonicRouting = true, Classes = { "gitextensions-working-directory-entry", "gitextensions-working-directory-repository" } }
+            : new ToolStripMenuItem();
+        item.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics($"{numberString}: {caption}");
+        item.Tag = repo;
+        item.Icon = anchored
+            ? new Image { Classes = { "gitextensions-icon-16" }, Source = Images.Pin }
+            : null;
 
         WinFormsToolStripMenuSizer.SetShortcutDisplayString(item, branchName);
 
@@ -120,13 +120,20 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
             ToolTip.SetTip(item, repo.Path);
         }
 
-        item.PointerPressed += (_, e) =>
-            item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers == KeyModifiers.Control);
-        item.KeyDown += (_, e) =>
-            item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers == KeyModifiers.Control);
+        // The owned native popup supplies release/Enter modifiers synchronously around Click.
+        if (item is not NativeToolStripDropDownMenuItem)
+        {
+            item.PointerPressed += (_, e) =>
+                item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers == KeyModifiers.Control);
+            item.KeyDown += (_, e) =>
+                item.SetValue(OpenInNewInstanceProperty, e.KeyModifiers == KeyModifiers.Control);
+        }
+
         item.Click += (_, _) =>
         {
-            bool openInNewInstance = item.GetValue(OpenInNewInstanceProperty);
+            KeyModifiers sourceControl = KeysMapper.ToKeyGesture(GitExtensions.Shims.WinForms.Keys.Control | GitExtensions.Shims.WinForms.Keys.A)!.KeyModifiers;
+            bool openInNewInstance = NativeRepositoryMenu.ActivationModifiers is KeyModifiers modifiers
+                ? modifiers == sourceControl : item.GetValue(OpenInNewInstanceProperty);
             item.ClearValue(OpenInNewInstanceProperty);
             if (openInNewInstance)
             {
@@ -176,7 +183,8 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         container.Items.Clear();
 
-        RepositoryHistorySnapshot snapshot = LoadSnapshot();
+        IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
+        RepositoryHistorySnapshot snapshot = CreateSnapshot([], repositoryHistory);
         if (snapshot.Favourites.Count < 1)
         {
             return;
@@ -191,10 +199,10 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
                      .GroupBy(item => item.Repository.Category)
                      .OrderBy(group => group.Key))
         {
-            ToolStripMenuItem menuItemCategory = new()
-            {
-                Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(repositories.Key ?? string.Empty),
-            };
+            ToolStripMenuItem menuItemCategory = container is NativeToolStripDropDownMenuItem
+                ? new NativeToolStripDropDownMenuItem { UseSourceMnemonicRouting = true, Classes = { "gitextensions-working-directory-entry" } }
+                : new ToolStripMenuItem();
+            menuItemCategory.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(repositories.Key ?? string.Empty);
             container.Items.Add(menuItemCategory);
 
             int number = 0;
@@ -239,7 +247,7 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
             // contain pinned entries. Only the splitter's boundary determines the separator.
             if (number > 0 && number == snapshot.TopCount)
             {
-                container.Items.Add(new ToolStripSeparator());
+                container.Items.Add(container is NativeToolStripDropDownMenuItem ? new NativeToolStripDropDownSeparator() : new ToolStripSeparator());
             }
 
             AddRecentRepositories(

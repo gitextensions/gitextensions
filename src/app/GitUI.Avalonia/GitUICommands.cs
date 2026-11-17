@@ -562,7 +562,7 @@ public sealed class GitUICommands : IGitUICommands
     /// <param name="workingDir">The working directory for the new process.</param>
     /// <returns>The <see cref="IProcess"/> object for controlling the launched instance.</returns>
     public static IProcess Launch(string arguments, string workingDir = "")
-        => new Executable(Application.ExecutablePath, workingDir).Start(arguments);
+        => GitExtensionsProcess.Start(arguments, workingDir);
 
     /// <summary>
     /// Launch FormBrowse in a new GE instance.

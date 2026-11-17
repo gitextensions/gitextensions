@@ -24,6 +24,9 @@ namespace GitExtensionsTests;
 [NonParallelizable]
 public sealed class BrowseRepositoryDropdownFocusTests
 {
+    [TearDown]
+    public void TearDown() => WorkingDirectoryTestSupport.Reset();
+
     [AvaloniaTest]
     [TestCase(false)]
     [TestCase(true)]

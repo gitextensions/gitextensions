@@ -441,15 +441,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         manageStashesToolStripMenuItem.Click += ManageStashesToolStripMenuItemClick;
         createAStashToolStripMenuItem.Click += CreateStashToolStripMenuItemClick;
 
-        _NO_TRANSLATE_WorkingDir.Initialize(
-            () => UICommands,
-            _repositoryHistoryUIService
-                ?? throw new InvalidOperationException($"{nameof(IRepositoryHistoryUIService)} is not registered."),
-            ChangeWorkingDirectory,
-            path => GitUICommands.LaunchBrowse(path),
-            OpenRepositoryDialog,
-            () => ChangeWorkingDirectory(string.Empty),
-            ConfigureRecentRepositories);
         _gitStatusMonitor = new GitStatusMonitor(this, () => WindowState == WindowState.Minimized);
         _gitStatusMonitor.GitStatusMonitorStateChanged += GitStatusMonitorStateChanged;
         _gitStatusMonitor.GitWorkingDirectoryStatusChanged += GitWorkingDirectoryStatusChanged;
@@ -461,6 +452,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         InitializeComplete();
+        _NO_TRANSLATE_WorkingDir.Initialize(() => UICommands,
+            _repositoryHistoryUIService ?? throw new InvalidOperationException($"{nameof(IRepositoryHistoryUIService)} is not registered."),
+            fileToolStripMenuItem, closeToolStripMenuItem);
         HotkeysEnabled = true;
         LoadHotkeys(HotkeySettingsName);
         SetShortcutKeyDisplayStringsFromHotkeySettings();

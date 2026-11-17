@@ -700,11 +700,21 @@ public class ToolStripPanel : Avalonia.Controls.Panel
 /// </summary>
 public class ToolStripDropDownItem : MenuItem
 {
+    /// <summary>
+    ///  Gets whether the generic popup sizer supplies this menu's layout.
+    /// </summary>
+    protected virtual bool UseDefaultDropDownLayout => true;
+
     protected override Type StyleKeyOverride => typeof(MenuItem);
 
     protected override void OnSubmenuOpened(RoutedEventArgs e)
     {
         base.OnSubmenuOpened(e);
+
+        if (!UseDefaultDropDownLayout)
+        {
+            return;
+        }
 
         // Framework constraint: Avalonia measures each popup from its own template. WinForms
         // instead gives every item the widest ToolStrip text-and-shortcut layout when it opens.

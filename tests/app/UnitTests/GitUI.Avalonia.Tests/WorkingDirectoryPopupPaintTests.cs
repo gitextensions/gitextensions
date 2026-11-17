@@ -22,6 +22,9 @@ namespace GitExtensionsTests;
 [Category("P8.6i.126")]
 public sealed class WorkingDirectoryPopupPaintTests
 {
+    [TearDown]
+    public void TearDown() => WorkingDirectoryTestSupport.Reset();
+
     [AvaloniaTest]
     [TestCase(false, false)]
     [TestCase(true, false)]

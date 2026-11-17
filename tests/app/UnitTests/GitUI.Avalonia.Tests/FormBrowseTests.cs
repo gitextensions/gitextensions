@@ -64,6 +64,55 @@ public sealed class FormBrowseTests
     private bool _revisionGraphShowArtificialCommits;
 
     [AvaloniaTest]
+    public async Task Working_directory_reopening_should_rebuild_from_current_saved_history_without_duplicates()
+    {
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithInitialCommit()), new BrowseArguments());
+        form.Show();
+        try
+        {
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(20));
+            await form.JoinLoadOperationsForTestAsync(timeout.Token);
+            WorkingDirectoryToolStripSplitButton selector = form.FindControl<WorkingDirectoryToolStripSplitButton>("_NO_TRANSLATE_WorkingDir")!;
+            MenuFlyout menu = (MenuFlyout)selector.Flyout!;
+            for (int opening = 0; opening < 3; opening++)
+            {
+                string path = Path.Join(_workingDirectory, "menu-" + opening);
+                await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync([new Repository(path)]);
+                string favouritePath = Path.Join(_workingDirectory, "favourite-" + opening);
+                await RepositoryHistoryManager.Locals.SaveFavouriteHistoryAsync([new Repository(favouritePath) { Category = "Team" }]);
+                selector.ShowDropDown();
+                Dispatcher.UIThread.RunJobs();
+                menu.IsOpen.Should().BeTrue();
+                menu.Items.OfType<MenuItem>().Where(item => item.Tag is Repository or RepositoryHistoryEntry or RecentRepoInfo)
+                    .Select(item => item.Tag switch
+                    {
+                        Repository repository => repository.Path,
+                        RepositoryHistoryEntry entry => entry.Repository.Path,
+                        RecentRepoInfo info => info.Repo.Path,
+                        _ => throw new InvalidOperationException(),
+                    }).Should().Equal(new[] { path }, "each opening clears once before the shared producer appends current rows");
+                MenuItem favourites = menu.Items.OfType<MenuItem>().Single(item => item.Items.Count > 0);
+                favourites.Items.OfType<MenuItem>().Should().ContainSingle();
+                favourites.Items.OfType<MenuItem>().Single().Items.OfType<MenuItem>()
+                    .Select(item => item.Tag switch
+                    {
+                        Repository repository => repository.Path,
+                        RepositoryHistoryEntry entry => entry.Repository.Path,
+                        RecentRepoInfo info => info.Repo.Path,
+                        _ => throw new InvalidOperationException(),
+                    }).Should().Equal(new[] { favouritePath });
+                menu.Items.OfType<MenuItem>().Where(item => item.Header is TextBox).Should().ContainSingle();
+                menu.Hide();
+                Dispatcher.UIThread.RunJobs();
+            }
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [NonParallelizable]
     [TestCase("broadcast")]
     [TestCase("taskbar")]

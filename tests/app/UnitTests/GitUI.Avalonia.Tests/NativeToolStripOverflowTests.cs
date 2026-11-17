@@ -32,6 +32,9 @@ public sealed class NativeToolStripOverflowTests
     [SetUp]
     public void SetUp() => ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
+    [TearDown]
+    public void TearDown() => WorkingDirectoryTestSupport.Reset();
+
     [AvaloniaTest]
     [TestCase(false, 25)]
     [TestCase(true, 25)]
@@ -648,6 +651,9 @@ public sealed class NativeToolStripOverflowTests
     [TestCase(true)]
     public void Working_directory_refresh_should_use_its_open_logical_owner_in_closed_and_open_overflow(bool rightToLeft)
     {
+        using AppSettingsTestScope settings = new();
+        using WorkingDirectoryTestSupport.HistoryStorageScope observation = new();
+        IRepositoryStorage storage = observation.Storage;
         int originalMinimum = AppSettings.RecentReposComboMinWidth;
         using NativeToolStrip strip = NewStrip(rightToLeft);
         WorkingDirectoryToolStripSplitButton selector = new()
@@ -660,13 +666,12 @@ public sealed class NativeToolStripOverflowTests
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
         IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
-        history.AddAsMostRecent(Arg.Any<string>()).Returns(_ => new List<Repository>());
         history.LoadSnapshot().Returns(new RepositoryHistorySnapshot([], []));
         string firstPath = Path.Combine(Path.GetTempPath(), "GitExtensions.OverflowOwner", "first-repository");
         string secondPath = Path.Combine(Path.GetTempPath(), "GitExtensions.OverflowOwner", "second-longer-repository");
         string thirdPath = Path.Combine(Path.GetTempPath(), "GitExtensions.OverflowOwner", "third-repository-with-longer-caption");
         module.WorkingDir.Returns(firstPath);
-        selector.Initialize(() => commands, history, _ => { }, _ => { }, () => { }, () => { }, () => { });
+        WorkingDirectoryTestSupport.InitializeInputFixture(selector, () => commands, history);
         strip.Items.Add(selector);
         Window window = NewWindow(strip, 50);
         try
@@ -676,19 +681,20 @@ public sealed class NativeToolStripOverflowTests
             Settle(window);
             strip.GetItemPlacement(selector).Should().Be(NativeToolStripItemPlacement.Overflow);
             selector.GetVisualParent().Should().BeNull();
-            history.ClearReceivedCalls();
+            storage.ClearReceivedCalls();
             module.WorkingDir.Returns(secondPath);
             selector.RefreshContent();
             Settle(window);
-            history.Received(1).AddAsMostRecent(secondPath);
+            storage.Received(1).Load("history");
+            new RepositoryStorage().Load("history")[0].Path.Should().Be(secondPath.EnsureTrailingPathSeparator());
             selector.Content.Should().Be(PathUtil.GetDisplayPath(secondPath));
             float measured = (float)WinFormsGraphicsTextMeasurer.MeasureSize(selector, selector.Content as string ?? string.Empty).Width;
             measured = measured + 11 + 5;
             selector.Width.Should().Be(Math.Max(140, (int)measured));
-            history.ClearReceivedCalls();
+            storage.ClearReceivedCalls();
             strip.ShowOverflow();
             Settle(window);
-            history.DidNotReceive().AddAsMostRecent(Arg.Any<string>());
+            storage.DidNotReceive().Load("history");
             selector.Content.Should().Be(PathUtil.GetDisplayPath(secondPath), "visual reparenting is not a source content/history refresh route");
             TopLevel.GetTopLevel(selector).Should().NotBeNull();
             strip.IsOverflowOpen.Should().BeTrue();
@@ -698,23 +704,24 @@ public sealed class NativeToolStripOverflowTests
             strip.CloseOverflow();
             strip.Width = strip.PreferredSize.Width + 20;
             Settle(window);
-            history.DidNotReceive().AddAsMostRecent(Arg.Any<string>());
+            storage.DidNotReceive().Load("history");
             strip.Width = 50;
             Settle(window);
             strip.ShowOverflow();
             Settle(window);
-            history.ClearReceivedCalls();
+            storage.ClearReceivedCalls();
             module.WorkingDir.Returns(thirdPath);
             selector.RefreshContent();
             Settle(window);
-            history.Received(1).AddAsMostRecent(thirdPath);
+            storage.Received(1).Load("history");
+            new RepositoryStorage().Load("history")[0].Path.Should().Be(thirdPath.EnsureTrailingPathSeparator());
             selector.Content.Should().Be(PathUtil.GetDisplayPath(thirdPath));
             selector.GetVisualParent().Should().BeSameAs(strip.OverflowContent);
             strip.CloseOverflow();
             strip.Items.Remove(selector);
-            history.ClearReceivedCalls();
+            storage.ClearReceivedCalls();
             selector.RefreshContent();
-            history.DidNotReceive().AddAsMostRecent(Arg.Any<string>());
+            storage.DidNotReceive().Load("history");
         }
         finally
         {
