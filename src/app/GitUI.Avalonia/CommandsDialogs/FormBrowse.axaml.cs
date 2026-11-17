@@ -703,7 +703,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _gpgInfoSequence.Dispose();
         _gitStatusMonitor?.Dispose();
         _windowsJumpListManager?.Dispose();
-        RevisionGrid.CancelBackgroundTasks();
+        ((IDisposable)RevisionGrid).Dispose();
         revisionDiff.CancelBackgroundTasks();
         fileTree.CancelBackgroundTasks();
         _loadOperations.JoinPendingOperations();

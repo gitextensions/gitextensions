@@ -43,6 +43,7 @@ public partial class FormLog : GitModuleForm
     /// </summary>
     protected override void OnClosed(EventArgs e)
     {
+        ((IDisposable)RevisionGrid).Dispose();
         _viewChangesSequence.Dispose();
         base.OnClosed(e);
     }

@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.Design;
+using System.Collections.Concurrent;
+using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Text;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -20,6 +22,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.NBugReports;
 using GitUI.UserControls.RevisionGrid;
+using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -38,6 +41,226 @@ public sealed class RevisionGridSelectionTests
     private string _workingDirectory = null!;
     private bool _showArtificialCommits;
     private bool _showStashes;
+    private bool _showReflogReferences;
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task ReloadRevisions_should_read_log_while_metadata_is_pending_and_wait_before_inserting_rows(bool delayRefs)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.ShowStashes = true;
+        AppSettings.RevisionGraphShowArtificialCommits = false;
+        GitModule repository = CreateRepository();
+        ObjectId head = repository.GetCurrentCheckout();
+        File.WriteAllText(Path.Combine(_workingDirectory, "untracked.txt"), "stash content");
+        repository.GitExecutable.RunCommand(new GitArgumentBuilder("stash") { "push", "--quiet", "--include-untracked" }).Should().BeTrue();
+
+        TaskCompletionSource metadataStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource logStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource loaded = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using ManualResetEventSlim releaseMetadata = new();
+        using CancellationTokenSource deadline = new();
+        ConcurrentQueue<string> operations = new();
+        IGitExecutor originalExecutor = _serviceContainer.GetRequiredService<IGitExecutorProvider>().GetExecutor(_workingDirectory);
+        IGitCommandRunner runner = Substitute.For<IGitCommandRunner>();
+        runner.RunDetached(Arg.Any<CancellationToken>(), Arg.Any<ArgumentString>(), Arg.Any<bool>(), Arg.Any<bool>(),
+                Arg.Any<bool>(), Arg.Any<Encoding?>(), Arg.Any<bool>())
+            .Returns(call =>
+            {
+                ArgumentString arguments = call.ArgAt<ArgumentString>(1);
+                string command = arguments.ToString();
+                operations.Enqueue($"{Environment.CurrentManagedThreadId}: {command}");
+                bool isLog = command.StartsWith("log ", StringComparison.Ordinal) || command.Contains(" log ", StringComparison.Ordinal);
+                if (!delayRefs && isLog
+                    && command.Contains("--dirstat=files", StringComparison.Ordinal))
+                {
+                    metadataStarted.TrySetResult();
+                    releaseMetadata.Wait(deadline.Token);
+                }
+                else if (isLog
+                    && !command.Contains("--dirstat=files", StringComparison.Ordinal))
+                {
+                    logStarted.TrySetResult();
+                }
+
+                return originalExecutor.GitCommandRunner.RunDetached(call.ArgAt<CancellationToken>(0), arguments,
+                    call.ArgAt<bool>(2), call.ArgAt<bool>(3), call.ArgAt<bool>(4), call.ArgAt<Encoding?>(5), call.ArgAt<bool>(6));
+            });
+        IGitExecutor executor = Substitute.For<IGitExecutor>();
+        executor.WorkingDir.Returns(originalExecutor.WorkingDir);
+        executor.GetGitDirectory().Returns(originalExecutor.GetGitDirectory());
+        executor.GitExecutable.Returns(originalExecutor.GitExecutable);
+        executor.GitCommandRunner.Returns(runner);
+        executor.GitWindowsExecutable.Returns(originalExecutor.GitWindowsExecutable);
+        executor.GitWindowsCommandRunner.Returns(originalExecutor.GitWindowsCommandRunner);
+        executor.WslDistro.Returns(originalExecutor.WslDistro);
+        IGitExecutorProvider provider = Substitute.For<IGitExecutorProvider>();
+        provider.GetExecutor(Arg.Any<string>()).Returns(executor);
+        GitModule module = new(provider, _workingDirectory);
+        RevisionGridControl control = CreateControl(module);
+        control.RevisionsLoaded += (_, _) => loaded.TrySetResult();
+        try
+        {
+            deadline.CancelAfter(TimeSpan.FromSeconds(15));
+            operations.Enqueue($"UI: {Environment.CurrentManagedThreadId}; stashes={AppSettings.ShowStashes}; reflog={AppSettings.ShowReflogReferences.Value}");
+            control.ReloadRevisions(module, getRefs: filter =>
+            {
+                operations.Enqueue($"refs: {Environment.CurrentManagedThreadId}");
+                if (delayRefs)
+                {
+                    metadataStarted.TrySetResult();
+                    releaseMetadata.Wait(deadline.Token);
+                }
+
+                return repository.GetRefs(filter);
+            });
+            await metadataStarted.Task.WaitAsync(deadline.Token);
+            await logStarted.Task.WaitAsync(deadline.Token);
+            control._gridView.ItemCount.Should().Be(0, "the original gates insertion on refs and stash preparation");
+            control.GetTestAccessor().IsDataLoadComplete.Should().BeFalse();
+            releaseMetadata.Set();
+            await loaded.Task.WaitAsync(deadline.Token);
+            control.GetTestAccessor().IsDataLoadComplete.Should().BeTrue();
+            control.SelectedRevision.Should().NotBeNull();
+            control._gridView.Items.OfType<GitRevision>().Should().Contain(revision => revision.ObjectId == head);
+            control._gridView.Items.OfType<GitRevision>().Single(revision => revision.ObjectId == head)
+                .Refs.Should().Contain(gitRef => gitRef.Name == "selection");
+            control._gridView.Items.OfType<GitRevision>().Should().Contain(revision => revision.ReflogSelector == "refs/stash@{0}");
+        }
+        finally
+        {
+            releaseMetadata.Set();
+            control.CancelBackgroundTasks();
+            await TestContext.Out.WriteLineAsync(string.Join(Environment.NewLine, operations));
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task Ref_hover_should_remain_usable_after_grid_reattachment(bool reattach)
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.RevisionGraphShowArtificialCommits = false;
+        GitModule module = CreateRepository();
+        AddCommit(module, "second");
+        RevisionGridControl control = CreateControl(module);
+        Window window = new() { Content = control, Width = 1000, Height = 300 };
+        window.Show();
+        try
+        {
+            await ReloadAsync(control, module);
+            if (reattach)
+            {
+                window.Content = null;
+                window.Content = control;
+                await ReloadAsync(control, module);
+            }
+
+            Settle(window);
+            RevisionGridRefRenderer.RefLabelControl label = control._gridView.GetVisualDescendants()
+                .OfType<RevisionGridRefRenderer.RefLabelControl>().Single(candidate => candidate.GitRef?.Name == "selection");
+            Point point = label.TranslatePoint(new Point(label.Bounds.Width / 2, label.Bounds.Height / 2), window)!.Value;
+            (window.InputHitTest(point) as Visual)?.GetSelfAndVisualAncestors().Should().Contain(label);
+            window.MouseMove(point);
+            Settle(window);
+            RevisionGraphColumnProvider provider = control.ColumnProviders
+                .OfType<RevisionGraphColumnProvider>().Single();
+            HoverHighlightCalculator calculator = (HoverHighlightCalculator)typeof(RevisionGraphColumnProvider)
+                .GetField("_hoverHighlight", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.GetValue(provider)!;
+            ObjectId head = module.GetCurrentCheckout();
+            await WaitUntilAsync(() => calculator.HighlightedIds?.Contains(head) == true);
+            control._gridView.GetVisualDescendants().OfType<RevisionGridRefRenderer.RefLabelControl>()
+                .Single(candidate => candidate.GitRef?.Name == "selection").IsHighlighted.Should().BeTrue();
+        }
+        finally
+        {
+            control.CancelBackgroundTasks();
+            window.Close();
+            ((IDisposable)control).Dispose();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormBrowse_close_should_dispose_its_revision_grid_resources()
+    {
+        using AppSettingsTestScope settings = new();
+        GitModule module = CreateRepository();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
+        form.Show();
+        try
+        {
+            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == module.GetCurrentCheckout());
+            RevisionGraphColumnProvider provider = form.RevisionGrid.ColumnProviders.OfType<RevisionGraphColumnProvider>().Single();
+            GitRevision revision = form.RevisionGrid.SelectedRevision!;
+            IGitRef branch = revision.Refs.Single(gitRef => gitRef.Name == "selection");
+            form.Close();
+
+            Func<Task> hoverAfterClose = () => provider.SetHoverHighlightAsync(branch, 0);
+            await hoverAfterClose.Should().ThrowAsync<OperationCanceledException>();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task ReloadRevisions_should_use_the_original_translated_autostash_caption()
+    {
+        using AppSettingsTestScope settings = new();
+        AppSettings.ShowStashes = true;
+        AppSettings.RevisionGraphShowArtificialCommits = false;
+        GitModule module = CreateRepository();
+        AddCommit(module, "second");
+        File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "pending change");
+        ProcessStartInfo startInfo = new(AppSettings.GitCommand)
+        {
+            WorkingDirectory = module.WorkingDir,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+        };
+        foreach (string argument in new[] { "rebase", "--autostash", "--exec", "exit 1", "HEAD~1" })
+        {
+            startInfo.ArgumentList.Add(argument);
+        }
+
+        using Process rebase = new() { StartInfo = startInfo };
+        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(30));
+        rebase.Start().Should().BeTrue();
+        try
+        {
+            Task<string> output = rebase.StandardOutput.ReadToEndAsync(timeout.Token);
+            Task<string> error = rebase.StandardError.ReadToEndAsync(timeout.Token);
+            await rebase.WaitForExitAsync(timeout.Token);
+            await Task.WhenAll(output, error);
+            rebase.ExitCode.Should().Be(1);
+            File.Exists(Path.Join(module.WorkingDirGitDir, "rebase-merge", "autostash")).Should().BeTrue();
+            RevisionGridControl control = CreateControl(module);
+            try
+            {
+                await ReloadAsync(control, module);
+
+                control._gridView.Items.OfType<GitRevision>().Should().ContainSingle(revision => revision.IsAutostash)
+                    .Which.Subject.Should().Be(ResourceManager.TranslatedStrings.Autostash);
+            }
+            finally
+            {
+                ((IDisposable)control).Dispose();
+            }
+        }
+        finally
+        {
+            if (!rebase.HasExited)
+            {
+                rebase.Kill(entireProcessTree: true);
+                await rebase.WaitForExitAsync();
+            }
+        }
+    }
 
     [SetUp]
     public void SetUp()
@@ -46,6 +269,8 @@ public sealed class RevisionGridSelectionTests
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
         _showArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
         _showStashes = AppSettings.ShowStashes;
+        _showReflogReferences = AppSettings.ShowReflogReferences.Value;
+        AppSettings.ShowReflogReferences.Value = false;
         AppSettings.RevisionGraphShowArtificialCommits = true;
         AppSettings.ShowStashes = false;
 
@@ -70,6 +295,7 @@ public sealed class RevisionGridSelectionTests
     {
         AppSettings.RevisionGraphShowArtificialCommits = _showArtificialCommits;
         AppSettings.ShowStashes = _showStashes;
+        AppSettings.ShowReflogReferences.Value = _showReflogReferences;
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
     }
@@ -999,21 +1225,38 @@ public sealed class RevisionGridSelectionTests
     }
 
     [AvaloniaTest]
-    public void Cancelled_stream_callbacks_should_not_replace_selection_or_focus_from_the_active_load()
+    public async Task Cancelled_stream_callbacks_should_not_replace_selection_or_focus_from_the_active_load()
     {
-        GitRevision first = Revision(1);
-        GitRevision selected = Revision(2);
-        RevisionGridControl control = CreatePausedControl(selected.ObjectId, out IGitModule module);
-        using CancellationTokenSource staleLoad = new();
+        using AppSettingsTestScope settings = new();
+        AppSettings.RevisionGraphShowArtificialCommits = false;
+        GitModule module = CreateRepository();
+        RevisionGridControl control = CreateControl(module);
+        TaskCompletionSource staleMetadataStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource staleMetadataFinished = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using ManualResetEventSlim releaseStaleMetadata = new();
+        using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(15));
         try
         {
-            StartControlledLoad(control, module);
-            control.GetNativeTestAccessor().ReadRevisions([selected]);
-            staleLoad.Cancel();
-
-            IObserver<IReadOnlyList<GitRevision>> staleObserver = control.GetNativeTestAccessor().CreateRevisionObserver(staleLoad.Token);
-            staleObserver.OnNext([first]);
-            staleObserver.OnCompleted();
+            control.ReloadRevisions(module, getRefs: filter =>
+            {
+                staleMetadataStarted.TrySetResult();
+                try
+                {
+                    releaseStaleMetadata.Wait(deadline.Token);
+                    return module.GetRefs(filter);
+                }
+                finally
+                {
+                    staleMetadataFinished.TrySetResult();
+                }
+            });
+            await staleMetadataStarted.Task.WaitAsync(deadline.Token);
+            await ReloadAsync(control, module);
+            GitRevision selected = control.SelectedRevision!;
+            selected.ObjectId.Should().Be(module.GetCurrentCheckout());
+            releaseStaleMetadata.Set();
+            await staleMetadataFinished.Task.WaitAsync(deadline.Token);
+            control.CancelBackgroundTasks();
             Dispatcher.UIThread.RunJobs();
 
             control._gridView.Items.OfType<GitRevision>().Should().ContainSingle()
@@ -1022,6 +1265,7 @@ public sealed class RevisionGridSelectionTests
         }
         finally
         {
+            releaseStaleMetadata.Set();
             control.CancelBackgroundTasks();
         }
     }
@@ -1091,7 +1335,8 @@ public sealed class RevisionGridSelectionTests
             AddCommit(module, "initial");
         }
 
-        return module;
+        // GitModule snapshots its Git-directory path, so construct the UI input after git init.
+        return new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
     }
 
     private RevisionGridControl CreateControl(GitModule module)
@@ -1114,6 +1359,7 @@ public sealed class RevisionGridSelectionTests
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         module = Substitute.For<IGitModule>();
         module.GetCurrentCheckout().Returns(head);
+        module.ConfigureCancelledRevisionRead();
         commands.Module.Returns(module);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         source.UICommands.Returns(commands);
@@ -1174,9 +1420,10 @@ public sealed class RevisionGridSelectionTests
 
     private static void StartControlledLoad(RevisionGridControl control, IGitModule module)
     {
-        // Deliver deterministic stream callbacks without blocking a pool-backed headless UI context.
-        // TaskManager handles the interrupted provider; real Git reads are covered separately above.
-        control.ReloadRevisions(module, getRefs: _ => throw new OperationCanceledException());
+        // Let production prepare its metadata while the fixture cancels external log I/O.
+        // Streamed-row assertions then use the same pending selection as the real refs stage.
+        control.ReloadRevisions(module, getRefs: _ => []);
+        control.GetNativeTestAccessor().JoinBackgroundOperations();
     }
 
     private static async Task WaitUntilAsync(Func<bool> condition)

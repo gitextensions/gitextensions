@@ -1208,7 +1208,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
             SetDock(Indicator, Dock.Right);
             Children.Add(Indicator);
             Children.Add(ContentPanel);
-            PointerMoved += OnPointerMoved;
             DoubleTapped += OnDoubleTapped;
         }
 
@@ -1273,13 +1272,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
             => Revision is not null
                 ? _provider.HitTest(_provider._grid.GetRevisionIndex(Revision), getPosition(_provider._grid))
                 : null;
-
-        private void OnPointerMoved(object? sender, PointerEventArgs e)
-        {
-            // Keep hover/cursor state here; the central provider owns truncated-cell tooltip text.
-            RevisionGridRefRenderer.RefLabelControl? label = HitTest(e.GetPosition);
-            _provider.SetHighlight(this, label);
-        }
 
         private void OnDoubleTapped(object? sender, TappedEventArgs e)
         {

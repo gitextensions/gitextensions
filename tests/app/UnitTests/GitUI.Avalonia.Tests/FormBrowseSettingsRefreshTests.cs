@@ -273,6 +273,7 @@ public sealed class FormBrowseSettingsRefreshTests
             loader.LoadHotkeys(Arg.Any<string>()).Returns(call =>
                 _hotkeys.TryGetValue(call.Arg<string>(), out IReadOnlyList<HotkeyCommand>? commands) ? commands : []);
             IGitModule module = Substitute.For<IGitModule>();
+            module.ConfigureCancelledRevisionRead();
             module.WorkingDir.Returns(Path.GetTempPath());
             module.IsValidGitWorkingDir().Returns(validRepository);
             IAppTitleGenerator title = Substitute.For<IAppTitleGenerator>();

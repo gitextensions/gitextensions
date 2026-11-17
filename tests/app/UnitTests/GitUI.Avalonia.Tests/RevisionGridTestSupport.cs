@@ -1,13 +1,16 @@
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using System.Text;
 using Avalonia.Controls;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
+using NSubstitute;
 
 namespace GitExtensionsTests;
 
@@ -15,6 +18,25 @@ namespace GitExtensionsTests;
 internal static class RevisionGridTestSupport
 {
     internal static Accessor GetNativeTestAccessor(this RevisionGridControl control) => new(control);
+
+    internal static void ConfigureCancelledRevisionRead(this IGitModule module)
+    {
+        module.GitCommandRunner.RunDetached(Arg.Any<CancellationToken>(), Arg.Any<ArgumentString>(),
+                Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<Encoding?>(), Arg.Any<bool>())
+            .Returns<IProcess>(call =>
+            {
+                if (!call.ArgAt<ArgumentString>(1).ToString().StartsWith("stash list", StringComparison.Ordinal))
+                {
+                    throw new OperationCanceledException();
+                }
+
+                StreamReader output = new(new MemoryStream());
+                IProcess process = Substitute.For<IProcess>();
+                process.StandardOutput.Returns(output);
+                process.When(value => value.Dispose()).Do(_ => output.Dispose());
+                return process;
+            });
+    }
 
     internal readonly struct Accessor(RevisionGridControl control)
     {
@@ -47,22 +69,10 @@ internal static class RevisionGridTestSupport
             Invoke("AppendRevisions", batch, cancellationToken);
         }
 
+        public void JoinBackgroundOperations() => GetField<TaskManager>("_taskManager").JoinPendingOperations();
+
         public void CompleteLoading(CancellationToken cancellationToken = default)
             => Invoke("OnLoadingCompleted", cancellationToken, default(ObjectId), null);
-
-        public IObserver<IReadOnlyList<GitRevision>> CreateRevisionObserver(CancellationToken cancellationToken)
-        {
-            IGitUICommands commands = (IGitUICommands)typeof(RevisionGridControl)
-                .GetProperty("UICommands", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
-                .GetValue(control)!;
-            RevisionLoadEventArgs args = new(control, commands,
-                new Lazy<IReadOnlyList<IGitRef>>(() => []),
-                new Lazy<IReadOnlyCollection<GitRevision>>(() => []), forceRefresh: false);
-            return (IObserver<IReadOnlyList<GitRevision>>)Activator.CreateInstance(
-                typeof(RevisionGridControl).GetNestedType("RevisionObserver", BindingFlags.NonPublic)!,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                binder: null, args: [control, cancellationToken, args, null], culture: null)!;
-        }
 
         public bool HasGraphParent(ObjectId childId, ObjectId parentId)
             => GetField<RevisionGraph>("_revisionGraph").TryGetNode(childId, out RevisionGraphRevision? child)

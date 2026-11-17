@@ -139,6 +139,7 @@ public partial class FormFormatPatch : GitModuleForm
 
     private void WireEvents()
     {
+        Closed += (_, _) => ((IDisposable)RevisionGrid).Dispose();
         EventHandler? focusInitialControl = null;
         focusInitialControl = (_, _) =>
         {

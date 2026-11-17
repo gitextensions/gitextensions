@@ -169,7 +169,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     /// </summary>
     protected override void OnClosed(EventArgs e)
     {
-        RevisionGrid.CancelBackgroundTasks();
+        ((IDisposable)RevisionGrid).Dispose();
         Blame.CancelBackgroundTasks();
         _customDiffToolsSequence.CancelCurrent();
         _taskManager.JoinPendingOperations();

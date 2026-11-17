@@ -186,6 +186,7 @@ public sealed class RevisionGridSupportTests
                 selectedObjectId: requestedSelection,
                 getRefs: _ => []);
 
+            control.GetNativeTestAccessor().JoinBackgroundOperations();
             loadingCount.Should().Be(2);
             control.GetNativeTestAccessor().PendingSelectedObjectId.Should().Be(requestedSelection);
         }
@@ -1225,7 +1226,9 @@ public sealed class RevisionGridSupportTests
     {
         IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
         IGitUICommands commands = Substitute.For<IGitUICommands>();
-        commands.Module.Returns(Substitute.For<IGitModule>());
+        IGitModule module = Substitute.For<IGitModule>();
+        module.ConfigureCancelledRevisionRead();
+        commands.Module.Returns(module);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         source.UICommands.Returns(commands);
         return source;

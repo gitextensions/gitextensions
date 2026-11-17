@@ -1,4 +1,7 @@
 using System.ComponentModel;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Runtime.ExceptionServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -172,10 +175,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private Lazy<IReadOnlyCollection<string>>? _ambiguousRefs; //// _ambiguousRefs not disposable
     private ILookup<ObjectId, IGitRef>? _refsByObjectId;
     private int _updatingFilters;
+
+    private IDisposable? _revisionSubscription;
     private ObjectId? _headId;
     private IReadOnlyList<ObjectId> _pendingSelectedObjectIds = [];
     private bool _headHighlighted;
-    private bool _isControlCreated;
     private bool _focusGridWhenShown;
     private string _lastPathFilter = string.Empty;
     private string _lastRevisionFilter = "--all";
@@ -518,26 +522,75 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         {
             OnRuntimeLoad();
         };
-        AttachedToVisualTree += (_, _) =>
+
+        // Avalonia may detach and reattach a created control without recreating its native lifetime.
+        EventHandler<VisualTreeAttachmentEventArgs>? onCreateControl = null;
+        onCreateControl = (_, _) =>
         {
+            AttachedToVisualTree -= onCreateControl;
             OnCreateControl();
-            AttachOwnerWindow();
         };
+        AttachedToVisualTree += onCreateControl;
+        AttachedToVisualTree += (_, _) => AttachOwnerWindow();
         UpdateContextMenuItems();
         DetachedFromVisualTree += (_, _) =>
         {
             DetachOwnerWindow();
-            //// _selectionTimer stopped when detached
             _selectionTimer.Stop();
+            _toolTipProvider.Hide();
+        };
+
+        InitializeComplete();
+    }
+
+    internal void CancelBackgroundTasks()
+    {
+        _refreshRevisionsSequence.CancelCurrent();
+        _revisionSubscription?.Dispose();
+        _isRefreshingRevisions = false;
+        _customDiffToolsSequence.CancelCurrent();
+        _buildServerWatcher.CancelBuildStatusFetchOperation();
+        _taskManager.JoinPendingOperations();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            CancelBackgroundTasks();
+            DetachOwnerWindow();
+            _toolTipProvider.Hide();
+            //// MenuCommands not disposable
+            //// _superprojectCurrentCheckout not disposable
+            //// _selectedObjectIds not disposable
+            //// _baseCommitToCompare not disposable
+            _revisionSubscription?.Dispose();
+            //// _artificialStatus not disposable
+            //// _ambiguousRefs not disposable
+            //// _refFilterOptions not disposable
+            //// _lastVisibleResizableColumn not owned
+            //// _maximizedColumn not owned
             _revisionGraphColumnProvider.Dispose();
-            _buildServerWatcher.Dispose();
+
+            //// _selectionTimer stopped by Dispose
+            _selectionTimer.Stop();
+            _buildServerWatcher?.Dispose();
+            _customDiffToolsSequence.Dispose();
+            _refreshRevisionsSequence.Dispose();
+
             if (_indexWatcher.IsValueCreated)
             {
                 _indexWatcher.Value.Dispose();
             }
-        };
 
-        InitializeComplete();
+            //// _authorHighlighting not disposable
+            //// _parentChildNavigationHistory not disposable
+            //// _quickSearchProvider not disposable
+            //// _toolTipProvider  not disposable
+            //// _navigationHistory not disposable
+        }
+
+        base.Dispose(disposing);
     }
 
     public override void AddTranslationItems(ITranslation translation)
@@ -564,15 +617,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal int GetRevisionIndex(GitRevision revision)
         => _revisions.IndexOf(revision);
-
-    internal void CancelBackgroundTasks()
-    {
-        _refreshRevisionsSequence.CancelCurrent();
-        _isRefreshingRevisions = false;
-        _customDiffToolsSequence.CancelCurrent();
-        _buildServerWatcher.CancelBuildStatusFetchOperation();
-        _taskManager.JoinPendingOperations();
-    }
 
     /// <summary>
     /// Reset the controls to the supplied content.
@@ -771,7 +815,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     public void Refresh()
     {
-        // Apply settings early, adapt column widths, etc.
         ApplyColumnSettings();
         _toolTipProvider.Clear();
         RefreshRealizedRows();
@@ -782,13 +825,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 #pragma warning disable CS0628
     protected void OnCreateControl()
     {
-        if (_isControlCreated)
-        {
-            return;
-        }
-
-        _isControlCreated = true;
-
         // Avalonia attaches after callers can seed rows; preserve an already populated page.
         if (_gridView.ItemCount == 0 && ReferenceEquals(revisionPage.Content, _gridView))
         {
@@ -1064,12 +1100,13 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     /// <param name="showSpinner">Show the spinner or the text controls.</param>
     private void ShowLoading(bool showSpinner = true)
     {
+        _loadingControlSpinner.IsVisible = showSpinner;
         _loadingControlText.IsVisible = !showSpinner;
-        SetPage(_gridView);
 
         // The source adds the spinner over the grid; retain Avalonia's columns and row host too.
         if (showSpinner)
         {
+            SetPage(_gridView);
             _loadingControlSpinner.IsHitTestVisible = false;
             pnlRevisionGrid.Children.Add(_loadingControlSpinner);
         }
@@ -1117,16 +1154,29 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             pathFilter = _filterInfo.PathFilter;
         }
 
-        // Revision info is read in three steps:
+        // Revision info is read in three parallel steps:
         // 1. Read current commit, refs, prepare grid etc.
         // 2. Read stashes (if enabled).
         // 3. Read all revisions with git-log.
         //    Git will provide log information when available (so slower to first revision if sorting).
-        // These operations can take a long time and is done async in the background.
+        // These operations can take a long time and is done async in parallel.
         // Step 3. requires that the information in 1 and 2 is available when adding revisions,
-        // and is therefore started after they complete.
+        // and is therefore protected with a semaphore.
+        SemaphoreSlim semaphoreUpdateGrid = new(initialCount: 0, maxCount: 2);
         CancellationToken cancellationToken = _refreshRevisionsSequence.Next();
         _isRefreshingRevisions = true;
+
+        // getRefs (refreshing from Browse) is Lazy already, but not from RevGrid (updating filters etc)
+        Lazy<IReadOnlyList<IGitRef>> refs = new(() => (getRefs ?? capturedModule.GetRefs)(RefsFilter.NoFilter));
+        _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs.Value));
+
+        // Get the "main" stash commit, including the reflog selector
+        Lazy<IReadOnlyCollection<GitRevision>> stashes = new(() =>
+            !AppSettings.ShowStashes || capturedModule.IsBareRepository()
+                ? []
+                : new RevisionReader(capturedModule).GetStashes(cancellationToken));
+        RevisionLoadEventArgs loadEventArgs = new(this, UICommands, refs, stashes, forceRefresh);
+        ILookup<ObjectId, IGitRef>? refsByObjectId = null;
 
         // Apply checkboxes changes also to FormBrowse main menu
         MenuCommands.TriggerMenuChanged();
@@ -1143,9 +1193,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             _gridView.SelectionChanged += OnGridViewSelectionChanged;
         }
 
-        // Selected is null: Update to trigger reset the tabs etc.
-        _selectionTimer.Stop();
-        _selectionTimer.Start();
         _toolTipProvider.Clear();
         ResetNavigationHistory();
         _parentChildNavigationHistory.Clear();
@@ -1157,22 +1204,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         _revisionGraph.Clear();
         ObjectId previousCheckout = _headId ?? default;
-        _headId = capturedModule.GetCurrentCheckout();
-        _revisionGraph.HeadId = _headId.Value;
         _superprojectCurrentCheckout = null;
-        IndexWatcher.Reset();
-
-        // If the current checkout (HEAD) is changed, don't get the currently selected rows,
-        // select the new current checkout instead.
-        if (_headId.Value != previousCheckout)
-        {
-            currentlySelectedObjectIds = _headId.Value.IsZero ? [] : [_headId.Value];
-        }
 
         // A path filter makes git rewrite parents ("history simplification"), so revisions
         // may carry parent ids that are not their real parents.
         _parentsAreRewritten = !string.IsNullOrEmpty(pathFilter);
-        _pendingSelectedObjectIds = GetToBeSelectedRevisions(_headId.Value, currentlySelectedObjectIds);
         _headHighlighted = false;
         lblLoadingStatus.Text = _strLoading.Text;
         _focusGridWhenShown = true;
@@ -1181,67 +1217,185 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         ShowLoading();
         FocusRevisionGridWhenShown();
 
-        // getRefs (refreshing from Browse) is Lazy already, but not from RevGrid (updating filters etc)
-        Lazy<IReadOnlyList<IGitRef>> refs = new(() => (getRefs ?? capturedModule.GetRefs)(RefsFilter.NoFilter));
-        _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs.Value));
+        bool firstRevisionReceived = false;
+        bool headIsHandled = false;
+        HashSet<ObjectId> insertedStashIds = [];
+        Dictionary<ObjectId, GitRevision>? stashesById = null;
+        Dictionary<ObjectId, GitRevision>? untrackedByStashId = null;
+        ILookup<ObjectId, GitRevision>? stashesByParentId = null;
+        Subject<IReadOnlyList<GitRevision>> observeRevisions = new();
+        _revisionSubscription?.Dispose();
+        _revisionSubscription = observeRevisions
+            .ObserveOn(ThreadPoolScheduler.Instance)
+            .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
 
-        // Get the "main" stash commit, including the reflog selector
-        Lazy<IReadOnlyCollection<GitRevision>> stashes = new(() =>
-            !AppSettings.ShowStashes || capturedModule.IsBareRepository()
-                ? []
-                : new RevisionReader(capturedModule).GetStashes(cancellationToken));
-        RevisionLoadEventArgs loadEventArgs = new(this, UICommands, refs, stashes, forceRefresh);
-        RevisionObserver observer = new(this, cancellationToken, loadEventArgs,
-            objectId => TryGetParents(capturedModule, _filterInfo, objectId).ToList());
+        IndexWatcher.Reset();
 
-        // Initiate update left panel
-        RevisionsLoading?.Invoke(this, loadEventArgs);
-        _taskManager.FileAndForget(async () =>
-        {
-            SuperProjectInfo? superProjectInfo = await GetSuperprojectCheckoutAsync(capturedModule).ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
-            _superprojectCurrentCheckout = superProjectInfo;
-            if (superProjectInfo is not null)
-            {
-                // Revision may be displayed already, explicit refresh needed
-                await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-                RefreshRealizedRows();
-            }
-        });
+        // Selected is null: Update to trigger reset the tabs etc.
+        _selectionTimer.Stop();
+        _selectionTimer.Start();
 
-        // Get info about all Git commits, update the grid
+        bool showStashes = AppSettings.ShowStashes;
+
+        // Avalonia's dispatcher may use a pool thread; queue each independently owned background stage.
         // Evaluate GitRefs and current commit
-        _taskManager.FileAndForget(() =>
+        _taskManager.FileAndForget(() => Task.Run(async () =>
         {
-            TaskManager.HandleExceptions(() =>
+            try
             {
                 IReadOnlyList<IGitRef> loadedRefs = refs.Value;
                 cancellationToken.ThrowIfCancellationRequested();
                 string selectedBranch = capturedModule.GetSelectedBranch(emptyIfDetached: true);
                 IGitRef? selectedRef = loadedRefs.FirstOrDefault(
                     gitRef => gitRef.IsHead && gitRef.Name == selectedBranch);
+
+                // If the current checkout (HEAD) is changed, don't get the currently selected rows,
+                // select the new current checkout instead.
+                ObjectId currentCheckout = selectedRef?.ObjectId ?? capturedModule.GetCurrentCheckout();
+                cancellationToken.ThrowIfCancellationRequested();
+                _headId = currentCheckout;
+                _revisionGraph.OnlyFirstParent = _filterInfo.ShowOnlyFirstParent;
+                _revisionGraph.HeadId = currentCheckout;
+                if (currentCheckout != previousCheckout)
+                {
+                    currentlySelectedObjectIds = currentCheckout.IsZero ? [] : [currentCheckout];
+                }
+
+                _pendingSelectedObjectIds = GetToBeSelectedRevisions(currentCheckout, currentlySelectedObjectIds);
                 UpdateSelectedRef(capturedModule, loadedRefs, selectedRef);
 
                 // Exclude the 'stash' ref, it is specially handled when stashes are shown
-                _refsByObjectId = (AppSettings.ShowStashes
+                _refsByObjectId = refsByObjectId = (showStashes
                         ? loadedRefs.Where(gitRef => gitRef.CompleteName != GitRefName.RefsStashPrefix)
                         : loadedRefs)
                     .Where(gitRef => !gitRef.ObjectId.IsZero)
                     .ToLookup(gitRef => gitRef.ObjectId);
 
-                // Wait for refs,CurrentCheckout and stashes as second step
-                observer.InitializeStashes(capturedModule, stashes.Value);
+                // Allow add revisions to the grid
+                semaphoreUpdateGrid.Release();
+                _superprojectCurrentCheckout = await GetSuperprojectCheckoutAsync(capturedModule).ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+                if (firstRevisionReceived && _superprojectCurrentCheckout is not null)
+                {
+                    // Revision may be displayed already, explicit refresh needed
+                    await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+                    RefreshRealizedRows();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception exception)
+            {
+                OnRevisionReaderError(exception);
+            }
+        }, cancellationToken));
 
+        // Apply settings early, adapt column widths, etc.
+        Refresh();
+
+        if (!showStashes || stashes.Value.Count == 0)
+        {
+            semaphoreUpdateGrid.Release();
+        }
+        else
+        {
+            _taskManager.FileAndForget(() => Task.Run(() =>
+            {
+                try
+                {
+                    stashesById = stashes.Value.ToDictionary(stash => stash.ObjectId);
+
+                    // Git stores stashes in 2 or 3 commits. The (first) "stash" commit is listed by git-stash-list,
+                    // does not include untracked files, may be stored in the third "untracked" commit.
+                    // The second "index" commit are ignored (can be seen with reflog).
+                    // Git creates the "untracked" commit also if there are no changes, these are filtered (adds marginal time to getting revisions).
+                    // This command to list "untracked" commits is quite slow, why max number of "stash" commits
+                    // to evaluate for untracked files is limited.
+                    if (AppSettings.ShowReflogReferences)
+                    {
+                        // the "untracked" commits are already shown in the grid
+                        return;
+                    }
+
+                    stashesByParentId = stashes.Value
+                        .Where(stash => !stash.FirstParentId.IsZero)
+                        .ToLookup(stash => stash.FirstParentId);
+
+                    // "untracked" commits to insert (parent to "stash" commits)
+                    Dictionary<ObjectId, ObjectId> untrackedIdByStashId = stashes.Value
+                        .Where(stash => stash.ParentIds is { Count: >= 3 })
+                        .Take(AppSettings.MaxStashesWithUntrackedFiles)
+                        .ToDictionary(stash => stash.ObjectId, stash => stash.ParentIds![2]);
+                    List<ObjectId> untrackedIds = [.. untrackedIdByStashId.Values.Distinct()];
+                    Dictionary<ObjectId, GitRevision> untrackedRevs = new RevisionReader(capturedModule)
+                        .GetRevisionsFromList(untrackedIds, cancellationToken)
+                        .ToDictionary(revision => revision.ObjectId);
+                    untrackedByStashId = [];
+                    foreach ((ObjectId stashId, ObjectId untrackedId) in untrackedIdByStashId)
+                    {
+                        if (untrackedRevs.TryGetValue(untrackedId, out GitRevision? revision))
+                        {
+                            untrackedByStashId.Add(stashId, revision);
+                        }
+                    }
+
+                    // Remove parents not included ("index" and empty "untracked" commits).
+                    foreach (GitRevision stash in stashes.Value.Where(stash => !stash.FirstParentId.IsZero))
+                    {
+                        stash.ParentIds = untrackedByStashId.TryGetValue(stash.ObjectId, out GitRevision? untracked)
+                            ? [stash.FirstParentId, untracked.ObjectId]
+                            : [stash.FirstParentId];
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                }
+                catch (Exception exception)
+                {
+                    stashesById = null;
+                    stashesByParentId = null;
+                    untrackedByStashId = null;
+                    OnRevisionReaderError(exception);
+                }
+                finally
+                {
+                    // Allow add revisions to the grid
+                    semaphoreUpdateGrid.Release();
+                }
+            }, cancellationToken));
+        }
+
+        // Get info about all Git commits, update the grid
+        _taskManager.FileAndForget(() => Task.Run(() =>
+        {
+            TaskManager.HandleExceptions(() =>
+            {
                 RevisionReader reader = new(capturedModule);
                 bool hasNotes = AppSettings.ShowGitNotesColumn || AppSettings.ShowGitNotes;
                 string effectivePathFilter = BuildPathFilter(pathFilter);
+                reader.GetLog(observeRevisions, revisionFilter, effectivePathFilter, hasNotes,
+                    ResourceManager.TranslatedStrings.Autostash, cancellationToken);
+            }, OnRevisionReaderError);
+        }, cancellationToken));
 
-                // Allow add revisions to the grid
-                reader.GetLog(observer, revisionFilter, effectivePathFilter, hasNotes, autostashLabel: "autostash", cancellationToken);
-            }, observer.OnError);
-        });
+        // Initiate update left panel
+        RevisionsLoading?.Invoke(this, loadEventArgs);
 
         return;
+
+        static void UpdateSelectedRef(IGitModule module, IReadOnlyList<IGitRef> gitRefs, IGitRef? selectedRef)
+        {
+            if (selectedRef is null)
+            {
+                return;
+            }
+
+            selectedRef.IsSelected = true;
+            IGitRef? selectedHeadMergeSource = gitRefs.FirstOrDefault(
+                gitRef => selectedRef.IsTrackingRemote(gitRef));
+            selectedHeadMergeSource?.IsSelectedHeadMergeSource = true;
+        }
 
         string BuildPathFilter(string? path)
         {
@@ -1328,6 +1482,296 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return path;
         }
 
+        void OnRevisionRead(IReadOnlyList<GitRevision> revisions)
+        {
+            if (!firstRevisionReceived)
+            {
+                // Wait for refs,CurrentCheckout and stashes as second step
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (!cancellationToken.IsCancellationRequested && _isRefreshingRevisions)
+                    {
+                        ShowLoading(showSpinner: false);
+                    }
+                });
+                try
+                {
+                    semaphoreUpdateGrid.Wait(cancellationToken);
+                    semaphoreUpdateGrid.Wait(cancellationToken);
+                    firstRevisionReceived = true;
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            const int artificialCommitCount = 2;
+            List<GitRevision> revisionsToDisplay = new(capacity: revisions.Count + stashes.Value.Count + artificialCommitCount);
+
+            foreach (GitRevision revision in revisions)
+            {
+                // Avalonia ListBox rows need the duplicate rejection supplied by the original graph-backed grid.
+                if (!insertedStashIds.Add(revision.ObjectId))
+                {
+                    continue;
+                }
+
+                if (stashesById is not null && stashesById.Count != 0)
+                {
+                    if (stashesById.TryGetValue(revision.ObjectId, out GitRevision? gridStash))
+                    {
+                        revision.ReflogSelector = gridStash.ReflogSelector;
+
+                        // Do not add this again (when the main commit is handled)
+                        stashesById.Remove(revision.ObjectId);
+                    }
+                    else if (stashesByParentId?.Contains(revision.ObjectId) is true)
+                    {
+                        foreach (GitRevision stash in stashesByParentId[revision.ObjectId])
+                        {
+                            // Add if not already added (reflogs etc list before parent commit)
+                            if (stashesById.ContainsKey(stash.ObjectId))
+                            {
+                                revisionsToDisplay.Add(stash);
+                                insertedStashIds.Add(stash.ObjectId);
+
+                                // Remove current stash from list of stashes to display
+                                stashesById.Remove(stash.ObjectId);
+
+                                if (untrackedByStashId!.TryGetValue(stash.ObjectId, out GitRevision? untracked)
+                                    && insertedStashIds.Add(untracked.ObjectId))
+                                {
+                                    revisionsToDisplay.Add(untracked);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Look up any refs associated with this revision
+                revision.Refs = refsByObjectId![revision.ObjectId].AsReadOnlyList();
+
+                if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout.IsZero))
+                {
+                    // Insert artificial worktree/index just before HEAD (CurrentCheckout)
+                    // If grid is filtered and HEAD not visible, insert in OnRevisionReadCompleted()
+                    headIsHandled = true;
+                    AddRange(revisionsToDisplay);
+                    revisionsToDisplay.Clear();
+                    AddArtificialRevisions();
+                }
+
+                revisionsToDisplay.Add(revision);
+            }
+
+            AddRange(revisionsToDisplay);
+            return;
+        }
+
+        bool ShowArtificialRevisions()
+        {
+            return ShowUncommittedChangesIfPossible
+                && AppSettings.RevisionGraphShowArtificialCommits
+                && !Module.IsBareRepository();
+        }
+
+        // Add artificial revisions to the graph.
+        bool AddArtificialRevisions(IReadOnlyList<ObjectId>? headParents = null)
+        {
+            if (!ShowArtificialRevisions())
+            {
+                return false;
+            }
+
+            string userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
+            string userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
+
+            GitRevision workTreeRev = new(ObjectId.WorkTreeId)
+            {
+                Author = userName,
+                AuthorUnixTime = 0,
+                AuthorEmail = userEmail,
+                Committer = userName,
+                CommitUnixTime = 0,
+                CommitterEmail = userEmail,
+                Subject = ResourceManager.TranslatedStrings.Workspace,
+                ParentIds = new[] { ObjectId.IndexId },
+                Notes = ""
+            };
+            GitRevision indexRev = new(ObjectId.IndexId)
+            {
+                Author = userName,
+                AuthorUnixTime = 0,
+                AuthorEmail = userEmail,
+                Committer = userName,
+                CommitUnixTime = 0,
+                CommitterEmail = userEmail,
+                Subject = ResourceManager.TranslatedStrings.Index,
+                ParentIds = CurrentCheckout.IsZero ? null : new[] { CurrentCheckout },
+                Notes = ""
+            };
+
+            if (headParents is null)
+            {
+                // Add as normal commits at current position
+                AddRange([workTreeRev, indexRev]);
+            }
+            else
+            {
+                // Insert before headParents if they are found, otherwise first.
+                _revisionGraph.Insert(workTreeRev, indexRev, headParents);
+            }
+
+            return true;
+        }
+
+        void OnRevisionReaderError(Exception exception)
+        {
+            Dispatcher.UIThread.Post(() => this.OnRevisionReaderError(exception, cancellationToken));
+        }
+
+        void OnRevisionReadCompleted()
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            if (!firstRevisionReceived)
+            {
+                try
+                {
+                    semaphoreUpdateGrid.Wait(cancellationToken);
+                    semaphoreUpdateGrid.Wait(cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+            }
+
+            IReadOnlyList<ObjectId>? headParents = null;
+            if (!headIsHandled && ShowArtificialRevisions())
+            {
+                if (!CurrentCheckout.IsZero)
+                {
+                    // Not found, so search for its parents
+                    headParents = TryGetParents(capturedModule, _filterInfo, CurrentCheckout).ToList();
+                }
+
+                // HEAD where to insert the artificial was not found
+                // (can occur when filtering or limiting number of loaded commits)
+                // Try to find the revision where to attach the artificial, first is not found
+                // null means that no matching should be done (just add), so use an empty list if no parents were found
+                AddArtificialRevisions(headParents ?? []);
+            }
+
+            _revisionGraph.LoadingCompleted();
+
+            // Finish the row cache (including segment straightening); before this final pass
+            // GetSegmentsForRow reports the cache dirty and rows render without a graph.
+            int lastRowIndex = _revisionGraph.Count - 1;
+            _revisionGraph.CacheTo(lastRowIndex, lastRowIndex, cancellationToken);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                // Retain the stream's posted batch order and use the owner's factory for any async fallback.
+                _taskManager.FileAndForget(async () =>
+                {
+                    // Snapshot the current request on the owner's UI thread before searching its ancestors.
+                    await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+                    ObjectId fallbackSelectionId = _pendingSelectedObjectIds.FirstOrDefault();
+
+                    bool searchParents = !fallbackSelectionId.IsZero && !fallbackSelectionId.IsArtificial
+                        && !_revisions.Any(revision => _pendingSelectedObjectIds.Contains(revision.ObjectId));
+                    IReadOnlyList<ObjectId>? parents = null;
+                    if (searchParents)
+                    {
+                        // Try to reuse headParents for parents to the commit to be selected
+                        if (headParents is not null && fallbackSelectionId == CurrentCheckout)
+                        {
+                            parents = headParents;
+                        }
+                        else if (headParents?.ToList().IndexOf(fallbackSelectionId) is int index and >= 0)
+                        {
+                            parents = headParents.Skip(index + 1).ToList();
+                        }
+                        else
+                        {
+                            // Ignore if the not selected is artificial, it is likely that the settings was changed
+                            await TaskScheduler.Default;
+                            parents = TryGetParents(capturedModule, _filterInfo, fallbackSelectionId).ToList();
+                        }
+                    }
+
+                    await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+                    OnLoadingCompleted(cancellationToken, fallbackSelectionId, parents);
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        RevisionsLoaded?.Invoke(this, loadEventArgs);
+                        LaunchBuildServerInfoFetchOperation(cancellationToken);
+                    }
+                });
+            });
+        }
+
+        static async Task<SuperProjectInfo?> GetSuperprojectCheckoutAsync(IGitModule module)
+        {
+            if (module.SuperprojectModule is null)
+            {
+                return null;
+            }
+
+            SuperProjectInfo superProjectInfo = new();
+            (char code, ObjectId commit) = await module.GetSuperprojectCurrentCheckoutAsync().ConfigureAwait(false);
+            if (code == 'U')
+            {
+                // return local and remote hashes
+                ConflictData conflict = await module.SuperprojectModule.GetConflictAsync(module.SubmodulePath).ConfigureAwait(false);
+                superProjectInfo.ConflictBase = conflict.Base.ObjectId;
+                superProjectInfo.ConflictLocal = conflict.Local.ObjectId;
+                superProjectInfo.ConflictRemote = conflict.Remote.ObjectId;
+            }
+            else
+            {
+                superProjectInfo.CurrentCommit = commit;
+            }
+
+            Dictionary<IGitRef, IGitItem?> refs = await module.SuperprojectModule
+                .GetSubmoduleItemsForEachRefAsync(module.SubmodulePath, noLocks: true)
+                .ConfigureAwait(false);
+            if (refs is not null)
+            {
+                superProjectInfo.Refs = refs
+                    .Where(item => item.Value is not null && !item.Value.ObjectId.IsZero)
+                    .GroupBy(item => item.Value!.ObjectId)
+                    .ToDictionary(
+                        group => group.Key,
+                        group => (IReadOnlyList<IGitRef>)[.. group.Select(item => item.Key)]);
+            }
+
+            return superProjectInfo;
+        }
+
+        // Avalonia collection notifications run on the dispatcher after the shared graph receives the batch.
+        void AddRange(IEnumerable<GitRevision> revisions)
+        {
+            GitRevision[] batch = revisions.ToArray();
+            AddToGraph(batch, cancellationToken);
+            Dispatcher.UIThread.Post(() => AppendRevisions(batch, cancellationToken));
+        }
+
 #pragma warning disable CS1587 // XML comment is not placed on a valid language element
         /// <summary>
         /// Select initial revision(s) in the grid.
@@ -1361,19 +1805,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 : currentCheckout.IsZero
                     ? []
                     : new ObjectId[] { currentCheckout };
-        }
-
-        static void UpdateSelectedRef(IGitModule module, IReadOnlyList<IGitRef> gitRefs, IGitRef? selectedRef)
-        {
-            if (selectedRef is null)
-            {
-                return;
-            }
-
-            selectedRef.IsSelected = true;
-            IGitRef? selectedHeadMergeSource = gitRefs.FirstOrDefault(
-                gitRef => selectedRef.IsTrackingRemote(gitRef));
-            selectedHeadMergeSource?.IsSelectedHeadMergeSource = true;
         }
 
         IEnumerable<ObjectId> TryGetParents(IGitModule module, FilterInfo filterInfo, ObjectId objectId)
@@ -1825,6 +2256,41 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
             e.Handled = true;
             return;
+        }
+    }
+
+    private void _gridView_CellMouseEnter(object? sender, PointerEventArgs e)
+    {
+        if (sender is Control cell)
+        {
+            cell.Cursor = cell.Classes.Contains("revision-build-status-cell")
+                && cell.DataContext is GitRevision { BuildStatus.Url: { } url }
+                && !string.IsNullOrWhiteSpace(url)
+                    ? new Cursor(StandardCursorType.Hand)
+                    : null;
+        }
+    }
+
+    private void OnGridViewCellMouseMove(object? sender, PointerEventArgs e)
+    {
+        if (sender is not Control cell)
+        {
+            return;
+        }
+
+        RevisionGridRefRenderer.RefLabelControl? hitInfo = GetHitInfo();
+        _toolTipProvider.OnCellMouseMove(cell, e);
+        _messageColumnProvider.SetHighlight(cell.Classes.Contains("revision-message-cell") ? cell : null, hitInfo);
+        return;
+
+        RevisionGridRefRenderer.RefLabelControl? GetHitInfo()
+        {
+            if (!cell.Classes.Contains("revision-message-cell") || cell.DataContext is not GitRevision revision)
+            {
+                return null;
+            }
+
+            return _messageColumnProvider.HitTest(GetRevisionIndex(revision), e.GetPosition(this));
         }
     }
 
@@ -3488,40 +3954,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         LaunchRebase("e");
     }
 
-    private static async Task<SuperProjectInfo?> GetSuperprojectCheckoutAsync(IGitModule module)
-    {
-        if (module.SuperprojectModule is null)
-        {
-            return null;
-        }
-
-        SuperProjectInfo superProjectInfo = new();
-        (char code, ObjectId commit) = await module.GetSuperprojectCurrentCheckoutAsync().ConfigureAwait(false);
-        if (code == 'U')
-        {
-            // return local and remote hashes
-            ConflictData conflict = await module.SuperprojectModule.GetConflictAsync(module.SubmodulePath).ConfigureAwait(false);
-            superProjectInfo.ConflictBase = conflict.Base.ObjectId;
-            superProjectInfo.ConflictLocal = conflict.Local.ObjectId;
-            superProjectInfo.ConflictRemote = conflict.Remote.ObjectId;
-        }
-        else
-        {
-            superProjectInfo.CurrentCommit = commit;
-        }
-
-        Dictionary<IGitRef, IGitItem?> refs = await module.SuperprojectModule
-            .GetSubmoduleItemsForEachRefAsync(module.SubmodulePath, noLocks: true)
-            .ConfigureAwait(false);
-        superProjectInfo.Refs = refs
-            .Where(item => item.Value is not null && !item.Value.ObjectId.IsZero)
-            .GroupBy(item => item.Value!.ObjectId)
-            .ToDictionary(
-                group => group.Key,
-                group => (IReadOnlyList<IGitRef>)[.. group.Select(item => item.Key)]);
-        return superProjectInfo;
-    }
-
     /// <summary>
     ///  Adds a batch to the shared graph model on the reader thread (like the WinForms grid
     ///  does), so rows are already shaped when the UI displays them.
@@ -3580,8 +4012,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return;
         }
 
-        _isRefreshingRevisions = false;
-
         // Avalonia's observable stream preserves arrival order, while the original grid exposes
         // RevisionGraph's final scored order after artificial revisions have been inserted.
         GitRevision[] orderedRevisions = Enumerable.Range(0, _revisionGraph.Count)
@@ -3610,6 +4040,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             RefreshRealizedRows();
         }
 
+        _loadingControlText.IsVisible = false;
         lblLoadingStatus.Text = $"{_revisions.Count} revisions";
 
         // All revisions are loaded (but maybe not yet the grid)
@@ -3637,6 +4068,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         {
             _gridView.SelectedItem = _revisions.FirstOrDefault(revision => !revision.IsArtificial) ?? _revisions[0];
         }
+
+        _isRefreshingRevisions = false;
     }
 
     private void ApplyFinalRevisionOrder(IReadOnlyList<GitRevision> orderedRevisions)
@@ -3694,53 +4127,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         _focusGridWhenShown |= restoreFocus;
     }
 
-    // Add artificial revisions to the graph.
-    private IReadOnlyList<GitRevision> CreateArtificialRevisions(CancellationToken cancellationToken)
-    {
-        if (cancellationToken.IsCancellationRequested
-            || !ShowUncommittedChangesIfPossible
-            || !AppSettings.RevisionGraphShowArtificialCommits
-            || _lastModule is null
-            || _lastModule.IsBareRepository())
-        {
-            return [];
-        }
-
-        string userName = _lastModule.GetEffectiveSetting(SettingKeyString.UserName);
-        string userEmail = _lastModule.GetEffectiveSetting(SettingKeyString.UserEmail);
-        GitRevision workTreeRevision = new(ObjectId.WorkTreeId)
-        {
-            Author = userName,
-            AuthorEmail = userEmail,
-            AuthorUnixTime = 0,
-            Committer = userName,
-            CommitterEmail = userEmail,
-            CommitUnixTime = 0,
-            Notes = string.Empty,
-            ParentIds = [ObjectId.IndexId],
-            Subject = ResourceManager.TranslatedStrings.Workspace,
-        };
-        GitRevision indexRevision = new(ObjectId.IndexId)
-        {
-            Author = userName,
-            AuthorEmail = userEmail,
-            AuthorUnixTime = 0,
-            Committer = userName,
-            CommitterEmail = userEmail,
-            CommitUnixTime = 0,
-            Notes = string.Empty,
-            ParentIds = _headId is ObjectId { IsZero: false } headId ? [headId] : null,
-            Subject = ResourceManager.TranslatedStrings.Index,
-        };
-        return [workTreeRevision, indexRevision];
-    }
-
-    private void InsertArtificialRevisions(IReadOnlyList<GitRevision> artificialRevisions, IReadOnlyList<ObjectId> insertionParents)
-    {
-        // Insert before insertionParents if they are found, otherwise first.
-        _revisionGraph.Insert(artificialRevisions[0], artificialRevisions[1], insertionParents);
-    }
-
     private void SelectPendingRevision(bool loadingCompleted = false)
     {
         if (_pendingSelectedObjectIds.Count == 0)
@@ -3795,6 +4181,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         {
             _refreshRevisionsSequence.CancelCurrent();
             _isRefreshingRevisions = false;
+            _loadingControlText.IsVisible = false;
             lblLoadingStatus.Text = $"Failed to load revisions: {exception.Message}";
             SetPage(new ErrorControl());
 
@@ -4074,249 +4461,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     // parity-scaffolding: exposes deterministic grid state to capture and behavior tests.
     internal TestAccessor GetTestAccessor() => new(this);
 
-    private sealed class RevisionObserver(
-        RevisionGridControl owner,
-        CancellationToken cancellationToken,
-        RevisionLoadEventArgs loadEventArgs,
-        Func<ObjectId, IReadOnlyList<ObjectId>>? getParents = null) : IObserver<IReadOnlyList<GitRevision>>
-    {
-        private bool _artificialRevisionsAddedToStream;
-        private readonly HashSet<ObjectId> _insertedStashIds = [];
-        private Dictionary<ObjectId, GitRevision>? _stashesById;
-        private Dictionary<ObjectId, GitRevision>? _untrackedByStashId;
-        private ILookup<ObjectId, GitRevision>? _stashesByParentId;
-
-        public void InitializeStashes(IGitModule module, IReadOnlyCollection<GitRevision> stashes)
-        {
-            _stashesById = stashes.ToDictionary(stash => stash.ObjectId);
-
-            // Git stores stashes in 2 or 3 commits. The (first) "stash" commit is listed by git-stash-list,
-            // does not include untracked files, may be stored in the third "untracked" commit.
-            // The second "index" commit are ignored (can be seen with reflog).
-            // Git creates the "untracked" commit also if there are no changes, these are filtered (adds marginal time to getting revisions).
-            // This command to list "untracked" commits is quite slow, why max number of "stash" commits
-            // to evaluate for untracked files is limited.
-            if (AppSettings.ShowReflogReferences)
-            {
-                // the "untracked" commits are already shown in the grid
-                return;
-            }
-
-            _stashesByParentId = stashes
-                .Where(stash => !stash.FirstParentId.IsZero)
-                .ToLookup(stash => stash.FirstParentId);
-
-            // "untracked" commits to insert (parent to "stash" commits)
-            Dictionary<ObjectId, ObjectId> untrackedIdByStashId = stashes
-                .Where(stash => stash.ParentIds is { Count: >= 3 })
-                .Take(AppSettings.MaxStashesWithUntrackedFiles)
-                .ToDictionary(stash => stash.ObjectId, stash => stash.ParentIds![2]);
-            List<ObjectId> untrackedIds = [.. untrackedIdByStashId.Values.Distinct()];
-            Dictionary<ObjectId, GitRevision> untrackedRevs = new RevisionReader(module)
-                .GetRevisionsFromList(untrackedIds, cancellationToken)
-                .ToDictionary(revision => revision.ObjectId);
-            _untrackedByStashId = [];
-            foreach ((ObjectId stashId, ObjectId untrackedId) in untrackedIdByStashId)
-            {
-                if (untrackedRevs.TryGetValue(untrackedId, out GitRevision? revision))
-                {
-                    _untrackedByStashId.Add(stashId, revision);
-                }
-            }
-
-            // Remove parents not included ("index" and empty "untracked" commits).
-            foreach (GitRevision stash in stashes.Where(stash => !stash.FirstParentId.IsZero))
-            {
-                stash.ParentIds = _untrackedByStashId.TryGetValue(stash.ObjectId, out GitRevision? untracked)
-                    ? [stash.FirstParentId, untracked.ObjectId]
-                    : [stash.FirstParentId];
-            }
-        }
-
-        public void OnNext(IReadOnlyList<GitRevision> value)
-        {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-
-            IReadOnlyList<GitRevision> revisions = AddStashRevisions(value);
-            revisions = AddArtificialRevisionsBeforeHead(revisions);
-            owner.AddToGraph(revisions, cancellationToken);
-            Dispatcher.UIThread.Post(() => owner.AppendRevisions(revisions, cancellationToken));
-        }
-
-        public void OnCompleted()
-        {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-
-            IReadOnlyList<GitRevision> artificialRevisions = _artificialRevisionsAddedToStream
-                ? []
-                : owner.CreateArtificialRevisions(cancellationToken);
-            IReadOnlyList<ObjectId>? headParents = null;
-            if (artificialRevisions.Count > 0)
-            {
-                if (!owner.CurrentCheckout.IsZero)
-                {
-                    // Not found, so search for its parents
-                    headParents = getParents?.Invoke(owner.CurrentCheckout) ?? [];
-                }
-
-                // HEAD where to insert the artificial was not found
-                // (can occur when filtering or limiting number of loaded commits)
-                // Try to find the revision where to attach the artificial, first is not found
-                // Insertion requires a non-null parent list, so use an empty list if no parents were found
-                owner.InsertArtificialRevisions(artificialRevisions, headParents ?? []);
-            }
-
-            owner._revisionGraph.LoadingCompleted();
-
-            // Finish the row cache (including segment straightening); before this final pass
-            // GetSegmentsForRow reports the cache dirty and rows render without a graph.
-            int lastRowIndex = owner._revisionGraph.Count - 1;
-            owner._revisionGraph.CacheTo(lastRowIndex, lastRowIndex, cancellationToken);
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-
-                // Retain the stream's posted batch order and use the owner's factory for any async fallback.
-                owner._taskManager.FileAndForget(async () =>
-                {
-                    // Snapshot the current request on the owner's UI thread before searching its ancestors.
-                    await owner._taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-                    ObjectId fallbackSelectionId = owner._pendingSelectedObjectIds.FirstOrDefault();
-
-                    // Ignore if the not selected is artificial, it is likely that the settings was changed
-                    bool searchParents = !fallbackSelectionId.IsZero && !fallbackSelectionId.IsArtificial
-                        && !owner._revisions.Any(revision => owner._pendingSelectedObjectIds.Contains(revision.ObjectId));
-                    IReadOnlyList<ObjectId>? parents = null;
-                    if (searchParents)
-                    {
-                        // Try to reuse headParents for parents to the commit to be selected
-                        if (headParents is not null && fallbackSelectionId == owner.CurrentCheckout)
-                        {
-                            parents = headParents;
-                        }
-                        else if (headParents?.ToList().IndexOf(fallbackSelectionId) is int index and >= 0)
-                        {
-                            parents = headParents.Skip(index + 1).ToList();
-                        }
-                        else
-                        {
-                            await TaskScheduler.Default;
-                            parents = getParents?.Invoke(fallbackSelectionId);
-                        }
-                    }
-
-                    await owner._taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-                    owner.OnLoadingCompleted(cancellationToken, fallbackSelectionId, parents);
-                    if (!cancellationToken.IsCancellationRequested)
-                    {
-                        owner.RevisionsLoaded?.Invoke(owner, loadEventArgs);
-                        owner.LaunchBuildServerInfoFetchOperation(cancellationToken);
-                    }
-                });
-            });
-        }
-
-        public void OnError(Exception error)
-            => Dispatcher.UIThread.Post(() => owner.OnRevisionReaderError(error, cancellationToken));
-
-        private IReadOnlyList<GitRevision> AddArtificialRevisionsBeforeHead(IReadOnlyList<GitRevision> revisions)
-        {
-            if (_artificialRevisionsAddedToStream || owner._headId is not ObjectId headId)
-            {
-                return revisions;
-            }
-
-            int headIndex = -1;
-            for (int index = 0; index < revisions.Count; ++index)
-            {
-                if (revisions[index].ObjectId == headId)
-                {
-                    headIndex = index;
-                    break;
-                }
-            }
-
-            if (headIndex < 0)
-            {
-                return revisions;
-            }
-
-            IReadOnlyList<GitRevision> artificialRevisions = owner.CreateArtificialRevisions(cancellationToken);
-            if (artificialRevisions.Count == 0)
-            {
-                return revisions;
-            }
-
-            // Insert artificial worktree/index just before HEAD (CurrentCheckout)
-            // If grid is filtered and HEAD not visible, insert in OnCompleted()
-            List<GitRevision> revisionsWithArtificial = new(revisions.Count + artificialRevisions.Count);
-            revisionsWithArtificial.AddRange(revisions.Take(headIndex));
-
-            // Add as normal commits at current position
-            revisionsWithArtificial.AddRange(artificialRevisions);
-            revisionsWithArtificial.AddRange(revisions.Skip(headIndex));
-            _artificialRevisionsAddedToStream = true;
-            return revisionsWithArtificial;
-        }
-
-        private IReadOnlyList<GitRevision> AddStashRevisions(IReadOnlyList<GitRevision> revisions)
-        {
-            if (_stashesById is not { } stashesById
-                || (stashesById.Count == 0 && _insertedStashIds.Count == 0))
-            {
-                return revisions;
-            }
-
-            List<GitRevision> revisionsWithStashes = new(revisions.Count + stashesById.Count);
-            foreach (GitRevision revision in revisions)
-            {
-                if (_insertedStashIds.Contains(revision.ObjectId))
-                {
-                    // Do not add this again (when the main commit is handled)
-                    continue;
-                }
-
-                if (stashesById.Remove(revision.ObjectId, out GitRevision? stash))
-                {
-                    revision.ReflogSelector = stash.ReflogSelector;
-                    _insertedStashIds.Add(revision.ObjectId);
-                }
-                else if (_stashesByParentId is not null)
-                {
-                    foreach (GitRevision parentStash in _stashesByParentId[revision.ObjectId])
-                    {
-                        // Add if not already added (reflogs etc list before parent commit)
-                        // Remove current stash from list of stashes to display
-                        if (stashesById.Remove(parentStash.ObjectId))
-                        {
-                            revisionsWithStashes.Add(parentStash);
-                            _insertedStashIds.Add(parentStash.ObjectId);
-                            if (_untrackedByStashId?.TryGetValue(parentStash.ObjectId, out GitRevision? untracked) is true
-                                && _insertedStashIds.Add(untracked.ObjectId))
-                            {
-                                revisionsWithStashes.Add(untracked);
-                            }
-                        }
-                    }
-                }
-
-                revisionsWithStashes.Add(revision);
-            }
-
-            return revisionsWithStashes;
-        }
-    }
-
     /// <summary>One provider-shaped row recycled by the virtualizing panel.</summary>
     private sealed class RevisionRowControl : Grid
     {
@@ -4360,6 +4504,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 Control cell = provider.CreateCell();
 
                 // Avalonia ListBox has no CellMouseLeave event; wire the source handler on each retained cell.
+                cell.PointerEntered += owner._gridView_CellMouseEnter;
+                cell.PointerMoved += owner.OnGridViewCellMouseMove;
                 cell.PointerExited += owner.OnGridViewCellMouseLeave;
                 SetColumn(cell, provider.Index);
                 Children.Add(cell);
@@ -4539,6 +4685,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
 
         public int VisibleRevisionCount => _revisionGridControl._gridView.ItemCount;
+
+        public bool IsDataLoadComplete => !_revisionGridControl._isRefreshingRevisions;
 
         public RevisionGridToolTipProvider ToolTipProvider => _revisionGridControl._toolTipProvider;
 

@@ -68,6 +68,7 @@ public partial class FormChooseCommit : GitModuleForm
 
     private void InitializeStaticContent()
     {
+        Closed += (_, _) => ((IDisposable)revisionGrid).Dispose();
         flowLayoutPanelParents.IsVisible = false;
         linkLabelParent.IsVisible = false;
         linkLabelParent2.IsVisible = false;
