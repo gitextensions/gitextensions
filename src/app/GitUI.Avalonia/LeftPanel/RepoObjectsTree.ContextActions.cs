@@ -166,42 +166,6 @@ partial class RepoObjectsTree : IMenuItemFactory
         item.Click += (o, e) => Node.OnNode(treeMain.SelectedItem as TreeViewItem, onClick);
     }
 
-    // parity-scaffolding: Lets headless tests locate generator-owned menu items by the legacy action names.
-    private MenuItem GetActionMenuItem(string action)
-    {
-        if (Enum.TryParse(action, out RepoAction repoAction)
-            && _actionItems.TryGetValue(repoAction, out MenuItem? menuItem))
-        {
-            return menuItem;
-        }
-
-        return action switch
-        {
-            "Copy" => copyContextMenuItem,
-            "CheckoutLocal" => GetMenuItem(_localBranchMenuItems, MenuItemKey.GitRefCheckout),
-            "CheckoutRemote" => GetMenuItem(_remoteBranchMenuItems, MenuItemKey.GitRefCheckout),
-            "Merge" => GetMenuItem(_localBranchMenuItems, MenuItemKey.GitRefMerge),
-            "RebaseLocal" => GetMenuItem(_localBranchMenuItems, MenuItemKey.GitRefRebase),
-            "RebaseRemote" => GetMenuItem(_remoteBranchMenuItems, MenuItemKey.GitRefRebase),
-            "RebaseTag" => GetMenuItem(_tagNodeMenuItems, MenuItemKey.GitRefRebase),
-            "CreateBranch" => GetMenuItem(_localBranchMenuItems, MenuItemKey.GitRefCreateBranch),
-            "Reset" => GetMenuItem(_localBranchMenuItems, MenuItemKey.GitRefReset),
-            "RenameBranch" => GetMenuItem(_localBranchMenuItems, MenuItemKey.Rename),
-            "DeleteBranch" => GetMenuItem(_localBranchMenuItems, MenuItemKey.Delete),
-            "DeleteRemoteBranch" => GetMenuItem(_remoteBranchMenuItems, MenuItemKey.Delete),
-            "CheckoutTag" => GetMenuItem(_tagNodeMenuItems, MenuItemKey.GitRefCheckout),
-            "DeleteTag" => GetMenuItem(_tagNodeMenuItems, MenuItemKey.Delete),
-            _ => throw new ArgumentOutOfRangeException(nameof(action), action, null),
-        };
-    }
-
-    private static MenuItem GetMenuItem<TNode>(MenuItemsGenerator<TNode> generator, MenuItemKey key) where TNode : class, INode
-    {
-        return generator.TryGetMenuItem(key, out Control? item) && item is MenuItem menuItem
-            ? menuItem
-            : throw new ArgumentOutOfRangeException(nameof(key), key, null);
-    }
-
     [System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(_sortByContextMenuItem), nameof(_sortOrderContextMenuItem), nameof(_localBranchMenuItems), nameof(_remoteBranchMenuItems), nameof(_tagNodeMenuItems))]
     private void RegisterContextActions()
     {

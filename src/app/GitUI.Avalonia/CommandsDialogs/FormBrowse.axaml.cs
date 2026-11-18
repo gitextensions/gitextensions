@@ -334,7 +334,6 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
         repoObjectsTree.Initialize(_aheadBehindDataProvider, RevisionGrid.SetAndApplyBranchFilter, RevisionGrid, RevisionGrid);
-        repoObjectsTree.Initialize(RevisionGrid.SetAndApplyBranchFilter, OpenRepository);
         RevisionGrid.SuspendRefreshRevisions();
 
         ToolStripFilters.Bind(() => Module, RevisionGrid);
@@ -1403,13 +1402,6 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         _selectedRevisionUpdatedTargets |= UpdateTargets.FileTree;
         fileTree.DisplayDiffTab(revision is null ? [] : [revision]);
-    }
-
-    private void OpenRepository(string path, ObjectId selectedId, ObjectId firstId)
-    {
-        // The Avalonia grid currently retains one pending revision across repository changes.
-        // Keep the original first diff endpoint in this boundary until multi-selection accepts it.
-        SetWorkingDir(path, selectedId, firstId);
     }
 
     private void FillDiff(IReadOnlyList<GitRevision> revisions)

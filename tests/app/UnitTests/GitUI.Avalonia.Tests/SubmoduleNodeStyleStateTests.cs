@@ -158,7 +158,7 @@ public sealed class SubmoduleNodeStyleStateTests
         node.TreeViewNode.Should().BeSameAs(originalItem);
         node.TreeViewNode.Tag.Should().BeSameAs(node);
         node.IsSelected.Should().Be(selected);
-        accessor.LogicalSelection.Contains(originalItem).Should().Be(selected);
+        accessor.GetLogicalSelection().Contains(originalItem).Should().Be(selected);
         NativeTreeTextBlock label = HeaderLabel(node);
         label.FontFamily.Name.Should().Be(family);
         label.FontSize.Should().Be(AvaloniaFontSettings.ToDeviceIndependentPixels(points));

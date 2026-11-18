@@ -1,14 +1,20 @@
+using System.Collections;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using GitCommands.Git;
 using GitCommands.Remotes;
+using GitCommands.Submodules;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.LeftPanel;
+using GitUI.LeftPanel.ContextMenu;
+using GitUI.LeftPanel.Interfaces;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -30,15 +36,88 @@ internal static class RepoObjectsTreeTestExtensions
     private static readonly FieldInfo ReloadTaskRunner = typeof(GitUI.LeftPanel.Tree).GetField("_reloadTaskRunner", BindingFlags.Instance | BindingFlags.NonPublic)!;
     private static readonly FieldInfo RunningTask = typeof(ExclusiveTaskRunner).GetField("_runningTask", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
+    // parity-scaffolding: inspect actual source-shaped control state without adding shipping accessor members.
+    public static IEnumerable<TreeViewItem> GetLogicalSelection(this RepoObjectsTree.TestAccessor accessor)
+        => ((IEnumerable<GitUI.LeftPanel.Tree>)RootNodes.GetValue(GetOwner(accessor))!)
+            .Where(tree => tree.IsEnabled)
+            .SelectMany(tree => tree.GetSelectedNodes())
+            .Select(node => node.TreeViewNode);
+
+    public static SearchControl<string> GetSearchBox(this RepoObjectsTree.TestAccessor accessor)
+        => ReadField<SearchControl<string>>(GetOwner(accessor), "_txtBranchCriterion");
+
+    public static Nodes GetNodes(this RepoObjectsTree.TestAccessor accessor, TreeViewItem item)
+        => ((NodeBase)item.Tag!).Nodes;
+
+    public static void Search(this RepoObjectsTree.TestAccessor accessor)
+        => GetOwner(accessor).FindControl<Button>("btnSearch")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+    public static void SetSubmodules(this RepoObjectsTree.TestAccessor accessor, SubmoduleInfoResult result)
+        => ((IEnumerable<GitUI.LeftPanel.Tree>)RootNodes.GetValue(GetOwner(accessor))!).OfType<SubmoduleTree>().Single().Load(result);
+
+    public static MenuItem GetActionMenuItem(this RepoObjectsTree.TestAccessor accessor, string action)
+    {
+        RepoObjectsTree control = GetOwner(accessor);
+        IDictionary items = ReadField<IDictionary>(control, "_actionItems");
+        Type keyType = items.GetType().GetGenericArguments()[0];
+        if (Enum.TryParse(keyType, action, out object? key) && items.Contains(key))
+        {
+            return (MenuItem)items[key]!;
+        }
+
+        return action switch
+        {
+            "Copy" => ReadField<MenuItem>(control, "copyContextMenuItem"),
+            "CheckoutLocal" => GetMenuItem(ReadField<LocalBranchMenuItems<LocalBranchNode>>(control, "_localBranchMenuItems"), MenuItemKey.GitRefCheckout),
+            "CheckoutRemote" => GetMenuItem(ReadField<RemoteBranchMenuItems<RemoteBranchNode>>(control, "_remoteBranchMenuItems"), MenuItemKey.GitRefCheckout),
+            "Merge" => GetMenuItem(ReadField<LocalBranchMenuItems<LocalBranchNode>>(control, "_localBranchMenuItems"), MenuItemKey.GitRefMerge),
+            "RebaseLocal" => GetMenuItem(ReadField<LocalBranchMenuItems<LocalBranchNode>>(control, "_localBranchMenuItems"), MenuItemKey.GitRefRebase),
+            "RebaseRemote" => GetMenuItem(ReadField<RemoteBranchMenuItems<RemoteBranchNode>>(control, "_remoteBranchMenuItems"), MenuItemKey.GitRefRebase),
+            "RebaseTag" => GetMenuItem(ReadField<TagMenuItems<TagNode>>(control, "_tagNodeMenuItems"), MenuItemKey.GitRefRebase),
+            "CreateBranch" => GetMenuItem(ReadField<LocalBranchMenuItems<LocalBranchNode>>(control, "_localBranchMenuItems"), MenuItemKey.GitRefCreateBranch),
+            "Reset" => GetMenuItem(ReadField<LocalBranchMenuItems<LocalBranchNode>>(control, "_localBranchMenuItems"), MenuItemKey.GitRefReset),
+            "RenameBranch" => GetMenuItem(ReadField<LocalBranchMenuItems<LocalBranchNode>>(control, "_localBranchMenuItems"), MenuItemKey.Rename),
+            "DeleteBranch" => GetMenuItem(ReadField<LocalBranchMenuItems<LocalBranchNode>>(control, "_localBranchMenuItems"), MenuItemKey.Delete),
+            "DeleteRemoteBranch" => GetMenuItem(ReadField<RemoteBranchMenuItems<RemoteBranchNode>>(control, "_remoteBranchMenuItems"), MenuItemKey.Delete),
+            "CheckoutTag" => GetMenuItem(ReadField<TagMenuItems<TagNode>>(control, "_tagNodeMenuItems"), MenuItemKey.GitRefCheckout),
+            "DeleteTag" => GetMenuItem(ReadField<TagMenuItems<TagNode>>(control, "_tagNodeMenuItems"), MenuItemKey.Delete),
+            _ => throw new ArgumentOutOfRangeException(nameof(action), action, null),
+        };
+    }
+
+    private static MenuItem GetMenuItem<TNode>(MenuItemsGenerator<TNode> generator, MenuItemKey key) where TNode : class, INode
+    {
+        return generator.TryGetMenuItem(key, out Control? item) && item is MenuItem menuItem
+            ? menuItem
+            : throw new ArgumentOutOfRangeException(nameof(key), key, null);
+    }
+
+    private static RepoObjectsTree GetOwner(RepoObjectsTree.TestAccessor accessor)
+        => accessor.TreeView.FindLogicalAncestorOfType<RepoObjectsTree>()
+            ?? throw new InvalidOperationException("The tree view is not hosted by a RepoObjectsTree.");
+
+    private static T ReadField<T>(RepoObjectsTree control, string name)
+        => (T)(typeof(RepoObjectsTree).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(control)
+            ?? throw new MissingFieldException(typeof(RepoObjectsTree).FullName, name));
+
     /// <summary>Creates a tree whose trees were built with the given revision-grid services, like FormBrowse's Initialize.</summary>
     internal static RepoObjectsTree Create(
-        IGitUICommandsSource source,
+        IGitUICommandsSource? source = null,
         IAheadBehindDataProvider? aheadBehindDataProvider = null,
         ICheckRefs? refsSource = null,
-        IRevisionGridInfo? revisionGridInfo = null)
+        IRevisionGridInfo? revisionGridInfo = null,
+        Action<string?>? filterRevisionGridBySpaceSeparatedRefs = null)
     {
+        if (source is null)
+        {
+            source = Substitute.For<IGitUICommandsSource>();
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(Substitute.For<IGitModule>());
+            source.UICommands.Returns(commands);
+        }
+
         RepoObjectsTree control = new();
-        Attach(control, source, aheadBehindDataProvider, refsSource, revisionGridInfo);
+        Attach(control, source, aheadBehindDataProvider, refsSource, revisionGridInfo, filterRevisionGridBySpaceSeparatedRefs);
         return control;
     }
 
@@ -116,10 +195,11 @@ internal static class RepoObjectsTreeTestExtensions
         }
 
         Configure(commands.Module, snapshot);
-        if (moduleChanged && control.UICommandsSource.GetType().Namespace == "Castle.Proxies")
+        IGitUICommandsSource sourceToNotify = control.UICommandsSource is CommandsHost host ? host.Source : control.UICommandsSource;
+        if (moduleChanged && sourceToNotify.GetType().Namespace == "Castle.Proxies")
         {
             // FormBrowse raises the module change before it refreshes the trees of another repository.
-            control.UICommandsSource.UICommandsChanged += Raise.EventWith(control.UICommandsSource, new GitUICommandsChangedEventArgs(commands));
+            sourceToNotify.UICommandsChanged += Raise.EventWith(sourceToNotify, new GitUICommandsChangedEventArgs(commands));
         }
 
         control.RefreshRevisionsLoading(
@@ -139,7 +219,8 @@ internal static class RepoObjectsTreeTestExtensions
         IGitUICommandsSource source,
         IAheadBehindDataProvider? aheadBehindDataProvider,
         ICheckRefs? refsSource,
-        IRevisionGridInfo? revisionGridInfo)
+        IRevisionGridInfo? revisionGridInfo,
+        Action<string?>? filterRevisionGridBySpaceSeparatedRefs = null)
     {
         Snapshot snapshot = control.GetSnapshot();
         if (refsSource is null)
@@ -154,11 +235,42 @@ internal static class RepoObjectsTreeTestExtensions
             revisionGridInfo.GetCurrentBranch().Returns(_ => snapshot.CurrentBranch);
         }
 
-        // FormBrowse initializes the revision-grid services before the command source creates the trees.
-        SetField(control, "_aheadBehindDataProvider", aheadBehindDataProvider);
-        SetField(control, "_refsSource", refsSource);
-        SetField(control, "_revisionGridInfo", revisionGridInfo);
-        control.UICommandsSource = source;
+        // Initialize supplies the services before lazy command-source discovery constructs the trees.
+        CommandsHost host = new(source);
+        Avalonia.StyledElement? parent = control.Parent;
+        int index = parent is Panel panel ? panel.Children.IndexOf(control) : -1;
+
+        void ReplaceChild(Control child)
+        {
+            switch (parent)
+            {
+                case null:
+                    break;
+                case Decorator decorator:
+                    decorator.Child = child;
+                    break;
+                case ContentControl content:
+                    content.Content = child;
+                    break;
+                case Panel container:
+                    container.Children[index] = child;
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unsupported test host: {parent.GetType().Name}.");
+            }
+        }
+
+        ReplaceChild(host);
+        host.Child = control;
+        try
+        {
+            control.Initialize(aheadBehindDataProvider!, filterRevisionGridBySpaceSeparatedRefs ?? (_ => { }), refsSource, revisionGridInfo);
+        }
+        finally
+        {
+            host.Child = null;
+            ReplaceChild(control);
+        }
     }
 
     private static void Configure(IGitModule module, Snapshot snapshot)
@@ -234,9 +346,19 @@ internal static class RepoObjectsTreeTestExtensions
         Dispatcher.UIThread.RunJobs();
     }
 
-    private static void SetField(RepoObjectsTree control, string name, object? value)
-        => (typeof(RepoObjectsTree).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic)
-            ?? throw new MissingFieldException(nameof(RepoObjectsTree), name)).SetValue(control, value);
+    // parity-scaffolding: provide the external command source through the production ancestor-discovery path.
+    private sealed class CommandsHost(IGitUICommandsSource source) : Decorator, IGitUICommandsSource
+    {
+        public IGitUICommandsSource Source => source;
+
+        public IGitUICommands UICommands => source.UICommands;
+
+        public event EventHandler<GitUICommandsChangedEventArgs> UICommandsChanged
+        {
+            add => source.UICommandsChanged += value;
+            remove => source.UICommandsChanged -= value;
+        }
+    }
 
     private sealed class Snapshot
     {

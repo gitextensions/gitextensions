@@ -66,11 +66,11 @@ internal sealed class SubmoduleNode : Node
 
         if (Info.Detailed?.RawStatus is not null)
         {
-            Tree.OwnerControl.OpenRepository(Info.Path, ObjectId.WorkTreeId, Info.Detailed.RawStatus.OldCommit);
+            UICommands.BrowseRepo?.SetWorkingDir(Info.Path, ObjectId.WorkTreeId, Info.Detailed.RawStatus.OldCommit);
             return;
         }
 
-        Tree.OwnerControl.OpenRepository(Info.Path);
+        UICommands.BrowseRepo?.SetWorkingDir(Info.Path);
     }
 
     public void LaunchGitExtensions()

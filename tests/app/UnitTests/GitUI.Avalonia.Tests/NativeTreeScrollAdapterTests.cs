@@ -143,7 +143,7 @@ public sealed class NativeTreeScrollAdapterTests
             scroll.Offset = new Vector(100, scroll.Offset.Y);
             if (search)
             {
-                accessor.SearchBox.Text = "target";
+                accessor.GetSearchBox().Text = "target";
                 accessor.Search();
             }
             else

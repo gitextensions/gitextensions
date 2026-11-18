@@ -4261,6 +4261,86 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task Browse_submodule_node_should_open_through_its_real_owner()
+    {
+        AppSettings.RepoObjectsTreeShowSubmodules = true;
+        AppSettings.ShowSubmoduleStatus = false;
+        GitModule parent = CreateRepositoryWithInitialCommit();
+        string sourceDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.SubmoduleSource-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(sourceDirectory);
+        FormBrowse? form = null;
+        try
+        {
+            IGitExecutorProvider executors = _serviceContainer.GetRequiredService<IGitExecutorProvider>();
+            GitModule seed = new(executors, sourceDirectory);
+            seed.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" }).Should().BeTrue();
+            seed.SetSetting("user.name", "Avalonia Test");
+            seed.SetSetting("user.email", "avalonia@example.com");
+            File.WriteAllText(Path.Combine(sourceDirectory, "child.txt"), "submodule content");
+            seed.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "child.txt" }).Should().BeTrue();
+            seed.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "child" }).Should().BeTrue();
+            parent.GitExecutable.RunCommand(new GitArgumentBuilder("-c")
+            {
+                "protocol.file.allow=always", "submodule", "add", "--quiet", sourceDirectory.Quote(), "nested",
+            }).Should().BeTrue();
+            parent.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "add-nested" }).Should().BeTrue();
+            GitModule nested = new(executors, Path.Combine(_workingDirectory, "nested"));
+            ObjectId expected = seed.GetCurrentCheckout();
+            form = new FormBrowse(new GitUICommands(_serviceContainer, parent), new BrowseArguments());
+            form.Show();
+            await form.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(20));
+            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == parent.GetCurrentCheckout()
+                && form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!.Text == "2 revisions");
+            TreeView tree = form.repoObjectsTree.FindControl<TreeView>("treeMain")!;
+            SubmoduleNode? node = null;
+            await WaitUntilAsync(() =>
+            {
+                node = GetSubmodules(tree.Items.OfType<TreeViewItem>()).SingleOrDefault(candidate =>
+                    string.Equals(Path.TrimEndingDirectorySeparator(Path.GetFullPath(candidate.Info.Path)),
+                        Path.TrimEndingDirectorySeparator(Path.GetFullPath(nested.WorkingDir)),
+                        OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal));
+                return node is not null;
+            });
+            form.UICommands.BrowseRepo.Should().BeSameAs(form);
+            (node!.Info.Detailed?.RawStatus).Should().BeNull();
+            node.Open();
+            form.UICommands.Module.WorkingDir.Should().Be(nested.WorkingDir);
+            await form.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(20));
+            try
+            {
+                await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == expected
+                    && form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!.Text == "1 revisions");
+            }
+            finally
+            {
+                await TestContext.Out.WriteLineAsync($"Submodule open: module={form.Module.WorkingDir}, selected={form.RevisionGrid.SelectedRevision?.ObjectId}, expected={expected}, status={form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!.Text}");
+            }
+        }
+        finally
+        {
+            form?.Close();
+            (form as IDisposable)?.Dispose();
+            TestDirectory.Delete(sourceDirectory);
+        }
+
+        static IEnumerable<SubmoduleNode> GetSubmodules(IEnumerable<TreeViewItem> items)
+        {
+            foreach (TreeViewItem item in items)
+            {
+                if (item.Tag is SubmoduleNode submodule)
+                {
+                    yield return submodule;
+                }
+
+                foreach (SubmoduleNode child in GetSubmodules(item.Items.OfType<TreeViewItem>()))
+                {
+                    yield return child;
+                }
+            }
+        }
+    }
+
+    [AvaloniaTest]
     public async Task Browse_open_repository_should_load_the_module_chosen_in_the_real_dialog()
     {
         GitModule first = CreateRepositoryWithInitialCommit();

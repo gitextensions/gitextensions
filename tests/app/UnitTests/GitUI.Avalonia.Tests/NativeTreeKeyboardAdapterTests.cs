@@ -607,13 +607,13 @@ public sealed class NativeTreeKeyboardAdapterTests
             RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
             accessor.SelectNode<LocalBranchNode>(["Branches", "main"]);
             accessor.SelectNode<TagNode>(["Tags", "v1"], multiple: true);
-            TreeViewItem[] logical = accessor.LogicalSelection.ToArray();
+            TreeViewItem[] logical = accessor.GetLogicalSelection().ToArray();
             window.Content = control;
             window.Show();
             window.UpdateLayout();
             accessor.TreeView.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = key });
 
-            accessor.LogicalSelection.Should().BeEquivalentTo(logical);
+            accessor.GetLogicalSelection().Should().BeEquivalentTo(logical);
             accessor.TreeView.SelectedItems.Cast<object>().Should().ContainSingle();
             foreach (TreeViewItem item in logical)
             {

@@ -53,7 +53,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private SubmoduleTree _submoduleTree = null!;
     private WorktreeTree _worktreeTree = null!;
     private List<TreeViewItem>? _searchResult;
-    private Action<string, ObjectId, ObjectId>? _openRepository;
     private ISubmoduleStatusProvider? _submoduleStatusProvider;
     private int _selectionUpdateDepth;
     private KeyModifiers _selectionModifiers;
@@ -86,9 +85,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private bool _searchCriteriaChanged;
     private ICheckRefs _refsSource = null!;
     private IRevisionGridInfo _revisionGridInfo = null!;
-
-    internal void OpenRepository(string path, ObjectId selectedId = default, ObjectId firstId = default)
-        => _openRepository?.Invoke(path, selectedId, firstId);
 
     internal void UpdateNodes(Action update)
     {
@@ -250,15 +246,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         // This lazily sets the command source, invoking OnUICommandsSourceSet, which is required for setting up
         // notifications for each Tree.
         _ = UICommandsSource;
-    }
-
-    /// <summary>Connects the tree's selected-ref filtering action to the revision grid.</summary>
-    public void Initialize(
-        Action<string?> filterRevisionGridBySpaceSeparatedRefs,
-        Action<string, ObjectId, ObjectId>? openRepository = null)
-    {
-        _filterRevisionGridBySpaceSeparatedRefs = filterRevisionGridBySpaceSeparatedRefs;
-        _openRepository = openRepository;
     }
 
     /// <summary>
@@ -1051,31 +1038,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         public Avalonia.Controls.ContextMenu ContextMenu => _repoObjectsTree.menuMain;
         public TreeView TreeView => _repoObjectsTree.treeMain;
 
-        internal IEnumerable<TreeViewItem> LogicalSelection
-            => _repoObjectsTree.GetSelectedNodes().Select(node => node.TreeViewNode);
-
-        internal SearchControl<string> SearchBox => _repoObjectsTree._txtBranchCriterion;
-
         public void OpenContextMenu()
         {
             _repoObjectsTree.contextMenu_Opening(ContextMenu, new CancelEventArgs());
             _repoObjectsTree.contextMenu_Opened(ContextMenu, new EventArgs());
         }
-
-        internal MenuItem GetActionMenuItem(string action)
-            => _repoObjectsTree.GetActionMenuItem(action);
-
-        internal Nodes GetNodes(TreeViewItem item)
-            => ((NodeBase)item.Tag!).Nodes;
-
-        internal void Search()
-            => _repoObjectsTree.DoSearch();
-
-        internal void SetSubmodules(SubmoduleInfoResult result)
-            => _repoObjectsTree._submoduleTree.Load(result);
-
-        internal void SetSelectionModifiers(KeyModifiers modifiers)
-            => _repoObjectsTree._selectionModifiers = modifiers;
 
         /// <summary>Simulates a left click on the <see cref="TreeNode"/> in <see cref="TreeView"/>
         /// identified by the path of <paramref name="nodeTexts"/> for UI tests.</summary>

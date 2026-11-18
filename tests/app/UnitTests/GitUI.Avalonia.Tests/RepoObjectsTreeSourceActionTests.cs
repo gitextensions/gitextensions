@@ -81,7 +81,7 @@ public sealed class RepoObjectsTreeSourceActionTests
                     item.IsExpanded = !expand;
                 }
 
-                TreeViewItem[] selection = [.. accessor.LogicalSelection];
+                TreeViewItem[] selection = [.. accessor.GetLogicalSelection()];
                 selection.Should().BeEquivalentTo([alpha, beta]);
                 accessor.OpenContextMenu();
                 accessor.ContextMenu.Items.OfType<MenuItem>().Should().Contain(item => item.IsVisible && item.IsEnabled);
@@ -96,7 +96,7 @@ public sealed class RepoObjectsTreeSourceActionTests
                 }
 
                 untouched.IsExpanded.Should().Be(!expand, "an unselected parent must not participate in the action");
-                accessor.LogicalSelection.Should().BeEquivalentTo(selection);
+                accessor.GetLogicalSelection().Should().BeEquivalentTo(selection);
                 accessor.TreeView.SelectedItem.Should().BeSameAs(caret);
             }
             finally
