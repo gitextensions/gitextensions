@@ -831,18 +831,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     internal void SelectTreeViewItem(TreeViewItem item)
         => treeMain.SelectedItem = item;
 
-    internal void EnsureHighlightedNodeVisible()
-    {
-        if (treeMain.SelectedItem is TreeViewItem caret)
-        {
-            EnsureVerticallyVisible(caret);
-        }
-        else if (treeMain.Items.OfType<TreeViewItem>().FirstOrDefault() is { } first)
-        {
-            EnsureVerticallyVisible(first);
-        }
-    }
-
     internal void EnsureVerticallyVisible(TreeViewItem item)
     {
         if (item.Tag is NodeBase node)

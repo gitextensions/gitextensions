@@ -399,6 +399,26 @@ public partial class UserRepositoriesList : GitExtensionsControl
         listView1.ItemsSource = rows;
         listView1.SelectedItem = null;
 
+        // The native list publishes its flattened rows together before updating their metadata.
+        IUserRepositoriesListController controller = Controller;
+        foreach (RepositoryListItem item in rows.OfType<RepositoryListItem>())
+        {
+            ThreadHelper.FileAndForget(async () =>
+            {
+                bool isValidGitDir = controller.IsValidGitWorkingDir(item.Repository.Repo.Path);
+                string branchName = isValidGitDir ? controller.GetCurrentBranchName(item.Repository.Repo.Path) : string.Empty;
+                await this.SwitchToMainThreadAsync();
+                if (ReferenceEquals(listView1.ItemsSource, rows))
+                {
+                    _hasInvalidRepos |= !isValidGitDir;
+                    item.SetMetadata(branchName, isValidGitDir);
+                    //// NB: we can add a 3rd row as well: { repository.Repo.Category, Brushes.Gray, Background, _secondaryFont }
+                }
+            });
+        }
+
+        return;
+
         void BindRepositories(IReadOnlyList<RecentRepoInfo> repos, bool isFavourite)
         {
             for (int index = 0; index < repos.Count; index++)
@@ -407,18 +427,12 @@ public partial class UserRepositoriesList : GitExtensionsControl
                 RepositoryGroupItem group = isFavourite
                     ? GetTileGroup(recent.Repo)
                     : _lvgRecentRepositories;
-                bool isValidGitDir = Controller.IsValidGitWorkingDir(recent.Repo.Path);
-                string branchName = isValidGitDir ? Controller.GetCurrentBranchName(recent.Repo.Path) : string.Empty;
-                _hasInvalidRepos |= !isValidGitDir;
                 rows.Add(new RepositoryListItem(
                     recent.Caption ?? recent.Repo.Path,
                     recent,
-                    branchName,
                     isFavourite,
-                    isValidGitDir,
                     tileSize,
                     group));
-                //// NB: we can add a 3rd row as well: { repository.Repo.Category, Brushes.Gray, Background, _secondaryFont }
             }
         }
     }
@@ -609,7 +623,6 @@ public partial class UserRepositoriesList : GitExtensionsControl
             // The source ImageList stream retains the authored 32px dashboard resource size.
             Width = imageList1[0].Size.Width,
             Height = imageList1[0].Size.Height,
-            Source = imageList1[repository.IsValid ? 0 : 1],
             Margin = new Avalonia.Thickness(4, 8, 0, 0),
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
@@ -659,6 +672,13 @@ public partial class UserRepositoriesList : GitExtensionsControl
         // DrawItem advances by TextRenderer's measured height, not the Avalonia
         // TextBlock line box. Retain that source baseline algorithm for the branch.
         path.Height = WinFormsTextMeasurer.MeasureTextRenderer(path, repository.Text).Height;
+        TextBlock branch = new()
+        {
+            Foreground = _branchNameColorBrush,
+            FontFamily = new FontFamily(_secondaryFont.Name),
+            FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(_secondaryFont.Size),
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        };
         StackPanel text = new()
         {
             Spacing = 1,
@@ -666,20 +686,28 @@ public partial class UserRepositoriesList : GitExtensionsControl
             Children =
             {
                 path,
-                new TextBlock
-                {
-                    Text = repository.BranchName,
-                    IsVisible = !string.IsNullOrWhiteSpace(repository.BranchName),
-                    Foreground = _branchNameColorBrush,
-                    FontFamily = new FontFamily(_secondaryFont.Name),
-                    FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(_secondaryFont.Size),
-                    TextTrimming = TextTrimming.CharacterEllipsis,
-                },
+                branch,
             },
         };
         row.Children.Add(text);
         ToolTip.SetTip(row, repository.Repository.Repo.Path);
+        ApplyMetadata();
+        row.AttachedToVisualTree += (_, _) =>
+        {
+            repository.MetadataChanged += MetadataChanged;
+            ApplyMetadata();
+        };
+        row.DetachedFromVisualTree += (_, _) => repository.MetadataChanged -= MetadataChanged;
         return row;
+
+        void MetadataChanged(object? sender, EventArgs e) => ApplyMetadata();
+
+        void ApplyMetadata()
+        {
+            branch.Text = repository.BranchName;
+            branch.IsVisible = !string.IsNullOrWhiteSpace(repository.BranchName);
+            image.Source = imageList1[repository.IsValid ? 0 : 1];
+        }
     }
 
     private void SetAppearance(ref Color field, ref Brush brush, Color value)
@@ -1289,14 +1317,36 @@ public partial class UserRepositoriesList : GitExtensionsControl
     private WinFormsShims.IWin32Window? GetOwner()
         => this.FindAncestorOfType<Window>() as WinFormsShims.IWin32Window;
 
-    internal sealed record RepositoryListItem(
-        string Text,
-        RecentRepoInfo Repository,
-        string BranchName,
-        bool IsFavourite,
-        bool IsValid,
-        Size TileSize,
-        RepositoryGroupItem Group);
+    internal sealed class RepositoryListItem(
+        string text,
+        RecentRepoInfo repository,
+        bool isFavourite,
+        Size tileSize,
+        RepositoryGroupItem group)
+    {
+        public string Text { get; } = text;
+
+        public RecentRepoInfo Repository { get; } = repository;
+
+        public bool IsFavourite { get; } = isFavourite;
+
+        public Size TileSize { get; } = tileSize;
+
+        public RepositoryGroupItem Group { get; } = group;
+
+        public string BranchName { get; private set; } = string.Empty;
+
+        public bool IsValid { get; private set; } = true;
+
+        public event EventHandler? MetadataChanged;
+
+        public void SetMetadata(string branchName, bool isValid)
+        {
+            BranchName = branchName;
+            IsValid = isValid;
+            MetadataChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 
     internal sealed class RepositoryGroupItem(string name, bool isRecentGroup, int repositoryCount)
     {

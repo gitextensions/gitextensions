@@ -311,14 +311,19 @@ internal sealed class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
             if (paths.Length > 0)
             {
+                UpdateBranchNamesCache(paths, cancellationToken);
+            }
+
+            return;
+
+            void UpdateBranchNamesCache(IReadOnlyList<string> paths, CancellationToken cancellationToken)
+            {
                 const int MaxBranchNameFetchParallelism = 4;
                 paths.AsParallel()
                     .WithCancellation(cancellationToken)
                     .WithDegreeOfParallelism(Math.Min(MaxBranchNameFetchParallelism, Math.Max(1, Environment.ProcessorCount / 2)))
                     .ForAll(path => _ = _branchNameCache.GetUpdatedBranchName(path));
             }
-
-            HistoryChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 

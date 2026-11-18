@@ -1451,7 +1451,7 @@ public sealed class DashboardTests
 
     [AvaloniaTest]
     [Category("P4.5")]
-    public void Repository_list_should_show_shared_recent_favourite_and_branch_data()
+    public async Task Repository_list_should_show_shared_recent_favourite_and_branch_data()
     {
         Repository recent = new(@"C:\repos\recent");
         Repository favourite = new(@"C:\repos\favourite") { Category = "Team" };
@@ -1468,6 +1468,7 @@ public sealed class DashboardTests
 
         list.listView1.Items.OfType<UserRepositoriesList.RepositoryGroupItem>().Select(row => row.Name)
             .Should().Contain("Recent repositories", "Team");
+        await WaitForBranchesAsync(list, "main", "feature");
         list.listView1.Items.OfType<UserRepositoriesList.RepositoryListItem>().Select(row => row.BranchName)
             .Should().Contain("main", "feature");
 
@@ -1999,7 +2000,7 @@ public sealed class DashboardTests
 
     [AvaloniaTest]
     [Category("P4.5")]
-    public void Attached_repository_list_should_replace_rows_after_branch_cache_refresh()
+    public async Task Attached_repository_list_should_replace_rows_after_history_changes()
     {
         Repository repository = new(@"C:\repos\recent");
         RepositoryHistorySnapshot initial =
@@ -2023,6 +2024,7 @@ public sealed class DashboardTests
 
             history.HistoryChanged += Raise.Event<EventHandler>();
             Dispatcher.UIThread.RunJobs();
+            await WaitForBranchesAsync(list, "main");
 
             list.listView1.Items
                 .OfType<UserRepositoriesList.RepositoryListItem>()
@@ -2032,6 +2034,20 @@ public sealed class DashboardTests
         finally
         {
             window.Close();
+        }
+    }
+
+    private static async Task WaitForBranchesAsync(UserRepositoriesList list, params string[] expectedBranches)
+    {
+        for (int attempt = 0; attempt < 400; attempt++)
+        {
+            string[] branches = [.. list.listView1.Items.OfType<UserRepositoriesList.RepositoryListItem>().Select(item => item.BranchName)];
+            if (expectedBranches.All(branches.Contains))
+            {
+                return;
+            }
+
+            await Task.Delay(10);
         }
     }
 

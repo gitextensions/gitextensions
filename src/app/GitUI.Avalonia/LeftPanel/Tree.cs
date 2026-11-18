@@ -232,6 +232,11 @@ internal abstract class Tree : NodeBase, IDisposable
         }
 
         // If no selected node, just make sure that the first node is visible
-        OwnerControl.EnsureHighlightedNodeVisible();
+        TreeView treeView = OwnerControl.treeMain;
+        TreeNode? node = treeView.SelectedItem as TreeNode ?? treeView.Items.OfType<TreeNode>().FirstOrDefault();
+        if (node is not null)
+        {
+            OwnerControl.EnsureVerticallyVisible(node);
+        }
     }
 }
