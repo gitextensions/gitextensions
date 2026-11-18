@@ -560,7 +560,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private void CreateBranches()
     {
-        TreeNode rootNode = new()
+        TreeNode rootNode = new NativeTreeViewItem()
         {
             Header = CreateHeader(TranslatedStrings.Branches, Images.BranchLocalRoot),
             Name = TranslatedStrings.Branches,
@@ -572,7 +572,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private void CreateRemotes()
     {
-        TreeNode rootNode = new()
+        TreeNode rootNode = new NativeTreeViewItem()
         {
             Header = CreateHeader(TranslatedStrings.Remotes, Images.BranchRemoteRoot),
             Name = TranslatedStrings.Remotes,
@@ -584,7 +584,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private void CreateWorktrees()
     {
-        TreeNode rootNode = new()
+        TreeNode rootNode = new NativeTreeViewItem()
         {
             Header = CreateHeader(TranslatedStrings.Worktrees, Images.WorkTree),
             Name = TranslatedStrings.Worktrees,
@@ -596,7 +596,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private void CreateTags()
     {
-        TreeNode rootNode = new()
+        TreeNode rootNode = new NativeTreeViewItem()
         {
             Header = CreateHeader(TranslatedStrings.Tags, Images.TagHorizontal),
             Name = TranslatedStrings.Tags,
@@ -608,7 +608,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private void CreateSubmodules()
     {
-        TreeNode rootNode = new()
+        TreeNode rootNode = new NativeTreeViewItem()
         {
             Header = CreateHeader(TranslatedStrings.Submodules, Images.FolderSubmodule),
             Name = TranslatedStrings.Submodules,
@@ -620,7 +620,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
     private void CreateStashes()
     {
-        TreeNode rootNode = new()
+        TreeNode rootNode = new NativeTreeViewItem()
         {
             Header = CreateHeader(TranslatedStrings.Stashes, Images.Stash),
             Name = TranslatedStrings.Stashes,

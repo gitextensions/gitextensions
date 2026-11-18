@@ -467,6 +467,81 @@ public sealed class RepoObjectsTreeTests
     }
 
     [AvaloniaTest]
+    [TestCase("keyboard", false)]
+    [TestCase("keyboard", true)]
+    [TestCase("programmatic", false)]
+    [TestCase("programmatic", true)]
+    [TestCase("double-click", false)]
+    [TestCase("double-click", true)]
+    [TestCase("expander", false)]
+    [TestCase("expander", true)]
+    public void Remote_node_should_cancel_expansion_before_publishing_it(string route, bool initiallyExpanded)
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        Window window = new() { Width = 350, Height = 400 };
+        try
+        {
+            settings.EnableAllTrees();
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(Substitute.For<IGitModule>());
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            RepoObjectsTree control = RepoObjectsTreeTestExtensions.Create(source);
+            control.SetRefs([CreateRef("refs/remotes/origin/main", "origin")]);
+            TreeViewItem remote = control.GetTestAccessor().TreeView.Items.Cast<TreeViewItem>()
+                .Single(item => item.Tag is RemoteBranchTree).Items.Cast<TreeViewItem>().Single();
+            remote.Tag.Should().BeOfType<RemoteRepoNode>();
+            remote.IsExpanded = initiallyExpanded;
+            window.Content = control;
+            window.Show();
+            window.UpdateLayout();
+            Point position = HeaderLabel(remote).TranslatePoint(new Point(5, 8), window)!.Value;
+            ToggleButton expander = remote.GetVisualDescendants().OfType<ToggleButton>().First();
+            Point expanderPosition = expander.TranslatePoint(new Point(expander.Bounds.Width / 2, expander.Bounds.Height / 2), window)!.Value;
+            int changes = 0;
+            remote.Expanded += (_, _) => changes++;
+            remote.Collapsed += (_, _) => changes++;
+
+            window.MouseDown(position, MouseButton.Left);
+            window.MouseUp(position, MouseButton.Left);
+            switch (route)
+            {
+                case "keyboard":
+                    Key key = initiallyExpanded ? Key.Left : Key.Right;
+                    PhysicalKey physicalKey = initiallyExpanded ? PhysicalKey.ArrowLeft : PhysicalKey.ArrowRight;
+                    window.KeyPress(key, RawInputModifiers.None, physicalKey, keySymbol: null);
+                    window.KeyRelease(key, RawInputModifiers.None, physicalKey, keySymbol: null);
+                    break;
+                case "programmatic":
+                    remote.IsExpanded = !initiallyExpanded;
+                    break;
+                case "expander":
+                    window.MouseDown(expanderPosition, MouseButton.Left);
+                    window.MouseUp(expanderPosition, MouseButton.Left);
+                    break;
+                default:
+                    window.MouseDown(position, MouseButton.Left);
+                    window.MouseUp(position, MouseButton.Left);
+                    break;
+            }
+
+            remote.IsExpanded.Should().Be(initiallyExpanded);
+            expander.IsChecked.Should().Be(initiallyExpanded, "the chevron must show the actual expansion state after cancellation");
+            changes.Should().Be(0, "a cancelled native transition never publishes Expanded or Collapsed");
+            commands.Received(route == "double-click" ? 1 : 0).StartRemotesDialog(control, "origin");
+
+            remote.IsExpanded = !initiallyExpanded;
+            remote.IsExpanded.Should().Be(!initiallyExpanded, "the source consumes its recent press before notifying consumers");
+            changes.Should().Be(1);
+        }
+        finally
+        {
+            window.Close();
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
     [Category("P8.6i.126")]
     public void Pointer_ctrl_and_right_click_should_keep_one_caret_and_independent_logical_flags()
     {

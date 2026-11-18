@@ -6,8 +6,8 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using GitUI.Compat;
 using GitUI.UserControls;
-using NSubstitute;
 
 namespace GitExtensionsTests;
 
@@ -201,7 +201,7 @@ public sealed class NativeTreeViewDecoratorTests
     [TestCase(true)]
     public void Inner_node_double_tap_should_expose_the_source_cancellation_boundary(bool cancel)
     {
-        TreeViewItem item = new() { Header = "parent", Items = { new TreeViewItem { Header = "child" } } };
+        TreeViewItem item = new NativeTreeViewItem { Header = "parent", Items = { new TreeViewItem { Header = "child" } } };
         TreeView tree = new() { Items = { item } };
         NativeTreeViewDoubleClickDecorator decorator = new(tree);
         int notifications = 0;
@@ -210,20 +210,26 @@ public sealed class NativeTreeViewDecoratorTests
             notifications++;
             e.Cancel = cancel;
         };
-        Window window = new() { Content = tree };
+        Window window = new() { Width = 280, Height = 180, Content = tree };
         try
         {
             window.Show();
             Dispatcher.UIThread.RunJobs();
-            TappedEventArgs args = CreateDoubleTap(item);
-            item.RaiseEvent(args);
+            Point header = GetHeaderPosition(window, item);
+            window.MouseDown(header, MouseButton.Left);
+            window.MouseUp(header, MouseButton.Left);
+            window.MouseDown(header, MouseButton.Left);
+            window.MouseUp(header, MouseButton.Left);
 
             notifications.Should().Be(1);
             item.IsExpanded.Should().Be(!cancel);
             Avalonia.Controls.Primitives.ToggleButton expander = item.GetVisualDescendants()
                 .OfType<Avalonia.Controls.Primitives.ToggleButton>().First();
-            expander.RaiseEvent(CreateDoubleTap(expander));
+            Point toggle = expander.TranslatePoint(new Point(expander.Bounds.Width / 2, expander.Bounds.Height / 2), window)!.Value;
+            window.MouseDown(toggle, MouseButton.Left);
+            window.MouseUp(toggle, MouseButton.Left);
             notifications.Should().Be(1, "expansion-toggle taps must not open submodules or other node actions");
+            item.IsExpanded.Should().Be(cancel, "the plus/minus control must still toggle the node");
         }
         finally
         {
@@ -238,13 +244,6 @@ public sealed class NativeTreeViewDecoratorTests
         window.MouseUp(position, MouseButton.Left);
         Dispatcher.UIThread.RunJobs();
     }
-
-    private static TappedEventArgs CreateDoubleTap(Control source)
-        => new(InputElement.DoubleTappedEvent, new PointerEventArgs(
-            null, source, Substitute.For<IPointer>(), null, default, 0, default, KeyModifiers.None))
-        {
-            Source = source,
-        };
 
     private static Point GetHeaderPosition(Window window, TreeViewItem item)
     {

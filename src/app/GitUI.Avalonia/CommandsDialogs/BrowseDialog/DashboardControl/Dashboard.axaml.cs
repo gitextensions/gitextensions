@@ -94,22 +94,29 @@ public partial class Dashboard : GitModuleControl
                 AlignmentY = AlignmentY.Top,
                 DestinationRect = new RelativeRect(new Rect(default, selectedTheme.BackgroundImage.Size), RelativeUnit.Absolute),
             };
-            pnlLogo.Background = new SolidColorBrush(selectedTheme.LogoBackColor);
-            flpnlStart.Background = new SolidColorBrush(selectedTheme.StartBackColor);
-            flpnlContribute.Background = new SolidColorBrush(selectedTheme.ContributeBackColor);
-            Resources["DashboardLinkForegroundBrush"] = new SolidColorBrush(selectedTheme.PrimaryText);
-            Resources["DashboardLinkHoverForegroundBrush"] = new SolidColorBrush(selectedTheme.AccentedText);
-            lblContribute.Foreground = new SolidColorBrush(selectedTheme.SecondaryHeadingText);
-            userRepositoriesList.MainBackColor = AvaloniaThemeResources.ToMediaColor(
-                AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.Window));
-            userRepositoriesList.BranchNameColor = selectedTheme.SecondaryText;
-            userRepositoriesList.FavouriteColor = selectedTheme.AccentedText;
-            userRepositoriesList.ForeColor = selectedTheme.PrimaryText;
-            userRepositoriesList.HeaderColor = selectedTheme.SecondaryHeadingText;
-            userRepositoriesList.HeaderBackColor = selectedTheme.HeaderBackColor;
-            userRepositoriesList.HoverColor = selectedTheme.StartBackColor;
-            userRepositoriesList.SearchBackColor = selectedTheme.SearchBackColor;
+            pnlLogo.Background = new SolidColorBrush(ResolveColor(selectedTheme.LogoBackColor));
+            flpnlStart.Background = new SolidColorBrush(ResolveColor(selectedTheme.StartBackColor));
+            flpnlContribute.Background = new SolidColorBrush(ResolveColor(selectedTheme.ContributeBackColor));
+            Resources["DashboardLinkForegroundBrush"] = new SolidColorBrush(ResolveColor(selectedTheme.PrimaryText));
+            Resources["DashboardLinkHoverForegroundBrush"] = new SolidColorBrush(ResolveColor(selectedTheme.AccentedText));
+            lblContribute.Foreground = new SolidColorBrush(ResolveColor(selectedTheme.SecondaryHeadingText));
+            userRepositoriesList.MainBackColor = ResolveColor(System.Drawing.SystemColors.Window);
+            userRepositoriesList.BranchNameColor = ResolveColor(selectedTheme.SecondaryText);
+            userRepositoriesList.FavouriteColor = ResolveColor(selectedTheme.AccentedText);
+            userRepositoriesList.ForeColor = ResolveColor(selectedTheme.PrimaryText);
+            userRepositoriesList.HeaderColor = ResolveColor(selectedTheme.SecondaryHeadingText);
+            userRepositoriesList.HeaderBackColor = ResolveColor(selectedTheme.HeaderBackColor);
+            userRepositoriesList.HoverColor = ResolveColor(selectedTheme.StartBackColor);
+            userRepositoriesList.SearchBackColor = ResolveColor(selectedTheme.SearchBackColor);
             Background = new SolidColorBrush(userRepositoriesList.MainBackColor);
+
+            return;
+
+            // Avalonia colors snapshot ARGB, so resolve the original system roles when applying the palette.
+            static Avalonia.Media.Color ResolveColor(System.Drawing.Color color)
+                => AvaloniaThemeResources.ToMediaColor(color.IsSystemColor
+                    ? AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, color.ToKnownColor())
+                    : color);
         }
 
         void InitDashboardLayout()

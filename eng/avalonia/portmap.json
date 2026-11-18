@@ -2692,7 +2692,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/DashboardTheme.cs",
     "status": "functional",
     "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "Same-named palette contract with the original member order and exact light RGB values; dark SystemColors are resolved through Avalonia's default dark palette because symbolic SystemColors do not exist cross-platform. P8.6i progress 67 classifies exact WinForms Designer-generated lifecycle omissions, required Avalonia-only seams, and approved framework signature substitutions through schema-4 drift-checked deviations, and restores 18 original handler identities where Avalonia permits them; all remaining differences stay measured. 2026-10-01 Progress 126 batch 62: preserve native KnownColor identity rather than snapshotting light-theme ARGB in the dark palette. Resolve against current theme settings on consumption, including before attachment and after theme changes. Ten backing fields and the resolver are measured framework-boundary structural differences; full parity remains open. Evidence: eng/avalonia/parity-evidence/P8.6i/application-shell-126/batch-62/."
+    "notes": "Restores the original palette properties, order, RGB values and SystemColors identities. Dashboard applies the named system roles against the current cross-platform theme when creating brushes, so a later theme cannot inherit another theme snapshot. The portable background image uses Avalonia IImage; full color and visual parity remain open."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/FormDashboardCategoryTitle.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/FormDashboardCategoryTitle.axaml.cs",
@@ -4120,7 +4120,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/NativeTreeViewDoubleClickDecorator.cs",
     "status": "functional",
     "basedOn": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
-    "notes": "Routed double taps preserve the source cancellation boundary for inner nodes and exclude expansion-toggle clicks. Native message/timing fields are framework-forced substitutions. Full structural/state/platform closure remains open. 2026-11-03 Tier 1 comment review: Original and twin members reviewed; surviving comments restored verbatim or minimally adapted beside their code. Exact moved, absent and adapted-wording pins preserve the source text and reviewed rationale; accepted pins are separate from closed findings. No parity axis promoted."
+    "notes": "Restores the original mouse-down clock, recent-press guard and reset-before-callback comments. Avalonia TreeViewItem coerces IsExpanded through the repository item cancellable event before publishing either state. The native header gesture and chevron both request that same property change; arrow keys and direct assignments use it too. Exact event and signature differences remain accepted and full visual and platform parity stays open."
   },
   "src/app/GitUI/UserControls/NativeTreeViewExplorerNavigationDecorator.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/NativeTreeViewExplorerNavigationDecorator.cs",

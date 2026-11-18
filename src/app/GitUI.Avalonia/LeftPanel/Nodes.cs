@@ -1,4 +1,5 @@
-﻿using TreeNode = Avalonia.Controls.TreeViewItem;
+﻿using GitUI.Compat;
+using TreeNode = Avalonia.Controls.TreeViewItem;
 
 namespace GitUI.LeftPanel;
 
@@ -125,7 +126,7 @@ internal sealed class Nodes(Tree? tree) : IReadOnlyCollection<Node>
             // a TreeView that is shown, adding it, setting its text, image or colour each invalidates the
             // control's layout, which is very slow for thousands of refs. A detached TreeNode
             // only stores the values, and adding the finished subtree sends a single insert per node.
-            TreeNode treeNode = new();
+            TreeNode treeNode = new NativeTreeViewItem();
             node.TreeViewNode = treeNode;
             node.Nodes.FillTreeViewNode(treeNode);
 

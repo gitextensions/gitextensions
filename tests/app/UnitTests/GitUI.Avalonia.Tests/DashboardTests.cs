@@ -30,6 +30,7 @@ using GitUI.Compat;
 using GitUI.Theming;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using Color = Avalonia.Media.Color;
 using WinFormsControls = GitUI.Compat.WinFormsControls;
 
 namespace GitExtensionsTests;
@@ -630,11 +631,11 @@ public sealed class DashboardTests
             window.MouseMove(point);
             Dispatcher.UIThread.RunJobs();
             link.IsPointerOver.Should().BeTrue();
-            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(DashboardTheme.Light.PrimaryText,
+            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(AvaloniaThemeResources.ToMediaColor(DashboardTheme.Light.PrimaryText),
                 "source MouseHover does not recolor a link immediately on entering its control");
             await Task.Delay(link.HoverDelay + TimeSpan.FromMilliseconds(50));
             Dispatcher.UIThread.RunJobs();
-            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(DashboardTheme.Light.AccentedText);
+            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(AvaloniaThemeResources.ToMediaColor(DashboardTheme.Light.AccentedText));
             ((Avalonia.Media.ISolidColorBrush)presenter.Background!).Color.A.Should().Be(0);
             point = link.TranslatePoint(link.CaptionHitBounds.Center, window)!.Value;
             window.MouseMove(point);
@@ -722,7 +723,7 @@ public sealed class DashboardTests
             ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(Avalonia.Media.Colors.Red);
             window.MouseUp(new Point(1, 1), MouseButton.Left);
             Dispatcher.UIThread.RunJobs();
-            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(DashboardTheme.Light.PrimaryText);
+            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(AvaloniaThemeResources.ToMediaColor(DashboardTheme.Light.PrimaryText));
         }
         finally
         {
@@ -780,7 +781,7 @@ public sealed class DashboardTests
             link.Cursor!.ToString().Should().Contain(nameof(StandardCursorType.Arrow));
             window.MouseUp(captionPoint, button);
             Dispatcher.UIThread.RunJobs();
-            ((ISolidColorBrush)link.Foreground!).Color.Should().Be(DashboardTheme.Light.PrimaryText);
+            ((ISolidColorBrush)link.Foreground!).Color.Should().Be(AvaloniaThemeResources.ToMediaColor(DashboardTheme.Light.PrimaryText));
             clicks.Should().Be(0);
             window.MouseDown(imagePoint, button);
             Dispatcher.UIThread.RunJobs();
@@ -954,7 +955,7 @@ public sealed class DashboardTests
             window.MouseMove(new Point(1, 1));
             await Task.Delay(link.HoverDelay + TimeSpan.FromMilliseconds(50));
             Dispatcher.UIThread.RunJobs();
-            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(DashboardTheme.Light.PrimaryText);
+            ((Avalonia.Media.ISolidColorBrush)link.Foreground!).Color.Should().Be(AvaloniaThemeResources.ToMediaColor(DashboardTheme.Light.PrimaryText));
             window.MouseMove(point);
             link.IsEnabled = false;
             await Task.Delay(link.HoverDelay + TimeSpan.FromMilliseconds(50));
@@ -2185,10 +2186,10 @@ public sealed class DashboardTests
     [Category("P4.5")]
     public void Dashboard_theme_should_preserve_the_original_light_palette()
     {
-        DashboardTheme.Light.LogoBackColor.Should().Be(Avalonia.Media.Color.FromRgb(19, 122, 212));
-        DashboardTheme.Light.StartBackColor.Should().Be(Avalonia.Media.Color.FromRgb(219, 235, 248));
-        DashboardTheme.Light.ContributeBackColor.Should().Be(Avalonia.Media.Color.FromRgb(230, 241, 250));
-        DashboardTheme.Light.SearchBackColor.Should().Be(Avalonia.Media.Color.FromRgb(248, 248, 255));
+        DashboardTheme.Light.LogoBackColor.Should().Be(System.Drawing.Color.FromArgb(19, 122, 212));
+        DashboardTheme.Light.StartBackColor.Should().Be(System.Drawing.Color.FromArgb(219, 235, 248));
+        DashboardTheme.Light.ContributeBackColor.Should().Be(System.Drawing.Color.FromArgb(230, 241, 250));
+        DashboardTheme.Light.SearchBackColor.Should().Be(System.Drawing.Color.FromArgb(248, 248, 255));
     }
 
     [AvaloniaTest]
@@ -2213,19 +2214,13 @@ public sealed class DashboardTests
             AppSettings.UseSystemVisualStyle = false;
             ThemeModule.TestAccessor.ReloadThemeSettings(repository);
             DashboardTheme dark = DashboardTheme.Dark;
-            dark.StartBackColor.Should().Be(Avalonia.Media.Color.FromRgb(12, 34, 56));
-            AssertSystemColors(dark);
             Dashboard dashboard = CreateDashboard();
             dashboard.RefreshContent();
-            ((Avalonia.Media.SolidColorBrush)dashboard.FindControl<Border>("flpnlStart")!.Background!).Color
-                .Should().Be(dark.StartBackColor);
+            AssertSystemColors(dashboard, dark, Color.FromRgb(12, 34, 56));
 
             ThemeModule.TestAccessor.ReloadThemeSettings(repository);
-            dark.StartBackColor.Should().Be(Avalonia.Media.Color.FromRgb(65, 43, 21));
-            AssertSystemColors(dark);
             dashboard.RefreshContent();
-            ((Avalonia.Media.SolidColorBrush)dashboard.FindControl<Border>("flpnlStart")!.Background!).Color
-                .Should().Be(dark.StartBackColor);
+            AssertSystemColors(dashboard, dark, Color.FromRgb(65, 43, 21));
         }
         finally
         {
@@ -2252,7 +2247,7 @@ public sealed class DashboardTests
                     .ToDictionary(pair => pair.color, pair => pair.value),
                 themeId);
 
-        static void AssertSystemColors(DashboardTheme dark)
+        static void AssertSystemColors(Dashboard dashboard, DashboardTheme dark, Color expectedControl)
         {
             SearchControl<string> search = new(_ => [], _ => { })
             {
@@ -2261,21 +2256,30 @@ public sealed class DashboardTests
             };
             TextBox input = search.FindControl<TextBox>("txtSearchBox")!;
             ((Avalonia.Media.SolidColorBrush)((Border)input.Parent!).BorderBrush!).Color
-                .Should().Be(dark.StartBackColor);
-            (System.Drawing.KnownColor Name, Avalonia.Media.Color Actual)[] colors =
+                .Should().Be(expectedControl);
+            Color start = ((ISolidColorBrush)dashboard.FindControl<Border>("flpnlStart")!.Background!).Color;
+            start.Should().Be(expectedControl);
+            UserRepositoriesList repositories = dashboard.FindControl<UserRepositoriesList>("userRepositoriesList")!;
+            (System.Drawing.KnownColor Name, System.Drawing.Color Palette, Color Applied)[] colors =
             [
-                (System.Drawing.KnownColor.Control, dark.SearchBackColor),
-                (System.Drawing.KnownColor.Control, dark.StartBackColor),
-                (System.Drawing.KnownColor.ControlLight, dark.ContributeBackColor),
-                (System.Drawing.KnownColor.ControlDark, dark.HeaderBackColor),
-                (System.Drawing.KnownColor.ControlDarkDark, dark.LogoBackColor),
-                (System.Drawing.KnownColor.WindowText, dark.PrimaryText),
-                (System.Drawing.KnownColor.ControlText, dark.PrimaryHeadingText),
-                (System.Drawing.KnownColor.GrayText, dark.SecondaryHeadingText),
+                (System.Drawing.KnownColor.Control, dark.SearchBackColor, repositories.SearchBackColor),
+                (System.Drawing.KnownColor.Control, dark.StartBackColor, start),
+                (System.Drawing.KnownColor.ControlLight, dark.ContributeBackColor,
+                    ((ISolidColorBrush)dashboard.FindControl<Border>("flpnlContribute")!.Background!).Color),
+                (System.Drawing.KnownColor.ControlDark, dark.HeaderBackColor, repositories.HeaderBackColor),
+                (System.Drawing.KnownColor.ControlDarkDark, dark.LogoBackColor,
+                    ((ISolidColorBrush)dashboard.FindControl<WinFormsControls.Panel>("pnlLogo")!.Background!).Color),
+                (System.Drawing.KnownColor.WindowText, dark.PrimaryText, repositories.ForeColor),
+                (System.Drawing.KnownColor.ControlText, dark.PrimaryHeadingText, AvaloniaThemeResources.ToMediaColor(
+                    AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, dark.PrimaryHeadingText.ToKnownColor()))),
+                (System.Drawing.KnownColor.GrayText, dark.SecondaryHeadingText,
+                    ((ISolidColorBrush)dashboard.FindControl<TextBlock>("lblContribute")!.Foreground!).Color),
             ];
-            foreach ((System.Drawing.KnownColor name, Avalonia.Media.Color actual) in colors)
+            foreach ((System.Drawing.KnownColor name, System.Drawing.Color palette, Color applied) in colors)
             {
-                actual.Should().Be(AvaloniaThemeResources.ToMediaColor(ThemeModule.Settings.Theme.GetColor(name)));
+                palette.IsSystemColor.Should().BeTrue();
+                palette.ToKnownColor().Should().Be(name);
+                applied.Should().Be(AvaloniaThemeResources.ToMediaColor(ThemeModule.Settings.Theme.GetColor(name)));
             }
         }
     }

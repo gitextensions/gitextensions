@@ -22,7 +22,7 @@ internal static class DedicatedHeadlessTestSession
         }
 
         // Avalonia rendering resources can retain their creating dispatcher across application scopes.
-        string directory = Path.Combine(Path.GetTempPath(), $"GitExtensions.ThreadingEvidence-{Environment.ProcessId}-{Guid.NewGuid():N}");
+        string directory = Path.Combine(TestContext.CurrentContext.WorkDirectory, "TestResults", "ThreadingEvidence", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
         string assembly = typeof(DedicatedHeadlessTestSession).Assembly.Location;
         ProcessStartInfo start = new(Environment.GetEnvironmentVariable("DOTNET_HOST_PATH") ?? "dotnet")
@@ -108,7 +108,9 @@ internal static class DedicatedHeadlessTestSession
             BindingFlags.Instance | BindingFlags.NonPublic,
             binder: null,
             [typeof(AppBuilder), typeof(CancellationTokenSource), typeof(BlockingCollection<(Action, ExecutionContext?)>), typeof(Task), typeof(bool)],
-            modifiers: null) ?? throw new MissingMethodException(typeof(HeadlessUnitTestSession).FullName, ".ctor");
+            modifiers: null) ?? throw new MissingMethodException(
+                $"Avalonia.Headless {typeof(HeadlessUnitTestSession).Assembly.GetName().Version} no longer exposes the HeadlessUnitTestSession constructor "
+                + "(AppBuilder, CancellationTokenSource, BlockingCollection<(Action, ExecutionContext)>, Task, bool) required by the dedicated UI-thread test host.");
         HeadlessUnitTestSession session = (HeadlessUnitTestSession)constructor.Invoke(
             [TestAppBuilder.BuildAvaloniaApp(), cancellation, queue, dispatch, true]);
         dispatch.Start(TaskScheduler.Default);

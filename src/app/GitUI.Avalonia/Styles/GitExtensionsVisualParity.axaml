@@ -1760,10 +1760,10 @@
                 <Panel x:Name="PART_ExpandCollapseChevronContainer"
                        Width="12"
                        Margin="{StaticResource GitExtensionsTreeViewChevronMargin}">
-                  <ToggleButton x:Name="PART_ExpandCollapseChevron"
-                                Theme="{StaticResource FluentTreeViewExpandCollapseChevron}"
-                                Focusable="False"
-                                IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
+                  <compat:NativeTreeExpander x:Name="PART_ExpandCollapseChevron"
+                                             Theme="{StaticResource FluentTreeViewExpandCollapseChevron}"
+                                             Focusable="False"
+                                             IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
                 </Panel>
                 <Grid Grid.Column="1">
                   <Border x:Name="PART_NativeSelectionBorder">
