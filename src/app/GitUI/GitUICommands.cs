@@ -261,8 +261,8 @@ public sealed class GitUICommands : IGitUICommands
     {
         // The main worktree holds the repository in a ".git" directory, while a linked worktree only
         // has a ".git" file pointing into it, so deleting the former destroys the repository - which
-        // is why git refuses to remove it even with --force. Deleting is done by removing the
-        // directory rather than by "git worktree remove", so that refusal has to be repeated here.
+        // is why git refuses to remove it even with --force. Where git refuses, the directory is
+        // deleted directly instead (e.g. for a locked worktree), so that refusal has to be repeated here.
         // This does not compare paths and therefore also holds where the current worktree is not
         // recognised, e.g. when the repository is opened through a junction or a mount point.
         if (Directory.Exists(Path.Combine(worktreePath, ".git")))
@@ -295,7 +295,7 @@ public sealed class GitUICommands : IGitUICommands
                 return false;
             }
 
-            if (!worktreePath.TryDeleteDirectory(out string? errorMessage))
+            if (!Module.TryRemoveWorktree(worktreePath, out string? errorMessage))
             {
                 TaskDialog.ShowDialog(owner!, new TaskDialogPage
                 {
@@ -308,7 +308,6 @@ public sealed class GitUICommands : IGitUICommands
                 return false;
             }
 
-            StartCommandLineProcessDialog(owner, command: null, "worktree prune");
             return true;
         });
     }
