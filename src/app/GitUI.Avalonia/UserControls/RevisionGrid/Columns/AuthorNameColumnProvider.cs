@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
-using Avalonia.Media;
 using GitCommands;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -35,13 +34,9 @@ internal sealed class AuthorNameColumnProvider : ColumnProvider
     {
         TextBlock textBlock = (TextBlock)control;
         bool emphasized = _authorHighlighting.IsHighlighted(revision);
-        GitExtensions.Shims.WinForms.Font normalFont = AppSettings.Font;
 
         // The source's BoldFont replaces the normal style rather than adding Bold.
-        textBlock.FontWeight = emphasized || normalFont.Bold
-            ? FontWeight.Bold
-            : FontWeight.Normal;
-        textBlock.FontStyle = !emphasized && normalFont.Italic ? FontStyle.Italic : FontStyle.Normal;
+        textBlock.Classes.Set("revision-emphasized", emphasized);
         _grid.DrawColumnText(textBlock, textBlock.Text);
     }
 

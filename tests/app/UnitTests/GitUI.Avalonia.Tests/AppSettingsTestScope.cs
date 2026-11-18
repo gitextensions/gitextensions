@@ -20,7 +20,7 @@ internal sealed class AppSettingsTestScope : IDisposable
     private readonly string _directory;
     private bool _disposed;
 
-    public AppSettingsTestScope()
+    public AppSettingsTestScope(bool useSharedCache = false)
     {
         _previousWindowPositions = (WindowPositionList?)WindowPositionCache.GetValue(null);
         _previousSettings = AppSettings.SettingsContainer;
@@ -28,7 +28,7 @@ internal sealed class AppSettingsTestScope : IDisposable
         _previousWindowPositionPath = WindowPositionList.ConfigFilePathProvider;
         _directory = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.FixtureSettings-{Guid.NewGuid():N}");
         Directory.CreateDirectory(_directory);
-        _cache = GitExtSettingsCache.Create(Path.Combine(_directory, AppSettings.SettingsFileName), useSharedCache: false);
+        _cache = GitExtSettingsCache.Create(Path.Combine(_directory, AppSettings.SettingsFileName), useSharedCache);
         // Borrow the settings reference without holding UsingContainer's cache lock across asynchronous UI work.
         SettingsContainerSetter.Invoke(null, [new DistributedSettings(null, _cache, SettingLevel.Unknown)]);
         AppSettings.GetTestAccessor().ApplicationDataPath = new Lazy<string?>(() => _directory);

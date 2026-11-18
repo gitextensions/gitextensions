@@ -8,10 +8,11 @@ using GitUI.Compat;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
+using ToolStripMenuItem = GitUI.Compat.WinFormsControls.ToolStripMenuItem;
 
 namespace GitUI.UserControls.RevisionGrid;
 
-public sealed class CopyContextMenuItem : GitUI.Compat.WinFormsControls.ToolStripMenuItem
+public sealed class CopyContextMenuItem : ToolStripMenuItem
 {
     private readonly TranslationString _copyToClipboardText = new("&Copy to clipboard");
     private Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> _filterRefsFunc = refs => refs;
@@ -129,7 +130,7 @@ public sealed class CopyContextMenuItem : GitUI.Compat.WinFormsControls.ToolStri
         // Add items for branches
         if (branchNames.Count != 0)
         {
-            MenuItem caption = new()
+            ToolStripMenuItem caption = new()
             {
                 Header = TranslatedStrings.Branches,
             };
@@ -147,7 +148,7 @@ public sealed class CopyContextMenuItem : GitUI.Compat.WinFormsControls.ToolStri
         // Add items for tags
         if (tagNames.Count != 0)
         {
-            MenuItem caption = new()
+            ToolStripMenuItem caption = new()
             {
                 Header = TranslatedStrings.Tags,
             };

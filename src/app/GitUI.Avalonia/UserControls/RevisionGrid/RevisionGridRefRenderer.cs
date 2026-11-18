@@ -376,7 +376,8 @@ internal static class RevisionGridRefRenderer
         FontWeight? fontWeight = null,
         string? highlightedLabel = null,
         RefLabelIcon? icon = null)
-        => new(
+    {
+        RefLabelControl control = new(
             gitRef,
             label,
             GetBrushResourceKey(gitRef),
@@ -395,14 +396,14 @@ internal static class RevisionGridRefRenderer
             GetRemoteRefBrush(gitRef),
             highlightedLabel)
         {
-            // Explicit Normal denotes the source NormalFont, which may itself be bold.
-            // Its selected/forced BoldFont replaces configured Italic rather than adding Bold.
-            FontWeight = fontWeight == FontWeight.Bold || (fontWeight is null && gitRef.IsSelected) || AppSettings.Font.Bold
-                ? FontWeight.Bold : FontWeight.Normal,
-            FontStyle = fontWeight != FontWeight.Bold && (fontWeight is not null || !gitRef.IsSelected) && AppSettings.Font.Italic
-                ? FontStyle.Italic : FontStyle.Normal,
             VerticalAlignment = VerticalAlignment.Center,
         };
+
+        // Explicit Normal denotes the source NormalFont, which may itself be bold.
+        // Its selected/forced BoldFont replaces configured Italic rather than adding Bold.
+        control.Classes.Set("revision-emphasized", fontWeight == FontWeight.Bold || (fontWeight is null && gitRef.IsSelected));
+        return control;
+    }
 
     /// <summary>
     ///  Draws a ref label and returns the retained label.

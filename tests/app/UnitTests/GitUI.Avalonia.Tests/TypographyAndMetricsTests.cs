@@ -96,9 +96,12 @@ public sealed class TypographyAndMetricsTests
     }
 
     [AvaloniaTest]
+    [NonParallelizable]
     public void FormRecentReposSettings_should_preserve_source_specific_density()
     {
-        FormRecentReposSettings form = new([]);
+        using AppSettingsTestScope settings = new();
+        using CommitInfoTestSupport.UiContextScope uiContext = new();
+        FormRecentReposSettings form = new();
         form.Show();
         try
         {

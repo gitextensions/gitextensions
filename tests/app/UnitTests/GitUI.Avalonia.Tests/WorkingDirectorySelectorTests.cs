@@ -725,6 +725,7 @@ public sealed class WorkingDirectorySelectorTests
     [NonParallelizable]
     public void FormRecentReposSettings_should_roundtrip_settings_and_repository_actions()
     {
+        using AppSettingsTestScope settings = new();
         int originalMaximum = AppSettings.MaxTopRepositories;
         int originalHistorySize = AppSettings.RecentRepositoriesHistorySize;
         int originalWidth = AppSettings.RecentReposComboMinWidth;
@@ -742,16 +743,11 @@ public sealed class WorkingDirectorySelectorTests
             AppSettings.SortTopRepos = false;
             AppSettings.SortRecentRepos = false;
             AppSettings.ShorteningRecentRepoPathStrategy = ShorteningRecentRepoPathStrategy.None;
-            Repository first = new(@"C:\repos\first");
-            Repository second = new(@"C:\repos\second");
-            IList<Repository>? saved = null;
-            form = new(
-                [first, second],
-                repositories =>
-                {
-                    saved = [.. repositories];
-                    return Task.CompletedTask;
-                });
+            string root = Path.GetDirectoryName(settings.WindowPositionPath)!;
+            Repository first = new(Directory.CreateDirectory(Path.Combine(root, "first")).FullName);
+            Repository second = new(Directory.CreateDirectory(Path.Combine(root, "second")).FullName);
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.SaveRecentHistoryAsync([first, second]));
+            form = new();
             form.Show();
             Dispatcher.UIThread.RunJobs();
             form.TopLB.Items.Cast<RecentRepoInfo>().Should().ContainSingle();
@@ -763,7 +759,7 @@ public sealed class WorkingDirectorySelectorTests
             Click(TopLevel.GetTopLevel(form.anchorToRecentReposToolStripMenuItem)!, form.anchorToRecentReposToolStripMenuItem, MouseButton.Left);
             Dispatcher.UIThread.RunJobs();
             form.contextMenuStrip1.IsOpen.Should().BeFalse();
-            first.Anchor.Should().Be(Repository.RepositoryAnchor.AnchoredInRecent);
+            top.Repo.Anchor.Should().Be(Repository.RepositoryAnchor.AnchoredInRecent);
             form.RecentLB.SelectedItem = form.RecentLB.Items
                 .Cast<RecentRepoInfo>()
                 .Single(item => item.Repo.Path == first.Path);
@@ -771,7 +767,7 @@ public sealed class WorkingDirectorySelectorTests
             Click(TopLevel.GetTopLevel(form.removeAnchorToolStripMenuItem)!, form.removeAnchorToolStripMenuItem, MouseButton.Left);
             Dispatcher.UIThread.RunJobs();
             form.contextMenuStrip1.IsOpen.Should().BeFalse();
-            first.Anchor.Should().Be(Repository.RepositoryAnchor.None);
+            top.Repo.Anchor.Should().Be(Repository.RepositoryAnchor.None);
 
             RecentRepoInfo recent = form.RecentLB.Items.Cast<RecentRepoInfo>().Single();
             form.RecentLB.SelectedItem = recent;
@@ -798,7 +794,8 @@ public sealed class WorkingDirectorySelectorTests
             AppSettings.SortTopRepos.Should().BeTrue();
             AppSettings.SortRecentRepos.Should().BeTrue();
             AppSettings.ShorteningRecentRepoPathStrategy.Should().Be(ShorteningRecentRepoPathStrategy.MiddleDots);
-            saved.Should().NotBeNull();
+            IList<Repository> saved = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
+            saved.Should().ContainSingle().Which.Path.Should().Be(first.Path);
         }
         finally
         {
@@ -831,16 +828,17 @@ public sealed class WorkingDirectorySelectorTests
     [NonParallelizable]
     public void FormRecentReposSettings_should_ignore_detached_radio_group_transitions()
     {
+        using AppSettingsTestScope settings = new();
         ShorteningRecentRepoPathStrategy originalShortening = AppSettings.ShorteningRecentRepoPathStrategy;
         FormRecentReposSettings? first = null;
         FormRecentReposSettings? second = null;
         try
         {
             AppSettings.ShorteningRecentRepoPathStrategy = ShorteningRecentRepoPathStrategy.MiddleDots;
-            first = new FormRecentReposSettings([]);
+            first = new FormRecentReposSettings();
 
             AppSettings.ShorteningRecentRepoPathStrategy = ShorteningRecentRepoPathStrategy.None;
-            Action constructSecondForm = () => second = new FormRecentReposSettings([]);
+            Action constructSecondForm = () => second = new FormRecentReposSettings();
 
             constructSecondForm.Should().NotThrow();
         }
@@ -871,10 +869,12 @@ public sealed class WorkingDirectorySelectorTests
     }
 
     [AvaloniaTest]
+    [NonParallelizable]
     public void FormRecentReposSettings_should_preserve_original_translation_keys()
     {
+        using AppSettingsTestScope settings = new();
         ITranslation translation = Substitute.For<ITranslation>();
-        FormRecentReposSettings form = new([]);
+        FormRecentReposSettings form = new();
         try
         {
             form.AddTranslationItems(translation);

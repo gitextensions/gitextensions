@@ -6,6 +6,7 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
@@ -165,6 +166,82 @@ public sealed class RevisionGridFontMetricsTests
     }
 
     [AvaloniaTest]
+    public async Task Reloaded_non_head_cells_should_keep_the_published_normal_font()
+    {
+        Font originalFont = AppSettings.Font;
+        using AppSettingsTestScope settings = new();
+        using GitModuleTestHelper repository = new();
+        repository.Module.GitExecutable.GetOutput("commit --allow-empty --author=\"Other Author <older@example.invalid>\" -m older");
+        repository.Module.GitExecutable.GetOutput("tag older-tag");
+        repository.Module.GitExecutable.GetOutput("commit --allow-empty -m newer");
+        IGitUICommandsSource source = CreateCommandsSource();
+        source.UICommands.Module.Returns(repository.Module);
+        Window? window = null;
+        RevisionGridControl? grid = null;
+        try
+        {
+            AppSettings.ShowAuthorNameColumn = true;
+            AppSettings.ShowTags = true;
+            AppSettings.Font = CreateFont(bold: false, italic: true);
+            AvaloniaFontSettings.ApplyAppSettings();
+            grid = new() { UICommandsSource = source };
+            window = new Window { Width = 900, Height = 240, Content = grid };
+            window.Show();
+            await ReloadAsync(grid, window);
+            AssertNormalFont(grid);
+
+            // An existing grid continues using its applied typography until settings are applied.
+            AppSettings.Font = CreateFont(bold: true, italic: false);
+            await ReloadAsync(grid, window);
+            AssertNormalFont(grid);
+        }
+        finally
+        {
+            grid?.CancelBackgroundTasks();
+            window?.Close();
+            AppSettings.Font = originalFont;
+            AvaloniaFontSettings.ApplyAppSettings();
+        }
+
+        async Task ReloadAsync(RevisionGridControl revisionGrid, Window owner)
+        {
+            TaskCompletionSource loaded = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            EventHandler<RevisionLoadEventArgs> handler = (_, _) => loaded.TrySetResult();
+            revisionGrid.RevisionsLoaded += handler;
+            try
+            {
+                revisionGrid.ReloadRevisions(repository.Module);
+                await loaded.Task.WaitAsync(TimeSpan.FromSeconds(15));
+                owner.UpdateLayout();
+            }
+            finally
+            {
+                revisionGrid.RevisionsLoaded -= handler;
+            }
+        }
+
+        static void AssertNormalFont(RevisionGridControl revisionGrid)
+        {
+            ListBoxItem row = revisionGrid._gridView.GetRealizedContainers().OfType<ListBoxItem>()
+                .Single(item => item.Content is GitRevision { Subject: "older" });
+            TextBlock author = row.GetVisualDescendants().OfType<TextBlock>()
+                .Single(text => text.Classes.Contains("revision-author-cell"));
+            TextBlock subject = row.GetVisualDescendants().OfType<TextBlock>()
+                .Single(text => text.Classes.Contains("revision-subject"));
+            RevisionGridRefRenderer.RefLabelControl tag = row.GetVisualDescendants()
+                .OfType<RevisionGridRefRenderer.RefLabelControl>().Single(label => label.Label == "older-tag");
+            foreach (TextBlock text in new[] { author, subject })
+            {
+                text.FontStyle.Should().Be(FontStyle.Italic);
+                text.FontWeight.Should().Be(FontWeight.Normal);
+            }
+
+            tag.FontStyle.Should().Be(FontStyle.Italic);
+            tag.FontWeight.Should().Be(FontWeight.Normal);
+        }
+    }
+
+    [AvaloniaTest]
     public void Graphics_measurement_should_preserve_empty_text_and_cached_float_metrics()
     {
         Button owner = new() { FontFamily = new FontFamily("Arial"), FontSize = 12 };
@@ -185,9 +262,11 @@ public sealed class RevisionGridFontMetricsTests
         bool bold, bool italic, bool emphasized)
     {
         Font original = AppSettings.Font;
+        Window? window = null;
         try
         {
             AppSettings.Font = CreateFont(bold, italic);
+            AvaloniaFontSettings.ApplyAppSettings();
             RevisionGridControl grid = new();
             AuthorRevisionHighlighting highlighting = new();
             GitRevision revision = new(ObjectId.Random()) { Author = "Author", AuthorEmail = "author@example.invalid" };
@@ -199,12 +278,15 @@ public sealed class RevisionGridFontMetricsTests
             AuthorNameColumnProvider provider = new(grid, highlighting);
             TextBlock cell = (TextBlock)provider.CreateCell();
             provider.UpdateCell(cell, revision);
+            window = ShowTypographyCell(cell);
             cell.FontWeight.Should().Be(emphasized || bold ? FontWeight.Bold : FontWeight.Normal);
             cell.FontStyle.Should().Be(!emphasized && italic ? FontStyle.Italic : FontStyle.Normal);
         }
         finally
         {
+            window?.Close();
             AppSettings.Font = original;
+            AvaloniaFontSettings.ApplyAppSettings();
         }
     }
 
@@ -214,10 +296,12 @@ public sealed class RevisionGridFontMetricsTests
         bool bold, bool italic, bool emphasized)
     {
         Font original = AppSettings.Font;
+        Window? window = null;
         bool originalShowBody = AppSettings.ShowCommitBodyInRevisionGrid;
         try
         {
             AppSettings.Font = CreateFont(bold, italic);
+            AvaloniaFontSettings.ApplyAppSettings();
             AppSettings.ShowCommitBodyInRevisionGrid = true;
             RevisionGridControl grid = new();
             GitRevision revision = new(ObjectId.Random()) { Subject = "subject", Body = "subject\n\nbody", HasMultiLineMessage = true };
@@ -231,6 +315,7 @@ public sealed class RevisionGridFontMetricsTests
             MessageColumnProvider provider = grid.ColumnProviders.OfType<MessageColumnProvider>().Single();
             Control cell = provider.CreateCell();
             provider.UpdateCell(cell, revision);
+            window = ShowTypographyCell(cell);
             TextBlock subject = cell.GetVisualDescendants().OfType<TextBlock>().Single(block => block.Classes.Contains("revision-subject"));
             TextBlock body = cell.GetVisualDescendants().OfType<TextBlock>().Single(block => block.Classes.Contains("revision-body"));
             subject.Text.Should().NotBeNullOrEmpty();
@@ -242,7 +327,9 @@ public sealed class RevisionGridFontMetricsTests
         }
         finally
         {
+            window?.Close();
             AppSettings.Font = original;
+            AvaloniaFontSettings.ApplyAppSettings();
             AppSettings.ShowCommitBodyInRevisionGrid = originalShowBody;
         }
     }
@@ -253,17 +340,22 @@ public sealed class RevisionGridFontMetricsTests
         bool bold, bool italic, bool emphasized)
     {
         Font original = AppSettings.Font;
+        Window? window = null;
         try
         {
             AppSettings.Font = CreateFont(bold, italic);
+            AvaloniaFontSettings.ApplyAppSettings();
             GitRef gitRef = new(Substitute.For<IGitModule>(), ObjectId.Random(), "refs/heads/branch") { IsSelected = emphasized };
             RevisionGridRefRenderer.RefLabelControl label = RevisionGridRefRenderer.CreateLabel(gitRef, "branch", RefLabelShape.Rect, fill: false);
+            window = ShowTypographyCell(label);
             label.FontWeight.Should().Be(emphasized || bold ? FontWeight.Bold : FontWeight.Normal);
             label.FontStyle.Should().Be(!emphasized && italic ? FontStyle.Italic : FontStyle.Normal);
         }
         finally
         {
+            window?.Close();
             AppSettings.Font = original;
+            AvaloniaFontSettings.ApplyAppSettings();
         }
     }
 
@@ -271,19 +363,33 @@ public sealed class RevisionGridFontMetricsTests
     public void Explicit_normal_ref_font_should_keep_the_configured_bold_italic_style()
     {
         Font original = AppSettings.Font;
+        Window? window = null;
         try
         {
             AppSettings.Font = CreateFont(bold: true, italic: true);
+            AvaloniaFontSettings.ApplyAppSettings();
             GitRef gitRef = new(Substitute.For<IGitModule>(), ObjectId.Random(), "refs/heads/branch") { IsSelected = true };
             RevisionGridRefRenderer.RefLabelControl label = RevisionGridRefRenderer.CreateLabel(gitRef, "branch", RefLabelShape.Rect,
                 fill: false, fontWeight: FontWeight.Normal);
+            window = ShowTypographyCell(label);
             label.FontWeight.Should().Be(FontWeight.Bold);
             label.FontStyle.Should().Be(FontStyle.Italic);
         }
         finally
         {
+            window?.Close();
             AppSettings.Font = original;
+            AvaloniaFontSettings.ApplyAppSettings();
         }
+    }
+
+    private static Window ShowTypographyCell(Control cell)
+    {
+        Window window = new() { Width = 800, Height = 120, Content = cell };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        return window;
     }
 
     private static IEnumerable<TestCaseData> ConfiguredFonts()

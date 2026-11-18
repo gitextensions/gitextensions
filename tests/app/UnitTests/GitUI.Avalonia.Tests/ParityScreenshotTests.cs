@@ -850,14 +850,24 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormRecentReposSettings))
         {
-            return new FormRecentReposSettings(
-            [
-                new Repository(context.WorkingDirectory)
-                {
-                    Anchor = Repository.RepositoryAnchor.AnchoredInTop,
-                },
-                new Repository(Path.GetDirectoryName(context.WorkingDirectory)!),
-            ]);
+            ILocalRepositoryManager history = RepositoryHistoryManager.Locals;
+            IList<Repository> previous = ThreadHelper.JoinableTaskFactory.Run(history.LoadRecentHistoryAsync);
+            try
+            {
+                ThreadHelper.JoinableTaskFactory.Run(() => history.SaveRecentHistoryAsync(
+                [
+                    new Repository(context.WorkingDirectory)
+                    {
+                        Anchor = Repository.RepositoryAnchor.AnchoredInTop,
+                    },
+                    new Repository(Path.GetDirectoryName(context.WorkingDirectory)!),
+                ]));
+                return new FormRecentReposSettings();
+            }
+            finally
+            {
+                ThreadHelper.JoinableTaskFactory.Run(() => history.SaveRecentHistoryAsync(previous));
+            }
         }
 
         if (viewType == typeof(FormUpdates))

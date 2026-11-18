@@ -75,7 +75,7 @@ public sealed class BuildServerAutoDetectionColumnTests
     {
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
-        using AppSettingsTestScope settings = new();
+        using AppSettingsTestScope settings = new(useSharedCache: true);
         AppSettings.ShowBuildStatusIconColumn = showIcon;
         AppSettings.ShowBuildStatusTextColumn = showText;
         using ServiceContainer services = new();
@@ -134,6 +134,9 @@ public sealed class BuildServerAutoDetectionColumnTests
             module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" }).Should().BeTrue();
             module.GitExecutable.RunCommand(new GitArgumentBuilder("remote")
                 { "add", "origin", "https://github.com/parity-owner/parity-repository.git" }).Should().BeTrue();
+            module.EffectiveSettings.LowerPriority!.LowerPriority!.SettingsCache.Should()
+                .BeSameAs(AppSettings.SettingsContainer.SettingsCache,
+                    "the original app preferences and detector writes share the global settings cache");
             BuildServerSettings.ServerName[module.GetEffectiveSettings()].Should().BeNullOrEmpty();
             BuildServerSettings.IntegrationEnabled[module.GetEffectiveSettings()].Should().BeNull();
             form = new FormBrowse(new GitUICommands(services, module), new BrowseArguments()) { Width = 1400, Height = 800 };

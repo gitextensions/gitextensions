@@ -1626,6 +1626,14 @@
     <Setter Property="FontStyle" Value="Normal" />
     <Setter Property="FontWeight" Value="Normal" />
   </Style>
+  <Style Selector="TextBlock.revision-emphasized">
+    <Setter Property="FontStyle" Value="Normal" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+  <Style Selector=":is(TemplatedControl).revision-emphasized">
+    <Setter Property="FontStyle" Value="Normal" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
   <Style Selector="SelectableTextBlock.gitextensions-commit-message">
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsCommitFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsCommitFontSize}" />

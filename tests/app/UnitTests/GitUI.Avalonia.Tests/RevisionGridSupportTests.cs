@@ -469,7 +469,7 @@ public sealed class RevisionGridSupportTests
     [Category("P8.6h.3a")]
     public void Menu_caption_and_multiline_indicator_should_use_native_noninteractive_controls()
     {
-        MenuItem caption = new();
+        GitUI.Compat.WinFormsControls.ToolStripMenuItem caption = new();
         MenuItem owner = new();
 
         MenuUtil.SetAsCaptionMenuItem(caption, owner);
@@ -689,9 +689,9 @@ public sealed class RevisionGridSupportTests
         item.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
 
         item.Items.Should().HaveCount(10);
-        item.Items[0].Should().BeOfType<MenuItem>().Which.Header.Should().Be(TranslatedStrings.Branches);
+        item.Items[0].Should().BeOfType<GitUI.Compat.WinFormsControls.ToolStripMenuItem>().Which.Header.Should().Be(TranslatedStrings.Branches);
         item.Items[1].Should().BeOfType<MenuItem>().Which.Header.Should().Be("_1:   branch1");
-        item.Items[3].Should().BeOfType<MenuItem>().Which.Header.Should().Be(TranslatedStrings.Tags);
+        item.Items[3].Should().BeOfType<GitUI.Compat.WinFormsControls.ToolStripMenuItem>().Which.Header.Should().Be(TranslatedStrings.Tags);
         item.Items[4].Should().BeOfType<MenuItem>().Which.Header.Should().Be("_2:   tag1");
         item.Items[6].Should().BeOfType<MenuItem>().Which.Header!.ToString().Should().StartWith("_Commit hash");
         item.Items.OfType<MenuItem>().Select(menuItem => menuItem.Width).Distinct().Should().ContainSingle();

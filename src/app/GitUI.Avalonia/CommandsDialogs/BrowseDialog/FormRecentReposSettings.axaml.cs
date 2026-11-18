@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -19,31 +20,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog;
 public partial class FormRecentReposSettings : GitExtensionsForm
 {
     private const int MinComboWidthAllowed = 30;
-    private readonly Func<string, Task<IList<Repository>>> _removeRecentAsync;
-    private readonly Func<IEnumerable<Repository>, Task> _saveRecentAsync;
     private IList<Repository>? _repositoryHistory;
     private decimal _previousValue;
 
-    // Avalonia's designer must not read or mutate repository history.
     public FormRecentReposSettings()
-        : this(
-            Design.IsDesignMode
-                ? []
-                : ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync),
-            Design.IsDesignMode ? null : RepositoryHistoryManager.Locals.SaveRecentHistoryAsync,
-            Design.IsDesignMode ? null : RepositoryHistoryManager.Locals.RemoveRecentAsync)
-    {
-    }
-
-    internal FormRecentReposSettings(
-        IList<Repository> repositoryHistory,
-        Func<IEnumerable<Repository>, Task>? saveRecentAsync = null,
-        Func<string, Task<IList<Repository>>>? removeRecentAsync = null)
         : base(enablePositionRestore: true)
     {
-        _repositoryHistory = repositoryHistory;
-        _saveRecentAsync = saveRecentAsync ?? (_ => Task.CompletedTask);
-        _removeRecentAsync = removeRecentAsync ?? RemoveRecentFromMemoryAsync;
+        // The previewer owns the dispatcher before the application creates its joinable context.
+        Dispatcher.UIThread.VerifyAccess();
 
         InitializeComponent();
         contextMenuStrip1.Opening += contextMenuStrip1_Opening;
@@ -61,6 +45,11 @@ public partial class FormRecentReposSettings : GitExtensionsForm
         removeAnchorToolStripMenuItem.Click += removeAnchorToolStripMenuItem_Click;
         removeRecentToolStripMenuItem.Click += removeRecentToolStripMenuItem_Click;
         InitializeComplete();
+
+        // Avalonia's designer must not read or mutate repository history.
+        _repositoryHistory = Design.IsDesignMode
+            ? []
+            : ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
         LoadSettings();
         RefreshRepos();
         _NO_TRANSLATE_maxRecentRepositories.ValueChanged += sortTopRepos_CheckedChanged;
@@ -132,7 +121,10 @@ public partial class FormRecentReposSettings : GitExtensionsForm
         AppSettings.MaxTopRepositories = Convert.ToInt32(_NO_TRANSLATE_maxRecentRepositories.Value);
         AppSettings.RecentReposComboMinWidth = Convert.ToInt32(comboMinWidthEdit.Value);
         AppSettings.RecentRepositoriesHistorySize = Convert.ToInt32(_NO_TRANSLATE_RecentRepositoriesHistorySize.Value);
-        ThreadHelper.JoinableTaskFactory.Run(() => _saveRecentAsync(_repositoryHistory));
+        if (!Design.IsDesignMode)
+        {
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(_repositoryHistory));
+        }
     }
 
     private ShorteningRecentRepoPathStrategy GetShorteningStrategy()
@@ -358,7 +350,7 @@ public partial class FormRecentReposSettings : GitExtensionsForm
     {
         ThreadHelper.ThrowIfNotOnUIThread();
 
-        if (!GetSelectedRepos(sender, out List<RecentRepoInfo>? repos))
+        if (Design.IsDesignMode || !GetSelectedRepos(sender, out List<RecentRepoInfo>? repos))
         {
             return;
         }
@@ -367,24 +359,11 @@ public partial class FormRecentReposSettings : GitExtensionsForm
         {
             foreach (RecentRepoInfo repo in repos)
             {
-                _repositoryHistory = await _removeRecentAsync(repo.Repo.Path);
+                _repositoryHistory = await RepositoryHistoryManager.Locals.RemoveRecentAsync(repo.Repo.Path);
             }
         });
 
         RefreshRepos();
-    }
-
-    private Task<IList<Repository>> RemoveRecentFromMemoryAsync(string path)
-    {
-        Validates.NotNull(_repositoryHistory);
-        Repository? repository = _repositoryHistory.FirstOrDefault(
-            repo => string.Equals(repo.Path, path, StringComparison.OrdinalIgnoreCase));
-        if (repository is not null)
-        {
-            _repositoryHistory.Remove(repository);
-        }
-
-        return Task.FromResult(_repositoryHistory);
     }
 
     // Avalonia paints ListBox rows through a TextBlock template rather than a GDI DrawItem event.

@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using GitUI.Compat.WinFormsControls;
 
 namespace GitUI.UserControls.RevisionGrid;
 
@@ -9,7 +10,7 @@ internal static class MenuUtil
     /// <summary>
     /// set the menu item disabled.
     /// </summary>
-    public static void SetAsCaptionMenuItem(MenuItem menuItem)
+    public static void SetAsCaptionMenuItem(ToolStripMenuItem menuItem)
     {
         menuItem.Tag = _captionTag;
         menuItem.IsEnabled = false;
@@ -24,8 +25,9 @@ internal static class MenuUtil
     /// <summary>
     /// set the menu item disabled and remove mouse hover effect.
     /// </summary>
-    public static void SetAsCaptionMenuItem(MenuItem menuItem, ItemsControl menu)
+    public static void SetAsCaptionMenuItem(ToolStripMenuItem menuItem, ItemsControl menu)
     {
+        // Avalonia applies the caption style to the item without a parent renderer.
         SetAsCaptionMenuItem(menuItem);
     }
 }

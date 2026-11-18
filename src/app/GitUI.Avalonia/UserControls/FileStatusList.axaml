@@ -49,8 +49,8 @@
       <MenuItem x:Name="tsmiCherryPickChanges" Header="Cherr_y pick changes" IsVisible="False" />
       <Separator x:Name="sepGit" />
       <MenuItem x:Name="tsmiOpenWithDifftool" Header="Open with _difftool">
-        <MenuItem x:Name="tsmiSecondDiffCaption" IsEnabled="False" />
-        <MenuItem x:Name="tsmiFirstDiffCaption" IsEnabled="False" />
+        <wf:ToolStripMenuItem x:Name="tsmiSecondDiffCaption" IsEnabled="False" />
+        <wf:ToolStripMenuItem x:Name="tsmiFirstDiffCaption" IsEnabled="False" />
         <MenuItem x:Name="tsmiDiffFirstToSelected" x:FieldModifier="internal" Header="_First -&gt; Second" />
         <MenuItem x:Name="tsmiDiffSelectedToLocal" Header="_Second -&gt; Working directory" />
         <MenuItem x:Name="tsmiDiffFirstToLocal" Header="First -&gt; _Working directory" />

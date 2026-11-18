@@ -138,10 +138,11 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         if (revision.IsArtificial)
         {
+            panel.Subject.Classes.Remove("revision-emphasized");
+            panel.Body.Classes.Remove("revision-emphasized");
             DrawArtificialRevision(panel, revision);
 
             panel.Subject.Text = string.Empty;
-            panel.Subject.FontWeight = FontWeight.Normal;
             panel.Revision = revision;
             panel.Indicator.Update(revision);
             ToolTip.SetTip(panel, _settings.ShowGitStatusForArtificialCommits
@@ -662,15 +663,10 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         // Draw the multi-line indicator
         bool emphasized = _grid.IsCurrentCheckout(revision);
-        GitExtensions.Shims.WinForms.Font normalFont = AppSettings.Font;
 
         // Source BoldFont replaces configured Italic; NormalFont keeps its full style.
-        panel.Subject.FontWeight = emphasized || normalFont.Bold
-            ? FontWeight.Bold
-            : FontWeight.Normal;
-        panel.Subject.FontStyle = !emphasized && normalFont.Italic ? FontStyle.Italic : FontStyle.Normal;
-        panel.Body.FontWeight = panel.Subject.FontWeight;
-        panel.Body.FontStyle = panel.Subject.FontStyle;
+        panel.Subject.Classes.Set("revision-emphasized", emphasized);
+        panel.Body.Classes.Set("revision-emphasized", emphasized);
     }
 
     private bool FilterRef(IGitRef gitRef)

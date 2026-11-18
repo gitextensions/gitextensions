@@ -7,6 +7,7 @@ using Avalonia.Media;
 using GitUI.Compat;
 
 using Keys = GitExtensions.Shims.WinForms.Keys;
+using ToolStripMenuItem = GitUI.Compat.WinFormsControls.ToolStripMenuItem;
 
 namespace GitUI.CommandsDialogs.BrowseDialog;
 
@@ -45,7 +46,7 @@ internal sealed class MenuCommand
 
         if (menuCommand.IsGroupHeader)
         {
-            MenuItem headerToolStripMenuItem = new()
+            ToolStripMenuItem headerToolStripMenuItem = new()
             {
                 Name = menuCommand.Name,
                 Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(menuCommand.Text ?? string.Empty),
