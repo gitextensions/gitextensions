@@ -55,40 +55,99 @@ public sealed class GraphHistoryRenderingTests
     }
 
     [AvaloniaTest]
-    public async Task RenderGraphToCacheAsync_should_publish_worker_results_on_the_realized_grid_thread()
+    public async Task Loaded_graph_should_publish_on_the_grid_thread_and_replace_the_old_viewport()
     {
-        RevisionGraph graph = BuildGraph();
-        RevisionGridControl grid = new() { UICommandsSource = CreateCommandsSource() };
-        GitRevision revision = graph.GetNodeForRow(0)!.GitRevision!;
-        grid.GetNativeTestAccessor().SetRevisions([revision]);
-        Window window = new() { Width = 800, Height = 180, Content = grid };
-        using RevisionGraphColumnProvider provider = new(graph, grid, Substitute.For<IGitRevisionSummaryBuilder>());
-        VisibleRowRange range = new(fromIndex: 0, count: 16);
+        using AppSettingsTestScope settings = new();
+        AppSettings.RevisionGraphShowArtificialCommits = false;
+        AppSettings.ShowRevisionGridGraphColumn = true;
+        using GitModuleTestHelper first = new();
+        using GitModuleTestHelper second = new();
+        ImportHistory(first.Module);
+        second.Module.GitExecutable.GetOutput("commit --allow-empty -m replacement");
+        IGitUICommandsSource source = CreateCommandsSource();
+        RevisionGridControl grid = new() { UICommandsSource = source };
+        Window window = new() { Width = 1_000, Height = 400, Content = grid };
 
         window.Show();
         try
         {
-            Dispatcher.UIThread.RunJobs();
-            grid._gridView.GetRealizedContainers().Should().NotBeEmpty();
+            await ReloadAsync(first.Module);
+            RevisionGraph graph = (RevisionGraph)(typeof(RevisionGridControl)
+                .GetField("_revisionGraph", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .GetValue(grid)!);
+            graph.GetCachedCount().Should().Be(graph.Count);
+            ScrollContentPresenter viewport = grid._gridView.GetVisualDescendants()
+                .OfType<ScrollContentPresenter>().Single();
+            ScrollViewer scroll = grid._gridView.GetVisualDescendants().OfType<ScrollViewer>().Single();
+            double rowHeight = RevisionGridControl.GetRowHeight(grid);
+            RevisionGraphColumnProvider provider = grid.ColumnProviders.OfType<RevisionGraphColumnProvider>().Single();
 
-            await Task.Run(() => provider.RenderGraphToCacheAsync(range, toRowIndex: 15, RowHeight, CancellationToken.None));
+            foreach (int lastRow in new[] { 5, 15 })
+            {
+                SetViewportHeight(rowHeight * (lastRow + 0.5));
+                int[] rows = GetVisibleRows(graph, viewport);
+                rows.Should().Equal(Enumerable.Range(0, lastRow + 1));
+                provider.Column.Width.Value.Should().Be(GetSourceWidth(
+                    rows.Max(index => graph.GetSegmentsForRow(index)!.GetLaneCount())));
+            }
 
-            Dispatcher.UIThread.CheckAccess().Should().BeTrue();
-            provider.GetTestAccessor().GetCachedVisibleRange().Should().Equal(range);
-            provider.GetTestAccessor().GetLastRenderedRow().Should().Be(15);
-            provider.Column.Width.Value.Should().Be(GetSourceWidth(
-                range.Max(index => graph.GetSegmentsForRow(index)!.GetLaneCount())));
             int threeLaneRow = Enumerable.Range(0, graph.Count)
                 .First(index => graph.GetSegmentsForRow(index)!.GetLaneCount() == 3);
-            await Task.Run(() => provider.RenderGraphToCacheAsync(
-                new VisibleRowRange(threeLaneRow, count: 1), threeLaneRow, RowHeight, CancellationToken.None));
+            SetViewportHeight(rowHeight / 2);
+            scroll.Offset = new Vector(scroll.Offset.X, rowHeight * (threeLaneRow + 0.25));
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            GetVisibleRows(graph, viewport).Should().Equal(threeLaneRow);
             provider.Column.Width.Value.Should().Be(54, "the source reserves a 6-DIP left margin and three 16-DIP lanes");
+
+            window.Height = 400;
+            await ReloadAsync(second.Module);
+            GitRevision revision = grid._gridView.Items.OfType<GitRevision>().Should().ContainSingle().Which;
+            revision.Subject.Should().Be("replacement");
+            graph.GetCachedCount().Should().Be(1);
+            provider.Column.Width.Value.Should().Be(GetSourceWidth(1));
+
+            void SetViewportHeight(double height)
+            {
+                window.Height += height - viewport.Bounds.Height;
+                window.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+            }
         }
         finally
         {
             window.Close();
             grid.CancelBackgroundTasks();
         }
+
+        async Task ReloadAsync(GitModule module)
+        {
+            source.UICommands.Module.Returns(module);
+            TaskCompletionSource<bool> loaded = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            EventHandler<RevisionLoadEventArgs> handler = (_, _) => loaded.TrySetResult(Dispatcher.UIThread.CheckAccess());
+            grid.RevisionsLoaded += handler;
+            try
+            {
+                grid.ReloadRevisions(module);
+                (await loaded.Task.WaitAsync(TimeSpan.FromSeconds(15))).Should().BeTrue();
+                window.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+            }
+            finally
+            {
+                grid.RevisionsLoaded -= handler;
+            }
+        }
+
+        int[] GetVisibleRows(RevisionGraph graph, ScrollContentPresenter viewport)
+            => [.. grid.GetVisualDescendants().OfType<Control>()
+                .Where(cell => cell.Classes.Contains("revision-graph-cell")
+                    && cell.TranslatePoint(default, viewport) is Point origin
+                    && origin.Y < viewport.Bounds.Height
+                    && origin.Y + cell.Bounds.Height > 0)
+                .Select(cell => (GitRevision)cell.DataContext!)
+                .Select(revision => graph.TryGetRowIndex(revision.ObjectId, out int index) ? index : -1)
+                .Order()];
     }
 
     [AvaloniaTest]

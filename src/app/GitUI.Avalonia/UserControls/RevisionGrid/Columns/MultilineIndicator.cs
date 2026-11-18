@@ -8,6 +8,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class MultilineIndicator : Control
 {
+    // The native visual resolves its own theme, so each retained control owns its brushes.
+    private readonly SolidColorBrush _indicatorForeBrush = new(Colors.Black, 128d / 255d);
+    private readonly SolidColorBrush _indicatorBackBrush = new(Colors.Black, 32d / 255d);
+
     private const int DotCount = 3;
 
     private const int paddingX = 4;
@@ -73,22 +77,22 @@ internal sealed class MultilineIndicator : Control
             && value is SolidColorBrush brush
                 ? brush.Color
                 : Colors.Black;
-        SolidColorBrush indicatorForeBrush = new(foreground, 128d / 255d);
-        SolidColorBrush indicatorBackBrush = new(foreground, 32d / 255d);
+        _indicatorForeBrush.Color = foreground;
+        _indicatorBackBrush.Color = foreground;
         Rect indicatorRect = new(
             marginX,
             (Bounds.Height - _indicatorRectHeight) / 2,
             _indicatorRectWidth,
             _indicatorRectHeight);
 
-        context.FillRectangle(indicatorBackBrush, indicatorRect);
+        context.FillRectangle(_indicatorBackBrush, indicatorRect);
 
         double x = indicatorRect.X + paddingX;
         double y = indicatorRect.Y + paddingTop;
 
         for (int i = 0; i < DotCount; i++)
         {
-            context.FillRectangle(indicatorForeBrush, new Rect(x, y, dotSize, dotSize));
+            context.FillRectangle(_indicatorForeBrush, new Rect(x, y, dotSize, dotSize));
             x += dotSize + dotSpacing;
         }
     }

@@ -453,23 +453,6 @@ public sealed class RevisionGridColumnProviderTests
 
     [AvaloniaTest]
     [Category("P8.6i.126")]
-    public void Revision_graph_provider_should_preserve_the_source_cache_lifecycle_for_retained_rows()
-    {
-        RevisionGridControl control = new();
-        RevisionGraphColumnProvider provider = (RevisionGraphColumnProvider)control.ColumnProviders[0];
-        RevisionGraphColumnProvider.TestAccessor accessor = provider.GetTestAccessor();
-        VisibleRowRange range = new(fromIndex: 2, count: 4);
-
-        accessor.RenderGraphToCache(range, toRowIndex: 5, rowHeight: 22);
-
-        accessor.GetCachedVisibleRange().Equals(range).Should().BeTrue();
-        accessor.GetLastRenderedRow().Should().Be(5);
-        provider.Clear();
-        accessor.GetLastRenderedRow().Should().Be(-1);
-    }
-
-    [AvaloniaTest]
-    [Category("P8.6i.126")]
     public async Task Avatar_provider_should_show_the_source_placeholder_while_loading()
     {
         TaskCompletionSource<byte[]?> avatarCompletion = new(TaskCreationOptions.RunContinuationsAsynchronously);

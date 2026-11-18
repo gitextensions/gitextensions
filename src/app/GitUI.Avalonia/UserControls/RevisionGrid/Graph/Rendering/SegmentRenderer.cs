@@ -44,7 +44,7 @@ internal ref struct SegmentRenderer
 
     private static void DrawTo(in Point fromPoint, in Point toPoint, in bool fromPerpendicularly, in bool toPerpendicularly, in Context context)
     {
-        DrawingContext g = context.DrawingContext;
+        DrawingContext g = context.Graphics;
         Pen pen = context.Pen;
 
         if (fromPoint.X == toPoint.X)

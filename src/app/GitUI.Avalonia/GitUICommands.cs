@@ -2238,7 +2238,7 @@ public sealed class GitUICommands : IGitUICommands
 
         internal string NormalizeFileName(string fileName) => _commands.NormalizeFileName(fileName);
 
-        internal bool RunCommandBasedOnArgument(IReadOnlyList<string> args)
+        internal bool RunCommandBasedOnArgument(string[] args)
             => _commands.RunCommandBasedOnArgument(args, InitializeArguments(args));
     }
 }

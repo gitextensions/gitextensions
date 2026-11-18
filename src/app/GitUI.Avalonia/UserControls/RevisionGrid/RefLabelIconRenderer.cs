@@ -20,6 +20,7 @@ namespace GitUI.UserControls.RevisionGrid;
 /// </remarks>
 internal abstract class RefLabelIconRenderer
 {
+    // The native ref capsule supplies a DrawingContext and uses Avalonia's geometry points.
     private static readonly ConcurrentDictionary<(RefLabelIcon Icon, RefLabelIconMetrics Metrics), RefLabelIconRenderer?> _renderers = [];
 
     /// <summary>

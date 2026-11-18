@@ -48,6 +48,7 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
         OnDropDownOpening(this, EventArgs.Empty);
     }
 
+    // The native menu icon accepts IImage from the portable Images resources.
     private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, IImage image, char? hotkey)
     {
         string[]? textToCopy = ExtractRevisionTexts(extractRevisionText);

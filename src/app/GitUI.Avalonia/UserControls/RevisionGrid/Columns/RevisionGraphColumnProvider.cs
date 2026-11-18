@@ -18,9 +18,6 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     private readonly RevisionGridControl _grid;
     private readonly LaneInfoProvider _laneInfoProvider;
     private readonly RevisionGraph _revisionGraph;
-    private readonly RetainedGraphCache _graphDisplayCache = new();
-    private readonly RetainedGraphCache _graphRenderCache = new();
-
     private int _columnWidth;
 
     private VisibleRowRange _cachedVisibleRange;
@@ -61,7 +58,9 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     {
         try
         {
-            DrawGraphCellFromCache(control, revision);
+            GraphCellControl graph = (GraphCellControl)control;
+            graph.DataContext = revision;
+            ToolTip.SetTip(graph, null);
         }
         catch (Exception ex)
         {
@@ -73,57 +72,9 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         }
     }
 
-    private void DrawGraphCellFromCache(Control control, GitRevision revision)
-    {
-        GraphCellControl graph = (GraphCellControl)control;
-        graph.DataContext = revision;
-        ToolTip.SetTip(graph, null);
-    }
-
-    public async Task RenderGraphToCacheAsync(
-        VisibleRowRange range,
-        int toRowIndex,
-        int rowHeight,
-        CancellationToken cancellationToken)
-    {
-        RenderGraphToCache(range, toRowIndex, rowHeight);
-        cancellationToken.ThrowIfCancellationRequested();
-
-        // Dispatching a no-op does not move this worker continuation onto the control's thread.
-        await _grid.SwitchToMainThreadAsync(cancellationToken);
-        cancellationToken.ThrowIfCancellationRequested();
-
-        _graphDisplayCache.CopyFrom(_graphRenderCache);
-        if (!Column.Width.IsAbsolute || Column.Width.Value != _columnWidth)
-        {
-            Column.Width = new GridLength(_columnWidth);
-        }
-
-        _grid.RefreshRealizedRows();
-    }
-
-    private void RenderGraphToCache(VisibleRowRange range, int toRowIndex, int rowHeight)
-    {
-        _cachedVisibleRange = range;
-        int width = CalculateGraphColumnWidth(range);
-        if (_columnWidth != width)
-        {
-            _columnWidth = width;
-            _graphRenderCache.Reset();
-        }
-
-        _graphRenderCache.Range = range;
-        for (int rowIndex = Math.Max(0, range.FromIndex); rowIndex <= toRowIndex; rowIndex++)
-        {
-            RenderRowToCache(rowIndex, rowHeight);
-        }
-    }
-
-    private void RenderRowToCache(int rowIndex, int rowHeight)
-    {
-        _graphRenderCache.LastRenderedRow = rowIndex;
-        _graphRenderCache.RowHeight = rowHeight;
-    }
+    // The native retained cell draws from the revision graph's cached segments.
+    private void DrawGraphCellFromCache(DrawingContext graphics, GitRevision revision, double rowHeight)
+        => _grid.DrawGraphCell(graphics, revision, RevisionGraphDrawStyle, rowHeight, _hoverHighlight.HighlightedIds);
 
     public override void ApplySettings()
     {
@@ -132,8 +83,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
     public override void Clear()
     {
-        _graphRenderCache.Reset();
-        _graphDisplayCache.Reset();
+        _cachedVisibleRange = default;
         _hoverHighlight.Clear();
     }
 
@@ -153,11 +103,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         _cachedVisibleRange = rowIndexes.Length == 0
             ? new VisibleRowRange(fromIndex: 0, count: 0)
             : new VisibleRowRange(rowIndexes.Min(), rowIndexes.Max() - rowIndexes.Min() + 1);
-        RenderGraphToCache(
-            _cachedVisibleRange,
-            rowIndexes.Length == 0 ? -1 : rowIndexes.Max(),
-            (int)Math.Round(RevisionGridControl.GetRowHeight(_grid), MidpointRounding.AwayFromZero));
-        _graphDisplayCache.CopyFrom(_graphRenderCache);
+        _columnWidth = CalculateGraphColumnWidth(_cachedVisibleRange);
         if (!Column.Width.IsAbsolute || Column.Width.Value != _columnWidth)
         {
             Column.Width = new GridLength(_columnWidth);
@@ -195,9 +141,6 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         return ColumnLeftMargin + Math.Max(lanesWidth, (int)Column.MinimumWidth);
     }
 
-    internal bool DrawGraph(DrawingContext context, GitRevision revision, double rowHeight)
-        => _grid.DrawGraphCell(context, revision, RevisionGraphDrawStyle, rowHeight, _hoverHighlight.HighlightedIds);
-
     public bool TryGetToolTip(GitRevision revision, double x, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
         if (x < 0
@@ -227,35 +170,6 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
         internal HoverHighlightCalculator.TestAccessor HoverHighlight
             => RevisionGraphColumnProvider._hoverHighlight.GetTestAccessor();
-
-        internal void RenderGraphToCache(VisibleRowRange range, int toRowIndex, int rowHeight)
-            => RevisionGraphColumnProvider.RenderGraphToCache(range, toRowIndex, rowHeight);
-
-        internal void RenderRowToCache(int rowIndex, int rowHeight)
-            => RevisionGraphColumnProvider.RenderRowToCache(rowIndex, rowHeight);
-    }
-
-    private sealed class RetainedGraphCache
-    {
-        public VisibleRowRange Range { get; set; }
-
-        public int LastRenderedRow { get; set; } = -1;
-
-        public int RowHeight { get; set; }
-
-        public void CopyFrom(RetainedGraphCache source)
-        {
-            Range = source.Range;
-            LastRenderedRow = source.LastRenderedRow;
-            RowHeight = source.RowHeight;
-        }
-
-        public void Reset()
-        {
-            Range = default;
-            LastRenderedRow = -1;
-            RowHeight = 0;
-        }
     }
 
     // Avalonia realizes graph cells as retained controls instead of DataGridView cell-paint events.
@@ -286,7 +200,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
             context.FillRectangle(Brushes.Transparent, new Rect(Bounds.Size));
             if (DataContext is GitRevision revision)
             {
-                _provider.DrawGraph(context, revision, Bounds.Height);
+                _provider.DrawGraphCellFromCache(context, revision, Bounds.Height);
             }
         }
     }
