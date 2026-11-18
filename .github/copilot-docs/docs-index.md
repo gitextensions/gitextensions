@@ -47,6 +47,8 @@ Use this to route a question to the right layer/doc and the right part of the co
 Ordered doc sequences for the most common questions. `→` means "read next". End every chain by
 verifying against the actual source files referenced in the docs.
 
+- **"How do layered / per-repo settings work?"**
+  L0 primer → [settings-system](L2-core-platform/settings-system.md) → verify in `DetailedSettings.cs` + `DistributedSettings.cs`.
 - **"How does Git Extensions run a git command?"**
   L0 primer → [git-command-execution](L2-core-platform/git-command-execution.md) → [structured-commands](L2-core-platform/structured-commands.md) → verify in `GitModule` / `Executable`.
 - **"How does the commit flow work?"**
