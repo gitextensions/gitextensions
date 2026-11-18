@@ -169,7 +169,7 @@ public sealed class WinFormsSingleLineTextBlockTests
             ?? throw new AssertionException("The source-shaped cell factory must exist.");
         TextBlock ordinary = (TextBlock)(factory.Invoke(null, [0d, 1d])
             ?? throw new AssertionException("The shared cell painter must exist."));
-        TextBlock build = new BuildStatusColumnProvider.BuildStatusTextBlock();
+        TextBlock build = (TextBlock)new BuildStatusColumnProvider(_ => { }, () => null).CreateCell();
         foreach (TextBlock text in new[] { ordinary, build })
         {
             text.Should().BeAssignableTo<WinFormsSingleLineTextBlock>();

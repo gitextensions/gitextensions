@@ -76,7 +76,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     private void DrawGraphCellFromCache(Control control, GitRevision revision)
     {
         GraphCellControl graph = (GraphCellControl)control;
-        graph.Revision = revision;
+        graph.DataContext = revision;
         ToolTip.SetTip(graph, null);
     }
 
@@ -192,7 +192,10 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     {
         int maxLaneCount = range.Max(index => _revisionGraph.GetSegmentsForRow(index)?.GetLaneCount()) ?? 0;
         int visibleLaneCount = Math.Min(maxLaneCount, GraphRenderer.MaxLanes);
-        return CalculateGraphColumnWidth(visibleLaneCount);
+        int lanesWidth = GraphRenderer.LaneWidth * visibleLaneCount;
+
+        // Avalonia column dimensions are DIPs; the graph minimum is an integral lane width.
+        return ColumnLeftMargin + Math.Max(lanesWidth, (int)Column.MinimumWidth);
     }
 
     internal static int CalculateGraphColumnWidth(int visibleLaneCount)
@@ -220,8 +223,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
     public bool TryGetToolTip(GitRevision revision, double x, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
-        if (!AppSettings.ShowRevisionGridTooltips.Value
-            || x < 0
+        if (x < 0
             || !_revisionGraph.TryGetRowIndex(revision.ObjectId, out int rowIndex))
         {
             toolTip = null;
@@ -246,9 +248,8 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
         internal RevisionGraphColumnProvider RevisionGraphColumnProvider { get; }
 
-        internal VisibleRowRange CachedVisibleRange => RevisionGraphColumnProvider._graphRenderCache.Range;
-
-        internal int LastRenderedRow => RevisionGraphColumnProvider._graphRenderCache.LastRenderedRow;
+        internal HoverHighlightCalculator.TestAccessor HoverHighlight
+            => RevisionGraphColumnProvider._hoverHighlight.GetTestAccessor();
 
         internal void RenderGraphToCache(VisibleRowRange range, int toRowIndex, int rowHeight)
             => RevisionGraphColumnProvider.RenderGraphToCache(range, toRowIndex, rowHeight);
@@ -280,10 +281,10 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         }
     }
 
+    // Avalonia realizes graph cells as retained controls instead of DataGridView cell-paint events.
     private sealed class GraphCellControl : Control
     {
         private readonly RevisionGraphColumnProvider _provider;
-        private GitRevision? _revision;
 
         public GraphCellControl(RevisionGraphColumnProvider provider)
         {
@@ -295,14 +296,10 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
             };
         }
 
-        public GitRevision? Revision
+        protected override void OnDataContextChanged(EventArgs e)
         {
-            get => _revision;
-            set
-            {
-                _revision = value;
-                InvalidateVisual();
-            }
+            base.OnDataContextChanged(e);
+            InvalidateVisual();
         }
 
         public override void Render(DrawingContext context)
@@ -310,9 +307,9 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
             // DataGridView hit-tests the entire cell, while the retained lane operations
             // intentionally expose no input geometry of their own.
             context.FillRectangle(Brushes.Transparent, new Rect(Bounds.Size));
-            if (_revision is not null)
+            if (DataContext is GitRevision revision)
             {
-                _provider.DrawGraph(context, _revision, Bounds.Height);
+                _provider.DrawGraph(context, revision, Bounds.Height);
             }
         }
     }

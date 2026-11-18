@@ -465,10 +465,10 @@ public sealed class RevisionGridColumnProviderTests
 
         accessor.RenderGraphToCache(range, toRowIndex: 5, rowHeight: 22);
 
-        accessor.CachedVisibleRange.Equals(range).Should().BeTrue();
-        accessor.LastRenderedRow.Should().Be(5);
+        accessor.GetCachedVisibleRange().Equals(range).Should().BeTrue();
+        accessor.GetLastRenderedRow().Should().Be(5);
         provider.Clear();
-        accessor.LastRenderedRow.Should().Be(-1);
+        accessor.GetLastRenderedRow().Should().Be(-1);
     }
 
     [AvaloniaTest]

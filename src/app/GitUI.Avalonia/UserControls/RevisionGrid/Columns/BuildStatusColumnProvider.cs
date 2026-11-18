@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -12,7 +12,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.Compat;
 using GitUI.Theming;
 using GitUIPluginInterfaces;
-using DrawingColor = System.Drawing.Color;
+using Color = System.Drawing.Color;
 using MediaColor = Avalonia.Media.Color;
 
 namespace GitUI.UserControls.RevisionGrid.Columns;
@@ -23,6 +23,9 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
     private const int TextColumnWidth = 150;
     private readonly Action<GitRevision> _openBuildReport;
     private readonly Func<IGitModule?> _module;
+
+    // Increase contrast to selected rows (adapted to theme at use)
+    private readonly Color _lightBlue = Color.FromArgb(130, 180, 240);
 
     public BuildStatusColumnProvider(Action<GitRevision> openBuildReport, Func<IGitModule?> module)
         : base("Build Status", new GridLength(150), minimumWidth: 16, resizable: true)
@@ -58,7 +61,7 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
 
     public override Control CreateCell()
     {
-        BuildStatusTextBlock textBlock = new()
+        BuildStatusTextBlock textBlock = new(this)
         {
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -84,7 +87,58 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
             ? string.Empty
             : (AppSettings.ShowBuildStatusIconColumn ? buildStatus.StatusSymbol : string.Empty)
                 + (AppSettings.ShowBuildStatusTextColumn ? description : string.Empty);
-        textBlock.Status = buildStatus?.Status;
+
+        // Clearing the local Avalonia brush preserves the source's inherited row foreground.
+        textBlock.ClearValue(TextBlock.ForegroundProperty);
+        if (buildStatus is null)
+        {
+            return;
+        }
+
+        IBrush? foreColor = textBlock.Foreground;
+        IBrush? brush = GetColor(foreColor);
+        if (!ReferenceEquals(brush, foreColor))
+        {
+            textBlock.Foreground = brush;
+        }
+
+        return;
+
+        IBrush? GetColor(IBrush? foreColor)
+        {
+            bool isSelected = textBlock.FindAncestorOfType<ListBoxItem>()?.IsSelected == true;
+
+            Color customColor;
+            switch (buildStatus.Status)
+            {
+                case BuildStatus.Unknown:
+                    return foreColor;
+
+                case BuildStatus.Success:
+                    customColor = isSelected ? Color.LightGreen : Color.DarkGreen;
+                    break;
+                case BuildStatus.Failure:
+                    customColor = isSelected ? Color.Red : Color.DarkRed;
+                    break;
+                case BuildStatus.InProgress:
+                    customColor = isSelected ? _lightBlue : Color.Blue;
+                    break;
+                case BuildStatus.Unstable:
+                    customColor = Color.OrangeRed;
+                    break;
+                case BuildStatus.Stopped:
+                default:
+                    customColor = isSelected ? Color.LightGray : Color.Gray;
+                    break;
+            }
+
+            Color resolved = customColor.AdaptForeColor(GetResolvedBackColor());
+            MediaColor color = AvaloniaThemeResources.ToMediaColor(resolved);
+            return new SolidColorBrush(color);
+        }
+
+        Color GetResolvedBackColor()
+            => AvaloniaThemeResources.ResolveAppColor(ThemeModule.Settings, AppColor.PanelBackground);
     }
 
     public override void OnCellFormatting(Control control, GitRevision revision)
@@ -103,38 +157,16 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
         return toolTip is not null;
     }
 
-    // Native DrawColumnText uses SingleLine for provider descriptions as well as messages.
+    // Avalonia retains text cells, so row/theme changes replay the provider's formatting and painting.
     internal sealed class BuildStatusTextBlock : WinFormsSingleLineTextBlock
     {
-        // Increase contrast to selected rows (adapted to theme at use)
-        private static readonly DrawingColor LightBlue = DrawingColor.FromArgb(130, 180, 240);
+        private readonly BuildStatusColumnProvider _provider;
         private ListBoxItem? _row;
-        private BuildStatus? _status;
-        private bool? _selectedForTest;
 
-        public BuildStatusTextBlock()
+        public BuildStatusTextBlock(BuildStatusColumnProvider provider)
         {
+            _provider = provider;
             ActualThemeVariantChanged += (_, _) => UpdateForeground();
-        }
-
-        public BuildStatus? Status
-        {
-            get => _status;
-            set
-            {
-                _status = value;
-                UpdateForeground();
-            }
-        }
-
-        internal bool? SelectedForTest
-        {
-            get => _selectedForTest;
-            set
-            {
-                _selectedForTest = value;
-                UpdateForeground();
-            }
         }
 
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -170,28 +202,14 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
 
         private void UpdateForeground()
         {
-            bool isSelected = _selectedForTest ?? _row?.IsSelected == true;
-            DrawingColor? customColor = _status switch
+            if (DataContext is GitRevision revision)
             {
-                BuildStatus.Success => isSelected ? DrawingColor.LightGreen : DrawingColor.DarkGreen,
-                BuildStatus.Failure => isSelected ? DrawingColor.Red : DrawingColor.DarkRed,
-                BuildStatus.InProgress => isSelected ? LightBlue : DrawingColor.Blue,
-                BuildStatus.Unstable => DrawingColor.OrangeRed,
-                BuildStatus.Stopped => isSelected ? DrawingColor.LightGray : DrawingColor.Gray,
-                _ => null,
-            };
-            if (customColor is null)
-            {
-                Foreground = null;
-                return;
+                _provider.UpdateCell(this, revision);
             }
-
-            DrawingColor background = AvaloniaThemeResources.ResolveAppColor(
-                ThemeModule.Settings,
-                AppColor.PanelBackground);
-            DrawingColor resolved = customColor.Value.AdaptForeColor(background);
-            MediaColor color = AvaloniaThemeResources.ToMediaColor(resolved);
-            Foreground = new SolidColorBrush(color);
+            else
+            {
+                ClearValue(ForegroundProperty);
+            }
         }
     }
 }

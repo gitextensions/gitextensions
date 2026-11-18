@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using AppVeyorIntegration;
@@ -862,31 +862,8 @@ public sealed class BuildServerIntegrationTests
     }
 
     [AvaloniaTest]
-    public void Build_status_column_should_use_the_original_selected_and_unselected_status_palette()
-    {
-        IGitModule module = Substitute.For<IGitModule>();
-        BuildStatusColumnProvider provider = new(_ => { }, () => module);
-        BuildStatusColumnProvider.BuildStatusTextBlock cell =
-            provider.CreateCell().Should().BeOfType<BuildStatusColumnProvider.BuildStatusTextBlock>().Subject;
-        (BuildStatus Status, Color Normal, Color Selected)[] cases =
-        [
-            (BuildStatus.Success, Colors.DarkGreen, Colors.LightGreen),
-            (BuildStatus.Failure, Colors.DarkRed, Colors.Red),
-            (BuildStatus.InProgress, Colors.Blue, Color.FromRgb(130, 180, 240)),
-            (BuildStatus.Unstable, Colors.OrangeRed, Colors.OrangeRed),
-            (BuildStatus.Stopped, Colors.Gray, Colors.LightGray),
-        ];
-
-        foreach ((BuildStatus status, Color normal, Color selected) in cases)
-        {
-            cell.SelectedForTest = false;
-            cell.Status = status;
-            GetColor(cell.Foreground).Should().Be(AdaptExpected(normal));
-
-            cell.SelectedForTest = true;
-            GetColor(cell.Foreground).Should().Be(AdaptExpected(selected));
-        }
-    }
+    public async Task Build_status_column_should_use_the_original_selected_and_unselected_status_palette()
+        => await BuildServerAutoDetectionColumnTests.VerifyDetectedAdapterAsync(showIcon: true, showText: true, verifyPalette: true);
 
     [AvaloniaTest]
     [TestCase(true)]

@@ -1,11 +1,14 @@
-﻿using System.ComponentModel.Composition;
+using System.ComponentModel.Composition;
 using System.ComponentModel.Design;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Reflection;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
@@ -18,10 +21,12 @@ using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.GitHubActionsIntegration;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
@@ -41,6 +46,9 @@ public sealed class BuildServerAutoDetectionColumnTests
     [TestCase(true, true)]
     [TestCase(false, false)]
     public async Task Detected_adapter_should_apply_display_preferences_before_any_build_arrives(bool showIcon, bool showText)
+        => await VerifyDetectedAdapterAsync(showIcon, showText, verifyPalette: false);
+
+    internal static async Task VerifyDetectedAdapterAsync(bool showIcon, bool showText, bool verifyPalette)
     {
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
@@ -63,6 +71,8 @@ public sealed class BuildServerAutoDetectionColumnTests
         IRepositoryHostPlugin[] previousHosters = [.. PluginRegistry.GitHosters];
         TaskCompletionSource<(IBuildServerWatcher Watcher, SettingsSource Config)> initialized = new(TaskCreationOptions.RunContinuationsAsynchronously);
         TaskCompletionSource queried = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using Subject<BuildInfo> running = new();
+        using Subject<BuildInfo> finished = new();
         IBuildServerAdapter adapter = Substitute.For<IBuildServerAdapter>();
         adapter.When(instance => instance.Initialize(Arg.Any<IBuildServerWatcher>(), Arg.Any<SettingsSource>(),
             Arg.Any<Action>(), Arg.Any<Func<ObjectId, bool>?>())).Do(call =>
@@ -72,9 +82,9 @@ public sealed class BuildServerAutoDetectionColumnTests
         adapter.GetRunningBuilds(Arg.Any<IScheduler>()).Returns(_ =>
         {
             queried.TrySetResult();
-            return Observable.Never<BuildInfo>();
+            return running;
         });
-        adapter.GetFinishedBuildsSince(Arg.Any<IScheduler>(), Arg.Any<DateTime?>()).Returns(Observable.Never<BuildInfo>());
+        adapter.GetFinishedBuildsSince(Arg.Any<IScheduler>(), Arg.Any<DateTime?>()).Returns(finished);
         Type detector = typeof(GitHubActionsIntegrationMetadataAttribute).Assembly.GetType(
             "GitExtensions.Plugins.GitHubActionsIntegration.GitHubActionsAutoDetector", throwOnError: true)!;
         AttributedPartDiscoveryV1 discovery = new(Resolver.DefaultInstance);
@@ -126,6 +136,66 @@ public sealed class BuildServerAutoDetectionColumnTests
                 row.ColumnDefinitions[column.Index].Width.Should().Be(column.Column.EffectiveWidth);
                 row.Children.OfType<BuildStatusColumnProvider.BuildStatusTextBlock>().Single().IsVisible.Should().Be(showIcon || showText);
             }
+
+            if (verifyPalette)
+            {
+                ObjectId head = module.GetCurrentCheckout();
+                await WaitUntilAsync(() => running.HasObservers && finished.HasObservers
+                    && form.RevisionGrid.GetRevision(head) is not null);
+                GitRevision revision = form.RevisionGrid.GetRevision(head);
+                BuildStatusColumnProvider.BuildStatusTextBlock cell = form.RevisionGrid.GetVisualDescendants()
+                    .OfType<BuildStatusColumnProvider.BuildStatusTextBlock>()
+                    .Single(candidate => ReferenceEquals(candidate.DataContext, revision));
+                ListBoxItem row = cell.FindAncestorOfType<ListBoxItem>()!;
+                (BuildStatus Status, Color Normal, Color Selected)[] cases =
+                [
+                    (BuildStatus.Success, Colors.DarkGreen, Colors.LightGreen),
+                    (BuildStatus.Failure, Colors.DarkRed, Colors.Red),
+                    (BuildStatus.InProgress, Colors.Blue, Color.FromRgb(130, 180, 240)),
+                    (BuildStatus.Unstable, Colors.OrangeRed, Colors.OrangeRed),
+                    (BuildStatus.Stopped, Colors.Gray, Colors.LightGray),
+                ];
+                int buildIndex = 0;
+                foreach ((BuildStatus status, Color normal, Color selected) in cases)
+                {
+                    await PublishStatusAsync(status);
+                    form.RevisionGrid._gridView.SelectedItem = null;
+                    Settle(form);
+                    row.IsSelected.Should().BeFalse();
+                    cell.Foreground.Should().BeAssignableTo<ISolidColorBrush>().Which.Color.Should().Be(AdaptExpected(normal));
+
+                    form.RevisionGrid._gridView.SelectedItem = revision;
+                    Settle(form);
+                    row.IsSelected.Should().BeTrue();
+                    cell.Foreground.Should().BeAssignableTo<ISolidColorBrush>().Which.Color.Should().Be(AdaptExpected(selected));
+                }
+
+                await PublishStatusAsync(BuildStatus.Unknown);
+                foreach (bool selected in new[] { false, true })
+                {
+                    form.RevisionGrid._gridView.SelectedItem = selected ? revision : null;
+                    Settle(form);
+                    row.IsSelected.Should().Be(selected);
+                    cell.Foreground.Should().NotBeNull("the original Unknown status returns the inherited row foreground");
+                    cell.Foreground.Should().BeSameAs(cell.FindAncestorOfType<ContentPresenter>()!.Foreground);
+                }
+
+                async Task PublishStatusAsync(BuildStatus status)
+                {
+                    BuildInfo info = new()
+                    {
+                        Id = $"palette-{++buildIndex}",
+                        StartDate = DateTime.Today.AddMinutes(buildIndex),
+                        CommitHashList = [head],
+                        Status = status,
+                        Description = status.ToString(),
+                    };
+                    (status == BuildStatus.InProgress ? running : finished).OnNext(info);
+                    await WaitUntilAsync(() => ReferenceEquals(revision.BuildStatus, info));
+                    cell.DataContext.Should().BeSameAs(revision);
+                    cell.Text.Should().Be((showIcon ? info.StatusSymbol : string.Empty) + (showText ? info.Description : string.Empty));
+                }
+            }
         }
         finally
         {
@@ -152,6 +222,19 @@ public sealed class BuildServerAutoDetectionColumnTests
                 TestDirectory.Delete(directory);
             }
         }
+    }
+
+    private static Color AdaptExpected(Color color)
+    {
+        System.Drawing.Color original = System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);
+        System.Drawing.Color background = ThemeModule.Settings.Theme.GetColor(AppColor.PanelBackground);
+        if (background.IsEmpty)
+        {
+            background = ThemeModule.Settings.InvariantTheme.GetColor(AppColor.PanelBackground);
+        }
+
+        System.Drawing.Color adapted = original.AdaptForeColor(background);
+        return Color.FromArgb(adapted.A, adapted.R, adapted.G, adapted.B);
     }
 
     private static async Task WaitUntilAsync(Func<bool> condition)

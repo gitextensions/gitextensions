@@ -74,8 +74,8 @@ public sealed class GraphHistoryRenderingTests
             await Task.Run(() => provider.RenderGraphToCacheAsync(range, toRowIndex: 15, RowHeight, CancellationToken.None));
 
             Dispatcher.UIThread.CheckAccess().Should().BeTrue();
-            provider.GetTestAccessor().CachedVisibleRange.Should().Equal(range);
-            provider.GetTestAccessor().LastRenderedRow.Should().Be(15);
+            provider.GetTestAccessor().GetCachedVisibleRange().Should().Equal(range);
+            provider.GetTestAccessor().GetLastRenderedRow().Should().Be(15);
             provider.Column.Width.Value.Should().Be(RevisionGraphColumnProvider.CalculateGraphColumnWidth(
                 range.Max(index => graph.GetSegmentsForRow(index)!.GetLaneCount())));
         }

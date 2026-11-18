@@ -4261,6 +4261,55 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task Browse_revision_refresh_should_restore_the_source_graph_draw_style(bool drawNonRelativesGray)
+    {
+        AppSettings.RevisionGraphDrawNonRelativesGray = drawNonRelativesGray;
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments());
+        form.Show();
+        try
+        {
+            await form.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(20));
+            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == module.GetCurrentCheckout()
+                && form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!.Text == "1 revisions");
+            RevisionGraphColumnProvider provider = form.RevisionGrid.ColumnProviders.OfType<RevisionGraphColumnProvider>().Single();
+            MenuItem highlight = form.RevisionGrid.ViewMenuItem.Items.OfType<MenuItem>()
+                .Single(item => item.Name == "HighlightSelectedBranch");
+            highlight.IsEnabled.Should().BeTrue();
+            highlight.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            provider.RevisionGraphDrawStyle.Should().Be(RevisionGraphDrawStyle.HighlightSelected);
+
+            RevisionGraphDrawStyle? menuStyle = null;
+            RevisionGraphDrawStyle? filterStyle = null;
+            form.RevisionGrid.MenuCommands.MenuChanged += (_, _) => menuStyle ??= provider.RevisionGraphDrawStyle;
+            form.RevisionGrid.FilterChanged += (_, _) => filterStyle ??= provider.RevisionGraphDrawStyle;
+
+            form.RevisionGrid.PerformRefreshRevisions(forceRefresh: true);
+
+            menuStyle.Should().Be(drawNonRelativesGray
+                ? RevisionGraphDrawStyle.DrawNonRelativesGray
+                : RevisionGraphDrawStyle.Normal);
+            filterStyle.Should().Be(drawNonRelativesGray
+                ? RevisionGraphDrawStyle.DrawNonRelativesGray
+                : RevisionGraphDrawStyle.Normal);
+            provider.RevisionGraphDrawStyle.Should().Be(drawNonRelativesGray
+                ? RevisionGraphDrawStyle.DrawNonRelativesGray
+                : RevisionGraphDrawStyle.Normal);
+            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == module.GetCurrentCheckout()
+                && form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!.Text == "1 revisions");
+            provider.RevisionGraphDrawStyle.Should().Be(drawNonRelativesGray
+                ? RevisionGraphDrawStyle.DrawNonRelativesGray
+                : RevisionGraphDrawStyle.Normal);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task Browse_submodule_node_should_open_through_its_real_owner()
     {
         AppSettings.RepoObjectsTreeShowSubmodules = true;

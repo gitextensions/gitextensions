@@ -1181,6 +1181,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         RevisionLoadEventArgs loadEventArgs = new(this, UICommands, refs, stashes, forceRefresh);
         ILookup<ObjectId, IGitRef>? refsByObjectId = null;
 
+        _revisionGraphColumnProvider.RevisionGraphDrawStyle
+            = AppSettings.RevisionGraphDrawNonRelativesGray ? RevisionGraphDrawStyle.DrawNonRelativesGray : RevisionGraphDrawStyle.Normal;
+
         // Apply checkboxes changes also to FormBrowse main menu
         MenuCommands.TriggerMenuChanged();
         FilterChanged?.Invoke(this, new FilterChangedEventArgs(_filterInfo));
