@@ -201,7 +201,7 @@ public sealed class CommitInfoBodyFontTests
             accessor.TableLayout.IsVisible = true;
             accessor.CommitMessage.SetXHTMLText(PlainParagraphs);
             accessor.RevisionInfo.SetXHTMLText(PlainParagraphs);
-            XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
+            XhtmlTextBlock header = accessor.Header.GetRevisionHeader();
             window = new Window { Width = 1200, Height = 900, Content = control };
             window.Show();
             RunLayout(window);

@@ -5,7 +5,6 @@ using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using GitCommands;
-using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
@@ -24,7 +23,6 @@ using GitUI.Properties;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
-using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -253,61 +251,6 @@ public sealed class PluginSettingsTests
         {
             RemovePlugin(plugin);
         }
-    }
-
-    [AvaloniaTest]
-    public void FormBrowse_should_list_loaded_plugins_with_their_platform_icons()
-    {
-        IGitPlugin plugin = CreatePlugin();
-        AddPlugin(plugin);
-        try
-        {
-            using FormBrowse form = CreateBrowseForm();
-            form.PopulatePluginMenuForTest();
-
-            MenuItem pluginsMenu = form.FindControl<MenuItem>("pluginsToolStripMenuItem")
-                ?? throw new InvalidOperationException("Plugins menu was not created.");
-            pluginsMenu.Items.Should().NotContain(item => item == form.FindControl<MenuItem>("pluginsLoadingToolStripMenuItem"));
-            MenuItem pluginItem = pluginsMenu.Items
-                .OfType<MenuItem>()
-                .Single(item => ReferenceEquals(item.Tag, plugin));
-            pluginItem.Header.Should().Be(plugin.Name);
-            ((Image)pluginItem.Icon!).Source.Should().BeSameAs(Images.Plugin);
-            pluginItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-            plugin.Received(1).Execute(Arg.Is<GitUIEventArgs>(args => ReferenceEquals(args.OwnerForm, form)));
-        }
-        finally
-        {
-            RemovePlugin(plugin);
-        }
-    }
-
-    private static FormBrowse CreateBrowseForm()
-    {
-        IGitModule module = Substitute.For<IGitModule>();
-        module.WorkingDir.Returns(Path.GetTempPath());
-        module.IsValidGitWorkingDir().Returns(false);
-
-        IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
-        appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
-        IHotkeySettingsLoader hotkeySettingsLoader = Substitute.For<IHotkeySettingsLoader>();
-        hotkeySettingsLoader.LoadHotkeys(Arg.Any<string>()).Returns([]);
-
-        IGitUICommands commands = Substitute.For<IGitUICommands>();
-        commands.Module.Returns(module);
-        commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
-        commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
-        commands.GetService(typeof(GitUI.Shells.IShellProvider)).Returns(new GitUI.Shells.ShellProvider());
-        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(hotkeySettingsLoader);
-        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
-        commands.GetService(typeof(ILinkFactory)).Returns(Substitute.For<ILinkFactory>());
-        IUserRepositoriesListController repositoriesController = Substitute.For<IUserRepositoriesListController>();
-        repositoriesController.PreRenderRepositories(Arg.Any<string>()).Returns((
-            Array.Empty<RecentRepoInfo>(),
-            Array.Empty<RecentRepoInfo>()));
-        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
-        commands.GetService(typeof(GitUI.IRepositoryCurrentBranchNameCache)).Returns(Substitute.For<GitUI.IRepositoryCurrentBranchNameCache>());
-        return new FormBrowse(commands, new BrowseArguments());
     }
 
     private static IGitPlugin CreatePlugin()

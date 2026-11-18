@@ -15,6 +15,12 @@ internal static class CommitInfoTestSupport
 {
     public static Accessor GetNativeTestSupport(this CommitInfo control) => new(control);
 
+    public static XhtmlTextBlock GetRevisionHeader(this CommitInfoHeader header)
+        => header.FindControl<XhtmlTextBlock>("rtbRevisionHeader")!;
+
+    public static AvatarControl GetAvatar(this CommitInfoHeader header)
+        => header.FindControl<AvatarControl>("avatarControl")!;
+
     public static void WaitForContentsLayout(Window window)
     {
         DispatcherPump.Wait(async () =>
@@ -94,7 +100,7 @@ internal static class CommitInfoTestSupport
 
     internal readonly struct Accessor(CommitInfo control)
     {
-        public AvatarControl Avatar => Header.GetTestAccessor().Avatar;
+        public AvatarControl Avatar => Header.GetAvatar();
 
         public XhtmlTextBlock CommitMessage => control.GetTestAccessor().CommitMessage;
 

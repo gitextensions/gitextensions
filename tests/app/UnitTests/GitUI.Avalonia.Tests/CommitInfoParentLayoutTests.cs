@@ -206,7 +206,7 @@ public sealed class CommitInfoParentLayoutTests
                 accessor.RevisionInfo.SetXHTMLText("refs");
                 RunLayout(window);
                 AssertParentLayout(control);
-                accessor.Header.GetTestAccessor().Avatar.IsVisible.Should().Be(showAvatar);
+                accessor.Header.GetAvatar().IsVisible.Should().Be(showAvatar);
                 double firstHeaderHeight = accessor.Header.Bounds.Height;
                 double bodyHeight = accessor.CommitMessage.Bounds.Height;
 

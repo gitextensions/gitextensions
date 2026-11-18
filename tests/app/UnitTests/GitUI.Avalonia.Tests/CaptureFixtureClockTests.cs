@@ -39,7 +39,7 @@ public sealed class CaptureFixtureClockTests
             Dispatcher.UIThread.Post(() => header.ShowCommitInfo(later, null));
             Settle(window);
             AssertHeaderDate(header, later, new DateFormatter(() => fixtureNowUtc));
-            header.GetTestAccessor().RevisionHeader.GetPlainText().Should().NotContain(
+            header.GetRevisionHeader().GetPlainText().Should().NotContain(
                 new DateFormatter(() => fixtureNowUtc).FormatDateAsRelativeLocal(DateTimeOffset.FromUnixTimeSeconds(first.CommitUnixTime)),
                 "the later actual header must render the refreshed revision, not retain its first captured date");
         });
@@ -58,27 +58,27 @@ public sealed class CaptureFixtureClockTests
             window.Show();
             Settle(window);
             AssertHeaderDate(header, revision, new DateFormatter());
-            string liveText = header.GetTestAccessor().RevisionHeader.GetPlainText();
+            string liveText = header.GetRevisionHeader().GetPlainText();
 
             using (CaptureFixtureClock fixedClock = CaptureFixtureClock.Apply([header], fixtureNowUtc))
             {
                 header.ShowCommitInfo(revision, null);
                 Settle(window);
                 AssertHeaderDate(header, revision, new DateFormatter(() => fixtureNowUtc));
-                header.GetTestAccessor().RevisionHeader.GetPlainText().Should().NotBe(liveText);
+                header.GetRevisionHeader().GetPlainText().Should().NotBe(liveText);
             }
 
             Dispatcher.UIThread.Post(() => header.ShowCommitInfo(revision, null));
             Settle(window);
             AssertHeaderDate(header, revision, new DateFormatter());
-            header.GetTestAccessor().RevisionHeader.GetPlainText().Should().Be(liveText,
+            header.GetRevisionHeader().GetPlainText().Should().Be(liveText,
                 "disposing the capture input must restore the actual renderer's live formatter for subsequent refreshes");
         });
     }
 
     private static void AssertHeaderDate(CommitInfoHeader header, GitRevision revision, IDateFormatter formatter)
     {
-        var block = header.GetTestAccessor().RevisionHeader;
+        var block = header.GetRevisionHeader();
         block.GetPlainText().Should().Contain(formatter.FormatDateAsRelativeLocal(DateTimeOffset.FromUnixTimeSeconds(revision.CommitUnixTime)));
         block.Bounds.Height.Should().BeGreaterThan(0);
         block.TextLayout.TextLines.Should().NotBeEmpty();

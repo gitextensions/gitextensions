@@ -36,7 +36,7 @@ public sealed class CommitInfoContextLinkTests
         using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
-        XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
+        XhtmlTextBlock header = accessor.Header.GetRevisionHeader();
         XhtmlTextBlock[] surfaces = [accessor.CommitMessage, header, accessor.RevisionInfo];
         string[] links = ["gitext://body", "gitext://header", "gitext://revision"];
         for (int index = 0; index < surfaces.Length; index++)
@@ -100,7 +100,7 @@ public sealed class CommitInfoContextLinkTests
         using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
-        XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
+        XhtmlTextBlock header = accessor.Header.GetRevisionHeader();
         header.SetXHTMLText("prefix <a href='gitext://gotorevision/second'>caption</a> tail");
         int activations = 0;
         header.LinkClicked += (_, _) => activations++;
@@ -143,7 +143,7 @@ public sealed class CommitInfoContextLinkTests
         using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
-        XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
+        XhtmlTextBlock header = accessor.Header.GetRevisionHeader();
         header.SetXHTMLText($"head <a href='{link}'>caption</a> tail");
         int activations = 0;
         header.LinkClicked += (_, _) => activations++;
@@ -197,7 +197,7 @@ public sealed class CommitInfoContextLinkTests
         using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
-        XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
+        XhtmlTextBlock header = accessor.Header.GetRevisionHeader();
         header.SetXHTMLText("prefix <a href='gitext://first'>first</a> plain <a href='gitext://second'>second</a> tail");
         Window window = new() { Width = 600, Height = 260, Content = control };
         window.Show();
@@ -233,7 +233,7 @@ public sealed class CommitInfoContextLinkTests
         using IDisposable controlLifetime = control;
         CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
         accessor.TableLayout.IsVisible = true;
-        XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
+        XhtmlTextBlock header = accessor.Header.GetRevisionHeader();
         header.SetXHTMLText("prefix <a href='gitext://first'>caption</a>");
         Window first = new() { Width = 600, Height = 260, Content = control };
         Window second = new() { Width = 600, Height = 260 };
@@ -271,7 +271,7 @@ public sealed class CommitInfoContextLinkTests
     public void Context_link_lookup_should_match_source_nearest_character_semantics_in_blank_space(bool nativeHeader, bool trailingPlainText)
     {
         CommitInfoHeader header = new();
-        XhtmlTextBlock block = nativeHeader ? header.GetTestAccessor().RevisionHeader : new();
+        XhtmlTextBlock block = nativeHeader ? header.GetRevisionHeader() : new();
         const string link = "https://example.invalid/source";
         block.SetXHTMLText($"head <a href='{link}'>caption</a>{(trailingPlainText ? " tail" : string.Empty)}");
         Window window = new() { Width = 600, Height = 220, Content = nativeHeader ? header : block };

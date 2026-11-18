@@ -260,17 +260,18 @@ public sealed class FormBrowseSourceActionTests
     }
 
     [AvaloniaTest]
-    public async Task Create_tag_should_use_the_latest_selected_revision([Values] bool hotkey)
+    public async Task Create_branch_or_tag_should_use_the_latest_selected_revision([Values] bool hotkey, [Values] bool createBranch)
     {
-        GitModule module = CreateRepository("tag");
+        GitModule module = CreateRepository(createBranch ? "branch" : "tag");
         ObjectId older = module.GetCurrentCheckout();
         module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "--allow-empty", "-m", "middle" }).Should().BeTrue();
         ObjectId middle = module.GetCurrentCheckout();
         module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "--allow-empty", "-m", "newer" }).Should().BeTrue();
         ObjectId newer = module.GetCurrentCheckout();
+        FormBrowse.Command command = createBranch ? FormBrowse.Command.CreateBranch : FormBrowse.Command.CreateTag;
         (FormBrowse form, IGitUICommands commands) = await OpenBrowseAsync(
             module,
-            new HotkeyCommand((int)FormBrowse.Command.CreateTag, nameof(FormBrowse.Command.CreateTag))
+            new HotkeyCommand((int)command, command.ToString())
             {
                 KeyData = WinFormsShims.Keys.F6,
             });
@@ -301,12 +302,22 @@ public sealed class FormBrowseSourceActionTests
                 else
                 {
                     OpenCommandsMenu(form);
-                    form.tagToolStripMenuItem.IsEnabled.Should().BeTrue();
-                    Click(GetRoot(form.tagToolStripMenuItem), form.tagToolStripMenuItem);
+                    MenuItem menuItem = createBranch ? form.branchToolStripMenuItem : form.tagToolStripMenuItem;
+                    menuItem.IsEnabled.Should().BeTrue();
+                    Click(GetRoot(menuItem), menuItem);
                 }
 
-                commands.Received(1).StartCreateTagDialog(form, Arg.Is<GitRevision>(revision => revision.ObjectId == older));
-                commands.DidNotReceive().StartCreateTagDialog(form, Arg.Is<GitRevision>(revision => revision.ObjectId == newer));
+                if (createBranch)
+                {
+                    commands.Received(1).StartCreateBranchDialog(form, older);
+                    commands.DidNotReceive().StartCreateBranchDialog(form, newer);
+                }
+                else
+                {
+                    commands.Received(1).StartCreateTagDialog(form, Arg.Is<GitRevision>(revision => revision.ObjectId == older));
+                    commands.DidNotReceive().StartCreateTagDialog(form, Arg.Is<GitRevision>(revision => revision.ObjectId == newer));
+                }
+
                 return;
 
                 void ClickRow(int index, RawInputModifiers modifiers)

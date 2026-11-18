@@ -76,8 +76,13 @@ public sealed class GraphHistoryRenderingTests
             Dispatcher.UIThread.CheckAccess().Should().BeTrue();
             provider.GetTestAccessor().GetCachedVisibleRange().Should().Equal(range);
             provider.GetTestAccessor().GetLastRenderedRow().Should().Be(15);
-            provider.Column.Width.Value.Should().Be(RevisionGraphColumnProvider.CalculateGraphColumnWidth(
+            provider.Column.Width.Value.Should().Be(GetSourceWidth(
                 range.Max(index => graph.GetSegmentsForRow(index)!.GetLaneCount())));
+            int threeLaneRow = Enumerable.Range(0, graph.Count)
+                .First(index => graph.GetSegmentsForRow(index)!.GetLaneCount() == 3);
+            await Task.Run(() => provider.RenderGraphToCacheAsync(
+                new VisibleRowRange(threeLaneRow, count: 1), threeLaneRow, RowHeight, CancellationToken.None));
+            provider.Column.Width.Value.Should().Be(54, "the source reserves a 6-DIP left margin and three 16-DIP lanes");
         }
         finally
         {
@@ -161,7 +166,7 @@ public sealed class GraphHistoryRenderingTests
                 && origin.Y < viewport.Bounds.Height && origin.Y + cell.Bounds.Height > 0)];
             visible.Should().NotBeEmpty();
             int visibleLaneCount = visible.Max(Lanes);
-            int expectedWidth = RevisionGraphColumnProvider.CalculateGraphColumnWidth(visibleLaneCount);
+            int expectedWidth = GetSourceWidth(visibleLaneCount);
             if (requireOverscan)
             {
                 cells.Max(Lanes).Should().BeGreaterThan(visibleLaneCount,
@@ -253,7 +258,7 @@ public sealed class GraphHistoryRenderingTests
             {
                 Grid row = cell.GetVisualParent<Grid>()!;
                 row.ColumnDefinitions[Grid.GetColumn(cell)].Width.Value.Should()
-                    .Be(RevisionGraphColumnProvider.CalculateGraphColumnWidth(visibleLaneCount));
+                    .Be(GetSourceWidth(visibleLaneCount));
             }
 
             int realNodes = 0;
@@ -368,6 +373,9 @@ public sealed class GraphHistoryRenderingTests
             AppSettings.MergeGraphLanesHavingCommonParent.Value = previousMergeCommonParents;
         }
     }
+
+    private static int GetSourceWidth(int visibleLaneCount)
+        => 6 + Math.Max(GraphRenderer.LaneWidth, GraphRenderer.LaneWidth * Math.Min(visibleLaneCount, GraphRenderer.MaxLanes));
 
     private static RevisionGraph BuildGraph()
     {

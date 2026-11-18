@@ -2339,7 +2339,7 @@ public sealed partial class ParityScreenshotTests
         // Wait for the selected revision's header and message before recording it.
         CommitInfoTestSupport.Accessor commitInfo = formBrowse.RevisionInfo.GetNativeTestSupport();
         Stopwatch commitInfoStopwatch = Stopwatch.StartNew();
-        while ((!commitInfo.Header.GetTestAccessor().RevisionHeader.GetPlainText()
+        while ((!commitInfo.Header.GetRevisionHeader().GetPlainText()
             .Contains(revision.ObjectId.ToString(), StringComparison.Ordinal)
                 || string.IsNullOrWhiteSpace(commitInfo.CommitMessage.GetPlainText())
                 || string.IsNullOrWhiteSpace(commitInfo.RevisionInfo.GetPlainText()))
@@ -2349,7 +2349,7 @@ public sealed partial class ParityScreenshotTests
             await Task.Delay(10);
         }
 
-        commitInfo.Header.GetTestAccessor().RevisionHeader.GetPlainText()
+        commitInfo.Header.GetRevisionHeader().GetPlainText()
             .Should().Contain(revision.ObjectId.ToString());
         commitInfo.CommitMessage.GetPlainText().Should().NotBeNullOrWhiteSpace();
         commitInfo.RevisionInfo.GetPlainText().Should().NotBeNullOrWhiteSpace();

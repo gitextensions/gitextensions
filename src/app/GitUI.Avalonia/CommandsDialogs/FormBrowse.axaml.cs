@@ -346,14 +346,6 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
         RevisionInfo.CommandClicked += RevisionInfo_CommandClicked;
         CommitInfoTabControl.SelectionChanged += CommitInfoTabControl_SelectedIndexChanged;
 
-        // Avalonia lists consume Ctrl+A before the form receives the bubbling key event.
-        AddHandler(KeyDownEvent, (_, e) =>
-        {
-            if (e.Key == Key.A && e.KeyModifiers == KeyModifiers.Control && ProcessHotkey(KeysMapper.ToKeys(e)))
-            {
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
         refreshDashboardToolStripMenuItem.Click += RefreshDashboardToolStripMenuItemClick;
         fileExplorerToolStripMenuItem.Click += FileExplorerToolStripMenuItemClick;
@@ -983,52 +975,6 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     #endregion
 
-    private void PopulatePluginMenu()
-    {
-        lock (PluginRegistry.Plugins)
-        {
-            if (PluginRegistry.Plugins.Count == 0)
-            {
-                return;
-            }
-
-            pluginsToolStripMenuItem.Items.Remove(pluginsLoadingToolStripMenuItem);
-            MenuItem[] existingPluginItems = pluginsToolStripMenuItem.Items
-                .OfType<MenuItem>()
-                .Where(item => item.Tag is IGitPlugin)
-                .ToArray();
-            foreach (MenuItem existingPluginItem in existingPluginItems)
-            {
-                pluginsToolStripMenuItem.Items.Remove(existingPluginItem);
-            }
-
-            int insertIndex = 0;
-            foreach (IGitPlugin plugin in PluginRegistry.Plugins
-                         .OrderBy(item => item.Name, StringComparer.CurrentCultureIgnoreCase))
-            {
-                MenuItem item = new()
-                {
-                    Header = plugin.Name,
-                    Tag = plugin,
-                };
-                Avalonia.Media.IImage? icon = PluginIconProvider.GetIcon(plugin);
-                if (icon is not null)
-                {
-                    item.Icon = new Image { Width = 16, Height = 16, Source = icon };
-                }
-
-                item.Click += (_, _) =>
-                {
-                    if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
-                    {
-                        UICommands.RepoChangedNotifier.Notify();
-                    }
-                };
-                pluginsToolStripMenuItem.Items.Insert(insertIndex++, item);
-            }
-        }
-    }
-
     public void GoToRef(string refName, bool showNoRevisionMsg, bool toggleSelection = false) => RevisionGrid.GoToRef(refName, showNoRevisionMsg, toggleSelection);
 
     private void UpdateRepositoryHostsMenu()
@@ -1109,21 +1055,76 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void RegisterPlugins()
     {
-        bool werePluginsRegistered = PluginRegistry.PluginsRegistered;
+        const string PluginManagerName = "Plugin Manager";
+        ILookup<object?, SourceControls.ToolStripMenuItem> existingPluginMenus = pluginsToolStripMenuItem.Items.OfType<SourceControls.ToolStripMenuItem>().ToLookup(c => c.Tag);
+
+        lock (PluginRegistry.Plugins)
+        {
+            if (PluginRegistry.Plugins.Count == 0)
+            {
+                return;
+            }
+
+            if (pluginsToolStripMenuItem.Items.Contains(pluginsLoadingToolStripMenuItem))
+            {
+                pluginsToolStripMenuItem.Items.Remove(pluginsLoadingToolStripMenuItem);
+            }
+
+            IOrderedEnumerable<IGitPlugin> pluginEntries = PluginRegistry.Plugins
+                .OrderByDescending(entry => entry.Name, StringComparer.CurrentCultureIgnoreCase);
+
+            // pluginsToolStripMenuItem.Items menu already contains at least 2 items:
+            //    [1] Separator
+            //    [0] Plugin Settings
+            // insert all plugins except 'Plugin Manager' above the separator
+            foreach (IGitPlugin plugin in pluginEntries)
+            {
+                // don't add the plugin to the Plugins menu, if already added
+                if (existingPluginMenus.Contains(plugin))
+                {
+                    continue;
+                }
+
+                SourceControls.ToolStripMenuItem item = new()
+                {
+                    Header = plugin.Name,
+                    Tag = plugin,
+                };
+                Avalonia.Media.IImage? icon = PluginIconProvider.GetIcon(plugin);
+                if (icon is not null)
+                {
+                    item.Icon = new Image { Width = 16, Height = 16, Source = icon };
+                }
+
+                item.Click += (_, _) =>
+                {
+                    if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
+                    {
+                        UICommands.RepoChangedNotifier.Notify();
+                    }
+                };
+
+                if (plugin.Name == PluginManagerName)
+                {
+                    // insert Plugin Manager below the separator
+                    pluginsToolStripMenuItem.Items.Insert(pluginsToolStripMenuItem.Items.Count - 1, item);
+                }
+                else
+                {
+                    // Handle special case where Git Hosting plugin has already been loaded
+                    object? first = pluginsToolStripMenuItem.Items[0];
+                    int index = first is Separator || string.CompareOrdinal((first as MenuItem)?.Header as string, plugin.Name) >= 0 ? 0 : 1;
+
+                    pluginsToolStripMenuItem.Items.Insert(index, item);
+                }
+            }
+        }
 
         // Allow the plugin to perform any self-registration actions
         PluginRegistry.Register(UICommands);
 
-        // pluginsToolStripMenuItem.DropDownItems menu already contains at least 2 items:
-        //    [1] Separator
-        //    [0] Plugin Settings
-        // insert all plugins except 'Plugin Manager' above the separator
-        if (!werePluginsRegistered && PluginRegistry.PluginsRegistered)
-        {
-            UICommands.RaisePostRegisterPlugin(this);
-        }
+        UICommands.RaisePostRegisterPlugin(this);
 
-        PopulatePluginMenu();
         UpdateRepositoryHostsMenu();
         UpdatePluginMenu(Module.IsValidGitWorkingDir());
         revisionDiff.RegisterGitHostingPluginInBlameControl();
@@ -2336,7 +2337,7 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void CreateBranchToolStripMenuItemClick(object sender, EventArgs e)
     {
-        UICommands.StartCreateBranchDialog(this, RevisionGrid.SelectedRevision?.ObjectId ?? default);
+        UICommands.StartCreateBranchDialog(this, RevisionGrid.LatestSelectedRevision?.ObjectId ?? default);
     }
 
     private void editGitAttributesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3971,7 +3972,6 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
         return RelativePath.From(relativePath.ToPosixPath());
     }
 
-    internal void PopulatePluginMenuForTest() => PopulatePluginMenu();
     internal void UpdateRepositoryHostsMenuForTest() => UpdateRepositoryHostsMenu();
     internal Task JoinLoadOperationsForTestAsync(CancellationToken cancellationToken = default)
         => _loadOperations.JoinPendingOperationsAsync(cancellationToken);

@@ -26,6 +26,7 @@ using GitUI;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Compat;
 using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
@@ -33,6 +34,7 @@ using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft.VisualStudio.Composition;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -48,7 +50,28 @@ public sealed class BuildServerAutoDetectionColumnTests
     public async Task Detected_adapter_should_apply_display_preferences_before_any_build_arrives(bool showIcon, bool showText)
         => await VerifyDetectedAdapterAsync(showIcon, showText, verifyPalette: false);
 
-    internal static async Task VerifyDetectedAdapterAsync(bool showIcon, bool showText, bool verifyPalette)
+    [AvaloniaTest]
+    public async Task Detected_adapter_should_render_build_status_in_regular_generic_monospace_at_the_ui_font_size()
+    {
+        using AppSettingsTestScope settings = new();
+        WinFormsShims.Font previousUi = AppSettings.Font;
+        WinFormsShims.Font previousMonospace = AppSettings.MonospaceFont;
+        try
+        {
+            AppSettings.Font = new WinFormsShims.Font("Segoe UI", 12, WinFormsShims.FontStyle.Bold);
+            AppSettings.MonospaceFont = new WinFormsShims.Font("Consolas", 20, WinFormsShims.FontStyle.Italic);
+            AvaloniaFontSettings.ApplyAppSettings();
+            await VerifyDetectedAdapterAsync(showIcon: true, showText: true, verifyPalette: false, verifyFont: true);
+        }
+        finally
+        {
+            AppSettings.Font = previousUi;
+            AppSettings.MonospaceFont = previousMonospace;
+            AvaloniaFontSettings.ApplyAppSettings();
+        }
+    }
+
+    internal static async Task VerifyDetectedAdapterAsync(bool showIcon, bool showText, bool verifyPalette, bool verifyFont = false)
     {
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
@@ -134,7 +157,17 @@ public sealed class BuildServerAutoDetectionColumnTests
             foreach (Grid row in rows)
             {
                 row.ColumnDefinitions[column.Index].Width.Should().Be(column.Column.EffectiveWidth);
-                row.Children.OfType<BuildStatusColumnProvider.BuildStatusTextBlock>().Single().IsVisible.Should().Be(showIcon || showText);
+                BuildStatusColumnProvider.BuildStatusTextBlock cell = row.Children.OfType<BuildStatusColumnProvider.BuildStatusTextBlock>().Single();
+                cell.IsVisible.Should().Be(showIcon || showText);
+                if (verifyFont)
+                {
+                    cell.FontSize.Should().Be(16);
+                    cell.FontStyle.Should().Be(FontStyle.Normal);
+                    cell.FontWeight.Should().Be(FontWeight.Normal);
+                    cell.FontFamily.Name.Should().Be(OperatingSystem.IsWindows()
+                        ? "Courier New"
+                        : OperatingSystem.IsMacOS() ? "Menlo" : "DejaVu Sans Mono");
+                }
             }
 
             if (verifyPalette)

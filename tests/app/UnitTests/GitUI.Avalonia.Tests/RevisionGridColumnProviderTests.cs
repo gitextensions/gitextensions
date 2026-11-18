@@ -259,7 +259,6 @@ public sealed class RevisionGridColumnProviderTests
             DateTime widthWindowStart = DateTime.Now;
             DateColumnProvider dateProvider = new(grid);
             DateTime widthWindowEnd = DateTime.Now;
-            BuildStatusColumnProvider buildProvider = new(_ => { }, () => Substitute.For<IGitModule>());
             authorProvider.CreateCell().Opacity.Should().Be(1,
                 "the source author column uses the row's unmodified foreground");
             dateProvider.CreateCell().Opacity.Should().Be(1,
@@ -279,8 +278,6 @@ public sealed class RevisionGridColumnProviderTests
 
             sourceMeasuredWidths.Should().Contain(dateProvider.Column.Width.Value,
                 "the source measures the current absolute-date text instead of using a fixed column width");
-            buildProvider.CreateCell().Classes.Should().Contain("gitextensions-commit-header",
-                "the source paints build status with its configured monospace font");
         }
         finally
         {

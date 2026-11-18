@@ -128,9 +128,6 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     public override void ApplySettings()
     {
         Column.IsVisible = AppSettings.ShowRevisionGridGraphColumn;
-        RevisionGraphDrawStyle = AppSettings.RevisionGraphDrawNonRelativesGray
-            ? RevisionGraphDrawStyle.DrawNonRelativesGray
-            : RevisionGraphDrawStyle.Normal;
     }
 
     public override void Clear()
@@ -196,26 +193,6 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
         // Avalonia column dimensions are DIPs; the graph minimum is an integral lane width.
         return ColumnLeftMargin + Math.Max(lanesWidth, (int)Column.MinimumWidth);
-    }
-
-    internal static int CalculateGraphColumnWidth(int visibleLaneCount)
-        => 6
-            + Math.Max(
-                GraphRenderer.LaneWidth * Math.Min(visibleLaneCount, GraphRenderer.MaxLanes),
-                GraphRenderer.LaneWidth);
-
-    internal int GetLaneCount(GitRevision revision)
-    {
-        try
-        {
-            return _revisionGraph.TryGetRowIndex(revision.ObjectId, out int rowIndex)
-                ? _revisionGraph.GetSegmentsForRow(rowIndex)?.GetLaneCount() ?? 0
-                : 0;
-        }
-        catch (Exception)
-        {
-            return 0;
-        }
     }
 
     internal bool DrawGraph(DrawingContext context, GitRevision revision, double rowHeight)

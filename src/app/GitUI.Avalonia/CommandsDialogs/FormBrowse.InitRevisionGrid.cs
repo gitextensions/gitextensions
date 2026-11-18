@@ -1,8 +1,11 @@
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.Compat;
 using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs;
@@ -13,6 +16,15 @@ partial class FormBrowse
 
     private void InitRevisionGrid(ObjectId selectedId, ObjectId firstId, bool isFileHistoryMode)
     {
+        // Avalonia lists consume Ctrl+A before the form receives the bubbling key event.
+        AddHandler(KeyDownEvent, (_, e) =>
+        {
+            if (e.Key == Key.A && e.KeyModifiers == KeyModifiers.Control && ProcessHotkey(KeysMapper.ToKeys(e)))
+            {
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+
         RevisionGrid.ArtificialChanged += (_, _) => RefreshGitStatusMonitor();
 
         RevisionGrid.IndexWatcher.Changed += (_, args) =>

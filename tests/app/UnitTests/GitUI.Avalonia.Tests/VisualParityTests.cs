@@ -1379,7 +1379,6 @@ public sealed class VisualParityTests
             Panel messageContent = messageCell.Children.OfType<Panel>().Should().ContainSingle().Which;
             messageContent.Margin.Left.Should().Be(6);
             messageContent.TranslatePoint(default, messageCell)!.Value.X.Should().Be(6);
-            RevisionGridControl.CalculateGraphColumnWidth(visibleLaneCount: 3).Should().Be(54);
         }
         finally
         {

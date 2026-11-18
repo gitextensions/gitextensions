@@ -232,7 +232,7 @@ public sealed class CommitInfoParagraphCopyTests
         WithClipboard(clipboard => WithSurface("body", (control, _, window) =>
         {
             CommitInfoTestSupport.Accessor accessor = control.GetNativeTestSupport();
-            XhtmlTextBlock header = accessor.Header.GetTestAccessor().RevisionHeader;
+            XhtmlTextBlock header = accessor.Header.GetRevisionHeader();
             header.SetXHTMLText("Author:\tA &amp; B\r\nCommit hash:\tabc123");
             string body = "body first\nbody second" + (trailingParagraph ? "\n" : string.Empty);
             accessor.CommitMessage.SetXHTMLText(body.Replace("\n", "\r\n", StringComparison.Ordinal));
@@ -299,7 +299,7 @@ public sealed class CommitInfoParagraphCopyTests
         accessor.TableLayout.IsVisible = true;
         XhtmlTextBlock block = role switch
         {
-            "header" => accessor.Header.GetTestAccessor().RevisionHeader,
+            "header" => accessor.Header.GetRevisionHeader(),
             "body" => accessor.CommitMessage,
             "refs" => accessor.RevisionInfo,
             _ => throw new ArgumentOutOfRangeException(nameof(role)),

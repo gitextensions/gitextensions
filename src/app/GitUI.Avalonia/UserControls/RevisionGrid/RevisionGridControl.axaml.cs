@@ -609,9 +609,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal int GraphColumnWidth => (int)_revisionGraphColumnProvider.Column.Width.Value;
 
-    internal static int CalculateGraphColumnWidth(int visibleLaneCount)
-        => RevisionGraphColumnProvider.CalculateGraphColumnWidth(visibleLaneCount);
-
     internal bool IsCurrentCheckout(GitRevision revision)
         => _headId is ObjectId headId && revision.ObjectId == headId;
 
@@ -1960,6 +1957,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void ApplyColumnSettings()
     {
+        _revisionGraphColumnProvider.RevisionGraphDrawStyle
+            = AppSettings.RevisionGraphDrawNonRelativesGray ? RevisionGraphDrawStyle.DrawNonRelativesGray : RevisionGraphDrawStyle.Normal;
+
         // restore its resizable state
         _lastVisibleResizableColumn?.Resizable = true;
 
@@ -4253,23 +4253,14 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             : realizedRows;
         _revisionGraphColumnProvider.UpdateVisibleRange(
             visibleRows.Select(row => row.DataContext).OfType<GitRevision>());
-        int visibleLaneCount = visibleRows
-            .Select(row => row.DataContext)
-            .OfType<GitRevision>()
-            .Select(_revisionGraphColumnProvider.GetLaneCount)
-            .DefaultIfEmpty()
-            .Max();
-        int graphColumnWidth = CalculateGraphColumnWidth(visibleLaneCount);
-        GridLength graphColumnGridLength = new(graphColumnWidth);
-        if (_revisionGraphColumnProvider.Column.Width == graphColumnGridLength
-            && realizedRows.All(row => row.ColumnDefinitions[_revisionGraphColumnProvider.Index].Width == graphColumnGridLength))
+        GridLength graphColumnGridLength = _revisionGraphColumnProvider.Column.Width;
+        if (realizedRows.All(row => row.ColumnDefinitions[_revisionGraphColumnProvider.Index].Width == graphColumnGridLength))
         {
             return;
         }
 
         // UpdateVisibleRange already publishes the model width; recycled rows still retain
         // their old Grid allocation until it is applied, otherwise additional lanes are clipped.
-        _revisionGraphColumnProvider.Column.Width = graphColumnGridLength;
         foreach (RevisionRowControl row in realizedRows)
         {
             row.ApplyColumnLayout();

@@ -1620,6 +1620,12 @@
     <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsMonospaceFontStyle}" />
     <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsMonospaceFontWeight}" />
   </Style>
+  <Style Selector="TextBlock.revision-build-status-cell">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsGenericMonospaceFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="Normal" />
+    <Setter Property="FontWeight" Value="Normal" />
+  </Style>
   <Style Selector="SelectableTextBlock.gitextensions-commit-message">
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsCommitFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsCommitFontSize}" />
