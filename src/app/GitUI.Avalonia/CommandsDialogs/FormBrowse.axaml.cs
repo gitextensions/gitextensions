@@ -342,8 +342,6 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
         _splitterManager = new(settingsSource);
         InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileHistoryMode);
 
-        // Framework constraint: streamed rows must recheck the dropdown after initialization returns.
-        RevisionGrid.CanFocusRevisionGridWhenShown = () => _NO_TRANSLATE_WorkingDir.Flyout?.IsOpen != true;
         InitCommitDetails();
         RevisionInfo.CommandClicked += RevisionInfo_CommandClicked;
         CommitInfoTabControl.SelectionChanged += CommitInfoTabControl_SelectedIndexChanged;
@@ -810,7 +808,9 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         RefreshCommitInfoPositionToolTip();
         UpdateTooltipWithShortcut(toolStripButtonPull, Command.QuickPullOrFetch);
-        UpdateTooltipWithShortcut(toolStripFileExplorer, fileExplorerToolStripMenuItem.InputGesture);
+        UpdateTooltipWithShortcut(toolStripFileExplorer, fileExplorerToolStripMenuItem.InputGesture is { } gesture
+            ? KeysMapper.ToKeys(gesture.Key, gesture.KeyModifiers)
+            : WinFormsShims.Keys.None);
 
         return;
 
@@ -1320,8 +1320,10 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
         UpdateTooltipWithShortcut(toolStripButtonCommit, Command.Commit);
         UpdateTooltipWithShortcut(EditSettings, Command.OpenSettings);
         UpdateTooltipWithShortcut(branchSelect, Command.CheckoutBranch);
-        UpdateTooltipWithShortcut(toolStripFileExplorer, fileExplorerToolStripMenuItem.InputGesture);
-        UpdateTooltipWithShortcut(RefreshButton, new KeyGesture(Key.F5));
+        UpdateTooltipWithShortcut(toolStripFileExplorer, fileExplorerToolStripMenuItem.InputGesture is { } gesture
+            ? KeysMapper.ToKeys(gesture.Key, gesture.KeyModifiers)
+            : WinFormsShims.Keys.None);
+        UpdateTooltipWithShortcut(RefreshButton, WinFormsShims.Keys.F5);
         UpdateTooltipWithShortcut(userShell, Command.GitBash);
 
         void SetShortcutKeyDisplayString(MenuItem item, Command command)
@@ -1884,7 +1886,7 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void TagToolStripMenuItemClick(object sender, EventArgs e)
     {
-        UICommands.StartCreateTagDialog(this, RevisionGrid.SelectedRevision);
+        UICommands.StartCreateTagDialog(this, RevisionGrid.LatestSelectedRevision);
     }
 
     private static void SaveApplicationSettings()

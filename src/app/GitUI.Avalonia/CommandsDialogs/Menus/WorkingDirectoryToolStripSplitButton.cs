@@ -328,7 +328,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     public WorkingDirectoryToolStripSplitButton()
     {
         Name = nameof(WorkingDirectoryToolStripSplitButton);
-        Content = "WorkingDir";
         Icon = Images.RepoOpen;
 
         // Avalonia separates horizontal alignment from the source MiddleLeft value.

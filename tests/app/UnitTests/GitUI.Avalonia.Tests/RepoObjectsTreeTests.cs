@@ -2053,6 +2053,15 @@ public sealed class RepoObjectsTreeTests
     }
 
     [AvaloniaTest]
+    public void Collapse_toolbar_should_copy_the_localized_menu_tooltip()
+    {
+        using TranslationTestScope translation = new("Dutch");
+        RepoObjectsTree control = new();
+        ToolTip.GetTip(control.FindControl<MenuItem>("mnubtnCollapse")!).Should().Be("Alle subknooppunten samenvouwen");
+        ToolTip.GetTip(control.FindControl<Button>("tsbCollapseAll")!).Should().Be("Alle subknooppunten samenvouwen");
+    }
+
+    [AvaloniaTest]
     public void Remote_roots_should_use_remote_priorities_independently_of_branch_priorities()
     {
         SettingsSnapshot settings = SettingsSnapshot.Capture();

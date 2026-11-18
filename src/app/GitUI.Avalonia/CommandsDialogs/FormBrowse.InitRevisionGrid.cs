@@ -111,6 +111,9 @@ partial class FormBrowse
 
         RevisionGrid.SelectInLeftPanel = SelectInLeftPanel;
 
+        // Framework constraint: streamed rows must recheck the dropdown after initialization returns.
+        RevisionGrid.CanFocusRevisionGridWhenShown = () => _NO_TRANSLATE_WorkingDir.Flyout?.IsOpen != true;
+
         return;
 
         void SelectInLeftPanel(string gitRef)

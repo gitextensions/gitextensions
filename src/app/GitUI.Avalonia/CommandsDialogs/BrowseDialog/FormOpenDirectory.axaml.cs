@@ -35,13 +35,7 @@ public partial class FormOpenDirectory : GitExtensionsForm
         folderBrowserButton.Click += folderBrowserButton_Click;
         folderGoUpButton.Click += folderGoUpButton_Click;
         _NO_TRANSLATE_Directory.KeyDown += DirectoryKeyPress;
-        _NO_TRANSLATE_Directory.PropertyChanged += (sender, args) =>
-        {
-            if (args.Property == ComboBox.TextProperty)
-            {
-                _NO_TRANSLATE_Directory_TextChanged(sender, EventArgs.Empty);
-            }
-        };
+        _NO_TRANSLATE_Directory.PropertyChanged += _NO_TRANSLATE_Directory_TextChanged;
         InitializeComplete();
 
         IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
@@ -160,8 +154,13 @@ public partial class FormOpenDirectory : GitExtensionsForm
         }
     }
 
-    private void _NO_TRANSLATE_Directory_TextChanged(object? sender, EventArgs e)
+    private void _NO_TRANSLATE_Directory_TextChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
+        if (e.Property != ComboBox.TextProperty)
+        {
+            return;
+        }
+
         try
         {
             DirectoryInfo currentDirectory = new(_NO_TRANSLATE_Directory.Text ?? string.Empty);
@@ -201,18 +200,6 @@ public partial class FormOpenDirectory : GitExtensionsForm
         {
             _form = form;
         }
-
-        public ComboBox Directory => _form._NO_TRANSLATE_Directory;
-        public Button OpenButton => _form.Load;
-        public Button BrowseButton => _form.folderBrowserButton;
-        public Button GoUpButton => _form.folderGoUpButton;
-
-        public void GoUp() => _form.folderGoUpButton_Click(_form.folderGoUpButton, EventArgs.Empty);
-
-        public void UpdateDirectoryState() => _form._NO_TRANSLATE_Directory_TextChanged(_form._NO_TRANSLATE_Directory, EventArgs.Empty);
-
-        public static IReadOnlyList<string> GetDirectories(IGitModule? currentModule, IEnumerable<Repository> repositoryHistory)
-            => FormOpenDirectory.GetDirectories(currentModule, repositoryHistory);
 
         public static IGitModule? OpenGitRepository(IGitExecutorProvider executorProvider, string path, ILocalRepositoryManager localRepositoryManager)
             => FormOpenDirectory.OpenGitRepository(executorProvider, path, localRepositoryManager);

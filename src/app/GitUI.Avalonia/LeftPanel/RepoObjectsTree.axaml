@@ -230,7 +230,10 @@
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" /></MenuItem.Icon>
           </wf:ToolStripMenuItem>
           <wf:ToolStripSeparator x:Name="toolStripSeparator9" />
-          <wf:ToolStripMenuItem x:Name="mnubtnCollapse" Header="Collapse">
+          <wf:ToolStripMenuItem x:Name="mnubtnCollapse"
+                                Header="Collapse"
+                                compat:TranslationCompat.UseToolTipText="True"
+                                ToolTip.Tip="Collapse all subnodes">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CollapseAll}" /></MenuItem.Icon>
           </wf:ToolStripMenuItem>
           <wf:ToolStripMenuItem x:Name="mnubtnExpand" Header="Expand">

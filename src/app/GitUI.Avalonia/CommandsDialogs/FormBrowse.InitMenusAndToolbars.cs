@@ -13,7 +13,9 @@ using GitUI.Properties;
 using GitUI.Shells;
 using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
+using ResourceManager.Hotkey;
 using Brush = Avalonia.Media.IBrush;
+using Keys = GitExtensions.Shims.WinForms.Keys;
 
 namespace GitUI.CommandsDialogs;
 
@@ -88,7 +90,7 @@ partial class FormBrowse
         UpdateTooltipWithShortcut(toolStripButtonCommit, Command.Commit);
         UpdateTooltipWithShortcut(EditSettings, Command.OpenSettings);
         UpdateTooltipWithShortcut(branchSelect, Command.CheckoutBranch);
-        UpdateTooltipWithShortcut(RefreshButton, new KeyGesture(Key.F5));
+        UpdateTooltipWithShortcut(RefreshButton, Keys.F5);
         UpdateTooltipWithShortcut(userShell, Command.GitBash);
 
         return;
@@ -110,18 +112,15 @@ partial class FormBrowse
     }
 
     private void UpdateTooltipWithShortcut(Control button, Command command)
-        => UpdateTooltipWithShortcut(button, GetShortcutKeyTooltipString(command));
+        => UpdateTooltipWithShortcut(button, GetShortcutKeys(command));
 
-    private static void UpdateTooltipWithShortcut(Control button, KeyGesture? keys)
-        => UpdateTooltipWithShortcut(button, keys is null ? string.Empty : $"({keys})");
-
-    private static void UpdateTooltipWithShortcut(Control button, string shortcut)
+    private static void UpdateTooltipWithShortcut(Control button, Keys keys)
     {
         string text = ToolTip.GetTip(button)?.ToString()
             ?? (button as ContentControl)?.Content?.ToString()
             ?? button.Name
             ?? string.Empty;
-        ToolTip.SetTip(button, text.UpdateSuffix(shortcut));
+        ToolTip.SetTip(button, text.UpdateSuffix(keys.ToShortcutKeyToolTipString()));
     }
 
     private void InsertFetchPullShortcuts()

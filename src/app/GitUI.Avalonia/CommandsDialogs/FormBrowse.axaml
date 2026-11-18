@@ -336,6 +336,7 @@
         <menus:WorkingDirectoryToolStripSplitButton x:Name="_NO_TRANSLATE_WorkingDir"
                                                     UseNativeToolStripLayout="True"
                                                     Classes="gitextensions-toolbar-button"
+                                                    Content="WorkingDir"
                                                     compat:NativeToolStrip.ItemHeight="22" />
         <compat:IconSplitButton x:Name="branchSelect"
                                 UseNativeToolStripLayout="True"

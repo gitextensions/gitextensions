@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -141,12 +143,11 @@ public sealed class HelpInfoDialogsTests
     public void FormOpenDirectory_should_construct_with_the_original_controls_and_keys()
     {
         FormOpenDirectory form = new();
-        FormOpenDirectory.TestAccessor accessor = form.GetTestAccessor();
 
-        accessor.Directory.Should().NotBeNull();
-        accessor.OpenButton.Should().NotBeNull();
-        accessor.BrowseButton.Should().NotBeNull();
-        accessor.GoUpButton.Should().NotBeNull();
+        form.FindControl<ComboBox>("_NO_TRANSLATE_Directory").Should().NotBeNull();
+        form.FindControl<Button>("Load").Should().NotBeNull();
+        form.FindControl<Button>("folderBrowserButton").Should().NotBeNull();
+        form.FindControl<Button>("folderGoUpButton").Should().NotBeNull();
 
         ITranslation translation = Substitute.For<ITranslation>();
         form.AddTranslationItems(translation);
@@ -194,14 +195,17 @@ public sealed class HelpInfoDialogsTests
     }
 
     [AvaloniaTest]
-    public void FormOpenDirectory_should_preserve_directory_order_and_remove_duplicates()
+    public async Task FormOpenDirectory_should_preserve_directory_order_and_remove_duplicates()
     {
+        using AppSettingsTestScope settings = new();
         string first = Path.Combine(Path.GetTempPath(), "ge-first");
         string second = Path.Combine(Path.GetTempPath(), "ge-second");
-        Repository[] history = [new(first), new(first), new(second)];
+        await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync([new(first), new(first), new(second)]);
+        (await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync()).Select(repository => repository.Path)
+            .Should().Equal(first, first, second);
 
-        IReadOnlyList<string> directories = FormOpenDirectory.TestAccessor.GetDirectories(null, history);
-
+        using FormOpenDirectory form = new(Substitute.For<IGitExecutorProvider>(), currentModule: null);
+        IEnumerable<string> directories = form.FindControl<ComboBox>("_NO_TRANSLATE_Directory")!.Items.Cast<string>();
         directories.Should().ContainInOrder(first, second);
         directories.Count(path => path == first).Should().Be(1);
     }
@@ -209,22 +213,34 @@ public sealed class HelpInfoDialogsTests
     [AvaloniaTest]
     public void FormOpenDirectory_should_navigate_to_the_parent_and_update_parent_availability()
     {
-        FormOpenDirectory form = new();
-        FormOpenDirectory.TestAccessor accessor = form.GetTestAccessor();
-        string child = Path.Combine(Path.GetTempPath(), "GitExtensions", "nested");
+        using AppSettingsTestScope settings = new();
+        using FormOpenDirectory form = new(Substitute.For<IGitExecutorProvider>(), currentModule: null);
+        DirectoryInfo temporary = Directory.CreateTempSubdirectory("GitExtensions.OpenDirectory-");
+        try
+        {
+            DirectoryInfo child = temporary.CreateSubdirectory("nested");
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
+            ComboBox directory = form.FindControl<ComboBox>("_NO_TRANSLATE_Directory")!;
+            Button goUp = form.FindControl<Button>("folderGoUpButton")!;
+            directory.Text = child.FullName;
+            goUp.IsEnabled.Should().BeTrue();
+            Point location = goUp.TranslatePoint(new Point(goUp.Bounds.Width / 2, goUp.Bounds.Height / 2), form)!.Value;
+            form.MouseDown(location, MouseButton.Left);
+            form.MouseUp(location, MouseButton.Left);
+            directory.Text.Should().Be(temporary.FullName.EnsureTrailingPathSeparator());
 
-        accessor.Directory.Text = child;
-        accessor.GoUp();
+            directory.Text = Path.GetTempPath();
+            goUp.IsEnabled.Should().BeTrue();
 
-        accessor.Directory.Text.Should().Be(new DirectoryInfo(child).Parent!.FullName.EnsureTrailingPathSeparator());
-
-        accessor.Directory.Text = Path.GetTempPath();
-        accessor.UpdateDirectoryState();
-        accessor.GoUpButton.IsEnabled.Should().BeTrue();
-
-        accessor.Directory.Text = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
-        accessor.UpdateDirectoryState();
-        accessor.GoUpButton.IsEnabled.Should().BeFalse();
+            directory.Text = Path.Combine(temporary.FullName, "missing");
+            goUp.IsEnabled.Should().BeFalse();
+        }
+        finally
+        {
+            form.Close();
+            TestDirectory.Delete(temporary.FullName);
+        }
     }
 
     private static void AssertBoundsRelativeTo(Control control, Visual relativeTo, double x, double y, double width, double height)

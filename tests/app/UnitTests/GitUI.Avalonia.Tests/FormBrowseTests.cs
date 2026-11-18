@@ -64,6 +64,18 @@ public sealed class FormBrowseTests
     private bool _revisionGraphShowArtificialCommits;
 
     [AvaloniaTest]
+    public void Browse_working_directory_should_display_the_original_initial_caption_without_translating_it()
+    {
+        using FormBrowse form = new();
+        WorkingDirectoryToolStripSplitButton selector = form.FindControl<WorkingDirectoryToolStripSplitButton>("_NO_TRANSLATE_WorkingDir")!;
+
+        selector.Content.Should().Be("WorkingDir");
+        ITranslation translation = Substitute.For<ITranslation>();
+        form.AddTranslationItems(translation);
+        translation.DidNotReceive().AddTranslationItem(nameof(FormBrowse), selector.Name!, "Text", Arg.Any<string>());
+    }
+
+    [AvaloniaTest]
     [TestCase(false)]
     [TestCase(true)]
     public async Task Working_directory_fixed_actions_should_dismiss_the_popup_before_opening_their_real_dialog(bool configure)

@@ -150,7 +150,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         InitializeComplete();
         ToolTip.SetTip(btnSearch, _searchTooltip.Text);
-        ToolTip.SetTip(tsbCollapseAll, Translate(nameof(RepoObjectsTree), "mnubtnCollapse", "Collapse all subnodes", "ToolTipText"));
+        ToolTip.SetTip(tsbCollapseAll, ToolTip.GetTip(mnubtnCollapse));
         ToolTip.SetTip(tsbShowBranches, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowBranches.Content!));
         ToolTip.SetTip(tsbShowRemotes, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowRemotes.Content!));
         ToolTip.SetTip(tsbShowWorktrees, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowWorktrees.Content!));
@@ -726,17 +726,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private void OnBtnSearchClicked(object? sender, EventArgs e)
     {
         DoSearch();
-    }
-
-    private static string Translate(string category, string name, string source, string property = "Text")
-    {
-        string text = source;
-        foreach (ITranslation translation in Translator.GetTranslation(AppSettings.CurrentTranslation).Values)
-        {
-            text = translation.TranslateItem(category, name, property, () => source) ?? text;
-        }
-
-        return text;
     }
 
     private void btnCollapseAll_Click(object? sender, EventArgs e)

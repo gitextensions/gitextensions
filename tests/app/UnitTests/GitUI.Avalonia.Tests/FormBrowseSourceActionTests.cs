@@ -20,6 +20,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
@@ -259,6 +260,74 @@ public sealed class FormBrowseSourceActionTests
     }
 
     [AvaloniaTest]
+    public async Task Create_tag_should_use_the_latest_selected_revision([Values] bool hotkey)
+    {
+        GitModule module = CreateRepository("tag");
+        ObjectId older = module.GetCurrentCheckout();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "--allow-empty", "-m", "middle" }).Should().BeTrue();
+        ObjectId middle = module.GetCurrentCheckout();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "--allow-empty", "-m", "newer" }).Should().BeTrue();
+        ObjectId newer = module.GetCurrentCheckout();
+        (FormBrowse form, IGitUICommands commands) = await OpenBrowseAsync(
+            module,
+            new HotkeyCommand((int)FormBrowse.Command.CreateTag, nameof(FormBrowse.Command.CreateTag))
+            {
+                KeyData = WinFormsShims.Keys.F6,
+            });
+        using (form)
+        {
+            try
+            {
+                using CancellationTokenSource deadline = new(TimeSpan.FromSeconds(20));
+                await form.JoinLoadOperationsForTestAsync(deadline.Token);
+                await WaitUntilAsync(() => form.RevisionGrid._gridView.ItemCount == 3);
+                ClickRow(2, RawInputModifiers.None);
+                if (hotkey)
+                {
+                    ClickRow(1, RawInputModifiers.Control);
+                }
+
+                ClickRow(0, RawInputModifiers.Control);
+                ClickRow(2, RawInputModifiers.Control);
+                ObjectId[] selected = hotkey ? [newer, middle] : [newer];
+                form.RevisionGrid.GetSelectedRevisions().Select(revision => revision.ObjectId).Should().Equal(selected);
+                form.RevisionGrid.LatestSelectedRevision!.ObjectId.Should().Be(older);
+
+                if (hotkey)
+                {
+                    form.KeyPress(Key.F6, RawInputModifiers.None, PhysicalKey.F6, keySymbol: null);
+                    form.KeyRelease(Key.F6, RawInputModifiers.None, PhysicalKey.F6, keySymbol: null);
+                }
+                else
+                {
+                    OpenCommandsMenu(form);
+                    form.tagToolStripMenuItem.IsEnabled.Should().BeTrue();
+                    Click(GetRoot(form.tagToolStripMenuItem), form.tagToolStripMenuItem);
+                }
+
+                commands.Received(1).StartCreateTagDialog(form, Arg.Is<GitRevision>(revision => revision.ObjectId == older));
+                commands.DidNotReceive().StartCreateTagDialog(form, Arg.Is<GitRevision>(revision => revision.ObjectId == newer));
+                return;
+
+                void ClickRow(int index, RawInputModifiers modifiers)
+                {
+                    form.UpdateLayout();
+                    ListBoxItem row = (ListBoxItem)form.RevisionGrid._gridView.ContainerFromIndex(index)!;
+                    Point point = row.TranslatePoint(new Point(100, row.Bounds.Height / 2), form)!.Value;
+                    form.MouseMove(point, modifiers);
+                    form.MouseDown(point, MouseButton.Left, modifiers);
+                    form.MouseUp(point, MouseButton.Left, modifiers);
+                    Dispatcher.UIThread.RunJobs();
+                }
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+    }
+
+    [AvaloniaTest]
     public async Task Explicit_Pull_dialog_routes_should_use_the_remembered_dialog_action(
         [Values("menu", "hotkey", "dropdown")] string route,
         [Values(GitPullAction.None, GitPullAction.Merge, GitPullAction.Rebase,
@@ -418,9 +487,11 @@ public sealed class FormBrowseSourceActionTests
         }
     }
 
-    private async Task<(FormBrowse Form, IGitUICommands Commands)> OpenBrowseAsync(params HotkeyCommand[] hotkeys)
+    private Task<(FormBrowse Form, IGitUICommands Commands)> OpenBrowseAsync(params HotkeyCommand[] hotkeys)
+        => OpenBrowseAsync(CreateRepository("actions"), hotkeys);
+
+    private async Task<(FormBrowse Form, IGitUICommands Commands)> OpenBrowseAsync(GitModule module, params HotkeyCommand[] hotkeys)
     {
-        GitModule module = CreateRepository("actions");
         IHotkeySettingsLoader loader = Substitute.For<IHotkeySettingsLoader>();
         loader.LoadHotkeys(Arg.Any<string>()).Returns([]);
         loader.LoadHotkeys(FormBrowse.HotkeySettingsName).Returns(hotkeys);
