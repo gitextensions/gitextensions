@@ -4126,7 +4126,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/NativeTreeViewExplorerNavigationDecorator.cs",
     "status": "functional",
     "basedOn": "6e90fc1bf2bad453d1a18a290aceff87caaf4338",
-    "notes": "Preserves arrow-key highlight-only navigation, explicit Space/Enter activation and same-node mouse activation through Avalonia preview/selection/pointer events. Keeps the source clock-injection seam and 500 ms navigation guard. Full structural/state/platform closure remains open."
+    "notes": "Preserves arrow-key highlight-only navigation, explicit Space/Enter activation and same-node mouse activation through Avalonia preview/selection/pointer events. Keeps the source clock-injection seam and 500 ms navigation guard. Full structural/state/platform closure remains open. 2026-11-18: Restores source selection clear/reselection and subscription order, removing the synthetic activation helper and publication flag. Avalonia removal notifications are ignored as WinForms AfterSelect does. Routed pointer events retain the native control's pressed-node/release-hit boundary and include original expander selection. The original 500 ms guard also applies to mouse reselection; tests retain this upstream behavior through its clock seam and real input. Native TreeView/event arguments, routed-event wiring and required click-producer state are exact framework differences; only false API names change in the header. No complete parity axis claimed."
   },
   "src/app/GitUI/UserControls/PathFormatter.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/PathFormatter.cs",

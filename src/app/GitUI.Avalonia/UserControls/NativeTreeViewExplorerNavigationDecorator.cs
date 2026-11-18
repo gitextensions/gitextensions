@@ -1,25 +1,27 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 
 namespace GitUI.UserControls;
 
-// Add explorer-like navigation to NativeTreeView:
+// Add explorer-like navigation to TreeView:
 // * Arrow key navigation to highlight without selecting node
 // * Space or Enter key to select node
 // * Mouse clicking highlighted node selects it
 //
-// As this decorator sets TreeView.SelectedNode, you should avoid hooking into
+// As this decorator sets TreeView.SelectedItem, you should avoid hooking into
 // node selection-based events. Instead, hook into AfterSelect on this decorator
 // to know when a node has been selected (either by Space/Enter, or mouse click).
 public class NativeTreeViewExplorerNavigationDecorator
 {
+    // Avalonia uses TreeView in place of the Win32-specific NativeTreeView.
     private readonly TreeView _treeView;
     private DateTime _lastKeyNavigateTime = DateTime.MinValue;
     private readonly Func<DateTime> _getCurrentTime;
-    private bool _pointerSelectionRaised;
+
+    // WinForms tracks the pressed node inside its native control; routed events need the same click boundary.
+    private TreeViewItem? _mouseDownNode;
 
     public event EventHandler<SelectionChangedEventArgs>? AfterSelect;
 
@@ -28,10 +30,15 @@ public class NativeTreeViewExplorerNavigationDecorator
         _treeView = treeView;
         _getCurrentTime = getCurrentTime;
 
+        _treeView.KeyDown += OnKeyDown;
+
         // Avalonia routes preview keys before its TreeView changes the native selection.
         _treeView.AddHandler(InputElement.KeyDownEvent, OnPreviewKeyDown, RoutingStrategies.Tunnel);
-        _treeView.KeyDown += OnKeyDown;
+
+        // Avalonia emits removal notifications when selection is cleared; WinForms AfterSelect does not.
         _treeView.SelectionChanged += OnAfterSelect;
+
+        // Avalonia supplies template visuals instead of a TreeNode in pointer events.
         _treeView.AddHandler(InputElement.PointerPressedEvent, OnPointerPressed, RoutingStrategies.Tunnel);
         _treeView.AddHandler(InputElement.PointerReleasedEvent, OnNodeMouseClick, RoutingStrategies.Bubble, handledEventsToo: true);
     }
@@ -60,13 +67,20 @@ public class NativeTreeViewExplorerNavigationDecorator
         {
             // Force a reselection of the current node
             _lastKeyNavigateTime = DateTime.MinValue;
-            RaiseAfterSelect();
+            TreeViewItem? currNode = _treeView.SelectedItem as TreeViewItem;
+            _treeView.SelectedItem = null;
+            _treeView.SelectedItem = currNode;
             e.Handled = true;
         }
     }
 
     private void OnAfterSelect(object? sender, SelectionChangedEventArgs e)
     {
+        if (e.AddedItems.Count == 0)
+        {
+            return;
+        }
+
         // If arrow key was used to navigate to this node, don't send OnSelected
         int delta = (int)_getCurrentTime().Subtract(_lastKeyNavigateTime).TotalMilliseconds;
         if (delta is (>= 0 and < 500))
@@ -74,37 +88,33 @@ public class NativeTreeViewExplorerNavigationDecorator
             return;
         }
 
-        _pointerSelectionRaised = true;
         AfterSelect?.Invoke(sender, e);
     }
 
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        _lastKeyNavigateTime = DateTime.MinValue;
-        _pointerSelectionRaised = false;
+        _mouseDownNode = (e.Source as Avalonia.Visual)?.GetSelfAndVisualAncestors().OfType<TreeViewItem>().FirstOrDefault();
     }
 
     private void OnNodeMouseClick(object? sender, PointerReleasedEventArgs e)
     {
+        TreeViewItem? mouseDownNode = _mouseDownNode;
+        _mouseDownNode = null;
+        TreeViewItem? node = (_treeView.InputHitTest(e.GetPosition(_treeView)) as Avalonia.Visual)?
+            .GetSelfAndVisualAncestors().OfType<TreeViewItem>().FirstOrDefault();
+        if (node is null || node != mouseDownNode)
+        {
+            return;
+        }
+
         // If selected node is clicked, make sure to force re-selection. This way, if user
         // navigates to a node by keyboard, then clicks on the same node with the mouse, it
         // will perform the AfterSelect action (i.e. select revision in revision graph).
-        if (!_pointerSelectionRaised
-            && e.Source is Avalonia.Visual source
-            && !source.GetSelfAndVisualAncestors().OfType<ToggleButton>().Any()
-            && source.GetSelfAndVisualAncestors().OfType<TreeViewItem>().FirstOrDefault() is { } item
-            && ReferenceEquals(_treeView.SelectedItem, item))
+        if (_treeView.SelectedItem == node)
         {
-            RaiseAfterSelect();
+            _treeView.SelectedItem = null;
         }
-    }
 
-    private void RaiseAfterSelect()
-    {
-        if (_treeView.SelectedItem is { } item)
-        {
-            AfterSelect?.Invoke(_treeView, new SelectionChangedEventArgs(
-                SelectingItemsControl.SelectionChangedEvent, Array.Empty<object>(), new object[] { item }));
-        }
+        _treeView.SelectedItem = node;
     }
 }

@@ -63,9 +63,10 @@ public sealed class NativeTreeViewDecoratorTests
     [AvaloniaTest]
     public void Mouse_click_should_activate_a_keyboard_highlighted_node_without_changing_selection()
     {
+        DateTime now = new(2026, 10, 1, 12, 0, 0);
         TreeViewItem item = new() { Header = "branch" };
         TreeView tree = new() { Items = { item } };
-        NativeTreeViewExplorerNavigationDecorator decorator = new(tree);
+        NativeTreeViewExplorerNavigationDecorator decorator = new(tree, () => now);
         Window window = new() { Width = 280, Height = 150, Content = tree };
         int activations = 0;
         decorator.AfterSelect += (_, _) => activations++;
@@ -76,12 +77,118 @@ public sealed class NativeTreeViewDecoratorTests
             tree.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = Key.Down });
             tree.SelectedItem = item;
             activations.Should().Be(0);
+            now = now.AddMilliseconds(500);
             Point position = item.TranslatePoint(new Point(60, 8), window)!.Value;
             window.MouseDown(position, MouseButton.Left);
             window.MouseUp(position, MouseButton.Left);
 
             activations.Should().Be(1);
             tree.SelectedItem.Should().BeSameAs(item);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Release_over_another_node_should_not_reselect_it()
+    {
+        TreeViewItem first = new() { Header = "first" };
+        TreeViewItem second = new() { Header = "second" };
+        TreeView tree = new() { Items = { first, second } };
+        NativeTreeViewExplorerNavigationDecorator decorator = new(tree);
+        Window window = new() { Width = 280, Height = 160, Content = tree };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            ClickHeader(window, first);
+            int activations = 0;
+            decorator.AfterSelect += (_, _) => activations++;
+            Point press = GetHeaderPosition(window, first);
+            Point release = GetHeaderPosition(window, second);
+
+            window.MouseDown(press, MouseButton.Left);
+            window.MouseMove(release, RawInputModifiers.LeftMouseButton);
+            window.MouseUp(release, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+
+            tree.SelectedItem.Should().BeSameAs(first);
+            activations.Should().Be(0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Expander_click_should_preserve_the_source_node_reselection()
+    {
+        TreeViewItem parent = new() { Header = "parent", Items = { new TreeViewItem { Header = "child" } } };
+        TreeViewItem other = new() { Header = "other" };
+        TreeView tree = new() { Items = { parent, other } };
+        NativeTreeViewExplorerNavigationDecorator decorator = new(tree);
+        Window window = new() { Width = 280, Height = 180, Content = tree };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            ClickHeader(window, other);
+            tree.SelectedItem.Should().BeSameAs(other);
+            int activations = 0;
+            decorator.AfterSelect += (_, _) => activations++;
+            Avalonia.Controls.Primitives.ToggleButton expander = parent.GetVisualDescendants()
+                .OfType<Avalonia.Controls.Primitives.ToggleButton>().First();
+            Point position = expander.TranslatePoint(new Point(expander.Bounds.Width / 2, expander.Bounds.Height / 2), window)!.Value;
+
+            window.MouseDown(position, MouseButton.Left);
+            window.MouseUp(position, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+
+            parent.IsExpanded.Should().BeTrue();
+            tree.SelectedItem.Should().BeSameAs(parent);
+            activations.Should().Be(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Pointer_reselection_should_obey_the_original_navigation_guard()
+    {
+        DateTime now = new(2026, 10, 1, 12, 0, 0);
+        TreeViewItem first = new() { Header = "first" };
+        TreeViewItem second = new() { Header = "second" };
+        TreeView tree = new() { Items = { first, second } };
+        NativeTreeViewExplorerNavigationDecorator decorator = new(tree, () => now);
+        Window window = new() { Width = 280, Height = 160, Content = tree };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            ClickHeader(window, first);
+            tree.SelectedItem.Should().BeSameAs(first);
+            int activations = 0;
+            decorator.AfterSelect += (_, _) => activations++;
+
+            window.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, keySymbol: null);
+            window.KeyRelease(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+            tree.SelectedItem.Should().BeSameAs(second);
+            activations.Should().Be(0);
+
+            ClickHeader(window, second);
+            activations.Should().Be(0, "the original mouse reselection passes through the same 500 ms AfterSelect guard");
+            now = now.AddMilliseconds(500);
+            ClickHeader(window, second);
+
+            activations.Should().Be(1);
+            tree.SelectedItem.Should().BeSameAs(second);
+            tree.IsKeyboardFocusWithin.Should().BeTrue();
         }
         finally
         {
@@ -124,10 +231,24 @@ public sealed class NativeTreeViewDecoratorTests
         }
     }
 
+    private static void ClickHeader(Window window, TreeViewItem item)
+    {
+        Point position = GetHeaderPosition(window, item);
+        window.MouseDown(position, MouseButton.Left);
+        window.MouseUp(position, MouseButton.Left);
+        Dispatcher.UIThread.RunJobs();
+    }
+
     private static TappedEventArgs CreateDoubleTap(Control source)
         => new(InputElement.DoubleTappedEvent, new PointerEventArgs(
             null, source, Substitute.For<IPointer>(), null, default, 0, default, KeyModifiers.None))
         {
             Source = source,
         };
+
+    private static Point GetHeaderPosition(Window window, TreeViewItem item)
+    {
+        TextBlock label = item.GetVisualDescendants().OfType<TextBlock>().First(text => text.Text == item.Header?.ToString());
+        return label.TranslatePoint(new Point(label.Bounds.Width / 2, label.Bounds.Height / 2), window)!.Value;
+    }
 }
