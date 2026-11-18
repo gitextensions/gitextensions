@@ -142,12 +142,15 @@ public sealed class HelpInfoDialogsTests
     [AvaloniaTest]
     public void FormOpenDirectory_should_construct_with_the_original_controls_and_keys()
     {
-        FormOpenDirectory form = new();
+        using AppSettingsTestScope settings = new();
+        using FormOpenDirectory form = new(Substitute.For<IGitExecutorProvider>(), currentModule: null);
 
         form.FindControl<ComboBox>("_NO_TRANSLATE_Directory").Should().NotBeNull();
         form.FindControl<Button>("Load").Should().NotBeNull();
         form.FindControl<Button>("folderBrowserButton").Should().NotBeNull();
-        form.FindControl<Button>("folderGoUpButton").Should().NotBeNull();
+        Button goUp = form.FindControl<Button>("folderGoUpButton")!;
+        goUp.Should().NotBeNull();
+        ToolTip.GetShowDelay(goUp).Should().Be(100);
 
         ITranslation translation = Substitute.For<ITranslation>();
         form.AddTranslationItems(translation);

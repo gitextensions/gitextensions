@@ -10,8 +10,7 @@
           Padding="2">
     <Grid RowDefinitions="Auto,Auto">
       <ListBox x:Name="lbxRefs"
-               MinWidth="150"
-               DoubleTapped="lbxRefs_DoubleTapped" />
+               MinWidth="150" />
       <StackPanel x:Name="flowLayoutPanel1"
                   Grid.Row="1"
                   HorizontalAlignment="Right"

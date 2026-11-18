@@ -18,6 +18,7 @@ internal partial class FormQuickItemSelector : GitExtensionsForm
     public FormQuickItemSelector()
     {
         InitializeComponent();
+        lbxRefs.DoubleTapped += lbxRefs_MouseDoubleClick;
         AcceptButton = btnAction;
         btnAction.Click += (_, _) => AcceptSelection();
         InitializeComplete();
@@ -83,9 +84,8 @@ internal partial class FormQuickItemSelector : GitExtensionsForm
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        if (e.Key == Key.Escape)
+        if (ProcessCmdKey(KeysMapper.ToKeys(e)))
         {
-            DialogResult = WinFormsShims.DialogResult.Cancel;
             e.Handled = true;
             return;
         }
@@ -93,7 +93,23 @@ internal partial class FormQuickItemSelector : GitExtensionsForm
         base.OnKeyDown(e);
     }
 
-    private void lbxRefs_DoubleTapped(object? sender, TappedEventArgs e)
+    protected bool ProcessCmdKey(WinFormsShims.Keys keyData)
+    {
+        if (keyData == WinFormsShims.Keys.Escape)
+        {
+            DialogResult = WinFormsShims.DialogResult.Cancel;
+            if (IsVisible)
+            {
+                Close();
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void lbxRefs_MouseDoubleClick(object? sender, TappedEventArgs e)
         => AcceptSelection();
 
     private void AcceptSelection()

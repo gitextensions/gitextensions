@@ -149,7 +149,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         };
 
         InitializeComplete();
-        ToolTip.SetTip(btnSearch, _searchTooltip.Text);
+        toolTip.Content = _searchTooltip.Text;
         ToolTip.SetTip(tsbCollapseAll, ToolTip.GetTip(mnubtnCollapse));
         ToolTip.SetTip(tsbShowBranches, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowBranches.Content!));
         ToolTip.SetTip(tsbShowRemotes, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowRemotes.Content!));

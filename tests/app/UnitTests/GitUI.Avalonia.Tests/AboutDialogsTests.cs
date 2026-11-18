@@ -37,7 +37,7 @@ public sealed class AboutDialogsTests
     [AvaloniaTest]
     public void FormChangeLog_should_construct_and_load_the_changelog()
     {
-        FormChangeLog form = new();
+        using FormChangeLog form = new();
         form.Title.Should().Be("Change log");
 
         ITranslation translation = Substitute.For<ITranslation>();
@@ -47,7 +47,17 @@ public sealed class AboutDialogsTests
         TextBox changeLog = form.FindControl<TextBox>("ChangeLog")!;
         changeLog.IsReadOnly.Should().BeTrue();
         changeLog.TextWrapping.Should().Be(Avalonia.Media.TextWrapping.NoWrap);
-        changeLog.Text.Should().Be(GitUI.Properties.Resources.ChangeLog);
+        changeLog.Text.Should().BeEmpty();
+        translation.DidNotReceive().AddTranslationItem(nameof(FormChangeLog), "ChangeLog", "Text", Arg.Any<string>());
+        form.Show();
+        try
+        {
+            changeLog.Text.Should().Be(GitUI.Properties.Resources.ChangeLog);
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]

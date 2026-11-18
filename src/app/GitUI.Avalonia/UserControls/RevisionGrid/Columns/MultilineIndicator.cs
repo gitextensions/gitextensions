@@ -22,7 +22,6 @@ internal sealed class MultilineIndicator : Control
     private readonly int _indicatorRectWidth;
     private bool _isMultiline;
     private bool _hasAvailableWidth = true;
-    private bool _canPaint = true;
 
     public MultilineIndicator()
     {
@@ -65,7 +64,7 @@ internal sealed class MultilineIndicator : Control
 
     public override void Render(DrawingContext context)
     {
-        if (!IsVisible || !_canPaint)
+        if (!IsVisible)
         {
             return;
         }
@@ -96,15 +95,4 @@ internal sealed class MultilineIndicator : Control
 
     private void UpdateVisibility()
         => IsVisible = _isMultiline && _hasAvailableWidth;
-
-    public void UpdatePaintVisibility(bool canPaint)
-    {
-        if (_canPaint == canPaint)
-        {
-            return;
-        }
-
-        _canPaint = canPaint;
-        InvalidateVisual();
-    }
 }

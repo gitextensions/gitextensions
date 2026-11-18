@@ -28,7 +28,7 @@
                        Classes="gitextensions-icon-only"
                        Width="26" Height="25"
                        compat:TranslationCompat.ToolTipPropertyName="toolTip1"
-                       ToolTip.Tip="Go to parent directory..."
+                       ToolTip.ShowDelay="100"
                        AutomationProperties.Name="Go to parent directory..."
                        Icon="{x:Static properties:Images.NavigateUp}" />
     <compat:IconButton x:Name="folderBrowserButton"

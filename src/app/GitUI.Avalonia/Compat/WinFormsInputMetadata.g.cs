@@ -4470,6 +4470,7 @@ internal static class WinFormsInputMetadata
                 new("toolStripSeparator7", "ToolStripSeparator"),
                 new("toolStripSeparator8", "ToolStripSeparator"),
                 new("toolStripSeparator9", "ToolStripSeparator"),
+                new("toolTip", "ToolTip"),
                 new("treeMain", "GitUI.UserControls.NativeTreeView"),
                 new("tsbCollapseAll", "ToolStripButton"),
                 new("tsbShowBranches", "ToolStripButton"),

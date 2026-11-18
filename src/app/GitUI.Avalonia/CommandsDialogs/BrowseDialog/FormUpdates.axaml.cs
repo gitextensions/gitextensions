@@ -57,7 +57,7 @@ public partial class FormUpdates : GitExtensionsDialog
         : base(commands: null, enablePositionRestore: false)
     {
         _currentVersion = currentVersion;
-        _loadReleases = LoadReleasesAsync;
+        _loadReleases = static cancellationToken => HttpClient.GetStringAsync(ReleasesConfigUrl, cancellationToken);
 
         InitializeComponent();
         linkChangeLog.Click += linkChangeLog_LinkClicked;
@@ -179,9 +179,6 @@ public partial class FormUpdates : GitExtensionsDialog
         _cancellationTokenSource.Dispose();
         base.OnClosed(e);
     }
-
-    private static Task<string> LoadReleasesAsync(CancellationToken cancellationToken)
-        => HttpClient.GetStringAsync(ReleasesConfigUrl, cancellationToken);
 
     private void CheckForNewerVersion(string releases)
     {

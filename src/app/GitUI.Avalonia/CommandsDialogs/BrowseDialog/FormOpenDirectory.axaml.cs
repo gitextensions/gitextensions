@@ -6,12 +6,17 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using ResourceManager;
+using ToolTip = GitUI.Compat.Components.ToolTip;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs.BrowseDialog;
 
 public partial class FormOpenDirectory : GitExtensionsForm
 {
+#pragma warning disable SX1309 // Keep the original Designer component name.
+    private readonly ToolTip toolTip1 = new();
+#pragma warning restore SX1309
+
     private readonly TranslationString _warningOpenFailed = new("The selected directory is not a valid git repository.");
 
     private readonly IGitExecutorProvider _executorProvider = null!;
@@ -21,6 +26,7 @@ public partial class FormOpenDirectory : GitExtensionsForm
     public FormOpenDirectory()
     {
         InitializeComponent();
+        InitializeToolTips();
         InitializeComplete();
     }
 
@@ -36,6 +42,7 @@ public partial class FormOpenDirectory : GitExtensionsForm
         folderGoUpButton.Click += folderGoUpButton_Click;
         _NO_TRANSLATE_Directory.KeyDown += DirectoryKeyPress;
         _NO_TRANSLATE_Directory.PropertyChanged += _NO_TRANSLATE_Directory_TextChanged;
+        InitializeToolTips();
         InitializeComplete();
 
         IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
@@ -43,6 +50,9 @@ public partial class FormOpenDirectory : GitExtensionsForm
 
         _NO_TRANSLATE_Directory.Focus();
     }
+
+    // Framework constraint: native XAML leaves component setup to the two constructors.
+    private void InitializeToolTips() => toolTip1.SetToolTip(folderGoUpButton, "Go to parent directory...");
 
     protected override void OnRuntimeLoad(EventArgs e)
     {

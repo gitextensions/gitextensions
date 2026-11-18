@@ -1251,8 +1251,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
                     Indicator.Width, Indicator.Height));
             }
 
-            Indicator.UpdatePaintVisibility(Revision is { IsArtificial: false, IsAutostash: false }
-                && MessagePanel.CanRenderIndicator);
+            Indicator.Opacity = Revision is { IsArtificial: false, IsAutostash: false }
+                && MessagePanel.CanRenderIndicator ? 1 : 0;
             return result;
         }
 

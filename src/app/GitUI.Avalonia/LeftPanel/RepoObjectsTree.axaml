@@ -81,7 +81,12 @@
                          Height="26"
                          Margin="0"
                          Padding="2"
-                         Icon="{x:Static properties:Images.Preview}" />
+                         Icon="{x:Static properties:Images.Preview}">
+        <ToolTip.Tip>
+          <ToolTip x:Name="toolTip"
+                   compat:TranslationCompat.TranslateText="False" />
+        </ToolTip.Tip>
+      </compat:IconButton>
     </Grid>
     <TreeView x:Name="treeMain"
               Classes="gitextensions-native-tree gitextensions-explorer-tree gitextensions-hide-tree-selection"

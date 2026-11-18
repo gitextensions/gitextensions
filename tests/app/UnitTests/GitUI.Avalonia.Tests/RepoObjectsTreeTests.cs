@@ -2062,6 +2062,16 @@ public sealed class RepoObjectsTreeTests
     }
 
     [AvaloniaTest]
+    public void Search_button_should_use_the_named_tooltip_with_the_source_translation()
+    {
+        using TranslationTestScope translation = new("Dutch");
+        RepoObjectsTree control = new();
+        ToolTip tip = ToolTip.GetTip(control.FindControl<Button>("btnSearch")!).Should().BeOfType<ToolTip>().Subject;
+        tip.Name.Should().Be("toolTip");
+        tip.Content.Should().Be("Zoeken");
+    }
+
+    [AvaloniaTest]
     public void Remote_roots_should_use_remote_priorities_independently_of_branch_priorities()
     {
         SettingsSnapshot settings = SettingsSnapshot.Capture();

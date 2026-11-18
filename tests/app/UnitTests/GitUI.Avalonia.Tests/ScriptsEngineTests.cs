@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.Design;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
+using Avalonia.Input.Raw;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using GitCommands;
@@ -155,6 +157,46 @@ public sealed class ScriptsEngineTests
 
         selector.SelectedString.Should().Be("alpha");
         selector.FindControl<ListBox>("lbxRefs")!.Height.Should().Be(48);
+    }
+
+    [AvaloniaTest]
+    public void Quick_string_selector_should_cancel_only_on_unmodified_escape()
+    {
+        using GitExtensionsForm owner = new();
+        using FormQuickStringSelector selector = new();
+        selector.Init(["zeta", "alpha"]);
+        owner.Show();
+        bool survivedModifiedEscape = false;
+        try
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                try
+                {
+                    selector.KeyPress(Key.Escape, RawInputModifiers.Control, PhysicalKey.Escape, keySymbol: null);
+                    survivedModifiedEscape = selector.IsVisible;
+                    if (survivedModifiedEscape)
+                    {
+                        selector.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+                    }
+                }
+                finally
+                {
+                    if (selector.IsVisible)
+                    {
+                        selector.Close();
+                    }
+                }
+            }, DispatcherPriority.Loaded);
+
+            selector.ShowDialog((WinFormsShims.IWin32Window)owner).Should().Be(WinFormsShims.DialogResult.Cancel);
+            survivedModifiedEscape.Should().BeTrue();
+            selector.SelectedString.Should().Be("alpha");
+        }
+        finally
+        {
+            owner.Close();
+        }
     }
 
     [Test]

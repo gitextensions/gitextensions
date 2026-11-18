@@ -7,7 +7,11 @@ public partial class FormChangeLog : GitExtensionsForm
     {
         InitializeComponent();
         InitializeComplete();
+    }
 
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
         ChangeLog.Text = Properties.Resources.ChangeLog;
     }
 }

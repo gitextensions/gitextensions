@@ -6,6 +6,7 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Shims.WinForms;
+using Control = Avalonia.Controls.Control;
 
 namespace GitUI.CommandsDialogs.BrowseDialog;
 
@@ -172,7 +173,7 @@ public sealed partial class FormGoToCommit : GitModuleForm
     ///  a child, so it has to be recognised explicitly; otherwise the focus
     ///  would be moved away from it below. Pass <see langword="null"/> outside of that event.
     /// </param>
-    private void SetSelectedRevisionByFocusedControl(Avalonia.Controls.Control? enteredControl = null)
+    private void SetSelectedRevisionByFocusedControl(Control? enteredControl = null)
     {
         if (IsSupplyingRevision(textboxCommitExpression))
         {
