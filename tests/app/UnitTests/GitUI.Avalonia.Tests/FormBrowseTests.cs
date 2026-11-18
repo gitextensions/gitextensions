@@ -4261,6 +4261,80 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task Browse_open_repository_should_load_the_module_chosen_in_the_real_dialog()
+    {
+        GitModule first = CreateRepositoryWithInitialCommit();
+        string directory = Path.Combine(Path.GetTempPath(), $"GitExtensions.BrowseSwitch-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, first), new BrowseArguments());
+        Window? openedDialog = null;
+        bool deadlineExpired = false;
+        Exception? inputFailure = null;
+        DispatcherTimer deadline = new() { Interval = TimeSpan.FromSeconds(20) };
+        deadline.Tick += (_, _) =>
+        {
+            deadline.Stop();
+            deadlineExpired = true;
+            openedDialog?.Close();
+        };
+        try
+        {
+            GitModule second = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), directory);
+            second.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" }).Should().BeTrue();
+            second.SetSetting("user.name", "Avalonia Test");
+            second.SetSetting("user.email", "avalonia@example.com");
+            File.WriteAllText(Path.Combine(directory, "other.txt"), "second repository\n");
+            second.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "other.txt" }).Should().BeTrue();
+            second.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "other repository".Quote() }).Should().BeTrue();
+            ObjectId expected = second.GetCurrentCheckout();
+            expected.Should().NotBe(first.GetCurrentCheckout());
+            form.Show();
+            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == first.GetCurrentCheckout()
+                && form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!.Text == "1 revisions");
+            using IDisposable observer = Window.WindowOpenedEvent.AddClassHandler<Window>((dialog, _) =>
+            {
+                if (dialog is not FormOpenDirectory)
+                {
+                    return;
+                }
+
+                openedDialog = dialog;
+                Dispatcher.UIThread.Post(() =>
+                {
+                    try
+                    {
+                        dialog.FindControl<ComboBox>("_NO_TRANSLATE_Directory")!.Text = directory;
+                        dialog.FindControl<Button>("Load")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    }
+                    catch (Exception ex)
+                    {
+                        inputFailure = ex;
+                        dialog.Close();
+                    }
+                });
+            });
+            deadline.Start();
+            form.ExecuteCommand(FormBrowse.Command.OpenRepo).Should().BeTrue();
+            deadline.Stop();
+            deadlineExpired.Should().BeFalse();
+            inputFailure.Should().BeNull();
+            openedDialog.Should().NotBeNull();
+            form.UICommands.Module.WorkingDir.Should().Be(second.WorkingDir);
+            await form.JoinLoadOperationsForTestAsync().WaitAsync(TimeSpan.FromSeconds(20));
+            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == expected
+                && form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!.Text == "1 revisions");
+            form.RevisionGrid.GetSelectedRevisions().Should().ContainSingle().Which.ObjectId.Should().Be(expected);
+        }
+        finally
+        {
+            deadline.Stop();
+            openedDialog?.Close();
+            form.Close();
+            TestDirectory.Delete(directory);
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormBrowse_should_apply_command_line_browse_arguments_before_loading()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
@@ -4284,6 +4358,7 @@ public sealed class FormBrowseTests
             await WaitUntilAsync(() => loadingStatus.Text == "1 revisions" && form.RevisionGrid.SelectedRevision is not null);
 
             form.RevisionGrid.SelectedRevision?.ObjectId.Should().Be(selectedId);
+            form.Title.Should().StartWith("\"tracked.txt\" ");
             form.FindControl<FilterToolBar>("ToolStripFilters")!
                 .FindControl<ComboBox>("tstxtRevisionFilter")!.Text.Should().Be("initial");
             form.FindControl<Control>("leftPanel")!.IsVisible.Should().BeFalse();

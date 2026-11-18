@@ -1132,7 +1132,10 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return;
         }
 
-        IGitModule capturedModule = _lastModule ?? Module;
+        // Standalone native grids bind a module explicitly; hosted grids follow their owner's current commands.
+        IGitModule capturedModule = TryGetUICommandsDirect(out IGitUICommands? commands)
+            ? commands.Module
+            : _lastModule ?? Module;
 
         // Reset the "cache" for current branch
         CurrentBranch = new(() => capturedModule.IsValidGitWorkingDir()

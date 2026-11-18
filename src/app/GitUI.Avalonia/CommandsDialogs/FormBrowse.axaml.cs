@@ -335,6 +335,8 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
         repoObjectsTree.Initialize(_aheadBehindDataProvider, RevisionGrid.SetAndApplyBranchFilter, RevisionGrid, RevisionGrid);
         repoObjectsTree.Initialize(RevisionGrid.SetAndApplyBranchFilter, OpenRepository);
+        RevisionGrid.SuspendRefreshRevisions();
+
         ToolStripFilters.Bind(() => Module, RevisionGrid);
         revisionDiff.Bind(RevisionGrid, RevisionGrid, fileTree, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor);
         fileTree.Bind(RevisionGrid, RevisionGrid, revisionFileTree: null, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor, requestBlame: _isFileHistoryMode);
@@ -472,9 +474,18 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
         InitializeToolbarsMenus();
         LoadUserMenu();
 
+        RevisionGrid.ResumeRefreshRevisions();
+
         // Application is init, the repo related operations are triggered in InternalInitialize()
-        // "Repo" related methods, creates _dashboard
-        InternalInitialize();
+        RevisionGrid.OnRepositoryChanged();
+        if (Module.IsValidGitWorkingDir())
+        {
+            RefreshRevisions();
+        }
+        else
+        {
+            InternalInitialize();
+        }
     }
 
     private void LoadUserMenu()
@@ -875,16 +886,21 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void UICommands_PostRepositoryChanged(object? sender, GitUIEventArgs e)
     {
-        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
-
         // Note that this called in most FormBrowse context to "be sure"
         // that the repo has not been updated externally.
+
         // It can also be called from background tasks, e.g. from BackgroundFetchPlugin.
-        _loadOperations.FileAndForget(async () =>
+        if (!ThreadHelper.JoinableTaskContext.IsOnMainThread)
         {
-            await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            InternalInitialize();
-        });
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+                {
+                    await this.SwitchToMainThreadAsync();
+                    RefreshRevisions(e.GetRefs);
+                });
+            return;
+        }
+
+        RefreshRevisions(e.GetRefs);
     }
 
     /// <summary>
@@ -892,7 +908,45 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
     /// </summary>
     private void RefreshRevisions()
     {
-        RevisionGrid.ReloadRevisions(Module, selectedObjectId: RevisionGrid.SelectedId);
+        RefreshRevisions(new FilteredGitRefsProvider(UICommands.Module).GetRefs);
+    }
+
+    /// <summary>
+    /// Refresh revisions, also handling changes external to GE.
+    /// </summary>
+    /// <param name="getRefs">(Lazy) func to get refs.</param>
+    private void RefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+    {
+        // Avalonia has no WinForms disposal flags; this token is cancelled before the owned grid is disposed.
+        if (_loadOperationsCancellationTokenSource.IsCancellationRequested)
+        {
+            return;
+        }
+
+        _aheadBehindDataProvider?.ResetCache();
+        bool isDashboard = string.IsNullOrEmpty(Module.WorkingDir) || (_dashboard?.IsVisible ?? false);
+        if (isDashboard)
+        {
+            // Explicit call: Title is normally updated on RevisionGrid filter change
+            Title = _appTitleGenerator!.Generate();
+
+            // "Repo" related methods, creates _dashboard
+            InternalInitialize();
+
+            return;
+        }
+
+        // Pre-warm the ahead/behind cache in the background so the revision grid can pick it up synchronously. GetData checks the AppSetting itself.
+        ThreadHelper.FileAndForget(() => _ = _aheadBehindDataProvider?.GetData());
+
+        RevisionGrid.PerformRefreshRevisions(getRefs, forceRefresh: true);
+
+        InternalInitialize();
+        ToolStripFilters.RefreshRevisionFunction(getRefs);
+        UpdateSubmodulesStructure();
+
+        RefreshGitStatusMonitor();
+        UpdateStashCount();
     }
 
     private void RefreshGitStatusMonitor()
@@ -1100,7 +1154,6 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
     private void InternalInitialize()
     {
         IGitModule module = Module;
-        RevisionGrid.OnRepositoryChanged();
 
         // check for updates
         if (_updateCheckService is not null
@@ -1117,8 +1170,10 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
         bool enableWorkingTreeCommands = isValidWorkingDir && !isBareRepository;
         string branchName = isValidWorkingDir ? module.GetSelectedBranch() : string.Empty;
 
-        // Explicit call: Title is normally updated on RevisionGrid filter change
-        Title = _appTitleGenerator!.Generate(module.WorkingDir, isValidWorkingDir, branchName);
+        if (!isValidWorkingDir)
+        {
+            Title = _appTitleGenerator!.Generate();
+        }
 
         refreshToolStripMenuItem.IsEnabled = isValidWorkingDir;
         refreshToolStripMenuItem.InputGesture = isValidWorkingDir ? new KeyGesture(Key.F5) : null;
@@ -1207,11 +1262,8 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
             // add Navigate and View menu
             _formBrowseMenus?.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
             _NO_TRANSLATE_WorkingDir.RefreshContent();
-            _aheadBehindDataProvider?.ResetCache();
             lblRepoPath.Text = $"{module.WorkingDir}  —  {branchName}";
             lblStatus.Text = $"git: {GitVersion.Current}";
-            RevisionGrid.ReloadRevisions(module, selectedObjectId: RevisionGrid.SelectedId);
-            UpdateSubmodulesStructure();
             RefreshPushButton(module, branchName);
 
             // Do not steal focus from an open dropdown menu.
@@ -1231,7 +1283,6 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         _gitStatusMonitor?.Active = isValidWorkingDir && NeedsGitStatusMonitor();
-        UpdateStashCount();
         OnActivate();
         LoadUserMenu();
 
@@ -2249,9 +2300,11 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
         module.ResetRemoteColors();
 
         UICommands = UICommands.WithGitModule(module);
+        RevisionGrid.OnRepositoryChanged();
         if (Module.IsValidGitWorkingDir())
         {
             AppSettings.RecentWorkingDir = Module.WorkingDir;
+            HideDashboard();
         }
 
         StringComparison pathComparison = OperatingSystem.IsWindows()
@@ -2270,7 +2323,15 @@ public partial class FormBrowse : GitModuleForm, IBrowseRepo
             _selectedRevisionUpdatedTargets = UpdateTargets.None;
         }
 
-        InternalInitialize();
+        if (Module.IsValidGitWorkingDir())
+        {
+            RefreshRevisions();
+        }
+        else
+        {
+            InternalInitialize();
+        }
+
         RegisterPlugins();
     }
 
