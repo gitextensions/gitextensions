@@ -3,7 +3,8 @@
 public enum LaneSharing
 {
     /// <summary>
-    /// The graph segment uses the lane exclusively or is the initial user of the lane.
+    /// The graph segment uses the lane exclusively or is the initial user of the lane
+    /// (except possibly for a reserved lane placeholder segment. Placeholders also get this value).
     /// </summary>
     ExclusiveOrPrimary,
 

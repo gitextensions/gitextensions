@@ -287,5 +287,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
         internal void RenderRowToCache(int rowIndex, int rowHeight)
             => RevisionGraphColumnProvider.RenderRowToCache(rowIndex, rowHeight);
+
+        internal int LaneWidth => GraphRenderer.LaneWidth;
     }
 }

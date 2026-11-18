@@ -48,6 +48,7 @@ internal static class GraphRenderer
             LaneInfo? currentRowRevisionLaneInfo = null;
 
             foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments.Reverse()
+                .Where(s => !s.IsReservedLanePlaceholder)
                 .OrderBy(s => s.Child.IsRelative)
                 .ThenBy(s => hoverHighlightedIds?.Contains(s.Child.Objectid) is true
                           || hoverHighlightedIds?.Contains(s.Parent.Objectid) is true))
