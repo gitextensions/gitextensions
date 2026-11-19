@@ -579,19 +579,22 @@ public sealed class FileStatusListTests
         roots.Should().HaveCount(3);
         roots[0].Text.Should().Be("(2) Changes");
         roots[1].Text.Should().Be("(0) No changes");
-        roots[1].Children.Should().BeEmpty();
+        roots[1].IsExpanded.Should().BeFalse();
+        GitItemStatus noChanges = roots[1].Children.Should().ContainSingle().Which.Item!.Item;
+        noChanges.IsStatusOnly.Should().BeTrue();
+        noChanges.Name.Should().Be("- No changes -");
         roots[2].Item?.Item.Should().Be(range, "a range-diff marker remains a selectable root like WinForms");
         roots[2].IsGroupHeader.Should().BeFalse();
         control.FindControl<TextBlock>("NoFiles")!.IsVisible.Should().BeFalse();
 
         control.SetFilter("source");
-        control.GitItemFilteredStatuses.Count.Should().Be(2, "range-diff markers remain visible through file filters");
+        control.GitItemFilteredStatuses.Count.Should().Be(3, "the empty-group status and range-diff marker remain present through file filters");
 
         roots = [.. diffTree.Items.Cast<FileStatusList.DiffTreeNode>()];
         roots[0].Text.Should().Be("(1/2) Changes");
         roots[1].Text.Should().Be("(0) No changes");
         roots[2].Item?.Item.Should().Be(range);
-        control.GitItemFilteredStatuses.Should().Equal(source, range);
+        control.GitItemFilteredStatuses.Should().Equal(source, noChanges, range);
     }
 
     [AvaloniaTest]

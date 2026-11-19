@@ -269,6 +269,49 @@ public sealed class StashTests
     }
 
     [AvaloniaTest]
+    public async Task FormStash_should_show_the_original_status_under_an_empty_index_group()
+    {
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" }).Should().BeTrue();
+        module.SetSetting("user.name", "Avalonia Test");
+        module.SetSetting("user.email", "avalonia@example.com");
+        string trackedFile = Path.Combine(_workingDirectory, "tracked.txt");
+        File.WriteAllText(trackedFile, "initial line\n");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" }).Should().BeTrue();
+        File.AppendAllText(trackedFile, "unstaged change\n");
+
+        FormStash form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            TreeView files = form.Stashed.FindControl<TreeView>("tvDiffFiles")!;
+            await WaitUntilAsync(() => !form.Loading.IsVisible
+                && files.ContainerFromIndex(1) is TreeViewItem
+                && form.Stashed.SelectedItem?.Item.Name == "tracked.txt"
+                && form.View.TextEditor.Text.Contains("unstaged change", StringComparison.Ordinal));
+
+            TreeViewItem index = files.ContainerFromIndex(1).Should().BeOfType<TreeViewItem>().Which;
+            index.IsExpanded.Should().BeFalse();
+            index.ItemCount.Should().Be(1);
+            index.Focus().Should().BeTrue();
+            form.KeyPress(Key.Right, RawInputModifiers.None, PhysicalKey.ArrowRight, keySymbol: null);
+            Dispatcher.UIThread.RunJobs();
+            form.UpdateLayout();
+
+            index.IsExpanded.Should().BeTrue();
+            TreeViewItem noChanges = index.ContainerFromIndex(0).Should().BeOfType<TreeViewItem>().Which;
+            noChanges.GetVisualDescendants().OfType<TextBlock>()
+                .Should().Contain(label => label.IsEffectivelyVisible && label.Text == "- No changes -");
+            form.Stashed.GitItemStatuses.Should().ContainSingle(item => item.Name == "tracked.txt");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormStash_should_inspect_a_real_repository_stash()
     {
         GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);

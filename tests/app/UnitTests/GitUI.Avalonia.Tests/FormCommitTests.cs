@@ -1150,6 +1150,96 @@ public sealed class FormCommitTests
     }
 
     [AvaloniaTest]
+    public async Task FormCommit_should_keep_the_file_filter_editable_when_no_file_matches()
+    {
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        FormCommit form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+            FileStatusList staged = form.FindControl<FileStatusList>("Staged")!;
+            await WaitForCountsAsync(unstaged, 2, staged, 0);
+            form.UpdateLayout();
+
+            ComboBox filter = unstaged.FindControl<ComboBox>("cboFilterComboBox")!;
+            TextBox editor = filter.GetVisualDescendants().OfType<TextBox>()
+                .Single(control => control.Name == "PART_EditableTextBox");
+            editor.Focus().Should().BeTrue();
+            editor.SelectAll();
+            form.KeyTextInput("^does-not-match$");
+            await WaitUntilAsync(() => unstaged.GitItemFilteredStatuses.Count == 0);
+
+            filter.IsEffectivelyVisible.Should().BeTrue();
+            editor.IsFocused.Should().BeTrue();
+            unstaged.FindControl<TextBlock>("NoFiles")!.IsVisible.Should().BeFalse();
+
+            editor.SelectAll();
+            form.KeyTextInput(@"^tracked\.txt$");
+            await WaitUntilAsync(() => unstaged.GitItemFilteredStatuses.Count == 1);
+            unstaged.GitItemFilteredStatuses.Select(item => item.Name).Should().Equal("tracked.txt");
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommit_reset_should_get_its_delete_choice_from_filtered_files()
+    {
+        AppSettings.ShowResetWorkTreeChanges = true;
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        FormCommit form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+            FileStatusList staged = form.FindControl<FileStatusList>("Staged")!;
+            await WaitForCountsAsync(unstaged, 2, staged, 0);
+            unstaged.SetFilter(@"^tracked\.txt$");
+            unstaged.GitItemFilteredStatuses.Select(item => item.Name).Should().Equal("tracked.txt");
+
+            int dialogCount = 0;
+            bool? canDelete = null;
+            bool? deleteSelected = null;
+            using IDisposable observer = Window.WindowOpenedEvent.AddClassHandler<Window>((window, _) =>
+            {
+                if (window is FormResetChanges dialog)
+                {
+                    dialog.Opened += (_, _) =>
+                    {
+                        dialogCount++;
+                        canDelete = dialog.cbDeleteNewFilesAndDirectories.IsEnabled;
+                        deleteSelected = dialog.cbDeleteNewFilesAndDirectories.IsChecked;
+                        Dispatcher.UIThread.Post(dialog.Close);
+                    };
+                }
+            });
+
+            Button reset = form.FindControl<Button>("btnResetUnstagedChanges")!;
+            form.UpdateLayout();
+            reset.IsEffectivelyVisible.Should().BeTrue();
+            reset.IsEffectivelyEnabled.Should().BeTrue();
+            Point point = reset.TranslatePoint(new Point(reset.Bounds.Width / 2, reset.Bounds.Height / 2), form)!.Value;
+            form.MouseMove(point, Avalonia.Input.RawInputModifiers.None);
+            form.MouseDown(point, Avalonia.Input.MouseButton.Left, Avalonia.Input.RawInputModifiers.None);
+            form.MouseUp(point, Avalonia.Input.MouseButton.Left, Avalonia.Input.RawInputModifiers.None);
+
+            dialogCount.Should().Be(1);
+            canDelete.Should().BeFalse();
+            deleteSelected.Should().BeFalse();
+            File.Exists(Path.Combine(_workingDirectory, "untracked.txt")).Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormCommit_should_stage_files_when_a_folder_row_is_double_clicked()
     {
         GitModule module = CreateRepositoryWithTwoUnstagedChanges();

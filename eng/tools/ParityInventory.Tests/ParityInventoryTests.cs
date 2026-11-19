@@ -1148,10 +1148,11 @@ public sealed class ParityInventoryTests
                 private ContextMenuStrip menu;
                 private ToolStripMenuItem open;
                 private CopyContextMenuItem copy;
+                private CopyPathsToolStripMenuItem copyPaths;
                 private ToolStripSeparator toolStripMenuItem1;
                 private void InitializeComponent()
                 {
-                    menu.Items.AddRange(new ToolStripItem[] { open, copy, toolStripMenuItem1 });
+                    menu.Items.AddRange(new ToolStripItem[] { open, copy, copyPaths, toolStripMenuItem1 });
                 }
             }
             """);
@@ -1166,6 +1167,7 @@ public sealed class ParityInventoryTests
               <wf:ContextMenuStrip x:Name="menu">
                 <wf:ToolStripMenuItem x:Name="open" Header="Open" />
                 <controls:CopyContextMenuItem x:Name="copy" />
+                <controls:CopyPathsToolStripMenuItem x:Name="copyPaths" Header="Copy _path(s)" />
                 <wf:ToolStripSeparator x:Name="toolStripMenuItem1" />
               </wf:ContextMenuStrip>
             </UserControl>
@@ -1181,6 +1183,10 @@ public sealed class ParityInventoryTests
             item.Parent == "menu" && item.Name == "copy");
         report.Original.Menus.Should().Contain(item =>
             item.Parent == "menu" && item.Name == "copy");
+        report.Twin.Menus.Should().Contain(item =>
+            item.Parent == "menu" && item.Name == "copyPaths" && item.Order == 2);
+        report.Original.Menus.Should().Contain(item =>
+            item.Parent == "menu" && item.Name == "copyPaths" && item.Order == 2);
         report.Twin.Menus.Should().Contain(item =>
             item.Parent == "menu" && item.Name == "toolStripMenuItem1" && item.Kind == "separator");
         report.Original.Menus.Should().Contain(item =>

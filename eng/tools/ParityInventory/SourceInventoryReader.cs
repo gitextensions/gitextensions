@@ -1181,7 +1181,7 @@ internal static class SourceInventoryReader
         localName is "ContextMenu" or "ContextMenuStrip" || IsMenuItemElement(localName);
 
     private static bool IsMenuItemElement(string localName) =>
-        localName is "MenuItem" or "ToolStripMenuItem" or "CopyContextMenuItem";
+        localName is "MenuItem" or "ToolStripMenuItem" or "CopyContextMenuItem" or "CopyPathsToolStripMenuItem";
 
     private static bool IsMenuSeparatorElement(string localName) =>
         localName is "Separator" or "ToolStripSeparator";

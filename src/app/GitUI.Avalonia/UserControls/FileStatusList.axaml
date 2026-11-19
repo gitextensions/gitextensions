@@ -167,7 +167,7 @@
             <MenuItem x:Name="tsmiMove" Header="Rena_me / move" />
             <MenuItem x:Name="tsmiDeleteFile" Header="De_lete file" />
             <Separator x:Name="sepFile" />
-            <menus:CopyPathsToolStripMenuItem x:Name="tsmiCopyPaths" />
+            <menus:CopyPathsToolStripMenuItem x:Name="tsmiCopyPaths" Header="Copy _path(s)" />
             <MenuItem x:Name="tsmiShowInFolder" Header="Show _in folder" />
             <Separator x:Name="sepBrowse" />
             <MenuItem x:Name="tsmiShowInFileTree" Header="Show in File _tree" IsVisible="False" />

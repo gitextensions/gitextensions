@@ -1657,7 +1657,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void ResetChanges(bool onlyWorkTree)
     {
-        BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.GitItemStatuses, onlyWorkTree));
+        BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.Select(i => i.Item).ToList(), onlyWorkTree));
         Initialize();
     }
 
