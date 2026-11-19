@@ -488,8 +488,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private void RefreshBisectTree(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
         // Not created until the UICommandsSource is set.
-        BisectTree? bisectTree = _bisectTree;
-        if (bisectTree is null)
+        if (_bisectTree is not { } bisectTree)
         {
             return;
         }
@@ -513,6 +512,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 }
 
                 bisectTree.Refresh(refs);
+
+                // The refs may be loaded after RefreshRevisionsLoaded has already run (e.g. reopening the left panel);
+                // Refresh creates the nodes with visible: true, so apply a visibility pass so commits filtered out of the
+                // revision grid do not keep the open-eye/bisect icon until the next grid refresh.
+                bisectTree.UpdateVisibility();
             }
             else if (isShown)
             {
