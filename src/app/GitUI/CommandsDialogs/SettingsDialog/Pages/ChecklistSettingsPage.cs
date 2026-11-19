@@ -491,10 +491,16 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     private bool CheckGlobalUserSettingsValid()
     {
-        return RenderSettingSetUnset(() => string.IsNullOrEmpty(GetGlobalSetting(SettingKeyString.UserName)) ||
-                                     string.IsNullOrEmpty(GetGlobalSetting(SettingKeyString.UserEmail)),
-                               UserNameSet, UserNameSet_Fix,
-                               _noEmailSet.Text, _emailSet.Text);
+        // Render the warning (red button) if the global user.name/user.email is unset,
+        // but do not trigger the startup settings dialog: this check only looks at the
+        // global config, while FormCommit shows the effective config, and git itself
+        // gives a clear error at commit time if no identification is set.
+        RenderSettingSetUnset(() => string.IsNullOrEmpty(GetGlobalSetting(SettingKeyString.UserName)) ||
+                                   string.IsNullOrEmpty(GetGlobalSetting(SettingKeyString.UserEmail)),
+                             UserNameSet, UserNameSet_Fix,
+                             _noEmailSet.Text, _emailSet.Text);
+
+        return true;
     }
 
     private bool CheckEditorTool()
