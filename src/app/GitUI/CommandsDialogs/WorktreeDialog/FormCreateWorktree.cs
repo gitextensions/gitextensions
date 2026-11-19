@@ -19,6 +19,8 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
 
     public IReadOnlyList<IGitRef>? ExistingBranches { get; set; }
 
+    public IReadOnlyList<IGitRef>? RemoteBranches { get; set; }
+
     public FormCreateWorktree(IGitUICommands commands, string? path)
         : base(commands, enablePositionRestore: false)
     {
@@ -45,16 +47,17 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         {
             string selectedBranch = UICommands.Module.GetSelectedBranch();
             ExistingBranches = Module.GetRefs(RefsFilter.Heads);
+            RemoteBranches = Module.GetRefs(RefsFilter.Remotes);
             cbxBranches.Text = TranslatedStrings.LoadingData;
             ThreadHelper.FileAndForget(async () =>
             {
                 await _branchesLoader.LoadAsync(
-                    () => ExistingBranches.Where(r => r.Name != selectedBranch).ToList(),
+                    () => GetCheckoutableBranches(ExistingBranches, RemoteBranches, selectedBranch),
                     list =>
                     {
                         cbxBranches.Text = string.Empty;
                         cbxBranches.DataSource = list;
-                        cbxBranches.DisplayMember = nameof(IGitRef.LocalName);
+                        cbxBranches.DisplayMember = nameof(IGitRef.Name);
                     });
 
                 await this.SwitchToMainThreadAsync();
@@ -73,6 +76,23 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
 
             return Task.CompletedTask;
         }
+    }
+
+    /// <summary>
+    ///  Combines local and remote branches for the checkout list. Local branches come
+    ///  first, excluding the branch already checked out in this worktree (git refuses
+    ///  to check out a branch in a second worktree), followed by remote branches,
+    ///  which git resolves to a new tracking branch on checkout.
+    /// </summary>
+    internal static IReadOnlyList<IGitRef> GetCheckoutableBranches(
+        IReadOnlyList<IGitRef> localBranches,
+        IReadOnlyList<IGitRef> remoteBranches,
+        string selectedBranch)
+    {
+        List<IGitRef> branches = [];
+        branches.AddRange(localBranches.Where(b => b.Name != selectedBranch));
+        branches.AddRange(remoteBranches);
+        return branches;
     }
 
     protected override void Dispose(bool disposing)
@@ -134,7 +154,7 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         DialogResult = UICommands.StartGitCommandProcessDialog(this, CreateWorktreeCommand(Module, relativePath, newBranchOption!)) ? DialogResult.OK : DialogResult.None;
     }
 
-    private GitArgumentBuilder CreateWorktreeCommand(IGitModule module, string relativePath, string newBranchOption)
+    internal static GitArgumentBuilder CreateWorktreeCommand(IGitModule module, string relativePath, string newBranchOption)
     {
         // https://git-scm.com/docs/git-worktree
 
@@ -225,8 +245,10 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
 
         void UpdateWorktreePath()
         {
+            // LocalName keeps the directory suffix short for remote branches
+            // (e.g. origin/feature -> feature) while staying identical for local ones.
             string branchNameNormalized = NormalizeBranchName(rbCheckoutExistingBranch.Checked
-                ? ((IGitRef?)cbxBranches.SelectedItem)?.Name ?? string.Empty
+                ? ((IGitRef?)cbxBranches.SelectedItem)?.LocalName ?? string.Empty
                 : txtNewBranchName.Text);
             txtWorktreeDirectory.Text = $"{_initialDirectoryPath}_{branchNameNormalized}";
         }
