@@ -39,7 +39,6 @@ public partial class FileStatusList : GitModuleControl
     private static readonly TimeSpan FilterThrottleDuration = TimeSpan.FromMilliseconds(250);
     private readonly DispatcherTimer _filterTimer = new() { Interval = FilterThrottleDuration };
     private readonly DispatcherTimer _selectedIndexChangeTimer = new() { Interval = SelectedIndexChangeThrottleDuration };
-    private readonly List<object?> _gitGrepSearchItems = [];
     private IReadOnlyList<object> _allListItems = [];
     private IReadOnlyList<FileStatusItem> _allTreeItems = [];
     private IReadOnlyList<GitItemStatus> _gitItemFilteredStatuses = [];
@@ -62,6 +61,8 @@ public partial class FileStatusList : GitModuleControl
     private readonly Separator _sortBySeparator = new();
     private GitItemStatus? _nextItemToSelect;
     private bool _enableSelectedIndexChangeEvent = true;
+    private bool _flatList;
+    private GroupBy? _groupBy;
     private bool _isFileTreeMode;
     private bool _mouseEntered;
     private Rectangle _dragBoxFromMouseDown;
@@ -163,13 +164,7 @@ public partial class FileStatusList : GitModuleControl
         cboFilterComboBox.PointerEntered += FilterComboBox_MouseEnter;
         cboFilterComboBox.SelectionChanged += FilterComboBox_SelectedIndexChanged;
         cboFilterComboBox.SizeChanged += FilterComboBox_SizeChanged;
-        cboFindInCommitFilesGitGrep.PropertyChanged += (_, e) =>
-        {
-            if (e.Property == ComboBox.TextProperty)
-            {
-                cboFindInCommitFilesGitGrep_TextUpdate(this, EventArgs.Empty);
-            }
-        };
+        cboFindInCommitFilesGitGrep.PropertyChanged += cboFindInCommitFilesGitGrep_TextUpdate;
         cboFindInCommitFilesGitGrep.SelectionChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
         cboFindInCommitFilesGitGrep.SizeChanged += cboFindInCommitFilesGitGrep_SizeChanged;
         DeleteFilterButton.Click += DeleteFilterButton_Click;
@@ -885,10 +880,7 @@ public partial class FileStatusList : GitModuleControl
             DiffTreeNode? first = tvDiffFiles.Items.Cast<DiffTreeNode>()
                 .SelectMany(FlattenVisible)
                 .FirstOrDefault(node => node.Item is not null);
-            if (first is not null)
-            {
-                tvDiffFiles.SelectedItem = first;
-            }
+            tvDiffFiles.SelectedItem = first ?? tvDiffFiles.Items.Cast<DiffTreeNode>().FirstOrDefault();
 
             return;
         }
@@ -1236,6 +1228,19 @@ public partial class FileStatusList : GitModuleControl
         FileStatusItem? selectedFileStatus = SelectedFileStatusItem;
         RelativePath? selectedPath = SelectedRelativePath;
 
+        DiffListSortType sortType = DiffListSortService.Instance.DiffListSorting;
+        _groupBy = sortType switch
+        {
+            DiffListSortType.FilePath or DiffListSortType.FilePathFlat
+                => null,
+            DiffListSortType.FileExtension or DiffListSortType.FileExtensionFlat
+                => new GroupBy(status => GroupKey.From(Path.GetExtension(status.Name)), GetImageKey: GetExtensionImageKey, GetLabel: group => group.Key.Value),
+            DiffListSortType.FileStatus or DiffListSortType.FileStatusFlat
+                => new GroupBy(GetStatusKey, GetImageKey: group => GetItemImageKey(group.First()), GetLabel: _ => ""),
+            _ => throw new NotSupportedException($"{sortType} is not a supported sorting method.")
+        };
+        _flatList = sortType is DiffListSortType.FilePathFlat or DiffListSortType.FileExtensionFlat or DiffListSortType.FileStatusFlat;
+
         if (!ReferenceEquals(items, GitItemStatusesWithDescription))
         {
             FileStatusItem[] statusItems =
@@ -1272,7 +1277,8 @@ public partial class FileStatusList : GitModuleControl
                     .OfType<GitItemStatus>(),
             ];
 
-            if (ShowDiffTree)
+            bool showDiffTree = _showDiffGroups || !_flatList || roots.Any(node => node.IsGroupHeader);
+            if (showDiffTree)
             {
                 tvDiffFiles.ItemsSource = roots;
                 lstFiles.ItemsSource = null;
@@ -1289,9 +1295,12 @@ public partial class FileStatusList : GitModuleControl
                 lstFiles.ItemsSource = visibleItems;
                 tvDiffFiles.ItemsSource = null;
             }
+
+            ShowDiffTree = showDiffTree;
         }
         else
         {
+            ShowDiffTree = false;
             List<object> visibleItems =
             [
                 .. _allListItems.Where(item => GetGitItemStatus(item) is GitItemStatus status && IsFilterMatch(status)),
@@ -1299,6 +1308,7 @@ public partial class FileStatusList : GitModuleControl
 
             _gitItemFilteredStatuses = [.. visibleItems.Select(GetGitItemStatus).OfType<GitItemStatus>()];
             lstFiles.ItemsSource = visibleItems;
+            tvDiffFiles.ItemsSource = null;
         }
 
         SetFileStatusListVisibility(
@@ -1324,6 +1334,22 @@ public partial class FileStatusList : GitModuleControl
 
         DataSourceChanged?.Invoke(this, EventArgs.Empty);
         FilterChanged?.Invoke(this, EventArgs.Empty);
+        return;
+
+        static string GetExtensionImageKey(IGrouping<GroupKey, GitItemStatus> group)
+        {
+            string extension = group.Key.Value;
+            return _imageListData.StateImageIndexMap.ContainsKey(extension) ? extension : nameof(ImageListData.DefaultFileImage);
+        }
+
+        static GroupKey GetStatusKey(GitItemStatus status)
+        {
+            char inverseDiffStatus = (char)((int)'Z' - (int)status.DiffStatus);
+            int imageIndex = _imageListData.StateImageIndexMap[GetItemImageKey(status)];
+            DebugHelpers.Assert(inverseDiffStatus >= 0, $"offset of {nameof(inverseDiffStatus)} needs to be adapted");
+            DebugHelpers.Assert(imageIndex < 100, $"width of {nameof(imageIndex)} needs to be adapted");
+            return GroupKey.From($"{inverseDiffStatus}{imageIndex:D02}");
+        }
     }
 
     private IReadOnlyList<DiffTreeNode> GetNodes(
@@ -1334,7 +1360,6 @@ public partial class FileStatusList : GitModuleControl
     {
         bool showDiffGroups = groups.Count > 1
                               || (GroupByRevision && !(groups.Count == 1 && groups[0].Statuses.Count == 0));
-        DiffListSortType sortType = DiffListSortService.Instance.DiffListSorting;
         bool hasGrepGroup = gitGrepState != GitGrepState.None
                             && (gitGrepState != GitGrepState.Unknown || groups.Any(FileStatusDiffCalculator.IsGrepItemStatuses));
         List<DiffTreeNode> roots = [];
@@ -1388,17 +1413,65 @@ public partial class FileStatusList : GitModuleControl
                 {
                     IsExpanded = expanded,
                 };
-                header.Children.AddRange(BuildDiffPathTree(visibleItems, header, expandFolders, sortType));
+                header.Children.AddRange(CreateGroup(visibleItems, header, expandFolders));
                 roots.Add(header);
             }
             else
             {
                 // Add nodes of single group as root nodes
-                roots.AddRange(BuildDiffPathTree(visibleItems, parent: null, expandFolders, sortType));
+                roots.AddRange(CreateGroup(visibleItems, parent: null, expandFolders));
             }
         }
 
         return roots;
+
+        IReadOnlyList<DiffTreeNode> CreateGroup(IReadOnlyList<FileStatusItem> items, DiffTreeNode? parent, bool expanded)
+        {
+            GroupBy? groupBy = _groupBy;
+            if (groupBy is null)
+            {
+                return BuildPathNodes(items, parent, expanded, _flatList);
+            }
+
+            Dictionary<GitItemStatus, FileStatusItem> itemsByStatus = new(ReferenceEqualityComparer.Instance);
+            foreach (FileStatusItem item in items)
+            {
+                itemsByStatus[item.Item] = item;
+            }
+
+            IOrderedEnumerable<IGrouping<GroupKey, GitItemStatus>> grouped = items
+                .Select(item => item.Item)
+                .GroupBy(groupBy.GetGroupKey)
+                .OrderBy(group => group.Key);
+            List<DiffTreeNode> groupRoots = [];
+            foreach (IGrouping<GroupKey, GitItemStatus> group in grouped)
+            {
+                FileStatusItem[] groupItems = [.. group.Select(status => itemsByStatus[status])];
+                IReadOnlyList<DiffTreeNode> children = BuildPathNodes(groupItems, parent: null, expanded, _flatList);
+                bool showGroupNode = !_flatList || AppSettings.FileStatusShowGroupNodesInFlatList;
+                if (!showGroupNode || (children.Count == 1 && children[0].Children.Count == 0))
+                {
+                    groupRoots.AddRange(BuildPathNodes(groupItems, parent, expanded, _flatList));
+                    continue;
+                }
+
+                DiffTreeNode groupNode = new(
+                    groupBy.GetLabel(group),
+                    _imageListData.ImageList[groupBy.GetImageKey(group)],
+                    item: null,
+                    folderPath: null,
+                    parent,
+                    isGroupHeader: true,
+                    groupIndex: null)
+                {
+                    IsExpanded = expanded,
+                };
+                groupNode.Children.AddRange(BuildPathNodes(groupItems, groupNode, expanded, _flatList));
+                groupRoots.Add(groupNode);
+            }
+
+            return groupRoots;
+        }
     }
 
     private static string GetItemImageKey(GitItemStatus gitItemStatus)
@@ -1668,7 +1741,7 @@ public partial class FileStatusList : GitModuleControl
         _formFindInCommitFilesGitGrep.GitGrepExpressionText = !string.IsNullOrEmpty(text)
             ? text
             : FindInCommitFilesGitGrepActive ? cboFindInCommitFilesGitGrep.Text : null;
-        _formFindInCommitFilesGitGrep.SetSearchItems(_gitGrepSearchItems);
+        _formFindInCommitFilesGitGrep.SetSearchItems(cboFindInCommitFilesGitGrep.Items);
         _formFindInCommitFilesGitGrep.SetShowFindInCommitFilesGitGrep(FindInCommitFilesGitGrepVisible);
         if (!_formFindInCommitFilesGitGrep.IsVisible)
         {
@@ -1983,8 +2056,13 @@ public partial class FileStatusList : GitModuleControl
         cboFilterComboBox.InvalidateVisual();
     }
 
-    private void cboFindInCommitFilesGitGrep_TextUpdate(object? sender, EventArgs e)
-        => FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text ?? string.Empty, delay: 200);
+    private void cboFindInCommitFilesGitGrep_TextUpdate(object? sender, Avalonia.AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == ComboBox.TextProperty)
+        {
+            FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text ?? string.Empty, delay: 200);
+        }
+    }
 
     private void FindInCommitFilesGitGrep()
     {
@@ -2014,12 +2092,68 @@ public partial class FileStatusList : GitModuleControl
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
+                cboFindInCommitFilesGitGrep.Classes.Set("file-filter-active", !string.IsNullOrEmpty(search));
                 UpdateFileStatusListView(groups, gitGrepState: string.IsNullOrEmpty(search) ? GitGrepState.None : GitGrepState.Provided, cancellationToken: cancellationToken);
                 if (!string.IsNullOrEmpty(search))
                 {
                     AddToSearchFilter(search);
                 }
             });
+
+            void AddToSearchFilter(string search)
+            {
+                int index = cboFindInCommitFilesGitGrep.Items.IndexOf(search);
+                if (index == 0)
+                {
+                    return;
+                }
+
+                // Avalonia also reports programmatic changes to the editor text.
+                cboFindInCommitFilesGitGrep.PropertyChanged -= cboFindInCommitFilesGitGrep_TextUpdate;
+                cboFindInCommitFilesGitGrep.SelectionChanged -= cboFindInCommitFilesGitGrep_SelectedIndexChanged;
+                try
+                {
+                    if (index > 0)
+                    {
+                        cboFindInCommitFilesGitGrep.Items.RemoveAt(index);
+                        cboFindInCommitFilesGitGrep.Items.Insert(0, search);
+                        cboFindInCommitFilesGitGrep.Text = search;
+                        TextBox? editor = cboFindInCommitFilesGitGrep.GetVisualDescendants().OfType<TextBox>()
+                            .FirstOrDefault(control => control.Name == "PART_EditableTextBox");
+                        if (editor is not null)
+                        {
+                            editor.CaretIndex = search.Length;
+                            editor.SelectionStart = search.Length;
+                            editor.SelectionEnd = search.Length;
+                        }
+                    }
+                    else
+                    {
+                        const int SearchFilterMaxLength = 30;
+                        if (cboFindInCommitFilesGitGrep.Items.Count >= SearchFilterMaxLength)
+                        {
+                            cboFindInCommitFilesGitGrep.Items.RemoveAt(SearchFilterMaxLength - 1);
+                        }
+
+                        cboFindInCommitFilesGitGrep.Items.Insert(0, search);
+                    }
+
+                    if (_formFindInCommitFilesGitGrep?.IsVisible is true)
+                    {
+                        _formFindInCommitFilesGitGrep.SetSearchItems(cboFindInCommitFilesGitGrep.Items);
+                        if (FindInCommitFilesGitGrepVisible)
+                        {
+                            _formFindInCommitFilesGitGrep.GitGrepExpressionText = search;
+                        }
+                    }
+                }
+                finally
+                {
+                    cboFindInCommitFilesGitGrep.PropertyChanged += cboFindInCommitFilesGitGrep_TextUpdate;
+                    cboFindInCommitFilesGitGrep.SelectionChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
+                }
+            }
         });
     }
 
@@ -2051,13 +2185,7 @@ public partial class FileStatusList : GitModuleControl
     }
 
     // Avalonia uses separate list and tree renderers, so renderer selection stays distinct from the source's revision-group flag.
-    private bool ShowDiffTree
-        => !_isFileTreeMode
-           && GitItemStatusesWithDescription.Count > 0
-           && (_showDiffGroups
-               || DiffListSortService.Instance.DiffListSorting is not (DiffListSortType.FilePathFlat
-                   or DiffListSortType.FileExtensionFlat
-                   or DiffListSortType.FileStatusFlat));
+    private bool ShowDiffTree { get; set; }
 
     public override void AddTranslationItems(ITranslation translation)
     {
@@ -2162,6 +2290,7 @@ public partial class FileStatusList : GitModuleControl
         _gitItemFilteredStatuses = [];
         _gitItemStatuses = [];
         _showDiffGroups = false;
+        ShowDiffTree = false;
         lstFiles.ItemsSource = null;
         tvDiffFiles.ItemsSource = null;
         tvFiles.ItemsSource = null;
@@ -2186,6 +2315,7 @@ public partial class FileStatusList : GitModuleControl
         Toolbar.IsVisible = !isFileTreeMode;
         if (modeChanged)
         {
+            ShowDiffTree = false;
             lblSplitter.Height = isFileTreeMode ? 1 : 0;
         }
 
@@ -2257,36 +2387,6 @@ public partial class FileStatusList : GitModuleControl
     private void FileStatusList_LostFocus(object? sender, EventArgs e)
     {
         Dispatcher.UIThread.Post(() => _hasKeyboardFocus = IsKeyboardFocusWithin);
-    }
-
-    private void AddToSearchFilter(string search)
-    {
-        int index = _gitGrepSearchItems.FindIndex(item => string.Equals(item?.ToString(), search, StringComparison.Ordinal));
-        if (index == 0)
-        {
-            return;
-        }
-
-        if (index > 0)
-        {
-            _gitGrepSearchItems.RemoveAt(index);
-        }
-
-        _gitGrepSearchItems.Insert(0, search);
-        const int SearchFilterMaxLength = 30;
-        if (_gitGrepSearchItems.Count > SearchFilterMaxLength)
-        {
-            _gitGrepSearchItems.RemoveRange(SearchFilterMaxLength, _gitGrepSearchItems.Count - SearchFilterMaxLength);
-        }
-
-        if (_formFindInCommitFilesGitGrep?.IsVisible is true)
-        {
-            _formFindInCommitFilesGitGrep.SetSearchItems(_gitGrepSearchItems);
-            if (FindInCommitFilesGitGrepVisible)
-            {
-                _formFindInCommitFilesGitGrep.GitGrepExpressionText = search;
-            }
-        }
     }
 
     private int ApplyFilter(bool selectFirstItem, bool updateCausedByFilter = false)
@@ -2534,84 +2634,6 @@ public partial class FileStatusList : GitModuleControl
 
         internal static IImage GetSubmoduleImageForTesting(GitItemStatus item, GitSubmoduleStatus? status)
             => _imageListData.ImageList[FileStatusList.GetSubmoduleItemImageKey(item, status)];
-    }
-
-    private static IReadOnlyList<DiffTreeNode> BuildDiffPathTree(
-        IReadOnlyList<FileStatusItem> items,
-        DiffTreeNode? parent,
-        bool expanded,
-        DiffListSortType sortType)
-    {
-        bool flat = sortType is DiffListSortType.FilePathFlat
-            or DiffListSortType.FileExtensionFlat
-            or DiffListSortType.FileStatusFlat;
-        if (sortType is DiffListSortType.FilePath or DiffListSortType.FilePathFlat)
-        {
-            return BuildPathNodes(items, parent, expanded, flat);
-        }
-
-        GroupBy groupBy = sortType switch
-        {
-            DiffListSortType.FileExtension or DiffListSortType.FileExtensionFlat
-                => new GroupBy(status => GroupKey.From(Path.GetExtension(status.Name)), GetImageKey: GetExtensionImageKey, GetLabel: group => group.Key.Value),
-            DiffListSortType.FileStatus or DiffListSortType.FileStatusFlat
-                => new GroupBy(GetStatusKey, GetImageKey: group => GetItemImageKey(group.First()), GetLabel: _ => ""),
-            _ => throw new NotSupportedException($"{sortType} is not a supported diff-list sorting mode."),
-        };
-
-        Dictionary<GitItemStatus, FileStatusItem> itemsByStatus = new(ReferenceEqualityComparer.Instance);
-        foreach (FileStatusItem item in items)
-        {
-            itemsByStatus[item.Item] = item;
-        }
-
-        IOrderedEnumerable<IGrouping<GroupKey, GitItemStatus>> groups = items
-            .Select(item => item.Item)
-            .GroupBy(groupBy.GetGroupKey)
-            .OrderBy(group => group.Key);
-        List<DiffTreeNode> roots = [];
-        foreach (IGrouping<GroupKey, GitItemStatus> group in groups)
-        {
-            FileStatusItem[] groupItems = [.. group.Select(status => itemsByStatus[status])];
-            IReadOnlyList<DiffTreeNode> children = BuildPathNodes(groupItems, parent: null, expanded, flat);
-            bool showGroupNode = !flat || AppSettings.FileStatusShowGroupNodesInFlatList;
-            if (!showGroupNode || (children.Count == 1 && children[0].Children.Count == 0))
-            {
-                roots.AddRange(BuildPathNodes(groupItems, parent, expanded, flat));
-                continue;
-            }
-
-            DiffTreeNode groupNode = new(
-                groupBy.GetLabel(group),
-                _imageListData.ImageList[groupBy.GetImageKey(group)],
-                item: null,
-                folderPath: null,
-                parent,
-                isGroupHeader: true,
-                groupIndex: null)
-            {
-                IsExpanded = expanded,
-            };
-            groupNode.Children.AddRange(BuildPathNodes(groupItems, groupNode, expanded, flat));
-            roots.Add(groupNode);
-        }
-
-        return roots;
-
-        static string GetExtensionImageKey(IGrouping<GroupKey, GitItemStatus> group)
-        {
-            string extension = group.Key.Value;
-            return _imageListData.StateImageIndexMap.ContainsKey(extension) ? extension : nameof(ImageListData.DefaultFileImage);
-        }
-
-        static GroupKey GetStatusKey(GitItemStatus status)
-        {
-            char inverseDiffStatus = (char)((int)'Z' - (int)status.DiffStatus);
-            int imageIndex = _imageListData.StateImageIndexMap[GetItemImageKey(status)];
-            DebugHelpers.Assert(inverseDiffStatus >= 0, $"offset of {nameof(inverseDiffStatus)} needs to be adapted");
-            DebugHelpers.Assert(imageIndex < 100, $"width of {nameof(imageIndex)} needs to be adapted");
-            return GroupKey.From($"{inverseDiffStatus}{imageIndex:D02}");
-        }
     }
 
     private static IReadOnlyList<DiffTreeNode> BuildPathNodes(

@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.Compat;
@@ -38,19 +39,65 @@ partial class FileStatusList
 
     private void CollapseGroups_Click(object sender, EventArgs e)
     {
-        if (!_showDiffGroups)
+        if (!ShowDiffTree)
         {
             return;
         }
 
+        Control? focused = TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() as Control;
+        DiffTreeNode? focusedNode = tvDiffFiles.IsKeyboardFocusWithin
+            ? focused?.FindAncestorOfType<TreeViewItem>(includeSelf: true)?.DataContext as DiffTreeNode
+            : null;
+        focusedNode ??= tvDiffFiles.SelectedItem as DiffTreeNode;
         DiffTreeNode[] roots = [.. tvDiffFiles.Items.Cast<DiffTreeNode>()];
-        bool collapse = roots.Any(node => node.IsExpanded);
-        foreach (DiffTreeNode root in roots)
+        bool collapsed = false;
+        if (_showDiffGroups)
         {
-            root.IsExpanded = !collapse;
+            foreach (DiffTreeNode diffGroup in roots)
+            {
+                collapsed |= CollapseGroupByGroups(diffGroup.Children);
+                if (diffGroup.IsExpanded)
+                {
+                    diffGroup.IsExpanded = false;
+                    collapsed = true;
+                }
+            }
+        }
+        else
+        {
+            collapsed = CollapseGroupByGroups(roots);
         }
 
-        SelectFirstVisibleItem();
+        if (collapsed)
+        {
+            while (focusedNode?.Parent is DiffTreeNode parent)
+            {
+                focusedNode = parent;
+            }
+
+            tvDiffFiles.SelectedItem = focusedNode ?? roots.FirstOrDefault();
+        }
+        else if (focusedNode is not null)
+        {
+            focusedNode.IsExpanded = true;
+        }
+
+        return;
+
+        static bool CollapseGroupByGroups(IEnumerable<DiffTreeNode> nodes)
+        {
+            bool collapsed = false;
+            foreach (DiffTreeNode group in nodes)
+            {
+                if (group.IsExpanded && group.IsGroupHeader)
+                {
+                    group.IsExpanded = false;
+                    collapsed = true;
+                }
+            }
+
+            return collapsed;
+        }
     }
 
     private void DenseTree_Click(object sender, EventArgs e)
@@ -237,7 +284,7 @@ partial class FileStatusList
 
         tsmiDenseTree.IsEnabled = !flatList;
         tsmiDenseTree.IsChecked = AppSettings.FileStatusMergeSingleItemWithFolder;
-        tsmiShowGroupNodesInFlatList.IsEnabled = flatList;
+        tsmiShowGroupNodesInFlatList.IsEnabled = _groupBy is not null && flatList;
         tsmiShowGroupNodesInFlatList.IsChecked = AppSettings.FileStatusShowGroupNodesInFlatList;
         bool filterByDiffStatus = GitItemStatusesWithDescription.Any(group => group.IconName is nameof(Images.DiffA) or nameof(Images.DiffB));
         sepFilter.IsVisible = filterByDiffStatus;

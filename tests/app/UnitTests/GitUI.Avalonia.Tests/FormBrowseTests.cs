@@ -6382,6 +6382,63 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task Browse_file_list_focus_should_follow_the_visible_presenter_while_a_diff_is_loading()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        ObjectId first = module.GetCurrentCheckout();
+        File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second revision\n");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" }).Should().BeTrue();
+        ObjectId second = module.GetCurrentCheckout();
+        AppSettings.RevisionGraphShowArtificialCommits = false;
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 800 };
+        try
+        {
+            form.Show();
+            form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+            await WaitUntilAsync(() => form.revisionDiff.DisplayedRevision?.ObjectId == second);
+            form.UpdateLayout();
+
+            FileStatusList files = form.revisionDiff.FileStatusList;
+            TreeView tree = files.FindControl<TreeView>("tvDiffFiles")!;
+            tree.IsEffectivelyVisible.Should().BeTrue();
+            tree.ItemsSource.Should().NotBeNull();
+            form.RevisionGrid._gridView.Focus().Should().BeTrue();
+
+            Control loading = files.FindControl<Control>("LoadingFiles")!;
+            bool? focusedDuringLoad = null;
+            tree.PropertyChanged += OnTreeChanged;
+            try
+            {
+                form.RevisionGrid.SetSelectedRevision(first).Should().BeTrue();
+                await WaitUntilAsync(() => form.revisionDiff.DisplayedRevision?.ObjectId == first);
+            }
+            finally
+            {
+                tree.PropertyChanged -= OnTreeChanged;
+            }
+
+            focusedDuringLoad.Should().BeTrue("the active tree remains the focus target while its items are being replaced");
+            files.IsKeyboardFocusWithin.Should().BeTrue();
+
+            void OnTreeChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+            {
+                if (e.Property == ItemsControl.ItemsSourceProperty && tree.ItemsSource is null && loading.IsVisible)
+                {
+                    form.ExecuteCommand(FormBrowse.Command.FocusDiff).Should().BeTrue();
+                    focusedDuringLoad = tree.IsKeyboardFocusWithin;
+                }
+            }
+        }
+        finally
+        {
+            form.Close();
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task Browse_git_grep_should_publish_results_for_the_current_revision_after_the_diff()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
@@ -6437,6 +6494,122 @@ public sealed class FormBrowseTests
             TreeView tree = files.FindControl<TreeView>("tvDiffFiles")!;
             tree.ContainerFromIndex(0).Should().BeOfType<TreeViewItem>().Which.IsExpanded.Should().BeFalse();
             tree.ContainerFromIndex(tree.ItemCount - 1).Should().BeOfType<TreeViewItem>().Which.IsExpanded.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task Browse_git_grep_should_use_the_source_active_input_color_and_restore_the_window_color(bool dark)
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        AppSettings.ShowFindInCommitFilesGitGrep.Value = true;
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments())
+        {
+            Width = 1200,
+            Height = 800,
+            RequestedThemeVariant = dark ? ThemeVariant.Dark : ThemeVariant.Light,
+        };
+        try
+        {
+            form.Show();
+            form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+            await WaitUntilAsync(() => form.revisionDiff.DisplayedRevision is not null);
+            form.UpdateLayout();
+
+            FileStatusList files = form.revisionDiff.FileStatusList;
+            ComboBox grep = files.FindControl<ComboBox>("cboFindInCommitFilesGitGrep")!;
+            TextBox editor = grep.GetVisualDescendants().OfType<TextBox>().Single(part => part.Name == "PART_EditableTextBox");
+            Color idleColor = editor.Background.Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+            grep.TryFindResource("GitExtensionsValidFilterBackgroundBrush", grep.ActualThemeVariant, out object? resource).Should().BeTrue();
+            Color activeColor = resource.Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+            idleColor.Should().NotBe(activeColor);
+
+            await SearchAsync(() => grep.Text = "content");
+            editor.Background.Should().BeAssignableTo<ISolidColorBrush>().Which.Color.Should().Be(activeColor);
+
+            Button clear = files.FindControl<Button>("DeleteSearchButton")!;
+            await SearchAsync(() => clear.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)));
+            grep.Text.Should().BeNullOrEmpty();
+            editor.Background.Should().BeAssignableTo<ISolidColorBrush>().Which.Color.Should().Be(idleColor);
+
+            async Task SearchAsync(Action action)
+            {
+                TaskCompletionSource published = new(TaskCreationOptions.RunContinuationsAsynchronously);
+                EventHandler record = (_, _) => published.TrySetResult();
+                files.DataSourceChanged += record;
+                try
+                {
+                    action();
+                    await published.Task.WaitAsync(TimeSpan.FromSeconds(15));
+                    Dispatcher.UIThread.RunJobs();
+                }
+                finally
+                {
+                    files.DataSourceChanged -= record;
+                }
+            }
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Browse_git_grep_should_reuse_and_promote_the_same_history_in_the_editor_and_dialog()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        AppSettings.ShowFindInCommitFilesGitGrep.Value = true;
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module), new BrowseArguments()) { Width = 1200, Height = 800 };
+        try
+        {
+            form.Show();
+            form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+            await WaitUntilAsync(() => form.revisionDiff.DisplayedRevision is not null);
+
+            FileStatusList files = form.revisionDiff.FileStatusList;
+            ComboBox grep = files.FindControl<ComboBox>("cboFindInCommitFilesGitGrep")!;
+            grep.IsEffectivelyVisible.Should().BeTrue();
+            await SearchAsync(() => grep.Text = "first");
+            await SearchAsync(() => grep.Text = "second");
+            grep.Items.Cast<string>().Should().Equal("second", "first");
+
+            await SearchAsync(() => grep.SelectedIndex = 1);
+            grep.Text.Should().Be("first");
+            grep.Items.Cast<string>().Should().Equal("first", "second");
+
+            files.ExecuteCommand(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_DiffTab).Should().BeTrue();
+            FormFindInCommitFilesGitGrep dialog = form.OwnedWindows.OfType<FormFindInCommitFilesGitGrep>().Single();
+            try
+            {
+                ComboBox dialogGrep = dialog.FindControl<ComboBox>("cboFindInCommitFilesGitGrep")!;
+                dialogGrep.Items.Cast<string>().Should().Equal("first", "second");
+            }
+            finally
+            {
+                dialog.Close();
+            }
+
+            async Task SearchAsync(Action action)
+            {
+                TaskCompletionSource published = new(TaskCreationOptions.RunContinuationsAsynchronously);
+                EventHandler record = (_, _) => published.TrySetResult();
+                files.DataSourceChanged += record;
+                try
+                {
+                    action();
+                    await published.Task.WaitAsync(TimeSpan.FromSeconds(15));
+                }
+                finally
+                {
+                    files.DataSourceChanged -= record;
+                }
+            }
         }
         finally
         {

@@ -213,15 +213,17 @@ public sealed partial class ParityScreenshotTests
 
                 form.Loading.IsVisible.Should().BeFalse();
                 form.Stashes.IsEnabled.Should().BeTrue();
-                form.Stashed.HasSelection.Should().Be(hasChanges);
+                form.Stashed.HasSelection.Should().BeTrue("the original selects a file or the first revision summary");
                 if (hasChanges)
                 {
                     form.Stashed.GitItemStatuses.Should().NotBeEmpty();
+                    form.Stashed.SelectedItem.Should().NotBeNull();
                     form.View.GetText().Should().NotBeEmpty();
                 }
                 else
                 {
                     form.Stashed.GitItemStatuses.Should().BeEmpty();
+                    form.Stashed.SelectedItem.Should().BeNull();
                     form.View.GetText().Should().BeNullOrEmpty();
                 }
             }
@@ -2265,7 +2267,8 @@ public sealed partial class ParityScreenshotTests
             loading.IsVisible.Should().BeFalse();
             stashes.IsEnabled.Should().BeTrue();
 
-            if (formStash.Stashed.HasSelection)
+            // FormStash starts a file preview from the selected file.
+            if (formStash.Stashed.SelectedItem is not null)
             {
                 FileViewer view = GetRequiredControl<FileViewer>(formStash, "View");
                 Stopwatch diffStopwatch = Stopwatch.StartNew();

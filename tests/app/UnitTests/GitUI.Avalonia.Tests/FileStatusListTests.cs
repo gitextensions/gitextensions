@@ -448,6 +448,83 @@ public sealed class FileStatusListTests
     }
 
     [AvaloniaTest]
+    public void FileStatusList_should_collapse_all_revision_groups_then_expand_only_the_selected_group()
+    {
+        using AppSettingsTestScope settings = new();
+        FileStatusList control = new();
+        Window window = new() { Width = 660, Height = 380, Content = control };
+        try
+        {
+            window.Show();
+            GitRevision revision = new(ObjectId.Random());
+            control.SetDiffs(
+                [
+                    new FileStatusWithDescription(null, revision, "First", [new GitItemStatus("first.cs") { IsTracked = true }]),
+                    new FileStatusWithDescription(null, revision, "Second", [new GitItemStatus("second.cs") { IsTracked = true }]),
+                ],
+                isFileTreeMode: false);
+            control.SelectFileOrFolder(RelativePath.From("second.cs")).Should().BeTrue();
+
+            Button collapse = control.FindControl<Button>("btnCollapseGroups")!;
+            TreeView tree = control.FindControl<TreeView>("tvDiffFiles")!;
+            collapse.IsEffectivelyVisible.Should().BeTrue();
+            window.UpdateLayout();
+            TreeViewItem first = tree.ContainerFromIndex(0).Should().BeOfType<TreeViewItem>().Which;
+            TreeViewItem second = tree.ContainerFromIndex(1).Should().BeOfType<TreeViewItem>().Which;
+            first.IsExpanded.Should().BeTrue();
+            second.IsExpanded.Should().BeTrue();
+
+            collapse.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            first.IsExpanded.Should().BeFalse();
+            second.IsExpanded.Should().BeFalse();
+            tree.SelectedItem.Should().BeSameAs(second.DataContext);
+            control.SelectedItems.Select(item => item.Item.Name).Should().Equal("second.cs");
+
+            collapse.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            first.IsExpanded.Should().BeFalse();
+            second.IsExpanded.Should().BeTrue();
+            tree.SelectedItem.Should().BeSameAs(second.DataContext);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_select_the_first_revision_summary_when_all_groups_are_collapsed()
+    {
+        using AppSettingsTestScope settings = new();
+        FileStatusList control = new();
+        Window window = new() { Width = 660, Height = 380, Content = control };
+        try
+        {
+            window.Show();
+            GitRevision revision = new(ObjectId.Random());
+            control.SetDiffs(
+                [
+                    new FileStatusWithDescription(null, revision, "First", [new GitItemStatus("first.cs") { IsTracked = true }]),
+                    new FileStatusWithDescription(null, revision, "Second", [new GitItemStatus("second.cs") { IsTracked = true }]),
+                ],
+                isFileTreeMode: false);
+            Button collapse = control.FindControl<Button>("btnCollapseGroups")!;
+            collapse.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            control.ClearSelected();
+            control.HasSelection.Should().BeFalse();
+
+            control.Focus();
+
+            control.SelectedFolder.Should().Be(RelativePath.From(string.Empty));
+            control.SelectedItem.Should().BeNull();
+            control.SelectedItems.Select(item => item.Item.Name).Should().Equal("first.cs");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_should_preserve_empty_and_range_groups_and_filtered_counts()
     {
         FileStatusList control = new() { GroupByRevision = true };
@@ -584,6 +661,54 @@ public sealed class FileStatusListTests
         control.GetTestAccessor().FilteredItemsCount.Should().Be(2);
 
         control.SelectedGitItem.Should().BeSameAs(secondParent);
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_show_flat_group_nodes_only_for_an_original_grouped_sort()
+    {
+        using AppSettingsTestScope settings = new();
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+        AppSettings.FileStatusShowGroupNodesInFlatList.Value = true;
+        FileStatusList control = new() { GroupByRevision = false };
+        Window window = new() { Width = 660, Height = 380, Content = control };
+        MenuFlyout? flyout = null;
+        try
+        {
+            window.Show();
+            control.SetDiffs(null, new GitRevision(ObjectId.Random()),
+                [
+                    new GitItemStatus("first.cs") { IsTracked = true },
+                    new GitItemStatus("second.cs") { IsTracked = true },
+                    new GitItemStatus("readme.md") { IsTracked = true },
+                ]);
+
+            SplitButton sort = control.FindControl<SplitButton>("btnAsTree")!;
+            window.UpdateLayout();
+            flyout = sort.Flyout.Should().BeAssignableTo<MenuFlyout>().Which;
+            flyout.ShowAt(sort);
+            Dispatcher.UIThread.RunJobs();
+            flyout.IsOpen.Should().BeTrue();
+            MenuItem group = flyout.Items.OfType<MenuItem>().Single(item => item.Name == "tsmiShowGroupNodesInFlatList");
+            group.IsEnabled.Should().BeFalse();
+
+            MenuItem extension = flyout.Items.OfType<MenuItem>().Single(item => item.Name == "tsmiGroupByFileExtensionFlat");
+            extension.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            flyout.Hide();
+            window.UpdateLayout();
+            DiffListSortService.Instance.DiffListSorting.Should().Be(DiffListSortType.FileExtensionFlat);
+            group.IsEnabled.Should().BeTrue();
+            TreeView tree = control.FindControl<TreeView>("tvDiffFiles")!;
+            tree.IsEffectivelyVisible.Should().BeTrue();
+            tree.GetVisualDescendants().OfType<TextBlock>().Should().Contain(block => block.Text == ".cs");
+            control.GitItemFilteredStatuses.Select(item => item.Name).Should().Equal("first.cs", "second.cs", "readme.md");
+        }
+        finally
+        {
+            flyout?.Hide();
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
     }
 
     [AvaloniaTest]
