@@ -283,18 +283,6 @@ public partial class FileStatusList : GitModuleControl
         }
     }
 
-    /// <summary>
-    ///  Refreshes this list when repository-change notifications are raised.
-    /// </summary>
-    public void Bind(Action refreshAction)
-    {
-        _refreshAction = refreshAction;
-        if (TryGetUICommandsDirect(out IGitUICommands? commands))
-        {
-            BindCommands(commands);
-        }
-    }
-
     // Wire up events to respond to Settings changes
     protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
     {
@@ -341,7 +329,12 @@ public partial class FileStatusList : GitModuleControl
         Func<GitRevision, GitRevision>? getActualRevision = null,
         bool isFileTreeMode = false)
     {
-        Bind(refreshArtificial);
+        _refreshAction = refreshArtificial;
+        if (TryGetUICommandsDirect(out IGitUICommands? commands))
+        {
+            BindCommands(commands);
+        }
+
         btnRefresh.IsVisible = true;
         tsmiRefreshOnFormFocus.IsVisible = canAutoRefresh;
         sepToolbar.IsVisible = canAutoRefresh;
@@ -852,20 +845,6 @@ public partial class FileStatusList : GitModuleControl
     }
 
     /// <summary>
-    ///  Shows the given diff items.
-    /// </summary>
-    public void SetDiffs(IReadOnlyList<GitItemStatus> items)
-    {
-        SetFileTreeMode(false);
-        GitItemStatusesWithDescription = [];
-        _showDiffGroups = false;
-        _gitItemStatuses = items;
-        _allListItems = [.. items.Cast<object>()];
-        _allTreeItems = [];
-        UpdateFileStatusListView(GitItemStatusesWithDescription);
-    }
-
-    /// <summary>
     ///  Selects the first file in the active list/tree.
     /// </summary>
     public void SelectFirstVisibleItem()
@@ -1033,10 +1012,24 @@ public partial class FileStatusList : GitModuleControl
         isFileTreeMode: false);
     }
 
-    /// <summary>
-    ///  Clears all diff entries.
-    /// </summary>
-    public void ClearDiffs() => Clear();
+    public void ClearDiffs()
+    {
+        _reloadSequence.CancelCurrent();
+        ClearSelected();
+        UpdateToolbar([]);
+        _allListItems = [];
+        GitItemStatusesWithDescription = [];
+        _allTreeItems = [];
+        _gitItemFilteredStatuses = [];
+        _gitItemStatuses = [];
+        _showDiffGroups = false;
+        ShowDiffTree = false;
+        lstFiles.ItemsSource = null;
+        tvDiffFiles.ItemsSource = null;
+        tvFiles.ItemsSource = null;
+        SetFileStatusListVisibility(showNoFiles: true);
+        UpdateToolbar();
+    }
 
     private string? GetDescriptionForRevision(ObjectId objectId)
         => DescribeRevision is not null ? DescribeRevision(objectId)
@@ -2292,25 +2285,6 @@ public partial class FileStatusList : GitModuleControl
         UpdateFileStatusListView(groups);
     }
 
-    public void Clear()
-    {
-        _reloadSequence.CancelCurrent();
-        ClearSelected();
-        UpdateToolbar([]);
-        _allListItems = [];
-        GitItemStatusesWithDescription = [];
-        _allTreeItems = [];
-        _gitItemFilteredStatuses = [];
-        _gitItemStatuses = [];
-        _showDiffGroups = false;
-        ShowDiffTree = false;
-        lstFiles.ItemsSource = null;
-        tvDiffFiles.ItemsSource = null;
-        tvFiles.ItemsSource = null;
-        SetFileStatusListVisibility(showNoFiles: true);
-        UpdateToolbar();
-    }
-
     internal TestAccessor GetTestAccessor()
         => new(this);
 
@@ -2518,7 +2492,7 @@ public partial class FileStatusList : GitModuleControl
             _fileStatusList = fileStatusList;
         }
 
-        internal WatermarkComboBox FilterComboBox => _fileStatusList.cboFilterComboBox;
+        internal ComboBox FilterComboBox => _fileStatusList.cboFilterComboBox;
         internal MenuItem OpenSubmoduleMenuItem => _fileStatusList._NO_TRANSLATE_openSubmoduleMenuItem;
         internal SortDiffListContextMenuItem SortByContextMenuItem => _fileStatusList._sortByContextMenu;
         internal MenuItem SelectAllMenuItem => _fileStatusList._selectAll;

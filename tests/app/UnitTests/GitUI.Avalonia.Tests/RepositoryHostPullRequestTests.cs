@@ -19,6 +19,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.UserControls.RevisionGrid;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using FlowLayoutPanel = GitUI.Compat.WinFormsControls.FlowLayoutPanel;
@@ -281,75 +282,84 @@ public sealed class RepositoryHostPullRequestTests
     [AvaloniaTest]
     public void ViewPullRequestsForm_should_preserve_the_embedded_file_status_list_layout_and_semantic_tree()
     {
-        using ViewPullRequestsForm form = CreateForm(
-            Substitute.For<IRepositoryHostPlugin>(),
-            Substitute.For<IGitModule>());
-        form.Show();
-        Dispatcher.UIThread.RunJobs();
-
-        FileStatusList files = form.FindControl<FileStatusList>("_fileStatusList")!;
-        GitItemStatus worktree = new("tracked.txt")
+        using AppSettingsTestScope settings = new();
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+        try
         {
-            IsChanged = true,
-            IsTracked = true,
-            Staged = StagedStatus.WorkTree,
-        };
-        files.SetDiffs([worktree]);
-        Dispatcher.UIThread.RunJobs();
+            using ViewPullRequestsForm form = CreateForm(
+                Substitute.For<IRepositoryHostPlugin>(),
+                Substitute.For<IGitModule>());
+            form.Show();
+            Dispatcher.UIThread.RunJobs();
 
-        StackPanel toolbarControl = files.FindControl<StackPanel>("Toolbar")!;
-        TextBlock splitterControl = files.FindControl<TextBlock>("lblSplitter")!;
-        ComboBox filterControl = files.FindControl<ComboBox>("cboFilterComboBox")!;
-        ListBox activeListControl = files.FindControl<ListBox>("lstFiles")!;
-        BoundsInFiles(toolbarControl).Should().Be(new Rect(0, 0, 742, 25));
-        BoundsInFiles(splitterControl).Should().Be(new Rect(0, 25, 742, 2));
-        BoundsInFiles(filterControl).Should().Be(new Rect(0, 27, 742, 23));
-        BoundsInFiles(activeListControl).Should().Be(new Rect(0, 50, 742, 62));
+            FileStatusList files = form.FindControl<FileStatusList>("_fileStatusList")!;
+            GitItemStatus changed = new("tracked.txt")
+            {
+                IsChanged = true,
+                IsTracked = true,
+            };
+            files.SetDiffs(new GitRevision(ObjectId.Parse(BaseSha)), new GitRevision(ObjectId.Parse(HeadSha)), [changed]);
+            Dispatcher.UIThread.RunJobs();
 
-        Control asTreeButton = files.FindControl<Control>("btnAsTree")!;
-        asTreeButton.Bounds.Should().Be(new Rect(0, 1, 32, 22));
-        files.FindControl<Separator>("sepAsTree")!.IsVisible.Should().BeFalse();
-        files.FindControl<Separator>("sepGroupBy")!.Bounds.Should().Be(new Rect(32, 0, 6, 25));
-        files.FindControl<Control>("btnByPath")!.Bounds.Should().Be(new Rect(38, 1, 23, 22));
+            StackPanel toolbarControl = files.FindControl<StackPanel>("Toolbar")!;
+            TextBlock splitterControl = files.FindControl<TextBlock>("lblSplitter")!;
+            ComboBox filterControl = files.FindControl<ComboBox>("cboFilterComboBox")!;
+            ListBox activeListControl = files.FindControl<ListBox>("lstFiles")!;
+            BoundsInFiles(toolbarControl).Should().Be(new Rect(0, 0, 742, 25));
+            BoundsInFiles(splitterControl).Should().Be(new Rect(0, 25, 742, 2));
+            BoundsInFiles(filterControl).Should().Be(new Rect(0, 27, 742, 23));
+            BoundsInFiles(activeListControl).Should().Be(new Rect(0, 50, 742, 62));
 
-        CaptureNode[] nodes = Flatten(
-                new AvaloniaControlTreeReader(form, renderScale: 1)
-                    .ReadPrimary(form, new PixelSize(754, 511)).Root)
-            .ToArray();
-        CaptureNode toolbar = nodes.Single(node => node.FieldName == "Toolbar");
-        CaptureNode list = nodes.Single(node => node.FieldName == "FileStatusListView");
-        CaptureNode filter = nodes.Single(node => node.FieldName == "cboFilterComboBox");
-        CaptureNode gitGrep = nodes.Single(node => node.FieldName == "cboFindInCommitFilesGitGrep");
-        CaptureNode asTree = nodes.Single(node => node.FieldName == "btnAsTree");
-        CaptureNode closedDropDownItem = nodes.Single(node => node.FieldName == "tsmiGroupByFilePathTree");
+            Control asTreeButton = files.FindControl<Control>("btnAsTree")!;
+            asTreeButton.Bounds.Should().Be(new Rect(0, 1, 32, 22));
+            files.FindControl<Separator>("sepAsTree")!.IsVisible.Should().BeFalse();
+            files.FindControl<Separator>("sepGroupBy")!.Bounds.Should().Be(new Rect(32, 0, 6, 25));
+            files.FindControl<Control>("btnByPath")!.Bounds.Should().Be(new Rect(38, 1, 23, 22));
 
-        toolbar.ControlKind.Should().Be("toolStrip");
-        toolbar.BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 0, Width = 742, Height = 25 });
-        list.ControlKind.Should().Be("tree");
-        list.BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 50, Width = 742, Height = 62 });
-        list.Visible.Should().BeTrue();
-        list.Colors.Background.Should().Be("#FFFFFFFF");
-        list.Colors.SelectionBackground.Should().Be("#FF0078D7");
-        list.Colors.InactiveSelectionBackground.Should().Be("#FFBFCDDB");
-        list.Colors.Additional["hotTrack"].Should().Be("#FF0066CC");
-        filter.Font!.Style.Should().Equal("Italic");
-        filter.Colors.Foreground.Should().Be("#FF6D6D6D");
-        filter.Colors.Border.Should().BeNull();
-        filter.FlatStyle.Should().BeNull();
-        gitGrep.Visible.Should().BeFalse();
-        gitGrep.Font!.Style.Should().Equal("Bold");
-        gitGrep.Colors.Border.Should().BeNull();
-        gitGrep.FlatStyle.Should().BeNull();
-        asTree.ControlKind.Should().Be("menuItem");
-        asTree.Colors.Background.Should().Be("#00FFFFFF");
-        asTree.Margin!.Dip.Should().Be(new CaptureThicknessF { Left = 0, Top = 1, Right = 0, Bottom = 2 });
-        closedDropDownItem.ControlKind.Should().Be("menuItem");
-        closedDropDownItem.Visible.Should().BeFalse();
-        nodes.Where(node => node.FieldName is "lstFiles" or "tvDiffFiles" or "tvFiles")
-            .Should().BeEmpty();
+            CaptureNode[] nodes = Flatten(
+                    new AvaloniaControlTreeReader(form, renderScale: 1)
+                        .ReadPrimary(form, new PixelSize(754, 511)).Root)
+                .ToArray();
+            CaptureNode toolbar = nodes.Single(node => node.FieldName == "Toolbar");
+            CaptureNode list = nodes.Single(node => node.FieldName == "FileStatusListView");
+            CaptureNode filter = nodes.Single(node => node.FieldName == "cboFilterComboBox");
+            CaptureNode gitGrep = nodes.Single(node => node.FieldName == "cboFindInCommitFilesGitGrep");
+            CaptureNode asTree = nodes.Single(node => node.FieldName == "btnAsTree");
+            CaptureNode closedDropDownItem = nodes.Single(node => node.FieldName == "tsmiGroupByFilePathTree");
 
-        Rect BoundsInFiles(Control control)
-            => new(control.TranslatePoint(default, files)!.Value, control.Bounds.Size);
+            toolbar.ControlKind.Should().Be("toolStrip");
+            toolbar.BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 0, Width = 742, Height = 25 });
+            list.ControlKind.Should().Be("tree");
+            list.BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 50, Width = 742, Height = 62 });
+            list.Visible.Should().BeTrue();
+            list.Colors.Background.Should().Be("#FFFFFFFF");
+            list.Colors.SelectionBackground.Should().Be("#FF0078D7");
+            list.Colors.InactiveSelectionBackground.Should().Be("#FFBFCDDB");
+            list.Colors.Additional["hotTrack"].Should().Be("#FF0066CC");
+            filter.Font!.Style.Should().Equal("Italic");
+            filter.Colors.Foreground.Should().Be("#FF6D6D6D");
+            filter.Colors.Border.Should().BeNull();
+            filter.FlatStyle.Should().BeNull();
+            gitGrep.Visible.Should().BeFalse();
+            gitGrep.Font!.Style.Should().Equal("Bold");
+            gitGrep.Colors.Border.Should().BeNull();
+            gitGrep.FlatStyle.Should().BeNull();
+            asTree.ControlKind.Should().Be("menuItem");
+            asTree.Colors.Background.Should().Be("#00FFFFFF");
+            asTree.Margin!.Dip.Should().Be(new CaptureThicknessF { Left = 0, Top = 1, Right = 0, Bottom = 2 });
+            closedDropDownItem.ControlKind.Should().Be("menuItem");
+            closedDropDownItem.Visible.Should().BeFalse();
+            nodes.Where(node => node.FieldName is "lstFiles" or "tvDiffFiles" or "tvFiles")
+                .Should().BeEmpty();
+
+            Rect BoundsInFiles(Control control)
+                => new(control.TranslatePoint(default, files)!.Value, control.Bounds.Size);
+        }
+        finally
+        {
+            DiffListSortService.Instance.DiffListSorting = previousSort;
+        }
     }
 
     [AvaloniaTest]

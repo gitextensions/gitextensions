@@ -355,7 +355,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
             DisplayedRevision = null;
             if (revisions.Count == 0)
             {
-                DiffFiles.Clear();
+                DiffFiles.ClearDiffs();
                 return;
             }
 
@@ -412,7 +412,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         _viewChangesSequence.CancelCurrent();
         _displayedRevisions = [];
         DisplayedRevision = null;
-        DiffFiles.Clear();
+        DiffFiles.ClearDiffs();
         DiffText.ViewPatch(string.Empty);
     }
 

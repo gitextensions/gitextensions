@@ -20,6 +20,7 @@ using GitUI.Editor;
 using GitUI.LeftPanel;
 using GitUI.Properties;
 using GitUI.Theming;
+using GitUIPluginInterfaces;
 using ImagesResxToAvalonia;
 using Microsoft.VisualStudio.Threading;
 using DrawingColor = System.Drawing.Color;
@@ -328,7 +329,7 @@ public sealed class ImageResourceTests
             NativeTreeImageListImage.Create(((StackPanel)branches.Header!).Children.OfType<Image>().Single().Source!)
                 .Should().BeSameAs(NativeTreeImageListImage.Create(Images.BranchLocalRoot));
 
-            fileStatusList.SetDiffs([new GitItemStatus("new-file.txt") { IsNew = true }]);
+            fileStatusList.SetDiffs(null, new GitRevision(ObjectId.IndexId), [new GitItemStatus("new-file.txt") { IsNew = true }]);
             listWindow.Show();
             Dispatcher.UIThread.RunJobs();
             fileStatusList.GetVisualDescendants()

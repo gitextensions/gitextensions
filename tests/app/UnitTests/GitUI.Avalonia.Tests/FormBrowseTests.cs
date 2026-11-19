@@ -4622,11 +4622,15 @@ public sealed class FormBrowseTests
             await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.ObjectId == head);
             Click(form, form.DiffTabPage, MouseButton.Left);
             FileStatusList files = form.fileStatusList;
-            await WaitUntilAsync(() => files.GitItemStatuses.Any(item => item.Name == "tracked.txt"));
+            ComboBox filter = files.FindControl<ComboBox>("cboFilterComboBox")!;
+            await WaitUntilAsync(() =>
+                form.CommitInfoTabControl.SelectedItem == form.DiffTabPage
+                && files.GitItemStatuses.Any(item => item.Name == "tracked.txt")
+                && filter.IsEffectivelyVisible
+                && filter.GetVisualDescendants().OfType<TextBox>().Any(control => control.Name == "PART_EditableTextBox"));
             files.TryGetUICommandsDirect(out IGitUICommands? commands).Should().BeTrue();
             commands!.Module.Should().BeSameAs(module);
 
-            ComboBox filter = files.FindControl<ComboBox>("cboFilterComboBox")!;
             TextBox editor = filter.GetVisualDescendants().OfType<TextBox>().Single(control => control.Name == "PART_EditableTextBox");
             editor.Focus().Should().BeTrue();
             editor.SelectAll();

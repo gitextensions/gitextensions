@@ -34,7 +34,7 @@ public sealed class FileStatusListTests
         };
         GitItemStatus documentation = new("docs/readme.md") { IsChanged = true, IsTracked = true };
         GitItemStatus rangeDiff = new("range-diff") { IsRangeDiff = true };
-        control.SetDiffs([renamed, documentation, rangeDiff]);
+        control.SetDiffs(null, new GitRevision(ObjectId.IndexId), [renamed, documentation, rangeDiff]);
         FileStatusList.TestAccessor accessor = control.GetTestAccessor();
 
         control.SetFilter("old-name");
@@ -50,7 +50,7 @@ public sealed class FileStatusListTests
 
         control.SetFilter(string.Empty);
         control.GitItemFilteredStatuses.Count.Should().Be(3);
-        control.GitItemFilteredStatuses.Should().Equal(renamed, documentation, rangeDiff);
+        control.GitItemFilteredStatuses.Should().Equal(documentation, renamed, rangeDiff);
         accessor.FilterComboBox.Classes.Should().NotContain("file-filter-active");
         accessor.FilterComboBox.Classes.Should().NotContain("file-filter-invalid");
     }
@@ -95,7 +95,7 @@ public sealed class FileStatusListTests
         {
             FileStatusList control = new();
             GitItemStatus item = new("directory/match.cs") { IsChanged = true, IsTracked = true };
-            control.SetDiffs([item]);
+            control.SetDiffs(null, new GitRevision(ObjectId.IndexId), [item]);
 
             AppSettings.TruncatePathMethod = TruncatePathMethod.FileNameOnly;
             control.SetFilter("directory");

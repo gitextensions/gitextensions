@@ -201,7 +201,7 @@ public sealed class FileStatusListFamilyTests
         FileStatusList control = new();
         TextBlock noFiles = control.FindControl<TextBlock>("NoFiles")!;
 
-        control.Clear();
+        control.ClearDiffs();
 
         noFiles.IsVisible.Should().BeTrue();
         Control filterRow = (Control)control.FindControl<ComboBox>("cboFilterComboBox")!.Parent!;

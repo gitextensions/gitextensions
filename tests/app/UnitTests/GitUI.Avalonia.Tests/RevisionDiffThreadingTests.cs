@@ -292,7 +292,7 @@ public sealed class RevisionDiffThreadingTests
         TreeView renderer = fileTreeMode ? files.FindControl<TreeView>("tvFiles")! : files.FindControl<TreeView>("tvDiffFiles")!;
         renderer.SelectedItem.Should().NotBeNull();
 
-        files.Clear();
+        files.ClearDiffs();
 
         renderer.SelectedItem.Should().BeNull("an old node must not survive hidden behind the cleared renderer flags");
         (renderer.SelectedItems?.Cast<object>()).Should().BeEmpty();
