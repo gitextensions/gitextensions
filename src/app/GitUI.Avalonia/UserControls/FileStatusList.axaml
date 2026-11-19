@@ -120,8 +120,8 @@
       </Button>
     </Grid>
     <Grid>
-      <TextBlock x:Name="LoadingFiles" Padding="2" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsDisabledForegroundBrush}" FontStyle="Italic" Text="Loading data..." IsVisible="False" IsHitTestVisible="False" />
-      <TextBlock x:Name="NoFiles" Padding="2" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsDisabledForegroundBrush}" FontStyle="Italic" Text="No changes" IsHitTestVisible="False" />
+      <TextBlock x:Name="LoadingFiles" Padding="2" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsDisabledForegroundBrush}" FontStyle="Italic" IsVisible="False" IsHitTestVisible="False" />
+      <TextBlock x:Name="NoFiles" Padding="2" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsDisabledForegroundBrush}" FontStyle="Italic" IsHitTestVisible="False" />
       <ListBox x:Name="FileStatusListView" SelectionMode="Single" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" IsVisible="False" />
       <ListBox x:Name="lstFiles" SelectionMode="Single" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}">
         <ListBox.ContextMenu>
@@ -171,7 +171,7 @@
             <MenuItem x:Name="tsmiShowInFolder" Header="Show _in folder" />
             <Separator x:Name="sepBrowse" />
             <MenuItem x:Name="tsmiShowInFileTree" Header="Show in File _tree" IsVisible="False" />
-            <MenuItem x:Name="tsmiFilterFileInGrid" Header="Filter file in _grid" IsVisible="False" />
+            <MenuItem x:Name="tsmiFilterFileInGrid" IsVisible="False" />
             <MenuItem x:Name="tsmiFileHistory" Header="File _history" />
             <MenuItem x:Name="tsmiBlame" x:FieldModifier="internal" Header="_Blame" />
             <MenuItem x:Name="tsmiFindFile" Header="_Find file..." />

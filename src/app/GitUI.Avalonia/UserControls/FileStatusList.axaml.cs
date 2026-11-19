@@ -131,22 +131,14 @@ public partial class FileStatusList : GitModuleControl
         _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
         _revisionDiffController = new RevisionDiffController(() => Module, _fullPathResolver);
         InitializeComponent();
-        _noItemStatuses =
-        [
-            new GitItemStatus(name: $"- {TranslatedStrings.NoChanges} -")
-            {
-                IsStatusOnly = true,
-                ErrorMessage = string.Empty,
-            },
-        ];
 
-        // Trigger initialisation of Search and Filter boxes
         _NO_TRANSLATE_openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
         _sortByContextMenu = new SortDiffListContextMenuItem(DiffListSortService.Instance)
         {
             Name = "sortListByContextMenuItem",
         };
         tsmiCopyPaths.Initialize(() => UICommands, GetSelectedFilePaths);
+        tsmiFilterFileInGrid.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(TranslatedStrings.FilterFileInGrid);
 
         cboFilterComboBox.Items.Add("^(?!.*NotThisWord)");
         cboFilterComboBox.Items.Add(@"^(?!.*\bg?tests?/)");
@@ -217,6 +209,19 @@ public partial class FileStatusList : GitModuleControl
         DetachedFromLogicalTree += (_, _) => DisposeCustomResources();
 
         InitializeComplete();
+
+        NoFiles.Text = TranslatedStrings.NoChanges;
+        LoadingFiles.Text = TranslatedStrings.LoadingData;
+        _noItemStatuses =
+        [
+            new GitItemStatus(name: $"- {NoFiles.Text} -")
+            {
+                IsStatusOnly = true,
+                ErrorMessage = string.Empty,
+            },
+        ];
+
+        // Trigger initialisation of Search and Filter boxes
         SetFileStatusListVisibility(showNoFiles: true);
 
         MenuItem CreateOpenSubmoduleMenuItem()
@@ -2517,29 +2522,6 @@ public partial class FileStatusList : GitModuleControl
             CancelEventArgs eventArgs = new();
             _fileStatusList.ItemContextMenu_Opening(_fileStatusList.ItemContextMenu, eventArgs);
             return eventArgs.Cancel;
-        }
-
-        internal void SetSort(DiffListSortType sortType)
-        {
-            DiffListSortService.Instance.DiffListSorting = sortType;
-            _fileStatusList.UpdateToolbar();
-        }
-
-        internal void UpdateToolbar()
-            => _fileStatusList.UpdateToolbar();
-
-        internal void SetDiffStatusVisible(DiffBranchStatus status, bool visible)
-        {
-            ToggleButton button = status switch
-            {
-                DiffBranchStatus.OnlyAChange => _fileStatusList.btnOnlyA,
-                DiffBranchStatus.OnlyBChange => _fileStatusList.btnOnlyB,
-                DiffBranchStatus.SameChange => _fileStatusList.btnSameChange,
-                DiffBranchStatus.UnequalChange => _fileStatusList.btnUnequalChange,
-                _ => throw new ArgumentOutOfRangeException(nameof(status)),
-            };
-            button.IsChecked = visible;
-            _fileStatusList.UpdateFileStatusListView(_fileStatusList.GitItemStatusesWithDescription, updateCausedByFilter: true);
         }
 
         internal static IImage GetItemImageForTesting(GitItemStatus item)

@@ -744,10 +744,12 @@ public sealed class FileStatusListFamilyTests
     [AvaloniaTest]
     public void FileStatusList_should_apply_all_sort_and_branch_diff_filters()
     {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
         DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        using FileStatusList control = new() { GroupByRevision = true };
+        Window window = new() { Width = 680, Height = 420, Content = control };
         try
         {
-            FileStatusList control = new() { GroupByRevision = true };
             GitRevision first = new(ObjectId.Random());
             GitRevision second = new(ObjectId.Random());
             control.SetDiffs(
@@ -763,19 +765,29 @@ public sealed class FileStatusListFamilyTests
                     iconName: nameof(Images.DiffA)),
             ],
             isFileTreeMode: false);
-            FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+            window.Show();
 
             foreach (DiffListSortType sortType in Enum.GetValues<DiffListSortType>())
             {
-                accessor.SetSort(sortType);
+                DiffListSortService.Instance.DiffListSorting = sortType;
+                Dispatcher.UIThread.RunJobs();
                 control.GitItemFilteredStatuses.Should().HaveCount(2);
             }
 
-            accessor.SetDiffStatusVisible(DiffBranchStatus.OnlyAChange, visible: false);
+            window.UpdateLayout();
+            ToggleButton onlyA = control.FindControl<ToggleButton>("btnOnlyA")!;
+            onlyA.IsEffectivelyVisible.Should().BeTrue();
+            Point point = onlyA.TranslatePoint(new Point(onlyA.Bounds.Width / 2, onlyA.Bounds.Height / 2), window)!.Value;
+            window.MouseMove(point, RawInputModifiers.None);
+            window.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            window.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
             control.GitItemFilteredStatuses.Should().ContainSingle().Which.Name.Should().Be("only-b.cs");
         }
         finally
         {
+            window.Close();
             DiffListSortService.Instance.DiffListSorting = originalSort;
         }
     }
@@ -793,7 +805,6 @@ public sealed class FileStatusListFamilyTests
             control.SetDiffs(
                 [new FileStatusWithDescription(null, revision, "Diff with parent", [first, second])],
                 isFileTreeMode: false);
-            FileStatusList.TestAccessor accessor = control.GetTestAccessor();
             Window window = new() { Width = 360, Height = 240, Content = control };
             window.Show();
             Dispatcher.UIThread.RunJobs();
@@ -802,7 +813,7 @@ public sealed class FileStatusListFamilyTests
             {
                 foreach (DiffListSortType sortType in Enum.GetValues<DiffListSortType>())
                 {
-                    accessor.SetSort(sortType);
+                    DiffListSortService.Instance.DiffListSorting = sortType;
                     Dispatcher.UIThread.RunJobs();
                     bool flat = sortType is DiffListSortType.FilePathFlat
                         or DiffListSortType.FileExtensionFlat
@@ -828,30 +839,49 @@ public sealed class FileStatusListFamilyTests
     [AvaloniaTest]
     public void FileStatusList_should_persist_each_toolbar_item_visibility()
     {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
         const string settingsKey = "FileStatusList.Toolbar.Visibility.btnByPath";
-        bool originalValue = AppSettings.GetBool(settingsKey, defaultValue: true);
+        AppSettings.SetBool(settingsKey, false);
+        using FileStatusList control = new();
+        control.Bind(() => { });
+        ToggleButton byPath = control.FindControl<ToggleButton>("btnByPath")!;
+        int buttonIndex = control.FindControl<StackPanel>("Toolbar")!.Children.IndexOf(byPath);
+        MenuItem toolbar = control.FindControl<MenuItem>("tsmiToolbar")!;
+        MenuItem visibilityItem = (MenuItem)toolbar.Items[buttonIndex]!;
+        IconDropDownButton settingsButton = control.FindControl<IconDropDownButton>("btnSettings")!;
+        MenuFlyout menu = (MenuFlyout)settingsButton.Flyout!;
+
+        Window window = new() { Width = 680, Height = 420, Content = control };
         try
         {
-            AppSettings.SetBool(settingsKey, false);
-            FileStatusList control = new();
-            FileStatusList.TestAccessor accessor = control.GetTestAccessor();
-            ToggleButton byPath = control.FindControl<ToggleButton>("btnByPath")!;
-            accessor.UpdateToolbar();
-            int buttonIndex = control.FindControl<StackPanel>("Toolbar")!.Children.IndexOf(byPath);
-            MenuItem visibilityItem = (MenuItem)control.FindControl<MenuItem>("tsmiToolbar")!.Items[buttonIndex]!;
-
+            window.Show();
             visibilityItem.IsChecked.Should().BeFalse();
             byPath.IsVisible.Should().BeFalse();
 
-            visibilityItem.IsChecked = true;
-            visibilityItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            Click(settingsButton);
+            menu.IsOpen.Should().BeTrue();
+            Click(toolbar);
+            toolbar.IsSubMenuOpen.Should().BeTrue();
+            Click(visibilityItem);
 
             AppSettings.GetBool(settingsKey, defaultValue: true).Should().BeTrue();
             byPath.IsVisible.Should().BeTrue();
         }
         finally
         {
-            AppSettings.SetBool(settingsKey, originalValue ? null : false);
+            menu.Hide();
+            window.Close();
+        }
+
+        static void Click(Control target)
+        {
+            TopLevel owner = TopLevel.GetTopLevel(target)
+                ?? throw new InvalidOperationException("The toolbar item must be attached to its actual window or popup.");
+            Point point = target.TranslatePoint(new Point(target.Bounds.Width / 2, target.Bounds.Height / 2), owner)!.Value;
+            owner.MouseMove(point, RawInputModifiers.None);
+            owner.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            owner.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
         }
     }
 

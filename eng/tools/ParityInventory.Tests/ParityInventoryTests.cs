@@ -1379,6 +1379,41 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Run_should_preserve_the_watermark_translation_key_from_designer_to_axaml()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.Designer.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                private WatermarkComboBox filter;
+
+                private void InitializeComponent()
+                {
+                    filter.Watermark = "Filter files...";
+                }
+            }
+            """);
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml", """
+            <UserControl xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:controls="using:Sample.Controls"
+                         x:Class="Sample.Widget">
+              <controls:WatermarkComboBox x:Name="filter" Watermark="Filter files..." />
+            </UserControl>
+            """);
+        fixture.WriteEnglish("filter.Watermark");
+
+        InventoryReport report = fixture.Run();
+
+        report.Original.TranslationKeys.Should().ContainSingle(key => key.Key == "filter.Watermark" && key.InEnglishCatalog);
+        report.Twin.TranslationKeys.Should().ContainSingle(key => key.Key == "filter.Watermark" && key.InEnglishCatalog);
+        report.Findings.Should().NotContain(finding => finding.Path == "translation.key/filter.Watermark");
+    }
+
+    [Test]
     public void Run_should_not_emit_a_text_key_when_axaml_explicitly_disables_text_translation()
     {
         using InventoryFixture fixture = new();

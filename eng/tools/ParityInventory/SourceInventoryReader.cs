@@ -1055,8 +1055,8 @@ internal static class SourceInventoryReader
 
         foreach (AssignmentExpressionSyntax assignment in declaration.DescendantNodes().OfType<AssignmentExpressionSyntax>())
         {
-            if (assignment.Left is not MemberAccessExpressionSyntax access
-                || access.Name.Identifier.ValueText is not ("Text" or "HeaderText"))
+            if (assignment.Left is not MemberAccessExpressionSyntax { Name.Identifier.ValueText: var property } access
+                || property is not ("Text" or "HeaderText" or "Watermark"))
             {
                 continue;
             }
@@ -1070,7 +1070,7 @@ internal static class SourceInventoryReader
             if (!string.IsNullOrEmpty(control))
             {
                 part.TranslationKeys.Add(NewTranslationKey(
-                    $"{control}.Text",
+                    $"{control}.{(property == "Watermark" ? property : "Text")}",
                     $"{part.Path}:{className}.{control}"));
             }
         }
