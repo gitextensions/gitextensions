@@ -380,11 +380,12 @@ public sealed class IndexWatcher : IDisposable
             ushort flags = BinaryPrimitives.ReadUInt16BigEndian(entries[(statDataLength + objectIdLength)..]);
             if (version >= 3 && (flags & extendedFlag) != 0)
             {
-                nameOffset += extendedFlagsLength;
-                if (entries.Length < nameOffset)
+                if (entries.Length < nameOffset + extendedFlagsLength)
                 {
                     return null;
                 }
+
+                nameOffset += extendedFlagsLength;
             }
 
             int entryLength;
