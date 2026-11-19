@@ -401,7 +401,7 @@ partial class FileStatusList
 
         bool AddFileToGitIgnore()
         {
-            if (!IsKeyboardFocusWithin)
+            if (!Focused)
             {
                 return false;
             }
@@ -412,7 +412,7 @@ partial class FileStatusList
 
         bool ResetSelectedFilesWithConfirmation()
         {
-            if (!IsKeyboardFocusWithin)
+            if (!Focused)
             {
                 return false;
             }
@@ -431,7 +431,7 @@ partial class FileStatusList
 
         bool SelectFirstGroupChangesIfFocused()
         {
-            if (!IsKeyboardFocusWithin)
+            if (!Focused)
             {
                 return false;
             }

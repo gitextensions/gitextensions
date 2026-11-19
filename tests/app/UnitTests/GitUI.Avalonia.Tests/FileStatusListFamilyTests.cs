@@ -227,7 +227,7 @@ public sealed class FileStatusListFamilyTests
     public void FileStatusList_context_menu_should_restore_dynamic_entries_state_and_action_routes()
     {
         FileStatusList control = new();
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        Window window = new() { Width = 660, Height = 380, Content = control };
         ContextMenu menu = control.FindControl<ContextMenu>("ItemContextMenu")!;
         MenuItem resetToParent = control.FindControl<MenuItem>("tsmiResetFileToParent")!;
         ListBox fileList = control.FindControl<ListBox>("lstFiles")!;
@@ -237,8 +237,6 @@ public sealed class FileStatusListFamilyTests
             IsTracked = true,
             Staged = StagedStatus.WorkTree,
         };
-        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [worktree]);
-        fileList.SelectedIndex = 0;
 
         int stageCalls = 0;
         int filterCalls = 0;
@@ -255,44 +253,76 @@ public sealed class FileStatusListFamilyTests
             getSupportLinePatching: () => true);
         control.BindContextMenu(() => { }, canAutoRefresh: true, () => stageCalls++, unstage: null);
 
-        accessor.UpdateContextMenu().Should().BeFalse();
-        control.FindControl<MenuItem>("tsmiStageFile")!.IsVisible.Should().BeTrue();
-        control.FindControl<MenuItem>("tsmiUnstageFile")!.IsVisible.Should().BeFalse();
-        control.FindControl<MenuItem>("tsmiResetChunkOfFile")!.IsVisible.Should().BeTrue();
-        control.FindControl<MenuItem>("tsmiInteractiveAdd")!.IsVisible.Should().BeTrue();
-        control.FindControl<MenuItem>("tsmiResetFileTo")!.IsVisible.Should().BeTrue();
-        control.FindControl<MenuItem>("tsmiResetFileToSelected")!.IsVisible.Should().BeFalse();
-        resetToParent.IsVisible.Should().BeTrue();
-        resetToParent.Header.Should().Be("First: A Commit index");
-        control.FindControl<MenuItem>("tsmiAddFileToGitIgnore")!.IsVisible.Should().BeTrue();
-        control.FindControl<MenuItem>("tsmiAddFileToGitInfoExclude")!.IsVisible.Should().BeTrue();
-        control.FindControl<MenuItem>("tsmiSkipWorktree")!.IsVisible.Should().BeTrue();
-        control.FindControl<MenuItem>("tsmiStopTracking")!.IsVisible.Should().BeTrue();
-        accessor.OpenSubmoduleMenuItem.IsVisible.Should().BeFalse();
-        accessor.SortByContextMenuItem.IsVisible.Should().BeTrue();
-        menu.Items.OfType<SortDiffListContextMenuItem>().Should().ContainSingle();
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
+            window.Show();
+            control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [worktree]);
+            fileList.SelectedIndex = 0;
 
-        accessor.UpdateContextMenu().Should().BeFalse();
-        menu.Items.OfType<SortDiffListContextMenuItem>().Should().ContainSingle();
+            OpenAlreadySelectedRow();
+            control.FindControl<MenuItem>("tsmiStageFile")!.IsVisible.Should().BeTrue();
+            control.FindControl<MenuItem>("tsmiUnstageFile")!.IsVisible.Should().BeFalse();
+            control.FindControl<MenuItem>("tsmiResetChunkOfFile")!.IsVisible.Should().BeTrue();
+            control.FindControl<MenuItem>("tsmiInteractiveAdd")!.IsVisible.Should().BeTrue();
+            control.FindControl<MenuItem>("tsmiResetFileTo")!.IsVisible.Should().BeTrue();
+            control.FindControl<MenuItem>("tsmiResetFileToSelected")!.IsVisible.Should().BeFalse();
+            resetToParent.IsVisible.Should().BeTrue();
+            resetToParent.Header.Should().Be("First: A Commit index");
+            control.FindControl<MenuItem>("tsmiAddFileToGitIgnore")!.IsVisible.Should().BeTrue();
+            control.FindControl<MenuItem>("tsmiAddFileToGitInfoExclude")!.IsVisible.Should().BeTrue();
+            control.FindControl<MenuItem>("tsmiSkipWorktree")!.IsVisible.Should().BeTrue();
+            control.FindControl<MenuItem>("tsmiStopTracking")!.IsVisible.Should().BeTrue();
+            MenuItem submoduleMenuItem = menu.Items.OfType<MenuItem>().Single(item => item.Name == "openSubmoduleMenuItem");
+            submoduleMenuItem.IsVisible.Should().BeFalse();
+            menu.Items.OfType<SortDiffListContextMenuItem>().Single().IsVisible.Should().BeTrue();
+            menu.Items.OfType<SortDiffListContextMenuItem>().Should().ContainSingle();
 
-        control.ExecuteCommand(RevisionDiffControl.Command.StageSelectedFile).Should().BeTrue();
-        control.ExecuteCommand(RevisionDiffControl.Command.FilterFileInGrid).Should().BeTrue();
-        control.ExecuteCommand(RevisionDiffControl.Command.ShowFileTree).Should().BeTrue();
-        stageCalls.Should().Be(1);
-        filterCalls.Should().Be(1);
-        showInTreeCalls.Should().Be(1);
-        control.ExecuteCommand(RevisionDiffControl.Command.AddFileToGitIgnore).Should().BeFalse("the original route requires list focus");
+            OpenAlreadySelectedRow();
+            menu.Items.OfType<SortDiffListContextMenuItem>().Should().ContainSingle();
 
-        GitItemStatus submodule = new("submodule") { IsSubmodule = true, IsTracked = true };
-        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [submodule]);
-        fileList.SelectedIndex = 0;
-        accessor.UpdateContextMenu().Should().BeFalse();
-        accessor.OpenSubmoduleMenuItem.IsVisible.Should().BeTrue();
+            menu.Close();
+            control.ExecuteCommand(RevisionDiffControl.Command.StageSelectedFile).Should().BeTrue();
+            control.ExecuteCommand(RevisionDiffControl.Command.FilterFileInGrid).Should().BeTrue();
+            control.ExecuteCommand(RevisionDiffControl.Command.ShowFileTree).Should().BeTrue();
+            stageCalls.Should().Be(1);
+            filterCalls.Should().Be(1);
+            showInTreeCalls.Should().Be(1);
+            control.FindControl<ToggleButton>("btnByPath")!.Focus().Should().BeTrue();
+            control.ExecuteCommand(RevisionDiffControl.Command.AddFileToGitIgnore).Should().BeFalse("the original route requires list focus");
+            control.ExecuteCommand(RevisionDiffControl.Command.ResetSelectedFiles).Should().BeFalse("the original route requires list focus");
+            control.ExecuteCommand(RevisionDiffControl.Command.SelectFirstGroupChanges).Should().BeFalse("the original route requires list focus");
 
-        GitItemStatus statusOnly = new("summary") { IsStatusOnly = true };
-        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [statusOnly]);
-        fileList.SelectedIndex = 0;
-        accessor.UpdateContextMenu().Should().BeTrue();
+            GitItemStatus submodule = new("submodule") { IsSubmodule = true, IsTracked = true };
+            control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [submodule]);
+            fileList.SelectedIndex = 0;
+            OpenAlreadySelectedRow();
+            submoduleMenuItem.IsVisible.Should().BeTrue();
+
+            menu.Close();
+
+            GitItemStatus statusOnly = new("summary") { IsStatusOnly = true };
+            control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [statusOnly]);
+            fileList.SelectedIndex = 0;
+            OpenAlreadySelectedRow(expectedOpen: false);
+        }
+        finally
+        {
+            menu.Close();
+            window.Close();
+            DiffListSortService.Instance.DiffListSorting = previousSort;
+        }
+
+        void OpenAlreadySelectedRow(bool expectedOpen = true)
+        {
+            menu.Close();
+            window.UpdateLayout();
+            ListBoxItem row = fileList.ContainerFromIndex(fileList.SelectedIndex).Should().BeOfType<ListBoxItem>().Which;
+            RightClick(window, row);
+            menu.IsOpen.Should().Be(expectedOpen);
+        }
     }
 
     [AvaloniaTest]
@@ -314,11 +344,11 @@ public sealed class FileStatusListFamilyTests
             window.UpdateLayout();
 
             ToggleButton groupByPath = control.FindControl<ToggleButton>("btnByPath")!;
-            RightClick(groupByPath);
+            RightClick(window, groupByPath);
             menu.IsOpen.Should().BeFalse("the source file context menu is attached to the file presenter");
 
             ListBoxItem row = files.ContainerFromIndex(0).Should().BeOfType<ListBoxItem>().Which;
-            RightClick(row);
+            RightClick(window, row);
             menu.IsOpen.Should().BeTrue();
             control.SelectedGitItem.Should().BeSameAs(item);
         }
@@ -328,50 +358,48 @@ public sealed class FileStatusListFamilyTests
             window.Close();
             DiffListSortService.Instance.DiffListSorting = previousSort;
         }
-
-        void RightClick(Control target)
-        {
-            target.IsEffectivelyVisible.Should().BeTrue();
-            Point point = target.TranslatePoint(new Point(target.Bounds.Width / 2, target.Bounds.Height / 2), window)!.Value;
-            window.MouseMove(point, RawInputModifiers.None);
-            window.MouseDown(point, MouseButton.Right, RawInputModifiers.None);
-            window.MouseUp(point, MouseButton.Right, RawInputModifiers.None);
-            Dispatcher.UIThread.RunJobs();
-        }
     }
 
     [AvaloniaTest]
     public void FileStatusList_context_menu_should_render_derived_menu_items_with_the_standard_menu_theme()
     {
+        using GitExtensionsTests.AppSettingsTestScope settings = new();
+        DiffListSortType previousSort = DiffListSortService.Instance.DiffListSorting;
         FileStatusList control = new();
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
-        ContextMenu menu = control.FindControl<ContextMenu>("ItemContextMenu")!;
         ListBox fileList = control.FindControl<ListBox>("lstFiles")!;
-        GitItemStatus worktree = new("tracked.txt")
-        {
-            IsChanged = true,
-            IsTracked = true,
-            Staged = StagedStatus.WorkTree,
-        };
-        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [worktree]);
-        fileList.SelectedIndex = 0;
-        accessor.UpdateContextMenu().Should().BeFalse();
-        Window window = new() { Content = control };
+        ContextMenu menu = fileList.ContextMenu!;
+        Window window = new() { Width = 660, Height = 380, Content = control };
 
         try
         {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePathFlat;
             window.Show();
-            menu.Open(fileList);
-            global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            GitItemStatus worktree = new("tracked.txt") { IsChanged = true, IsTracked = true, Staged = StagedStatus.WorkTree };
+            control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [worktree]);
+            window.UpdateLayout();
 
+            ListBoxItem row = fileList.ContainerFromIndex(0).Should().BeOfType<ListBoxItem>().Which;
+            RightClick(window, row);
+            menu.IsOpen.Should().BeTrue();
             control.FindControl<MenuItem>("tsmiCopyPaths")!.Bounds.Height.Should().BeGreaterThan(0);
-            accessor.SortByContextMenuItem.Bounds.Height.Should().BeGreaterThan(0);
+            menu.Items.OfType<SortDiffListContextMenuItem>().Single().Bounds.Height.Should().BeGreaterThan(0);
         }
         finally
         {
             menu.Close();
             window.Close();
+            DiffListSortService.Instance.DiffListSorting = previousSort;
         }
+    }
+
+    private static void RightClick(Window window, Control target)
+    {
+        target.IsEffectivelyVisible.Should().BeTrue();
+        Point point = target.TranslatePoint(new Point(target.Bounds.Width / 2, target.Bounds.Height / 2), window)!.Value;
+        window.MouseMove(point, RawInputModifiers.None);
+        window.MouseDown(point, MouseButton.Right, RawInputModifiers.None);
+        window.MouseUp(point, MouseButton.Right, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
     }
 
     [AvaloniaTest]
@@ -422,6 +450,20 @@ public sealed class FileStatusListFamilyTests
             ClickMenuItem(collapseAll);
             root.IsExpanded.Should().BeFalse();
 
+            window.UpdateLayout();
+            TextBox filter = control.FindControl<ComboBox>("cboFilterComboBox")!.GetVisualDescendants()
+                .OfType<TextBox>().Single(item => item.Name == "PART_EditableTextBox");
+            filter.Focus().Should().BeTrue();
+            PressMultiply();
+            root.IsExpanded.Should().BeFalse("the original shortcut belongs to the file list");
+
+            root.Focus().Should().BeTrue();
+            PressMultiply();
+            root.IsExpanded.Should().BeTrue();
+            root.IsKeyboardFocusWithin.Should().BeTrue();
+            root.GetVisualDescendants().OfType<TreeViewItem>()
+                .Where(item => item.ItemCount > 0).Should().NotBeEmpty().And.OnlyContain(item => item.IsExpanded);
+
             ClickMenuItem(expandAll);
             ClickMenuItem(selectAll);
             control.SelectedGitItems.Should().HaveCount(2);
@@ -438,6 +480,13 @@ public sealed class FileStatusListFamilyTests
 
         MenuItem FindMenuItem(string header)
             => menu.Items.OfType<MenuItem>().Single(item => item.Header as string == header);
+
+        void PressMultiply()
+        {
+            window.KeyPress(Key.Multiply, RawInputModifiers.None, PhysicalKey.NumPadMultiply, "*");
+            window.KeyRelease(Key.Multiply, RawInputModifiers.None, PhysicalKey.NumPadMultiply, "*");
+            Dispatcher.UIThread.RunJobs();
+        }
 
         void OpenMenu()
         {

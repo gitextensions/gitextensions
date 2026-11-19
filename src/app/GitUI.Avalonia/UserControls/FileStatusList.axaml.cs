@@ -180,12 +180,20 @@ public partial class FileStatusList : GitModuleControl
 
         InitialiseFiltering();
         _selectedIndexChangeTimer.Tick += SelectedIndexChangeTimer_Tick;
-        KeyDown += FileStatusListView_KeyDown;
+        KeyDown += (_, e) =>
+        {
+            if (ProcessHotkey(KeysMapper.ToKeys(e)))
+            {
+                e.Handled = true;
+            }
+        };
         GotFocus += FileStatusList_Enter;
         LostFocus += FileStatusList_LostFocus;
         Control[] fileStatusListViews = [lstFiles, tvDiffFiles, tvFiles];
         foreach (Control fileStatusListView in fileStatusListViews)
         {
+            // Avalonia tree rows handle NumPad Multiply before the key bubbles to the list.
+            fileStatusListView.AddHandler(KeyDownEvent, FileStatusListView_KeyDown, RoutingStrategies.Tunnel);
             fileStatusListView.AddHandler(PointerPressedEvent, FileStatusListView_MouseDown, RoutingStrategies.Bubble, handledEventsToo: true);
             fileStatusListView.AddHandler(PointerMovedEvent, FileStatusListView_MouseMove, RoutingStrategies.Bubble, handledEventsToo: true);
             fileStatusListView.AddHandler(PointerReleasedEvent, FileStatusListView_MouseUp, RoutingStrategies.Bubble, handledEventsToo: true);
@@ -1807,21 +1815,18 @@ public partial class FileStatusList : GitModuleControl
             return;
         }
 
-        if (e.Key == Key.Multiply)
+        if (e.Key == Key.Multiply && e.KeyModifiers == KeyModifiers.None && sender is TreeView tree)
         {
             // Set e.Handled = true; Avalonia has no TreeView Ding sound
-            object? focusedNode = (_isFileTreeMode ? tvFiles : tvDiffFiles).SelectedItem;
+            Control? focusedElement = e.Source as Control;
+            TreeViewItem? focusedRow = focusedElement?.FindAncestorOfType<TreeViewItem>(includeSelf: true);
+            object? focusedNode = focusedRow?.DataContext ?? tree.SelectedItem;
             if (focusedNode is not null)
             {
                 SetExpansion(focusedNode, expanded: true);
+                focusedRow?.BringIntoView();
             }
 
-            e.Handled = true;
-            return;
-        }
-
-        if (ProcessHotkey(KeysMapper.ToKeys(e)))
-        {
             e.Handled = true;
         }
     }
@@ -2514,9 +2519,6 @@ public partial class FileStatusList : GitModuleControl
         }
 
         internal ComboBox FilterComboBox => _fileStatusList.cboFilterComboBox;
-        internal MenuItem OpenSubmoduleMenuItem => _fileStatusList._NO_TRANSLATE_openSubmoduleMenuItem;
-        internal SortDiffListContextMenuItem SortByContextMenuItem => _fileStatusList._sortByContextMenu;
-
         internal bool UpdateContextMenu()
         {
             CancelEventArgs eventArgs = new();

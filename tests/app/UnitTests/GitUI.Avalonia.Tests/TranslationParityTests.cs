@@ -51,6 +51,8 @@ public sealed class TranslationParityTests
         using FileStatusList files = new();
         Dictionary<string, object> fields = TranslationUtils.GetObjFields(tree, "$this")
             .ToDictionary(item => item.Name, item => item.Item);
+        MenuItem fileSort = (MenuItem)TranslationUtils.GetObjFields(files, "$this")
+            .Single(field => field.Name == "_sortByContextMenu").Item;
         (MenuItem Item, string Expected)[] captions =
         [
             ((MenuItem)fields["copyContextMenuItem"], "Copy to clipboard"),
@@ -60,7 +62,7 @@ public sealed class TranslationParityTests
             ((MenuItem)fields["mnubtnFetchRebase"], "Fetch & Rebase"),
             ((MenuItem)fields["mnubtnPullFromRemoteBranch"], "Fetch & Merge (Pull)"),
             ((MenuItem)fields["mnubtnRemoteBranchFetchAndCheckout"], "Fetch & Checkout"),
-            (files.GetTestAccessor().SortByContextMenuItem, "Sort and group by"),
+            (fileSort, "Sort and group by"),
         ];
         Button owner = new() { Content = "Menu" };
         Window window = new() { Width = 400, Height = 300, Content = owner };

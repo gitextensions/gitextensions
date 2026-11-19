@@ -2,7 +2,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Selection;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -229,7 +231,6 @@ public sealed class FileStatusListTests
         GitItemStatus first = new("first.txt") { IsChanged = true, IsTracked = true, Staged = StagedStatus.WorkTree };
         GitItemStatus second = new("second.txt") { IsChanged = true, IsTracked = true, Staged = StagedStatus.WorkTree };
         control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [first, second]);
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
         MenuItem stage = control.FindControl<MenuItem>("tsmiStageFile")!;
         Window window = new() { Width = 320, Height = 180, Content = control };
         int stageCalls = 0;
@@ -245,7 +246,15 @@ public sealed class FileStatusListTests
             diffTree.SelectedItems.Add(diffTree.Items[1]!);
 
             control.SelectedGitItems.Should().Equal(first, second);
-            accessor.UpdateContextMenu();
+            TreeViewItem row = diffTree.ContainerFromIndex(1).Should().BeOfType<TreeViewItem>().Which;
+            Control header = row.GetVisualDescendants().OfType<Control>().Single(control => control.Name == "PART_HeaderPresenter");
+            Point point = header.TranslatePoint(new Point(header.Bounds.Width / 2, header.Bounds.Height / 2), window)!.Value;
+            window.MouseMove(point, RawInputModifiers.None);
+            window.MouseDown(point, MouseButton.Right, RawInputModifiers.None);
+            window.MouseUp(point, MouseButton.Right, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            diffTree.ContextMenu!.IsOpen.Should().BeTrue();
+            control.SelectedGitItems.Should().Equal(first, second);
             stage.IsVisible.Should().BeTrue();
             stage.IsEnabled.Should().BeTrue();
             control.FindControl<MenuItem>("tsmiUnstageFile")!.IsVisible.Should().BeFalse();
